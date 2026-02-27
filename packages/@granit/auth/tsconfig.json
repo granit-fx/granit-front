@@ -1,4 +1,10 @@
 {
   "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@granit/types": ["../types/src/index.ts"],
+      "@granit/api-client": ["../api-client/src/index.ts"]
+    }
+  },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

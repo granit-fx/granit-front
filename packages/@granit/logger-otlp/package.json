@@ -1,0 +1,12 @@
+{
+  "name": "@granit/logger-otlp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "peerDependencies": {
+    "@granit/logger": "workspace:*"
+  }
+}

@@ -2,9 +2,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { createApiClient, setTokenGetter } from '../index.ts';
 
+import type { AxiosStatic } from 'axios';
+
 // Minimal mock for axios to avoid real HTTP calls
 vi.mock('axios', async () => {
-  const actual = await vi.importActual<typeof import('axios')>('axios');
+  const actual = await vi.importActual<{ default: AxiosStatic }>('axios');
   return {
     ...actual,
     default: {

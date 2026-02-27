@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/images/granit-logo.svg" alt="Granit Front" height="80" />
+</p>
+
 # granit-front
 
 Framework TypeScript/React partagé — équivalent JavaScript/TypeScript de `granit-dotnet`.
@@ -9,11 +13,21 @@ types OIDC, utilitaires, client HTTP Axios et couche d'authentification Keycloak
 
 | Package | Description |
 | --- | --- |
-| [`@granit/logger`](packages/@granit/logger) | Factory de loggers configurables (`createLogger`) |
-| [`@granit/types`](packages/@granit/types) | Types TypeScript partagés (`KeycloakUserInfo`, `PaginatedResponse`) |
-| [`@granit/utils`](packages/@granit/utils) | Utilitaires partagés (`cn`, `formatDate`, `formatNumber`, …) |
-| [`@granit/api-client`](packages/@granit/api-client) | Factory Axios avec intercepteur Bearer token |
-| [`@granit/auth`](packages/@granit/auth) | Hooks Keycloak, factory de contexte auth, mock provider |
+| [`@granit/logger`](docs/framework/logger.md) | Factory de loggers configurables (`createLogger`) |
+| [`@granit/types`](docs/framework/types.md) | Types TypeScript partagés (`KeycloakUserInfo`, `PaginatedResponse`) |
+| [`@granit/utils`](docs/framework/utils.md) | Utilitaires partagés (`cn`, `formatDate`, `formatNumber`, …) |
+| [`@granit/api-client`](docs/framework/api-client.md) | Factory Axios avec intercepteur Bearer token |
+| [`@granit/auth`](docs/framework/auth.md) | Hooks Keycloak, factory de contexte auth, mock provider |
+
+## Documentation
+
+| Section | Description |
+| --- | --- |
+| [Framework](docs/framework/index.md) | Documentation de référence de chaque module |
+| [Guide](docs/guide/index.md) | Tutoriels pas-à-pas, démarrage rapide |
+| [Tests](docs/testing/index.md) | Conventions, stack Vitest, patterns de mock, couverture |
+| [CI/CD et qualité](docs/deployment/index.md) | Pipeline GitLab CI, analyse de qualité, workflow de release |
+| [Patterns](docs/patterns/index.md) | 8 design patterns identifiés dans granit-front |
 
 ## Intégration dans une application
 

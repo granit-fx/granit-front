@@ -1,12 +1,9 @@
+import { setTokenGetter } from '@granit/api-client';
+import Keycloak from 'keycloak-js';
 import * as React from 'react';
 
-import Keycloak from 'keycloak-js';
-
-import { setTokenGetter } from '@granit/api-client';
-
+import type { BaseAuthContextType, KeycloakCoreConfig, LoginOptions, LogoutOptions } from './types.ts';
 import type { KeycloakUserInfo } from '@granit/types';
-
-import type { BaseAuthContextType, KeycloakCoreConfig } from './types.ts';
 
 export interface KeycloakCoreResult extends BaseAuthContextType {
   /**
@@ -14,13 +11,60 @@ export interface KeycloakCoreResult extends BaseAuthContextType {
    * Expose to consuming apps that need to build custom login/logout URLs (e.g. Capacitor).
    */
   keycloakRef: React.MutableRefObject<Keycloak | null>;
+
+  /** Redirect to the Keycloak login page with optional overrides. */
+  login: (options?: LoginOptions) => void;
+  /** Redirect to the Keycloak logout page with optional overrides. */
+  logout: (options?: LogoutOptions) => void;
+  /** Shortcut for `login({ action: 'register' })`. */
+  register: (options?: Omit<LoginOptions, 'action'>) => void;
+
+  /** Check whether the user has a realm-level role. Returns false when unauthenticated. */
+  hasRealmRole: (role: string) => boolean;
+  /** Check whether the user has a resource-level role. Returns false when unauthenticated. */
+  hasResourceRole: (role: string, resource?: string) => boolean;
+
+  /** Returns true when the access token expires within `minValidity` seconds (default 0). */
+  isTokenExpired: (minValidity?: number) => boolean;
+  /** Decoded JWT payload — undefined before authentication. */
+  tokenParsed: Record<string, unknown> | undefined;
 }
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/** Starts a 60 s interval that proactively keeps the Keycloak token alive. */
+function startTokenRefresh(keycloak: Keycloak): ReturnType<typeof setInterval> {
+  return setInterval(() => {
+    keycloak.updateToken(70).catch(() => {
+      // Token refresh failed — app will handle re-login via onAuthRefreshError
+    });
+  }, 60_000);
+}
+
+/** Extract standard OIDC claims from a decoded JWT. */
+function extractUserFromToken(parsed: Record<string, unknown>): KeycloakUserInfo {
+  return {
+    sub: parsed.sub as string,
+    email: parsed.email as string | undefined,
+    name: parsed.name as string | undefined,
+    preferred_username: parsed.preferred_username as string | undefined,
+    given_name: parsed.given_name as string | undefined,
+    family_name: parsed.family_name as string | undefined,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Hook
+// ---------------------------------------------------------------------------
 
 /**
  * Shared Keycloak initialization hook (web-only, no Capacitor logic).
  *
  * Handles: instantiation, check-sso init, PKCE S256, token refresh every 60s,
- * loadUserInfo(), and wiring the Bearer token to @granit/api-client.
+ * user info loading (via `/userinfo` or `tokenParsed`), lifecycle events, role
+ * checking, and wiring the Bearer token to `@granit/api-client`.
  *
  * Consuming apps that need native/Capacitor support should:
  * 1. Use `keycloakRef` to build platform-specific login/logout URLs
@@ -51,11 +95,43 @@ export function useKeycloakInit(config: KeycloakCoreConfig): KeycloakCoreResult 
 
         keycloakRef.current = keycloak;
 
+        // ----- Lifecycle event wiring (Story #2) -------------------------
+        keycloak.onTokenExpired = () => {
+          config.onTokenExpired?.();
+          config.onEvent?.('onTokenExpired');
+        };
+
+        keycloak.onAuthRefreshError = () => {
+          setAuthenticated(false);
+          config.onAuthRefreshError?.();
+          config.onEvent?.('onAuthRefreshError');
+        };
+
+        keycloak.onAuthLogout = () => {
+          setAuthenticated(false);
+          setUser(null);
+          config.onAuthLogout?.();
+          config.onEvent?.('onAuthLogout');
+        };
+
+        keycloak.onAuthRefreshSuccess = () => {
+          config.onEvent?.('onAuthRefreshSuccess');
+          if (config.useTokenClaims && keycloak.tokenParsed) {
+            setUser(extractUserFromToken(keycloak.tokenParsed as Record<string, unknown>));
+          }
+        };
+
+        keycloak.onAuthSuccess = () => config.onEvent?.('onAuthSuccess');
+        keycloak.onAuthError = (err) => config.onEvent?.('onAuthError', err);
+        keycloak.onReady = () => config.onEvent?.('onReady');
+
+        // ----- Initialization --------------------------------------------
         const silentCheckSso = config.silentCheckSso !== false;
         const auth = await keycloak.init({
           onLoad: 'check-sso',
           pkceMethod: 'S256',
           checkLoginIframe: false,
+          silentCheckSsoFallback: config.silentCheckSsoFallback ?? true,
           ...(silentCheckSso
             ? { silentCheckSsoRedirectUri: `${globalThis.location.origin}/silent-check-sso.html` }
             : {}),
@@ -64,19 +140,20 @@ export function useKeycloakInit(config: KeycloakCoreConfig): KeycloakCoreResult 
         setAuthenticated(auth);
 
         if (auth) {
-          refreshInterval = setInterval(() => {
-            keycloak
-              .updateToken(70)
-              .catch(() => {
-                // Token refresh failed — app will handle re-login
-              });
-          }, 60_000);
+          refreshInterval = startTokenRefresh(keycloak);
 
-          try {
-            const userInfo = await keycloak.loadUserInfo();
-            setUser(userInfo as KeycloakUserInfo);
-          } catch {
-            // User info load failed — non-fatal
+          // ----- User info loading (Story #3) ----------------------------
+          if (config.useTokenClaims) {
+            if (keycloak.tokenParsed) {
+              setUser(extractUserFromToken(keycloak.tokenParsed as Record<string, unknown>));
+            }
+          } else {
+            try {
+              const userInfo = await keycloak.loadUserInfo();
+              setUser(userInfo as KeycloakUserInfo);
+            } catch {
+              // User info load failed — non-fatal
+            }
           }
 
           setTokenGetter(async (): Promise<string | undefined> => {
@@ -103,14 +180,35 @@ export function useKeycloakInit(config: KeycloakCoreConfig): KeycloakCoreResult 
     return () => {
       if (refreshInterval) clearInterval(refreshInterval);
     };
-  }, [config.url, config.realm, config.clientId, config.silentCheckSso]);
+  }, [config.url, config.realm, config.clientId, config.silentCheckSso,
+    config.silentCheckSsoFallback, config.useTokenClaims,
+    config.onTokenExpired, config.onAuthRefreshError, config.onAuthLogout, config.onEvent]);
 
-  const login = React.useCallback(async () => {
-    await keycloakRef.current?.login();
+  // ----- Actions (Story #4) ------------------------------------------------
+  const login = React.useCallback(async (options?: LoginOptions) => {
+    await keycloakRef.current?.login(options);
   }, []);
 
-  const logout = React.useCallback(async () => {
-    await keycloakRef.current?.logout();
+  const logout = React.useCallback(async (options?: LogoutOptions) => {
+    await keycloakRef.current?.logout(options);
+  }, []);
+
+  const register = React.useCallback(async (options?: Omit<LoginOptions, 'action'>) => {
+    await keycloakRef.current?.register(options);
+  }, []);
+
+  // ----- Role checking (Story #5) ------------------------------------------
+  const hasRealmRole = React.useCallback((role: string): boolean => {
+    return keycloakRef.current?.hasRealmRole(role) ?? false;
+  }, []);
+
+  const hasResourceRole = React.useCallback((role: string, resource?: string): boolean => {
+    return keycloakRef.current?.hasResourceRole(role, resource) ?? false;
+  }, []);
+
+  // ----- Token state (Story #6) --------------------------------------------
+  const isTokenExpired = React.useCallback((minValidity?: number): boolean => {
+    return keycloakRef.current?.isTokenExpired(minValidity ?? 0) ?? true;
   }, []);
 
   return {
@@ -121,5 +219,10 @@ export function useKeycloakInit(config: KeycloakCoreConfig): KeycloakCoreResult 
     user,
     login,
     logout,
+    register,
+    hasRealmRole,
+    hasResourceRole,
+    isTokenExpired,
+    tokenParsed: keycloakRef.current?.tokenParsed as Record<string, unknown> | undefined,
   };
 }

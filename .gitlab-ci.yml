@@ -1,3 +1,16 @@
+# =============================================================================
+# GitLab CI/CD - Granit Front
+# =============================================================================
+# Pipeline : quality -> gitlab-security -> test -> analysis
+#
+# Variables requises (Settings > CI/CD > Variables) :
+#   Aucune — les packages sont consommés via link: en local
+#
+# Variables optionnelles :
+#   SONAR_HOST_URL  : URL du serveur SonarQube (ex: https://sonar.digitaldynamics.be)
+#   SONAR_TOKEN     : Token d'authentification SonarQube (masked)
+# =============================================================================
+
 include:
   - template: Security/Secret-Detection.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
@@ -16,11 +29,18 @@ variables:
 
 stages:
   - quality
+  - gitlab-security
   - test
   - analysis
 
+# ---------------------------------------------------------------------------
+# HIDDEN JOBS
+# ---------------------------------------------------------------------------
+
 .node_base:
   image: node:24-bookworm-slim
+  tags:
+    - docker
   before_script:
     - corepack enable
     - corepack prepare pnpm@latest --activate
@@ -33,7 +53,9 @@ stages:
     paths:
       - .pnpm-store/
 
-# ── Quality stage ─────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
+# QUALITY
+# ---------------------------------------------------------------------------
 
 lint:
   stage: quality
@@ -47,24 +69,27 @@ typecheck:
   script:
     - pnpm tsc
 
+# ---------------------------------------------------------------------------
+# SECURITY
+# ---------------------------------------------------------------------------
+
 secret_detection:
-  stage: quality
-  inherit:
-    variables: false
-  allow_failure: true
+  stage: gitlab-security
+  before_script: []
+  allow_failure: false
 
 sast:
-  stage: quality
-  inherit:
-    variables: false
+  stage: gitlab-security
+  before_script: []
 
 semgrep-sast:
-  stage: quality
-  inherit:
-    variables: false
-  allow_failure: true
+  stage: gitlab-security
+  before_script: []
+  allow_failure: false
 
-# ── Test stage ────────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
+# TEST
+# ---------------------------------------------------------------------------
 
 test:
   stage: test
@@ -81,7 +106,26 @@ test:
       - coverage/
     expire_in: 1 week
 
-# ── Analysis stage ────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
+# ANALYSIS
+# ---------------------------------------------------------------------------
+
+audit:npm:
+  stage: analysis
+  extends: .node_base
+  script:
+    - pnpm audit --audit-level moderate 2>&1 | tee audit-report.txt
+    - '! grep -qE "^[0-9]+ (moderate|high|critical)" audit-report.txt'
+  artifacts:
+    when: always
+    paths:
+      - audit-report.txt
+    expire_in: 1 week
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'develop'
+    - if: $CI_COMMIT_BRANCH == 'main'
+  allow_failure: true
 
 sonarqube:
   stage: analysis
@@ -101,7 +145,6 @@ sonarqube:
       -Dsonar.qualitygate.wait=true
   allow_failure: true
   rules:
-    - if: $CI_COMMIT_BRANCH == 'develop'
-    - if: $CI_COMMIT_BRANCH == 'main'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'develop'
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'main'
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $SONAR_HOST_URL && $SONAR_TOKEN
+    - if: $CI_COMMIT_BRANCH == 'develop' && $SONAR_HOST_URL && $SONAR_TOKEN
+    - if: $CI_COMMIT_BRANCH == 'main' && $SONAR_HOST_URL && $SONAR_TOKEN

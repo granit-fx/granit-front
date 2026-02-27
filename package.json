@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "lint": "eslint 'packages/@granit/*/src' --max-warnings 0",
+    "lint": "eslint 'packages/@granit/*/src/**/*.{ts,tsx}' --max-warnings 0",
     "tsc": "pnpm -r exec -- tsc --noEmit",
     "test": "vitest",
     "test:coverage": "vitest run --coverage"

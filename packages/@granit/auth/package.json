@@ -7,6 +7,7 @@
     ".": "./src/index.ts"
   },
   "peerDependencies": {
+    "@granit/api-client": "workspace:*",
     "@granit/types": "workspace:*",
     "keycloak-js": "*",
     "react": "^19.0.0"

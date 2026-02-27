@@ -1,9 +1,9 @@
-import * as React from 'react';
-
 import { renderHook } from '@testing-library/react';
+import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
 import { createAuthContext } from '../use-auth-context.ts';
+
 import type { BaseAuthContextType } from '../types.ts';
 
 interface TestAuthContextType extends BaseAuthContextType {
