@@ -63,7 +63,9 @@ vi.mock('@opentelemetry/semantic-conventions', () => ({
 }));
 
 vi.mock('@opentelemetry/context-zone', () => ({
-  ZoneContextManager: class {},
+  ZoneContextManager: class {
+    _noop = true;
+  },
 }));
 
 vi.mock('@opentelemetry/instrumentation-fetch', () => ({

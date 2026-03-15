@@ -4,6 +4,11 @@
 
 # granit-front
 
+[![CI](https://github.com/granit-fx/granit-front/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/granit-fx/granit-front/actions/workflows/ci.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=granit-fx_granit-front&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=granit-fx_granit-front)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=granit-fx_granit-front&metric=coverage)](https://sonarcloud.io/summary/new_code?id=granit-fx_granit-front)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/granit-fx/granit-front/blob/main/LICENSE)
+
 Shared TypeScript/React framework — JavaScript/TypeScript counterpart of `granit-dotnet`.
 
 Provides common building blocks for Digital Dynamics front-end applications: logger,

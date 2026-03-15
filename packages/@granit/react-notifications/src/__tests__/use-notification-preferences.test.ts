@@ -237,7 +237,7 @@ describe('useNotificationPreferences', () => {
 
     // Start the toggle but don't await — we'll unmount during the save
     act(() => {
-      void result.current.toggleChannel('AppointmentReminder', 'email', false);
+      result.current.toggleChannel('AppointmentReminder', 'email', false);
     });
 
     unmount();
@@ -267,7 +267,7 @@ describe('useNotificationPreferences', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     act(() => {
-      void result.current.toggleChannel('AppointmentReminder', 'email', false);
+      result.current.toggleChannel('AppointmentReminder', 'email', false);
     });
 
     unmount();

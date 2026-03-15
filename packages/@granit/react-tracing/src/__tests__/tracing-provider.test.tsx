@@ -35,14 +35,14 @@ vi.mock('@opentelemetry/sdk-trace-web', () => {
   return {
     WebTracerProvider: MockWebTracerProvider,
     BatchSpanProcessor: class {
-      /* empty mock */
+      _noop = true;
     },
   };
 });
 
 vi.mock('@opentelemetry/exporter-trace-otlp-http', () => ({
   OTLPTraceExporter: class {
-    /* empty mock */
+    _noop = true;
   },
 }));
 
@@ -57,7 +57,7 @@ vi.mock('@opentelemetry/semantic-conventions', () => ({
 
 vi.mock('@opentelemetry/context-zone', () => ({
   ZoneContextManager: class {
-    /* empty mock */
+    _noop = true;
   },
 }));
 
