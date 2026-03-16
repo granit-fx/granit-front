@@ -50,7 +50,7 @@
     "lint-staged": "^16.4.0",
     "lucide-react": "^0.577.0",
     "markdownlint-cli2": "^0.21.0",
-    "msw": "^2.12.10",
+    "msw": "^2.12.11",
     "prettier": "^3.8.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
