@@ -45,7 +45,7 @@
     "eslint-plugin-import-x": "^4.16.2",
     "husky": "^9.1.7",
     "i18next": "^25.8.18",
-    "jsdom": "^29.0.0",
+    "jsdom": "^29.0.1",
     "keycloak-js": "^26.2.3",
     "lint-staged": "^16.4.0",
     "lucide-react": "^0.577.0",
