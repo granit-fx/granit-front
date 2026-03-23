@@ -20,6 +20,71 @@ updates:
           - "vitest"
           - "@vitest/*"
           - "@testing-library/*"
+          - "jsdom"
+          - "msw"
+      linting:
+        patterns:
+          - "eslint"
+          - "eslint-*"
+          - "@eslint/*"
+          - "markdownlint-cli2"
+          - "typescript-eslint"
+          - "@typescript-eslint/*"
+      tailwind:
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/*"
+      i18n:
+        patterns:
+          - "i18next"
+          - "react-i18next"
+          - "i18next-*"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+          - "react-hook-form"
+          - "react-router"
+          - "react-router-dom"
+      build:
+        patterns:
+          - "tsup"
+          - "typescript"
+      minor-and-patch:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+        exclude-patterns:
+          - "@granit/*"
+          - "@tanstack/*"
+          - "vitest"
+          - "@vitest/*"
+          - "@testing-library/*"
+          - "jsdom"
+          - "msw"
+          - "eslint"
+          - "eslint-*"
+          - "@eslint/*"
+          - "markdownlint-cli2"
+          - "typescript-eslint"
+          - "@typescript-eslint/*"
+          - "tailwindcss"
+          - "@tailwindcss/*"
+          - "i18next"
+          - "react-i18next"
+          - "i18next-*"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+          - "react-hook-form"
+          - "react-router"
+          - "react-router-dom"
+          - "tsup"
+          - "typescript"
 
   - package-ecosystem: github-actions
     directory: /
