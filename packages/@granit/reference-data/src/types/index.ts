@@ -1,3 +1,5 @@
+import type { PaginationParams } from '@granit/querying';
+
 /** The 14 multilingual labels supported by Granit reference data. */
 export interface ReferenceDataLabels {
   readonly labelEn: string;
@@ -77,7 +79,7 @@ export interface ReferenceDataUpdateRequest extends Partial<ReferenceDataLabels>
  * Query parameters for listing reference data entries.
  * Mirrors Granit.ReferenceData.Endpoints.Dtos.ReferenceDataQueryParameters (.NET).
  */
-export interface ReferenceDataQuery {
+export interface ReferenceDataQuery extends PaginationParams {
   /** When true, only active entries are returned. Default: true. */
   readonly activeOnly?: boolean;
   /** Free-text search on code and labels. */
@@ -86,8 +88,4 @@ export interface ReferenceDataQuery {
   readonly sortBy?: string;
   /** Sort in descending order. Default: false. */
   readonly descending?: boolean;
-  /** One-based page number. Default: 1. */
-  readonly page?: number;
-  /** Items per page. Default: 20. */
-  readonly pageSize?: number;
 }

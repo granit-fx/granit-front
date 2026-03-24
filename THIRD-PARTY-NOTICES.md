@@ -4,7 +4,7 @@ This file lists the third-party libraries used by the **granit-front** project
 along with their respective licenses. It is updated whenever an external
 dependency is added or modified.
 
-Last updated: 2026-03-17
+Last updated: 2026-03-24
 
 ---
 
@@ -12,9 +12,8 @@ Last updated: 2026-03-17
 
 | License      | Package count |
 | ------------ | ------------- |
-| MIT          | 37            |
+| MIT          | 34            |
 | Apache-2.0   | 13            |
-| ISC          | 1             |
 | BSD-3-Clause | 1             |
 
 ---
@@ -36,23 +35,21 @@ Last updated: 2026-03-17
 | @microsoft/fetch-event-source   | 2.0.1   | Copyright (c) Microsoft Corporation        |
 | @microsoft/signalr              | 10.0.0  | Copyright (c) .NET Foundation              |
 | @tailwindcss/vite               | 4.2.1   | Copyright (c) Tailwind Labs, Inc.          |
-| @tanstack/react-query           | 5.90.21 | Copyright (c) Tanner Linsley               |
-| @tanstack/react-table           | 8.21.3  | Copyright (c) Tanner Linsley               |
+| @tanstack/react-query           | 5.95.2  | Copyright (c) Tanner Linsley               |
 | @tanstack/react-virtual         | 3.13.23 | Copyright (c) Tanner Linsley               |
 | @testing-library/jest-dom       | 6.9.1   | Copyright (c) Testing Library Contributors |
 | @testing-library/react          | 16.3.2  | Copyright (c) Testing Library Contributors |
 | @testing-library/user-event     | 14.6.1  | Copyright (c) Testing Library Contributors |
 | @types/react                    | 19.2.14 | DefinitelyTyped Contributors               |
-| @vitejs/plugin-react            | 5.2.0   | Copyright (c) Evan You                     |
-| @vitest/coverage-v8             | 4.1.0   | Vitest Contributors                        |
+| @vitejs/plugin-react            | 6.0.1   | Copyright (c) Evan You                     |
+| @vitest/coverage-v8             | 4.1.1   | Vitest Contributors                        |
 | axios                           | 1.13.6  | Copyright (c) Matt Zabriskie               |
 | clsx                            | 2.1.1   | Copyright (c) Luke Edwards                 |
-| cmdk                            | 1.1.1   | Copyright (c) Paco Coursey                 |
 | date-fns                        | 4.1.0   | Copyright (c) Sasha Koss                   |
 | eslint                          | 10.0.3  | OpenJS Foundation                          |
 | eslint-plugin-import-x          | 4.16.2  | eslint-plugin-import-x Contributors        |
 | husky                           | 9.1.7   | Copyright (c) typicode                     |
-| i18next                         | 25.8.18 | Copyright (c) i18next Contributors         |
+| i18next                         | 25.10.9 | Copyright (c) i18next Contributors         |
 | jsdom                           | 29.0.0  | Copyright (c) jsdom Contributors           |
 | lint-staged                     | 16.4.0  | Copyright (c) Andrey Okonetchnikov         |
 | markdownlint-cli2               | 0.21.0  | Copyright (c) David Anson                  |
@@ -60,12 +57,12 @@ Last updated: 2026-03-17
 | prettier                        | 3.8.1   | Copyright (c) James Long                   |
 | react                           | 19.2.4  | Copyright (c) Meta Platforms, Inc.         |
 | react-dom                       | 19.2.4  | Copyright (c) Meta Platforms, Inc.         |
-| react-hook-form                 | 7.71.2  | Copyright (c) react-hook-form Contributors |
-| react-i18next                   | 16.5.8  | Copyright (c) i18next Contributors         |
+| react-hook-form                 | 7.72.0  | Copyright (c) react-hook-form Contributors |
+| react-i18next                   | 16.6.6  | Copyright (c) i18next Contributors         |
 | tailwind-merge                  | 3.5.0   | Copyright (c) Dany Castillo                |
 | tsup                            | 8.5.1   | Copyright (c) EGOIST                       |
-| typescript-eslint               | 8.57.1  | typescript-eslint Contributors             |
-| vitest                          | 4.1.0   | Vitest Contributors                        |
+| typescript-eslint               | 8.57.2  | typescript-eslint Contributors             |
+| vitest                          | 4.1.1   | Vitest Contributors                        |
 
 ### Apache-2.0
 
@@ -83,13 +80,7 @@ Last updated: 2026-03-17
 | @opentelemetry/semantic-conventions             | 1.40.0  | Copyright The OpenTelemetry Authors |
 | keycloak-js                                     | 26.2.3  | Copyright Red Hat, Inc.             |
 | tailwindcss                                     | 4.2.1   | Copyright (c) Tailwind Labs, Inc.   |
-| typescript                                      | 5.9.3   | Copyright (c) Microsoft Corporation |
-
-### ISC
-
-| Package      | Version | Copyright                         |
-| ------------ | ------- | --------------------------------- |
-| lucide-react | 0.577.0 | Copyright (c) Lucide Contributors |
+| typescript                                      | 6.0.2   | Copyright (c) Microsoft Corporation |
 
 ### BSD-3-Clause
 
