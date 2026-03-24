@@ -104,8 +104,8 @@ export function parseQueryRequest(search: string): QueryRequest {
     if (match) {
       params.filters ??= [];
       params.filters.push({
-        field: match[1],
-        operator: match[2],
+        field: match[1]!,
+        operator: match[2]!,
         value,
       });
     }
@@ -128,7 +128,7 @@ export function parseQueryRequest(search: string): QueryRequest {
     const match = presetRegex.exec(key);
     if (match) {
       params.presets ??= {};
-      params.presets[match[1]] = value.split(',');
+      params.presets[match[1]!] = value.split(',');
     }
   }
 

@@ -132,7 +132,7 @@ export function extractConstraints(spec: OpenApiSpec, options?: ExtractOptions):
   const schemaNames = filterSchemaNames(Object.keys(schemas), options);
 
   for (const name of schemaNames) {
-    const schema = schemas[name];
+    const schema = schemas[name]!;
     const { properties, required } = mergeAllOf(schema, schemas, 0);
     const requiredSet = new Set(required);
 

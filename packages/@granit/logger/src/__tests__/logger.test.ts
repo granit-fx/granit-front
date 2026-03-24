@@ -97,28 +97,28 @@ describe('createLogger', () => {
     logger.debug('no context');
     // format + 3 styles = 4 args total, no trailing empty string
     expect(console.log).toHaveBeenCalledTimes(1);
-    const args = vi.mocked(console.log).mock.calls[0];
+    const args = vi.mocked(console.log).mock.calls[0]!;
     expect(args).toHaveLength(4);
   });
 
   it('should not pass extra args in info when context is omitted', () => {
     const logger = createLogger('[Test]');
     logger.info('no context');
-    const args = vi.mocked(console.info).mock.calls[0];
+    const args = vi.mocked(console.info).mock.calls[0]!;
     expect(args).toHaveLength(4);
   });
 
   it('should not pass extra args in warn when context is omitted', () => {
     const logger = createLogger('[Test]');
     logger.warn('no context');
-    const args = vi.mocked(console.warn).mock.calls[0];
+    const args = vi.mocked(console.warn).mock.calls[0]!;
     expect(args).toHaveLength(4);
   });
 
   it('should not pass extra args in error when no error or context', () => {
     const logger = createLogger('[Test]');
     logger.error('bare error');
-    const args = vi.mocked(console.error).mock.calls[0];
+    const args = vi.mocked(console.error).mock.calls[0]!;
     expect(args).toHaveLength(4);
   });
 
@@ -126,7 +126,7 @@ describe('createLogger', () => {
     const logger = createLogger('[Test]');
     const ctx = { requestId: '123' };
     logger.debug('with context', ctx);
-    const args = vi.mocked(console.log).mock.calls[0];
+    const args = vi.mocked(console.log).mock.calls[0]!;
     expect(args).toHaveLength(5);
     expect(args[4]).toBe(ctx);
   });
@@ -135,7 +135,7 @@ describe('createLogger', () => {
     const logger = createLogger('[Test]');
     const ctx = { userId: 'u-42' };
     logger.info('with context', ctx);
-    const args = vi.mocked(console.info).mock.calls[0];
+    const args = vi.mocked(console.info).mock.calls[0]!;
     expect(args).toHaveLength(5);
     expect(args[4]).toBe(ctx);
   });
@@ -144,7 +144,7 @@ describe('createLogger', () => {
     const logger = createLogger('[MyApp]');
     const ctx = { userId: 'abc' };
     logger.warn('with context', ctx);
-    const args = vi.mocked(console.warn).mock.calls[0];
+    const args = vi.mocked(console.warn).mock.calls[0]!;
     expect(args).toHaveLength(5);
     expect(args[4]).toBe(ctx);
   });
@@ -154,7 +154,7 @@ describe('createLogger', () => {
     const err = new Error('boom');
     const ctx = { traceId: 'abc' };
     logger.error('with context', err, ctx);
-    const args = vi.mocked(console.error).mock.calls[0];
+    const args = vi.mocked(console.error).mock.calls[0]!;
     expect(args).toHaveLength(6);
     expect(args[4]).toBe(err);
     expect(args[5]).toBe(ctx);
@@ -164,7 +164,7 @@ describe('createLogger', () => {
     const logger = createLogger('[Test]');
     const err = new Error('test');
     logger.error('failure', err);
-    const args = vi.mocked(console.error).mock.calls[0];
+    const args = vi.mocked(console.error).mock.calls[0]!;
     expect(args).toHaveLength(5);
     expect(args[4]).toBe(err);
   });
@@ -204,7 +204,7 @@ describe('createLogger with level option', () => {
     logger.warn('w');
     logger.error('e', new Error('test'));
     expect(transport.entries).toHaveLength(1);
-    expect(transport.entries[0].level).toBe('ERROR');
+    expect(transport.entries[0]!.level).toBe('ERROR');
   });
 
   it('should suppress debug and info at level WARN', () => {
@@ -215,8 +215,8 @@ describe('createLogger with level option', () => {
     logger.warn('w');
     logger.error('e');
     expect(transport.entries).toHaveLength(2);
-    expect(transport.entries[0].level).toBe('WARN');
-    expect(transport.entries[1].level).toBe('ERROR');
+    expect(transport.entries[0]!.level).toBe('WARN');
+    expect(transport.entries[1]!.level).toBe('ERROR');
   });
 
   it('should suppress debug only at level INFO', () => {
@@ -227,7 +227,7 @@ describe('createLogger with level option', () => {
     logger.warn('w');
     logger.error('e');
     expect(transport.entries).toHaveLength(3);
-    expect(transport.entries[0].level).toBe('INFO');
+    expect(transport.entries[0]!.level).toBe('INFO');
   });
 
   it('should allow all messages at level DEBUG', () => {
@@ -251,13 +251,13 @@ describe('createLogger with custom transports', () => {
     const logger = createLogger('[App]', { transports: [transport] });
     logger.info('hello', { userId: '42' });
     expect(transport.entries).toHaveLength(1);
-    expect(transport.entries[0]).toMatchObject({
+    expect(transport.entries[0]!).toMatchObject({
       level: 'INFO',
       prefix: '[App]',
       message: 'hello',
       context: { userId: '42' },
     });
-    expect(transport.entries[0].timestamp).toBeGreaterThan(0);
+    expect(transport.entries[0]!.timestamp).toBeGreaterThan(0);
   });
 
   it('should dispatch to multiple transports', () => {
@@ -274,7 +274,7 @@ describe('createLogger with custom transports', () => {
     const logger = createLogger('[App]', { transports: [transport] });
     const err = new Error('crash');
     logger.error('oops', err, { traceId: 'abc' });
-    expect(transport.entries[0]).toMatchObject({
+    expect(transport.entries[0]!).toMatchObject({
       level: 'ERROR',
       message: 'oops',
       error: err,
@@ -292,8 +292,8 @@ describe('Logger.child', () => {
     const transport = createMockTransport();
     const logger = createLogger('[Auth]', { transports: [transport] });
     logger.child('[Token]').warn('expired');
-    expect(transport.entries[0].prefix).toBe('[Auth] [Token]');
-    expect(transport.entries[0].message).toBe('expired');
+    expect(transport.entries[0]!.prefix).toBe('[Auth] [Token]');
+    expect(transport.entries[0]!.message).toBe('expired');
   });
 
   it('should inherit parent level', () => {
@@ -304,14 +304,14 @@ describe('Logger.child', () => {
     child.warn('w');
     child.error('e');
     expect(transport.entries).toHaveLength(1);
-    expect(transport.entries[0].level).toBe('ERROR');
+    expect(transport.entries[0]!.level).toBe('ERROR');
   });
 
   it('should chain child prefixes', () => {
     const transport = createMockTransport();
     const logger = createLogger('[A]', { transports: [transport] });
     logger.child('[B]').child('[C]').info('deep');
-    expect(transport.entries[0].prefix).toBe('[A] [B] [C]');
+    expect(transport.entries[0]!.prefix).toBe('[A] [B] [C]');
   });
 
   it('should keep child independent from parent', () => {
@@ -320,8 +320,8 @@ describe('Logger.child', () => {
     const child = parent.child('[Child]');
     parent.info('parent msg');
     child.info('child msg');
-    expect(transport.entries[0].prefix).toBe('[Parent]');
-    expect(transport.entries[1].prefix).toBe('[Parent] [Child]');
+    expect(transport.entries[0]!.prefix).toBe('[Parent]');
+    expect(transport.entries[1]!.prefix).toBe('[Parent] [Child]');
   });
 });
 
@@ -410,7 +410,7 @@ describe('default level', () => {
     const logger = createLogger('[Dev]', { transports: [transport] });
     logger.debug('should pass in dev');
     expect(transport.entries).toHaveLength(1);
-    expect(transport.entries[0].level).toBe('DEBUG');
+    expect(transport.entries[0]!.level).toBe('DEBUG');
   });
 
   it('should expose production behavior when explicit level is WARN', () => {
@@ -422,7 +422,7 @@ describe('default level', () => {
     logger.warn('passes');
     logger.error('passes');
     expect(transport.entries).toHaveLength(2);
-    expect(transport.entries[0].level).toBe('WARN');
-    expect(transport.entries[1].level).toBe('ERROR');
+    expect(transport.entries[0]!.level).toBe('WARN');
+    expect(transport.entries[1]!.level).toBe('ERROR');
   });
 });

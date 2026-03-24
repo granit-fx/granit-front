@@ -167,7 +167,7 @@ export async function downloadCorrectionFile(
   if (contentDisposition) {
     const match = /filename\*?=(?:UTF-8''|"?)([^";]+)/i.exec(contentDisposition);
     if (match) {
-      fileName = decodeURIComponent(match[1].replaceAll('"', ''));
+      fileName = decodeURIComponent(match[1]!.replaceAll('"', ''));
     }
   }
 

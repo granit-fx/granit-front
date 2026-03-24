@@ -42,7 +42,7 @@ describe('useTimeline', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     expect(result.current.entries).toHaveLength(1);
-    expect(result.current.entries[0].body).toBe('Test comment');
+    expect(result.current.entries[0]!.body).toBe('Test comment');
     expect(result.current.totalCount).toBe(1);
     expect(result.current.hasMore).toBe(false);
   });
@@ -107,7 +107,7 @@ describe('useTimeline', () => {
     result.current.loadMore();
 
     await waitFor(() => expect(result.current.entries).toHaveLength(2));
-    expect(result.current.entries[1].body).toBe('Second');
+    expect(result.current.entries[1]!.body).toBe('Second');
     expect(result.current.hasMore).toBe(false);
   });
 
@@ -130,7 +130,7 @@ describe('useTimeline', () => {
     result.current.addOptimisticEntry(optimistic);
 
     await waitFor(() => expect(result.current.entries).toHaveLength(2));
-    expect(result.current.entries[0].id).toBe('e-new');
+    expect(result.current.entries[0]!.id).toBe('e-new');
     // totalCount reflects server state — optimistic additions don't change it
     expect(result.current.totalCount).toBe(1);
   });
@@ -153,7 +153,7 @@ describe('useTimeline', () => {
     result.current.removeOptimisticEntry('e-1');
 
     await waitFor(() => expect(result.current.entries).toHaveLength(1));
-    expect(result.current.entries[0].id).toBe('e-2');
+    expect(result.current.entries[0]!.id).toBe('e-2');
     // totalCount reflects server state — optimistic removals don't change it
     expect(result.current.totalCount).toBe(2);
   });

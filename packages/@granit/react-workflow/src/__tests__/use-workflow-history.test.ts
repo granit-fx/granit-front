@@ -41,8 +41,8 @@ describe('useWorkflowHistory', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     expect(result.current.history).toHaveLength(2);
-    expect(result.current.history[0].newState).toBe('PendingReview');
-    expect(result.current.history[1].transitionedBy).toBe('Dr. Marchand');
+    expect(result.current.history[0]!.newState).toBe('PendingReview');
+    expect(result.current.history[1]!.transitionedBy).toBe('Dr. Marchand');
   });
 
   it('should set error state on failure', async () => {

@@ -45,7 +45,7 @@ describe('useEntityActivityFeed', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     expect(result.current.entries).toHaveLength(1);
-    expect(result.current.entries[0].title).toBe('Consultation ajoutée');
+    expect(result.current.entries[0]!.title).toBe('Consultation ajoutée');
   });
 
   it('should handle fetch errors', async () => {
@@ -69,7 +69,7 @@ describe('useEntityActivityFeed', () => {
 
   it('should report hasMore correctly', async () => {
     const page: ActivityFeedPage = {
-      items: [MOCK_FEED.items[0]],
+      items: [MOCK_FEED.items[0]!],
       totalCount: 25,
       nextCursor: null,
     };
@@ -93,11 +93,11 @@ describe('useEntityActivityFeed', () => {
 
   it('should load more entries when loadMore is called', async () => {
     const page1: ActivityFeedPage = {
-      items: [MOCK_FEED.items[0]],
+      items: [MOCK_FEED.items[0]!],
       totalCount: 2,
       nextCursor: null,
     };
-    const entry2 = { ...MOCK_FEED.items[0], id: 'a-2', title: 'Deuxième entrée' };
+    const entry2 = { ...MOCK_FEED.items[0]!, id: 'a-2', title: 'Deuxième entrée' };
     const page2: ActivityFeedPage = {
       items: [entry2],
       totalCount: 2,
@@ -128,7 +128,7 @@ describe('useEntityActivityFeed', () => {
 
     await waitFor(() => expect(result.current.loadingMore).toBe(false));
     expect(result.current.entries).toHaveLength(2);
-    expect(result.current.entries[1].title).toBe('Deuxième entrée');
+    expect(result.current.entries[1]!.title).toBe('Deuxième entrée');
   });
 
   it('should use default pageSize when none is specified', async () => {
@@ -169,7 +169,7 @@ describe('useEntityActivityFeed', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     const updatedFeed: ActivityFeedPage = {
-      items: [{ ...MOCK_FEED.items[0], title: 'Mis à jour' }],
+      items: [{ ...MOCK_FEED.items[0]!, title: 'Mis à jour' }],
       totalCount: 1,
       nextCursor: null,
     };
@@ -180,7 +180,7 @@ describe('useEntityActivityFeed', () => {
     });
 
     await waitFor(() => expect(result.current.loading).toBe(false));
-    expect(result.current.entries[0].title).toBe('Mis à jour');
+    expect(result.current.entries[0]!.title).toBe('Mis à jour');
   });
 
   it('should use default basePath when config.basePath is undefined', async () => {
@@ -203,7 +203,7 @@ describe('useEntityActivityFeed', () => {
 
   it('should report hasMore as false when all entries are loaded', async () => {
     const page: ActivityFeedPage = {
-      items: [MOCK_FEED.items[0]],
+      items: [MOCK_FEED.items[0]!],
       totalCount: 1,
       nextCursor: null,
     };

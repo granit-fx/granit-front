@@ -105,7 +105,7 @@ describe('useList', () => {
       params: undefined,
     });
     expect(result.current.data?.items).toHaveLength(1);
-    expect(result.current.data?.items[0].code).toBe('BE');
+    expect(result.current.data?.items[0]!.code).toBe('BE');
   });
 
   it('passes query params', async () => {
@@ -259,7 +259,7 @@ describe('useChildren', () => {
 
     expect(client.get).toHaveBeenCalledWith('/api/v1/reference-data/test-entity/BE/children');
     expect(result.current.data).toHaveLength(1);
-    expect(result.current.data?.[0].parentCode).toBe('BE');
+    expect(result.current.data?.[0]!.parentCode).toBe('BE');
   });
 
   it('uses custom basePath', async () => {

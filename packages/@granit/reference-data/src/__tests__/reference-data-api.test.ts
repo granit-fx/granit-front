@@ -169,7 +169,7 @@ describe('fetchReferenceDataChildren', () => {
 
     expect(client.get).toHaveBeenCalledWith(`${BASE_PATH}/BE/children`);
     expect(result).toHaveLength(1);
-    expect(result[0].parentCode).toBe('BE');
+    expect(result[0]!.parentCode).toBe('BE');
   });
 
   it('encodes special characters in parent code', async () => {

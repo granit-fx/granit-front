@@ -204,7 +204,7 @@ describe('createSseTransport', () => {
 
     try {
       await customFetch('/api/v1/notifications/stream', {});
-      const calledInit = vi.mocked(globalThis.fetch).mock.calls[0][1]!;
+      const calledInit = vi.mocked(globalThis.fetch).mock.calls[0]![1]!;
       const headers = new Headers(calledInit.headers);
       expect(headers.get('Authorization')).toBe('Bearer my-token');
     } finally {
@@ -232,7 +232,7 @@ describe('createSseTransport', () => {
 
     try {
       await customFetch('/api/v1/notifications/stream', {});
-      const calledInit = vi.mocked(globalThis.fetch).mock.calls[0][1]!;
+      const calledInit = vi.mocked(globalThis.fetch).mock.calls[0]![1]!;
       const headers = new Headers(calledInit.headers);
       expect(headers.get('Authorization')).toBeNull();
     } finally {

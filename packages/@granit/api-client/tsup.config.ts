@@ -1,10 +1,7 @@
-import { defineConfig } from 'tsup'
+import { createTsupConfig } from '../../../tsup.preset';
 
-export default defineConfig({
+export default createTsupConfig({
   entry: ['src/index.ts', 'src/test-utils.ts'],
-  format: ['esm'],
-  dts: { tsconfig: '../../../tsconfig.build.json' },
   splitting: false,
-  clean: true,
   external: [/^@granit\//, 'vitest'],
-})
+});

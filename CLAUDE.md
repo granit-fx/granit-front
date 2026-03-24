@@ -28,6 +28,10 @@
 | `@granit/cookies`                         | Cookie consent abstraction: types (`CookieConsentProvider` interface, `CookieCategory`, `ConsentState`)                                                                                                                                       |
 | `@granit/react-cookies`                   | React bindings for `@granit/cookies`: `CookieConsentProvider`, `useCookieConsent`                                                                                                                                                             |
 | `@granit/cookies-klaro`                   | Klaro CMP adapter: `createKlaroCookieConsentProvider` factory                                                                                                                                                                                 |
+| `@granit/privacy`                         | GDPR privacy types and API: data export, deletion requests, legal agreement management — mirrors `Granit.Privacy` .NET contract                                                                                                               |
+| `@granit/react-privacy`                   | React hooks for `@granit/privacy`: `PrivacyProvider`, `usePrivacyExports`, `useRequestExport`, `useDeletionRequests`, `useRequestDeletion`, `useAgreementStatuses`, `useAcceptAgreement`                                                      |
+| `@granit/bff`                             | BFF authentication types, CSRF token manager (`CsrfManager`), session API — mirrors `Granit.Bff` .NET contract                                                                                                                                |
+| `@granit/react-bff`                       | React bindings for `@granit/bff`: `BffProvider`, `useBffAuth`, `useBffCsrf`, `useBffFetch`, `useBffSessions`, `BffGuard`                                                                                                                      |
 | `@granit/workflow`                        | Workflow lifecycle: API functions, types mirroring `Granit.Workflow` .NET contract                                                                                                                                                            |
 | `@granit/react-workflow`                  | React bindings for `@granit/workflow`: `WorkflowProvider`, `useWorkflowStatus`, `useWorkflowTransition`, `useWorkflowHistory`                                                                                                                 |
 | `@granit/notifications`                   | Notification core: API functions, `NotificationTransport` interface, extensible `NotificationChannels` constants, types — no React                                                                                                            |
@@ -85,7 +89,7 @@
 
 ## Stack & versions
 
-TypeScript 5 (strict) | React 19 | Vitest 4 | ESLint 10 | pnpm workspace | Node 24
+TypeScript 6 (strict, ES2025) | React 19 | Vitest 4 | ESLint 10 | pnpm workspace | Node 24
 
 ## Commands
 
@@ -150,6 +154,10 @@ Full frontend conventions: `../granit-dotnet/docs/guide/conventions/frontend/`
   - `@granit/cookies` → _(no peer dependencies)_
   - `@granit/react-cookies` → `react`, `@granit/cookies`, `@granit/logger`
   - `@granit/cookies-klaro` → `klaro`, `@granit/cookies`
+  - `@granit/privacy` → `axios`
+  - `@granit/react-privacy` → `react`, `@tanstack/react-query`, `axios`, `@granit/privacy`
+  - `@granit/bff` → _(no peer dependencies)_
+  - `@granit/react-bff` → `react`, `@granit/bff`
   - `@granit/timeline` → `@granit/querying`, `axios`
   - `@granit/react-timeline` → `react`, `axios`, `@granit/logger`, `@granit/querying`, `@granit/react-querying`, `@granit/timeline`
   - `@granit/workflow` → `@granit/querying`, `axios`

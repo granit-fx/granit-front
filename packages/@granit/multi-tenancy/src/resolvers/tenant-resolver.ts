@@ -21,7 +21,7 @@ export interface TenantResolver {
  * Mirrors .NET Granit.MultiTenancy.Pipeline.TenantResolverPipeline.
  */
 export function resolveTenant(resolvers: readonly TenantResolver[]): TenantInfo | null {
-  const sorted = [...resolvers].sort((a, b) => a.order - b.order);
+  const sorted = resolvers.toSorted((a, b) => a.order - b.order);
   for (const resolver of sorted) {
     const result = resolver.resolve();
     if (result !== null) {

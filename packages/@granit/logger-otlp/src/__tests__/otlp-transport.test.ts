@@ -120,7 +120,7 @@ describe('createOtlpTransport', () => {
     transport.send(makeEntry({ level: 'WARN', context: { userId: '42' } }));
     await transport.flush!();
 
-    const body = JSON.parse(vi.mocked(fetch).mock.calls[0][1]!.body as string);
+    const body = JSON.parse(vi.mocked(fetch).mock.calls[0]![1]!.body as string);
     // Resource attributes
     const resourceAttrs = body.resourceLogs[0].resource.attributes;
     expect(resourceAttrs).toContainEqual({
@@ -156,7 +156,7 @@ describe('createOtlpTransport', () => {
     transport.send(makeEntry({ level: 'ERROR' }));
     await transport.flush!();
 
-    const body = JSON.parse(vi.mocked(fetch).mock.calls[0][1]!.body as string);
+    const body = JSON.parse(vi.mocked(fetch).mock.calls[0]![1]!.body as string);
     const records = body.resourceLogs[0].scopeLogs[0].logRecords;
     expect(records[0].severityNumber).toBe(5); // DEBUG
     expect(records[1].severityNumber).toBe(9); // INFO
@@ -173,7 +173,7 @@ describe('createOtlpTransport', () => {
     transport.send(makeEntry({ context: { userId: 'abc', requestId: '123' } }));
     await transport.flush!();
 
-    const body = JSON.parse(vi.mocked(fetch).mock.calls[0][1]!.body as string);
+    const body = JSON.parse(vi.mocked(fetch).mock.calls[0]![1]!.body as string);
     const attrs = body.resourceLogs[0].scopeLogs[0].logRecords[0].attributes;
     expect(attrs).toContainEqual({
       key: 'userId',
@@ -196,7 +196,7 @@ describe('createOtlpTransport', () => {
     transport.send(makeEntry({ level: 'ERROR', error }));
     await transport.flush!();
 
-    const body = JSON.parse(vi.mocked(fetch).mock.calls[0][1]!.body as string);
+    const body = JSON.parse(vi.mocked(fetch).mock.calls[0]![1]!.body as string);
     const attrs = body.resourceLogs[0].scopeLogs[0].logRecords[0].attributes;
     expect(attrs).toContainEqual({
       key: 'exception.type',
@@ -219,7 +219,7 @@ describe('createOtlpTransport', () => {
     transport.send(makeEntry());
     await transport.flush!();
 
-    const body = JSON.parse(vi.mocked(fetch).mock.calls[0][1]!.body as string);
+    const body = JSON.parse(vi.mocked(fetch).mock.calls[0]![1]!.body as string);
     const record = body.resourceLogs[0].scopeLogs[0].logRecords[0];
     expect(record.traceId).toBe('trace-abc');
     expect(record.spanId).toBe('span-def');
@@ -234,7 +234,7 @@ describe('createOtlpTransport', () => {
     transport.send(makeEntry());
     await transport.flush!();
 
-    const body = JSON.parse(vi.mocked(fetch).mock.calls[0][1]!.body as string);
+    const body = JSON.parse(vi.mocked(fetch).mock.calls[0]![1]!.body as string);
     const record = body.resourceLogs[0].scopeLogs[0].logRecords[0];
     expect(record.traceId).toBe('');
     expect(record.spanId).toBe('');
@@ -250,7 +250,7 @@ describe('createOtlpTransport', () => {
     transport.send(makeEntry());
     await transport.flush!();
 
-    const init = vi.mocked(fetch).mock.calls[0][1]!;
+    const init = vi.mocked(fetch).mock.calls[0]![1]!;
     const headers = init.headers as Record<string, string>;
     expect(headers['Content-Type']).toBe('application/json');
     expect(headers['X-Custom']).toBe('value');
@@ -265,7 +265,7 @@ describe('createOtlpTransport', () => {
     transport.send(makeEntry());
     await transport.flush!();
 
-    const init = vi.mocked(fetch).mock.calls[0][1]!;
+    const init = vi.mocked(fetch).mock.calls[0]![1]!;
     expect(init.keepalive).toBe(true);
   });
 

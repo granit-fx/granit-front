@@ -28,8 +28,8 @@ describe('useTransitions', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     expect(result.current.transitions).toHaveLength(2);
-    expect(result.current.transitions[0].name).toBe('Publier');
-    expect(result.current.transitions[1].requiresApproval).toBe(true);
+    expect(result.current.transitions[0]!.name).toBe('Publier');
+    expect(result.current.transitions[1]!.requiresApproval).toBe(true);
   });
 
   it('should set error state on failure', async () => {

@@ -43,7 +43,7 @@ describe('useNotifications', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     expect(result.current.notifications).toHaveLength(1);
-    expect(result.current.notifications[0].title).toBe('Nouveau message');
+    expect(result.current.notifications[0]!.title).toBe('Nouveau message');
     expect(result.current.totalCount).toBe(1);
   });
 
@@ -64,7 +64,7 @@ describe('useNotifications', () => {
       await result.current.markRead('n-1');
     });
 
-    expect(result.current.notifications[0].isRead).toBe(true);
+    expect(result.current.notifications[0]!.isRead).toBe(true);
   });
 
   it('should mark all as read', async () => {
@@ -156,7 +156,7 @@ describe('useNotifications', () => {
 
     await waitFor(() => expect(result.current.loadingMore).toBe(false));
     expect(result.current.notifications).toHaveLength(2);
-    expect(result.current.notifications[1].title).toBe('Deuxième notification');
+    expect(result.current.notifications[1]!.title).toBe('Deuxième notification');
   });
 
   it('should use custom pageSize option', async () => {
@@ -199,7 +199,7 @@ describe('useNotifications', () => {
     });
 
     await waitFor(() => expect(result.current.loading).toBe(false));
-    expect(result.current.notifications[0].title).toBe('Mis à jour');
+    expect(result.current.notifications[0]!.title).toBe('Mis à jour');
   });
 
   it('should use default basePath when config.basePath is undefined', async () => {
@@ -243,9 +243,9 @@ describe('useNotifications', () => {
       await result.current.markRead('n-1');
     });
 
-    expect(result.current.notifications[0].isRead).toBe(true);
-    expect(result.current.notifications[1].isRead).toBe(false);
-    expect(result.current.notifications[1].id).toBe('n-2');
+    expect(result.current.notifications[0]!.isRead).toBe(true);
+    expect(result.current.notifications[1]!.isRead).toBe(false);
+    expect(result.current.notifications[1]!.id).toBe('n-2');
   });
 
   it('should use default pageSize when no options are provided', async () => {

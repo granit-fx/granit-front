@@ -37,7 +37,7 @@ describe('useNotificationPreferences', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     expect(result.current.preferences).toHaveLength(2);
-    expect(result.current.preferences[0].notificationType).toBe('AppointmentReminder');
+    expect(result.current.preferences[0]!.notificationType).toBe('AppointmentReminder');
   });
 
   it('should update preference optimistically via toggleChannel', async () => {
@@ -45,7 +45,7 @@ describe('useNotificationPreferences', () => {
     vi.mocked(client.get).mockResolvedValue(axiosResponse(MOCK_PREFS));
 
     const updatedPref: NotificationPreference = {
-      ...MOCK_PREFS[0],
+      ...MOCK_PREFS[0]!,
       channels: { inApp: true, email: false, push: false },
     };
     vi.mocked(client.put).mockResolvedValue(axiosResponse(updatedPref));
@@ -60,7 +60,7 @@ describe('useNotificationPreferences', () => {
       await result.current.toggleChannel('AppointmentReminder', 'email', false);
     });
 
-    expect(result.current.preferences[0].channels.email).toBe(false);
+    expect(result.current.preferences[0]!.channels.email).toBe(false);
   });
 
   it('should roll back on toggle failure', async () => {
@@ -79,7 +79,7 @@ describe('useNotificationPreferences', () => {
     });
 
     // Should roll back to original value
-    expect(result.current.preferences[0].channels.email).toBe(true);
+    expect(result.current.preferences[0]!.channels.email).toBe(true);
     expect(result.current.error?.message).toBe('Save failed');
   });
 
@@ -148,7 +148,7 @@ describe('useNotificationPreferences', () => {
     });
 
     // Should roll back to original value
-    expect(result.current.preferences[0].channels.email).toBe(true);
+    expect(result.current.preferences[0]!.channels.email).toBe(true);
     expect(result.current.error).toBeInstanceOf(Error);
     expect(result.current.error?.message).toBe('42');
   });
@@ -164,7 +164,7 @@ describe('useNotificationPreferences', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     const updatedPrefs: NotificationPreference[] = [
-      { ...MOCK_PREFS[0], channels: { inApp: false, email: true, push: true } },
+      { ...MOCK_PREFS[0]!, channels: { inApp: false, email: true, push: true } },
     ];
     vi.mocked(client.get).mockResolvedValue(axiosResponse(updatedPrefs));
 
@@ -174,7 +174,7 @@ describe('useNotificationPreferences', () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false));
     expect(result.current.preferences).toHaveLength(1);
-    expect(result.current.preferences[0].channels.push).toBe(true);
+    expect(result.current.preferences[0]!.channels.push).toBe(true);
   });
 
   it('should not update state when unmounted during initial fetch', async () => {

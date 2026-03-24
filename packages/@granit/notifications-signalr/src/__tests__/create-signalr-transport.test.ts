@@ -144,15 +144,15 @@ describe('createSignalRTransport', () => {
 
     await transport.connect();
 
-    const reconnectingHandler = lastConnection.onreconnecting.mock.calls[0][0] as () => void;
+    const reconnectingHandler = lastConnection.onreconnecting.mock.calls[0]![0] as () => void;
     reconnectingHandler();
     expect(stateListener).toHaveBeenCalledWith('reconnecting');
 
-    const reconnectedHandler = lastConnection.onreconnected.mock.calls[0][0] as () => void;
+    const reconnectedHandler = lastConnection.onreconnected.mock.calls[0]![0] as () => void;
     reconnectedHandler();
     expect(stateListener).toHaveBeenCalledWith('connected');
 
-    const oncloseHandler = lastConnection.onclose.mock.calls[0][0] as () => void;
+    const oncloseHandler = lastConnection.onclose.mock.calls[0]![0] as () => void;
     oncloseHandler();
     expect(stateListener).toHaveBeenCalledWith('disconnected');
   });
@@ -209,7 +209,7 @@ describe('createSignalRTransport', () => {
     listener.mockClear();
     unsub();
 
-    const oncloseHandler = lastConnection.onclose.mock.calls[0][0] as () => void;
+    const oncloseHandler = lastConnection.onclose.mock.calls[0]![0] as () => void;
     oncloseHandler();
 
     expect(listener).not.toHaveBeenCalled();

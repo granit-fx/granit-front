@@ -58,8 +58,8 @@ describe('fetchMonitoringHealth', () => {
 
     const result = await fetchMonitoringHealth(client, BASE);
     expect(result.services).toHaveLength(2);
-    expect(result.services[0].status).toBe('healthy');
-    expect(result.services[1].status).toBe('degraded');
+    expect(result.services[0]!.status).toBe('healthy');
+    expect(result.services[1]!.status).toBe('degraded');
   });
 
   it('uses a custom basePath', async () => {

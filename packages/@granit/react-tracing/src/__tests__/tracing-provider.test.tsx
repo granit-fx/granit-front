@@ -144,7 +144,7 @@ describe('TracingProvider', () => {
   it('should not include serviceVersion when omitted', () => {
     renderHook(() => useTracer(), { wrapper: createWrapper() });
 
-    const callArgs = mockResourceFromAttributes.mock.calls[0][0] as Record<string, string>;
+    const callArgs = mockResourceFromAttributes.mock.calls[0]![0] as Record<string, string>;
     expect(callArgs).not.toHaveProperty('service.version');
   });
 

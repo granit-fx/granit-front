@@ -10,13 +10,13 @@ describe('useKeycloakTenantResolvers', () => {
     const { result } = renderHook(() => useKeycloakTenantResolvers({ tokenParsed }));
 
     expect(result.current).toHaveLength(1);
-    expect(result.current[0].resolve()).toEqual({ id: 'abc-123', name: 'Acme' });
+    expect(result.current[0]!.resolve()).toEqual({ id: 'abc-123', name: 'Acme' });
   });
 
   it('returns a resolver that resolves null when tokenParsed is undefined', () => {
     const { result } = renderHook(() => useKeycloakTenantResolvers({ tokenParsed: undefined }));
 
-    expect(result.current[0].resolve()).toBeNull();
+    expect(result.current[0]!.resolve()).toBeNull();
   });
 
   it('supports custom claim type', () => {
@@ -26,7 +26,7 @@ describe('useKeycloakTenantResolvers', () => {
       useKeycloakTenantResolvers({ tokenParsed, claimType: 'org_id' })
     );
 
-    expect(result.current[0].resolve()).toEqual({ id: 'org-789', name: undefined });
+    expect(result.current[0]!.resolve()).toEqual({ id: 'org-789', name: undefined });
   });
 
   it('memoizes resolvers for same tokenParsed reference', () => {

@@ -135,6 +135,7 @@ export interface NotificationConfig {
  * Useful for dynamically rendering a preferences matrix without hardcoding channels.
  */
 export function getAvailableChannels(preferences: readonly NotificationPreference[]): string[] {
-  if (preferences.length === 0) return [];
-  return Object.keys(preferences[0].channels);
+  const first = preferences[0];
+  if (!first) return [];
+  return Object.keys(first.channels);
 }

@@ -249,7 +249,7 @@ describe('idempotency interceptor', () => {
 
     await client.post('/test', {});
     expect(generator).toHaveBeenCalledOnce();
-    expect(generator.mock.calls[0][0]).toHaveProperty('method');
+    expect(generator.mock.calls[0]![0]).toHaveProperty('method');
   });
 });
 

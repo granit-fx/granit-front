@@ -525,8 +525,8 @@ export function useSmartFilter(options?: UseSmartFilterOptions): UseSmartFilterR
     const result: Record<string, string[]> = {};
     for (const t of state.tokens) {
       if (t.type === 'preset' && t.group && t.name) {
-        result[t.group] ??= [];
-        result[t.group].push(t.name);
+        const group = (result[t.group] ??= []);
+        group.push(t.name);
       }
     }
     return result;

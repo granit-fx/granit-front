@@ -34,7 +34,7 @@ export function resolveInitialLocale(
   // 3. navigator.language — try exact match first (e.g. "pt-BR"), then base code (e.g. "pt")
   if (typeof navigator !== 'undefined' && navigator.language) {
     const fullLocale = navigator.language;
-    const baseLocale = fullLocale.split('-')[0];
+    const baseLocale = fullLocale.split('-')[0]!;
 
     if (!languages) {
       return fullLocale;

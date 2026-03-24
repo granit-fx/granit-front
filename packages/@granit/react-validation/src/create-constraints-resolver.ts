@@ -40,7 +40,7 @@ export function createConstraintsResolver(
       );
 
       if (fieldErrors.length > 0) {
-        const first = fieldErrors[0];
+        const first = fieldErrors[0]!;
         let message = t(first.code, {
           ...first.params,
           nsSeparator: false,
