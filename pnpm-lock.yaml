@@ -184,9 +184,9 @@ importers:
 
   packages/@granit/audit-log:
     dependencies:
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
+        version: link:../query-engine
       axios:
         specifier: '*'
         version: 1.13.6
@@ -211,9 +211,9 @@ importers:
 
   packages/@granit/background-jobs:
     dependencies:
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
+        version: link:../query-engine
       axios:
         specifier: '*'
         version: 1.13.6
@@ -247,9 +247,9 @@ importers:
 
   packages/@granit/data-exchange:
     dependencies:
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
+        version: link:../query-engine
       '@granit/utils':
         specifier: workspace:*
         version: link:../utils
@@ -294,9 +294,9 @@ importers:
 
   packages/@granit/identity:
     dependencies:
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
+        version: link:../query-engine
       axios:
         specifier: '*'
         version: 1.13.6
@@ -330,9 +330,9 @@ importers:
 
   packages/@granit/notifications:
     dependencies:
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
+        version: link:../query-engine
       axios:
         specifier: '*'
         version: 1.13.6
@@ -379,9 +379,9 @@ importers:
 
   packages/@granit/openiddict-admin:
     dependencies:
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
+        version: link:../query-engine
       axios:
         specifier: '*'
         version: 1.13.6
@@ -400,7 +400,7 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
-  packages/@granit/querying:
+  packages/@granit/query-engine:
     dependencies:
       '@granit/utils':
         specifier: workspace:*
@@ -543,9 +543,9 @@ importers:
       '@granit/background-jobs':
         specifier: workspace:*
         version: link:../background-jobs
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
+        version: link:../query-engine
       '@tanstack/react-query':
         specifier: ^5.0.0
         version: 5.90.21(react@19.2.4)
@@ -612,9 +612,9 @@ importers:
       '@granit/data-exchange':
         specifier: workspace:*
         version: link:../data-exchange
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
+        version: link:../query-engine
       '@granit/utils':
         specifier: workspace:*
         version: link:../utils
@@ -751,12 +751,12 @@ importers:
       '@granit/notifications':
         specifier: workspace:*
         version: link:../notifications
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
-      '@granit/react-querying':
+        version: link:../query-engine
+      '@granit/react-query-engine':
         specifier: workspace:*
-        version: link:../react-querying
+        version: link:../react-query-engine
       axios:
         specifier: '*'
         version: 1.13.6
@@ -852,17 +852,17 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
-  packages/@granit/react-querying:
+  packages/@granit/react-query-engine:
     dependencies:
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
+        version: link:../query-engine
       '@granit/utils':
         specifier: workspace:*
         version: link:../utils
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.90.21(react@19.2.4)
+        version: 5.95.2(react@19.2.4)
       axios:
         specifier: '*'
         version: 1.13.6
@@ -882,9 +882,9 @@ importers:
 
   packages/@granit/react-reference-data:
     dependencies:
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
+        version: link:../query-engine
       '@granit/reference-data':
         specifier: workspace:*
         version: link:../reference-data
@@ -951,9 +951,9 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
+        version: link:../query-engine
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -985,12 +985,12 @@ importers:
       '@granit/logger':
         specifier: workspace:*
         version: link:../logger
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
-      '@granit/react-querying':
+        version: link:../query-engine
+      '@granit/react-query-engine':
         specifier: workspace:*
-        version: link:../react-querying
+        version: link:../react-query-engine
       '@granit/timeline':
         specifier: workspace:*
         version: link:../timeline
@@ -1093,9 +1093,9 @@ importers:
       '@granit/logger':
         specifier: workspace:*
         version: link:../logger
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
+        version: link:../query-engine
       '@granit/workflow':
         specifier: workspace:*
         version: link:../workflow
@@ -1118,9 +1118,9 @@ importers:
 
   packages/@granit/reference-data:
     dependencies:
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
+        version: link:../query-engine
       axios:
         specifier: '*'
         version: 1.13.6
@@ -1143,9 +1143,9 @@ importers:
 
   packages/@granit/templating:
     dependencies:
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
+        version: link:../query-engine
       axios:
         specifier: '*'
         version: 1.13.6
@@ -1165,9 +1165,9 @@ importers:
 
   packages/@granit/timeline:
     dependencies:
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
+        version: link:../query-engine
       axios:
         specifier: '*'
         version: 1.13.6
@@ -1222,9 +1222,9 @@ importers:
 
   packages/@granit/workflow:
     dependencies:
-      '@granit/querying':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../querying
+        version: link:../query-engine
       axios:
         specifier: '*'
         version: 1.13.6

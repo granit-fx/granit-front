@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import { useSmartFilter } from '../hooks/use-smart-filter.js';
 
-import type { QueryMetadata } from '@granit/querying';
+import type { QueryMetadata } from '@granit/query-engine';
 
 const MOCK_METADATA: QueryMetadata = {
   columns: [

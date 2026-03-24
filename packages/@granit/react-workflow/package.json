@@ -20,7 +20,7 @@
   },
   "peerDependencies": {
     "@granit/logger": "workspace:*",
-    "@granit/querying": "workspace:*",
+    "@granit/query-engine": "workspace:*",
     "@granit/workflow": "workspace:*",
     "axios": "*",
     "react": "^19.0.0"

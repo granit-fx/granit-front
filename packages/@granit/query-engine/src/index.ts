@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// @granit/querying — public API (framework-agnostic)
+// @granit/query-engine — public API (framework-agnostic)
 // ---------------------------------------------------------------------------
 
 // Types

@@ -1,4 +1,4 @@
-import type { PaginationParams } from '@granit/querying';
+import type { PaginationParams } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
 
 // ── Template lifecycle status (mirrors .NET Granit.Templating.Domain.TemplateLifecycleStatus) ──

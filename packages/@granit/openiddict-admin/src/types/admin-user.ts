@@ -2,7 +2,7 @@
 // Admin user types — mirrors Granit.OpenIddict.Endpoints .NET contract
 // ---------------------------------------------------------------------------
 
-import type { PagedResult } from '@granit/querying';
+import type { PagedResult } from '@granit/query-engine';
 
 /** Query parameters for `GET /users`. */
 export interface AdminUserListParams {

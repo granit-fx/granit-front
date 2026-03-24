@@ -11,7 +11,7 @@ import type {
   FilterToken,
   QueryMetadata,
   SmartFilterPhase,
-} from '@granit/querying';
+} from '@granit/query-engine';
 
 // ---------------------------------------------------------------------------
 // State

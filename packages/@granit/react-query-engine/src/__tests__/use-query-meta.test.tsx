@@ -7,7 +7,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useQueryMeta } from '../hooks/use-query-meta.js';
 import { QueryProvider } from '../providers/query-provider.js';
 
-import type { QueryConfig } from '@granit/querying';
+import type { QueryConfig } from '@granit/query-engine';
 import type { ReactNode } from 'react';
 
 // ---------------------------------------------------------------------------

@@ -44,8 +44,8 @@
 | `@granit/react-notifications-mobile-push` | React hooks for `@granit/notifications-mobile-push`: `useMobilePush`, `useDeviceTokens`                                                                                                                                                       |
 | `@granit/openiddict-admin`                | OpenIddict admin management types and API: user/role/group CRUD, OIDC application/scope/authorization management — mirrors `Granit.OpenIddict.Endpoints` .NET                                                                                 |
 | `@granit/react-openiddict-admin`          | React hooks for `@granit/openiddict-admin`: `OpenIddictAdminProvider`, `useAdminUsers`, `useAdminRoles`, `useAdminGroups`, `useOidcApplications`, `useOidcScopes`, `useOidcAuthorizations`                                                    |
-| `@granit/querying`                        | Data grid types and utilities: `QueryParams`, `FilterEntry`, `QueryMetadata`, `SavedView` — types mirroring `Granit.Querying` .NET contract                                                                                                   |
-| `@granit/react-querying`                  | React bindings for `@granit/querying`: `QueryProvider`, `useQueryEndpoint`, `useQueryMeta`, `useSavedViews`, `useSmartFilter`, `usePagination`, `useInfiniteScroll`                                                                           |
+| `@granit/query-engine`                    | Data grid types and utilities: `QueryParams`, `FilterEntry`, `QueryMetadata`, `SavedView` — types mirroring `Granit.QueryEngine` .NET contract                                                                                                |
+| `@granit/react-query-engine`              | React bindings for `@granit/query-engine`: `QueryProvider`, `useQueryEndpoint`, `useQueryMeta`, `useSavedViews`, `useSmartFilter`, `usePagination`, `useInfiniteScroll`                                                                       |
 | `@granit/data-exchange`                   | Tabular data exchange types and API: export/import types mirroring `Granit.DataExchange` .NET contract                                                                                                                                        |
 | `@granit/react-data-exchange`             | React bindings for `@granit/data-exchange`: `ExportProvider`, `ImportProvider`, hooks (`useExportJob`, `useImportJob`, etc.)                                                                                                                  |
 | `@granit/tracing`                         | Distributed tracing: OpenTelemetry types, `getTraceContext` (non-React, for logger-otlp integration)                                                                                                                                          |
@@ -158,39 +158,39 @@ Full frontend conventions: `../granit-dotnet/docs/guide/conventions/frontend/`
   - `@granit/react-privacy` → `react`, `@tanstack/react-query`, `axios`, `@granit/privacy`
   - `@granit/bff` → _(no peer dependencies)_
   - `@granit/react-bff` → `react`, `@granit/bff`
-  - `@granit/timeline` → `@granit/querying`, `axios`
-  - `@granit/react-timeline` → `react`, `axios`, `@granit/logger`, `@granit/querying`, `@granit/react-querying`, `@granit/timeline`
-  - `@granit/workflow` → `@granit/querying`, `axios`
-  - `@granit/react-workflow` → `react`, `axios`, `@granit/logger`, `@granit/querying`, `@granit/workflow`
-  - `@granit/notifications` → `@granit/querying`, `axios`
-  - `@granit/react-notifications` → `react`, `axios`, `@granit/notifications`, `@granit/querying`, `@granit/react-querying`
+  - `@granit/timeline` → `@granit/query-engine`, `axios`
+  - `@granit/react-timeline` → `react`, `axios`, `@granit/logger`, `@granit/query-engine`, `@granit/react-query-engine`, `@granit/timeline`
+  - `@granit/workflow` → `@granit/query-engine`, `axios`
+  - `@granit/react-workflow` → `react`, `axios`, `@granit/logger`, `@granit/query-engine`, `@granit/workflow`
+  - `@granit/notifications` → `@granit/query-engine`, `axios`
+  - `@granit/react-notifications` → `react`, `axios`, `@granit/notifications`, `@granit/query-engine`, `@granit/react-query-engine`
   - `@granit/notifications-signalr` → `@granit/notifications`, `@microsoft/signalr`
   - `@granit/notifications-sse` → `@granit/notifications`, `@microsoft/fetch-event-source`
   - `@granit/notifications-web-push` → `axios`
   - `@granit/react-notifications-web-push` → `react`, `axios`, `@granit/notifications-web-push`
   - `@granit/notifications-mobile-push` → `axios`
   - `@granit/react-notifications-mobile-push` → `react`, `axios`, `@capacitor/push-notifications`, `@granit/notifications-mobile-push`, `@tanstack/react-query`
-  - `@granit/openiddict-admin` → `@granit/querying`, `axios`
+  - `@granit/openiddict-admin` → `@granit/query-engine`, `axios`
   - `@granit/react-openiddict-admin` → `react`, `@tanstack/react-query`, `axios`, `@granit/openiddict-admin`
-  - `@granit/querying` → `@granit/utils`, `axios`
-  - `@granit/react-querying` → `react`, `react-dom`, `axios`, `@tanstack/react-query`, `@granit/querying`, `@granit/utils`
-  - `@granit/data-exchange` → `@granit/querying`, `@granit/utils`, `axios`
-  - `@granit/react-data-exchange` → `react`, `react-dom`, `axios`, `@tanstack/react-query`, `@granit/data-exchange`, `@granit/querying`, `@granit/utils`
+  - `@granit/query-engine` → `@granit/utils`, `axios`
+  - `@granit/react-query-engine` → `react`, `react-dom`, `axios`, `@tanstack/react-query`, `@granit/query-engine`, `@granit/utils`
+  - `@granit/data-exchange` → `@granit/query-engine`, `@granit/utils`, `axios`
+  - `@granit/react-data-exchange` → `react`, `react-dom`, `axios`, `@tanstack/react-query`, `@granit/data-exchange`, `@granit/query-engine`, `@granit/utils`
   - `@granit/tracing` → `@opentelemetry/api`, `@opentelemetry/instrumentation`
   - `@granit/react-tracing` → `react`, `@granit/tracing`, `@opentelemetry/api`, `@opentelemetry/sdk-trace-web`, `@opentelemetry/exporter-trace-otlp-http`, `@opentelemetry/instrumentation-fetch`, `@opentelemetry/instrumentation-xml-http-request`, `@opentelemetry/instrumentation-document-load`, `@opentelemetry/resources`, `@opentelemetry/semantic-conventions`, `@opentelemetry/context-zone`
-  - `@granit/identity` → `@granit/querying`, `axios`
+  - `@granit/identity` → `@granit/query-engine`, `axios`
   - `@granit/react-identity` → `react`, `axios`, `@tanstack/react-query`, `@granit/identity`
   - `@granit/multi-tenancy` → _(no peer dependencies)_
   - `@granit/react-multi-tenancy` → `react`, `@granit/multi-tenancy`, `@granit/api-client`
   - `@granit/error-boundary` → _(no peer dependencies)_
   - `@granit/react-error-boundary` → `react`, `@granit/logger`, `@granit/error-boundary`
-  - `@granit/background-jobs` → `@granit/querying`, `axios`
-  - `@granit/react-background-jobs` → `react`, `axios`, `@tanstack/react-query`, `@granit/background-jobs`, `@granit/querying`
+  - `@granit/background-jobs` → `@granit/query-engine`, `axios`
+  - `@granit/react-background-jobs` → `react`, `axios`, `@tanstack/react-query`, `@granit/background-jobs`, `@granit/query-engine`
   - `@granit/authentication-api-keys` → _(no peer dependencies)_
   - `@granit/react-authentication-api-keys` → `react`, `axios`, `@tanstack/react-query`, `@granit/authentication-api-keys`
-  - `@granit/reference-data` → `@granit/querying`, `axios`
+  - `@granit/reference-data` → `@granit/query-engine`, `axios`
   - `@granit/react-reference-data` → `react`, `axios`, `@tanstack/react-query`, `@granit/reference-data`
-  - `@granit/templating` → `@granit/querying`, `axios`
+  - `@granit/templating` → `@granit/query-engine`, `axios`
   - `@granit/react-templating` → `react`, `axios`, `@tanstack/react-query`, `@granit/templating`
   - `@granit/settings` → `axios`
   - `@granit/react-settings` → `react`, `axios`, `@tanstack/react-query`, `@granit/settings`
@@ -204,7 +204,7 @@ Full frontend conventions: `../granit-dotnet/docs/guide/conventions/frontend/`
   - `@granit/idempotency` → `@granit/api-client`, `axios`
   - `@granit/ai` → `axios`
   - `@granit/react-ai` → `react`, `axios`, `@tanstack/react-query`, `@granit/ai`
-  - `@granit/audit-log` → `@granit/querying`, `axios`
+  - `@granit/audit-log` → `@granit/query-engine`, `axios`
   - `@granit/react-audit-log` → `react`, `axios`, `@tanstack/react-query`, `@granit/audit-log`
   - `@granit/diagnostics` → `axios`
   - `@granit/react-diagnostics` → `react`, `axios`, `@tanstack/react-query`, `@granit/diagnostics`

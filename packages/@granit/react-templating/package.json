@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
-    "@granit/querying": "workspace:*",
+    "@granit/query-engine": "workspace:*",
     "@granit/templating": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/react-testing": "workspace:*"

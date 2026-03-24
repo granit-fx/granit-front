@@ -31,7 +31,7 @@ import type {
   TemplateRevision,
   TemplateVariables,
 } from '../types/index.js';
-import type { PagedResult } from '@granit/querying';
+import type { PagedResult } from '@granit/query-engine';
 
 const basePath = '/api/v1';
 

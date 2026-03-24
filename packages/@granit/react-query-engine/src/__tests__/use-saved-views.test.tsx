@@ -7,7 +7,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useSavedViews } from '../hooks/use-saved-views.js';
 import { QueryProvider } from '../providers/query-provider.js';
 
-import type { QueryConfig } from '@granit/querying';
+import type { QueryConfig } from '@granit/query-engine';
 import type { ReactNode } from 'react';
 
 // ---------------------------------------------------------------------------

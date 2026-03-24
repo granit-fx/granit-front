@@ -8,7 +8,7 @@ import {
 } from '@granit/reference-data';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import type { PagedResult } from '@granit/querying';
+import type { PagedResult } from '@granit/query-engine';
 import type {
   ReferenceDataCreateRequest,
   ReferenceDataEntry,

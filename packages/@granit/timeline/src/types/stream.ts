@@ -1,5 +1,5 @@
 import type { TimelineEntryTypeValue } from './entry-type.js';
-import type { PagedResult } from '@granit/querying';
+import type { PagedResult } from '@granit/query-engine';
 
 // --- API response types ---
 

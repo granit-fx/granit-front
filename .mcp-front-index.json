@@ -667,7 +667,7 @@
       "exports": []
     },
     {
-      "name": "@granit/querying",
+      "name": "@granit/query-engine",
       "description": "Headless data grid hooks with TanStack Query integration",
       "exports": [
         {
@@ -1862,7 +1862,7 @@
       ]
     },
     {
-      "name": "@granit/react-querying",
+      "name": "@granit/react-query-engine",
       "description": "",
       "exports": [
         {

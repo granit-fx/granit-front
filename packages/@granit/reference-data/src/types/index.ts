@@ -1,4 +1,4 @@
-import type { PaginationParams } from '@granit/querying';
+import type { PaginationParams } from '@granit/query-engine';
 
 /** The 14 multilingual labels supported by Granit reference data. */
 export interface ReferenceDataLabels {

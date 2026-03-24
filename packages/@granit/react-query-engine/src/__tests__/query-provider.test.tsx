@@ -1,11 +1,11 @@
-import { buildQueryKey } from '@granit/querying';
+import { buildQueryKey } from '@granit/query-engine';
 import { render, renderHook, screen } from '@testing-library/react';
 import axios from 'axios';
 import { describe, expect, it } from 'vitest';
 
 import { QueryProvider, useQueryConfig } from '../providers/query-provider.js';
 
-import type { QueryConfig } from '@granit/querying';
+import type { QueryConfig } from '@granit/query-engine';
 import type { ReactNode } from 'react';
 
 const mockConfig: QueryConfig = {

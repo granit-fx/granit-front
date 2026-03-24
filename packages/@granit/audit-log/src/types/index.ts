@@ -1,4 +1,4 @@
-import type { PagedResult, PaginationParams } from '@granit/querying';
+import type { PagedResult, PaginationParams } from '@granit/query-engine';
 
 // ---------------------------------------------------------------------------
 // Audit log types — mirrors Granit.AuditLog .NET contracts

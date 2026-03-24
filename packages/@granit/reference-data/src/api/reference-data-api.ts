@@ -4,7 +4,7 @@ import type {
   ReferenceDataQuery,
   ReferenceDataUpdateRequest,
 } from '../types/index.js';
-import type { PagedResult } from '@granit/querying';
+import type { PagedResult } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
 
 /**

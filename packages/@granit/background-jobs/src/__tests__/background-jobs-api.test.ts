@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { fetchBackgroundJob, fetchBackgroundJobs } from '../api/background-jobs-api.js';
 
 import type { BackgroundJobStatus } from '../types/index.js';
-import type { PagedResult } from '@granit/querying';
+import type { PagedResult } from '@granit/query-engine';
 
 const BASE = '/api/v1/background-jobs';
 

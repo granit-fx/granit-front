@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { buildImportQueryKey, useImportConfig } from '../providers/import-provider.js';
 
 import type { ImportJobListParams, ImportJobResponse } from '@granit/data-exchange';
-import type { PagedResult } from '@granit/querying';
+import type { PagedResult } from '@granit/query-engine';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /**

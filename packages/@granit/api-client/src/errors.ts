@@ -36,7 +36,7 @@ export class HttpError extends Error {
 /**
  * Validation error for client-side or server-returned validation failures.
  *
- * Used by `@granit/querying` (filter syntax) and `@granit/data-exchange` (import mapping).
+ * Used by `@granit/query-engine` (filter syntax) and `@granit/data-exchange` (import mapping).
  *
  * @example
  * ```ts

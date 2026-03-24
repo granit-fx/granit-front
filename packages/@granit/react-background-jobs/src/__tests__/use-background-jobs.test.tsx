@@ -14,7 +14,7 @@ import {
 } from '../hooks/use-background-jobs.js';
 
 import type { BackgroundJobStatus } from '@granit/background-jobs';
-import type { PagedResult } from '@granit/querying';
+import type { PagedResult } from '@granit/query-engine';
 
 function createWrapper() {
   const queryClient = createTestQueryClient();

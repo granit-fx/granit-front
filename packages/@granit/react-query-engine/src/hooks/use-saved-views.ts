@@ -9,7 +9,7 @@ import {
   fetchSavedViews,
   setDefaultSavedView,
   updateSavedView,
-} from '@granit/querying';
+} from '@granit/query-engine';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useQueryConfig } from '../providers/query-provider.js';
@@ -18,7 +18,7 @@ import type {
   CreateSavedViewRequest,
   SavedViewSummary,
   UpdateSavedViewRequest,
-} from '@granit/querying';
+} from '@granit/query-engine';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 export interface UseSavedViewsReturn {

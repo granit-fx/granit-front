@@ -1,4 +1,4 @@
-import { useInfiniteScroll } from '@granit/react-querying';
+import { useInfiniteScroll } from '@granit/react-query-engine';
 import { fetchStream } from '@granit/timeline';
 import { useCallback } from 'react';
 
@@ -30,7 +30,7 @@ export interface UseTimelineReturn {
 /**
  * Infinite-scroll timeline hook.
  *
- * Composes {@link useInfiniteScroll} from `@granit/querying` with
+ * Composes {@link useInfiniteScroll} from `@granit/query-engine` with
  * domain-specific optimistic update helpers.
  */
 export function useTimeline({

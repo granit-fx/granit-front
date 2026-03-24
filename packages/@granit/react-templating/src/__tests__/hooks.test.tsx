@@ -18,7 +18,7 @@ import { TemplatingProvider } from '../providers/templating-provider.js';
 
 import { axiosResponse, createMockClient, createWrapper } from './test-utils.tsx';
 
-import type { PagedResult } from '@granit/querying';
+import type { PagedResult } from '@granit/query-engine';
 import type {
   TemplateCategory,
   TemplateDetail,

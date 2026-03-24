@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Types barrel — public type API for @granit/querying
+// Types barrel — public type API for @granit/query-engine
 // ---------------------------------------------------------------------------
 
 export type {

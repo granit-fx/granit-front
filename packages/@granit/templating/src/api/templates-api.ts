@@ -12,7 +12,7 @@ import type {
   TemplateRevision,
   TemplateVariables,
 } from '../types/index.js';
-import type { PagedResult, PaginationParams } from '@granit/querying';
+import type { PagedResult, PaginationParams } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
 
 function templateUrl(basePath: string, name: string, ...segments: string[]): string {

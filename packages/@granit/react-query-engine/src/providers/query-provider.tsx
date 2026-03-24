@@ -4,7 +4,7 @@
 
 import { createContext, useContext, useMemo } from 'react';
 
-import type { QueryConfig } from '@granit/querying';
+import type { QueryConfig } from '@granit/query-engine';
 import type { ReactNode } from 'react';
 
 const QueryConfigContext = createContext<QueryConfig | null>(null);

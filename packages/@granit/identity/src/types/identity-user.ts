@@ -1,4 +1,4 @@
-import type { PagedResult, PaginationParams } from '@granit/querying';
+import type { PagedResult, PaginationParams } from '@granit/query-engine';
 
 /** Cached identity user — mirrors Granit.Identity.IdentityUser .NET record. */
 export type IdentityUser = {

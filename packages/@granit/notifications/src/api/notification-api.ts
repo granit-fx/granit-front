@@ -4,7 +4,7 @@ import type {
   UserNotificationPage,
   NotificationPreference,
 } from '../types/index.js';
-import type { PaginationParams } from '@granit/querying';
+import type { PaginationParams } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
 
 function buildUrl(basePath: string, ...segments: string[]): string {
