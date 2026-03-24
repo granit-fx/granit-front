@@ -18,6 +18,8 @@ export interface BffContextType {
   readonly logout: () => void;
   /** CSRF manager instance for advanced use cases. */
   readonly csrfManager: CsrfManager;
+  /** Path prefix for this frontend (e.g., "/admin"). */
+  readonly pathPrefix: string;
 }
 
 const BffContext = createContext<BffContextType | null>(null);
@@ -92,6 +94,7 @@ export function BffProvider({ config, children }: BffProviderProps) {
         login,
         logout,
         csrfManager,
+        pathPrefix: config.pathPrefix,
       }}
     >
       {children}

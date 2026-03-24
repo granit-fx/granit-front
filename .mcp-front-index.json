@@ -231,31 +231,7 @@
     {
       "name": "@granit/bff",
       "description": "BFF authentication types and CSRF manager — TypeScript mirror of Granit.Bff .NET",
-      "exports": [
-        {
-          "name": "BffConfig",
-          "kind": "interface",
-          "signature": "interface BffConfig",
-          "members": []
-        },
-        {
-          "name": "BffUnauthenticated",
-          "kind": "interface",
-          "signature": "interface BffUnauthenticated",
-          "members": []
-        },
-        {
-          "name": "BffUser",
-          "kind": "interface",
-          "signature": "interface BffUser",
-          "members": []
-        },
-        {
-          "name": "BffUserResponse",
-          "kind": "type",
-          "signature": "type BffUserResponse = BffUser | BffUnauthenticated"
-        }
-      ]
+      "exports": []
     },
     {
       "name": "@granit/blob-storage",

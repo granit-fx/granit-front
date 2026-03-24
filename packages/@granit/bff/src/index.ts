@@ -1,3 +1,16 @@
-export type { BffConfig, BffUnauthenticated, BffUser, BffUserResponse } from './types/index.js';
+export type {
+  BffConfig,
+  BffSessionInfo,
+  BffSessionListResponse,
+  BffUnauthenticated,
+  BffUser,
+  BffUserResponse,
+} from './types/index.js';
 
 export { CsrfManager } from './csrf/index.js';
+
+export {
+  fetchBffSessions,
+  revokeAllOtherBffSessions,
+  revokeBffSession,
+} from './api/bff-session-api.js';
