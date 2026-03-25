@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Saved views — mirrors Granit.Querying.SavedViews DTOs (.NET)
+// Saved views — mirrors Granit.QueryEngine.SavedViews DTOs (.NET)
 // ---------------------------------------------------------------------------
 
 /** Saved view summary returned by list endpoint. */

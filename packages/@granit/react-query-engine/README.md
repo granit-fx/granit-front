@@ -1,11 +1,11 @@
-# @granit/react-querying
+# @granit/react-query-engine
 
-React bindings for `@granit/querying` -- QueryProvider, pagination hooks, data grid hooks.
+React bindings for `@granit/query-engine` -- QueryProvider, pagination hooks, data grid hooks.
 
 ## Installation
 
 ```bash
-pnpm add @granit/react-querying
+pnpm add @granit/react-query-engine
 ```
 
 ## API
@@ -42,7 +42,7 @@ pnpm add @granit/react-querying
 ## Usage
 
 ```tsx
-import { QueryProvider, useQueryEndpoint } from '@granit/react-querying';
+import { QueryProvider, useQueryEndpoint } from '@granit/react-query-engine';
 
 function App() {
   return (

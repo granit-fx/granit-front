@@ -2,7 +2,7 @@
 // Server-enforced validation limits for QueryRequest parameters
 // ---------------------------------------------------------------------------
 
-/** Validation limits enforced by Granit Querying endpoints (422 on violation). */
+/** Validation limits enforced by Granit QueryEngine endpoints (422 on violation). */
 export const QUERY_LIMITS = {
   PAGE_MIN: 1,
   PAGE_SIZE_MIN: 1,

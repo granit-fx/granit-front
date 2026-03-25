@@ -18,7 +18,7 @@ audit without the checklist — it contains the full verification matrix.
 **Absolute minimum rules** (in case checklist is partially loaded):
 
 1. Frontend types must mirror .NET DTO names and fields exactly
-2. All paginated responses must use `PagedResult<T>` from `@granit/querying`
+2. All paginated responses must use `PagedResult<T>` from `@granit/query-engine`
 3. All paginated request params must use `PaginationParams` (no inline duplication)
 4. Every backend endpoint must have a corresponding frontend API function
 
@@ -30,7 +30,7 @@ audit without the checklist — it contains the full verification matrix.
 | ----------------- | ---------------------------------------------------------------- |
 | `help`            | Show available commands, flags, and examples                     |
 | _(none)_ or `all` | Full audit across all `@granit/*` packages                       |
-| `<package>`       | Single package (e.g., `querying`, `notifications`, `workflow`)   |
+| `<package>`       | Single package (e.g., `query-engine`, `notifications`)           |
 | `pr`              | PR readiness — audit only packages touched by the current branch |
 
 ### Flags
@@ -60,7 +60,7 @@ TARGETS
   help              Show this help
   all               Full audit — all packages (default)
   pr                PR mode — only packages changed vs develop
-  <package>         Single package (e.g., querying, notifications, workflow)
+  <package>         Single package (e.g., query-engine, notifications, workflow)
 
 FLAGS
   --fix             Apply fixes automatically (default: report only)
@@ -74,8 +74,8 @@ FLAGS
 
 EXAMPLES
   /audit                        Full audit, report only
-  /audit querying               Audit @granit/querying + react-querying
-  /audit querying --fix         Audit and auto-fix querying
+  /audit query-engine            Audit @granit/query-engine + react-query-engine
+  /audit query-engine --fix     Audit and auto-fix query-engine
   /audit pr                     Check packages modified in current branch
   /audit pr --fix               Check and fix before PR
   /audit all --scope types      Only check type conformity across all packages
@@ -99,7 +99,7 @@ RELATED SKILLS
 
 If a specific package was given, resolve it:
 
-- `querying` → `packages/@granit/querying` + `packages/@granit/react-querying`
+- `query-engine` → `packages/@granit/query-engine` + `packages/@granit/react-query-engine`
 - `notifications` → `packages/@granit/notifications` + `packages/@granit/react-notifications`
   - transport packages (`notifications-signalr`, `notifications-sse`, etc.)
 - Any name → `packages/@granit/{name}` + `packages/@granit/react-{name}` if it exists
@@ -115,9 +115,44 @@ For each target package, collect:
 1. **Frontend types**: read `src/types/` and `src/index.ts` (public API surface)
 2. **Frontend API functions**: read `src/api/` files
 3. **Frontend hooks**: read `src/hooks/` files (for `react-*` packages)
-4. **Backend contract**: use `mcp__granit-docs__search_code` and
-   `mcp__granit-docs__get_public_api` to find the corresponding .NET module types.
-   If available, also use `mcp__roslyn-lens__get_public_api` for precise signatures.
+4. **Backend contract** (multi-step discovery):
+
+   a. **Module mapping**: resolve the .NET module name from the package name
+   using the naming convention `@granit/{name}` → `Granit.{PascalName}`
+   (e.g., `@granit/query-engine` → `Granit.QueryEngine`,
+   `@granit/blob-storage` → `Granit.BlobStorage`,
+   `@granit/audit-log` → `Granit.AuditLog`).
+
+   b. **Type discovery**: use `mcp__granit-docs__search_code` and
+   `mcp__granit-docs__get_public_api` to find the corresponding .NET module
+   types. If available, also use `mcp__roslyn-lens__get_public_api` for
+   precise signatures.
+
+   c. **Endpoint discovery**: systematically enumerate **all** backend endpoints
+   for the module. Use `mcp__roslyn-lens__find_symbol` to locate the
+   `Map*Endpoints` method (e.g., `MapQueryEngineEndpoints`,
+   `MapBlobStorageEndpoints`), then `mcp__roslyn-lens__analyze_method` or
+   `mcp__roslyn-lens__get_symbol_detail` to extract every route registration.
+   Build a complete list:
+
+   ```text
+   [HTTP method] [route template] → [handler method] → [request DTO] → [response DTO]
+   ```
+
+   If `roslyn-lens` is unavailable, fall back to `mcp__granit-docs__search_code`
+   with queries like `Map{Module}Endpoints`, `MapGet`, `MapPost` in the module
+   namespace, then read the endpoint registration file via Read tool.
+
+   d. **Naming convention map**: record the .NET → TypeScript naming for the
+   module to verify consistency in Step 3:
+
+   | .NET                                   | TypeScript                              | Convention                                             |
+   | -------------------------------------- | --------------------------------------- | ------------------------------------------------------ |
+   | Namespace `Granit.{Module}`            | Package `@granit/{kebab-name}`          | PascalCase → kebab-case                                |
+   | DTO `{Name}Request` / `{Name}Response` | Type `{Name}Request` / `{Name}Response` | Identical (minus namespace)                            |
+   | Endpoint method `Get{Resources}`       | API function `fetch{Resources}`         | Get→fetch, Create→create, Update→update, Delete→delete |
+   | Route `/api/{module}/{resource}`       | basePath + `/{resource}`                | Segments match exactly                                 |
+
 5. **Peer dependencies**: read `package.json`
 6. **Consumer usage**: if the audit may lead to renaming or removing an exported
    symbol, search for references in consumer apps before flagging:
@@ -160,6 +195,25 @@ Output findings using this format:
 
 ```markdown
 ## Audit Report — @granit/{package} — {date}
+
+### Naming Alignment — @granit/{package} ↔ Granit.{Module}
+
+| .NET                          | TypeScript          | Match                   |
+| ----------------------------- | ------------------- | ----------------------- |
+| `Granit.{Module}` (namespace) | `@granit/{package}` | OK / MISMATCH           |
+| `{DtoName}`                   | `{TsTypeName}`      | OK / MISMATCH / MISSING |
+| ...                           | ...                 | ...                     |
+
+### Endpoint Alignment — @granit/{package}
+
+| .NET Endpoint      | Route           | Frontend Function  | Match |
+| ------------------ | --------------- | ------------------ | ----- |
+| `Get{Resources}`   | `GET /api/...`  | `fetch{Resources}` | OK    |
+| `Create{Resource}` | `POST /api/...` | `create{Resource}` | OK    |
+| `Update{Resource}` | `PUT /api/...`  | _(none)_           | GAP   |
+| ...                | ...             | ...                | ...   |
+
+Coverage: {covered}/{total} endpoints ({percentage}%)
 
 ### Summary
 
@@ -243,7 +297,7 @@ attempt to fix pre-existing issues outside the audit scope.
 When auditing all packages, perform these additional checks:
 
 1. **Shared type consistency**: verify that `PaginationParams`, `PagedResult`,
-   and other shared types from `@granit/querying` are used consistently
+   and other shared types from `@granit/query-engine` are used consistently
    (no inline `{ page?: number; pageSize?: number }` duplicates)
 2. **Import graph**: check that no circular dependencies exist between packages
 3. **Peer dependency matrix**: verify that the peer deps in CLAUDE.md match
@@ -252,6 +306,15 @@ When auditing all packages, perform these additional checks:
    any consumer (guava-front, guava-admin) — candidate for removal
 5. **Pattern uniformity**: verify all domain modules follow the same structure
    (core types package + react hooks package, same file organization)
+6. **Cross-package naming consistency**: verify that all packages follow the
+   same naming conventions relative to their .NET counterpart:
+   - All packages use the same verb mapping (`Get*` → `fetch*`, etc.) — flag
+     any package that deviates (e.g., one uses `get*` while others use `fetch*`)
+   - All packages use the same DTO naming strategy (no mix of `*Response` and
+     `*Result` or `*Dto` across packages for the same pattern)
+   - Provider names follow `{Module}Provider` uniformly (not `{Module}Context`
+     in some and `{Module}Provider` in others)
+   - Query key factories follow the same pattern across all `react-*` packages
 
 ---
 
@@ -321,8 +384,24 @@ For any new dependency:
 For any new TypeScript interface or type added in the diff:
 
 - Fetch the corresponding .NET type via MCP tools
+- Verify **naming alignment** first: does the TS type name match the .NET DTO
+  name? (checklist 1a module-level naming rules apply)
 - Verify field-by-field alignment (same checks as checklist section 1a)
 - Flag any field present in .NET but missing in the new TS type
+- Produce the Naming Alignment table for the PR report
+
+#### New or changed API functions vs backend
+
+For any new or modified function in `src/api/`:
+
+- Fetch the corresponding .NET endpoint via MCP tools (same discovery as
+  checklist 2b)
+- Verify **verb mapping**: `Get*` → `fetch*`, `Create*` → `create*`,
+  `Update*` → `update*`, `Delete*` → `delete*`
+- Verify **route alignment**: URL path built in the function matches the
+  .NET route template (same segments, same parameter names)
+- Verify **HTTP method** matches the backend endpoint
+- Produce the Endpoint Alignment table for the PR report
 
 #### Test coverage
 
@@ -356,6 +435,26 @@ Report results inline with the audit findings.
 | Package | Added | Renamed | Removed |
 | ------- | ----- | ------- | ------- |
 | ...     | ...   | ...     | ...     |
+
+### Backend Alignment (changed packages only)
+
+#### Naming — @granit/{pkg} ↔ Granit.{Module}
+
+| .NET                      | TypeScript     | Match                   |
+| ------------------------- | -------------- | ----------------------- |
+| `{DtoName}` (new/changed) | `{TsTypeName}` | OK / MISMATCH / MISSING |
+| ...                       | ...            | ...                     |
+
+_(Only types added or modified in this branch)_
+
+#### Endpoints — @granit/{pkg}
+
+| .NET Endpoint | Route             | Frontend Function | Match             |
+| ------------- | ----------------- | ----------------- | ----------------- |
+| `{Method}`    | `{HTTP} /api/...` | `{function}`      | OK / GAP / ORPHAN |
+| ...           | ...               | ...               | ...               |
+
+_(Only endpoints affected by new/changed API functions in this branch)_
 
 ### Findings
 

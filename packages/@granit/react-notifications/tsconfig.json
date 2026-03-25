@@ -3,8 +3,8 @@
   "compilerOptions": {
     "paths": {
       "@granit/notifications": ["../notifications/src/index.ts"],
-      "@granit/querying": ["../querying/src/index.ts"],
-      "@granit/react-querying": ["../react-querying/src/index.ts"],
+      "@granit/query-engine": ["../query-engine/src/index.ts"],
+      "@granit/react-query-engine": ["../react-query-engine/src/index.ts"],
       "@granit/api-client/test-utils": ["../api-client/src/test-utils.ts"]
     }
   },

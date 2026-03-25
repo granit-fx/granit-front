@@ -1,15 +1,15 @@
-<img src="../../../docs/images/granit-icon.svg" alt="" height="32" align="left" style="margin-right:10px" />
+<img src="https://granit-fx.dev/images/granit-icon.svg" alt="" height="32" align="left" style="margin-right:10px" />
 
 # @granit/localization
 
 Locale resolution and i18next integration: `createLocalization`, `resolveInitialLocale`, `useLocale`, and `react-i18next` re-exports.
 
-Part of the [granit-front](../../../README.md) framework.
+Part of the [Granit](https://granit-fx.dev) framework.
 
 ## Installation
 
-Consumed via `link:` protocol — see the [integration documentation](../../../README.md).
+Consumed via `link:` protocol — see the [integration documentation](https://granit-fx.dev).
 
 ## Documentation
 
-See the [full documentation](../../../docs/framework/localization.md).
+See the [full documentation](https://granit-fx.dev/frontend/infrastructure/localization/).

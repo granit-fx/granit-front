@@ -4,7 +4,7 @@ This file lists the third-party libraries used by the **granit-front** project
 along with their respective licenses. It is updated whenever an external
 dependency is added or modified.
 
-Last updated: 2026-03-24
+Last updated: 2026-03-25
 
 ---
 
@@ -12,8 +12,8 @@ Last updated: 2026-03-24
 
 | License      | Package count |
 | ------------ | ------------- |
-| MIT          | 34            |
-| Apache-2.0   | 13            |
+| MIT          | 33            |
+| Apache-2.0   | 12            |
 | BSD-3-Clause | 1             |
 
 ---
@@ -34,7 +34,6 @@ Last updated: 2026-03-24
 | @eslint/js                      | 10.0.1  | OpenJS Foundation                          |
 | @microsoft/fetch-event-source   | 2.0.1   | Copyright (c) Microsoft Corporation        |
 | @microsoft/signalr              | 10.0.0  | Copyright (c) .NET Foundation              |
-| @tailwindcss/vite               | 4.2.1   | Copyright (c) Tailwind Labs, Inc.          |
 | @tanstack/react-query           | 5.95.2  | Copyright (c) Tanner Linsley               |
 | @tanstack/react-virtual         | 3.13.23 | Copyright (c) Tanner Linsley               |
 | @testing-library/jest-dom       | 6.9.1   | Copyright (c) Testing Library Contributors |
@@ -79,7 +78,6 @@ Last updated: 2026-03-24
 | @opentelemetry/sdk-trace-web                    | 2.6.0   | Copyright The OpenTelemetry Authors |
 | @opentelemetry/semantic-conventions             | 1.40.0  | Copyright The OpenTelemetry Authors |
 | keycloak-js                                     | 26.2.3  | Copyright Red Hat, Inc.             |
-| tailwindcss                                     | 4.2.1   | Copyright (c) Tailwind Labs, Inc.   |
 | typescript                                      | 6.0.2   | Copyright (c) Microsoft Corporation |
 
 ### BSD-3-Clause

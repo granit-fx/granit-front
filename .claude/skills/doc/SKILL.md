@@ -123,7 +123,7 @@ Every document longer than ~30 lines MUST start with:
 Link to related docs using relative paths:
 
 ```markdown
-See [@granit/querying](../querying/) for the data grid hooks used by the timeline.
+See [@granit/query-engine](../query-engine/) for the data grid hooks used by the timeline.
 ```
 
 ## Granit Front-specific constraints

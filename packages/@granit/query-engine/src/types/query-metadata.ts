@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Query metadata — mirrors Granit.Querying.Meta.QueryMetadata (.NET)
+// Query metadata — mirrors Granit.QueryEngine.Meta.QueryMetadata (.NET)
 // Returned by GET {basePath}/meta
 // ---------------------------------------------------------------------------
 

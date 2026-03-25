@@ -9,9 +9,9 @@ Ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ### Ajouté
 
-- **@granit/querying** : enrichissement de `useSmartFilter` avec support enum, boolean,
+- **@granit/query-engine** : enrichissement de `useSmartFilter` avec support enum, boolean,
   field search et labels localisables (2026-03-07)
-- **@granit/querying** : ajout de `labelParts` aux tokens et exposition de
+- **@granit/query-engine** : ajout de `labelParts` aux tokens et exposition de
   `selectedFieldType` (2026-03-07)
 - **@granit/cookies** : synchronisation bidirectionnelle CMP (2026-03-06)
 - **@granit/notifications** : prop `enabled` pour désactiver SignalR
@@ -26,7 +26,7 @@ Ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
   `usePermissionGrant`) (2026-03-04)
 - **@granit/data-exchange** : nouveau package — export et import tabulaire
   (renommé depuis `@granit/data-export`) (2026-03-04)
-- **@granit/querying** : nouveau package — vues liste filtrées headless
+- **@granit/query-engine** : nouveau package — vues liste filtrées headless
   (`useQueryMeta`, `useQueryEndpoint`, `useSavedViews`, `useSmartFilter`) (2026-03-04)
 - **@granit/ui** et **@granit/ui-back** : packages de composants UI partagés
   (2026-03-03)
@@ -62,9 +62,9 @@ Ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ### Modifié
 
-- **@granit/querying** : adaptation de la pagination `skip`/`take` vers
+- **@granit/query-engine** : adaptation de la pagination `skip`/`take` vers
   `page`/`pageSize` (`PagedResult<T>`) (2026-03-08)
-- **@granit/querying** : extraction des ternaires imbriqués et réduction de la
+- **@granit/query-engine** : extraction des ternaires imbriqués et réduction de la
   complexité cognitive (2026-03-07)
 - **Architecture** : transformation des packages en headless — suppression de
   `@granit/ui` (2026-03-06)
@@ -94,7 +94,7 @@ Ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **@granit/localization** : guard contre `data.resources` undefined dans
   `applyTranslations` (2026-03-04)
 - **SonarQube** : correction des code smells sur `error-boundary`, `tracing`,
-  `workflow`, `data-exchange`, `querying`, `ui`, `ui-back` (2026-03-04)
+  `workflow`, `data-exchange`, `query-engine`, `ui`, `ui-back` (2026-03-04)
 - **Sécurité** : correction de la vulnérabilité `immutable` (2026-03-05)
 - **@granit/notifications** : extraction de `createConnection` hors du callback
   `vi.hoisted` (2026-03-03)

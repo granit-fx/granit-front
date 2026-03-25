@@ -31,7 +31,7 @@ utilities, Axios HTTP client, Keycloak authentication, notifications, querying, 
 | [`@granit/notifications-signalr`](packages/@granit/notifications-signalr/)                 | SignalR transport adapter for `@granit/notifications`                   |
 | [`@granit/notifications-sse`](packages/@granit/notifications-sse/)                         | SSE transport adapter for `@granit/notifications`                       |
 | [`@granit/notifications-web-push`](packages/@granit/notifications-web-push/)               | Web Push VAPID subscription management                                  |
-| [`@granit/querying`](packages/@granit/querying/)                                           | Headless data grid hooks with TanStack Query integration                |
+| [`@granit/query-engine`](packages/@granit/query-engine/)                                   | Headless data grid hooks with TanStack Query integration                |
 | [`@granit/react-authentication`](packages/@granit/react-authentication/)                   | React hooks for Keycloak init, auth context factory, mock provider      |
 | [`@granit/react-authentication-api-keys`](packages/@granit/react-authentication-api-keys/) | React hooks for API key CRUD operations                                 |
 | [`@granit/react-authorization`](packages/@granit/react-authorization/)                     | React hooks for permissions, definitions, role grants                   |

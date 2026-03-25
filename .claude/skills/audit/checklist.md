@@ -10,6 +10,19 @@ package against the backend .NET module. Use MCP tools (`granit-docs`,
 
 ### 1a. Request/Response DTOs
 
+**Module-level naming** (check once per package):
+
+- [ ] **Package ↔ namespace**: `@granit/{kebab-name}` maps to `Granit.{PascalName}`
+      (e.g., `@granit/query-engine` → `Granit.QueryEngine`,
+      `@granit/blob-storage` → `Granit.BlobStorage`,
+      `@granit/audit-log` → `Granit.AuditLog`)
+- [ ] **API function verb mapping**: frontend functions follow the convention
+      `Get*` → `fetch*`, `Create*` → `create*`, `Update*` → `update*`,
+      `Delete*` → `delete*`, `List*` → `fetch*` (consistent across all packages)
+- [ ] **Route segment alignment**: URL path segments built in frontend API
+      functions match the .NET route templates exactly (same resource names,
+      same nesting)
+
 For each type exported from the package's `src/types/`:
 
 - [ ] **Name alignment**: type name matches the .NET DTO name
@@ -40,7 +53,7 @@ For each type exported from the package's `src/types/`:
 - [ ] **No internal leaks**: types not meant for consumers are not exported
 - [ ] **`import type`**: type-only imports use `import type` syntax
 - [ ] **Re-exports**: if a type is used across packages, it's re-exported from
-      the owning package (not imported directly from `@granit/querying` in hooks)
+      the owning package (not imported directly from `@granit/query-engine` in hooks)
 
 ---
 
@@ -62,12 +75,32 @@ For each function in `src/api/`:
 
 ### 2b. Endpoint coverage
 
-- [ ] **All backend endpoints covered**: each `Map*Endpoints` registration in
-      the .NET module has a corresponding frontend API function
+**Systematic discovery** — build a complete backend endpoint inventory before
+checking coverage. Use `mcp__roslyn-lens__find_symbol` to locate the
+`Map{Module}Endpoints` method, then `mcp__roslyn-lens__analyze_method` or
+`mcp__roslyn-lens__get_symbol_detail` to extract every route registration.
+If roslyn-lens is unavailable, use `mcp__granit-docs__search_code` with the
+module name, then read the endpoint file directly.
+
+Build the inventory as:
+
+```text
+[HTTP method] [route template] → [handler] → [request DTO] → [response DTO]
+```
+
+Then check each entry against the frontend `src/api/` functions:
+
+- [ ] **All backend endpoints covered**: each route in the inventory has a
+      corresponding frontend API function (produce the Endpoint Alignment
+      table from the report template)
+- [ ] **No orphan functions**: every frontend API function maps to a real
+      backend endpoint (flag stale functions targeting removed endpoints)
 - [ ] **Saved views**: if the module uses `MapQueryEndpoints`, saved view CRUD
       functions exist
 - [ ] **Meta endpoint**: if the module exposes `/meta`, a `fetch*Meta` function
       exists
+- [ ] **Route consistency**: dynamic segments use the same parameter names
+      as the .NET route template (e.g., `{id}` not `{entityId}` if .NET uses `{id}`)
 
 ### 2c. Serialization
 
@@ -100,7 +133,7 @@ For each function in `src/api/`:
       (not try/catch swallowing)
 - [ ] **Enabled flag**: conditional queries use `enabled` option
 - [ ] **Pagination**: uses `usePagination` or `useInfiniteScroll` from
-      `@granit/react-querying` — not a custom implementation
+      `@granit/react-query-engine` — not a custom implementation
 - [ ] **Optimistic updates**: mutations that affect cached lists invalidate
       the relevant query keys in `onSuccess`
 

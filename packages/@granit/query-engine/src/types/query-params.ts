@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Query parameters — mirrors Granit.Querying.QueryRequest (.NET)
+// Query parameters — mirrors Granit.QueryEngine.QueryRequest (.NET)
 // ---------------------------------------------------------------------------
 
 /** Minimal pagination parameters shared across all domain modules. */
@@ -11,7 +11,7 @@ export interface PaginationParams {
 }
 
 /**
- * Filter operators supported by Granit Querying.
+ * Filter operators supported by Granit QueryEngine.
  *
  * Operator availability per field type is defined in metadata:
  * - string:   Eq, Contains, StartsWith, EndsWith, In
@@ -51,7 +51,7 @@ export interface SortEntry {
 }
 
 /**
- * Full query request sent to the backend — mirrors `Granit.Querying.QueryRequest` (.NET).
+ * Full query request sent to the backend — mirrors `Granit.QueryEngine.QueryRequest` (.NET).
  *
  * Serialized to query string format:
  * ```

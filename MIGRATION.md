@@ -1,13 +1,13 @@
 # Guide de migration
 
-## Pagination : migration vers `@granit/querying`
+## Pagination : migration vers `@granit/query-engine`
 
 **Date** : 2026-03-08
 
 ### Contexte
 
 Les hooks de pagination (`usePaginatedFetch`) étaient dupliqués dans `@granit/notifications`
-et `@granit/timeline`. La logique est désormais centralisée dans `@granit/querying` sous deux
+et `@granit/timeline`. La logique est désormais centralisée dans `@granit/query-engine` sous deux
 primitives :
 
 - `useInfiniteScroll` — chargement progressif (load more / infinite scroll)
@@ -22,7 +22,7 @@ Aucun changement requis immédiatement, mais il est recommandé de migrer :
 
 ```diff
 - import { usePaginatedFetch } from '@granit/notifications';
-+ import { useInfiniteScroll } from '@granit/querying';
++ import { useInfiniteScroll } from '@granit/query-engine';
 ```
 
 Les types suivent le même schéma :
@@ -42,10 +42,10 @@ Aucun changement d'API publique.
 #### Nouvelles dépendances
 
 Les packages `@granit/timeline` et `@granit/notifications` ont un nouveau
-`peerDependency` sur `@granit/querying`. Assurez-vous qu'il est installé :
+`peerDependency` sur `@granit/query-engine`. Assurez-vous qu'il est installé :
 
 ```bash
-pnpm add @granit/querying
+pnpm add @granit/query-engine
 ```
 
 ### Renommage des types de retour

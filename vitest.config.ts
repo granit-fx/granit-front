@@ -78,7 +78,7 @@ export default defineConfig({
         'packages/@granit/notifications/src/index.ts'
       ),
       '@granit/privacy': path.resolve(__dirname, 'packages/@granit/privacy/src/index.ts'),
-      '@granit/querying': path.resolve(__dirname, 'packages/@granit/querying/src/index.ts'),
+      '@granit/query-engine': path.resolve(__dirname, 'packages/@granit/query-engine/src/index.ts'),
       '@granit/validation': path.resolve(__dirname, 'packages/@granit/validation/src/index.ts'),
       '@granit/react-reference-data': path.resolve(
         __dirname,
@@ -165,9 +165,9 @@ export default defineConfig({
         __dirname,
         'packages/@granit/react-privacy/src/index.ts'
       ),
-      '@granit/react-querying': path.resolve(
+      '@granit/react-query-engine': path.resolve(
         __dirname,
-        'packages/@granit/react-querying/src/index.ts'
+        'packages/@granit/react-query-engine/src/index.ts'
       ),
       '@granit/react-validation': path.resolve(
         __dirname,

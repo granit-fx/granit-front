@@ -1,15 +1,15 @@
-<img src="../../../docs/images/granit-icon.svg" alt="" height="32" align="left" style="margin-right:10px" />
+<img src="https://granit-fx.dev/images/granit-icon.svg" alt="" height="32" align="left" style="margin-right:10px" />
 
-# @granit/querying
+# @granit/query-engine
 
-Headless data grid: hooks `useQueryEndpoint`, `useQueryMeta`, `useSavedViews`, `useSmartFilter`, and types mirroring the `Granit.Querying` .NET contract.
+Headless data grid: hooks `useQueryEndpoint`, `useQueryMeta`, `useSavedViews`, `useSmartFilter`, and types mirroring the `Granit.QueryEngine` .NET contract.
 
-Part of the [granit-front](../../../README.md) framework.
+Part of the [Granit](https://granit-fx.dev) framework.
 
 ## Installation
 
-Consumed via `link:` protocol — see the [integration documentation](../../../README.md).
+Consumed via `link:` protocol — see the [integration documentation](https://granit-fx.dev).
 
 ## Documentation
 
-See the [full documentation](../../../docs/framework/querying.md).
+See the [full documentation](https://granit-fx.dev/frontend/data/query-engine/).

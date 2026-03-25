@@ -50,7 +50,7 @@ const DATE_TYPES = new Set(['DateTime', 'DateTimeOffset', 'DateOnly']);
  * Infer available filter operators from a CLR type name.
  *
  * Mirrors the backend operator inference logic in
- * `Granit.Querying.Filtering.OperatorInference`.
+ * `Granit.QueryEngine.Filtering.OperatorInference`.
  */
 export function inferOperators(clrType: string): readonly FilterOperator[] {
   if (clrType === 'String') return STRING_OPERATORS;

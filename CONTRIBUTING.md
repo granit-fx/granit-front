@@ -85,7 +85,7 @@ Open an issue using the **Feature Request** template. Describe:
 6. **Commit** using [Conventional Commits](https://www.conventionalcommits.org/):
 
    ```bash
-   git commit -m "feat(querying): add enum filter support"
+   git commit -m "feat(query-engine): add enum filter support"
    git commit -m "fix(auth): handle expired token refresh"
    git commit -m "docs: update getting started guide"
    ```

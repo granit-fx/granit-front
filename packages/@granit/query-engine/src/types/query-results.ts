@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Query results — mirrors Granit.Querying.PagedResult / GroupedResult (.NET)
+// Query results — mirrors Granit.QueryEngine.PagedResult / GroupedResult (.NET)
 // ---------------------------------------------------------------------------
 
 /** Paginated query result (offset or cursor). */

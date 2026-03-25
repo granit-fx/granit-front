@@ -2,12 +2,12 @@
 
 User settings hooks and providers.
 
-Part of the [granit-front](../../../README.md) framework.
+Part of the [Granit](https://granit-fx.dev) framework.
 
 ## Installation
 
-Consumed via `link:` protocol — see the [integration documentation](../../../README.md).
+Consumed via `link:` protocol — see the [integration documentation](https://granit-fx.dev).
 
 ## Documentation
 
-See the [full documentation](../../../docs/framework/settings.md).
+See the [full documentation](https://granit-fx.dev/frontend/infrastructure/settings/).
