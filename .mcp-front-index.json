@@ -190,14 +190,14 @@
       "description": "Audit log types and API functions — mirrors Granit.Auditing .NET",
       "exports": [
         {
+          "name": "AuditCategory",
+          "kind": "const",
+          "signature": "const AuditCategory"
+        },
+        {
           "name": "AuditChangeType",
           "kind": "const",
           "signature": "const AuditChangeType"
-        },
-        {
-          "name": "AuditLogCategory",
-          "kind": "const",
-          "signature": "const AuditLogCategory"
         }
       ]
     },

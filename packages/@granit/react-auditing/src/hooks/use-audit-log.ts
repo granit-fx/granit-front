@@ -7,7 +7,8 @@ import {
   useAuditLogConfig,
 } from '../providers/audit-log-provider.js';
 
-import type { AuditLogEntryDetail, AuditLogListParams, AuditLogPage } from '@granit/auditing';
+import type { AuditEntryDetail, AuditListParams, AuditPage } from '@granit/auditing';
+import type { PaginationParams } from '@granit/query-engine';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -15,10 +16,10 @@ import type { UseQueryResult } from '@tanstack/react-query';
  *
  * @example
  * ```tsx
- * const { data } = useAuditLogEntries({ category: AuditLogCategory.DataMutation });
+ * const { data } = useAuditLogEntries({ category: AuditCategory.DataMutation });
  * ```
  */
-export function useAuditLogEntries(params?: AuditLogListParams): UseQueryResult<AuditLogPage> {
+export function useAuditLogEntries(params?: AuditListParams): UseQueryResult<AuditPage> {
   const config = useAuditLogConfig();
   const basePath = config.basePath ?? DEFAULT_BASE_PATH;
 
@@ -36,7 +37,7 @@ export function useAuditLogEntries(params?: AuditLogListParams): UseQueryResult<
  * const { data: entry } = useAuditLogEntry(entryId);
  * ```
  */
-export function useAuditLogEntry(id: string): UseQueryResult<AuditLogEntryDetail> {
+export function useAuditLogEntry(id: string): UseQueryResult<AuditEntryDetail> {
   const config = useAuditLogConfig();
   const basePath = config.basePath ?? DEFAULT_BASE_PATH;
 
@@ -58,8 +59,8 @@ export function useAuditLogEntry(id: string): UseQueryResult<AuditLogEntryDetail
 export function useEntityAuditTrail(
   entityType: string,
   entityId: string,
-  params?: { page?: number; pageSize?: number }
-): UseQueryResult<AuditLogPage> {
+  params?: PaginationParams
+): UseQueryResult<AuditPage> {
   const config = useAuditLogConfig();
   const basePath = config.basePath ?? DEFAULT_BASE_PATH;
 

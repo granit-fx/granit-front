@@ -1,4 +1,4 @@
-import { AuditLogCategory } from '@granit/auditing';
+import { AuditCategory } from '@granit/auditing';
 import { createTestQueryClient } from '@granit/react-testing';
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -13,7 +13,7 @@ import {
 import { AuditLogProvider } from '../providers/audit-log-provider.js';
 
 import type { AuditLogConfig } from '../providers/audit-log-provider.js';
-import type { AuditLogEntryDetail, AuditLogPage } from '@granit/auditing';
+import type { AuditEntryDetail, AuditPage } from '@granit/auditing';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -29,7 +29,7 @@ function createWrapper(client: AxiosInstance, basePath = '/audit-log') {
   };
 }
 
-const emptyPage: AuditLogPage = {
+const emptyPage: AuditPage = {
   items: [],
   totalCount: 0,
   hasMore: false,
@@ -42,14 +42,14 @@ describe('useAuditLogEntries', () => {
     vi.mocked(client.get).mockResolvedValue(axiosResponse(emptyPage));
 
     const { result } = renderHook(
-      () => useAuditLogEntries({ category: AuditLogCategory.DataMutation }),
+      () => useAuditLogEntries({ category: AuditCategory.DataMutation }),
       { wrapper: createWrapper(client) }
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual(emptyPage);
     expect(client.get).toHaveBeenCalledWith('/audit-log', {
-      params: { category: AuditLogCategory.DataMutation },
+      params: { category: AuditCategory.DataMutation },
     });
   });
 });
@@ -57,12 +57,12 @@ describe('useAuditLogEntries', () => {
 describe('useAuditLogEntry', () => {
   it('should fetch a single entry', async () => {
     const client = createMockClient();
-    const detail: AuditLogEntryDetail = {
+    const detail: AuditEntryDetail = {
       id: 'abc-123',
       timestamp: '2026-03-17T10:00:00Z',
       userId: 'user-1',
       userName: 'admin',
-      category: AuditLogCategory.DataMutation,
+      category: AuditCategory.DataMutation,
       ipAddress: null,
       tenantId: null,
       correlationId: null,

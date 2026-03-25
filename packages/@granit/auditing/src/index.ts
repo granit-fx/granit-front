@@ -3,16 +3,16 @@
 // ---------------------------------------------------------------------------
 
 // Types
-export { AuditChangeType, AuditLogCategory } from './types/index.js';
+export { AuditCategory, AuditChangeType } from './types/index.js';
 
 export type {
+  AuditCategoryValue,
   AuditChangeTypeValue,
+  AuditEntry,
+  AuditEntryDetail,
   AuditEntityChange,
-  AuditLogCategoryValue,
-  AuditLogEntry,
-  AuditLogEntryDetail,
-  AuditLogListParams,
-  AuditLogPage,
+  AuditListParams,
+  AuditPage,
   AuditPropertyChange,
 } from './types/index.js';
 

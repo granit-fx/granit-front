@@ -4,15 +4,15 @@ import type { PagedResult, PaginationParams } from '@granit/query-engine';
 // Audit log types — mirrors Granit.Auditing .NET contracts
 // ---------------------------------------------------------------------------
 
-/** Audit log category — mirrors `AuditLogCategory` enum. */
-export const AuditLogCategory = {
+/** Audit log category — mirrors `AuditCategory` enum. */
+export const AuditCategory = {
   DataMutation: 'DataMutation',
   ConfigurationChange: 'ConfigurationChange',
   DataAccess: 'DataAccess',
   AccessDenied: 'AccessDenied',
 } as const;
 
-export type AuditLogCategoryValue = (typeof AuditLogCategory)[keyof typeof AuditLogCategory];
+export type AuditCategoryValue = (typeof AuditCategory)[keyof typeof AuditCategory];
 
 /** Entity change type — mirrors `AuditChangeType` enum. */
 export const AuditChangeType = {
@@ -39,41 +39,41 @@ export type AuditEntityChange = {
   readonly propertyChanges: readonly AuditPropertyChange[];
 };
 
-/** Audit log entry summary (list view). */
-export type AuditLogEntry = {
+/** Audit log entry summary (list view) — mirrors `AuditEntryResponse`. */
+export type AuditEntry = {
   readonly id: string;
   readonly timestamp: string;
   readonly userId: string;
   readonly userName: string | null;
-  readonly category: AuditLogCategoryValue;
+  readonly category: AuditCategoryValue;
   readonly ipAddress: string | null;
   readonly tenantId: string | null;
   readonly correlationId: string | null;
   readonly entityChangeCount: number;
 };
 
-/** Audit log entry with full entity change details. */
-export type AuditLogEntryDetail = {
+/** Audit log entry with full entity change details — mirrors `AuditEntryDetailResponse`. */
+export type AuditEntryDetail = {
   readonly id: string;
   readonly timestamp: string;
   readonly userId: string;
   readonly userName: string | null;
-  readonly category: AuditLogCategoryValue;
+  readonly category: AuditCategoryValue;
   readonly ipAddress: string | null;
   readonly tenantId: string | null;
   readonly correlationId: string | null;
   readonly entityChanges: readonly AuditEntityChange[];
 };
 
-/** Query parameters for listing audit log entries. */
-export type AuditLogListParams = PaginationParams & {
+/** Query parameters for listing audit log entries — mirrors `AuditingQueryParameters`. */
+export type AuditListParams = PaginationParams & {
   readonly userId?: string;
   readonly entityType?: string;
   readonly entityId?: string;
-  readonly category?: AuditLogCategoryValue;
+  readonly category?: AuditCategoryValue;
   readonly from?: string;
   readonly to?: string;
 };
 
 /** Paginated response for audit log entries. */
-export type AuditLogPage = PagedResult<AuditLogEntry>;
+export type AuditPage = PagedResult<AuditEntry>;

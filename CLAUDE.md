@@ -205,7 +205,7 @@ Full frontend conventions: `../granit-dotnet/docs/guide/conventions/frontend/`
   - `@granit/ai` → `axios`
   - `@granit/react-ai` → `react`, `axios`, `@tanstack/react-query`, `@granit/ai`
   - `@granit/auditing` → `@granit/query-engine`, `axios`
-  - `@granit/react-auditing` → `react`, `axios`, `@tanstack/react-query`, `@granit/auditing`
+  - `@granit/react-auditing` → `react`, `axios`, `@tanstack/react-query`, `@granit/auditing`, `@granit/query-engine`
   - `@granit/diagnostics` → `axios`
   - `@granit/react-diagnostics` → `react`, `axios`, `@tanstack/react-query`, `@granit/diagnostics`
   - `@granit/features` → `axios`

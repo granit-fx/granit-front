@@ -1,4 +1,5 @@
-import type { AuditLogEntryDetail, AuditLogListParams, AuditLogPage } from '../types/index.js';
+import type { AuditEntryDetail, AuditListParams, AuditPage } from '../types/index.js';
+import type { PaginationParams } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
 
 /**
@@ -9,9 +10,9 @@ import type { AxiosInstance } from 'axios';
 export async function fetchAuditLogEntries(
   client: AxiosInstance,
   basePath: string,
-  params?: AuditLogListParams
-): Promise<AuditLogPage> {
-  const { data } = await client.get<AuditLogPage>(basePath, { params });
+  params?: AuditListParams
+): Promise<AuditPage> {
+  const { data } = await client.get<AuditPage>(basePath, { params });
   return data;
 }
 
@@ -24,8 +25,8 @@ export async function fetchAuditLogEntry(
   client: AxiosInstance,
   basePath: string,
   id: string
-): Promise<AuditLogEntryDetail> {
-  const { data } = await client.get<AuditLogEntryDetail>(`${basePath}/${encodeURIComponent(id)}`);
+): Promise<AuditEntryDetail> {
+  const { data } = await client.get<AuditEntryDetail>(`${basePath}/${encodeURIComponent(id)}`);
   return data;
 }
 
@@ -39,9 +40,9 @@ export async function fetchEntityAuditTrail(
   basePath: string,
   entityType: string,
   entityId: string,
-  params?: { page?: number; pageSize?: number }
-): Promise<AuditLogPage> {
-  const { data } = await client.get<AuditLogPage>(
+  params?: PaginationParams
+): Promise<AuditPage> {
+  const { data } = await client.get<AuditPage>(
     `${basePath}/entity/${encodeURIComponent(entityType)}/${encodeURIComponent(entityId)}`,
     { params }
   );

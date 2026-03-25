@@ -459,6 +459,9 @@ importers:
       '@granit/auditing':
         specifier: workspace:*
         version: link:../auditing
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
       '@tanstack/react-query':
         specifier: ^5.0.0
         version: 5.95.2(react@19.2.4)

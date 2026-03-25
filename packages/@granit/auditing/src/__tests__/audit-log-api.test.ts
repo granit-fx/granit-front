@@ -6,9 +6,9 @@ import {
   fetchAuditLogEntry,
   fetchEntityAuditTrail,
 } from '../api/audit-log-api.js';
-import { AuditLogCategory } from '../types/index.js';
+import { AuditCategory } from '../types/index.js';
 
-import type { AuditLogEntryDetail, AuditLogPage } from '../types/index.js';
+import type { AuditEntryDetail, AuditPage } from '../types/index.js';
 
 const basePath = '/audit-log';
 
@@ -16,7 +16,7 @@ describe('audit-log-api', () => {
   describe('fetchAuditLogEntries', () => {
     it('should call GET with params', async () => {
       const client = createMockClient();
-      const page: AuditLogPage = {
+      const page: AuditPage = {
         items: [],
         totalCount: 0,
         hasMore: false,
@@ -24,7 +24,7 @@ describe('audit-log-api', () => {
       };
       vi.mocked(client.get).mockResolvedValue(axiosResponse(page));
 
-      const params = { category: AuditLogCategory.DataMutation, page: 1, pageSize: 20 };
+      const params = { category: AuditCategory.DataMutation, page: 1, pageSize: 20 };
       const result = await fetchAuditLogEntries(client, basePath, params);
 
       expect(client.get).toHaveBeenCalledWith('/audit-log', { params });
@@ -46,12 +46,12 @@ describe('audit-log-api', () => {
   describe('fetchAuditLogEntry', () => {
     it('should call GET with encoded id', async () => {
       const client = createMockClient();
-      const entry: AuditLogEntryDetail = {
+      const entry: AuditEntryDetail = {
         id: 'abc-123',
         timestamp: '2026-03-17T10:00:00Z',
         userId: 'user-1',
         userName: 'admin',
-        category: AuditLogCategory.DataMutation,
+        category: AuditCategory.DataMutation,
         ipAddress: '127.0.0.1',
         tenantId: null,
         correlationId: null,
@@ -69,7 +69,7 @@ describe('audit-log-api', () => {
   describe('fetchEntityAuditTrail', () => {
     it('should call GET with encoded entity type and id', async () => {
       const client = createMockClient();
-      const page: AuditLogPage = {
+      const page: AuditPage = {
         items: [],
         totalCount: 0,
         hasMore: false,
