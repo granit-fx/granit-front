@@ -39,7 +39,7 @@ describe('useWebhookStats', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/v1/webhooks/subscriptions/stats');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/webhooks/stats');
     expect(result.current.data).toEqual(mockStats);
   });
 

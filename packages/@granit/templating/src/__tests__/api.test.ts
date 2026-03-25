@@ -43,7 +43,7 @@ describe('templates-api', () => {
         items: [
           {
             name: 'Billing.Invoice',
-            status: TemplateLifecycleStatus.Draft,
+            currentStatus: TemplateLifecycleStatus.Draft,
             mimeType: 'text/html',
             lastModifiedAt: '2026-03-01T10:00:00Z',
             lastModifiedBy: 'admin',

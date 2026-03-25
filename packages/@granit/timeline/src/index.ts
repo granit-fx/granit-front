@@ -2,6 +2,7 @@
 export {
   TimelineEntryType,
   type TimelineEntryTypeValue,
+  type TimelineAttachmentInfo,
   type TimelineEntry,
   type TimelineEntryPage,
   type CreateTimelineEntryRequest,

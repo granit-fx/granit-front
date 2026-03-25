@@ -6,11 +6,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  useCreateOidcScope,
-  useDeleteOidcScope,
-  useOidcScopes,
-} from '../hooks/use-oidc-scopes.js';
+import { useCreateOidcScope, useDeleteOidcScope, useOidcScopes } from '../hooks/use-oidc-scopes.js';
 import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider.js';
 
 import type { AdminOidcScope } from '@granit/openiddict-admin';
@@ -27,9 +23,7 @@ function createWrapper() {
   return {
     wrapper: ({ children }: { children: React.ReactNode }) => (
       <QueryClientProvider client={queryClient}>
-        <OpenIddictAdminProvider config={{ client }}>
-          {children}
-        </OpenIddictAdminProvider>
+        <OpenIddictAdminProvider config={{ client }}>{children}</OpenIddictAdminProvider>
       </QueryClientProvider>
     ),
     queryClient,
@@ -38,15 +32,14 @@ function createWrapper() {
 }
 
 const mockScope: AdminOidcScope = {
-  id: 'scope-001',
   name: 'api',
   displayName: 'API access',
-  resources: ['guava-backend'],
+  description: null,
 };
 
 const mockScopes: readonly AdminOidcScope[] = [
   mockScope,
-  { id: 'scope-002', name: 'openid', displayName: 'OpenID', resources: [] },
+  { name: 'openid', displayName: 'OpenID', description: null },
 ];
 
 describe('useOidcScopes', () => {
@@ -86,16 +79,16 @@ describe('useCreateOidcScope', () => {
     result.current.mutate({
       name: 'api',
       displayName: 'API access',
-      resources: ['guava-backend'],
+      description: 'Grants API access',
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(createScope).toHaveBeenCalledWith(
-      expect.anything(),
-      '/api/admin',
-      { name: 'api', displayName: 'API access', resources: ['guava-backend'] }
-    );
+    expect(createScope).toHaveBeenCalledWith(expect.anything(), '/api/admin', {
+      name: 'api',
+      displayName: 'API access',
+      description: 'Grants API access',
+    });
     expect(result.current.data).toEqual(mockScope);
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'oidc', 'scopes'],

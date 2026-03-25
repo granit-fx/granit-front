@@ -16,8 +16,8 @@ const BASE = '/api/admin';
 const mockGroup: AdminGroup = {
   id: 'grp-001',
   name: 'Developers',
-  path: null,
-  subGroups: [],
+  description: null,
+  tenantId: null,
 };
 
 describe('admin-group-api', () => {
@@ -119,9 +119,7 @@ describe('admin-group-api', () => {
 
       await removeGroupMember(client, BASE, 'id/slash', 'user/slash');
 
-      expect(client.delete).toHaveBeenCalledWith(
-        `${BASE}/groups/id%2Fslash/members/user%2Fslash`
-      );
+      expect(client.delete).toHaveBeenCalledWith(`${BASE}/groups/id%2Fslash/members/user%2Fslash`);
     });
   });
 });

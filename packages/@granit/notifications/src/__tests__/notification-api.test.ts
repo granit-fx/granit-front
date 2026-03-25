@@ -13,7 +13,6 @@ import {
 
 import type {
   ActivityFeedPage,
-  UserNotification,
   UserNotificationPage,
   NotificationPreference,
 } from '../types/index.js';
@@ -44,24 +43,12 @@ describe('notification-api', () => {
   // markAsRead
   // -----------------------------------------------------------------------
   it('should send POST to the correct URL (markAsRead)', async () => {
-    const notification: UserNotification = {
-      id: 'n-1',
-      title: 'Test',
-      body: null,
-      severity: 'info',
-      entityType: null,
-      entityId: null,
-      isRead: true,
-      createdAt: '2026-01-01T00:00:00Z',
-      readAt: '2026-01-01T00:01:00Z',
-    };
     const client = createMockClient();
-    vi.mocked(client.post).mockResolvedValue(axiosResponse(notification));
+    vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
 
-    const result = await markAsRead(client, '/api/v1', 'n-1');
+    await markAsRead(client, '/api/v1', 'n-1');
 
     expect(client.post).toHaveBeenCalledWith('/api/v1/notifications/n-1/read');
-    expect(result.isRead).toBe(true);
   });
 
   // -----------------------------------------------------------------------
@@ -127,9 +114,11 @@ describe('notification-api', () => {
   // -----------------------------------------------------------------------
   it('should send PUT with preference data (updatePreference)', async () => {
     const pref: NotificationPreference = {
-      notificationType: 'AppointmentReminder',
-      label: 'Rappel de rendez-vous',
-      channels: { inApp: true, email: false, push: true },
+      id: 'pref-1',
+      userId: 'u-1',
+      notificationTypeName: 'AppointmentReminder',
+      channelName: 'InApp',
+      isEnabled: true,
     };
     const client = createMockClient();
     vi.mocked(client.put).mockResolvedValue(axiosResponse(pref));

@@ -15,6 +15,7 @@
   },
   "peerDependencies": {
     "@granit/storage": "workspace:*",
+    "axios": "*",
     "i18next": "^25.0.0"
   },
   "devDependencies": {

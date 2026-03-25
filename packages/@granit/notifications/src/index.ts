@@ -8,11 +8,13 @@ export type {
   NotificationPreference,
   NotificationSeverity,
   NotificationTransport,
+  NotificationTransportMessage,
   UserNotification,
   UserNotificationPage,
+  UserNotificationState,
 } from './types/index.js';
 
-export { getAvailableChannels, NotificationChannels } from './types/index.js';
+export { NotificationChannels } from './types/index.js';
 
 // API (pure TypeScript functions)
 export {

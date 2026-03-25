@@ -1,40 +1,21 @@
 import { describe, expect, it } from 'vitest';
 
-import { getAvailableChannels } from '../types/index.js';
+import { NotificationChannels } from '../types/index.js';
 
-import type { NotificationPreference } from '../types/index.js';
-
-describe('getAvailableChannels', () => {
-  it('should return empty array for empty preferences', () => {
-    expect(getAvailableChannels([])).toEqual([]);
+describe('NotificationChannels', () => {
+  it('should use PascalCase values matching .NET backend', () => {
+    expect(NotificationChannels.InApp).toBe('InApp');
+    expect(NotificationChannels.Email).toBe('Email');
+    expect(NotificationChannels.Sms).toBe('Sms');
+    expect(NotificationChannels.WhatsApp).toBe('WhatsApp');
+    expect(NotificationChannels.Push).toBe('Push');
+    expect(NotificationChannels.MobilePush).toBe('MobilePush');
+    expect(NotificationChannels.Sse).toBe('Sse');
+    expect(NotificationChannels.SignalR).toBe('SignalR');
+    expect(NotificationChannels.Zulip).toBe('Zulip');
   });
 
-  it('should extract channel keys from the first preference', () => {
-    const preferences: NotificationPreference[] = [
-      {
-        notificationType: 'document_update',
-        label: 'Document updates',
-        channels: { inApp: true, email: false, sms: true, whatsApp: false },
-      },
-      {
-        notificationType: 'system_alert',
-        label: 'System alerts',
-        channels: { inApp: true, email: true, sms: false, whatsApp: false },
-      },
-    ];
-
-    expect(getAvailableChannels(preferences)).toEqual(['inApp', 'email', 'sms', 'whatsApp']);
-  });
-
-  it('should handle preferences with a single channel', () => {
-    const preferences: NotificationPreference[] = [
-      {
-        notificationType: 'alert',
-        label: 'Alert',
-        channels: { inApp: true },
-      },
-    ];
-
-    expect(getAvailableChannels(preferences)).toEqual(['inApp']);
+  it('should contain all 9 well-known channels', () => {
+    expect(Object.keys(NotificationChannels)).toHaveLength(9);
   });
 });

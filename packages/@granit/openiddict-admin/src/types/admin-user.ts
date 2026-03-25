@@ -11,16 +11,15 @@ export interface AdminUserListParams {
   readonly pageSize?: number;
 }
 
-/** User descriptor returned by admin endpoints. */
+/** User descriptor returned by admin endpoints — mirrors `AdminUserResponse`. */
 export interface AdminUser {
-  readonly id: string;
-  readonly email: string;
+  readonly userId: string;
+  readonly username: string | null;
+  readonly email: string | null;
   readonly firstName: string | null;
   readonly lastName: string | null;
-  readonly emailConfirmed: boolean;
-  readonly isDeleted: boolean;
-  readonly roles: readonly string[];
-  readonly groups: readonly string[];
+  readonly enabled: boolean;
+  readonly extraProperties: Readonly<Record<string, string>>;
 }
 
 /** Paginated list of admin users. */

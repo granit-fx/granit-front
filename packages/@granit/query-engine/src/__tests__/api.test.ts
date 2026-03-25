@@ -88,9 +88,8 @@ describe('saved-views-api', () => {
 
   it('updateSavedView calls PUT /saved-views/:id', async () => {
     const client = createMockClient();
-    const view = { id: '1', name: 'Updated', isShared: true, isDefault: false };
-    vi.mocked(client.put).mockResolvedValueOnce({ data: view });
-    const result = await updateSavedView(client, '/api/v1/patients', '1', {
+    vi.mocked(client.put).mockResolvedValueOnce({ data: undefined });
+    await updateSavedView(client, '/api/v1/patients', '1', {
       name: 'Updated',
       isShared: true,
     });
@@ -98,7 +97,6 @@ describe('saved-views-api', () => {
       name: 'Updated',
       isShared: true,
     });
-    expect(result).toEqual(view);
   });
 
   it('deleteSavedView calls DELETE /saved-views/:id', async () => {
@@ -109,10 +107,8 @@ describe('saved-views-api', () => {
 
   it('setDefaultSavedView calls POST /saved-views/:id/set-default', async () => {
     const client = createMockClient();
-    const view = { id: '1', name: 'Test', isShared: false, isDefault: true };
-    vi.mocked(client.post).mockResolvedValueOnce({ data: view });
-    const result = await setDefaultSavedView(client, '/api/v1/patients', '1');
+    vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
+    await setDefaultSavedView(client, '/api/v1/patients', '1');
     expect(client.post).toHaveBeenCalledWith('/api/v1/patients/saved-views/1/set-default');
-    expect(result).toEqual(view);
   });
 });

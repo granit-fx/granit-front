@@ -33,16 +33,15 @@ export async function createSavedView(
 }
 
 /**
- * Update an existing saved view.
+ * Update an existing saved view. Returns `void` (backend responds with 204 NoContent).
  */
 export async function updateSavedView(
   client: AxiosInstance,
   basePath: string,
   id: string,
   request: UpdateSavedViewRequest
-): Promise<SavedViewSummary> {
-  const response = await client.put<SavedViewSummary>(`${basePath}/saved-views/${id}`, request);
-  return response.data;
+): Promise<void> {
+  await client.put(`${basePath}/saved-views/${id}`, request);
 }
 
 /**
@@ -57,13 +56,12 @@ export async function deleteSavedView(
 }
 
 /**
- * Set a saved view as the default.
+ * Set a saved view as the default. Returns `void` (backend responds with 204 NoContent).
  */
 export async function setDefaultSavedView(
   client: AxiosInstance,
   basePath: string,
   id: string
-): Promise<SavedViewSummary> {
-  const response = await client.post<SavedViewSummary>(`${basePath}/saved-views/${id}/set-default`);
-  return response.data;
+): Promise<void> {
+  await client.post(`${basePath}/saved-views/${id}/set-default`);
 }

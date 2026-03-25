@@ -579,11 +579,6 @@
       "description": "Transport-agnostic notification hooks and providers",
       "exports": [
         {
-          "name": "getAvailableChannels",
-          "kind": "function",
-          "signature": "function getAvailableChannels(preferences: readonly NotificationPreference[]): string[]"
-        },
-        {
           "name": "NotificationChannels",
           "kind": "const",
           "signature": "const NotificationChannels"
@@ -1139,7 +1134,7 @@
         {
           "name": "UsePermissionGrantReturn",
           "kind": "type",
-          "signature": "type UsePermissionGrantReturn = { /** Grant a permission to a role. `PUT {basePath}/roles/{roleName}/permissions/{permissionName}` */ readonly grant: UseMutationResult<void, Error, PermissionGrantParams>; /** Revoke a permission from a role. `DELETE {basePath}/roles/{roleName}/permissions/{permissionName}` */ readonly revoke: UseMutationResult<void, Error, PermissionGrantParams>; }"
+          "signature": "type UsePermissionGrantReturn = { /** Grant a permission to a role. `PUT {basePath}/roles/{roleName}/{permissionName}` */ readonly grant: UseMutationResult<void, Error, PermissionGrantParams>; /** Revoke a permission from a role. `DELETE {basePath}/roles/{roleName}/{permissionName}` */ readonly revoke: UseMutationResult<void, Error, PermissionGrantParams>; }"
         }
       ]
     },
@@ -1479,11 +1474,6 @@
           "signature": "type RoleMutationVariables = { readonly userId: string; readonly roleName: string; }"
         },
         {
-          "name": "SetUserRolesVariables",
-          "kind": "type",
-          "signature": "type SetUserRolesVariables = { readonly userId: string; readonly roles: readonly string[]; }"
-        },
-        {
           "name": "GroupMutationVariables",
           "kind": "type",
           "signature": "type GroupMutationVariables = { readonly userId: string; readonly groupId: string; }"
@@ -1586,9 +1576,9 @@
           "signature": "interface UseRealTimeNotificationsReturn",
           "members": [
             {
-              "name": "lastNotification",
+              "name": "lastMessage",
               "kind": "property",
-              "signature": "lastNotification: UserNotification | null"
+              "signature": "lastMessage: NotificationTransportMessage | null"
             },
             {
               "name": "connectionState",
@@ -1741,9 +1731,9 @@
               "signature": "saving: boolean"
             },
             {
-              "name": "toggleChannel",
+              "name": "togglePreference",
               "kind": "method",
-              "signature": "toggleChannel: (notificationType: string, channel: NotificationChannel, enabled: boolean) => void"
+              "signature": "togglePreference: (preferenceId: string, enabled: boolean) => void"
             },
             {
               "name": "refresh",

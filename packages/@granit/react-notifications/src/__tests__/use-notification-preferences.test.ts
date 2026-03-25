@@ -14,14 +14,25 @@ import type { NotificationPreference } from '@granit/notifications';
 
 const MOCK_PREFS: NotificationPreference[] = [
   {
-    notificationType: 'AppointmentReminder',
-    label: 'Rappel de rendez-vous',
-    channels: { inApp: true, email: true, push: false },
+    id: 'pref-1',
+    userId: 'u-1',
+    notificationTypeName: 'AppointmentReminder',
+    channelName: 'InApp',
+    isEnabled: true,
   },
   {
-    notificationType: 'SystemAlert',
-    label: 'Alerte système',
-    channels: { inApp: true, email: false, push: false },
+    id: 'pref-2',
+    userId: 'u-1',
+    notificationTypeName: 'AppointmentReminder',
+    channelName: 'Email',
+    isEnabled: true,
+  },
+  {
+    id: 'pref-3',
+    userId: 'u-1',
+    notificationTypeName: 'SystemAlert',
+    channelName: 'InApp',
+    isEnabled: true,
   },
 ];
 
@@ -36,17 +47,17 @@ describe('useNotificationPreferences', () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
-    expect(result.current.preferences).toHaveLength(2);
-    expect(result.current.preferences[0]!.notificationType).toBe('AppointmentReminder');
+    expect(result.current.preferences).toHaveLength(3);
+    expect(result.current.preferences[0]!.notificationTypeName).toBe('AppointmentReminder');
   });
 
-  it('should update preference optimistically via toggleChannel', async () => {
+  it('should update preference optimistically via togglePreference', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse(MOCK_PREFS));
 
     const updatedPref: NotificationPreference = {
-      ...MOCK_PREFS[0]!,
-      channels: { inApp: true, email: false, push: false },
+      ...MOCK_PREFS[1]!,
+      isEnabled: false,
     };
     vi.mocked(client.put).mockResolvedValue(axiosResponse(updatedPref));
 
@@ -57,10 +68,10 @@ describe('useNotificationPreferences', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     await act(async () => {
-      await result.current.toggleChannel('AppointmentReminder', 'email', false);
+      await result.current.togglePreference('pref-2', false);
     });
 
-    expect(result.current.preferences[0]!.channels.email).toBe(false);
+    expect(result.current.preferences[1]!.isEnabled).toBe(false);
   });
 
   it('should roll back on toggle failure', async () => {
@@ -75,11 +86,11 @@ describe('useNotificationPreferences', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     await act(async () => {
-      await result.current.toggleChannel('AppointmentReminder', 'email', false);
+      await result.current.togglePreference('pref-2', false);
     });
 
     // Should roll back to original value
-    expect(result.current.preferences[0]!.channels.email).toBe(true);
+    expect(result.current.preferences[1]!.isEnabled).toBe(true);
     expect(result.current.error?.message).toBe('Save failed');
   });
 
@@ -112,7 +123,7 @@ describe('useNotificationPreferences', () => {
     expect(result.current.error?.message).toBe('string error');
   });
 
-  it('should no-op when toggling a non-existent notification type', async () => {
+  it('should no-op when toggling a non-existent preference id', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse(MOCK_PREFS));
 
@@ -123,7 +134,7 @@ describe('useNotificationPreferences', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     await act(async () => {
-      await result.current.toggleChannel('NonExistentType', 'email', false);
+      await result.current.togglePreference('non-existent', false);
     });
 
     // No put call should have been made
@@ -144,11 +155,11 @@ describe('useNotificationPreferences', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     await act(async () => {
-      await result.current.toggleChannel('AppointmentReminder', 'email', false);
+      await result.current.togglePreference('pref-2', false);
     });
 
     // Should roll back to original value
-    expect(result.current.preferences[0]!.channels.email).toBe(true);
+    expect(result.current.preferences[1]!.isEnabled).toBe(true);
     expect(result.current.error).toBeInstanceOf(Error);
     expect(result.current.error?.message).toBe('42');
   });
@@ -163,9 +174,7 @@ describe('useNotificationPreferences', () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
-    const updatedPrefs: NotificationPreference[] = [
-      { ...MOCK_PREFS[0]!, channels: { inApp: false, email: true, push: true } },
-    ];
+    const updatedPrefs: NotificationPreference[] = [{ ...MOCK_PREFS[0]!, isEnabled: false }];
     vi.mocked(client.get).mockResolvedValue(axiosResponse(updatedPrefs));
 
     await act(async () => {
@@ -174,7 +183,7 @@ describe('useNotificationPreferences', () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false));
     expect(result.current.preferences).toHaveLength(1);
-    expect(result.current.preferences[0]!.channels.push).toBe(true);
+    expect(result.current.preferences[0]!.isEnabled).toBe(false);
   });
 
   it('should not update state when unmounted during initial fetch', async () => {
@@ -219,7 +228,7 @@ describe('useNotificationPreferences', () => {
     });
   });
 
-  it('should not update state when unmounted during toggleChannel save', async () => {
+  it('should not update state when unmounted during togglePreference save', async () => {
     let resolvePut: (value: unknown) => void;
     const pendingPut = new Promise((resolve) => {
       resolvePut = resolve;
@@ -237,20 +246,18 @@ describe('useNotificationPreferences', () => {
 
     // Start the toggle but don't await — we'll unmount during the save
     act(() => {
-      void result.current.toggleChannel('AppointmentReminder', 'email', false);
+      void result.current.togglePreference('pref-2', false);
     });
 
     unmount();
 
     // Resolve after unmount
     await act(async () => {
-      resolvePut!(
-        axiosResponse({ ...MOCK_PREFS[0], channels: { inApp: true, email: false, push: false } })
-      );
+      resolvePut!(axiosResponse({ ...MOCK_PREFS[1], isEnabled: false }));
     });
   });
 
-  it('should not update state when unmounted during toggleChannel error', async () => {
+  it('should not update state when unmounted during togglePreference error', async () => {
     let rejectPut: (reason: unknown) => void;
     const pendingPut = new Promise((_resolve, reject) => {
       rejectPut = reject;
@@ -267,7 +274,7 @@ describe('useNotificationPreferences', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     act(() => {
-      void result.current.toggleChannel('AppointmentReminder', 'email', false);
+      void result.current.togglePreference('pref-2', false);
     });
 
     unmount();

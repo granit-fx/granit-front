@@ -27,15 +27,11 @@ export interface UseSavedViewsReturn {
   /** Create a new saved view. */
   readonly create: UseMutationResult<SavedViewSummary, Error, CreateSavedViewRequest>;
   /** Update an existing saved view. */
-  readonly update: UseMutationResult<
-    SavedViewSummary,
-    Error,
-    { id: string; request: UpdateSavedViewRequest }
-  >;
+  readonly update: UseMutationResult<void, Error, { id: string; request: UpdateSavedViewRequest }>;
   /** Delete a saved view. */
   readonly remove: UseMutationResult<void, Error, string>;
   /** Set a saved view as the default. */
-  readonly setDefault: UseMutationResult<SavedViewSummary, Error, string>;
+  readonly setDefault: UseMutationResult<void, Error, string>;
 }
 
 /**

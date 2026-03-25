@@ -20,12 +20,13 @@ export interface ReferenceDataLabels {
 
 /**
  * Base interface for all reference data entries.
- * Mirrors Granit.ReferenceData.Domain.ReferenceDataEntity (.NET).
+ * Mirrors Granit.ReferenceData.Endpoints.Dtos.ReferenceDataResponse (.NET).
  *
  * Concrete entity types (Country, Currency, Language, etc.) extend this
  * interface with domain-specific fields in the consuming application.
  */
 export interface ReferenceDataEntry extends ReferenceDataLabels {
+  readonly id: string;
   readonly code: string;
   /** Resolved label for the current UI culture (server-computed, not persisted). */
   readonly label: string;
@@ -37,10 +38,6 @@ export interface ReferenceDataEntry extends ReferenceDataLabels {
   readonly parentCode: string | null;
   /** Custom properties bag (all values are strings). */
   readonly extraProperties: Record<string, string> | null;
-  readonly createdAt: string;
-  readonly createdBy: string;
-  readonly modifiedAt: string | null;
-  readonly modifiedBy: string | null;
 }
 
 /**

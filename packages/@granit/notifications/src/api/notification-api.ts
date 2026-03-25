@@ -1,6 +1,5 @@
 import type {
   ActivityFeedPage,
-  UserNotification,
   UserNotificationPage,
   NotificationPreference,
 } from '../types/index.js';
@@ -30,11 +29,8 @@ export async function markAsRead(
   client: AxiosInstance,
   basePath: string,
   notificationId: string
-): Promise<UserNotification> {
-  const { data } = await client.post<UserNotification>(
-    buildUrl(basePath, 'notifications', notificationId, 'read')
-  );
-  return data;
+): Promise<void> {
+  await client.post(buildUrl(basePath, 'notifications', notificationId, 'read'));
 }
 
 export async function markAllAsRead(client: AxiosInstance, basePath: string): Promise<void> {

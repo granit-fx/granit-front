@@ -10,7 +10,7 @@ import { createMockClient } from './test-utils.js';
 
 import type {
   NotificationConfig,
-  UserNotification,
+  NotificationTransportMessage,
   NotificationTransport,
 } from '@granit/notifications';
 import type { AxiosInstance } from 'axios';
@@ -62,7 +62,7 @@ describe('NotificationProvider', () => {
 
     expect(result.current.config.apiClient).toBe(client);
     expect(result.current.connectionState).toBe('disconnected');
-    expect(result.current.lastNotification).toBeNull();
+    expect(result.current.lastMessage).toBeNull();
     expect(result.current.unreadCount).toBe(0);
   });
 
@@ -106,11 +106,11 @@ describe('NotificationProvider', () => {
   });
 
   it('should handle incoming notifications from transport', async () => {
-    let notificationCallback: ((n: UserNotification) => void) | null = null;
+    let messageCallback: ((m: NotificationTransportMessage) => void) | null = null;
 
     const transport = createMockTransport({
       onNotification: vi.fn((cb) => {
-        notificationCallback = cb;
+        messageCallback = cb;
         return () => {};
       }),
     });
@@ -121,23 +121,21 @@ describe('NotificationProvider', () => {
 
     await waitFor(() => expect(result.current.connectionState).toBe('connected'));
 
-    const mockNotif: UserNotification = {
-      id: 'n-99',
-      title: 'Real-time notification',
-      body: null,
-      severity: 'info',
-      entityType: null,
-      entityId: null,
-      isRead: false,
-      createdAt: '2026-01-15T10:00:00Z',
-      readAt: null,
+    const mockMsg: NotificationTransportMessage = {
+      notificationId: 'n-99',
+      notificationTypeName: 'SystemAlert',
+      severity: 'Info',
+      data: { title: 'Real-time notification' },
+      relatedEntityType: null,
+      relatedEntityId: null,
+      occurredAt: '2026-01-15T10:00:00Z',
     };
 
     act(() => {
-      notificationCallback!(mockNotif);
+      messageCallback!(mockMsg);
     });
 
-    expect(result.current.lastNotification).toEqual(mockNotif);
+    expect(result.current.lastMessage).toEqual(mockMsg);
     expect(result.current.unreadCount).toBe(1);
   });
 

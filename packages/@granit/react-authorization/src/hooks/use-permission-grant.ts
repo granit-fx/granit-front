@@ -9,9 +9,9 @@ const DEFAULT_BASE_PATH = '/api/v1/auth';
 
 /** Return type of the {@link usePermissionGrant} hook. */
 export type UsePermissionGrantReturn = {
-  /** Grant a permission to a role. `PUT {basePath}/roles/{roleName}/permissions/{permissionName}` */
+  /** Grant a permission to a role. `PUT {basePath}/roles/{roleName}/{permissionName}` */
   readonly grant: UseMutationResult<void, Error, PermissionGrantParams>;
-  /** Revoke a permission from a role. `DELETE {basePath}/roles/{roleName}/permissions/{permissionName}` */
+  /** Revoke a permission from a role. `DELETE {basePath}/roles/{roleName}/{permissionName}` */
   readonly revoke: UseMutationResult<void, Error, PermissionGrantParams>;
 };
 
@@ -39,7 +39,7 @@ export function usePermissionGrant(options: UsePermissionGrantOptions): UsePermi
   const queryClient = useQueryClient();
 
   const buildUrl = ({ roleName, permissionName }: PermissionGrantParams) =>
-    `${basePath}/roles/${encodeURIComponent(roleName)}/permissions/${encodeURIComponent(permissionName)}`;
+    `${basePath}/roles/${encodeURIComponent(roleName)}/${encodeURIComponent(permissionName)}`;
 
   const invalidateRole = (params: PermissionGrantParams) =>
     queryClient.invalidateQueries({ queryKey: permissionKeys.role(params.roleName) });

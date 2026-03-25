@@ -43,7 +43,7 @@ export type TemplateRevision = {
   readonly publishedBy?: string;
 };
 
-export type TemplateRevisionSummary = Omit<TemplateRevision, 'content'> & {
+export type TemplateRevisionSummary = Omit<TemplateRevision, 'content' | 'mimeType'> & {
   readonly contentLength: number;
 };
 
@@ -53,7 +53,7 @@ export type TemplateListItem = {
   readonly name: string;
   readonly culture?: string;
   readonly category?: string;
-  readonly status: TemplateLifecycleStatusValue;
+  readonly currentStatus: TemplateLifecycleStatusValue;
   readonly mimeType: string;
   readonly lastModifiedAt: string;
   readonly lastModifiedBy: string;
@@ -63,7 +63,7 @@ export type TemplateListItem = {
 export type TemplateListParams = PaginationParams & {
   readonly search?: string;
   readonly status?: TemplateLifecycleStatusValue;
-  readonly category?: string;
+  readonly categoryId?: string;
   readonly culture?: string;
 };
 

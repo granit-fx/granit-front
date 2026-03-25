@@ -42,14 +42,13 @@ function createWrapper() {
 }
 
 const mockRole: AdminRole = {
-  id: 'role-001',
   name: 'admin',
   description: 'Administrator role',
 };
 
 const mockRoles: readonly AdminRole[] = [
   mockRole,
-  { id: 'role-002', name: 'user', description: 'Standard user role' },
+  { name: 'user', description: 'Standard user role' },
 ];
 
 describe('useAdminRoles', () => {
@@ -116,7 +115,13 @@ describe('useCreateAdminRole', () => {
 
 describe('useAdminRoleMembers', () => {
   const mockMembers: readonly AdminRoleMember[] = [
-    { id: 'usr-001', email: 'admin@example.com', firstName: 'Admin', lastName: 'User' },
+    {
+      userId: 'usr-001',
+      username: 'admin',
+      email: 'admin@example.com',
+      firstName: 'Admin',
+      lastName: 'User',
+    },
   ];
 
   it('should fetch role members', async () => {

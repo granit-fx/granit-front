@@ -47,15 +47,13 @@ describe('timeline API', () => {
       };
       const entry = {
         id: 'e-1',
-        entityType: 'Patient',
-        entityId: 'p-1',
         entryType: 0,
         body: 'Hello',
         authorId: 'u-1',
-        authorDisplayName: 'User',
+        authorName: 'User',
         parentEntryId: null,
-        createdAt: '2026-01-01T00:00:00Z',
-        attachmentBlobIds: [],
+        occurredAt: '2026-01-01T00:00:00Z',
+        attachments: [],
       };
       vi.mocked(client.post).mockResolvedValue(axiosResponse(entry));
 

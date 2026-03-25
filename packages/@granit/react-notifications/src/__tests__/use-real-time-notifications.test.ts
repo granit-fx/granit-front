@@ -6,7 +6,7 @@ import { useRealTimeNotifications } from '../hooks/use-real-time-notifications.j
 import { createMockClient, createWrapper } from './test-utils.js';
 
 describe('useRealTimeNotifications', () => {
-  it('should return initial state with null lastNotification', () => {
+  it('should return initial state with null lastMessage', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: { count: 0 } });
 
@@ -14,7 +14,7 @@ describe('useRealTimeNotifications', () => {
       wrapper: createWrapper(client),
     });
 
-    expect(result.current.lastNotification).toBeNull();
+    expect(result.current.lastMessage).toBeNull();
     expect(result.current.connectionState).toBeDefined();
   });
 });

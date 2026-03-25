@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createSignalRTransport } from '../transports/create-signalr-transport.js';
 
-import type { UserNotification } from '@granit/notifications';
+import type { NotificationTransportMessage } from '@granit/notifications';
 
 let lastConnection: {
   start: ReturnType<typeof vi.fn>;
@@ -119,22 +119,20 @@ describe('createSignalRTransport', () => {
     const receiveCall = lastConnection.on.mock.calls.find(
       (call: unknown[]) => call[0] === 'ReceiveNotification'
     );
-    const handler = receiveCall![1] as (n: UserNotification) => void;
+    const handler = receiveCall![1] as (m: NotificationTransportMessage) => void;
 
-    const mockNotif: UserNotification = {
-      id: 'n-1',
-      title: 'Test',
-      body: null,
-      severity: 'info',
-      entityType: null,
-      entityId: null,
-      isRead: false,
-      createdAt: '2026-01-15T10:00:00Z',
-      readAt: null,
+    const mockMsg: NotificationTransportMessage = {
+      notificationId: 'n-1',
+      notificationTypeName: 'SystemAlert',
+      severity: 'Info',
+      data: { title: 'Test' },
+      relatedEntityType: null,
+      relatedEntityId: null,
+      occurredAt: '2026-01-15T10:00:00Z',
     };
 
-    handler(mockNotif);
-    expect(listener).toHaveBeenCalledWith(mockNotif);
+    handler(mockMsg);
+    expect(listener).toHaveBeenCalledWith(mockMsg);
   });
 
   it('should handle reconnecting, reconnected, and onclose events', async () => {
@@ -183,18 +181,16 @@ describe('createSignalRTransport', () => {
     const receiveCall = lastConnection.on.mock.calls.find(
       (call: unknown[]) => call[0] === 'ReceiveNotification'
     );
-    const handler = receiveCall![1] as (n: UserNotification) => void;
+    const handler = receiveCall![1] as (m: NotificationTransportMessage) => void;
 
     handler({
-      id: 'n-1',
-      title: 'Test',
-      body: null,
-      severity: 'info',
-      entityType: null,
-      entityId: null,
-      isRead: false,
-      createdAt: '2026-01-15T10:00:00Z',
-      readAt: null,
+      notificationId: 'n-1',
+      notificationTypeName: 'SystemAlert',
+      severity: 'Info',
+      data: { title: 'Test' },
+      relatedEntityType: null,
+      relatedEntityId: null,
+      occurredAt: '2026-01-15T10:00:00Z',
     });
 
     expect(listener).not.toHaveBeenCalled();

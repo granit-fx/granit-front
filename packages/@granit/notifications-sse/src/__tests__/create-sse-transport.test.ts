@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { UserNotification } from '@granit/notifications';
+import type { NotificationTransportMessage } from '@granit/notifications';
 
 let capturedUrl: string | null = null;
 let capturedOptions: Record<string, unknown> | null = null;
@@ -60,20 +60,18 @@ describe('createSseTransport', () => {
       event: string;
       data: string;
     }) => void;
-    const mockNotif: UserNotification = {
-      id: 'n-1',
-      title: 'SSE Notification',
-      body: null,
-      severity: 'info',
-      entityType: null,
-      entityId: null,
-      isRead: false,
-      createdAt: '2026-01-15T10:00:00Z',
-      readAt: null,
+    const mockMsg: NotificationTransportMessage = {
+      notificationId: 'n-1',
+      notificationTypeName: 'SystemAlert',
+      severity: 'Info',
+      data: { title: 'SSE Notification' },
+      relatedEntityType: null,
+      relatedEntityId: null,
+      occurredAt: '2026-01-15T10:00:00Z',
     };
 
-    onmessage({ event: 'notification', data: JSON.stringify(mockNotif) });
-    expect(listener).toHaveBeenCalledWith(mockNotif);
+    onmessage({ event: 'notification', data: JSON.stringify(mockMsg) });
+    expect(listener).toHaveBeenCalledWith(mockMsg);
   });
 
   it('should filter heartbeat messages', async () => {

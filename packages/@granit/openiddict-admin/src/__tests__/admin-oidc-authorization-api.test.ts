@@ -13,6 +13,7 @@ const BASE = '/api/admin';
 
 const mockAuthorization: AdminOidcAuthorization = {
   id: 'auth-001',
+  clientId: 'my-spa',
   subject: 'user-001',
   type: 'permanent',
   status: 'valid',
@@ -91,9 +92,7 @@ describe('admin-oidc-authorization-api', () => {
 
       await revokeUserAuthorizations(client, BASE, 'id/slash');
 
-      expect(client.delete).toHaveBeenCalledWith(
-        `${BASE}/oidc/authorizations/user/id%2Fslash`
-      );
+      expect(client.delete).toHaveBeenCalledWith(`${BASE}/oidc/authorizations/user/id%2Fslash`);
     });
   });
 });

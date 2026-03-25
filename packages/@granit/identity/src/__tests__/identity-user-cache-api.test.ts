@@ -21,13 +21,13 @@ import type {
 } from '../types/index.js';
 
 const sampleUser: IdentityUser = {
-  id: 'user-1',
+  userId: 'user-1',
   username: 'jdoe',
   email: 'jdoe@example.com',
   firstName: 'John',
   lastName: 'Doe',
   enabled: true,
-  attributes: { department: 'Engineering' },
+  extraProperties: { department: 'Engineering' },
 };
 
 const basePath = '/identity/users';

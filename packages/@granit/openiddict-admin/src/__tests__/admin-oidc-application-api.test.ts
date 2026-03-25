@@ -8,21 +8,15 @@ import {
   rotateApplicationSecret,
 } from '../api/admin-oidc-application-api.js';
 
-import type {
-  AdminOidcApplication,
-  AdminOidcApplicationSecretResponse,
-} from '../types/index.js';
+import type { AdminOidcApplication, AdminOidcApplicationSecretResponse } from '../types/index.js';
 
 const BASE = '/api/admin';
 
 const mockApplication: AdminOidcApplication = {
-  id: 'app-001',
   clientId: 'my-spa',
   displayName: 'My SPA',
   type: 'public',
-  permissions: ['openid', 'profile'],
-  redirectUris: ['https://app.example.com/callback'],
-  postLogoutRedirectUris: ['https://app.example.com/logout'],
+  tenantId: null,
 };
 
 describe('admin-oidc-application-api', () => {
@@ -50,15 +44,11 @@ describe('admin-oidc-application-api', () => {
       const result = await createApplication(client, BASE, {
         clientId: 'my-spa',
         displayName: 'My SPA',
-        permissions: ['openid', 'profile'],
-        redirectUris: ['https://app.example.com/callback'],
       });
 
       expect(client.post).toHaveBeenCalledWith(`${BASE}/oidc/applications`, {
         clientId: 'my-spa',
         displayName: 'My SPA',
-        permissions: ['openid', 'profile'],
-        redirectUris: ['https://app.example.com/callback'],
       });
       expect(result).toEqual(mockApplication);
     });

@@ -8,9 +8,10 @@ export interface AdminOidcAuthorizationListParams {
   readonly clientId?: string;
 }
 
-/** OIDC authorization descriptor. */
+/** OIDC authorization descriptor — mirrors `AdminOidcAuthorizationResponse`. */
 export interface AdminOidcAuthorization {
   readonly id: string;
+  readonly clientId: string | null;
   readonly subject: string;
   readonly status: string;
   readonly type: string;

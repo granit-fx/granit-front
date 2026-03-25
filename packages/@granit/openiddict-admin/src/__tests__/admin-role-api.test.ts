@@ -1,25 +1,20 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  createRole,
-  deleteRole,
-  getRoleMembers,
-  listRoles,
-} from '../api/admin-role-api.js';
+import { createRole, deleteRole, getRoleMembers, listRoles } from '../api/admin-role-api.js';
 
 import type { AdminRole, AdminRoleMember } from '../types/index.js';
 
 const BASE = '/api/admin';
 
 const mockRole: AdminRole = {
-  id: 'role-001',
   name: 'editor',
   description: 'Content editor role',
 };
 
 const mockMember: AdminRoleMember = {
-  id: 'user-001',
+  userId: 'user-001',
+  username: 'alice',
   email: 'alice@example.com',
   firstName: 'Alice',
   lastName: 'Doe',

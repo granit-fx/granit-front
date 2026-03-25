@@ -37,9 +37,7 @@ function createWrapper() {
   return {
     wrapper: ({ children }: { children: React.ReactNode }) => (
       <QueryClientProvider client={queryClient}>
-        <OpenIddictAdminProvider config={{ client }}>
-          {children}
-        </OpenIddictAdminProvider>
+        <OpenIddictAdminProvider config={{ client }}>{children}</OpenIddictAdminProvider>
       </QueryClientProvider>
     ),
     queryClient,
@@ -50,13 +48,13 @@ function createWrapper() {
 const mockGroup: AdminGroup = {
   id: 'grp-001',
   name: 'Engineering',
-  path: '/engineering',
-  subGroups: [],
+  description: 'Engineering team',
+  tenantId: null,
 };
 
 const mockGroups: readonly AdminGroup[] = [
   mockGroup,
-  { id: 'grp-002', name: 'Marketing', path: null, subGroups: [] },
+  { id: 'grp-002', name: 'Marketing', description: null, tenantId: null },
 ];
 
 describe('useAdminGroups', () => {
@@ -97,11 +95,10 @@ describe('useCreateAdminGroup', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(createGroup).toHaveBeenCalledWith(
-      expect.anything(),
-      '/api/admin',
-      { name: 'Engineering', description: 'Engineering team' }
-    );
+    expect(createGroup).toHaveBeenCalledWith(expect.anything(), '/api/admin', {
+      name: 'Engineering',
+      description: 'Engineering team',
+    });
     expect(result.current.data).toEqual(mockGroup);
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'groups'],
@@ -168,12 +165,9 @@ describe('useAddGroupMember', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(addGroupMember).toHaveBeenCalledWith(
-      expect.anything(),
-      '/api/admin',
-      'grp-001',
-      { userId: 'usr-001' }
-    );
+    expect(addGroupMember).toHaveBeenCalledWith(expect.anything(), '/api/admin', 'grp-001', {
+      userId: 'usr-001',
+    });
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'groups'],
     });

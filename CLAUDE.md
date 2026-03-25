@@ -33,7 +33,7 @@
 | `@granit/bff`                             | BFF authentication types, CSRF token manager (`CsrfManager`), session API — mirrors `Granit.Bff` .NET contract                                                                                                                                |
 | `@granit/react-bff`                       | React bindings for `@granit/bff`: `BffProvider`, `useBffAuth`, `useBffCsrf`, `useBffFetch`, `useBffSessions`, `BffGuard`                                                                                                                      |
 | `@granit/workflow`                        | Workflow lifecycle: API functions, types mirroring `Granit.Workflow` .NET contract                                                                                                                                                            |
-| `@granit/react-workflow`                  | React bindings for `@granit/workflow`: `WorkflowProvider`, `useWorkflowStatus`, `useWorkflowTransition`, `useWorkflowHistory`                                                                                                                 |
+| `@granit/react-workflow`                  | React bindings for `@granit/workflow`: `WorkflowProvider`, `useTransitions`, `useExecuteTransition`, `useWorkflowHistory`                                                                                                                     |
 | `@granit/notifications`                   | Notification core: API functions, `NotificationTransport` interface, extensible `NotificationChannels` constants, types — no React                                                                                                            |
 | `@granit/react-notifications`             | React bindings for `@granit/notifications`: `NotificationProvider`, `useNotifications`, `useUnreadCount`, `useRealTimeNotifications`, `useEntityActivityFeed`, `useNotificationPreferences`                                                   |
 | `@granit/notifications-signalr`           | SignalR transport adapter: `createSignalRTransport` factory implementing `NotificationTransport`                                                                                                                                              |
@@ -61,7 +61,7 @@
 | `@granit/authentication-api-keys`         | API key management types: `ApiKeyResponse`, `ApiKeyCreateRequest`, `ApiKeyCreateResponse`, `ApiKeyRotateResponse` — mirrors `Granit.Authentication.ApiKeys` .NET                                                                              |
 | `@granit/react-authentication-api-keys`   | React hooks for `@granit/authentication-api-keys`: `useApiKeys`, `useApiKey`, `useCreateApiKey`, `useRevokeApiKey`, `useRotateApiKey`, `useUpdateApiKeyScopes`                                                                                |
 | `@granit/reference-data`                  | Reference data types: `Country`, `CountriesListParams` — mirrors `Granit.ReferenceData` .NET                                                                                                                                                  |
-| `@granit/react-reference-data`            | React hooks for `@granit/reference-data`: `useCountry`, `useCountries`, `useCreateCountry`, `useUpdateCountry`, `useDeactivateCountry`, `useReactivateCountry`                                                                                |
+| `@granit/react-reference-data`            | React hooks for `@granit/reference-data`: `createReferenceDataHooks` factory producing typed `useEntry`, `useList`, `useCreate`, `useUpdate`, `useDeactivate`, `useChildren`                                                                  |
 | `@granit/templating`                      | Template management types and API functions: `getTemplates`, `saveDraft`, `publishTemplate`, types — mirrors `Granit.Templating` .NET                                                                                                         |
 | `@granit/react-templating`                | React bindings for `@granit/templating`: `TemplatingProvider`, `useTemplate`, `useTemplates`, `useTemplateMutations`, `useTemplateCategories`, `useTemplatePreview`, `useTemplateVariables`                                                   |
 | `@granit/settings`                        | Application settings types — mirrors `Granit.Settings` .NET                                                                                                                                                                                   |
@@ -85,7 +85,7 @@
 | `@granit/react-validation`                | React bindings for `@granit/validation`: `createConstraintsResolver`, `useFieldProps`, `useServerValidation`                                                                                                                                  |
 | `@granit/testing`                         | Shared test utilities: `createMockClient`, `axiosResponse`, `createMockLogger`                                                                                                                                                                |
 | `@granit/react-testing`                   | React test utilities: `createTestQueryClient`, `createQueryWrapper` (re-exports `@granit/testing`)                                                                                                                                            |
-| `@granit/idempotency`                     | Idempotency key generation: `createIdempotencyKey` — mirrors `Granit.Idempotency` .NET                                                                                                                                                        |
+| `@granit/idempotency`                     | Idempotency key generation: `enableIdempotency`, `disableIdempotency` — mirrors `Granit.Idempotency` .NET                                                                                                                                     |
 
 ## Stack & versions
 
@@ -196,8 +196,8 @@ Full frontend conventions: `../granit-dotnet/docs/guide/conventions/frontend/`
   - `@granit/react-settings` → `react`, `axios`, `@tanstack/react-query`, `@granit/settings`
   - `@granit/storage` → _(no peer dependencies)_
   - `@granit/react-storage` → `react`, `@granit/storage`
-  - `@granit/localization` → `@granit/storage`, `i18next`
-  - `@granit/react-localization` → `react`, `react-i18next`, `i18next`, `@granit/localization`, `@granit/storage`
+  - `@granit/localization` → `@granit/storage`, `axios`, `i18next`
+  - `@granit/react-localization` → `react`, `react-i18next`, `i18next`, `@tanstack/react-query`, `axios`, `@granit/localization`, `@granit/storage`
   - `@granit/logger-otlp` → `@granit/logger`
   - `@granit/webhooks` → `axios`
   - `@granit/react-webhooks` → `react`, `axios`, `@tanstack/react-query`, `@granit/webhooks`

@@ -20,13 +20,13 @@ import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
 const sampleUser: IdentityUser = {
-  id: 'user-1',
+  userId: 'user-1',
   username: 'jdoe',
   email: 'jdoe@example.com',
   firstName: 'John',
   lastName: 'Doe',
   enabled: true,
-  attributes: null,
+  extraProperties: {},
 };
 
 function createWrapper(client: AxiosInstance, providerBasePath?: string) {

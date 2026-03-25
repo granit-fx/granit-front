@@ -2,12 +2,12 @@
 // Admin group types — mirrors Granit.OpenIddict.Endpoints .NET contract
 // ---------------------------------------------------------------------------
 
-/** Group descriptor. */
+/** Group descriptor — mirrors `AdminGroupResponse`. */
 export interface AdminGroup {
   readonly id: string;
   readonly name: string;
-  readonly path: string | null;
-  readonly subGroups: readonly AdminGroup[];
+  readonly description: string | null;
+  readonly tenantId: string | null;
 }
 
 /** Request body for `POST /groups`. */

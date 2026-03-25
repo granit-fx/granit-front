@@ -2,7 +2,7 @@ import { HttpTransportType, HubConnectionBuilder, LogLevel } from '@microsoft/si
 
 import type {
   ConnectionState,
-  UserNotification,
+  NotificationTransportMessage,
   NotificationTransport,
 } from '@granit/notifications';
 import type { HubConnection } from '@microsoft/signalr';
@@ -30,7 +30,7 @@ export interface SignalRTransportConfig {
 export function createSignalRTransport(config: SignalRTransportConfig): NotificationTransport {
   let connection: HubConnection | null = null;
   let currentState: ConnectionState = 'disconnected';
-  const notificationListeners = new Set<(notification: UserNotification) => void>();
+  const notificationListeners = new Set<(message: NotificationTransportMessage) => void>();
   const stateListeners = new Set<(state: ConnectionState) => void>();
 
   function setState(state: ConnectionState) {
@@ -57,9 +57,9 @@ export function createSignalRTransport(config: SignalRTransportConfig): Notifica
         .configureLogging(LogLevel.Warning)
         .build();
 
-      connection.on('ReceiveNotification', (notification: UserNotification) => {
+      connection.on('ReceiveNotification', (message: NotificationTransportMessage) => {
         for (const listener of notificationListeners) {
-          listener(notification);
+          listener(message);
         }
       });
 

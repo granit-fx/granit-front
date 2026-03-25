@@ -1,17 +1,17 @@
 import { useNotificationContext } from '../providers/notification-provider.js';
 
-import type { ConnectionState, UserNotification } from '@granit/notifications';
+import type { ConnectionState, NotificationTransportMessage } from '@granit/notifications';
 
 export interface UseRealTimeNotificationsReturn {
-  lastNotification: UserNotification | null;
+  lastMessage: NotificationTransportMessage | null;
   connectionState: ConnectionState;
 }
 
 /**
- * Exposes the most recently received real-time notification and connection
+ * Exposes the most recently received real-time transport message and connection
  * state. Useful for triggering toasts or in-app alerts.
  */
 export function useRealTimeNotifications(): UseRealTimeNotificationsReturn {
-  const { lastNotification, connectionState } = useNotificationContext();
-  return { lastNotification, connectionState };
+  const { lastMessage, connectionState } = useNotificationContext();
+  return { lastMessage, connectionState };
 }

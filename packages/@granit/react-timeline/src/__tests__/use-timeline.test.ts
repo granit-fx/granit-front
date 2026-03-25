@@ -10,15 +10,13 @@ import type { TimelineEntry, TimelineEntryPage } from '@granit/timeline';
 function makeEntry(overrides: Partial<TimelineEntry> = {}): TimelineEntry {
   return {
     id: 'e-1',
-    entityType: 'Patient',
-    entityId: 'p-1',
     entryType: 0,
     body: 'Test comment',
     authorId: 'u-1',
-    authorDisplayName: 'Dr. Martin',
+    authorName: 'Dr. Martin',
     parentEntryId: null,
-    createdAt: '2026-01-01T00:00:00Z',
-    attachmentBlobIds: [],
+    occurredAt: '2026-01-01T00:00:00Z',
+    attachments: [],
     ...overrides,
   };
 }

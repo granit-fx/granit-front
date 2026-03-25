@@ -7,12 +7,10 @@ export interface FeatureNumericConstraint {
   readonly max: number;
 }
 
-/** Allowed values for Selection features. Mirrors `Granit.Features.ValueTypes.SelectionValues`. */
-export interface SelectionValues {
-  readonly allowedValues: readonly string[];
-}
+/** Allowed values for Selection features. Mirrors `Granit.Features.Endpoints.FeatureDefinitionResponse.SelectionValues`. */
+export type SelectionValues = readonly string[];
 
-/** Static metadata for a feature. Mirrors `Granit.Features.Definitions.FeatureDefinition`. */
+/** Static metadata for a feature. Mirrors `Granit.Features.Endpoints.FeatureDefinitionResponse`. */
 export interface FeatureDefinition {
   readonly name: string;
   readonly defaultValue: string;

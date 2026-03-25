@@ -37,9 +37,7 @@ function createWrapper() {
   return {
     wrapper: ({ children }: { children: React.ReactNode }) => (
       <QueryClientProvider client={queryClient}>
-        <OpenIddictAdminProvider config={{ client }}>
-          {children}
-        </OpenIddictAdminProvider>
+        <OpenIddictAdminProvider config={{ client }}>{children}</OpenIddictAdminProvider>
       </QueryClientProvider>
     ),
     queryClient,
@@ -48,13 +46,10 @@ function createWrapper() {
 }
 
 const mockApp: AdminOidcApplication = {
-  id: 'app-001',
   clientId: 'guava-front',
   displayName: 'Guava Frontend',
   type: 'confidential',
-  permissions: ['openid', 'profile'],
-  redirectUris: ['https://app.example.com/callback'],
-  postLogoutRedirectUris: ['https://app.example.com'],
+  tenantId: null,
 };
 
 const mockApps: readonly AdminOidcApplication[] = [mockApp];
@@ -96,20 +91,14 @@ describe('useCreateOidcApplication', () => {
     result.current.mutate({
       clientId: 'guava-front',
       displayName: 'Guava Frontend',
-      permissions: ['openid', 'profile'],
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(createApplication).toHaveBeenCalledWith(
-      expect.anything(),
-      '/api/admin',
-      {
-        clientId: 'guava-front',
-        displayName: 'Guava Frontend',
-        permissions: ['openid', 'profile'],
-      }
-    );
+    expect(createApplication).toHaveBeenCalledWith(expect.anything(), '/api/admin', {
+      clientId: 'guava-front',
+      displayName: 'Guava Frontend',
+    });
     expect(result.current.data).toEqual(mockApp);
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'oidc', 'applications'],
@@ -143,11 +132,7 @@ describe('useDeleteOidcApplication', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(deleteApplication).toHaveBeenCalledWith(
-      expect.anything(),
-      '/api/admin',
-      'guava-front'
-    );
+    expect(deleteApplication).toHaveBeenCalledWith(expect.anything(), '/api/admin', 'guava-front');
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'oidc', 'applications'],
     });

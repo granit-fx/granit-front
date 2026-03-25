@@ -77,17 +77,3 @@ export async function removeRole(
     `${basePath}/users/${encodeURIComponent(userId)}/roles/${encodeURIComponent(roleName)}`
   );
 }
-
-/**
- * Replace all roles assigned to a user.
- *
- * `PATCH {basePath}/users/{userId}/roles`
- */
-export async function setUserRoles(
-  client: AxiosInstance,
-  basePath: string,
-  userId: string,
-  roles: readonly string[]
-): Promise<void> {
-  await client.patch(`${basePath}/users/${encodeURIComponent(userId)}/roles`, { roles });
-}

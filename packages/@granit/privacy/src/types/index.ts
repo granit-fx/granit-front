@@ -12,6 +12,8 @@ export type PrivacyExportStatusResponse = {
   readonly requestedAt: string;
   readonly state: PrivacyExportStatus;
   readonly archiveBlobReferenceId: string | null;
+  readonly completedAt: string | null;
+  readonly missingProviders: readonly string[];
 };
 
 // ── Data Deletion (GDPR Art. 17) ─────────────────────────────────────────────
@@ -28,6 +30,7 @@ export type PrivacyDeletionResponse = {
   readonly status: DeletionStatusValue;
   readonly reason: string;
   readonly requestedAt: string;
+  readonly executedAt: string | null;
   readonly scheduledDeletionAt?: string;
   readonly cancelledAt?: string;
 };

@@ -58,7 +58,7 @@ describe('useTemplates', () => {
       items: [
         {
           name: 'Billing.Invoice',
-          status: TemplateLifecycleStatus.Draft,
+          currentStatus: TemplateLifecycleStatus.Draft,
           mimeType: 'text/html',
           lastModifiedAt: '2026-03-01T10:00:00Z',
           lastModifiedBy: 'admin',
@@ -83,7 +83,7 @@ describe('useTemplates', () => {
       axiosResponse({ items: [], total: 0, page: 1, pageSize: 20 })
     );
 
-    const params = { status: TemplateLifecycleStatus.Published, category: 'billing' };
+    const params = { status: TemplateLifecycleStatus.Published, categoryId: 'billing' };
     renderHook(() => useTemplates(params), {
       wrapper: createWrapper(client),
     });

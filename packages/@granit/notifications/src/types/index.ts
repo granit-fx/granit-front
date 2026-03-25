@@ -5,23 +5,48 @@ import type { AxiosInstance } from 'axios';
 // Notification types — aligned with Granit.Notifications .NET backend
 // ---------------------------------------------------------------------------
 
-export type NotificationSeverity = 'info' | 'success' | 'warning' | 'error';
+export type NotificationSeverity = 'Info' | 'Success' | 'Warning' | 'Error' | 'Fatal';
+
+/**
+ * Matches `UserNotificationState` enum from .NET backend.
+ */
+export type UserNotificationState = 'Unread' | 'Read';
 
 export interface UserNotification {
-  id: string;
-  title: string;
-  body: string | null;
-  severity: NotificationSeverity;
-  entityType: string | null;
-  entityId: string | null;
-  isRead: boolean;
-  createdAt: string;
-  readAt: string | null;
+  readonly id: string;
+  readonly notificationId: string;
+  readonly notificationTypeName: string;
+  readonly severity: NotificationSeverity;
+  readonly data: unknown;
+  readonly recipientUserId: string;
+  readonly relatedEntityType: string | null;
+  readonly relatedEntityId: string | null;
+  readonly state: UserNotificationState;
+  readonly createdAt: string;
+  readonly readAt: string | null;
 }
 
 export type UserNotificationPage = PagedResult<UserNotification> & {
   readonly unreadCount: number;
 };
+
+// ---------------------------------------------------------------------------
+// Real-time transport message — shape received via SignalR/SSE
+// ---------------------------------------------------------------------------
+
+/**
+ * Message shape pushed by the backend over real-time transports (SignalR, SSE).
+ * This is distinct from `UserNotification` which is the REST API response shape.
+ */
+export interface NotificationTransportMessage {
+  readonly notificationId: string;
+  readonly notificationTypeName: string;
+  readonly severity: NotificationSeverity;
+  readonly data: unknown;
+  readonly relatedEntityType: string | null;
+  readonly relatedEntityId: string | null;
+  readonly occurredAt: string;
+}
 
 // ---------------------------------------------------------------------------
 // Activity feed
@@ -48,37 +73,40 @@ export type ActivityFeedPage = PagedResult<ActivityFeedEntry>;
  * Consumer apps and backend may define additional channels.
  */
 export type NotificationChannel =
-  | 'inApp'
-  | 'email'
-  | 'sms'
-  | 'whatsApp'
-  | 'push'
-  | 'mobilePush'
+  | 'InApp'
+  | 'Email'
+  | 'Sms'
+  | 'WhatsApp'
+  | 'Push'
+  | 'MobilePush'
   | (string & {});
 
 /**
  * Well-known channel identifiers matching the .NET `NotificationChannels` class.
+ * Values are PascalCase strings matching the backend serialization.
  */
 export const NotificationChannels = {
-  InApp: 'inApp',
-  Email: 'email',
-  Sms: 'sms',
-  WhatsApp: 'whatsApp',
-  Push: 'push',
-  MobilePush: 'mobilePush',
-  Sse: 'sse',
-  SignalR: 'signalR',
-  Zulip: 'zulip',
+  InApp: 'InApp',
+  Email: 'Email',
+  Sms: 'Sms',
+  WhatsApp: 'WhatsApp',
+  Push: 'Push',
+  MobilePush: 'MobilePush',
+  Sse: 'Sse',
+  SignalR: 'SignalR',
+  Zulip: 'Zulip',
 } as const;
 
 // ---------------------------------------------------------------------------
-// Preferences
+// Preferences — flat row matching NotificationPreferenceResponse from .NET
 // ---------------------------------------------------------------------------
 
 export interface NotificationPreference {
-  notificationType: string;
-  label: string;
-  channels: Record<string, boolean>;
+  readonly id: string;
+  readonly userId: string;
+  readonly notificationTypeName: string;
+  readonly channelName: string;
+  readonly isEnabled: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -105,10 +133,10 @@ export interface NotificationTransport {
   readonly state: ConnectionState;
 
   /**
-   * Subscribes to incoming notifications.
+   * Subscribes to incoming real-time notifications.
    * Returns an unsubscribe function.
    */
-  onNotification(callback: (notification: UserNotification) => void): () => void;
+  onNotification(callback: (message: NotificationTransportMessage) => void): () => void;
 
   /**
    * Subscribes to connection state changes.
@@ -124,18 +152,4 @@ export interface NotificationTransport {
 export interface NotificationConfig {
   apiClient: AxiosInstance;
   basePath?: string;
-}
-
-// ---------------------------------------------------------------------------
-// Utilities
-// ---------------------------------------------------------------------------
-
-/**
- * Extracts the list of available channels from a preferences response.
- * Useful for dynamically rendering a preferences matrix without hardcoding channels.
- */
-export function getAvailableChannels(preferences: readonly NotificationPreference[]): string[] {
-  const first = preferences[0];
-  if (!first) return [];
-  return Object.keys(first.channels);
 }

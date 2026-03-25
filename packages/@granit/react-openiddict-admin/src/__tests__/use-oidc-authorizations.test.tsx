@@ -31,9 +31,7 @@ function createWrapper() {
   return {
     wrapper: ({ children }: { children: React.ReactNode }) => (
       <QueryClientProvider client={queryClient}>
-        <OpenIddictAdminProvider config={{ client }}>
-          {children}
-        </OpenIddictAdminProvider>
+        <OpenIddictAdminProvider config={{ client }}>{children}</OpenIddictAdminProvider>
       </QueryClientProvider>
     ),
     queryClient,
@@ -44,6 +42,7 @@ function createWrapper() {
 const mockAuthorizations: readonly AdminOidcAuthorization[] = [
   {
     id: 'auth-001',
+    clientId: 'guava-front',
     subject: 'usr-001',
     type: 'permanent',
     status: 'valid',
@@ -59,11 +58,7 @@ describe('useOidcAuthorizations', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(listAuthorizations).toHaveBeenCalledWith(
-      expect.anything(),
-      '/api/admin',
-      undefined
-    );
+    expect(listAuthorizations).toHaveBeenCalledWith(expect.anything(), '/api/admin', undefined);
     expect(result.current.data).toEqual(mockAuthorizations);
   });
 
@@ -71,18 +66,13 @@ describe('useOidcAuthorizations', () => {
     vi.mocked(listAuthorizations).mockResolvedValueOnce(mockAuthorizations);
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(
-      () => useOidcAuthorizations({ userId: 'usr-001' }),
-      { wrapper }
-    );
+    const { result } = renderHook(() => useOidcAuthorizations({ userId: 'usr-001' }), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(listAuthorizations).toHaveBeenCalledWith(
-      expect.anything(),
-      '/api/admin',
-      { userId: 'usr-001' }
-    );
+    expect(listAuthorizations).toHaveBeenCalledWith(expect.anything(), '/api/admin', {
+      userId: 'usr-001',
+    });
   });
 
   it('should handle fetch error', async () => {
@@ -110,11 +100,7 @@ describe('useRevokeAuthorization', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(revokeAuthorization).toHaveBeenCalledWith(
-      expect.anything(),
-      '/api/admin',
-      'auth-001'
-    );
+    expect(revokeAuthorization).toHaveBeenCalledWith(expect.anything(), '/api/admin', 'auth-001');
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'oidc', 'authorizations'],
     });

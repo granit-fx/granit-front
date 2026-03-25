@@ -1,21 +1,16 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  createScope,
-  deleteScope,
-  listScopes,
-} from '../api/admin-oidc-scope-api.js';
+import { createScope, deleteScope, listScopes } from '../api/admin-oidc-scope-api.js';
 
 import type { AdminOidcScope } from '../types/index.js';
 
 const BASE = '/api/admin';
 
 const mockScope: AdminOidcScope = {
-  id: 'scope-001',
   name: 'api',
   displayName: 'API Access',
-  resources: ['resource-server-1'],
+  description: null,
 };
 
 describe('admin-oidc-scope-api', () => {
@@ -43,13 +38,13 @@ describe('admin-oidc-scope-api', () => {
       const result = await createScope(client, BASE, {
         name: 'api',
         displayName: 'API Access',
-        resources: ['resource-server-1'],
+        description: 'Grants API access',
       });
 
       expect(client.post).toHaveBeenCalledWith(`${BASE}/oidc/scopes`, {
         name: 'api',
         displayName: 'API Access',
-        resources: ['resource-server-1'],
+        description: 'Grants API access',
       });
       expect(result).toEqual(mockScope);
     });

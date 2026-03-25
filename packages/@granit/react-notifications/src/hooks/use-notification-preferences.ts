@@ -3,7 +3,7 @@ import { useCallback, useEffect, useOptimistic, useRef, useState, useTransition 
 
 import { useNotificationContext } from '../providers/notification-provider.js';
 
-import type { NotificationChannel, NotificationPreference } from '@granit/notifications';
+import type { NotificationPreference } from '@granit/notifications';
 import type { AxiosInstance } from 'axios';
 
 export interface UseNotificationPreferencesReturn {
@@ -11,19 +11,19 @@ export interface UseNotificationPreferencesReturn {
   loading: boolean;
   error: Error | null;
   saving: boolean;
-  toggleChannel: (notificationType: string, channel: NotificationChannel, enabled: boolean) => void;
+  togglePreference: (preferenceId: string, enabled: boolean) => void;
   refresh: () => void;
 }
 
 type OptimisticAction = {
-  notificationType: string;
+  preferenceId: string;
   updated: NotificationPreference;
 };
 
 async function savePreference(
   apiClient: AxiosInstance,
   basePath: string,
-  notificationType: string,
+  preferenceId: string,
   updated: NotificationPreference,
   mountedRef: React.RefObject<boolean>,
   setPreferences: React.Dispatch<React.SetStateAction<NotificationPreference[]>>,
@@ -32,9 +32,7 @@ async function savePreference(
   try {
     const saved = await updatePreference(apiClient, basePath, updated);
     if (mountedRef.current) {
-      setPreferences((prev) =>
-        prev.map((p) => (p.notificationType === notificationType ? saved : p))
-      );
+      setPreferences((prev) => prev.map((p) => (p.id === preferenceId ? saved : p)));
     }
   } catch (err) {
     // No manual rollback — useOptimistic reverts automatically when the
@@ -46,7 +44,7 @@ async function savePreference(
 }
 
 /**
- * CRUD hook for notification preferences (type x channel matrix).
+ * CRUD hook for notification preferences (flat rows: one per type x channel).
  *
  * Uses React 19 `useOptimistic` for instant UI feedback with automatic
  * rollback on server failure.
@@ -63,7 +61,7 @@ export function useNotificationPreferences(): UseNotificationPreferencesReturn {
   const [optimisticPreferences, applyOptimistic] = useOptimistic(
     preferences,
     (state: NotificationPreference[], action: OptimisticAction) =>
-      state.map((p) => (p.notificationType === action.notificationType ? action.updated : p))
+      state.map((p) => (p.id === action.preferenceId ? action.updated : p))
   );
 
   const [saving, startTransition] = useTransition();
@@ -92,22 +90,22 @@ export function useNotificationPreferences(): UseNotificationPreferencesReturn {
     };
   }, [load]);
 
-  const toggleChannel = useCallback(
-    (notificationType: string, channel: NotificationChannel, enabled: boolean) => {
-      const pref = preferences.find((p) => p.notificationType === notificationType);
+  const togglePreference = useCallback(
+    (preferenceId: string, enabled: boolean) => {
+      const pref = preferences.find((p) => p.id === preferenceId);
       if (!pref) return;
 
       const updated: NotificationPreference = {
         ...pref,
-        channels: { ...pref.channels, [channel]: enabled },
+        isEnabled: enabled,
       };
 
       startTransition(async () => {
-        applyOptimistic({ notificationType, updated });
+        applyOptimistic({ preferenceId, updated });
         await savePreference(
           config.apiClient,
           basePath,
-          notificationType,
+          preferenceId,
           updated,
           mountedRef,
           setPreferences,
@@ -123,5 +121,5 @@ export function useNotificationPreferences(): UseNotificationPreferencesReturn {
     load();
   }, [load]);
 
-  return { preferences: optimisticPreferences, loading, error, saving, toggleChannel, refresh };
+  return { preferences: optimisticPreferences, loading, error, saving, togglePreference, refresh };
 }

@@ -2,17 +2,13 @@ import type { PagedResult, PaginationParams } from '@granit/query-engine';
 
 /** Cached identity user — mirrors Granit.Identity.IdentityUser .NET record. */
 export type IdentityUser = {
-  readonly id: string;
+  readonly userId: string;
   readonly username: string | null;
   readonly email: string | null;
   readonly firstName: string | null;
   readonly lastName: string | null;
   readonly enabled: boolean;
-  readonly emailVerified?: boolean;
-  readonly roles?: readonly string[];
-  readonly attributes: Readonly<Record<string, string>> | null;
-  readonly createdAt?: string;
-  readonly lastLoginAt?: string | null;
+  readonly extraProperties: Readonly<Record<string, string>>;
 };
 
 export type IdentityUserListParams = PaginationParams & {

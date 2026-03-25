@@ -49,6 +49,8 @@ describe('privacy-api', () => {
         requestedAt: '2026-03-21T10:00:00Z',
         state: 'Completed',
         archiveBlobReferenceId: 'blob-123',
+        completedAt: '2026-03-21T10:05:00Z',
+        missingProviders: [],
       };
       vi.mocked(client.get).mockResolvedValueOnce({ data: response });
 
@@ -82,6 +84,7 @@ describe('privacy-api', () => {
         status: 'Executed',
         reason: 'User requested account deletion',
         requestedAt: '2026-03-22T10:00:00Z',
+        executedAt: '2026-03-22T10:00:01Z',
       };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
@@ -102,6 +105,7 @@ describe('privacy-api', () => {
         status: 'Deferred',
         reason: 'Closing account',
         requestedAt: '2026-03-22T10:00:00Z',
+        executedAt: null,
         scheduledDeletionAt: '2026-04-21T10:00:00Z',
       };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
@@ -128,6 +132,7 @@ describe('privacy-api', () => {
           status: 'Deferred',
           reason: 'Closing account',
           requestedAt: '2026-03-22T10:00:00Z',
+          executedAt: null,
           scheduledDeletionAt: '2026-04-21T10:00:00Z',
         },
       ];
@@ -148,6 +153,7 @@ describe('privacy-api', () => {
         status: 'Deferred',
         reason: 'Closing account',
         requestedAt: '2026-03-22T10:00:00Z',
+        executedAt: null,
         scheduledDeletionAt: '2026-04-21T10:00:00Z',
       };
       vi.mocked(client.get).mockResolvedValueOnce({ data: response });

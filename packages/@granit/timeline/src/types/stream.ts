@@ -3,17 +3,23 @@ import type { PagedResult } from '@granit/query-engine';
 
 // --- API response types ---
 
+export interface TimelineAttachmentInfo {
+  readonly id: string;
+  readonly blobId: string;
+  readonly fileName: string;
+  readonly contentType: string;
+  readonly sizeBytes: number;
+}
+
 export interface TimelineEntry {
   readonly id: string;
-  readonly entityType: string;
-  readonly entityId: string;
   readonly entryType: TimelineEntryTypeValue;
   readonly body: string;
-  readonly authorId: string;
-  readonly authorDisplayName: string;
+  readonly authorId: string | null;
+  readonly authorName: string | null;
   readonly parentEntryId: string | null;
-  readonly createdAt: string;
-  readonly attachmentBlobIds: readonly string[];
+  readonly occurredAt: string;
+  readonly attachments: readonly TimelineAttachmentInfo[];
 }
 
 export type TimelineEntryPage = PagedResult<TimelineEntry>;

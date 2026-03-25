@@ -9,23 +9,18 @@ import {
   listUsers,
 } from '../api/admin-user-api.js';
 
-import type {
-  AdminImpersonationResult,
-  AdminUser,
-  AdminUserPage,
-} from '../types/index.js';
+import type { AdminImpersonationResult, AdminUser, AdminUserPage } from '../types/index.js';
 
 const BASE = '/api/admin';
 
 const mockUser: AdminUser = {
-  id: 'user-001',
+  userId: 'user-001',
+  username: 'alice',
   email: 'alice@example.com',
   firstName: 'Alice',
   lastName: 'Doe',
-  emailConfirmed: true,
-  isDeleted: false,
-  roles: ['admin'],
-  groups: ['editors'],
+  enabled: true,
+  extraProperties: {},
 };
 
 const mockUserPage: AdminUserPage = {

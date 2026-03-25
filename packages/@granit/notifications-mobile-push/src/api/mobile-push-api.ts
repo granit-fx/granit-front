@@ -17,7 +17,7 @@ export async function registerDeviceToken(
   basePath: string,
   payload: DeviceTokenDto
 ): Promise<void> {
-  await client.post(buildUrl(basePath, 'notifications', 'push-tokens'), payload);
+  await client.post(buildUrl(basePath, 'notifications', 'mobile-push', 'tokens'), payload);
 }
 
 export async function unregisterDeviceToken(
@@ -26,7 +26,7 @@ export async function unregisterDeviceToken(
   token: string
 ): Promise<void> {
   await client.delete(
-    buildUrl(basePath, 'notifications', 'push-tokens', encodeURIComponent(token))
+    buildUrl(basePath, 'notifications', 'mobile-push', 'tokens', encodeURIComponent(token))
   );
 }
 
@@ -39,14 +39,14 @@ export interface MobilePushTokenResponse {
 /**
  * Fetches all registered device tokens for the current user.
  *
- * `GET {basePath}/notifications/push-tokens`
+ * `GET {basePath}/notifications/mobile-push/tokens`
  */
 export async function fetchDeviceTokens(
   client: AxiosInstance,
   basePath: string
 ): Promise<readonly MobilePushTokenResponse[]> {
   const { data } = await client.get<MobilePushTokenResponse[]>(
-    buildUrl(basePath, 'notifications', 'push-tokens')
+    buildUrl(basePath, 'notifications', 'mobile-push', 'tokens')
   );
   return data;
 }

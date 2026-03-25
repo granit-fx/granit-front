@@ -12,13 +12,13 @@ import {
 import type { IdentityUser } from '../types/index.js';
 
 const sampleUser: IdentityUser = {
-  id: 'user-1',
+  userId: 'user-1',
   username: 'jdoe',
   email: 'jdoe@example.com',
   firstName: 'John',
   lastName: 'Doe',
   enabled: true,
-  attributes: null,
+  extraProperties: {},
 };
 
 const basePath = '/identity/provider';

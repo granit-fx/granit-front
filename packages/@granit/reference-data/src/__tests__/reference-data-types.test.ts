@@ -54,11 +54,9 @@ describe('@granit/reference-data types', () => {
       > | null>();
     });
 
-    it('should have audit trail fields', () => {
-      expectTypeOf<ReferenceDataEntry['createdAt']>().toBeString();
-      expectTypeOf<ReferenceDataEntry['createdBy']>().toBeString();
-      expectTypeOf<ReferenceDataEntry['modifiedAt']>().toEqualTypeOf<string | null>();
-      expectTypeOf<ReferenceDataEntry['modifiedBy']>().toEqualTypeOf<string | null>();
+    it('should have a unique id', () => {
+      expectTypeOf<ReferenceDataEntry>().toHaveProperty('id');
+      expectTypeOf<ReferenceDataEntry['id']>().toBeString();
     });
 
     it('should be extensible by concrete entity types', () => {

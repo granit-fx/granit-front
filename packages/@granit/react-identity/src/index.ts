@@ -32,10 +32,9 @@ export {
   useRemoveRole,
   useRoleMembers,
   useRoles,
-  useSetUserRoles,
   useUserRoles,
 } from './hooks/use-identity-roles.js';
-export type { RoleMutationVariables, SetUserRolesVariables } from './hooks/use-identity-roles.js';
+export type { RoleMutationVariables } from './hooks/use-identity-roles.js';
 
 // Hooks — Groups
 export {

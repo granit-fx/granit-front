@@ -12,7 +12,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
  * @example
  * ```tsx
  * const { data } = useIdentityUsers({ search: 'john', page: 1 });
- * data?.items.map(user => <span key={user.id}>{user.username}</span>);
+ * data?.items.map(user => <span key={user.userId}>{user.username}</span>);
  * ```
  */
 export function useIdentityUsers(

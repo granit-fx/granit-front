@@ -13,7 +13,7 @@ export type IdentityUserUpdateRequest = {
   readonly email?: string;
   readonly firstName?: string;
   readonly lastName?: string;
-  readonly attributes?: Readonly<Record<string, string | null>>;
+  readonly extraProperties?: Readonly<Record<string, string | null>>;
 };
 
 /** Request body for `PATCH /identity/provider/users/{userId}/enabled`. */

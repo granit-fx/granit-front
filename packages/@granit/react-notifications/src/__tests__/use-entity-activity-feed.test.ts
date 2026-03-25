@@ -18,7 +18,7 @@ const MOCK_FEED: ActivityFeedPage = {
       id: 'a-1',
       title: 'Consultation ajoutée',
       body: null,
-      severity: 'info',
+      severity: 'Info',
       createdAt: '2026-01-15T10:00:00Z',
       userId: 'u-1',
       userDisplayName: 'Dr. Martin',

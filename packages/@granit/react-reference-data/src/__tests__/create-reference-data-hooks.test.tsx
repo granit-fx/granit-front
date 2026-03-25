@@ -12,6 +12,7 @@ interface TestEntity extends ReferenceDataEntry {
 }
 
 const mockEntry: TestEntity = {
+  id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
   code: 'BE',
   labelEn: 'Belgium',
   labelFr: 'Belgique',
@@ -34,10 +35,6 @@ const mockEntry: TestEntity = {
   validTo: null,
   parentCode: null,
   extraProperties: null,
-  createdAt: '2024-01-01T00:00:00Z',
-  createdBy: 'system',
-  modifiedAt: null,
-  modifiedBy: null,
   extra: 'test-value',
 };
 

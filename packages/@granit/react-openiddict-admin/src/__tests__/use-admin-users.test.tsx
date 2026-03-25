@@ -1,4 +1,10 @@
-import { createUser, deleteUser, getUser, impersonateUser, listUsers } from '@granit/openiddict-admin';
+import {
+  createUser,
+  deleteUser,
+  getUser,
+  impersonateUser,
+  listUsers,
+} from '@granit/openiddict-admin';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -35,9 +41,7 @@ function createWrapper() {
   return {
     wrapper: ({ children }: { children: React.ReactNode }) => (
       <QueryClientProvider client={queryClient}>
-        <OpenIddictAdminProvider config={{ client }}>
-          {children}
-        </OpenIddictAdminProvider>
+        <OpenIddictAdminProvider config={{ client }}>{children}</OpenIddictAdminProvider>
       </QueryClientProvider>
     ),
     queryClient,
@@ -46,14 +50,13 @@ function createWrapper() {
 }
 
 const mockUser: AdminUser = {
-  id: 'usr-001',
+  userId: 'usr-001',
+  username: 'admin',
   email: 'admin@example.com',
   firstName: 'Admin',
   lastName: 'User',
-  emailConfirmed: true,
-  isDeleted: false,
-  roles: ['admin'],
-  groups: ['staff'],
+  enabled: true,
+  extraProperties: {},
 };
 
 const mockPage: AdminUserPage = {
@@ -78,18 +81,17 @@ describe('useAdminUsers', () => {
     vi.mocked(listUsers).mockResolvedValueOnce(mockPage);
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(
-      () => useAdminUsers({ search: 'admin', page: 1, pageSize: 10 }),
-      { wrapper }
-    );
+    const { result } = renderHook(() => useAdminUsers({ search: 'admin', page: 1, pageSize: 10 }), {
+      wrapper,
+    });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(listUsers).toHaveBeenCalledWith(
-      expect.anything(),
-      '/api/admin',
-      { search: 'admin', page: 1, pageSize: 10 }
-    );
+    expect(listUsers).toHaveBeenCalledWith(expect.anything(), '/api/admin', {
+      search: 'admin',
+      page: 1,
+      pageSize: 10,
+    });
   });
 
   it('should handle fetch error', async () => {
@@ -139,11 +141,10 @@ describe('useCreateAdminUser', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(createUser).toHaveBeenCalledWith(
-      expect.anything(),
-      '/api/admin',
-      { email: 'admin@example.com', firstName: 'Admin' }
-    );
+    expect(createUser).toHaveBeenCalledWith(expect.anything(), '/api/admin', {
+      email: 'admin@example.com',
+      firstName: 'Admin',
+    });
     expect(result.current.data).toEqual(mockUser);
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'users'],

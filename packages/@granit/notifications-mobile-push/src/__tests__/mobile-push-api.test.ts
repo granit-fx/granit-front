@@ -16,7 +16,7 @@ describe('mobile-push-api', () => {
       platform: 'android',
     });
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/notifications/push-tokens', {
+    expect(client.post).toHaveBeenCalledWith('/api/v1/notifications/mobile-push/tokens', {
       token: 'fcm-token-123',
       platform: 'android',
     });
@@ -27,7 +27,9 @@ describe('mobile-push-api', () => {
 
     await unregisterDeviceToken(client, '/api/v1', 'fcm-token-123');
 
-    expect(client.delete).toHaveBeenCalledWith('/api/v1/notifications/push-tokens/fcm-token-123');
+    expect(client.delete).toHaveBeenCalledWith(
+      '/api/v1/notifications/mobile-push/tokens/fcm-token-123'
+    );
   });
 
   it('should encode special characters in token for unregister', async () => {
@@ -36,7 +38,7 @@ describe('mobile-push-api', () => {
     await unregisterDeviceToken(client, '/api/v1', 'token/with+special=chars');
 
     expect(client.delete).toHaveBeenCalledWith(
-      '/api/v1/notifications/push-tokens/token%2Fwith%2Bspecial%3Dchars'
+      '/api/v1/notifications/mobile-push/tokens/token%2Fwith%2Bspecial%3Dchars'
     );
   });
 
@@ -49,7 +51,7 @@ describe('mobile-push-api', () => {
     vi.mocked(client.get).mockResolvedValueOnce({ data: tokens });
 
     const result = await fetchDeviceTokens(client, '/api/v1');
-    expect(client.get).toHaveBeenCalledWith('/api/v1/notifications/push-tokens');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/notifications/mobile-push/tokens');
     expect(result).toEqual(tokens);
   });
 

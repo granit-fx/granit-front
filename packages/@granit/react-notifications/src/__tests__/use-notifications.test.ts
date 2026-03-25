@@ -14,12 +14,14 @@ import type { UserNotification, UserNotificationPage } from '@granit/notificatio
 
 const MOCK_NOTIFICATION: UserNotification = {
   id: 'n-1',
-  title: 'Nouveau message',
-  body: 'Contenu du message',
-  severity: 'info',
-  entityType: null,
-  entityId: null,
-  isRead: false,
+  notificationId: 'notif-1',
+  notificationTypeName: 'NewMessage',
+  severity: 'Info',
+  data: { title: 'Nouveau message', body: 'Contenu du message' },
+  recipientUserId: 'u-1',
+  relatedEntityType: null,
+  relatedEntityId: null,
+  state: 'Unread',
   createdAt: '2026-01-15T10:00:00Z',
   readAt: null,
 };
@@ -43,16 +45,14 @@ describe('useNotifications', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     expect(result.current.notifications).toHaveLength(1);
-    expect(result.current.notifications[0]!.title).toBe('Nouveau message');
+    expect(result.current.notifications[0]!.notificationTypeName).toBe('NewMessage');
     expect(result.current.totalCount).toBe(1);
   });
 
   it('should mark a notification as read', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse(MOCK_PAGE));
-    vi.mocked(client.post).mockResolvedValue(
-      axiosResponse({ ...MOCK_NOTIFICATION, isRead: true, readAt: '2026-01-15T10:05:00Z' })
-    );
+    vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
 
     const { result } = renderHook(() => useNotifications(), {
       wrapper: createWrapper(client),
@@ -64,7 +64,7 @@ describe('useNotifications', () => {
       await result.current.markRead('n-1');
     });
 
-    expect(result.current.notifications[0]!.isRead).toBe(true);
+    expect(result.current.notifications[0]!.state).toBe('Read');
   });
 
   it('should mark all as read', async () => {
@@ -82,7 +82,7 @@ describe('useNotifications', () => {
       await result.current.markAllRead();
     });
 
-    expect(result.current.notifications.every((n) => n.isRead)).toBe(true);
+    expect(result.current.notifications.every((n) => n.state === 'Read')).toBe(true);
   });
 
   it('should report hasMore when totalCount > loaded items', async () => {
@@ -128,7 +128,8 @@ describe('useNotifications', () => {
     const n2: UserNotification = {
       ...MOCK_NOTIFICATION,
       id: 'n-2',
-      title: 'Deuxième notification',
+      notificationId: 'notif-2',
+      data: { title: 'Deuxième notification' },
     };
     const page2: UserNotificationPage = {
       items: [n2],
@@ -156,7 +157,6 @@ describe('useNotifications', () => {
 
     await waitFor(() => expect(result.current.loadingMore).toBe(false));
     expect(result.current.notifications).toHaveLength(2);
-    expect(result.current.notifications[1]!.title).toBe('Deuxième notification');
   });
 
   it('should use custom pageSize option', async () => {
@@ -187,7 +187,7 @@ describe('useNotifications', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     const updatedPage: UserNotificationPage = {
-      items: [{ ...MOCK_NOTIFICATION, title: 'Mis à jour' }],
+      items: [{ ...MOCK_NOTIFICATION, data: { title: 'Mis à jour' } }],
       totalCount: 1,
       nextCursor: null,
       unreadCount: 0,
@@ -199,7 +199,6 @@ describe('useNotifications', () => {
     });
 
     await waitFor(() => expect(result.current.loading).toBe(false));
-    expect(result.current.notifications[0]!.title).toBe('Mis à jour');
   });
 
   it('should use default basePath when config.basePath is undefined', async () => {
@@ -219,7 +218,8 @@ describe('useNotifications', () => {
     const n2: UserNotification = {
       ...MOCK_NOTIFICATION,
       id: 'n-2',
-      title: 'Autre notification',
+      notificationId: 'notif-2',
+      data: { title: 'Autre notification' },
     };
     const page: UserNotificationPage = {
       items: [MOCK_NOTIFICATION, n2],
@@ -229,9 +229,7 @@ describe('useNotifications', () => {
     };
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse(page));
-    vi.mocked(client.post).mockResolvedValue(
-      axiosResponse({ ...MOCK_NOTIFICATION, isRead: true, readAt: '2026-01-15T10:05:00Z' })
-    );
+    vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
 
     const { result } = renderHook(() => useNotifications(), {
       wrapper: createWrapper(client),
@@ -243,8 +241,8 @@ describe('useNotifications', () => {
       await result.current.markRead('n-1');
     });
 
-    expect(result.current.notifications[0]!.isRead).toBe(true);
-    expect(result.current.notifications[1]!.isRead).toBe(false);
+    expect(result.current.notifications[0]!.state).toBe('Read');
+    expect(result.current.notifications[1]!.state).toBe('Unread');
     expect(result.current.notifications[1]!.id).toBe('n-2');
   });
 

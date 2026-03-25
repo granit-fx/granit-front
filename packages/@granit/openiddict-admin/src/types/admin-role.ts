@@ -2,9 +2,8 @@
 // Admin role types — mirrors Granit.OpenIddict.Endpoints .NET contract
 // ---------------------------------------------------------------------------
 
-/** Role descriptor. */
+/** Role descriptor — mirrors `AdminRoleResponse`. */
 export interface AdminRole {
-  readonly id: string;
   readonly name: string;
   readonly description: string | null;
 }
@@ -15,10 +14,11 @@ export interface AdminRoleCreateRequest {
   readonly description?: string;
 }
 
-/** Role member (simplified user). */
+/** Role member (simplified user) — mirrors `AdminUserResponse` subset. */
 export interface AdminRoleMember {
-  readonly id: string;
-  readonly email: string;
+  readonly userId: string;
+  readonly username: string | null;
+  readonly email: string | null;
   readonly firstName: string | null;
   readonly lastName: string | null;
 }

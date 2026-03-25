@@ -4,7 +4,6 @@ import {
   fetchRoles,
   fetchUserRoles,
   removeRole,
-  setUserRoles,
 } from '@granit/identity';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -126,35 +125,6 @@ export function useRemoveRole(): UseMutationResult<void, Error, RoleMutationVari
   return useMutation({
     mutationFn: ({ userId, roleName }: RoleMutationVariables) =>
       removeRole(config.client, basePath, userId, roleName),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: buildIdentityQueryKey(config, 'provider', 'roles'),
-      });
-      queryClient.invalidateQueries({
-        queryKey: buildIdentityQueryKey(config, 'provider', 'users'),
-      });
-    },
-  });
-}
-
-/** Variables for `useSetUserRoles` mutation. */
-export type SetUserRolesVariables = {
-  readonly userId: string;
-  readonly roles: readonly string[];
-};
-
-/**
- * Replace all roles assigned to a user.
- * Invalidates role and user queries on success.
- */
-export function useSetUserRoles(): UseMutationResult<void, Error, SetUserRolesVariables> {
-  const config = useIdentityConfig();
-  const queryClient = useQueryClient();
-  const basePath = config.providerBasePath ?? '/identity/provider';
-
-  return useMutation({
-    mutationFn: ({ userId, roles }: SetUserRolesVariables) =>
-      setUserRoles(config.client, basePath, userId, roles),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildIdentityQueryKey(config, 'provider', 'roles'),
