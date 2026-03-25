@@ -56,6 +56,17 @@ describe('import-api', () => {
     expect(client.put).toHaveBeenCalledWith(`${BASE}/job-1/mappings`, request);
   });
 
+  it('confirmMappings forwards saveForReuse flag', async () => {
+    const client = createMockClient();
+    const request = {
+      mappings: [{ sourceColumn: 'Col1', targetProperty: 'Email', confidence: 'Manual' as const }],
+      saveForReuse: true,
+    };
+
+    await confirmMappings(client, BASE, 'job-1', request);
+    expect(client.put).toHaveBeenCalledWith(`${BASE}/job-1/mappings`, request);
+  });
+
   it('executeImport calls POST /{jobId}/execute', async () => {
     const client = createMockClient();
     await executeImport(client, BASE, 'job-1');

@@ -43,4 +43,6 @@ export interface ImportPreviewResponse {
  */
 export interface ConfirmMappingsRequest {
   readonly mappings: readonly ImportColumnMapping[];
+  /** When true, saves these mappings for reuse in future imports. */
+  readonly saveForReuse?: boolean;
 }

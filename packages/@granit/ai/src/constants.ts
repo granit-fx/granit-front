@@ -14,8 +14,8 @@ export const AI_PERMISSIONS = {
   WORKSPACES_CREATE: 'AI.Workspaces.Create',
   WORKSPACES_UPDATE: 'AI.Workspaces.Update',
   WORKSPACES_DELETE: 'AI.Workspaces.Delete',
-  USAGE_VIEW: 'AI.Usage.View',
-  CHAT_EXECUTE: 'AI.Chat.Execute',
+  USAGES_VIEW: 'AI.Usages.View',
+  CHATS_EXECUTE: 'AI.Chats.Execute',
   EMBEDDINGS_EXECUTE: 'AI.Embeddings.Execute',
 } as const;
 
