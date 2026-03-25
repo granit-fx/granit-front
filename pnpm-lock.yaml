@@ -304,6 +304,9 @@ importers:
       '@granit/storage':
         specifier: workspace:*
         version: link:../storage
+      axios:
+        specifier: '*'
+        version: 1.13.6
       i18next:
         specifier: ^25.0.0
         version: 25.8.13(typescript@5.9.3)
@@ -718,6 +721,12 @@ importers:
       '@granit/storage':
         specifier: workspace:*
         version: link:../storage
+      '@tanstack/react-query':
+        specifier: ^5.0.0
+        version: 5.95.2(react@19.2.4)
+      axios:
+        specifier: '*'
+        version: 1.13.6
       i18next:
         specifier: ^25.0.0
         version: 25.8.14(typescript@5.9.3)
