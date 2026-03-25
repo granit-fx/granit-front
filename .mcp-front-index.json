@@ -186,8 +186,8 @@
       ]
     },
     {
-      "name": "@granit/audit-log",
-      "description": "Audit log types and API functions — mirrors Granit.AuditLog .NET",
+      "name": "@granit/auditing",
+      "description": "Audit log types and API functions — mirrors Granit.Auditing .NET",
       "exports": [
         {
           "name": "AuditChangeType",
@@ -915,8 +915,8 @@
       ]
     },
     {
-      "name": "@granit/react-audit-log",
-      "description": "React bindings for @granit/audit-log — AuditLogProvider, hooks",
+      "name": "@granit/react-auditing",
+      "description": "React bindings for @granit/auditing — AuditLogProvider, hooks",
       "exports": [
         {
           "name": "AuditLogProvider",

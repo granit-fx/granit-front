@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// @granit/audit-log — public API (pure TypeScript, no React)
+// @granit/auditing — public API (pure TypeScript, no React)
 // ---------------------------------------------------------------------------
 
 // Types

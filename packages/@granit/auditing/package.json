@@ -1,6 +1,6 @@
 {
-  "name": "@granit/react-audit-log",
-  "description": "React bindings for @granit/audit-log — AuditLogProvider, hooks",
+  "name": "@granit/auditing",
+  "description": "Audit log types and API functions — mirrors Granit.Auditing .NET",
   "version": "0.2.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -14,14 +14,11 @@
     "build": "tsup"
   },
   "devDependencies": {
-    "@granit/testing": "workspace:*",
-    "@granit/react-testing": "workspace:*"
+    "@granit/testing": "workspace:*"
   },
   "peerDependencies": {
-    "@granit/audit-log": "workspace:*",
-    "@tanstack/react-query": "^5.0.0",
-    "axios": "*",
-    "react": "^19.0.0"
+    "@granit/query-engine": "workspace:*",
+    "axios": "*"
   },
   "publishConfig": {
     "exports": {

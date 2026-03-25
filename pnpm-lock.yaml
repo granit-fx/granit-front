@@ -176,7 +176,7 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
-  packages/@granit/audit-log:
+  packages/@granit/auditing:
     dependencies:
       '@granit/query-engine':
         specifier: workspace:*
@@ -454,14 +454,14 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
-  packages/@granit/react-audit-log:
+  packages/@granit/react-auditing:
     dependencies:
-      '@granit/audit-log':
+      '@granit/auditing':
         specifier: workspace:*
-        version: link:../audit-log
+        version: link:../auditing
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.90.21(react@19.2.4)
+        version: 5.95.2(react@19.2.4)
       axios:
         specifier: '*'
         version: 1.13.6

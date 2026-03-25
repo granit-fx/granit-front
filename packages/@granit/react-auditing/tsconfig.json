@@ -2,7 +2,7 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "paths": {
-      "@granit/audit-log": ["../audit-log/src/index.ts"]
+      "@granit/auditing": ["../auditing/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]

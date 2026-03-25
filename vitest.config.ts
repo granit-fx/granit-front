@@ -10,7 +10,7 @@ export default defineConfig({
         'packages/@granit/api-client/src/test-utils.ts'
       ),
       '@granit/api-client': path.resolve(__dirname, 'packages/@granit/api-client/src/index.ts'),
-      '@granit/audit-log': path.resolve(__dirname, 'packages/@granit/audit-log/src/index.ts'),
+      '@granit/auditing': path.resolve(__dirname, 'packages/@granit/auditing/src/index.ts'),
       '@granit/account': path.resolve(__dirname, 'packages/@granit/account/src/index.ts'),
       '@granit/ai': path.resolve(__dirname, 'packages/@granit/ai/src/index.ts'),
       '@granit/background-jobs': path.resolve(
@@ -89,9 +89,9 @@ export default defineConfig({
         'packages/@granit/reference-data/src/index.ts'
       ),
       '@granit/react-ai': path.resolve(__dirname, 'packages/@granit/react-ai/src/index.ts'),
-      '@granit/react-audit-log': path.resolve(
+      '@granit/react-auditing': path.resolve(
         __dirname,
-        'packages/@granit/react-audit-log/src/index.ts'
+        'packages/@granit/react-auditing/src/index.ts'
       ),
       '@granit/react-account': path.resolve(
         __dirname,

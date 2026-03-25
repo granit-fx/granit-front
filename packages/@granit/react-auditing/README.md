@@ -1,11 +1,11 @@
-# @granit/react-audit-log
+# @granit/react-auditing
 
-React bindings for `@granit/audit-log` — `AuditLogProvider`, hooks.
+React bindings for `@granit/auditing` — `AuditLogProvider`, hooks.
 
 ## Installation
 
 ```bash
-pnpm add @granit/react-audit-log
+pnpm add @granit/react-auditing
 ```
 
 ## API
@@ -24,8 +24,8 @@ pnpm add @granit/react-audit-log
 ## Usage
 
 ```tsx
-import { AuditLogProvider, useAuditLogEntries } from '@granit/react-audit-log';
-import { AuditLogCategory } from '@granit/audit-log';
+import { AuditLogProvider, useAuditLogEntries } from '@granit/react-auditing';
+import { AuditLogCategory } from '@granit/auditing';
 
 function App() {
   return (

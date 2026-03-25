@@ -1,4 +1,4 @@
-import { AuditLogCategory } from '@granit/audit-log';
+import { AuditLogCategory } from '@granit/auditing';
 import { createTestQueryClient } from '@granit/react-testing';
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -13,7 +13,7 @@ import {
 import { AuditLogProvider } from '../providers/audit-log-provider.js';
 
 import type { AuditLogConfig } from '../providers/audit-log-provider.js';
-import type { AuditLogEntryDetail, AuditLogPage } from '@granit/audit-log';
+import type { AuditLogEntryDetail, AuditLogPage } from '@granit/auditing';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 

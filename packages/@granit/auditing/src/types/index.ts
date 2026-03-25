@@ -1,7 +1,7 @@
 import type { PagedResult, PaginationParams } from '@granit/query-engine';
 
 // ---------------------------------------------------------------------------
-// Audit log types — mirrors Granit.AuditLog .NET contracts
+// Audit log types — mirrors Granit.Auditing .NET contracts
 // ---------------------------------------------------------------------------
 
 /** Audit log category — mirrors `AuditLogCategory` enum. */

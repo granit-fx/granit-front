@@ -1,11 +1,11 @@
-# @granit/audit-log
+# @granit/auditing
 
-Audit log types and API functions — mirrors `Granit.AuditLog` .NET.
+Audit log types and API functions — mirrors `Granit.Auditing` .NET.
 
 ## Installation
 
 ```bash
-pnpm add @granit/audit-log
+pnpm add @granit/auditing
 ```
 
 ## API
@@ -28,7 +28,7 @@ pnpm add @granit/audit-log
 ## Usage
 
 ```typescript
-import { fetchAuditLogEntries, AuditLogCategory } from '@granit/audit-log';
+import { fetchAuditLogEntries, AuditLogCategory } from '@granit/auditing';
 
 const page = await fetchAuditLogEntries(client, '/audit-log', {
   category: AuditLogCategory.DataMutation,

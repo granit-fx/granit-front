@@ -1,4 +1,4 @@
-import { fetchAuditLogEntries, fetchAuditLogEntry, fetchEntityAuditTrail } from '@granit/audit-log';
+import { fetchAuditLogEntries, fetchAuditLogEntry, fetchEntityAuditTrail } from '@granit/auditing';
 import { useQuery } from '@tanstack/react-query';
 
 import {
@@ -7,7 +7,7 @@ import {
   useAuditLogConfig,
 } from '../providers/audit-log-provider.js';
 
-import type { AuditLogEntryDetail, AuditLogListParams, AuditLogPage } from '@granit/audit-log';
+import type { AuditLogEntryDetail, AuditLogListParams, AuditLogPage } from '@granit/auditing';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /**

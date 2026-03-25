@@ -75,8 +75,8 @@
 | `@granit/react-webhooks`                  | React hooks for `@granit/webhooks`: `useSubscription`, `useCreateSubscription`, `useDeleteSubscription`, `useActivateSubscription`, `useRotateSecret`, `useTestPing`, `useDeliveries`, `useWebhookStats`                                      |
 | `@granit/ai`                              | AI workspace management, chat completion (sync + streaming), embedding generation, usage tracking — mirrors `Granit.AI` .NET                                                                                                                  |
 | `@granit/react-ai`                        | React bindings for `@granit/ai`: `AIProvider`, `useAIWorkspaces`, `useAIChat`, `useAIChatStream`, `useAIEmbeddings`                                                                                                                           |
-| `@granit/audit-log`                       | Audit log types and API: `fetchAuditLogEntries`, `fetchAuditLogEntry`, `fetchEntityAuditTrail` — mirrors `Granit.AuditLog` .NET                                                                                                               |
-| `@granit/react-audit-log`                 | React bindings for `@granit/audit-log`: `AuditLogProvider`, `useAuditLogEntries`, `useAuditLogEntry`, `useEntityAuditTrail`                                                                                                                   |
+| `@granit/auditing`                        | Audit log types and API: `fetchAuditLogEntries`, `fetchAuditLogEntry`, `fetchEntityAuditTrail` — mirrors `Granit.Auditing` .NET                                                                                                               |
+| `@granit/react-auditing`                  | React bindings for `@granit/auditing`: `AuditLogProvider`, `useAuditLogEntries`, `useAuditLogEntry`, `useEntityAuditTrail`                                                                                                                    |
 | `@granit/diagnostics`                     | Monitoring health types and API: `fetchMonitoringHealth`, `ServiceHealth`, `MonitoringHealthResponse` — mirrors `Granit.Diagnostics` .NET                                                                                                     |
 | `@granit/react-diagnostics`               | React hooks for `@granit/diagnostics`: `useMonitoringHealth`                                                                                                                                                                                  |
 | `@granit/features`                        | Feature management types and API: `fetchFeatureDefinitions`, `fetchFeatureValues`, `setFeatureOverride`, `deleteFeatureOverride` — mirrors `Granit.Features` .NET                                                                             |
@@ -204,8 +204,8 @@ Full frontend conventions: `../granit-dotnet/docs/guide/conventions/frontend/`
   - `@granit/idempotency` → `@granit/api-client`, `axios`
   - `@granit/ai` → `axios`
   - `@granit/react-ai` → `react`, `axios`, `@tanstack/react-query`, `@granit/ai`
-  - `@granit/audit-log` → `@granit/query-engine`, `axios`
-  - `@granit/react-audit-log` → `react`, `axios`, `@tanstack/react-query`, `@granit/audit-log`
+  - `@granit/auditing` → `@granit/query-engine`, `axios`
+  - `@granit/react-auditing` → `react`, `axios`, `@tanstack/react-query`, `@granit/auditing`
   - `@granit/diagnostics` → `axios`
   - `@granit/react-diagnostics` → `react`, `axios`, `@tanstack/react-query`, `@granit/diagnostics`
   - `@granit/features` → `axios`
