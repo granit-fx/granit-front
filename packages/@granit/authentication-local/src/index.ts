@@ -2,6 +2,7 @@
 export type {
   AccountLoginRequest,
   AccountLoginResponse,
+  AccountPasskeyAssertionCompleteRequest,
   AccountTwoFactorLoginRequest,
 } from './types/index.js';
 
@@ -15,4 +16,7 @@ export { loginAccount } from './api/account-login-api.js';
 export { verifyTwoFactorLogin } from './api/account-two-factor-login-api.js';
 
 // API — Passkey assertion (for login)
-export { beginPasskeyAssertion } from './api/account-passkey-assertion-api.js';
+export {
+  beginPasskeyAssertion,
+  completePasskeyAssertion,
+} from './api/account-passkey-assertion-api.js';

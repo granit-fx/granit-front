@@ -249,11 +249,6 @@
           "name": "verifyTwoFactorLogin",
           "kind": "function",
           "signature": "async function verifyTwoFactorLogin( client: AxiosInstance, basePath: string, request: AccountTwoFactorLoginRequest ): Promise<AccountLoginResponse>"
-        },
-        {
-          "name": "beginPasskeyAssertion",
-          "kind": "function",
-          "signature": "async function beginPasskeyAssertion( client: AxiosInstance, basePath: string ): Promise<string>"
         }
       ]
     },
@@ -1184,6 +1179,11 @@
           "name": "useBeginPasskeyAssertion",
           "kind": "function",
           "signature": "function useBeginPasskeyAssertion(): UseMutationResult<string, Error, void>"
+        },
+        {
+          "name": "useCompletePasskeyAssertion",
+          "kind": "function",
+          "signature": "function useCompletePasskeyAssertion(): UseMutationResult< AccountLoginResponse, Error, AccountPasskeyAssertionCompleteRequest >"
         }
       ]
     },
