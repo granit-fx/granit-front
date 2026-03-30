@@ -63,7 +63,11 @@
     "overrides": {
       "immutable": ">=5.1.5",
       "flatted": ">=3.4.2",
-      "@tanstack/query-core": "^5.95.0"
+      "@tanstack/query-core": "^5.95.0",
+      "picomatch": ">=4.0.4",
+      "yaml": ">=2.8.3",
+      "smol-toml": ">=1.6.1",
+      "brace-expansion": ">=5.0.5"
     }
   },
   "lint-staged": {
