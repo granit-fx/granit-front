@@ -227,6 +227,176 @@
       "exports": []
     },
     {
+      "name": "@granit/authentication-cognito",
+      "description": "AWS Cognito User Pools OIDC authentication types — CognitoAuthContextType, config",
+      "exports": [
+        {
+          "name": "CognitoAuthContextType",
+          "kind": "interface",
+          "signature": "interface CognitoAuthContextType extends BaseAuthContextType",
+          "members": [
+            {
+              "name": "userPool",
+              "kind": "property",
+              "signature": "userPool: CognitoUserPool | null"
+            }
+          ]
+        },
+        {
+          "name": "CognitoCoreConfig",
+          "kind": "interface",
+          "signature": "interface CognitoCoreConfig",
+          "members": [
+            {
+              "name": "userPoolId",
+              "kind": "property",
+              "signature": "userPoolId: string"
+            },
+            {
+              "name": "clientId",
+              "kind": "property",
+              "signature": "clientId: string"
+            },
+            {
+              "name": "region",
+              "kind": "property",
+              "signature": "region: string"
+            },
+            {
+              "name": "domain",
+              "kind": "property",
+              "signature": "domain?: string"
+            },
+            {
+              "name": "scopes",
+              "kind": "property",
+              "signature": "scopes?: readonly string[]"
+            },
+            {
+              "name": "onTokenRefreshError",
+              "kind": "method",
+              "signature": "onTokenRefreshError?: () => void"
+            },
+            {
+              "name": "onSessionExpired",
+              "kind": "method",
+              "signature": "onSessionExpired?: () => void"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "@granit/authentication-entraid",
+      "description": "Microsoft Entra ID (Azure AD) OIDC authentication types — EntraIdAuthContextType, config",
+      "exports": [
+        {
+          "name": "EntraIdAuthContextType",
+          "kind": "interface",
+          "signature": "interface EntraIdAuthContextType extends BaseAuthContextType",
+          "members": [
+            {
+              "name": "msalInstance",
+              "kind": "property",
+              "signature": "msalInstance: IPublicClientApplication | null"
+            }
+          ]
+        },
+        {
+          "name": "EntraIdCoreConfig",
+          "kind": "interface",
+          "signature": "interface EntraIdCoreConfig",
+          "members": [
+            {
+              "name": "clientId",
+              "kind": "property",
+              "signature": "clientId: string"
+            },
+            {
+              "name": "authority",
+              "kind": "property",
+              "signature": "authority: string"
+            },
+            {
+              "name": "redirectUri",
+              "kind": "property",
+              "signature": "redirectUri: string"
+            },
+            {
+              "name": "scopes",
+              "kind": "property",
+              "signature": "scopes?: readonly string[]"
+            },
+            {
+              "name": "onAcquireTokenFailure",
+              "kind": "method",
+              "signature": "onAcquireTokenFailure?: () => void"
+            },
+            {
+              "name": "onSessionEnd",
+              "kind": "method",
+              "signature": "onSessionEnd?: () => void"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "@granit/authentication-google-cloud",
+      "description": "Google Cloud Identity Platform (Firebase Auth) authentication types — GoogleCloudAuthContextType, config",
+      "exports": [
+        {
+          "name": "GoogleCloudAuthContextType",
+          "kind": "interface",
+          "signature": "interface GoogleCloudAuthContextType extends BaseAuthContextType",
+          "members": [
+            {
+              "name": "firebaseAuth",
+              "kind": "property",
+              "signature": "firebaseAuth: Auth | null"
+            }
+          ]
+        },
+        {
+          "name": "GoogleCloudCoreConfig",
+          "kind": "interface",
+          "signature": "interface GoogleCloudCoreConfig",
+          "members": [
+            {
+              "name": "apiKey",
+              "kind": "property",
+              "signature": "apiKey: string"
+            },
+            {
+              "name": "authDomain",
+              "kind": "property",
+              "signature": "authDomain: string"
+            },
+            {
+              "name": "projectId",
+              "kind": "property",
+              "signature": "projectId: string"
+            },
+            {
+              "name": "scopes",
+              "kind": "property",
+              "signature": "scopes?: readonly string[]"
+            },
+            {
+              "name": "onTokenRefreshError",
+              "kind": "method",
+              "signature": "onTokenRefreshError?: () => void"
+            },
+            {
+              "name": "onSessionExpired",
+              "kind": "method",
+              "signature": "onSessionExpired?: () => void"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "@granit/authentication-keycloak",
       "description": "Keycloak OIDC authentication types — KeycloakAuthContextType, config, events",
       "exports": []
@@ -1086,6 +1256,105 @@
               "name": "request",
               "kind": "property",
               "signature": "request: ApiKeyUpdateScopesRequest"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-authentication-cognito",
+      "description": "React hooks for AWS Cognito OIDC authentication — useCognitoInit",
+      "exports": [
+        {
+          "name": "useCognitoInit",
+          "kind": "function",
+          "signature": "function useCognitoInit(config: CognitoCoreConfig): CognitoCoreResult"
+        },
+        {
+          "name": "CognitoCoreResult",
+          "kind": "interface",
+          "signature": "interface CognitoCoreResult extends CognitoAuthContextType",
+          "members": [
+            {
+              "name": "userPoolRef",
+              "kind": "property",
+              "signature": "userPoolRef: React.RefObject<CognitoUserPool | null>"
+            },
+            {
+              "name": "login",
+              "kind": "method",
+              "signature": "login: (options?: LoginOptions) => void"
+            },
+            {
+              "name": "logout",
+              "kind": "method",
+              "signature": "logout: (options?: LogoutOptions) => void"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-authentication-entraid",
+      "description": "React hooks for Microsoft Entra ID OIDC authentication — useEntraIdInit",
+      "exports": [
+        {
+          "name": "useEntraIdInit",
+          "kind": "function",
+          "signature": "function useEntraIdInit(config: EntraIdCoreConfig): EntraIdCoreResult"
+        },
+        {
+          "name": "EntraIdCoreResult",
+          "kind": "interface",
+          "signature": "interface EntraIdCoreResult extends EntraIdAuthContextType",
+          "members": [
+            {
+              "name": "msalRef",
+              "kind": "property",
+              "signature": "msalRef: React.RefObject<PublicClientApplication | null>"
+            },
+            {
+              "name": "login",
+              "kind": "method",
+              "signature": "login: (options?: LoginOptions) => void"
+            },
+            {
+              "name": "logout",
+              "kind": "method",
+              "signature": "logout: (options?: LogoutOptions) => void"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-authentication-google-cloud",
+      "description": "React hooks for Google Cloud Identity Platform (Firebase Auth) — useGoogleCloudInit",
+      "exports": [
+        {
+          "name": "useGoogleCloudInit",
+          "kind": "function",
+          "signature": "function useGoogleCloudInit(config: GoogleCloudCoreConfig): GoogleCloudCoreResult"
+        },
+        {
+          "name": "GoogleCloudCoreResult",
+          "kind": "interface",
+          "signature": "interface GoogleCloudCoreResult extends GoogleCloudAuthContextType",
+          "members": [
+            {
+              "name": "authRef",
+              "kind": "property",
+              "signature": "authRef: React.RefObject<Auth | null>"
+            },
+            {
+              "name": "login",
+              "kind": "method",
+              "signature": "login: (options?: LoginOptions) => void"
+            },
+            {
+              "name": "logout",
+              "kind": "method",
+              "signature": "logout: (options?: LogoutOptions) => void"
             }
           ]
         }

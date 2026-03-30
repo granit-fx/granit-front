@@ -1,0 +1,33 @@
+{
+  "name": "@granit/react-authentication-entraid",
+  "description": "React hooks for Microsoft Entra ID OIDC authentication — useEntraIdInit",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@azure/msal-browser": ">=3.0.0",
+    "@granit/api-client": "workspace:*",
+    "@granit/authentication": "workspace:*",
+    "@granit/authentication-entraid": "workspace:*",
+    "@granit/react-authentication": "workspace:*",
+    "react": "^19.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  }
+}
