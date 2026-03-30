@@ -1,0 +1,23 @@
+// ---------------------------------------------------------------------------
+// Account login types — mirrors Granit.Identity.Local.Endpoints .NET contract
+// ---------------------------------------------------------------------------
+
+/** Request body for `POST {basePath}/login`. */
+export interface AccountLoginRequest {
+  readonly login: string;
+  readonly password: string;
+}
+
+/**
+ * Response from `POST {basePath}/login`.
+ *
+ * On success the server sets an ASP.NET Core Identity session cookie.
+ * The caller should then redirect to the OIDC authorization endpoint
+ * (`/connect/authorize`) to complete the token exchange.
+ */
+export interface AccountLoginResponse {
+  readonly succeeded: boolean;
+  readonly requiresTwoFactor: boolean;
+  readonly isLockedOut: boolean;
+  readonly isNotAllowed: boolean;
+}

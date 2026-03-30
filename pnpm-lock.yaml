@@ -189,13 +189,28 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
-  packages/@granit/authentication:
+  packages/@granit/authentication: {}
+
+  packages/@granit/authentication-api-keys: {}
+
+  packages/@granit/authentication-keycloak:
     dependencies:
+      '@granit/authentication':
+        specifier: workspace:*
+        version: link:../authentication
       keycloak-js:
         specifier: '*'
         version: 26.2.3
 
-  packages/@granit/authentication-api-keys: {}
+  packages/@granit/authentication-local:
+    dependencies:
+      axios:
+        specifier: '*'
+        version: 1.14.0
+    devDependencies:
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
 
   packages/@granit/authorization:
     dependencies:
@@ -481,15 +496,9 @@ importers:
 
   packages/@granit/react-authentication:
     dependencies:
-      '@granit/api-client':
-        specifier: workspace:*
-        version: link:../api-client
       '@granit/authentication':
         specifier: workspace:*
         version: link:../authentication
-      keycloak-js:
-        specifier: '*'
-        version: 26.2.3
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -505,6 +514,49 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+    devDependencies:
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
+  packages/@granit/react-authentication-keycloak:
+    dependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/authentication':
+        specifier: workspace:*
+        version: link:../authentication
+      '@granit/authentication-keycloak':
+        specifier: workspace:*
+        version: link:../authentication-keycloak
+      '@granit/react-authentication':
+        specifier: workspace:*
+        version: link:../react-authentication
+      keycloak-js:
+        specifier: '*'
+        version: 26.2.3
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+
+  packages/@granit/react-authentication-local:
+    dependencies:
+      '@granit/authentication-local':
+        specifier: workspace:*
+        version: link:../authentication-local
+      '@tanstack/react-query':
+        specifier: ^5.0.0
+        version: 5.95.2(react@19.2.4)
+      axios:
+        specifier: '*'
+        version: 1.14.0
       react:
         specifier: ^19.0.0
         version: 19.2.4

@@ -1,7 +1,7 @@
 {
-  "name": "@granit/authentication",
-  "description": "Provider-agnostic OIDC authentication types — base context, user info, login/logout options",
-  "version": "0.3.0",
+  "name": "@granit/authentication-local",
+  "description": "Local credential authentication types and API — headless login, passkey assertion — mirrors Granit.Identity.Local.Endpoints .NET contract",
+  "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
@@ -12,6 +12,12 @@
   ],
   "scripts": {
     "build": "tsup"
+  },
+  "peerDependencies": {
+    "axios": "*"
+  },
+  "devDependencies": {
+    "@granit/testing": "workspace:*"
   },
   "publishConfig": {
     "exports": {

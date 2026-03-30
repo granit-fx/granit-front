@@ -11,7 +11,6 @@ interface TestAuthContextType extends BaseAuthContextType {
 }
 
 const mockValue: TestAuthContextType = {
-  keycloak: null,
   authenticated: true,
   loading: false,
   user: null,

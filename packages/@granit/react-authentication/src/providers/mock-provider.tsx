@@ -7,9 +7,8 @@ import type { BaseAuthContextType } from '@granit/authentication';
  *
  * @example
  * const MockAuthProvider = createMockProvider(AuthContext, {
- *   keycloak: null, authenticated: true, loading: false,
+ *   authenticated: true, loading: false,
  *   user: MOCK_USER, login: () => {}, logout: () => {},
- *   register: () => {},  // guava-front specific
  * });
  */
 export function createMockProvider<T extends BaseAuthContextType>(

@@ -2,7 +2,6 @@ import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
-  beginPasskeyAssertion,
   beginPasskeyRegistration,
   completePasskeyRegistration,
   deletePasskey,
@@ -69,19 +68,6 @@ describe('account-passkey-api', () => {
         name: 'iPhone',
       });
       expect(result).toEqual(response);
-    });
-  });
-
-  describe('beginPasskeyAssertion', () => {
-    it('sends POST /passkeys/assertion/begin and returns raw JSON', async () => {
-      const client = createMockClient();
-      const optionsJson = '{"challenge":"def456"}';
-      vi.mocked(client.post).mockResolvedValueOnce({ data: optionsJson });
-
-      const result = await beginPasskeyAssertion(client, BASE);
-
-      expect(client.post).toHaveBeenCalledWith(`${BASE}/passkeys/assertion/begin`);
-      expect(result).toBe(optionsJson);
     });
   });
 

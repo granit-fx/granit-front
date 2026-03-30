@@ -9,14 +9,8 @@ import type { BaseAuthContextType } from '@granit/authentication';
  * (extending BaseAuthContextType with app-specific fields).
  *
  * @example
- * // guava-front
- * interface AuthContextType extends BaseAuthContextType { register: () => void }
- * export const { AuthContext, useAuth } = createAuthContext<AuthContextType>();
- *
- * @example
- * // guava-admin
- * interface AuthContextType extends BaseAuthContextType { hasAdminRole: boolean }
- * export const { AuthContext, useAuth } = createAuthContext<AuthContextType>();
+ * interface AppAuthContext extends BaseAuthContextType { hasAdminRole: boolean }
+ * export const { AuthContext, useAuth } = createAuthContext<AppAuthContext>();
  */
 export function createAuthContext<T extends BaseAuthContextType>() {
   const AuthContext = React.createContext<T | undefined>(undefined);

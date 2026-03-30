@@ -21,6 +21,21 @@
           "signature": "async function updateProfile( client: AxiosInstance, basePath: string, request: AccountProfileUpdateRequest ): Promise<AccountProfileResponse>"
         },
         {
+          "name": "changePassword",
+          "kind": "function",
+          "signature": "async function changePassword( client: AxiosInstance, basePath: string, request: AccountPasswordChangeRequest ): Promise<void>"
+        },
+        {
+          "name": "forgotPassword",
+          "kind": "function",
+          "signature": "async function forgotPassword( client: AxiosInstance, basePath: string, request: AccountForgotPasswordRequest ): Promise<void>"
+        },
+        {
+          "name": "resetPassword",
+          "kind": "function",
+          "signature": "async function resetPassword( client: AxiosInstance, basePath: string, request: AccountPasswordResetRequest ): Promise<void>"
+        },
+        {
           "name": "backToImpersonator",
           "kind": "function",
           "signature": "async function backToImpersonator( client: AxiosInstance, basePath: string ): Promise<AccountImpersonationResult>"
@@ -203,13 +218,39 @@
     },
     {
       "name": "@granit/authentication",
-      "description": "Keycloak/OIDC authentication types — TypeScript mirror of Granit.Authentication .NET",
+      "description": "Provider-agnostic OIDC authentication types — base context, user info, login/logout options",
       "exports": []
     },
     {
       "name": "@granit/authentication-api-keys",
       "description": "API key types — TypeScript mirror of Granit.Authentication.ApiKeys .NET",
       "exports": []
+    },
+    {
+      "name": "@granit/authentication-keycloak",
+      "description": "Keycloak OIDC authentication types — KeycloakAuthContextType, config, events",
+      "exports": []
+    },
+    {
+      "name": "@granit/authentication-local",
+      "description": "Local credential authentication types and API — headless login, passkey assertion — mirrors Granit.Identity.Local.Endpoints .NET contract",
+      "exports": [
+        {
+          "name": "localAuthKeys",
+          "kind": "const",
+          "signature": "const localAuthKeys"
+        },
+        {
+          "name": "loginAccount",
+          "kind": "function",
+          "signature": "async function loginAccount( client: AxiosInstance, basePath: string, request: AccountLoginRequest ): Promise<AccountLoginResponse>"
+        },
+        {
+          "name": "beginPasskeyAssertion",
+          "kind": "function",
+          "signature": "async function beginPasskeyAssertion( client: AxiosInstance, basePath: string ): Promise<string>"
+        }
+      ]
     },
     {
       "name": "@granit/authorization",
@@ -944,60 +985,8 @@
     },
     {
       "name": "@granit/react-authentication",
-      "description": "React bindings for @granit/authentication — Keycloak init hook, auth context factory, mock provider",
+      "description": "React bindings for @granit/authentication — generic auth context factory, mock provider",
       "exports": [
-        {
-          "name": "useKeycloakInit",
-          "kind": "function",
-          "signature": "function useKeycloakInit(config: KeycloakCoreConfig): KeycloakCoreResult"
-        },
-        {
-          "name": "KeycloakCoreResult",
-          "kind": "interface",
-          "signature": "interface KeycloakCoreResult extends BaseAuthContextType",
-          "members": [
-            {
-              "name": "keycloakRef",
-              "kind": "property",
-              "signature": "keycloakRef: React.RefObject<Keycloak | null>"
-            },
-            {
-              "name": "login",
-              "kind": "method",
-              "signature": "login: (options?: LoginOptions) => void"
-            },
-            {
-              "name": "logout",
-              "kind": "method",
-              "signature": "logout: (options?: LogoutOptions) => void"
-            },
-            {
-              "name": "register",
-              "kind": "method",
-              "signature": "register: (options?: Omit<LoginOptions, 'action'>) => void"
-            },
-            {
-              "name": "hasRealmRole",
-              "kind": "method",
-              "signature": "hasRealmRole: (role: string) => boolean"
-            },
-            {
-              "name": "hasResourceRole",
-              "kind": "method",
-              "signature": "hasResourceRole: (role: string, resource?: string) => boolean"
-            },
-            {
-              "name": "isTokenExpired",
-              "kind": "method",
-              "signature": "isTokenExpired: (minValidity?: number) => boolean"
-            },
-            {
-              "name": "tokenParsed",
-              "kind": "property",
-              "signature": "tokenParsed: Record<string, unknown> | undefined"
-            }
-          ]
-        },
         {
           "name": "createAuthContext",
           "kind": "function",
@@ -1099,6 +1088,92 @@
               "signature": "request: ApiKeyUpdateScopesRequest"
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-authentication-keycloak",
+      "description": "React hooks for Keycloak OIDC authentication — useKeycloakInit",
+      "exports": [
+        {
+          "name": "useKeycloakInit",
+          "kind": "function",
+          "signature": "function useKeycloakInit(config: KeycloakCoreConfig): KeycloakCoreResult"
+        },
+        {
+          "name": "KeycloakCoreResult",
+          "kind": "interface",
+          "signature": "interface KeycloakCoreResult extends KeycloakAuthContextType",
+          "members": [
+            {
+              "name": "keycloakRef",
+              "kind": "property",
+              "signature": "keycloakRef: React.RefObject<Keycloak | null>"
+            },
+            {
+              "name": "login",
+              "kind": "method",
+              "signature": "login: (options?: LoginOptions) => void"
+            },
+            {
+              "name": "logout",
+              "kind": "method",
+              "signature": "logout: (options?: LogoutOptions) => void"
+            },
+            {
+              "name": "register",
+              "kind": "method",
+              "signature": "register: (options?: Omit<LoginOptions, 'action'>) => void"
+            },
+            {
+              "name": "hasRealmRole",
+              "kind": "method",
+              "signature": "hasRealmRole: (role: string) => boolean"
+            },
+            {
+              "name": "hasResourceRole",
+              "kind": "method",
+              "signature": "hasResourceRole: (role: string, resource?: string) => boolean"
+            },
+            {
+              "name": "isTokenExpired",
+              "kind": "method",
+              "signature": "isTokenExpired: (minValidity?: number) => boolean"
+            },
+            {
+              "name": "tokenParsed",
+              "kind": "property",
+              "signature": "tokenParsed: Record<string, unknown> | undefined"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-authentication-local",
+      "description": "React hooks for local credential authentication — useLogin, useBeginPasskeyAssertion",
+      "exports": [
+        {
+          "name": "LocalAuthConfig",
+          "kind": "interface",
+          "signature": "interface LocalAuthConfig",
+          "members": []
+        },
+        {
+          "name": "LocalAuthProviderProps",
+          "kind": "interface",
+          "signature": "interface LocalAuthProviderProps",
+          "members": []
+        },
+        {
+          "name": "useLogin",
+          "kind": "function",
+          "signature": "function useLogin(): UseMutationResult<AccountLoginResponse, Error, AccountLoginRequest>"
+        },
+        {
+          "name": "useBeginPasskeyAssertion",
+          "kind": "function",
+          "signature": "function useBeginPasskeyAssertion(): UseMutationResult<string, Error, void>"
         }
       ]
     },

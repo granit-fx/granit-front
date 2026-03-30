@@ -1,12 +1,6 @@
 // Types
-export type {
-  AccountRegisterRequest,
-  AccountRegisterResponse,
-} from './types/index.js';
-export type {
-  AccountProfileResponse,
-  AccountProfileUpdateRequest,
-} from './types/index.js';
+export type { AccountRegisterRequest, AccountRegisterResponse } from './types/index.js';
+export type { AccountProfileResponse, AccountProfileUpdateRequest } from './types/index.js';
 export type {
   AccountForgotPasswordRequest,
   AccountPasswordChangeRequest,
@@ -46,11 +40,7 @@ export {
 export { getProfile, updateProfile } from './api/account-profile-api.js';
 
 // API — Password
-export {
-  changePassword,
-  forgotPassword,
-  resetPassword,
-} from './api/account-password-api.js';
+export { changePassword, forgotPassword, resetPassword } from './api/account-password-api.js';
 
 // API — Two-Factor
 export {
@@ -69,9 +59,8 @@ export {
   unlinkExternalLogin,
 } from './api/account-external-login-api.js';
 
-// API — Passkeys
+// API — Passkeys (beginPasskeyAssertion moved to @granit/authentication-local)
 export {
-  beginPasskeyAssertion,
   beginPasskeyRegistration,
   completePasskeyRegistration,
   deletePasskey,

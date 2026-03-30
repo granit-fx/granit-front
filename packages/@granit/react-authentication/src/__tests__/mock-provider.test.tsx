@@ -8,7 +8,6 @@ import { createAuthContext } from '../providers/use-auth-context.js';
 import type { BaseAuthContextType } from '@granit/authentication';
 
 const mockValue: BaseAuthContextType = {
-  keycloak: null,
   authenticated: true,
   loading: false,
   user: null,

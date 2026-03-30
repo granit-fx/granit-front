@@ -1,10 +1,9 @@
-import type Keycloak from 'keycloak-js';
-
 // ---------------------------------------------------------------------------
-// Keycloak / OIDC standard user claims
+// Standard OIDC user claims (provider-agnostic)
 // ---------------------------------------------------------------------------
 
-export interface KeycloakUserInfo {
+/** Standard OIDC user info claims — compatible with any OIDC provider. */
+export interface OidcUserInfo {
   sub: string;
   email?: string;
   email_verified?: boolean;
@@ -16,31 +15,17 @@ export interface KeycloakUserInfo {
 }
 
 // ---------------------------------------------------------------------------
-// Event types
+// Login / Logout option types (OIDC standard)
 // ---------------------------------------------------------------------------
 
-/** Keycloak lifecycle event names forwarded by useKeycloakInit. */
-export type KeycloakEvent =
-  | 'onReady'
-  | 'onAuthSuccess'
-  | 'onAuthError'
-  | 'onAuthRefreshSuccess'
-  | 'onAuthRefreshError'
-  | 'onAuthLogout'
-  | 'onTokenExpired';
-
-// ---------------------------------------------------------------------------
-// Login / Logout option types (mirrors keycloak-js but decoupled)
-// ---------------------------------------------------------------------------
-
-/** Options forwarded to `keycloak.login()`. All fields are optional. */
+/** Generic login options forwarded to the identity provider. */
 export interface LoginOptions {
   redirectUri?: string;
-  /** Bypass the Keycloak login page and redirect to a specific identity provider. */
+  /** Bypass the login page and redirect to a specific identity provider. */
   idpHint?: string;
   /** Pre-fill the username/email field on the login page. */
   loginHint?: string;
-  /** Force the Keycloak UI locale (e.g. `"fr"`). */
+  /** Force the IdP UI locale (e.g. `"fr"`). */
   locale?: string;
   /** Trigger a specific action: `"register"` for signup, or a required action name. */
   action?: string;
@@ -51,67 +36,27 @@ export interface LoginOptions {
   maxAge?: number;
 }
 
-/** Options forwarded to `keycloak.logout()`. */
+/** Generic logout options forwarded to the identity provider. */
 export interface LogoutOptions {
   /** URL to redirect to after logout completes. */
   redirectUri?: string;
 }
 
 // ---------------------------------------------------------------------------
-// Base auth context (shared by all consuming apps — kept minimal)
+// Base auth context (provider-agnostic, extended by each provider package)
 // ---------------------------------------------------------------------------
 
 /**
  * Base auth context shared by all consuming applications.
  *
- * Apps extend this interface with their own fields:
- * - guava-front: adds `register: () => void`
- * - guava-admin: adds `hasAdminRole: boolean`
+ * Provider-specific packages extend this interface:
+ * - `@granit/authentication-keycloak` adds `keycloak: Keycloak | null`
+ * - Consuming apps extend further with app-specific fields
  */
 export interface BaseAuthContextType {
-  /** Live Keycloak instance — null before init completes */
-  keycloak: Keycloak | null;
   authenticated: boolean;
   loading: boolean;
-  user: KeycloakUserInfo | null;
-  login: () => void;
-  logout: () => void;
-}
-
-// ---------------------------------------------------------------------------
-// Hook configuration
-// ---------------------------------------------------------------------------
-
-export interface KeycloakCoreConfig {
-  url: string;
-  realm: string;
-  clientId: string;
-
-  /** Whether the silent SSO check is enabled (web-only, skip on native). Default: true */
-  silentCheckSso?: boolean;
-
-  /**
-   * Fall back to a regular `check-sso` redirect when the silent iframe check
-   * fails (e.g. Safari with third-party cookie blocking). Default: true
-   */
-  silentCheckSsoFallback?: boolean;
-
-  /**
-   * When true, extract user info from the decoded JWT (`tokenParsed`) instead
-   * of calling the `/userinfo` endpoint. Avoids an extra HTTP round-trip but
-   * requires the Keycloak client mappers to include the needed claims in the
-   * access token. Default: false (calls `loadUserInfo()`).
-   */
-  useTokenClaims?: boolean;
-
-  // -- Lifecycle callbacks (all optional) ----------------------------------
-
-  /** Called when the access token expires. */
-  onTokenExpired?: () => void;
-  /** Called when a token refresh attempt fails. */
-  onAuthRefreshError?: () => void;
-  /** Called when the Keycloak session is terminated (admin logout, SSO logout). */
-  onAuthLogout?: () => void;
-  /** Generic handler called for every Keycloak lifecycle event. */
-  onEvent?: (event: KeycloakEvent, error?: unknown) => void;
+  user: OidcUserInfo | null;
+  login: (options?: LoginOptions) => void;
+  logout: (options?: LogoutOptions) => void;
 }

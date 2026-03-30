@@ -1,8 +1,6 @@
 export type {
   BaseAuthContextType,
-  KeycloakCoreConfig,
-  KeycloakEvent,
-  KeycloakUserInfo,
   LoginOptions,
   LogoutOptions,
+  OidcUserInfo,
 } from './types/index.js';

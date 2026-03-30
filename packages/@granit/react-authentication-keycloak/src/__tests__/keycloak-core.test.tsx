@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useKeycloakInit } from '../hooks/use-keycloak-core.js';
 
-import type { KeycloakCoreConfig } from '@granit/authentication';
+import type { KeycloakCoreConfig } from '@granit/authentication-keycloak';
 
 // ---------------------------------------------------------------------------
 // Hoisted mock references (declared before vi.mock hoisting)
@@ -195,7 +195,7 @@ describe('useKeycloakInit', () => {
 
     await waitFor(() => expect(mockSetTokenGetter).toHaveBeenCalledOnce());
 
-    const getter = mockSetTokenGetter.mock.calls[0][0] as () => Promise<string | undefined>;
+    const getter = mockSetTokenGetter.mock.calls[0]![0] as () => Promise<string | undefined>;
     const token = await getter();
     expect(token).toBe('mock-access-token');
   });
@@ -207,7 +207,7 @@ describe('useKeycloakInit', () => {
 
     await waitFor(() => expect(mockSetTokenGetter).toHaveBeenCalledOnce());
 
-    const getter = mockSetTokenGetter.mock.calls[0][0] as () => Promise<string | undefined>;
+    const getter = mockSetTokenGetter.mock.calls[0]![0] as () => Promise<string | undefined>;
     const token = await getter();
     expect(token).toBeUndefined();
   });
@@ -218,7 +218,7 @@ describe('useKeycloakInit', () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
-    const initArg = mockInit.mock.calls[0][0] as Record<string, unknown>;
+    const initArg = mockInit.mock.calls[0]![0] as Record<string, unknown>;
     expect(initArg).not.toHaveProperty('silentCheckSsoRedirectUri');
   });
 
@@ -433,8 +433,8 @@ describe('useKeycloakInit', () => {
 
       await waitFor(() => expect(result.current.loading).toBe(false));
 
-      expect(result.current.hasResourceRole('editor', 'guava-admin')).toBe(true);
-      expect(mockHasResourceRole).toHaveBeenCalledWith('editor', 'guava-admin');
+      expect(result.current.hasResourceRole('editor', 'showcase-admin')).toBe(true);
+      expect(mockHasResourceRole).toHaveBeenCalledWith('editor', 'showcase-admin');
     });
 
     it('should return false from hasRealmRole when not authenticated', async () => {
@@ -488,7 +488,7 @@ describe('useKeycloakInit', () => {
 
       await waitFor(() => expect(result.current.loading).toBe(false));
 
-      const initArg = mockInit.mock.calls[0][0] as Record<string, unknown>;
+      const initArg = mockInit.mock.calls[0]![0] as Record<string, unknown>;
       expect(initArg.silentCheckSsoFallback).toBe(false);
     });
 
@@ -498,7 +498,7 @@ describe('useKeycloakInit', () => {
 
       await waitFor(() => expect(result.current.loading).toBe(false));
 
-      const initArg = mockInit.mock.calls[0][0] as Record<string, unknown>;
+      const initArg = mockInit.mock.calls[0]![0] as Record<string, unknown>;
       expect(initArg.silentCheckSsoFallback).toBe(true);
     });
 

@@ -1,7 +1,7 @@
 {
-  "name": "@granit/react-authentication",
-  "description": "React bindings for @granit/authentication — generic auth context factory, mock provider",
-  "version": "0.3.0",
+  "name": "@granit/react-authentication-local",
+  "description": "React hooks for local credential authentication — useLogin, useBeginPasskeyAssertion",
+  "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
@@ -14,8 +14,14 @@
     "build": "tsup"
   },
   "peerDependencies": {
-    "@granit/authentication": "workspace:*",
+    "@granit/authentication-local": "workspace:*",
+    "@tanstack/react-query": "^5.0.0",
+    "axios": "*",
     "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@granit/react-testing": "workspace:*",
+    "@granit/testing": "workspace:*"
   },
   "publishConfig": {
     "exports": {
