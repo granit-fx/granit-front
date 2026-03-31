@@ -4,7 +4,7 @@ This file lists the third-party libraries used by the **granit-front** project
 along with their respective licenses. It is updated whenever an external
 dependency is added or modified.
 
-Last updated: 2026-03-25
+Last updated: 2026-03-31
 
 ---
 
@@ -12,8 +12,8 @@ Last updated: 2026-03-25
 
 | License      | Package count |
 | ------------ | ------------- |
-| MIT          | 33            |
-| Apache-2.0   | 12            |
+| MIT          | 36            |
+| Apache-2.0   | 13            |
 | BSD-3-Clause | 1             |
 
 ---
@@ -28,6 +28,7 @@ Last updated: 2026-03-25
 
 | Package                         | Version | Copyright                                  |
 | ------------------------------- | ------- | ------------------------------------------ |
+| @azure/msal-browser             | 3.x     | Copyright (c) Microsoft Corporation        |
 | @capacitor/push-notifications   | 8.0.2   | Copyright (c) Drifty Co.                   |
 | @commitlint/cli                 | 20.5.0  | commitlint Contributors                    |
 | @commitlint/config-conventional | 20.5.0  | commitlint Contributors                    |
@@ -61,6 +62,7 @@ Last updated: 2026-03-25
 | tailwind-merge                  | 3.5.0   | Copyright (c) Dany Castillo                |
 | tsup                            | 8.5.1   | Copyright (c) EGOIST                       |
 | typescript-eslint               | 8.57.2  | typescript-eslint Contributors             |
+| amazon-cognito-identity-js      | 6.x     | Copyright (c) Amazon.com, Inc.             |
 | vitest                          | 4.1.1   | Vitest Contributors                        |
 
 ### Apache-2.0
@@ -77,6 +79,7 @@ Last updated: 2026-03-25
 | @opentelemetry/resources                        | 2.6.0   | Copyright The OpenTelemetry Authors |
 | @opentelemetry/sdk-trace-web                    | 2.6.0   | Copyright The OpenTelemetry Authors |
 | @opentelemetry/semantic-conventions             | 1.40.0  | Copyright The OpenTelemetry Authors |
+| firebase                                        | 10.x    | Copyright Google LLC                |
 | keycloak-js                                     | 26.2.3  | Copyright Red Hat, Inc.             |
 | typescript                                      | 6.0.2   | Copyright (c) Microsoft Corporation |
 
@@ -88,3 +91,8 @@ Last updated: 2026-03-25
 
 > `klaro` is a peerDependency of `@granit/cookies-klaro`, installed in
 > consumer applications.
+>
+> `@azure/msal-browser` is a peerDependency of `@granit/authentication-entraid`,
+> `amazon-cognito-identity-js` is a peerDependency of `@granit/authentication-cognito`,
+> and `firebase` is a peerDependency of `@granit/authentication-google-cloud`.
+> These are installed in consumer applications that use the corresponding provider.
