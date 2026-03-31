@@ -419,6 +419,11 @@
           "name": "verifyTwoFactorLogin",
           "kind": "function",
           "signature": "async function verifyTwoFactorLogin( client: AxiosInstance, basePath: string, request: AccountTwoFactorLoginRequest ): Promise<AccountLoginResponse>"
+        },
+        {
+          "name": "extractReturnUrl",
+          "kind": "function",
+          "signature": "function extractReturnUrl(search?: string): string | null"
         }
       ]
     },
@@ -1438,6 +1443,11 @@
           "name": "useLogin",
           "kind": "function",
           "signature": "function useLogin(): UseMutationResult<AccountLoginResponse, Error, AccountLoginRequest>"
+        },
+        {
+          "name": "useLoginWithRedirect",
+          "kind": "function",
+          "signature": "function useLoginWithRedirect( options?: UseLoginWithRedirectOptions ): UseLoginWithRedirectResult"
         },
         {
           "name": "useVerifyTwoFactorLogin",

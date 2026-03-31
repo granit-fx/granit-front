@@ -20,3 +20,6 @@ export {
   beginPasskeyAssertion,
   completePasskeyAssertion,
 } from './api/account-passkey-assertion-api.js';
+
+// Utilities
+export { extractReturnUrl } from './utils/extract-return-url.js';
