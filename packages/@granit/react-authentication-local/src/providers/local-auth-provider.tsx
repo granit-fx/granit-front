@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
@@ -38,11 +38,14 @@ export function buildLocalAuthQueryKey(
 }
 
 export function LocalAuthProvider({ config, children }: LocalAuthProviderProps) {
-  const value: LocalAuthConfig = {
-    ...config,
-    basePath: config.basePath ?? DEFAULT_BASE_PATH,
-    queryKeyPrefix: config.queryKeyPrefix ?? DEFAULT_KEY_PREFIX,
-  };
+  const value = useMemo<LocalAuthConfig>(
+    () => ({
+      ...config,
+      basePath: config.basePath ?? DEFAULT_BASE_PATH,
+      queryKeyPrefix: config.queryKeyPrefix ?? DEFAULT_KEY_PREFIX,
+    }),
+    [config]
+  );
 
   return <LocalAuthContext value={value}>{children}</LocalAuthContext>;
 }

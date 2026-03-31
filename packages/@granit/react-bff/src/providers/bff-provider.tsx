@@ -1,5 +1,13 @@
 import { CsrfManager } from '@granit/bff';
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import type { BffConfig, BffUser } from '@granit/bff';
 import type { ReactNode } from 'react';
@@ -77,29 +85,28 @@ export function BffProvider({ config, children }: BffProviderProps) {
     };
   }, [csrfManager]);
 
-  const login = () => {
-    window.location.href = `${configRef.current.pathPrefix}/bff/login`;
-  };
+  const login = useCallback(() => {
+    globalThis.location.href = `${configRef.current.pathPrefix}/bff/login`;
+  }, []);
 
-  const logout = () => {
-    window.location.href = `${configRef.current.pathPrefix}/bff/logout`;
-  };
+  const logout = useCallback(() => {
+    globalThis.location.href = `${configRef.current.pathPrefix}/bff/logout`;
+  }, []);
 
-  return (
-    <BffContext.Provider
-      value={{
-        user,
-        isAuthenticated: user !== null,
-        isLoading,
-        login,
-        logout,
-        csrfManager,
-        pathPrefix: config.pathPrefix,
-      }}
-    >
-      {children}
-    </BffContext.Provider>
+  const value = useMemo<BffContextType>(
+    () => ({
+      user,
+      isAuthenticated: user !== null,
+      isLoading,
+      login,
+      logout,
+      csrfManager,
+      pathPrefix: config.pathPrefix,
+    }),
+    [user, isLoading, login, logout, csrfManager, config.pathPrefix]
   );
+
+  return <BffContext.Provider value={value}>{children}</BffContext.Provider>;
 }
 
 /**

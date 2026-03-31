@@ -58,6 +58,26 @@ export function useCognitoInit(config: CognitoCoreConfig): CognitoCoreResult {
       return;
     }
 
+    const refreshToken = (): Promise<string | undefined> =>
+      new Promise((resolve) => {
+        cognitoUser.getSession(
+          (
+            refreshErr: Error | null,
+            refreshSession: {
+              isValid: () => boolean;
+              getAccessToken: () => { getJwtToken: () => string };
+            } | null
+          ) => {
+            if (refreshErr || !refreshSession?.isValid()) {
+              config.onTokenRefreshError?.();
+              resolve(undefined);
+              return;
+            }
+            resolve(refreshSession.getAccessToken().getJwtToken());
+          }
+        );
+      });
+
     cognitoUser.getSession(
       (
         err: Error | null,
@@ -86,26 +106,7 @@ export function useCognitoInit(config: CognitoCoreConfig): CognitoCoreResult {
           setLoading(false);
         });
 
-        setTokenGetter(async (): Promise<string | undefined> => {
-          return new Promise((resolve) => {
-            cognitoUser.getSession(
-              (
-                refreshErr: Error | null,
-                refreshSession: {
-                  isValid: () => boolean;
-                  getAccessToken: () => { getJwtToken: () => string };
-                } | null
-              ) => {
-                if (refreshErr || !refreshSession?.isValid()) {
-                  config.onTokenRefreshError?.();
-                  resolve(undefined);
-                  return;
-                }
-                resolve(refreshSession.getAccessToken().getJwtToken());
-              }
-            );
-          });
-        });
+        setTokenGetter(refreshToken);
 
         setOnUnauthorized(() => {
           cognitoUser.signOut();
@@ -120,8 +121,8 @@ export function useCognitoInit(config: CognitoCoreConfig): CognitoCoreResult {
     (options?: LoginOptions) => {
       if (!config.domain) return;
       const scopes = config.scopes?.join('+') ?? 'openid+profile+email';
-      const redirectUri = options?.redirectUri ?? window.location.origin;
-      window.location.href = `https://${config.domain}/login?client_id=${config.clientId}&response_type=code&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}`;
+      const redirectUri = options?.redirectUri ?? globalThis.location.origin;
+      globalThis.location.href = `https://${config.domain}/login?client_id=${config.clientId}&response_type=code&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}`;
     },
     [config.domain, config.clientId, config.scopes]
   );
@@ -134,7 +135,7 @@ export function useCognitoInit(config: CognitoCoreConfig): CognitoCoreResult {
     setAuthenticated(false);
     setUser(null);
     if (options?.redirectUri) {
-      window.location.href = options.redirectUri;
+      globalThis.location.href = options.redirectUri;
     }
   }, []);
 

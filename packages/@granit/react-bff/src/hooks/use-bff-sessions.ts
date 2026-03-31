@@ -51,7 +51,7 @@ export function useBffSessions(): UseBffSessionsResult {
   useEffect(() => {
     mountedRef.current = true;
     if (isAuthenticated) {
-      void refetch();
+      refetch().catch(() => undefined);
     } else if (!authLoading) {
       setSessions([]);
     }

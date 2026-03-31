@@ -127,27 +127,24 @@ export function createApiClient(config: ApiClientConfig): AxiosInstance {
             req.headers['X-CSRF-Token'] = csrfToken;
           }
         }
-      } else {
+      } else if (_tokenGetter) {
         // Bearer mode: inject Authorization header
-        if (_tokenGetter) {
-          const token = await _tokenGetter();
-          if (token) {
-            req.headers.Authorization = `Bearer ${token}`;
-          }
+        const token = await _tokenGetter();
+        if (token) {
+          req.headers.Authorization = `Bearer ${token}`;
         }
       }
-      if (_tenantGetter) {
-        const tenantId = _tenantGetter();
-        if (tenantId) {
-          req.headers['X-Tenant-Id'] = tenantId;
-        }
+
+      const tenantId = _tenantGetter?.();
+      if (tenantId) {
+        req.headers['X-Tenant-Id'] = tenantId;
       }
-      if (_idempotencyKeyGenerator) {
-        const key = _idempotencyKeyGenerator(req);
-        if (key) {
-          req.headers['Idempotency-Key'] = key;
-        }
+
+      const idempotencyKey = _idempotencyKeyGenerator?.(req);
+      if (idempotencyKey) {
+        req.headers['Idempotency-Key'] = idempotencyKey;
       }
+
       return req;
     },
     /* v8 ignore next 3 */

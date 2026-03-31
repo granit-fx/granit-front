@@ -118,7 +118,7 @@ export function useGoogleCloudInit(config: GoogleCloudCoreConfig): GoogleCloudCo
     setAuthenticated(false);
     setUser(null);
     if (options?.redirectUri) {
-      window.location.href = options.redirectUri;
+      globalThis.location.href = options.redirectUri;
     }
   }, []);
 

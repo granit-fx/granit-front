@@ -1,9 +1,4 @@
-import {
-  cancelDeletion,
-  getDeletionStatus,
-  listDeletions,
-  requestDeletion,
-} from '@granit/privacy';
+import { cancelDeletion, getDeletionStatus, listDeletions, requestDeletion } from '@granit/privacy';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { buildPrivacyQueryKey, usePrivacyConfig } from '../providers/privacy-provider.js';
@@ -23,8 +18,8 @@ export function useRequestDeletion(): UseMutationResult<
   return useMutation({
     mutationFn: (request: PrivacyDeletionRequest) =>
       requestDeletion(config.client, config.basePath!, request),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: buildPrivacyQueryKey(config, 'deletion'),
       });
     },
@@ -42,9 +37,7 @@ export function useDeletionRequests(): UseQueryResult<PrivacyDeletionResponse[]>
 }
 
 /** Get the status of a specific deletion request. */
-export function useDeletionStatus(
-  requestId: string
-): UseQueryResult<PrivacyDeletionResponse> {
+export function useDeletionStatus(requestId: string): UseQueryResult<PrivacyDeletionResponse> {
   const config = usePrivacyConfig();
 
   return useQuery({
@@ -60,10 +53,9 @@ export function useCancelDeletion(): UseMutationResult<void, Error, string> {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (requestId: string) =>
-      cancelDeletion(config.client, config.basePath!, requestId),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
+    mutationFn: (requestId: string) => cancelDeletion(config.client, config.basePath!, requestId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: buildPrivacyQueryKey(config, 'deletion'),
       });
     },

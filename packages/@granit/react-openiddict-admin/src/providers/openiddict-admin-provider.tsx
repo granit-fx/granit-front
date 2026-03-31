@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
@@ -33,11 +33,14 @@ export function buildAdminQueryKey(
 }
 
 export function OpenIddictAdminProvider({ config, children }: OpenIddictAdminProviderProps) {
-  const value: OpenIddictAdminConfig = {
-    ...config,
-    basePath: config.basePath ?? DEFAULT_BASE_PATH,
-    queryKeyPrefix: config.queryKeyPrefix ?? DEFAULT_KEY_PREFIX,
-  };
+  const value = useMemo<OpenIddictAdminConfig>(
+    () => ({
+      ...config,
+      basePath: config.basePath ?? DEFAULT_BASE_PATH,
+      queryKeyPrefix: config.queryKeyPrefix ?? DEFAULT_KEY_PREFIX,
+    }),
+    [config]
+  );
 
   return <AdminContext value={value}>{children}</AdminContext>;
 }
