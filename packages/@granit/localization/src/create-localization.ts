@@ -40,6 +40,13 @@ export function createLocalization(config?: LocalizationConfig): i18n {
       interpolation: {
         escapeValue: false,
       },
+      // react-i18next v16 defaults bindI18nStore to '' — useTranslation hooks
+      // no longer re-render when addResourceBundle fires 'added' events.
+      // We load translations asynchronously via applyTranslations (addResourceBundle),
+      // so hooks must listen for store changes to pick up the new resources.
+      react: {
+        bindI18nStore: 'added removed',
+      },
       resources: {},
     })
     .catch(() => undefined);

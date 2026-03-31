@@ -15,6 +15,12 @@ export interface CognitoCoreResult extends CognitoAuthContextType {
   logout: (options?: LogoutOptions) => void;
 }
 
+interface CognitoSessionLike {
+  isValid: () => boolean;
+  getIdToken: () => { getJwtToken: () => string };
+  getAccessToken: () => { getJwtToken: () => string };
+}
+
 /** Extract standard OIDC claims from Cognito user attributes. */
 function extractUser(attributes: Record<string, string>): OidcUserInfo {
   return {
@@ -26,6 +32,26 @@ function extractUser(attributes: Record<string, string>): OidcUserInfo {
     family_name: attributes.family_name,
     picture: attributes.picture,
   };
+}
+
+/** Create a token-refresh function that resolves the current access token. */
+function createTokenRefresher(
+  cognitoUser: {
+    getSession: (cb: (err: Error | null, session: CognitoSessionLike | null) => void) => void;
+  },
+  onTokenRefreshError?: () => void
+): () => Promise<string | undefined> {
+  return () =>
+    new Promise((resolve) => {
+      cognitoUser.getSession((err, session) => {
+        if (err || !session?.isValid()) {
+          onTokenRefreshError?.();
+          resolve(undefined);
+          return;
+        }
+        resolve(session.getAccessToken().getJwtToken());
+      });
+    });
 }
 
 /**
@@ -58,63 +84,36 @@ export function useCognitoInit(config: CognitoCoreConfig): CognitoCoreResult {
       return;
     }
 
-    const refreshToken = (): Promise<string | undefined> =>
-      new Promise((resolve) => {
-        cognitoUser.getSession(
-          (
-            refreshErr: Error | null,
-            refreshSession: {
-              isValid: () => boolean;
-              getAccessToken: () => { getJwtToken: () => string };
-            } | null
-          ) => {
-            if (refreshErr || !refreshSession?.isValid()) {
-              config.onTokenRefreshError?.();
-              resolve(undefined);
-              return;
-            }
-            resolve(refreshSession.getAccessToken().getJwtToken());
+    const refreshToken = createTokenRefresher(cognitoUser, config.onTokenRefreshError);
+
+    cognitoUser.getSession((err: Error | null, session: CognitoSessionLike | null) => {
+      if (err || !session?.isValid()) {
+        setLoading(false);
+        config.onSessionExpired?.();
+        return;
+      }
+
+      setAuthenticated(true);
+
+      cognitoUser.getUserAttributes((attrErr, attributes) => {
+        if (!attrErr && attributes) {
+          const attrMap: Record<string, string> = {};
+          for (const attr of attributes) {
+            attrMap[attr.Name] = attr.Value;
           }
-        );
+          setUser(extractUser(attrMap));
+        }
+        setLoading(false);
       });
 
-    cognitoUser.getSession(
-      (
-        err: Error | null,
-        session: {
-          isValid: () => boolean;
-          getIdToken: () => { getJwtToken: () => string };
-          getAccessToken: () => { getJwtToken: () => string };
-        } | null
-      ) => {
-        if (err || !session?.isValid()) {
-          setLoading(false);
-          config.onSessionExpired?.();
-          return;
-        }
+      setTokenGetter(refreshToken);
 
-        setAuthenticated(true);
-
-        cognitoUser.getUserAttributes((attrErr, attributes) => {
-          if (!attrErr && attributes) {
-            const attrMap: Record<string, string> = {};
-            for (const attr of attributes) {
-              attrMap[attr.Name] = attr.Value;
-            }
-            setUser(extractUser(attrMap));
-          }
-          setLoading(false);
-        });
-
-        setTokenGetter(refreshToken);
-
-        setOnUnauthorized(() => {
-          cognitoUser.signOut();
-          setAuthenticated(false);
-          setUser(null);
-        });
-      }
-    );
+      setOnUnauthorized(() => {
+        cognitoUser.signOut();
+        setAuthenticated(false);
+        setUser(null);
+      });
+    });
   }, [config.userPoolId, config.clientId, config.onSessionExpired, config.onTokenRefreshError]);
 
   const login = React.useCallback(
