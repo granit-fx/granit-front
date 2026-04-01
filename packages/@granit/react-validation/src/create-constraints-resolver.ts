@@ -18,6 +18,15 @@ export type ConstraintsResolver = (
   errors: Record<string, { type: string; message: string }>;
 }>;
 
+export interface ConstraintsResolverOptions {
+  /**
+   * Resolves a human-readable label for a field name.
+   * Used as {PropertyName} in validation messages.
+   * Defaults to the field name as-is.
+   */
+  readonly labelResolver?: (fieldName: string) => string;
+}
+
 /**
  * Creates a react-hook-form compatible resolver from OpenAPI-extracted constraints.
  * For each constrained field, calls validateField() and maps error codes to
@@ -25,12 +34,13 @@ export type ConstraintsResolver = (
  */
 export function createConstraintsResolver(
   constraints: SchemaConstraints,
-  t: TranslateFunction
+  t: TranslateFunction,
+  options?: ConstraintsResolverOptions
 ): ConstraintsResolver {
-  return async (values, _context, options) => {
+  return async (values, _context, formOptions) => {
     const errors: Record<string, { type: string; message: string }> = {};
 
-    for (const fieldName of Object.keys(options.fields)) {
+    for (const fieldName of Object.keys(formOptions.fields)) {
       const constraint = constraints[fieldName];
       if (!constraint) continue;
 
@@ -41,8 +51,11 @@ export function createConstraintsResolver(
 
       if (fieldErrors.length > 0) {
         const first = fieldErrors[0]!;
+        const propertyName = options?.labelResolver?.(fieldName) ?? fieldName;
+
         let message = t(first.code, {
           ...first.params,
+          PropertyName: propertyName,
           nsSeparator: false,
         } as Record<string, unknown>);
 

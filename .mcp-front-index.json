@@ -2662,17 +2662,7 @@
         {
           "name": "createConstraintsResolver",
           "kind": "function",
-          "signature": "function createConstraintsResolver( constraints: SchemaConstraints, t: TranslateFunction ): ConstraintsResolver"
-        },
-        {
-          "name": "ConstraintsResolver",
-          "kind": "type",
-          "signature": "type ConstraintsResolver = ( values: Record<string, unknown>, context: unknown, options: { fields: Record<string, { name: string }> } ) => Promise<{ values: Record<string, unknown>; errors: Record<string, { type: string; message: string }>; }>"
-        },
-        {
-          "name": "TranslateFunction",
-          "kind": "type",
-          "signature": "type TranslateFunction = (key: string, params?: Record<string, unknown>) => string"
+          "signature": "function createConstraintsResolver( constraints: SchemaConstraints, t: TranslateFunction, options?: ConstraintsResolverOptions ): ConstraintsResolver"
         },
         {
           "name": "useFieldProps",

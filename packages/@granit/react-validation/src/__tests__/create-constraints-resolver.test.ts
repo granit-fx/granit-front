@@ -46,7 +46,7 @@ describe('createConstraintsResolver', () => {
     });
     expect(result.errors['name']).toEqual({
       type: 'Granit:Validation:NotEmptyValidator',
-      message: 'Granit:Validation:NotEmptyValidator',
+      message: 'Granit:Validation:NotEmptyValidator (PropertyName=name)',
     });
   });
 
@@ -77,6 +77,7 @@ describe('createConstraintsResolver', () => {
     });
     expect(t).toHaveBeenCalledWith('Granit:Validation:MaximumLengthValidator', {
       maxLength: 100,
+      PropertyName: 'name',
       nsSeparator: false,
     });
   });
@@ -118,5 +119,37 @@ describe('createConstraintsResolver', () => {
       fields: createFields('name'),
     });
     expect(result).toBeInstanceOf(Promise);
+  });
+
+  it('passes PropertyName to t() for validation errors', async () => {
+    t.mockClear();
+    const resolver = createConstraintsResolver(constraints, t);
+    await resolver({ name: '' }, undefined, { fields: createFields('name') });
+    expect(t).toHaveBeenCalledWith('Granit:Validation:NotEmptyValidator', {
+      PropertyName: 'name',
+      nsSeparator: false,
+    });
+  });
+
+  it('uses labelResolver for PropertyName when provided', async () => {
+    t.mockClear();
+    const resolver = createConstraintsResolver(constraints, t, {
+      labelResolver: (f) => f.toUpperCase(),
+    });
+    await resolver({ name: '' }, undefined, { fields: createFields('name') });
+    expect(t).toHaveBeenCalledWith('Granit:Validation:NotEmptyValidator', {
+      PropertyName: 'NAME',
+      nsSeparator: false,
+    });
+  });
+
+  it('falls back to fieldName when labelResolver is not provided', async () => {
+    t.mockClear();
+    const resolver = createConstraintsResolver(constraints, t);
+    await resolver({ email: '' }, undefined, { fields: createFields('email') });
+    expect(t).toHaveBeenCalledWith('Granit:Validation:NotEmptyValidator', {
+      PropertyName: 'email',
+      nsSeparator: false,
+    });
   });
 });

@@ -1,6 +1,10 @@
 // Resolver
 export { createConstraintsResolver } from './create-constraints-resolver.js';
-export type { ConstraintsResolver, TranslateFunction } from './create-constraints-resolver.js';
+export type {
+  ConstraintsResolver,
+  ConstraintsResolverOptions,
+  TranslateFunction,
+} from './create-constraints-resolver.js';
 
 // Hooks
 export { useFieldProps } from './use-field-props.js';
