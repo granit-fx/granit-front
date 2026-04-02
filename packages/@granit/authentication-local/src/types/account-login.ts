@@ -6,6 +6,7 @@
 export interface AccountLoginRequest {
   readonly login: string;
   readonly password: string;
+  readonly rememberMe?: boolean;
 }
 
 /**
