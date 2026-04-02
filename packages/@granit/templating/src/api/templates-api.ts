@@ -180,6 +180,15 @@ export async function getVariables(
 }
 
 // ---------------------------------------------------------------------------
+// Layouts
+// ---------------------------------------------------------------------------
+
+export async function getLayouts(client: AxiosInstance, basePath: string): Promise<string[]> {
+  const { data } = await client.get<string[]>(`${basePath}/templates/layouts`);
+  return data;
+}
+
+// ---------------------------------------------------------------------------
 // Categories
 // ---------------------------------------------------------------------------
 

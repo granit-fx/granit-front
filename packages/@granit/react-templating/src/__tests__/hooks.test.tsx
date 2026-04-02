@@ -9,6 +9,7 @@ import {
   useTemplateCategoryMutations,
 } from '../hooks/use-template-categories.js';
 import { useTemplateHistory, useTemplateRevision } from '../hooks/use-template-history.js';
+import { useTemplateLayouts } from '../hooks/use-template-layouts.js';
 import { useTemplateMutations } from '../hooks/use-template-mutations.js';
 import { useTemplateBinaryPreview, useTemplatePreview } from '../hooks/use-template-preview.js';
 import { useTemplateVariables } from '../hooks/use-template-variables.js';
@@ -58,6 +59,7 @@ describe('useTemplates', () => {
       items: [
         {
           name: 'Billing.Invoice',
+          layoutName: 'Layout.Email',
           currentStatus: TemplateLifecycleStatus.Draft,
           mimeType: 'text/html',
           lastModifiedAt: '2026-03-01T10:00:00Z',
@@ -118,11 +120,13 @@ describe('useTemplate', () => {
     const client = createMockClient();
     const detail: TemplateDetail = {
       name: 'Billing.Invoice',
+      layoutName: 'Layout.Email',
       draft: {
         revisionId: 'rev-1',
         content: '<p>Hello</p>',
         mimeType: 'text/html',
         status: TemplateLifecycleStatus.Draft,
+        layoutName: 'Layout.Email',
         createdAt: '2026-03-01T10:00:00Z',
         createdBy: 'admin',
       },
@@ -149,7 +153,7 @@ describe('useTemplate', () => {
 
   it('should pass culture param', async () => {
     const client = createMockClient();
-    const detail: TemplateDetail = { name: 'Billing.Invoice', culture: 'fr-BE' };
+    const detail: TemplateDetail = { name: 'Billing.Invoice', culture: 'fr-BE', layoutName: null };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(detail));
 
     renderHook(() => useTemplate('Billing.Invoice', 'fr-BE'), {
@@ -186,7 +190,7 @@ describe('useTemplateMutations', () => {
 
   it('should save draft and invalidate queries', async () => {
     const client = createMockClient();
-    const detail: TemplateDetail = { name: 'Billing.Invoice' };
+    const detail: TemplateDetail = { name: 'Billing.Invoice', layoutName: null };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(detail));
 
     const { result } = renderHook(() => useTemplateMutations(), {
@@ -252,7 +256,7 @@ describe('useTemplateMutations', () => {
 
   it('should update draft', async () => {
     const client = createMockClient();
-    const detail: TemplateDetail = { name: 'Billing.Invoice' };
+    const detail: TemplateDetail = { name: 'Billing.Invoice', layoutName: null };
     vi.mocked(client.put).mockResolvedValue(axiosResponse(detail));
 
     const { result } = renderHook(() => useTemplateMutations(), {
@@ -301,7 +305,7 @@ describe('useTemplateMutations', () => {
 
   it('should invalidate cache after saveDraft succeeds', async () => {
     const client = createMockClient();
-    const detail: TemplateDetail = { name: 'Billing.Invoice' };
+    const detail: TemplateDetail = { name: 'Billing.Invoice', layoutName: null };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(detail));
 
     const { wrapper, queryClient } = createWrapperWithQueryClient(client);
@@ -388,7 +392,7 @@ describe('useTemplateMutations', () => {
 
   it('should invalidate cache after updateDraft succeeds', async () => {
     const client = createMockClient();
-    const detail: TemplateDetail = { name: 'Billing.Invoice' };
+    const detail: TemplateDetail = { name: 'Billing.Invoice', layoutName: null };
     vi.mocked(client.put).mockResolvedValue(axiosResponse(detail));
 
     const { wrapper, queryClient } = createWrapperWithQueryClient(client);
@@ -477,6 +481,7 @@ describe('useTemplateRevision', () => {
       content: '<p>Hello</p>',
       mimeType: 'text/html',
       status: TemplateLifecycleStatus.Published,
+      layoutName: null,
       createdAt: '2026-03-01T10:00:00Z',
       createdBy: 'admin',
       publishedAt: '2026-03-02T10:00:00Z',
@@ -695,6 +700,42 @@ describe('useTemplateCategories', () => {
 
     await waitFor(() => expect(result.current.isError).toBe(true));
     expect(result.current.error?.message).toBe('Forbidden');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// useTemplateLayouts
+// ---------------------------------------------------------------------------
+
+describe('useTemplateLayouts', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('should fetch layouts', async () => {
+    const client = createMockClient();
+    const layouts = ['Layout.Email', 'Layout.Pdf', 'Layout.Letter'];
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(layouts));
+
+    const { result } = renderHook(() => useTemplateLayouts(), {
+      wrapper: createWrapper(client),
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.data).toEqual(layouts);
+    expect(client.get).toHaveBeenCalledWith('/api/v1/templates/layouts');
+  });
+
+  it('should expose error state on failure', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockRejectedValue(new Error('Server Error'));
+
+    const { result } = renderHook(() => useTemplateLayouts(), {
+      wrapper: createWrapper(client),
+    });
+
+    await waitFor(() => expect(result.current.isError).toBe(true));
+    expect(result.current.error?.message).toBe('Server Error');
   });
 });
 

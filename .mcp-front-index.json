@@ -2440,6 +2440,11 @@
           "signature": "function useTemplate(name: string, culture?: string)"
         },
         {
+          "name": "useTemplateLayouts",
+          "kind": "function",
+          "signature": "function useTemplateLayouts()"
+        },
+        {
           "name": "useTemplateHistory",
           "kind": "function",
           "signature": "function useTemplateHistory( name: string, params?:"

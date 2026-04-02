@@ -8,6 +8,7 @@ export type { TemplatingProviderProps } from './providers/templating-provider.js
 
 // Hooks
 export { useTemplate } from './hooks/use-template.js';
+export { useTemplateLayouts } from './hooks/use-template-layouts.js';
 export {
   useTemplateCategories,
   useTemplateCategoryMutations,

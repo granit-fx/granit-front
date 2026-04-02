@@ -68,6 +68,10 @@ describe('templateKeys', () => {
     ]);
   });
 
+  it('should build layouts key', () => {
+    expect(templateKeys.layouts(prefix)).toEqual(['admin', 'templates', 'layouts']);
+  });
+
   it('should build categories key', () => {
     expect(templateKeys.categories(prefix)).toEqual(['admin', 'templates', 'categories']);
   });

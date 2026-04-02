@@ -37,6 +37,7 @@ export {
   deleteDraft,
   getCategories,
   getHistory,
+  getLayouts,
   getLifecycleInfo,
   getRevision,
   getTemplate,

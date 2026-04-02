@@ -13,5 +13,6 @@ export const templateKeys = {
     [...prefix, 'revision', name, revisionId] as const,
   variables: (prefix: readonly string[], name: string) => [...prefix, 'variables', name] as const,
   lifecycle: (prefix: readonly string[], name: string) => [...prefix, 'lifecycle', name] as const,
+  layouts: (prefix: readonly string[]) => [...prefix, 'layouts'] as const,
   categories: (prefix: readonly string[]) => [...prefix, 'categories'] as const,
 } as const;

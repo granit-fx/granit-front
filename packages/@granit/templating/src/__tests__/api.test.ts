@@ -7,6 +7,7 @@ import {
   deleteDraft,
   getCategories,
   getHistory,
+  getLayouts,
   getLifecycleInfo,
   getRevision,
   getTemplate,
@@ -43,6 +44,7 @@ describe('templates-api', () => {
         items: [
           {
             name: 'Billing.Invoice',
+            layoutName: 'Layout.Email',
             currentStatus: TemplateLifecycleStatus.Draft,
             mimeType: 'text/html',
             lastModifiedAt: '2026-03-01T10:00:00Z',
@@ -80,11 +82,13 @@ describe('templates-api', () => {
       const detail: TemplateDetail = {
         name: 'Billing.Invoice',
         category: 'billing',
+        layoutName: 'Layout.Email',
         draft: {
           revisionId: 'rev-1',
           content: '<p>Hello</p>',
           mimeType: 'text/html',
           status: TemplateLifecycleStatus.Draft,
+          layoutName: 'Layout.Email',
           createdAt: '2026-03-01T10:00:00Z',
           createdBy: 'admin',
         },
@@ -104,7 +108,7 @@ describe('templates-api', () => {
     it('should call POST /templates', async () => {
       const client = createMockClient();
       const request = { name: 'Billing.Invoice', content: '<p>Hello</p>' };
-      const detail: TemplateDetail = { name: 'Billing.Invoice' };
+      const detail: TemplateDetail = { name: 'Billing.Invoice', layoutName: null };
       vi.mocked(client.post).mockResolvedValue(axiosResponse(detail));
 
       const result = await saveDraft(client, basePath, request);
@@ -118,7 +122,7 @@ describe('templates-api', () => {
     it('should call PUT /templates/{name}', async () => {
       const client = createMockClient();
       const request = { name: 'Billing.Invoice', content: '<p>Updated</p>' };
-      const detail: TemplateDetail = { name: 'Billing.Invoice' };
+      const detail: TemplateDetail = { name: 'Billing.Invoice', layoutName: null };
       vi.mocked(client.put).mockResolvedValue(axiosResponse(detail));
 
       const result = await updateDraft(client, basePath, 'Billing.Invoice', request);
@@ -220,6 +224,7 @@ describe('templates-api', () => {
         content: '<p>Hello</p>',
         mimeType: 'text/html',
         status: TemplateLifecycleStatus.Published,
+        layoutName: null,
         createdAt: '2026-03-01T10:00:00Z',
         createdBy: 'admin',
         publishedAt: '2026-03-02T10:00:00Z',
@@ -269,6 +274,28 @@ describe('templates-api', () => {
 
       expect(client.get).toHaveBeenCalledWith('/api/v1/templates/Billing.Invoice/variables');
       expect(result).toEqual(variables);
+    });
+  });
+
+  describe('getLayouts', () => {
+    it('should call GET /templates/layouts', async () => {
+      const client = createMockClient();
+      const layouts = ['Layout.Email', 'Layout.Pdf', 'Layout.Letter'];
+      vi.mocked(client.get).mockResolvedValue(axiosResponse(layouts));
+
+      const result = await getLayouts(client, basePath);
+
+      expect(client.get).toHaveBeenCalledWith('/api/v1/templates/layouts');
+      expect(result).toEqual(layouts);
+    });
+
+    it('should return empty array when no layouts exist', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue(axiosResponse([]));
+
+      const result = await getLayouts(client, basePath);
+
+      expect(result).toEqual([]);
     });
   });
 

@@ -37,6 +37,7 @@ export type TemplateRevision = {
   readonly content: string;
   readonly mimeType: string;
   readonly status: TemplateLifecycleStatusValue;
+  readonly layoutName: string | null;
   readonly createdAt: string;
   readonly createdBy: string;
   readonly publishedAt?: string;
@@ -53,6 +54,7 @@ export type TemplateListItem = {
   readonly name: string;
   readonly culture?: string;
   readonly category?: string;
+  readonly layoutName: string | null;
   readonly currentStatus: TemplateLifecycleStatusValue;
   readonly mimeType: string;
   readonly lastModifiedAt: string;
@@ -73,6 +75,7 @@ export type TemplateDetail = {
   readonly name: string;
   readonly culture?: string;
   readonly category?: string;
+  readonly layoutName: string | null;
   readonly draft?: TemplateRevision;
   readonly published?: TemplateRevision;
 };
@@ -85,6 +88,7 @@ export type SaveTemplateRequest = {
   readonly content: string;
   readonly mimeType?: string;
   readonly category?: string;
+  readonly layoutName?: string | null;
 };
 
 // ── Lifecycle ──
