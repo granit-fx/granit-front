@@ -2318,6 +2318,11 @@
       ]
     },
     {
+      "name": "@granit/react-scheduling",
+      "description": "React hooks for scheduled action management — useScheduledActions, useCancelScheduledAction, useRescheduleScheduledAction",
+      "exports": []
+    },
+    {
       "name": "@granit/react-settings",
       "description": "React bindings for @granit/settings — SettingsProvider, useSetting, useSettings, useUpdateSetting, useDeleteSetting",
       "exports": [
@@ -2864,6 +2869,11 @@
     {
       "name": "@granit/reference-data",
       "description": "Generic reference data types and API — mirrors Granit.ReferenceData .NET",
+      "exports": []
+    },
+    {
+      "name": "@granit/scheduling",
+      "description": "Scheduled action types and API — mirrors Granit.Scheduling .NET contract",
       "exports": []
     },
     {

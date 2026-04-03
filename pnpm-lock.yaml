@@ -1057,6 +1057,31 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/react-scheduling:
+    dependencies:
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
+      '@granit/scheduling':
+        specifier: workspace:*
+        version: link:../scheduling
+      '@tanstack/react-query':
+        specifier: ^5.0.0
+        version: 5.95.2(react@19.2.4)
+      axios:
+        specifier: '*'
+        version: 1.14.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+    devDependencies:
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/react-settings:
     dependencies:
       '@granit/settings':
@@ -1276,6 +1301,19 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+    devDependencies:
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
+  packages/@granit/scheduling:
+    dependencies:
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
+      axios:
+        specifier: '*'
+        version: 1.14.0
     devDependencies:
       '@granit/testing':
         specifier: workspace:*

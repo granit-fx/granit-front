@@ -1,0 +1,32 @@
+{
+  "name": "@granit/scheduling",
+  "description": "Scheduled action types and API — mirrors Granit.Scheduling .NET contract",
+  "version": "0.3.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/query-engine": "workspace:*",
+    "axios": "*"
+  },
+  "devDependencies": {
+    "@granit/testing": "workspace:*"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  }
+}
