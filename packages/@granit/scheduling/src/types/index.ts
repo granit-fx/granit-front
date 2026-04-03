@@ -1,11 +1,14 @@
 /** Status of a scheduled action. Mirrors Granit.Scheduling.ScheduledActionStatus .NET enum. */
-export enum ScheduledActionStatus {
-  Pending = 0,
-  Executed = 1,
-  Cancelled = 2,
-  Failed = 3,
-  Processing = 4,
-}
+export const ScheduledActionStatus = {
+  Pending: 0,
+  Executed: 1,
+  Cancelled: 2,
+  Failed: 3,
+  Processing: 4,
+} as const;
+
+export type ScheduledActionStatus =
+  (typeof ScheduledActionStatus)[keyof typeof ScheduledActionStatus];
 
 /** Response DTO for a scheduled action. Mirrors Granit.Scheduling.ScheduledActionResponse .NET. */
 export interface ScheduledActionResponse {
