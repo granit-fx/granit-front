@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toEntityId } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -52,11 +53,11 @@ describe('useIdentitySync', () => {
       wrapper: createWrapper(client),
     });
 
-    result.current.sync.mutate(['user-1', 'user-2']);
+    result.current.sync.mutate([toEntityId<'User'>('user-1'), toEntityId<'User'>('user-2')]);
 
     await waitFor(() => expect(result.current.sync.isSuccess).toBe(true));
     expect(client.post).toHaveBeenCalledWith('/identity/users/sync', {
-      userIds: ['user-1', 'user-2'],
+      userIds: [toEntityId<'User'>('user-1'), toEntityId<'User'>('user-2')],
     });
   });
 
@@ -98,10 +99,12 @@ describe('useIdentitySync', () => {
       wrapper: createWrapper(client, '/custom/path'),
     });
 
-    result.current.sync.mutate(['user-1']);
+    result.current.sync.mutate([toEntityId<'User'>('user-1')]);
 
     await waitFor(() => expect(result.current.sync.isSuccess).toBe(true));
-    expect(client.post).toHaveBeenCalledWith('/custom/path/sync', { userIds: ['user-1'] });
+    expect(client.post).toHaveBeenCalledWith('/custom/path/sync', {
+      userIds: [toEntityId<'User'>('user-1')],
+    });
   });
 
   it('exposes error state on sync failure', async () => {

@@ -1,5 +1,5 @@
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -12,7 +12,7 @@ import {
 import type { InvoiceCreateRequest, InvoiceResponse } from '../types.js';
 
 const sampleLineItem = {
-  id: 'li-1',
+  id: toEntityId<'InvoiceLineItem'>('li-1'),
   description: 'Pro plan — monthly',
   quantity: 1,
   unitPrice: 4900,
@@ -26,7 +26,7 @@ const sampleLineItem = {
 } as const;
 
 const sampleInvoice: InvoiceResponse = {
-  id: 'inv-1',
+  id: toEntityId<'Invoice'>('inv-1'),
   documentType: 'Invoice',
   invoiceNumber: 'INV-2026-0001',
   status: 'Paid',
@@ -76,7 +76,11 @@ describe('invoicing-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: sampleInvoice });
 
-      const result = await getInvoiceById(client, '/api/granit/invoicing', 'inv-1');
+      const result = await getInvoiceById(
+        client,
+        '/api/granit/invoicing',
+        toEntityId<'Invoice'>('inv-1')
+      );
 
       expect(client.get).toHaveBeenCalledWith('/api/granit/invoicing/invoices/inv-1');
       expect(result).toEqual(sampleInvoice);
@@ -86,7 +90,11 @@ describe('invoicing-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: sampleInvoice });
 
-      await getInvoiceById(client, '/api/granit/invoicing', 'inv/special&id');
+      await getInvoiceById(
+        client,
+        '/api/granit/invoicing',
+        toEntityId<'Invoice'>('inv/special&id')
+      );
 
       expect(client.get).toHaveBeenCalledWith(
         `/api/granit/invoicing/invoices/${encodeURIComponent('inv/special&id')}`
@@ -100,7 +108,11 @@ describe('invoicing-api', () => {
       const pdfBlob = new Blob(['%PDF-1.4'], { type: 'application/pdf' });
       vi.mocked(client.get).mockResolvedValue({ data: pdfBlob });
 
-      const result = await downloadInvoicePdf(client, '/api/granit/invoicing', 'inv-1');
+      const result = await downloadInvoicePdf(
+        client,
+        '/api/granit/invoicing',
+        toEntityId<'Invoice'>('inv-1')
+      );
 
       expect(client.get).toHaveBeenCalledWith('/api/granit/invoicing/invoices/inv-1/pdf', {
         responseType: 'blob',
@@ -113,7 +125,11 @@ describe('invoicing-api', () => {
       const pdfBlob = new Blob(['%PDF-1.4'], { type: 'application/pdf' });
       vi.mocked(client.get).mockResolvedValue({ data: pdfBlob });
 
-      await downloadInvoicePdf(client, '/api/granit/invoicing', 'inv/special&id');
+      await downloadInvoicePdf(
+        client,
+        '/api/granit/invoicing',
+        toEntityId<'Invoice'>('inv/special&id')
+      );
 
       expect(client.get).toHaveBeenCalledWith(
         `/api/granit/invoicing/invoices/${encodeURIComponent('inv/special&id')}/pdf`,
@@ -148,10 +164,10 @@ describe('invoicing-api', () => {
       const client = createMockClient();
       const creditNote: InvoiceResponse = {
         ...sampleInvoice,
-        id: 'cn-1',
+        id: toEntityId<'Invoice'>('cn-1'),
         documentType: 'CreditNote',
         invoiceNumber: 'CN-2026-0001',
-        parentInvoiceId: 'inv-1',
+        parentInvoiceId: toEntityId<'Invoice'>('inv-1'),
         creditNoteReason: 'Duplicate charge',
       };
       vi.mocked(client.post).mockResolvedValue({ data: creditNote });
@@ -161,7 +177,7 @@ describe('invoicing-api', () => {
         currency: 'EUR',
         collectionMethod: 'SendInvoice',
         billingReason: 'Manual',
-        parentInvoiceId: 'inv-1',
+        parentInvoiceId: toEntityId<'Invoice'>('inv-1'),
         creditNoteReason: 'Duplicate charge',
         periodStart: null,
         periodEnd: null,
@@ -170,7 +186,7 @@ describe('invoicing-api', () => {
       const result = await createInvoice(client, '/api/granit/invoicing', request);
 
       expect(result.documentType).toBe('CreditNote');
-      expect(result.parentInvoiceId).toBe('inv-1');
+      expect(result.parentInvoiceId).toBe(toEntityId<'Invoice'>('inv-1'));
     });
   });
 });

@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider.js';
 
+import type { UserId } from '@granit/types';
 import type { UseMutationResult } from '@tanstack/react-query';
 
 /**
@@ -19,14 +20,14 @@ import type { UseMutationResult } from '@tanstack/react-query';
  * ```
  */
 export function useIdentityRgpd(): {
-  erase: UseMutationResult<void, Error, string>;
+  erase: UseMutationResult<void, Error, UserId>;
 } {
   const config = useIdentityConfig();
   const queryClient = useQueryClient();
   const basePath = config.basePath ?? '/identity/users';
 
   const erase = useMutation({
-    mutationFn: (userId: string) => eraseUserCache(config.client, basePath, userId),
+    mutationFn: (userId: UserId) => eraseUserCache(config.client, basePath, userId),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildIdentityQueryKey(config, 'users'),

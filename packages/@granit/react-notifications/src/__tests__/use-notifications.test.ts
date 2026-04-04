@@ -1,4 +1,4 @@
-import { toISODateString } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -14,12 +14,12 @@ import {
 import type { UserNotification, UserNotificationPage } from '@granit/notifications';
 
 const MOCK_NOTIFICATION: UserNotification = {
-  id: 'n-1',
-  notificationId: 'notif-1',
+  id: toEntityId<'UserNotification'>('n-1'),
+  notificationId: toEntityId<'Notification'>('notif-1'),
   notificationTypeName: 'NewMessage',
   severity: 'Info',
   data: { title: 'Nouveau message', body: 'Contenu du message' },
-  recipientUserId: 'u-1',
+  recipientUserId: toEntityId<'User'>('u-1'),
   relatedEntityType: null,
   relatedEntityId: null,
   state: 'Unread',
@@ -62,7 +62,7 @@ describe('useNotifications', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     await act(async () => {
-      await result.current.markRead('n-1');
+      await result.current.markRead(toEntityId<'UserNotification'>('n-1'));
     });
 
     expect(result.current.notifications[0]!.state).toBe('Read');
@@ -128,8 +128,8 @@ describe('useNotifications', () => {
     };
     const n2: UserNotification = {
       ...MOCK_NOTIFICATION,
-      id: 'n-2',
-      notificationId: 'notif-2',
+      id: toEntityId<'UserNotification'>('n-2'),
+      notificationId: toEntityId<'Notification'>('notif-2'),
       data: { title: 'Deuxième notification' },
     };
     const page2: UserNotificationPage = {
@@ -218,8 +218,8 @@ describe('useNotifications', () => {
   it('should not modify other notifications when marking one as read', async () => {
     const n2: UserNotification = {
       ...MOCK_NOTIFICATION,
-      id: 'n-2',
-      notificationId: 'notif-2',
+      id: toEntityId<'UserNotification'>('n-2'),
+      notificationId: toEntityId<'Notification'>('notif-2'),
       data: { title: 'Autre notification' },
     };
     const page: UserNotificationPage = {
@@ -239,12 +239,12 @@ describe('useNotifications', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     await act(async () => {
-      await result.current.markRead('n-1');
+      await result.current.markRead(toEntityId<'UserNotification'>('n-1'));
     });
 
     expect(result.current.notifications[0]!.state).toBe('Read');
     expect(result.current.notifications[1]!.state).toBe('Unread');
-    expect(result.current.notifications[1]!.id).toBe('n-2');
+    expect(result.current.notifications[1]!.id).toBe(toEntityId<'UserNotification'>('n-2'));
   });
 
   it('should use default pageSize when no options are provided', async () => {

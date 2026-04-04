@@ -9,6 +9,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider.js';
 
 import type { IdentityGroup } from '@granit/identity';
+import type { UserId } from '@granit/types';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -39,7 +40,7 @@ export function useGroups(): UseQueryResult<readonly IdentityGroup[]> {
  * const { data: groups } = useUserGroups(selectedUserId);
  * ```
  */
-export function useUserGroups(userId: string): UseQueryResult<readonly IdentityGroup[]> {
+export function useUserGroups(userId: UserId): UseQueryResult<readonly IdentityGroup[]> {
   const config = useIdentityConfig();
   const basePath = config.providerBasePath ?? '/identity/provider';
 
@@ -52,7 +53,7 @@ export function useUserGroups(userId: string): UseQueryResult<readonly IdentityG
 
 /** Variables for `useAddUserToGroup` and `useRemoveUserFromGroup` mutations. */
 export type GroupMutationVariables = {
-  readonly userId: string;
+  readonly userId: UserId;
   readonly groupId: string;
 };
 

@@ -1,10 +1,13 @@
 // Types
 export {
   TimelineEntryType,
-  type TimelineEntryTypeValue,
+  type BlobId,
+  type TimelineAttachmentId,
   type TimelineAttachmentInfo,
   type TimelineEntry,
+  type TimelineEntryId,
   type TimelineEntryPage,
+  type TimelineEntryTypeValue,
   type CreateTimelineEntryRequest,
   type TimelineQueryParams,
   type TimelineConfig,

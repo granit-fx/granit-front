@@ -1,4 +1,10 @@
-import type { ISODateString } from '@granit/types';
+import type { CurrencyCode, EntityId, ISODateString, TenantId } from '@granit/types';
+
+export type PaymentTransactionId = EntityId<'PaymentTransaction'>;
+export type PaymentRefundId = EntityId<'PaymentRefund'>;
+export type PaymentDisputeId = EntityId<'PaymentDispute'>;
+export type PaymentMethodId = EntityId<'PaymentMethod'>;
+type InvoiceId = EntityId<'Invoice'>;
 
 export type PaymentStatus =
   | 'Pending'
@@ -15,25 +21,25 @@ export type DisputeStatus = 'Open' | 'UnderReview' | 'Won' | 'Lost';
 export type PaymentMethodCategory = 'Card' | 'BankTransfer' | 'Wallet' | 'DirectDebit';
 
 export interface PaymentChargeRequest {
-  readonly invoiceId: string;
+  readonly invoiceId: InvoiceId;
   readonly amount: number;
-  readonly currency: string;
+  readonly currency: CurrencyCode;
   readonly methodType: string;
   readonly idempotencyKey: string;
   readonly providerName: string | null;
 }
 
 export interface PaymentRefundRequest {
-  readonly transactionId: string;
+  readonly transactionId: PaymentTransactionId;
   readonly amount: number;
   readonly reason: string | null;
   readonly idempotencyKey: string;
 }
 
 export interface PaymentCheckoutRequest {
-  readonly transactionId: string;
+  readonly transactionId: PaymentTransactionId;
   readonly amount: number;
-  readonly currency: string;
+  readonly currency: CurrencyCode;
   readonly methodType: string;
   readonly successUrl: string;
   readonly cancelUrl: string;
@@ -47,14 +53,14 @@ export interface PaymentAttachMethodRequest {
 }
 
 export interface PaymentTransactionResponse {
-  readonly id: string;
-  readonly invoiceId: string;
+  readonly id: PaymentTransactionId;
+  readonly invoiceId: InvoiceId;
   readonly amount: number;
-  readonly currency: string;
+  readonly currency: CurrencyCode;
   readonly status: PaymentStatus;
   readonly providerName: string;
   readonly providerTransactionId: string | null;
-  readonly paymentMethodId: string | null;
+  readonly paymentMethodId: PaymentMethodId | null;
   readonly actionUrl: string | null;
   readonly idempotencyKey: string;
   readonly failureCode: string | null;
@@ -62,13 +68,13 @@ export interface PaymentTransactionResponse {
   readonly canceledAt: ISODateString | null;
   readonly refunds: readonly PaymentRefundResponse[];
   readonly disputes: readonly PaymentDisputeResponse[];
-  readonly tenantId: string | null;
+  readonly tenantId: TenantId | null;
 }
 
 export interface PaymentRefundResponse {
-  readonly id: string;
+  readonly id: PaymentRefundId;
   readonly amount: number;
-  readonly currency: string;
+  readonly currency: CurrencyCode;
   readonly status: RefundStatus;
   readonly providerRefundId: string | null;
   readonly reason: string | null;
@@ -77,12 +83,12 @@ export interface PaymentRefundResponse {
 }
 
 export interface PaymentDisputeResponse {
-  readonly id: string;
+  readonly id: PaymentDisputeId;
   readonly providerDisputeId: string;
   readonly status: DisputeStatus;
   readonly reason: string;
   readonly amount: number;
-  readonly currency: string;
+  readonly currency: CurrencyCode;
   readonly createdAt: ISODateString;
   readonly resolvedAt: ISODateString | null;
 }
@@ -94,14 +100,14 @@ export interface PaymentCheckoutSessionResponse {
 }
 
 export interface PaymentMethodResponse {
-  readonly id: string;
+  readonly id: PaymentMethodId;
   readonly type: string;
   readonly providerName: string;
   readonly providerMethodId: string;
   readonly displayLabel: string;
   readonly isDefault: boolean;
   readonly expiresAt: ISODateString | null;
-  readonly tenantId: string | null;
+  readonly tenantId: TenantId | null;
 }
 
 export interface PaymentAvailableMethodResponse {

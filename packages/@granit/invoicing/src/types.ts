@@ -1,4 +1,7 @@
-import type { ISODateString } from '@granit/types';
+import type { CurrencyCode, EntityId, ISODateString } from '@granit/types';
+
+export type InvoiceId = EntityId<'Invoice'>;
+export type InvoiceLineItemId = EntityId<'InvoiceLineItem'>;
 
 /** The document type of an invoice. */
 export type InvoiceDocumentType = 'Invoice' | 'CreditNote';
@@ -18,10 +21,10 @@ export type BillingReason =
 /** Payload for creating a new invoice. */
 export interface InvoiceCreateRequest {
   readonly documentType: InvoiceDocumentType;
-  readonly currency: string;
+  readonly currency: CurrencyCode;
   readonly collectionMethod: CollectionMethod;
   readonly billingReason: BillingReason;
-  readonly parentInvoiceId: string | null;
+  readonly parentInvoiceId: InvoiceId | null;
   readonly creditNoteReason: string | null;
   readonly periodStart: ISODateString | null;
   readonly periodEnd: ISODateString | null;
@@ -29,7 +32,7 @@ export interface InvoiceCreateRequest {
 
 /** A single line item within an invoice. */
 export interface InvoiceLineItemResponse {
-  readonly id: string;
+  readonly id: InvoiceLineItemId;
   readonly description: string;
   readonly quantity: number;
   readonly unitPrice: number;
@@ -44,20 +47,20 @@ export interface InvoiceLineItemResponse {
 
 /** Full invoice response from the API. */
 export interface InvoiceResponse {
-  readonly id: string;
+  readonly id: InvoiceId;
   readonly documentType: string;
   readonly invoiceNumber: string | null;
   readonly status: string;
   readonly collectionMethod: string;
   readonly billingReason: string;
-  readonly currency: string;
+  readonly currency: CurrencyCode;
   readonly subtotal: number;
   readonly taxTotal: number;
   readonly total: number;
   readonly amountPaid: number;
   readonly amountCredited: number;
   readonly amountRemaining: number;
-  readonly parentInvoiceId: string | null;
+  readonly parentInvoiceId: InvoiceId | null;
   readonly creditNoteReason: string | null;
   readonly issuedAt: ISODateString | null;
   readonly dueAt: ISODateString | null;

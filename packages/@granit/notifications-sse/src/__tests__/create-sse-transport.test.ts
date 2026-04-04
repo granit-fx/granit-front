@@ -1,4 +1,4 @@
-import { toISODateString } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { NotificationTransportMessage } from '@granit/notifications';
@@ -62,7 +62,7 @@ describe('createSseTransport', () => {
       data: string;
     }) => void;
     const mockMsg: NotificationTransportMessage = {
-      notificationId: 'n-1',
+      notificationId: toEntityId<'Notification'>('n-1'),
       notificationTypeName: 'SystemAlert',
       severity: 'Info',
       data: { title: 'SSE Notification' },

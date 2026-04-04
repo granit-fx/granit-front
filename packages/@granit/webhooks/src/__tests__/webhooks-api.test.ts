@@ -1,5 +1,5 @@
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -30,7 +30,7 @@ import type {
 const BASE = '/api/v1/webhooks/subscriptions';
 
 const mockSubscription: WebhookSubscriptionResponse = {
-  id: 'sub-001',
+  id: toEntityId<'WebhookSubscription'>('sub-001'),
   targetUrl: 'https://example.com/webhook',
   eventType: 'document.uploaded',
   status: WebhookSubscriptionStatus.Active,
@@ -68,7 +68,7 @@ describe('webhooks-api', () => {
     it('sends POST with request body', async () => {
       const client = createMockClient();
       const response: WebhookSubscriptionCreatedResponse = {
-        id: 'sub-002',
+        id: toEntityId<'WebhookSubscription'>('sub-002'),
         targetUrl: 'https://example.com/webhook',
         eventType: 'document.uploaded',
         status: WebhookSubscriptionStatus.Active,
@@ -220,8 +220,8 @@ describe('webhooks-api', () => {
       const client = createMockClient();
       const response: WebhookDeliveryAttemptResponse[] = [
         {
-          deliveryId: 'del-001',
-          subscriptionId: 'sub-001',
+          deliveryId: toEntityId<'WebhookDelivery'>('del-001'),
+          subscriptionId: toEntityId<'WebhookSubscription'>('sub-001'),
           tenantId: null,
           eventType: 'document.uploaded',
           targetUrl: 'https://example.com/webhook',

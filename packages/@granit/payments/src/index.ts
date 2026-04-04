@@ -5,10 +5,14 @@ export type {
   PaymentChargeRequest,
   PaymentCheckoutRequest,
   PaymentCheckoutSessionResponse,
+  PaymentDisputeId,
   PaymentDisputeResponse,
+  PaymentMethodId,
   PaymentMethodResponse,
+  PaymentRefundId,
   PaymentRefundRequest,
   PaymentRefundResponse,
+  PaymentTransactionId,
   PaymentTransactionResponse,
 } from './types.js';
 export type { DisputeStatus, PaymentMethodCategory, PaymentStatus, RefundStatus } from './types.js';

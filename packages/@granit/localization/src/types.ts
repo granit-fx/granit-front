@@ -1,4 +1,4 @@
-import type { ISODateString } from '@granit/types';
+import type { EntityId, ISODateString } from '@granit/types';
 import type { Module } from 'i18next';
 
 /** Matches backend Granit.Localization.LanguageInfo. */
@@ -24,9 +24,12 @@ export interface AdminLanguage extends LanguageInfo {
   parentCulture?: string;
 }
 
+/** Branded localization override identifier. */
+export type LocalizationOverrideId = EntityId<'LocalizationOverride'>;
+
 /** Localization override record for admin translation management. */
 export interface LocalizationOverride {
-  readonly id: string;
+  readonly id: LocalizationOverrideId;
   readonly resourceName: string;
   readonly cultureName: string;
   readonly key: string;

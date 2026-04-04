@@ -4,9 +4,11 @@ import type {
   PaymentChargeRequest,
   PaymentCheckoutRequest,
   PaymentCheckoutSessionResponse,
+  PaymentMethodId,
   PaymentMethodResponse,
   PaymentRefundRequest,
   PaymentRefundResponse,
+  PaymentTransactionId,
   PaymentTransactionResponse,
 } from '../types.js';
 import type { AxiosInstance } from 'axios';
@@ -34,7 +36,7 @@ export async function listPaymentTransactions(
 export async function getPaymentTransaction(
   client: AxiosInstance,
   basePath: string,
-  id: string
+  id: PaymentTransactionId
 ): Promise<PaymentTransactionResponse> {
   const response = await client.get<PaymentTransactionResponse>(
     `${basePath}/transactions/${encodeURIComponent(id)}`
@@ -137,7 +139,7 @@ export async function attachPaymentMethod(
 export async function detachPaymentMethod(
   client: AxiosInstance,
   basePath: string,
-  id: string
+  id: PaymentMethodId
 ): Promise<void> {
   await client.delete(`${basePath}/methods/${encodeURIComponent(id)}`);
 }

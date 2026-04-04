@@ -7,9 +7,13 @@ export type {
   IdentityUserPage,
 } from './identity-user.js';
 
-export type { IdentityRole } from './identity-role.js';
-export type { IdentityGroup } from './identity-group.js';
-export type { IdentityDeviceActivity, IdentitySession } from './identity-session.js';
+export type { IdentityRole, IdentityRoleId } from './identity-role.js';
+export type { IdentityGroup, IdentityGroupId } from './identity-group.js';
+export type {
+  IdentityDeviceActivity,
+  IdentitySession,
+  IdentitySessionId,
+} from './identity-session.js';
 export type { IdentityPasswordChangedAtResponse } from './identity-password.js';
 export type {
   IdentitySetTemporaryPasswordRequest,

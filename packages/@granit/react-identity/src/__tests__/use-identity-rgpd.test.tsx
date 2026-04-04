@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toEntityId } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -45,7 +46,7 @@ describe('useIdentityRgpd', () => {
       wrapper: createWrapper(client),
     });
 
-    result.current.erase.mutate('user-1');
+    result.current.erase.mutate(toEntityId<'User'>('user-1'));
 
     await waitFor(() => expect(result.current.erase.isSuccess).toBe(true));
     expect(client.delete).toHaveBeenCalledWith('/identity/users/user-1');
@@ -59,7 +60,7 @@ describe('useIdentityRgpd', () => {
       wrapper: createWrapper(client, '/custom/path'),
     });
 
-    result.current.erase.mutate('user-1');
+    result.current.erase.mutate(toEntityId<'User'>('user-1'));
 
     await waitFor(() => expect(result.current.erase.isSuccess).toBe(true));
     expect(client.delete).toHaveBeenCalledWith('/custom/path/user-1');
@@ -73,7 +74,7 @@ describe('useIdentityRgpd', () => {
       wrapper: createWrapper(client),
     });
 
-    result.current.erase.mutate('user-1');
+    result.current.erase.mutate(toEntityId<'User'>('user-1'));
 
     await waitFor(() => expect(result.current.erase.isError).toBe(true));
     expect(result.current.erase.error?.message).toBe('Forbidden');

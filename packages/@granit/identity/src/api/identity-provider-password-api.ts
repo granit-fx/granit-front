@@ -1,4 +1,5 @@
 import type { IdentityPasswordChangedAtResponse } from '../types/index.js';
+import type { UserId } from '@granit/types';
 import type { AxiosInstance } from 'axios';
 
 /**
@@ -9,7 +10,7 @@ import type { AxiosInstance } from 'axios';
 export async function fetchPasswordChangedAt(
   client: AxiosInstance,
   basePath: string,
-  userId: string
+  userId: UserId
 ): Promise<IdentityPasswordChangedAtResponse> {
   const response = await client.get<IdentityPasswordChangedAtResponse>(
     `${basePath}/users/${encodeURIComponent(userId)}/password/changed-at`
@@ -26,7 +27,7 @@ export async function fetchPasswordChangedAt(
 export async function sendPasswordResetEmail(
   client: AxiosInstance,
   basePath: string,
-  userId: string
+  userId: UserId
 ): Promise<void> {
   await client.post(`${basePath}/users/${encodeURIComponent(userId)}/password/reset-email`);
 }

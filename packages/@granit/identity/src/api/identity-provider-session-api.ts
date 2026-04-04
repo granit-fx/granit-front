@@ -1,4 +1,5 @@
-import type { IdentityDeviceActivity, IdentitySession } from '../types/index.js';
+import type { IdentityDeviceActivity, IdentitySession, IdentitySessionId } from '../types/index.js';
+import type { UserId } from '@granit/types';
 import type { AxiosInstance } from 'axios';
 
 /**
@@ -9,7 +10,7 @@ import type { AxiosInstance } from 'axios';
 export async function fetchUserSessions(
   client: AxiosInstance,
   basePath: string,
-  userId: string
+  userId: UserId
 ): Promise<readonly IdentitySession[]> {
   const response = await client.get<readonly IdentitySession[]>(
     `${basePath}/users/${encodeURIComponent(userId)}/sessions`
@@ -25,7 +26,7 @@ export async function fetchUserSessions(
 export async function fetchUserDeviceActivity(
   client: AxiosInstance,
   basePath: string,
-  userId: string
+  userId: UserId
 ): Promise<readonly IdentityDeviceActivity[]> {
   const response = await client.get<readonly IdentityDeviceActivity[]>(
     `${basePath}/users/${encodeURIComponent(userId)}/devices`
@@ -41,8 +42,8 @@ export async function fetchUserDeviceActivity(
 export async function terminateSession(
   client: AxiosInstance,
   basePath: string,
-  userId: string,
-  sessionId: string
+  userId: UserId,
+  sessionId: IdentitySessionId
 ): Promise<void> {
   await client.delete(
     `${basePath}/users/${encodeURIComponent(userId)}/sessions/${encodeURIComponent(sessionId)}`
@@ -57,7 +58,7 @@ export async function terminateSession(
 export async function terminateAllSessions(
   client: AxiosInstance,
   basePath: string,
-  userId: string
+  userId: UserId
 ): Promise<void> {
   await client.delete(`${basePath}/users/${encodeURIComponent(userId)}/sessions`);
 }

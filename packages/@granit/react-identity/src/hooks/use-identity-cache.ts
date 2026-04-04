@@ -4,6 +4,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider.js';
 
 import type { IdentityUser, IdentityUserCacheStats } from '@granit/identity';
+import type { UserId } from '@granit/types';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -38,12 +39,12 @@ export function useIdentityCacheStats(): UseQueryResult<IdentityUserCacheStats> 
 export function useBatchResolveUsers(): UseMutationResult<
   readonly IdentityUser[],
   Error,
-  string[]
+  UserId[]
 > {
   const config = useIdentityConfig();
 
   return useMutation({
-    mutationFn: (userIds: string[]) =>
+    mutationFn: (userIds: UserId[]) =>
       batchResolveUsers(config.client, config.basePath ?? '/identity/users', userIds),
   });
 }

@@ -1,5 +1,5 @@
 import type { PaginationParams } from '@granit/query-engine';
-import type { ISODateString } from '@granit/types';
+import type { EntityId, ISODateString } from '@granit/types';
 import type { AxiosInstance } from 'axios';
 
 // ── Template lifecycle status (mirrors .NET Granit.Templating.Domain.TemplateLifecycleStatus) ──
@@ -31,10 +31,18 @@ export type TemplateKey = {
   readonly culture?: string;
 };
 
+// ── Branded identifiers ──
+
+/** Branded template revision identifier. */
+export type TemplateRevisionId = EntityId<'TemplateRevision'>;
+
+/** Branded template category identifier. */
+export type TemplateCategoryId = EntityId<'TemplateCategory'>;
+
 // ── Revision ──
 
 export type TemplateRevision = {
-  readonly revisionId: string;
+  readonly revisionId: TemplateRevisionId;
   readonly content: string;
   readonly mimeType: string;
   readonly status: TemplateLifecycleStatusValue;
@@ -66,7 +74,7 @@ export type TemplateListItem = {
 export type TemplateListParams = PaginationParams & {
   readonly search?: string;
   readonly status?: TemplateLifecycleStatusValue;
-  readonly categoryId?: string;
+  readonly categoryId?: TemplateCategoryId;
   readonly culture?: string;
 };
 
@@ -114,7 +122,7 @@ export type TemplatePreviewResponse = {
   readonly html: string;
   readonly plainText?: string;
   readonly subject?: string;
-  readonly revisionId: string;
+  readonly revisionId: TemplateRevisionId;
   readonly renderTimeMs: number;
 };
 
@@ -143,7 +151,7 @@ export type TemplateVariables = {
 // ── Categories ──
 
 export type TemplateCategory = {
-  readonly id: string;
+  readonly id: TemplateCategoryId;
   readonly name: string;
   readonly description?: string;
   readonly icon?: string;

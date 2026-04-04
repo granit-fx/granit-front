@@ -8,9 +8,9 @@ export type {
   IdentityUserListParams,
   IdentityUserPage,
 } from './types/index.js';
-export type { IdentityRole } from './types/index.js';
-export type { IdentityGroup } from './types/index.js';
-export type { IdentityDeviceActivity, IdentitySession } from './types/index.js';
+export type { IdentityRole, IdentityRoleId } from './types/index.js';
+export type { IdentityGroup, IdentityGroupId } from './types/index.js';
+export type { IdentityDeviceActivity, IdentitySession, IdentitySessionId } from './types/index.js';
 export type { IdentityPasswordChangedAtResponse } from './types/index.js';
 export type {
   IdentitySetTemporaryPasswordRequest,

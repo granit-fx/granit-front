@@ -8,7 +8,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider.js';
 
-import type { IdentityDeviceActivity, IdentitySession } from '@granit/identity';
+import type { IdentityDeviceActivity, IdentitySession, IdentitySessionId } from '@granit/identity';
+import type { UserId } from '@granit/types';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -21,7 +22,7 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
  * const { data: sessions } = useUserSessions(selectedUserId);
  * ```
  */
-export function useUserSessions(userId: string): UseQueryResult<readonly IdentitySession[]> {
+export function useUserSessions(userId: UserId): UseQueryResult<readonly IdentitySession[]> {
   const config = useIdentityConfig();
   const basePath = config.providerBasePath ?? '/identity/provider';
 
@@ -43,7 +44,7 @@ export function useUserSessions(userId: string): UseQueryResult<readonly Identit
  * ```
  */
 export function useUserDeviceActivity(
-  userId: string
+  userId: UserId
 ): UseQueryResult<readonly IdentityDeviceActivity[]> {
   const config = useIdentityConfig();
   const basePath = config.providerBasePath ?? '/identity/provider';
@@ -57,8 +58,8 @@ export function useUserDeviceActivity(
 
 /** Variables for `useTerminateSession` mutation. */
 export type TerminateSessionVariables = {
-  readonly userId: string;
-  readonly sessionId: string;
+  readonly userId: UserId;
+  readonly sessionId: IdentitySessionId;
 };
 
 /**
@@ -98,13 +99,13 @@ export function useTerminateSession(): UseMutationResult<void, Error, TerminateS
  * await terminateAll.mutateAsync('user-1');
  * ```
  */
-export function useTerminateAllSessions(): UseMutationResult<void, Error, string> {
+export function useTerminateAllSessions(): UseMutationResult<void, Error, UserId> {
   const config = useIdentityConfig();
   const queryClient = useQueryClient();
   const basePath = config.providerBasePath ?? '/identity/provider';
 
   return useMutation({
-    mutationFn: (userId: string) => terminateAllSessions(config.client, basePath, userId),
+    mutationFn: (userId: UserId) => terminateAllSessions(config.client, basePath, userId),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildIdentityQueryKey(config, 'provider', 'users'),

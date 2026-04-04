@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toEntityId } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -12,13 +13,13 @@ import {
 import type { IdentityRole, IdentityUser } from '../types/index.js';
 
 const sampleRole: IdentityRole = {
-  id: 'role-1',
+  id: toEntityId<'IdentityRole'>('role-1'),
   name: 'admin',
   description: 'Administrator role',
 };
 
 const sampleUser: IdentityUser = {
-  userId: 'user-1',
+  userId: toEntityId<'User'>('user-1'),
   username: 'jdoe',
   email: 'jdoe@example.com',
   firstName: 'John',
@@ -71,7 +72,7 @@ describe('identity-provider-role-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleRole]));
 
-      const result = await fetchUserRoles(client, basePath, 'user-1');
+      const result = await fetchUserRoles(client, basePath, toEntityId<'User'>('user-1'));
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/users/user-1/roles`);
       expect(result).toEqual([sampleRole]);
@@ -83,7 +84,7 @@ describe('identity-provider-role-api', () => {
       const client = createMockClient();
       vi.mocked(client.put).mockResolvedValue(axiosResponse(undefined));
 
-      await assignRole(client, basePath, 'user-1', 'admin');
+      await assignRole(client, basePath, toEntityId<'User'>('user-1'), 'admin');
 
       expect(client.put).toHaveBeenCalledWith(`${basePath}/users/user-1/roles/admin`);
     });
@@ -92,7 +93,12 @@ describe('identity-provider-role-api', () => {
       const client = createMockClient();
       vi.mocked(client.put).mockResolvedValue(axiosResponse(undefined));
 
-      await assignRole(client, basePath, 'user/special@id', 'role/special@name');
+      await assignRole(
+        client,
+        basePath,
+        toEntityId<'User'>('user/special@id'),
+        'role/special@name'
+      );
 
       expect(client.put).toHaveBeenCalledWith(
         `${basePath}/users/${encodeURIComponent('user/special@id')}/roles/${encodeURIComponent('role/special@name')}`
@@ -105,7 +111,7 @@ describe('identity-provider-role-api', () => {
       const client = createMockClient();
       vi.mocked(client.delete).mockResolvedValue(axiosResponse(undefined));
 
-      await removeRole(client, basePath, 'user-1', 'admin');
+      await removeRole(client, basePath, toEntityId<'User'>('user-1'), 'admin');
 
       expect(client.delete).toHaveBeenCalledWith(`${basePath}/users/user-1/roles/admin`);
     });

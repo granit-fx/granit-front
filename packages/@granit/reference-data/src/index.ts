@@ -2,6 +2,7 @@
 export type {
   ReferenceDataCreateRequest,
   ReferenceDataEntry,
+  ReferenceDataEntryId,
   ReferenceDataLabels,
   ReferenceDataQuery,
   ReferenceDataUpdateRequest,

@@ -6,6 +6,7 @@ import type {
   IdentityUserListParams,
   IdentityUserPage,
 } from '../types/index.js';
+import type { UserId } from '@granit/types';
 import type { AxiosInstance } from 'axios';
 
 /**
@@ -30,7 +31,7 @@ export async function searchUsers(
 export async function getUserById(
   client: AxiosInstance,
   basePath: string,
-  userId: string
+  userId: UserId
 ): Promise<IdentityUser> {
   const response = await client.get<IdentityUser>(`${basePath}/${encodeURIComponent(userId)}`);
   return response.data;
@@ -44,7 +45,7 @@ export async function getUserById(
 export async function batchResolveUsers(
   client: AxiosInstance,
   basePath: string,
-  userIds: readonly string[]
+  userIds: readonly UserId[]
 ): Promise<readonly IdentityUser[]> {
   const response = await client.post<readonly IdentityUser[]>(`${basePath}/batch`, { userIds });
   return response.data;
@@ -71,7 +72,7 @@ export async function getCacheStats(
 export async function syncUsers(
   client: AxiosInstance,
   basePath: string,
-  userIds: readonly string[]
+  userIds: readonly UserId[]
 ): Promise<void> {
   await client.post(`${basePath}/sync`, { userIds });
 }
@@ -110,7 +111,7 @@ export async function syncStaleUsers(
 export async function eraseUserCache(
   client: AxiosInstance,
   basePath: string,
-  userId: string
+  userId: UserId
 ): Promise<void> {
   await client.delete(`${basePath}/${encodeURIComponent(userId)}`);
 }

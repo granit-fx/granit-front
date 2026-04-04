@@ -3,11 +3,13 @@ export { WebhookSubscriptionStatus } from './types/index.js';
 
 export type {
   WebhookDeliveryAttemptResponse,
+  WebhookDeliveryId,
   WebhookEventTypeResponse,
   WebhookModuleConfig,
   WebhookSubscriptionCreateRequest,
   WebhookSubscriptionCreatedResponse,
   WebhookSubscriptionDeactivateRequest,
+  WebhookSubscriptionId,
   WebhookSubscriptionResponse,
   WebhookSubscriptionRotateSecretResponse,
   WebhookSubscriptionStatsResponse,

@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider.js';
 
 import type { IdentityUser, IdentityUserListParams, IdentityUserPage } from '@granit/identity';
+import type { UserId } from '@granit/types';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -39,7 +40,7 @@ export function useIdentityUsers(
  * }
  * ```
  */
-export function useIdentityUser(userId: string): UseQueryResult<IdentityUser> {
+export function useIdentityUser(userId: UserId): UseQueryResult<IdentityUser> {
   const config = useIdentityConfig();
 
   return useQuery({

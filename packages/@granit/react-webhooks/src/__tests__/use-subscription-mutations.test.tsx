@@ -1,6 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { WebhookSubscriptionStatus, webhooksKeys } from '@granit/webhooks';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
@@ -29,7 +29,7 @@ function createWrapper() {
 }
 
 const mockSubscription: WebhookSubscriptionResponse = {
-  id: 'sub-001',
+  id: toEntityId<'WebhookSubscription'>('sub-001'),
   targetUrl: 'https://example.com/webhook',
   eventType: 'document.uploaded',
   status: WebhookSubscriptionStatus.Active,
@@ -43,7 +43,7 @@ describe('useCreateSubscription', () => {
   it('should send POST and invalidate subscriptions on success', async () => {
     const client = createMockClient();
     const response: WebhookSubscriptionCreatedResponse = {
-      id: 'sub-002',
+      id: toEntityId<'WebhookSubscription'>('sub-002'),
       targetUrl: 'https://example.com/webhook',
       eventType: 'document.uploaded',
       status: WebhookSubscriptionStatus.Active,

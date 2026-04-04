@@ -22,6 +22,7 @@ import type {
   SubscriptionCancelRequest,
   SubscriptionChangePlanRequest,
   SubscriptionCreateRequest,
+  SubscriptionId,
   SubscriptionResponse,
 } from '@granit/subscriptions';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
@@ -72,13 +73,13 @@ export function useActiveSubscription(): UseQueryResult<SubscriptionResponse> {
  * const { data: subscription } = useSubscription(selectedId);
  * ```
  */
-export function useSubscription(id: string): UseQueryResult<SubscriptionResponse> {
+export function useSubscription(id: SubscriptionId | ''): UseQueryResult<SubscriptionResponse> {
   const config = useSubscriptionsConfig();
   const basePath = config.basePath ?? '/api/granit/subscriptions';
 
   return useQuery({
     queryKey: buildSubscriptionsQueryKey(config, 'subscriptions', id),
-    queryFn: () => getSubscriptionById(config.client, basePath, id),
+    queryFn: () => getSubscriptionById(config.client, basePath, id as SubscriptionId),
     enabled: id.length > 0,
   });
 }
@@ -118,7 +119,7 @@ export function useCreateSubscription(): UseMutationResult<
 
 /** Variables for `useCancelSubscription` mutation. */
 export type CancelSubscriptionVariables = {
-  readonly id: string;
+  readonly id: SubscriptionId;
   readonly request: SubscriptionCancelRequest;
 };
 
@@ -154,7 +155,7 @@ export function useCancelSubscription(): UseMutationResult<
 
 /** Variables for `useChangeSubscriptionPlan` mutation. */
 export type ChangeSubscriptionPlanVariables = {
-  readonly id: string;
+  readonly id: SubscriptionId;
   readonly request: SubscriptionChangePlanRequest;
 };
 
@@ -190,7 +191,7 @@ export function useChangeSubscriptionPlan(): UseMutationResult<
 
 /** Variables for `useMigrateSubscriptionPrice` mutation. */
 export type MigrateSubscriptionPriceVariables = {
-  readonly id: string;
+  readonly id: SubscriptionId;
   readonly request: MigratePriceRequest;
 };
 

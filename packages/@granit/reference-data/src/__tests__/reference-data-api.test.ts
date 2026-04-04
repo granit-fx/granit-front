@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toEntityId } from '@granit/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -15,7 +16,7 @@ import type { ReferenceDataEntry } from '../types/index.js';
 const BASE_PATH = '/api/v1/reference-data/country';
 
 const mockEntry: ReferenceDataEntry = {
-  id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+  id: toEntityId<'ReferenceDataEntry'>('a1b2c3d4-e5f6-7890-abcd-ef1234567890'),
   code: 'BE',
   labelEn: 'Belgium',
   labelFr: 'Belgique',

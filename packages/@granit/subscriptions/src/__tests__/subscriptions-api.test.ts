@@ -1,5 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -35,7 +35,7 @@ import type {
 const basePath = '/api/granit/subscriptions';
 
 const samplePlan: PlanResponse = {
-  id: 'plan-1',
+  id: toEntityId<'Plan'>('plan-1'),
   name: 'Pro',
   description: 'Professional plan',
   pricingModel: 'PerSeat',
@@ -48,7 +48,7 @@ const samplePlan: PlanResponse = {
 };
 
 const samplePrice: PlanPriceResponse = {
-  id: 'price-1',
+  id: toEntityId<'PlanPrice'>('price-1'),
   amount: 29.99,
   currency: 'EUR',
   interval: 'Monthly',
@@ -59,8 +59,8 @@ const samplePrice: PlanPriceResponse = {
 };
 
 const sampleSubscription: SubscriptionResponse = {
-  id: 'sub-1',
-  planId: 'plan-1',
+  id: toEntityId<'Subscription'>('sub-1'),
+  planId: toEntityId<'Plan'>('plan-1'),
   status: 'Active',
   currency: 'EUR',
   currentPeriodStart: toISODateString('2026-01-01T00:00:00Z'),
@@ -71,12 +71,12 @@ const sampleSubscription: SubscriptionResponse = {
   cancellationReason: null,
   dunningAttempt: 0,
   seatCount: 5,
-  planPriceId: 'price-1',
+  planPriceId: toEntityId<'PlanPrice'>('price-1'),
 };
 
 const sampleSeat: SeatResponse = {
-  id: 'seat-1',
-  userId: 'user-1',
+  id: toEntityId<'Seat'>('seat-1'),
+  userId: toEntityId<'User'>('user-1'),
   assignedAt: toISODateString('2026-01-15T10:00:00Z'),
 };
 
@@ -102,7 +102,7 @@ describe('subscriptions-api — Plans', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse(samplePlan));
 
-      const result = await getPlanById(client, basePath, 'plan-1');
+      const result = await getPlanById(client, basePath, toEntityId<'Plan'>('plan-1'));
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/plans/plan-1`);
       expect(result).toEqual(samplePlan);
@@ -112,7 +112,7 @@ describe('subscriptions-api — Plans', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse(samplePlan));
 
-      await getPlanById(client, basePath, 'plan/special@id');
+      await getPlanById(client, basePath, toEntityId<'Plan'>('plan/special@id'));
 
       expect(client.get).toHaveBeenCalledWith(
         `${basePath}/plans/${encodeURIComponent('plan/special@id')}`
@@ -148,7 +148,7 @@ describe('subscriptions-api — Plans', () => {
 
       const request = { name: 'Pro Updated', description: null, sortOrder: 2 };
 
-      const result = await updatePlan(client, basePath, 'plan-1', request);
+      const result = await updatePlan(client, basePath, toEntityId<'Plan'>('plan-1'), request);
 
       expect(client.put).toHaveBeenCalledWith(`${basePath}/plans/plan-1`, request);
       expect(result).toEqual(samplePlan);
@@ -158,7 +158,7 @@ describe('subscriptions-api — Plans', () => {
       const client = createMockClient();
       vi.mocked(client.put).mockResolvedValue(axiosResponse(samplePlan));
 
-      await updatePlan(client, basePath, 'plan/special@id', {
+      await updatePlan(client, basePath, toEntityId<'Plan'>('plan/special@id'), {
         name: 'X',
         description: null,
         sortOrder: 0,
@@ -176,7 +176,7 @@ describe('subscriptions-api — Plans', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
 
-      await publishPlan(client, basePath, 'plan-1');
+      await publishPlan(client, basePath, toEntityId<'Plan'>('plan-1'));
 
       expect(client.post).toHaveBeenCalledWith(`${basePath}/plans/plan-1/publish`);
     });
@@ -185,7 +185,7 @@ describe('subscriptions-api — Plans', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
 
-      await publishPlan(client, basePath, 'plan/special@id');
+      await publishPlan(client, basePath, toEntityId<'Plan'>('plan/special@id'));
 
       expect(client.post).toHaveBeenCalledWith(
         `${basePath}/plans/${encodeURIComponent('plan/special@id')}/publish`
@@ -198,7 +198,7 @@ describe('subscriptions-api — Plans', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
 
-      await archivePlan(client, basePath, 'plan-1');
+      await archivePlan(client, basePath, toEntityId<'Plan'>('plan-1'));
 
       expect(client.post).toHaveBeenCalledWith(`${basePath}/plans/plan-1/archive`);
     });
@@ -209,9 +209,14 @@ describe('subscriptions-api — Plans', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue(axiosResponse(samplePrice));
 
-      const request = { amount: 29.99, currency: 'EUR', interval: 'Monthly' as const };
+      const request = { amount: 29.99, currency: 'EUR' as const, interval: 'Monthly' as const };
 
-      const result = await createPriceVersion(client, basePath, 'plan-1', request);
+      const result = await createPriceVersion(
+        client,
+        basePath,
+        toEntityId<'Plan'>('plan-1'),
+        request
+      );
 
       expect(client.post).toHaveBeenCalledWith(`${basePath}/plans/plan-1/prices`, request);
       expect(result).toEqual(samplePrice);
@@ -221,7 +226,7 @@ describe('subscriptions-api — Plans', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue(axiosResponse(samplePrice));
 
-      await createPriceVersion(client, basePath, 'plan/special@id', {
+      await createPriceVersion(client, basePath, toEntityId<'Plan'>('plan/special@id'), {
         amount: 10,
         currency: 'USD',
         interval: 'Annual' as const,
@@ -239,7 +244,7 @@ describe('subscriptions-api — Plans', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([samplePrice]));
 
-      const result = await getPlanPriceHistory(client, basePath, 'plan-1');
+      const result = await getPlanPriceHistory(client, basePath, toEntityId<'Plan'>('plan-1'));
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/plans/plan-1/prices/history`);
       expect(result).toEqual([samplePrice]);
@@ -281,7 +286,11 @@ describe('subscriptions-api — Subscriptions', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse(sampleSubscription));
 
-      const result = await getSubscriptionById(client, basePath, 'sub-1');
+      const result = await getSubscriptionById(
+        client,
+        basePath,
+        toEntityId<'Subscription'>('sub-1')
+      );
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/subscriptions/sub-1`);
       expect(result).toEqual(sampleSubscription);
@@ -291,7 +300,7 @@ describe('subscriptions-api — Subscriptions', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse(sampleSubscription));
 
-      await getSubscriptionById(client, basePath, 'sub/special@id');
+      await getSubscriptionById(client, basePath, toEntityId<'Subscription'>('sub/special@id'));
 
       expect(client.get).toHaveBeenCalledWith(
         `${basePath}/subscriptions/${encodeURIComponent('sub/special@id')}`
@@ -304,7 +313,11 @@ describe('subscriptions-api — Subscriptions', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue(axiosResponse(sampleSubscription));
 
-      const request = { planId: 'plan-1', currency: 'EUR', trialEndsAt: null };
+      const request = {
+        planId: toEntityId<'Plan'>('plan-1'),
+        currency: 'EUR' as const,
+        trialEndsAt: null,
+      };
 
       const result = await createSubscription(client, basePath, request);
 
@@ -320,7 +333,12 @@ describe('subscriptions-api — Subscriptions', () => {
 
       const request = { reason: 'Too expensive', atPeriodEnd: true };
 
-      const result = await cancelSubscription(client, basePath, 'sub-1', request);
+      const result = await cancelSubscription(
+        client,
+        basePath,
+        toEntityId<'Subscription'>('sub-1'),
+        request
+      );
 
       expect(client.post).toHaveBeenCalledWith(`${basePath}/subscriptions/sub-1/cancel`, request);
       expect(result).toEqual(sampleSubscription);
@@ -332,9 +350,14 @@ describe('subscriptions-api — Subscriptions', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue(axiosResponse(sampleSubscription));
 
-      const request = { newPlanId: 'plan-2' };
+      const request = { newPlanId: toEntityId<'Plan'>('plan-2') };
 
-      const result = await changeSubscriptionPlan(client, basePath, 'sub-1', request);
+      const result = await changeSubscriptionPlan(
+        client,
+        basePath,
+        toEntityId<'Subscription'>('sub-1'),
+        request
+      );
 
       expect(client.post).toHaveBeenCalledWith(
         `${basePath}/subscriptions/sub-1/change-plan`,
@@ -349,9 +372,14 @@ describe('subscriptions-api — Subscriptions', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue(axiosResponse(sampleSubscription));
 
-      const request = { newPlanPriceId: 'price-2' };
+      const request = { newPlanPriceId: toEntityId<'PlanPrice'>('price-2') };
 
-      const result = await migrateSubscriptionPrice(client, basePath, 'sub-1', request);
+      const result = await migrateSubscriptionPrice(
+        client,
+        basePath,
+        toEntityId<'Subscription'>('sub-1'),
+        request
+      );
 
       expect(client.post).toHaveBeenCalledWith(
         `${basePath}/subscriptions/sub-1/migrate-price`,
@@ -368,9 +396,9 @@ describe('subscriptions-api — Subscriptions', () => {
       vi.mocked(client.post).mockResolvedValue(axiosResponse(bulkResponse));
 
       const request = {
-        planId: 'plan-1',
-        newPlanPriceId: 'price-2',
-        oldPlanPriceId: 'price-1',
+        planId: toEntityId<'Plan'>('plan-1'),
+        newPlanPriceId: toEntityId<'PlanPrice'>('price-2'),
+        oldPlanPriceId: toEntityId<'PlanPrice'>('price-1'),
       };
 
       const result = await bulkMigrateSubscriptionPrice(client, basePath, request);
@@ -394,7 +422,7 @@ describe('subscriptions-api — Seats', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleSeat]));
 
-      const result = await listSeats(client, basePath, 'sub-1');
+      const result = await listSeats(client, basePath, toEntityId<'Subscription'>('sub-1'));
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/subscriptions/sub-1/seats`);
       expect(result).toEqual([sampleSeat]);
@@ -404,7 +432,7 @@ describe('subscriptions-api — Seats', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([]));
 
-      await listSeats(client, basePath, 'sub/special@id');
+      await listSeats(client, basePath, toEntityId<'Subscription'>('sub/special@id'));
 
       expect(client.get).toHaveBeenCalledWith(
         `${basePath}/subscriptions/${encodeURIComponent('sub/special@id')}/seats`
@@ -417,9 +445,14 @@ describe('subscriptions-api — Seats', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue(axiosResponse(sampleSeat));
 
-      const request = { userId: 'user-1' };
+      const request = { userId: toEntityId<'User'>('user-1') };
 
-      const result = await assignSeat(client, basePath, 'sub-1', request);
+      const result = await assignSeat(
+        client,
+        basePath,
+        toEntityId<'Subscription'>('sub-1'),
+        request
+      );
 
       expect(client.post).toHaveBeenCalledWith(`${basePath}/subscriptions/sub-1/seats`, request);
       expect(result).toEqual(sampleSeat);
@@ -431,7 +464,12 @@ describe('subscriptions-api — Seats', () => {
       const client = createMockClient();
       vi.mocked(client.delete).mockResolvedValue(axiosResponse(undefined));
 
-      await revokeSeat(client, basePath, 'sub-1', 'user-1');
+      await revokeSeat(
+        client,
+        basePath,
+        toEntityId<'Subscription'>('sub-1'),
+        toEntityId<'User'>('user-1')
+      );
 
       expect(client.delete).toHaveBeenCalledWith(`${basePath}/subscriptions/sub-1/seats/user-1`);
     });
@@ -440,7 +478,12 @@ describe('subscriptions-api — Seats', () => {
       const client = createMockClient();
       vi.mocked(client.delete).mockResolvedValue(axiosResponse(undefined));
 
-      await revokeSeat(client, basePath, 'sub/special@id', 'user/special@id');
+      await revokeSeat(
+        client,
+        basePath,
+        toEntityId<'Subscription'>('sub/special@id'),
+        toEntityId<'User'>('user/special@id')
+      );
 
       expect(client.delete).toHaveBeenCalledWith(
         `${basePath}/subscriptions/${encodeURIComponent('sub/special@id')}/seats/${encodeURIComponent('user/special@id')}`

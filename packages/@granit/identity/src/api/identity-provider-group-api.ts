@@ -1,4 +1,5 @@
 import type { IdentityGroup } from '../types/index.js';
+import type { UserId } from '@granit/types';
 import type { AxiosInstance } from 'axios';
 
 /**
@@ -22,7 +23,7 @@ export async function fetchGroups(
 export async function fetchUserGroups(
   client: AxiosInstance,
   basePath: string,
-  userId: string
+  userId: UserId
 ): Promise<readonly IdentityGroup[]> {
   const response = await client.get<readonly IdentityGroup[]>(
     `${basePath}/users/${encodeURIComponent(userId)}/groups`
@@ -38,7 +39,7 @@ export async function fetchUserGroups(
 export async function addUserToGroup(
   client: AxiosInstance,
   basePath: string,
-  userId: string,
+  userId: UserId,
   groupId: string
 ): Promise<void> {
   await client.put(
@@ -54,7 +55,7 @@ export async function addUserToGroup(
 export async function removeUserFromGroup(
   client: AxiosInstance,
   basePath: string,
-  userId: string,
+  userId: UserId,
   groupId: string
 ): Promise<void> {
   await client.delete(

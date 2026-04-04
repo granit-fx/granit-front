@@ -1,4 +1,5 @@
 import type { IdentityRole, IdentityUser } from '../types/index.js';
+import type { UserId } from '@granit/types';
 import type { AxiosInstance } from 'axios';
 
 /**
@@ -38,7 +39,7 @@ export async function fetchRoleMembers(
 export async function fetchUserRoles(
   client: AxiosInstance,
   basePath: string,
-  userId: string
+  userId: UserId
 ): Promise<readonly IdentityRole[]> {
   const response = await client.get<readonly IdentityRole[]>(
     `${basePath}/users/${encodeURIComponent(userId)}/roles`
@@ -54,7 +55,7 @@ export async function fetchUserRoles(
 export async function assignRole(
   client: AxiosInstance,
   basePath: string,
-  userId: string,
+  userId: UserId,
   roleName: string
 ): Promise<void> {
   await client.put(
@@ -70,7 +71,7 @@ export async function assignRole(
 export async function removeRole(
   client: AxiosInstance,
   basePath: string,
-  userId: string,
+  userId: UserId,
   roleName: string
 ): Promise<void> {
   await client.delete(

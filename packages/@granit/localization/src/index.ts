@@ -9,6 +9,7 @@ export type {
   LanguageInfo,
   LocalizationConfig,
   LocalizationOverride,
+  LocalizationOverrideId,
 } from './types.js';
 
 // API — Admin

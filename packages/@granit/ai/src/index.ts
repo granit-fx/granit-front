@@ -10,6 +10,7 @@ export type {
   AIEmbeddingRequest,
   AIEmbeddingResponse,
   AIUsageRecord,
+  AIUsageRecordId,
   AIWorkspaceCreateRequest,
   AIWorkspaceKind,
   AIWorkspaceListResponse,

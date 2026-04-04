@@ -1,5 +1,6 @@
 export type {
   BffConfig,
+  BffSessionId,
   BffSessionInfo,
   BffSessionListResponse,
   BffUnauthenticated,

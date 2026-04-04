@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toEntityId } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -19,7 +20,7 @@ import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
 const sampleGroup: IdentityGroup = {
-  id: 'group-1',
+  id: toEntityId<'IdentityGroup'>('group-1'),
   name: 'developers',
   path: '/developers',
   subGroups: [],
@@ -62,7 +63,7 @@ describe('use-identity-groups', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: [sampleGroup] });
 
-      const { result } = renderHook(() => useUserGroups('user-1'), {
+      const { result } = renderHook(() => useUserGroups(toEntityId<'User'>('user-1')), {
         wrapper: createWrapper(client),
       });
 
@@ -73,7 +74,7 @@ describe('use-identity-groups', () => {
     it('is disabled when userId is empty', async () => {
       const client = createMockClient();
 
-      const { result } = renderHook(() => useUserGroups(''), {
+      const { result } = renderHook(() => useUserGroups(toEntityId<'User'>('')), {
         wrapper: createWrapper(client),
       });
 
@@ -91,7 +92,7 @@ describe('use-identity-groups', () => {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate({ userId: 'user-1', groupId: 'group-1' });
+      result.current.mutate({ userId: toEntityId<'User'>('user-1'), groupId: 'group-1' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.put).toHaveBeenCalledWith('/identity/provider/users/user-1/groups/group-1');
@@ -107,7 +108,7 @@ describe('use-identity-groups', () => {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate({ userId: 'user-1', groupId: 'group-1' });
+      result.current.mutate({ userId: toEntityId<'User'>('user-1'), groupId: 'group-1' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.delete).toHaveBeenCalledWith('/identity/provider/users/user-1/groups/group-1');
@@ -121,7 +122,7 @@ describe('use-identity-groups', () => {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate({ userId: 'user-1', groupId: 'group-1' });
+      result.current.mutate({ userId: toEntityId<'User'>('user-1'), groupId: 'group-1' });
 
       await waitFor(() => expect(result.current.isError).toBe(true));
       expect(result.current.error?.message).toBe('Not found');

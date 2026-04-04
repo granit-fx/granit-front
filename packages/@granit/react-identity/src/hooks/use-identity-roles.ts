@@ -10,6 +10,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider.js';
 
 import type { IdentityRole, IdentityUser } from '@granit/identity';
+import type { UserId } from '@granit/types';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -40,7 +41,7 @@ export function useRoles(): UseQueryResult<readonly IdentityRole[]> {
  * const { data: roles } = useUserRoles(selectedUserId);
  * ```
  */
-export function useUserRoles(userId: string): UseQueryResult<readonly IdentityRole[]> {
+export function useUserRoles(userId: UserId): UseQueryResult<readonly IdentityRole[]> {
   const config = useIdentityConfig();
   const basePath = config.providerBasePath ?? '/identity/provider';
 
@@ -74,7 +75,7 @@ export function useRoleMembers(roleName: string): UseQueryResult<readonly Identi
 
 /** Variables for `useAssignRole` and `useRemoveRole` mutations. */
 export type RoleMutationVariables = {
-  readonly userId: string;
+  readonly userId: UserId;
   readonly roleName: string;
 };
 

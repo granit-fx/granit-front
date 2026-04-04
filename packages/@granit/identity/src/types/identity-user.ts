@@ -1,9 +1,9 @@
 import type { PagedResult, PaginationParams } from '@granit/query-engine';
-import type { ISODateString } from '@granit/types';
+import type { ISODateString, UserId } from '@granit/types';
 
 /** Cached identity user — mirrors Granit.Identity.IdentityUser .NET record. */
 export type IdentityUser = {
-  readonly userId: string;
+  readonly userId: UserId;
   readonly username: string | null;
   readonly email: string | null;
   readonly firstName: string | null;

@@ -1,6 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -35,14 +35,14 @@ import type { ReactNode } from 'react';
 // ---------------------------------------------------------------------------
 
 const sampleTransaction: PaymentTransactionResponse = {
-  id: 'txn-1',
-  invoiceId: 'inv-1',
+  id: toEntityId<'PaymentTransaction'>('txn-1'),
+  invoiceId: toEntityId<'Invoice'>('inv-1'),
   amount: 5000,
   currency: 'EUR',
   status: 'Succeeded',
   providerName: 'Stripe',
   providerTransactionId: 'pi_abc123',
-  paymentMethodId: 'pm-1',
+  paymentMethodId: toEntityId<'PaymentMethod'>('pm-1'),
   actionUrl: null,
   idempotencyKey: 'key-1',
   failureCode: null,
@@ -54,7 +54,7 @@ const sampleTransaction: PaymentTransactionResponse = {
 };
 
 const sampleRefund: PaymentRefundResponse = {
-  id: 'ref-1',
+  id: toEntityId<'PaymentRefund'>('ref-1'),
   amount: 2000,
   currency: 'EUR',
   status: 'Succeeded',
@@ -71,7 +71,7 @@ const sampleCheckoutSession: PaymentCheckoutSessionResponse = {
 };
 
 const sampleMethod: PaymentMethodResponse = {
-  id: 'pm-1',
+  id: toEntityId<'PaymentMethod'>('pm-1'),
   type: 'card',
   providerName: 'Stripe',
   providerMethodId: 'pm_abc123',
@@ -145,9 +145,12 @@ describe('use-payments', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: sampleTransaction });
 
-      const { result } = renderHook(() => usePaymentTransaction('txn-1'), {
-        wrapper: createWrapper(client),
-      });
+      const { result } = renderHook(
+        () => usePaymentTransaction(toEntityId<'PaymentTransaction'>('txn-1')),
+        {
+          wrapper: createWrapper(client),
+        }
+      );
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.get).toHaveBeenCalledWith('/api/granit/payments/transactions/txn-1');
@@ -176,7 +179,7 @@ describe('use-payments', () => {
       });
 
       result.current.mutate({
-        invoiceId: 'inv-1',
+        invoiceId: toEntityId<'Invoice'>('inv-1'),
         amount: 5000,
         currency: 'EUR',
         methodType: 'card',
@@ -197,7 +200,7 @@ describe('use-payments', () => {
       });
 
       result.current.mutate({
-        invoiceId: 'inv-1',
+        invoiceId: toEntityId<'Invoice'>('inv-1'),
         amount: 5000,
         currency: 'EUR',
         methodType: 'card',
@@ -220,7 +223,7 @@ describe('use-payments', () => {
       });
 
       result.current.mutate({
-        transactionId: 'txn-1',
+        transactionId: toEntityId<'PaymentTransaction'>('txn-1'),
         amount: 2000,
         reason: 'Customer request',
         idempotencyKey: 'key-2',
@@ -241,7 +244,7 @@ describe('use-payments', () => {
       });
 
       result.current.mutate({
-        transactionId: 'txn-1',
+        transactionId: toEntityId<'PaymentTransaction'>('txn-1'),
         amount: 5000,
         currency: 'EUR',
         methodType: 'card',
@@ -315,7 +318,7 @@ describe('use-payments', () => {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate('pm-1');
+      result.current.mutate(toEntityId<'PaymentMethod'>('pm-1'));
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.delete).toHaveBeenCalledWith('/api/granit/payments/methods/pm-1');
@@ -329,7 +332,7 @@ describe('use-payments', () => {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate('pm-1');
+      result.current.mutate(toEntityId<'PaymentMethod'>('pm-1'));
 
       await waitFor(() => expect(result.current.isError).toBe(true));
       expect(result.current.error?.message).toBe('Not found');

@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toEntityId } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -39,7 +40,7 @@ describe('use-identity-passwords', () => {
       const response = { changedAt: '2026-03-15T08:00:00Z' };
       vi.mocked(client.get).mockResolvedValue({ data: response });
 
-      const { result } = renderHook(() => usePasswordChangedAt('user-1'), {
+      const { result } = renderHook(() => usePasswordChangedAt(toEntityId<'User'>('user-1')), {
         wrapper: createWrapper(client),
       });
 
@@ -54,7 +55,7 @@ describe('use-identity-passwords', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: { changedAt: null } });
 
-      const { result } = renderHook(() => usePasswordChangedAt('user-1'), {
+      const { result } = renderHook(() => usePasswordChangedAt(toEntityId<'User'>('user-1')), {
         wrapper: createWrapper(client),
       });
 
@@ -65,7 +66,7 @@ describe('use-identity-passwords', () => {
     it('is disabled when userId is empty', async () => {
       const client = createMockClient();
 
-      const { result } = renderHook(() => usePasswordChangedAt(''), {
+      const { result } = renderHook(() => usePasswordChangedAt(toEntityId<'User'>('')), {
         wrapper: createWrapper(client),
       });
 
@@ -83,7 +84,7 @@ describe('use-identity-passwords', () => {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate('user-1');
+      result.current.mutate(toEntityId<'User'>('user-1'));
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith(
@@ -99,7 +100,7 @@ describe('use-identity-passwords', () => {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate('user-1');
+      result.current.mutate(toEntityId<'User'>('user-1'));
 
       await waitFor(() => expect(result.current.isError).toBe(true));
       expect(result.current.error?.message).toBe('Not Implemented');
@@ -115,7 +116,7 @@ describe('use-identity-passwords', () => {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate({ userId: 'user-1', password: 'temp123!' });
+      result.current.mutate({ userId: toEntityId<'User'>('user-1'), password: 'temp123!' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith(

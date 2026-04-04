@@ -1,6 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -39,7 +39,7 @@ const mockStats: IdentityUserCacheStats = {
 
 const mockUsers: IdentityUser[] = [
   {
-    userId: 'user-1',
+    userId: toEntityId<'User'>('user-1'),
     username: 'jdoe',
     email: 'jdoe@example.com',
     firstName: 'John',
@@ -113,11 +113,13 @@ describe('useBatchResolveUsers', () => {
       wrapper: createWrapper(client),
     });
 
-    result.current.mutate(['user-1']);
+    result.current.mutate([toEntityId<'User'>('user-1')]);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual(mockUsers);
-    expect(client.post).toHaveBeenCalledWith('/identity/users/batch', { userIds: ['user-1'] });
+    expect(client.post).toHaveBeenCalledWith('/identity/users/batch', {
+      userIds: [toEntityId<'User'>('user-1')],
+    });
   });
 
   it('exposes error state on failure', async () => {
@@ -128,7 +130,7 @@ describe('useBatchResolveUsers', () => {
       wrapper: createWrapper(client),
     });
 
-    result.current.mutate(['user-1']);
+    result.current.mutate([toEntityId<'User'>('user-1')]);
 
     await waitFor(() => expect(result.current.isError).toBe(true));
     expect(result.current.error?.message).toBe('Server error');

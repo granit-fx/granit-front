@@ -1,5 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -29,14 +29,14 @@ import type {
 const basePath = '/api/granit/payments';
 
 const sampleTransaction: PaymentTransactionResponse = {
-  id: 'txn-1',
-  invoiceId: 'inv-1',
+  id: toEntityId<'PaymentTransaction'>('txn-1'),
+  invoiceId: toEntityId<'Invoice'>('inv-1'),
   amount: 5000,
   currency: 'EUR',
   status: 'Succeeded',
   providerName: 'Stripe',
   providerTransactionId: 'pi_abc123',
-  paymentMethodId: 'pm-1',
+  paymentMethodId: toEntityId<'PaymentMethod'>('pm-1'),
   actionUrl: null,
   idempotencyKey: 'key-1',
   failureCode: null,
@@ -48,7 +48,7 @@ const sampleTransaction: PaymentTransactionResponse = {
 };
 
 const sampleRefund: PaymentRefundResponse = {
-  id: 'ref-1',
+  id: toEntityId<'PaymentRefund'>('ref-1'),
   amount: 2000,
   currency: 'EUR',
   status: 'Succeeded',
@@ -65,7 +65,7 @@ const sampleCheckoutSession: PaymentCheckoutSessionResponse = {
 };
 
 const sampleMethod: PaymentMethodResponse = {
-  id: 'pm-1',
+  id: toEntityId<'PaymentMethod'>('pm-1'),
   type: 'card',
   providerName: 'Stripe',
   providerMethodId: 'pm_abc123',
@@ -100,7 +100,11 @@ describe('payments-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse(sampleTransaction));
 
-      const result = await getPaymentTransaction(client, basePath, 'txn-1');
+      const result = await getPaymentTransaction(
+        client,
+        basePath,
+        toEntityId<'PaymentTransaction'>('txn-1')
+      );
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/transactions/txn-1`);
       expect(result).toEqual(sampleTransaction);
@@ -110,7 +114,11 @@ describe('payments-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse(sampleTransaction));
 
-      await getPaymentTransaction(client, basePath, 'txn/special@id');
+      await getPaymentTransaction(
+        client,
+        basePath,
+        toEntityId<'PaymentTransaction'>('txn/special@id')
+      );
 
       expect(client.get).toHaveBeenCalledWith(
         `${basePath}/transactions/${encodeURIComponent('txn/special@id')}`
@@ -122,7 +130,7 @@ describe('payments-api', () => {
     it('should POST {basePath}/charge', async () => {
       const client = createMockClient();
       const request: PaymentChargeRequest = {
-        invoiceId: 'inv-1',
+        invoiceId: toEntityId<'Invoice'>('inv-1'),
         amount: 5000,
         currency: 'EUR',
         methodType: 'card',
@@ -142,7 +150,7 @@ describe('payments-api', () => {
     it('should POST {basePath}/refund', async () => {
       const client = createMockClient();
       const request: PaymentRefundRequest = {
-        transactionId: 'txn-1',
+        transactionId: toEntityId<'PaymentTransaction'>('txn-1'),
         amount: 2000,
         reason: 'Customer request',
         idempotencyKey: 'key-2',
@@ -160,7 +168,7 @@ describe('payments-api', () => {
     it('should POST {basePath}/checkout', async () => {
       const client = createMockClient();
       const request: PaymentCheckoutRequest = {
-        transactionId: 'txn-1',
+        transactionId: toEntityId<'PaymentTransaction'>('txn-1'),
         amount: 5000,
         currency: 'EUR',
         methodType: 'card',
@@ -223,7 +231,7 @@ describe('payments-api', () => {
       const client = createMockClient();
       vi.mocked(client.delete).mockResolvedValue(axiosResponse(undefined));
 
-      await detachPaymentMethod(client, basePath, 'pm-1');
+      await detachPaymentMethod(client, basePath, toEntityId<'PaymentMethod'>('pm-1'));
 
       expect(client.delete).toHaveBeenCalledWith(`${basePath}/methods/pm-1`);
     });
@@ -232,7 +240,7 @@ describe('payments-api', () => {
       const client = createMockClient();
       vi.mocked(client.delete).mockResolvedValue(axiosResponse(undefined));
 
-      await detachPaymentMethod(client, basePath, 'pm/special@id');
+      await detachPaymentMethod(client, basePath, toEntityId<'PaymentMethod'>('pm/special@id'));
 
       expect(client.delete).toHaveBeenCalledWith(
         `${basePath}/methods/${encodeURIComponent('pm/special@id')}`

@@ -3,6 +3,7 @@ import type {
   IdentityUserCreateRequest,
   IdentityUserUpdateRequest,
 } from '../types/index.js';
+import type { UserId } from '@granit/types';
 import type { AxiosInstance } from 'axios';
 
 export type IdentityProviderUserListParams = {
@@ -33,7 +34,7 @@ export async function fetchProviderUsers(
 export async function fetchProviderUser(
   client: AxiosInstance,
   basePath: string,
-  userId: string
+  userId: UserId
 ): Promise<IdentityUser> {
   const response = await client.get<IdentityUser>(
     `${basePath}/users/${encodeURIComponent(userId)}`
@@ -64,7 +65,7 @@ export async function createUser(
 export async function updateUser(
   client: AxiosInstance,
   basePath: string,
-  userId: string,
+  userId: UserId,
   request: IdentityUserUpdateRequest
 ): Promise<IdentityUser> {
   const response = await client.put<IdentityUser>(
@@ -82,7 +83,7 @@ export async function updateUser(
 export async function setUserEnabled(
   client: AxiosInstance,
   basePath: string,
-  userId: string,
+  userId: UserId,
   enabled: boolean
 ): Promise<void> {
   await client.patch(`${basePath}/users/${encodeURIComponent(userId)}/enabled`, { enabled });

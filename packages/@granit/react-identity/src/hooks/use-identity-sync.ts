@@ -7,6 +7,7 @@ import type {
   IdentityUserCacheSyncAllResult,
   IdentityUserCacheSyncStaleResult,
 } from '@granit/identity';
+import type { UserId } from '@granit/types';
 import type { UseMutationResult } from '@tanstack/react-query';
 
 /**
@@ -25,7 +26,7 @@ import type { UseMutationResult } from '@tanstack/react-query';
  * ```
  */
 export function useIdentitySync(): {
-  sync: UseMutationResult<void, Error, string[]>;
+  sync: UseMutationResult<void, Error, UserId[]>;
   syncAll: UseMutationResult<IdentityUserCacheSyncAllResult, Error, void>;
   syncStale: UseMutationResult<IdentityUserCacheSyncStaleResult, Error, void>;
 } {
@@ -34,7 +35,7 @@ export function useIdentitySync(): {
   const basePath = config.basePath ?? '/identity/users';
 
   const sync = useMutation({
-    mutationFn: (userIds: string[]) => syncUsers(config.client, basePath, userIds),
+    mutationFn: (userIds: UserId[]) => syncUsers(config.client, basePath, userIds),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildIdentityQueryKey(config, 'users'),

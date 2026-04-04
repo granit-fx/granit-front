@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toEntityId } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -20,7 +21,7 @@ import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
 const sampleRole: IdentityRole = {
-  id: 'role-1',
+  id: toEntityId<'IdentityRole'>('role-1'),
   name: 'admin',
   description: 'Administrator',
 };
@@ -62,7 +63,7 @@ describe('use-identity-roles', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: [sampleRole] });
 
-      const { result } = renderHook(() => useUserRoles('user-1'), {
+      const { result } = renderHook(() => useUserRoles(toEntityId<'User'>('user-1')), {
         wrapper: createWrapper(client),
       });
 
@@ -73,7 +74,7 @@ describe('use-identity-roles', () => {
     it('is disabled when userId is empty', async () => {
       const client = createMockClient();
 
-      const { result } = renderHook(() => useUserRoles(''), {
+      const { result } = renderHook(() => useUserRoles(toEntityId<'User'>('')), {
         wrapper: createWrapper(client),
       });
 
@@ -116,7 +117,7 @@ describe('use-identity-roles', () => {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate({ userId: 'user-1', roleName: 'admin' });
+      result.current.mutate({ userId: toEntityId<'User'>('user-1'), roleName: 'admin' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.put).toHaveBeenCalledWith('/identity/provider/users/user-1/roles/admin');
@@ -132,7 +133,7 @@ describe('use-identity-roles', () => {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate({ userId: 'user-1', roleName: 'admin' });
+      result.current.mutate({ userId: toEntityId<'User'>('user-1'), roleName: 'admin' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.delete).toHaveBeenCalledWith('/identity/provider/users/user-1/roles/admin');
@@ -146,7 +147,7 @@ describe('use-identity-roles', () => {
         wrapper: createWrapper(client, '/custom/provider'),
       });
 
-      result.current.mutate({ userId: 'user-1', roleName: 'admin' });
+      result.current.mutate({ userId: toEntityId<'User'>('user-1'), roleName: 'admin' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.delete).toHaveBeenCalledWith('/custom/provider/users/user-1/roles/admin');

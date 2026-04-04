@@ -1,4 +1,4 @@
-import { toISODateString } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createSignalRTransport } from '../transports/create-signalr-transport.js';
@@ -123,7 +123,7 @@ describe('createSignalRTransport', () => {
     const handler = receiveCall![1] as (m: NotificationTransportMessage) => void;
 
     const mockMsg: NotificationTransportMessage = {
-      notificationId: 'n-1',
+      notificationId: toEntityId<'Notification'>('n-1'),
       notificationTypeName: 'SystemAlert',
       severity: 'Info',
       data: { title: 'Test' },
@@ -185,7 +185,7 @@ describe('createSignalRTransport', () => {
     const handler = receiveCall![1] as (m: NotificationTransportMessage) => void;
 
     handler({
-      notificationId: 'n-1',
+      notificationId: toEntityId<'Notification'>('n-1'),
       notificationTypeName: 'SystemAlert',
       severity: 'Info',
       data: { title: 'Test' },

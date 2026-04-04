@@ -1,6 +1,14 @@
+import type { EntityId, TenantId } from '@granit/types';
+
 // ---------------------------------------------------------------------------
 // Webhook types — mirrors Granit.Webhooks .NET contract
 // ---------------------------------------------------------------------------
+
+/** Branded webhook subscription identifier. */
+export type WebhookSubscriptionId = EntityId<'WebhookSubscription'>;
+
+/** Branded webhook delivery identifier. */
+export type WebhookDeliveryId = EntityId<'WebhookDelivery'>;
 
 /**
  * Webhook subscription lifecycle status.
@@ -38,7 +46,7 @@ export interface WebhookSubscriptionDeactivateRequest {
 
 /** Subscription descriptor returned by most endpoints. */
 export interface WebhookSubscriptionResponse {
-  readonly id: string;
+  readonly id: WebhookSubscriptionId;
   readonly targetUrl: string;
   readonly eventType: string;
   readonly status: WebhookSubscriptionStatusValue;
@@ -50,7 +58,7 @@ export interface WebhookSubscriptionResponse {
 
 /** Response from `POST /subscriptions` (201 Created). Contains the signing secret (shown once). */
 export interface WebhookSubscriptionCreatedResponse {
-  readonly id: string;
+  readonly id: WebhookSubscriptionId;
   readonly targetUrl: string;
   readonly eventType: string;
   readonly status: WebhookSubscriptionStatusValue;
@@ -101,9 +109,9 @@ export interface WebhookModuleConfig {
 
 /** Immutable delivery attempt record (ISO 27001 audit trail). */
 export interface WebhookDeliveryAttemptResponse {
-  readonly deliveryId: string;
-  readonly subscriptionId: string;
-  readonly tenantId: string | null;
+  readonly deliveryId: WebhookDeliveryId;
+  readonly subscriptionId: WebhookSubscriptionId;
+  readonly tenantId: TenantId | null;
   readonly eventType: string;
   readonly targetUrl: string;
   readonly httpStatusCode: number | null;

@@ -1,6 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -23,14 +23,14 @@ import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
 const sampleBalance: CustomerBalanceResponse = {
-  balanceAccountId: 'ba-001',
+  balanceAccountId: toEntityId<'BalanceAccount'>('ba-001'),
   currency: 'EUR',
   balance: 150.0,
   updatedAt: toISODateString('2026-04-01T10:00:00Z'),
 };
 
 const sampleTransaction: BalanceTransactionResponse = {
-  id: 'tx-001',
+  id: toEntityId<'BalanceTransaction'>('tx-001'),
   type: 'Credit',
   amount: 50.0,
   source: 'Promotional',

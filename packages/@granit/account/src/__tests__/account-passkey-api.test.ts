@@ -1,5 +1,5 @@
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -16,7 +16,7 @@ const BASE = '/api/account';
 
 const mockPasskeys: readonly AccountPasskeyInfo[] = [
   {
-    id: 'pk-001',
+    id: toEntityId<'Passkey'>('pk-001'),
     name: 'MacBook Pro',
     createdAt: toISODateString('2026-03-01T08:00:00Z'),
     lastUsedAt: toISODateString('2026-03-20T10:00:00Z'),
@@ -53,7 +53,7 @@ describe('account-passkey-api', () => {
     it('sends POST /passkeys/register/complete with credential', async () => {
       const client = createMockClient();
       const response: AccountPasskeyCreatedResponse = {
-        id: 'pk-002',
+        id: toEntityId<'Passkey'>('pk-002'),
         name: 'iPhone',
         createdAt: toISODateString('2026-03-21T12:00:00Z'),
       };

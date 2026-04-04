@@ -15,6 +15,7 @@ import type {
   IdentityUserCreateRequest,
   IdentityUserUpdateRequest,
 } from '@granit/identity';
+import type { UserId } from '@granit/types';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -47,7 +48,7 @@ export function useProviderUsers(
  * const { data: user } = useProviderUser(selectedUserId);
  * ```
  */
-export function useProviderUser(userId: string): UseQueryResult<IdentityUser> {
+export function useProviderUser(userId: UserId): UseQueryResult<IdentityUser> {
   const config = useIdentityConfig();
   const basePath = config.providerBasePath ?? '/identity/provider';
 
@@ -86,7 +87,7 @@ export function useCreateUser(): UseMutationResult<IdentityUser, Error, Identity
 
 /** Variables for `useUpdateUser` mutation. */
 export type UpdateUserVariables = {
-  readonly userId: string;
+  readonly userId: UserId;
   readonly request: IdentityUserUpdateRequest;
 };
 
@@ -118,7 +119,7 @@ export function useUpdateUser(): UseMutationResult<IdentityUser, Error, UpdateUs
 
 /** Variables for `useSetUserEnabled` mutation. */
 export type SetUserEnabledVariables = {
-  readonly userId: string;
+  readonly userId: UserId;
   readonly enabled: boolean;
 };
 

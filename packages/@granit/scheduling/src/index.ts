@@ -2,6 +2,7 @@
 export {
   ScheduledActionStatus,
   type RescheduleActionRequest,
+  type ScheduledActionId,
   type ScheduledActionResponse,
 } from './types/index.js';
 

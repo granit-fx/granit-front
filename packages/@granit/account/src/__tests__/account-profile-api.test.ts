@@ -1,4 +1,5 @@
 import { createMockClient } from '@granit/testing';
+import { toEntityId } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import { getProfile, updateProfile } from '../api/account-profile-api.js';
@@ -8,7 +9,7 @@ import type { AccountProfileResponse } from '../types/index.js';
 const BASE = '/api/account';
 
 const mockProfile: AccountProfileResponse = {
-  userId: '550e8400-e29b-41d4-a716-446655440000',
+  userId: toEntityId<'User'>('550e8400-e29b-41d4-a716-446655440000'),
   email: 'user@example.com',
   emailConfirmed: true,
   firstName: 'John',

@@ -1820,7 +1820,7 @@
         {
           "name": "useBatchResolveUsers",
           "kind": "function",
-          "signature": "function useBatchResolveUsers(): UseMutationResult< readonly IdentityUser[], Error, string[] >"
+          "signature": "function useBatchResolveUsers(): UseMutationResult< readonly IdentityUser[], Error, UserId[] >"
         },
         {
           "name": "useIdentityCapabilities",
@@ -1840,7 +1840,7 @@
         {
           "name": "useIdentityUser",
           "kind": "function",
-          "signature": "function useIdentityUser(userId: string): UseQueryResult<IdentityUser>"
+          "signature": "function useIdentityUser(userId: UserId): UseQueryResult<IdentityUser>"
         },
         {
           "name": "useIdentityUsers",
@@ -1850,22 +1850,22 @@
         {
           "name": "RoleMutationVariables",
           "kind": "type",
-          "signature": "type RoleMutationVariables = { readonly userId: string; readonly roleName: string; }"
+          "signature": "type RoleMutationVariables = { readonly userId: UserId; readonly roleName: string; }"
         },
         {
           "name": "GroupMutationVariables",
           "kind": "type",
-          "signature": "type GroupMutationVariables = { readonly userId: string; readonly groupId: string; }"
+          "signature": "type GroupMutationVariables = { readonly userId: UserId; readonly groupId: string; }"
         },
         {
           "name": "TerminateSessionVariables",
           "kind": "type",
-          "signature": "type TerminateSessionVariables = { readonly userId: string; readonly sessionId: string; }"
+          "signature": "type TerminateSessionVariables = { readonly userId: UserId; readonly sessionId: IdentitySessionId; }"
         },
         {
           "name": "SetTemporaryPasswordVariables",
           "kind": "type",
-          "signature": "type SetTemporaryPasswordVariables = { readonly userId: string; readonly password: string; }"
+          "signature": "type SetTemporaryPasswordVariables = { readonly userId: UserId; readonly password: string; }"
         }
       ]
     },
@@ -1934,7 +1934,7 @@
         {
           "name": "UpdateMeterDefinitionVariables",
           "kind": "type",
-          "signature": "type UpdateMeterDefinitionVariables = { readonly id: string; readonly request: MeterDefinitionUpdateRequest; }"
+          "signature": "type UpdateMeterDefinitionVariables = { readonly id: MeterDefinitionId; readonly request: MeterDefinitionUpdateRequest; }"
         }
       ]
     },
@@ -2479,17 +2479,17 @@
         {
           "name": "useAssignSeat",
           "kind": "function",
-          "signature": "function useAssignSeat( subscriptionId: string ): UseMutationResult<SeatResponse, Error, AssignSeatVariables>"
+          "signature": "function useAssignSeat( subscriptionId: SubscriptionId ): UseMutationResult<SeatResponse, Error, AssignSeatVariables>"
         },
         {
           "name": "useRevokeSeat",
           "kind": "function",
-          "signature": "function useRevokeSeat( subscriptionId: string ): UseMutationResult<void, Error, RevokeSeatVariables>"
+          "signature": "function useRevokeSeat( subscriptionId: SubscriptionId ): UseMutationResult<void, Error, RevokeSeatVariables>"
         },
         {
           "name": "useSeats",
           "kind": "function",
-          "signature": "function useSeats(subscriptionId: string): UseQueryResult<readonly SeatResponse[]>"
+          "signature": "function useSeats( subscriptionId: SubscriptionId | '' ): UseQueryResult<readonly SeatResponse[]>"
         },
         {
           "name": "AssignSeatVariables",
@@ -2499,7 +2499,7 @@
         {
           "name": "RevokeSeatVariables",
           "kind": "type",
-          "signature": "type RevokeSeatVariables = { readonly userId: string; }"
+          "signature": "type RevokeSeatVariables = { readonly userId: UserId; }"
         }
       ]
     },
@@ -3107,17 +3107,17 @@
         {
           "name": "assignSeat",
           "kind": "function",
-          "signature": "async function assignSeat( client: AxiosInstance, basePath: string, subscriptionId: string, request: SeatAssignRequest ): Promise<SeatResponse>"
+          "signature": "async function assignSeat( client: AxiosInstance, basePath: string, subscriptionId: SubscriptionId, request: SeatAssignRequest ): Promise<SeatResponse>"
         },
         {
           "name": "listSeats",
           "kind": "function",
-          "signature": "async function listSeats( client: AxiosInstance, basePath: string, subscriptionId: string ): Promise<readonly SeatResponse[]>"
+          "signature": "async function listSeats( client: AxiosInstance, basePath: string, subscriptionId: SubscriptionId ): Promise<readonly SeatResponse[]>"
         },
         {
           "name": "revokeSeat",
           "kind": "function",
-          "signature": "async function revokeSeat( client: AxiosInstance, basePath: string, subscriptionId: string, userId: string ): Promise<void>"
+          "signature": "async function revokeSeat( client: AxiosInstance, basePath: string, subscriptionId: SubscriptionId, userId: UserId ): Promise<void>"
         }
       ]
     },
@@ -3265,9 +3265,39 @@
       "description": "Cross-cutting branded types for the Granit framework",
       "exports": [
         {
+          "name": "toEntityId",
+          "kind": "function",
+          "signature": "function toEntityId<Brand extends string>(value: string): EntityId<Brand>"
+        },
+        {
           "name": "toISODateString",
           "kind": "function",
           "signature": "function toISODateString(value: string): ISODateString"
+        },
+        {
+          "name": "CurrencyCode",
+          "kind": "type",
+          "signature": "type CurrencyCode ="
+        },
+        {
+          "name": "CorrelationId",
+          "kind": "type",
+          "signature": "type CorrelationId = EntityId<'Correlation'>"
+        },
+        {
+          "name": "EntityId",
+          "kind": "type",
+          "signature": "type EntityId<Brand extends string> = string & { readonly __entity: Brand; }"
+        },
+        {
+          "name": "TenantId",
+          "kind": "type",
+          "signature": "type TenantId = EntityId<'Tenant'>"
+        },
+        {
+          "name": "UserId",
+          "kind": "type",
+          "signature": "type UserId = EntityId<'User'>"
         },
         {
           "name": "ISODateString",

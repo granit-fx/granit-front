@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toEntityId } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -20,7 +21,7 @@ import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
 const sampleUser: IdentityUser = {
-  userId: 'user-1',
+  userId: toEntityId<'User'>('user-1'),
   username: 'jdoe',
   email: 'jdoe@example.com',
   firstName: 'John',
@@ -95,7 +96,7 @@ describe('use-identity-provider-users', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: sampleUser });
 
-      const { result } = renderHook(() => useProviderUser('user-1'), {
+      const { result } = renderHook(() => useProviderUser(toEntityId<'User'>('user-1')), {
         wrapper: createWrapper(client),
       });
 
@@ -107,7 +108,7 @@ describe('use-identity-provider-users', () => {
     it('is disabled when userId is empty', async () => {
       const client = createMockClient();
 
-      const { result } = renderHook(() => useProviderUser(''), {
+      const { result } = renderHook(() => useProviderUser(toEntityId<'User'>('')), {
         wrapper: createWrapper(client),
       });
 
@@ -145,7 +146,10 @@ describe('use-identity-provider-users', () => {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate({ userId: 'user-1', request: { email: 'new@example.com' } });
+      result.current.mutate({
+        userId: toEntityId<'User'>('user-1'),
+        request: { email: 'new@example.com' },
+      });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.put).toHaveBeenCalledWith('/identity/provider/users/user-1', {
@@ -163,7 +167,7 @@ describe('use-identity-provider-users', () => {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate({ userId: 'user-1', enabled: false });
+      result.current.mutate({ userId: toEntityId<'User'>('user-1'), enabled: false });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.patch).toHaveBeenCalledWith('/identity/provider/users/user-1/enabled', {
@@ -179,7 +183,7 @@ describe('use-identity-provider-users', () => {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate({ userId: 'user-1', enabled: false });
+      result.current.mutate({ userId: toEntityId<'User'>('user-1'), enabled: false });
 
       await waitFor(() => expect(result.current.isError).toBe(true));
       expect(result.current.error?.message).toBe('Forbidden');

@@ -1,10 +1,12 @@
+import type { UserId } from '@granit/types';
+
 // ---------------------------------------------------------------------------
 // Account profile types — mirrors Granit.OpenIddict.Endpoints .NET contract
 // ---------------------------------------------------------------------------
 
 /** Response from `GET /profile`. */
 export interface AccountProfileResponse {
-  readonly userId: string;
+  readonly userId: UserId;
   readonly email: string;
   readonly emailConfirmed: boolean;
   readonly firstName: string | null;

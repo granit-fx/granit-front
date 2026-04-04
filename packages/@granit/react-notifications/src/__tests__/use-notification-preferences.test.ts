@@ -1,3 +1,4 @@
+import { toEntityId } from '@granit/types';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -14,22 +15,22 @@ import type { NotificationPreference } from '@granit/notifications';
 
 const MOCK_PREFS: NotificationPreference[] = [
   {
-    id: 'pref-1',
-    userId: 'u-1',
+    id: toEntityId<'NotificationPreference'>('pref-1'),
+    userId: toEntityId<'User'>('u-1'),
     notificationTypeName: 'AppointmentReminder',
     channelName: 'InApp',
     isEnabled: true,
   },
   {
-    id: 'pref-2',
-    userId: 'u-1',
+    id: toEntityId<'NotificationPreference'>('pref-2'),
+    userId: toEntityId<'User'>('u-1'),
     notificationTypeName: 'AppointmentReminder',
     channelName: 'Email',
     isEnabled: true,
   },
   {
-    id: 'pref-3',
-    userId: 'u-1',
+    id: toEntityId<'NotificationPreference'>('pref-3'),
+    userId: toEntityId<'User'>('u-1'),
     notificationTypeName: 'SystemAlert',
     channelName: 'InApp',
     isEnabled: true,

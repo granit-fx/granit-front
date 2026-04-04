@@ -1,4 +1,4 @@
-import type { ISODateString } from '@granit/types';
+import type { EntityId, ISODateString } from '@granit/types';
 
 /** API key type. Mirrors Granit.Authentication.ApiKeys.ApiKeyType .NET. */
 export type ApiKeyType = 'Secret' | 'Publishable' | 'Webhook' | 'Ephemeral';
@@ -6,9 +6,12 @@ export type ApiKeyType = 'Secret' | 'Publishable' | 'Webhook' | 'Ephemeral';
 /** Cache behavior for API key lookups. */
 export type CacheBehavior = 'Normal' | 'NoCache';
 
+/** Branded API key identifier. */
+export type ApiKeyId = EntityId<'ApiKey'>;
+
 /** API key response DTO. */
 export interface ApiKeyResponse {
-  readonly id: string;
+  readonly id: ApiKeyId;
   readonly name: string;
   readonly type: ApiKeyType;
   readonly environment: string;
@@ -36,7 +39,7 @@ export interface ApiKeyCreateRequest {
 
 /** Response after creating a new API key (includes the raw secret). */
 export interface ApiKeyCreateResponse {
-  readonly id: string;
+  readonly id: ApiKeyId;
   readonly rawSecret: string;
   readonly prefix: string;
   readonly lastFourChars: string;
@@ -48,11 +51,11 @@ export interface ApiKeyCreateResponse {
 
 /** Response after rotating an API key. */
 export interface ApiKeyRotateResponse {
-  readonly newKeyId: string;
+  readonly newKeyId: ApiKeyId;
   readonly rawSecret: string;
   readonly prefix: string;
   readonly lastFourChars: string;
-  readonly oldKeyId: string;
+  readonly oldKeyId: ApiKeyId;
 }
 
 /** Request to update API key scopes. */

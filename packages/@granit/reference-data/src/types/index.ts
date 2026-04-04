@@ -1,5 +1,5 @@
 import type { PaginationParams } from '@granit/query-engine';
-import type { ISODateString } from '@granit/types';
+import type { EntityId, ISODateString } from '@granit/types';
 
 /** The 14 multilingual labels supported by Granit reference data. */
 export interface ReferenceDataLabels {
@@ -26,8 +26,11 @@ export interface ReferenceDataLabels {
  * Concrete entity types (Country, Currency, Language, etc.) extend this
  * interface with domain-specific fields in the consuming application.
  */
+/** Branded reference data entry identifier. */
+export type ReferenceDataEntryId = EntityId<'ReferenceDataEntry'>;
+
 export interface ReferenceDataEntry extends ReferenceDataLabels {
-  readonly id: string;
+  readonly id: ReferenceDataEntryId;
   readonly code: string;
   /** Resolved label for the current UI culture (server-computed, not persisted). */
   readonly label: string;

@@ -1,5 +1,5 @@
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -15,14 +15,14 @@ import type {
 } from '../types.js';
 
 const sampleBalance: CustomerBalanceResponse = {
-  balanceAccountId: 'ba-001',
+  balanceAccountId: toEntityId<'BalanceAccount'>('ba-001'),
   currency: 'EUR',
   balance: 150.0,
   updatedAt: toISODateString('2026-04-01T10:00:00Z'),
 };
 
 const sampleTransaction: BalanceTransactionResponse = {
-  id: 'tx-001',
+  id: toEntityId<'BalanceTransaction'>('tx-001'),
   type: 'Credit',
   amount: 50.0,
   source: 'Promotional',

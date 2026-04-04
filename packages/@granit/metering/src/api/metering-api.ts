@@ -1,5 +1,6 @@
 import type {
   MeterDefinitionCreateRequest,
+  MeterDefinitionId,
   MeterDefinitionResponse,
   MeterDefinitionUpdateRequest,
   MeteringQuotaStatusResponse,
@@ -29,7 +30,7 @@ export async function listActiveMeters(
 export async function getMeterDefinition(
   client: AxiosInstance,
   basePath: string,
-  id: string
+  id: MeterDefinitionId
 ): Promise<MeterDefinitionResponse> {
   const response = await client.get<MeterDefinitionResponse>(
     `${basePath}/meters/${encodeURIComponent(id)}`
@@ -59,7 +60,7 @@ export async function createMeterDefinition(
 export async function updateMeterDefinition(
   client: AxiosInstance,
   basePath: string,
-  id: string,
+  id: MeterDefinitionId,
   request: MeterDefinitionUpdateRequest
 ): Promise<MeterDefinitionResponse> {
   const response = await client.put<MeterDefinitionResponse>(
@@ -77,7 +78,7 @@ export async function updateMeterDefinition(
 export async function deactivateMeterDefinition(
   client: AxiosInstance,
   basePath: string,
-  id: string
+  id: MeterDefinitionId
 ): Promise<void> {
   await client.post(`${basePath}/meters/${encodeURIComponent(id)}/deactivate`);
 }
@@ -103,7 +104,7 @@ export async function getUsageForPeriod(
 export async function checkMeteringQuota(
   client: AxiosInstance,
   basePath: string,
-  meterId: string
+  meterId: MeterDefinitionId
 ): Promise<MeteringQuotaStatusResponse> {
   const response = await client.get<MeteringQuotaStatusResponse>(
     `${basePath}/quota/${encodeURIComponent(meterId)}`

@@ -1,6 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -68,13 +68,13 @@ function createWrapperWithQueryClient(client: AxiosInstance) {
 
 const mockPasskeys: readonly AccountPasskeyInfo[] = [
   {
-    id: 'pk-001',
+    id: toEntityId<'Passkey'>('pk-001'),
     name: 'YubiKey 5',
     createdAt: toISODateString('2026-03-01T08:00:00Z'),
     lastUsedAt: toISODateString('2026-03-20T10:00:00Z'),
   },
   {
-    id: 'pk-002',
+    id: toEntityId<'Passkey'>('pk-002'),
     name: null,
     createdAt: toISODateString('2026-03-10T12:00:00Z'),
     lastUsedAt: null,
@@ -136,7 +136,7 @@ describe('useCompletePasskeyRegistration', () => {
   it('should call completePasskeyRegistration and invalidate passkeys on success', async () => {
     const client = createMockClient();
     const response: AccountPasskeyCreatedResponse = {
-      id: 'pk-003',
+      id: toEntityId<'Passkey'>('pk-003'),
       name: 'New Key',
       createdAt: toISODateString('2026-03-21T09:00:00Z'),
     };
@@ -172,13 +172,21 @@ describe('useRenamePasskey', () => {
 
     const { result } = renderHook(() => useRenamePasskey(), { wrapper });
 
-    result.current.mutate({ id: 'pk-001', request: { name: 'Renamed Key' } });
+    result.current.mutate({
+      id: toEntityId<'Passkey'>('pk-001'),
+      request: { name: 'Renamed Key' },
+    });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(renamePasskey).toHaveBeenCalledWith(client, '/api/account', 'pk-001', {
-      name: 'Renamed Key',
-    });
+    expect(renamePasskey).toHaveBeenCalledWith(
+      client,
+      '/api/account',
+      toEntityId<'Passkey'>('pk-001'),
+      {
+        name: 'Renamed Key',
+      }
+    );
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['account', 'passkeys'],
     });
@@ -195,11 +203,15 @@ describe('useDeletePasskey', () => {
 
     const { result } = renderHook(() => useDeletePasskey(), { wrapper });
 
-    result.current.mutate('pk-001');
+    result.current.mutate(toEntityId<'Passkey'>('pk-001'));
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(deletePasskey).toHaveBeenCalledWith(client, '/api/account', 'pk-001');
+    expect(deletePasskey).toHaveBeenCalledWith(
+      client,
+      '/api/account',
+      toEntityId<'Passkey'>('pk-001')
+    );
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['account', 'passkeys'],
     });
@@ -213,7 +225,7 @@ describe('useDeletePasskey', () => {
       wrapper: createWrapper(client),
     });
 
-    result.current.mutate('pk-999');
+    result.current.mutate(toEntityId<'Passkey'>('pk-999'));
 
     await waitFor(() => expect(result.current.isError).toBe(true));
     expect(result.current.error?.message).toBe('Not Found');

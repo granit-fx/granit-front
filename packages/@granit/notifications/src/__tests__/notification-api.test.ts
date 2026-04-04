@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/api-client/test-utils';
+import { toEntityId } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -114,8 +115,8 @@ describe('notification-api', () => {
   // -----------------------------------------------------------------------
   it('should send PUT with preference data (updatePreference)', async () => {
     const pref: NotificationPreference = {
-      id: 'pref-1',
-      userId: 'u-1',
+      id: toEntityId<'NotificationPreference'>('pref-1'),
+      userId: toEntityId<'User'>('u-1'),
       notificationTypeName: 'AppointmentReminder',
       channelName: 'InApp',
       isEnabled: true,

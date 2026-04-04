@@ -1,4 +1,4 @@
-import { toISODateString } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -123,7 +123,7 @@ describe('NotificationProvider', () => {
     await waitFor(() => expect(result.current.connectionState).toBe('connected'));
 
     const mockMsg: NotificationTransportMessage = {
-      notificationId: 'n-99',
+      notificationId: toEntityId<'Notification'>('n-99'),
       notificationTypeName: 'SystemAlert',
       severity: 'Info',
       data: { title: 'Real-time notification' },

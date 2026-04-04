@@ -1,4 +1,5 @@
 export type {
+  ApiKeyId,
   ApiKeyType,
   CacheBehavior,
   ApiKeyResponse,

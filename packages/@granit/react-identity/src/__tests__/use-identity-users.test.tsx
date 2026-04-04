@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toEntityId } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -30,7 +31,7 @@ function createWrapper(client: AxiosInstance, basePath?: string) {
 }
 
 const mockUser: IdentityUser = {
-  userId: 'user-1',
+  userId: toEntityId<'User'>('user-1'),
   username: 'jdoe',
   email: 'jdoe@example.com',
   firstName: 'John',
@@ -119,7 +120,7 @@ describe('useIdentityUser', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: mockUser });
 
-    const { result } = renderHook(() => useIdentityUser('user-1'), {
+    const { result } = renderHook(() => useIdentityUser(toEntityId<'User'>('user-1')), {
       wrapper: createWrapper(client),
     });
 
@@ -130,7 +131,7 @@ describe('useIdentityUser', () => {
   it('is disabled when userId is empty', () => {
     const client = createMockClient();
 
-    const { result } = renderHook(() => useIdentityUser(''), {
+    const { result } = renderHook(() => useIdentityUser(toEntityId<'User'>('')), {
       wrapper: createWrapper(client),
     });
 
@@ -142,7 +143,7 @@ describe('useIdentityUser', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockRejectedValue(new Error('Not found'));
 
-    const { result } = renderHook(() => useIdentityUser('user-1'), {
+    const { result } = renderHook(() => useIdentityUser(toEntityId<'User'>('user-1')), {
       wrapper: createWrapper(client),
     });
 

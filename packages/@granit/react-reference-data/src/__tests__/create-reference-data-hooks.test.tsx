@@ -1,5 +1,6 @@
 import { createQueryWrapper } from '@granit/react-testing';
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toEntityId } from '@granit/types';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -12,7 +13,7 @@ interface TestEntity extends ReferenceDataEntry {
 }
 
 const mockEntry: TestEntity = {
-  id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+  id: toEntityId<'ReferenceDataEntry'>('a1b2c3d4-e5f6-7890-abcd-ef1234567890'),
   code: 'BE',
   labelEn: 'Belgium',
   labelFr: 'Belgique',

@@ -1,15 +1,19 @@
 // Types
 export type {
   ActivityFeedEntry,
+  ActivityFeedEntryId,
   ActivityFeedPage,
   ConnectionState,
   NotificationChannel,
   NotificationConfig,
+  NotificationId,
   NotificationPreference,
+  NotificationPreferenceId,
   NotificationSeverity,
   NotificationTransport,
   NotificationTransportMessage,
   UserNotification,
+  UserNotificationId,
   UserNotificationPage,
   UserNotificationState,
 } from './types/index.js';

@@ -8,6 +8,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider.js';
 
 import type { IdentityPasswordChangedAtResponse } from '@granit/identity';
+import type { UserId } from '@granit/types';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -22,7 +23,7 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
  * ```
  */
 export function usePasswordChangedAt(
-  userId: string
+  userId: UserId
 ): UseQueryResult<IdentityPasswordChangedAtResponse> {
   const config = useIdentityConfig();
   const basePath = config.providerBasePath ?? '/identity/provider';
@@ -44,18 +45,18 @@ export function usePasswordChangedAt(
  * await sendReset.mutateAsync('user-1');
  * ```
  */
-export function useSendPasswordResetEmail(): UseMutationResult<void, Error, string> {
+export function useSendPasswordResetEmail(): UseMutationResult<void, Error, UserId> {
   const config = useIdentityConfig();
   const basePath = config.providerBasePath ?? '/identity/provider';
 
   return useMutation({
-    mutationFn: (userId: string) => sendPasswordResetEmail(config.client, basePath, userId),
+    mutationFn: (userId: UserId) => sendPasswordResetEmail(config.client, basePath, userId),
   });
 }
 
 /** Variables for `useSetTemporaryPassword` mutation. */
 export type SetTemporaryPasswordVariables = {
-  readonly userId: string;
+  readonly userId: UserId;
   readonly password: string;
 };
 

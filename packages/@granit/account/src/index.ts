@@ -22,6 +22,7 @@ export type {
   AccountPasskeyInfo,
   AccountPasskeyRegistrationRequest,
   AccountPasskeyRenameRequest,
+  PasskeyId,
 } from './types/index.js';
 export type { AccountImpersonationResult } from './types/index.js';
 export type { AccountDeleteRequest } from './types/index.js';
