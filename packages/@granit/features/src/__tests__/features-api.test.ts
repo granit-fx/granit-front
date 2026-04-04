@@ -1,122 +1,158 @@
-import { createMockClient } from '@granit/testing';
+import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
   deleteFeatureOverride,
-  fetchFeatureDefinitions,
-  fetchFeatureValue,
-  fetchFeatureValues,
+  getAllFeatureValues,
+  getFeatureDefinitions,
+  getFeatureValue,
   setFeatureOverride,
 } from '../api/features-api.js';
 
+import type { FeatureGroupResponse, FeatureValueResponse } from '../types.js';
+
+const basePath = '/api/granit/features';
+
+const sampleGroup: FeatureGroupResponse = {
+  name: 'ui',
+  displayName: 'User Interface',
+  features: [
+    {
+      name: 'ui.dark-mode',
+      defaultValue: 'false',
+      valueType: 'Toggle',
+      numericConstraint: null,
+      selectionValues: null,
+      displayName: 'Dark Mode',
+      description: 'Enable dark mode for the application.',
+    },
+    {
+      name: 'ui.max-items',
+      defaultValue: '50',
+      valueType: 'Numeric',
+      numericConstraint: { min: 10, max: 200 },
+      selectionValues: null,
+      displayName: 'Max Items',
+      description: null,
+    },
+    {
+      name: 'ui.theme',
+      defaultValue: 'light',
+      valueType: 'Selection',
+      numericConstraint: null,
+      selectionValues: ['light', 'dark', 'system'],
+      displayName: null,
+      description: null,
+    },
+  ],
+};
+
+const sampleValue: FeatureValueResponse = {
+  name: 'ui.dark-mode',
+  value: 'true',
+};
+
 describe('features-api', () => {
-  describe('fetchFeatureDefinitions', () => {
-    it('should GET /features/definitions', async () => {
+  describe('getFeatureDefinitions', () => {
+    it('should GET {basePath}/definitions', async () => {
       const client = createMockClient();
-      const data = [{ name: 'Acme', displayName: 'Acme Features', features: [] }];
-      vi.mocked(client.get).mockResolvedValue({ data });
+      vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleGroup]));
 
-      const result = await fetchFeatureDefinitions(client, '');
+      const result = await getFeatureDefinitions(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/features/definitions');
-      expect(result).toEqual(data);
+      expect(client.get).toHaveBeenCalledWith(`${basePath}/definitions`);
+      expect(result).toEqual([sampleGroup]);
     });
 
-    it('should prepend basePath', async () => {
+    it('should work with custom basePath', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [] });
+      vi.mocked(client.get).mockResolvedValue(axiosResponse([]));
 
-      await fetchFeatureDefinitions(client, '/api/v1');
+      await getFeatureDefinitions(client, '/custom/features');
 
-      expect(client.get).toHaveBeenCalledWith('/api/v1/features/definitions');
-    });
-  });
-
-  describe('fetchFeatureValues', () => {
-    it('should GET /features/values', async () => {
-      const client = createMockClient();
-      const data = { 'Acme.Video': 'true', 'Acme.MaxUsers': '50' };
-      vi.mocked(client.get).mockResolvedValue({ data });
-
-      const result = await fetchFeatureValues(client, '');
-
-      expect(client.get).toHaveBeenCalledWith('/features/values');
-      expect(result).toEqual(data);
-    });
-
-    it('should prepend basePath', async () => {
-      const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: {} });
-
-      await fetchFeatureValues(client, '/api/v1');
-
-      expect(client.get).toHaveBeenCalledWith('/api/v1/features/values');
+      expect(client.get).toHaveBeenCalledWith('/custom/features/definitions');
     });
   });
 
-  describe('fetchFeatureValue', () => {
-    it('should GET /features/values/{name}', async () => {
+  describe('getAllFeatureValues', () => {
+    it('should GET {basePath}/values', async () => {
       const client = createMockClient();
-      const data = { name: 'Acme.Video', value: 'true' };
-      vi.mocked(client.get).mockResolvedValue({ data });
+      vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleValue]));
 
-      const result = await fetchFeatureValue(client, '', 'Acme.Video');
+      const result = await getAllFeatureValues(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/features/values/Acme.Video');
-      expect(result).toEqual(data);
+      expect(client.get).toHaveBeenCalledWith(`${basePath}/values`);
+      expect(result).toEqual([sampleValue]);
+    });
+  });
+
+  describe('getFeatureValue', () => {
+    it('should GET {basePath}/values/{name}', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue(axiosResponse(sampleValue));
+
+      const result = await getFeatureValue(client, basePath, 'ui.dark-mode');
+
+      expect(client.get).toHaveBeenCalledWith(`${basePath}/values/ui.dark-mode`);
+      expect(result).toEqual(sampleValue);
     });
 
-    it('should encode feature name in URL', async () => {
+    it('should encode name with special characters', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: { name: 'a b', value: 'x' } });
+      vi.mocked(client.get).mockResolvedValue(axiosResponse(sampleValue));
 
-      await fetchFeatureValue(client, '/api', 'a b');
+      await getFeatureValue(client, basePath, 'feature/special@name');
 
-      expect(client.get).toHaveBeenCalledWith('/api/features/values/a%20b');
+      expect(client.get).toHaveBeenCalledWith(
+        `${basePath}/values/${encodeURIComponent('feature/special@name')}`
+      );
     });
   });
 
   describe('setFeatureOverride', () => {
-    it('should PUT /features/overrides/{name}', async () => {
+    it('should PUT {basePath}/overrides/{name}', async () => {
       const client = createMockClient();
-      vi.mocked(client.put).mockResolvedValue({});
+      vi.mocked(client.put).mockResolvedValue(axiosResponse(undefined));
 
-      await setFeatureOverride(client, '', 'Acme.MaxUsers', { value: '100' });
+      await setFeatureOverride(client, basePath, 'ui.dark-mode', { value: 'true' });
 
-      expect(client.put).toHaveBeenCalledWith('/features/overrides/Acme.MaxUsers', {
-        value: '100',
+      expect(client.put).toHaveBeenCalledWith(`${basePath}/overrides/ui.dark-mode`, {
+        value: 'true',
       });
     });
 
-    it('should prepend basePath and encode name', async () => {
+    it('should encode name with special characters', async () => {
       const client = createMockClient();
-      vi.mocked(client.put).mockResolvedValue({});
+      vi.mocked(client.put).mockResolvedValue(axiosResponse(undefined));
 
-      await setFeatureOverride(client, '/api', 'a b', { value: 'true' });
+      await setFeatureOverride(client, basePath, 'feature/special@name', { value: '42' });
 
-      expect(client.put).toHaveBeenCalledWith('/api/features/overrides/a%20b', {
-        value: 'true',
-      });
+      expect(client.put).toHaveBeenCalledWith(
+        `${basePath}/overrides/${encodeURIComponent('feature/special@name')}`,
+        { value: '42' }
+      );
     });
   });
 
   describe('deleteFeatureOverride', () => {
-    it('should DELETE /features/overrides/{name}', async () => {
+    it('should DELETE {basePath}/overrides/{name}', async () => {
       const client = createMockClient();
-      vi.mocked(client.delete).mockResolvedValue({});
+      vi.mocked(client.delete).mockResolvedValue(axiosResponse(undefined));
 
-      await deleteFeatureOverride(client, '', 'Acme.Video');
+      await deleteFeatureOverride(client, basePath, 'ui.dark-mode');
 
-      expect(client.delete).toHaveBeenCalledWith('/features/overrides/Acme.Video');
+      expect(client.delete).toHaveBeenCalledWith(`${basePath}/overrides/ui.dark-mode`);
     });
 
-    it('should prepend basePath and encode name', async () => {
+    it('should encode name with special characters', async () => {
       const client = createMockClient();
-      vi.mocked(client.delete).mockResolvedValue({});
+      vi.mocked(client.delete).mockResolvedValue(axiosResponse(undefined));
 
-      await deleteFeatureOverride(client, '/api', 'a b');
+      await deleteFeatureOverride(client, basePath, 'feature/special@name');
 
-      expect(client.delete).toHaveBeenCalledWith('/api/features/overrides/a%20b');
+      expect(client.delete).toHaveBeenCalledWith(
+        `${basePath}/overrides/${encodeURIComponent('feature/special@name')}`
+      );
     });
   });
 });

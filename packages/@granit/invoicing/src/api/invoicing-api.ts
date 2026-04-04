@@ -1,0 +1,63 @@
+import type { InvoiceCreateRequest, InvoiceResponse } from '../types.js';
+import type { AxiosInstance } from 'axios';
+
+/**
+ * List all invoices.
+ *
+ * `GET {basePath}/invoices`
+ */
+export async function listInvoices(
+  client: AxiosInstance,
+  basePath: string
+): Promise<readonly InvoiceResponse[]> {
+  const response = await client.get<readonly InvoiceResponse[]>(`${basePath}/invoices`);
+  return response.data;
+}
+
+/**
+ * Fetch a single invoice by ID.
+ *
+ * `GET {basePath}/invoices/{id}`
+ */
+export async function getInvoiceById(
+  client: AxiosInstance,
+  basePath: string,
+  id: string
+): Promise<InvoiceResponse> {
+  const response = await client.get<InvoiceResponse>(
+    `${basePath}/invoices/${encodeURIComponent(id)}`
+  );
+  return response.data;
+}
+
+/**
+ * Download the PDF for an invoice.
+ *
+ * `GET {basePath}/invoices/{id}/pdf`
+ *
+ * Returns a `Blob` suitable for client-side download.
+ */
+export async function downloadInvoicePdf(
+  client: AxiosInstance,
+  basePath: string,
+  id: string
+): Promise<Blob> {
+  const response = await client.get<Blob>(`${basePath}/invoices/${encodeURIComponent(id)}/pdf`, {
+    responseType: 'blob',
+  });
+  return response.data;
+}
+
+/**
+ * Create a new invoice.
+ *
+ * `POST {basePath}/invoices`
+ */
+export async function createInvoice(
+  client: AxiosInstance,
+  basePath: string,
+  request: InvoiceCreateRequest
+): Promise<InvoiceResponse> {
+  const response = await client.post<InvoiceResponse>(`${basePath}/invoices`, request);
+  return response.data;
+}

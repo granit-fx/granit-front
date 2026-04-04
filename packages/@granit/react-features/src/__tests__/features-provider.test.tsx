@@ -13,7 +13,7 @@ import type { AxiosInstance } from 'axios';
 
 const mockConfig: FeaturesConfig = {
   client: {} as AxiosInstance,
-  basePath: '/api',
+  basePath: '/api/granit/features',
 };
 
 function createWrapper(config: FeaturesConfig) {
@@ -29,7 +29,7 @@ describe('FeaturesProvider', () => {
     });
 
     expect(result.current.client).toBe(mockConfig.client);
-    expect(result.current.basePath).toBe('/api');
+    expect(result.current.basePath).toBe('/api/granit/features');
   });
 
   it('should throw when used outside provider', () => {
@@ -41,8 +41,8 @@ describe('FeaturesProvider', () => {
 
 describe('buildFeaturesQueryKey', () => {
   it('should build key with default prefix', () => {
-    const key = buildFeaturesQueryKey(mockConfig, 'values');
-    expect(key).toEqual(['features', 'values']);
+    const key = buildFeaturesQueryKey(mockConfig, 'definitions');
+    expect(key).toEqual(['features', 'definitions']);
   });
 
   it('should build key with custom prefix', () => {
@@ -52,7 +52,7 @@ describe('buildFeaturesQueryKey', () => {
   });
 
   it('should support multiple segments', () => {
-    const key = buildFeaturesQueryKey(mockConfig, 'values', 'Acme.Video');
-    expect(key).toEqual(['features', 'values', 'Acme.Video']);
+    const key = buildFeaturesQueryKey(mockConfig, 'values', 'ui.dark-mode');
+    expect(key).toEqual(['features', 'values', 'ui.dark-mode']);
   });
 });

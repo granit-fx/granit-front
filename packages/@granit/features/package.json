@@ -1,7 +1,7 @@
 {
   "name": "@granit/features",
-  "description": "Feature management types and API functions — mirrors Granit.Features .NET",
-  "version": "0.2.0",
+  "description": "Feature flags and tenant overrides — types and API functions",
+  "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {

@@ -482,6 +482,17 @@
       ]
     },
     {
+      "name": "@granit/customer-balance",
+      "description": "Customer balance and credits — types and API functions",
+      "exports": [
+        {
+          "name": "CustomerBalancePermissions",
+          "kind": "const",
+          "signature": "const CustomerBalancePermissions"
+        }
+      ]
+    },
+    {
       "name": "@granit/data-exchange",
       "description": "Tabular data import/export hooks and providers",
       "exports": []
@@ -542,12 +553,12 @@
     },
     {
       "name": "@granit/features",
-      "description": "Feature management types and API functions — mirrors Granit.Features .NET",
+      "description": "Feature flags and tenant overrides — types and API functions",
       "exports": [
         {
-          "name": "FEATURE_VALUE_TYPES",
+          "name": "FeaturesPermissions",
           "kind": "const",
-          "signature": "const FEATURE_VALUE_TYPES"
+          "signature": "const FeaturesPermissions"
         }
       ]
     },
@@ -608,6 +619,17 @@
           "name": "IdentityProviderUserListParams",
           "kind": "type",
           "signature": "type IdentityProviderUserListParams = { readonly search?: string; readonly first?: number; readonly max?: number; }"
+        }
+      ]
+    },
+    {
+      "name": "@granit/invoicing",
+      "description": "Invoice lifecycle — types and API functions for invoices and credit notes",
+      "exports": [
+        {
+          "name": "InvoicingPermissions",
+          "kind": "const",
+          "signature": "const InvoicingPermissions"
         }
       ]
     },
@@ -730,6 +752,17 @@
               "signature": "spanId: string"
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "@granit/metering",
+      "description": "Usage metering — meter definitions, events, and quota types and API functions",
+      "exports": [
+        {
+          "name": "MeteringPermissions",
+          "kind": "const",
+          "signature": "const MeteringPermissions"
         }
       ]
     },
@@ -869,6 +902,37 @@
           "name": "openIddictAdminKeys",
           "kind": "const",
           "signature": "const openIddictAdminKeys"
+        }
+      ]
+    },
+    {
+      "name": "@granit/payments",
+      "description": "Payment processing — charges, refunds, checkout, and payment methods types and API functions",
+      "exports": [
+        {
+          "name": "DisputeStatus",
+          "kind": "type",
+          "signature": "type DisputeStatus = 'Open' | 'UnderReview' | 'Won' | 'Lost'"
+        },
+        {
+          "name": "PaymentMethodCategory",
+          "kind": "type",
+          "signature": "type PaymentMethodCategory = 'Card' | 'BankTransfer' | 'Wallet' | 'DirectDebit'"
+        },
+        {
+          "name": "PaymentStatus",
+          "kind": "type",
+          "signature": "type PaymentStatus ="
+        },
+        {
+          "name": "RefundStatus",
+          "kind": "type",
+          "signature": "type RefundStatus = 'Pending' | 'Succeeded' | 'Failed'"
+        },
+        {
+          "name": "PaymentsPermissions",
+          "kind": "const",
+          "signature": "const PaymentsPermissions"
         }
       ]
     },
@@ -1632,6 +1696,11 @@
       ]
     },
     {
+      "name": "@granit/react-customer-balance",
+      "description": "React bindings for @granit/customer-balance — CustomerBalanceProvider and hooks",
+      "exports": []
+    },
+    {
       "name": "@granit/react-data-exchange",
       "description": "React bindings for @granit/data-exchange — ExportProvider, ImportProvider, hooks",
       "exports": []
@@ -1706,7 +1775,7 @@
     },
     {
       "name": "@granit/react-features",
-      "description": "React bindings for @granit/features — FeaturesProvider, useFeatureFlag, useFeatureValue, useFeatureDefinitions, useSetFeatureOverride, useDeleteFeatureOverride",
+      "description": "React bindings for @granit/features — FeaturesProvider and hooks",
       "exports": [
         {
           "name": "FeaturesConfig",
@@ -1721,63 +1790,9 @@
           "members": []
         },
         {
-          "name": "useFeatureDefinitions",
-          "kind": "function",
-          "signature": "function useFeatureDefinitions(options?:"
-        },
-        {
-          "name": "useFeatureValues",
-          "kind": "function",
-          "signature": "function useFeatureValues(options?:"
-        },
-        {
-          "name": "useFeatureFlag",
-          "kind": "function",
-          "signature": "function useFeatureFlag(name: string): UseFeatureFlagReturn"
-        },
-        {
-          "name": "UseFeatureFlagReturn",
-          "kind": "interface",
-          "signature": "interface UseFeatureFlagReturn",
-          "members": []
-        },
-        {
-          "name": "useFeatureValue",
-          "kind": "function",
-          "signature": "function useFeatureValue(name: string): UseFeatureValueReturn"
-        },
-        {
-          "name": "UseFeatureValueReturn",
-          "kind": "interface",
-          "signature": "interface UseFeatureValueReturn",
-          "members": []
-        },
-        {
-          "name": "useSetFeatureOverride",
-          "kind": "function",
-          "signature": "function useSetFeatureOverride(): UseSetFeatureOverrideReturn"
-        },
-        {
-          "name": "UseSetFeatureOverrideReturn",
-          "kind": "interface",
-          "signature": "interface UseSetFeatureOverrideReturn",
-          "members": []
-        },
-        {
-          "name": "useDeleteFeatureOverride",
-          "kind": "function",
-          "signature": "function useDeleteFeatureOverride(): UseDeleteFeatureOverrideReturn"
-        },
-        {
-          "name": "UseDeleteFeatureOverrideReturn",
-          "kind": "interface",
-          "signature": "interface UseDeleteFeatureOverrideReturn",
-          "members": []
-        },
-        {
-          "name": "ToggleFeatureFlagVariables",
+          "name": "SetFeatureOverrideVariables",
           "kind": "type",
-          "signature": "type ToggleFeatureFlagVariables = { readonly key: string; readonly enabled: boolean; }"
+          "signature": "type SetFeatureOverrideVariables = { readonly name: string; readonly request: SetFeatureOverrideRequest; }"
         }
       ]
     },
@@ -1855,6 +1870,24 @@
       ]
     },
     {
+      "name": "@granit/react-invoicing",
+      "description": "React bindings for @granit/invoicing — InvoicingProvider and hooks",
+      "exports": [
+        {
+          "name": "InvoicingConfig",
+          "kind": "interface",
+          "signature": "interface InvoicingConfig",
+          "members": []
+        },
+        {
+          "name": "InvoicingProviderProps",
+          "kind": "interface",
+          "signature": "interface InvoicingProviderProps",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/react-localization",
       "description": "",
       "exports": [
@@ -1879,6 +1912,29 @@
               "signature": "onLocaleChange?: (locale: string) => void"
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-metering",
+      "description": "React bindings for @granit/metering — MeteringProvider and hooks",
+      "exports": [
+        {
+          "name": "MeteringConfig",
+          "kind": "interface",
+          "signature": "interface MeteringConfig",
+          "members": []
+        },
+        {
+          "name": "MeteringProviderProps",
+          "kind": "interface",
+          "signature": "interface MeteringProviderProps",
+          "members": []
+        },
+        {
+          "name": "UpdateMeterDefinitionVariables",
+          "kind": "type",
+          "signature": "type UpdateMeterDefinitionVariables = { readonly id: string; readonly request: MeterDefinitionUpdateRequest; }"
         }
       ]
     },
@@ -2198,6 +2254,24 @@
       "exports": []
     },
     {
+      "name": "@granit/react-payments",
+      "description": "React bindings for @granit/payments — PaymentsProvider and hooks",
+      "exports": [
+        {
+          "name": "PaymentsConfig",
+          "kind": "interface",
+          "signature": "interface PaymentsConfig",
+          "members": []
+        },
+        {
+          "name": "PaymentsProviderProps",
+          "kind": "interface",
+          "signature": "interface PaymentsProviderProps",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/react-privacy",
       "description": "React hooks for GDPR privacy — data export, deletion, legal agreements",
       "exports": [
@@ -2395,6 +2469,85 @@
           "name": "useStorage",
           "kind": "function",
           "signature": "function useStorage<T>( key: string, defaultValue: T, options?: StorageOptions<T> ): [T, (value: T) => void]"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-subscriptions",
+      "description": "React bindings for @granit/subscriptions — SubscriptionsProvider and hooks",
+      "exports": [
+        {
+          "name": "useAssignSeat",
+          "kind": "function",
+          "signature": "function useAssignSeat( subscriptionId: string ): UseMutationResult<SeatResponse, Error, AssignSeatVariables>"
+        },
+        {
+          "name": "useRevokeSeat",
+          "kind": "function",
+          "signature": "function useRevokeSeat( subscriptionId: string ): UseMutationResult<void, Error, RevokeSeatVariables>"
+        },
+        {
+          "name": "useSeats",
+          "kind": "function",
+          "signature": "function useSeats(subscriptionId: string): UseQueryResult<readonly SeatResponse[]>"
+        },
+        {
+          "name": "AssignSeatVariables",
+          "kind": "type",
+          "signature": "type AssignSeatVariables = SeatAssignRequest"
+        },
+        {
+          "name": "RevokeSeatVariables",
+          "kind": "type",
+          "signature": "type RevokeSeatVariables = { readonly userId: string; }"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-tax",
+      "description": "React bindings for @granit/tax — TaxProvider and hooks",
+      "exports": [
+        {
+          "name": "TaxProvider",
+          "kind": "function",
+          "signature": "function TaxProvider("
+        },
+        {
+          "name": "buildTaxQueryKey",
+          "kind": "function",
+          "signature": "function buildTaxQueryKey( config: TaxConfig, ...segments: readonly string[] ): readonly unknown[]"
+        },
+        {
+          "name": "useTaxConfig",
+          "kind": "function",
+          "signature": "function useTaxConfig(): TaxConfig"
+        },
+        {
+          "name": "TaxConfig",
+          "kind": "interface",
+          "signature": "interface TaxConfig",
+          "members": []
+        },
+        {
+          "name": "TaxProviderProps",
+          "kind": "interface",
+          "signature": "interface TaxProviderProps",
+          "members": []
+        },
+        {
+          "name": "useTaxRateByCountry",
+          "kind": "function",
+          "signature": "function useTaxRateByCountry(countryCode: string): UseQueryResult<TaxRateResponse>"
+        },
+        {
+          "name": "useTaxRates",
+          "kind": "function",
+          "signature": "function useTaxRates(): UseQueryResult<readonly TaxRateResponse[]>"
+        },
+        {
+          "name": "useValidateTaxId",
+          "kind": "function",
+          "signature": "function useValidateTaxId(): UseMutationResult< TaxValidateResponse, Error, TaxValidateRequest >"
         }
       ]
     },
@@ -2939,6 +3092,76 @@
               "signature": "remove(): void"
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "@granit/subscriptions",
+      "description": "Plan catalog, subscription lifecycle, price versioning, and seat management — types and API functions",
+      "exports": [
+        {
+          "name": "SubscriptionsPermissions",
+          "kind": "const",
+          "signature": "const SubscriptionsPermissions"
+        },
+        {
+          "name": "assignSeat",
+          "kind": "function",
+          "signature": "async function assignSeat( client: AxiosInstance, basePath: string, subscriptionId: string, request: SeatAssignRequest ): Promise<SeatResponse>"
+        },
+        {
+          "name": "listSeats",
+          "kind": "function",
+          "signature": "async function listSeats( client: AxiosInstance, basePath: string, subscriptionId: string ): Promise<readonly SeatResponse[]>"
+        },
+        {
+          "name": "revokeSeat",
+          "kind": "function",
+          "signature": "async function revokeSeat( client: AxiosInstance, basePath: string, subscriptionId: string, userId: string ): Promise<void>"
+        }
+      ]
+    },
+    {
+      "name": "@granit/tax",
+      "description": "Tax validation and rate lookup — types and API functions",
+      "exports": [
+        {
+          "name": "TaxRateResponse",
+          "kind": "interface",
+          "signature": "interface TaxRateResponse",
+          "members": []
+        },
+        {
+          "name": "TaxValidateRequest",
+          "kind": "interface",
+          "signature": "interface TaxValidateRequest",
+          "members": []
+        },
+        {
+          "name": "TaxValidateResponse",
+          "kind": "interface",
+          "signature": "interface TaxValidateResponse",
+          "members": []
+        },
+        {
+          "name": "TaxPermissions",
+          "kind": "const",
+          "signature": "const TaxPermissions"
+        },
+        {
+          "name": "getTaxRateByCountry",
+          "kind": "function",
+          "signature": "async function getTaxRateByCountry( client: AxiosInstance, basePath: string, countryCode: string ): Promise<TaxRateResponse>"
+        },
+        {
+          "name": "getTaxRates",
+          "kind": "function",
+          "signature": "async function getTaxRates( client: AxiosInstance, basePath: string ): Promise<readonly TaxRateResponse[]>"
+        },
+        {
+          "name": "validateTaxId",
+          "kind": "function",
+          "signature": "async function validateTaxId( client: AxiosInstance, basePath: string, request: TaxValidateRequest ): Promise<TaxValidateResponse>"
         }
       ]
     },

@@ -285,6 +285,16 @@ importers:
         specifier: ^0.7.0
         version: 0.7.21(@babel/core@7.29.0)(eslint@10.1.0(jiti@2.6.1))
 
+  packages/@granit/customer-balance:
+    dependencies:
+      axios:
+        specifier: '*'
+        version: 1.14.0
+    devDependencies:
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/data-exchange:
     dependencies:
       '@granit/query-engine':
@@ -345,6 +355,16 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/invoicing:
+    dependencies:
+      axios:
+        specifier: '*'
+        version: 1.14.0
+    devDependencies:
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/localization:
     dependencies:
       '@granit/storage':
@@ -368,6 +388,16 @@ importers:
       '@granit/logger':
         specifier: workspace:*
         version: link:../logger
+
+  packages/@granit/metering:
+    dependencies:
+      axios:
+        specifier: '*'
+        version: 1.14.0
+    devDependencies:
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
 
   packages/@granit/multi-tenancy: {}
 
@@ -428,6 +458,16 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+    devDependencies:
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
+  packages/@granit/payments:
+    dependencies:
+      axios:
+        specifier: '*'
+        version: 1.14.0
     devDependencies:
       '@granit/testing':
         specifier: workspace:*
@@ -753,6 +793,28 @@ importers:
         specifier: workspace:*
         version: link:../logger
 
+  packages/@granit/react-customer-balance:
+    dependencies:
+      '@granit/customer-balance':
+        specifier: workspace:*
+        version: link:../customer-balance
+      '@tanstack/react-query':
+        specifier: ^5.0.0
+        version: 5.95.2(react@19.2.4)
+      axios:
+        specifier: '*'
+        version: 1.14.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+    devDependencies:
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/react-data-exchange:
     dependencies:
       '@granit/data-exchange':
@@ -862,6 +924,28 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/react-invoicing:
+    dependencies:
+      '@granit/invoicing':
+        specifier: workspace:*
+        version: link:../invoicing
+      '@tanstack/react-query':
+        specifier: ^5.0.0
+        version: 5.95.2(react@19.2.4)
+      axios:
+        specifier: '*'
+        version: 1.14.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+    devDependencies:
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/react-localization:
     dependencies:
       '@granit/localization':
@@ -885,6 +969,28 @@ importers:
       react-i18next:
         specifier: ^16.0.0
         version: 16.5.4(i18next@25.8.14(typescript@5.9.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)
+
+  packages/@granit/react-metering:
+    dependencies:
+      '@granit/metering':
+        specifier: workspace:*
+        version: link:../metering
+      '@tanstack/react-query':
+        specifier: ^5.0.0
+        version: 5.95.2(react@19.2.4)
+      axios:
+        specifier: '*'
+        version: 1.14.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+    devDependencies:
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
 
   packages/@granit/react-multi-tenancy:
     dependencies:
@@ -971,6 +1077,28 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+    devDependencies:
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
+  packages/@granit/react-payments:
+    dependencies:
+      '@granit/payments':
+        specifier: workspace:*
+        version: link:../payments
+      '@tanstack/react-query':
+        specifier: ^5.0.0
+        version: 5.95.2(react@19.2.4)
+      axios:
+        specifier: '*'
+        version: 1.14.0
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -1112,6 +1240,50 @@ importers:
       react:
         specifier: ^19.0.0
         version: 19.2.4
+
+  packages/@granit/react-subscriptions:
+    dependencies:
+      '@granit/subscriptions':
+        specifier: workspace:*
+        version: link:../subscriptions
+      '@tanstack/react-query':
+        specifier: ^5.0.0
+        version: 5.95.2(react@19.2.4)
+      axios:
+        specifier: '*'
+        version: 1.14.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+    devDependencies:
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
+  packages/@granit/react-tax:
+    dependencies:
+      '@granit/tax':
+        specifier: workspace:*
+        version: link:../tax
+      '@tanstack/react-query':
+        specifier: ^5.0.0
+        version: 5.95.2(react@19.2.4)
+      axios:
+        specifier: '*'
+        version: 1.14.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+    devDependencies:
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
 
   packages/@granit/react-templating:
     dependencies:
@@ -1330,6 +1502,26 @@ importers:
         version: link:../testing
 
   packages/@granit/storage: {}
+
+  packages/@granit/subscriptions:
+    dependencies:
+      axios:
+        specifier: '*'
+        version: 1.14.0
+    devDependencies:
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
+  packages/@granit/tax:
+    dependencies:
+      axios:
+        specifier: '*'
+        version: 1.14.0
+    devDependencies:
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
 
   packages/@granit/templating:
     dependencies:

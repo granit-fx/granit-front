@@ -1,26 +1,20 @@
 // Types
 export type {
-  AdminFeatureFlag,
-  FeatureDefinition,
-  FeatureGroup,
+  FeatureDefinitionResponse,
+  FeatureGroupResponse,
+  FeatureNumericConstraintResponse,
   FeatureValueResponse,
-  FeatureValueType,
-  FeatureValuesMap,
-  FeatureNumericConstraint,
-  SelectionValues,
   SetFeatureOverrideRequest,
-} from './types/index.js';
+} from './types.js';
 
-// Constants
-export { FEATURE_VALUE_TYPES } from './constants.js';
+// Permissions
+export { FeaturesPermissions } from './permissions.js';
 
 // API
 export {
   deleteFeatureOverride,
-  fetchAdminFeatureFlags,
-  fetchFeatureDefinitions,
-  fetchFeatureValue,
-  fetchFeatureValues,
+  getAllFeatureValues,
+  getFeatureDefinitions,
+  getFeatureValue,
   setFeatureOverride,
-  toggleAdminFeatureFlag,
 } from './api/features-api.js';

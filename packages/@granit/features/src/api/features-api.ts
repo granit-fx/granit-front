@@ -1,58 +1,56 @@
 import type {
-  AdminFeatureFlag,
-  FeatureGroup,
+  FeatureGroupResponse,
   FeatureValueResponse,
-  FeatureValuesMap,
   SetFeatureOverrideRequest,
-} from '../types/index.js';
+} from '../types.js';
 import type { AxiosInstance } from 'axios';
 
 /**
  * Fetch all feature definitions grouped by category.
  *
- * `GET /features/definitions`
+ * `GET {basePath}/definitions`
  */
-export async function fetchFeatureDefinitions(
+export async function getFeatureDefinitions(
   client: AxiosInstance,
   basePath: string
-): Promise<FeatureGroup[]> {
-  const response = await client.get<FeatureGroup[]>(`${basePath}/features/definitions`);
+): Promise<readonly FeatureGroupResponse[]> {
+  const response = await client.get<readonly FeatureGroupResponse[]>(`${basePath}/definitions`);
   return response.data;
 }
 
 /**
- * Fetch all resolved feature values for the current context (tenant/plan/default).
+ * Fetch all resolved feature values for the current tenant.
  *
- * `GET /features/values`
+ * `GET {basePath}/values`
  */
-export async function fetchFeatureValues(
+export async function getAllFeatureValues(
   client: AxiosInstance,
   basePath: string
-): Promise<FeatureValuesMap> {
-  const response = await client.get<FeatureValuesMap>(`${basePath}/features/values`);
+): Promise<readonly FeatureValueResponse[]> {
+  const response = await client.get<readonly FeatureValueResponse[]>(`${basePath}/values`);
   return response.data;
 }
 
 /**
- * Fetch a single resolved feature value by name.
+ * Fetch the resolved value of a single feature flag.
  *
- * `GET /features/values/{name}`
+ * `GET {basePath}/values/{name}`
  */
-export async function fetchFeatureValue(
+export async function getFeatureValue(
   client: AxiosInstance,
   basePath: string,
   name: string
 ): Promise<FeatureValueResponse> {
   const response = await client.get<FeatureValueResponse>(
-    `${basePath}/features/values/${encodeURIComponent(name)}`
+    `${basePath}/values/${encodeURIComponent(name)}`
   );
   return response.data;
 }
 
 /**
- * Set a tenant-level feature override.
+ * Set a tenant-level override for a feature flag.
  *
- * `PUT /features/overrides/{name}`
+ * `PUT {basePath}/overrides/{name}`
  */
 export async function setFeatureOverride(
   client: AxiosInstance,
@@ -60,47 +58,18 @@ export async function setFeatureOverride(
   name: string,
   request: SetFeatureOverrideRequest
 ): Promise<void> {
-  await client.put(`${basePath}/features/overrides/${encodeURIComponent(name)}`, request);
+  await client.put(`${basePath}/overrides/${encodeURIComponent(name)}`, request);
 }
 
 /**
- * Delete a tenant-level feature override (reverts to plan/default cascade).
+ * Delete a tenant-level override, reverting to the default value.
  *
- * `DELETE /features/overrides/{name}`
+ * `DELETE {basePath}/overrides/{name}`
  */
 export async function deleteFeatureOverride(
   client: AxiosInstance,
   basePath: string,
   name: string
 ): Promise<void> {
-  await client.delete(`${basePath}/features/overrides/${encodeURIComponent(name)}`);
-}
-
-// ── Admin endpoints ─────────────────────────────────────────────────────────
-
-/**
- * Fetch all feature flags with admin metadata.
- *
- * `GET {basePath}/admin/config/flags`
- */
-export async function fetchAdminFeatureFlags(
-  client: AxiosInstance,
-  basePath: string
-): Promise<AdminFeatureFlag[]> {
-  const response = await client.get<AdminFeatureFlag[]>(`${basePath}/admin/config/flags`);
-  return response.data;
-}
-
-/**
- * Toggle a feature flag on or off.
- *
- * `PATCH {basePath}/admin/config/flags/{key}`
- */
-export async function toggleAdminFeatureFlag(
-  client: AxiosInstance,
-  basePath: string,
-  key: string,
-  enabled: boolean
-): Promise<void> {
-  await client.patch(`${basePath}/admin/config/flags/${encodeURIComponent(key)}`, { enabled });
+  await client.delete(`${basePath}/overrides/${encodeURIComponent(name)}`);
 }

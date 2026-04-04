@@ -1,0 +1,159 @@
+import { createTestQueryClient } from '@granit/react-testing';
+import { createMockClient } from '@granit/testing';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { renderHook, waitFor } from '@testing-library/react';
+import * as React from 'react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import {
+  useAddAdminCredit,
+  useBalanceTransactions,
+  useCustomerBalance,
+} from '../hooks/use-customer-balance.js';
+import { CustomerBalanceProvider } from '../providers/customer-balance-provider.js';
+
+import type { CustomerBalanceConfig } from '../providers/customer-balance-provider.js';
+import type {
+  AdminCreditRequest,
+  BalanceTransactionResponse,
+  CustomerBalanceResponse,
+} from '@granit/customer-balance';
+import type { AxiosInstance } from 'axios';
+import type { ReactNode } from 'react';
+
+const sampleBalance: CustomerBalanceResponse = {
+  balanceAccountId: 'ba-001',
+  currency: 'EUR',
+  balance: 150.0,
+  updatedAt: '2026-04-01T10:00:00Z',
+};
+
+const sampleTransaction: BalanceTransactionResponse = {
+  id: 'tx-001',
+  type: 'Credit',
+  amount: 50.0,
+  source: 'Promotional',
+  reason: 'Welcome bonus',
+  referenceId: null,
+  referenceType: null,
+  expiresAt: '2026-12-31T23:59:59Z',
+  createdAt: '2026-04-01T10:00:00Z',
+};
+
+function createWrapper(client: AxiosInstance, basePath?: string) {
+  return function Wrapper({ children }: { children: ReactNode }) {
+    const queryClient = createTestQueryClient();
+    const config: CustomerBalanceConfig = { client, basePath };
+    return React.createElement(
+      QueryClientProvider,
+      { client: queryClient },
+      <CustomerBalanceProvider config={config}>{children}</CustomerBalanceProvider>
+    );
+  };
+}
+
+describe('use-customer-balance', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  describe('useCustomerBalance', () => {
+    it('fetches the current balance', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue({ data: sampleBalance });
+
+      const { result } = renderHook(() => useCustomerBalance(), {
+        wrapper: createWrapper(client),
+      });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.get).toHaveBeenCalledWith('/api/granit/customer-balance/balance');
+      expect(result.current.data).toEqual(sampleBalance);
+    });
+
+    it('uses custom basePath', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue({ data: sampleBalance });
+
+      const { result } = renderHook(() => useCustomerBalance(), {
+        wrapper: createWrapper(client, '/custom/balance'),
+      });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.get).toHaveBeenCalledWith('/custom/balance/balance');
+    });
+  });
+
+  describe('useBalanceTransactions', () => {
+    it('fetches all transactions', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue({ data: [sampleTransaction] });
+
+      const { result } = renderHook(() => useBalanceTransactions(), {
+        wrapper: createWrapper(client),
+      });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.get).toHaveBeenCalledWith('/api/granit/customer-balance/transactions');
+      expect(result.current.data).toEqual([sampleTransaction]);
+    });
+
+    it('returns empty array when no transactions', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue({ data: [] });
+
+      const { result } = renderHook(() => useBalanceTransactions(), {
+        wrapper: createWrapper(client),
+      });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(result.current.data).toEqual([]);
+    });
+  });
+
+  describe('useAddAdminCredit', () => {
+    it('posts a credit via POST', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: undefined });
+
+      const request: AdminCreditRequest = {
+        amount: 50.0,
+        currency: 'EUR',
+        source: 'Promotional',
+        reason: 'Welcome bonus',
+        expiresAt: null,
+      };
+
+      const { result } = renderHook(() => useAddAdminCredit(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate(request);
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.post).toHaveBeenCalledWith('/api/granit/customer-balance/credit', request);
+    });
+
+    it('uses custom basePath', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: undefined });
+
+      const request: AdminCreditRequest = {
+        amount: 100.0,
+        currency: 'USD',
+        source: 'ManualAdjustment',
+        reason: 'Compensation',
+        expiresAt: '2026-12-31T23:59:59Z',
+      };
+
+      const { result } = renderHook(() => useAddAdminCredit(), {
+        wrapper: createWrapper(client, '/custom/balance'),
+      });
+
+      result.current.mutate(request);
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.post).toHaveBeenCalledWith('/custom/balance/credit', request);
+    });
+  });
+});
