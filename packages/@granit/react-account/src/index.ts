@@ -14,11 +14,7 @@ export { useConfirmEmail, useRegister, useResendConfirmation } from './hooks/use
 export type { ConfirmEmailVariables } from './hooks/use-registration.js';
 
 // Hooks — Password
-export {
-  useChangePassword,
-  useForgotPassword,
-  useResetPassword,
-} from './hooks/use-password.js';
+export { useChangePassword, useForgotPassword, useResetPassword } from './hooks/use-password.js';
 
 // Hooks — Two-Factor
 export {
@@ -48,6 +44,9 @@ export type { RenamePasskeyVariables } from './hooks/use-passkeys.js';
 
 // Hooks — Session
 export { useBackToImpersonator, useSessionHeartbeat } from './hooks/use-session.js';
+
+// Hooks — Email change
+export { useChangeEmail, useConfirmEmailChange } from './hooks/use-email.js';
 
 // Hooks — Deletion
 export { useDeleteAccount } from './hooks/use-account-deletion.js';

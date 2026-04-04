@@ -46,6 +46,16 @@
           "signature": "async function sessionHeartbeat( client: AxiosInstance, basePath: string ): Promise<void>"
         },
         {
+          "name": "changeEmail",
+          "kind": "function",
+          "signature": "async function changeEmail( client: AxiosInstance, basePath: string, request: AccountChangeEmailRequest ): Promise<void>"
+        },
+        {
+          "name": "confirmEmailChange",
+          "kind": "function",
+          "signature": "async function confirmEmailChange( client: AxiosInstance, basePath: string, request: AccountConfirmEmailChangeRequest ): Promise<void>"
+        },
+        {
           "name": "deleteAccount",
           "kind": "function",
           "signature": "async function deleteAccount( client: AxiosInstance, basePath: string, request: AccountDeleteRequest ): Promise<void>"
@@ -977,6 +987,21 @@
           "members": []
         },
         {
+          "name": "useChangePassword",
+          "kind": "function",
+          "signature": "function useChangePassword(): UseMutationResult< void, Error, AccountPasswordChangeRequest >"
+        },
+        {
+          "name": "useForgotPassword",
+          "kind": "function",
+          "signature": "function useForgotPassword(): UseMutationResult< void, Error, AccountForgotPasswordRequest >"
+        },
+        {
+          "name": "useResetPassword",
+          "kind": "function",
+          "signature": "function useResetPassword(): UseMutationResult< void, Error, AccountPasswordResetRequest >"
+        },
+        {
           "name": "RenamePasskeyVariables",
           "kind": "interface",
           "signature": "interface RenamePasskeyVariables",
@@ -991,6 +1016,16 @@
           "name": "useSessionHeartbeat",
           "kind": "function",
           "signature": "function useSessionHeartbeat(): UseMutationResult<void, Error, void>"
+        },
+        {
+          "name": "useChangeEmail",
+          "kind": "function",
+          "signature": "function useChangeEmail(): UseMutationResult<void, Error, AccountChangeEmailRequest>"
+        },
+        {
+          "name": "useConfirmEmailChange",
+          "kind": "function",
+          "signature": "function useConfirmEmailChange(): UseMutationResult< void, Error, AccountConfirmEmailChangeRequest >"
         },
         {
           "name": "useDeleteAccount",

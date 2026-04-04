@@ -1,12 +1,6 @@
-export type {
-  AccountRegisterRequest,
-  AccountRegisterResponse,
-} from './account-registration.js';
+export type { AccountRegisterRequest, AccountRegisterResponse } from './account-registration.js';
 
-export type {
-  AccountProfileResponse,
-  AccountProfileUpdateRequest,
-} from './account-profile.js';
+export type { AccountProfileResponse, AccountProfileUpdateRequest } from './account-profile.js';
 
 export type {
   AccountForgotPasswordRequest,
@@ -37,3 +31,8 @@ export type {
 export type { AccountImpersonationResult } from './account-session.js';
 
 export type { AccountDeleteRequest } from './account-deletion.js';
+
+export type {
+  AccountChangeEmailRequest,
+  AccountConfirmEmailChangeRequest,
+} from './account-email.js';
