@@ -1,4 +1,5 @@
 import { fetchNotifications, markAllAsRead, markAsRead } from '@granit/notifications';
+import { toISODateString } from '@granit/types';
 import { useCallback } from 'react';
 
 import { useNotificationContext } from '../providers/notification-provider.js';
@@ -66,7 +67,9 @@ export function useNotifications(options: UseNotificationsOptions = {}): UseNoti
       await markAsRead(config.apiClient, basePath, id);
       setNotifications((prev: readonly UserNotification[]) =>
         prev.map((n: UserNotification) =>
-          n.id === id ? { ...n, state: 'Read' as const, readAt: new Date().toISOString() } : n
+          n.id === id
+            ? { ...n, state: 'Read' as const, readAt: toISODateString(new Date().toISOString()) }
+            : n
         )
       );
       setUnreadCount((prev: number) => Math.max(0, prev - 1));
@@ -80,7 +83,7 @@ export function useNotifications(options: UseNotificationsOptions = {}): UseNoti
       prev.map((n: UserNotification) => ({
         ...n,
         state: 'Read' as const,
-        readAt: new Date().toISOString(),
+        readAt: toISODateString(new Date().toISOString()),
       }))
     );
     setUnreadCount(0);

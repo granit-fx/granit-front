@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -112,8 +113,8 @@ describe('identity-user-cache-api', () => {
       const stats: IdentityUserCacheStats = {
         totalEntries: 42,
         staleEntries: 3,
-        oldestSyncAt: '2026-01-01T00:00:00Z',
-        newestSyncAt: '2026-03-17T12:00:00Z',
+        oldestSyncAt: toISODateString('2026-01-01T00:00:00Z'),
+        newestSyncAt: toISODateString('2026-03-17T12:00:00Z'),
       };
       vi.mocked(client.get).mockResolvedValue(axiosResponse(stats));
 

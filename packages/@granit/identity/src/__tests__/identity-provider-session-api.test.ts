@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -13,15 +14,15 @@ import type { IdentityDeviceActivity, IdentitySession } from '../types/index.js'
 const sampleSession: IdentitySession = {
   sessionId: 'session-1',
   ipAddress: '192.168.1.1',
-  startedAt: '2026-03-20T10:00:00Z',
-  lastAccess: '2026-03-20T12:00:00Z',
+  startedAt: toISODateString('2026-03-20T10:00:00Z'),
+  lastAccess: toISODateString('2026-03-20T12:00:00Z'),
   rememberMe: false,
   clients: ['web-app'],
 };
 
 const sampleDeviceActivity: IdentityDeviceActivity = {
   ipAddress: '192.168.1.1',
-  lastAccess: '2026-03-20T12:00:00Z',
+  lastAccess: toISODateString('2026-03-20T12:00:00Z'),
   device: 'Desktop',
   os: 'Windows',
   osVersion: '11',

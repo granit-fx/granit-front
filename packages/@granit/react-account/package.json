@@ -7,7 +7,9 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup"
   },
@@ -18,8 +20,9 @@
     "react": "^19.0.0"
   },
   "devDependencies": {
+    "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
-    "@granit/react-testing": "workspace:*"
+    "@granit/types": "workspace:*"
   },
   "publishConfig": {
     "exports": {

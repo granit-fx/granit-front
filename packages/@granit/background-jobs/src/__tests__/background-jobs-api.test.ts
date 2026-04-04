@@ -1,4 +1,5 @@
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import { fetchBackgroundJob, fetchBackgroundJobs } from '../api/background-jobs-api.js';
@@ -12,8 +13,8 @@ const mockJob: BackgroundJobStatus = {
   jobName: 'SendEmails',
   cronExpression: '0 */5 * * *',
   isEnabled: true,
-  lastExecutedAt: '2026-03-17T10:00:00Z',
-  nextExecutionAt: '2026-03-17T10:05:00Z',
+  lastExecutedAt: toISODateString('2026-03-17T10:00:00Z'),
+  nextExecutionAt: toISODateString('2026-03-17T10:05:00Z'),
   consecutiveFailures: 0,
   deadLetterCount: 0,
   lastError: null,

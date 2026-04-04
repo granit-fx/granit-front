@@ -18,7 +18,8 @@
     "@granit/query-engine": "workspace:*",
     "@granit/templating": "workspace:*",
     "@granit/testing": "workspace:*",
-    "@granit/react-testing": "workspace:*"
+    "@granit/react-testing": "workspace:*",
+    "@granit/types": "workspace:*"
   },
   "peerDependencies": {
     "@granit/templating": "workspace:*",

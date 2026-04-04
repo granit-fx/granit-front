@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -48,7 +49,7 @@ describe('audit-log-api', () => {
       const client = createMockClient();
       const entry: AuditEntryDetail = {
         id: 'abc-123',
-        timestamp: '2026-03-17T10:00:00Z',
+        timestamp: toISODateString('2026-03-17T10:00:00Z'),
         userId: 'user-1',
         userName: 'admin',
         category: AuditCategory.DataMutation,

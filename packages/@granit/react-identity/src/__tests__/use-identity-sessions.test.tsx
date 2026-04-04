@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -21,15 +22,15 @@ import type { ReactNode } from 'react';
 const sampleSession: IdentitySession = {
   sessionId: 'session-1',
   ipAddress: '192.168.1.1',
-  startedAt: '2026-03-20T10:00:00Z',
-  lastAccess: '2026-03-20T12:00:00Z',
+  startedAt: toISODateString('2026-03-20T10:00:00Z'),
+  lastAccess: toISODateString('2026-03-20T12:00:00Z'),
   rememberMe: false,
   clients: ['web-app'],
 };
 
 const sampleDevice: IdentityDeviceActivity = {
   ipAddress: '192.168.1.1',
-  lastAccess: '2026-03-20T12:00:00Z',
+  lastAccess: toISODateString('2026-03-20T12:00:00Z'),
   device: 'Desktop',
   os: 'Windows',
   osVersion: '11',

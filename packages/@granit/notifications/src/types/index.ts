@@ -1,4 +1,5 @@
 import type { PagedResult } from '@granit/query-engine';
+import type { ISODateString } from '@granit/types';
 import type { AxiosInstance } from 'axios';
 
 // ---------------------------------------------------------------------------
@@ -22,8 +23,8 @@ export interface UserNotification {
   readonly relatedEntityType: string | null;
   readonly relatedEntityId: string | null;
   readonly state: UserNotificationState;
-  readonly createdAt: string;
-  readonly readAt: string | null;
+  readonly createdAt: ISODateString;
+  readonly readAt: ISODateString | null;
 }
 
 export type UserNotificationPage = PagedResult<UserNotification> & {
@@ -45,7 +46,7 @@ export interface NotificationTransportMessage {
   readonly data: unknown;
   readonly relatedEntityType: string | null;
   readonly relatedEntityId: string | null;
-  readonly occurredAt: string;
+  readonly occurredAt: ISODateString;
 }
 
 // ---------------------------------------------------------------------------
@@ -57,7 +58,7 @@ export interface ActivityFeedEntry {
   title: string;
   body: string | null;
   severity: NotificationSeverity;
-  createdAt: string;
+  createdAt: ISODateString;
   userId: string | null;
   userDisplayName: string | null;
 }

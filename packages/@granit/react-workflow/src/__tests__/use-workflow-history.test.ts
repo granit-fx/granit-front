@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -11,14 +12,14 @@ const sampleHistory: TransitionHistory[] = [
   {
     previousState: 'Draft',
     newState: 'PendingReview',
-    transitionedAt: '2026-01-10T09:00:00Z',
+    transitionedAt: toISODateString('2026-01-10T09:00:00Z'),
     transitionedBy: 'Dr. Martin',
     comment: 'Submitted for review',
   },
   {
     previousState: 'PendingReview',
     newState: 'Published',
-    transitionedAt: '2026-01-11T14:00:00Z',
+    transitionedAt: toISODateString('2026-01-11T14:00:00Z'),
     transitionedBy: 'Dr. Marchand',
     comment: null,
   },

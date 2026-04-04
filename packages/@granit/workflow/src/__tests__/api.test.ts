@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/api-client/test-utils';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -24,7 +25,7 @@ describe('workflow api', () => {
       {
         previousState: 'Draft',
         newState: 'Published',
-        transitionedAt: '2026-01-15T10:00:00Z',
+        transitionedAt: toISODateString('2026-01-15T10:00:00Z'),
         transitionedBy: 'Dr. Martin',
         comment: null,
       },
@@ -88,7 +89,7 @@ describe('workflow api', () => {
       {
         previousState: 'Draft',
         newState: 'Published',
-        transitionedAt: '2026-01-15T10:00:00Z',
+        transitionedAt: toISODateString('2026-01-15T10:00:00Z'),
         transitionedBy: 'Dr. Martin',
         comment: null,
       },

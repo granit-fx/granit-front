@@ -1,3 +1,5 @@
+import type { ISODateString } from '@granit/types';
+
 // ---------------------------------------------------------------------------
 // BFF authentication types — mirrors Granit.Bff .NET contract
 // ---------------------------------------------------------------------------
@@ -10,7 +12,7 @@ export interface BffUser {
   readonly email: string;
   readonly roles: readonly string[];
   readonly tenantId?: string;
-  readonly sessionExpiresAt: string;
+  readonly sessionExpiresAt: ISODateString;
 }
 
 /** Unauthenticated response from GET /{prefix}/bff/user. */
@@ -28,7 +30,7 @@ export interface BffSessionInfo {
   /** Whether this is the calling session. */
   readonly isCurrent: boolean;
   /** When the session was created. ISO 8601 string. */
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
   /** User-Agent string captured at session creation, if available. */
   readonly userAgent: string | null;
 }

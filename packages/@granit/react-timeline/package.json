@@ -15,8 +15,9 @@
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
-    "@granit/react-testing": "workspace:*"
+    "@granit/types": "workspace:*"
   },
   "peerDependencies": {
     "@granit/logger": "workspace:*",

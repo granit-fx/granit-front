@@ -1,4 +1,5 @@
 import type { PaginationParams } from '@granit/query-engine';
+import type { ISODateString } from '@granit/types';
 import type { AxiosInstance } from 'axios';
 
 // ── Template lifecycle status (mirrors .NET Granit.Templating.Domain.TemplateLifecycleStatus) ──
@@ -38,9 +39,9 @@ export type TemplateRevision = {
   readonly mimeType: string;
   readonly status: TemplateLifecycleStatusValue;
   readonly layoutName: string | null;
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
   readonly createdBy: string;
-  readonly publishedAt?: string;
+  readonly publishedAt?: ISODateString;
   readonly publishedBy?: string;
 };
 
@@ -57,7 +58,7 @@ export type TemplateListItem = {
   readonly layoutName: string | null;
   readonly currentStatus: TemplateLifecycleStatusValue;
   readonly mimeType: string;
-  readonly lastModifiedAt: string;
+  readonly lastModifiedAt: ISODateString;
   readonly lastModifiedBy: string;
   readonly hasPublishedVersion: boolean;
 };

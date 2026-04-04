@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -24,13 +25,13 @@ describe('BFF session API', () => {
         {
           sessionId: 'ab12...yz89',
           isCurrent: true,
-          createdAt: '2026-03-23T10:00:00Z',
+          createdAt: toISODateString('2026-03-23T10:00:00Z'),
           userAgent: 'Mozilla/5.0',
         },
         {
           sessionId: 'cd34...wx67',
           isCurrent: false,
-          createdAt: '2026-03-22T08:00:00Z',
+          createdAt: toISODateString('2026-03-22T08:00:00Z'),
           userAgent: null,
         },
       ];

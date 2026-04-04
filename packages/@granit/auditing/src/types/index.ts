@@ -1,4 +1,5 @@
 import type { PagedResult, PaginationParams } from '@granit/query-engine';
+import type { ISODateString } from '@granit/types';
 
 // ---------------------------------------------------------------------------
 // Audit log types — mirrors Granit.Auditing .NET contracts
@@ -42,7 +43,7 @@ export type AuditEntityChange = {
 /** Audit log entry summary (list view) — mirrors `AuditEntryResponse`. */
 export type AuditEntry = {
   readonly id: string;
-  readonly timestamp: string;
+  readonly timestamp: ISODateString;
   readonly userId: string;
   readonly userName: string | null;
   readonly category: AuditCategoryValue;
@@ -55,7 +56,7 @@ export type AuditEntry = {
 /** Audit log entry with full entity change details — mirrors `AuditEntryDetailResponse`. */
 export type AuditEntryDetail = {
   readonly id: string;
-  readonly timestamp: string;
+  readonly timestamp: ISODateString;
   readonly userId: string;
   readonly userName: string | null;
   readonly category: AuditCategoryValue;
@@ -71,8 +72,8 @@ export type AuditListParams = PaginationParams & {
   readonly entityType?: string;
   readonly entityId?: string;
   readonly category?: AuditCategoryValue;
-  readonly from?: string;
-  readonly to?: string;
+  readonly from?: ISODateString;
+  readonly to?: ISODateString;
 };
 
 /** Paginated response for audit log entries. */

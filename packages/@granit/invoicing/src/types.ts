@@ -1,3 +1,5 @@
+import type { ISODateString } from '@granit/types';
+
 /** The document type of an invoice. */
 export type InvoiceDocumentType = 'Invoice' | 'CreditNote';
 
@@ -21,8 +23,8 @@ export interface InvoiceCreateRequest {
   readonly billingReason: BillingReason;
   readonly parentInvoiceId: string | null;
   readonly creditNoteReason: string | null;
-  readonly periodStart: string | null;
-  readonly periodEnd: string | null;
+  readonly periodStart: ISODateString | null;
+  readonly periodEnd: ISODateString | null;
 }
 
 /** A single line item within an invoice. */
@@ -36,8 +38,8 @@ export interface InvoiceLineItemResponse {
   readonly taxAmount: number;
   readonly sourceType: string;
   readonly sourceId: string | null;
-  readonly periodStart: string | null;
-  readonly periodEnd: string | null;
+  readonly periodStart: ISODateString | null;
+  readonly periodEnd: ISODateString | null;
 }
 
 /** Full invoice response from the API. */
@@ -57,10 +59,10 @@ export interface InvoiceResponse {
   readonly amountRemaining: number;
   readonly parentInvoiceId: string | null;
   readonly creditNoteReason: string | null;
-  readonly issuedAt: string | null;
-  readonly dueAt: string | null;
-  readonly paidAt: string | null;
-  readonly periodStart: string | null;
-  readonly periodEnd: string | null;
+  readonly issuedAt: ISODateString | null;
+  readonly dueAt: ISODateString | null;
+  readonly paidAt: ISODateString | null;
+  readonly periodStart: ISODateString | null;
+  readonly periodEnd: ISODateString | null;
   readonly lineItems: readonly InvoiceLineItemResponse[];
 }

@@ -1,3 +1,5 @@
+import type { ISODateString } from '@granit/types';
+
 export type PricingModel = 'Flat' | 'PerSeat' | 'Tiered' | 'UsageBased';
 export type BillingInterval = 'Monthly' | 'Quarterly' | 'SemiAnnual' | 'Annual';
 export type PlanLifecycleStatus = 'Draft' | 'Published' | 'Archived';
@@ -27,7 +29,7 @@ export interface CreatePriceVersionRequest {
 export interface SubscriptionCreateRequest {
   readonly planId: string;
   readonly currency: string;
-  readonly trialEndsAt: string | null;
+  readonly trialEndsAt: ISODateString | null;
 }
 
 export interface SubscriptionCancelRequest {
@@ -71,10 +73,10 @@ export interface PlanPriceResponse {
   readonly amount: number;
   readonly currency: string;
   readonly interval: string;
-  readonly effectiveFrom: string;
+  readonly effectiveFrom: ISODateString;
   readonly isActive: boolean;
   readonly replacedByPriceId: string | null;
-  readonly replacedAt: string | null;
+  readonly replacedAt: ISODateString | null;
 }
 
 export interface SubscriptionResponse {
@@ -82,11 +84,11 @@ export interface SubscriptionResponse {
   readonly planId: string;
   readonly status: SubscriptionStatus;
   readonly currency: string;
-  readonly currentPeriodStart: string;
-  readonly currentPeriodEnd: string;
-  readonly trialEndsAt: string | null;
+  readonly currentPeriodStart: ISODateString;
+  readonly currentPeriodEnd: ISODateString;
+  readonly trialEndsAt: ISODateString | null;
   readonly cancelAtPeriodEnd: boolean;
-  readonly cancelledAt: string | null;
+  readonly cancelledAt: ISODateString | null;
   readonly cancellationReason: string | null;
   readonly dunningAttempt: number;
   readonly seatCount: number;
@@ -96,7 +98,7 @@ export interface SubscriptionResponse {
 export interface SeatResponse {
   readonly id: string;
   readonly userId: string;
-  readonly assignedAt: string;
+  readonly assignedAt: ISODateString;
 }
 
 export interface BulkMigratePriceResponse {

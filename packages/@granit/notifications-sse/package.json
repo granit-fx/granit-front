@@ -27,6 +27,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
+    "@granit/types": "workspace:*",
     "@microsoft/fetch-event-source": "^2.0.1"
   }
 }

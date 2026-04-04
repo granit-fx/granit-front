@@ -17,6 +17,7 @@
     "@granit/testing": "workspace:*"
   },
   "peerDependencies": {
+    "@granit/types": "workspace:*",
     "axios": "*"
   },
   "publishConfig": {

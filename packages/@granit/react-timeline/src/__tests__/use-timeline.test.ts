@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -15,7 +16,7 @@ function makeEntry(overrides: Partial<TimelineEntry> = {}): TimelineEntry {
     authorId: 'u-1',
     authorName: 'Dr. Martin',
     parentEntryId: null,
-    occurredAt: '2026-01-01T00:00:00Z',
+    occurredAt: toISODateString('2026-01-01T00:00:00Z'),
     attachments: [],
     ...overrides,
   };

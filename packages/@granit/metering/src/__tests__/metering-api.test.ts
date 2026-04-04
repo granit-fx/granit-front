@@ -1,4 +1,5 @@
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -36,8 +37,8 @@ const sampleUsage: UsageAggregateResponse = {
   id: 'agg-1',
   meterDefinitionId: 'meter-1',
   period: 'Daily',
-  periodStart: '2026-04-01T00:00:00Z',
-  periodEnd: '2026-04-02T00:00:00Z',
+  periodStart: toISODateString('2026-04-01T00:00:00Z'),
+  periodEnd: toISODateString('2026-04-02T00:00:00Z'),
   aggregatedValue: 150,
   eventCount: 30,
 };
@@ -206,7 +207,7 @@ describe('metering-api', () => {
             meterDefinitionId: 'meter-1',
             idempotencyKey: 'key-1',
             quantity: 1,
-            timestamp: '2026-04-04T12:00:00Z',
+            timestamp: toISODateString('2026-04-04T12:00:00Z'),
             metadata: null,
           },
         ],

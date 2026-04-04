@@ -1,3 +1,5 @@
+import type { ISODateString } from '@granit/types';
+
 // ---------------------------------------------------------------------------
 // Account passkey (WebAuthn) types — mirrors Granit.OpenIddict.Endpoints .NET contract
 // ---------------------------------------------------------------------------
@@ -6,8 +8,8 @@
 export interface AccountPasskeyInfo {
   readonly id: string;
   readonly name: string | null;
-  readonly createdAt: string;
-  readonly lastUsedAt: string | null;
+  readonly createdAt: ISODateString;
+  readonly lastUsedAt: ISODateString | null;
 }
 
 /** Request body for `POST /passkeys/register/complete`. */
@@ -20,7 +22,7 @@ export interface AccountPasskeyRegistrationRequest {
 export interface AccountPasskeyCreatedResponse {
   readonly id: string;
   readonly name: string | null;
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
 }
 
 /** Request body for `PATCH /passkeys/{id}`. */

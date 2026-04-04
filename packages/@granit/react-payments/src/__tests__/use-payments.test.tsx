@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -45,7 +46,7 @@ const sampleTransaction: PaymentTransactionResponse = {
   actionUrl: null,
   idempotencyKey: 'key-1',
   failureCode: null,
-  succeededAt: '2026-04-01T10:00:00Z',
+  succeededAt: toISODateString('2026-04-01T10:00:00Z'),
   canceledAt: null,
   refunds: [],
   disputes: [],
@@ -59,14 +60,14 @@ const sampleRefund: PaymentRefundResponse = {
   status: 'Succeeded',
   providerRefundId: 're_abc123',
   reason: 'Customer request',
-  createdAt: '2026-04-02T10:00:00Z',
-  completedAt: '2026-04-02T10:05:00Z',
+  createdAt: toISODateString('2026-04-02T10:00:00Z'),
+  completedAt: toISODateString('2026-04-02T10:05:00Z'),
 };
 
 const sampleCheckoutSession: PaymentCheckoutSessionResponse = {
   url: 'https://checkout.stripe.com/session/abc123',
   sessionId: 'cs_abc123',
-  expiresAt: '2026-04-01T11:00:00Z',
+  expiresAt: toISODateString('2026-04-01T11:00:00Z'),
 };
 
 const sampleMethod: PaymentMethodResponse = {
@@ -76,7 +77,7 @@ const sampleMethod: PaymentMethodResponse = {
   providerMethodId: 'pm_abc123',
   displayLabel: 'Visa •••• 4242',
   isDefault: true,
-  expiresAt: '2028-12-01T00:00:00Z',
+  expiresAt: toISODateString('2028-12-01T00:00:00Z'),
   tenantId: null,
 };
 

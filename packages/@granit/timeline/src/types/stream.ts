@@ -1,5 +1,6 @@
 import type { TimelineEntryTypeValue } from './entry-type.js';
 import type { PagedResult } from '@granit/query-engine';
+import type { ISODateString } from '@granit/types';
 
 // --- API response types ---
 
@@ -18,7 +19,7 @@ export interface TimelineEntry {
   readonly authorId: string | null;
   readonly authorName: string | null;
   readonly parentEntryId: string | null;
-  readonly occurredAt: string;
+  readonly occurredAt: ISODateString;
   readonly attachments: readonly TimelineAttachmentInfo[];
 }
 

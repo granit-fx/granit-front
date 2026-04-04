@@ -1,4 +1,5 @@
 import type { TransitionOutcomeValue } from './transition-outcome.js';
+import type { ISODateString } from '@granit/types';
 
 /** Single available workflow transition. */
 export interface WorkflowTransition {
@@ -25,7 +26,7 @@ export interface WorkflowTransitionRequest {
 export interface TransitionHistory {
   readonly previousState: string;
   readonly newState: string;
-  readonly transitionedAt: string;
+  readonly transitionedAt: ISODateString;
   readonly transitionedBy: string;
   readonly comment: string | null;
 }

@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -28,7 +29,7 @@ const mockDeliveries: WebhookDeliveryAttemptResponse[] = [
     targetUrl: 'https://example.com/webhook',
     httpStatusCode: 200,
     payloadHash: 'a'.repeat(64),
-    occurredAt: '2026-03-20T10:00:00Z',
+    occurredAt: toISODateString('2026-03-20T10:00:00Z'),
     durationMs: 142,
     errorMessage: null,
     isSuccess: true,
@@ -42,7 +43,7 @@ const mockDeliveries: WebhookDeliveryAttemptResponse[] = [
     targetUrl: 'https://example.com/webhook',
     httpStatusCode: 500,
     payloadHash: 'b'.repeat(64),
-    occurredAt: '2026-03-20T10:05:00Z',
+    occurredAt: toISODateString('2026-03-20T10:05:00Z'),
     durationMs: 3021,
     errorMessage: 'Internal Server Error',
     isSuccess: false,

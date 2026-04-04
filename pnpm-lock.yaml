@@ -152,6 +152,9 @@ importers:
 
   packages/@granit/account:
     dependencies:
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.13.6
@@ -162,6 +165,9 @@ importers:
 
   packages/@granit/ai:
     dependencies:
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.13.6
@@ -185,6 +191,9 @@ importers:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.13.6
@@ -195,7 +204,11 @@ importers:
 
   packages/@granit/authentication: {}
 
-  packages/@granit/authentication-api-keys: {}
+  packages/@granit/authentication-api-keys:
+    dependencies:
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/authentication-cognito:
     dependencies:
@@ -254,6 +267,9 @@ importers:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.13.6
@@ -262,7 +278,11 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
-  packages/@granit/bff: {}
+  packages/@granit/bff:
+    dependencies:
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/blob-storage:
     dependencies:
@@ -287,6 +307,9 @@ importers:
 
   packages/@granit/customer-balance:
     dependencies:
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.14.0
@@ -347,6 +370,9 @@ importers:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.13.6
@@ -357,6 +383,9 @@ importers:
 
   packages/@granit/invoicing:
     dependencies:
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.14.0
@@ -370,6 +399,9 @@ importers:
       '@granit/storage':
         specifier: workspace:*
         version: link:../storage
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.13.6
@@ -391,6 +423,9 @@ importers:
 
   packages/@granit/metering:
     dependencies:
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.14.0
@@ -406,6 +441,9 @@ importers:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.13.6
@@ -426,6 +464,9 @@ importers:
         specifier: workspace:*
         version: link:../notifications
     devDependencies:
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       '@microsoft/signalr':
         specifier: 10.0.0
         version: 10.0.0
@@ -436,6 +477,9 @@ importers:
         specifier: workspace:*
         version: link:../notifications
     devDependencies:
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       '@microsoft/fetch-event-source':
         specifier: ^2.0.1
         version: 2.0.1
@@ -465,6 +509,9 @@ importers:
 
   packages/@granit/payments:
     dependencies:
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.14.0
@@ -517,6 +564,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-ai:
     dependencies:
@@ -564,6 +614,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-authentication:
     dependencies:
@@ -595,6 +648,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-authentication-cognito:
     dependencies:
@@ -748,6 +804,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-bff:
     dependencies:
@@ -814,6 +873,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-data-exchange:
     dependencies:
@@ -923,6 +985,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-invoicing:
     dependencies:
@@ -945,6 +1010,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-localization:
     dependencies:
@@ -991,6 +1059,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-multi-tenancy:
     dependencies:
@@ -1015,6 +1086,9 @@ importers:
       '@granit/react-query-engine':
         specifier: workspace:*
         version: link:../react-query-engine
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.13.6
@@ -1109,6 +1183,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-privacy:
     dependencies:
@@ -1262,6 +1339,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-tax:
     dependencies:
@@ -1284,6 +1364,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-templating:
     dependencies:
@@ -1312,6 +1395,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-testing:
     dependencies:
@@ -1359,6 +1445,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-tracing:
     dependencies:
@@ -1436,6 +1525,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-workflow:
     dependencies:
@@ -1464,12 +1556,18 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/reference-data:
     dependencies:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.13.6
@@ -1483,6 +1581,9 @@ importers:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.14.0
@@ -1505,6 +1606,9 @@ importers:
 
   packages/@granit/subscriptions:
     dependencies:
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.14.0
@@ -1515,6 +1619,9 @@ importers:
 
   packages/@granit/tax:
     dependencies:
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.14.0
@@ -1528,6 +1635,9 @@ importers:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.13.6
@@ -1550,6 +1660,9 @@ importers:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.13.6
@@ -1569,6 +1682,8 @@ importers:
       '@opentelemetry/instrumentation':
         specifier: '>=0.50.0'
         version: 0.213.0(@opentelemetry/api@1.9.0)
+
+  packages/@granit/types: {}
 
   packages/@granit/utils:
     dependencies:
@@ -1601,12 +1716,18 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/workflow:
     dependencies:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.13.6

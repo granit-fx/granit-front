@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -152,7 +153,7 @@ describe('useCreateApiKey', () => {
         name: 'Opt Key',
         type: 'Webhook',
         environment: 'production',
-        expiresAt: '2027-01-01T00:00:00Z',
+        expiresAt: toISODateString('2027-01-01T00:00:00Z'),
       },
     });
 
@@ -165,7 +166,7 @@ describe('useCreateApiKey', () => {
       environment: 'production',
       permissions: ['Events.Publish'],
       allowedCidrs: ['192.168.1.0/24'],
-      expiresAt: '2027-01-01T00:00:00Z',
+      expiresAt: toISODateString('2027-01-01T00:00:00Z'),
       cacheBehavior: 'NoCache',
     };
     result.current.mutate(request);

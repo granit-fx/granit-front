@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { WebhookSubscriptionStatus, webhooksKeys } from '@granit/webhooks';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
@@ -31,7 +32,7 @@ const mockSubscription: WebhookSubscriptionResponse = {
   status: WebhookSubscriptionStatus.Active,
   consecutiveFailureCount: 0,
   lastSuccessAt: null,
-  createdAt: '2026-03-01T08:00:00Z',
+  createdAt: toISODateString('2026-03-01T08:00:00Z'),
   modifiedAt: null,
 };
 

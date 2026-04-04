@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -128,7 +129,7 @@ describe('NotificationProvider', () => {
       data: { title: 'Real-time notification' },
       relatedEntityType: null,
       relatedEntityId: null,
-      occurredAt: '2026-01-15T10:00:00Z',
+      occurredAt: toISODateString('2026-01-15T10:00:00Z'),
     };
 
     act(() => {

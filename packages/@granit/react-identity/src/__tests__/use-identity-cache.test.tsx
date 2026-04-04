@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -32,8 +33,8 @@ function createWrapper(client: AxiosInstance, basePath?: string) {
 const mockStats: IdentityUserCacheStats = {
   totalEntries: 100,
   staleEntries: 5,
-  oldestSyncAt: '2026-01-01T00:00:00Z',
-  newestSyncAt: '2026-03-17T00:00:00Z',
+  oldestSyncAt: toISODateString('2026-01-01T00:00:00Z'),
+  newestSyncAt: toISODateString('2026-03-17T00:00:00Z'),
 };
 
 const mockUsers: IdentityUser[] = [

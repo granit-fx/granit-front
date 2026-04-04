@@ -6,6 +6,7 @@ import type {
   ReferenceDataQuery,
   ReferenceDataUpdateRequest,
 } from '../index.js';
+import type { ISODateString } from '@granit/types';
 
 describe('@granit/reference-data types', () => {
   describe('ReferenceDataEntry', () => {
@@ -39,8 +40,8 @@ describe('@granit/reference-data types', () => {
     it('should have active status, sort order, and validity period', () => {
       expectTypeOf<ReferenceDataEntry['isActive']>().toBeBoolean();
       expectTypeOf<ReferenceDataEntry['sortOrder']>().toBeNumber();
-      expectTypeOf<ReferenceDataEntry['validFrom']>().toEqualTypeOf<string | null>();
-      expectTypeOf<ReferenceDataEntry['validTo']>().toEqualTypeOf<string | null>();
+      expectTypeOf<ReferenceDataEntry['validFrom']>().toEqualTypeOf<ISODateString | null>();
+      expectTypeOf<ReferenceDataEntry['validTo']>().toEqualTypeOf<ISODateString | null>();
     });
 
     it('should have hierarchical parent code', () => {

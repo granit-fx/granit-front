@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -50,11 +51,11 @@ const sampleInvoice: InvoiceResponse = {
   amountRemaining: 0,
   parentInvoiceId: null,
   creditNoteReason: null,
-  issuedAt: '2026-03-01T00:00:00Z',
-  dueAt: '2026-03-15T00:00:00Z',
-  paidAt: '2026-03-02T10:00:00Z',
-  periodStart: '2026-03-01T00:00:00Z',
-  periodEnd: '2026-04-01T00:00:00Z',
+  issuedAt: toISODateString('2026-03-01T00:00:00Z'),
+  dueAt: toISODateString('2026-03-15T00:00:00Z'),
+  paidAt: toISODateString('2026-03-02T10:00:00Z'),
+  periodStart: toISODateString('2026-03-01T00:00:00Z'),
+  periodEnd: toISODateString('2026-04-01T00:00:00Z'),
   lineItems: [],
 };
 
@@ -193,8 +194,8 @@ describe('useCreateInvoice', () => {
       billingReason: 'SubscriptionCycle',
       parentInvoiceId: null,
       creditNoteReason: null,
-      periodStart: '2026-03-01T00:00:00Z',
-      periodEnd: '2026-04-01T00:00:00Z',
+      periodStart: toISODateString('2026-03-01T00:00:00Z'),
+      periodEnd: toISODateString('2026-04-01T00:00:00Z'),
     };
 
     result.current.mutate(request);

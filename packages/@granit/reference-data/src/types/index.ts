@@ -1,4 +1,5 @@
 import type { PaginationParams } from '@granit/query-engine';
+import type { ISODateString } from '@granit/types';
 
 /** The 14 multilingual labels supported by Granit reference data. */
 export interface ReferenceDataLabels {
@@ -32,8 +33,8 @@ export interface ReferenceDataEntry extends ReferenceDataLabels {
   readonly label: string;
   readonly isActive: boolean;
   readonly sortOrder: number;
-  readonly validFrom: string | null;
-  readonly validTo: string | null;
+  readonly validFrom: ISODateString | null;
+  readonly validTo: ISODateString | null;
   /** Parent code for hierarchical types (null for root entries). */
   readonly parentCode: string | null;
   /** Custom properties bag (all values are strings). */

@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -16,7 +17,7 @@ import type { ReactNode } from 'react';
 const sampleSeat: SeatResponse = {
   id: 'seat-1',
   userId: 'user-1',
-  assignedAt: '2026-01-15T10:00:00Z',
+  assignedAt: toISODateString('2026-01-15T10:00:00Z'),
 };
 
 function createWrapper(client: AxiosInstance, basePath?: string) {

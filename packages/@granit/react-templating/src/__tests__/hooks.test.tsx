@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { TemplateLifecycleStatus } from '@granit/templating';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -62,7 +63,7 @@ describe('useTemplates', () => {
           layoutName: 'Layout.Email',
           currentStatus: TemplateLifecycleStatus.Draft,
           mimeType: 'text/html',
-          lastModifiedAt: '2026-03-01T10:00:00Z',
+          lastModifiedAt: toISODateString('2026-03-01T10:00:00Z'),
           lastModifiedBy: 'admin',
           hasPublishedVersion: false,
         },
@@ -127,7 +128,7 @@ describe('useTemplate', () => {
         mimeType: 'text/html',
         status: TemplateLifecycleStatus.Draft,
         layoutName: 'Layout.Email',
-        createdAt: '2026-03-01T10:00:00Z',
+        createdAt: toISODateString('2026-03-01T10:00:00Z'),
         createdBy: 'admin',
       },
     };
@@ -482,9 +483,9 @@ describe('useTemplateRevision', () => {
       mimeType: 'text/html',
       status: TemplateLifecycleStatus.Published,
       layoutName: null,
-      createdAt: '2026-03-01T10:00:00Z',
+      createdAt: toISODateString('2026-03-01T10:00:00Z'),
       createdBy: 'admin',
-      publishedAt: '2026-03-02T10:00:00Z',
+      publishedAt: toISODateString('2026-03-02T10:00:00Z'),
       publishedBy: 'admin',
     };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(revision));

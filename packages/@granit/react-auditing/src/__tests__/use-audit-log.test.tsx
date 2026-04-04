@@ -1,6 +1,7 @@
 import { AuditCategory } from '@granit/auditing';
 import { createTestQueryClient } from '@granit/react-testing';
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
@@ -59,7 +60,7 @@ describe('useAuditLogEntry', () => {
     const client = createMockClient();
     const detail: AuditEntryDetail = {
       id: 'abc-123',
-      timestamp: '2026-03-17T10:00:00Z',
+      timestamp: toISODateString('2026-03-17T10:00:00Z'),
       userId: 'user-1',
       userName: 'admin',
       category: AuditCategory.DataMutation,

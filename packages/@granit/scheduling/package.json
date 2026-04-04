@@ -15,6 +15,7 @@
   },
   "peerDependencies": {
     "@granit/query-engine": "workspace:*",
+    "@granit/types": "workspace:*",
     "axios": "*"
   },
   "devDependencies": {

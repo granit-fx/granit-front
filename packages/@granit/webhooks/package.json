@@ -17,7 +17,8 @@
     "axios": "*"
   },
   "devDependencies": {
-    "@granit/testing": "workspace:*"
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*"
   },
   "publishConfig": {
     "exports": {

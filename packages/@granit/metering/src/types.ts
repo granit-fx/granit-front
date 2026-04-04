@@ -1,3 +1,5 @@
+import type { ISODateString } from '@granit/types';
+
 export type AggregationType = 'Sum' | 'Count' | 'Max' | 'Last' | 'UniqueCount';
 
 export type AggregationPeriod = 'Hourly' | 'Daily' | 'Monthly';
@@ -19,7 +21,7 @@ export interface MeterEventRequest {
   readonly meterDefinitionId: string;
   readonly idempotencyKey: string;
   readonly quantity: number;
-  readonly timestamp: string;
+  readonly timestamp: ISODateString;
   readonly metadata: string | null;
 }
 
@@ -40,8 +42,8 @@ export interface UsageAggregateResponse {
   readonly id: string;
   readonly meterDefinitionId: string;
   readonly period: AggregationPeriod;
-  readonly periodStart: string;
-  readonly periodEnd: string;
+  readonly periodStart: ISODateString;
+  readonly periodEnd: ISODateString;
   readonly aggregatedValue: number;
   readonly eventCount: number;
 }

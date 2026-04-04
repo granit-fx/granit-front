@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -30,8 +31,8 @@ const mockJob: BackgroundJobStatus = {
   jobName: 'InvoiceSync',
   cronExpression: '0 */1 * * *',
   isEnabled: true,
-  lastExecutedAt: '2026-03-12T10:00:00Z',
-  nextExecutionAt: '2026-03-12T11:00:00Z',
+  lastExecutedAt: toISODateString('2026-03-12T10:00:00Z'),
+  nextExecutionAt: toISODateString('2026-03-12T11:00:00Z'),
   consecutiveFailures: 0,
   deadLetterCount: 0,
   lastError: null,

@@ -1,4 +1,5 @@
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -34,8 +35,8 @@ const mockSubscription: WebhookSubscriptionResponse = {
   eventType: 'document.uploaded',
   status: WebhookSubscriptionStatus.Active,
   consecutiveFailureCount: 0,
-  lastSuccessAt: '2026-03-20T10:00:00Z',
-  createdAt: '2026-03-01T08:00:00Z',
+  lastSuccessAt: toISODateString('2026-03-20T10:00:00Z'),
+  createdAt: toISODateString('2026-03-01T08:00:00Z'),
   modifiedAt: null,
 };
 
@@ -226,7 +227,7 @@ describe('webhooks-api', () => {
           targetUrl: 'https://example.com/webhook',
           httpStatusCode: 200,
           payloadHash: 'a'.repeat(64),
-          occurredAt: '2026-03-20T10:00:00Z',
+          occurredAt: toISODateString('2026-03-20T10:00:00Z'),
           durationMs: 142,
           errorMessage: null,
           isSuccess: true,

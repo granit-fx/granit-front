@@ -1,4 +1,5 @@
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -17,8 +18,8 @@ const mockPasskeys: readonly AccountPasskeyInfo[] = [
   {
     id: 'pk-001',
     name: 'MacBook Pro',
-    createdAt: '2026-03-01T08:00:00Z',
-    lastUsedAt: '2026-03-20T10:00:00Z',
+    createdAt: toISODateString('2026-03-01T08:00:00Z'),
+    lastUsedAt: toISODateString('2026-03-20T10:00:00Z'),
   },
 ];
 
@@ -54,7 +55,7 @@ describe('account-passkey-api', () => {
       const response: AccountPasskeyCreatedResponse = {
         id: 'pk-002',
         name: 'iPhone',
-        createdAt: '2026-03-21T12:00:00Z',
+        createdAt: toISODateString('2026-03-21T12:00:00Z'),
       };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 

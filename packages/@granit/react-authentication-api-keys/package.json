@@ -15,7 +15,8 @@
   },
   "devDependencies": {
     "@granit/testing": "workspace:*",
-    "@granit/react-testing": "workspace:*"
+    "@granit/react-testing": "workspace:*",
+    "@granit/types": "workspace:*"
   },
   "peerDependencies": {
     "@granit/authentication-api-keys": "workspace:*",

@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createSignalRTransport } from '../transports/create-signalr-transport.js';
@@ -128,7 +129,7 @@ describe('createSignalRTransport', () => {
       data: { title: 'Test' },
       relatedEntityType: null,
       relatedEntityId: null,
-      occurredAt: '2026-01-15T10:00:00Z',
+      occurredAt: toISODateString('2026-01-15T10:00:00Z'),
     };
 
     handler(mockMsg);
@@ -190,7 +191,7 @@ describe('createSignalRTransport', () => {
       data: { title: 'Test' },
       relatedEntityType: null,
       relatedEntityId: null,
-      occurredAt: '2026-01-15T10:00:00Z',
+      occurredAt: toISODateString('2026-01-15T10:00:00Z'),
     });
 
     expect(listener).not.toHaveBeenCalled();

@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -19,7 +20,7 @@ const MOCK_FEED: ActivityFeedPage = {
       title: 'Consultation ajoutée',
       body: null,
       severity: 'Info',
-      createdAt: '2026-01-15T10:00:00Z',
+      createdAt: toISODateString('2026-01-15T10:00:00Z'),
       userId: 'u-1',
       userDisplayName: 'Dr. Martin',
     },

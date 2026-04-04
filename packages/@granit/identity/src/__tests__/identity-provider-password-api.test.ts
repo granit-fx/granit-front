@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -16,7 +17,7 @@ describe('identity-provider-password-api', () => {
     it('should GET {basePath}/users/{userId}/password/changed-at', async () => {
       const client = createMockClient();
       const response: IdentityPasswordChangedAtResponse = {
-        changedAt: '2026-03-15T08:00:00Z',
+        changedAt: toISODateString('2026-03-15T08:00:00Z'),
       };
       vi.mocked(client.get).mockResolvedValue(axiosResponse(response));
 

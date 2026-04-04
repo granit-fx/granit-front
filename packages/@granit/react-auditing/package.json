@@ -14,8 +14,9 @@
     "build": "tsup"
   },
   "devDependencies": {
+    "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
-    "@granit/react-testing": "workspace:*"
+    "@granit/types": "workspace:*"
   },
   "peerDependencies": {
     "@granit/auditing": "workspace:*",

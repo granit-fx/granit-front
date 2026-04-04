@@ -3261,6 +3261,22 @@
       ]
     },
     {
+      "name": "@granit/types",
+      "description": "Cross-cutting branded types for the Granit framework",
+      "exports": [
+        {
+          "name": "toISODateString",
+          "kind": "function",
+          "signature": "function toISODateString(value: string): ISODateString"
+        },
+        {
+          "name": "ISODateString",
+          "kind": "type",
+          "signature": "type ISODateString = string & { readonly __brand: 'ISODateString' }"
+        }
+      ]
+    },
+    {
       "name": "@granit/utils",
       "description": "Shared utilities (cn, formatDate, formatNumber, ...)",
       "exports": []

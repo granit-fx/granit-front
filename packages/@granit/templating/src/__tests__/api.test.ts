@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/api-client/test-utils';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -47,7 +48,7 @@ describe('templates-api', () => {
             layoutName: 'Layout.Email',
             currentStatus: TemplateLifecycleStatus.Draft,
             mimeType: 'text/html',
-            lastModifiedAt: '2026-03-01T10:00:00Z',
+            lastModifiedAt: toISODateString('2026-03-01T10:00:00Z'),
             lastModifiedBy: 'admin',
             hasPublishedVersion: false,
           },
@@ -89,7 +90,7 @@ describe('templates-api', () => {
           mimeType: 'text/html',
           status: TemplateLifecycleStatus.Draft,
           layoutName: 'Layout.Email',
-          createdAt: '2026-03-01T10:00:00Z',
+          createdAt: toISODateString('2026-03-01T10:00:00Z'),
           createdBy: 'admin',
         },
       };
@@ -225,9 +226,9 @@ describe('templates-api', () => {
         mimeType: 'text/html',
         status: TemplateLifecycleStatus.Published,
         layoutName: null,
-        createdAt: '2026-03-01T10:00:00Z',
+        createdAt: toISODateString('2026-03-01T10:00:00Z'),
         createdBy: 'admin',
-        publishedAt: '2026-03-02T10:00:00Z',
+        publishedAt: toISODateString('2026-03-02T10:00:00Z'),
         publishedBy: 'admin',
       };
       vi.mocked(client.get).mockResolvedValue(axiosResponse(revision));

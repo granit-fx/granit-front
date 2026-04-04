@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -51,7 +52,7 @@ const samplePrice: PlanPriceResponse = {
   amount: 29.99,
   currency: 'EUR',
   interval: 'Monthly',
-  effectiveFrom: '2026-01-01T00:00:00Z',
+  effectiveFrom: toISODateString('2026-01-01T00:00:00Z'),
   isActive: true,
   replacedByPriceId: null,
   replacedAt: null,
@@ -62,8 +63,8 @@ const sampleSubscription: SubscriptionResponse = {
   planId: 'plan-1',
   status: 'Active',
   currency: 'EUR',
-  currentPeriodStart: '2026-01-01T00:00:00Z',
-  currentPeriodEnd: '2026-02-01T00:00:00Z',
+  currentPeriodStart: toISODateString('2026-01-01T00:00:00Z'),
+  currentPeriodEnd: toISODateString('2026-02-01T00:00:00Z'),
   trialEndsAt: null,
   cancelAtPeriodEnd: false,
   cancelledAt: null,
@@ -76,7 +77,7 @@ const sampleSubscription: SubscriptionResponse = {
 const sampleSeat: SeatResponse = {
   id: 'seat-1',
   userId: 'user-1',
-  assignedAt: '2026-01-15T10:00:00Z',
+  assignedAt: toISODateString('2026-01-15T10:00:00Z'),
 };
 
 // ---------------------------------------------------------------------------

@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -69,13 +70,13 @@ const mockPasskeys: readonly AccountPasskeyInfo[] = [
   {
     id: 'pk-001',
     name: 'YubiKey 5',
-    createdAt: '2026-03-01T08:00:00Z',
-    lastUsedAt: '2026-03-20T10:00:00Z',
+    createdAt: toISODateString('2026-03-01T08:00:00Z'),
+    lastUsedAt: toISODateString('2026-03-20T10:00:00Z'),
   },
   {
     id: 'pk-002',
     name: null,
-    createdAt: '2026-03-10T12:00:00Z',
+    createdAt: toISODateString('2026-03-10T12:00:00Z'),
     lastUsedAt: null,
   },
 ];
@@ -137,7 +138,7 @@ describe('useCompletePasskeyRegistration', () => {
     const response: AccountPasskeyCreatedResponse = {
       id: 'pk-003',
       name: 'New Key',
-      createdAt: '2026-03-21T09:00:00Z',
+      createdAt: toISODateString('2026-03-21T09:00:00Z'),
     };
     vi.mocked(completePasskeyRegistration).mockResolvedValue(response);
 

@@ -1,3 +1,5 @@
+import type { ISODateString } from '@granit/types';
+
 // ---------------------------------------------------------------------------
 // Types mirroring Granit.AI and Granit.AI.Endpoints .NET contracts.
 // Property names match the camelCase JSON serialization from the backend.
@@ -116,6 +118,6 @@ export interface AIUsageRecord {
   readonly inputTokens: number;
   readonly outputTokens: number;
   readonly estimatedCostUsd: number | null;
-  readonly timestamp: string;
+  readonly timestamp: ISODateString;
   readonly duration: string | null;
 }
