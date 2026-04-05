@@ -3,6 +3,10 @@ import type {
   AgreementHistoryEntry,
   AgreementStatus,
   LegalDocument,
+  LegalDocumentCreateRequest,
+  LegalDocumentDetail,
+  LegalDocumentListParams,
+  LegalDocumentUpdateRequest,
   PrivacyDeletionRequest,
   PrivacyDeletionResponse,
   PrivacyExportRequestResponse,
@@ -172,4 +176,87 @@ export async function acceptAgreement(
   request: AcceptAgreementRequest
 ): Promise<void> {
   await client.post(`${basePath}/agreements/accept`, request);
+}
+
+// ── Legal Document Admin (lifecycle management) ─────────────────────────────
+
+/**
+ * Create a new legal document draft.
+ *
+ * `POST {basePath}/legal-documents`
+ */
+export async function createLegalDocument(
+  client: AxiosInstance,
+  basePath: string,
+  request: LegalDocumentCreateRequest
+): Promise<LegalDocumentDetail> {
+  const { data } = await client.post<LegalDocumentDetail>(`${basePath}/legal-documents`, request);
+  return data;
+}
+
+/**
+ * Get a legal document version by ID (includes drafts and archived).
+ *
+ * `GET {basePath}/legal-documents/{id}`
+ */
+export async function getLegalDocument(
+  client: AxiosInstance,
+  basePath: string,
+  id: string
+): Promise<LegalDocumentDetail> {
+  const { data } = await client.get<LegalDocumentDetail>(
+    `${basePath}/legal-documents/${encodeURIComponent(id)}`
+  );
+  return data;
+}
+
+/**
+ * List legal document versions, optionally filtered by document ID.
+ *
+ * `GET {basePath}/legal-documents`
+ */
+export async function listLegalDocuments(
+  client: AxiosInstance,
+  basePath: string,
+  params?: LegalDocumentListParams
+): Promise<LegalDocumentDetail[]> {
+  const { data } = await client.get<LegalDocumentDetail[]>(`${basePath}/legal-documents`, {
+    params,
+  });
+  return data;
+}
+
+/**
+ * Update a legal document draft.
+ *
+ * `PUT {basePath}/legal-documents/{id}`
+ */
+export async function updateLegalDocument(
+  client: AxiosInstance,
+  basePath: string,
+  id: string,
+  request: LegalDocumentUpdateRequest
+): Promise<LegalDocumentDetail> {
+  const { data } = await client.put<LegalDocumentDetail>(
+    `${basePath}/legal-documents/${encodeURIComponent(id)}`,
+    request
+  );
+  return data;
+}
+
+/**
+ * Publish a legal document draft. Auto-archives the current published version
+ * and triggers re-consent notifications.
+ *
+ * `POST {basePath}/legal-documents/{id}/publish`
+ */
+export async function publishLegalDocument(
+  client: AxiosInstance,
+  basePath: string,
+  id: string
+): Promise<LegalDocumentDetail> {
+  const { data } = await client.post<LegalDocumentDetail>(
+    `${basePath}/legal-documents/${encodeURIComponent(id)}/publish`
+  );
+  return data;
 }

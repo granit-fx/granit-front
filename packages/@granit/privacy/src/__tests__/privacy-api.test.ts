@@ -4,21 +4,27 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   acceptAgreement,
   cancelDeletion,
+  createLegalDocument,
   getAgreementDocuments,
   getAgreementHistory,
   getAgreementStatuses,
   getDeletionStatus,
   getExportStatus,
+  getLegalDocument,
   listDeletions,
   listExports,
+  listLegalDocuments,
+  publishLegalDocument,
   requestDeletion,
   requestExport,
+  updateLegalDocument,
 } from '../api/privacy-api.js';
 
 import type {
   AgreementHistoryEntry,
   AgreementStatus,
   LegalDocument,
+  LegalDocumentDetail,
   PrivacyDeletionResponse,
   PrivacyExportStatusResponse,
 } from '../types/index.js';
@@ -245,6 +251,143 @@ describe('privacy-api', () => {
         documentId: 'tos',
         version: '2.0',
       });
+    });
+  });
+
+  // ── Legal Document Admin ─────────────────────────────────────────────────
+
+  const mockDocument: LegalDocumentDetail = {
+    id: 'ldv-001',
+    documentId: 'privacy-policy',
+    version: 1,
+    lifecycleStatus: 'Draft',
+    displayName: 'Privacy Policy',
+    description: 'Initial draft',
+    templateName: 'privacy-policy-template',
+    createdAt: '2026-04-01T10:00:00Z',
+    lastModifiedAt: '2026-04-01T10:00:00Z',
+  };
+
+  describe('createLegalDocument', () => {
+    it('sends POST to /legal-documents with request body', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValueOnce({ data: mockDocument });
+
+      const result = await createLegalDocument(client, BASE, {
+        documentId: 'privacy-policy',
+        displayName: 'Privacy Policy',
+        description: 'Initial draft',
+        templateName: 'privacy-policy-template',
+      });
+
+      expect(client.post).toHaveBeenCalledWith(`${BASE}/legal-documents`, {
+        documentId: 'privacy-policy',
+        displayName: 'Privacy Policy',
+        description: 'Initial draft',
+        templateName: 'privacy-policy-template',
+      });
+      expect(result).toEqual(mockDocument);
+    });
+  });
+
+  describe('getLegalDocument', () => {
+    it('sends GET to /legal-documents/{id}', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValueOnce({ data: mockDocument });
+
+      const result = await getLegalDocument(client, BASE, 'ldv-001');
+
+      expect(client.get).toHaveBeenCalledWith(`${BASE}/legal-documents/ldv-001`);
+      expect(result).toEqual(mockDocument);
+    });
+
+    it('encodes id with special characters', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValueOnce({ data: mockDocument });
+
+      await getLegalDocument(client, BASE, 'id/slash');
+
+      expect(client.get).toHaveBeenCalledWith(`${BASE}/legal-documents/id%2Fslash`);
+    });
+  });
+
+  describe('listLegalDocuments', () => {
+    it('sends GET to /legal-documents with params', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValueOnce({ data: [mockDocument] });
+
+      const result = await listLegalDocuments(client, BASE, { documentId: 'privacy-policy' });
+
+      expect(client.get).toHaveBeenCalledWith(`${BASE}/legal-documents`, {
+        params: { documentId: 'privacy-policy' },
+      });
+      expect(result).toEqual([mockDocument]);
+    });
+
+    it('sends GET to /legal-documents without params', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValueOnce({ data: [mockDocument] });
+
+      const result = await listLegalDocuments(client, BASE);
+
+      expect(client.get).toHaveBeenCalledWith(`${BASE}/legal-documents`, {
+        params: undefined,
+      });
+      expect(result).toEqual([mockDocument]);
+    });
+  });
+
+  describe('updateLegalDocument', () => {
+    it('sends PUT to /legal-documents/{id} with request body', async () => {
+      const client = createMockClient();
+      const updated = { ...mockDocument, displayName: 'Updated Policy' };
+      vi.mocked(client.put).mockResolvedValueOnce({ data: updated });
+
+      const result = await updateLegalDocument(client, BASE, 'ldv-001', {
+        displayName: 'Updated Policy',
+        description: 'Revised draft',
+      });
+
+      expect(client.put).toHaveBeenCalledWith(`${BASE}/legal-documents/ldv-001`, {
+        displayName: 'Updated Policy',
+        description: 'Revised draft',
+      });
+      expect(result).toEqual(updated);
+    });
+
+    it('encodes id with special characters', async () => {
+      const client = createMockClient();
+      vi.mocked(client.put).mockResolvedValueOnce({ data: mockDocument });
+
+      await updateLegalDocument(client, BASE, 'id/slash', {
+        displayName: 'Test',
+      });
+
+      expect(client.put).toHaveBeenCalledWith(`${BASE}/legal-documents/id%2Fslash`, {
+        displayName: 'Test',
+      });
+    });
+  });
+
+  describe('publishLegalDocument', () => {
+    it('sends POST to /legal-documents/{id}/publish', async () => {
+      const client = createMockClient();
+      const published = { ...mockDocument, lifecycleStatus: 'Published' as const };
+      vi.mocked(client.post).mockResolvedValueOnce({ data: published });
+
+      const result = await publishLegalDocument(client, BASE, 'ldv-001');
+
+      expect(client.post).toHaveBeenCalledWith(`${BASE}/legal-documents/ldv-001/publish`);
+      expect(result).toEqual(published);
+    });
+
+    it('encodes id with special characters', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValueOnce({ data: mockDocument });
+
+      await publishLegalDocument(client, BASE, 'id/slash');
+
+      expect(client.post).toHaveBeenCalledWith(`${BASE}/legal-documents/id%2Fslash/publish`);
     });
   });
 });

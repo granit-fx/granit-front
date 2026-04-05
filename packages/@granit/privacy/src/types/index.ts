@@ -62,3 +62,38 @@ export type AcceptAgreementRequest = {
   readonly documentId: string;
   readonly version: string;
 };
+
+// ── Legal Document Admin (GDPR Art. 7 — document lifecycle) ─────────────────
+
+export type LegalDocumentLifecycleStatus = 'Draft' | 'Published' | 'Archived';
+
+export type LegalDocumentListParams = {
+  readonly documentId?: string;
+};
+
+export type LegalDocumentDetail = {
+  readonly id: string;
+  readonly documentId: string;
+  readonly version: number;
+  readonly lifecycleStatus: LegalDocumentLifecycleStatus;
+  readonly displayName: string;
+  readonly description?: string;
+  readonly templateName?: string;
+  readonly documentBlobId?: string;
+  readonly createdAt: string;
+  readonly lastModifiedAt: string;
+};
+
+export type LegalDocumentCreateRequest = {
+  readonly documentId: string;
+  readonly displayName: string;
+  readonly description?: string;
+  readonly templateName?: string;
+};
+
+export type LegalDocumentUpdateRequest = {
+  readonly displayName: string;
+  readonly description?: string;
+  readonly templateName?: string;
+  readonly documentBlobId?: string;
+};

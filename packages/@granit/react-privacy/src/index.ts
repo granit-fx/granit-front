@@ -28,3 +28,13 @@ export {
   useAgreementHistory,
   useAgreementStatuses,
 } from './hooks/use-privacy-agreements.js';
+
+// Hooks — Legal document admin
+export {
+  useCreateLegalDocument,
+  useLegalDocument,
+  useLegalDocuments,
+  usePublishLegalDocument,
+  useUpdateLegalDocument,
+} from './hooks/use-legal-documents.js';
+export type { UpdateLegalDocumentVariables } from './hooks/use-legal-documents.js';

@@ -17,17 +17,17 @@ export interface UseLoginWithRedirectOptions {
   readonly fallbackUrl?: string;
   /** Called when the server requires two-factor authentication. */
   readonly onTwoFactorRequired?: () => void;
-  /** Called when the account is locked out. */
-  readonly onLockedOut?: () => void;
   /** Called when login is not allowed (e.g. unconfirmed email). */
   readonly onNotAllowed?: () => void;
+  /** Called when the login request fails (network error, 401, etc.). */
+  readonly onError?: (error: Error) => void;
 }
 
 export interface UseLoginWithRedirectResult {
   /**
    * Submit credentials and auto-redirect to `returnUrl` on success.
    *
-   * On non-success responses (`requiresTwoFactor`, `isLockedOut`, `isNotAllowed`),
+   * On non-success responses (`requiresTwoFactor`, `isNotAllowed`),
    * the corresponding callback from {@link UseLoginWithRedirectOptions} is invoked.
    */
   readonly loginAndRedirect: (request: AccountLoginRequest) => void;
@@ -71,13 +71,12 @@ export function useLoginWithRedirect(
             optionsRef.current?.onTwoFactorRequired?.();
             return;
           }
-          if (data.isLockedOut) {
-            optionsRef.current?.onLockedOut?.();
-            return;
-          }
           if (data.isNotAllowed) {
             optionsRef.current?.onNotAllowed?.();
           }
+        },
+        onError: (error) => {
+          optionsRef.current?.onError?.(error);
         },
       });
     },

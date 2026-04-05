@@ -5,6 +5,11 @@ export type {
   AgreementStatus,
   DeletionStatusValue,
   LegalDocument,
+  LegalDocumentCreateRequest,
+  LegalDocumentDetail,
+  LegalDocumentLifecycleStatus,
+  LegalDocumentListParams,
+  LegalDocumentUpdateRequest,
   PrivacyDeletionRequest,
   PrivacyDeletionResponse,
   PrivacyExportRequestResponse,
@@ -12,17 +17,30 @@ export type {
   PrivacyExportStatusResponse,
 } from './types/index.js';
 
-// API
+// API — Data export
+export { getExportStatus, listExports, requestExport } from './api/privacy-api.js';
+
+// API — Data deletion
+export {
+  cancelDeletion,
+  getDeletionStatus,
+  listDeletions,
+  requestDeletion,
+} from './api/privacy-api.js';
+
+// API — Legal agreements
 export {
   acceptAgreement,
-  cancelDeletion,
   getAgreementDocuments,
   getAgreementHistory,
   getAgreementStatuses,
-  getDeletionStatus,
-  getExportStatus,
-  listDeletions,
-  listExports,
-  requestDeletion,
-  requestExport,
+} from './api/privacy-api.js';
+
+// API — Legal document admin
+export {
+  createLegalDocument,
+  getLegalDocument,
+  listLegalDocuments,
+  publishLegalDocument,
+  updateLegalDocument,
 } from './api/privacy-api.js';

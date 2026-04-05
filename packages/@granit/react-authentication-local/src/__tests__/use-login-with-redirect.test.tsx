@@ -49,13 +49,6 @@ const twoFactorResponse: AccountLoginResponse = {
   isNotAllowed: false,
 };
 
-const lockedOutResponse: AccountLoginResponse = {
-  succeeded: false,
-  requiresTwoFactor: false,
-  isLockedOut: true,
-  isNotAllowed: false,
-};
-
 const notAllowedResponse: AccountLoginResponse = {
   succeeded: false,
   requiresTwoFactor: false,
@@ -157,25 +150,6 @@ describe('useLoginWithRedirect', () => {
     expect(onTwoFactorRequired).toHaveBeenCalledOnce();
   });
 
-  it('calls onLockedOut when account is locked', async () => {
-    const client = createMockClient();
-    vi.mocked(loginAccount).mockResolvedValue(lockedOutResponse);
-    const onLockedOut = vi.fn();
-
-    const { result } = renderHook(() => useLoginWithRedirect({ search: '', onLockedOut }), {
-      wrapper: createWrapper(client),
-    });
-
-    result.current.loginAndRedirect({
-      login: 'user@example.com',
-      password: 'P@ssw0rd!',
-    });
-
-    await waitFor(() => expect(result.current.mutation.isSuccess).toBe(true));
-
-    expect(onLockedOut).toHaveBeenCalledOnce();
-  });
-
   it('calls onNotAllowed when login is not allowed', async () => {
     const client = createMockClient();
     vi.mocked(loginAccount).mockResolvedValue(notAllowedResponse);
@@ -211,5 +185,26 @@ describe('useLoginWithRedirect', () => {
     await waitFor(() => expect(result.current.mutation.isError).toBe(true));
 
     expect(result.current.mutation.error?.message).toBe('Network error');
+  });
+
+  it('calls onError when the login request fails', async () => {
+    const client = createMockClient();
+    const error = new Error('Request failed');
+    vi.mocked(loginAccount).mockRejectedValue(error);
+    const onError = vi.fn();
+
+    const { result } = renderHook(() => useLoginWithRedirect({ search: '', onError }), {
+      wrapper: createWrapper(client),
+    });
+
+    result.current.loginAndRedirect({
+      login: 'user@example.com',
+      password: 'wrong',
+    });
+
+    await waitFor(() => expect(result.current.mutation.isError).toBe(true));
+
+    expect(onError).toHaveBeenCalledOnce();
+    expect(onError).toHaveBeenCalledWith(error);
   });
 });

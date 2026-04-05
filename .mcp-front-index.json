@@ -944,7 +944,23 @@
     {
       "name": "@granit/privacy",
       "description": "GDPR privacy types and API — data export, deletion, legal agreements — mirrors Granit.Privacy .NET contract",
-      "exports": []
+      "exports": [
+        {
+          "name": "getExportStatus",
+          "kind": "function",
+          "signature": "async function getExportStatus( client: AxiosInstance, basePath: string, requestId: string ): Promise<PrivacyExportStatusResponse>"
+        },
+        {
+          "name": "listExports",
+          "kind": "function",
+          "signature": "async function listExports( client: AxiosInstance, basePath: string ): Promise<PrivacyExportStatusResponse[]>"
+        },
+        {
+          "name": "requestExport",
+          "kind": "function",
+          "signature": "async function requestExport( client: AxiosInstance, basePath: string ): Promise<PrivacyExportRequestResponse>"
+        }
+      ]
     },
     {
       "name": "@granit/query-engine",
