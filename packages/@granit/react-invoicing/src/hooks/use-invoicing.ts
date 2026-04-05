@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { buildInvoicingQueryKey, useInvoicingConfig } from '../providers/invoicing-provider.js';
 
-import type { InvoiceCreateRequest, InvoiceId, InvoiceResponse } from '@granit/invoicing';
+import type { InvoiceCreateRequest, InvoiceResponse } from '@granit/invoicing';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 const DEFAULT_BASE_PATH = '/api/granit/invoicing';
@@ -36,13 +36,13 @@ export function useInvoices(): UseQueryResult<readonly InvoiceResponse[]> {
  * const { data: invoice } = useInvoice(selectedId);
  * ```
  */
-export function useInvoice(id: InvoiceId | ''): UseQueryResult<InvoiceResponse> {
+export function useInvoice(id: string): UseQueryResult<InvoiceResponse> {
   const config = useInvoicingConfig();
   const basePath = config.basePath ?? DEFAULT_BASE_PATH;
 
   return useQuery({
     queryKey: buildInvoicingQueryKey(config, 'invoices', id),
-    queryFn: () => getInvoiceById(config.client, basePath, id as InvoiceId),
+    queryFn: () => getInvoiceById(config.client, basePath, id),
     enabled: id.length > 0,
   });
 }
@@ -58,12 +58,12 @@ export function useInvoice(id: InvoiceId | ''): UseQueryResult<InvoiceResponse> 
  * await downloadPdf.mutateAsync('inv-1');
  * ```
  */
-export function useDownloadInvoicePdf(): UseMutationResult<Blob, Error, InvoiceId> {
+export function useDownloadInvoicePdf(): UseMutationResult<Blob, Error, string> {
   const config = useInvoicingConfig();
   const basePath = config.basePath ?? DEFAULT_BASE_PATH;
 
   return useMutation({
-    mutationFn: (id: InvoiceId) => downloadInvoicePdf(config.client, basePath, id),
+    mutationFn: (id: string) => downloadInvoicePdf(config.client, basePath, id),
   });
 }
 

@@ -4,7 +4,6 @@ import type {
   CreatePriceVersionRequest,
   MigratePriceRequest,
   PlanCreateRequest,
-  PlanId,
   PlanPriceResponse,
   PlanResponse,
   PlanUpdateRequest,
@@ -13,10 +12,8 @@ import type {
   SubscriptionCancelRequest,
   SubscriptionChangePlanRequest,
   SubscriptionCreateRequest,
-  SubscriptionId,
   SubscriptionResponse,
 } from '../types.js';
-import type { UserId } from '@granit/types';
 import type { AxiosInstance } from 'axios';
 
 // ---------------------------------------------------------------------------
@@ -44,7 +41,7 @@ export async function listPlans(
 export async function getPlanById(
   client: AxiosInstance,
   basePath: string,
-  id: PlanId
+  id: string
 ): Promise<PlanResponse> {
   const response = await client.get<PlanResponse>(`${basePath}/plans/${encodeURIComponent(id)}`);
   return response.data;
@@ -72,7 +69,7 @@ export async function createPlan(
 export async function updatePlan(
   client: AxiosInstance,
   basePath: string,
-  id: PlanId,
+  id: string,
   request: PlanUpdateRequest
 ): Promise<PlanResponse> {
   const response = await client.put<PlanResponse>(
@@ -90,7 +87,7 @@ export async function updatePlan(
 export async function publishPlan(
   client: AxiosInstance,
   basePath: string,
-  id: PlanId
+  id: string
 ): Promise<void> {
   await client.post(`${basePath}/plans/${encodeURIComponent(id)}/publish`);
 }
@@ -103,7 +100,7 @@ export async function publishPlan(
 export async function archivePlan(
   client: AxiosInstance,
   basePath: string,
-  id: PlanId
+  id: string
 ): Promise<void> {
   await client.post(`${basePath}/plans/${encodeURIComponent(id)}/archive`);
 }
@@ -116,7 +113,7 @@ export async function archivePlan(
 export async function createPriceVersion(
   client: AxiosInstance,
   basePath: string,
-  planId: PlanId,
+  planId: string,
   request: CreatePriceVersionRequest
 ): Promise<PlanPriceResponse> {
   const response = await client.post<PlanPriceResponse>(
@@ -134,7 +131,7 @@ export async function createPriceVersion(
 export async function getPlanPriceHistory(
   client: AxiosInstance,
   basePath: string,
-  planId: PlanId
+  planId: string
 ): Promise<readonly PlanPriceResponse[]> {
   const response = await client.get<readonly PlanPriceResponse[]>(
     `${basePath}/plans/${encodeURIComponent(planId)}/prices/history`
@@ -180,7 +177,7 @@ export async function getActiveSubscription(
 export async function getSubscriptionById(
   client: AxiosInstance,
   basePath: string,
-  id: SubscriptionId
+  id: string
 ): Promise<SubscriptionResponse> {
   const response = await client.get<SubscriptionResponse>(
     `${basePath}/subscriptions/${encodeURIComponent(id)}`
@@ -210,7 +207,7 @@ export async function createSubscription(
 export async function cancelSubscription(
   client: AxiosInstance,
   basePath: string,
-  id: SubscriptionId,
+  id: string,
   request: SubscriptionCancelRequest
 ): Promise<SubscriptionResponse> {
   const response = await client.post<SubscriptionResponse>(
@@ -228,7 +225,7 @@ export async function cancelSubscription(
 export async function changeSubscriptionPlan(
   client: AxiosInstance,
   basePath: string,
-  id: SubscriptionId,
+  id: string,
   request: SubscriptionChangePlanRequest
 ): Promise<SubscriptionResponse> {
   const response = await client.post<SubscriptionResponse>(
@@ -246,7 +243,7 @@ export async function changeSubscriptionPlan(
 export async function migrateSubscriptionPrice(
   client: AxiosInstance,
   basePath: string,
-  id: SubscriptionId,
+  id: string,
   request: MigratePriceRequest
 ): Promise<SubscriptionResponse> {
   const response = await client.post<SubscriptionResponse>(
@@ -285,7 +282,7 @@ export async function bulkMigrateSubscriptionPrice(
 export async function listSeats(
   client: AxiosInstance,
   basePath: string,
-  subscriptionId: SubscriptionId
+  subscriptionId: string
 ): Promise<readonly SeatResponse[]> {
   const response = await client.get<readonly SeatResponse[]>(
     `${basePath}/subscriptions/${encodeURIComponent(subscriptionId)}/seats`
@@ -301,7 +298,7 @@ export async function listSeats(
 export async function assignSeat(
   client: AxiosInstance,
   basePath: string,
-  subscriptionId: SubscriptionId,
+  subscriptionId: string,
   request: SeatAssignRequest
 ): Promise<SeatResponse> {
   const response = await client.post<SeatResponse>(
@@ -319,8 +316,8 @@ export async function assignSeat(
 export async function revokeSeat(
   client: AxiosInstance,
   basePath: string,
-  subscriptionId: SubscriptionId,
-  userId: UserId
+  subscriptionId: string,
+  userId: string
 ): Promise<void> {
   await client.delete(
     `${basePath}/subscriptions/${encodeURIComponent(subscriptionId)}/seats/${encodeURIComponent(userId)}`

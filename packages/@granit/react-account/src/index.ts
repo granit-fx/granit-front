@@ -48,5 +48,8 @@ export type { RenamePasskeyVariables } from './hooks/use-passkeys.js';
 // Hooks — Session
 export { useBackToImpersonator, useSessionHeartbeat } from './hooks/use-session.js';
 
+// Hooks — Email change
+export { useChangeEmail, useConfirmEmailChange } from './hooks/use-email.js';
+
 // Hooks — Deletion
 export { useDeleteAccount } from './hooks/use-account-deletion.js';

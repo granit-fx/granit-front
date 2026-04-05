@@ -1,6 +1,5 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toEntityId, toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -24,7 +23,7 @@ import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
 const samplePlan: PlanResponse = {
-  id: toEntityId<'Plan'>('plan-1'),
+  id: 'plan-1',
   name: 'Pro',
   description: 'Professional plan',
   pricingModel: 'PerSeat',
@@ -37,11 +36,11 @@ const samplePlan: PlanResponse = {
 };
 
 const samplePrice: PlanPriceResponse = {
-  id: toEntityId<'PlanPrice'>('price-1'),
+  id: 'price-1',
   amount: 29.99,
   currency: 'EUR',
   interval: 'Monthly',
-  effectiveFrom: toISODateString('2026-01-01T00:00:00Z'),
+  effectiveFrom: '2026-01-01T00:00:00Z',
   isActive: true,
   replacedByPriceId: null,
   replacedAt: null,
@@ -84,7 +83,7 @@ describe('use-plans', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: samplePlan });
 
-      const { result } = renderHook(() => usePlan(toEntityId<'Plan'>('plan-1')), {
+      const { result } = renderHook(() => usePlan('plan-1'), {
         wrapper: createWrapper(client),
       });
 
@@ -140,7 +139,7 @@ describe('use-plans', () => {
       });
 
       const request = { name: 'Pro Updated', description: null, sortOrder: 2 };
-      result.current.mutate({ id: toEntityId<'Plan'>('plan-1'), request });
+      result.current.mutate({ id: 'plan-1', request });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.put).toHaveBeenCalledWith('/api/granit/subscriptions/plans/plan-1', request);
@@ -156,7 +155,7 @@ describe('use-plans', () => {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate({ id: toEntityId<'Plan'>('plan-1') });
+      result.current.mutate({ id: 'plan-1' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith('/api/granit/subscriptions/plans/plan-1/publish');
@@ -172,7 +171,7 @@ describe('use-plans', () => {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate({ id: toEntityId<'Plan'>('plan-1') });
+      result.current.mutate({ id: 'plan-1' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith('/api/granit/subscriptions/plans/plan-1/archive');
@@ -188,8 +187,8 @@ describe('use-plans', () => {
         wrapper: createWrapper(client),
       });
 
-      const request = { amount: 29.99, currency: 'EUR' as const, interval: 'Monthly' as const };
-      result.current.mutate({ planId: toEntityId<'Plan'>('plan-1'), request });
+      const request = { amount: 29.99, currency: 'EUR', interval: 'Monthly' as const };
+      result.current.mutate({ planId: 'plan-1', request });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith(
@@ -204,7 +203,7 @@ describe('use-plans', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: [samplePrice] });
 
-      const { result } = renderHook(() => usePlanPriceHistory(toEntityId<'Plan'>('plan-1')), {
+      const { result } = renderHook(() => usePlanPriceHistory('plan-1'), {
         wrapper: createWrapper(client),
       });
 

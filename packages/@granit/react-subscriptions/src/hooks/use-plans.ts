@@ -18,7 +18,6 @@ import {
 import type {
   CreatePriceVersionRequest,
   PlanCreateRequest,
-  PlanId,
   PlanPriceResponse,
   PlanResponse,
   PlanUpdateRequest,
@@ -53,13 +52,13 @@ export function usePlans(): UseQueryResult<readonly PlanResponse[]> {
  * const { data: plan } = usePlan(selectedPlanId);
  * ```
  */
-export function usePlan(id: PlanId | ''): UseQueryResult<PlanResponse> {
+export function usePlan(id: string): UseQueryResult<PlanResponse> {
   const config = useSubscriptionsConfig();
   const basePath = config.basePath ?? '/api/granit/subscriptions';
 
   return useQuery({
     queryKey: buildSubscriptionsQueryKey(config, 'plans', id),
-    queryFn: () => getPlanById(config.client, basePath, id as PlanId),
+    queryFn: () => getPlanById(config.client, basePath, id),
     enabled: id.length > 0,
   });
 }
@@ -94,7 +93,7 @@ export function useCreatePlan(): UseMutationResult<PlanResponse, Error, CreatePl
 
 /** Variables for `useUpdatePlan` mutation. */
 export type UpdatePlanVariables = {
-  readonly id: PlanId;
+  readonly id: string;
   readonly request: PlanUpdateRequest;
 };
 
@@ -126,7 +125,7 @@ export function useUpdatePlan(): UseMutationResult<PlanResponse, Error, UpdatePl
 
 /** Variables for `usePublishPlan` mutation. */
 export type PublishPlanVariables = {
-  readonly id: PlanId;
+  readonly id: string;
 };
 
 /**
@@ -156,7 +155,7 @@ export function usePublishPlan(): UseMutationResult<void, Error, PublishPlanVari
 
 /** Variables for `useArchivePlan` mutation. */
 export type ArchivePlanVariables = {
-  readonly id: PlanId;
+  readonly id: string;
 };
 
 /**
@@ -186,7 +185,7 @@ export function useArchivePlan(): UseMutationResult<void, Error, ArchivePlanVari
 
 /** Variables for `useCreatePriceVersion` mutation. */
 export type CreatePriceVersionVariables = {
-  readonly planId: PlanId;
+  readonly planId: string;
   readonly request: CreatePriceVersionRequest;
 };
 
@@ -230,15 +229,13 @@ export function useCreatePriceVersion(): UseMutationResult<
  * const { data: history } = usePlanPriceHistory(selectedPlanId);
  * ```
  */
-export function usePlanPriceHistory(
-  planId: PlanId | ''
-): UseQueryResult<readonly PlanPriceResponse[]> {
+export function usePlanPriceHistory(planId: string): UseQueryResult<readonly PlanPriceResponse[]> {
   const config = useSubscriptionsConfig();
   const basePath = config.basePath ?? '/api/granit/subscriptions';
 
   return useQuery({
     queryKey: buildSubscriptionsQueryKey(config, 'plans', planId, 'prices', 'history'),
-    queryFn: () => getPlanPriceHistory(config.client, basePath, planId as PlanId),
+    queryFn: () => getPlanPriceHistory(config.client, basePath, planId),
     enabled: planId.length > 0,
   });
 }

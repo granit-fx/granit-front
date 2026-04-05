@@ -1,6 +1,5 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toEntityId, toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -36,7 +35,7 @@ function createWrapper(client: AxiosInstance, basePath?: string) {
 }
 
 const sampleInvoice: InvoiceResponse = {
-  id: toEntityId<'Invoice'>('inv-1'),
+  id: 'inv-1',
   documentType: 'Invoice',
   invoiceNumber: 'INV-2026-0001',
   status: 'Paid',
@@ -51,11 +50,11 @@ const sampleInvoice: InvoiceResponse = {
   amountRemaining: 0,
   parentInvoiceId: null,
   creditNoteReason: null,
-  issuedAt: toISODateString('2026-03-01T00:00:00Z'),
-  dueAt: toISODateString('2026-03-15T00:00:00Z'),
-  paidAt: toISODateString('2026-03-02T10:00:00Z'),
-  periodStart: toISODateString('2026-03-01T00:00:00Z'),
-  periodEnd: toISODateString('2026-04-01T00:00:00Z'),
+  issuedAt: '2026-03-01T00:00:00Z',
+  dueAt: '2026-03-15T00:00:00Z',
+  paidAt: '2026-03-02T10:00:00Z',
+  periodStart: '2026-03-01T00:00:00Z',
+  periodEnd: '2026-04-01T00:00:00Z',
   lineItems: [],
 };
 
@@ -115,7 +114,7 @@ describe('useInvoice', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: sampleInvoice });
 
-    const { result } = renderHook(() => useInvoice(toEntityId<'Invoice'>('inv-1')), {
+    const { result } = renderHook(() => useInvoice('inv-1'), {
       wrapper: createWrapper(client),
     });
 
@@ -150,7 +149,7 @@ describe('useDownloadInvoicePdf', () => {
       wrapper: createWrapper(client),
     });
 
-    result.current.mutate(toEntityId<'Invoice'>('inv-1'));
+    result.current.mutate('inv-1');
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(client.get).toHaveBeenCalledWith('/api/granit/invoicing/invoices/inv-1/pdf', {
@@ -167,7 +166,7 @@ describe('useDownloadInvoicePdf', () => {
       wrapper: createWrapper(client),
     });
 
-    result.current.mutate(toEntityId<'Invoice'>('inv-999'));
+    result.current.mutate('inv-999');
 
     await waitFor(() => expect(result.current.isError).toBe(true));
     expect(result.current.error?.message).toBe('Not found');
@@ -194,8 +193,8 @@ describe('useCreateInvoice', () => {
       billingReason: 'SubscriptionCycle',
       parentInvoiceId: null,
       creditNoteReason: null,
-      periodStart: toISODateString('2026-03-01T00:00:00Z'),
-      periodEnd: toISODateString('2026-04-01T00:00:00Z'),
+      periodStart: '2026-03-01T00:00:00Z',
+      periodEnd: '2026-04-01T00:00:00Z',
     };
 
     result.current.mutate(request);

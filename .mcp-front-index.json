@@ -51,6 +51,16 @@
           "signature": "async function getAccountSettings( client: AxiosInstance, basePath: string ): Promise<AccountSettingsResponse>"
         },
         {
+          "name": "changeEmail",
+          "kind": "function",
+          "signature": "async function changeEmail( client: AxiosInstance, basePath: string, request: AccountChangeEmailRequest ): Promise<void>"
+        },
+        {
+          "name": "confirmEmailChange",
+          "kind": "function",
+          "signature": "async function confirmEmailChange( client: AxiosInstance, basePath: string, request: AccountConfirmEmailChangeRequest ): Promise<void>"
+        },
+        {
           "name": "deleteAccount",
           "kind": "function",
           "signature": "async function deleteAccount( client: AxiosInstance, basePath: string, request: AccountDeleteRequest ): Promise<void>"
@@ -1098,6 +1108,16 @@
           "signature": "function useSessionHeartbeat(): UseMutationResult<void, Error, void>"
         },
         {
+          "name": "useChangeEmail",
+          "kind": "function",
+          "signature": "function useChangeEmail(): UseMutationResult<void, Error, AccountChangeEmailRequest>"
+        },
+        {
+          "name": "useConfirmEmailChange",
+          "kind": "function",
+          "signature": "function useConfirmEmailChange(): UseMutationResult< void, Error, AccountConfirmEmailChangeRequest >"
+        },
+        {
           "name": "useDeleteAccount",
           "kind": "function",
           "signature": "function useDeleteAccount(): UseMutationResult<void, Error, AccountDeleteRequest>"
@@ -1975,7 +1995,7 @@
         {
           "name": "UpdateMeterDefinitionVariables",
           "kind": "type",
-          "signature": "type UpdateMeterDefinitionVariables = { readonly id: MeterDefinitionId; readonly request: MeterDefinitionUpdateRequest; }"
+          "signature": "type UpdateMeterDefinitionVariables = { readonly id: string; readonly request: MeterDefinitionUpdateRequest; }"
         }
       ]
     },
@@ -2526,17 +2546,17 @@
         {
           "name": "useAssignSeat",
           "kind": "function",
-          "signature": "function useAssignSeat( subscriptionId: SubscriptionId ): UseMutationResult<SeatResponse, Error, AssignSeatVariables>"
+          "signature": "function useAssignSeat( subscriptionId: string ): UseMutationResult<SeatResponse, Error, AssignSeatVariables>"
         },
         {
           "name": "useRevokeSeat",
           "kind": "function",
-          "signature": "function useRevokeSeat( subscriptionId: SubscriptionId ): UseMutationResult<void, Error, RevokeSeatVariables>"
+          "signature": "function useRevokeSeat( subscriptionId: string ): UseMutationResult<void, Error, RevokeSeatVariables>"
         },
         {
           "name": "useSeats",
           "kind": "function",
-          "signature": "function useSeats( subscriptionId: SubscriptionId | '' ): UseQueryResult<readonly SeatResponse[]>"
+          "signature": "function useSeats(subscriptionId: string): UseQueryResult<readonly SeatResponse[]>"
         },
         {
           "name": "AssignSeatVariables",
@@ -2546,7 +2566,7 @@
         {
           "name": "RevokeSeatVariables",
           "kind": "type",
-          "signature": "type RevokeSeatVariables = { readonly userId: UserId; }"
+          "signature": "type RevokeSeatVariables = { readonly userId: string; }"
         }
       ]
     },
@@ -3154,17 +3174,17 @@
         {
           "name": "assignSeat",
           "kind": "function",
-          "signature": "async function assignSeat( client: AxiosInstance, basePath: string, subscriptionId: SubscriptionId, request: SeatAssignRequest ): Promise<SeatResponse>"
+          "signature": "async function assignSeat( client: AxiosInstance, basePath: string, subscriptionId: string, request: SeatAssignRequest ): Promise<SeatResponse>"
         },
         {
           "name": "listSeats",
           "kind": "function",
-          "signature": "async function listSeats( client: AxiosInstance, basePath: string, subscriptionId: SubscriptionId ): Promise<readonly SeatResponse[]>"
+          "signature": "async function listSeats( client: AxiosInstance, basePath: string, subscriptionId: string ): Promise<readonly SeatResponse[]>"
         },
         {
           "name": "revokeSeat",
           "kind": "function",
-          "signature": "async function revokeSeat( client: AxiosInstance, basePath: string, subscriptionId: SubscriptionId, userId: UserId ): Promise<void>"
+          "signature": "async function revokeSeat( client: AxiosInstance, basePath: string, subscriptionId: string, userId: string ): Promise<void>"
         }
       ]
     },

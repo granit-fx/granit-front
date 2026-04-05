@@ -1,5 +1,4 @@
 import { createMockClient } from '@granit/testing';
-import { toEntityId, toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -25,7 +24,7 @@ import type {
 const basePath = '/api/granit/metering';
 
 const sampleMeter: MeterDefinitionResponse = {
-  id: toEntityId<'MeterDefinition'>('meter-1'),
+  id: 'meter-1',
   name: 'API Calls',
   unit: 'calls',
   description: 'Number of API calls',
@@ -34,11 +33,11 @@ const sampleMeter: MeterDefinitionResponse = {
 };
 
 const sampleUsage: UsageAggregateResponse = {
-  id: toEntityId<'UsageAggregate'>('agg-1'),
-  meterDefinitionId: toEntityId<'MeterDefinition'>('meter-1'),
+  id: 'agg-1',
+  meterDefinitionId: 'meter-1',
   period: 'Daily',
-  periodStart: toISODateString('2026-04-01T00:00:00Z'),
-  periodEnd: toISODateString('2026-04-02T00:00:00Z'),
+  periodStart: '2026-04-01T00:00:00Z',
+  periodEnd: '2026-04-02T00:00:00Z',
   aggregatedValue: 150,
   eventCount: 30,
 };
@@ -69,11 +68,7 @@ describe('metering-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: sampleMeter });
 
-      const result = await getMeterDefinition(
-        client,
-        basePath,
-        toEntityId<'MeterDefinition'>('meter-1')
-      );
+      const result = await getMeterDefinition(client, basePath, 'meter-1');
 
       expect(client.get).toHaveBeenCalledWith('/api/granit/metering/meters/meter-1');
       expect(result).toEqual(sampleMeter);
@@ -83,7 +78,7 @@ describe('metering-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: sampleMeter });
 
-      await getMeterDefinition(client, basePath, toEntityId<'MeterDefinition'>('meter/special'));
+      await getMeterDefinition(client, basePath, 'meter/special');
 
       expect(client.get).toHaveBeenCalledWith('/api/granit/metering/meters/meter%2Fspecial');
     });
@@ -120,12 +115,7 @@ describe('metering-api', () => {
         description: null,
       };
 
-      const result = await updateMeterDefinition(
-        client,
-        basePath,
-        toEntityId<'MeterDefinition'>('meter-1'),
-        request
-      );
+      const result = await updateMeterDefinition(client, basePath, 'meter-1', request);
 
       expect(client.put).toHaveBeenCalledWith('/api/granit/metering/meters/meter-1', request);
       expect(result).toEqual(updated);
@@ -141,12 +131,7 @@ describe('metering-api', () => {
         description: null,
       };
 
-      await updateMeterDefinition(
-        client,
-        basePath,
-        toEntityId<'MeterDefinition'>('meter/special'),
-        request
-      );
+      await updateMeterDefinition(client, basePath, 'meter/special', request);
 
       expect(client.put).toHaveBeenCalledWith(
         '/api/granit/metering/meters/meter%2Fspecial',
@@ -160,7 +145,7 @@ describe('metering-api', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue({ data: undefined });
 
-      await deactivateMeterDefinition(client, basePath, toEntityId<'MeterDefinition'>('meter-1'));
+      await deactivateMeterDefinition(client, basePath, 'meter-1');
 
       expect(client.post).toHaveBeenCalledWith('/api/granit/metering/meters/meter-1/deactivate');
     });
@@ -169,11 +154,7 @@ describe('metering-api', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue({ data: undefined });
 
-      await deactivateMeterDefinition(
-        client,
-        basePath,
-        toEntityId<'MeterDefinition'>('meter/special')
-      );
+      await deactivateMeterDefinition(client, basePath, 'meter/special');
 
       expect(client.post).toHaveBeenCalledWith(
         '/api/granit/metering/meters/meter%2Fspecial/deactivate'
@@ -198,11 +179,7 @@ describe('metering-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: sampleQuota });
 
-      const result = await checkMeteringQuota(
-        client,
-        basePath,
-        toEntityId<'MeterDefinition'>('meter-1')
-      );
+      const result = await checkMeteringQuota(client, basePath, 'meter-1');
 
       expect(client.get).toHaveBeenCalledWith('/api/granit/metering/quota/meter-1');
       expect(result).toEqual(sampleQuota);
@@ -212,7 +189,7 @@ describe('metering-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: sampleQuota });
 
-      await checkMeteringQuota(client, basePath, toEntityId<'MeterDefinition'>('meter/special'));
+      await checkMeteringQuota(client, basePath, 'meter/special');
 
       expect(client.get).toHaveBeenCalledWith('/api/granit/metering/quota/meter%2Fspecial');
     });
@@ -226,10 +203,10 @@ describe('metering-api', () => {
       const request: RecordUsageRequest = {
         events: [
           {
-            meterDefinitionId: toEntityId<'MeterDefinition'>('meter-1'),
+            meterDefinitionId: 'meter-1',
             idempotencyKey: 'key-1',
             quantity: 1,
-            timestamp: toISODateString('2026-04-04T12:00:00Z'),
+            timestamp: '2026-04-04T12:00:00Z',
             metadata: null,
           },
         ],

@@ -1,6 +1,5 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toEntityId, toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -23,22 +22,22 @@ import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
 const sampleBalance: CustomerBalanceResponse = {
-  balanceAccountId: toEntityId<'BalanceAccount'>('ba-001'),
+  balanceAccountId: 'ba-001',
   currency: 'EUR',
   balance: 150.0,
-  updatedAt: toISODateString('2026-04-01T10:00:00Z'),
+  updatedAt: '2026-04-01T10:00:00Z',
 };
 
 const sampleTransaction: BalanceTransactionResponse = {
-  id: toEntityId<'BalanceTransaction'>('tx-001'),
+  id: 'tx-001',
   type: 'Credit',
   amount: 50.0,
   source: 'Promotional',
   reason: 'Welcome bonus',
   referenceId: null,
   referenceType: null,
-  expiresAt: toISODateString('2026-12-31T23:59:59Z'),
-  createdAt: toISODateString('2026-04-01T10:00:00Z'),
+  expiresAt: '2026-12-31T23:59:59Z',
+  createdAt: '2026-04-01T10:00:00Z',
 };
 
 function createWrapper(client: AxiosInstance, basePath?: string) {
@@ -144,7 +143,7 @@ describe('use-customer-balance', () => {
         currency: 'USD',
         source: 'ManualAdjustment',
         reason: 'Compensation',
-        expiresAt: toISODateString('2026-12-31T23:59:59Z'),
+        expiresAt: '2026-12-31T23:59:59Z',
       };
 
       const { result } = renderHook(() => useAddAdminCredit(), {

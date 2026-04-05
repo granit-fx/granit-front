@@ -1,6 +1,5 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toEntityId, toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -24,19 +23,19 @@ import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
 const sampleSubscription: SubscriptionResponse = {
-  id: toEntityId<'Subscription'>('sub-1'),
-  planId: toEntityId<'Plan'>('plan-1'),
+  id: 'sub-1',
+  planId: 'plan-1',
   status: 'Active',
   currency: 'EUR',
-  currentPeriodStart: toISODateString('2026-01-01T00:00:00Z'),
-  currentPeriodEnd: toISODateString('2026-02-01T00:00:00Z'),
+  currentPeriodStart: '2026-01-01T00:00:00Z',
+  currentPeriodEnd: '2026-02-01T00:00:00Z',
   trialEndsAt: null,
   cancelAtPeriodEnd: false,
   cancelledAt: null,
   cancellationReason: null,
   dunningAttempt: 0,
   seatCount: 5,
-  planPriceId: toEntityId<'PlanPrice'>('price-1'),
+  planPriceId: 'price-1',
 };
 
 function createWrapper(client: AxiosInstance, basePath?: string) {
@@ -91,7 +90,7 @@ describe('use-subscriptions', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: sampleSubscription });
 
-      const { result } = renderHook(() => useSubscription(toEntityId<'Subscription'>('sub-1')), {
+      const { result } = renderHook(() => useSubscription('sub-1'), {
         wrapper: createWrapper(client),
       });
 
@@ -120,11 +119,7 @@ describe('use-subscriptions', () => {
         wrapper: createWrapper(client),
       });
 
-      const request = {
-        planId: toEntityId<'Plan'>('plan-1'),
-        currency: 'EUR' as const,
-        trialEndsAt: null,
-      };
+      const request = { planId: 'plan-1', currency: 'EUR', trialEndsAt: null };
       result.current.mutate(request);
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -142,7 +137,7 @@ describe('use-subscriptions', () => {
       });
 
       const request = { reason: 'Too expensive', atPeriodEnd: true };
-      result.current.mutate({ id: toEntityId<'Subscription'>('sub-1'), request });
+      result.current.mutate({ id: 'sub-1', request });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith(
@@ -161,8 +156,8 @@ describe('use-subscriptions', () => {
         wrapper: createWrapper(client),
       });
 
-      const request = { newPlanId: toEntityId<'Plan'>('plan-2') };
-      result.current.mutate({ id: toEntityId<'Subscription'>('sub-1'), request });
+      const request = { newPlanId: 'plan-2' };
+      result.current.mutate({ id: 'sub-1', request });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith(
@@ -181,8 +176,8 @@ describe('use-subscriptions', () => {
         wrapper: createWrapper(client),
       });
 
-      const request = { newPlanPriceId: toEntityId<'PlanPrice'>('price-2') };
-      result.current.mutate({ id: toEntityId<'Subscription'>('sub-1'), request });
+      const request = { newPlanPriceId: 'price-2' };
+      result.current.mutate({ id: 'sub-1', request });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith(
@@ -203,9 +198,9 @@ describe('use-subscriptions', () => {
       });
 
       const request = {
-        planId: toEntityId<'Plan'>('plan-1'),
-        newPlanPriceId: toEntityId<'PlanPrice'>('price-2'),
-        oldPlanPriceId: toEntityId<'PlanPrice'>('price-1'),
+        planId: 'plan-1',
+        newPlanPriceId: 'price-2',
+        oldPlanPriceId: 'price-1',
       };
       result.current.mutate(request);
 

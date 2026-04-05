@@ -1,6 +1,5 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toEntityId, toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -44,7 +43,7 @@ function createWrapper(client: AxiosInstance, basePath?: string) {
 }
 
 const sampleMeter: MeterDefinitionResponse = {
-  id: toEntityId<'MeterDefinition'>('meter-1'),
+  id: 'meter-1',
   name: 'API Calls',
   unit: 'calls',
   description: 'Number of API calls',
@@ -53,11 +52,11 @@ const sampleMeter: MeterDefinitionResponse = {
 };
 
 const sampleUsage: UsageAggregateResponse = {
-  id: toEntityId<'UsageAggregate'>('agg-1'),
-  meterDefinitionId: toEntityId<'MeterDefinition'>('meter-1'),
+  id: 'agg-1',
+  meterDefinitionId: 'meter-1',
   period: 'Daily',
-  periodStart: toISODateString('2026-04-01T00:00:00Z'),
-  periodEnd: toISODateString('2026-04-02T00:00:00Z'),
+  periodStart: '2026-04-01T00:00:00Z',
+  periodEnd: '2026-04-02T00:00:00Z',
   aggregatedValue: 150,
   eventCount: 30,
 };
@@ -111,12 +110,9 @@ describe('use-metering', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: sampleMeter });
 
-      const { result } = renderHook(
-        () => useMeterDefinition(toEntityId<'MeterDefinition'>('meter-1')),
-        {
-          wrapper: createWrapper(client),
-        }
-      );
+      const { result } = renderHook(() => useMeterDefinition('meter-1'), {
+        wrapper: createWrapper(client),
+      });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.get).toHaveBeenCalledWith('/api/granit/metering/meters/meter-1');
@@ -154,12 +150,9 @@ describe('use-metering', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: sampleQuota });
 
-      const { result } = renderHook(
-        () => useMeteringQuota(toEntityId<'MeterDefinition'>('meter-1')),
-        {
-          wrapper: createWrapper(client),
-        }
-      );
+      const { result } = renderHook(() => useMeteringQuota('meter-1'), {
+        wrapper: createWrapper(client),
+      });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.get).toHaveBeenCalledWith('/api/granit/metering/quota/meter-1');
@@ -214,7 +207,7 @@ describe('use-metering', () => {
       });
 
       result.current.mutate({
-        id: toEntityId<'MeterDefinition'>('meter-1'),
+        id: 'meter-1',
         request: { name: 'Updated', unit: 'calls', description: null },
       });
 
@@ -236,7 +229,7 @@ describe('use-metering', () => {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate(toEntityId<'MeterDefinition'>('meter-1'));
+      result.current.mutate('meter-1');
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith('/api/granit/metering/meters/meter-1/deactivate');
@@ -255,10 +248,10 @@ describe('use-metering', () => {
       const request = {
         events: [
           {
-            meterDefinitionId: toEntityId<'MeterDefinition'>('meter-1'),
+            meterDefinitionId: 'meter-1',
             idempotencyKey: 'key-1',
             quantity: 1,
-            timestamp: toISODateString('2026-04-04T12:00:00Z'),
+            timestamp: '2026-04-04T12:00:00Z',
             metadata: null,
           },
         ],

@@ -1,8 +1,6 @@
 // Types
 export type {
   AdminCreditRequest,
-  BalanceAccountId,
-  BalanceTransactionId,
   BalanceTransactionResponse,
   CustomerBalanceResponse,
 } from './types.js';

@@ -1,6 +1,5 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -35,7 +34,7 @@ const mockValidateResponse: TaxValidateResponse = {
   companyName: 'Digital Dynamics SRL',
   companyAddress: 'Rue de la Loi 1, 1000 Bruxelles',
   requestIdentifier: 'req-abc-123',
-  validatedAt: toISODateString('2026-04-04T10:00:00Z'),
+  validatedAt: '2026-04-04T10:00:00Z',
   source: 'VIES',
 };
 
@@ -45,7 +44,7 @@ const mockBelgiumRate: TaxRateResponse = {
   reducedRate: 6,
   superReducedRate: null,
   parkingRate: 12,
-  effectiveFrom: toISODateString('2024-01-01'),
+  effectiveFrom: '2024-01-01',
   effectiveTo: null,
 };
 
@@ -55,7 +54,7 @@ const mockLuxembourgRate: TaxRateResponse = {
   reducedRate: 8,
   superReducedRate: 3,
   parkingRate: 14,
-  effectiveFrom: toISODateString('2024-01-01'),
+  effectiveFrom: '2024-01-01',
   effectiveTo: null,
 };
 

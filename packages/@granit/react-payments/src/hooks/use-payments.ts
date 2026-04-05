@@ -19,11 +19,9 @@ import type {
   PaymentChargeRequest,
   PaymentCheckoutRequest,
   PaymentCheckoutSessionResponse,
-  PaymentMethodId,
   PaymentMethodResponse,
   PaymentRefundRequest,
   PaymentRefundResponse,
-  PaymentTransactionId,
   PaymentTransactionResponse,
 } from '@granit/payments';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
@@ -58,15 +56,13 @@ export function usePaymentTransactions(): UseQueryResult<readonly PaymentTransac
  * const { data: transaction } = usePaymentTransaction(selectedId);
  * ```
  */
-export function usePaymentTransaction(
-  id: PaymentTransactionId | ''
-): UseQueryResult<PaymentTransactionResponse> {
+export function usePaymentTransaction(id: string): UseQueryResult<PaymentTransactionResponse> {
   const config = usePaymentsConfig();
   const basePath = config.basePath ?? DEFAULT_BASE_PATH;
 
   return useQuery({
     queryKey: buildPaymentsQueryKey(config, 'transactions', id),
-    queryFn: () => getPaymentTransaction(config.client, basePath, id as PaymentTransactionId),
+    queryFn: () => getPaymentTransaction(config.client, basePath, id),
     enabled: id.length > 0,
   });
 }
@@ -233,13 +229,13 @@ export function useAttachPaymentMethod(): UseMutationResult<
  * await detach.mutateAsync('pm-1');
  * ```
  */
-export function useDetachPaymentMethod(): UseMutationResult<void, Error, PaymentMethodId> {
+export function useDetachPaymentMethod(): UseMutationResult<void, Error, string> {
   const config = usePaymentsConfig();
   const queryClient = useQueryClient();
   const basePath = config.basePath ?? DEFAULT_BASE_PATH;
 
   return useMutation({
-    mutationFn: (id: PaymentMethodId) => detachPaymentMethod(config.client, basePath, id),
+    mutationFn: (id: string) => detachPaymentMethod(config.client, basePath, id),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildPaymentsQueryKey(config, 'methods'),

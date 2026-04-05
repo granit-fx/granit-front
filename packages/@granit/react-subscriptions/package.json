@@ -30,7 +30,6 @@
   },
   "devDependencies": {
     "@granit/testing": "workspace:*",
-    "@granit/react-testing": "workspace:*",
-    "@granit/types": "workspace:*"
+    "@granit/react-testing": "workspace:*"
   }
 }

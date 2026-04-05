@@ -3,13 +3,11 @@ export type {
   AggregationPeriod,
   AggregationType,
   MeterDefinitionCreateRequest,
-  MeterDefinitionId,
   MeterDefinitionResponse,
   MeterDefinitionUpdateRequest,
   MeterEventRequest,
   MeteringQuotaStatusResponse,
   RecordUsageRequest,
-  UsageAggregateId,
   UsageAggregateResponse,
 } from './types.js';
 

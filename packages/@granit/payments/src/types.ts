@@ -1,11 +1,3 @@
-import type { CurrencyCode, EntityId, ISODateString, TenantId } from '@granit/types';
-
-export type PaymentTransactionId = EntityId<'PaymentTransaction'>;
-export type PaymentRefundId = EntityId<'PaymentRefund'>;
-export type PaymentDisputeId = EntityId<'PaymentDispute'>;
-export type PaymentMethodId = EntityId<'PaymentMethod'>;
-type InvoiceId = EntityId<'Invoice'>;
-
 export type PaymentStatus =
   | 'Pending'
   | 'Processing'
@@ -21,25 +13,25 @@ export type DisputeStatus = 'Open' | 'UnderReview' | 'Won' | 'Lost';
 export type PaymentMethodCategory = 'Card' | 'BankTransfer' | 'Wallet' | 'DirectDebit';
 
 export interface PaymentChargeRequest {
-  readonly invoiceId: InvoiceId;
+  readonly invoiceId: string;
   readonly amount: number;
-  readonly currency: CurrencyCode;
+  readonly currency: string;
   readonly methodType: string;
   readonly idempotencyKey: string;
   readonly providerName: string | null;
 }
 
 export interface PaymentRefundRequest {
-  readonly transactionId: PaymentTransactionId;
+  readonly transactionId: string;
   readonly amount: number;
   readonly reason: string | null;
   readonly idempotencyKey: string;
 }
 
 export interface PaymentCheckoutRequest {
-  readonly transactionId: PaymentTransactionId;
+  readonly transactionId: string;
   readonly amount: number;
-  readonly currency: CurrencyCode;
+  readonly currency: string;
   readonly methodType: string;
   readonly successUrl: string;
   readonly cancelUrl: string;
@@ -53,61 +45,61 @@ export interface PaymentAttachMethodRequest {
 }
 
 export interface PaymentTransactionResponse {
-  readonly id: PaymentTransactionId;
-  readonly invoiceId: InvoiceId;
+  readonly id: string;
+  readonly invoiceId: string;
   readonly amount: number;
-  readonly currency: CurrencyCode;
+  readonly currency: string;
   readonly status: PaymentStatus;
   readonly providerName: string;
   readonly providerTransactionId: string | null;
-  readonly paymentMethodId: PaymentMethodId | null;
+  readonly paymentMethodId: string | null;
   readonly actionUrl: string | null;
   readonly idempotencyKey: string;
   readonly failureCode: string | null;
-  readonly succeededAt: ISODateString | null;
-  readonly canceledAt: ISODateString | null;
+  readonly succeededAt: string | null;
+  readonly canceledAt: string | null;
   readonly refunds: readonly PaymentRefundResponse[];
   readonly disputes: readonly PaymentDisputeResponse[];
-  readonly tenantId: TenantId | null;
+  readonly tenantId: string | null;
 }
 
 export interface PaymentRefundResponse {
-  readonly id: PaymentRefundId;
+  readonly id: string;
   readonly amount: number;
-  readonly currency: CurrencyCode;
+  readonly currency: string;
   readonly status: RefundStatus;
   readonly providerRefundId: string | null;
   readonly reason: string | null;
-  readonly createdAt: ISODateString;
-  readonly completedAt: ISODateString | null;
+  readonly createdAt: string;
+  readonly completedAt: string | null;
 }
 
 export interface PaymentDisputeResponse {
-  readonly id: PaymentDisputeId;
+  readonly id: string;
   readonly providerDisputeId: string;
   readonly status: DisputeStatus;
   readonly reason: string;
   readonly amount: number;
-  readonly currency: CurrencyCode;
-  readonly createdAt: ISODateString;
-  readonly resolvedAt: ISODateString | null;
+  readonly currency: string;
+  readonly createdAt: string;
+  readonly resolvedAt: string | null;
 }
 
 export interface PaymentCheckoutSessionResponse {
   readonly url: string;
   readonly sessionId: string;
-  readonly expiresAt: ISODateString;
+  readonly expiresAt: string;
 }
 
 export interface PaymentMethodResponse {
-  readonly id: PaymentMethodId;
+  readonly id: string;
   readonly type: string;
   readonly providerName: string;
   readonly providerMethodId: string;
   readonly displayLabel: string;
   readonly isDefault: boolean;
-  readonly expiresAt: ISODateString | null;
-  readonly tenantId: TenantId | null;
+  readonly expiresAt: string | null;
+  readonly tenantId: string | null;
 }
 
 export interface PaymentAvailableMethodResponse {

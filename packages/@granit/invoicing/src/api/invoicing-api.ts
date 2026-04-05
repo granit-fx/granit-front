@@ -1,4 +1,4 @@
-import type { InvoiceCreateRequest, InvoiceId, InvoiceResponse } from '../types.js';
+import type { InvoiceCreateRequest, InvoiceResponse } from '../types.js';
 import type { AxiosInstance } from 'axios';
 
 /**
@@ -22,7 +22,7 @@ export async function listInvoices(
 export async function getInvoiceById(
   client: AxiosInstance,
   basePath: string,
-  id: InvoiceId
+  id: string
 ): Promise<InvoiceResponse> {
   const response = await client.get<InvoiceResponse>(
     `${basePath}/invoices/${encodeURIComponent(id)}`
@@ -40,7 +40,7 @@ export async function getInvoiceById(
 export async function downloadInvoicePdf(
   client: AxiosInstance,
   basePath: string,
-  id: InvoiceId
+  id: string
 ): Promise<Blob> {
   const response = await client.get<Blob>(`${basePath}/invoices/${encodeURIComponent(id)}/pdf`, {
     responseType: 'blob',

@@ -1,8 +1,3 @@
-import type { CurrencyCode, EntityId, ISODateString } from '@granit/types';
-
-export type InvoiceId = EntityId<'Invoice'>;
-export type InvoiceLineItemId = EntityId<'InvoiceLineItem'>;
-
 /** The document type of an invoice. */
 export type InvoiceDocumentType = 'Invoice' | 'CreditNote';
 
@@ -21,18 +16,18 @@ export type BillingReason =
 /** Payload for creating a new invoice. */
 export interface InvoiceCreateRequest {
   readonly documentType: InvoiceDocumentType;
-  readonly currency: CurrencyCode;
+  readonly currency: string;
   readonly collectionMethod: CollectionMethod;
   readonly billingReason: BillingReason;
-  readonly parentInvoiceId: InvoiceId | null;
+  readonly parentInvoiceId: string | null;
   readonly creditNoteReason: string | null;
-  readonly periodStart: ISODateString | null;
-  readonly periodEnd: ISODateString | null;
+  readonly periodStart: string | null;
+  readonly periodEnd: string | null;
 }
 
 /** A single line item within an invoice. */
 export interface InvoiceLineItemResponse {
-  readonly id: InvoiceLineItemId;
+  readonly id: string;
   readonly description: string;
   readonly quantity: number;
   readonly unitPrice: number;
@@ -41,31 +36,31 @@ export interface InvoiceLineItemResponse {
   readonly taxAmount: number;
   readonly sourceType: string;
   readonly sourceId: string | null;
-  readonly periodStart: ISODateString | null;
-  readonly periodEnd: ISODateString | null;
+  readonly periodStart: string | null;
+  readonly periodEnd: string | null;
 }
 
 /** Full invoice response from the API. */
 export interface InvoiceResponse {
-  readonly id: InvoiceId;
+  readonly id: string;
   readonly documentType: string;
   readonly invoiceNumber: string | null;
   readonly status: string;
   readonly collectionMethod: string;
   readonly billingReason: string;
-  readonly currency: CurrencyCode;
+  readonly currency: string;
   readonly subtotal: number;
   readonly taxTotal: number;
   readonly total: number;
   readonly amountPaid: number;
   readonly amountCredited: number;
   readonly amountRemaining: number;
-  readonly parentInvoiceId: InvoiceId | null;
+  readonly parentInvoiceId: string | null;
   readonly creditNoteReason: string | null;
-  readonly issuedAt: ISODateString | null;
-  readonly dueAt: ISODateString | null;
-  readonly paidAt: ISODateString | null;
-  readonly periodStart: ISODateString | null;
-  readonly periodEnd: ISODateString | null;
+  readonly issuedAt: string | null;
+  readonly dueAt: string | null;
+  readonly paidAt: string | null;
+  readonly periodStart: string | null;
+  readonly periodEnd: string | null;
   readonly lineItems: readonly InvoiceLineItemResponse[];
 }

@@ -1,6 +1,5 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toEntityId, toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -15,9 +14,9 @@ import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
 const sampleSeat: SeatResponse = {
-  id: toEntityId<'Seat'>('seat-1'),
-  userId: toEntityId<'User'>('user-1'),
-  assignedAt: toISODateString('2026-01-15T10:00:00Z'),
+  id: 'seat-1',
+  userId: 'user-1',
+  assignedAt: '2026-01-15T10:00:00Z',
 };
 
 function createWrapper(client: AxiosInstance, basePath?: string) {
@@ -42,7 +41,7 @@ describe('use-seats', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: [sampleSeat] });
 
-      const { result } = renderHook(() => useSeats(toEntityId<'Subscription'>('sub-1')), {
+      const { result } = renderHook(() => useSeats('sub-1'), {
         wrapper: createWrapper(client),
       });
 
@@ -70,16 +69,16 @@ describe('use-seats', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue({ data: sampleSeat });
 
-      const { result } = renderHook(() => useAssignSeat(toEntityId<'Subscription'>('sub-1')), {
+      const { result } = renderHook(() => useAssignSeat('sub-1'), {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate({ userId: toEntityId<'User'>('user-1') });
+      result.current.mutate({ userId: 'user-1' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith(
         '/api/granit/subscriptions/subscriptions/sub-1/seats',
-        { userId: toEntityId<'User'>('user-1') }
+        { userId: 'user-1' }
       );
       expect(result.current.data).toEqual(sampleSeat);
     });
@@ -90,11 +89,11 @@ describe('use-seats', () => {
       const client = createMockClient();
       vi.mocked(client.delete).mockResolvedValue({ data: undefined });
 
-      const { result } = renderHook(() => useRevokeSeat(toEntityId<'Subscription'>('sub-1')), {
+      const { result } = renderHook(() => useRevokeSeat('sub-1'), {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate({ userId: toEntityId<'User'>('user-1') });
+      result.current.mutate({ userId: 'user-1' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.delete).toHaveBeenCalledWith(
@@ -106,11 +105,11 @@ describe('use-seats', () => {
       const client = createMockClient();
       vi.mocked(client.delete).mockResolvedValue({ data: undefined });
 
-      const { result } = renderHook(() => useRevokeSeat(toEntityId<'Subscription'>('sub-1')), {
+      const { result } = renderHook(() => useRevokeSeat('sub-1'), {
         wrapper: createWrapper(client, '/custom/path'),
       });
 
-      result.current.mutate({ userId: toEntityId<'User'>('user-1') });
+      result.current.mutate({ userId: 'user-1' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.delete).toHaveBeenCalledWith('/custom/path/subscriptions/sub-1/seats/user-1');

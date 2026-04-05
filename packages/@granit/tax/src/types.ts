@@ -1,5 +1,3 @@
-import type { ISODateString } from '@granit/types';
-
 /** Request payload for tax ID validation. */
 export interface TaxValidateRequest {
   readonly taxId: string;
@@ -12,7 +10,7 @@ export interface TaxValidateResponse {
   readonly companyName: string | null;
   readonly companyAddress: string | null;
   readonly requestIdentifier: string | null;
-  readonly validatedAt: ISODateString | null;
+  readonly validatedAt: string | null;
   readonly source: string;
 }
 
@@ -23,6 +21,6 @@ export interface TaxRateResponse {
   readonly reducedRate: number | null;
   readonly superReducedRate: number | null;
   readonly parkingRate: number | null;
-  readonly effectiveFrom: ISODateString | null;
-  readonly effectiveTo: ISODateString | null;
+  readonly effectiveFrom: string | null;
+  readonly effectiveTo: string | null;
 }

@@ -1,5 +1,4 @@
 import { createMockClient } from '@granit/testing';
-import { toEntityId, toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -15,22 +14,22 @@ import type {
 } from '../types.js';
 
 const sampleBalance: CustomerBalanceResponse = {
-  balanceAccountId: toEntityId<'BalanceAccount'>('ba-001'),
+  balanceAccountId: 'ba-001',
   currency: 'EUR',
   balance: 150.0,
-  updatedAt: toISODateString('2026-04-01T10:00:00Z'),
+  updatedAt: '2026-04-01T10:00:00Z',
 };
 
 const sampleTransaction: BalanceTransactionResponse = {
-  id: toEntityId<'BalanceTransaction'>('tx-001'),
+  id: 'tx-001',
   type: 'Credit',
   amount: 50.0,
   source: 'Promotional',
   reason: 'Welcome bonus',
   referenceId: null,
   referenceType: null,
-  expiresAt: toISODateString('2026-12-31T23:59:59Z'),
-  createdAt: toISODateString('2026-04-01T10:00:00Z'),
+  expiresAt: '2026-12-31T23:59:59Z',
+  createdAt: '2026-04-01T10:00:00Z',
 };
 
 const basePath = '/api/granit/customer-balance';
@@ -98,7 +97,7 @@ describe('customer-balance-api', () => {
         currency: 'EUR',
         source: 'Promotional',
         reason: 'Welcome bonus',
-        expiresAt: toISODateString('2026-12-31T23:59:59Z'),
+        expiresAt: '2026-12-31T23:59:59Z',
       };
 
       await addAdminCredit(client, basePath, request);

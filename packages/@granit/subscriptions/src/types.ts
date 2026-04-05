@@ -1,10 +1,3 @@
-import type { CurrencyCode, EntityId, ISODateString, UserId } from '@granit/types';
-
-export type PlanId = EntityId<'Plan'>;
-export type PlanPriceId = EntityId<'PlanPrice'>;
-export type SubscriptionId = EntityId<'Subscription'>;
-export type SeatId = EntityId<'Seat'>;
-
 export type PricingModel = 'Flat' | 'PerSeat' | 'Tiered' | 'UsageBased';
 export type BillingInterval = 'Monthly' | 'Quarterly' | 'SemiAnnual' | 'Annual';
 export type PlanLifecycleStatus = 'Draft' | 'Published' | 'Archived';
@@ -27,14 +20,14 @@ export interface PlanUpdateRequest {
 
 export interface CreatePriceVersionRequest {
   readonly amount: number;
-  readonly currency: CurrencyCode;
+  readonly currency: string;
   readonly interval: BillingInterval;
 }
 
 export interface SubscriptionCreateRequest {
-  readonly planId: PlanId;
-  readonly currency: CurrencyCode;
-  readonly trialEndsAt: ISODateString | null;
+  readonly planId: string;
+  readonly currency: string;
+  readonly trialEndsAt: string | null;
 }
 
 export interface SubscriptionCancelRequest {
@@ -43,25 +36,25 @@ export interface SubscriptionCancelRequest {
 }
 
 export interface SubscriptionChangePlanRequest {
-  readonly newPlanId: PlanId;
+  readonly newPlanId: string;
 }
 
 export interface MigratePriceRequest {
-  readonly newPlanPriceId: PlanPriceId;
+  readonly newPlanPriceId: string;
 }
 
 export interface BulkMigratePriceRequest {
-  readonly planId: PlanId;
-  readonly newPlanPriceId: PlanPriceId;
-  readonly oldPlanPriceId: PlanPriceId | null;
+  readonly planId: string;
+  readonly newPlanPriceId: string;
+  readonly oldPlanPriceId: string | null;
 }
 
 export interface SeatAssignRequest {
-  readonly userId: UserId;
+  readonly userId: string;
 }
 
 export interface PlanResponse {
-  readonly id: PlanId;
+  readonly id: string;
   readonly name: string;
   readonly description: string | null;
   readonly pricingModel: string;
@@ -74,36 +67,36 @@ export interface PlanResponse {
 }
 
 export interface PlanPriceResponse {
-  readonly id: PlanPriceId;
+  readonly id: string;
   readonly amount: number;
-  readonly currency: CurrencyCode;
+  readonly currency: string;
   readonly interval: string;
-  readonly effectiveFrom: ISODateString;
+  readonly effectiveFrom: string;
   readonly isActive: boolean;
-  readonly replacedByPriceId: PlanPriceId | null;
-  readonly replacedAt: ISODateString | null;
+  readonly replacedByPriceId: string | null;
+  readonly replacedAt: string | null;
 }
 
 export interface SubscriptionResponse {
-  readonly id: SubscriptionId;
-  readonly planId: PlanId;
+  readonly id: string;
+  readonly planId: string;
   readonly status: SubscriptionStatus;
-  readonly currency: CurrencyCode;
-  readonly currentPeriodStart: ISODateString;
-  readonly currentPeriodEnd: ISODateString;
-  readonly trialEndsAt: ISODateString | null;
+  readonly currency: string;
+  readonly currentPeriodStart: string;
+  readonly currentPeriodEnd: string;
+  readonly trialEndsAt: string | null;
   readonly cancelAtPeriodEnd: boolean;
-  readonly cancelledAt: ISODateString | null;
+  readonly cancelledAt: string | null;
   readonly cancellationReason: string | null;
   readonly dunningAttempt: number;
   readonly seatCount: number;
-  readonly planPriceId: PlanPriceId | null;
+  readonly planPriceId: string | null;
 }
 
 export interface SeatResponse {
-  readonly id: SeatId;
-  readonly userId: UserId;
-  readonly assignedAt: ISODateString;
+  readonly id: string;
+  readonly userId: string;
+  readonly assignedAt: string;
 }
 
 export interface BulkMigratePriceResponse {

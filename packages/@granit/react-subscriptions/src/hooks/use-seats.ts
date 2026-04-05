@@ -6,8 +6,7 @@ import {
   useSubscriptionsConfig,
 } from '../providers/subscriptions-provider.js';
 
-import type { SeatAssignRequest, SeatResponse, SubscriptionId } from '@granit/subscriptions';
-import type { UserId } from '@granit/types';
+import type { SeatAssignRequest, SeatResponse } from '@granit/subscriptions';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -20,15 +19,13 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
  * const { data: seats } = useSeats(subscriptionId);
  * ```
  */
-export function useSeats(
-  subscriptionId: SubscriptionId | ''
-): UseQueryResult<readonly SeatResponse[]> {
+export function useSeats(subscriptionId: string): UseQueryResult<readonly SeatResponse[]> {
   const config = useSubscriptionsConfig();
   const basePath = config.basePath ?? '/api/granit/subscriptions';
 
   return useQuery({
     queryKey: buildSubscriptionsQueryKey(config, 'subscriptions', subscriptionId, 'seats'),
-    queryFn: () => listSeats(config.client, basePath, subscriptionId as SubscriptionId),
+    queryFn: () => listSeats(config.client, basePath, subscriptionId),
     enabled: subscriptionId.length > 0,
   });
 }
@@ -47,7 +44,7 @@ export type AssignSeatVariables = SeatAssignRequest;
  * ```
  */
 export function useAssignSeat(
-  subscriptionId: SubscriptionId
+  subscriptionId: string
 ): UseMutationResult<SeatResponse, Error, AssignSeatVariables> {
   const config = useSubscriptionsConfig();
   const queryClient = useQueryClient();
@@ -66,7 +63,7 @@ export function useAssignSeat(
 
 /** Variables for `useRevokeSeat` mutation. */
 export type RevokeSeatVariables = {
-  readonly userId: UserId;
+  readonly userId: string;
 };
 
 /**
@@ -80,7 +77,7 @@ export type RevokeSeatVariables = {
  * ```
  */
 export function useRevokeSeat(
-  subscriptionId: SubscriptionId
+  subscriptionId: string
 ): UseMutationResult<void, Error, RevokeSeatVariables> {
   const config = useSubscriptionsConfig();
   const queryClient = useQueryClient();

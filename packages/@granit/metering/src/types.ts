@@ -1,8 +1,3 @@
-import type { EntityId, ISODateString } from '@granit/types';
-
-export type MeterDefinitionId = EntityId<'MeterDefinition'>;
-export type UsageAggregateId = EntityId<'UsageAggregate'>;
-
 export type AggregationType = 'Sum' | 'Count' | 'Max' | 'Last' | 'UniqueCount';
 
 export type AggregationPeriod = 'Hourly' | 'Daily' | 'Monthly';
@@ -21,10 +16,10 @@ export interface MeterDefinitionUpdateRequest {
 }
 
 export interface MeterEventRequest {
-  readonly meterDefinitionId: MeterDefinitionId;
+  readonly meterDefinitionId: string;
   readonly idempotencyKey: string;
   readonly quantity: number;
-  readonly timestamp: ISODateString;
+  readonly timestamp: string;
   readonly metadata: string | null;
 }
 
@@ -33,7 +28,7 @@ export interface RecordUsageRequest {
 }
 
 export interface MeterDefinitionResponse {
-  readonly id: MeterDefinitionId;
+  readonly id: string;
   readonly name: string;
   readonly unit: string;
   readonly description: string | null;
@@ -42,11 +37,11 @@ export interface MeterDefinitionResponse {
 }
 
 export interface UsageAggregateResponse {
-  readonly id: UsageAggregateId;
-  readonly meterDefinitionId: MeterDefinitionId;
+  readonly id: string;
+  readonly meterDefinitionId: string;
   readonly period: AggregationPeriod;
-  readonly periodStart: ISODateString;
-  readonly periodEnd: ISODateString;
+  readonly periodStart: string;
+  readonly periodEnd: string;
   readonly aggregatedValue: number;
   readonly eventCount: number;
 }

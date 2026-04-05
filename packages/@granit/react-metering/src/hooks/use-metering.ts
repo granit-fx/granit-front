@@ -14,7 +14,6 @@ import { buildMeteringQueryKey, useMeteringConfig } from '../providers/metering-
 
 import type {
   MeterDefinitionCreateRequest,
-  MeterDefinitionId,
   MeterDefinitionResponse,
   MeterDefinitionUpdateRequest,
   MeteringQuotaStatusResponse,
@@ -57,15 +56,13 @@ export function useActiveMeters(): UseQueryResult<readonly MeterDefinitionRespon
  * const { data: meter } = useMeterDefinition(selectedId);
  * ```
  */
-export function useMeterDefinition(
-  id: MeterDefinitionId | ''
-): UseQueryResult<MeterDefinitionResponse> {
+export function useMeterDefinition(id: string): UseQueryResult<MeterDefinitionResponse> {
   const config = useMeteringConfig();
   const basePath = config.basePath ?? DEFAULT_BASE_PATH;
 
   return useQuery({
     queryKey: buildMeteringQueryKey(config, 'meters', id),
-    queryFn: () => getMeterDefinition(config.client, basePath, id as MeterDefinitionId),
+    queryFn: () => getMeterDefinition(config.client, basePath, id),
     enabled: id.length > 0,
   });
 }
@@ -98,15 +95,13 @@ export function useUsageForPeriod(): UseQueryResult<readonly UsageAggregateRespo
  * const { data: quota } = useMeteringQuota(meterId);
  * ```
  */
-export function useMeteringQuota(
-  meterId: MeterDefinitionId | ''
-): UseQueryResult<MeteringQuotaStatusResponse> {
+export function useMeteringQuota(meterId: string): UseQueryResult<MeteringQuotaStatusResponse> {
   const config = useMeteringConfig();
   const basePath = config.basePath ?? DEFAULT_BASE_PATH;
 
   return useQuery({
     queryKey: buildMeteringQueryKey(config, 'quota', meterId),
-    queryFn: () => checkMeteringQuota(config.client, basePath, meterId as MeterDefinitionId),
+    queryFn: () => checkMeteringQuota(config.client, basePath, meterId),
     enabled: meterId.length > 0,
   });
 }
@@ -147,7 +142,7 @@ export function useCreateMeterDefinition(): UseMutationResult<
 
 /** Variables for `useUpdateMeterDefinition`. */
 export type UpdateMeterDefinitionVariables = {
-  readonly id: MeterDefinitionId;
+  readonly id: string;
   readonly request: MeterDefinitionUpdateRequest;
 };
 
@@ -191,13 +186,13 @@ export function useUpdateMeterDefinition(): UseMutationResult<
  * await deactivate.mutateAsync('meter-1');
  * ```
  */
-export function useDeactivateMeterDefinition(): UseMutationResult<void, Error, MeterDefinitionId> {
+export function useDeactivateMeterDefinition(): UseMutationResult<void, Error, string> {
   const config = useMeteringConfig();
   const queryClient = useQueryClient();
   const basePath = config.basePath ?? DEFAULT_BASE_PATH;
 
   return useMutation({
-    mutationFn: (id: MeterDefinitionId) => deactivateMeterDefinition(config.client, basePath, id),
+    mutationFn: (id: string) => deactivateMeterDefinition(config.client, basePath, id),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildMeteringQueryKey(config, 'meters'),
