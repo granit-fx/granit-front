@@ -32,3 +32,5 @@ export type {
 export type { AccountImpersonationResult } from './account-session.js';
 
 export type { AccountDeleteRequest } from './account-deletion.js';
+
+export type { AccountSettingsResponse } from './account-settings.js';

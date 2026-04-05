@@ -6,4 +6,5 @@ export const accountKeys = {
   authenticatorKey: () => [...accountKeys.twoFactor(), 'authenticator-key'] as const,
   externalLogins: () => [...accountKeys.all, 'external-logins'] as const,
   passkeys: () => [...accountKeys.all, 'passkeys'] as const,
+  settings: () => [...accountKeys.all, 'settings'] as const,
 };

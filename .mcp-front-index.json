@@ -46,6 +46,11 @@
           "signature": "async function sessionHeartbeat( client: AxiosInstance, basePath: string ): Promise<void>"
         },
         {
+          "name": "getAccountSettings",
+          "kind": "function",
+          "signature": "async function getAccountSettings( client: AxiosInstance, basePath: string ): Promise<AccountSettingsResponse>"
+        },
+        {
           "name": "deleteAccount",
           "kind": "function",
           "signature": "async function deleteAccount( client: AxiosInstance, basePath: string, request: AccountDeleteRequest ): Promise<void>"
@@ -1010,6 +1015,11 @@
           "members": []
         },
         {
+          "name": "useAccountSettings",
+          "kind": "function",
+          "signature": "function useAccountSettings(): UseQueryResult<AccountSettingsResponse>"
+        },
+        {
           "name": "useProfile",
           "kind": "function",
           "signature": "function useProfile(): UseQueryResult<AccountProfileResponse>"
@@ -1039,6 +1049,21 @@
           "kind": "interface",
           "signature": "interface ConfirmEmailVariables",
           "members": []
+        },
+        {
+          "name": "useChangePassword",
+          "kind": "function",
+          "signature": "function useChangePassword(): UseMutationResult< void, Error, AccountPasswordChangeRequest >"
+        },
+        {
+          "name": "useForgotPassword",
+          "kind": "function",
+          "signature": "function useForgotPassword(): UseMutationResult< void, Error, AccountForgotPasswordRequest >"
+        },
+        {
+          "name": "useResetPassword",
+          "kind": "function",
+          "signature": "function useResetPassword(): UseMutationResult< void, Error, AccountPasswordResetRequest >"
         },
         {
           "name": "RenamePasskeyVariables",
@@ -2285,6 +2310,12 @@
           "name": "PrivacyProviderProps",
           "kind": "interface",
           "signature": "interface PrivacyProviderProps",
+          "members": []
+        },
+        {
+          "name": "UpdateLegalDocumentVariables",
+          "kind": "interface",
+          "signature": "interface UpdateLegalDocumentVariables",
           "members": []
         }
       ]

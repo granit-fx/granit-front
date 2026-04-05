@@ -6,6 +6,9 @@ export {
 } from './providers/account-provider.js';
 export type { AccountConfig, AccountProviderProps } from './providers/account-provider.js';
 
+// Hooks — Settings
+export { useAccountSettings } from './hooks/use-account-settings.js';
+
 // Hooks — Profile
 export { useProfile, useUpdateProfile } from './hooks/use-profile.js';
 
@@ -14,11 +17,7 @@ export { useConfirmEmail, useRegister, useResendConfirmation } from './hooks/use
 export type { ConfirmEmailVariables } from './hooks/use-registration.js';
 
 // Hooks — Password
-export {
-  useChangePassword,
-  useForgotPassword,
-  useResetPassword,
-} from './hooks/use-password.js';
+export { useChangePassword, useForgotPassword, useResetPassword } from './hooks/use-password.js';
 
 // Hooks — Two-Factor
 export {
