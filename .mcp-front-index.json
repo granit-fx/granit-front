@@ -809,6 +809,11 @@
           "signature": "const DEFAULT_MULTI_TENANCY_OPTIONS: Required<MultiTenancyOptions>"
         },
         {
+          "name": "MultiTenancyPermissions",
+          "kind": "const",
+          "signature": "const MultiTenancyPermissions"
+        },
+        {
           "name": "TenantResolver",
           "kind": "interface",
           "signature": "interface TenantResolver",

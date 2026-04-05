@@ -16,6 +16,8 @@
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/multi-tenancy": "workspace:*",
+    "@tanstack/react-query": "^5.0.0",
+    "axios": "*",
     "react": "^19.0.0"
   },
   "publishConfig": {
