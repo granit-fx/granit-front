@@ -3,7 +3,8 @@
   "compilerOptions": {
     "paths": {
       "@granit/api-client/test-utils": ["../api-client/src/test-utils.ts"],
-      "@granit/templating": ["../templating/src/index.ts"]
+      "@granit/templating": ["../templating/src/index.ts"],
+      "@granit/testing/msw": ["../testing/src/msw.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]

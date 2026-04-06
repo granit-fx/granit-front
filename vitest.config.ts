@@ -10,6 +10,107 @@ export default defineConfig({
         'packages/@granit/api-client/src/test-utils.ts'
       ),
       '@granit/api-client': path.resolve(__dirname, 'packages/@granit/api-client/src/index.ts'),
+      '@granit/testing/msw': path.resolve(__dirname, 'packages/@granit/testing/src/msw.ts'),
+      '@granit/react-auditing/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-auditing/src/testing/index.ts'
+      ),
+      '@granit/react-authentication-api-keys/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-authentication-api-keys/src/testing/index.ts'
+      ),
+      '@granit/react-authentication-local/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-authentication-local/src/testing/index.ts'
+      ),
+      '@granit/react-authorization/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-authorization/src/testing/index.ts'
+      ),
+      '@granit/react-background-jobs/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-background-jobs/src/testing/index.ts'
+      ),
+      '@granit/react-blob-storage/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-blob-storage/src/testing/index.ts'
+      ),
+      '@granit/react-customer-balance/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-customer-balance/src/testing/index.ts'
+      ),
+      '@granit/react-data-exchange/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-data-exchange/src/testing/index.ts'
+      ),
+      '@granit/react-diagnostics/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-diagnostics/src/testing/index.ts'
+      ),
+      '@granit/react-features/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-features/src/testing/index.ts'
+      ),
+      '@granit/react-identity/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-identity/src/testing/index.ts'
+      ),
+      '@granit/react-invoicing/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-invoicing/src/testing/index.ts'
+      ),
+      '@granit/react-localization/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-localization/src/testing/index.ts'
+      ),
+      '@granit/react-metering/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-metering/src/testing/index.ts'
+      ),
+      '@granit/react-notifications/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-notifications/src/testing/index.ts'
+      ),
+      '@granit/react-payments/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-payments/src/testing/index.ts'
+      ),
+      '@granit/react-privacy/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-privacy/src/testing/index.ts'
+      ),
+      '@granit/react-scheduling/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-scheduling/src/testing/index.ts'
+      ),
+      '@granit/react-settings/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-settings/src/testing/index.ts'
+      ),
+      '@granit/react-subscriptions/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-subscriptions/src/testing/index.ts'
+      ),
+      '@granit/react-tax/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-tax/src/testing/index.ts'
+      ),
+      '@granit/react-templating/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-templating/src/testing/index.ts'
+      ),
+      '@granit/react-timeline/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-timeline/src/testing/index.ts'
+      ),
+      '@granit/react-webhooks/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-webhooks/src/testing/index.ts'
+      ),
+      '@granit/react-workflow/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-workflow/src/testing/index.ts'
+      ),
       '@granit/auditing': path.resolve(__dirname, 'packages/@granit/auditing/src/index.ts'),
       '@granit/account': path.resolve(__dirname, 'packages/@granit/account/src/index.ts'),
       '@granit/ai': path.resolve(__dirname, 'packages/@granit/ai/src/index.ts'),
@@ -89,9 +190,17 @@ export default defineConfig({
         'packages/@granit/reference-data/src/index.ts'
       ),
       '@granit/react-ai': path.resolve(__dirname, 'packages/@granit/react-ai/src/index.ts'),
+      '@granit/react-ai/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-ai/src/testing/index.ts'
+      ),
       '@granit/react-auditing': path.resolve(
         __dirname,
         'packages/@granit/react-auditing/src/index.ts'
+      ),
+      '@granit/react-account/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-account/src/testing/index.ts'
       ),
       '@granit/react-account': path.resolve(
         __dirname,
@@ -108,6 +217,10 @@ export default defineConfig({
       '@granit/react-blob-storage': path.resolve(
         __dirname,
         'packages/@granit/react-blob-storage/src/index.ts'
+      ),
+      '@granit/react-authentication/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-authentication/src/testing/index.ts'
       ),
       '@granit/react-authentication': path.resolve(
         __dirname,
@@ -137,6 +250,10 @@ export default defineConfig({
         __dirname,
         'packages/@granit/react-identity/src/index.ts'
       ),
+      '@granit/react-multi-tenancy/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-multi-tenancy/src/testing/index.ts'
+      ),
       '@granit/react-multi-tenancy': path.resolve(
         __dirname,
         'packages/@granit/react-multi-tenancy/src/index.ts'
@@ -144,6 +261,10 @@ export default defineConfig({
       '@granit/react-localization': path.resolve(
         __dirname,
         'packages/@granit/react-localization/src/index.ts'
+      ),
+      '@granit/react-openiddict-admin/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-openiddict-admin/src/testing/index.ts'
       ),
       '@granit/react-openiddict-admin': path.resolve(
         __dirname,
@@ -172,6 +293,10 @@ export default defineConfig({
       '@granit/react-validation': path.resolve(
         __dirname,
         'packages/@granit/react-validation/src/index.ts'
+      ),
+      '@granit/react-templating/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-templating/src/testing/index.ts'
       ),
       '@granit/react-templating': path.resolve(
         __dirname,
@@ -236,6 +361,7 @@ export default defineConfig({
         '**/__tests__/setup.ts',
         '**/__tests__/test-utils.tsx',
         '**/api-client/src/test-utils.ts',
+        '**/src/testing/**',
       ],
       thresholds: {
         lines: 80,

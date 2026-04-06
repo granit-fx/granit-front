@@ -1,0 +1,68 @@
+import { accepted, noContent, notFound, pagedResponse } from '@granit/testing/msw';
+import { toISODateString } from '@granit/types';
+import { http, HttpResponse } from 'msw';
+
+import { mockBackgroundJobs } from './data.js';
+
+import type { BackgroundJobStatus } from '@granit/background-jobs';
+
+/**
+ * Create stateful MSW handlers for background job endpoints.
+ * Handlers mutate the in-memory `mockBackgroundJobs` array — pause/resume/trigger
+ * calls update state that subsequent GET calls reflect.
+ *
+ * @param baseUrl - API base path (default: `/api/v1/background-jobs`)
+ */
+export function createBackgroundJobHandlers(baseUrl = '/api/v1/background-jobs') {
+  return [
+    // GET list — sorted, paginated
+    http.get(baseUrl, ({ request }) => {
+      const url = new URL(request.url);
+      const page = Number(url.searchParams.get('page') ?? 1);
+      const pageSize = Number(url.searchParams.get('pageSize') ?? 20);
+
+      const sorted = [...mockBackgroundJobs].sort((a, b) => a.jobName.localeCompare(b.jobName));
+
+      const start = (page - 1) * pageSize;
+      return pagedResponse<BackgroundJobStatus>(
+        sorted.slice(start, start + pageSize),
+        sorted.length
+      );
+    }),
+
+    // GET single job
+    http.get(`${baseUrl}/:name`, ({ params }) => {
+      const job = mockBackgroundJobs.find((j) => j.jobName === params.name);
+      if (!job) return notFound();
+      return HttpResponse.json(job);
+    }),
+
+    // POST pause
+    http.post(`${baseUrl}/:name/pause`, ({ params }) => {
+      const job = mockBackgroundJobs.find((j) => j.jobName === params.name);
+      if (!job) return notFound();
+      job.isEnabled = false;
+      job.nextExecutionAt = null;
+      return noContent();
+    }),
+
+    // POST resume
+    http.post(`${baseUrl}/:name/resume`, ({ params }) => {
+      const job = mockBackgroundJobs.find((j) => j.jobName === params.name);
+      if (!job) return notFound();
+      job.isEnabled = true;
+      job.nextExecutionAt = toISODateString(new Date(Date.now() + 60_000).toISOString());
+      return noContent();
+    }),
+
+    // POST trigger
+    http.post(`${baseUrl}/:name/trigger`, ({ params }) => {
+      const job = mockBackgroundJobs.find((j) => j.jobName === params.name);
+      if (!job) return notFound();
+      job.lastExecutedAt = toISODateString(new Date().toISOString());
+      job.consecutiveFailures = 0;
+      job.lastError = null;
+      return accepted();
+    }),
+  ];
+}

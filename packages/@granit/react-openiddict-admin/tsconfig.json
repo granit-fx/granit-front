@@ -1,4 +1,10 @@
 {
   "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@granit/openiddict-admin": ["../openiddict-admin/src/index.ts"],
+      "@granit/testing/msw": ["../testing/src/msw.ts"]
+    }
+  },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

@@ -1,5 +1,6 @@
 import { createTsupConfig } from '../../../tsup.preset';
 
 export default createTsupConfig({
-  external: [/^@granit\//, /^react/, /^@tanstack\//],
+  entry: ['src/index.ts', 'src/testing/index.ts'],
+  external: [/^@granit\//, /^react/, /^@tanstack\//, 'msw'],
 });

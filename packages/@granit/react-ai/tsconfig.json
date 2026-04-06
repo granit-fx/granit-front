@@ -2,7 +2,9 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "paths": {
-      "@granit/ai": ["../ai/src/index.ts"]
+      "@granit/ai": ["../ai/src/index.ts"],
+      "@granit/query-engine": ["../query-engine/src/index.ts"],
+      "@granit/types": ["../types/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]

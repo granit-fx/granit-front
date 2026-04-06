@@ -574,16 +574,25 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
     devDependencies:
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-auditing:
     dependencies:
@@ -599,6 +608,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -618,9 +630,19 @@ importers:
       '@granit/authentication':
         specifier: workspace:*
         version: link:../authentication
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
+    devDependencies:
+      '@granit/bff':
+        specifier: workspace:*
+        version: link:../bff
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-authentication-api-keys:
     dependencies:
@@ -633,6 +655,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -742,6 +767,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.14.0
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -764,6 +792,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -826,10 +857,16 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
     devDependencies:
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -861,6 +898,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.14.0
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -871,6 +911,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-data-exchange:
     dependencies:
@@ -889,6 +932,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -914,6 +960,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -948,6 +997,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -970,6 +1022,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -995,6 +1050,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.14.0
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -1005,6 +1063,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-localization:
     dependencies:
@@ -1023,12 +1084,22 @@ importers:
       i18next:
         specifier: ^25.0.0
         version: 25.8.14(typescript@5.9.3)
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@5.9.3)
       react:
         specifier: ^19.0.0
         version: 19.2.4
       react-i18next:
         specifier: ^16.0.0
         version: 16.5.4(i18next@25.8.14(typescript@5.9.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)
+    devDependencies:
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-metering:
     dependencies:
@@ -1041,6 +1112,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.14.0
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -1051,6 +1125,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-multi-tenancy:
     dependencies:
@@ -1087,6 +1164,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -1168,6 +1248,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.14.0
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -1178,6 +1261,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-privacy:
     dependencies:
@@ -1190,6 +1276,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -1271,6 +1360,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.14.0
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -1281,6 +1373,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-settings:
     dependencies:
@@ -1293,6 +1388,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -1324,6 +1422,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.14.0
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -1334,6 +1435,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-tax:
     dependencies:
@@ -1346,6 +1450,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.14.0
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -1356,6 +1463,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-templating:
     dependencies:
@@ -1421,6 +1531,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -1504,6 +1617,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -1532,6 +1648,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -8578,6 +8697,31 @@ snapshots:
   module-details-from-path@1.0.4: {}
 
   ms@2.1.3: {}
+
+  msw@2.12.14(@types/node@25.5.0)(typescript@5.9.3):
+    dependencies:
+      '@inquirer/confirm': 5.1.21(@types/node@25.5.0)
+      '@mswjs/interceptors': 0.41.3
+      '@open-draft/deferred-promise': 2.2.0
+      '@types/statuses': 2.0.6
+      cookie: 1.1.1
+      graphql: 16.13.1
+      headers-polyfill: 4.0.3
+      is-node-process: 1.2.0
+      outvariant: 1.4.3
+      path-to-regexp: 6.3.0
+      picocolors: 1.1.1
+      rettime: 0.10.1
+      statuses: 2.0.2
+      strict-event-emitter: 0.5.1
+      tough-cookie: 6.0.1
+      type-fest: 5.4.4
+      until-async: 3.0.2
+      yargs: 17.7.2
+    optionalDependencies:
+      typescript: 5.9.3
+    transitivePeerDependencies:
+      - '@types/node'
 
   msw@2.12.14(@types/node@25.5.0)(typescript@6.0.2):
     dependencies:

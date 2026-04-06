@@ -1,0 +1,232 @@
+import type {
+  AgreementHistoryEntry,
+  AgreementStatus,
+  LegalDocument,
+  LegalDocumentDetail,
+  PrivacyDeletionResponse,
+  PrivacyExportStatusResponse,
+} from '@granit/privacy';
+
+export const mockExports: PrivacyExportStatusResponse[] = [
+  {
+    requestId: 'exp-001',
+    requestedAt: '2026-03-10T08:00:00Z',
+    state: 'Completed',
+    archiveBlobReferenceId: 'blob-archive-001',
+    completedAt: '2026-03-10T08:05:00Z',
+    missingProviders: [],
+  },
+  {
+    requestId: 'exp-002',
+    requestedAt: '2026-03-15T14:30:00Z',
+    state: 'Pending',
+    archiveBlobReferenceId: null,
+    completedAt: null,
+    missingProviders: [],
+  },
+  {
+    requestId: 'exp-003',
+    requestedAt: '2026-02-20T09:00:00Z',
+    state: 'TimedOut',
+    archiveBlobReferenceId: null,
+    completedAt: null,
+    missingProviders: ['ExternalCrm'],
+  },
+];
+
+export const mockLegalDocuments: LegalDocument[] = [
+  {
+    documentId: 'doc-privacy-policy',
+    currentVersion: '2.1.0',
+    displayName: 'Privacy Policy',
+  },
+  {
+    documentId: 'doc-terms-of-service',
+    currentVersion: '3.0.0',
+    displayName: 'Terms of Service',
+  },
+  {
+    documentId: 'doc-data-processing',
+    currentVersion: '1.2.0',
+    displayName: 'Data Processing Agreement',
+  },
+];
+
+export const mockAgreementStatuses: AgreementStatus[] = [
+  {
+    documentId: 'doc-privacy-policy',
+    currentVersion: '2.1.0',
+    hasAcceptedLatest: true,
+    lastAcceptedAt: '2026-02-15T10:30:00Z',
+  },
+  {
+    documentId: 'doc-terms-of-service',
+    currentVersion: '3.0.0',
+    hasAcceptedLatest: false,
+    lastAcceptedAt: '2025-11-20T14:00:00Z',
+  },
+  {
+    documentId: 'doc-data-processing',
+    currentVersion: '1.2.0',
+    hasAcceptedLatest: true,
+    lastAcceptedAt: '2026-01-10T09:15:00Z',
+  },
+];
+
+export const mockDeletionRequests: PrivacyDeletionResponse[] = [
+  {
+    requestId: 'del-001',
+    status: 'Deferred',
+    reason: 'Moving to a different platform',
+    requestedAt: '2026-03-18T10:00:00Z',
+    executedAt: null,
+    scheduledDeletionAt: '2026-04-17T10:00:00Z',
+  },
+  {
+    requestId: 'del-002',
+    status: 'Executed',
+    reason: 'No longer using the service',
+    requestedAt: '2026-02-01T08:00:00Z',
+    executedAt: '2026-02-01T08:01:00Z',
+  },
+  {
+    requestId: 'del-003',
+    status: 'Cancelled',
+    reason: 'Testing the deletion process',
+    requestedAt: '2026-01-15T14:30:00Z',
+    executedAt: null,
+    cancelledAt: '2026-01-16T09:00:00Z',
+  },
+];
+
+export const mockAgreementHistory: AgreementHistoryEntry[] = [
+  {
+    id: 'ah-1',
+    documentId: 'doc-privacy-policy',
+    version: '2.1.0',
+    acceptedAt: '2026-02-15T10:30:00Z',
+    isLatest: true,
+  },
+  {
+    id: 'ah-2',
+    documentId: 'doc-privacy-policy',
+    version: '2.0.0',
+    acceptedAt: '2025-09-01T08:00:00Z',
+    isLatest: false,
+  },
+  {
+    id: 'ah-3',
+    documentId: 'doc-privacy-policy',
+    version: '1.0.0',
+    acceptedAt: '2025-03-15T12:00:00Z',
+    isLatest: false,
+  },
+  {
+    id: 'ah-4',
+    documentId: 'doc-terms-of-service',
+    version: '2.0.0',
+    acceptedAt: '2025-11-20T14:00:00Z',
+    isLatest: false,
+  },
+  {
+    id: 'ah-5',
+    documentId: 'doc-data-processing',
+    version: '1.2.0',
+    acceptedAt: '2026-01-10T09:15:00Z',
+    isLatest: true,
+  },
+  {
+    id: 'ah-6',
+    documentId: 'doc-data-processing',
+    version: '1.0.0',
+    acceptedAt: '2025-06-01T10:00:00Z',
+    isLatest: false,
+  },
+];
+
+export const mockLegalDocumentDetails: LegalDocumentDetail[] = [
+  {
+    id: 'ld-001',
+    documentId: 'privacy-policy',
+    version: 3,
+    lifecycleStatus: 'Published',
+    displayName: 'Privacy Policy',
+    description: 'Updated GDPR compliance language',
+    templateName: 'privacy-policy-template',
+    documentBlobId: 'blob-pp-v3',
+    createdAt: '2026-03-01T10:00:00Z',
+    lastModifiedAt: '2026-03-15T14:30:00Z',
+  },
+  {
+    id: 'ld-002',
+    documentId: 'privacy-policy',
+    version: 2,
+    lifecycleStatus: 'Archived',
+    displayName: 'Privacy Policy',
+    description: 'Added data retention section',
+    templateName: 'privacy-policy-template',
+    documentBlobId: 'blob-pp-v2',
+    createdAt: '2026-01-10T08:00:00Z',
+    lastModifiedAt: '2026-03-01T10:00:00Z',
+  },
+  {
+    id: 'ld-003',
+    documentId: 'privacy-policy',
+    version: 1,
+    lifecycleStatus: 'Archived',
+    displayName: 'Privacy Policy',
+    description: 'Initial version',
+    templateName: 'privacy-policy-template',
+    documentBlobId: 'blob-pp-v1',
+    createdAt: '2025-06-01T09:00:00Z',
+    lastModifiedAt: '2026-01-10T08:00:00Z',
+  },
+  {
+    id: 'ld-004',
+    documentId: 'terms-of-service',
+    version: 2,
+    lifecycleStatus: 'Published',
+    displayName: 'Terms of Service',
+    description: 'Revised liability clauses',
+    templateName: 'tos-template',
+    documentBlobId: 'blob-tos-v2',
+    createdAt: '2026-02-15T11:00:00Z',
+    lastModifiedAt: '2026-02-20T16:00:00Z',
+  },
+  {
+    id: 'ld-005',
+    documentId: 'terms-of-service',
+    version: 1,
+    lifecycleStatus: 'Archived',
+    displayName: 'Terms of Service',
+    description: 'Initial version',
+    templateName: 'tos-template',
+    documentBlobId: 'blob-tos-v1',
+    createdAt: '2025-09-01T08:00:00Z',
+    lastModifiedAt: '2026-02-15T11:00:00Z',
+  },
+  {
+    id: 'ld-006',
+    documentId: 'data-processing-agreement',
+    version: 1,
+    lifecycleStatus: 'Draft',
+    displayName: 'Data Processing Agreement',
+    description: 'DPA for sub-processors',
+    templateName: 'dpa-template',
+    documentBlobId: undefined,
+    createdAt: '2026-03-20T09:00:00Z',
+    lastModifiedAt: '2026-03-25T10:30:00Z',
+  },
+  {
+    id: 'ld-007',
+    documentId: 'cookie-policy',
+    version: 1,
+    lifecycleStatus: 'Draft',
+    displayName: 'Cookie Policy',
+    description: undefined,
+    templateName: undefined,
+    documentBlobId: undefined,
+    createdAt: '2026-04-01T08:00:00Z',
+    lastModifiedAt: '2026-04-01T08:00:00Z',
+  },
+];

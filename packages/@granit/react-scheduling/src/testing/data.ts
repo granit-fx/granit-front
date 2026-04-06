@@ -1,0 +1,75 @@
+import { ScheduledActionStatus } from '@granit/scheduling';
+import { toEntityId, toISODateString } from '@granit/types';
+
+import type { ScheduledActionResponse } from '@granit/scheduling';
+
+type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+
+export const mockScheduledActions: Mutable<ScheduledActionResponse>[] = [
+  {
+    id: toEntityId<'ScheduledAction'>('a1b2c3d4-0001-4000-8000-000000000001'),
+    payloadType: 'SendReminderEmail',
+    executeAt: toISODateString('2026-04-05T09:00:00Z'),
+    correlationId: null,
+    status: ScheduledActionStatus.Pending,
+    executedAt: null,
+    cancelledBy: null,
+    failureReason: null,
+    createdAt: toISODateString('2026-04-02T14:30:00Z'),
+  },
+  {
+    id: toEntityId<'ScheduledAction'>('a1b2c3d4-0002-4000-8000-000000000002'),
+    payloadType: 'GenerateMonthlyReport',
+    executeAt: toISODateString('2026-04-01T00:00:00Z'),
+    correlationId: null,
+    status: ScheduledActionStatus.Executed,
+    executedAt: toISODateString('2026-04-01T00:01:23Z'),
+    cancelledBy: null,
+    failureReason: null,
+    createdAt: toISODateString('2026-03-25T10:00:00Z'),
+  },
+  {
+    id: toEntityId<'ScheduledAction'>('a1b2c3d4-0003-4000-8000-000000000003'),
+    payloadType: 'CleanupTempFiles',
+    executeAt: toISODateString('2026-03-28T03:00:00Z'),
+    correlationId: null,
+    status: ScheduledActionStatus.Cancelled,
+    executedAt: null,
+    cancelledBy: 'admin@example.com',
+    failureReason: null,
+    createdAt: toISODateString('2026-03-20T16:45:00Z'),
+  },
+  {
+    id: toEntityId<'ScheduledAction'>('a1b2c3d4-0004-4000-8000-000000000004'),
+    payloadType: 'SyncExternalData',
+    executeAt: toISODateString('2026-03-30T12:00:00Z'),
+    correlationId: null,
+    status: ScheduledActionStatus.Failed,
+    executedAt: null,
+    cancelledBy: null,
+    failureReason: 'Connection timeout after 30s',
+    createdAt: toISODateString('2026-03-28T08:00:00Z'),
+  },
+  {
+    id: toEntityId<'ScheduledAction'>('a1b2c3d4-0005-4000-8000-000000000005'),
+    payloadType: 'ArchiveAuditLogs',
+    executeAt: toISODateString('2026-04-04T02:00:00Z'),
+    correlationId: null,
+    status: ScheduledActionStatus.Processing,
+    executedAt: null,
+    cancelledBy: null,
+    failureReason: null,
+    createdAt: toISODateString('2026-04-01T18:00:00Z'),
+  },
+  {
+    id: toEntityId<'ScheduledAction'>('a1b2c3d4-0006-4000-8000-000000000006'),
+    payloadType: 'NotifyExpiredLicenses',
+    executeAt: toISODateString('2026-04-10T08:00:00Z'),
+    correlationId: toEntityId<'Correlation'>('license-batch-42'),
+    status: ScheduledActionStatus.Pending,
+    executedAt: null,
+    cancelledBy: null,
+    failureReason: null,
+    createdAt: toISODateString('2026-04-03T09:15:00Z'),
+  },
+];

@@ -3,7 +3,9 @@
   "compilerOptions": {
     "paths": {
       "@granit/api-client": ["../api-client/src/index.ts"],
-      "@granit/authentication": ["../authentication/src/index.ts"]
+      "@granit/authentication": ["../authentication/src/index.ts"],
+      "@granit/bff": ["../bff/src/index.ts"],
+      "@granit/types": ["../types/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
