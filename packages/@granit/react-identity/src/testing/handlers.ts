@@ -294,7 +294,7 @@ export function createIdentityHandlers(
     http.put(`${providerBase}/users/:userId/roles/:roleName`, ({ params }) => {
       const userId = params.userId as string;
       const roleName = params.roleName as string;
-      if (!mockRoleAssignments[userId]) mockRoleAssignments[userId] = [];
+      mockRoleAssignments[userId] ??= [];
       if (!mockRoleAssignments[userId].includes(roleName)) {
         mockRoleAssignments[userId].push(roleName);
       }
@@ -325,7 +325,7 @@ export function createIdentityHandlers(
     http.put(`${providerBase}/users/:userId/groups/:groupId`, ({ params }) => {
       const userId = params.userId as string;
       const groupId = params.groupId as string;
-      if (!mockUserGroups[userId]) mockUserGroups[userId] = [];
+      mockUserGroups[userId] ??= [];
       if (!mockUserGroups[userId].includes(groupId)) {
         mockUserGroups[userId].push(groupId);
       }

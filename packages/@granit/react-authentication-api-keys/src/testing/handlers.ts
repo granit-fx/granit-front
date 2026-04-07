@@ -56,8 +56,8 @@ export function createApiKeyHandlers(baseUrl = '/api/v1/api-keys') {
       }
 
       if (type) {
-        const types = type.split(',');
-        filtered = filtered.filter((k) => types.includes(k.type));
+        const types = new Set(type.split(','));
+        filtered = filtered.filter((k) => types.has(k.type));
       }
 
       if (environment) {

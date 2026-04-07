@@ -1,33 +1,5 @@
 // Types
-export type { AccountRegisterRequest, AccountRegisterResponse } from './types/index.js';
-export type { AccountProfileResponse, AccountProfileUpdateRequest } from './types/index.js';
-export type {
-  AccountForgotPasswordRequest,
-  AccountPasswordChangeRequest,
-  AccountPasswordResetRequest,
-} from './types/index.js';
-export type {
-  AccountAuthenticatorKeyResponse,
-  AccountRecoveryCodesResponse,
-  AccountTwoFactorEnableRequest,
-  AccountTwoFactorEnableResponse,
-  AccountTwoFactorStatusResponse,
-} from './types/index.js';
-export type {
-  AccountExternalLoginCallbackResponse,
-  AccountExternalLoginInfo,
-} from './types/index.js';
-export type {
-  AccountPasskeyCreatedResponse,
-  AccountPasskeyInfo,
-  AccountPasskeyRegistrationRequest,
-  AccountPasskeyRenameRequest,
-  PasskeyId,
-} from './types/index.js';
-export type { AccountImpersonationResult } from './types/index.js';
-export type { AccountDeleteRequest } from './types/index.js';
-export type { AccountSettingsResponse } from './types/index.js';
-export type { AccountChangeEmailRequest, AccountConfirmEmailChangeRequest } from './types/index.js';
+export type * from './types/index.js';
 
 // Query keys
 export { accountKeys } from './hooks/query-keys.js';

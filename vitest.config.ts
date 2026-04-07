@@ -294,10 +294,6 @@ export default defineConfig({
         __dirname,
         'packages/@granit/react-validation/src/index.ts'
       ),
-      '@granit/react-templating/testing': path.resolve(
-        __dirname,
-        'packages/@granit/react-templating/src/testing/index.ts'
-      ),
       '@granit/react-templating': path.resolve(
         __dirname,
         'packages/@granit/react-templating/src/index.ts'

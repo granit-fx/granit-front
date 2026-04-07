@@ -171,16 +171,13 @@ export function createBlobStorageHandlers(baseUrl = '/api/v1/blob-storage') {
 
       // Preset filters
       if (presetStatus) {
-        const presetNames = presetStatus.split(',');
+        const presetNames = new Set(presetStatus.split(','));
         filtered = filtered.filter((b) => {
-          if (presetNames.includes('valid') && b.status === S.Valid) return true;
-          if (
-            presetNames.includes('pending') &&
-            (b.status === S.Pending || b.status === S.Uploading)
-          )
+          if (presetNames.has('valid') && b.status === S.Valid) return true;
+          if (presetNames.has('pending') && (b.status === S.Pending || b.status === S.Uploading))
             return true;
-          if (presetNames.includes('rejected') && b.status === S.Rejected) return true;
-          if (presetNames.includes('deleted') && b.status === S.Deleted) return true;
+          if (presetNames.has('rejected') && b.status === S.Rejected) return true;
+          if (presetNames.has('deleted') && b.status === S.Deleted) return true;
           return false;
         });
       }
@@ -229,9 +226,8 @@ export function createBlobStorageHandlers(baseUrl = '/api/v1/blob-storage') {
         for (const item of filtered) {
           const rawKey = item[groupBy as keyof BlobDescriptorResponse];
           const key = String(rawKey ?? '');
-          const group = groupMap.get(key);
-          if (group) group.push(item);
-          else groupMap.set(key, [item]);
+          if (!groupMap.has(key)) groupMap.set(key, []);
+          groupMap.get(key)!.push(item);
         }
         const response: GroupedResult<BlobDescriptorResponse> = {
           groups: Array.from(groupMap.entries()).map(([value, items]) => ({

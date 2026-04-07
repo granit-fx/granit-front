@@ -1,10 +1,12 @@
 import { toISODateString } from '@granit/types';
 
-import type { AccountExternalLoginInfo } from '@granit/account';
-import type { AccountPasskeyInfo } from '@granit/account';
-import type { AccountProfileResponse } from '@granit/account';
-import type { AccountSettingsResponse } from '@granit/account';
-import type { AccountTwoFactorStatusResponse } from '@granit/account';
+import type {
+  AccountExternalLoginInfo,
+  AccountPasskeyInfo,
+  AccountProfileResponse,
+  AccountSettingsResponse,
+  AccountTwoFactorStatusResponse,
+} from '@granit/account';
 
 type Mutable<T> = { -readonly [K in keyof T]: T[K] };
 

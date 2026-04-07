@@ -13,9 +13,7 @@ import type { AdminAppSetting } from '@granit/settings';
  */
 export function createSettingsHandlers(baseUrl = '/api/v1') {
   // Local mutable copy of the store per handler factory call
-  const store: Record<string, Record<string, string | null>> = JSON.parse(
-    JSON.stringify(mockSettingsStore)
-  ) as Record<string, Record<string, string | null>>;
+  const store: Record<string, Record<string, string | null>> = structuredClone(mockSettingsStore);
 
   return [
     // ---------------------------------------------------------------------------
@@ -62,7 +60,7 @@ export function createSettingsHandlers(baseUrl = '/api/v1') {
       const scope = params.scope as string;
       const name = decodeURIComponent(params.name as string);
       const body = (await request.json()) as { value: string | null };
-      if (!store[scope]) store[scope] = {};
+      store[scope] ??= {};
       store[scope][name] = body.value;
       return noContent();
     }),

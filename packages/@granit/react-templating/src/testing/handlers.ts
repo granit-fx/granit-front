@@ -123,10 +123,10 @@ export function createTemplatesHandlers(baseUrl = '/api/v1') {
       const name = params.name as string;
       const template = templates.find((t) => t.name === name);
       if (!template) return notFound();
-      if (!template.hasPublishedVersion) {
-        templates = templates.filter((t) => t.name !== name);
-      } else {
+      if (template.hasPublishedVersion) {
         template.status = TemplateLifecycleStatus.Published;
+      } else {
+        templates = templates.filter((t) => t.name !== name);
       }
       return noContent();
     }),
@@ -184,7 +184,7 @@ export function createTemplatesHandlers(baseUrl = '/api/v1') {
       return HttpResponse.json({
         revisions: [
           {
-            revisionId: `rev_${name.replace(/\./g, '_')}_1`,
+            revisionId: `rev_${name.replaceAll('.', '_')}_1`,
             status: template.status,
             createdAt: template.lastModifiedAt,
             createdBy: template.lastModifiedBy,
@@ -223,11 +223,11 @@ export function createTemplatesHandlers(baseUrl = '/api/v1') {
       const data = (body.data ?? {}) as Record<string, unknown>;
       let html = template.content;
       for (const [key, value] of Object.entries(data)) {
-        html = html.replace(new RegExp(`\\{\\{\\s*${key}\\s*\\}\\}`, 'g'), String(value));
+        html = html.replaceAll(new RegExp(String.raw`\{\{\s*${key}\s*\}\}`, 'g'), String(value));
       }
       return HttpResponse.json({
         html,
-        revisionId: `rev_${name.replace(/\./g, '_')}_1`,
+        revisionId: `rev_${name.replaceAll('.', '_')}_1`,
         renderTimeMs: 12,
       });
     }),

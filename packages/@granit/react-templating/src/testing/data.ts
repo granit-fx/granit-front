@@ -107,7 +107,7 @@ export function toTemplateListItem(t: MockTemplate): Mutable<TemplateListItem> {
 
 export function toTemplateDetail(t: MockTemplate): Mutable<TemplateDetail> {
   const revision = {
-    revisionId: `rev_${t.name.replace(/\./g, '_')}_1` as TemplateRevisionId,
+    revisionId: `rev_${t.name.replaceAll('.', '_')}_1` as TemplateRevisionId,
     content: t.content,
     mimeType: t.mimeType,
     layoutName: t.layoutName ?? null,

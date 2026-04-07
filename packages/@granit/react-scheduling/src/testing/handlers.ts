@@ -109,10 +109,10 @@ export function createSchedulingHandlers(baseUrl = '/api/granit/scheduling') {
       // Apply preset filters
       if (presetStatus) {
         const presetNames = presetStatus.split(',');
-        const allowedStatuses = presetNames
-          .map((name) => statusPresetMap[name])
-          .filter((s) => s !== undefined);
-        filtered = filtered.filter((a) => allowedStatuses.includes(a.status));
+        const allowedStatuses = new Set(
+          presetNames.map((name) => statusPresetMap[name]).filter((s) => s !== undefined)
+        );
+        filtered = filtered.filter((a) => allowedStatuses.has(a.status));
       }
 
       // Apply advanced filters

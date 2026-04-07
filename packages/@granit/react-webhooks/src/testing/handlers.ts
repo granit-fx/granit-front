@@ -309,10 +309,10 @@ export function createWebhooksHandlers(baseUrl = '/api/v1/webhooks') {
       // Presets
       const resultPresets = url.searchParams.get('presets[result]');
       if (resultPresets) {
-        const presets = resultPresets.split(',');
-        if (presets.includes('success') && !presets.includes('failure')) {
+        const presets = new Set(resultPresets.split(','));
+        if (presets.has('success') && !presets.has('failure')) {
           filtered = filtered.filter((d) => d.isSuccess);
-        } else if (presets.includes('failure') && !presets.includes('success')) {
+        } else if (presets.has('failure') && !presets.has('success')) {
           filtered = filtered.filter((d) => !d.isSuccess);
         }
       }

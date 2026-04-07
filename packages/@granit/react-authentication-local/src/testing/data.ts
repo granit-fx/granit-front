@@ -23,7 +23,7 @@ export const mockLoginNotAllowed: AccountLoginResponse = {
 
 export const MOCK_CREDENTIALS = {
   login: 'admin@granit-showcase.local',
-  password: 'Admin123!',
+  password: 'test-password-mock-only',
 } as const;
 
 export const MOCK_TOTP_CODE = '123456';

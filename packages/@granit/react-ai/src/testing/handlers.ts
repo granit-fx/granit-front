@@ -262,7 +262,7 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
       }
 
       const body = (await request.json()) as { messages: { role: string; content: string }[] };
-      const lastMessage = body.messages[body.messages.length - 1]?.content ?? '';
+      const lastMessage = body.messages.at(-1)?.content ?? '';
 
       return HttpResponse.json({
         workspaceName: wsName,
@@ -326,12 +326,8 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
 
         for (const record of records) {
           const key = String(record[groupBy as UsageKey] ?? '');
-          const group = groupMap.get(key);
-          if (group) {
-            group.push(record);
-          } else {
-            groupMap.set(key, [record]);
-          }
+          if (!groupMap.has(key)) groupMap.set(key, []);
+          groupMap.get(key)!.push(record);
         }
 
         const response: GroupedResult<(typeof records)[0]> = {
