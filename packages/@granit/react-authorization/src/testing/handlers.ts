@@ -27,9 +27,7 @@ export function createAuthorizationHandlers(baseUrl = '/api/v1/auth') {
     http.put(`${baseUrl}/roles/:roleName/permissions/:permissionName`, ({ params }) => {
       const roleName = params.roleName as string;
       const permissionName = params.permissionName as string;
-      if (!mockRoleGrants[roleName]) {
-        mockRoleGrants[roleName] = [];
-      }
+      mockRoleGrants[roleName] ??= [];
       if (!mockRoleGrants[roleName].includes(permissionName)) {
         mockRoleGrants[roleName].push(permissionName);
       }

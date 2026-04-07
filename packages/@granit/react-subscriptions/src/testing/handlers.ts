@@ -87,9 +87,7 @@ export function createSubscriptionsHandlers(baseUrl = '/api/v1/granit/subscripti
         effectiveFrom: string;
       };
       const planId = params.planId as string;
-      if (!mockPriceHistory[planId]) {
-        mockPriceHistory[planId] = [];
-      }
+      mockPriceHistory[planId] ??= [];
       const existing = mockPriceHistory[planId];
       const newId = toEntityId<'PlanPrice'>(`price-${planId}-${existing.length + 1}`);
 
@@ -196,9 +194,7 @@ export function createSubscriptionsHandlers(baseUrl = '/api/v1/granit/subscripti
     http.post(`${baseUrl}/:subscriptionId/seats`, async ({ params, request }) => {
       const body = (await request.json()) as { userId: string };
       const subscriptionId = params.subscriptionId as string;
-      if (!mockSeats[subscriptionId]) {
-        mockSeats[subscriptionId] = [];
-      }
+      mockSeats[subscriptionId] ??= [];
       const newSeat: SeatResponse = {
         id: toEntityId<'Seat'>(
           `seat-${String(mockSeats[subscriptionId].length + 1).padStart(3, '0')}`
