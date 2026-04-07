@@ -1,3 +1,14 @@
+import type { EntityId } from '@granit/types';
+
+/** Branded identifier for a plan. */
+export type PlanId = EntityId<'Plan'>;
+
+/** Branded identifier for a plan price version. */
+export type PlanPriceId = EntityId<'PlanPrice'>;
+
+/** Branded identifier for a subscription. */
+export type SubscriptionId = EntityId<'Subscription'>;
+
 export type PricingModel = 'Flat' | 'PerSeat' | 'Tiered' | 'UsageBased';
 export type BillingInterval = 'Monthly' | 'Quarterly' | 'SemiAnnual' | 'Annual';
 export type PlanLifecycleStatus = 'Draft' | 'Published' | 'Archived';

@@ -6,7 +6,9 @@ export type {
   CreatePriceVersionRequest,
   MigratePriceRequest,
   PlanCreateRequest,
+  PlanId,
   PlanLifecycleStatus,
+  PlanPriceId,
   PlanPriceResponse,
   PlanResponse,
   PlanUpdateRequest,
@@ -16,6 +18,7 @@ export type {
   SubscriptionCancelRequest,
   SubscriptionChangePlanRequest,
   SubscriptionCreateRequest,
+  SubscriptionId,
   SubscriptionResponse,
   SubscriptionStatus,
 } from './types.js';

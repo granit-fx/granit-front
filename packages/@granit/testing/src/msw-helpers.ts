@@ -1,6 +1,26 @@
 import { HttpResponse } from 'msw';
 
-import type { GroupedResult, PagedResult } from '@granit/query-engine';
+// Mirrors @granit/query-engine types — defined locally to avoid a circular workspace dependency.
+interface PagedResult<T> {
+  readonly items: readonly T[];
+  readonly totalCount: number | null;
+  readonly hasMore?: boolean;
+  readonly nextCursor?: string | null;
+}
+
+interface GroupEntry<T> {
+  readonly field: string;
+  readonly value: unknown;
+  readonly label: string;
+  readonly count: number;
+  readonly aggregates?: Readonly<Record<string, unknown>>;
+  readonly items?: readonly T[];
+}
+
+interface GroupedResult<T> {
+  readonly groups: readonly GroupEntry<T>[];
+  readonly totalCount: number;
+}
 
 // ---------------------------------------------------------------------------
 // Response helpers

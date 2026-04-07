@@ -4,6 +4,7 @@ export type {
   CollectionMethod,
   InvoiceCreateRequest,
   InvoiceDocumentType,
+  InvoiceId,
   InvoiceLineItemResponse,
   InvoiceResponse,
 } from './types.js';

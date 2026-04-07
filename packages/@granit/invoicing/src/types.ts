@@ -1,3 +1,8 @@
+import type { EntityId } from '@granit/types';
+
+/** Branded identifier for an invoice. */
+export type InvoiceId = EntityId<'Invoice'>;
+
 /** The document type of an invoice. */
 export type InvoiceDocumentType = 'Invoice' | 'CreditNote';
 
