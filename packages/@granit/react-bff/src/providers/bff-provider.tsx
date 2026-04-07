@@ -86,8 +86,10 @@ export function BffProvider({ config, children }: BffProviderProps) {
   }, [csrfManager]);
 
   const login = useCallback(() => {
-    const returnUrl = encodeURIComponent(globalThis.location.pathname + globalThis.location.search);
-    globalThis.location.href = `${configRef.current.pathPrefix}/bff/login?returnUrl=${returnUrl}`;
+    const path = globalThis.location.pathname + globalThis.location.search;
+    const base = `${configRef.current.pathPrefix}/bff/login`;
+    globalThis.location.href =
+      path === '/' ? base : `${base}?returnUrl=${encodeURIComponent(path)}`;
   }, []);
 
   const logout = useCallback(() => {
