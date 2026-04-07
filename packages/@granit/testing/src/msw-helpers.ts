@@ -157,7 +157,7 @@ export function applyFilter(record: Record<string, unknown>, f: FilterEntry): bo
   if (typeof fieldValue === 'number') {
     return applyNumberFilter(fieldValue, f.operator, f.value);
   }
-  return applyStringFilter(String(fieldValue ?? ''), f.operator, f.value);
+  return applyStringFilter(fieldValue != null ? String(fieldValue) : '', f.operator, f.value);
 }
 
 // ---------------------------------------------------------------------------
@@ -185,7 +185,7 @@ export function sortItems<T extends Record<string, unknown>>(
       if (typeof aVal === 'number' && typeof bVal === 'number') {
         cmp = aVal - bVal;
       } else {
-        cmp = String(aVal ?? '').localeCompare(String(bVal ?? ''));
+        cmp = (aVal != null ? String(aVal) : '').localeCompare(bVal != null ? String(bVal) : '');
       }
       return desc ? -cmp : cmp;
     });
@@ -199,7 +199,7 @@ export function sortItems<T extends Record<string, unknown>>(
       if (typeof aVal === 'number' && typeof bVal === 'number') {
         cmp = aVal - bVal;
       } else {
-        cmp = String(aVal ?? '').localeCompare(String(bVal ?? ''));
+        cmp = (aVal != null ? String(aVal) : '').localeCompare(bVal != null ? String(bVal) : '');
       }
       return desc ? -cmp : cmp;
     });
@@ -232,7 +232,7 @@ export function groupBy<T extends Record<string, unknown>>(
 ): GroupedResult<T> {
   const map = new Map<string, T[]>();
   for (const item of items) {
-    const key = String(item[field] ?? '');
+    const key = item[field] != null ? String(item[field]) : '';
     if (!map.has(key)) map.set(key, []);
     map.get(key)!.push(item);
   }
