@@ -549,6 +549,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -1143,6 +1146,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.14.0
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -1226,6 +1232,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -1475,6 +1484,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.13.6
+      msw:
+        specifier: ^2.12.0
+        version: 2.12.14(@types/node@25.5.0)(typescript@6.0.2)
       react:
         specifier: ^19.0.0
         version: 19.2.4
