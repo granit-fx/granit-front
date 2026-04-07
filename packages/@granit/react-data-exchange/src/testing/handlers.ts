@@ -1,3 +1,4 @@
+import { paginate } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
 import { mockExportHistory, mockImportHistory } from './data.js';
@@ -430,8 +431,6 @@ export function createDataExchangeHandlers(
     // Import jobs: paginated list — must come before /:jobId wildcard
     http.get(`${importBase}/jobs`, ({ request }) => {
       const url = new URL(request.url);
-      const page = Number(url.searchParams.get('page') ?? 1);
-      const pageSize = Number(url.searchParams.get('pageSize') ?? 20);
       const status = url.searchParams.get('status');
 
       let filtered: ImportJobResponse[] = [...mockImportHistory];
@@ -440,18 +439,12 @@ export function createDataExchangeHandlers(
       }
       filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-      const start = (page - 1) * pageSize;
-      return HttpResponse.json({
-        items: filtered.slice(start, start + pageSize),
-        totalCount: filtered.length,
-      });
+      return HttpResponse.json(paginate(filtered, url));
     }),
 
     // Export jobs: paginated list
     http.get(exportJobsBase, ({ request }) => {
       const url = new URL(request.url);
-      const page = Number(url.searchParams.get('page') ?? 1);
-      const pageSize = Number(url.searchParams.get('pageSize') ?? 20);
       const status = url.searchParams.get('status');
 
       let filtered: ExportJobResponse[] = [...mockExportHistory];
@@ -460,11 +453,7 @@ export function createDataExchangeHandlers(
       }
       filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-      const start = (page - 1) * pageSize;
-      return HttpResponse.json({
-        items: filtered.slice(start, start + pageSize),
-        totalCount: filtered.length,
-      });
+      return HttpResponse.json(paginate(filtered, url));
     }),
 
     // Import: get job status

@@ -1,3 +1,4 @@
+import { groupBy as groupByField, paginate } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
 import { mockUsageRecords, mockWorkspaces } from './data.js';
@@ -7,9 +8,8 @@ import type {
   AIWorkspaceResponse,
   AIWorkspaceUpdateRequest,
 } from '@granit/ai';
-import type { GroupedResult, PagedResult, QueryMetadata } from '@granit/query-engine';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { PagedResult, QueryMetadata } from '@granit/query-engine';
+import type { Mutable } from '@granit/testing';
 
 // ---------------------------------------------------------------------------
 // Query metadata for usage endpoint (Granit.QueryEngine contract)
@@ -310,8 +310,6 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
 
     http.get(`${baseUrl}/usage`, ({ request }) => {
       const url = new URL(request.url);
-      const page = Number(url.searchParams.get('page') ?? 1);
-      const pageSize = Number(url.searchParams.get('pageSize') ?? 20);
       const groupBy = url.searchParams.get('groupBy');
 
       const records = [...mockUsageRecords];
@@ -321,34 +319,12 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
 
       // GroupBy support
       if (groupBy) {
-        type UsageKey = keyof (typeof records)[0];
-        const groupMap = new Map<string, typeof records>();
-
-        for (const record of records) {
-          const key = String(record[groupBy as UsageKey] ?? '');
-          if (!groupMap.has(key)) groupMap.set(key, []);
-          groupMap.get(key)!.push(record);
-        }
-
-        const response: GroupedResult<(typeof records)[0]> = {
-          groups: Array.from(groupMap.entries()).map(([value, items]) => ({
-            field: groupBy,
-            value,
-            label: value,
-            count: items.length,
-            items,
-          })),
-          totalCount: records.length,
-        };
-        return HttpResponse.json(response);
+        return HttpResponse.json(
+          groupByField(records as unknown as Record<string, unknown>[], groupBy)
+        );
       }
 
-      const start = (page - 1) * pageSize;
-      const response: PagedResult<(typeof records)[0]> = {
-        items: records.slice(start, start + pageSize),
-        totalCount: records.length,
-      };
-
+      const response: PagedResult<(typeof records)[0]> = paginate(records, url);
       return HttpResponse.json(response);
     }),
   ];

@@ -5,8 +5,7 @@ import type {
   ApplicationLocalizationDto,
   LocalizationOverride,
 } from '@granit/localization';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { Mutable } from '@granit/testing';
 
 export const mockLanguages: AdminLanguage[] = [
   {

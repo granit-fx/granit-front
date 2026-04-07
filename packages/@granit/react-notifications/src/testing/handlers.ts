@@ -9,8 +9,7 @@ import type {
   UserNotification,
   UserNotificationPage,
 } from '@granit/notifications';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { Mutable } from '@granit/testing';
 
 /**
  * Create stateful MSW handlers for notification endpoints.

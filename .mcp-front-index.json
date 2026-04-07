@@ -3253,6 +3253,11 @@
       "description": "Shared test utilities for @granit/* packages — mock clients, mock loggers, Axios response helpers",
       "exports": [
         {
+          "name": "Mutable",
+          "kind": "type",
+          "signature": "type Mutable<T> = { -readonly [K in keyof T]: T[K] }"
+        },
+        {
           "name": "axiosResponse",
           "kind": "function",
           "signature": "function axiosResponse<T>(data: T): AxiosResponse<T>"

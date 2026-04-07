@@ -1,6 +1,5 @@
 import type { AuditEntry } from '@granit/auditing';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { Mutable } from '@granit/testing';
 
 export const mockAuditEntries: Mutable<AuditEntry>[] = [
   {

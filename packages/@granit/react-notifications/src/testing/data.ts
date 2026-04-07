@@ -1,9 +1,8 @@
 import { toEntityId, toISODateString } from '@granit/types';
 
 import type { NotificationPreference, UserNotification } from '@granit/notifications';
+import type { Mutable } from '@granit/testing';
 import type { UserId } from '@granit/types';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
 
 const adminUserId = toEntityId<'User'>('user-admin-001') as UserId;
 

@@ -1,3 +1,11 @@
+import {
+  applyFilter,
+  groupBy as groupByField,
+  paginate,
+  parseFilters,
+  parseSort,
+  sortItems,
+} from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { WebhookSubscriptionStatus } from '@granit/webhooks';
 import { http, HttpResponse } from 'msw';
@@ -14,43 +22,6 @@ import type { WebhookSubscriptionResponse } from '@granit/webhooks';
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function parseFilters(url: URL): { field: string; operator: string; value: string }[] {
-  const filters: { field: string; operator: string; value: string }[] = [];
-  const filterRegex = /^filter\[(.+)\.(\w+)\]$/;
-  for (const [key, value] of url.searchParams.entries()) {
-    const match = filterRegex.exec(key);
-    if (match?.[1] && match[2]) {
-      filters.push({ field: match[1], operator: match[2], value });
-    }
-  }
-  return filters;
-}
-
-function applyFilter(
-  record: Record<string, unknown>,
-  f: { field: string; operator: string; value: string }
-): boolean {
-  const fieldValue = String(record[f.field] ?? '');
-  const v = fieldValue.toLowerCase();
-  const fv = f.value.toLowerCase();
-  switch (f.operator) {
-    case 'Eq':
-      return v === fv;
-    case 'Contains':
-      return v.includes(fv);
-    case 'In':
-      return f.value.split(',').some((item) => item.toLowerCase() === v);
-    case 'Gt':
-      return Number(fieldValue) > Number(f.value);
-    case 'Gte':
-      return Number(fieldValue) >= Number(f.value);
-    case 'Lt':
-      return Number(fieldValue) < Number(f.value);
-    default:
-      return true;
-  }
-}
 
 function applyPresets(
   items: WebhookSubscriptionResponse[],
@@ -81,54 +52,6 @@ function applyQuickFilters(
     items = items.filter((s) => s.consecutiveFailureCount > 0);
   }
   return items;
-}
-
-function parseSort(url: URL): { field: string; desc: boolean }[] {
-  const sortStr = url.searchParams.get('sort');
-  if (!sortStr) return [];
-  return sortStr.split(',').map((part) => {
-    if (part.startsWith('-')) {
-      return { field: part.slice(1), desc: true };
-    }
-    return { field: part, desc: false };
-  });
-}
-
-function sortItems<T extends Record<string, unknown>>(
-  items: T[],
-  sortEntries: { field: string; desc: boolean }[],
-  defaultSort?: string
-): T[] {
-  const firstSort = sortEntries[0];
-  if (firstSort) {
-    const { field, desc } = firstSort;
-    items.sort((a, b) => {
-      const aVal = String(a[field] ?? '');
-      const bVal = String(b[field] ?? '');
-      const cmp = aVal.localeCompare(bVal);
-      return desc ? -cmp : cmp;
-    });
-  } else if (defaultSort) {
-    const desc = defaultSort.startsWith('-');
-    const field = desc ? defaultSort.slice(1) : defaultSort;
-    items.sort((a, b) => {
-      const aVal = String(a[field] ?? '');
-      const bVal = String(b[field] ?? '');
-      const cmp = aVal.localeCompare(bVal);
-      return desc ? -cmp : cmp;
-    });
-  }
-  return items;
-}
-
-function paginate<T>(items: T[], url: URL): { items: T[]; totalCount: number } {
-  const page = Number(url.searchParams.get('page') ?? '1');
-  const pageSize = Number(url.searchParams.get('pageSize') ?? '20');
-  const start = (page - 1) * pageSize;
-  return {
-    items: items.slice(start, start + pageSize),
-    totalCount: items.length,
-  };
 }
 
 function generateSecret(): string {
@@ -250,24 +173,11 @@ export function createWebhooksHandlers(baseUrl = '/api/v1/webhooks') {
       ) as unknown as WebhookSubscriptionResponse[];
 
       // GroupBy
-      const groupBy = url.searchParams.get('groupBy');
-      if (groupBy) {
-        const groups = new Map<string, WebhookSubscriptionResponse[]>();
-        for (const item of filtered) {
-          const key = String((item as unknown as Record<string, unknown>)[groupBy] ?? '');
-          if (!groups.has(key)) groups.set(key, []);
-          groups.get(key)!.push(item);
-        }
-        return HttpResponse.json({
-          groups: Array.from(groups.entries()).map(([value, items]) => ({
-            field: groupBy,
-            value,
-            label: value,
-            count: items.length,
-            items,
-          })),
-          totalCount: filtered.length,
-        });
+      const groupByParam = url.searchParams.get('groupBy');
+      if (groupByParam) {
+        return HttpResponse.json(
+          groupByField(filtered as unknown as Record<string, unknown>[], groupByParam)
+        );
       }
 
       return HttpResponse.json(paginate(filtered, url));
@@ -336,24 +246,11 @@ export function createWebhooksHandlers(baseUrl = '/api/v1/webhooks') {
       ) as unknown as typeof filtered;
 
       // GroupBy
-      const groupBy = url.searchParams.get('groupBy');
-      if (groupBy) {
-        const groups = new Map<string, typeof filtered>();
-        for (const item of filtered) {
-          const key = String((item as unknown as Record<string, unknown>)[groupBy] ?? '');
-          if (!groups.has(key)) groups.set(key, []);
-          groups.get(key)!.push(item);
-        }
-        return HttpResponse.json({
-          groups: Array.from(groups.entries()).map(([value, items]) => ({
-            field: groupBy,
-            value,
-            label: value,
-            count: items.length,
-            items,
-          })),
-          totalCount: filtered.length,
-        });
+      const groupByParam = url.searchParams.get('groupBy');
+      if (groupByParam) {
+        return HttpResponse.json(
+          groupByField(filtered as unknown as Record<string, unknown>[], groupByParam)
+        );
       }
 
       return HttpResponse.json(paginate(filtered, url));

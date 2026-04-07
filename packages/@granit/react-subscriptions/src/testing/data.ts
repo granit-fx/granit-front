@@ -6,8 +6,7 @@ import type {
   SeatResponse,
   SubscriptionResponse,
 } from '@granit/subscriptions';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { Mutable } from '@granit/testing';
 
 export const mockPlans: Mutable<PlanResponse>[] = [
   {

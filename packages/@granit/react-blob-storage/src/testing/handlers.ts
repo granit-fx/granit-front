@@ -1,49 +1,16 @@
+import {
+  applyStringFilter,
+  groupBy as groupByField,
+  paginate,
+  parseFilters,
+  parseSort,
+  sortItems,
+} from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
 import { mockBlobs, S } from './data.js';
 
 import type { BlobDescriptorResponse, BlobStatusValue } from '@granit/blob-storage';
-import type { GroupedResult, PagedResult } from '@granit/query-engine';
-
-// ---------------------------------------------------------------------------
-// Query helpers
-// ---------------------------------------------------------------------------
-
-function parseFilters(url: URL): { field: string; operator: string; value: string }[] {
-  const filters: { field: string; operator: string; value: string }[] = [];
-  const filterRegex = /^filter\[(.+)\.(\w+)\]$/;
-  for (const [key, value] of url.searchParams.entries()) {
-    const match = filterRegex.exec(key);
-    if (match?.[1] && match[2]) {
-      filters.push({ field: match[1], operator: match[2], value });
-    }
-  }
-  return filters;
-}
-
-function parseSort(url: URL): { field: string; desc: boolean }[] {
-  const sortStr = url.searchParams.get('sort');
-  if (!sortStr) return [];
-  return sortStr.split(',').map((part) => {
-    if (part.startsWith('-')) return { field: part.slice(1), desc: true };
-    return { field: part, desc: false };
-  });
-}
-
-function applyStringFilter(value: string, operator: string, filterValue: string): boolean {
-  const v = value.toLowerCase();
-  const f = filterValue.toLowerCase();
-  switch (operator) {
-    case 'Eq':
-      return v === f;
-    case 'Contains':
-      return v.includes(f);
-    case 'StartsWith':
-      return v.startsWith(f);
-    default:
-      return true;
-  }
-}
 
 const STATUS_LABELS: Record<BlobStatusValue, string> = {
   0: 'Pending',
@@ -161,8 +128,6 @@ export function createBlobStorageHandlers(baseUrl = '/api/v1/blob-storage') {
     http.get(baseUrl, ({ request }) => {
       const url = new URL(request.url);
       const search = url.searchParams.get('search') ?? '';
-      const page = Number(url.searchParams.get('page') ?? 1);
-      const pageSize = Number(url.searchParams.get('pageSize') ?? 20);
       const filters = parseFilters(url);
       const sortEntries = parseSort(url);
       const presetStatus = url.searchParams.get('presets[status]');
@@ -200,59 +165,24 @@ export function createBlobStorageHandlers(baseUrl = '/api/v1/blob-storage') {
         );
       }
 
-      // Sort
-      const firstSort = sortEntries[0];
-      if (firstSort) {
-        const { field, desc } = firstSort;
-        filtered.sort((a, b) => {
-          const aVal = a[field as keyof BlobDescriptorResponse];
-          const bVal = b[field as keyof BlobDescriptorResponse];
-          let cmp: number;
-          if (typeof aVal === 'number' && typeof bVal === 'number') {
-            cmp = aVal - bVal;
-          } else {
-            cmp = String(aVal ?? '').localeCompare(String(bVal ?? ''));
-          }
-          return desc ? -cmp : cmp;
-        });
+      // Sort — fall back to createdAt desc when no explicit sort is given
+      if (sortEntries.length > 0) {
+        sortItems(filtered as unknown as Record<string, unknown>[], sortEntries);
       } else {
         filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
       }
 
       // GroupBy
-      const groupBy = url.searchParams.get('groupBy');
-      if (groupBy) {
-        const groupMap = new Map<string, BlobDescriptorResponse[]>();
-        for (const item of filtered) {
-          const rawKey = item[groupBy as keyof BlobDescriptorResponse];
-          const key = String(rawKey ?? '');
-          if (!groupMap.has(key)) groupMap.set(key, []);
-          groupMap.get(key)!.push(item);
-        }
-        const response: GroupedResult<BlobDescriptorResponse> = {
-          groups: Array.from(groupMap.entries()).map(([value, items]) => ({
-            field: groupBy,
-            value,
-            label:
-              groupBy === 'status'
-                ? (STATUS_LABELS[Number(value) as BlobStatusValue] ?? value)
-                : value,
-            count: items.length,
-            items,
-          })),
-          totalCount: filtered.length,
-        };
-        return HttpResponse.json(response);
+      const groupByParam = url.searchParams.get('groupBy');
+      if (groupByParam) {
+        const labelFn = (key: string): string =>
+          groupByParam === 'status' ? (STATUS_LABELS[Number(key) as BlobStatusValue] ?? key) : key;
+        return HttpResponse.json(
+          groupByField(filtered as unknown as Record<string, unknown>[], groupByParam, labelFn)
+        );
       }
 
-      // Paged result
-      const start = (page - 1) * pageSize;
-      const response: PagedResult<BlobDescriptorResponse> = {
-        items: filtered.slice(start, start + pageSize),
-        totalCount: filtered.length,
-        nextCursor: undefined,
-      };
-      return HttpResponse.json(response);
+      return HttpResponse.json(paginate(filtered, url));
     }),
 
     http.get(`${baseUrl}/:id`, ({ params }) => {

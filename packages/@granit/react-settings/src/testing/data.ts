@@ -1,6 +1,5 @@
 import type { AdminAppSetting } from '@granit/settings';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { Mutable } from '@granit/testing';
 
 export const mockAppSettings: Mutable<AdminAppSetting>[] = [
   {
