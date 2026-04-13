@@ -60,7 +60,7 @@ export function createPaymentsHandlers(baseUrl = DEFAULT_BASE_PATH) {
           providerTransactionId: null,
           paymentMethodId: null,
           actionUrl: null,
-          idempotencyKey: body.idempotencyKey,
+          idempotencyKey: 'idem_mock',
           failureCode: null,
           succeededAt: null,
           canceledAt: null,

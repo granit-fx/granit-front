@@ -17,7 +17,6 @@ export interface PaymentChargeRequest {
   readonly amount: number;
   readonly currency: string;
   readonly methodType: string;
-  readonly idempotencyKey: string;
   readonly providerName: string | null;
 }
 
@@ -25,7 +24,6 @@ export interface PaymentRefundRequest {
   readonly transactionId: string;
   readonly amount: number;
   readonly reason: string | null;
-  readonly idempotencyKey: string;
 }
 
 export interface PaymentCheckoutRequest {

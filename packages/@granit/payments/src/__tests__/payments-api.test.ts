@@ -125,7 +125,6 @@ describe('payments-api', () => {
         amount: 5000,
         currency: 'EUR',
         methodType: 'card',
-        idempotencyKey: 'key-1',
         providerName: null,
       };
       vi.mocked(client.post).mockResolvedValue(axiosResponse(sampleTransaction));
@@ -144,7 +143,6 @@ describe('payments-api', () => {
         transactionId: 'txn-1',
         amount: 2000,
         reason: 'Customer request',
-        idempotencyKey: 'key-2',
       };
       vi.mocked(client.post).mockResolvedValue(axiosResponse(sampleRefund));
 

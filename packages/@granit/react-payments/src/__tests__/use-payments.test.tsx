@@ -179,7 +179,6 @@ describe('use-payments', () => {
         amount: 5000,
         currency: 'EUR',
         methodType: 'card',
-        idempotencyKey: 'key-1',
         providerName: null,
       });
 
@@ -200,7 +199,6 @@ describe('use-payments', () => {
         amount: 5000,
         currency: 'EUR',
         methodType: 'card',
-        idempotencyKey: 'key-1',
         providerName: null,
       });
 
@@ -222,7 +220,6 @@ describe('use-payments', () => {
         transactionId: 'txn-1',
         amount: 2000,
         reason: 'Customer request',
-        idempotencyKey: 'key-2',
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
