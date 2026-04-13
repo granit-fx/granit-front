@@ -61,8 +61,12 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "@firebase/util",
+      "@parcel/watcher",
       "esbuild",
-      "msw"
+      "msw",
+      "protobufjs",
+      "unrs-resolver"
     ],
     "overrides": {
       "immutable": ">=5.1.5",

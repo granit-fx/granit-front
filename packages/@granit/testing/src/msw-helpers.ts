@@ -77,12 +77,12 @@ const FILTER_REGEX = /^filter\[(.+)\.(\w+)\]$/;
  */
 export function parseFilters(url: URL): FilterEntry[] {
   const filters: FilterEntry[] = [];
-  for (const [key, value] of url.searchParams.entries()) {
+  url.searchParams.forEach((value, key) => {
     const match = FILTER_REGEX.exec(key);
     if (match?.[1] && match[2]) {
       filters.push({ field: match[1], operator: match[2], value });
     }
-  }
+  });
   return filters;
 }
 
