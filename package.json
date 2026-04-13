@@ -35,7 +35,7 @@
     "@types/react": "^19.2.14",
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.1.4",
-    "axios": "^1.14.0",
+    "axios": "^1.15.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "eslint": "^10.2.0",
@@ -47,7 +47,7 @@
     "lint-staged": "^16.4.0",
     "markdownlint-cli2": "^0.22.0",
     "msw": "^2.13.2",
-    "prettier": "^3.8.1",
+    "prettier": "^3.8.2",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-hook-form": "^7.72.1",
@@ -56,7 +56,7 @@
     "tsup": "^8.5.1",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.1",
-    "vite": "^8.0.5",
+    "vite": "^8.0.8",
     "vitest": "^4.1.4"
   },
   "pnpm": {
