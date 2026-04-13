@@ -32,7 +32,7 @@ describe('useCleanupOrphans', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/blobs/cleanup-orphans');
+    expect(client.post).toHaveBeenCalledWith('/api/v1/blob-storage/blobs/cleanup-orphans');
     expect(result.current.data).toEqual(response);
   });
 
@@ -41,7 +41,7 @@ describe('useCleanupOrphans', () => {
     vi.mocked(client.post).mockResolvedValueOnce({ data: { cleanedCount: 0 } });
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useCleanupOrphans({ client, basePath: '/api/v2/blobs' }), {
+    const { result } = renderHook(() => useCleanupOrphans({ client, basePath: '/api/v2/blob-storage' }), {
       wrapper,
     });
 
@@ -49,7 +49,7 @@ describe('useCleanupOrphans', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v2/blobs/cleanup-orphans');
+    expect(client.post).toHaveBeenCalledWith('/api/v2/blob-storage/blobs/cleanup-orphans');
   });
 
   it('should handle error', async () => {

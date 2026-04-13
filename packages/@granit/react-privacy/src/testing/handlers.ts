@@ -1,6 +1,7 @@
 import { notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import {
   mockAgreementHistory,
   mockAgreementStatuses,
@@ -28,7 +29,7 @@ type Mutable<T> = { -readonly [K in keyof T]: T[K] };
  *
  * @param baseUrl - API base path (default: `/api/v1/privacy`)
  */
-export function createPrivacyHandlers(baseUrl = '/api/v1/privacy') {
+export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
   const exports: Mutable<PrivacyExportStatusResponse>[] = mockExports.map((e) => ({ ...e }));
   const deletionRequests: Mutable<PrivacyDeletionResponse>[] = mockDeletionRequests.map((d) => ({
     ...d,

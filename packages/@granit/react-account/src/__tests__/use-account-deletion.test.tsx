@@ -51,7 +51,7 @@ describe('useDeleteAccount', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(deleteAccount).toHaveBeenCalledWith(client, '/account', {
+    expect(deleteAccount).toHaveBeenCalledWith(client, '/api/v1/account', {
       password: 'MyP@ssword1!',
     });
   });

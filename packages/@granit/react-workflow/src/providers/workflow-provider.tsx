@@ -1,11 +1,11 @@
 import { createContext, useContext, useMemo } from 'react';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import type { WorkflowConfig } from '@granit/workflow';
 import type { AxiosInstance } from 'axios';
 
 const WorkflowConfigContext = createContext<WorkflowConfig | null>(null);
-
-const DEFAULT_BASE_PATH = '/api/v1/workflow';
 
 export interface WorkflowProviderProps {
   apiClient: AxiosInstance;

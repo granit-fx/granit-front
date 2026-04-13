@@ -27,7 +27,7 @@ export function useApiKey(id: string, options: ApiKeyHookOptions): UseQueryResul
   return useQuery({
     queryKey: apiKeyKeys.detail(id),
     queryFn: async () => {
-      const response = await client.get<ApiKeyResponse>(`${basePath}/${id}`);
+      const response = await client.get<ApiKeyResponse>(`${basePath}/api-keys/${id}`);
       return response.data;
     },
     enabled: Boolean(id),

@@ -56,7 +56,7 @@ describe('useChangePassword', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(changePassword).toHaveBeenCalledWith(client, '/account', {
+    expect(changePassword).toHaveBeenCalledWith(client, '/api/v1/account', {
       currentPassword: 'OldP@ss1!',
       newPassword: 'NewP@ss1!',
     });
@@ -93,7 +93,7 @@ describe('useForgotPassword', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(forgotPassword).toHaveBeenCalledWith(client, '/account', {
+    expect(forgotPassword).toHaveBeenCalledWith(client, '/api/v1/account', {
       email: 'user@example.com',
     });
   });
@@ -130,7 +130,7 @@ describe('useResetPassword', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(resetPassword).toHaveBeenCalledWith(client, '/account', {
+    expect(resetPassword).toHaveBeenCalledWith(client, '/api/v1/account', {
       userId: 'user-1',
       token: 'reset-token-abc',
       newPassword: 'NewP@ss1!',

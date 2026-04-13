@@ -60,7 +60,7 @@ describe('useCompletePasskeyAssertion', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(completePasskeyAssertion).toHaveBeenCalledWith(client, '/account', {
+    expect(completePasskeyAssertion).toHaveBeenCalledWith(client, '/api/v1/account', {
       credentialJson: '{"id":"cred-1","response":{"authenticatorData":"..."}}',
     });
     expect(result.current.data).toEqual(response);

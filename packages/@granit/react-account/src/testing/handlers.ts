@@ -2,6 +2,8 @@ import { noContent, notFound } from '@granit/testing/msw';
 import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import {
   mockAccountSettings,
   mockExternalLogins,
@@ -14,9 +16,9 @@ import {
  * Create stateful MSW handlers for account self-service endpoints.
  * Handlers mutate in-memory state — mutations are reflected by subsequent GETs.
  *
- * @param baseUrl - API base path (default: `/account`)
+ * @param baseUrl - API base path (default: `/api/v1/account`)
  */
-export function createAccountHandlers(baseUrl = '/account') {
+export function createAccountHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
     // ── Settings (anonymous) ─────────────────────────────────────────────────
     http.get(`${baseUrl}/config`, () => HttpResponse.json(mockAccountSettings)),

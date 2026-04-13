@@ -1635,14 +1635,7 @@
     {
       "name": "@granit/react-background-jobs",
       "description": "React hooks for background job monitoring — useBackgroundJobs, usePauseJob, useResumeJob, useTriggerJob",
-      "exports": [
-        {
-          "name": "BackgroundJobsOptions",
-          "kind": "interface",
-          "signature": "interface BackgroundJobsOptions",
-          "members": []
-        }
-      ]
+      "exports": []
     },
     {
       "name": "@granit/react-bff",
@@ -2237,7 +2230,7 @@
         {
           "name": "useDeviceTokens",
           "kind": "function",
-          "signature": "function useDeviceTokens( options: DeviceTokensOptions ): UseQueryResult<readonly MobilePushTokenResponse[]>"
+          "signature": "function useDeviceTokens(): UseQueryResult<readonly MobilePushTokenResponse[]>"
         },
         {
           "name": "deviceTokenKeys",
@@ -2245,20 +2238,14 @@
           "signature": "const deviceTokenKeys"
         },
         {
-          "name": "DeviceTokensOptions",
-          "kind": "interface",
-          "signature": "interface DeviceTokensOptions",
-          "members": []
-        },
-        {
           "name": "useMobilePush",
           "kind": "function",
-          "signature": "function useMobilePush(config: MobilePushConfig): UseMobilePushReturn"
+          "signature": "function useMobilePush(options: MobilePushHookOptions): UseMobilePushReturn"
         },
         {
-          "name": "MobilePushConfig",
+          "name": "MobilePushHookOptions",
           "kind": "interface",
-          "signature": "interface MobilePushConfig",
+          "signature": "interface MobilePushHookOptions",
           "members": []
         },
         {
@@ -2277,6 +2264,16 @@
               "signature": "unregister: () => Promise<void>"
             }
           ]
+        },
+        {
+          "name": "MobilePushProvider",
+          "kind": "function",
+          "signature": "function MobilePushProvider("
+        },
+        {
+          "name": "useMobilePushConfig",
+          "kind": "function",
+          "signature": "function useMobilePushConfig(): MobilePushProviderConfig"
         }
       ]
     },
@@ -2287,7 +2284,7 @@
         {
           "name": "useWebPush",
           "kind": "function",
-          "signature": "function useWebPush(config: WebPushConfig): UseWebPushReturn"
+          "signature": "function useWebPush(): UseWebPushReturn"
         },
         {
           "name": "UseWebPushReturn",
@@ -2307,10 +2304,14 @@
           ]
         },
         {
-          "name": "WebPushConfig",
-          "kind": "interface",
-          "signature": "interface WebPushConfig",
-          "members": []
+          "name": "WebPushProvider",
+          "kind": "function",
+          "signature": "function WebPushProvider("
+        },
+        {
+          "name": "useWebPushConfig",
+          "kind": "function",
+          "signature": "function useWebPushConfig(): WebPushProviderConfig"
         }
       ]
     },
@@ -2466,7 +2467,20 @@
     {
       "name": "@granit/react-scheduling",
       "description": "React hooks for scheduled action management — useScheduledActions, useCancelScheduledAction, useRescheduleScheduledAction",
-      "exports": []
+      "exports": [
+        {
+          "name": "SchedulingConfig",
+          "kind": "interface",
+          "signature": "interface SchedulingConfig",
+          "members": []
+        },
+        {
+          "name": "SchedulingProviderProps",
+          "kind": "interface",
+          "signature": "interface SchedulingProviderProps",
+          "members": []
+        }
+      ]
     },
     {
       "name": "@granit/react-settings",

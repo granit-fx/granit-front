@@ -96,7 +96,7 @@ describe('usePasskeys', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(getPasskeys).toHaveBeenCalledWith(client, '/account');
+    expect(getPasskeys).toHaveBeenCalledWith(client, '/api/v1/account');
     expect(result.current.data).toEqual(mockPasskeys);
   });
 
@@ -127,7 +127,7 @@ describe('useBeginPasskeyRegistration', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(beginPasskeyRegistration).toHaveBeenCalledWith(client, '/account');
+    expect(beginPasskeyRegistration).toHaveBeenCalledWith(client, '/api/v1/account');
     expect(result.current.data).toBe(optionsJson);
   });
 });
@@ -151,7 +151,7 @@ describe('useCompletePasskeyRegistration', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(completePasskeyRegistration).toHaveBeenCalledWith(client, '/account', {
+    expect(completePasskeyRegistration).toHaveBeenCalledWith(client, '/api/v1/account', {
       credentialJson: '{"id":"cred"}',
       name: 'New Key',
     });
@@ -181,7 +181,7 @@ describe('useRenamePasskey', () => {
 
     expect(renamePasskey).toHaveBeenCalledWith(
       client,
-      '/account',
+      '/api/v1/account',
       toEntityId<'Passkey'>('pk-001'),
       {
         name: 'Renamed Key',
@@ -207,7 +207,7 @@ describe('useDeletePasskey', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(deletePasskey).toHaveBeenCalledWith(client, '/account', toEntityId<'Passkey'>('pk-001'));
+    expect(deletePasskey).toHaveBeenCalledWith(client, '/api/v1/account', toEntityId<'Passkey'>('pk-001'));
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['account', 'passkeys'],
     });

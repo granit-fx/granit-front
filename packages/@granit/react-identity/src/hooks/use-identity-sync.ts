@@ -32,7 +32,7 @@ export function useIdentitySync(): {
 } {
   const config = useIdentityConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? '/api/v1/identity/users';
+  const basePath = config.basePath;
 
   const sync = useMutation({
     mutationFn: (userIds: UserId[]) => syncUsers(config.client, basePath, userIds),

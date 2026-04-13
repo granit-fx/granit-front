@@ -1,6 +1,7 @@
 import { noContent, notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import { mockPermissionGroups, mockRoleGrants } from './data.js';
 
 /**
@@ -9,7 +10,7 @@ import { mockPermissionGroups, mockRoleGrants } from './data.js';
  *
  * @param baseUrl - API base path (default: `/api/v1/authorization`)
  */
-export function createAuthorizationHandlers(baseUrl = '/api/v1/authorization') {
+export function createAuthorizationHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
     // GET /permissions/definitions — list all permission groups
     http.get(`${baseUrl}/permissions/definitions`, () => {

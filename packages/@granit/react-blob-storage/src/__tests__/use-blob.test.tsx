@@ -48,7 +48,7 @@ describe('useBlob', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/v1/blobs/abc-123', {
+    expect(client.get).toHaveBeenCalledWith('/api/v1/blob-storage/blobs/abc-123', {
       params: { containerName: 'medical-images' },
     });
     expect(result.current.data).toEqual(mockDescriptor);
@@ -60,13 +60,13 @@ describe('useBlob', () => {
 
     const { wrapper } = createWrapper();
     const { result } = renderHook(
-      () => useBlob('abc-123', 'docs', { client, basePath: '/api/v2/blobs' }),
+      () => useBlob('abc-123', 'docs', { client, basePath: '/api/v2/blob-storage' }),
       { wrapper }
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/v2/blobs/abc-123', {
+    expect(client.get).toHaveBeenCalledWith('/api/v2/blob-storage/blobs/abc-123', {
       params: { containerName: 'docs' },
     });
   });

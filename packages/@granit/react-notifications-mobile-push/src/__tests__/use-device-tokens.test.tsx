@@ -1,12 +1,16 @@
 import { fetchDeviceTokens } from '@granit/notifications-mobile-push';
-import { createQueryWrapper } from '@granit/react-testing';
+import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { deviceTokenKeys, useDeviceTokens } from '../hooks/use-device-tokens.js';
+import { MobilePushProvider } from '../providers/mobile-push-provider.js';
 
 import type { MobilePushTokenResponse } from '@granit/notifications-mobile-push';
+import type { AxiosInstance } from 'axios';
+import type { ReactNode } from 'react';
 
 vi.mock('@granit/notifications-mobile-push', () => ({
   fetchDeviceTokens: vi.fn(),
@@ -25,6 +29,17 @@ const mockTokens: readonly MobilePushTokenResponse[] = [
   },
 ];
 
+function createWrapper(client: AxiosInstance, basePath?: string) {
+  return function Wrapper({ children }: { children: ReactNode }) {
+    const queryClient = createTestQueryClient();
+    return (
+      <QueryClientProvider client={queryClient}>
+        <MobilePushProvider config={{ client, basePath }}>{children}</MobilePushProvider>
+      </QueryClientProvider>
+    );
+  };
+}
+
 describe('deviceTokenKeys', () => {
   it('should produce stable list key', () => {
     expect(deviceTokenKeys.list()).toEqual(['device-tokens', 'list']);
@@ -36,12 +51,12 @@ describe('useDeviceTokens', () => {
     vi.mocked(fetchDeviceTokens).mockResolvedValueOnce(mockTokens);
 
     const client = createMockClient();
-    const wrapper = createQueryWrapper();
-    const { result } = renderHook(() => useDeviceTokens({ client }), { wrapper });
+    const wrapper = createWrapper(client);
+    const { result } = renderHook(() => useDeviceTokens(), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(fetchDeviceTokens).toHaveBeenCalledWith(client, '/api/v1');
+    expect(fetchDeviceTokens).toHaveBeenCalledWith(client, '/api/v1/notifications');
     expect(result.current.data).toEqual(mockTokens);
   });
 
@@ -49,10 +64,8 @@ describe('useDeviceTokens', () => {
     vi.mocked(fetchDeviceTokens).mockResolvedValueOnce(mockTokens);
 
     const client = createMockClient();
-    const wrapper = createQueryWrapper();
-    const { result } = renderHook(() => useDeviceTokens({ client, basePath: '/custom/api' }), {
-      wrapper,
-    });
+    const wrapper = createWrapper(client, '/custom/api');
+    const { result } = renderHook(() => useDeviceTokens(), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
@@ -63,8 +76,8 @@ describe('useDeviceTokens', () => {
     vi.mocked(fetchDeviceTokens).mockRejectedValueOnce(new Error('Unauthorized'));
 
     const client = createMockClient();
-    const wrapper = createQueryWrapper();
-    const { result } = renderHook(() => useDeviceTokens({ client }), { wrapper });
+    const wrapper = createWrapper(client);
+    const { result } = renderHook(() => useDeviceTokens(), { wrapper });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 
@@ -75,8 +88,8 @@ describe('useDeviceTokens', () => {
     vi.mocked(fetchDeviceTokens).mockResolvedValueOnce([]);
 
     const client = createMockClient();
-    const wrapper = createQueryWrapper();
-    const { result } = renderHook(() => useDeviceTokens({ client }), { wrapper });
+    const wrapper = createWrapper(client);
+    const { result } = renderHook(() => useDeviceTokens(), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 

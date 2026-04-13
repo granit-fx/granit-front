@@ -23,7 +23,7 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
  */
 export function useRoles(): UseQueryResult<readonly IdentityRole[]> {
   const config = useIdentityConfig();
-  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
+  const basePath = config.providerBasePath;
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'roles'),
@@ -43,7 +43,7 @@ export function useRoles(): UseQueryResult<readonly IdentityRole[]> {
  */
 export function useUserRoles(userId: UserId): UseQueryResult<readonly IdentityRole[]> {
   const config = useIdentityConfig();
-  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
+  const basePath = config.providerBasePath;
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'users', userId, 'roles'),
@@ -64,7 +64,7 @@ export function useUserRoles(userId: UserId): UseQueryResult<readonly IdentityRo
  */
 export function useRoleMembers(roleName: string): UseQueryResult<readonly IdentityUser[]> {
   const config = useIdentityConfig();
-  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
+  const basePath = config.providerBasePath;
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'roles', roleName, 'members'),
@@ -92,7 +92,7 @@ export type RoleMutationVariables = {
 export function useAssignRole(): UseMutationResult<void, Error, RoleMutationVariables> {
   const config = useIdentityConfig();
   const queryClient = useQueryClient();
-  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
+  const basePath = config.providerBasePath;
 
   return useMutation({
     mutationFn: ({ userId, roleName }: RoleMutationVariables) =>
@@ -121,7 +121,7 @@ export function useAssignRole(): UseMutationResult<void, Error, RoleMutationVari
 export function useRemoveRole(): UseMutationResult<void, Error, RoleMutationVariables> {
   const config = useIdentityConfig();
   const queryClient = useQueryClient();
-  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
+  const basePath = config.providerBasePath;
 
   return useMutation({
     mutationFn: ({ userId, roleName }: RoleMutationVariables) =>

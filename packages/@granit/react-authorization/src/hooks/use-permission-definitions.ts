@@ -1,11 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import { permissionKeys } from './use-permissions.js';
 
 import type { PermissionGroupDto, UsePermissionDefinitionsOptions } from '@granit/authorization';
 import type { UseQueryResult } from '@tanstack/react-query';
-
-const DEFAULT_BASE_PATH = '/api/v1/authorization';
 
 /**
  * Fetches all permission definitions grouped by module.

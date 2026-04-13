@@ -13,7 +13,7 @@ import {
 } from '../hooks/use-audit-log.js';
 import { AuditLogProvider } from '../providers/audit-log-provider.js';
 
-import type { AuditLogConfig } from '../providers/audit-log-provider.js';
+import type { AuditLogProviderProps } from '../providers/audit-log-provider.js';
 import type { AuditEntryDetail, AuditPage } from '@granit/auditing';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
@@ -21,7 +21,7 @@ import type { ReactNode } from 'react';
 function createWrapper(client: AxiosInstance, basePath = '/api/v1/auditing') {
   return function Wrapper({ children }: { children: ReactNode }) {
     const queryClient = createTestQueryClient();
-    const config: AuditLogConfig = { client, basePath };
+    const config: AuditLogProviderProps['config'] = { client, basePath };
     return (
       <QueryClientProvider client={queryClient}>
         <AuditLogProvider config={config}>{children}</AuditLogProvider>
@@ -49,7 +49,7 @@ describe('useAuditLogEntries', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual(emptyPage);
-    expect(client.get).toHaveBeenCalledWith('/api/v1/auditing', {
+    expect(client.get).toHaveBeenCalledWith('/api/v1/auditing/audit-entries', {
       params: { category: AuditCategory.DataMutation },
     });
   });
@@ -100,7 +100,7 @@ describe('useEntityAuditTrail', () => {
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/api/v1/auditing/entity/Patient/42', {
+    expect(client.get).toHaveBeenCalledWith('/api/v1/auditing/audit-entries/entity/Patient/42', {
       params: { page: 1, pageSize: 10 },
     });
   });

@@ -17,7 +17,7 @@ export function createWrapper(client: AxiosInstance, basePath = '/api/v1') {
 
 /**
  * Creates a wrapper where `basePath` is omitted from the config,
- * exercising the `?? '/api'` fallback in hooks.
+ * exercising the `?? API_BASE_PATH` fallback in hooks.
  */
 export function createWrapperWithoutBasePath(client: AxiosInstance) {
   return function Wrapper({ children }: Readonly<{ children: React.ReactNode }>) {

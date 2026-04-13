@@ -1,3 +1,4 @@
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import { notFound, pagedResponse } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
@@ -32,7 +33,7 @@ function generateSecret(type: string, environment: string): string {
  *
  * @param baseUrl - API base path (default: `/api/v1/authentication/api-keys`)
  */
-export function createApiKeyHandlers(baseUrl = '/api/v1/authentication/api-keys') {
+export function createApiKeyHandlers(baseUrl = `${DEFAULT_BASE_PATH}/api-keys`) {
   const apiKeys: MutableApiKey[] = mockApiKeys.map((k) => ({ ...k }));
 
   return [

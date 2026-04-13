@@ -26,7 +26,7 @@ export function usePasswordChangedAt(
   userId: UserId
 ): UseQueryResult<IdentityPasswordChangedAtResponse> {
   const config = useIdentityConfig();
-  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
+  const basePath = config.providerBasePath;
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'users', userId, 'password-changed-at'),
@@ -47,7 +47,7 @@ export function usePasswordChangedAt(
  */
 export function useSendPasswordResetEmail(): UseMutationResult<void, Error, UserId> {
   const config = useIdentityConfig();
-  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
+  const basePath = config.providerBasePath;
 
   return useMutation({
     mutationFn: (userId: UserId) => sendPasswordResetEmail(config.client, basePath, userId),
@@ -75,7 +75,7 @@ export function useSetTemporaryPassword(): UseMutationResult<
   SetTemporaryPasswordVariables
 > {
   const config = useIdentityConfig();
-  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
+  const basePath = config.providerBasePath;
 
   return useMutation({
     mutationFn: ({ userId, password }: SetTemporaryPasswordVariables) =>

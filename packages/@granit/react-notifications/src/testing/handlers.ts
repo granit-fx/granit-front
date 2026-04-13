@@ -2,6 +2,8 @@ import { noContent, notFound } from '@granit/testing/msw';
 import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
+import { API_BASE_PATH } from '../constants.js';
+
 import { mockNotificationPreferences, mockNotifications } from './data.js';
 
 import type {
@@ -18,7 +20,7 @@ import type { Mutable } from '@granit/testing';
  *
  * @param baseUrl - API base path (default: `/api/v1`)
  */
-export function createNotificationsHandlers(baseUrl = '/api/v1') {
+export function createNotificationsHandlers(baseUrl = API_BASE_PATH) {
   let notifications: Mutable<UserNotification>[] = [...mockNotifications];
   let preferences: Mutable<NotificationPreference>[] = [...mockNotificationPreferences];
 

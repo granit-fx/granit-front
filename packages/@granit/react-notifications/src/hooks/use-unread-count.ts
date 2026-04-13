@@ -1,6 +1,7 @@
 import { fetchUnreadCount } from '@granit/notifications';
 import { useCallback, useEffect, useRef } from 'react';
 
+import { API_BASE_PATH } from '../constants.js';
 import { useNotificationContext } from '../providers/notification-provider.js';
 
 export interface UseUnreadCountOptions {
@@ -28,7 +29,7 @@ export function useUnreadCount(options: UseUnreadCountOptions = {}): UseUnreadCo
 
   const refresh = useCallback(async () => {
     try {
-      const count = await fetchUnreadCount(config.apiClient, config.basePath ?? '/api');
+      const count = await fetchUnreadCount(config.apiClient, config.basePath ?? API_BASE_PATH);
       if (mountedRef.current) {
         setUnreadCount(count);
       }

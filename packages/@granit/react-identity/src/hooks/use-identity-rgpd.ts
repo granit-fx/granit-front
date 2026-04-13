@@ -24,7 +24,7 @@ export function useIdentityRgpd(): {
 } {
   const config = useIdentityConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? '/api/v1/identity/users';
+  const basePath = config.basePath;
 
   const erase = useMutation({
     mutationFn: (userId: UserId) => eraseUserCache(config.client, basePath, userId),

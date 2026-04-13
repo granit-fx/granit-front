@@ -1,1 +1,3 @@
-export const DEFAULT_BASE_PATH = '/api/v1/blobs';
+export const API_VERSION = 'v1';
+export const MODULE = 'blob-storage';
+export const DEFAULT_BASE_PATH = `/api/${API_VERSION}/${MODULE}`;

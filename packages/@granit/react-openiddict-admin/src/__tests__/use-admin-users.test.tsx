@@ -87,7 +87,7 @@ describe('useAdminUsers', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(listUsers).toHaveBeenCalledWith(expect.anything(), '/admin', {
+    expect(listUsers).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', {
       search: 'admin',
       page: 1,
       pageSize: 10,
@@ -115,7 +115,7 @@ describe('useAdminUser', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(getUser).toHaveBeenCalledWith(expect.anything(), '/admin', 'usr-001');
+    expect(getUser).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', 'usr-001');
     expect(result.current.data).toEqual(mockUser);
   });
 
@@ -141,7 +141,7 @@ describe('useCreateAdminUser', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(createUser).toHaveBeenCalledWith(expect.anything(), '/admin', {
+    expect(createUser).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', {
       email: 'admin@example.com',
       firstName: 'Admin',
     });
@@ -178,7 +178,7 @@ describe('useDeleteAdminUser', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(deleteUser).toHaveBeenCalledWith(expect.anything(), '/admin', 'usr-001');
+    expect(deleteUser).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', 'usr-001');
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'users'],
     });
@@ -215,7 +215,7 @@ describe('useImpersonateUser', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(impersonateUser).toHaveBeenCalledWith(expect.anything(), '/admin', 'usr-001');
+    expect(impersonateUser).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', 'usr-001');
     expect(result.current.data).toEqual(mockImpersonation);
   });
 

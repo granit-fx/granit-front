@@ -14,7 +14,7 @@ import type { AxiosInstance } from 'axios';
 export interface ApiKeyHookOptions {
   /** Axios instance to use for HTTP requests. */
   client: AxiosInstance;
-  /** API base path. Defaults to `/api/v1/authentication/api-keys`. */
+  /** API base path. Defaults to `/api/v1/authentication`. */
   basePath?: string;
 }
 
@@ -70,7 +70,7 @@ export function useApiKeys(
   return useQuery({
     queryKey: apiKeyKeys.list(params),
     queryFn: async () => {
-      const response = await client.get<ApiKeyResponse[]>(basePath, {
+      const response = await client.get<ApiKeyResponse[]>(`${basePath}/api-keys`, {
         params: {
           search: params.search,
           type: params.type?.join(','),

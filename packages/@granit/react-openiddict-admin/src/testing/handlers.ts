@@ -1,6 +1,8 @@
 import { noContent, notFound, pagedResponse } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import {
   mockAdminGroups,
   mockAdminRoles,
@@ -23,9 +25,9 @@ import type {
  * Create stateful MSW handlers for OpenIddict admin endpoints.
  * Handlers mutate in-memory state — mutations are reflected by subsequent GETs.
  *
- * @param baseUrl - API base path (default: `/admin`)
+ * @param baseUrl - API base path (default: `/api/v1/admin`)
  */
-export function createOpenIddictAdminHandlers(baseUrl = '/admin') {
+export function createOpenIddictAdminHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
     // ── Users ────────────────────────────────────────────────────────────────
 

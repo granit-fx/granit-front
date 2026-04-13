@@ -1,3 +1,10 @@
+// Provider
+export {
+  BackgroundJobsProvider,
+  buildBackgroundJobsQueryKey,
+  useBackgroundJobsConfig,
+} from './providers/background-jobs-provider.js';
+
 // Hooks
 export {
   backgroundJobKeys,
@@ -9,4 +16,7 @@ export {
 } from './hooks/use-background-jobs.js';
 
 // Types
-export type { BackgroundJobsOptions } from './hooks/use-background-jobs.js';
+export type {
+  BackgroundJobsConfig,
+  BackgroundJobsProviderProps,
+} from './providers/background-jobs-provider.js';

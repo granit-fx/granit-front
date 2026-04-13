@@ -1,6 +1,7 @@
 import { fetchPreferences, updatePreference } from '@granit/notifications';
 import { useCallback, useEffect, useOptimistic, useRef, useState, useTransition } from 'react';
 
+import { API_BASE_PATH } from '../constants.js';
 import { useNotificationContext } from '../providers/notification-provider.js';
 
 import type { NotificationPreference } from '@granit/notifications';
@@ -51,7 +52,7 @@ async function savePreference(
  */
 export function useNotificationPreferences(): UseNotificationPreferencesReturn {
   const { config } = useNotificationContext();
-  const basePath = config.basePath ?? '/api';
+  const basePath = config.basePath ?? API_BASE_PATH;
 
   const [preferences, setPreferences] = useState<NotificationPreference[]>([]);
   const [loading, setLoading] = useState(true);

@@ -9,11 +9,11 @@ describe('TemplatingProvider', () => {
   it('should provide config to children', () => {
     const client = createMockClient();
     const { result } = renderHook(() => useTemplatingConfig(), {
-      wrapper: createWrapper(client, '/api/v1', ['templates']),
+      wrapper: createWrapper(client, '/api/v1/templating', ['templates']),
     });
 
     expect(result.current.client).toBe(client);
-    expect(result.current.basePath).toBe('/api/v1');
+    expect(result.current.basePath).toBe('/api/v1/templating');
     expect(result.current.queryKeyPrefix).toEqual(['templates']);
   });
 
@@ -23,7 +23,7 @@ describe('TemplatingProvider', () => {
       wrapper: createWrapper(client),
     });
 
-    expect(result.current.basePath).toBe('/api/v1');
+    expect(result.current.basePath).toBe('/api/v1/templating');
     expect(result.current.queryKeyPrefix).toEqual(['templates']);
   });
 

@@ -1,5 +1,7 @@
 import { createContext, useContext, useMemo } from 'react';
 
+import { DEFAULT_BASE_PATH } from '../../constants.js';
+
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -9,8 +11,8 @@ import type { ReactNode } from 'react';
 export interface ImportConfig {
   /** Axios instance used for API calls. */
   readonly client: AxiosInstance;
-  /** Base path for import endpoints (e.g. `/api/v1/data-exchange`). */
-  readonly basePath: string;
+  /** Base path for import endpoints (default: `/api/v1/data-exchange`). */
+  readonly basePath?: string;
   /** Optional prefix for React Query keys. */
   readonly queryKeyPrefix?: readonly string[];
 }
@@ -26,20 +28,29 @@ const ImportConfigContext = createContext<ImportConfig | null>(null);
  * Provides import configuration to child components and hooks.
  */
 export function ImportProvider({ config, children }: Readonly<ImportProviderProps>) {
-  const value = useMemo(() => config, [config]);
+  const value = useMemo<ImportConfig>(
+    () => ({
+      ...config,
+      basePath: config.basePath ?? DEFAULT_BASE_PATH,
+    }),
+    [config]
+  );
   return <ImportConfigContext value={value}>{children}</ImportConfigContext>;
 }
+
+/** Resolved config where basePath is always set. */
+export type ResolvedImportConfig = ImportConfig & { readonly basePath: string };
 
 /**
  * Returns the import configuration from the nearest `ImportProvider`.
  * Throws if used outside a provider.
  */
-export function useImportConfig(): ImportConfig {
+export function useImportConfig(): ResolvedImportConfig {
   const ctx = useContext(ImportConfigContext);
   if (!ctx) {
     throw new Error('useImportConfig must be used within an ImportProvider');
   }
-  return ctx;
+  return ctx as ResolvedImportConfig;
 }
 
 /**

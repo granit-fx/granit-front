@@ -51,7 +51,7 @@ describe('useOidcScopes', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(listScopes).toHaveBeenCalledWith(expect.anything(), '/admin');
+    expect(listScopes).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin');
     expect(result.current.data).toEqual(mockScopes);
   });
 
@@ -84,7 +84,7 @@ describe('useCreateOidcScope', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(createScope).toHaveBeenCalledWith(expect.anything(), '/admin', {
+    expect(createScope).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', {
       name: 'api',
       displayName: 'API access',
       description: 'Grants API access',
@@ -122,7 +122,7 @@ describe('useDeleteOidcScope', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(deleteScope).toHaveBeenCalledWith(expect.anything(), '/admin', 'api');
+    expect(deleteScope).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', 'api');
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'oidc', 'scopes'],
     });

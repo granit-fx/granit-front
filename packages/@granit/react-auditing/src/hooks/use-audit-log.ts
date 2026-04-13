@@ -1,11 +1,7 @@
 import { fetchAuditLogEntries, fetchAuditLogEntry, fetchEntityAuditTrail } from '@granit/auditing';
 import { useQuery } from '@tanstack/react-query';
 
-import {
-  buildAuditLogQueryKey,
-  DEFAULT_BASE_PATH,
-  useAuditLogConfig,
-} from '../providers/audit-log-provider.js';
+import { buildAuditLogQueryKey, useAuditLogConfig } from '../providers/audit-log-provider.js';
 
 import type { AuditEntryDetail, AuditListParams, AuditPage } from '@granit/auditing';
 import type { PaginationParams } from '@granit/query-engine';
@@ -21,11 +17,12 @@ import type { UseQueryResult } from '@tanstack/react-query';
  */
 export function useAuditLogEntries(params?: AuditListParams): UseQueryResult<AuditPage> {
   const config = useAuditLogConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath;
+  const auditEntriesPath = `${basePath}/audit-entries`;
 
   return useQuery({
     queryKey: buildAuditLogQueryKey(config, 'list', params),
-    queryFn: () => fetchAuditLogEntries(config.client, basePath, params),
+    queryFn: () => fetchAuditLogEntries(config.client, auditEntriesPath, params),
   });
 }
 
@@ -39,11 +36,12 @@ export function useAuditLogEntries(params?: AuditListParams): UseQueryResult<Aud
  */
 export function useAuditLogEntry(id: string): UseQueryResult<AuditEntryDetail> {
   const config = useAuditLogConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath;
+  const auditEntriesPath = `${basePath}/audit-entries`;
 
   return useQuery({
     queryKey: buildAuditLogQueryKey(config, 'detail', id),
-    queryFn: () => fetchAuditLogEntry(config.client, basePath, id),
+    queryFn: () => fetchAuditLogEntry(config.client, auditEntriesPath, id),
     enabled: id.length > 0,
   });
 }
@@ -62,11 +60,12 @@ export function useEntityAuditTrail(
   params?: PaginationParams
 ): UseQueryResult<AuditPage> {
   const config = useAuditLogConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath;
+  const auditEntriesPath = `${basePath}/audit-entries`;
 
   return useQuery({
     queryKey: buildAuditLogQueryKey(config, 'entity', entityType, entityId, params),
-    queryFn: () => fetchEntityAuditTrail(config.client, basePath, entityType, entityId, params),
+    queryFn: () => fetchEntityAuditTrail(config.client, auditEntriesPath, entityType, entityId, params),
     enabled: entityType.length > 0 && entityId.length > 0,
   });
 }

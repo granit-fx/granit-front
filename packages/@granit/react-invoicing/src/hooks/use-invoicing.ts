@@ -6,8 +6,6 @@ import { buildInvoicingQueryKey, useInvoicingConfig } from '../providers/invoici
 import type { InvoiceCreateRequest, InvoiceResponse } from '@granit/invoicing';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
-const DEFAULT_BASE_PATH = '/api/v1/invoicing';
-
 /**
  * Fetch all invoices.
  *
@@ -18,7 +16,7 @@ const DEFAULT_BASE_PATH = '/api/v1/invoicing';
  */
 export function useInvoices(): UseQueryResult<readonly InvoiceResponse[]> {
   const config = useInvoicingConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useQuery({
     queryKey: buildInvoicingQueryKey(config, 'invoices', 'list'),
@@ -38,7 +36,7 @@ export function useInvoices(): UseQueryResult<readonly InvoiceResponse[]> {
  */
 export function useInvoice(id: string): UseQueryResult<InvoiceResponse> {
   const config = useInvoicingConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useQuery({
     queryKey: buildInvoicingQueryKey(config, 'invoices', id),
@@ -60,7 +58,7 @@ export function useInvoice(id: string): UseQueryResult<InvoiceResponse> {
  */
 export function useDownloadInvoicePdf(): UseMutationResult<Blob, Error, string> {
   const config = useInvoicingConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useMutation({
     mutationFn: (id: string) => downloadInvoicePdf(config.client, basePath, id),
@@ -84,7 +82,7 @@ export function useCreateInvoice(): UseMutationResult<
 > {
   const config = useInvoicingConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useMutation({
     mutationFn: (request: InvoiceCreateRequest) => createInvoice(config.client, basePath, request),

@@ -58,7 +58,7 @@ describe('useOidcAuthorizations', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(listAuthorizations).toHaveBeenCalledWith(expect.anything(), '/admin', undefined);
+    expect(listAuthorizations).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', undefined);
     expect(result.current.data).toEqual(mockAuthorizations);
   });
 
@@ -70,7 +70,7 @@ describe('useOidcAuthorizations', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(listAuthorizations).toHaveBeenCalledWith(expect.anything(), '/admin', {
+    expect(listAuthorizations).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', {
       userId: 'usr-001',
     });
   });
@@ -100,7 +100,7 @@ describe('useRevokeAuthorization', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(revokeAuthorization).toHaveBeenCalledWith(expect.anything(), '/admin', 'auth-001');
+    expect(revokeAuthorization).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', 'auth-001');
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'oidc', 'authorizations'],
     });
@@ -133,7 +133,7 @@ describe('useRevokeUserAuthorizations', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(revokeUserAuthorizations).toHaveBeenCalledWith(expect.anything(), '/admin', 'usr-001');
+    expect(revokeUserAuthorizations).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', 'usr-001');
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'oidc', 'authorizations'],
     });

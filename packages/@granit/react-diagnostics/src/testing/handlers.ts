@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import { mockDiagnosticsHealth } from './data.js';
 
 /**
@@ -9,7 +10,7 @@ import { mockDiagnosticsHealth } from './data.js';
  *
  * @param baseUrl - API base path (default: `/api/v1/diagnostics`)
  */
-export function createDiagnosticsHandlers(baseUrl = '/api/v1/diagnostics') {
+export function createDiagnosticsHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
     http.get(`${baseUrl}/health`, () => {
       return HttpResponse.json({

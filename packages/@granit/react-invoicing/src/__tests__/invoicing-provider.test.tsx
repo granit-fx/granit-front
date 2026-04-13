@@ -2,6 +2,7 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import {
   InvoicingProvider,
   buildInvoicingQueryKey,
@@ -13,7 +14,7 @@ import type { AxiosInstance } from 'axios';
 
 const mockConfig: InvoicingConfig = {
   client: {} as AxiosInstance,
-  basePath: '/api/v1/invoicing',
+  basePath: DEFAULT_BASE_PATH,
 };
 
 function createWrapper(config: InvoicingConfig) {
@@ -29,7 +30,7 @@ describe('InvoicingProvider', () => {
     });
 
     expect(result.current.client).toBe(mockConfig.client);
-    expect(result.current.basePath).toBe('/api/v1/invoicing');
+    expect(result.current.basePath).toBe(DEFAULT_BASE_PATH);
   });
 
   it('should throw when used outside provider', () => {

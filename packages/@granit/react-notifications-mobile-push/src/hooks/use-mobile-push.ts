@@ -2,8 +2,9 @@ import { PushNotifications } from '@capacitor/push-notifications';
 import { registerDeviceToken, unregisterDeviceToken } from '@granit/notifications-mobile-push';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { useMobilePushConfig } from '../providers/mobile-push-provider.js';
+
 import type { MobilePlatform } from '@granit/notifications-mobile-push';
-import type { AxiosInstance } from 'axios';
 
 /**
  * Returns a promise that resolves with the device token once Capacitor
@@ -26,9 +27,7 @@ function waitForRegistrationToken(): Promise<string> {
   });
 }
 
-export interface MobilePushConfig {
-  readonly apiClient: AxiosInstance;
-  readonly basePath?: string;
+export interface MobilePushHookOptions {
   readonly platform: MobilePlatform;
 }
 
@@ -48,6 +47,8 @@ export interface UseMobilePushReturn {
 /**
  * Manages FCM/APNs device token registration for Capacitor apps.
  *
+ * Must be used within a {@link MobilePushProvider}.
+ *
  * This hook handles:
  * - Requesting push notification permissions via Capacitor
  * - Capturing the FCM/APNs token from the native layer
@@ -57,8 +58,8 @@ export interface UseMobilePushReturn {
  * Push payload display is handled by the native OS — the backend sends
  * wake-up only payloads (no PII in push payload, ISO 27001 compliant).
  */
-export function useMobilePush(config: MobilePushConfig): UseMobilePushReturn {
-  const basePath = config.basePath ?? '/api/v1';
+export function useMobilePush(options: MobilePushHookOptions): UseMobilePushReturn {
+  const { client: apiClient, basePath } = useMobilePushConfig();
 
   const [isRegistered, setIsRegistered] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -83,11 +84,11 @@ export function useMobilePush(config: MobilePushConfig): UseMobilePushReturn {
 
       try {
         if (oldToken) {
-          await unregisterDeviceToken(config.apiClient, basePath, oldToken);
+          await unregisterDeviceToken(apiClient, basePath, oldToken);
         }
-        await registerDeviceToken(config.apiClient, basePath, {
+        await registerDeviceToken(apiClient, basePath, {
           token: token.value,
-          platform: config.platform,
+          platform: options.platform,
         });
       } catch (err) {
         if (mountedRef.current) {
@@ -99,7 +100,7 @@ export function useMobilePush(config: MobilePushConfig): UseMobilePushReturn {
     return () => {
       listener.then((l) => l.remove());
     };
-  }, [isRegistered, config.apiClient, basePath, config.platform]);
+  }, [isRegistered, apiClient, basePath, options.platform]);
 
   const register = useCallback(async () => {
     setLoading(true);
@@ -121,9 +122,9 @@ export function useMobilePush(config: MobilePushConfig): UseMobilePushReturn {
       const token = await tokenPromise;
       tokenRef.current = token;
 
-      await registerDeviceToken(config.apiClient, basePath, {
+      await registerDeviceToken(apiClient, basePath, {
         token,
-        platform: config.platform,
+        platform: options.platform,
       });
 
       if (mountedRef.current) {
@@ -136,7 +137,7 @@ export function useMobilePush(config: MobilePushConfig): UseMobilePushReturn {
     } finally {
       if (mountedRef.current) setLoading(false);
     }
-  }, [config.apiClient, basePath, config.platform]);
+  }, [apiClient, basePath, options.platform]);
 
   const unregister = useCallback(async () => {
     setLoading(true);
@@ -144,7 +145,7 @@ export function useMobilePush(config: MobilePushConfig): UseMobilePushReturn {
 
     try {
       if (tokenRef.current) {
-        await unregisterDeviceToken(config.apiClient, basePath, tokenRef.current);
+        await unregisterDeviceToken(apiClient, basePath, tokenRef.current);
         tokenRef.current = null;
       }
 
@@ -158,7 +159,7 @@ export function useMobilePush(config: MobilePushConfig): UseMobilePushReturn {
     } finally {
       if (mountedRef.current) setLoading(false);
     }
-  }, [config.apiClient, basePath]);
+  }, [apiClient, basePath]);
 
   return { isRegistered, loading, error, register, unregister };
 }

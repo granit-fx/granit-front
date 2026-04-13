@@ -22,8 +22,6 @@ import type {
 } from '@granit/metering';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
-const DEFAULT_BASE_PATH = '/api/v1/metering';
-
 // ---------------------------------------------------------------------------
 // Queries
 // ---------------------------------------------------------------------------
@@ -38,7 +36,7 @@ const DEFAULT_BASE_PATH = '/api/v1/metering';
  */
 export function useActiveMeters(): UseQueryResult<readonly MeterDefinitionResponse[]> {
   const config = useMeteringConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useQuery({
     queryKey: buildMeteringQueryKey(config, 'meters'),
@@ -58,7 +56,7 @@ export function useActiveMeters(): UseQueryResult<readonly MeterDefinitionRespon
  */
 export function useMeterDefinition(id: string): UseQueryResult<MeterDefinitionResponse> {
   const config = useMeteringConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useQuery({
     queryKey: buildMeteringQueryKey(config, 'meters', id),
@@ -77,7 +75,7 @@ export function useMeterDefinition(id: string): UseQueryResult<MeterDefinitionRe
  */
 export function useUsageForPeriod(): UseQueryResult<readonly UsageAggregateResponse[]> {
   const config = useMeteringConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useQuery({
     queryKey: buildMeteringQueryKey(config, 'usage'),
@@ -97,7 +95,7 @@ export function useUsageForPeriod(): UseQueryResult<readonly UsageAggregateRespo
  */
 export function useMeteringQuota(meterId: string): UseQueryResult<MeteringQuotaStatusResponse> {
   const config = useMeteringConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useQuery({
     queryKey: buildMeteringQueryKey(config, 'quota', meterId),
@@ -127,7 +125,7 @@ export function useCreateMeterDefinition(): UseMutationResult<
 > {
   const config = useMeteringConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useMutation({
     mutationFn: (request: MeterDefinitionCreateRequest) =>
@@ -163,7 +161,7 @@ export function useUpdateMeterDefinition(): UseMutationResult<
 > {
   const config = useMeteringConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useMutation({
     mutationFn: ({ id, request }: UpdateMeterDefinitionVariables) =>
@@ -189,7 +187,7 @@ export function useUpdateMeterDefinition(): UseMutationResult<
 export function useDeactivateMeterDefinition(): UseMutationResult<void, Error, string> {
   const config = useMeteringConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useMutation({
     mutationFn: (id: string) => deactivateMeterDefinition(config.client, basePath, id),
@@ -214,7 +212,7 @@ export function useDeactivateMeterDefinition(): UseMutationResult<void, Error, s
 export function useRecordUsageEvents(): UseMutationResult<void, Error, RecordUsageRequest> {
   const config = useMeteringConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useMutation({
     mutationFn: (request: RecordUsageRequest) =>

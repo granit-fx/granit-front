@@ -38,7 +38,7 @@ export function useCreateApiKey(
 
   return useMutation({
     mutationFn: async (request: ApiKeyCreateRequest) => {
-      const response = await client.post<ApiKeyCreateResponse>(basePath, request);
+      const response = await client.post<ApiKeyCreateResponse>(`${basePath}/api-keys`, request);
       return response.data;
     },
     onSuccess: () => {
@@ -73,7 +73,7 @@ export function useRevokeApiKey(
 
   return useMutation({
     mutationFn: async (id: string) => {
-      await client.post(`${basePath}/${id}/revoke`);
+      await client.post(`${basePath}/api-keys/${id}/revoke`);
     },
     onSuccess: (_data, id) => {
       queryClient.invalidateQueries({ queryKey: apiKeyKeys.lists() });
@@ -109,7 +109,7 @@ export function useRotateApiKey(
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await client.post<ApiKeyRotateResponse>(`${basePath}/${id}/rotate`);
+      const response = await client.post<ApiKeyRotateResponse>(`${basePath}/api-keys/${id}/rotate`);
       return response.data;
     },
     onSuccess: (_data, id) => {
@@ -154,7 +154,7 @@ export function useUpdateApiKeyScopes(
 
   return useMutation({
     mutationFn: async ({ id, request }: UpdateApiKeyScopesVariables) => {
-      await client.put(`${basePath}/${id}/scopes`, request);
+      await client.put(`${basePath}/api-keys/${id}/scopes`, request);
     },
     onSuccess: (_data, { id }) => {
       queryClient.invalidateQueries({ queryKey: apiKeyKeys.lists() });

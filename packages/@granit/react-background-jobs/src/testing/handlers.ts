@@ -1,3 +1,4 @@
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import { accepted, noContent, notFound, pagedResponse } from '@granit/testing/msw';
 import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
@@ -11,12 +12,14 @@ import type { BackgroundJobStatus } from '@granit/background-jobs';
  * Handlers mutate the in-memory `mockBackgroundJobs` array — pause/resume/trigger
  * calls update state that subsequent GET calls reflect.
  *
- * @param baseUrl - API base path (default: `/api/v1/background-jobs/jobs`)
+ * @param baseUrl - Module base path (default: `/api/v1/background-jobs`)
  */
-export function createBackgroundJobHandlers(baseUrl = '/api/v1/background-jobs/jobs') {
+export function createBackgroundJobHandlers(baseUrl = DEFAULT_BASE_PATH) {
+  const jobsUrl = `${baseUrl}/jobs`;
+
   return [
     // GET list — sorted, paginated
-    http.get(baseUrl, ({ request }) => {
+    http.get(jobsUrl, ({ request }) => {
       const url = new URL(request.url);
       const page = Number(url.searchParams.get('page') ?? 1);
       const pageSize = Number(url.searchParams.get('pageSize') ?? 20);
@@ -31,14 +34,14 @@ export function createBackgroundJobHandlers(baseUrl = '/api/v1/background-jobs/j
     }),
 
     // GET single job
-    http.get(`${baseUrl}/:name`, ({ params }) => {
+    http.get(`${jobsUrl}/:name`, ({ params }) => {
       const job = mockBackgroundJobs.find((j) => j.jobName === params.name);
       if (!job) return notFound();
       return HttpResponse.json(job);
     }),
 
     // POST pause
-    http.post(`${baseUrl}/:name/pause`, ({ params }) => {
+    http.post(`${jobsUrl}/:name/pause`, ({ params }) => {
       const job = mockBackgroundJobs.find((j) => j.jobName === params.name);
       if (!job) return notFound();
       job.isEnabled = false;
@@ -47,7 +50,7 @@ export function createBackgroundJobHandlers(baseUrl = '/api/v1/background-jobs/j
     }),
 
     // POST resume
-    http.post(`${baseUrl}/:name/resume`, ({ params }) => {
+    http.post(`${jobsUrl}/:name/resume`, ({ params }) => {
       const job = mockBackgroundJobs.find((j) => j.jobName === params.name);
       if (!job) return notFound();
       job.isEnabled = true;
@@ -56,7 +59,7 @@ export function createBackgroundJobHandlers(baseUrl = '/api/v1/background-jobs/j
     }),
 
     // POST trigger
-    http.post(`${baseUrl}/:name/trigger`, ({ params }) => {
+    http.post(`${jobsUrl}/:name/trigger`, ({ params }) => {
       const job = mockBackgroundJobs.find((j) => j.jobName === params.name);
       if (!job) return notFound();
       job.lastExecutedAt = toISODateString(new Date().toISOString());

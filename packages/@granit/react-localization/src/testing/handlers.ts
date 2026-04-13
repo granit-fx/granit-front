@@ -2,6 +2,7 @@ import { noContent, notFound, pagedResponse } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import { buildMockLocalization, mockLanguages, mockLocalizationOverrides } from './data.js';
 
 import type { LocalizationOverride } from '@granit/localization';
@@ -12,7 +13,7 @@ import type { LocalizationOverride } from '@granit/localization';
  *
  * @param baseUrl - API base path (default: `/api/v1/localization`)
  */
-export function createLocalizationHandlers(baseUrl = '/api/v1/localization') {
+export function createLocalizationHandlers(baseUrl = DEFAULT_BASE_PATH) {
   const languages = [...mockLanguages];
   let overrides: LocalizationOverride[] = [...mockLocalizationOverrides];
   const overridesBase = `${baseUrl}/overrides`;

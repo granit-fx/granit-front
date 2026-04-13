@@ -1,5 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH, DEFAULT_PROVIDER_BASE_PATH } from '../constants.js';
+
 import { mockDevices, mockPasswordChangedAt, mockSessions, mockUsers } from './data.js';
 
 import type { IdentityProviderCapabilities, IdentityUser } from '@granit/identity';
@@ -128,8 +130,8 @@ function toIdentityUser(u: IdentityUser) {
  * @param cacheBase    - Cache API base path (default: `/api/v1/identity/users`)
  */
 export function createIdentityHandlers(
-  providerBase = '/api/v1/identity/provider',
-  cacheBase = '/api/v1/identity/users'
+  providerBase = DEFAULT_PROVIDER_BASE_PATH,
+  cacheBase = DEFAULT_BASE_PATH
 ) {
   return [
     // ── Cache endpoints (/identity/users) ───────────────────────────────────

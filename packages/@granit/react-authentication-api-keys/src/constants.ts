@@ -1,1 +1,3 @@
-export const DEFAULT_BASE_PATH = '/api/v1/authentication/api-keys';
+export const API_VERSION = 'v1';
+export const MODULE = 'authentication';
+export const DEFAULT_BASE_PATH = `/api/${API_VERSION}/${MODULE}`;

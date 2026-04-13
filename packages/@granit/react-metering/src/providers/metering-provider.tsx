@@ -1,5 +1,7 @@
 import { createContext, useContext, useMemo } from 'react';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -20,7 +22,10 @@ const MeteringConfigContext = createContext<MeteringConfig | null>(null);
 
 /** Provides metering configuration to child components and hooks. */
 export function MeteringProvider({ config, children }: Readonly<MeteringProviderProps>) {
-  const value = useMemo(() => config, [config]);
+  const value = useMemo(() => ({
+    ...config,
+    basePath: config.basePath ?? DEFAULT_BASE_PATH,
+  }), [config]);
   return <MeteringConfigContext value={value}>{children}</MeteringConfigContext>;
 }
 

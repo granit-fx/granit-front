@@ -6,23 +6,14 @@ import {
 } from '@granit/scheduling';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { useSchedulingConfig } from '../providers/scheduling-provider.js';
+
 import type { PagedResult, QueryRequest } from '@granit/query-engine';
 import type { RescheduleActionRequest, ScheduledActionResponse } from '@granit/scheduling';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
-import type { AxiosInstance } from 'axios';
 
-const DEFAULT_BASE_PATH = '/api/v1/scheduling/scheduled-actions';
-
-/** Options accepted by all scheduling hooks. */
-export interface SchedulingOptions {
-  /** Axios instance used for all requests. */
-  readonly client: AxiosInstance;
-  /** Base URL for the scheduling API. Defaults to `/api/v1/scheduling/scheduled-actions`. */
-  readonly basePath?: string;
-}
-
-/** Options for the list hook, extending base options with QueryEngine params. */
-export interface SchedulingListOptions extends SchedulingOptions {
+/** Options for the list hook (query parameters and polling interval). */
+export interface SchedulingListOptions {
   /** QueryEngine request parameters (pagination, filters, sort, etc.). */
   readonly request?: QueryRequest;
   /** Auto-refetch interval in milliseconds. Defaults to `15_000` (15 s). Set to `false` to disable. */
@@ -49,18 +40,20 @@ export const schedulingKeys = {
  *
  * @example
  * ```tsx
- * const { data } = useScheduledActions({ client: api, request: { page: 1, pageSize: 20 } });
+ * const { data } = useScheduledActions({ request: { page: 1, pageSize: 20 } });
  * // data.items, data.totalCount
  * ```
  */
 export function useScheduledActions(
-  options: SchedulingListOptions
+  options?: SchedulingListOptions
 ): UseQueryResult<PagedResult<ScheduledActionResponse>> {
-  const { client, basePath = DEFAULT_BASE_PATH, request, refetchInterval = 15_000 } = options;
+  const config = useSchedulingConfig();
+  const actionsPath = `${config.basePath}/scheduled-actions`;
+  const { request, refetchInterval = 15_000 } = options ?? {};
 
   return useQuery({
     queryKey: schedulingKeys.list(request),
-    queryFn: () => fetchScheduledActions(client, basePath, request),
+    queryFn: () => fetchScheduledActions(config.client, actionsPath, request),
     refetchInterval,
   });
 }
@@ -72,18 +65,20 @@ export function useScheduledActions(
  *
  * @example
  * ```tsx
- * const { data: action } = useScheduledAction('550e8400-...', { client: api });
+ * const { data: action } = useScheduledAction('550e8400-...');
  * ```
  */
 export function useScheduledAction(
   id: string,
-  options: SchedulingOptions & { readonly refetchInterval?: number | false }
+  options?: { readonly refetchInterval?: number | false }
 ): UseQueryResult<ScheduledActionResponse> {
-  const { client, basePath = DEFAULT_BASE_PATH, refetchInterval = 15_000 } = options;
+  const config = useSchedulingConfig();
+  const actionsPath = `${config.basePath}/scheduled-actions`;
+  const { refetchInterval = 15_000 } = options ?? {};
 
   return useQuery({
     queryKey: schedulingKeys.detail(id),
-    queryFn: () => fetchScheduledActionById(client, basePath, id),
+    queryFn: () => fetchScheduledActionById(config.client, actionsPath, id),
     refetchInterval,
     enabled: id.length > 0,
   });
@@ -96,19 +91,18 @@ export function useScheduledAction(
  *
  * @example
  * ```tsx
- * const { mutate: cancel } = useCancelScheduledAction({ client: api });
+ * const { mutate: cancel } = useCancelScheduledAction();
  * cancel('550e8400-...');
  * ```
  */
-export function useCancelScheduledAction(
-  options: SchedulingOptions
-): UseMutationResult<void, Error, string> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+export function useCancelScheduledAction(): UseMutationResult<void, Error, string> {
+  const config = useSchedulingConfig();
+  const actionsPath = `${config.basePath}/scheduled-actions`;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: string) => {
-      await cancelScheduledAction(client, basePath, id);
+      await cancelScheduledAction(config.client, actionsPath, id);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: schedulingKeys.all });
@@ -124,19 +118,18 @@ export function useCancelScheduledAction(
  *
  * @example
  * ```tsx
- * const { mutate: reschedule } = useRescheduleScheduledAction({ client: api });
+ * const { mutate: reschedule } = useRescheduleScheduledAction();
  * reschedule({ id: '550e8400-...', request: { newExecuteAt: '2026-04-10T09:00:00Z' } });
  * ```
  */
-export function useRescheduleScheduledAction(
-  options: SchedulingOptions
-): UseMutationResult<ScheduledActionResponse, Error, RescheduleVariables> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+export function useRescheduleScheduledAction(): UseMutationResult<ScheduledActionResponse, Error, RescheduleVariables> {
+  const config = useSchedulingConfig();
+  const actionsPath = `${config.basePath}/scheduled-actions`;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ id, request }: RescheduleVariables) =>
-      rescheduleScheduledAction(client, basePath, id, request),
+      rescheduleScheduledAction(config.client, actionsPath, id, request),
     onSuccess: async (_data, { id }) => {
       await queryClient.invalidateQueries({ queryKey: schedulingKeys.all });
       await queryClient.invalidateQueries({ queryKey: schedulingKeys.detail(id) });

@@ -21,7 +21,7 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
  */
 export function useSeats(subscriptionId: string): UseQueryResult<readonly SeatResponse[]> {
   const config = useSubscriptionsConfig();
-  const basePath = config.basePath ?? '/api/v1/subscriptions';
+  const basePath = config.basePath;
 
   return useQuery({
     queryKey: buildSubscriptionsQueryKey(config, 'subscriptions', subscriptionId, 'seats'),
@@ -48,7 +48,7 @@ export function useAssignSeat(
 ): UseMutationResult<SeatResponse, Error, AssignSeatVariables> {
   const config = useSubscriptionsConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? '/api/v1/subscriptions';
+  const basePath = config.basePath;
 
   return useMutation({
     mutationFn: (request: AssignSeatVariables) =>
@@ -81,7 +81,7 @@ export function useRevokeSeat(
 ): UseMutationResult<void, Error, RevokeSeatVariables> {
   const config = useSubscriptionsConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? '/api/v1/subscriptions';
+  const basePath = config.basePath;
 
   return useMutation({
     mutationFn: ({ userId }: RevokeSeatVariables) =>

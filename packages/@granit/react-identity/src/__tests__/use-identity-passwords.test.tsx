@@ -13,14 +13,14 @@ import {
 } from '../hooks/use-identity-passwords.js';
 import { IdentityProvider } from '../providers/identity-provider.js';
 
-import type { IdentityConfig } from '../providers/identity-provider.js';
+import type { IdentityProviderProps } from '../providers/identity-provider.js';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
 function createWrapper(client: AxiosInstance) {
   return function Wrapper({ children }: { children: ReactNode }) {
     const queryClient = createTestQueryClient();
-    const config: IdentityConfig = { client };
+    const config: IdentityProviderProps['config'] = { client };
     return React.createElement(
       QueryClientProvider,
       { client: queryClient },

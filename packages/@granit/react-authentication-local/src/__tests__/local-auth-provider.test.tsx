@@ -19,7 +19,7 @@ describe('LocalAuthProvider', () => {
     const { result } = renderHook(() => useLocalAuthConfig(), { wrapper });
 
     expect(result.current.client).toBe(client);
-    expect(result.current.basePath).toBe('/account');
+    expect(result.current.basePath).toBe('/api/v1/account');
     expect(result.current.queryKeyPrefix).toEqual(['authentication-local']);
   });
 

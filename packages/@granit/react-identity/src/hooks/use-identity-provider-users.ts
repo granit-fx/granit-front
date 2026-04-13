@@ -30,7 +30,7 @@ export function useProviderUsers(
   params?: IdentityProviderUserListParams
 ): UseQueryResult<readonly IdentityUser[]> {
   const config = useIdentityConfig();
-  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
+  const basePath = config.providerBasePath;
 
   return useQuery({
     queryKey: [...buildIdentityQueryKey(config, 'provider', 'users', 'list'), params],
@@ -50,7 +50,7 @@ export function useProviderUsers(
  */
 export function useProviderUser(userId: UserId): UseQueryResult<IdentityUser> {
   const config = useIdentityConfig();
-  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
+  const basePath = config.providerBasePath;
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'users', userId),
@@ -72,7 +72,7 @@ export function useProviderUser(userId: UserId): UseQueryResult<IdentityUser> {
 export function useCreateUser(): UseMutationResult<IdentityUser, Error, IdentityUserCreateRequest> {
   const config = useIdentityConfig();
   const queryClient = useQueryClient();
-  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
+  const basePath = config.providerBasePath;
 
   return useMutation({
     mutationFn: (request: IdentityUserCreateRequest) =>
@@ -104,7 +104,7 @@ export type UpdateUserVariables = {
 export function useUpdateUser(): UseMutationResult<IdentityUser, Error, UpdateUserVariables> {
   const config = useIdentityConfig();
   const queryClient = useQueryClient();
-  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
+  const basePath = config.providerBasePath;
 
   return useMutation({
     mutationFn: ({ userId, request }: UpdateUserVariables) =>
@@ -136,7 +136,7 @@ export type SetUserEnabledVariables = {
 export function useSetUserEnabled(): UseMutationResult<void, Error, SetUserEnabledVariables> {
   const config = useIdentityConfig();
   const queryClient = useQueryClient();
-  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
+  const basePath = config.providerBasePath;
 
   return useMutation({
     mutationFn: ({ userId, enabled }: SetUserEnabledVariables) =>

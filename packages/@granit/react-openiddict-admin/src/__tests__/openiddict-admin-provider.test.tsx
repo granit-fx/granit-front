@@ -38,7 +38,7 @@ describe('OpenIddictAdminProvider', () => {
       wrapper: createWrapper(config),
     });
 
-    expect(result.current.basePath).toBe('/admin');
+    expect(result.current.basePath).toBe('/api/v1/admin');
   });
 
   it('should apply default queryKeyPrefix when not specified', () => {

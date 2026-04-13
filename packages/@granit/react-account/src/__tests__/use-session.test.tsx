@@ -53,7 +53,7 @@ describe('useSessionHeartbeat', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(sessionHeartbeat).toHaveBeenCalledWith(client, '/account');
+    expect(sessionHeartbeat).toHaveBeenCalledWith(client, '/api/v1/account');
   });
 
   it('should handle heartbeat error', async () => {
@@ -89,7 +89,7 @@ describe('useBackToImpersonator', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(backToImpersonator).toHaveBeenCalledWith(client, '/account');
+    expect(backToImpersonator).toHaveBeenCalledWith(client, '/api/v1/account');
     expect(result.current.data).toEqual(response);
   });
 

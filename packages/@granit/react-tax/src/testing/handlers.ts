@@ -1,14 +1,15 @@
 import { notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import { sampleTaxRates, sampleValidation } from './data.js';
 
 /**
  * Create MSW handlers for tax rate and VAT validation endpoints.
  *
- * @param baseUrl - API base path (default: `/api/v1/granit/tax`)
+ * @param baseUrl - API base path (default: `/api/v1/tax`)
  */
-export function createTaxHandlers(baseUrl = '/api/v1/granit/tax') {
+export function createTaxHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
     // GET /rates — all rates
     http.get(`${baseUrl}/rates`, () => HttpResponse.json(sampleTaxRates)),

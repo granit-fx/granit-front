@@ -44,7 +44,7 @@ describe('useInitiateUpload', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/blobs/upload', {
+    expect(client.post).toHaveBeenCalledWith('/api/v1/blob-storage/blobs/upload', {
       containerName: 'docs',
       fileName: 'report.pdf',
       contentType: 'application/pdf',
@@ -58,7 +58,7 @@ describe('useInitiateUpload', () => {
     vi.mocked(client.post).mockResolvedValueOnce({ data: {} });
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useInitiateUpload({ client, basePath: '/api/v2/blobs' }), {
+    const { result } = renderHook(() => useInitiateUpload({ client, basePath: '/api/v2/blob-storage' }), {
       wrapper,
     });
 
@@ -71,7 +71,7 @@ describe('useInitiateUpload', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v2/blobs/upload', expect.any(Object));
+    expect(client.post).toHaveBeenCalledWith('/api/v2/blob-storage/blobs/upload', expect.any(Object));
   });
 
   it('should handle error', async () => {
@@ -116,7 +116,7 @@ describe('useConfirmUpload', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/blobs/abc-123/confirm', {
+    expect(client.post).toHaveBeenCalledWith('/api/v1/blob-storage/blobs/abc-123/confirm', {
       containerName: 'docs',
     });
     expect(invalidateSpy).toHaveBeenCalledWith({
@@ -156,7 +156,7 @@ describe('useDeleteBlob', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.delete).toHaveBeenCalledWith('/api/v1/blobs/abc-123', {
+    expect(client.delete).toHaveBeenCalledWith('/api/v1/blob-storage/blobs/abc-123', {
       data: { containerName: 'docs', deletionReason: 'RGPD Art. 17' },
     });
     expect(invalidateSpy).toHaveBeenCalledWith({

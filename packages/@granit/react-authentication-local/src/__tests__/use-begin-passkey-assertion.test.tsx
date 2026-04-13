@@ -52,7 +52,7 @@ describe('useBeginPasskeyAssertion', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(beginPasskeyAssertion).toHaveBeenCalledWith(client, '/account');
+    expect(beginPasskeyAssertion).toHaveBeenCalledWith(client, '/api/v1/account');
     expect(result.current.data).toBe(optionsJson);
   });
 

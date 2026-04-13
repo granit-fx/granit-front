@@ -1,6 +1,7 @@
 import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import { sampleBalance, sampleTransactions } from './data.js';
 
 import type { AdminCreditRequest } from '@granit/customer-balance';
@@ -9,9 +10,9 @@ import type { AdminCreditRequest } from '@granit/customer-balance';
  * Create stateful MSW handlers for customer balance endpoints.
  * Credit mutations update the in-memory balance amount.
  *
- * @param baseUrl - API base path (default: `/api/v1/granit/customer-balance`)
+ * @param baseUrl - API base path (default: `/api/v1/customer-balance`)
  */
-export function createCustomerBalanceHandlers(baseUrl = '/api/v1/granit/customer-balance') {
+export function createCustomerBalanceHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
     // GET current balance
     http.get(baseUrl, () => {

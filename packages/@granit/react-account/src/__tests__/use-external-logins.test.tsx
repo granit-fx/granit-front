@@ -84,7 +84,7 @@ describe('useExternalLogins', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(getExternalLogins).toHaveBeenCalledWith(client, '/account');
+    expect(getExternalLogins).toHaveBeenCalledWith(client, '/api/v1/account');
     expect(result.current.data).toEqual(mockLogins);
   });
 
@@ -114,7 +114,7 @@ describe('useChallengeExternalLogin', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(challengeExternalLogin).toHaveBeenCalledWith(client, '/account', 'Google');
+    expect(challengeExternalLogin).toHaveBeenCalledWith(client, '/api/v1/account', 'Google');
   });
 });
 
@@ -132,7 +132,7 @@ describe('useUnlinkExternalLogin', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(unlinkExternalLogin).toHaveBeenCalledWith(client, '/account', 'Google');
+    expect(unlinkExternalLogin).toHaveBeenCalledWith(client, '/api/v1/account', 'Google');
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['account', 'external-logins'],
     });

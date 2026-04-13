@@ -125,7 +125,7 @@ describe('useBlobUpload', () => {
     expect(result.current.state.blobId).toBe('blob-456');
     expect(result.current.state.result).toEqual(mockConfirmation);
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/blobs/upload', {
+    expect(client.post).toHaveBeenCalledWith('/api/v1/blob-storage/blobs/upload', {
       containerName: 'docs',
       fileName: 'test.png',
       contentType: 'image/png',
@@ -214,7 +214,7 @@ describe('useBlobUpload', () => {
       await waitFor(() => expect(xhrInstances).toHaveLength(1));
     });
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/blobs/upload', {
+    expect(client.post).toHaveBeenCalledWith('/api/v1/blob-storage/blobs/upload', {
       containerName: 'docs',
       fileName: 'unknown',
       contentType: 'application/octet-stream',

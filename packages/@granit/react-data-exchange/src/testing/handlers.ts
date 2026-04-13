@@ -1,6 +1,8 @@
 import { paginate } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import { mockExportHistory, mockImportHistory } from './data.js';
 
 import type { ExportJobResponse, ImportJobResponse } from '@granit/data-exchange';
@@ -311,9 +313,9 @@ let importJobCounter = 0;
  * @param exportJobsBase - Export jobs base path (default: `/api/v1/data-exchange/metadata/jobs`)
  */
 export function createDataExchangeHandlers(
-  metadataBase = '/api/v1/data-exchange/metadata',
-  importBase = '/api/v1/data-exchange',
-  exportJobsBase = '/api/v1/data-exchange/metadata/jobs'
+  metadataBase = `${DEFAULT_BASE_PATH}/metadata`,
+  importBase = DEFAULT_BASE_PATH,
+  exportJobsBase = `${DEFAULT_BASE_PATH}/metadata/jobs`
 ) {
   return [
     // Export: definitions

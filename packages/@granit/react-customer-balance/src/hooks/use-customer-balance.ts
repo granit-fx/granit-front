@@ -17,8 +17,6 @@ import type {
 } from '@granit/customer-balance';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
-const DEFAULT_BASE_PATH = '/api/v1/customer-balance';
-
 /**
  * Fetch the current customer balance.
  *
@@ -29,7 +27,7 @@ const DEFAULT_BASE_PATH = '/api/v1/customer-balance';
  */
 export function useCustomerBalance(): UseQueryResult<CustomerBalanceResponse> {
   const config = useCustomerBalanceConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useQuery({
     queryKey: buildCustomerBalanceQueryKey(config, 'balance'),
@@ -47,7 +45,7 @@ export function useCustomerBalance(): UseQueryResult<CustomerBalanceResponse> {
  */
 export function useBalanceTransactions(): UseQueryResult<readonly BalanceTransactionResponse[]> {
   const config = useCustomerBalanceConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useQuery({
     queryKey: buildCustomerBalanceQueryKey(config, 'transactions'),
@@ -68,7 +66,7 @@ export function useBalanceTransactions(): UseQueryResult<readonly BalanceTransac
 export function useAddAdminCredit(): UseMutationResult<void, Error, AdminCreditRequest> {
   const config = useCustomerBalanceConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useMutation({
     mutationFn: (request: AdminCreditRequest) => addAdminCredit(config.client, basePath, request),

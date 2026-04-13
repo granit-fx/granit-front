@@ -7,22 +7,11 @@ import {
 } from '@granit/background-jobs';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { useBackgroundJobsConfig } from '../providers/background-jobs-provider.js';
+
 import type { BackgroundJobListParams, BackgroundJobStatus } from '@granit/background-jobs';
 import type { PagedResult } from '@granit/query-engine';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
-import type { AxiosInstance } from 'axios';
-
-const DEFAULT_BASE_PATH = '/api/v1/background-jobs/jobs';
-
-/** Options accepted by all background-jobs hooks. */
-export interface BackgroundJobsOptions {
-  /** Axios instance used for all requests. */
-  readonly client: AxiosInstance;
-  /** Base URL for the background-jobs API. Defaults to `/api/v1/background-jobs/jobs`. */
-  readonly basePath?: string;
-  /** Pagination parameters for the list endpoint. */
-  readonly params?: BackgroundJobListParams;
-}
 
 /** Query key factory for background jobs queries. */
 export const backgroundJobKeys = {
@@ -39,18 +28,19 @@ export const backgroundJobKeys = {
  *
  * @example
  * ```tsx
- * const { data } = useBackgroundJobs({ client: api });
+ * const { data } = useBackgroundJobs();
  * // data.items, data.totalCount, data.hasMore
  * ```
  */
 export function useBackgroundJobs(
-  options: BackgroundJobsOptions
+  params?: BackgroundJobListParams
 ): UseQueryResult<PagedResult<BackgroundJobStatus>> {
-  const { client, basePath = DEFAULT_BASE_PATH, params } = options;
+  const { client, basePath } = useBackgroundJobsConfig();
+  const jobsPath = `${basePath}/jobs`;
 
   return useQuery({
     queryKey: backgroundJobKeys.list(params),
-    queryFn: () => fetchBackgroundJobs(client, basePath, params),
+    queryFn: () => fetchBackgroundJobs(client, jobsPath, params),
     refetchInterval: 15_000,
   });
 }
@@ -63,18 +53,18 @@ export function useBackgroundJobs(
  *
  * @example
  * ```tsx
- * const { data: job } = useBackgroundJob('InvoiceSync', { client: api });
+ * const { data: job } = useBackgroundJob('InvoiceSync');
  * ```
  */
 export function useBackgroundJob(
-  name: string,
-  options: BackgroundJobsOptions
+  name: string
 ): UseQueryResult<BackgroundJobStatus> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+  const { client, basePath } = useBackgroundJobsConfig();
+  const jobsPath = `${basePath}/jobs`;
 
   return useQuery({
     queryKey: backgroundJobKeys.job(name),
-    queryFn: () => fetchBackgroundJob(client, basePath, name),
+    queryFn: () => fetchBackgroundJob(client, jobsPath, name),
     refetchInterval: 15_000,
     enabled: name.length > 0,
   });
@@ -83,23 +73,22 @@ export function useBackgroundJob(
 /**
  * Mutation hook to pause a background job by name.
  *
- * Sends `POST {basePath}/{name}/pause` and invalidates the jobs list on success.
+ * Sends `POST {basePath}/jobs/{name}/pause` and invalidates the jobs list on success.
  *
  * @example
  * ```tsx
- * const { mutate: pause } = usePauseJob({ client: api });
+ * const { mutate: pause } = usePauseJob();
  * pause('InvoiceSync');
  * ```
  */
-export function usePauseJob(
-  options: BackgroundJobsOptions
-): UseMutationResult<void, Error, string> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+export function usePauseJob(): UseMutationResult<void, Error, string> {
+  const { client, basePath } = useBackgroundJobsConfig();
+  const jobsPath = `${basePath}/jobs`;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (jobName: string) => {
-      await pauseJob(client, basePath, jobName);
+      await pauseJob(client, jobsPath, jobName);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: backgroundJobKeys.all });
@@ -110,23 +99,22 @@ export function usePauseJob(
 /**
  * Mutation hook to resume a paused background job by name.
  *
- * Sends `POST {basePath}/{name}/resume` and invalidates the jobs list on success.
+ * Sends `POST {basePath}/jobs/{name}/resume` and invalidates the jobs list on success.
  *
  * @example
  * ```tsx
- * const { mutate: resume } = useResumeJob({ client: api });
+ * const { mutate: resume } = useResumeJob();
  * resume('InvoiceSync');
  * ```
  */
-export function useResumeJob(
-  options: BackgroundJobsOptions
-): UseMutationResult<void, Error, string> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+export function useResumeJob(): UseMutationResult<void, Error, string> {
+  const { client, basePath } = useBackgroundJobsConfig();
+  const jobsPath = `${basePath}/jobs`;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (jobName: string) => {
-      await resumeJob(client, basePath, jobName);
+      await resumeJob(client, jobsPath, jobName);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: backgroundJobKeys.all });
@@ -137,23 +125,22 @@ export function useResumeJob(
 /**
  * Mutation hook to manually trigger a background job by name.
  *
- * Sends `POST {basePath}/{name}/trigger` and invalidates the jobs list on success.
+ * Sends `POST {basePath}/jobs/{name}/trigger` and invalidates the jobs list on success.
  *
  * @example
  * ```tsx
- * const { mutate: trigger } = useTriggerJob({ client: api });
+ * const { mutate: trigger } = useTriggerJob();
  * trigger('InvoiceSync');
  * ```
  */
-export function useTriggerJob(
-  options: BackgroundJobsOptions
-): UseMutationResult<void, Error, string> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+export function useTriggerJob(): UseMutationResult<void, Error, string> {
+  const { client, basePath } = useBackgroundJobsConfig();
+  const jobsPath = `${basePath}/jobs`;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (jobName: string) => {
-      await triggerJob(client, basePath, jobName);
+      await triggerJob(client, jobsPath, jobName);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: backgroundJobKeys.all });

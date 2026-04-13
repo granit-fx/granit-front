@@ -1,5 +1,7 @@
 import { createContext, useContext, useMemo } from 'react';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -14,7 +16,6 @@ export interface TenantAdminProviderProps {
   readonly children: ReactNode;
 }
 
-const DEFAULT_BASE_PATH = '/api/v1/multi-tenancy';
 const DEFAULT_KEY_PREFIX = ['tenant-admin'] as const;
 
 const TenantAdminContext = createContext<TenantAdminConfig | null>(null);

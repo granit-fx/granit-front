@@ -1,5 +1,7 @@
 import { createContext, useContext, useMemo } from 'react';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -19,7 +21,6 @@ export interface LocalAuthProviderProps {
   readonly children: ReactNode;
 }
 
-const DEFAULT_BASE_PATH = '/account';
 const DEFAULT_KEY_PREFIX = ['authentication-local'] as const;
 
 const LocalAuthContext = createContext<LocalAuthConfig | null>(null);

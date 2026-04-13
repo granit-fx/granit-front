@@ -5,16 +5,7 @@ import {
 } from '@granit/notifications-web-push';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import type { AxiosInstance } from 'axios';
-
-export interface WebPushConfig {
-  /** VAPID public key (URL-safe Base64). */
-  readonly vapidPublicKey: string;
-  readonly apiClient: AxiosInstance;
-  readonly basePath?: string;
-  /** Path to the service worker. Default: '/sw.js'. */
-  readonly serviceWorkerPath?: string;
-}
+import { useWebPushConfig } from '../providers/web-push-provider.js';
 
 export interface UseWebPushReturn {
   /** Whether the browser supports Web Push. */
@@ -42,6 +33,8 @@ function isWebPushSupported(): boolean {
 /**
  * Manages Web Push VAPID subscription lifecycle.
  *
+ * Must be used within a {@link WebPushProvider}.
+ *
  * This hook handles:
  * - Requesting notification permission
  * - Registering/unregistering the service worker push subscription
@@ -50,9 +43,10 @@ function isWebPushSupported(): boolean {
  * The service worker itself (displaying notifications, handling clicks)
  * is app-level code — this hook only manages the subscription.
  */
-export function useWebPush(config: WebPushConfig): UseWebPushReturn {
-  const basePath = config.basePath ?? '/api/v1';
-  const swPath = config.serviceWorkerPath ?? '/sw.js';
+export function useWebPush(): UseWebPushReturn {
+  const config = useWebPushConfig();
+  const basePath = config.basePath;
+  const swPath = config.serviceWorkerPath;
 
   const [permission, setPermission] = useState<NotificationPermission>(
     isWebPushSupported() ? Notification.permission : 'default'

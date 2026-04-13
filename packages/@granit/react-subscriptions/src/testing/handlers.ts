@@ -2,6 +2,7 @@ import { noContent, notFound } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import { mockPlans, mockPriceHistory, mockSeats, mockSubscriptions } from './data.js';
 
 import type {
@@ -17,9 +18,9 @@ import type { CurrencyCode } from '@granit/types';
  * Covers plans, price versions, subscriptions, and seats — all mutations
  * persist in the in-memory data arrays.
  *
- * @param baseUrl - API base path (default: `/api/v1/granit/subscriptions`)
+ * @param baseUrl - API base path (default: `/api/v1/subscriptions`)
  */
-export function createSubscriptionsHandlers(baseUrl = '/api/v1/granit/subscriptions') {
+export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
     // ---------------------------------------------------------------------------
     // Plans

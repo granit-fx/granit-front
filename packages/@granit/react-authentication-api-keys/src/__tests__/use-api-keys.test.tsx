@@ -155,11 +155,11 @@ describe('useApiKeys', () => {
     vi.mocked(client.get).mockResolvedValueOnce({ data: [] });
 
     const { wrapper } = createWrapper();
-    renderHook(() => useApiKeys({ client, basePath: '/api/v2/api-keys' }), { wrapper });
+    renderHook(() => useApiKeys({ client, basePath: '/api/v2/authentication' }), { wrapper });
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
-    expect(client.get).toHaveBeenCalledWith('/api/v2/api-keys', expect.any(Object));
+    expect(client.get).toHaveBeenCalledWith('/api/v2/authentication/api-keys', expect.any(Object));
   });
 
   it('should surface errors from the API', async () => {
@@ -215,11 +215,11 @@ describe('useApiKey', () => {
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockApiKey });
 
     const { wrapper } = createWrapper();
-    renderHook(() => useApiKey('key-1', { client, basePath: '/api/v2/api-keys' }), { wrapper });
+    renderHook(() => useApiKey('key-1', { client, basePath: '/api/v2/authentication' }), { wrapper });
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
-    expect(client.get).toHaveBeenCalledWith('/api/v2/api-keys/key-1');
+    expect(client.get).toHaveBeenCalledWith('/api/v2/authentication/api-keys/key-1');
   });
 
   it('should not fetch when id is empty', async () => {

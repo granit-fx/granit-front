@@ -1,6 +1,7 @@
 import { noContent, notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import { mockFeatureGroups, mockFeatureValues } from './data.js';
 
 import type { FeatureValueResponse } from '@granit/features';
@@ -12,9 +13,9 @@ type Mutable<T> = { -readonly [K in keyof T]: T[K] };
  * The `featureValues` array is a mutable copy — override/delete calls
  * update state that subsequent GET calls reflect.
  *
- * @param baseUrl - API base path (default: `/api/v1/granit/features`)
+ * @param baseUrl - API base path (default: `/api/v1/features`)
  */
-export function createFeaturesHandlers(baseUrl = '/api/v1/granit/features') {
+export function createFeaturesHandlers(baseUrl = DEFAULT_BASE_PATH) {
   const featureValues: Mutable<FeatureValueResponse>[] = structuredClone(
     mockFeatureValues
   ) as Mutable<FeatureValueResponse>[];

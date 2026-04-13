@@ -2,6 +2,7 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import { TaxProvider, buildTaxQueryKey, useTaxConfig } from '../providers/tax-provider.js';
 
 import type { TaxConfig } from '../providers/tax-provider.js';
@@ -9,7 +10,7 @@ import type { AxiosInstance } from 'axios';
 
 const mockConfig: TaxConfig = {
   client: {} as AxiosInstance,
-  basePath: '/api/v1/tax',
+  basePath: DEFAULT_BASE_PATH,
 };
 
 function createWrapper(config: TaxConfig) {
@@ -25,7 +26,7 @@ describe('TaxProvider', () => {
     });
 
     expect(result.current.client).toBe(mockConfig.client);
-    expect(result.current.basePath).toBe('/api/v1/tax');
+    expect(result.current.basePath).toBe(DEFAULT_BASE_PATH);
   });
 
   it('should throw when used outside provider', () => {

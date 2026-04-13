@@ -2,6 +2,7 @@ import { noContent, notFound } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import {
   sampleAvailableMethods,
   sampleDisputes,
@@ -22,9 +23,9 @@ import type { CurrencyCode } from '@granit/types';
  * Create stateful MSW handlers for payments endpoints.
  * Handlers cover transactions, charges, refunds, payment methods, and checkout.
  *
- * @param baseUrl - API base path (default: `/api/v1/granit/payments`)
+ * @param baseUrl - API base path (default: `/api/v1/payments`)
  */
-export function createPaymentsHandlers(baseUrl = '/api/v1/granit/payments') {
+export function createPaymentsHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
     // GET all transactions
     http.get(`${baseUrl}/transactions`, () => {

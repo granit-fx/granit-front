@@ -30,6 +30,6 @@ export function useDownloadUrl(
   const { client, basePath = DEFAULT_BASE_PATH } = options;
 
   return useMutation({
-    mutationFn: ({ id, request }) => getDownloadUrl(client, basePath, id, request),
+    mutationFn: ({ id, request }) => getDownloadUrl(client, `${basePath}/blobs`, id, request),
   });
 }

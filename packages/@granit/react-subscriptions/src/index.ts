@@ -5,6 +5,7 @@ export {
   useSubscriptionsConfig,
 } from './providers/subscriptions-provider.js';
 export type {
+  ResolvedSubscriptionsConfig,
   SubscriptionsConfig,
   SubscriptionsProviderProps,
 } from './providers/subscriptions-provider.js';

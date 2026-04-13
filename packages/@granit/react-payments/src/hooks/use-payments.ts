@@ -26,8 +26,6 @@ import type {
 } from '@granit/payments';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
-const DEFAULT_BASE_PATH = '/api/v1/payments';
-
 /**
  * List all payment transactions.
  *
@@ -38,7 +36,7 @@ const DEFAULT_BASE_PATH = '/api/v1/payments';
  */
 export function usePaymentTransactions(): UseQueryResult<readonly PaymentTransactionResponse[]> {
   const config = usePaymentsConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useQuery({
     queryKey: buildPaymentsQueryKey(config, 'transactions'),
@@ -58,7 +56,7 @@ export function usePaymentTransactions(): UseQueryResult<readonly PaymentTransac
  */
 export function usePaymentTransaction(id: string): UseQueryResult<PaymentTransactionResponse> {
   const config = usePaymentsConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useQuery({
     queryKey: buildPaymentsQueryKey(config, 'transactions', id),
@@ -84,7 +82,7 @@ export function useInitiatePaymentCharge(): UseMutationResult<
 > {
   const config = usePaymentsConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useMutation({
     mutationFn: (request: PaymentChargeRequest) =>
@@ -114,7 +112,7 @@ export function useRequestPaymentRefund(): UseMutationResult<
 > {
   const config = usePaymentsConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useMutation({
     mutationFn: (request: PaymentRefundRequest) =>
@@ -143,7 +141,7 @@ export function useCreateCheckoutSession(): UseMutationResult<
   PaymentCheckoutRequest
 > {
   const config = usePaymentsConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useMutation({
     mutationFn: (request: PaymentCheckoutRequest) =>
@@ -161,7 +159,7 @@ export function useCreateCheckoutSession(): UseMutationResult<
  */
 export function usePaymentMethods(): UseQueryResult<readonly PaymentMethodResponse[]> {
   const config = usePaymentsConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useQuery({
     queryKey: buildPaymentsQueryKey(config, 'methods'),
@@ -181,7 +179,7 @@ export function useAvailablePaymentMethods(): UseQueryResult<
   readonly PaymentAvailableMethodResponse[]
 > {
   const config = usePaymentsConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useQuery({
     queryKey: buildPaymentsQueryKey(config, 'methods', 'available'),
@@ -206,7 +204,7 @@ export function useAttachPaymentMethod(): UseMutationResult<
 > {
   const config = usePaymentsConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useMutation({
     mutationFn: (request: PaymentAttachMethodRequest) =>
@@ -232,7 +230,7 @@ export function useAttachPaymentMethod(): UseMutationResult<
 export function useDetachPaymentMethod(): UseMutationResult<void, Error, string> {
   const config = usePaymentsConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
+  const basePath = config.basePath!;
 
   return useMutation({
     mutationFn: (id: string) => detachPaymentMethod(config.client, basePath, id),

@@ -2,6 +2,7 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import {
   CustomerBalanceProvider,
   buildCustomerBalanceQueryKey,
@@ -13,7 +14,7 @@ import type { AxiosInstance } from 'axios';
 
 const mockConfig: CustomerBalanceConfig = {
   client: {} as AxiosInstance,
-  basePath: '/api/v1/customer-balance',
+  basePath: DEFAULT_BASE_PATH,
 };
 
 function createWrapper(config: CustomerBalanceConfig) {
@@ -29,7 +30,7 @@ describe('CustomerBalanceProvider', () => {
     });
 
     expect(result.current.client).toBe(mockConfig.client);
-    expect(result.current.basePath).toBe('/api/v1/customer-balance');
+    expect(result.current.basePath).toBe(DEFAULT_BASE_PATH);
   });
 
   it('should throw when used outside provider', () => {

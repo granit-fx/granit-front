@@ -11,7 +11,7 @@ import type { AxiosInstance } from 'axios';
 export interface BlobStorageOptions {
   /** Axios instance used for all requests. */
   readonly client: AxiosInstance;
-  /** Base URL for the blob-storage API. Defaults to `/api/v1/blobs`. */
+  /** Base URL for the blob-storage API. Defaults to `/api/v1/blob-storage`. */
   readonly basePath?: string;
 }
 
@@ -34,7 +34,7 @@ export function useBlob(
 
   return useQuery({
     queryKey: blobStorageKeys.blob(id, containerName),
-    queryFn: () => getBlob(client, basePath, id, containerName),
+    queryFn: () => getBlob(client, `${basePath}/blobs`, id, containerName),
     enabled: id.length > 0 && containerName.length > 0,
   });
 }

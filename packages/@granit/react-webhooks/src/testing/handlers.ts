@@ -1,3 +1,4 @@
+import { DEFAULT_WEBHOOKS_BASE_PATH } from '../constants.js';
 import {
   applyFilter,
   groupBy as groupByField,
@@ -70,7 +71,7 @@ function generateSecret(): string {
  *
  * @param baseUrl - API base path (default: `/api/v1/webhooks`)
  */
-export function createWebhooksHandlers(baseUrl = '/api/v1/webhooks') {
+export function createWebhooksHandlers(baseUrl = DEFAULT_WEBHOOKS_BASE_PATH) {
   let subscriptions = [...mockWebhookSubscriptions];
   const deliveryAttempts = [...mockWebhookDeliveryAttempts];
 

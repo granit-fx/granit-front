@@ -1,11 +1,12 @@
 import { createContext, useContext, useMemo } from 'react';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import type { TemplatingConfig } from '@granit/templating';
 import type { AxiosInstance } from 'axios';
 
 const TemplatingConfigContext = createContext<TemplatingConfig | null>(null);
 
-const DEFAULT_BASE_PATH = '/api/v1';
 const DEFAULT_QUERY_KEY_PREFIX = ['templates'] as const;
 
 export interface TemplatingProviderProps {

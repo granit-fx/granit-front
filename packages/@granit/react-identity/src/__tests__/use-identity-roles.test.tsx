@@ -15,7 +15,7 @@ import {
 } from '../hooks/use-identity-roles.js';
 import { IdentityProvider } from '../providers/identity-provider.js';
 
-import type { IdentityConfig } from '../providers/identity-provider.js';
+import type { IdentityProviderProps } from '../providers/identity-provider.js';
 import type { IdentityRole } from '@granit/identity';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
@@ -29,7 +29,7 @@ const sampleRole: IdentityRole = {
 function createWrapper(client: AxiosInstance, providerBasePath?: string) {
   return function Wrapper({ children }: { children: ReactNode }) {
     const queryClient = createTestQueryClient();
-    const config: IdentityConfig = { client, providerBasePath };
+    const config: IdentityProviderProps['config'] = { client, providerBasePath };
     return React.createElement(
       QueryClientProvider,
       { client: queryClient },

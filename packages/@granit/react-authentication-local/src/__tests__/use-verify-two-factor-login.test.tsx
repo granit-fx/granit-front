@@ -58,7 +58,7 @@ describe('useVerifyTwoFactorLogin', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(verifyTwoFactorLogin).toHaveBeenCalledWith(client, '/account', {
+    expect(verifyTwoFactorLogin).toHaveBeenCalledWith(client, '/api/v1/account', {
       code: '123456',
     });
     expect(result.current.data).toEqual(response);
@@ -82,7 +82,7 @@ describe('useVerifyTwoFactorLogin', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(verifyTwoFactorLogin).toHaveBeenCalledWith(client, '/account', {
+    expect(verifyTwoFactorLogin).toHaveBeenCalledWith(client, '/api/v1/account', {
       code: 'ABCD-1234-EFGH',
       useRecoveryCode: true,
     });

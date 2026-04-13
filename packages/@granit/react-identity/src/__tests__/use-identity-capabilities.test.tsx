@@ -8,7 +8,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useIdentityCapabilities } from '../hooks/use-identity-capabilities.js';
 import { IdentityProvider } from '../providers/identity-provider.js';
 
-import type { IdentityConfig } from '../providers/identity-provider.js';
+import type { IdentityProviderProps } from '../providers/identity-provider.js';
 import type { IdentityProviderCapabilities } from '@granit/identity';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
@@ -20,7 +20,7 @@ import type { ReactNode } from 'react';
 function createWrapper(client: AxiosInstance, basePath?: string) {
   return function Wrapper({ children }: { children: ReactNode }) {
     const queryClient = createTestQueryClient();
-    const config: IdentityConfig = { client, basePath };
+    const config: IdentityProviderProps['config'] = { client, basePath };
     return React.createElement(
       QueryClientProvider,
       { client: queryClient },

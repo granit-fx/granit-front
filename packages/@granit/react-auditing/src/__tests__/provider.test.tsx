@@ -4,15 +4,15 @@ import { describe, expect, it } from 'vitest';
 import { useAuditLogConfig } from '../providers/audit-log-provider.js';
 import { AuditLogProvider } from '../providers/audit-log-provider.js';
 
-import type { AuditLogConfig } from '../providers/audit-log-provider.js';
+import type { AuditLogProviderProps } from '../providers/audit-log-provider.js';
 import type { AxiosInstance } from 'axios';
 
-const mockConfig: AuditLogConfig = {
+const mockConfig: AuditLogProviderProps['config'] = {
   client: {} as AxiosInstance,
   basePath: '/api/v1/auditing',
 };
 
-function createWrapper(config: AuditLogConfig) {
+function createWrapper(config: AuditLogProviderProps['config']) {
   return function Wrapper({ children }: { children: React.ReactNode }) {
     return <AuditLogProvider config={config}>{children}</AuditLogProvider>;
   };

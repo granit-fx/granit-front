@@ -1,5 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import {
   MOCK_CREDENTIALS,
   MOCK_TOTP_CODE,
@@ -11,9 +13,9 @@ import {
  * Create MSW handlers for local authentication endpoints (login, 2FA,
  * passkeys, password reset, registration, email confirmation).
  *
- * @param baseUrl - API base path (default: `/account`)
+ * @param baseUrl - API base path (default: `/api/v1/account`)
  */
-export function createLocalAuthHandlers(baseUrl = '/account') {
+export function createLocalAuthHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
     // POST /login
     http.post(`${baseUrl}/login`, async ({ request }) => {

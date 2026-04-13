@@ -2,9 +2,11 @@ import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useWebPush } from '../hooks/use-web-push.js';
+import { WebPushProvider } from '../providers/web-push-provider.js';
 
-import type { WebPushConfig } from '../hooks/use-web-push.js';
+import type { WebPushProviderProps } from '../providers/web-push-provider.js';
 import type { AxiosInstance } from 'axios';
+import type { ReactNode } from 'react';
 
 const mockRegisterPushSubscription = vi.fn().mockResolvedValue(undefined);
 const mockUnregisterPushSubscription = vi.fn().mockResolvedValue(undefined);
@@ -24,11 +26,15 @@ function createMockAxios(): AxiosInstance {
   } as unknown as AxiosInstance;
 }
 
-function createConfig(overrides?: Partial<WebPushConfig>): WebPushConfig {
+function createWrapper(overrides?: Partial<WebPushProviderProps['config']>) {
+  const apiClient = overrides?.apiClient ?? createMockAxios();
+  const vapidPublicKey = overrides?.vapidPublicKey ?? 'test-vapid-key';
+  const config: WebPushProviderProps['config'] = { apiClient, vapidPublicKey, ...overrides };
   return {
-    vapidPublicKey: 'test-vapid-key',
-    apiClient: createMockAxios(),
-    ...overrides,
+    apiClient,
+    wrapper({ children }: { children: ReactNode }) {
+      return <WebPushProvider config={config}>{children}</WebPushProvider>;
+    },
   };
 }
 
@@ -104,7 +110,8 @@ describe('useWebPush', () => {
   // -- Unsupported environment tests --
 
   it('should detect when Web Push is not supported', () => {
-    const { result } = renderHook(() => useWebPush(createConfig()));
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
 
     expect(result.current.isSupported).toBe(false);
     expect(result.current.isSubscribed).toBe(false);
@@ -113,14 +120,16 @@ describe('useWebPush', () => {
   });
 
   it('should expose subscribe and unsubscribe functions', () => {
-    const { result } = renderHook(() => useWebPush(createConfig()));
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
 
     expect(typeof result.current.subscribe).toBe('function');
     expect(typeof result.current.unsubscribe).toBe('function');
   });
 
   it('should no-op subscribe when Web Push is not supported', async () => {
-    const { result } = renderHook(() => useWebPush(createConfig()));
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
 
     await act(async () => {
       await result.current.subscribe();
@@ -131,7 +140,8 @@ describe('useWebPush', () => {
   });
 
   it('should no-op unsubscribe when Web Push is not supported', async () => {
-    const { result } = renderHook(() => useWebPush(createConfig()));
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
 
     await act(async () => {
       await result.current.unsubscribe();
@@ -142,7 +152,8 @@ describe('useWebPush', () => {
   });
 
   it('should use default basePath and serviceWorkerPath', () => {
-    const { result } = renderHook(() => useWebPush(createConfig()));
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
 
     expect(result.current.error).toBeNull();
   });
@@ -151,7 +162,8 @@ describe('useWebPush', () => {
 
   it('should detect when Web Push is supported', () => {
     installWebPushGlobals();
-    const { result } = renderHook(() => useWebPush(createConfig()));
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
 
     expect(result.current.isSupported).toBe(true);
     expect(result.current.permission).toBe('default');
@@ -159,7 +171,8 @@ describe('useWebPush', () => {
 
   it('should detect existing subscription on mount', async () => {
     installWebPushGlobals({ existingSubscription: true });
-    const { result } = renderHook(() => useWebPush(createConfig()));
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
 
     await vi.waitFor(() => {
       expect(result.current.isSubscribed).toBe(true);
@@ -168,8 +181,8 @@ describe('useWebPush', () => {
 
   it('should subscribe successfully', async () => {
     installWebPushGlobals();
-    const config = createConfig();
-    const { result } = renderHook(() => useWebPush(config));
+    const { wrapper, apiClient } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
 
     await act(async () => {
       await result.current.subscribe();
@@ -179,9 +192,9 @@ describe('useWebPush', () => {
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBeNull();
     expect(mockRegisterPushSubscription).toHaveBeenCalledWith(
-      config.apiClient,
-      '/api/v1',
-      mockSubscription.toJSON()
+      apiClient,
+      '/api/v1/notifications',
+      mockSubscription.toJSON(),
     );
   });
 
@@ -189,7 +202,8 @@ describe('useWebPush', () => {
     installWebPushGlobals();
     vi.mocked(globalThis.Notification.requestPermission).mockResolvedValue('denied');
 
-    const { result } = renderHook(() => useWebPush(createConfig()));
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
 
     await act(async () => {
       await result.current.subscribe();
@@ -205,7 +219,8 @@ describe('useWebPush', () => {
     installWebPushGlobals();
     mockRegisterPushSubscription.mockRejectedValueOnce(new Error('Network error'));
 
-    const { result } = renderHook(() => useWebPush(createConfig()));
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
 
     await act(async () => {
       await result.current.subscribe();
@@ -218,8 +233,8 @@ describe('useWebPush', () => {
 
   it('should unsubscribe successfully', async () => {
     installWebPushGlobals({ existingSubscription: true });
-    const config = createConfig();
-    const { result } = renderHook(() => useWebPush(config));
+    const { wrapper, apiClient } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
 
     await vi.waitFor(() => {
       expect(result.current.isSubscribed).toBe(true);
@@ -233,9 +248,9 @@ describe('useWebPush', () => {
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBeNull();
     expect(mockUnregisterPushSubscription).toHaveBeenCalledWith(
-      config.apiClient,
-      '/api/v1',
-      mockSubscription.endpoint
+      apiClient,
+      '/api/v1/notifications',
+      mockSubscription.endpoint,
     );
     expect(mockSubscription.unsubscribe).toHaveBeenCalled();
   });
@@ -244,7 +259,8 @@ describe('useWebPush', () => {
     installWebPushGlobals({ existingSubscription: true });
     mockUnregisterPushSubscription.mockRejectedValueOnce(new Error('Server error'));
 
-    const { result } = renderHook(() => useWebPush(createConfig()));
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
 
     await vi.waitFor(() => {
       expect(result.current.isSubscribed).toBe(true);
@@ -261,8 +277,11 @@ describe('useWebPush', () => {
 
   it('should use custom basePath and serviceWorkerPath', async () => {
     installWebPushGlobals();
-    const config = createConfig({ basePath: '/custom/api', serviceWorkerPath: '/custom-sw.js' });
-    const { result } = renderHook(() => useWebPush(config));
+    const { wrapper, apiClient } = createWrapper({
+      basePath: '/custom/api',
+      serviceWorkerPath: '/custom-sw.js',
+    });
+    const { result } = renderHook(() => useWebPush(), { wrapper });
 
     await act(async () => {
       await result.current.subscribe();
@@ -270,9 +289,9 @@ describe('useWebPush', () => {
 
     expect(navigator.serviceWorker.register).toHaveBeenCalledWith('/custom-sw.js');
     expect(mockRegisterPushSubscription).toHaveBeenCalledWith(
-      config.apiClient,
+      apiClient,
       '/custom/api',
-      expect.any(Object)
+      expect.any(Object),
     );
   });
 
@@ -280,7 +299,8 @@ describe('useWebPush', () => {
     installWebPushGlobals();
     mockRegisterPushSubscription.mockRejectedValueOnce('string error');
 
-    const { result } = renderHook(() => useWebPush(createConfig()));
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
 
     await act(async () => {
       await result.current.subscribe();

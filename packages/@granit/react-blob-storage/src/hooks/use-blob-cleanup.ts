@@ -24,6 +24,6 @@ export function useCleanupOrphans(
   const { client, basePath = DEFAULT_BASE_PATH } = options;
 
   return useMutation({
-    mutationFn: () => cleanupOrphans(client, basePath),
+    mutationFn: () => cleanupOrphans(client, `${basePath}/blobs`),
   });
 }

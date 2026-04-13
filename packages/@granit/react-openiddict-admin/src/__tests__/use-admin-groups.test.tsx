@@ -66,7 +66,7 @@ describe('useAdminGroups', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(listGroups).toHaveBeenCalledWith(expect.anything(), '/admin');
+    expect(listGroups).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin');
     expect(result.current.data).toEqual(mockGroups);
   });
 
@@ -95,7 +95,7 @@ describe('useCreateAdminGroup', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(createGroup).toHaveBeenCalledWith(expect.anything(), '/admin', {
+    expect(createGroup).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', {
       name: 'Engineering',
       description: 'Engineering team',
     });
@@ -132,7 +132,7 @@ describe('useDeleteAdminGroup', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(deleteGroup).toHaveBeenCalledWith(expect.anything(), '/admin', 'grp-001');
+    expect(deleteGroup).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', 'grp-001');
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'groups'],
     });
@@ -165,7 +165,7 @@ describe('useAddGroupMember', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(addGroupMember).toHaveBeenCalledWith(expect.anything(), '/admin', 'grp-001', {
+    expect(addGroupMember).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', 'grp-001', {
       userId: 'usr-001',
     });
     expect(invalidateSpy).toHaveBeenCalledWith({
@@ -202,7 +202,7 @@ describe('useRemoveGroupMember', () => {
 
     expect(removeGroupMember).toHaveBeenCalledWith(
       expect.anything(),
-      '/admin',
+      '/api/v1/admin',
       'grp-001',
       'usr-001'
     );

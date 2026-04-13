@@ -1,29 +1,37 @@
 import { createContext, useContext, useMemo } from 'react';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
 /** Configuration for the audit log provider. */
 export interface AuditLogConfig {
   readonly client: AxiosInstance;
-  /** Base path prefix (default: `/api/v1/auditing/audit-entries`). */
-  readonly basePath?: string;
+  /** Base path prefix (default: `/api/v1/auditing`). */
+  readonly basePath: string;
   readonly queryKeyPrefix?: readonly string[];
 }
 
+/** Props accepted by {@link AuditLogProvider}. `basePath` is optional — the default is applied by the provider. */
 export interface AuditLogProviderProps {
-  readonly config: AuditLogConfig;
+  readonly config: Omit<AuditLogConfig, 'basePath'> & Partial<Pick<AuditLogConfig, 'basePath'>>;
   readonly children: ReactNode;
 }
 
 const AuditLogConfigContext = createContext<AuditLogConfig | null>(null);
 
-const DEFAULT_BASE_PATH = '/api/v1/auditing/audit-entries';
 const DEFAULT_QUERY_KEY_PREFIX = ['audit-log'] as const;
 
 /** Provides audit log configuration to child components and hooks. */
 export function AuditLogProvider({ config, children }: Readonly<AuditLogProviderProps>) {
-  const value = useMemo(() => config, [config]);
+  const value = useMemo<AuditLogConfig>(
+    () => ({
+      ...config,
+      basePath: config.basePath ?? DEFAULT_BASE_PATH,
+    }),
+    [config]
+  );
   return <AuditLogConfigContext value={value}>{children}</AuditLogConfigContext>;
 }
 
@@ -45,4 +53,4 @@ export function buildAuditLogQueryKey(
   return [...prefix, ...segments];
 }
 
-export { DEFAULT_BASE_PATH, DEFAULT_QUERY_KEY_PREFIX };
+export { DEFAULT_QUERY_KEY_PREFIX };

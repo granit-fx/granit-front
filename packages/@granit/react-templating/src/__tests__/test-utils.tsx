@@ -9,7 +9,7 @@ export { axiosResponse, createMockClient } from '@granit/testing';
 
 export function createWrapper(
   client: AxiosInstance,
-  basePath = '/api/v1',
+  basePath = '/api/v1/templating',
   queryKeyPrefix: readonly string[] = ['templates']
 ) {
   const queryClient = createTestQueryClient();

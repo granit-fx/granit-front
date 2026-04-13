@@ -52,7 +52,7 @@ describe('useChangeEmail', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(changeEmail).toHaveBeenCalledWith(client, '/account', {
+    expect(changeEmail).toHaveBeenCalledWith(client, '/api/v1/account', {
       newEmail: 'new@example.com',
     });
   });
@@ -89,7 +89,7 @@ describe('useConfirmEmailChange', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(confirmEmailChange).toHaveBeenCalledWith(client, '/account', {
+    expect(confirmEmailChange).toHaveBeenCalledWith(client, '/api/v1/account', {
       userId: 'user-1',
       newEmail: 'new@example.com',
       token: 'confirm-token-abc',

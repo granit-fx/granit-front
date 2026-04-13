@@ -1,5 +1,7 @@
 import { createContext, useContext, useMemo } from 'react';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -20,7 +22,10 @@ const TaxConfigContext = createContext<TaxConfig | null>(null);
 
 /** Provides tax configuration to child components and hooks. */
 export function TaxProvider({ config, children }: Readonly<TaxProviderProps>) {
-  const value = useMemo(() => config, [config]);
+  const value = useMemo(() => ({
+    ...config,
+    basePath: config.basePath ?? DEFAULT_BASE_PATH,
+  }), [config]);
   return <TaxConfigContext value={value}>{children}</TaxConfigContext>;
 }
 

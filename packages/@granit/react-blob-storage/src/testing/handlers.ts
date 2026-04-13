@@ -1,3 +1,4 @@
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import {
   applyStringFilter,
   groupBy as groupByField,
@@ -26,9 +27,9 @@ const STATUS_LABELS: Record<BlobStatusValue, string> = {
  *
  * @param baseUrl - API base path (default: `/api/v1/blob-storage`)
  */
-export function createBlobStorageHandlers(baseUrl = '/api/v1/blob-storage') {
+export function createBlobStorageHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
-    http.get(`${baseUrl}/meta`, () => {
+    http.get(`${baseUrl}/blobs/meta`, () => {
       return HttpResponse.json({
         columns: [
           {
@@ -125,7 +126,7 @@ export function createBlobStorageHandlers(baseUrl = '/api/v1/blob-storage') {
       });
     }),
 
-    http.get(baseUrl, ({ request }) => {
+    http.get(`${baseUrl}/blobs`, ({ request }) => {
       const url = new URL(request.url);
       const search = url.searchParams.get('search') ?? '';
       const filters = parseFilters(url);
@@ -185,7 +186,7 @@ export function createBlobStorageHandlers(baseUrl = '/api/v1/blob-storage') {
       return HttpResponse.json(paginate(filtered, url));
     }),
 
-    http.get(`${baseUrl}/:id`, ({ params }) => {
+    http.get(`${baseUrl}/blobs/:id`, ({ params }) => {
       const blob = mockBlobs.find((b) => b.id === params.id);
       if (!blob) return new HttpResponse(null, { status: 404 });
       return HttpResponse.json(blob);

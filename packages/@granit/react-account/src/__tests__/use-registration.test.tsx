@@ -62,7 +62,7 @@ describe('useRegister', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(registerAccount).toHaveBeenCalledWith(client, '/account', {
+    expect(registerAccount).toHaveBeenCalledWith(client, '/api/v1/account', {
       email: 'user@example.com',
       password: 'P@ssword1!',
       firstName: 'John',
@@ -98,7 +98,7 @@ describe('useConfirmEmail', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(confirmEmail).toHaveBeenCalledWith(client, '/account', 'user-1', 'abc123');
+    expect(confirmEmail).toHaveBeenCalledWith(client, '/api/v1/account', 'user-1', 'abc123');
   });
 
   it('should handle invalid token error', async () => {
@@ -129,7 +129,7 @@ describe('useResendConfirmation', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(resendConfirmationEmail).toHaveBeenCalledWith(client, '/account');
+    expect(resendConfirmationEmail).toHaveBeenCalledWith(client, '/api/v1/account');
   });
 
   it('should handle rate limit error', async () => {

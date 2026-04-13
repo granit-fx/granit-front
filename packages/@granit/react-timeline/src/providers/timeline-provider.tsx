@@ -1,11 +1,11 @@
 import { createContext, useContext, useMemo } from 'react';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import type { TimelineConfig } from '@granit/timeline';
 import type { AxiosInstance } from 'axios';
 
 const TimelineConfigContext = createContext<TimelineConfig | null>(null);
-
-const DEFAULT_BASE_PATH = '/api/v1/timeline';
 
 export interface TimelineProviderProps {
   apiClient: AxiosInstance;

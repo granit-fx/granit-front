@@ -38,7 +38,7 @@ describe('useDownloadUrl', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/blobs/abc-123/download-url', {
+    expect(client.post).toHaveBeenCalledWith('/api/v1/blob-storage/blobs/abc-123/download-url', {
       containerName: 'docs',
       fileName: 'report.pdf',
     });
@@ -50,9 +50,10 @@ describe('useDownloadUrl', () => {
     vi.mocked(client.post).mockResolvedValueOnce({ data: {} });
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useDownloadUrl({ client, basePath: '/api/v2/blobs' }), {
-      wrapper,
-    });
+    const { result } = renderHook(
+      () => useDownloadUrl({ client, basePath: '/api/v2/blob-storage' }),
+      { wrapper }
+    );
 
     result.current.mutate({
       id: 'abc-123',
@@ -62,7 +63,7 @@ describe('useDownloadUrl', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(client.post).toHaveBeenCalledWith(
-      '/api/v2/blobs/abc-123/download-url',
+      '/api/v2/blob-storage/blobs/abc-123/download-url',
       expect.any(Object)
     );
   });

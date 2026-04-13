@@ -30,7 +30,8 @@ export function useInitiateUpload(
   const { client, basePath = DEFAULT_BASE_PATH } = options;
 
   return useMutation({
-    mutationFn: (request: BlobUploadInitiateRequest) => initiateUpload(client, basePath, request),
+    mutationFn: (request: BlobUploadInitiateRequest) =>
+      initiateUpload(client, `${basePath}/blobs`, request),
   });
 }
 
@@ -57,7 +58,7 @@ export function useConfirmUpload(
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, request }) => confirmUpload(client, basePath, id, request),
+    mutationFn: ({ id, request }) => confirmUpload(client, `${basePath}/blobs`, id, request),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: blobStorageKeys.blobs() });
     },
@@ -83,7 +84,7 @@ export function useDeleteBlob(
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, request }) => deleteBlob(client, basePath, id, request),
+    mutationFn: ({ id, request }) => deleteBlob(client, `${basePath}/blobs`, id, request),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: blobStorageKeys.blobs() });
     },

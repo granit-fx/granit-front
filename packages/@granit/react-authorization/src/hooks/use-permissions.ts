@@ -1,17 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import type {
   PermissionsResponse,
   UsePermissionsOptions,
   UsePermissionsReturn,
 } from '@granit/authorization';
-
-// ---------------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------------
-
-const DEFAULT_BASE_PATH = '/api/v1/authorization';
 const EMPTY_SET: ReadonlySet<string> = new Set<string>();
 
 /** Query key factory for permission queries. */

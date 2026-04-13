@@ -91,7 +91,7 @@ describe('useTwoFactorStatus', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(getTwoFactorStatus).toHaveBeenCalledWith(client, '/account');
+    expect(getTwoFactorStatus).toHaveBeenCalledWith(client, '/api/v1/account');
     expect(result.current.data).toEqual(mockStatus);
   });
 
@@ -123,7 +123,7 @@ describe('useAuthenticatorKey', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(getAuthenticatorKey).toHaveBeenCalledWith(client, '/account');
+    expect(getAuthenticatorKey).toHaveBeenCalledWith(client, '/api/v1/account');
     expect(result.current.data).toEqual(mockKey);
   });
 });
@@ -145,7 +145,7 @@ describe('useEnableTwoFactor', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(enableTwoFactor).toHaveBeenCalledWith(client, '/account', { code: '123456' });
+    expect(enableTwoFactor).toHaveBeenCalledWith(client, '/api/v1/account', { code: '123456' });
     expect(result.current.data).toEqual(response);
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['account', 'two-factor'],
@@ -181,7 +181,7 @@ describe('useDisableTwoFactor', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(disableTwoFactor).toHaveBeenCalledWith(client, '/account');
+    expect(disableTwoFactor).toHaveBeenCalledWith(client, '/api/v1/account');
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['account', 'two-factor'],
     });
@@ -205,7 +205,7 @@ describe('useGenerateRecoveryCodes', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(generateRecoveryCodes).toHaveBeenCalledWith(client, '/account');
+    expect(generateRecoveryCodes).toHaveBeenCalledWith(client, '/api/v1/account');
     expect(result.current.data).toEqual(response);
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['account', 'two-factor'],

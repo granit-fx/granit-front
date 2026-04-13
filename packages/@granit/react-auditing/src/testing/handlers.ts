@@ -1,6 +1,8 @@
 import { notFound, pagedResponse } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import { mockAuditEntries } from './data.js';
 
 import type { AuditEntry, AuditEntryDetail } from '@granit/auditing';
@@ -8,12 +10,13 @@ import type { AuditEntry, AuditEntryDetail } from '@granit/auditing';
 /**
  * Create stateful MSW handlers for audit log endpoints.
  *
- * @param baseUrl - API base path (default: `/api/v1/auditing/audit-entries`)
+ * @param baseUrl - API base path (default: `/api/v1/auditing`)
  */
-export function createAuditHandlers(baseUrl = '/api/v1/auditing/audit-entries') {
+export function createAuditHandlers(baseUrl = DEFAULT_BASE_PATH) {
+  const auditEntriesUrl = `${baseUrl}/audit-entries`;
   return [
     // GET list — filtered, sorted newest-first, paginated
-    http.get(baseUrl, ({ request }) => {
+    http.get(auditEntriesUrl, ({ request }) => {
       const url = new URL(request.url);
       const page = Number(url.searchParams.get('page') ?? 1);
       const pageSize = Number(url.searchParams.get('pageSize') ?? 20);
@@ -33,7 +36,7 @@ export function createAuditHandlers(baseUrl = '/api/v1/auditing/audit-entries') 
     }),
 
     // GET single entry detail
-    http.get(`${baseUrl}/:id`, ({ params }) => {
+    http.get(`${auditEntriesUrl}/:id`, ({ params }) => {
       const entry = mockAuditEntries.find((e) => e.id === params.id);
       if (!entry) return notFound();
 

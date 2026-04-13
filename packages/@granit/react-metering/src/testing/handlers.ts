@@ -2,6 +2,7 @@ import { noContent, notFound } from '@granit/testing/msw';
 import { toEntityId } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import { sampleMeters, sampleQuota, sampleUsage } from './data.js';
 
 import type { MeterDefinitionResponse } from '@granit/metering';
@@ -10,9 +11,9 @@ import type { MeterDefinitionResponse } from '@granit/metering';
  * Create stateful MSW handlers for metering endpoints.
  * Meter mutations (create/update/deactivate) persist in the in-memory list.
  *
- * @param baseUrl - API base path (default: `/api/v1/granit/metering`)
+ * @param baseUrl - API base path (default: `/api/v1/metering`)
  */
-export function createMeteringHandlers(baseUrl = '/api/v1/granit/metering') {
+export function createMeteringHandlers(baseUrl = DEFAULT_BASE_PATH) {
   let meters = [...sampleMeters];
 
   return [

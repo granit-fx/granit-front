@@ -13,15 +13,21 @@ import {
   useResumeJob,
   useTriggerJob,
 } from '../hooks/use-background-jobs.js';
+import { BackgroundJobsProvider } from '../providers/background-jobs-provider.js';
 
+import type { BackgroundJobsConfig } from '../providers/background-jobs-provider.js';
 import type { BackgroundJobStatus } from '@granit/background-jobs';
 import type { PagedResult } from '@granit/query-engine';
+import type { AxiosInstance } from 'axios';
 
-function createWrapper() {
+function createWrapper(client: AxiosInstance, basePath?: string) {
   const queryClient = createTestQueryClient();
+  const config: BackgroundJobsConfig = { client, basePath };
   return {
     wrapper: ({ children }: { children: React.ReactNode }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <BackgroundJobsProvider config={config}>{children}</BackgroundJobsProvider>
+      </QueryClientProvider>
     ),
     queryClient,
   };
@@ -67,8 +73,8 @@ describe('useBackgroundJobs', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockPage });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useBackgroundJobs({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useBackgroundJobs(), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
@@ -80,23 +86,21 @@ describe('useBackgroundJobs', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockPage });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useBackgroundJobs({ client, basePath: '/api/v2/jobs' }), {
-      wrapper,
-    });
+    const { wrapper } = createWrapper(client, '/api/v2/bg');
+    const { result } = renderHook(() => useBackgroundJobs(), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/v2/jobs', { params: undefined });
+    expect(client.get).toHaveBeenCalledWith('/api/v2/bg/jobs', { params: undefined });
   });
 
   it('should pass pagination params to the request', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockPage });
 
-    const { wrapper } = createWrapper();
+    const { wrapper } = createWrapper(client);
     const { result } = renderHook(
-      () => useBackgroundJobs({ client, params: { page: 2, pageSize: 10 } }),
+      () => useBackgroundJobs({ page: 2, pageSize: 10 }),
       { wrapper }
     );
 
@@ -111,8 +115,8 @@ describe('useBackgroundJobs', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockRejectedValueOnce(new Error('Unauthorized'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useBackgroundJobs({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useBackgroundJobs(), { wrapper });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 
@@ -125,10 +129,10 @@ describe('usePauseJob', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
 
-    const { wrapper, queryClient } = createWrapper();
+    const { wrapper, queryClient } = createWrapper(client);
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
-    const { result } = renderHook(() => usePauseJob({ client }), { wrapper });
+    const { result } = renderHook(() => usePauseJob(), { wrapper });
 
     result.current.mutate('InvoiceSync');
 
@@ -144,24 +148,22 @@ describe('usePauseJob', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => usePauseJob({ client, basePath: '/api/v2/jobs' }), {
-      wrapper,
-    });
+    const { wrapper } = createWrapper(client, '/api/v2/bg');
+    const { result } = renderHook(() => usePauseJob(), { wrapper });
 
     result.current.mutate('InvoiceSync');
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v2/jobs/InvoiceSync/pause');
+    expect(client.post).toHaveBeenCalledWith('/api/v2/bg/jobs/InvoiceSync/pause');
   });
 
   it('should handle pause error', async () => {
     const client = createMockClient();
     vi.mocked(client.post).mockRejectedValueOnce(new Error('Forbidden'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => usePauseJob({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => usePauseJob(), { wrapper });
 
     result.current.mutate('InvoiceSync');
 
@@ -176,10 +178,10 @@ describe('useResumeJob', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
 
-    const { wrapper, queryClient } = createWrapper();
+    const { wrapper, queryClient } = createWrapper(client);
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
-    const { result } = renderHook(() => useResumeJob({ client }), { wrapper });
+    const { result } = renderHook(() => useResumeJob(), { wrapper });
 
     result.current.mutate('InvoiceSync');
 
@@ -195,24 +197,22 @@ describe('useResumeJob', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useResumeJob({ client, basePath: '/api/v2/jobs' }), {
-      wrapper,
-    });
+    const { wrapper } = createWrapper(client, '/api/v2/bg');
+    const { result } = renderHook(() => useResumeJob(), { wrapper });
 
     result.current.mutate('InvoiceSync');
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v2/jobs/InvoiceSync/resume');
+    expect(client.post).toHaveBeenCalledWith('/api/v2/bg/jobs/InvoiceSync/resume');
   });
 
   it('should handle resume error', async () => {
     const client = createMockClient();
     vi.mocked(client.post).mockRejectedValueOnce(new Error('Service Unavailable'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useResumeJob({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useResumeJob(), { wrapper });
 
     result.current.mutate('InvoiceSync');
 
@@ -227,10 +227,10 @@ describe('useTriggerJob', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
 
-    const { wrapper, queryClient } = createWrapper();
+    const { wrapper, queryClient } = createWrapper(client);
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
-    const { result } = renderHook(() => useTriggerJob({ client }), { wrapper });
+    const { result } = renderHook(() => useTriggerJob(), { wrapper });
 
     result.current.mutate('InvoiceSync');
 
@@ -246,24 +246,22 @@ describe('useTriggerJob', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useTriggerJob({ client, basePath: '/api/v2/jobs' }), {
-      wrapper,
-    });
+    const { wrapper } = createWrapper(client, '/api/v2/bg');
+    const { result } = renderHook(() => useTriggerJob(), { wrapper });
 
     result.current.mutate('InvoiceSync');
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v2/jobs/InvoiceSync/trigger');
+    expect(client.post).toHaveBeenCalledWith('/api/v2/bg/jobs/InvoiceSync/trigger');
   });
 
   it('should handle trigger error', async () => {
     const client = createMockClient();
     vi.mocked(client.post).mockRejectedValueOnce(new Error('Conflict'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useTriggerJob({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useTriggerJob(), { wrapper });
 
     result.current.mutate('InvoiceSync');
 

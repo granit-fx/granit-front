@@ -1,6 +1,7 @@
 import { noContent, notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import { mockTenants } from './data.js';
 
 import type { AdminTenant } from '@granit/multi-tenancy';
@@ -12,7 +13,7 @@ import type { AdminTenant } from '@granit/multi-tenancy';
  *
  * @param baseUrl - API base path (default: `/api/v1/multi-tenancy`)
  */
-export function createTenantHandlers(baseUrl = '/api/v1/multi-tenancy') {
+export function createTenantHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
     // GET /tenants — list all
     http.get(`${baseUrl}/tenants`, () => HttpResponse.json(mockTenants)),

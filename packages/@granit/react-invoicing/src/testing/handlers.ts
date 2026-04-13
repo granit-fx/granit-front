@@ -2,6 +2,7 @@ import { notFound } from '@granit/testing/msw';
 import { toEntityId } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import { sampleInvoices } from './data.js';
 
 import type { InvoiceCreateRequest } from '@granit/invoicing';
@@ -10,9 +11,9 @@ import type { InvoiceCreateRequest } from '@granit/invoicing';
  * Create stateful MSW handlers for invoicing endpoints.
  * New invoices created via POST are appended to the in-memory list.
  *
- * @param baseUrl - API base path (default: `/api/v1/granit/invoicing`)
+ * @param baseUrl - API base path (default: `/api/v1/invoicing`)
  */
-export function createInvoicingHandlers(baseUrl = '/api/v1/granit/invoicing') {
+export function createInvoicingHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
     // GET list all invoices
     http.get(`${baseUrl}/invoices`, () => {

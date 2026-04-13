@@ -153,7 +153,7 @@ export function useBlobUpload(options: BlobStorageOptions): UseBlobUploadReturn 
           error: null,
         });
 
-        const ticket = await initiateUpload(client, basePath, {
+        const ticket = await initiateUpload(client, `${basePath}/blobs`, {
           containerName,
           fileName: file.name,
           contentType: file.type || 'application/octet-stream',
@@ -180,7 +180,7 @@ export function useBlobUpload(options: BlobStorageOptions): UseBlobUploadReturn 
         // Step 3: Confirm upload
         setState((prev) => ({ ...prev, phase: 'confirming', progress: 100 }));
 
-        const confirmation = await confirmUpload(client, basePath, ticket.blobId, {
+        const confirmation = await confirmUpload(client, `${basePath}/blobs`, ticket.blobId, {
           containerName,
         });
 

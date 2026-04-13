@@ -1,3 +1,10 @@
+// Provider
+export {
+  SchedulingProvider,
+  useSchedulingConfig,
+} from './providers/scheduling-provider.js';
+export type { SchedulingConfig, SchedulingProviderProps } from './providers/scheduling-provider.js';
+
 // Hooks
 export {
   schedulingKeys,
@@ -11,5 +18,4 @@ export {
 export type {
   RescheduleVariables,
   SchedulingListOptions,
-  SchedulingOptions,
 } from './hooks/use-scheduling.js';

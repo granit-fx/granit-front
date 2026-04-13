@@ -1,5 +1,7 @@
 import { createContext, useContext, useMemo } from 'react';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -14,7 +16,6 @@ export interface PrivacyProviderProps {
   readonly children: ReactNode;
 }
 
-const DEFAULT_BASE_PATH = '/api/v1/privacy';
 const DEFAULT_KEY_PREFIX = ['privacy'] as const;
 
 const PrivacyContext = createContext<PrivacyConfig | null>(null);

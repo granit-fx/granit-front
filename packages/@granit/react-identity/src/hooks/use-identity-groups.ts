@@ -22,7 +22,7 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
  */
 export function useGroups(): UseQueryResult<readonly IdentityGroup[]> {
   const config = useIdentityConfig();
-  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
+  const basePath = config.providerBasePath;
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'groups'),
@@ -42,7 +42,7 @@ export function useGroups(): UseQueryResult<readonly IdentityGroup[]> {
  */
 export function useUserGroups(userId: UserId): UseQueryResult<readonly IdentityGroup[]> {
   const config = useIdentityConfig();
-  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
+  const basePath = config.providerBasePath;
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'users', userId, 'groups'),
@@ -70,7 +70,7 @@ export type GroupMutationVariables = {
 export function useAddUserToGroup(): UseMutationResult<void, Error, GroupMutationVariables> {
   const config = useIdentityConfig();
   const queryClient = useQueryClient();
-  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
+  const basePath = config.providerBasePath;
 
   return useMutation({
     mutationFn: ({ userId, groupId }: GroupMutationVariables) =>
@@ -99,7 +99,7 @@ export function useAddUserToGroup(): UseMutationResult<void, Error, GroupMutatio
 export function useRemoveUserFromGroup(): UseMutationResult<void, Error, GroupMutationVariables> {
   const config = useIdentityConfig();
   const queryClient = useQueryClient();
-  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
+  const basePath = config.providerBasePath;
 
   return useMutation({
     mutationFn: ({ userId, groupId }: GroupMutationVariables) =>

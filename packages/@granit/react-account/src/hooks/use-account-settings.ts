@@ -7,7 +7,7 @@ import type { AccountSettingsResponse } from '@granit/account';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /**
- * Fetches the public account settings (`GET /account/config`).
+ * Fetches the public account settings (`GET {basePath}/config`).
  *
  * - No authentication required (anonymous endpoint).
  * - Cached indefinitely (`staleTime: Infinity`) — the setting rarely changes.

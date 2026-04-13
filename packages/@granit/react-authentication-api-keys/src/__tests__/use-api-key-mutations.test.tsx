@@ -88,7 +88,7 @@ describe('useCreateApiKey', () => {
     vi.mocked(client.post).mockResolvedValueOnce({ data: createResponse });
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useCreateApiKey({ client, basePath: '/api/v2/api-keys' }), {
+    const { result } = renderHook(() => useCreateApiKey({ client, basePath: '/api/v2/authentication' }), {
       wrapper,
     });
 
@@ -96,7 +96,7 @@ describe('useCreateApiKey', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v2/api-keys', expect.any(Object));
+    expect(client.post).toHaveBeenCalledWith('/api/v2/authentication/api-keys', expect.any(Object));
   });
 
   it('should invalidate the list cache on success', async () => {
@@ -205,7 +205,7 @@ describe('useRevokeApiKey', () => {
     vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useRevokeApiKey({ client, basePath: '/api/v2/api-keys' }), {
+    const { result } = renderHook(() => useRevokeApiKey({ client, basePath: '/api/v2/authentication' }), {
       wrapper,
     });
 
@@ -213,7 +213,7 @@ describe('useRevokeApiKey', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v2/api-keys/key-1/revoke');
+    expect(client.post).toHaveBeenCalledWith('/api/v2/authentication/api-keys/key-1/revoke');
   });
 
   it('should invalidate both list and detail caches on success', async () => {
@@ -294,7 +294,7 @@ describe('useRotateApiKey', () => {
     });
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useRotateApiKey({ client, basePath: '/api/v2/api-keys' }), {
+    const { result } = renderHook(() => useRotateApiKey({ client, basePath: '/api/v2/authentication' }), {
       wrapper,
     });
 
@@ -302,7 +302,7 @@ describe('useRotateApiKey', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v2/api-keys/k1/rotate');
+    expect(client.post).toHaveBeenCalledWith('/api/v2/authentication/api-keys/k1/rotate');
   });
 
   it('should invalidate both list and detail caches on success', async () => {
@@ -383,7 +383,7 @@ describe('useUpdateApiKeyScopes', () => {
 
     const { wrapper } = createWrapper();
     const { result } = renderHook(
-      () => useUpdateApiKeyScopes({ client, basePath: '/api/v2/api-keys' }),
+      () => useUpdateApiKeyScopes({ client, basePath: '/api/v2/authentication' }),
       { wrapper }
     );
 
@@ -394,7 +394,7 @@ describe('useUpdateApiKeyScopes', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.put).toHaveBeenCalledWith('/api/v2/api-keys/key-1/scopes', expect.any(Object));
+    expect(client.put).toHaveBeenCalledWith('/api/v2/authentication/api-keys/key-1/scopes', expect.any(Object));
   });
 
   it('should invalidate both list and detail caches on success', async () => {

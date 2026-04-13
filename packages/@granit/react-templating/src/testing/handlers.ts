@@ -2,6 +2,8 @@ import { TemplateLifecycleStatus } from '@granit/templating';
 import { noContent, notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import {
   mockTemplateCategories,
   mockTemplatesData,
@@ -18,7 +20,7 @@ import type { SaveTemplateCategoryRequest, TemplateCategory } from '@granit/temp
  *
  * @param baseUrl - API base path (default: `/api/v1/templating`)
  */
-export function createTemplatesHandlers(baseUrl = '/api/v1/templating') {
+export function createTemplatesHandlers(baseUrl = DEFAULT_BASE_PATH) {
   const BASE = `${baseUrl}/templates`;
 
   let templates = [...mockTemplatesData];

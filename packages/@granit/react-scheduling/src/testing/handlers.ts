@@ -1,3 +1,4 @@
+import { DEFAULT_BASE_PATH } from '../constants.js';
 import { ScheduledActionStatus } from '@granit/scheduling';
 import {
   applyDateFilter,
@@ -28,12 +29,14 @@ const statusPresetMap: Record<string, ScheduledActionStatus> = {
  * Create stateful MSW handlers for scheduled action endpoints.
  * Cancel and reschedule calls mutate the in-memory `mockScheduledActions` array.
  *
- * @param baseUrl - API base path (default: `/api/v1/scheduling/scheduled-actions`)
+ * @param baseUrl - API base path (default: `/api/v1/scheduling`)
  */
-export function createSchedulingHandlers(baseUrl = '/api/v1/scheduling/scheduled-actions') {
+export function createSchedulingHandlers(baseUrl = DEFAULT_BASE_PATH) {
+  const actionsUrl = `${baseUrl}/scheduled-actions`;
+
   return [
     // GET list — supports @granit/query-engine serialized params
-    http.get(baseUrl, ({ request }) => {
+    http.get(actionsUrl, ({ request }) => {
       const url = new URL(request.url);
       const search = url.searchParams.get('search') ?? '';
 
@@ -89,14 +92,14 @@ export function createSchedulingHandlers(baseUrl = '/api/v1/scheduling/scheduled
     }),
 
     // GET by ID
-    http.get(`${baseUrl}/:id`, ({ params }) => {
+    http.get(`${actionsUrl}/:id`, ({ params }) => {
       const action = mockScheduledActions.find((a) => a.id === params.id);
       if (!action) return new HttpResponse(null, { status: 404 });
       return HttpResponse.json(action);
     }),
 
     // DELETE — cancel a pending action
-    http.delete(`${baseUrl}/:id`, ({ params }) => {
+    http.delete(`${actionsUrl}/:id`, ({ params }) => {
       const action = mockScheduledActions.find((a) => a.id === params.id);
       if (!action) {
         return HttpResponse.json(
@@ -121,7 +124,7 @@ export function createSchedulingHandlers(baseUrl = '/api/v1/scheduling/scheduled
     }),
 
     // PUT — reschedule a pending action
-    http.put(`${baseUrl}/:id/reschedule`, async ({ params, request }) => {
+    http.put(`${actionsUrl}/:id/reschedule`, async ({ params, request }) => {
       const action = mockScheduledActions.find((a) => a.id === params.id);
       if (!action) {
         return HttpResponse.json(
