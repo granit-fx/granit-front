@@ -24,7 +24,7 @@ export function createTaxHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return HttpResponse.json(rate);
     }),
 
-    // POST /validate — validate a VAT number
-    http.post(`${baseUrl}/validate`, () => HttpResponse.json(sampleValidation)),
+    // POST /ids/validate — validate a VAT number
+    http.post(`${baseUrl}/ids/validate`, () => HttpResponse.json(sampleValidation)),
   ];
 }

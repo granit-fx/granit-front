@@ -48,13 +48,13 @@ const mockLuxembourgRate: TaxRateResponse = {
 // ---------------------------------------------------------------------------
 
 describe('validateTaxId', () => {
-  it('should POST {basePath}/validate', async () => {
+  it('should POST {basePath}/ids/validate', async () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValue({ data: mockValidateResponse });
 
     const result = await validateTaxId(client, '/api/granit/tax', mockValidateRequest);
 
-    expect(client.post).toHaveBeenCalledWith('/api/granit/tax/validate', mockValidateRequest);
+    expect(client.post).toHaveBeenCalledWith('/api/granit/tax/ids/validate', mockValidateRequest);
     expect(result).toEqual(mockValidateResponse);
   });
 
@@ -64,7 +64,7 @@ describe('validateTaxId', () => {
 
     await validateTaxId(client, '/custom/tax', mockValidateRequest);
 
-    expect(client.post).toHaveBeenCalledWith('/custom/tax/validate', mockValidateRequest);
+    expect(client.post).toHaveBeenCalledWith('/custom/tax/ids/validate', mockValidateRequest);
   });
 
   it('should return invalid validation response', async () => {

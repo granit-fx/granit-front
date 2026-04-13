@@ -4,14 +4,14 @@ import type { AxiosInstance } from 'axios';
 /**
  * Validate a tax ID (e.g. VAT number) against the configured tax service.
  *
- * `POST {basePath}/validate`
+ * `POST {basePath}/ids/validate`
  */
 export async function validateTaxId(
   client: AxiosInstance,
   basePath: string,
   request: TaxValidateRequest
 ): Promise<TaxValidateResponse> {
-  const response = await client.post<TaxValidateResponse>(`${basePath}/validate`, request);
+  const response = await client.post<TaxValidateResponse>(`${basePath}/ids/validate`, request);
   return response.data;
 }
 

@@ -78,7 +78,7 @@ describe('useValidateTaxId', () => {
     result.current.mutate({ taxId: 'BE0123456789', countryCode: 'BE' });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.post).toHaveBeenCalledWith('/api/v1/tax/validate', {
+    expect(client.post).toHaveBeenCalledWith('/api/v1/tax/ids/validate', {
       taxId: 'BE0123456789',
       countryCode: 'BE',
     });
@@ -96,7 +96,7 @@ describe('useValidateTaxId', () => {
     result.current.mutate({ taxId: 'BE0123456789', countryCode: 'BE' });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.post).toHaveBeenCalledWith('/custom/tax/validate', {
+    expect(client.post).toHaveBeenCalledWith('/custom/tax/ids/validate', {
       taxId: 'BE0123456789',
       countryCode: 'BE',
     });
