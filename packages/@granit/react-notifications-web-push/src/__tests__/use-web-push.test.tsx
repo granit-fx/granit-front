@@ -309,4 +309,88 @@ describe('useWebPush', () => {
     expect(result.current.error).toBeInstanceOf(Error);
     expect(result.current.error?.message).toBe('string error');
   });
+
+  it('should handle unsubscribe when no subscription exists', async () => {
+    const { mockGetSubscription } = installWebPushGlobals();
+    mockGetSubscription.mockResolvedValue(null);
+
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
+
+    await act(async () => {
+      await result.current.unsubscribe();
+    });
+
+    expect(result.current.isSubscribed).toBe(false);
+    expect(result.current.loading).toBe(false);
+    expect(result.current.error).toBeNull();
+    expect(mockUnregisterPushSubscription).not.toHaveBeenCalled();
+  });
+
+  it('should wrap non-Error thrown values in unsubscribe', async () => {
+    installWebPushGlobals({ existingSubscription: true });
+    mockUnregisterPushSubscription.mockRejectedValueOnce('string unsubscribe error');
+
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
+
+    await vi.waitFor(() => {
+      expect(result.current.isSubscribed).toBe(true);
+    });
+
+    await act(async () => {
+      await result.current.unsubscribe();
+    });
+
+    expect(result.current.error).toBeInstanceOf(Error);
+    expect(result.current.error?.message).toBe('string unsubscribe error');
+  });
+
+  it('should handle getRegistration failure on mount gracefully', async () => {
+    installWebPushGlobals();
+    vi.mocked(navigator.serviceWorker.getRegistration).mockRejectedValueOnce(
+      new Error('SW not available'),
+    );
+
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
+
+    // Should not throw — defaults to isSubscribed: false
+    await vi.waitFor(() => {
+      expect(result.current.isSubscribed).toBe(false);
+    });
+    expect(result.current.error).toBeNull();
+  });
+
+  it('should handle unsubscribe when getRegistration returns undefined', async () => {
+    installWebPushGlobals();
+    vi.mocked(navigator.serviceWorker.getRegistration).mockResolvedValue(undefined);
+
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
+
+    await act(async () => {
+      await result.current.unsubscribe();
+    });
+
+    expect(result.current.isSubscribed).toBe(false);
+    expect(result.current.error).toBeNull();
+    expect(mockUnregisterPushSubscription).not.toHaveBeenCalled();
+  });
+
+  it('should wrap non-Error thrown values in subscribe', async () => {
+    installWebPushGlobals();
+    // Override requestPermission to throw a non-Error value
+    vi.mocked(globalThis.Notification.requestPermission).mockRejectedValueOnce(42);
+
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useWebPush(), { wrapper });
+
+    await act(async () => {
+      await result.current.subscribe();
+    });
+
+    expect(result.current.error).toBeInstanceOf(Error);
+    expect(result.current.error?.message).toBe('42');
+  });
 });
