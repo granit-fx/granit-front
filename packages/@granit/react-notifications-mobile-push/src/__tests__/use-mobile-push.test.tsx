@@ -302,11 +302,8 @@ describe('useMobilePush', () => {
     mockCheckPermissions.mockResolvedValue({ receive: 'granted' });
     mockRegister.mockResolvedValue(undefined);
 
-    let registrationCallback: ((data: { value: string }) => void) | null = null;
-
     mockAddListener.mockImplementation((event: string, callback: (data: unknown) => void) => {
       if (event === 'registration') {
-        registrationCallback = callback as (data: { value: string }) => void;
         // Fire initial registration
         setTimeout(() => callback({ value: 'initial-token' }), 0);
       }
@@ -349,7 +346,7 @@ describe('useMobilePush', () => {
       expect(mockUnregisterDeviceToken).toHaveBeenCalledWith(
         client,
         '/api/v1/notifications',
-        'initial-token',
+        'initial-token'
       );
       expect(mockRegisterDeviceToken).toHaveBeenCalledWith(client, '/api/v1/notifications', {
         token: 'refreshed-token',
