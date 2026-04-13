@@ -65,7 +65,7 @@ describe('use-subscriptions', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/subscriptions/subscriptions');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/subscriptions/subscriptions');
       expect(result.current.data).toEqual([sampleSubscription]);
     });
   });
@@ -80,7 +80,7 @@ describe('use-subscriptions', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/subscriptions/subscriptions/active');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/subscriptions/subscriptions/active');
       expect(result.current.data).toEqual(sampleSubscription);
     });
   });
@@ -95,7 +95,7 @@ describe('use-subscriptions', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/subscriptions/subscriptions/sub-1');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/subscriptions/subscriptions/sub-1');
     });
 
     it('is disabled when id is empty', async () => {
@@ -123,7 +123,7 @@ describe('use-subscriptions', () => {
       result.current.mutate(request);
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith('/api/granit/subscriptions/subscriptions', request);
+      expect(client.post).toHaveBeenCalledWith('/api/v1/subscriptions/subscriptions', request);
     });
   });
 
@@ -141,7 +141,7 @@ describe('use-subscriptions', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith(
-        '/api/granit/subscriptions/subscriptions/sub-1/cancel',
+        '/api/v1/subscriptions/subscriptions/sub-1/cancel',
         request
       );
     });
@@ -161,7 +161,7 @@ describe('use-subscriptions', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith(
-        '/api/granit/subscriptions/subscriptions/sub-1/change-plan',
+        '/api/v1/subscriptions/subscriptions/sub-1/change-plan',
         request
       );
     });
@@ -181,7 +181,7 @@ describe('use-subscriptions', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith(
-        '/api/granit/subscriptions/subscriptions/sub-1/migrate-price',
+        '/api/v1/subscriptions/subscriptions/sub-1/migrate-price',
         request
       );
     });
@@ -206,7 +206,7 @@ describe('use-subscriptions', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith(
-        '/api/granit/subscriptions/subscriptions/bulk-migrate-price',
+        '/api/v1/subscriptions/subscriptions/bulk-migrate-price',
         request
       );
       expect(result.current.data).toEqual(bulkResponse);

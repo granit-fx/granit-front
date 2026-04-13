@@ -23,7 +23,7 @@ export function useIdentityCacheStats(): UseQueryResult<IdentityUserCacheStats> 
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'cache-stats'),
-    queryFn: () => getCacheStats(config.client, config.basePath ?? '/identity/users'),
+    queryFn: () => getCacheStats(config.client, config.basePath ?? '/api/v1/identity/users'),
   });
 }
 
@@ -45,6 +45,6 @@ export function useBatchResolveUsers(): UseMutationResult<
 
   return useMutation({
     mutationFn: (userIds: UserId[]) =>
-      batchResolveUsers(config.client, config.basePath ?? '/identity/users', userIds),
+      batchResolveUsers(config.client, config.basePath ?? '/api/v1/identity/users', userIds),
   });
 }

@@ -5,12 +5,12 @@ import { permissionKeys } from './use-permissions.js';
 import type { PermissionGrantDto, UseRolePermissionsOptions } from '@granit/authorization';
 import type { UseQueryResult } from '@tanstack/react-query';
 
-const DEFAULT_BASE_PATH = '/api/v1/auth';
+const DEFAULT_BASE_PATH = '/api/v1/authorization';
 
 /**
  * Fetches the permissions granted to a specific role.
  *
- * Calls `GET {basePath}/roles/{roleName}` (default `/api/v1/auth/roles/{roleName}`)
+ * Calls `GET {basePath}/roles/{roleName}` (default `/api/v1/authorization/roles/{roleName}`)
  * and returns the list of granted permission names.
  *
  * @param options - Axios client, role name, and optional configuration.

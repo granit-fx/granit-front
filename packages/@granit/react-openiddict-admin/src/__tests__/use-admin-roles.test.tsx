@@ -60,7 +60,7 @@ describe('useAdminRoles', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(listRoles).toHaveBeenCalledWith(expect.anything(), '/api/admin');
+    expect(listRoles).toHaveBeenCalledWith(expect.anything(), '/admin');
     expect(result.current.data).toEqual(mockRoles);
   });
 
@@ -89,7 +89,7 @@ describe('useCreateAdminRole', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(createRole).toHaveBeenCalledWith(expect.anything(), '/api/admin', {
+    expect(createRole).toHaveBeenCalledWith(expect.anything(), '/admin', {
       name: 'admin',
       description: 'Administrator role',
     });
@@ -132,7 +132,7 @@ describe('useAdminRoleMembers', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(getRoleMembers).toHaveBeenCalledWith(expect.anything(), '/api/admin', 'admin');
+    expect(getRoleMembers).toHaveBeenCalledWith(expect.anything(), '/admin', 'admin');
     expect(result.current.data).toEqual(mockMembers);
   });
 
@@ -158,7 +158,7 @@ describe('useDeleteAdminRole', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(deleteRole).toHaveBeenCalledWith(expect.anything(), '/api/admin', 'admin');
+    expect(deleteRole).toHaveBeenCalledWith(expect.anything(), '/admin', 'admin');
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'roles'],
     });

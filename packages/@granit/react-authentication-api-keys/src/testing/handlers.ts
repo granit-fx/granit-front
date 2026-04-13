@@ -30,9 +30,9 @@ function generateSecret(type: string, environment: string): string {
 /**
  * Create stateful MSW handlers for API key endpoints.
  *
- * @param baseUrl - API base path (default: `/api/v1/api-keys`)
+ * @param baseUrl - API base path (default: `/api/v1/authentication/api-keys`)
  */
-export function createApiKeyHandlers(baseUrl = '/api/v1/api-keys') {
+export function createApiKeyHandlers(baseUrl = '/api/v1/authentication/api-keys') {
   const apiKeys: MutableApiKey[] = mockApiKeys.map((k) => ({ ...k }));
 
   return [

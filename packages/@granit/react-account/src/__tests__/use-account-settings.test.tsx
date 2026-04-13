@@ -51,7 +51,7 @@ describe('useAccountSettings', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(getAccountSettings).toHaveBeenCalledWith(client, '/api/account');
+    expect(getAccountSettings).toHaveBeenCalledWith(client, '/account');
     expect(result.current.data).toEqual({ allowSelfRegistration: true });
   });
 

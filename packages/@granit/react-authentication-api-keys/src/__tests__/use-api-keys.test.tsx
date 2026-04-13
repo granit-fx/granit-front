@@ -59,7 +59,10 @@ describe('useApiKeys', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/v1/api-keys', expect.objectContaining({}));
+    expect(client.get).toHaveBeenCalledWith(
+      '/api/v1/authentication/api-keys',
+      expect.objectContaining({})
+    );
     expect(result.current.data).toHaveLength(1);
     expect(result.current.data![0].id).toBe('key-1');
   });
@@ -74,7 +77,7 @@ describe('useApiKeys', () => {
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
     expect(client.get).toHaveBeenCalledWith(
-      '/api/v1/api-keys',
+      '/api/v1/authentication/api-keys',
       expect.objectContaining({ params: expect.objectContaining({ search: 'prod' }) })
     );
   });
@@ -89,7 +92,7 @@ describe('useApiKeys', () => {
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
     expect(client.get).toHaveBeenCalledWith(
-      '/api/v1/api-keys',
+      '/api/v1/authentication/api-keys',
       expect.objectContaining({
         params: expect.objectContaining({ type: 'Secret,Webhook' }),
       })
@@ -106,7 +109,7 @@ describe('useApiKeys', () => {
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
     expect(client.get).toHaveBeenCalledWith(
-      '/api/v1/api-keys',
+      '/api/v1/authentication/api-keys',
       expect.objectContaining({
         params: expect.objectContaining({ environment: 'staging' }),
       })
@@ -123,7 +126,7 @@ describe('useApiKeys', () => {
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
     expect(client.get).toHaveBeenCalledWith(
-      '/api/v1/api-keys',
+      '/api/v1/authentication/api-keys',
       expect.objectContaining({
         params: expect.objectContaining({ includeRevoked: true }),
       })
@@ -140,7 +143,7 @@ describe('useApiKeys', () => {
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
     expect(client.get).toHaveBeenCalledWith(
-      '/api/v1/api-keys',
+      '/api/v1/authentication/api-keys',
       expect.objectContaining({
         params: expect.objectContaining({ page: 2, pageSize: 25 }),
       })
@@ -202,7 +205,7 @@ describe('useApiKey', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/v1/api-keys/key-1');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/authentication/api-keys/key-1');
     expect(result.current.data?.id).toBe('key-1');
     expect(result.current.data?.name).toBe('Test Key');
   });

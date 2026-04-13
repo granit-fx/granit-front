@@ -68,7 +68,7 @@ describe('useIdentityCacheStats', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual(mockStats);
-    expect(client.get).toHaveBeenCalledWith('/identity/users/stats');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/identity/users/stats');
   });
 
   it('uses custom basePath', async () => {
@@ -117,7 +117,7 @@ describe('useBatchResolveUsers', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual(mockUsers);
-    expect(client.post).toHaveBeenCalledWith('/identity/users/batch', {
+    expect(client.post).toHaveBeenCalledWith('/api/v1/identity/users/batch', {
       userIds: [toEntityId<'User'>('user-1')],
     });
   });

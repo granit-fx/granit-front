@@ -8,9 +8,9 @@ import type { AuditEntry, AuditEntryDetail } from '@granit/auditing';
 /**
  * Create stateful MSW handlers for audit log endpoints.
  *
- * @param baseUrl - API base path (default: `/api/v1/audit-log`)
+ * @param baseUrl - API base path (default: `/api/v1/auditing/audit-entries`)
  */
-export function createAuditHandlers(baseUrl = '/api/v1/audit-log') {
+export function createAuditHandlers(baseUrl = '/api/v1/auditing/audit-entries') {
   return [
     // GET list — filtered, sorted newest-first, paginated
     http.get(baseUrl, ({ request }) => {

@@ -78,7 +78,7 @@ describe('useValidateTaxId', () => {
     result.current.mutate({ taxId: 'BE0123456789', countryCode: 'BE' });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.post).toHaveBeenCalledWith('/api/granit/tax/validate', {
+    expect(client.post).toHaveBeenCalledWith('/api/v1/tax/validate', {
       taxId: 'BE0123456789',
       countryCode: 'BE',
     });
@@ -136,7 +136,7 @@ describe('useTaxRates', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/api/granit/tax/rates');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/tax/rates');
     expect(result.current.data).toEqual(rates);
   });
 
@@ -183,7 +183,7 @@ describe('useTaxRateByCountry', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/api/granit/tax/rates/BE');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/tax/rates/BE');
     expect(result.current.data).toEqual(mockBelgiumRate);
   });
 

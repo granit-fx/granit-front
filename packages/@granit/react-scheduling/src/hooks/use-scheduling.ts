@@ -11,13 +11,13 @@ import type { RescheduleActionRequest, ScheduledActionResponse } from '@granit/s
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import type { AxiosInstance } from 'axios';
 
-const DEFAULT_BASE_PATH = '/api/granit/scheduling';
+const DEFAULT_BASE_PATH = '/api/v1/scheduling/scheduled-actions';
 
 /** Options accepted by all scheduling hooks. */
 export interface SchedulingOptions {
   /** Axios instance used for all requests. */
   readonly client: AxiosInstance;
-  /** Base URL for the scheduling API. Defaults to `/api/granit/scheduling`. */
+  /** Base URL for the scheduling API. Defaults to `/api/v1/scheduling/scheduled-actions`. */
   readonly basePath?: string;
 }
 

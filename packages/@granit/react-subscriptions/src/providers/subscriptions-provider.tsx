@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 /** Configuration for the subscriptions provider. */
 export interface SubscriptionsConfig {
   readonly client: AxiosInstance;
-  /** Base path for subscriptions endpoints (default: `/api/granit/subscriptions`). */
+  /** Base path for subscriptions endpoints (default: `/api/v1/subscriptions`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
 }

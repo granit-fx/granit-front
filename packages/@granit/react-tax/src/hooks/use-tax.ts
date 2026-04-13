@@ -23,7 +23,7 @@ export function useValidateTaxId(): UseMutationResult<
   TaxValidateRequest
 > {
   const config = useTaxConfig();
-  const basePath = config.basePath ?? '/api/granit/tax';
+  const basePath = config.basePath ?? '/api/v1/tax';
 
   return useMutation({
     mutationFn: (request: TaxValidateRequest) => validateTaxId(config.client, basePath, request),
@@ -40,7 +40,7 @@ export function useValidateTaxId(): UseMutationResult<
  */
 export function useTaxRates(): UseQueryResult<readonly TaxRateResponse[]> {
   const config = useTaxConfig();
-  const basePath = config.basePath ?? '/api/granit/tax';
+  const basePath = config.basePath ?? '/api/v1/tax';
 
   return useQuery({
     queryKey: buildTaxQueryKey(config, 'rates'),
@@ -60,7 +60,7 @@ export function useTaxRates(): UseQueryResult<readonly TaxRateResponse[]> {
  */
 export function useTaxRateByCountry(countryCode: string): UseQueryResult<TaxRateResponse> {
   const config = useTaxConfig();
-  const basePath = config.basePath ?? '/api/granit/tax';
+  const basePath = config.basePath ?? '/api/v1/tax';
 
   return useQuery({
     queryKey: buildTaxQueryKey(config, 'rates', countryCode),

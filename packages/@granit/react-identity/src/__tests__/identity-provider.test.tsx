@@ -13,7 +13,7 @@ import type { AxiosInstance } from 'axios';
 
 const mockConfig: IdentityConfig = {
   client: {} as AxiosInstance,
-  basePath: '/identity/users',
+  basePath: '/api/v1/identity/users',
 };
 
 function createWrapper(config: IdentityConfig) {
@@ -29,7 +29,7 @@ describe('IdentityProvider', () => {
     });
 
     expect(result.current.client).toBe(mockConfig.client);
-    expect(result.current.basePath).toBe('/identity/users');
+    expect(result.current.basePath).toBe('/api/v1/identity/users');
   });
 
   it('should throw when used outside provider', () => {

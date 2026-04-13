@@ -49,7 +49,7 @@ describe('useIdentityRgpd', () => {
     result.current.erase.mutate(toEntityId<'User'>('user-1'));
 
     await waitFor(() => expect(result.current.erase.isSuccess).toBe(true));
-    expect(client.delete).toHaveBeenCalledWith('/identity/users/user-1');
+    expect(client.delete).toHaveBeenCalledWith('/api/v1/identity/users/user-1');
   });
 
   it('uses custom basePath', async () => {

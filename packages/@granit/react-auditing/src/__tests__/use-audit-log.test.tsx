@@ -18,7 +18,7 @@ import type { AuditEntryDetail, AuditPage } from '@granit/auditing';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
-function createWrapper(client: AxiosInstance, basePath = '/audit-log') {
+function createWrapper(client: AxiosInstance, basePath = '/api/v1/auditing') {
   return function Wrapper({ children }: { children: ReactNode }) {
     const queryClient = createTestQueryClient();
     const config: AuditLogConfig = { client, basePath };
@@ -49,7 +49,7 @@ describe('useAuditLogEntries', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual(emptyPage);
-    expect(client.get).toHaveBeenCalledWith('/audit-log', {
+    expect(client.get).toHaveBeenCalledWith('/api/v1/auditing', {
       params: { category: AuditCategory.DataMutation },
     });
   });
@@ -100,7 +100,7 @@ describe('useEntityAuditTrail', () => {
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/audit-log/entity/Patient/42', {
+    expect(client.get).toHaveBeenCalledWith('/api/v1/auditing/entity/Patient/42', {
       params: { page: 1, pageSize: 10 },
     });
   });

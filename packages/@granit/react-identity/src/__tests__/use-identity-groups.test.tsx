@@ -53,7 +53,7 @@ describe('use-identity-groups', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/identity/provider/groups');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/identity/provider/groups');
       expect(result.current.data).toEqual([sampleGroup]);
     });
   });
@@ -68,7 +68,7 @@ describe('use-identity-groups', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/identity/provider/users/user-1/groups');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/identity/provider/users/user-1/groups');
     });
 
     it('is disabled when userId is empty', async () => {
@@ -95,7 +95,9 @@ describe('use-identity-groups', () => {
       result.current.mutate({ userId: toEntityId<'User'>('user-1'), groupId: 'group-1' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.put).toHaveBeenCalledWith('/identity/provider/users/user-1/groups/group-1');
+      expect(client.put).toHaveBeenCalledWith(
+        '/api/v1/identity/provider/users/user-1/groups/group-1'
+      );
     });
   });
 
@@ -111,7 +113,9 @@ describe('use-identity-groups', () => {
       result.current.mutate({ userId: toEntityId<'User'>('user-1'), groupId: 'group-1' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.delete).toHaveBeenCalledWith('/identity/provider/users/user-1/groups/group-1');
+      expect(client.delete).toHaveBeenCalledWith(
+        '/api/v1/identity/provider/users/user-1/groups/group-1'
+      );
     });
 
     it('exposes error state on failure', async () => {

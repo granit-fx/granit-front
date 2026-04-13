@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 /** Configuration for the tax provider. */
 export interface TaxConfig {
   readonly client: AxiosInstance;
-  /** Base path for tax endpoints (default: `/api/granit/tax`). */
+  /** Base path for tax endpoints (default: `/api/v1/tax`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
 }

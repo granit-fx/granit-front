@@ -36,7 +36,7 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
  */
 export function useSubscriptions(): UseQueryResult<readonly SubscriptionResponse[]> {
   const config = useSubscriptionsConfig();
-  const basePath = config.basePath ?? '/api/granit/subscriptions';
+  const basePath = config.basePath ?? '/api/v1/subscriptions';
 
   return useQuery({
     queryKey: buildSubscriptionsQueryKey(config, 'subscriptions'),
@@ -54,7 +54,7 @@ export function useSubscriptions(): UseQueryResult<readonly SubscriptionResponse
  */
 export function useActiveSubscription(): UseQueryResult<SubscriptionResponse> {
   const config = useSubscriptionsConfig();
-  const basePath = config.basePath ?? '/api/granit/subscriptions';
+  const basePath = config.basePath ?? '/api/v1/subscriptions';
 
   return useQuery({
     queryKey: buildSubscriptionsQueryKey(config, 'subscriptions', 'active'),
@@ -74,7 +74,7 @@ export function useActiveSubscription(): UseQueryResult<SubscriptionResponse> {
  */
 export function useSubscription(id: string): UseQueryResult<SubscriptionResponse> {
   const config = useSubscriptionsConfig();
-  const basePath = config.basePath ?? '/api/granit/subscriptions';
+  const basePath = config.basePath ?? '/api/v1/subscriptions';
 
   return useQuery({
     queryKey: buildSubscriptionsQueryKey(config, 'subscriptions', id),
@@ -103,7 +103,7 @@ export function useCreateSubscription(): UseMutationResult<
 > {
   const config = useSubscriptionsConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? '/api/granit/subscriptions';
+  const basePath = config.basePath ?? '/api/v1/subscriptions';
 
   return useMutation({
     mutationFn: (request: CreateSubscriptionVariables) =>
@@ -139,7 +139,7 @@ export function useCancelSubscription(): UseMutationResult<
 > {
   const config = useSubscriptionsConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? '/api/granit/subscriptions';
+  const basePath = config.basePath ?? '/api/v1/subscriptions';
 
   return useMutation({
     mutationFn: ({ id, request }: CancelSubscriptionVariables) =>
@@ -175,7 +175,7 @@ export function useChangeSubscriptionPlan(): UseMutationResult<
 > {
   const config = useSubscriptionsConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? '/api/granit/subscriptions';
+  const basePath = config.basePath ?? '/api/v1/subscriptions';
 
   return useMutation({
     mutationFn: ({ id, request }: ChangeSubscriptionPlanVariables) =>
@@ -211,7 +211,7 @@ export function useMigrateSubscriptionPrice(): UseMutationResult<
 > {
   const config = useSubscriptionsConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? '/api/granit/subscriptions';
+  const basePath = config.basePath ?? '/api/v1/subscriptions';
 
   return useMutation({
     mutationFn: ({ id, request }: MigrateSubscriptionPriceVariables) =>
@@ -244,7 +244,7 @@ export function useBulkMigrateSubscriptionPrice(): UseMutationResult<
 > {
   const config = useSubscriptionsConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath ?? '/api/granit/subscriptions';
+  const basePath = config.basePath ?? '/api/v1/subscriptions';
 
   return useMutation({
     mutationFn: (request: BulkMigrateSubscriptionPriceVariables) =>

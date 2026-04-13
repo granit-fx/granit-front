@@ -14,7 +14,7 @@ import type { AxiosInstance } from 'axios';
 export interface ApiKeyHookOptions {
   /** Axios instance to use for HTTP requests. */
   client: AxiosInstance;
-  /** API base path. Defaults to `/api/v1/api-keys`. */
+  /** API base path. Defaults to `/api/v1/authentication/api-keys`. */
   basePath?: string;
 }
 

@@ -23,9 +23,9 @@ import type {
  * Create stateful MSW handlers for OpenIddict admin endpoints.
  * Handlers mutate in-memory state — mutations are reflected by subsequent GETs.
  *
- * @param baseUrl - API base path (default: `/api/admin`)
+ * @param baseUrl - API base path (default: `/admin`)
  */
-export function createOpenIddictAdminHandlers(baseUrl = '/api/admin') {
+export function createOpenIddictAdminHandlers(baseUrl = '/admin') {
   return [
     // ── Users ────────────────────────────────────────────────────────────────
 

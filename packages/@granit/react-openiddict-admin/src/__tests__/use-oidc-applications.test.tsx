@@ -63,7 +63,7 @@ describe('useOidcApplications', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(listApplications).toHaveBeenCalledWith(expect.anything(), '/api/admin');
+    expect(listApplications).toHaveBeenCalledWith(expect.anything(), '/admin');
     expect(result.current.data).toEqual(mockApps);
   });
 
@@ -95,7 +95,7 @@ describe('useCreateOidcApplication', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(createApplication).toHaveBeenCalledWith(expect.anything(), '/api/admin', {
+    expect(createApplication).toHaveBeenCalledWith(expect.anything(), '/admin', {
       clientId: 'guava-front',
       displayName: 'Guava Frontend',
     });
@@ -132,7 +132,7 @@ describe('useDeleteOidcApplication', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(deleteApplication).toHaveBeenCalledWith(expect.anything(), '/api/admin', 'guava-front');
+    expect(deleteApplication).toHaveBeenCalledWith(expect.anything(), '/admin', 'guava-front');
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'oidc', 'applications'],
     });
@@ -170,7 +170,7 @@ describe('useRotateApplicationSecret', () => {
 
     expect(rotateApplicationSecret).toHaveBeenCalledWith(
       expect.anything(),
-      '/api/admin',
+      '/admin',
       'guava-front'
     );
     expect(result.current.data).toEqual(mockSecretResponse);

@@ -11,7 +11,7 @@ import {
 
 import type { AdminGroup } from '../types/index.js';
 
-const BASE = '/api/admin';
+const BASE = '/admin';
 
 const mockGroup: AdminGroup = {
   id: 'grp-001',

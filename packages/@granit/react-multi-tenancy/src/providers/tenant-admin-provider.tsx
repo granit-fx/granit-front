@@ -14,7 +14,7 @@ export interface TenantAdminProviderProps {
   readonly children: ReactNode;
 }
 
-const DEFAULT_BASE_PATH = '/api/granit/admin';
+const DEFAULT_BASE_PATH = '/api/v1/multi-tenancy';
 const DEFAULT_KEY_PREFIX = ['tenant-admin'] as const;
 
 const TenantAdminContext = createContext<TenantAdminConfig | null>(null);

@@ -14,7 +14,7 @@ export interface AccountProviderProps {
   readonly children: ReactNode;
 }
 
-const DEFAULT_BASE_PATH = '/api/account';
+const DEFAULT_BASE_PATH = '/account';
 const DEFAULT_KEY_PREFIX = ['account'] as const;
 
 const AccountContext = createContext<AccountConfig | null>(null);

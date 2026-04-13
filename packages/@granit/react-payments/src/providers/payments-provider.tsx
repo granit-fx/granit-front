@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 /** Configuration for the payments provider. */
 export interface PaymentsConfig {
   readonly client: AxiosInstance;
-  /** Base path for payment endpoints (default: `/api/granit/payments`). */
+  /** Base path for payment endpoints (default: `/api/v1/payments`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
 }

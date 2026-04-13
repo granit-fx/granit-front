@@ -67,7 +67,7 @@ describe('use-customer-balance', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/customer-balance/balance');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/customer-balance/balance');
       expect(result.current.data).toEqual(sampleBalance);
     });
 
@@ -94,7 +94,7 @@ describe('use-customer-balance', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/customer-balance/transactions');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/customer-balance/transactions');
       expect(result.current.data).toEqual([sampleTransaction]);
     });
 
@@ -131,7 +131,7 @@ describe('use-customer-balance', () => {
       result.current.mutate(request);
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith('/api/granit/customer-balance/credit', request);
+      expect(client.post).toHaveBeenCalledWith('/api/v1/customer-balance/credit', request);
     });
 
     it('uses custom basePath', async () => {

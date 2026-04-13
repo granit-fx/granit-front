@@ -11,9 +11,9 @@ import type { BackgroundJobStatus } from '@granit/background-jobs';
  * Handlers mutate the in-memory `mockBackgroundJobs` array — pause/resume/trigger
  * calls update state that subsequent GET calls reflect.
  *
- * @param baseUrl - API base path (default: `/api/v1/background-jobs`)
+ * @param baseUrl - API base path (default: `/api/v1/background-jobs/jobs`)
  */
-export function createBackgroundJobHandlers(baseUrl = '/api/v1/background-jobs') {
+export function createBackgroundJobHandlers(baseUrl = '/api/v1/background-jobs/jobs') {
   return [
     // GET list — sorted, paginated
     http.get(baseUrl, ({ request }) => {

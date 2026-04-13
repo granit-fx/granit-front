@@ -53,7 +53,7 @@ describe('use-identity-roles', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/identity/provider/roles');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/identity/provider/roles');
       expect(result.current.data).toEqual([sampleRole]);
     });
   });
@@ -68,7 +68,7 @@ describe('use-identity-roles', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/identity/provider/users/user-1/roles');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/identity/provider/users/user-1/roles');
     });
 
     it('is disabled when userId is empty', async () => {
@@ -93,7 +93,7 @@ describe('use-identity-roles', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/identity/provider/roles/admin/members');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/identity/provider/roles/admin/members');
     });
 
     it('is disabled when roleName is empty', async () => {
@@ -120,7 +120,7 @@ describe('use-identity-roles', () => {
       result.current.mutate({ userId: toEntityId<'User'>('user-1'), roleName: 'admin' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.put).toHaveBeenCalledWith('/identity/provider/users/user-1/roles/admin');
+      expect(client.put).toHaveBeenCalledWith('/api/v1/identity/provider/users/user-1/roles/admin');
     });
   });
 
@@ -136,7 +136,9 @@ describe('use-identity-roles', () => {
       result.current.mutate({ userId: toEntityId<'User'>('user-1'), roleName: 'admin' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.delete).toHaveBeenCalledWith('/identity/provider/users/user-1/roles/admin');
+      expect(client.delete).toHaveBeenCalledWith(
+        '/api/v1/identity/provider/users/user-1/roles/admin'
+      );
     });
 
     it('uses custom providerBasePath', async () => {

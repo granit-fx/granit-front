@@ -61,7 +61,7 @@ describe('useLogin', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(loginAccount).toHaveBeenCalledWith(client, '/api/account', {
+    expect(loginAccount).toHaveBeenCalledWith(client, '/account', {
       login: 'user@example.com',
       password: 'P@ssw0rd!',
     });

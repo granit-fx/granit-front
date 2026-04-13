@@ -11,7 +11,7 @@ import {
 
 import type { AdminImpersonationResult, AdminUser, AdminUserPage } from '../types/index.js';
 
-const BASE = '/api/admin';
+const BASE = '/admin';
 
 const mockUser: AdminUser = {
   userId: 'user-001',

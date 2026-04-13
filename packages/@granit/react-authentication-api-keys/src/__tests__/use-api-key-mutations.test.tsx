@@ -68,7 +68,7 @@ describe('useCreateApiKey', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/api-keys', request);
+    expect(client.post).toHaveBeenCalledWith('/api/v1/authentication/api-keys', request);
     expect(result.current.data?.id).toBe('key-new');
     expect(result.current.data?.rawSecret).toBe('test-raw-secret-value');
   });
@@ -173,7 +173,7 @@ describe('useCreateApiKey', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/api-keys', request);
+    expect(client.post).toHaveBeenCalledWith('/api/v1/authentication/api-keys', request);
   });
 });
 
@@ -197,7 +197,7 @@ describe('useRevokeApiKey', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/api-keys/key-1/revoke');
+    expect(client.post).toHaveBeenCalledWith('/api/v1/authentication/api-keys/key-1/revoke');
   });
 
   it('should use custom basePath when provided', async () => {
@@ -275,7 +275,7 @@ describe('useRotateApiKey', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/api-keys/key-old/rotate');
+    expect(client.post).toHaveBeenCalledWith('/api/v1/authentication/api-keys/key-old/rotate');
     expect(result.current.data?.newKeyId).toBe('key-new');
     expect(result.current.data?.rawSecret).toBe('test-new-secret-value');
     expect(result.current.data?.oldKeyId).toBe('key-old');
@@ -371,7 +371,7 @@ describe('useUpdateApiKeyScopes', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.put).toHaveBeenCalledWith('/api/v1/api-keys/key-1/scopes', {
+    expect(client.put).toHaveBeenCalledWith('/api/v1/authentication/api-keys/key-1/scopes', {
       permissions: ['Invoices.Read', 'Invoices.Create'],
       allowedCidrs: ['10.0.0.0/8'],
     });
@@ -448,7 +448,7 @@ describe('useUpdateApiKeyScopes', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.put).toHaveBeenCalledWith('/api/v1/api-keys/key-1/scopes', {
+    expect(client.put).toHaveBeenCalledWith('/api/v1/authentication/api-keys/key-1/scopes', {
       permissions: [],
       allowedCidrs: [],
     });

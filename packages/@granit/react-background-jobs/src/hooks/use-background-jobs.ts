@@ -12,13 +12,13 @@ import type { PagedResult } from '@granit/query-engine';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import type { AxiosInstance } from 'axios';
 
-const DEFAULT_BASE_PATH = '/api/v1/background-jobs';
+const DEFAULT_BASE_PATH = '/api/v1/background-jobs/jobs';
 
 /** Options accepted by all background-jobs hooks. */
 export interface BackgroundJobsOptions {
   /** Axios instance used for all requests. */
   readonly client: AxiosInstance;
-  /** Base URL for the background-jobs API. Defaults to `/api/v1/background-jobs`. */
+  /** Base URL for the background-jobs API. Defaults to `/api/v1/background-jobs/jobs`. */
   readonly basePath?: string;
   /** Pagination parameters for the list endpoint. */
   readonly params?: BackgroundJobListParams;

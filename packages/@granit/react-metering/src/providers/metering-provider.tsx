@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 /** Configuration for the metering provider. */
 export interface MeteringConfig {
   readonly client: AxiosInstance;
-  /** Base path for metering endpoints (default: `/api/granit/metering`). */
+  /** Base path for metering endpoints (default: `/api/v1/metering`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
 }

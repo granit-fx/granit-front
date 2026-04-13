@@ -5,7 +5,7 @@ import { permissionKeys } from './use-permissions.js';
 import type { PermissionGrantParams, UsePermissionGrantOptions } from '@granit/authorization';
 import type { UseMutationResult } from '@tanstack/react-query';
 
-const DEFAULT_BASE_PATH = '/api/v1/auth';
+const DEFAULT_BASE_PATH = '/api/v1/authorization';
 
 /** Return type of the {@link usePermissionGrant} hook. */
 export type UsePermissionGrantReturn = {

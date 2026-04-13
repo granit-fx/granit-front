@@ -5,7 +5,7 @@ import { createScope, deleteScope, listScopes } from '../api/admin-oidc-scope-ap
 
 import type { AdminOidcScope } from '../types/index.js';
 
-const BASE = '/api/admin';
+const BASE = '/admin';
 
 const mockScope: AdminOidcScope = {
   name: 'api',

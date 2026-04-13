@@ -7,12 +7,12 @@ import { mockPermissionGroups, mockRoleGrants } from './data.js';
  * Create stateful MSW handlers for authorization endpoints (permission
  * definitions and role-based grants).
  *
- * @param baseUrl - API base path (default: `/api/v1/auth`)
+ * @param baseUrl - API base path (default: `/api/v1/authorization`)
  */
-export function createAuthorizationHandlers(baseUrl = '/api/v1/auth') {
+export function createAuthorizationHandlers(baseUrl = '/api/v1/authorization') {
   return [
-    // GET /definitions — list all permission groups
-    http.get(`${baseUrl}/definitions`, () => {
+    // GET /permissions/definitions — list all permission groups
+    http.get(`${baseUrl}/permissions/definitions`, () => {
       return HttpResponse.json(mockPermissionGroups);
     }),
 

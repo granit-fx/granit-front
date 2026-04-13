@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 /** Configuration for the features provider. */
 export interface FeaturesConfig {
   readonly client: AxiosInstance;
-  /** Base path for features endpoints (default: `/api/granit/features`). */
+  /** Base path for features endpoints (default: `/api/v1/features`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
 }

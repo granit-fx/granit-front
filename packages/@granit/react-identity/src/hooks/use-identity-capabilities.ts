@@ -27,7 +27,8 @@ export function useIdentityCapabilities(options?: {
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'capabilities'),
-    queryFn: () => fetchIdentityCapabilities(config.client, config.basePath ?? '/identity/users'),
+    queryFn: () =>
+      fetchIdentityCapabilities(config.client, config.basePath ?? '/api/v1/identity/users'),
     staleTime: Infinity,
     enabled: options?.enabled ?? true,
   });

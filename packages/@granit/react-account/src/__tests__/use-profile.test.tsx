@@ -77,7 +77,7 @@ describe('useProfile', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(getProfile).toHaveBeenCalledWith(client, '/api/account');
+    expect(getProfile).toHaveBeenCalledWith(client, '/account');
     expect(result.current.data).toEqual(mockProfile);
   });
 
@@ -109,7 +109,7 @@ describe('useUpdateProfile', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(updateProfile).toHaveBeenCalledWith(client, '/api/account', { firstName: 'Jane' });
+    expect(updateProfile).toHaveBeenCalledWith(client, '/account', { firstName: 'Jane' });
     expect(result.current.data).toEqual(updatedProfile);
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['account', 'profile'],

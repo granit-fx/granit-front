@@ -73,7 +73,7 @@ describe('use-plans', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/subscriptions/plans');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/subscriptions/plans');
       expect(result.current.data).toEqual([samplePlan]);
     });
   });
@@ -88,7 +88,7 @@ describe('use-plans', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/subscriptions/plans/plan-1');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/subscriptions/plans/plan-1');
       expect(result.current.data).toEqual(samplePlan);
     });
 
@@ -125,7 +125,7 @@ describe('use-plans', () => {
       result.current.mutate(request);
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith('/api/granit/subscriptions/plans', request);
+      expect(client.post).toHaveBeenCalledWith('/api/v1/subscriptions/plans', request);
     });
   });
 
@@ -142,7 +142,7 @@ describe('use-plans', () => {
       result.current.mutate({ id: 'plan-1', request });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.put).toHaveBeenCalledWith('/api/granit/subscriptions/plans/plan-1', request);
+      expect(client.put).toHaveBeenCalledWith('/api/v1/subscriptions/plans/plan-1', request);
     });
   });
 
@@ -158,7 +158,7 @@ describe('use-plans', () => {
       result.current.mutate({ id: 'plan-1' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith('/api/granit/subscriptions/plans/plan-1/publish');
+      expect(client.post).toHaveBeenCalledWith('/api/v1/subscriptions/plans/plan-1/publish');
     });
   });
 
@@ -174,7 +174,7 @@ describe('use-plans', () => {
       result.current.mutate({ id: 'plan-1' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith('/api/granit/subscriptions/plans/plan-1/archive');
+      expect(client.post).toHaveBeenCalledWith('/api/v1/subscriptions/plans/plan-1/archive');
     });
   });
 
@@ -192,7 +192,7 @@ describe('use-plans', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith(
-        '/api/granit/subscriptions/plans/plan-1/prices',
+        '/api/v1/subscriptions/plans/plan-1/prices',
         request
       );
     });
@@ -208,9 +208,7 @@ describe('use-plans', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith(
-        '/api/granit/subscriptions/plans/plan-1/prices/history'
-      );
+      expect(client.get).toHaveBeenCalledWith('/api/v1/subscriptions/plans/plan-1/prices/history');
       expect(result.current.data).toEqual([samplePrice]);
     });
 

@@ -76,7 +76,7 @@ describe('useInvoices', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/api/granit/invoicing/invoices');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/invoicing/invoices');
     expect(result.current.data).toEqual([sampleInvoice]);
   });
 
@@ -119,7 +119,7 @@ describe('useInvoice', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/api/granit/invoicing/invoices/inv-1');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/invoicing/invoices/inv-1');
     expect(result.current.data).toEqual(sampleInvoice);
   });
 
@@ -152,7 +152,7 @@ describe('useDownloadInvoicePdf', () => {
     result.current.mutate('inv-1');
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/api/granit/invoicing/invoices/inv-1/pdf', {
+    expect(client.get).toHaveBeenCalledWith('/api/v1/invoicing/invoices/inv-1/pdf', {
       responseType: 'blob',
     });
     expect(result.current.data).toBe(pdfBlob);
@@ -200,7 +200,7 @@ describe('useCreateInvoice', () => {
     result.current.mutate(request);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.post).toHaveBeenCalledWith('/api/granit/invoicing/invoices', request);
+    expect(client.post).toHaveBeenCalledWith('/api/v1/invoicing/invoices', request);
   });
 
   it('exposes error state on failure', async () => {

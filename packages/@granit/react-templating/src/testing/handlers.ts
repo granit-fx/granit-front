@@ -16,9 +16,9 @@ import type { SaveTemplateCategoryRequest, TemplateCategory } from '@granit/temp
  * Create stateful MSW handlers for templating endpoints.
  * Handlers mutate in-memory state — mutations are reflected by subsequent GETs.
  *
- * @param baseUrl - API base path (default: `/api/v1`)
+ * @param baseUrl - API base path (default: `/api/v1/templating`)
  */
-export function createTemplatesHandlers(baseUrl = '/api/v1') {
+export function createTemplatesHandlers(baseUrl = '/api/v1/templating') {
   const BASE = `${baseUrl}/templates`;
 
   let templates = [...mockTemplatesData];

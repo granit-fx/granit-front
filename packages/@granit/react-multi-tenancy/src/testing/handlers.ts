@@ -10,9 +10,9 @@ import type { AdminTenant } from '@granit/multi-tenancy';
  * Handlers mutate the in-memory `mockTenants` array — create/update/activate/
  * deactivate calls update state that subsequent GET calls reflect.
  *
- * @param baseUrl - API base path (default: `/api/granit/admin`)
+ * @param baseUrl - API base path (default: `/api/v1/multi-tenancy`)
  */
-export function createTenantHandlers(baseUrl = '/api/granit/admin') {
+export function createTenantHandlers(baseUrl = '/api/v1/multi-tenancy') {
   return [
     // GET /tenants — list all
     http.get(`${baseUrl}/tenants`, () => HttpResponse.json(mockTenants)),

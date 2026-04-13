@@ -46,9 +46,7 @@ describe('use-seats', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith(
-        '/api/granit/subscriptions/subscriptions/sub-1/seats'
-      );
+      expect(client.get).toHaveBeenCalledWith('/api/v1/subscriptions/subscriptions/sub-1/seats');
       expect(result.current.data).toEqual([sampleSeat]);
     });
 
@@ -76,10 +74,9 @@ describe('use-seats', () => {
       result.current.mutate({ userId: 'user-1' });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith(
-        '/api/granit/subscriptions/subscriptions/sub-1/seats',
-        { userId: 'user-1' }
-      );
+      expect(client.post).toHaveBeenCalledWith('/api/v1/subscriptions/subscriptions/sub-1/seats', {
+        userId: 'user-1',
+      });
       expect(result.current.data).toEqual(sampleSeat);
     });
   });
@@ -97,7 +94,7 @@ describe('use-seats', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.delete).toHaveBeenCalledWith(
-        '/api/granit/subscriptions/subscriptions/sub-1/seats/user-1'
+        '/api/v1/subscriptions/subscriptions/sub-1/seats/user-1'
       );
     });
 

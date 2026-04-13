@@ -6,7 +6,7 @@ import { buildInvoicingQueryKey, useInvoicingConfig } from '../providers/invoici
 import type { InvoiceCreateRequest, InvoiceResponse } from '@granit/invoicing';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
-const DEFAULT_BASE_PATH = '/api/granit/invoicing';
+const DEFAULT_BASE_PATH = '/api/v1/invoicing';
 
 /**
  * Fetch all invoices.

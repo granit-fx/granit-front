@@ -9,7 +9,7 @@ import type { AxiosInstance } from 'axios';
 
 const mockConfig: TaxConfig = {
   client: {} as AxiosInstance,
-  basePath: '/api/granit/tax',
+  basePath: '/api/v1/tax',
 };
 
 function createWrapper(config: TaxConfig) {
@@ -25,7 +25,7 @@ describe('TaxProvider', () => {
     });
 
     expect(result.current.client).toBe(mockConfig.client);
-    expect(result.current.basePath).toBe('/api/granit/tax');
+    expect(result.current.basePath).toBe('/api/v1/tax');
   });
 
   it('should throw when used outside provider', () => {

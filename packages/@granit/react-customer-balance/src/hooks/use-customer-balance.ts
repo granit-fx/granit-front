@@ -17,7 +17,7 @@ import type {
 } from '@granit/customer-balance';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
-const DEFAULT_BASE_PATH = '/api/granit/customer-balance';
+const DEFAULT_BASE_PATH = '/api/v1/customer-balance';
 
 /**
  * Fetch the current customer balance.

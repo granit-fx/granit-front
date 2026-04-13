@@ -216,7 +216,7 @@ describe('webhooks-api', () => {
   // ── Deliveries ────────────────────────────────────────────────────────────
 
   describe('getDeliveries', () => {
-    it('sends GET to /deliveries/query with subscriptionId param', async () => {
+    it('sends GET to /deliveries with subscriptionId param', async () => {
       const client = createMockClient();
       const response: WebhookDeliveryAttemptResponse[] = [
         {
@@ -238,7 +238,7 @@ describe('webhooks-api', () => {
 
       const result = await getDeliveries(client, '/api/v1/webhooks', { subscriptionId: 'sub-001' });
 
-      expect(client.get).toHaveBeenCalledWith('/api/v1/webhooks/deliveries/query', {
+      expect(client.get).toHaveBeenCalledWith('/api/v1/webhooks/deliveries', {
         params: { subscriptionId: 'sub-001' },
       });
       expect(result).toEqual(response);

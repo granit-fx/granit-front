@@ -9,7 +9,7 @@ import type { AxiosInstance } from 'axios';
 
 const mockConfig: AuditLogConfig = {
   client: {} as AxiosInstance,
-  basePath: '/audit-log',
+  basePath: '/api/v1/auditing',
 };
 
 function createWrapper(config: AuditLogConfig) {
@@ -25,7 +25,7 @@ describe('AuditLogProvider', () => {
     });
 
     expect(result.current.client).toBe(mockConfig.client);
-    expect(result.current.basePath).toBe('/audit-log');
+    expect(result.current.basePath).toBe('/api/v1/auditing');
   });
 
   it('should throw when used outside provider', () => {

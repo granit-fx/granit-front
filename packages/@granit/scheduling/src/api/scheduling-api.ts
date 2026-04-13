@@ -21,14 +21,14 @@ export async function fetchScheduledActionById(
 /**
  * Fetch a paginated, filterable, sortable list of scheduled actions via QueryEngine.
  *
- * `GET {basePath}/query?page=&pageSize=&...`
+ * `GET {basePath}?page=&pageSize=&...`
  */
 export async function fetchScheduledActions(
   client: AxiosInstance,
   basePath: string,
   request: QueryRequest = {}
 ): Promise<PagedResult<ScheduledActionResponse>> {
-  return fetchPage<ScheduledActionResponse>(client, `${basePath}/query`, request);
+  return fetchPage<ScheduledActionResponse>(client, basePath, request);
 }
 
 /**

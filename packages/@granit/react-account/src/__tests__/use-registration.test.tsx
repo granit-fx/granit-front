@@ -5,11 +5,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import {
-  useConfirmEmail,
-  useRegister,
-  useResendConfirmation,
-} from '../hooks/use-registration.js';
+import { useConfirmEmail, useRegister, useResendConfirmation } from '../hooks/use-registration.js';
 import { AccountProvider } from '../providers/account-provider.js';
 
 import type { AccountConfig } from '../providers/account-provider.js';
@@ -27,8 +23,7 @@ vi.mock('@granit/account', async (importOriginal) => {
   };
 });
 
-const { registerAccount, confirmEmail, resendConfirmationEmail } =
-  await import('@granit/account');
+const { registerAccount, confirmEmail, resendConfirmationEmail } = await import('@granit/account');
 
 function createWrapper(client: AxiosInstance) {
   return function Wrapper({ children }: { children: ReactNode }) {
@@ -67,7 +62,7 @@ describe('useRegister', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(registerAccount).toHaveBeenCalledWith(client, '/api/account', {
+    expect(registerAccount).toHaveBeenCalledWith(client, '/account', {
       email: 'user@example.com',
       password: 'P@ssword1!',
       firstName: 'John',
@@ -103,7 +98,7 @@ describe('useConfirmEmail', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(confirmEmail).toHaveBeenCalledWith(client, '/api/account', 'user-1', 'abc123');
+    expect(confirmEmail).toHaveBeenCalledWith(client, '/account', 'user-1', 'abc123');
   });
 
   it('should handle invalid token error', async () => {
@@ -134,7 +129,7 @@ describe('useResendConfirmation', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(resendConfirmationEmail).toHaveBeenCalledWith(client, '/api/account');
+    expect(resendConfirmationEmail).toHaveBeenCalledWith(client, '/account');
   });
 
   it('should handle rate limit error', async () => {

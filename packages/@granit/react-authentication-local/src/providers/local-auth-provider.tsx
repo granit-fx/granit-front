@@ -19,7 +19,7 @@ export interface LocalAuthProviderProps {
   readonly children: ReactNode;
 }
 
-const DEFAULT_BASE_PATH = '/api/account';
+const DEFAULT_BASE_PATH = '/account';
 const DEFAULT_KEY_PREFIX = ['authentication-local'] as const;
 
 const LocalAuthContext = createContext<LocalAuthConfig | null>(null);

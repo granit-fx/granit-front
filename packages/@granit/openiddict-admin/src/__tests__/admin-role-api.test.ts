@@ -5,7 +5,7 @@ import { createRole, deleteRole, getRoleMembers, listRoles } from '../api/admin-
 
 import type { AdminRole, AdminRoleMember } from '../types/index.js';
 
-const BASE = '/api/admin';
+const BASE = '/admin';
 
 const mockRole: AdminRole = {
   name: 'editor',

@@ -23,7 +23,7 @@ export function useIdentityUsers(
 
   return useQuery({
     queryKey: [...buildIdentityQueryKey(config, 'users', 'list'), params],
-    queryFn: () => searchUsers(config.client, config.basePath ?? '/identity/users', params),
+    queryFn: () => searchUsers(config.client, config.basePath ?? '/api/v1/identity/users', params),
   });
 }
 
@@ -45,7 +45,7 @@ export function useIdentityUser(userId: UserId): UseQueryResult<IdentityUser> {
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'users', userId),
-    queryFn: () => getUserById(config.client, config.basePath ?? '/identity/users', userId),
+    queryFn: () => getUserById(config.client, config.basePath ?? '/api/v1/identity/users', userId),
     enabled: userId.length > 0,
   });
 }

@@ -35,7 +35,7 @@ import type {
 } from '../types/index.js';
 import type { PagedResult } from '@granit/query-engine';
 
-const basePath = '/api/v1';
+const basePath = '/api/v1/templating';
 
 describe('templates-api', () => {
   describe('getTemplates', () => {
@@ -61,7 +61,7 @@ describe('templates-api', () => {
         status: TemplateLifecycleStatus.Draft,
       });
 
-      expect(client.get).toHaveBeenCalledWith('/api/v1/templates', {
+      expect(client.get).toHaveBeenCalledWith('/api/v1/templating/templates', {
         params: { status: TemplateLifecycleStatus.Draft },
       });
       expect(result).toEqual(response);
@@ -73,7 +73,9 @@ describe('templates-api', () => {
 
       await getTemplates(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/api/v1/templates', { params: undefined });
+      expect(client.get).toHaveBeenCalledWith('/api/v1/templating/templates', {
+        params: undefined,
+      });
     });
   });
 
@@ -98,7 +100,7 @@ describe('templates-api', () => {
 
       const result = await getTemplate(client, basePath, 'Billing.Invoice', 'fr-BE');
 
-      expect(client.get).toHaveBeenCalledWith('/api/v1/templates/Billing.Invoice', {
+      expect(client.get).toHaveBeenCalledWith('/api/v1/templating/templates/Billing.Invoice', {
         params: { culture: 'fr-BE' },
       });
       expect(result).toEqual(detail);
@@ -114,7 +116,7 @@ describe('templates-api', () => {
 
       const result = await saveDraft(client, basePath, request);
 
-      expect(client.post).toHaveBeenCalledWith('/api/v1/templates', request);
+      expect(client.post).toHaveBeenCalledWith('/api/v1/templating/templates', request);
       expect(result).toEqual(detail);
     });
   });
@@ -128,7 +130,10 @@ describe('templates-api', () => {
 
       const result = await updateDraft(client, basePath, 'Billing.Invoice', request);
 
-      expect(client.put).toHaveBeenCalledWith('/api/v1/templates/Billing.Invoice', request);
+      expect(client.put).toHaveBeenCalledWith(
+        '/api/v1/templating/templates/Billing.Invoice',
+        request
+      );
       expect(result).toEqual(detail);
     });
   });
@@ -140,9 +145,12 @@ describe('templates-api', () => {
 
       await deleteDraft(client, basePath, 'Billing.Invoice', 'fr-BE');
 
-      expect(client.delete).toHaveBeenCalledWith('/api/v1/templates/Billing.Invoice/draft', {
-        params: { culture: 'fr-BE' },
-      });
+      expect(client.delete).toHaveBeenCalledWith(
+        '/api/v1/templating/templates/Billing.Invoice/draft',
+        {
+          params: { culture: 'fr-BE' },
+        }
+      );
     });
   });
 
@@ -153,9 +161,13 @@ describe('templates-api', () => {
 
       await publishTemplate(client, basePath, 'Billing.Invoice');
 
-      expect(client.post).toHaveBeenCalledWith('/api/v1/templates/Billing.Invoice/publish', null, {
-        params: { culture: undefined },
-      });
+      expect(client.post).toHaveBeenCalledWith(
+        '/api/v1/templating/templates/Billing.Invoice/publish',
+        null,
+        {
+          params: { culture: undefined },
+        }
+      );
     });
   });
 
@@ -167,7 +179,7 @@ describe('templates-api', () => {
       await unpublishTemplate(client, basePath, 'Billing.Invoice', 'fr-BE');
 
       expect(client.post).toHaveBeenCalledWith(
-        '/api/v1/templates/Billing.Invoice/unpublish',
+        '/api/v1/templating/templates/Billing.Invoice/unpublish',
         null,
         { params: { culture: 'fr-BE' } }
       );
@@ -187,9 +199,12 @@ describe('templates-api', () => {
 
       const result = await getLifecycleInfo(client, basePath, 'Billing.Invoice');
 
-      expect(client.get).toHaveBeenCalledWith('/api/v1/templates/Billing.Invoice/lifecycle', {
-        params: { culture: undefined },
-      });
+      expect(client.get).toHaveBeenCalledWith(
+        '/api/v1/templating/templates/Billing.Invoice/lifecycle',
+        {
+          params: { culture: undefined },
+        }
+      );
       expect(result).toEqual(info);
     });
   });
@@ -210,9 +225,12 @@ describe('templates-api', () => {
         pageSize: 20,
       });
 
-      expect(client.get).toHaveBeenCalledWith('/api/v1/templates/Billing.Invoice/history', {
-        params: { page: 1, pageSize: 20 },
-      });
+      expect(client.get).toHaveBeenCalledWith(
+        '/api/v1/templating/templates/Billing.Invoice/history',
+        {
+          params: { page: 1, pageSize: 20 },
+        }
+      );
       expect(result).toEqual(history);
     });
   });
@@ -235,7 +253,9 @@ describe('templates-api', () => {
 
       const result = await getRevision(client, basePath, 'Billing.Invoice', 'rev-1');
 
-      expect(client.get).toHaveBeenCalledWith('/api/v1/templates/Billing.Invoice/history/rev-1');
+      expect(client.get).toHaveBeenCalledWith(
+        '/api/v1/templating/templates/Billing.Invoice/history/rev-1'
+      );
       expect(result).toEqual(revision);
     });
   });
@@ -254,9 +274,12 @@ describe('templates-api', () => {
         data: { title: 'Test' },
       });
 
-      expect(client.post).toHaveBeenCalledWith('/api/v1/templates/Billing.Invoice/preview', {
-        data: { title: 'Test' },
-      });
+      expect(client.post).toHaveBeenCalledWith(
+        '/api/v1/templating/templates/Billing.Invoice/preview',
+        {
+          data: { title: 'Test' },
+        }
+      );
       expect(result).toEqual(response);
     });
   });
@@ -273,7 +296,9 @@ describe('templates-api', () => {
 
       const result = await getVariables(client, basePath, 'Billing.Invoice');
 
-      expect(client.get).toHaveBeenCalledWith('/api/v1/templates/Billing.Invoice/variables');
+      expect(client.get).toHaveBeenCalledWith(
+        '/api/v1/templating/templates/Billing.Invoice/variables'
+      );
       expect(result).toEqual(variables);
     });
   });
@@ -286,7 +311,7 @@ describe('templates-api', () => {
 
       const result = await getLayouts(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/api/v1/templates/layouts');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/templating/templates/layouts');
       expect(result).toEqual(layouts);
     });
 
@@ -315,7 +340,7 @@ describe('templates-api', () => {
 
       const result = await getCategories(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/api/v1/templates/categories');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/templating/templates/categories');
       expect(result).toEqual(categories);
     });
 
@@ -332,7 +357,7 @@ describe('templates-api', () => {
 
       const result = await createCategory(client, basePath, request);
 
-      expect(client.post).toHaveBeenCalledWith('/api/v1/templates/categories', request);
+      expect(client.post).toHaveBeenCalledWith('/api/v1/templating/templates/categories', request);
       expect(result).toEqual(category);
     });
 
@@ -349,7 +374,10 @@ describe('templates-api', () => {
 
       const result = await updateCategory(client, basePath, 'cat-1', request);
 
-      expect(client.put).toHaveBeenCalledWith('/api/v1/templates/categories/cat-1', request);
+      expect(client.put).toHaveBeenCalledWith(
+        '/api/v1/templating/templates/categories/cat-1',
+        request
+      );
       expect(result).toEqual(category);
     });
 
@@ -359,7 +387,7 @@ describe('templates-api', () => {
 
       await deleteCategory(client, basePath, 'cat-1');
 
-      expect(client.delete).toHaveBeenCalledWith('/api/v1/templates/categories/cat-1');
+      expect(client.delete).toHaveBeenCalledWith('/api/v1/templating/templates/categories/cat-1');
     });
   });
 });

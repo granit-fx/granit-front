@@ -57,7 +57,7 @@ describe('use-identity-provider-users', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/identity/provider/users', {
+      expect(client.get).toHaveBeenCalledWith('/api/v1/identity/provider/users', {
         params: undefined,
       });
       expect(result.current.data).toEqual([sampleUser]);
@@ -73,7 +73,7 @@ describe('use-identity-provider-users', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/identity/provider/users', { params });
+      expect(client.get).toHaveBeenCalledWith('/api/v1/identity/provider/users', { params });
     });
 
     it('uses custom providerBasePath', async () => {
@@ -101,7 +101,7 @@ describe('use-identity-provider-users', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/identity/provider/users/user-1');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/identity/provider/users/user-1');
       expect(result.current.data).toEqual(sampleUser);
     });
 
@@ -129,7 +129,7 @@ describe('use-identity-provider-users', () => {
       result.current.mutate({ username: 'jdoe', email: 'jdoe@example.com', enabled: true });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith('/identity/provider/users', {
+      expect(client.post).toHaveBeenCalledWith('/api/v1/identity/provider/users', {
         username: 'jdoe',
         email: 'jdoe@example.com',
         enabled: true,
@@ -152,7 +152,7 @@ describe('use-identity-provider-users', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.put).toHaveBeenCalledWith('/identity/provider/users/user-1', {
+      expect(client.put).toHaveBeenCalledWith('/api/v1/identity/provider/users/user-1', {
         email: 'new@example.com',
       });
     });
@@ -170,7 +170,7 @@ describe('use-identity-provider-users', () => {
       result.current.mutate({ userId: toEntityId<'User'>('user-1'), enabled: false });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.patch).toHaveBeenCalledWith('/identity/provider/users/user-1/enabled', {
+      expect(client.patch).toHaveBeenCalledWith('/api/v1/identity/provider/users/user-1/enabled', {
         enabled: false,
       });
     });

@@ -72,7 +72,7 @@ describe('useBackgroundJobs', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/v1/background-jobs', { params: undefined });
+    expect(client.get).toHaveBeenCalledWith('/api/v1/background-jobs/jobs', { params: undefined });
     expect(result.current.data).toEqual(mockPage);
   });
 
@@ -102,7 +102,7 @@ describe('useBackgroundJobs', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/v1/background-jobs', {
+    expect(client.get).toHaveBeenCalledWith('/api/v1/background-jobs/jobs', {
       params: { page: 2, pageSize: 10 },
     });
   });
@@ -134,7 +134,7 @@ describe('usePauseJob', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/background-jobs/InvoiceSync/pause');
+    expect(client.post).toHaveBeenCalledWith('/api/v1/background-jobs/jobs/InvoiceSync/pause');
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: backgroundJobKeys.all,
     });
@@ -185,7 +185,7 @@ describe('useResumeJob', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/background-jobs/InvoiceSync/resume');
+    expect(client.post).toHaveBeenCalledWith('/api/v1/background-jobs/jobs/InvoiceSync/resume');
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: backgroundJobKeys.all,
     });
@@ -236,7 +236,7 @@ describe('useTriggerJob', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/background-jobs/InvoiceSync/trigger');
+    expect(client.post).toHaveBeenCalledWith('/api/v1/background-jobs/jobs/InvoiceSync/trigger');
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: backgroundJobKeys.all,
     });

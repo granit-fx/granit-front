@@ -24,7 +24,7 @@ describe('useRolePermissions', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(result.current.data).toEqual(MOCK_GRANT);
-    expect(client.get).toHaveBeenCalledWith('/api/v1/auth/roles/admin');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/authorization/roles/admin');
   });
 
   it('should use custom basePath', async () => {
@@ -32,13 +32,13 @@ describe('useRolePermissions', () => {
     vi.mocked(client.get).mockResolvedValueOnce({ data: MOCK_GRANT });
 
     const { result } = renderHook(
-      () => useRolePermissions({ client, roleName: 'editor', basePath: '/api/v1/auth' }),
+      () => useRolePermissions({ client, roleName: 'editor', basePath: '/api/v1/authorization' }),
       { wrapper: createQueryWrapper() }
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/v1/auth/roles/editor');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/authorization/roles/editor');
   });
 
   it('should encode special characters in role name', async () => {
@@ -53,7 +53,7 @@ describe('useRolePermissions', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/v1/auth/roles/r%C3%B4le%20sp%C3%A9cial');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/authorization/roles/r%C3%B4le%20sp%C3%A9cial');
   });
 
   it('should not fetch when disabled', () => {

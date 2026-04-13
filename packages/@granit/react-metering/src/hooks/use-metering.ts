@@ -22,7 +22,7 @@ import type {
 } from '@granit/metering';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
-const DEFAULT_BASE_PATH = '/api/granit/metering';
+const DEFAULT_BASE_PATH = '/api/v1/metering';
 
 // ---------------------------------------------------------------------------
 // Queries

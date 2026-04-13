@@ -67,7 +67,7 @@ describe('use-identity-sessions', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/identity/provider/users/user-1/sessions');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/identity/provider/users/user-1/sessions');
       expect(result.current.data).toEqual([sampleSession]);
     });
 
@@ -93,7 +93,7 @@ describe('use-identity-sessions', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/identity/provider/users/user-1/devices');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/identity/provider/users/user-1/devices');
       expect(result.current.data).toEqual([sampleDevice]);
     });
 
@@ -124,7 +124,7 @@ describe('use-identity-sessions', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.delete).toHaveBeenCalledWith(
-        '/identity/provider/users/user-1/sessions/session-1'
+        '/api/v1/identity/provider/users/user-1/sessions/session-1'
       );
     });
   });
@@ -141,7 +141,7 @@ describe('use-identity-sessions', () => {
       result.current.mutate(toEntityId<'User'>('user-1'));
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.delete).toHaveBeenCalledWith('/identity/provider/users/user-1/sessions');
+      expect(client.delete).toHaveBeenCalledWith('/api/v1/identity/provider/users/user-1/sessions');
     });
 
     it('exposes error state on failure', async () => {

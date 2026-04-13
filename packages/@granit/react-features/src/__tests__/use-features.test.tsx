@@ -79,7 +79,7 @@ describe('use-features', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/features/definitions');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/features/definitions');
       expect(result.current.data).toEqual([sampleGroup]);
     });
 
@@ -106,7 +106,7 @@ describe('use-features', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/features/values');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/features/values');
       expect(result.current.data).toEqual([sampleValue]);
     });
   });
@@ -121,7 +121,7 @@ describe('use-features', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/features/values/ui.dark-mode');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/features/values/ui.dark-mode');
       expect(result.current.data).toEqual(sampleValue);
     });
 
@@ -149,7 +149,7 @@ describe('use-features', () => {
       result.current.mutate({ name: 'ui.dark-mode', request: { value: 'true' } });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.put).toHaveBeenCalledWith('/api/granit/features/overrides/ui.dark-mode', {
+      expect(client.put).toHaveBeenCalledWith('/api/v1/features/overrides/ui.dark-mode', {
         value: 'true',
       });
     });
@@ -181,7 +181,7 @@ describe('use-features', () => {
       result.current.mutate('ui.dark-mode');
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.delete).toHaveBeenCalledWith('/api/granit/features/overrides/ui.dark-mode');
+      expect(client.delete).toHaveBeenCalledWith('/api/v1/features/overrides/ui.dark-mode');
     });
 
     it('exposes error state on failure', async () => {

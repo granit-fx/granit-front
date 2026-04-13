@@ -38,7 +38,7 @@ describe('AccountProvider', () => {
       wrapper: createWrapper(config),
     });
 
-    expect(result.current.basePath).toBe('/api/account');
+    expect(result.current.basePath).toBe('/account');
   });
 
   it('should apply default queryKeyPrefix when not provided', () => {

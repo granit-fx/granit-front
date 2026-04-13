@@ -13,7 +13,7 @@ import type { AxiosInstance } from 'axios';
 
 const mockConfig: InvoicingConfig = {
   client: {} as AxiosInstance,
-  basePath: '/api/granit/invoicing',
+  basePath: '/api/v1/invoicing',
 };
 
 function createWrapper(config: InvoicingConfig) {
@@ -29,7 +29,7 @@ describe('InvoicingProvider', () => {
     });
 
     expect(result.current.client).toBe(mockConfig.client);
-    expect(result.current.basePath).toBe('/api/granit/invoicing');
+    expect(result.current.basePath).toBe('/api/v1/invoicing');
   });
 
   it('should throw when used outside provider', () => {

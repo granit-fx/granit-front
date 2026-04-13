@@ -24,7 +24,7 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
  */
 export function useUserSessions(userId: UserId): UseQueryResult<readonly IdentitySession[]> {
   const config = useIdentityConfig();
-  const basePath = config.providerBasePath ?? '/identity/provider';
+  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'users', userId, 'sessions'),
@@ -47,7 +47,7 @@ export function useUserDeviceActivity(
   userId: UserId
 ): UseQueryResult<readonly IdentityDeviceActivity[]> {
   const config = useIdentityConfig();
-  const basePath = config.providerBasePath ?? '/identity/provider';
+  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'users', userId, 'devices'),
@@ -76,7 +76,7 @@ export type TerminateSessionVariables = {
 export function useTerminateSession(): UseMutationResult<void, Error, TerminateSessionVariables> {
   const config = useIdentityConfig();
   const queryClient = useQueryClient();
-  const basePath = config.providerBasePath ?? '/identity/provider';
+  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
 
   return useMutation({
     mutationFn: ({ userId, sessionId }: TerminateSessionVariables) =>
@@ -102,7 +102,7 @@ export function useTerminateSession(): UseMutationResult<void, Error, TerminateS
 export function useTerminateAllSessions(): UseMutationResult<void, Error, UserId> {
   const config = useIdentityConfig();
   const queryClient = useQueryClient();
-  const basePath = config.providerBasePath ?? '/identity/provider';
+  const basePath = config.providerBasePath ?? '/api/v1/identity/provider';
 
   return useMutation({
     mutationFn: (userId: UserId) => terminateAllSessions(config.client, basePath, userId),

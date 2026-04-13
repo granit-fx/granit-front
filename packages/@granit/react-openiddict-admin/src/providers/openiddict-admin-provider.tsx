@@ -14,7 +14,7 @@ export interface OpenIddictAdminProviderProps {
   readonly children: ReactNode;
 }
 
-const DEFAULT_BASE_PATH = '/api/admin';
+const DEFAULT_BASE_PATH = '/admin';
 const DEFAULT_KEY_PREFIX = ['openiddict-admin'] as const;
 
 const AdminContext = createContext<OpenIddictAdminConfig | null>(null);

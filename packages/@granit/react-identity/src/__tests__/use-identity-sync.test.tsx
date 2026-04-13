@@ -56,7 +56,7 @@ describe('useIdentitySync', () => {
     result.current.sync.mutate([toEntityId<'User'>('user-1'), toEntityId<'User'>('user-2')]);
 
     await waitFor(() => expect(result.current.sync.isSuccess).toBe(true));
-    expect(client.post).toHaveBeenCalledWith('/identity/users/sync', {
+    expect(client.post).toHaveBeenCalledWith('/api/v1/identity/users/sync', {
       userIds: [toEntityId<'User'>('user-1'), toEntityId<'User'>('user-2')],
     });
   });
@@ -73,7 +73,7 @@ describe('useIdentitySync', () => {
 
     await waitFor(() => expect(result.current.syncAll.isSuccess).toBe(true));
     expect(result.current.syncAll.data).toEqual(mockSyncAllResult);
-    expect(client.post).toHaveBeenCalledWith('/identity/users/sync-all');
+    expect(client.post).toHaveBeenCalledWith('/api/v1/identity/users/sync-all');
   });
 
   it('syncStale mutation triggers stale sync', async () => {
@@ -88,7 +88,7 @@ describe('useIdentitySync', () => {
 
     await waitFor(() => expect(result.current.syncStale.isSuccess).toBe(true));
     expect(result.current.syncStale.data).toEqual(mockSyncStaleResult);
-    expect(client.post).toHaveBeenCalledWith('/identity/users/sync-stale');
+    expect(client.post).toHaveBeenCalledWith('/api/v1/identity/users/sync-stale');
   });
 
   it('uses custom basePath', async () => {

@@ -11,9 +11,9 @@ import {
  * Create MSW handlers for local authentication endpoints (login, 2FA,
  * passkeys, password reset, registration, email confirmation).
  *
- * @param baseUrl - API base path (default: `/api/account`)
+ * @param baseUrl - API base path (default: `/account`)
  */
-export function createLocalAuthHandlers(baseUrl = '/api/account') {
+export function createLocalAuthHandlers(baseUrl = '/account') {
   return [
     // POST /login
     http.post(`${baseUrl}/login`, async ({ request }) => {

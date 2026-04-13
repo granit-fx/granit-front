@@ -72,7 +72,7 @@ describe('usePermissions', () => {
     expect(result.current.error).toBeNull();
   });
 
-  it('should call GET /api/v1/auth/me with default basePath', async () => {
+  it('should call GET /api/v1/authorization/permissions with default basePath', async () => {
     const client = createMockClient();
     const { Wrapper } = createWrapper();
 
@@ -80,7 +80,7 @@ describe('usePermissions', () => {
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
-    expect(client.get).toHaveBeenCalledWith('/api/v1/auth/me');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/authorization/permissions');
   });
 
   it('should use custom basePath when provided', async () => {
@@ -93,7 +93,7 @@ describe('usePermissions', () => {
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
-    expect(client.get).toHaveBeenCalledWith('/api/v1/authorization/me');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/authorization/permissions');
   });
 
   it('hasPermission should return true for a granted permission', async () => {

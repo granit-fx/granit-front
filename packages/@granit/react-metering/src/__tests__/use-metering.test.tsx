@@ -88,7 +88,7 @@ describe('use-metering', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/meters');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/metering/meters');
       expect(result.current.data).toEqual([sampleMeter]);
     });
 
@@ -115,7 +115,7 @@ describe('use-metering', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/meters/meter-1');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/metering/meters/meter-1');
     });
 
     it('is disabled when id is empty', () => {
@@ -140,7 +140,7 @@ describe('use-metering', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/usage');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/metering/usage');
       expect(result.current.data).toEqual([sampleUsage]);
     });
   });
@@ -155,7 +155,7 @@ describe('use-metering', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/quota/meter-1');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/metering/quota/meter-1');
       expect(result.current.data).toEqual(sampleQuota);
     });
 
@@ -188,7 +188,7 @@ describe('use-metering', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith('/api/granit/metering/meters', {
+      expect(client.post).toHaveBeenCalledWith('/api/v1/metering/meters', {
         name: 'API Calls',
         unit: 'calls',
         aggregationType: 'Sum',
@@ -212,7 +212,7 @@ describe('use-metering', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.put).toHaveBeenCalledWith('/api/granit/metering/meters/meter-1', {
+      expect(client.put).toHaveBeenCalledWith('/api/v1/metering/meters/meter-1', {
         name: 'Updated',
         unit: 'calls',
         description: null,
@@ -232,7 +232,7 @@ describe('use-metering', () => {
       result.current.mutate('meter-1');
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith('/api/granit/metering/meters/meter-1/deactivate');
+      expect(client.post).toHaveBeenCalledWith('/api/v1/metering/meters/meter-1/deactivate');
     });
   });
 
@@ -260,7 +260,7 @@ describe('use-metering', () => {
       result.current.mutate(request);
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith('/api/granit/metering/events', request);
+      expect(client.post).toHaveBeenCalledWith('/api/v1/metering/events', request);
     });
   });
 

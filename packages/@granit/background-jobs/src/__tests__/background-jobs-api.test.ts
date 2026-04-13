@@ -7,7 +7,7 @@ import { fetchBackgroundJob, fetchBackgroundJobs } from '../api/background-jobs-
 import type { BackgroundJobStatus } from '../types/index.js';
 import type { PagedResult } from '@granit/query-engine';
 
-const BASE = '/api/v1/background-jobs';
+const BASE = '/api/v1/background-jobs/jobs';
 
 const mockJob: BackgroundJobStatus = {
   jobName: 'SendEmails',

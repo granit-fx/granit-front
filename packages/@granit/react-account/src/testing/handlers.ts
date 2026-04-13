@@ -14,9 +14,9 @@ import {
  * Create stateful MSW handlers for account self-service endpoints.
  * Handlers mutate in-memory state — mutations are reflected by subsequent GETs.
  *
- * @param baseUrl - API base path (default: `/api/account`)
+ * @param baseUrl - API base path (default: `/account`)
  */
-export function createAccountHandlers(baseUrl = '/api/account') {
+export function createAccountHandlers(baseUrl = '/account') {
   return [
     // ── Settings (anonymous) ─────────────────────────────────────────────────
     http.get(`${baseUrl}/config`, () => HttpResponse.json(mockAccountSettings)),

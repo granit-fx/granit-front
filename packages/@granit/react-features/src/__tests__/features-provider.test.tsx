@@ -13,7 +13,7 @@ import type { AxiosInstance } from 'axios';
 
 const mockConfig: FeaturesConfig = {
   client: {} as AxiosInstance,
-  basePath: '/api/granit/features',
+  basePath: '/api/v1/features',
 };
 
 function createWrapper(config: FeaturesConfig) {
@@ -29,7 +29,7 @@ describe('FeaturesProvider', () => {
     });
 
     expect(result.current.client).toBe(mockConfig.client);
-    expect(result.current.basePath).toBe('/api/granit/features');
+    expect(result.current.basePath).toBe('/api/v1/features');
   });
 
   it('should throw when used outside provider', () => {

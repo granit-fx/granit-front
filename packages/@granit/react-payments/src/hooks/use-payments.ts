@@ -26,7 +26,7 @@ import type {
 } from '@granit/payments';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
-const DEFAULT_BASE_PATH = '/api/granit/payments';
+const DEFAULT_BASE_PATH = '/api/v1/payments';
 
 /**
  * List all payment transactions.

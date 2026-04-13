@@ -66,7 +66,7 @@ describe('useIdentityUsers', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual(mockPage);
-    expect(client.get).toHaveBeenCalledWith('/identity/users/', { params: undefined });
+    expect(client.get).toHaveBeenCalledWith('/api/v1/identity/users/', { params: undefined });
   });
 
   it('passes search params to the API', async () => {
@@ -79,7 +79,7 @@ describe('useIdentityUsers', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/identity/users/', { params });
+    expect(client.get).toHaveBeenCalledWith('/api/v1/identity/users/', { params });
   });
 
   it('uses custom basePath', async () => {

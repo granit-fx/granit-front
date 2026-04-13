@@ -10,7 +10,7 @@ import {
 
 import type { AdminOidcApplication, AdminOidcApplicationSecretResponse } from '../types/index.js';
 
-const BASE = '/api/admin';
+const BASE = '/admin';
 
 const mockApplication: AdminOidcApplication = {
   clientId: 'my-spa',

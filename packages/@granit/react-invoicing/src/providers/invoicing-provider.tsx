@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 /** Configuration for the invoicing provider. */
 export interface InvoicingConfig {
   readonly client: AxiosInstance;
-  /** Base path for invoicing endpoints (default: `/api/granit/invoicing`). */
+  /** Base path for invoicing endpoints (default: `/api/v1/invoicing`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
 }

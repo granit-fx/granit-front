@@ -9,7 +9,7 @@ import {
 
 import type { AdminOidcAuthorization } from '../types/index.js';
 
-const BASE = '/api/admin';
+const BASE = '/admin';
 
 const mockAuthorization: AdminOidcAuthorization = {
   id: 'auth-001',

@@ -210,7 +210,7 @@ export async function getStats(
 /**
  * Query webhook delivery attempts.
  *
- * `GET {basePath}/deliveries/query`
+ * `GET {basePath}/deliveries`
  *
  * @param basePath - The webhooks root path (e.g. `/api/v1/webhooks`), **not** the subscriptions path.
  */
@@ -219,10 +219,9 @@ export async function getDeliveries(
   basePath: string,
   params?: { subscriptionId?: string }
 ): Promise<WebhookDeliveryAttemptResponse[]> {
-  const { data } = await client.get<WebhookDeliveryAttemptResponse[]>(
-    `${basePath}/deliveries/query`,
-    { params }
-  );
+  const { data } = await client.get<WebhookDeliveryAttemptResponse[]>(`${basePath}/deliveries`, {
+    params,
+  });
   return data;
 }
 

@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 /** Configuration for the audit log provider. */
 export interface AuditLogConfig {
   readonly client: AxiosInstance;
-  /** Base path prefix (default: `/audit-log`). */
+  /** Base path prefix (default: `/api/v1/auditing/audit-entries`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
 }
@@ -18,7 +18,7 @@ export interface AuditLogProviderProps {
 
 const AuditLogConfigContext = createContext<AuditLogConfig | null>(null);
 
-const DEFAULT_BASE_PATH = '/audit-log';
+const DEFAULT_BASE_PATH = '/api/v1/auditing/audit-entries';
 const DEFAULT_QUERY_KEY_PREFIX = ['audit-log'] as const;
 
 /** Provides audit log configuration to child components and hooks. */

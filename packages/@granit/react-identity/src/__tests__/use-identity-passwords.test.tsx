@@ -46,7 +46,7 @@ describe('use-identity-passwords', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.get).toHaveBeenCalledWith(
-        '/identity/provider/users/user-1/password/changed-at'
+        '/api/v1/identity/provider/users/user-1/password/changed-at'
       );
       expect(result.current.data).toEqual(response);
     });
@@ -88,7 +88,7 @@ describe('use-identity-passwords', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith(
-        '/identity/provider/users/user-1/password/reset-email'
+        '/api/v1/identity/provider/users/user-1/password/reset-email'
       );
     });
 
@@ -120,7 +120,7 @@ describe('use-identity-passwords', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith(
-        '/identity/provider/users/user-1/password/temporary',
+        '/api/v1/identity/provider/users/user-1/password/temporary',
         { password: 'temp123!' }
       );
     });

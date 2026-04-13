@@ -122,7 +122,7 @@ describe('use-payments', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/payments/transactions');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/payments/transactions');
       expect(result.current.data).toEqual([sampleTransaction]);
     });
 
@@ -149,7 +149,7 @@ describe('use-payments', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/payments/transactions/txn-1');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/payments/transactions/txn-1');
       expect(result.current.data).toEqual(sampleTransaction);
     });
 
@@ -184,7 +184,7 @@ describe('use-payments', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith('/api/granit/payments/charge', expect.any(Object));
+      expect(client.post).toHaveBeenCalledWith('/api/v1/payments/charge', expect.any(Object));
     });
 
     it('exposes error state on failure', async () => {
@@ -226,7 +226,7 @@ describe('use-payments', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith('/api/granit/payments/refund', expect.any(Object));
+      expect(client.post).toHaveBeenCalledWith('/api/v1/payments/refund', expect.any(Object));
     });
   });
 
@@ -251,7 +251,7 @@ describe('use-payments', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(result.current.data?.url).toBe('https://checkout.stripe.com/session/abc123');
-      expect(client.post).toHaveBeenCalledWith('/api/granit/payments/checkout', expect.any(Object));
+      expect(client.post).toHaveBeenCalledWith('/api/v1/payments/checkout', expect.any(Object));
     });
   });
 
@@ -265,7 +265,7 @@ describe('use-payments', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/payments/methods');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/payments/methods');
       expect(result.current.data).toEqual([sampleMethod]);
     });
   });
@@ -280,7 +280,7 @@ describe('use-payments', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/granit/payments/methods/available');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/payments/methods/available');
       expect(result.current.data).toEqual([sampleAvailableMethod]);
     });
   });
@@ -301,7 +301,7 @@ describe('use-payments', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith('/api/granit/payments/methods', expect.any(Object));
+      expect(client.post).toHaveBeenCalledWith('/api/v1/payments/methods', expect.any(Object));
     });
   });
 
@@ -317,7 +317,7 @@ describe('use-payments', () => {
       result.current.mutate('pm-1');
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.delete).toHaveBeenCalledWith('/api/granit/payments/methods/pm-1');
+      expect(client.delete).toHaveBeenCalledWith('/api/v1/payments/methods/pm-1');
     });
 
     it('exposes error state on failure', async () => {

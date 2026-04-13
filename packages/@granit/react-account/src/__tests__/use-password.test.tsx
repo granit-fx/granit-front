@@ -5,11 +5,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import {
-  useChangePassword,
-  useForgotPassword,
-  useResetPassword,
-} from '../hooks/use-password.js';
+import { useChangePassword, useForgotPassword, useResetPassword } from '../hooks/use-password.js';
 import { AccountProvider } from '../providers/account-provider.js';
 
 import type { AccountConfig } from '../providers/account-provider.js';
@@ -60,7 +56,7 @@ describe('useChangePassword', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(changePassword).toHaveBeenCalledWith(client, '/api/account', {
+    expect(changePassword).toHaveBeenCalledWith(client, '/account', {
       currentPassword: 'OldP@ss1!',
       newPassword: 'NewP@ss1!',
     });
@@ -97,7 +93,7 @@ describe('useForgotPassword', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(forgotPassword).toHaveBeenCalledWith(client, '/api/account', {
+    expect(forgotPassword).toHaveBeenCalledWith(client, '/account', {
       email: 'user@example.com',
     });
   });
@@ -134,7 +130,7 @@ describe('useResetPassword', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(resetPassword).toHaveBeenCalledWith(client, '/api/account', {
+    expect(resetPassword).toHaveBeenCalledWith(client, '/account', {
       userId: 'user-1',
       token: 'reset-token-abc',
       newPassword: 'NewP@ss1!',

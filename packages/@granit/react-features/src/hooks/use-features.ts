@@ -16,7 +16,7 @@ import type {
 } from '@granit/features';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
-const DEFAULT_BASE_PATH = '/api/granit/features';
+const DEFAULT_BASE_PATH = '/api/v1/features';
 
 /**
  * Fetch all feature definitions grouped by category.

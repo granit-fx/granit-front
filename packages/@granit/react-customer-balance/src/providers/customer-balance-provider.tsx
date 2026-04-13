@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 /** Configuration for the customer-balance provider. */
 export interface CustomerBalanceConfig {
   readonly client: AxiosInstance;
-  /** Base path for customer-balance endpoints (default: `/api/granit/customer-balance`). */
+  /** Base path for customer-balance endpoints (default: `/api/v1/customer-balance`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
 }

@@ -28,12 +28,12 @@ const statusPresetMap: Record<string, ScheduledActionStatus> = {
  * Create stateful MSW handlers for scheduled action endpoints.
  * Cancel and reschedule calls mutate the in-memory `mockScheduledActions` array.
  *
- * @param baseUrl - API base path (default: `/api/granit/scheduling`)
+ * @param baseUrl - API base path (default: `/api/v1/scheduling/scheduled-actions`)
  */
-export function createSchedulingHandlers(baseUrl = '/api/granit/scheduling') {
+export function createSchedulingHandlers(baseUrl = '/api/v1/scheduling/scheduled-actions') {
   return [
     // GET list — supports @granit/query-engine serialized params
-    http.get(`${baseUrl}/query`, ({ request }) => {
+    http.get(baseUrl, ({ request }) => {
       const url = new URL(request.url);
       const search = url.searchParams.get('search') ?? '';
 
