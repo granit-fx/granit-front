@@ -1,4 +1,3 @@
-import { DEFAULT_BASE_PATH } from '../constants.js';
 import {
   applyStringFilter,
   groupBy as groupByField,
@@ -8,6 +7,8 @@ import {
   sortItems,
 } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
+
+import { DEFAULT_BASE_PATH } from '../constants.js';
 
 import { mockBlobs, S } from './data.js';
 

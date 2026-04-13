@@ -1,7 +1,8 @@
-import { DEFAULT_BASE_PATH } from '../constants.js';
 import { accepted, noContent, notFound, pagedResponse } from '@granit/testing/msw';
 import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
+
+import { DEFAULT_BASE_PATH } from '../constants.js';
 
 import { mockBackgroundJobs } from './data.js';
 

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import { permissionKeys } from './use-permissions.js';
 
 import type { PermissionGrantDto, UseRolePermissionsOptions } from '@granit/authorization';

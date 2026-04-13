@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import { mockDiagnosticsHealth } from './data.js';
 
 /**

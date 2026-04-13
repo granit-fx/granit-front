@@ -3,6 +3,7 @@ import { toEntityId } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import { sampleMeters, sampleQuota, sampleUsage } from './data.js';
 
 import type { MeterDefinitionResponse } from '@granit/metering';

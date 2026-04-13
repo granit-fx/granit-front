@@ -2,6 +2,7 @@ import { noContent, notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import { mockTenants } from './data.js';
 
 import type { AdminTenant } from '@granit/multi-tenancy';

@@ -2,6 +2,7 @@ import { noContent, notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import { mockFeatureGroups, mockFeatureValues } from './data.js';
 
 import type { FeatureValueResponse } from '@granit/features';

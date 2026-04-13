@@ -1,4 +1,3 @@
-import { DEFAULT_WEBHOOKS_BASE_PATH } from '../constants.js';
 import {
   applyFilter,
   groupBy as groupByField,
@@ -10,6 +9,8 @@ import {
 import { toEntityId, toISODateString } from '@granit/types';
 import { WebhookSubscriptionStatus } from '@granit/webhooks';
 import { http, HttpResponse } from 'msw';
+
+import { DEFAULT_WEBHOOKS_BASE_PATH } from '../constants.js';
 
 import {
   mockWebhookConfig,

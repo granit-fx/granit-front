@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import { permissionKeys } from './use-permissions.js';
 
 import type { PermissionGrantParams, UsePermissionGrantOptions } from '@granit/authorization';

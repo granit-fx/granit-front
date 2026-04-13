@@ -1,9 +1,9 @@
 import { createContext, useContext, useMemo } from 'react';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
-
-import { DEFAULT_BASE_PATH } from '../constants.js';
 
 /** Configuration for the subscriptions provider. */
 export interface SubscriptionsConfig {
@@ -29,7 +29,7 @@ const SubscriptionsConfigContext = createContext<ResolvedSubscriptionsConfig | n
 export function SubscriptionsProvider({ config, children }: Readonly<SubscriptionsProviderProps>) {
   const value = useMemo<ResolvedSubscriptionsConfig>(
     () => ({ ...config, basePath: config.basePath ?? DEFAULT_BASE_PATH }),
-    [config],
+    [config]
   );
   return <SubscriptionsConfigContext value={value}>{children}</SubscriptionsConfigContext>;
 }

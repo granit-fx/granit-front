@@ -2,6 +2,7 @@ import { notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import {
   mockAgreementHistory,
   mockAgreementStatuses,
