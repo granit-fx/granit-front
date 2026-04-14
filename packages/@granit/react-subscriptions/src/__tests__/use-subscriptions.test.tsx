@@ -18,6 +18,7 @@ import {
 import { SubscriptionsProvider } from '../providers/subscriptions-provider.js';
 
 import type { SubscriptionsConfig } from '../providers/subscriptions-provider.js';
+import type { PagedResult } from '@granit/query-engine';
 import type { BulkMigratePriceResponse, SubscriptionResponse } from '@granit/subscriptions';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
@@ -56,9 +57,13 @@ describe('use-subscriptions', () => {
   });
 
   describe('useSubscriptions', () => {
-    it('fetches all subscriptions', async () => {
+    it('fetches subscriptions as PagedResult', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [sampleSubscription] });
+      const pagedResponse: PagedResult<SubscriptionResponse> = {
+        items: [sampleSubscription],
+        totalCount: 1,
+      };
+      vi.mocked(client.get).mockResolvedValue({ data: pagedResponse });
 
       const { result } = renderHook(() => useSubscriptions(), {
         wrapper: createWrapper(client),
@@ -66,7 +71,8 @@ describe('use-subscriptions', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.get).toHaveBeenCalledWith('/api/v1/subscriptions/subscriptions');
-      expect(result.current.data).toEqual([sampleSubscription]);
+      expect(result.current.data?.items).toEqual([sampleSubscription]);
+      expect(result.current.data?.totalCount).toBe(1);
     });
   });
 
@@ -216,7 +222,11 @@ describe('use-subscriptions', () => {
   describe('custom basePath', () => {
     it('uses custom basePath when provided', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [sampleSubscription] });
+      const pagedResponse: PagedResult<SubscriptionResponse> = {
+        items: [sampleSubscription],
+        totalCount: 1,
+      };
+      vi.mocked(client.get).mockResolvedValue({ data: pagedResponse });
 
       const { result } = renderHook(() => useSubscriptions(), {
         wrapper: createWrapper(client, '/custom/path'),

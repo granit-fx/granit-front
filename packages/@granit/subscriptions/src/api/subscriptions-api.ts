@@ -1,3 +1,5 @@
+import { fetchPage } from '@granit/query-engine';
+
 import type {
   BulkMigratePriceRequest,
   BulkMigratePriceResponse,
@@ -14,6 +16,7 @@ import type {
   SubscriptionCreateRequest,
   SubscriptionResponse,
 } from '../types.js';
+import type { PagedResult, QueryRequest } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
 
 // ---------------------------------------------------------------------------
@@ -144,16 +147,19 @@ export async function getPlanPriceHistory(
 // ---------------------------------------------------------------------------
 
 /**
- * List all subscriptions.
+ * List subscriptions (paginated).
  *
  * `GET {basePath}/subscriptions`
+ *
+ * Delegates to {@link fetchPage} from `@granit/query-engine` so query
+ * parameters (page, pageSize, filters, sort, …) are serialized consistently.
  */
 export async function listSubscriptions(
   client: AxiosInstance,
-  basePath: string
-): Promise<readonly SubscriptionResponse[]> {
-  const response = await client.get<readonly SubscriptionResponse[]>(`${basePath}/subscriptions`);
-  return response.data;
+  basePath: string,
+  params?: QueryRequest
+): Promise<PagedResult<SubscriptionResponse>> {
+  return fetchPage<SubscriptionResponse>(client, `${basePath}/subscriptions`, params ?? {});
 }
 
 /**

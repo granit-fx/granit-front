@@ -15,6 +15,7 @@
     "build": "tsup"
   },
   "peerDependencies": {
+    "@granit/query-engine": "workspace:*",
     "@granit/subscriptions": "workspace:*",
     "@granit/types": "workspace:*",
     "@tanstack/react-query": "^5.0.0",

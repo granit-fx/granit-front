@@ -30,6 +30,7 @@ import type {
   SeatResponse,
   SubscriptionResponse,
 } from '../types.js';
+import type { PagedResult } from '@granit/query-engine';
 
 const basePath = '/api/granit/subscriptions';
 
@@ -252,14 +253,34 @@ describe('subscriptions-api — Plans', () => {
 
 describe('subscriptions-api — Subscriptions', () => {
   describe('listSubscriptions', () => {
-    it('should GET {basePath}/subscriptions', async () => {
+    it('should GET {basePath}/subscriptions and return PagedResult', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleSubscription]));
+      const pagedResponse: PagedResult<SubscriptionResponse> = {
+        items: [sampleSubscription],
+        totalCount: 1,
+      };
+      vi.mocked(client.get).mockResolvedValue(axiosResponse(pagedResponse));
 
       const result = await listSubscriptions(client, basePath);
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/subscriptions`);
-      expect(result).toEqual([sampleSubscription]);
+      expect(result.items).toEqual([sampleSubscription]);
+      expect(result.totalCount).toBe(1);
+    });
+
+    it('should forward query params', async () => {
+      const client = createMockClient();
+      const pagedResponse: PagedResult<SubscriptionResponse> = {
+        items: [sampleSubscription],
+        totalCount: 1,
+      };
+      vi.mocked(client.get).mockResolvedValue(axiosResponse(pagedResponse));
+
+      await listSubscriptions(client, basePath, { page: 2, pageSize: 10 });
+
+      expect(client.get).toHaveBeenCalledWith(
+        expect.stringContaining(`${basePath}/subscriptions?`)
+      );
     });
   });
 

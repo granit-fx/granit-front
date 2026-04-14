@@ -1425,6 +1425,9 @@ importers:
 
   packages/@granit/react-subscriptions:
     dependencies:
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
       '@granit/subscriptions':
         specifier: workspace:*
         version: link:../subscriptions
@@ -1729,6 +1732,9 @@ importers:
 
   packages/@granit/subscriptions:
     dependencies:
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
       '@granit/types':
         specifier: workspace:*
         version: link:../types

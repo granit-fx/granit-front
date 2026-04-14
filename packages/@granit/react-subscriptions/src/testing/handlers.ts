@@ -120,17 +120,26 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // Subscriptions
     // ---------------------------------------------------------------------------
 
-    http.get(baseUrl, () => {
-      return HttpResponse.json(mockSubscriptions);
+    http.get(`${baseUrl}/subscriptions`, () => {
+      return HttpResponse.json({
+        items: mockSubscriptions,
+        totalCount: mockSubscriptions.length,
+      });
     }),
 
-    http.get(`${baseUrl}/:subscriptionId`, ({ params }) => {
+    http.get(`${baseUrl}/subscriptions/active`, ({ params: _params }) => {
+      const active = mockSubscriptions.find((s) => s.status === 'Active');
+      if (!active) return notFound();
+      return HttpResponse.json(active);
+    }),
+
+    http.get(`${baseUrl}/subscriptions/:subscriptionId`, ({ params }) => {
       const sub = mockSubscriptions.find((s) => s.id === params.subscriptionId);
       if (!sub) return notFound();
       return HttpResponse.json(sub);
     }),
 
-    http.post(baseUrl, async ({ request }) => {
+    http.post(`${baseUrl}/subscriptions`, async ({ request }) => {
       const body = (await request.json()) as {
         planId: string;
         currency: string;
@@ -160,7 +169,7 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return HttpResponse.json(newSub, { status: 201 });
     }),
 
-    http.post(`${baseUrl}/:subscriptionId/cancel`, ({ params }) => {
+    http.post(`${baseUrl}/subscriptions/:subscriptionId/cancel`, ({ params }) => {
       const sub = mockSubscriptions.find((s) => s.id === params.subscriptionId);
       if (!sub) return notFound();
       sub.status = 'Canceled';
@@ -168,19 +177,22 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return HttpResponse.json(sub);
     }),
 
-    http.post(`${baseUrl}/:subscriptionId/change-plan`, async ({ params, request }) => {
-      const body = (await request.json()) as { newPlanId: string };
-      const sub = mockSubscriptions.find((s) => s.id === params.subscriptionId);
-      if (!sub) return notFound();
-      sub.planId = toEntityId<'Plan'>(body.newPlanId);
-      return HttpResponse.json(sub);
-    }),
+    http.post(
+      `${baseUrl}/subscriptions/:subscriptionId/change-plan`,
+      async ({ params, request }) => {
+        const body = (await request.json()) as { newPlanId: string };
+        const sub = mockSubscriptions.find((s) => s.id === params.subscriptionId);
+        if (!sub) return notFound();
+        sub.planId = toEntityId<'Plan'>(body.newPlanId);
+        return HttpResponse.json(sub);
+      }
+    ),
 
-    http.post(`${baseUrl}/:subscriptionId/migrate-price`, () => {
+    http.post(`${baseUrl}/subscriptions/:subscriptionId/migrate-price`, () => {
       return noContent();
     }),
 
-    http.post(`${baseUrl}/bulk-migrate-price`, () => {
+    http.post(`${baseUrl}/subscriptions/bulk-migrate-price`, () => {
       return HttpResponse.json({ migratedCount: 3 });
     }),
 
@@ -188,12 +200,12 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // Seats
     // ---------------------------------------------------------------------------
 
-    http.get(`${baseUrl}/:subscriptionId/seats`, ({ params }) => {
+    http.get(`${baseUrl}/subscriptions/:subscriptionId/seats`, ({ params }) => {
       const seats = mockSeats[params.subscriptionId as string] ?? [];
       return HttpResponse.json(seats);
     }),
 
-    http.post(`${baseUrl}/:subscriptionId/seats`, async ({ params, request }) => {
+    http.post(`${baseUrl}/subscriptions/:subscriptionId/seats`, async ({ params, request }) => {
       const body = (await request.json()) as { userId: string };
       const subscriptionId = params.subscriptionId as string;
       mockSeats[subscriptionId] ??= [];
@@ -208,7 +220,7 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return HttpResponse.json(newSeat, { status: 201 });
     }),
 
-    http.delete(`${baseUrl}/:subscriptionId/seats/:seatId`, ({ params }) => {
+    http.delete(`${baseUrl}/subscriptions/:subscriptionId/seats/:seatId`, ({ params }) => {
       const subscriptionId = params.subscriptionId as string;
       const seatId = params.seatId as string;
       if (mockSeats[subscriptionId]) {

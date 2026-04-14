@@ -8,13 +8,14 @@ import {
   listSubscriptions,
   migrateSubscriptionPrice,
 } from '@granit/subscriptions';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import {
   buildSubscriptionsQueryKey,
   useSubscriptionsConfig,
 } from '../providers/subscriptions-provider.js';
 
+import type { PagedResult, QueryRequest } from '@granit/query-engine';
 import type {
   BulkMigratePriceRequest,
   BulkMigratePriceResponse,
@@ -27,20 +28,27 @@ import type {
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /**
- * List all subscriptions.
+ * List subscriptions (paginated).
+ *
+ * Returns a {@link PagedResult} with `items` and `totalCount` — matches the
+ * backend `PagedResult<SubscriptionResponse>` shape.
  *
  * @example
  * ```tsx
- * const { data: subscriptions } = useSubscriptions();
+ * const { data } = useSubscriptions();
+ * const { items, totalCount } = data ?? { items: [], totalCount: 0 };
  * ```
  */
-export function useSubscriptions(): UseQueryResult<readonly SubscriptionResponse[]> {
+export function useSubscriptions(
+  params?: QueryRequest
+): UseQueryResult<PagedResult<SubscriptionResponse>> {
   const config = useSubscriptionsConfig();
   const basePath = config.basePath;
 
   return useQuery({
-    queryKey: buildSubscriptionsQueryKey(config, 'subscriptions'),
-    queryFn: () => listSubscriptions(config.client, basePath),
+    queryKey: buildSubscriptionsQueryKey(config, 'subscriptions', JSON.stringify(params ?? {})),
+    queryFn: () => listSubscriptions(config.client, basePath, params),
+    placeholderData: keepPreviousData,
   });
 }
 
