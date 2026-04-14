@@ -2460,7 +2460,7 @@
         {
           "name": "createReferenceDataHooks",
           "kind": "function",
-          "signature": "function createReferenceDataHooks<T extends ReferenceDataEntry>( entityName: string, factoryOptions?: CreateReferenceDataHooksOptions )"
+          "signature": "function createReferenceDataHooks<T extends ReferenceDataEntry>( /** Plural, kebab-cased entity name matching the backend route segment (e.g. `'countries'`, `'product-categories'`). */ entityName: string, factoryOptions?: CreateReferenceDataHooksOptions )"
         }
       ]
     },

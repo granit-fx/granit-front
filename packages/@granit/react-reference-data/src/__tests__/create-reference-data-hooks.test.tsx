@@ -40,7 +40,7 @@ const mockEntry: TestEntity = {
 };
 
 const { keys, useList, useEntry, useChildren, useCreate, useUpdate, useDeactivate } =
-  createReferenceDataHooks<TestEntity>('test-entity');
+  createReferenceDataHooks<TestEntity>('test-entities');
 
 // ---------------------------------------------------------------------------
 // Query keys
@@ -48,26 +48,26 @@ const { keys, useList, useEntry, useChildren, useCreate, useUpdate, useDeactivat
 
 describe('keys', () => {
   it('namespaces keys by entity name', () => {
-    expect(keys.all).toEqual(['reference-data', 'test-entity']);
+    expect(keys.all).toEqual(['reference-data', 'test-entities']);
   });
 
   it('builds list keys with params', () => {
     expect(keys.list({ search: 'foo' })).toEqual([
       'reference-data',
-      'test-entity',
+      'test-entities',
       'list',
       { search: 'foo' },
     ]);
   });
 
   it('builds detail keys with code', () => {
-    expect(keys.detail('BE')).toEqual(['reference-data', 'test-entity', 'detail', 'BE']);
+    expect(keys.detail('BE')).toEqual(['reference-data', 'test-entities', 'detail', 'BE']);
   });
 
   it('builds children keys with parent code', () => {
     expect(keys.children('ELECTRONICS')).toEqual([
       'reference-data',
-      'test-entity',
+      'test-entities',
       'children',
       'ELECTRONICS',
     ]);
@@ -99,7 +99,7 @@ describe('useList', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/v1/reference-data/test-entity', {
+    expect(client.get).toHaveBeenCalledWith('/api/v1/reference-data/test-entities', {
       params: undefined,
     });
     expect(result.current.data?.items).toHaveLength(1);
@@ -117,7 +117,7 @@ describe('useList', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/v1/reference-data/test-entity', {
+    expect(client.get).toHaveBeenCalledWith('/api/v1/reference-data/test-entities', {
       params: { activeOnly: true, search: 'bel' },
     });
   });
@@ -181,7 +181,7 @@ describe('useEntry', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/v1/reference-data/test-entity/BE');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/reference-data/test-entities/BE');
     expect(result.current.data?.code).toBe('BE');
     expect(result.current.data?.extra).toBe('test-value');
   });
@@ -255,7 +255,7 @@ describe('useChildren', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/v1/reference-data/test-entity/BE/children');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/reference-data/test-entities/BE/children');
     expect(result.current.data).toHaveLength(1);
     expect(result.current.data?.[0]!.parentCode).toBe('BE');
   });
@@ -332,7 +332,7 @@ describe('useCreate', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/reference-data/test-entity', {
+    expect(client.post).toHaveBeenCalledWith('/api/v1/reference-data/test-entities', {
       code: 'BE',
       labelEn: 'Belgium',
     });
@@ -399,7 +399,7 @@ describe('useUpdate', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.put).toHaveBeenCalledWith('/api/v1/reference-data/test-entity/BE', {
+    expect(client.put).toHaveBeenCalledWith('/api/v1/reference-data/test-entities/BE', {
       labelEn: 'Belgium (updated)',
     });
   });
@@ -445,7 +445,7 @@ describe('useDeactivate', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.delete).toHaveBeenCalledWith('/api/v1/reference-data/test-entity/BE');
+    expect(client.delete).toHaveBeenCalledWith('/api/v1/reference-data/test-entities/BE');
   });
 
   it('exposes error state on failure', async () => {

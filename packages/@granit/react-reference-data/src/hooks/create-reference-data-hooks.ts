@@ -24,7 +24,7 @@ import type { AxiosInstance } from 'axios';
 
 /** Options for the factory function. */
 export interface CreateReferenceDataHooksOptions {
-  /** Override the default base path. Default: `/api/v1/reference-data/{entityName}`. */
+  /** Override the default base path. Default: `/api/v1/reference-data/{entityName}` (entityName must be plural). */
   readonly defaultBasePath?: string;
 }
 
@@ -111,10 +111,11 @@ export interface ReferenceDataKeys {
  *   useCreate: useCreateCountry,
  *   useUpdate: useUpdateCountry,
  *   useDeactivate: useDeactivateCountry,
- * } = createReferenceDataHooks<Country>('country');
+ * } = createReferenceDataHooks<Country>('countries');
  * ```
  */
 export function createReferenceDataHooks<T extends ReferenceDataEntry>(
+  /** Plural, kebab-cased entity name matching the backend route segment (e.g. `'countries'`, `'product-categories'`). */
   entityName: string,
   factoryOptions?: CreateReferenceDataHooksOptions
 ) {

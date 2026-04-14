@@ -13,7 +13,7 @@ import {
 
 import type { ReferenceDataEntry } from '../types/index.js';
 
-const BASE_PATH = '/api/v1/reference-data/country';
+const BASE_PATH = '/api/v1/reference-data/countries';
 
 const mockEntry: ReferenceDataEntry = {
   id: toEntityId<'ReferenceDataEntry'>('a1b2c3d4-e5f6-7890-abcd-ef1234567890'),
