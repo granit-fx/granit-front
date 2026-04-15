@@ -1,7 +1,7 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { fetchIdentityCapabilities } from '../api/identity-capabilities-api.js';
+import { getIdentityCapabilities } from '../api/identity-capabilities-api.js';
 
 import type { IdentityProviderCapabilities } from '../types/index.js';
 
@@ -21,7 +21,7 @@ describe('identity-capabilities-api', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: keycloakCapabilities });
 
-    const result = await fetchIdentityCapabilities(client, '/identity/users');
+    const result = await getIdentityCapabilities(client, '/identity/users');
 
     expect(client.get).toHaveBeenCalledWith('/identity/users/capabilities');
     expect(result).toEqual(keycloakCapabilities);
@@ -31,7 +31,7 @@ describe('identity-capabilities-api', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: keycloakCapabilities });
 
-    await fetchIdentityCapabilities(client, '/api/v1/identity');
+    await getIdentityCapabilities(client, '/api/v1/identity');
 
     expect(client.get).toHaveBeenCalledWith('/api/v1/identity/capabilities');
   });
@@ -50,7 +50,7 @@ describe('identity-capabilities-api', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: entraCapabilities });
 
-    const result = await fetchIdentityCapabilities(client, '/identity/users');
+    const result = await getIdentityCapabilities(client, '/identity/users');
 
     expect(result.providerName).toBe('Entra ID');
     expect(result.supportsIndividualSessionTermination).toBe(false);

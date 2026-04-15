@@ -14,7 +14,7 @@ import type { ReactNode } from 'react';
 function createConfig(overrides?: Partial<ImportConfig>): ImportConfig {
   return {
     client: axios.create(),
-    basePath: '/api/v1/data-exchange/import',
+    basePath: '/api/v1/data-exchange',
     ...overrides,
   };
 }
@@ -31,7 +31,7 @@ describe('ImportProvider', () => {
     const { result } = renderHook(() => useImportConfig(), {
       wrapper: wrapper(config),
     });
-    expect(result.current.basePath).toBe('/api/v1/data-exchange/import');
+    expect(result.current.basePath).toBe('/api/v1/data-exchange');
     expect(result.current.client).toBe(config.client);
   });
 

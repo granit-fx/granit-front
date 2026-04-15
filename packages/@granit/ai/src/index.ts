@@ -25,8 +25,8 @@ export { AI_PERMISSIONS, AI_STREAM_DONE_MARKER, AI_WORKSPACE_KINDS } from './con
 export {
   createAIWorkspace,
   deleteAIWorkspace,
-  fetchAIWorkspace,
-  fetchAIWorkspaces,
+  getAIWorkspace,
+  listAIWorkspaces,
   updateAIWorkspace,
 } from './api/ai-workspaces-api.js';
 

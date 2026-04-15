@@ -25,13 +25,16 @@ const NotificationContext = createContext<NotificationContextValue | null>(null)
 // Hook
 // ---------------------------------------------------------------------------
 
-export function useNotificationContext(): NotificationContextValue {
+export function useNotificationConfig(): NotificationContextValue {
   const ctx = useContext(NotificationContext);
   if (!ctx) {
-    throw new Error('useNotificationContext must be used within a <NotificationProvider>');
+    throw new Error('useNotificationConfig must be used within a <NotificationProvider>');
   }
   return ctx;
 }
+
+/** @deprecated Use useNotificationConfig instead */
+export const useNotificationContext = useNotificationConfig;
 
 // ---------------------------------------------------------------------------
 // Provider

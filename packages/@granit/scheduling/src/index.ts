@@ -16,7 +16,7 @@ export {
 // API
 export {
   cancelScheduledAction,
-  fetchScheduledActionById,
-  fetchScheduledActions,
+  getScheduledActionById,
+  listScheduledActions,
   rescheduleScheduledAction,
 } from './api/scheduling-api.js';

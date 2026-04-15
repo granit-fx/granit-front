@@ -5,21 +5,18 @@ import type {
 } from '../types/index.js';
 import type { PaginationParams } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
-
-function buildUrl(basePath: string, ...segments: string[]): string {
-  return [basePath, ...segments].join('/');
-}
+import { buildApiUrl } from '@granit/api-client';
 
 // ---------------------------------------------------------------------------
 // Notifications (inbox)
 // ---------------------------------------------------------------------------
 
-export async function fetchNotifications(
+export async function listNotifications(
   client: AxiosInstance,
   basePath: string,
   params: PaginationParams = {}
 ): Promise<UserNotificationPage> {
-  const { data } = await client.get<UserNotificationPage>(buildUrl(basePath, 'notifications'), {
+  const { data } = await client.get<UserNotificationPage>(buildApiUrl(basePath, 'notifications'), {
     params,
   });
   return data;
@@ -30,20 +27,20 @@ export async function markAsRead(
   basePath: string,
   notificationId: string
 ): Promise<void> {
-  await client.post(buildUrl(basePath, 'notifications', notificationId, 'read'));
+  await client.post(buildApiUrl(basePath, 'notifications', notificationId, 'read'));
 }
 
 export async function markAllAsRead(client: AxiosInstance, basePath: string): Promise<void> {
-  await client.post(buildUrl(basePath, 'notifications', 'read-all'));
+  await client.post(buildApiUrl(basePath, 'notifications', 'read-all'));
 }
 
 // ---------------------------------------------------------------------------
 // Unread count
 // ---------------------------------------------------------------------------
 
-export async function fetchUnreadCount(client: AxiosInstance, basePath: string): Promise<number> {
+export async function getUnreadCount(client: AxiosInstance, basePath: string): Promise<number> {
   const { data } = await client.get<{ count: number }>(
-    buildUrl(basePath, 'notifications', 'unread', 'count')
+    buildApiUrl(basePath, 'notifications', 'unread', 'count')
   );
   return data.count;
 }
@@ -52,7 +49,7 @@ export async function fetchUnreadCount(client: AxiosInstance, basePath: string):
 // Activity feed (entity-scoped)
 // ---------------------------------------------------------------------------
 
-export async function fetchEntityActivityFeed(
+export async function getEntityActivityFeed(
   client: AxiosInstance,
   basePath: string,
   entityType: string,
@@ -60,7 +57,7 @@ export async function fetchEntityActivityFeed(
   params: PaginationParams = {}
 ): Promise<ActivityFeedPage> {
   const { data } = await client.get<ActivityFeedPage>(
-    buildUrl(basePath, 'notifications', 'entity', entityType, entityId),
+    buildApiUrl(basePath, 'notifications', 'entity', entityType, entityId),
     { params }
   );
   return data;
@@ -70,12 +67,12 @@ export async function fetchEntityActivityFeed(
 // Preferences
 // ---------------------------------------------------------------------------
 
-export async function fetchPreferences(
+export async function getPreferences(
   client: AxiosInstance,
   basePath: string
 ): Promise<NotificationPreference[]> {
   const { data } = await client.get<NotificationPreference[]>(
-    buildUrl(basePath, 'notifications', 'preferences')
+    buildApiUrl(basePath, 'notifications', 'preferences')
   );
   return data;
 }
@@ -86,7 +83,7 @@ export async function updatePreference(
   preference: NotificationPreference
 ): Promise<NotificationPreference> {
   const { data } = await client.put<NotificationPreference>(
-    buildUrl(basePath, 'notifications', 'preferences'),
+    buildApiUrl(basePath, 'notifications', 'preferences'),
     preference
   );
   return data;

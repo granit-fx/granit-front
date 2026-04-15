@@ -15,12 +15,12 @@ vi.mock('@granit/settings', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   return {
     ...actual,
-    fetchAdminAppSettings: vi.fn(),
+    getAdminAppSettings: vi.fn(),
     saveAdminAppSettings: vi.fn(),
   };
 });
 
-const { fetchAdminAppSettings, saveAdminAppSettings } = await import('@granit/settings');
+const { getAdminAppSettings, saveAdminAppSettings } = await import('@granit/settings');
 
 function createWrapper(client: AxiosInstance, basePath?: string) {
   const queryClient = createTestQueryClient();
@@ -51,14 +51,14 @@ const mockSettings: AdminAppSetting[] = [
 describe('useAdminAppSettings', () => {
   it('should fetch admin settings', async () => {
     const client = createMockClient();
-    vi.mocked(fetchAdminAppSettings).mockResolvedValue(mockSettings);
+    vi.mocked(getAdminAppSettings).mockResolvedValue(mockSettings);
 
     const { wrapper } = createWrapper(client, '/api');
     const { result } = renderHook(() => useAdminAppSettings(), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(fetchAdminAppSettings).toHaveBeenCalledWith(client, '/api');
+    expect(getAdminAppSettings).toHaveBeenCalledWith(client, '/api');
     expect(result.current.data).toEqual(mockSettings);
   });
 
@@ -69,7 +69,7 @@ describe('useAdminAppSettings', () => {
     const { result } = renderHook(() => useAdminAppSettings({ enabled: false }), { wrapper });
 
     expect(result.current.isFetching).toBe(false);
-    expect(fetchAdminAppSettings).not.toHaveBeenCalled();
+    expect(getAdminAppSettings).not.toHaveBeenCalled();
   });
 });
 

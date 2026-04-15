@@ -9,14 +9,14 @@ export { axiosResponse, createMockClient } from '@granit/testing';
 
 export function createWrapper(
   client: AxiosInstance,
-  basePath = '/api/v1/templating',
-  queryKeyPrefix: readonly string[] = ['templates']
+  basePath?: string,
+  queryKeyPrefix?: readonly string[]
 ) {
   const queryClient = createTestQueryClient();
   return function Wrapper({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
       <QueryClientProvider client={queryClient}>
-        <TemplatingProvider client={client} basePath={basePath} queryKeyPrefix={queryKeyPrefix}>
+        <TemplatingProvider config={{ client, basePath, queryKeyPrefix }}>
           {children}
         </TemplatingProvider>
       </QueryClientProvider>

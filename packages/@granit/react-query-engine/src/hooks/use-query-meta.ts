@@ -2,7 +2,7 @@
 // useQueryMeta — fetch and cache query metadata (Story #48)
 // ---------------------------------------------------------------------------
 
-import { buildQueryKey, fetchQueryMeta } from '@granit/query-engine';
+import { buildQueryKey, getQueryMeta } from '@granit/query-engine';
 import { useQuery } from '@tanstack/react-query';
 
 import { useQueryConfig } from '../providers/query-provider.js';
@@ -26,7 +26,7 @@ export function useQueryMeta(): UseQueryResult<QueryMetadata> {
 
   return useQuery({
     queryKey: buildQueryKey(config, 'meta'),
-    queryFn: () => fetchQueryMeta(config.client, config.basePath),
+    queryFn: () => getQueryMeta(config.client, config.basePath),
     staleTime: Infinity,
   });
 }

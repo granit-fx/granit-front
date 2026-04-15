@@ -13,14 +13,12 @@
   "scripts": {
     "build": "tsup"
   },
-  "dependencies": {
-    "@granit/types": "workspace:*"
-  },
   "devDependencies": {
     "@granit/testing": "workspace:*"
   },
   "peerDependencies": {
     "@granit/query-engine": "workspace:*",
+    "@granit/types": "workspace:*",
     "axios": "*"
   },
   "publishConfig": {

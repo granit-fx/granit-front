@@ -1,4 +1,4 @@
-import { fetchAdminAppSettings, saveAdminAppSettings } from '@granit/settings';
+import { getAdminAppSettings, saveAdminAppSettings } from '@granit/settings';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { buildSettingsQueryKey, useSettingsConfig } from '../providers/settings-provider.js';
@@ -7,7 +7,7 @@ import type { AdminAppSetting } from '@granit/settings';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /**
- * Fetch all application settings with admin metadata.
+ * Get all application settings with admin metadata.
  */
 export function useAdminAppSettings(options?: {
   enabled?: boolean;
@@ -16,7 +16,7 @@ export function useAdminAppSettings(options?: {
 
   return useQuery({
     queryKey: buildSettingsQueryKey(config, 'admin', 'settings'),
-    queryFn: () => fetchAdminAppSettings(config.client, config.basePath ?? ''),
+    queryFn: () => getAdminAppSettings(config.client, config.basePath ?? ''),
     enabled: options?.enabled ?? true,
     staleTime: 5 * 60 * 1000,
   });

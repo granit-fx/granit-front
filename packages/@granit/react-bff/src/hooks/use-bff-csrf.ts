@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useBffContext } from '../providers/bff-provider.js';
+import { useBffConfig } from '../providers/bff-provider.js';
 
 /**
  * Hook to access the current CSRF token and refresh it.
@@ -8,7 +8,7 @@ import { useBffContext } from '../providers/bff-provider.js';
  * @throws Error if used outside of a `<BffProvider>`.
  */
 export function useBffCsrf() {
-  const { csrfManager } = useBffContext();
+  const { csrfManager } = useBffConfig();
 
   const csrfToken = csrfManager.getToken();
 

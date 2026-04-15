@@ -9,11 +9,11 @@ export type ExportJobListParams = PaginationParams & {
 };
 
 /**
- * Fetches all registered export definitions.
+ * Lists all registered export definitions.
  *
  * `GET {basePath}/metadata/definitions`
  */
-export async function fetchExportDefinitions(
+export async function listExportDefinitions(
   client: AxiosInstance,
   basePath: string
 ): Promise<readonly ExportDefinitionResponse[]> {
@@ -22,11 +22,11 @@ export async function fetchExportDefinitions(
 }
 
 /**
- * Fetches the available fields for a given export definition.
+ * Gets the available fields for a given export definition.
  *
  * `GET {basePath}/metadata/definitions/{name}/fields`
  */
-export async function fetchExportFields(
+export async function getExportFields(
   client: AxiosInstance,
   basePath: string,
   definitionName: string
@@ -52,11 +52,11 @@ export async function createExportJob(
 }
 
 /**
- * Fetches the current status of an export job.
+ * Gets the current status of an export job.
  *
  * `GET {basePath}/export/jobs/{jobId}`
  */
-export async function fetchExportJobStatus(
+export async function getExportJobStatus(
   client: AxiosInstance,
   basePath: string,
   jobId: string
@@ -68,11 +68,11 @@ export async function fetchExportJobStatus(
 }
 
 /**
- * Fetches a paginated list of export jobs.
+ * Lists a paginated list of export jobs.
  *
  * `GET {basePath}/export/jobs`
  */
-export async function fetchExportJobs(
+export async function listExportJobs(
   client: AxiosInstance,
   basePath: string,
   params?: ExportJobListParams

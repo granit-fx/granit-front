@@ -14,7 +14,7 @@ const mockClient = axios.create();
 
 const mockConfig: ExportConfig = {
   client: mockClient,
-  basePath: '/api/v1/data-exchange/metadata',
+  basePath: '/api/v1/data-exchange',
 };
 
 function createWrapper() {
@@ -55,7 +55,7 @@ describe('useExportJobs', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data?.items).toHaveLength(1);
     expect(result.current.data?.totalCount).toBe(1);
-    expect(mockClient.get).toHaveBeenCalledWith('/api/v1/data-exchange/metadata/jobs', {
+    expect(mockClient.get).toHaveBeenCalledWith('/api/v1/data-exchange/export/jobs', {
       params: undefined,
     });
   });
@@ -71,7 +71,7 @@ describe('useExportJobs', () => {
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(mockClient.get).toHaveBeenCalledWith('/api/v1/data-exchange/metadata/jobs', {
+    expect(mockClient.get).toHaveBeenCalledWith('/api/v1/data-exchange/export/jobs', {
       params: { status: 'Failed', page: 2, pageSize: 10 },
     });
   });

@@ -1,70 +1,70 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { fetchGrouped, fetchPage, fetchQueryMeta } from '../api/query-api.js';
+import { getGrouped, getPage, getQueryMeta } from '../api/query-api.js';
 import {
   createSavedView,
   deleteSavedView,
-  fetchSavedViews,
+  listSavedViews,
   setDefaultSavedView,
   updateSavedView,
 } from '../api/saved-views-api.js';
 
 describe('query-api', () => {
-  it('fetchPage calls GET with serialized params', async () => {
+  it('getPage calls GET with serialized params', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({
       data: { items: [{ id: '1' }], totalCount: 1 },
     });
-    const result = await fetchPage(client, '/api/v1/patients', { page: 1, pageSize: 10 });
+    const result = await getPage(client, '/api/v1/patients', { page: 1, pageSize: 10 });
     expect(client.get).toHaveBeenCalledWith(expect.stringContaining('/api/v1/patients'));
     expect(result).toEqual({ items: [{ id: '1' }], totalCount: 1 });
   });
 
-  it('fetchPage with empty params calls basePath only', async () => {
+  it('getPage with empty params calls basePath only', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({
       data: { items: [], totalCount: 0 },
     });
-    await fetchPage(client, '/api/v1/patients', {});
+    await getPage(client, '/api/v1/patients', {});
     expect(client.get).toHaveBeenCalledWith('/api/v1/patients');
   });
 
-  it('fetchGrouped calls GET with serialized params', async () => {
+  it('getGrouped calls GET with serialized params', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({
       data: { groups: [], totalCount: 0 },
     });
-    const result = await fetchGrouped(client, '/api/v1/patients', { groupBy: 'status' });
+    const result = await getGrouped(client, '/api/v1/patients', { groupBy: 'status' });
     expect(client.get).toHaveBeenCalledWith(expect.stringContaining('groupBy=status'));
     expect(result).toEqual({ groups: [], totalCount: 0 });
   });
 
-  it('fetchGrouped with empty params calls basePath only', async () => {
+  it('getGrouped with empty params calls basePath only', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({
       data: { groups: [], totalCount: 0 },
     });
-    await fetchGrouped(client, '/api/v1/patients', {});
+    await getGrouped(client, '/api/v1/patients', {});
     expect(client.get).toHaveBeenCalledWith('/api/v1/patients');
   });
 
-  it('fetchQueryMeta calls GET /meta', async () => {
+  it('getQueryMeta calls GET /meta', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({
       data: { columns: [], filterableFields: [] },
     });
-    const result = await fetchQueryMeta(client, '/api/v1/patients');
+    const result = await getQueryMeta(client, '/api/v1/patients');
     expect(client.get).toHaveBeenCalledWith('/api/v1/patients/meta');
     expect(result).toEqual({ columns: [], filterableFields: [] });
   });
 });
 
 describe('saved-views-api', () => {
-  it('fetchSavedViews calls GET /saved-views', async () => {
+  it('listSavedViews calls GET /saved-views', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: [] });
-    const result = await fetchSavedViews(client, '/api/v1/patients');
+    const result = await listSavedViews(client, '/api/v1/patients');
     expect(client.get).toHaveBeenCalledWith('/api/v1/patients/saved-views');
     expect(result).toEqual([]);
   });

@@ -20,7 +20,7 @@ export type {
 // API
 export {
   executeStateMachineTransition,
-  fetchHistory,
-  fetchTransitions,
+  getHistory,
+  listTransitions,
 } from './api/workflow-api.js';
 export type { WorkflowHistoryPage } from './api/workflow-api.js';

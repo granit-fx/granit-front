@@ -29,7 +29,7 @@ export function useTimelineActions({
   onEntryCreated,
   onEntryDeleted,
 }: UseTimelineActionsOptions): UseTimelineActionsReturn {
-  const { apiClient, basePath } = useTimelineConfig();
+  const { client, basePath } = useTimelineConfig();
 
   const [posting, setPosting] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -41,7 +41,7 @@ export function useTimelineActions({
       setError(null);
 
       try {
-        const entry = await createEntry(apiClient, basePath, entityType, entityId, request);
+        const entry = await createEntry(client, basePath, entityType, entityId, request);
         onEntryCreated?.(entry);
         return entry;
       } catch (err) {
@@ -53,7 +53,7 @@ export function useTimelineActions({
         setPosting(false);
       }
     },
-    [apiClient, basePath, entityType, entityId, onEntryCreated]
+    [client, basePath, entityType, entityId, onEntryCreated]
   );
 
   const removeEntry = useCallback(
@@ -62,7 +62,7 @@ export function useTimelineActions({
       setError(null);
 
       try {
-        await deleteEntry(apiClient, basePath, entityType, entityId, entryId);
+        await deleteEntry(client, basePath, entityType, entityId, entryId);
         onEntryDeleted?.(entryId);
       } catch (err) {
         const wrapped = err instanceof Error ? err : new Error(String(err));
@@ -73,7 +73,7 @@ export function useTimelineActions({
         setDeleting(false);
       }
     },
-    [apiClient, basePath, entityType, entityId, onEntryDeleted]
+    [client, basePath, entityType, entityId, onEntryDeleted]
   );
 
   return { postEntry, removeEntry, posting, deleting, error };

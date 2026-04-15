@@ -1,8 +1,8 @@
-import { fetchUnreadCount } from '@granit/notifications';
+import { getUnreadCount } from '@granit/notifications';
 import { useCallback, useEffect, useRef } from 'react';
 
 import { API_BASE_PATH } from '../constants.js';
-import { useNotificationContext } from '../providers/notification-provider.js';
+import { useNotificationConfig } from '../providers/notification-provider.js';
 
 export interface UseUnreadCountOptions {
   /** Polling interval in ms. Set to 0 to disable polling. Default: 60 000 */
@@ -24,12 +24,12 @@ export interface UseUnreadCountReturn {
  */
 export function useUnreadCount(options: UseUnreadCountOptions = {}): UseUnreadCountReturn {
   const { pollingInterval = 60_000 } = options;
-  const { config, unreadCount, setUnreadCount } = useNotificationContext();
+  const { config, unreadCount, setUnreadCount } = useNotificationConfig();
   const mountedRef = useRef(true);
 
   const refresh = useCallback(async () => {
     try {
-      const count = await fetchUnreadCount(config.apiClient, config.basePath ?? API_BASE_PATH);
+      const count = await getUnreadCount(config.apiClient, config.basePath ?? API_BASE_PATH);
       if (mountedRef.current) {
         setUnreadCount(count);
       }

@@ -1,8 +1,8 @@
 import {
   assignRole,
-  fetchRoleMembers,
-  fetchRoles,
-  fetchUserRoles,
+  listRoleMembers,
+  listRoles,
+  listUserRoles,
   removeRole,
 } from '@granit/identity';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -27,7 +27,7 @@ export function useRoles(): UseQueryResult<readonly IdentityRole[]> {
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'roles'),
-    queryFn: () => fetchRoles(config.client, basePath),
+    queryFn: () => listRoles(config.client, basePath),
   });
 }
 
@@ -47,7 +47,7 @@ export function useUserRoles(userId: UserId): UseQueryResult<readonly IdentityRo
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'users', userId, 'roles'),
-    queryFn: () => fetchUserRoles(config.client, basePath, userId),
+    queryFn: () => listUserRoles(config.client, basePath, userId),
     enabled: userId.length > 0,
   });
 }
@@ -68,7 +68,7 @@ export function useRoleMembers(roleName: string): UseQueryResult<readonly Identi
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'roles', roleName, 'members'),
-    queryFn: () => fetchRoleMembers(config.client, basePath, roleName),
+    queryFn: () => listRoleMembers(config.client, basePath, roleName),
     enabled: roleName.length > 0,
   });
 }

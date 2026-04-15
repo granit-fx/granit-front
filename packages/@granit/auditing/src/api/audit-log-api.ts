@@ -7,7 +7,7 @@ import type { AxiosInstance } from 'axios';
  *
  * `GET {basePath}/`
  */
-export async function fetchAuditLogEntries(
+export async function listAuditLogEntries(
   client: AxiosInstance,
   basePath: string,
   params?: AuditListParams
@@ -21,7 +21,7 @@ export async function fetchAuditLogEntries(
  *
  * `GET {basePath}/{id}`
  */
-export async function fetchAuditLogEntry(
+export async function getAuditLogEntry(
   client: AxiosInstance,
   basePath: string,
   id: string
@@ -35,7 +35,7 @@ export async function fetchAuditLogEntry(
  *
  * `GET {basePath}/entity/{entityType}/{entityId}`
  */
-export async function fetchEntityAuditTrail(
+export async function listEntityAuditTrail(
   client: AxiosInstance,
   basePath: string,
   entityType: string,

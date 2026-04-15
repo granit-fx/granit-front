@@ -1,6 +1,6 @@
 import {
   deleteLocalizationOverride,
-  fetchLanguages,
+  listLanguages,
   setLocalizationOverride,
   updateLanguageStatus,
 } from '@granit/localization';
@@ -19,14 +19,14 @@ const LANGUAGES_KEY = ['localization', 'languages'] as const;
 const OVERRIDES_KEY = ['localization', 'overrides'] as const;
 
 /**
- * Fetch all languages with admin enable/disable status.
+ * List all languages with admin enable/disable status.
  */
 export function useLanguages(options: LocalizationAdminOptions): UseQueryResult<AdminLanguage[]> {
   const { client, basePath = '' } = options;
 
   return useQuery({
     queryKey: [...LANGUAGES_KEY],
-    queryFn: () => fetchLanguages(client, basePath),
+    queryFn: () => listLanguages(client, basePath),
   });
 }
 

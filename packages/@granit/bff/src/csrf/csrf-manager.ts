@@ -27,8 +27,8 @@ export class CsrfManager {
     if (!response.ok) {
       throw new Error(`CSRF token fetch failed: ${response.status}`);
     }
-    const data = (await response.json()) as { token: string };
-    this.token = data.token;
+    const data = (await response.json()) as { csrfToken: string };
+    this.token = data.csrfToken;
     return this.token;
   }
 

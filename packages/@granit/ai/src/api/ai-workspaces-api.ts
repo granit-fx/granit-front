@@ -16,7 +16,7 @@ import type { AxiosInstance } from 'axios';
  *
  * `GET /ai/workspaces`
  */
-export async function fetchAIWorkspaces(
+export async function listAIWorkspaces(
   client: AxiosInstance,
   basePath: string
 ): Promise<AIWorkspaceListResponse> {
@@ -29,7 +29,7 @@ export async function fetchAIWorkspaces(
  *
  * `GET /ai/workspaces/{name}`
  */
-export async function fetchAIWorkspace(
+export async function getAIWorkspace(
   client: AxiosInstance,
   basePath: string,
   name: string

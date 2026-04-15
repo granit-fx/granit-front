@@ -181,6 +181,11 @@
           "signature": "function createMutator(instance: AxiosInstance)"
         },
         {
+          "name": "buildApiUrl",
+          "kind": "function",
+          "signature": "function buildApiUrl(basePath: string, ...segments: string[]): string"
+        },
+        {
           "name": "ProblemDetails",
           "kind": "interface",
           "signature": "interface ProblemDetailsPayload",
@@ -539,9 +544,9 @@
           "signature": "const DEFAULT_DIAGNOSTICS_BASE_PATH"
         },
         {
-          "name": "fetchMonitoringHealth",
+          "name": "getMonitoringHealth",
           "kind": "function",
-          "signature": "async function fetchMonitoringHealth( client: AxiosInstance, basePath: string ): Promise<MonitoringHealthResponse>"
+          "signature": "async function getMonitoringHealth( client: AxiosInstance, basePath: string ): Promise<MonitoringHealthResponse>"
         }
       ]
     },
@@ -626,9 +631,9 @@
           "members": []
         },
         {
-          "name": "fetchIdentityCapabilities",
+          "name": "getIdentityCapabilities",
           "kind": "function",
-          "signature": "async function fetchIdentityCapabilities( client: AxiosInstance, basePath: string ): Promise<IdentityProviderCapabilities>"
+          "signature": "async function getIdentityCapabilities( client: AxiosInstance, basePath: string ): Promise<IdentityProviderCapabilities>"
         },
         {
           "name": "IdentityProviderUserListParams",
@@ -1008,19 +1013,19 @@
           "signature": "function validateQueryRequest(params: QueryRequest): QueryRequest"
         },
         {
-          "name": "fetchGrouped",
+          "name": "getGrouped",
           "kind": "function",
-          "signature": "async function fetchGrouped<T>( client: AxiosInstance, basePath: string, request: QueryRequest ): Promise<GroupedResult<T>>"
+          "signature": "async function getGrouped<T>( client: AxiosInstance, basePath: string, request: QueryRequest ): Promise<GroupedResult<T>>"
         },
         {
-          "name": "fetchPage",
+          "name": "getPage",
           "kind": "function",
-          "signature": "async function fetchPage<T>( client: AxiosInstance, basePath: string, request: QueryRequest ): Promise<PagedResult<T>>"
+          "signature": "async function getPage<T>( client: AxiosInstance, basePath: string, request: QueryRequest ): Promise<PagedResult<T>>"
         },
         {
-          "name": "fetchQueryMeta",
+          "name": "getQueryMeta",
           "kind": "function",
-          "signature": "async function fetchQueryMeta( client: AxiosInstance, basePath: string ): Promise<QueryMetadata>"
+          "signature": "async function getQueryMeta( client: AxiosInstance, basePath: string ): Promise<QueryMetadata>"
         },
         {
           "name": "parseQueryRequest",
@@ -1324,6 +1329,11 @@
           "signature": "function useApiKeys( options: ApiKeyHookOptions, params: UseApiKeysParams ="
         },
         {
+          "name": "buildApiKeyQueryKey",
+          "kind": "function",
+          "signature": "function buildApiKeyQueryKey( config: Pick<ApiKeyHookOptions, 'queryKeyPrefix'>, ...segments: readonly unknown[] ): readonly unknown[]"
+        },
+        {
           "name": "apiKeyKeys",
           "kind": "const",
           "signature": "const apiKeyKeys"
@@ -1342,6 +1352,11 @@
               "name": "basePath",
               "kind": "property",
               "signature": "basePath?: string"
+            },
+            {
+              "name": "queryKeyPrefix",
+              "kind": "property",
+              "signature": "queryKeyPrefix?: readonly string[]"
             }
           ]
         },
@@ -1616,6 +1631,11 @@
           "signature": "function usePermissions(options: UsePermissionsOptions): UsePermissionsReturn"
         },
         {
+          "name": "buildPermissionQueryKey",
+          "kind": "function",
+          "signature": "function buildPermissionQueryKey( config:"
+        },
+        {
           "name": "permissionKeys",
           "kind": "const",
           "signature": "const permissionKeys"
@@ -1657,9 +1677,14 @@
           "signature": "function BffProvider("
         },
         {
-          "name": "useBffContext",
+          "name": "useBffConfig",
           "kind": "function",
-          "signature": "function useBffContext(): BffContextType"
+          "signature": "function useBffConfig(): BffContextType"
+        },
+        {
+          "name": "useBffContext",
+          "kind": "const",
+          "signature": "const useBffContext"
         },
         {
           "name": "BffContextType",
@@ -1779,6 +1804,11 @@
       "description": "React hooks for monitoring health — useMonitoringHealth",
       "exports": [
         {
+          "name": "buildDiagnosticsQueryKey",
+          "kind": "function",
+          "signature": "function buildDiagnosticsQueryKey( config: Pick<MonitoringHealthOptions, 'queryKeyPrefix'>, ...segments: readonly unknown[] ): readonly unknown[]"
+        },
+        {
           "name": "diagnosticsKeys",
           "kind": "const",
           "signature": "const diagnosticsKeys"
@@ -1809,16 +1839,6 @@
           "name": "GlobalErrorCapture",
           "kind": "function",
           "signature": "function GlobalErrorCapture("
-        },
-        {
-          "name": "ErrorContextProvider",
-          "kind": "function",
-          "signature": "function ErrorContextProvider("
-        },
-        {
-          "name": "useErrorContext",
-          "kind": "function",
-          "signature": "function useErrorContext(): ErrorContextValue"
         },
         {
           "name": "useBreadcrumb",
@@ -2044,16 +2064,6 @@
       "name": "@granit/react-notifications",
       "description": "React bindings for @granit/notifications — NotificationProvider, hooks",
       "exports": [
-        {
-          "name": "NotificationProvider",
-          "kind": "function",
-          "signature": "function NotificationProvider("
-        },
-        {
-          "name": "useNotificationContext",
-          "kind": "function",
-          "signature": "function useNotificationContext(): NotificationContextValue"
-        },
         {
           "name": "useRealTimeNotifications",
           "kind": "function",
@@ -2659,34 +2669,19 @@
         {
           "name": "useTemplatingConfig",
           "kind": "function",
-          "signature": "function useTemplatingConfig(): TemplatingConfig"
+          "signature": "function useTemplatingConfig(): ResolvedTemplatingConfig"
+        },
+        {
+          "name": "TemplatingConfig",
+          "kind": "interface",
+          "signature": "interface TemplatingConfig",
+          "members": []
         },
         {
           "name": "TemplatingProviderProps",
           "kind": "interface",
           "signature": "interface TemplatingProviderProps",
-          "members": [
-            {
-              "name": "client",
-              "kind": "property",
-              "signature": "client: AxiosInstance"
-            },
-            {
-              "name": "basePath",
-              "kind": "property",
-              "signature": "basePath?: string"
-            },
-            {
-              "name": "queryKeyPrefix",
-              "kind": "property",
-              "signature": "queryKeyPrefix?: readonly string[]"
-            },
-            {
-              "name": "children",
-              "kind": "property",
-              "signature": "children: React.ReactNode"
-            }
-          ]
+          "members": []
         },
         {
           "name": "useTemplate",
@@ -2755,38 +2750,6 @@
       "name": "@granit/react-timeline",
       "description": "React bindings for @granit/timeline — TimelineProvider, useTimeline, useTimelineActions, useTimelineFollowers",
       "exports": [
-        {
-          "name": "TimelineProvider",
-          "kind": "function",
-          "signature": "function TimelineProvider("
-        },
-        {
-          "name": "useTimelineConfig",
-          "kind": "function",
-          "signature": "function useTimelineConfig(): TimelineConfig"
-        },
-        {
-          "name": "TimelineProviderProps",
-          "kind": "interface",
-          "signature": "interface TimelineProviderProps",
-          "members": [
-            {
-              "name": "apiClient",
-              "kind": "property",
-              "signature": "apiClient: AxiosInstance"
-            },
-            {
-              "name": "basePath",
-              "kind": "property",
-              "signature": "basePath?: string"
-            },
-            {
-              "name": "children",
-              "kind": "property",
-              "signature": "children: React.ReactNode"
-            }
-          ]
-        },
         {
           "name": "useTimeline",
           "kind": "function",
@@ -2893,9 +2856,14 @@
           "signature": "function TracingProvider("
         },
         {
-          "name": "useTracer",
+          "name": "useTracingConfig",
           "kind": "function",
-          "signature": "function useTracer(): Tracer"
+          "signature": "function useTracingConfig(): Tracer"
+        },
+        {
+          "name": "useTracer",
+          "kind": "const",
+          "signature": "const useTracer"
         },
         {
           "name": "useSpan",
@@ -3027,38 +2995,6 @@
       "name": "@granit/react-workflow",
       "description": "React bindings for @granit/workflow — WorkflowProvider, useWorkflowStatus, useWorkflowTransition, useWorkflowHistory",
       "exports": [
-        {
-          "name": "useWorkflowConfig",
-          "kind": "function",
-          "signature": "function useWorkflowConfig(): WorkflowConfig"
-        },
-        {
-          "name": "WorkflowProvider",
-          "kind": "function",
-          "signature": "function WorkflowProvider("
-        },
-        {
-          "name": "WorkflowProviderProps",
-          "kind": "interface",
-          "signature": "interface WorkflowProviderProps",
-          "members": [
-            {
-              "name": "apiClient",
-              "kind": "property",
-              "signature": "apiClient: AxiosInstance"
-            },
-            {
-              "name": "basePath",
-              "kind": "property",
-              "signature": "basePath?: string"
-            },
-            {
-              "name": "children",
-              "kind": "property",
-              "signature": "children: React.ReactNode"
-            }
-          ]
-        },
         {
           "name": "useExecuteTransition",
           "kind": "function",

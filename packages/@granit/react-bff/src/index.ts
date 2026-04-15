@@ -1,4 +1,4 @@
-export { BffProvider, useBffContext } from './providers/bff-provider.js';
+export { BffProvider, useBffConfig, useBffContext } from './providers/bff-provider.js';
 export type { BffContextType, BffProviderProps } from './providers/bff-provider.js';
 
 export { useBffAuth } from './hooks/use-bff-auth.js';

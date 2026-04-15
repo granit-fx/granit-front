@@ -1,5 +1,5 @@
 import { createLogger } from '@granit/logger';
-import { fetchFollowers, followEntity, unfollowEntity } from '@granit/timeline';
+import { getFollowers, followEntity, unfollowEntity } from '@granit/timeline';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useTimelineConfig } from '../providers/timeline-provider.js';
@@ -26,7 +26,7 @@ export function useTimelineFollowers({
   entityId,
   currentUserId,
 }: UseTimelineFollowersOptions): UseTimelineFollowersReturn {
-  const { apiClient, basePath } = useTimelineConfig();
+  const { client, basePath } = useTimelineConfig();
 
   const [followers, setFollowers] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,7 +39,7 @@ export function useTimelineFollowers({
     setError(null);
 
     try {
-      const data = await fetchFollowers(apiClient, basePath, entityType, entityId);
+      const data = await getFollowers(client, basePath, entityType, entityId);
       setFollowers(data);
     } catch (err) {
       const wrapped = err instanceof Error ? err : new Error(String(err));
@@ -48,12 +48,12 @@ export function useTimelineFollowers({
     } finally {
       setLoading(false);
     }
-  }, [apiClient, basePath, entityType, entityId]);
+  }, [client, basePath, entityType, entityId]);
 
   const follow = useCallback(async () => {
     setError(null);
     try {
-      await followEntity(apiClient, basePath, entityType, entityId);
+      await followEntity(client, basePath, entityType, entityId);
       if (currentUserId) {
         setFollowers((prev) => (prev.includes(currentUserId) ? prev : [...prev, currentUserId]));
       }
@@ -63,12 +63,12 @@ export function useTimelineFollowers({
       setError(wrapped);
       throw wrapped;
     }
-  }, [apiClient, basePath, entityType, entityId, currentUserId]);
+  }, [client, basePath, entityType, entityId, currentUserId]);
 
   const unfollow = useCallback(async () => {
     setError(null);
     try {
-      await unfollowEntity(apiClient, basePath, entityType, entityId);
+      await unfollowEntity(client, basePath, entityType, entityId);
       if (currentUserId) {
         setFollowers((prev) => prev.filter((id) => id !== currentUserId));
       }
@@ -78,7 +78,7 @@ export function useTimelineFollowers({
       setError(wrapped);
       throw wrapped;
     }
-  }, [apiClient, basePath, entityType, entityId, currentUserId]);
+  }, [client, basePath, entityType, entityId, currentUserId]);
 
   useEffect(() => {
     loadFollowers().catch(() => {}); // Error state set inside loadFollowers

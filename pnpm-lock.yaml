@@ -448,6 +448,10 @@ importers:
       axios:
         specifier: '*'
         version: 1.15.0
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
 
   packages/@granit/notifications-mobile-push:
     dependencies:
@@ -455,6 +459,9 @@ importers:
         specifier: '*'
         version: 1.15.0
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -491,6 +498,9 @@ importers:
         specifier: '*'
         version: 1.15.0
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -599,6 +609,22 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
+
+  packages/@granit/react-api-client:
+    dependencies:
+      axios:
+        specifier: '*'
+        version: 1.15.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.5
+    devDependencies:
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
 
   packages/@granit/react-auditing:
     dependencies:
@@ -929,6 +955,9 @@ importers:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/utils':
         specifier: workspace:*
         version: link:../utils
@@ -1307,6 +1336,9 @@ importers:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/utils':
         specifier: workspace:*
         version: link:../utils

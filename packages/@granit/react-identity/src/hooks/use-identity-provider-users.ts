@@ -1,7 +1,7 @@
 import {
   createUser,
-  fetchProviderUser,
-  fetchProviderUsers,
+  getProviderUser,
+  listProviderUsers,
   setUserEnabled,
   updateUser,
 } from '@granit/identity';
@@ -34,12 +34,12 @@ export function useProviderUsers(
 
   return useQuery({
     queryKey: [...buildIdentityQueryKey(config, 'provider', 'users', 'list'), params],
-    queryFn: () => fetchProviderUsers(config.client, basePath, params),
+    queryFn: () => listProviderUsers(config.client, basePath, params),
   });
 }
 
 /**
- * Fetch a single user by ID from the identity provider.
+ * Get a single user by ID from the identity provider.
  *
  * The query is automatically disabled when `userId` is empty.
  *
@@ -54,7 +54,7 @@ export function useProviderUser(userId: UserId): UseQueryResult<IdentityUser> {
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'users', userId),
-    queryFn: () => fetchProviderUser(config.client, basePath, userId),
+    queryFn: () => getProviderUser(config.client, basePath, userId),
     enabled: userId.length > 0,
   });
 }

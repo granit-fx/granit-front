@@ -49,7 +49,7 @@ vi.mock('@opentelemetry/api', async () => {
 // ---------------------------------------------------------------------------
 
 vi.mock('../providers/tracing-provider.js', () => ({
-  useTracer: () => mockTracer,
+  useTracingConfig: () => mockTracer,
 }));
 
 // ---------------------------------------------------------------------------

@@ -4,8 +4,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   createEntry,
   deleteEntry,
-  fetchFollowers,
-  fetchStream,
+  getFollowers,
+  getStream,
   followEntity,
   unfollowEntity,
 } from '../api/timeline-api.js';
@@ -22,12 +22,12 @@ describe('timeline API', () => {
     client = createMockClient();
   });
 
-  describe('fetchStream', () => {
+  describe('getStream', () => {
     it('should call GET /{entityType}/{entityId} with query params', async () => {
       const page: TimelineEntryPage = { items: [], totalCount: 0, nextCursor: null };
       vi.mocked(client.get).mockResolvedValue(axiosResponse(page));
 
-      const result = await fetchStream(client, BASE_PATH, 'Patient', 'p-1', {
+      const result = await getStream(client, BASE_PATH, 'Patient', 'p-1', {
         page: 1,
         pageSize: 20,
       });
@@ -94,12 +94,12 @@ describe('timeline API', () => {
     });
   });
 
-  describe('fetchFollowers', () => {
+  describe('getFollowers', () => {
     it('should call GET /{entityType}/{entityId}/followers', async () => {
       const followers = ['u-1', 'u-2'];
       vi.mocked(client.get).mockResolvedValue(axiosResponse(followers));
 
-      const result = await fetchFollowers(client, BASE_PATH, 'Patient', 'p-1');
+      const result = await getFollowers(client, BASE_PATH, 'Patient', 'p-1');
 
       expect(client.get).toHaveBeenCalledWith('/api/v1/timeline/Patient/p-1/followers');
       expect(result).toEqual(followers);

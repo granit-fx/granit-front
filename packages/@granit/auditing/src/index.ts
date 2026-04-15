@@ -19,7 +19,7 @@ export type {
 
 // API
 export {
-  fetchAuditLogEntries,
-  fetchAuditLogEntry,
-  fetchEntityAuditTrail,
+  listAuditLogEntries,
+  getAuditLogEntry,
+  listEntityAuditTrail,
 } from './api/audit-log-api.js';

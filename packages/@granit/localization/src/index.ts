@@ -15,7 +15,7 @@ export type {
 // API — Admin
 export {
   deleteLocalizationOverride,
-  fetchLanguages,
+  listLanguages,
   setLocalizationOverride,
   updateLanguageStatus,
 } from './api/localization-admin-api.js';

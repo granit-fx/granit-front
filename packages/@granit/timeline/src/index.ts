@@ -18,8 +18,8 @@ export {
 export {
   createEntry,
   deleteEntry,
-  fetchFollowers,
-  fetchStream,
+  getFollowers,
+  getStream,
   followEntity,
   unfollowEntity,
 } from './api/timeline-api.js';

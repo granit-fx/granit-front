@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { TracingProvider, useTracer } from '../providers/tracing-provider.js';
+import { TracingProvider, useTracingConfig } from '../providers/tracing-provider.js';
 
 import type { TracingConfig } from '@granit/tracing';
 import type { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-web';
@@ -99,7 +99,7 @@ function renderProvider(): SpanExporter {
     exporter: { url: EXPORTER_URL },
   };
 
-  renderHook(() => useTracer(), {
+  renderHook(() => useTracingConfig(), {
     wrapper: ({ children }: { children: React.ReactNode }) => (
       <TracingProvider config={config}>{children}</TracingProvider>
     ),

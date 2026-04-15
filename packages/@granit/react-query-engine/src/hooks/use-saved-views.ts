@@ -6,7 +6,7 @@ import {
   buildQueryKey,
   createSavedView,
   deleteSavedView,
-  fetchSavedViews,
+  listSavedViews,
   setDefaultSavedView,
   updateSavedView,
 } from '@granit/query-engine';
@@ -57,7 +57,7 @@ export function useSavedViews(): UseSavedViewsReturn {
 
   const views = useQuery({
     queryKey: viewsKey,
-    queryFn: () => fetchSavedViews(config.client, config.basePath),
+    queryFn: () => listSavedViews(config.client, config.basePath),
   });
 
   const create = useMutation({

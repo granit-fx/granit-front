@@ -13,13 +13,11 @@
   "scripts": {
     "build": "tsup"
   },
-  "dependencies": {
-    "@granit/types": "workspace:*"
-  },
   "devDependencies": {
     "@granit/testing": "workspace:*"
   },
   "peerDependencies": {
+    "@granit/types": "workspace:*",
     "axios": "*"
   },
   "publishConfig": {

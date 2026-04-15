@@ -1,4 +1,4 @@
-import { fetchAuditLogEntries, fetchAuditLogEntry, fetchEntityAuditTrail } from '@granit/auditing';
+import { listAuditLogEntries, getAuditLogEntry, listEntityAuditTrail } from '@granit/auditing';
 import { useQuery } from '@tanstack/react-query';
 
 import { buildAuditLogQueryKey, useAuditLogConfig } from '../providers/audit-log-provider.js';
@@ -8,7 +8,7 @@ import type { PaginationParams } from '@granit/query-engine';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /**
- * Fetch paginated audit log entries with optional filters.
+ * List paginated audit log entries with optional filters.
  *
  * @example
  * ```tsx
@@ -22,12 +22,12 @@ export function useAuditLogEntries(params?: AuditListParams): UseQueryResult<Aud
 
   return useQuery({
     queryKey: buildAuditLogQueryKey(config, 'list', params),
-    queryFn: () => fetchAuditLogEntries(config.client, auditEntriesPath, params),
+    queryFn: () => listAuditLogEntries(config.client, auditEntriesPath, params),
   });
 }
 
 /**
- * Fetch a single audit log entry by ID (includes entity change details).
+ * Get a single audit log entry by ID (includes entity change details).
  *
  * @example
  * ```tsx
@@ -41,13 +41,13 @@ export function useAuditLogEntry(id: string): UseQueryResult<AuditEntryDetail> {
 
   return useQuery({
     queryKey: buildAuditLogQueryKey(config, 'detail', id),
-    queryFn: () => fetchAuditLogEntry(config.client, auditEntriesPath, id),
+    queryFn: () => getAuditLogEntry(config.client, auditEntriesPath, id),
     enabled: id.length > 0,
   });
 }
 
 /**
- * Fetch the audit trail for a specific entity (paginated).
+ * List the audit trail for a specific entity (paginated).
  *
  * @example
  * ```tsx
@@ -65,7 +65,7 @@ export function useEntityAuditTrail(
 
   return useQuery({
     queryKey: buildAuditLogQueryKey(config, 'entity', entityType, entityId, params),
-    queryFn: () => fetchEntityAuditTrail(config.client, auditEntriesPath, entityType, entityId, params),
+    queryFn: () => listEntityAuditTrail(config.client, auditEntriesPath, entityType, entityId, params),
     enabled: entityType.length > 0 && entityId.length > 0,
   });
 }

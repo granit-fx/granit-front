@@ -4,8 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   executeStateMachineTransition,
-  fetchHistory,
-  fetchTransitions,
+  getHistory,
+  listTransitions,
 } from '../api/workflow-api.js';
 
 import type {
@@ -19,7 +19,7 @@ describe('workflow api', () => {
   const entityType = 'Document';
   const entityId = 'doc-1';
 
-  it('should call GET with correct URL for fetchHistory', async () => {
+  it('should call GET with correct URL for getHistory', async () => {
     const client = createMockClient();
     const historyItems: TransitionHistory[] = [
       {
@@ -34,7 +34,7 @@ describe('workflow api', () => {
       axiosResponse({ items: historyItems, totalCount: 1, nextCursor: null })
     );
 
-    const result = await fetchHistory(client, basePath, entityType, entityId);
+    const result = await getHistory(client, basePath, entityType, entityId);
 
     expect(client.get).toHaveBeenCalledWith('/api/v1/workflow/Document/doc-1/history', {
       params: {},
@@ -42,7 +42,7 @@ describe('workflow api', () => {
     expect(result).toEqual({ items: historyItems, totalCount: 1, nextCursor: null });
   });
 
-  it('should call GET with query param for fetchTransitions', async () => {
+  it('should call GET with query param for listTransitions', async () => {
     const client = createMockClient();
     const status: WorkflowStatus = {
       currentState: 'Draft',
@@ -53,7 +53,7 @@ describe('workflow api', () => {
     };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(status));
 
-    const result = await fetchTransitions(client, basePath, 'Draft');
+    const result = await listTransitions(client, basePath, 'Draft');
 
     expect(client.get).toHaveBeenCalledWith('/api/v1/workflow/transitions', {
       params: { currentState: 'Draft' },
@@ -83,7 +83,7 @@ describe('workflow api', () => {
     expect(result).toEqual(transitionResult);
   });
 
-  it('should pass pagination params to fetchHistory when provided', async () => {
+  it('should pass pagination params to getHistory when provided', async () => {
     const client = createMockClient();
     const historyItems: TransitionHistory[] = [
       {
@@ -98,7 +98,7 @@ describe('workflow api', () => {
       axiosResponse({ items: historyItems, totalCount: 10, nextCursor: 'abc' })
     );
 
-    const result = await fetchHistory(client, basePath, entityType, entityId, {
+    const result = await getHistory(client, basePath, entityType, entityId, {
       page: 2,
       pageSize: 5,
     });

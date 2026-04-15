@@ -11,7 +11,7 @@ export type {
 export { CsrfManager } from './csrf/index.js';
 
 export {
-  fetchBffSessions,
+  listBffSessions,
   revokeAllOtherBffSessions,
   revokeBffSession,
 } from './api/bff-session-api.js';

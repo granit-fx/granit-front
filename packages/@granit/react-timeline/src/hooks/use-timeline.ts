@@ -1,5 +1,5 @@
 import { useInfiniteScroll } from '@granit/react-query-engine';
-import { fetchStream } from '@granit/timeline';
+import { getStream } from '@granit/timeline';
 import { useCallback } from 'react';
 
 import { useTimelineConfig } from '../providers/timeline-provider.js';
@@ -38,12 +38,12 @@ export function useTimeline({
   entityId,
   pageSize = DEFAULT_PAGE_SIZE,
 }: UseTimelineOptions): UseTimelineReturn {
-  const { apiClient, basePath } = useTimelineConfig();
+  const { client, basePath } = useTimelineConfig();
 
   const fetcher = useCallback(
     (page: number, ps: number) =>
-      fetchStream(apiClient, basePath, entityType, entityId, { page, pageSize: ps }),
-    [apiClient, basePath, entityType, entityId]
+      getStream(client, basePath, entityType, entityId, { page, pageSize: ps }),
+    [client, basePath, entityType, entityId]
   );
 
   const {

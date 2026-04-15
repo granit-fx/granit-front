@@ -2,7 +2,7 @@
 // useQueryEndpoint — main data fetching hook (Story #49)
 // ---------------------------------------------------------------------------
 
-import { buildQueryKey, fetchGrouped, fetchPage } from '@granit/query-engine';
+import { buildQueryKey, getGrouped, getPage } from '@granit/query-engine';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useCallback, useMemo, useReducer } from 'react';
 
@@ -216,7 +216,7 @@ export function useQueryEndpoint<T>(options?: UseQueryEndpointOptions): UseQuery
 
   const query = useQuery({
     queryKey: pagedQueryKey,
-    queryFn: () => fetchPage<T>(config.client, config.basePath, params),
+    queryFn: () => getPage<T>(config.client, config.basePath, params),
     enabled: enabled && !isGrouped,
     placeholderData: keepPreviousData,
   });
@@ -229,7 +229,7 @@ export function useQueryEndpoint<T>(options?: UseQueryEndpointOptions): UseQuery
 
   const groupedQuery = useQuery({
     queryKey: groupedQueryKey,
-    queryFn: () => fetchGrouped<T>(config.client, config.basePath, params),
+    queryFn: () => getGrouped<T>(config.client, config.basePath, params),
     enabled: enabled && isGrouped,
     placeholderData: keepPreviousData,
   });

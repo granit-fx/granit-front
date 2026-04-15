@@ -1,6 +1,6 @@
 import {
-  fetchUserDeviceActivity,
-  fetchUserSessions,
+  getUserDeviceActivity,
+  listUserSessions,
   terminateAllSessions,
   terminateSession,
 } from '@granit/identity';
@@ -28,13 +28,13 @@ export function useUserSessions(userId: UserId): UseQueryResult<readonly Identit
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'users', userId, 'sessions'),
-    queryFn: () => fetchUserSessions(config.client, basePath, userId),
+    queryFn: () => listUserSessions(config.client, basePath, userId),
     enabled: userId.length > 0,
   });
 }
 
 /**
- * List device activity for a user.
+ * Get device activity for a user.
  *
  * The query is automatically disabled when `userId` is empty.
  *
@@ -51,7 +51,7 @@ export function useUserDeviceActivity(
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'users', userId, 'devices'),
-    queryFn: () => fetchUserDeviceActivity(config.client, basePath, userId),
+    queryFn: () => getUserDeviceActivity(config.client, basePath, userId),
     enabled: userId.length > 0,
   });
 }

@@ -17,7 +17,7 @@ export type IdentityProviderUserListParams = {
  *
  * `GET {basePath}/users`
  */
-export async function fetchProviderUsers(
+export async function listProviderUsers(
   client: AxiosInstance,
   basePath: string,
   params?: IdentityProviderUserListParams
@@ -31,7 +31,7 @@ export async function fetchProviderUsers(
  *
  * `GET {basePath}/users/{userId}`
  */
-export async function fetchProviderUser(
+export async function getProviderUser(
   client: AxiosInstance,
   basePath: string,
   userId: UserId

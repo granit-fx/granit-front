@@ -5,25 +5,25 @@ import type {
   TimelineEntryPage,
 } from '../types/index.js';
 import type { AxiosInstance } from 'axios';
+import { buildApiUrl } from '@granit/api-client';
 
-function buildUrl(
+function buildEntityUrl(
   basePath: string,
   entityType: string,
   entityId: string,
   ...segments: string[]
 ): string {
-  const base = `${basePath}/${encodeURIComponent(entityType)}/${encodeURIComponent(entityId)}`;
-  return segments.length > 0 ? `${base}/${segments.join('/')}` : base;
+  return buildApiUrl(basePath, encodeURIComponent(entityType), encodeURIComponent(entityId), ...segments);
 }
 
-export async function fetchStream(
+export async function getStream(
   client: AxiosInstance,
   basePath: string,
   entityType: string,
   entityId: string,
   params?: TimelineQueryParams
 ): Promise<TimelineEntryPage> {
-  const { data } = await client.get<TimelineEntryPage>(buildUrl(basePath, entityType, entityId), {
+  const { data } = await client.get<TimelineEntryPage>(buildEntityUrl(basePath, entityType, entityId), {
     params,
   });
   return data;
@@ -37,7 +37,7 @@ export async function createEntry(
   request: CreateTimelineEntryRequest
 ): Promise<TimelineEntry> {
   const { data } = await client.post<TimelineEntry>(
-    buildUrl(basePath, entityType, entityId, 'entries'),
+    buildEntityUrl(basePath, entityType, entityId, 'entries'),
     request
   );
   return data;
@@ -50,7 +50,7 @@ export async function deleteEntry(
   entityId: string,
   entryId: string
 ): Promise<void> {
-  await client.delete(buildUrl(basePath, entityType, entityId, 'entries', entryId));
+  await client.delete(buildEntityUrl(basePath, entityType, entityId, 'entries', entryId));
 }
 
 export async function followEntity(
@@ -59,7 +59,7 @@ export async function followEntity(
   entityType: string,
   entityId: string
 ): Promise<void> {
-  await client.post(buildUrl(basePath, entityType, entityId, 'follow'));
+  await client.post(buildEntityUrl(basePath, entityType, entityId, 'follow'));
 }
 
 export async function unfollowEntity(
@@ -68,17 +68,17 @@ export async function unfollowEntity(
   entityType: string,
   entityId: string
 ): Promise<void> {
-  await client.delete(buildUrl(basePath, entityType, entityId, 'follow'));
+  await client.delete(buildEntityUrl(basePath, entityType, entityId, 'follow'));
 }
 
-export async function fetchFollowers(
+export async function getFollowers(
   client: AxiosInstance,
   basePath: string,
   entityType: string,
   entityId: string
 ): Promise<string[]> {
   const { data } = await client.get<string[]>(
-    buildUrl(basePath, entityType, entityId, 'followers')
+    buildEntityUrl(basePath, entityType, entityId, 'followers')
   );
   return data;
 }

@@ -1,4 +1,4 @@
-import { fetchPage } from '@granit/query-engine';
+import { getPage } from '@granit/query-engine';
 
 import type {
   BulkMigratePriceRequest,
@@ -151,7 +151,7 @@ export async function getPlanPriceHistory(
  *
  * `GET {basePath}/subscriptions`
  *
- * Delegates to {@link fetchPage} from `@granit/query-engine` so query
+ * Delegates to {@link getPage} from `@granit/query-engine` so query
  * parameters (page, pageSize, filters, sort, …) are serialized consistently.
  */
 export async function listSubscriptions(
@@ -159,7 +159,7 @@ export async function listSubscriptions(
   basePath: string,
   params?: QueryRequest
 ): Promise<PagedResult<SubscriptionResponse>> {
-  return fetchPage<SubscriptionResponse>(client, `${basePath}/subscriptions`, params ?? {});
+  return getPage<SubscriptionResponse>(client, `${basePath}/subscriptions`, params ?? {});
 }
 
 /**

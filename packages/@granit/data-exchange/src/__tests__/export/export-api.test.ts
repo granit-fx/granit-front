@@ -4,25 +4,25 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   createExportJob,
   downloadExportFile,
-  fetchExportDefinitions,
-  fetchExportFields,
-  fetchExportJobs,
-  fetchExportJobStatus,
+  listExportDefinitions,
+  getExportFields,
+  listExportJobs,
+  getExportJobStatus,
 } from '../../export/api/export-api.js';
 
 const BASE = '/api/v1/data-exchange';
 
 describe('export-api', () => {
-  it('fetchExportDefinitions calls GET /metadata/definitions', async () => {
+  it('listExportDefinitions calls GET /metadata/definitions', async () => {
     const client = createMockClient();
     const defs = [{ name: 'Test', entityType: 'Entity', supportedFormats: ['xlsx'] }];
     vi.mocked(client.get).mockResolvedValueOnce({ data: defs });
-    const result = await fetchExportDefinitions(client, BASE);
+    const result = await listExportDefinitions(client, BASE);
     expect(client.get).toHaveBeenCalledWith(`${BASE}/metadata/definitions`);
     expect(result).toEqual(defs);
   });
 
-  it('fetchExportFields calls GET /metadata/definitions/{name}/fields', async () => {
+  it('getExportFields calls GET /metadata/definitions/{name}/fields', async () => {
     const client = createMockClient();
     const fields = [
       {
@@ -35,15 +35,15 @@ describe('export-api', () => {
       },
     ];
     vi.mocked(client.get).mockResolvedValueOnce({ data: fields });
-    const result = await fetchExportFields(client, BASE, 'Test');
+    const result = await getExportFields(client, BASE, 'Test');
     expect(client.get).toHaveBeenCalledWith(`${BASE}/metadata/definitions/Test/fields`);
     expect(result).toEqual(fields);
   });
 
-  it('fetchExportFields encodes definition name', async () => {
+  it('getExportFields encodes definition name', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: [] });
-    await fetchExportFields(client, BASE, 'My Export');
+    await getExportFields(client, BASE, 'My Export');
     expect(client.get).toHaveBeenCalledWith(`${BASE}/metadata/definitions/My%20Export/fields`);
   });
 
@@ -66,11 +66,11 @@ describe('export-api', () => {
     expect(result).toEqual(job);
   });
 
-  it('fetchExportJobStatus calls GET /export/jobs/{jobId}', async () => {
+  it('getExportJobStatus calls GET /export/jobs/{jobId}', async () => {
     const client = createMockClient();
     const job = { id: 'abc', status: 'Exporting' };
     vi.mocked(client.get).mockResolvedValueOnce({ data: job });
-    const result = await fetchExportJobStatus(client, BASE, 'abc');
+    const result = await getExportJobStatus(client, BASE, 'abc');
     expect(client.get).toHaveBeenCalledWith(`${BASE}/export/jobs/abc`);
     expect(result).toEqual(job);
   });
@@ -96,21 +96,21 @@ describe('export-api', () => {
     expect(result.fileName).toBe('export');
   });
 
-  it('fetchExportJobs calls GET /export/jobs without params', async () => {
+  it('listExportJobs calls GET /export/jobs without params', async () => {
     const client = createMockClient();
     const page = { items: [], totalCount: 0 };
     vi.mocked(client.get).mockResolvedValueOnce({ data: page });
-    const result = await fetchExportJobs(client, BASE);
+    const result = await listExportJobs(client, BASE);
     expect(client.get).toHaveBeenCalledWith(`${BASE}/export/jobs`, { params: undefined });
     expect(result).toEqual(page);
   });
 
-  it('fetchExportJobs forwards query params', async () => {
+  it('listExportJobs forwards query params', async () => {
     const client = createMockClient();
     const page = { items: [{ id: '1' }], totalCount: 1 };
     vi.mocked(client.get).mockResolvedValueOnce({ data: page });
     const params = { status: 'Completed', page: 1, pageSize: 10 };
-    const result = await fetchExportJobs(client, BASE, params);
+    const result = await listExportJobs(client, BASE, params);
     expect(client.get).toHaveBeenCalledWith(`${BASE}/export/jobs`, { params });
     expect(result).toEqual(page);
   });

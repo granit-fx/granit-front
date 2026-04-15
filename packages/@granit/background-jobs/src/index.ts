@@ -3,8 +3,8 @@ export type { BackgroundJobListParams, BackgroundJobStatus } from './types/index
 
 // API
 export {
-  fetchBackgroundJob,
-  fetchBackgroundJobs,
+  getBackgroundJob,
+  listBackgroundJobs,
   pauseJob,
   resumeJob,
   triggerJob,

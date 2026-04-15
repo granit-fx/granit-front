@@ -1,9 +1,9 @@
 import {
   createReferenceDataEntry,
   deactivateReferenceDataEntry,
-  fetchReferenceDataChildren,
-  fetchReferenceDataEntry,
-  fetchReferenceDataList,
+  getReferenceDataEntry,
+  listReferenceData,
+  listReferenceDataChildren,
   updateReferenceDataEntry,
 } from '@granit/reference-data';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -139,7 +139,7 @@ export function createReferenceDataHooks<T extends ReferenceDataEntry>(
 
     return useQuery({
       queryKey: keys.list(params),
-      queryFn: async () => fetchReferenceDataList<T>(client, basePath, params),
+      queryFn: async () => listReferenceData<T>(client, basePath, params),
       enabled,
     });
   }
@@ -149,7 +149,7 @@ export function createReferenceDataHooks<T extends ReferenceDataEntry>(
 
     return useQuery({
       queryKey: keys.detail(code),
-      queryFn: async () => fetchReferenceDataEntry<T>(client, basePath, code),
+      queryFn: async () => getReferenceDataEntry<T>(client, basePath, code),
       enabled: enabled && code.length > 0,
     });
   }
@@ -162,7 +162,7 @@ export function createReferenceDataHooks<T extends ReferenceDataEntry>(
 
     return useQuery({
       queryKey: keys.children(parentCode),
-      queryFn: async () => fetchReferenceDataChildren<T>(client, basePath, parentCode),
+      queryFn: async () => listReferenceDataChildren<T>(client, basePath, parentCode),
       enabled: enabled && parentCode.length > 0,
     });
   }

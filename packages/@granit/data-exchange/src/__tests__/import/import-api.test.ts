@@ -7,9 +7,9 @@ import {
   downloadCorrectionFile,
   dryRunImport,
   executeImport,
-  fetchImportJob,
-  fetchImportJobs,
-  fetchImportReport,
+  getImportJob,
+  listImportJobs,
+  getImportReport,
   previewImport,
   uploadImportFile,
 } from '../../import/api/import-api.js';
@@ -83,12 +83,12 @@ describe('import-api', () => {
     expect(result).toEqual(report);
   });
 
-  it('fetchImportJob calls GET /import/{jobId}', async () => {
+  it('getImportJob calls GET /import/{jobId}', async () => {
     const client = createMockClient();
     const job = { id: 'job-1', status: 'Executing' };
     vi.mocked(client.get).mockResolvedValueOnce({ data: job });
 
-    const result = await fetchImportJob(client, BASE, 'job-1');
+    const result = await getImportJob(client, BASE, 'job-1');
     expect(client.get).toHaveBeenCalledWith(`${BASE}/import/job-1`);
     expect(result).toEqual(job);
   });
@@ -99,12 +99,12 @@ describe('import-api', () => {
     expect(client.delete).toHaveBeenCalledWith(`${BASE}/import/job-1`);
   });
 
-  it('fetchImportReport calls GET /import/{jobId}/report', async () => {
+  it('getImportReport calls GET /import/{jobId}/report', async () => {
     const client = createMockClient();
     const report = { importJobId: 'job-1', totalRows: 100 };
     vi.mocked(client.get).mockResolvedValueOnce({ data: report });
 
-    const result = await fetchImportReport(client, BASE, 'job-1');
+    const result = await getImportReport(client, BASE, 'job-1');
     expect(client.get).toHaveBeenCalledWith(`${BASE}/import/job-1/report`);
     expect(result).toEqual(report);
   });
@@ -138,27 +138,27 @@ describe('import-api', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: {} });
 
-    await fetchImportJob(client, BASE, 'job with spaces');
+    await getImportJob(client, BASE, 'job with spaces');
     expect(client.get).toHaveBeenCalledWith(`${BASE}/import/job%20with%20spaces`);
   });
 
-  it('fetchImportJobs calls GET /import/jobs without params', async () => {
+  it('listImportJobs calls GET /import/jobs without params', async () => {
     const client = createMockClient();
     const page = { items: [], totalCount: 0 };
     vi.mocked(client.get).mockResolvedValueOnce({ data: page });
 
-    const result = await fetchImportJobs(client, BASE);
+    const result = await listImportJobs(client, BASE);
     expect(client.get).toHaveBeenCalledWith(`${BASE}/import/jobs`, { params: undefined });
     expect(result).toEqual(page);
   });
 
-  it('fetchImportJobs forwards query params', async () => {
+  it('listImportJobs forwards query params', async () => {
     const client = createMockClient();
     const page = { items: [{ id: '1' }], totalCount: 1 };
     vi.mocked(client.get).mockResolvedValueOnce({ data: page });
     const params = { status: 'Completed', page: 1, pageSize: 10 };
 
-    const result = await fetchImportJobs(client, BASE, params);
+    const result = await listImportJobs(client, BASE, params);
     expect(client.get).toHaveBeenCalledWith(`${BASE}/import/jobs`, { params });
     expect(result).toEqual(page);
   });

@@ -10,12 +10,35 @@ import type {
 } from '@granit/authorization';
 const EMPTY_SET: ReadonlySet<string> = new Set<string>();
 
-/** Query key factory for permission queries. */
+// ---------------------------------------------------------------------------
+// Query key builder
+// ---------------------------------------------------------------------------
+
+const DEFAULT_QUERY_KEY_PREFIX = ['auth', 'permissions'] as const;
+
+/**
+ * Builds a query key for permission / authorization queries.
+ *
+ * @param config - Options containing an optional `queryKeyPrefix`.
+ * @param segments - Additional segments appended after the prefix.
+ */
+export function buildPermissionQueryKey(
+  config: { queryKeyPrefix?: readonly string[] },
+  ...segments: readonly unknown[]
+): readonly unknown[] {
+  return [...(config.queryKeyPrefix ?? DEFAULT_QUERY_KEY_PREFIX), ...segments];
+}
+
+// ---------------------------------------------------------------------------
+// Legacy query key factory (delegates to default prefix)
+// ---------------------------------------------------------------------------
+
+/** @deprecated Use {@link buildPermissionQueryKey} instead. */
 export const permissionKeys = {
-  all: ['auth', 'permissions'] as const,
-  me: (userId?: string) => [...permissionKeys.all, 'me', userId] as const,
-  definitions: () => [...permissionKeys.all, 'definitions'] as const,
-  role: (roleName: string) => [...permissionKeys.all, 'roles', roleName] as const,
+  all: DEFAULT_QUERY_KEY_PREFIX as readonly string[],
+  me: (userId?: string) => [...DEFAULT_QUERY_KEY_PREFIX, 'me', userId] as const,
+  definitions: () => [...DEFAULT_QUERY_KEY_PREFIX, 'definitions'] as const,
+  role: (roleName: string) => [...DEFAULT_QUERY_KEY_PREFIX, 'roles', roleName] as const,
 };
 
 // ---------------------------------------------------------------------------
@@ -47,7 +70,7 @@ export function usePermissions(options: UsePermissionsOptions): UsePermissionsRe
   const { client, basePath = DEFAULT_BASE_PATH, enabled } = options;
 
   const query = useQuery<PermissionsResponse>({
-    queryKey: permissionKeys.me(),
+    queryKey: buildPermissionQueryKey(options, 'me'),
     queryFn: async () => {
       const response = await client.get<PermissionsResponse>(`${basePath}/permissions`);
       return response.data;

@@ -2,7 +2,7 @@ import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
-  fetchDeviceTokens,
+  listDeviceTokens,
   registerDeviceToken,
   unregisterDeviceToken,
 } from '../api/mobile-push-api.js';
@@ -50,7 +50,7 @@ describe('mobile-push-api', () => {
     ];
     vi.mocked(client.get).mockResolvedValueOnce({ data: tokens });
 
-    const result = await fetchDeviceTokens(client, '/api/v1');
+    const result = await listDeviceTokens(client, '/api/v1');
     expect(client.get).toHaveBeenCalledWith('/api/v1/notifications/mobile-push/tokens');
     expect(result).toEqual(tokens);
   });
@@ -59,7 +59,7 @@ describe('mobile-push-api', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: [] });
 
-    const result = await fetchDeviceTokens(client, '/api/v1');
+    const result = await listDeviceTokens(client, '/api/v1');
     expect(result).toEqual([]);
   });
 });

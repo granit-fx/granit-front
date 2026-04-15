@@ -1,6 +1,6 @@
 import {
   deleteLocalizationOverride,
-  fetchLanguages,
+  listLanguages,
   setLocalizationOverride,
   updateLanguageStatus,
 } from '@granit/localization';
@@ -21,7 +21,7 @@ import {
 import type { ReactNode } from 'react';
 
 vi.mock('@granit/localization', () => ({
-  fetchLanguages: vi.fn(),
+  listLanguages: vi.fn(),
   updateLanguageStatus: vi.fn(),
   setLocalizationOverride: vi.fn(),
   deleteLocalizationOverride: vi.fn(),
@@ -46,25 +46,25 @@ describe('useLanguages', () => {
     const languages = [
       { cultureName: 'fr', displayName: 'Français', isDefault: true, isEnabled: true },
     ];
-    vi.mocked(fetchLanguages).mockResolvedValue(languages);
+    vi.mocked(listLanguages).mockResolvedValue(languages);
 
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useLanguages({ client, basePath: '/api' }), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(fetchLanguages).toHaveBeenCalledWith(client, '/api');
+    expect(listLanguages).toHaveBeenCalledWith(client, '/api');
     expect(result.current.data).toEqual(languages);
   });
 
   it('should use empty string as default basePath', async () => {
     const client = createMockClient();
-    vi.mocked(fetchLanguages).mockResolvedValue([]);
+    vi.mocked(listLanguages).mockResolvedValue([]);
 
     const { wrapper } = createWrapper();
     renderHook(() => useLanguages({ client }), { wrapper });
 
-    await waitFor(() => expect(fetchLanguages).toHaveBeenCalledWith(client, ''));
+    await waitFor(() => expect(listLanguages).toHaveBeenCalledWith(client, ''));
   });
 });
 

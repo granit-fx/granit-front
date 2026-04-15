@@ -20,7 +20,7 @@ export type {
 } from './types/index.js';
 
 // API — User cache
-export { fetchIdentityCapabilities } from './api/identity-capabilities-api.js';
+export { getIdentityCapabilities } from './api/identity-capabilities-api.js';
 export {
   batchResolveUsers,
   eraseUserCache,
@@ -36,32 +36,32 @@ export {
 export type { IdentityProviderUserListParams } from './api/identity-provider-user-api.js';
 export {
   createUser,
-  fetchProviderUser,
-  fetchProviderUsers,
+  getProviderUser,
+  listProviderUsers,
   setUserEnabled,
   updateUser,
 } from './api/identity-provider-user-api.js';
 export {
   assignRole,
-  fetchRoleMembers,
-  fetchRoles,
-  fetchUserRoles,
+  listRoleMembers,
+  listRoles,
+  listUserRoles,
   removeRole,
 } from './api/identity-provider-role-api.js';
 export {
   addUserToGroup,
-  fetchGroups,
-  fetchUserGroups,
+  listGroups,
+  listUserGroups,
   removeUserFromGroup,
 } from './api/identity-provider-group-api.js';
 export {
-  fetchUserDeviceActivity,
-  fetchUserSessions,
+  getUserDeviceActivity,
+  listUserSessions,
   terminateAllSessions,
   terminateSession,
 } from './api/identity-provider-session-api.js';
 export {
-  fetchPasswordChangedAt,
+  getPasswordChangedAt,
   sendPasswordResetEmail,
   setTemporaryPassword,
 } from './api/identity-provider-password-api.js';

@@ -2,7 +2,7 @@ import {
   cancelImportJob,
   confirmMappings,
   executeImport,
-  fetchImportJob,
+  getImportJob,
   uploadImportFile,
 } from '@granit/data-exchange';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -79,7 +79,7 @@ export function useImportJob(): UseImportJobReturn {
       confirmMappings(config.client, config.basePath, activeJobId ?? '', request),
     onSuccess: async () => {
       if (activeJobId) {
-        const updated = await fetchImportJob(config.client, config.basePath, activeJobId);
+        const updated = await getImportJob(config.client, config.basePath, activeJobId);
         setJob(updated);
       }
     },
@@ -96,7 +96,7 @@ export function useImportJob(): UseImportJobReturn {
     mutationFn: () => cancelImportJob(config.client, config.basePath, activeJobId ?? ''),
     onSuccess: async () => {
       if (activeJobId) {
-        const updated = await fetchImportJob(config.client, config.basePath, activeJobId);
+        const updated = await getImportJob(config.client, config.basePath, activeJobId);
         setJob(updated);
       }
     },
@@ -105,7 +105,7 @@ export function useImportJob(): UseImportJobReturn {
   // Poll job status during execution
   const statusQuery = useQuery({
     queryKey: buildImportQueryKey(config, 'job', activeJobId ?? ''),
-    queryFn: () => fetchImportJob(config.client, config.basePath, activeJobId ?? ''),
+    queryFn: () => getImportJob(config.client, config.basePath, activeJobId ?? ''),
     enabled: !!activeJobId && executionDispatched,
     refetchInterval: (query) => {
       const status = query.state.data?.status;

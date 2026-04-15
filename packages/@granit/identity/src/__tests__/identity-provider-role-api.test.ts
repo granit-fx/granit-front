@@ -4,9 +4,9 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   assignRole,
-  fetchRoleMembers,
-  fetchRoles,
-  fetchUserRoles,
+  listRoleMembers,
+  listRoles,
+  listUserRoles,
   removeRole,
 } from '../api/identity-provider-role-api.js';
 
@@ -31,25 +31,25 @@ const sampleUser: IdentityUser = {
 const basePath = '/identity/provider';
 
 describe('identity-provider-role-api', () => {
-  describe('fetchRoles', () => {
+  describe('listRoles', () => {
     it('should GET {basePath}/roles', async () => {
       const client = createMockClient();
       const roles = [sampleRole];
       vi.mocked(client.get).mockResolvedValue(axiosResponse(roles));
 
-      const result = await fetchRoles(client, basePath);
+      const result = await listRoles(client, basePath);
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/roles`);
       expect(result).toEqual(roles);
     });
   });
 
-  describe('fetchRoleMembers', () => {
+  describe('listRoleMembers', () => {
     it('should GET {basePath}/roles/{roleName}/members', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleUser]));
 
-      const result = await fetchRoleMembers(client, basePath, 'admin');
+      const result = await listRoleMembers(client, basePath, 'admin');
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/roles/admin/members`);
       expect(result).toEqual([sampleUser]);
@@ -59,7 +59,7 @@ describe('identity-provider-role-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([]));
 
-      await fetchRoleMembers(client, basePath, 'role/special@name');
+      await listRoleMembers(client, basePath, 'role/special@name');
 
       expect(client.get).toHaveBeenCalledWith(
         `${basePath}/roles/${encodeURIComponent('role/special@name')}/members`
@@ -67,12 +67,12 @@ describe('identity-provider-role-api', () => {
     });
   });
 
-  describe('fetchUserRoles', () => {
+  describe('listUserRoles', () => {
     it('should GET {basePath}/users/{userId}/roles', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleRole]));
 
-      const result = await fetchUserRoles(client, basePath, toEntityId<'User'>('user-1'));
+      const result = await listUserRoles(client, basePath, toEntityId<'User'>('user-1'));
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/users/user-1/roles`);
       expect(result).toEqual([sampleRole]);

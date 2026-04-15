@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import {
-  fetchValidators,
+  listValidators,
   validateFieldServer,
   validateFieldsBatch,
 } from '../api/server-validation-api.js';
@@ -13,13 +13,13 @@ function createMockClient() {
   };
 }
 
-describe('fetchValidators', () => {
+describe('listValidators', () => {
   it('calls GET /validators and returns the list', async () => {
     const client = createMockClient();
     const validators = ['Granit:Validation:InvalidIban', 'Granit:Validation:InvalidBce'];
     client.get.mockResolvedValue({ data: validators });
 
-    const result = await fetchValidators(client as never);
+    const result = await listValidators(client as never);
 
     expect(client.get).toHaveBeenCalledWith('/api/v1/validation/validators');
     expect(result).toEqual(validators);
@@ -29,7 +29,7 @@ describe('fetchValidators', () => {
     const client = createMockClient();
     client.get.mockResolvedValue({ data: [] });
 
-    await fetchValidators(client as never, '/custom');
+    await listValidators(client as never, '/custom');
 
     expect(client.get).toHaveBeenCalledWith('/custom/validators');
   });

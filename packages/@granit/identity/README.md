@@ -16,15 +16,15 @@ pnpm add @granit/identity
 
 ### Functions
 
-- `fetchIdentityCapabilities(axios)` -- fetches identity provider capabilities from the server
+- `getIdentityCapabilities(axios)` -- fetches identity provider capabilities from the server
 
 ## Usage
 
 ```ts
-import { fetchIdentityCapabilities } from '@granit/identity';
+import { getIdentityCapabilities } from '@granit/identity';
 import type { IdentityProviderCapabilities } from '@granit/identity';
 
-const capabilities = await fetchIdentityCapabilities(axiosInstance);
+const capabilities = await getIdentityCapabilities(axiosInstance);
 ```
 
 ## License

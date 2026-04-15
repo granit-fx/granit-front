@@ -7,11 +7,11 @@ import type {
 import type { AxiosInstance } from 'axios';
 
 /**
- * Fetch all visible settings for a scope.
+ * Get all visible settings for a scope.
  *
  * `GET /settings/{scope}`
  */
-export async function fetchSettings(
+export async function getSettings(
   client: AxiosInstance,
   basePath: string,
   scope: string
@@ -21,11 +21,11 @@ export async function fetchSettings(
 }
 
 /**
- * Fetch a single setting by name.
+ * Get a single setting by name.
  *
  * `GET /settings/{scope}/{name}`
  */
-export async function fetchSetting(
+export async function getSetting(
   client: AxiosInstance,
   basePath: string,
   scope: string,
@@ -69,11 +69,11 @@ export async function deleteSetting(
 // ── Admin endpoints ─────────────────────────────────────────────────────────
 
 /**
- * Fetch all application settings with admin metadata.
+ * Get all application settings with admin metadata.
  *
  * `GET {basePath}/admin/config/settings`
  */
-export async function fetchAdminAppSettings(
+export async function getAdminAppSettings(
   client: AxiosInstance,
   basePath: string
 ): Promise<AdminAppSetting[]> {

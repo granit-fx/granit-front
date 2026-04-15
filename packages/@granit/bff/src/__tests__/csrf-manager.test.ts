@@ -16,7 +16,7 @@ describe('CsrfManager', () => {
   describe('fetchToken', () => {
     it('should POST to /{prefix}/bff/csrf-token with credentials', async () => {
       vi.mocked(globalThis.fetch).mockResolvedValue(
-        new Response(JSON.stringify({ token: 'csrf-abc' }), { status: 200 })
+        new Response(JSON.stringify({ csrfToken: 'csrf-abc' }), { status: 200 })
       );
 
       const manager = new CsrfManager('/admin');
@@ -30,7 +30,7 @@ describe('CsrfManager', () => {
 
     it('should store and return the fetched token', async () => {
       vi.mocked(globalThis.fetch).mockResolvedValue(
-        new Response(JSON.stringify({ token: 'csrf-xyz' }), { status: 200 })
+        new Response(JSON.stringify({ csrfToken: 'csrf-xyz' }), { status: 200 })
       );
 
       const manager = new CsrfManager('/app');
@@ -58,7 +58,7 @@ describe('CsrfManager', () => {
   describe('createFetchWithCsrf', () => {
     it('should inject X-CSRF-Token on POST requests', async () => {
       vi.mocked(globalThis.fetch).mockResolvedValue(
-        new Response(JSON.stringify({ token: 'csrf-post' }), { status: 200 })
+        new Response(JSON.stringify({ csrfToken: 'csrf-post' }), { status: 200 })
       );
 
       const manager = new CsrfManager('/app');
@@ -78,7 +78,7 @@ describe('CsrfManager', () => {
 
     it('should inject X-CSRF-Token on PUT requests', async () => {
       vi.mocked(globalThis.fetch).mockResolvedValue(
-        new Response(JSON.stringify({ token: 'csrf-put' }), { status: 200 })
+        new Response(JSON.stringify({ csrfToken: 'csrf-put' }), { status: 200 })
       );
 
       const manager = new CsrfManager('/app');
@@ -97,7 +97,7 @@ describe('CsrfManager', () => {
 
     it('should inject X-CSRF-Token on DELETE requests', async () => {
       vi.mocked(globalThis.fetch).mockResolvedValue(
-        new Response(JSON.stringify({ token: 'csrf-del' }), { status: 200 })
+        new Response(JSON.stringify({ csrfToken: 'csrf-del' }), { status: 200 })
       );
 
       const manager = new CsrfManager('/app');
@@ -116,7 +116,7 @@ describe('CsrfManager', () => {
 
     it('should inject X-CSRF-Token on PATCH requests', async () => {
       vi.mocked(globalThis.fetch).mockResolvedValue(
-        new Response(JSON.stringify({ token: 'csrf-patch' }), { status: 200 })
+        new Response(JSON.stringify({ csrfToken: 'csrf-patch' }), { status: 200 })
       );
 
       const manager = new CsrfManager('/app');
@@ -135,7 +135,7 @@ describe('CsrfManager', () => {
 
     it('should NOT inject X-CSRF-Token on GET requests', async () => {
       vi.mocked(globalThis.fetch).mockResolvedValue(
-        new Response(JSON.stringify({ token: 'csrf-get' }), { status: 200 })
+        new Response(JSON.stringify({ csrfToken: 'csrf-get' }), { status: 200 })
       );
 
       const manager = new CsrfManager('/app');

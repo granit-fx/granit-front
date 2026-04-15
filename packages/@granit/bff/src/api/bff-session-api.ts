@@ -16,12 +16,12 @@ import type { BffSessionInfo, BffSessionListResponse } from '../types/index.js';
  * @returns Array of active sessions with metadata.
  * @throws Error on non-OK response (401 if not authenticated).
  */
-export async function fetchBffSessions(pathPrefix: string): Promise<readonly BffSessionInfo[]> {
+export async function listBffSessions(pathPrefix: string): Promise<readonly BffSessionInfo[]> {
   const response = await fetch(`${pathPrefix}/bff/sessions`, {
     credentials: 'include',
   });
   if (!response.ok) {
-    throw new Error(`Failed to fetch BFF sessions: ${response.status}`);
+    throw new Error(`Failed to list BFF sessions: ${response.status}`);
   }
   const data = (await response.json()) as BffSessionListResponse;
   return data.sessions;

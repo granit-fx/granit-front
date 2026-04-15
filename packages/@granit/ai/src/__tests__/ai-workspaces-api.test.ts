@@ -4,19 +4,19 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   createAIWorkspace,
   deleteAIWorkspace,
-  fetchAIWorkspace,
-  fetchAIWorkspaces,
+  getAIWorkspace,
+  listAIWorkspaces,
   updateAIWorkspace,
 } from '../api/ai-workspaces-api.js';
 
 describe('ai-workspaces-api', () => {
-  describe('fetchAIWorkspaces', () => {
+  describe('listAIWorkspaces', () => {
     it('should GET /ai/workspaces', async () => {
       const client = createMockClient();
       const data = { workspaces: [], totalCount: 0 };
       vi.mocked(client.get).mockResolvedValue({ data });
 
-      const result = await fetchAIWorkspaces(client, '');
+      const result = await listAIWorkspaces(client, '');
 
       expect(client.get).toHaveBeenCalledWith('/ai/workspaces');
       expect(result).toEqual(data);
@@ -26,19 +26,19 @@ describe('ai-workspaces-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: { workspaces: [], totalCount: 0 } });
 
-      await fetchAIWorkspaces(client, '/api/v1');
+      await listAIWorkspaces(client, '/api/v1');
 
       expect(client.get).toHaveBeenCalledWith('/api/v1/ai/workspaces');
     });
   });
 
-  describe('fetchAIWorkspace', () => {
+  describe('getAIWorkspace', () => {
     it('should GET /ai/workspaces/{name}', async () => {
       const client = createMockClient();
       const workspace = { name: 'default', provider: 'OpenAI', model: 'gpt-4o' };
       vi.mocked(client.get).mockResolvedValue({ data: workspace });
 
-      const result = await fetchAIWorkspace(client, '', 'default');
+      const result = await getAIWorkspace(client, '', 'default');
 
       expect(client.get).toHaveBeenCalledWith('/ai/workspaces/default');
       expect(result).toEqual(workspace);
@@ -48,7 +48,7 @@ describe('ai-workspaces-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: {} });
 
-      await fetchAIWorkspace(client, '/api', 'my workspace');
+      await getAIWorkspace(client, '/api', 'my workspace');
 
       expect(client.get).toHaveBeenCalledWith('/api/ai/workspaces/my%20workspace');
     });

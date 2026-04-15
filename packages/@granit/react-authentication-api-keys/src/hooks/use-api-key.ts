@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
 
-import { apiKeyKeys } from './use-api-keys.js';
+import { buildApiKeyQueryKey } from './use-api-keys.js';
 
 import type { ApiKeyHookOptions } from './use-api-keys.js';
 import type { ApiKeyResponse } from '@granit/authentication-api-keys';
@@ -25,7 +25,7 @@ export function useApiKey(id: string, options: ApiKeyHookOptions): UseQueryResul
   const { client, basePath = DEFAULT_BASE_PATH } = options;
 
   return useQuery({
-    queryKey: apiKeyKeys.detail(id),
+    queryKey: buildApiKeyQueryKey(options, 'detail', id),
     queryFn: async () => {
       const response = await client.get<ApiKeyResponse>(`${basePath}/api-keys/${id}`);
       return response.data;

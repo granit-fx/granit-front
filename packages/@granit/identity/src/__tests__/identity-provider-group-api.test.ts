@@ -4,8 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   addUserToGroup,
-  fetchGroups,
-  fetchUserGroups,
+  listGroups,
+  listUserGroups,
   removeUserFromGroup,
 } from '../api/identity-provider-group-api.js';
 
@@ -21,24 +21,24 @@ const sampleGroup: IdentityGroup = {
 const basePath = '/identity/provider';
 
 describe('identity-provider-group-api', () => {
-  describe('fetchGroups', () => {
+  describe('listGroups', () => {
     it('should GET {basePath}/groups', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleGroup]));
 
-      const result = await fetchGroups(client, basePath);
+      const result = await listGroups(client, basePath);
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/groups`);
       expect(result).toEqual([sampleGroup]);
     });
   });
 
-  describe('fetchUserGroups', () => {
+  describe('listUserGroups', () => {
     it('should GET {basePath}/users/{userId}/groups', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleGroup]));
 
-      const result = await fetchUserGroups(client, basePath, toEntityId<'User'>('user-1'));
+      const result = await listUserGroups(client, basePath, toEntityId<'User'>('user-1'));
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/users/user-1/groups`);
       expect(result).toEqual([sampleGroup]);
@@ -48,7 +48,7 @@ describe('identity-provider-group-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([]));
 
-      await fetchUserGroups(client, basePath, toEntityId<'User'>('user/special@id'));
+      await listUserGroups(client, basePath, toEntityId<'User'>('user/special@id'));
 
       expect(client.get).toHaveBeenCalledWith(
         `${basePath}/users/${encodeURIComponent('user/special@id')}/groups`

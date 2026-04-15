@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { useErrorContext } from '../providers/error-context-provider.js';
+import { useErrorBoundaryConfig } from '../providers/error-context-provider.js';
 
 /** Return type of the {@link useBreadcrumb} hook. */
 export type UseBreadcrumbReturn = {
@@ -24,7 +24,7 @@ export type UseBreadcrumbReturn = {
  * ```
  */
 export function useBreadcrumb(): UseBreadcrumbReturn {
-  const { addBreadcrumb } = useErrorContext();
+  const { addBreadcrumb } = useErrorBoundaryConfig();
 
   return React.useMemo(() => ({ addBreadcrumb }), [addBreadcrumb]);
 }

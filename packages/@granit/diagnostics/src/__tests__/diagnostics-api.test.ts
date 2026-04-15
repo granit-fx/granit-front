@@ -1,7 +1,7 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { DEFAULT_DIAGNOSTICS_BASE_PATH, fetchMonitoringHealth } from '../api/diagnostics-api.js';
+import { DEFAULT_DIAGNOSTICS_BASE_PATH, getMonitoringHealth } from '../api/diagnostics-api.js';
 
 import type { MonitoringHealthResponse } from '../types/index.js';
 
@@ -21,12 +21,12 @@ const mockResponse: MonitoringHealthResponse = {
   checkedAt: '2026-03-20T12:00:00+00:00',
 };
 
-describe('fetchMonitoringHealth', () => {
+describe('getMonitoringHealth', () => {
   it('calls GET {basePath}/health', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockResponse });
 
-    const result = await fetchMonitoringHealth(client, BASE);
+    const result = await getMonitoringHealth(client, BASE);
     expect(client.get).toHaveBeenCalledWith(`${BASE}/health`);
     expect(result).toEqual(mockResponse);
   });
@@ -56,7 +56,7 @@ describe('fetchMonitoringHealth', () => {
     };
     vi.mocked(client.get).mockResolvedValueOnce({ data: multiService });
 
-    const result = await fetchMonitoringHealth(client, BASE);
+    const result = await getMonitoringHealth(client, BASE);
     expect(result.services).toHaveLength(2);
     expect(result.services[0]!.status).toBe('healthy');
     expect(result.services[1]!.status).toBe('degraded');
@@ -66,7 +66,7 @@ describe('fetchMonitoringHealth', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockResponse });
 
-    await fetchMonitoringHealth(client, '/api/v2/diagnostics');
+    await getMonitoringHealth(client, '/api/v2/diagnostics');
     expect(client.get).toHaveBeenCalledWith('/api/v2/diagnostics/health');
   });
 
@@ -74,6 +74,6 @@ describe('fetchMonitoringHealth', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockRejectedValueOnce(new Error('Forbidden'));
 
-    await expect(fetchMonitoringHealth(client, BASE)).rejects.toThrow('Forbidden');
+    await expect(getMonitoringHealth(client, BASE)).rejects.toThrow('Forbidden');
   });
 });

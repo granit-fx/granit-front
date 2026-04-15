@@ -7,6 +7,7 @@ export type { SchedulingConfig, SchedulingProviderProps } from './providers/sche
 
 // Hooks
 export {
+  buildSchedulingQueryKey,
   schedulingKeys,
   useCancelScheduledAction,
   useRescheduleScheduledAction,

@@ -1,4 +1,4 @@
-import { fetchSetting } from '@granit/settings';
+import { getSetting } from '@granit/settings';
 import { useQuery } from '@tanstack/react-query';
 
 import { buildSettingsQueryKey, useSettingsConfig } from '../providers/settings-provider.js';
@@ -7,7 +7,7 @@ import type { SettingScope, SettingValueResponse } from '@granit/settings';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /**
- * Fetch a single setting by name.
+ * Get a single setting by name.
  *
  * @example
  * ```tsx
@@ -24,7 +24,7 @@ export function useSetting(
 
   return useQuery({
     queryKey: buildSettingsQueryKey(config, scope, name),
-    queryFn: () => fetchSetting(config.client, config.basePath ?? '', scope, name),
+    queryFn: () => getSetting(config.client, config.basePath ?? '', scope, name),
     enabled: options?.enabled ?? true,
   });
 }

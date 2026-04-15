@@ -1,7 +1,7 @@
 import { SpanStatusCode, context, trace } from '@opentelemetry/api';
 import * as React from 'react';
 
-import { useTracer } from '../providers/tracing-provider.js';
+import { useTracingConfig } from '../providers/tracing-provider.js';
 
 import type { Span, SpanOptions } from '@opentelemetry/api';
 
@@ -45,7 +45,7 @@ export type UseSpanReturn = {
  * ```
  */
 export function useSpan(): UseSpanReturn {
-  const tracer = useTracer();
+  const tracer = useTracingConfig();
 
   const withSpan = React.useCallback(
     async <T>(name: string, fn: (span: Span) => T | Promise<T>): Promise<T> => {

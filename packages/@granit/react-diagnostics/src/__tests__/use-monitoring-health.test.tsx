@@ -5,7 +5,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { diagnosticsKeys, useMonitoringHealth } from '../hooks/use-monitoring-health.js';
+import { buildDiagnosticsQueryKey, diagnosticsKeys, useMonitoringHealth } from '../hooks/use-monitoring-health.js';
 
 import type { MonitoringHealthResponse } from '@granit/diagnostics';
 
@@ -33,13 +33,28 @@ const mockResponse: MonitoringHealthResponse = {
   checkedAt: '2026-03-20T12:00:00+00:00',
 };
 
-describe('diagnosticsKeys', () => {
+describe('diagnosticsKeys (legacy)', () => {
   it('should produce stable all key', () => {
     expect(diagnosticsKeys.all).toEqual(['diagnostics']);
   });
 
   it('should produce stable health key', () => {
     expect(diagnosticsKeys.health()).toEqual(['diagnostics', 'health']);
+  });
+});
+
+describe('buildDiagnosticsQueryKey', () => {
+  it('should use default prefix when no queryKeyPrefix is provided', () => {
+    expect(buildDiagnosticsQueryKey({}, 'health')).toEqual(['diagnostics', 'health']);
+  });
+
+  it('should use custom prefix when queryKeyPrefix is provided', () => {
+    const config = { queryKeyPrefix: ['custom', 'diag'] as const };
+    expect(buildDiagnosticsQueryKey(config, 'health')).toEqual(['custom', 'diag', 'health']);
+  });
+
+  it('should return only the prefix when no segments are provided', () => {
+    expect(buildDiagnosticsQueryKey({})).toEqual(['diagnostics']);
   });
 });
 

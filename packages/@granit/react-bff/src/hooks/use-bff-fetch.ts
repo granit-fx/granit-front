@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useBffContext } from '../providers/bff-provider.js';
+import { useBffConfig } from '../providers/bff-provider.js';
 
 /**
  * Hook that returns a `fetch` wrapper with automatic CSRF token injection
@@ -9,6 +9,6 @@ import { useBffContext } from '../providers/bff-provider.js';
  * @throws Error if used outside of a `<BffProvider>`.
  */
 export function useBffFetch() {
-  const { csrfManager } = useBffContext();
+  const { csrfManager } = useBffConfig();
   return useMemo(() => csrfManager.createFetchWithCsrf(), [csrfManager]);
 }

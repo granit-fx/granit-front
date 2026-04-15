@@ -3,11 +3,11 @@ import type { PagedResult } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
 
 /**
- * Fetch a paginated list of all background jobs.
+ * List a paginated collection of all background jobs.
  *
  * `GET {basePath}?page=&pageSize=`
  */
-export async function fetchBackgroundJobs(
+export async function listBackgroundJobs(
   client: AxiosInstance,
   basePath: string,
   params?: BackgroundJobListParams
@@ -17,11 +17,11 @@ export async function fetchBackgroundJobs(
 }
 
 /**
- * Fetch the status of a specific background job by name.
+ * Get the status of a specific background job by name.
  *
  * `GET {basePath}/{name}`
  */
-export async function fetchBackgroundJob(
+export async function getBackgroundJob(
   client: AxiosInstance,
   basePath: string,
   name: string

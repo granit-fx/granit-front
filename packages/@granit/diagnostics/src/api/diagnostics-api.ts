@@ -5,11 +5,11 @@ import type { AxiosInstance } from 'axios';
 export const DEFAULT_DIAGNOSTICS_BASE_PATH = '/api/granit/diagnostics';
 
 /**
- * Fetch the monitoring health status of all registered services.
+ * Get the monitoring health status of all registered services.
  *
  * `GET {basePath}/health`
  */
-export async function fetchMonitoringHealth(
+export async function getMonitoringHealth(
   client: AxiosInstance,
   basePath: string
 ): Promise<MonitoringHealthResponse> {

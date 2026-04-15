@@ -1,8 +1,8 @@
-import { fetchPreferences, updatePreference } from '@granit/notifications';
+import { getPreferences, updatePreference } from '@granit/notifications';
 import { useCallback, useEffect, useOptimistic, useRef, useState, useTransition } from 'react';
 
 import { API_BASE_PATH } from '../constants.js';
-import { useNotificationContext } from '../providers/notification-provider.js';
+import { useNotificationConfig } from '../providers/notification-provider.js';
 
 import type { NotificationPreference } from '@granit/notifications';
 import type { AxiosInstance } from 'axios';
@@ -51,7 +51,7 @@ async function savePreference(
  * rollback on server failure.
  */
 export function useNotificationPreferences(): UseNotificationPreferencesReturn {
-  const { config } = useNotificationContext();
+  const { config } = useNotificationConfig();
   const basePath = config.basePath ?? API_BASE_PATH;
 
   const [preferences, setPreferences] = useState<NotificationPreference[]>([]);
@@ -69,7 +69,7 @@ export function useNotificationPreferences(): UseNotificationPreferencesReturn {
 
   const load = useCallback(async () => {
     try {
-      const data = await fetchPreferences(config.apiClient, basePath);
+      const data = await getPreferences(config.apiClient, basePath);
       if (mountedRef.current) {
         setPreferences(data);
         setError(null);
