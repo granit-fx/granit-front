@@ -198,6 +198,10 @@ export default defineConfig({
         __dirname,
         'packages/@granit/react-auditing/src/index.ts'
       ),
+      '@granit/react-api-client': path.resolve(
+        __dirname,
+        'packages/@granit/react-api-client/src/index.ts'
+      ),
       '@granit/react-account/testing': path.resolve(
         __dirname,
         'packages/@granit/react-account/src/testing/index.ts'

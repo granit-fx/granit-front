@@ -15,6 +15,7 @@
     "build": "tsup"
   },
   "peerDependencies": {
+    "@granit/react-api-client": "workspace:*",
     "@granit/data-exchange": "workspace:*",
     "@granit/query-engine": "workspace:*",
     "@granit/utils": "workspace:*",

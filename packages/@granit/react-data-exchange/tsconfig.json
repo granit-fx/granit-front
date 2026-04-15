@@ -2,6 +2,7 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "paths": {
+      "@granit/react-api-client": ["../react-api-client/src/index.ts"],
       "@granit/data-exchange": ["../data-exchange/src/index.ts"],
       "@granit/utils": ["../utils/src/index.ts"]
     }

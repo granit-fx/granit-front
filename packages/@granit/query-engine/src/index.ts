@@ -36,7 +36,7 @@ export type {
 
 // Config
 export { buildQueryKey } from './config.js';
-export type { QueryConfig } from './config.js';
+export type { QueryConfig, ResolvedQueryConfig } from './config.js';
 
 // Utils
 export {

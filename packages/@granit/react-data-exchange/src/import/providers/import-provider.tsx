@@ -1,5 +1,7 @@
 import { createContext, useContext, useMemo } from 'react';
 
+import { useOptionalGranitClient } from '@granit/react-api-client';
+
 import { DEFAULT_BASE_PATH } from '../../constants.js';
 
 import type { AxiosInstance } from 'axios';
@@ -9,8 +11,12 @@ import type { ReactNode } from 'react';
  * Configuration for the import provider.
  */
 export interface ImportConfig {
-  /** Axios instance used for API calls. */
-  readonly client: AxiosInstance;
+  /**
+   * Axios instance used for API calls.
+   *
+   * Optional when a `GranitClientProvider` is present higher in the tree.
+   */
+  readonly client?: AxiosInstance;
   /** Base path for import endpoints (default: `/api/v1/data-exchange`). */
   readonly basePath?: string;
   /** Optional prefix for React Query keys. */
@@ -22,24 +28,36 @@ export interface ImportProviderProps {
   readonly children: ReactNode;
 }
 
-const ImportConfigContext = createContext<ImportConfig | null>(null);
+const ImportConfigContext = createContext<ResolvedImportConfig | null>(null);
 
 /**
  * Provides import configuration to child components and hooks.
  */
 export function ImportProvider({ config, children }: Readonly<ImportProviderProps>) {
-  const value = useMemo<ImportConfig>(
-    () => ({
+  const contextClient = useOptionalGranitClient();
+
+  const value = useMemo<ResolvedImportConfig>(() => {
+    const client = config.client ?? contextClient;
+    if (!client) {
+      throw new Error(
+        'ImportProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
+      );
+    }
+    return {
       ...config,
+      client,
       basePath: config.basePath ?? DEFAULT_BASE_PATH,
-    }),
-    [config]
-  );
+    };
+  }, [config, contextClient]);
+
   return <ImportConfigContext value={value}>{children}</ImportConfigContext>;
 }
 
-/** Resolved config where basePath is always set. */
-export type ResolvedImportConfig = ImportConfig & { readonly basePath: string };
+/** Resolved config where client and basePath are always set. */
+export type ResolvedImportConfig = ImportConfig & {
+  readonly client: AxiosInstance;
+  readonly basePath: string;
+};
 
 /**
  * Returns the import configuration from the nearest `ImportProvider`.
@@ -50,7 +68,7 @@ export function useImportConfig(): ResolvedImportConfig {
   if (!ctx) {
     throw new Error('useImportConfig must be used within an ImportProvider');
   }
-  return ctx as ResolvedImportConfig;
+  return ctx;
 }
 
 /**

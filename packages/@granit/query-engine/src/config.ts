@@ -2,8 +2,13 @@ import type { AxiosInstance } from 'axios';
 
 /** Configuration for a single query endpoint. */
 export interface QueryConfig {
-  /** Axios instance (from @granit/api-client). */
-  readonly client: AxiosInstance;
+  /**
+   * Axios instance (from @granit/api-client).
+   *
+   * Optional when a `GranitClientProvider` from `@granit/react-api-client`
+   * is present higher in the React tree — the provider resolves it from context.
+   */
+  readonly client?: AxiosInstance;
   /** API base path (e.g. "/api/v1/patients"). */
   readonly basePath: string;
   /**
@@ -12,6 +17,9 @@ export interface QueryConfig {
    */
   readonly queryKeyPrefix?: readonly string[];
 }
+
+/** Resolved config where client is guaranteed to be set. */
+export type ResolvedQueryConfig = QueryConfig & { readonly client: AxiosInstance };
 
 /**
  * Build a TanStack Query key from the provider config + extra segments.
