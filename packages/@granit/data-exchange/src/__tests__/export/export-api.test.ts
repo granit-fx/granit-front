@@ -10,19 +10,19 @@ import {
   fetchExportJobStatus,
 } from '../../export/api/export-api.js';
 
-const BASE = '/api/v1/data-exchange/export';
+const BASE = '/api/v1/data-exchange';
 
 describe('export-api', () => {
-  it('fetchExportDefinitions calls GET /definitions', async () => {
+  it('fetchExportDefinitions calls GET /metadata/definitions', async () => {
     const client = createMockClient();
     const defs = [{ name: 'Test', entityType: 'Entity', supportedFormats: ['xlsx'] }];
     vi.mocked(client.get).mockResolvedValueOnce({ data: defs });
     const result = await fetchExportDefinitions(client, BASE);
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/definitions`);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/metadata/definitions`);
     expect(result).toEqual(defs);
   });
 
-  it('fetchExportFields calls GET /definitions/{name}/fields', async () => {
+  it('fetchExportFields calls GET /metadata/definitions/{name}/fields', async () => {
     const client = createMockClient();
     const fields = [
       {
@@ -36,7 +36,7 @@ describe('export-api', () => {
     ];
     vi.mocked(client.get).mockResolvedValueOnce({ data: fields });
     const result = await fetchExportFields(client, BASE, 'Test');
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/definitions/Test/fields`);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/metadata/definitions/Test/fields`);
     expect(result).toEqual(fields);
   });
 
@@ -44,10 +44,10 @@ describe('export-api', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: [] });
     await fetchExportFields(client, BASE, 'My Export');
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/definitions/My%20Export/fields`);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/metadata/definitions/My%20Export/fields`);
   });
 
-  it('createExportJob calls POST /jobs', async () => {
+  it('createExportJob calls POST /export/jobs', async () => {
     const client = createMockClient();
     const job = { id: '1', definitionName: 'Test', format: 'xlsx', status: 'Queued' };
     vi.mocked(client.post).mockResolvedValueOnce({ data: job });
@@ -62,20 +62,20 @@ describe('export-api', () => {
       search: null,
     };
     const result = await createExportJob(client, BASE, request);
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/jobs`, request);
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/export/jobs`, request);
     expect(result).toEqual(job);
   });
 
-  it('fetchExportJobStatus calls GET /jobs/{jobId}', async () => {
+  it('fetchExportJobStatus calls GET /export/jobs/{jobId}', async () => {
     const client = createMockClient();
     const job = { id: 'abc', status: 'Exporting' };
     vi.mocked(client.get).mockResolvedValueOnce({ data: job });
     const result = await fetchExportJobStatus(client, BASE, 'abc');
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/jobs/abc`);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/export/jobs/abc`);
     expect(result).toEqual(job);
   });
 
-  it('downloadExportFile calls GET /jobs/{jobId}/download with blob responseType', async () => {
+  it('downloadExportFile calls GET /export/jobs/{jobId}/download with blob responseType', async () => {
     const client = createMockClient();
     const blob = new Blob(['data']);
     vi.mocked(client.get).mockResolvedValueOnce({
@@ -83,7 +83,7 @@ describe('export-api', () => {
       headers: { 'content-disposition': 'attachment; filename="export.xlsx"' },
     });
     const result = await downloadExportFile(client, BASE, 'abc');
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/jobs/abc/download`, { responseType: 'blob' });
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/export/jobs/abc/download`, { responseType: 'blob' });
     expect(result.blob).toBe(blob);
     expect(result.fileName).toBe('export.xlsx');
   });
@@ -96,12 +96,12 @@ describe('export-api', () => {
     expect(result.fileName).toBe('export');
   });
 
-  it('fetchExportJobs calls GET /jobs without params', async () => {
+  it('fetchExportJobs calls GET /export/jobs without params', async () => {
     const client = createMockClient();
     const page = { items: [], totalCount: 0 };
     vi.mocked(client.get).mockResolvedValueOnce({ data: page });
     const result = await fetchExportJobs(client, BASE);
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/jobs`, { params: undefined });
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/export/jobs`, { params: undefined });
     expect(result).toEqual(page);
   });
 
@@ -111,7 +111,7 @@ describe('export-api', () => {
     vi.mocked(client.get).mockResolvedValueOnce({ data: page });
     const params = { status: 'Completed', page: 1, pageSize: 10 };
     const result = await fetchExportJobs(client, BASE, params);
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/jobs`, { params });
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/export/jobs`, { params });
     expect(result).toEqual(page);
   });
 });
