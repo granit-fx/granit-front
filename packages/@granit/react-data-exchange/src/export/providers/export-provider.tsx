@@ -24,16 +24,18 @@ export interface ExportConfig {
 }
 
 export interface ExportProviderProps {
-  readonly config: ExportConfig;
+  /** Configuration — optional when all defaults are acceptable. */
+  readonly config?: ExportConfig;
   readonly children: ReactNode;
 }
 
+const EMPTY_CONFIG: ExportConfig = {};
 const ExportConfigContext = createContext<ResolvedExportConfig | null>(null);
 
 /**
  * Provides export configuration to child components and hooks.
  */
-export function ExportProvider({ config, children }: Readonly<ExportProviderProps>) {
+export function ExportProvider({ config = EMPTY_CONFIG, children }: Readonly<ExportProviderProps>) {
   const contextClient = useOptionalGranitClient();
 
   const value = useMemo<ResolvedExportConfig>(() => {

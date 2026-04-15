@@ -30,22 +30,28 @@ export interface DataExchangeConfig {
 }
 
 export interface DataExchangeProviderProps {
-  readonly config: DataExchangeConfig;
+  /** Configuration — optional when all defaults are acceptable. */
+  readonly config?: DataExchangeConfig;
   readonly children: ReactNode;
 }
+
+const EMPTY_CONFIG: DataExchangeConfig = {};
 
 /**
  * Convenience wrapper that configures both {@link ExportProvider} and
  * {@link ImportProvider} from a single shared configuration.
  *
+ * When all config fields use their defaults (client from `GranitClientProvider`,
+ * default basePath, no custom query key prefix), config can be omitted entirely.
+ *
  * @example
  * ```tsx
- * <DataExchangeProvider config={{ client: api, queryKeyPrefix: ['admin', 'countries'] }}>
+ * <DataExchangeProvider>
  *   <Content />
  * </DataExchangeProvider>
  * ```
  */
-export function DataExchangeProvider({ config, children }: Readonly<DataExchangeProviderProps>) {
+export function DataExchangeProvider({ config = EMPTY_CONFIG, children }: Readonly<DataExchangeProviderProps>) {
   const exportConfig = useMemo<ExportConfig>(
     () => ({
       client: config.client,

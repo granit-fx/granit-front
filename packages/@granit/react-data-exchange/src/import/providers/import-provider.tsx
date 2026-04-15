@@ -24,16 +24,18 @@ export interface ImportConfig {
 }
 
 export interface ImportProviderProps {
-  readonly config: ImportConfig;
+  /** Configuration — optional when all defaults are acceptable. */
+  readonly config?: ImportConfig;
   readonly children: ReactNode;
 }
 
+const EMPTY_CONFIG: ImportConfig = {};
 const ImportConfigContext = createContext<ResolvedImportConfig | null>(null);
 
 /**
  * Provides import configuration to child components and hooks.
  */
-export function ImportProvider({ config, children }: Readonly<ImportProviderProps>) {
+export function ImportProvider({ config = EMPTY_CONFIG, children }: Readonly<ImportProviderProps>) {
   const contextClient = useOptionalGranitClient();
 
   const value = useMemo<ResolvedImportConfig>(() => {
