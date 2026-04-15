@@ -12,7 +12,7 @@ export type ImportJobListParams = PaginationParams & {
 /**
  * Uploads a file and creates a new import job.
  *
- * `POST {basePath}/`
+ * `POST {basePath}/import/`
  */
 export async function uploadImportFile(
   client: AxiosInstance,
@@ -23,7 +23,7 @@ export async function uploadImportFile(
   const formData = new FormData();
   formData.append('file', file);
   formData.append('definitionName', definitionName);
-  const response = await client.post<ImportJobResponse>(basePath, formData, {
+  const response = await client.post<ImportJobResponse>(`${basePath}/import`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
   return response.data;
@@ -32,7 +32,7 @@ export async function uploadImportFile(
 /**
  * Previews the uploaded file: extracts headers, sample rows, and mapping suggestions.
  *
- * `POST {basePath}/{jobId}/preview`
+ * `POST {basePath}/import/{jobId}/preview`
  */
 export async function previewImport(
   client: AxiosInstance,
@@ -40,7 +40,7 @@ export async function previewImport(
   jobId: string
 ): Promise<ImportPreviewResponse> {
   const response = await client.post<ImportPreviewResponse>(
-    `${basePath}/${encodeURIComponent(jobId)}/preview`
+    `${basePath}/import/${encodeURIComponent(jobId)}/preview`
   );
   return response.data;
 }
@@ -48,7 +48,7 @@ export async function previewImport(
 /**
  * Confirms the column mappings for an import job.
  *
- * `PUT {basePath}/{jobId}/mappings`
+ * `PUT {basePath}/import/{jobId}/mappings`
  */
 export async function confirmMappings(
   client: AxiosInstance,
@@ -56,26 +56,26 @@ export async function confirmMappings(
   jobId: string,
   request: ConfirmMappingsRequest
 ): Promise<void> {
-  await client.put(`${basePath}/${encodeURIComponent(jobId)}/mappings`, request);
+  await client.put(`${basePath}/import/${encodeURIComponent(jobId)}/mappings`, request);
 }
 
 /**
  * Dispatches the import job for asynchronous execution.
  *
- * `POST {basePath}/{jobId}/execute`
+ * `POST {basePath}/import/{jobId}/execute`
  */
 export async function executeImport(
   client: AxiosInstance,
   basePath: string,
   jobId: string
 ): Promise<void> {
-  await client.post(`${basePath}/${encodeURIComponent(jobId)}/execute`);
+  await client.post(`${basePath}/import/${encodeURIComponent(jobId)}/execute`);
 }
 
 /**
  * Runs a synchronous dry-run, validating without persisting.
  *
- * `POST {basePath}/{jobId}/dry-run`
+ * `POST {basePath}/import/{jobId}/dry-run`
  */
 export async function dryRunImport(
   client: AxiosInstance,
@@ -83,7 +83,7 @@ export async function dryRunImport(
   jobId: string
 ): Promise<ImportReportResponse> {
   const response = await client.post<ImportReportResponse>(
-    `${basePath}/${encodeURIComponent(jobId)}/dry-run`
+    `${basePath}/import/${encodeURIComponent(jobId)}/dry-run`
   );
   return response.data;
 }
@@ -91,34 +91,34 @@ export async function dryRunImport(
 /**
  * Fetches the current status of an import job.
  *
- * `GET {basePath}/{jobId}`
+ * `GET {basePath}/import/{jobId}`
  */
 export async function fetchImportJob(
   client: AxiosInstance,
   basePath: string,
   jobId: string
 ): Promise<ImportJobResponse> {
-  const response = await client.get<ImportJobResponse>(`${basePath}/${encodeURIComponent(jobId)}`);
+  const response = await client.get<ImportJobResponse>(`${basePath}/import/${encodeURIComponent(jobId)}`);
   return response.data;
 }
 
 /**
  * Cancels an import job.
  *
- * `DELETE {basePath}/{jobId}`
+ * `DELETE {basePath}/import/{jobId}`
  */
 export async function cancelImportJob(
   client: AxiosInstance,
   basePath: string,
   jobId: string
 ): Promise<void> {
-  await client.delete(`${basePath}/${encodeURIComponent(jobId)}`);
+  await client.delete(`${basePath}/import/${encodeURIComponent(jobId)}`);
 }
 
 /**
  * Fetches the full execution report for a completed import job.
  *
- * `GET {basePath}/{jobId}/report`
+ * `GET {basePath}/import/{jobId}/report`
  */
 export async function fetchImportReport(
   client: AxiosInstance,
@@ -126,7 +126,7 @@ export async function fetchImportReport(
   jobId: string
 ): Promise<ImportReportResponse> {
   const response = await client.get<ImportReportResponse>(
-    `${basePath}/${encodeURIComponent(jobId)}/report`
+    `${basePath}/import/${encodeURIComponent(jobId)}/report`
   );
   return response.data;
 }
@@ -134,14 +134,14 @@ export async function fetchImportReport(
 /**
  * Fetches a paginated list of import jobs.
  *
- * `GET {basePath}/jobs`
+ * `GET {basePath}/import/jobs`
  */
 export async function fetchImportJobs(
   client: AxiosInstance,
   basePath: string,
   params?: ImportJobListParams
 ): Promise<PagedResult<ImportJobResponse>> {
-  const response = await client.get<PagedResult<ImportJobResponse>>(`${basePath}/jobs`, {
+  const response = await client.get<PagedResult<ImportJobResponse>>(`${basePath}/import/jobs`, {
     params,
   });
   return response.data;
@@ -150,7 +150,7 @@ export async function fetchImportJobs(
 /**
  * Downloads the correction file (CSV/Excel with error rows only).
  *
- * `GET {basePath}/{jobId}/correction-file`
+ * `GET {basePath}/import/{jobId}/correction-file`
  */
 export async function downloadCorrectionFile(
   client: AxiosInstance,
@@ -158,7 +158,7 @@ export async function downloadCorrectionFile(
   jobId: string
 ): Promise<{ blob: Blob; fileName: string }> {
   const response = await client.get<Blob>(
-    `${basePath}/${encodeURIComponent(jobId)}/correction-file`,
+    `${basePath}/import/${encodeURIComponent(jobId)}/correction-file`,
     { responseType: 'blob' }
   );
 
