@@ -993,6 +993,11 @@
           "members": []
         },
         {
+          "name": "ResolvedQueryConfig",
+          "kind": "type",
+          "signature": "type ResolvedQueryConfig = QueryConfig & { readonly client: AxiosInstance }"
+        },
+        {
           "name": "QUERY_LIMITS",
           "kind": "const",
           "signature": "const QUERY_LIMITS"
@@ -1259,6 +1264,11 @@
           ]
         }
       ]
+    },
+    {
+      "name": "@granit/react-api-client",
+      "description": "React context provider for sharing an Axios instance across Granit framework packages",
+      "exports": []
     },
     {
       "name": "@granit/react-auditing",
@@ -2374,7 +2384,7 @@
         {
           "name": "useQueryConfig",
           "kind": "function",
-          "signature": "function useQueryConfig(): QueryConfig"
+          "signature": "function useQueryConfig(): ResolvedQueryConfig"
         },
         {
           "name": "QueryProviderProps",
