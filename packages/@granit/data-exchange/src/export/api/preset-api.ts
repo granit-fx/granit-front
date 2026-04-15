@@ -4,7 +4,7 @@ import type { AxiosInstance } from 'axios';
 /**
  * Fetches saved export presets for a given definition.
  *
- * `GET {basePath}/presets/{definitionName}`
+ * `GET {basePath}/metadata/presets/{definitionName}`
  */
 export async function fetchExportPresets(
   client: AxiosInstance,
@@ -12,7 +12,7 @@ export async function fetchExportPresets(
   definitionName: string
 ): Promise<readonly ExportPresetResponse[]> {
   const response = await client.get<ExportPresetResponse[]>(
-    `${basePath}/presets/${encodeURIComponent(definitionName)}`
+    `${basePath}/metadata/presets/${encodeURIComponent(definitionName)}`
   );
   return response.data;
 }
@@ -20,20 +20,20 @@ export async function fetchExportPresets(
 /**
  * Saves or updates an export preset.
  *
- * `POST {basePath}/presets`
+ * `POST {basePath}/metadata/presets`
  */
 export async function saveExportPreset(
   client: AxiosInstance,
   basePath: string,
   request: SaveExportPresetRequest
 ): Promise<void> {
-  await client.post(`${basePath}/presets`, request);
+  await client.post(`${basePath}/metadata/presets`, request);
 }
 
 /**
  * Deletes a saved export preset.
  *
- * `DELETE {basePath}/presets/{definitionName}/{presetName}`
+ * `DELETE {basePath}/metadata/presets/{definitionName}/{presetName}`
  */
 export async function deleteExportPreset(
   client: AxiosInstance,
@@ -42,6 +42,6 @@ export async function deleteExportPreset(
   presetName: string
 ): Promise<void> {
   await client.delete(
-    `${basePath}/presets/${encodeURIComponent(definitionName)}/${encodeURIComponent(presetName)}`
+    `${basePath}/metadata/presets/${encodeURIComponent(definitionName)}/${encodeURIComponent(presetName)}`
   );
 }

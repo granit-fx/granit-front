@@ -310,12 +310,12 @@ let importJobCounter = 0;
  *
  * @param metadataBase   - Export metadata base path (default: `/api/v1/data-exchange/metadata`)
  * @param importBase     - Import base path (default: `/api/v1/data-exchange`)
- * @param exportJobsBase - Export jobs base path (default: `/api/v1/data-exchange/metadata/jobs`)
+ * @param exportJobsBase - Export jobs base path (default: `/api/v1/data-exchange/export/jobs`)
  */
 export function createDataExchangeHandlers(
   metadataBase = `${DEFAULT_BASE_PATH}/metadata`,
   importBase = DEFAULT_BASE_PATH,
-  exportJobsBase = `${DEFAULT_BASE_PATH}/metadata/jobs`
+  exportJobsBase = `${DEFAULT_BASE_PATH}/export/jobs`
 ) {
   return [
     // Export: definitions
@@ -369,7 +369,7 @@ export function createDataExchangeHandlers(
     }),
 
     // Export: create job
-    http.post(`${metadataBase}/jobs`, async ({ request }) => {
+    http.post(exportJobsBase, async ({ request }) => {
       const body = (await request.json()) as { definitionName: string; format: string };
       const job = {
         id: crypto.randomUUID(),
@@ -386,7 +386,7 @@ export function createDataExchangeHandlers(
     }),
 
     // Export: job status
-    http.get(`${metadataBase}/jobs/:jobId`, () => {
+    http.get(`${exportJobsBase}/:jobId`, () => {
       return HttpResponse.json({
         id: 'mock',
         definitionName: 'countries',
@@ -401,7 +401,7 @@ export function createDataExchangeHandlers(
     }),
 
     // Export: download file
-    http.get(`${metadataBase}/jobs/:jobId/download`, () => {
+    http.get(`${exportJobsBase}/:jobId/download`, () => {
       const csv =
         'code,alpha3,labelEn,labelFr,region,isActive\nBE,BEL,Belgium,Belgique,Europe,true\n';
       return new HttpResponse(csv, {
