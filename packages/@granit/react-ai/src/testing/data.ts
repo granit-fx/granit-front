@@ -1,6 +1,68 @@
 import { toEntityId, toISODateString } from '@granit/types';
 
-import type { AIUsageRecord, AIWorkspaceResponse } from '@granit/ai';
+import type {
+  AIProviderModelResponse,
+  AIProviderResponse,
+  AIUsageRecord,
+  AIWorkspaceResponse,
+} from '@granit/ai';
+
+export const mockProviders: AIProviderResponse[] = [
+  { name: 'OpenAI', supportsChat: true, supportsEmbeddings: true },
+  { name: 'AzureOpenAI', supportsChat: true, supportsEmbeddings: true },
+  { name: 'Ollama', supportsChat: true, supportsEmbeddings: false },
+];
+
+export const mockProviderModels: Record<string, AIProviderModelResponse[]> = {
+  OpenAI: [
+    {
+      id: 'gpt-4o',
+      displayName: 'GPT-4o',
+      capabilities: { chat: true, embeddings: false },
+      maxContextTokens: 128_000,
+    },
+    {
+      id: 'gpt-4o-mini',
+      displayName: 'GPT-4o Mini',
+      capabilities: { chat: true, embeddings: false },
+      maxContextTokens: 128_000,
+    },
+    {
+      id: 'text-embedding-3-small',
+      displayName: 'Text Embedding 3 Small',
+      capabilities: { chat: false, embeddings: true },
+      maxContextTokens: 8_191,
+    },
+  ],
+  AzureOpenAI: [
+    {
+      id: 'gpt-4o',
+      displayName: 'GPT-4o (Azure)',
+      capabilities: { chat: true, embeddings: false },
+      maxContextTokens: 128_000,
+    },
+    {
+      id: 'text-embedding-3-small',
+      displayName: 'Text Embedding 3 Small (Azure)',
+      capabilities: { chat: false, embeddings: true },
+      maxContextTokens: 8_191,
+    },
+  ],
+  Ollama: [
+    {
+      id: 'llama3.1',
+      displayName: 'Llama 3.1',
+      capabilities: { chat: true, embeddings: false },
+      maxContextTokens: 131_072,
+    },
+    {
+      id: 'mistral',
+      displayName: 'Mistral 7B',
+      capabilities: { chat: true, embeddings: false },
+      maxContextTokens: 32_768,
+    },
+  ],
+};
 
 export const mockWorkspaces: AIWorkspaceResponse[] = [
   {

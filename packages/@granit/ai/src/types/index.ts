@@ -105,6 +105,29 @@ export interface AIEmbeddingResponse {
   readonly embeddings: readonly AIEmbeddingDataResponse[];
 }
 
+// -- Providers ---------------------------------------------------------------
+
+/** Model capabilities. Mirrors `Granit.AI.AIModelCapabilities`. */
+export interface AIModelCapabilities {
+  readonly chat: boolean;
+  readonly embeddings: boolean;
+}
+
+/** Provider summary returned by the discovery endpoint. Mirrors `AIProviderResponse`. */
+export interface AIProviderResponse {
+  readonly name: string;
+  readonly supportsChat: boolean;
+  readonly supportsEmbeddings: boolean;
+}
+
+/** Model metadata for a given provider. Mirrors `AIProviderModelResponse`. */
+export interface AIProviderModelResponse {
+  readonly id: string;
+  readonly displayName: string;
+  readonly capabilities: AIModelCapabilities;
+  readonly maxContextTokens: number | null;
+}
+
 // -- Usage tracking ----------------------------------------------------------
 
 /** Branded AI usage record identifier. */

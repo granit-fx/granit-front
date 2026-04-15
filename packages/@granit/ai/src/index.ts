@@ -9,6 +9,9 @@ export type {
   AIEmbeddingDataResponse,
   AIEmbeddingRequest,
   AIEmbeddingResponse,
+  AIModelCapabilities,
+  AIProviderModelResponse,
+  AIProviderResponse,
   AIUsageRecord,
   AIUsageRecordId,
   AIWorkspaceCreateRequest,
@@ -20,6 +23,9 @@ export type {
 
 // Constants
 export { AI_PERMISSIONS, AI_STREAM_DONE_MARKER, AI_WORKSPACE_KINDS } from './constants.js';
+
+// API — Providers
+export { listAIProviderModels, listAIProviders } from './api/ai-providers-api.js';
 
 // API — Workspaces
 export {

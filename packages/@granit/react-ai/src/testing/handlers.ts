@@ -1,7 +1,7 @@
 import { groupBy as groupByField, paginate } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
-import { mockUsageRecords, mockWorkspaces } from './data.js';
+import { mockProviderModels, mockProviders, mockUsageRecords, mockWorkspaces } from './data.js';
 
 import type {
   AIWorkspaceCreateRequest,
@@ -144,6 +144,21 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
   let workspaces: Mutable<AIWorkspaceResponse>[] = [...mockWorkspaces];
 
   return [
+    // --- Providers -------------------------------------------------------------
+
+    // GET all providers
+    http.get(`${baseUrl}/providers`, () => {
+      return HttpResponse.json(mockProviders);
+    }),
+
+    // GET models for a provider
+    http.get(`${baseUrl}/providers/:providerName/models`, ({ params }) => {
+      const name = params.providerName as string;
+      const models = mockProviderModels[name];
+      if (!models) return new HttpResponse(null, { status: 404 });
+      return HttpResponse.json(models);
+    }),
+
     // --- Workspaces -----------------------------------------------------------
 
     // GET list
