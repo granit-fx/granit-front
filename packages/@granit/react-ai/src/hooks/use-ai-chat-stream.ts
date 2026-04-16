@@ -3,13 +3,15 @@ import { useCallback, useRef, useState } from 'react';
 
 import { useAIConfig } from '../providers/ai-provider.js';
 
-import type { AIChatRequest } from '@granit/ai';
+import type { AIChatRequest, AIChatStreamUsage } from '@granit/ai';
 
 export interface UseAIChatStreamReturn {
   /** Accumulated content received so far. Reset on each new `send()` call. */
   readonly content: string;
   /** Whether a stream is currently active. */
   readonly isStreaming: boolean;
+  /** Token usage reported by the server at end of stream, or `null`. */
+  readonly usage: AIChatStreamUsage | null;
   /** Error from the last stream attempt, or `null`. */
   readonly error: Error | null;
   /** Start a new streaming chat. Aborts any in-progress stream first. */
@@ -38,6 +40,7 @@ export function useAIChatStream(): UseAIChatStreamReturn {
   const config = useAIConfig();
   const [content, setContent] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
+  const [usage, setUsage] = useState<AIChatStreamUsage | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -52,6 +55,7 @@ export function useAIChatStream(): UseAIChatStreamReturn {
     (workspaceName: string, request: AIChatRequest) => {
       abort();
       setContent('');
+      setUsage(null);
       setError(null);
       setIsStreaming(true);
 
@@ -61,15 +65,19 @@ export function useAIChatStream(): UseAIChatStreamReturn {
       (async () => {
         try {
           let accumulated = '';
-          for await (const chunk of chatStream(
+          for await (const event of chatStream(
             config.client,
             config.basePath ?? '',
             workspaceName,
             request,
-            controller.signal,
+            controller.signal
           )) {
-            accumulated += chunk;
-            setContent(accumulated);
+            if (event.type === 'chunk') {
+              accumulated += event.content;
+              setContent(accumulated);
+            } else if (event.type === 'usage') {
+              setUsage(event.usage);
+            }
           }
         } catch (err) {
           if (err instanceof DOMException && err.name === 'AbortError') return;
@@ -80,8 +88,8 @@ export function useAIChatStream(): UseAIChatStreamReturn {
         }
       })();
     },
-    [abort, config],
+    [abort, config]
   );
 
-  return { content, isStreaming, error, send, abort };
+  return { content, isStreaming, usage, error, send, abort };
 }

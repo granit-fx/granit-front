@@ -87,6 +87,11 @@
           "signature": "async function chatComplete( client: AxiosInstance, basePath: string, workspaceName: string, request: AIChatRequest ): Promise<AIChatResponse>"
         },
         {
+          "name": "ChatStreamEvent",
+          "kind": "type",
+          "signature": "type ChatStreamEvent ="
+        },
+        {
           "name": "generateEmbeddings",
           "kind": "function",
           "signature": "async function generateEmbeddings( client: AxiosInstance, basePath: string, workspaceName: string, request: AIEmbeddingRequest ): Promise<AIEmbeddingResponse>"

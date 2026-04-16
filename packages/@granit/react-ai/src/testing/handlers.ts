@@ -20,7 +20,8 @@ function addUsageRecord(
   ws: AIWorkspaceResponse,
   inputTokens: number,
   outputTokens: number,
-  estimatedCostUsd: number | null,
+  estimatedCost: number | null,
+  costCurrency: string | null,
   duration: string
 ): void {
   usageCounter++;
@@ -35,7 +36,8 @@ function addUsageRecord(
     model: ws.model,
     inputTokens,
     outputTokens,
-    estimatedCostUsd,
+    estimatedCost,
+    costCurrency,
     timestamp: toISODateString(new Date().toISOString()),
     duration,
   });
@@ -94,8 +96,8 @@ function buildUsageMeta(): QueryMetadata {
         isVisible: true,
       },
       {
-        name: 'estimatedCostUsd',
-        label: 'Est. Cost (USD)',
+        name: 'estimatedCost',
+        label: 'Est. Cost',
         type: 'Number',
         order: 6,
         isSortable: true,
@@ -103,10 +105,19 @@ function buildUsageMeta(): QueryMetadata {
         isVisible: true,
       },
       {
+        name: 'costCurrency',
+        label: 'Currency',
+        type: 'String',
+        order: 7,
+        isSortable: false,
+        isFilterable: true,
+        isVisible: true,
+      },
+      {
         name: 'timestamp',
         label: 'Timestamp',
         type: 'DateTime',
-        order: 7,
+        order: 8,
         isSortable: true,
         isFilterable: true,
         isVisible: true,
@@ -115,7 +126,7 @@ function buildUsageMeta(): QueryMetadata {
         name: 'duration',
         label: 'Duration',
         type: 'String',
-        order: 8,
+        order: 9,
         isSortable: false,
         isFilterable: false,
         isVisible: true,
@@ -125,13 +136,14 @@ function buildUsageMeta(): QueryMetadata {
       { name: 'workspaceName', type: 'String', operators: ['Eq', 'Contains', 'In'] },
       { name: 'provider', type: 'String', operators: ['Eq', 'In'] },
       { name: 'model', type: 'String', operators: ['Eq', 'In'] },
+      { name: 'costCurrency', type: 'String', operators: ['Eq', 'In'] },
       { name: 'timestamp', type: 'DateTime', operators: ['Gte', 'Lte'] },
     ],
     sortableFields: [
       { name: 'timestamp' },
       { name: 'inputTokens' },
       { name: 'outputTokens' },
-      { name: 'estimatedCostUsd' },
+      { name: 'estimatedCost' },
     ],
     presetFilterGroups: [
       {
@@ -317,12 +329,17 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
       const inputTokens = Math.ceil(lastMessage.length / 4);
       const outputTokens = Math.ceil(mockContent.length / 4);
 
-      addUsageRecord(usageRecords, ws, inputTokens, outputTokens, 0.0012, '00:00:00.350');
+      addUsageRecord(usageRecords, ws, inputTokens, outputTokens, 0.0012, 'USD', '00:00:00.350');
 
       const encoder = new TextEncoder();
       const stream = new ReadableStream({
         start(controller) {
           controller.enqueue(encoder.encode(`data: {"content":"${mockContent}"}\n\n`));
+          controller.enqueue(
+            encoder.encode(
+              `event: usage\ndata: {"inputTokens":${inputTokens},"outputTokens":${outputTokens}}\n\n`
+            )
+          );
           controller.enqueue(encoder.encode('data: [DONE]\n\n'));
           controller.close();
         },
@@ -349,7 +366,7 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
       const inputTokens = Math.ceil(lastMessage.length / 4);
       const outputTokens = 42;
 
-      addUsageRecord(usageRecords, ws, inputTokens, outputTokens, 0.0012, '00:00:00.350');
+      addUsageRecord(usageRecords, ws, inputTokens, outputTokens, 0.0012, 'USD', '00:00:00.350');
 
       return HttpResponse.json({
         workspaceName: wsName,
@@ -358,7 +375,8 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
         usage: {
           inputTokens,
           outputTokens,
-          estimatedCostUsd: 0.0012,
+          estimatedCost: 0.0012,
+          costCurrency: 'USD',
         },
         duration: '00:00:00.350',
       });
@@ -380,7 +398,8 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
       const body = (await request.json()) as { inputs: string[] };
       const totalChars = body.inputs.reduce((sum, s) => sum + s.length, 0);
 
-      addUsageRecord(usageRecords, ws, Math.ceil(totalChars / 4), 0, 0.0001, '00:00:00.120');
+      const embeddingInputTokens = Math.ceil(totalChars / 4);
+      addUsageRecord(usageRecords, ws, embeddingInputTokens, 0, 0.0001, 'USD', '00:00:00.120');
 
       return HttpResponse.json({
         workspaceName: wsName,
@@ -389,6 +408,7 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
           index: i,
           vector: Array.from({ length: 8 }, () => Math.random() * 2 - 1),
         })),
+        usage: { inputTokens: embeddingInputTokens },
       });
     }),
 

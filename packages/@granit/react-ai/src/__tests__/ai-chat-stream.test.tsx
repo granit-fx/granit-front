@@ -34,7 +34,7 @@ function createWrapper(client: AxiosInstance) {
     return React.createElement(
       QueryClientProvider,
       { client: queryClient },
-      <AIProvider config={config}>{children}</AIProvider>,
+      <AIProvider config={config}>{children}</AIProvider>
     );
   };
 }
@@ -59,6 +59,7 @@ describe('useAIChatStream', () => {
 
     expect(result.current.isStreaming).toBe(false);
     expect(result.current.content).toBe('');
+    expect(result.current.usage).toBeNull();
 
     act(() => {
       result.current.send('default', { messages: [{ role: 'user', content: 'Hi' }] });
@@ -135,7 +136,62 @@ describe('useAIChatStream', () => {
         adapter: 'fetch',
         responseType: 'stream',
         headers: { Accept: 'text/event-stream' },
-      }),
+      })
     );
+  });
+
+  it('should expose usage from SSE usage event', async () => {
+    const client = createMockClient();
+    const stream = createSSEStream([
+      'data: {"content":"Hi"}\n\n',
+      'event: usage\n',
+      'data: {"inputTokens":150,"outputTokens":42}\n\n',
+      'data: [DONE]\n\n',
+    ]);
+    vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
+
+    const { result } = renderHook(() => useAIChatStream(), {
+      wrapper: createWrapper(client),
+    });
+
+    act(() => {
+      result.current.send('default', { messages: [{ role: 'user', content: 'Hi' }] });
+    });
+
+    await waitFor(() => expect(result.current.isStreaming).toBe(false));
+
+    expect(result.current.content).toBe('Hi');
+    expect(result.current.usage).toEqual({ inputTokens: 150, outputTokens: 42 });
+  });
+
+  it('should reset usage on new send()', async () => {
+    const client = createMockClient();
+
+    const stream1 = createSSEStream([
+      'data: {"content":"A"}\n\n',
+      'event: usage\n',
+      'data: {"inputTokens":10,"outputTokens":5}\n\n',
+      'data: [DONE]\n\n',
+    ]);
+    const stream2 = createSSEStream(['data: {"content":"B"}\n\n', 'data: [DONE]\n\n']);
+    vi.spyOn(client, 'post')
+      .mockResolvedValueOnce({ data: stream1 })
+      .mockResolvedValueOnce({ data: stream2 });
+
+    const { result } = renderHook(() => useAIChatStream(), {
+      wrapper: createWrapper(client),
+    });
+
+    act(() => {
+      result.current.send('default', { messages: [{ role: 'user', content: 'A' }] });
+    });
+    await waitFor(() => expect(result.current.isStreaming).toBe(false));
+    expect(result.current.usage).toEqual({ inputTokens: 10, outputTokens: 5 });
+
+    act(() => {
+      result.current.send('default', { messages: [{ role: 'user', content: 'B' }] });
+    });
+    await waitFor(() => expect(result.current.content).toBe('B'));
+    expect(result.current.usage).toBeNull();
   });
 });

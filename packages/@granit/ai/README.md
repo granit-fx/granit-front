@@ -13,8 +13,8 @@ pnpm add @granit/ai
 ### Types
 
 - `AIWorkspaceResponse`, `AIWorkspaceListResponse`, `AIWorkspaceCreateRequest`, `AIWorkspaceUpdateRequest`, `AIWorkspaceKind` -- workspaces
-- `AIChatRequest`, `AIChatResponse`, `AIChatMessageRequest`, `AIChatMessageRole`, `AIChatStreamChunk`, `AIChatUsageResponse` -- chat
-- `AIEmbeddingRequest`, `AIEmbeddingResponse`, `AIEmbeddingDataResponse`, `AIUsageRecord` -- embeddings
+- `AIChatRequest`, `AIChatResponse`, `AIChatMessageRequest`, `AIChatMessageRole`, `AIChatStreamChunk`, `AIChatStreamUsage`, `AIChatUsageResponse`, `ChatStreamEvent` -- chat
+- `AIEmbeddingRequest`, `AIEmbeddingResponse`, `AIEmbeddingDataResponse`, `AIEmbeddingUsageResponse`, `AIUsageRecord` -- embeddings
 
 ### Constants
 
@@ -25,7 +25,7 @@ pnpm add @granit/ai
 ### Functions
 
 - `listAIWorkspaces(...)`, `getAIWorkspace(...)`, `createAIWorkspace(...)`, `updateAIWorkspace(...)`, `deleteAIWorkspace(...)` -- workspace CRUD
-- `chatComplete(...)`, `chatStream(...)`, `buildChatStreamUrl(...)` -- chat completion
+- `chatComplete(...)`, `chatStream(...)` -- chat completion
 - `generateEmbeddings(...)` -- embedding generation
 
 ## Usage

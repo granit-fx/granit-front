@@ -12,6 +12,7 @@ describe('ai-embeddings-api', () => {
         workspaceName: 'default',
         model: 'text-embedding-3-small',
         embeddings: [{ index: 0, vector: [0.1, 0.2, 0.3] }],
+        usage: { inputTokens: 3 },
       };
       vi.mocked(client.post).mockResolvedValue({ data: response });
 
@@ -19,6 +20,22 @@ describe('ai-embeddings-api', () => {
 
       expect(client.post).toHaveBeenCalledWith('/ai/embeddings/default', request);
       expect(result).toEqual(response);
+      expect(result.usage).toEqual({ inputTokens: 3 });
+    });
+
+    it('should handle null usage', async () => {
+      const client = createMockClient();
+      const response = {
+        workspaceName: 'default',
+        model: 'text-embedding-3-small',
+        embeddings: [{ index: 0, vector: [0.1, 0.2] }],
+        usage: null,
+      };
+      vi.mocked(client.post).mockResolvedValue({ data: response });
+
+      const result = await generateEmbeddings(client, '', 'default', { inputs: ['test'] });
+
+      expect(result.usage).toBeNull();
     });
 
     it('should prepend basePath', async () => {

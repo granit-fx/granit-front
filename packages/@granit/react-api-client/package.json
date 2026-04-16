@@ -7,12 +7,7 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "tsup"
-  },
+  "scripts": {},
   "peerDependencies": {
     "axios": "*",
     "react": "^19.0.0"
@@ -22,12 +17,6 @@
     "@granit/testing": "workspace:*"
   },
   "publishConfig": {
-    "exports": {
-      ".": {
-        "types": "./dist/index.d.ts",
-        "import": "./dist/index.js"
-      }
-    },
     "registry": "https://npm.pkg.github.com"
   }
 }

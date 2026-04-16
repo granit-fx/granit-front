@@ -3,6 +3,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { chatStream } from '../api/ai-chat-api.js';
 
+import type { ChatStreamEvent } from '../api/ai-chat-api.js';
+
 function createSSEStream(chunks: string[]): ReadableStream<Uint8Array> {
   const encoder = new TextEncoder();
   return new ReadableStream({
@@ -29,14 +31,17 @@ describe('chatStream', () => {
     ]);
     vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
-    const chunks: string[] = [];
-    for await (const chunk of chatStream(client, '', 'default', {
+    const events: ChatStreamEvent[] = [];
+    for await (const event of chatStream(client, '', 'default', {
       messages: [{ role: 'user', content: 'Hi' }],
     })) {
-      chunks.push(chunk);
+      events.push(event);
     }
 
-    expect(chunks).toEqual(['Hello', ' world']);
+    expect(events).toEqual([
+      { type: 'chunk', content: 'Hello' },
+      { type: 'chunk', content: ' world' },
+    ]);
   });
 
   it('should handle chunks split across reads', async () => {
@@ -44,14 +49,14 @@ describe('chatStream', () => {
     const stream = createSSEStream(['data: {"cont', 'ent":"split"}\n\ndata: [DONE]\n\n']);
     vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
-    const chunks: string[] = [];
-    for await (const chunk of chatStream(client, '', 'default', {
+    const events: ChatStreamEvent[] = [];
+    for await (const event of chatStream(client, '', 'default', {
       messages: [{ role: 'user', content: 'Hi' }],
     })) {
-      chunks.push(chunk);
+      events.push(event);
     }
 
-    expect(chunks).toEqual(['split']);
+    expect(events).toEqual([{ type: 'chunk', content: 'split' }]);
   });
 
   it('should propagate axios errors', async () => {
@@ -74,14 +79,14 @@ describe('chatStream', () => {
     ]);
     vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
-    const chunks: string[] = [];
-    for await (const chunk of chatStream(client, '', 'default', {
+    const events: ChatStreamEvent[] = [];
+    for await (const event of chatStream(client, '', 'default', {
       messages: [{ role: 'user', content: 'Hi' }],
     })) {
-      chunks.push(chunk);
+      events.push(event);
     }
 
-    expect(chunks).toEqual(['valid']);
+    expect(events).toEqual([{ type: 'chunk', content: 'valid' }]);
   });
 
   it('should call axios with correct URL and options', async () => {
@@ -102,7 +107,7 @@ describe('chatStream', () => {
         adapter: 'fetch',
         responseType: 'stream',
         headers: { Accept: 'text/event-stream' },
-      }),
+      })
     );
   });
 
@@ -110,13 +115,57 @@ describe('chatStream', () => {
     const client = createMockClient();
     vi.spyOn(client, 'post').mockResolvedValue({ data: null });
 
-    const chunks: string[] = [];
-    for await (const chunk of chatStream(client, '', 'default', {
+    const events: ChatStreamEvent[] = [];
+    for await (const event of chatStream(client, '', 'default', {
       messages: [{ role: 'user', content: 'Hi' }],
     })) {
-      chunks.push(chunk);
+      events.push(event);
     }
 
-    expect(chunks).toEqual([]);
+    expect(events).toEqual([]);
+  });
+
+  it('should yield usage event from SSE event: usage', async () => {
+    const client = createMockClient();
+    const stream = createSSEStream([
+      'data: {"content":"Hello"}\n\n',
+      'event: usage\n',
+      'data: {"inputTokens":150,"outputTokens":42}\n\n',
+      'data: [DONE]\n\n',
+    ]);
+    vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
+
+    const events: ChatStreamEvent[] = [];
+    for await (const event of chatStream(client, '', 'default', {
+      messages: [{ role: 'user', content: 'Hi' }],
+    })) {
+      events.push(event);
+    }
+
+    expect(events).toEqual([
+      { type: 'chunk', content: 'Hello' },
+      { type: 'usage', usage: { inputTokens: 150, outputTokens: 42 } },
+    ]);
+  });
+
+  it('should handle usage event split across reads', async () => {
+    const client = createMockClient();
+    const stream = createSSEStream([
+      'data: {"content":"Hi"}\n\nevent: us',
+      'age\ndata: {"inputTokens":10,"outputTokens":5}\n\ndata: [DONE]\n\n',
+    ]);
+    vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
+
+    const events: ChatStreamEvent[] = [];
+    for await (const event of chatStream(client, '', 'default', {
+      messages: [{ role: 'user', content: 'Hi' }],
+    })) {
+      events.push(event);
+    }
+
+    expect(events).toEqual([
+      { type: 'chunk', content: 'Hi' },
+      { type: 'usage', usage: { inputTokens: 10, outputTokens: 5 } },
+    ]);
   });
 });

@@ -69,7 +69,8 @@ export interface AIChatRequest {
 export interface AIChatUsageResponse {
   readonly inputTokens: number;
   readonly outputTokens: number;
-  readonly estimatedCostUsd: number | null;
+  readonly estimatedCost: number | null;
+  readonly costCurrency: string | null;
 }
 
 /** Chat completion response. Mirrors `AIChatResponse`. */
@@ -86,6 +87,12 @@ export interface AIChatStreamChunk {
   readonly content: string;
 }
 
+/** Token usage emitted as an SSE `event: usage` before `[DONE]`. */
+export interface AIChatStreamUsage {
+  readonly inputTokens: number;
+  readonly outputTokens: number;
+}
+
 // -- Embeddings --------------------------------------------------------------
 
 /** Embedding generation request. Mirrors `AIEmbeddingRequest`. */
@@ -99,11 +106,17 @@ export interface AIEmbeddingDataResponse {
   readonly vector: readonly number[];
 }
 
+/** Token usage in an embedding response. Mirrors `AIEmbeddingUsageResponse`. */
+export interface AIEmbeddingUsageResponse {
+  readonly inputTokens: number;
+}
+
 /** Embedding generation response. Mirrors `AIEmbeddingResponse`. */
 export interface AIEmbeddingResponse {
   readonly workspaceName: string;
   readonly model: string;
   readonly embeddings: readonly AIEmbeddingDataResponse[];
+  readonly usage: AIEmbeddingUsageResponse | null;
 }
 
 // -- Providers ---------------------------------------------------------------
@@ -151,7 +164,8 @@ export interface AIUsageRecord {
   readonly model: string;
   readonly inputTokens: number;
   readonly outputTokens: number;
-  readonly estimatedCostUsd: number | null;
+  readonly estimatedCost: number | null;
+  readonly costCurrency: string | null;
   readonly timestamp: ISODateString;
   readonly duration: string | null;
 }

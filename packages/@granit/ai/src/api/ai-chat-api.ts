@@ -5,7 +5,12 @@
 
 import { AI_STREAM_DONE_MARKER } from '../constants.js';
 
-import type { AIChatRequest, AIChatResponse, AIChatStreamChunk } from '../types/index.js';
+import type {
+  AIChatRequest,
+  AIChatResponse,
+  AIChatStreamChunk,
+  AIChatStreamUsage,
+} from '../types/index.js';
 import type { AxiosInstance } from 'axios';
 
 /**
@@ -27,16 +32,29 @@ export async function chatComplete(
 }
 
 /** Result of parsing a single SSE data line. */
-type ParsedLine = { kind: 'chunk'; content: string } | { kind: 'done' } | { kind: 'skip' };
+type ParsedLine =
+  | { kind: 'chunk'; content: string }
+  | { kind: 'usage'; usage: AIChatStreamUsage }
+  | { kind: 'done' }
+  | { kind: 'event'; eventType: string }
+  | { kind: 'skip' };
 
 /** Parses a single SSE line into a typed result. */
-function parseSseLine(line: string): ParsedLine {
+function parseSseLine(line: string, currentEventType: string | null): ParsedLine {
+  if (line.startsWith('event: ')) {
+    return { kind: 'event', eventType: line.slice(7).trim() };
+  }
+
   if (!line.startsWith('data: ')) return { kind: 'skip' };
 
   const data = line.slice(6).trim();
   if (data === AI_STREAM_DONE_MARKER) return { kind: 'done' };
 
   try {
+    if (currentEventType === 'usage') {
+      const parsed = JSON.parse(data) as AIChatStreamUsage;
+      return { kind: 'usage', usage: parsed };
+    }
     const parsed = JSON.parse(data) as AIChatStreamChunk;
     return { kind: 'chunk', content: parsed.content };
   } catch {
@@ -44,13 +62,19 @@ function parseSseLine(line: string): ParsedLine {
   }
 }
 
+/** Discriminated union yielded by {@link chatStream}. */
+export type ChatStreamEvent =
+  | { readonly type: 'chunk'; readonly content: string }
+  | { readonly type: 'usage'; readonly usage: AIChatStreamUsage };
+
 /**
  * Opens an SSE stream for chat completion via Axios.
  *
  * Uses `adapter: 'fetch'` with `responseType: 'stream'` so the request goes
  * through the full Axios interceptor pipeline (CSRF, auth, tenant headers).
- * Yields content string chunks as they arrive. The stream ends when the
- * server sends `data: [DONE]` or closes the connection.
+ * Yields {@link ChatStreamEvent} items as they arrive: content chunks and a
+ * final usage summary. The stream ends when the server sends `data: [DONE]`
+ * or closes the connection.
  *
  * `POST /ai/chat/{workspaceName}/stream`
  *
@@ -58,8 +82,9 @@ function parseSseLine(line: string): ParsedLine {
  * ```ts
  * const controller = new AbortController();
  *
- * for await (const chunk of chatStream(client, '/api', 'default', request, controller.signal)) {
- *   process.stdout.write(chunk);
+ * for await (const event of chatStream(client, '/api', 'default', request, controller.signal)) {
+ *   if (event.type === 'chunk') process.stdout.write(event.content);
+ *   if (event.type === 'usage') console.log('Tokens:', event.usage);
  * }
  * ```
  */
@@ -68,8 +93,8 @@ export async function* chatStream(
   basePath: string,
   workspaceName: string,
   request: AIChatRequest,
-  signal?: AbortSignal,
-): AsyncGenerator<string, void, undefined> {
+  signal?: AbortSignal
+): AsyncGenerator<ChatStreamEvent, void, undefined> {
   const url = `${basePath}/ai/chat/${encodeURIComponent(workspaceName)}/stream`;
 
   const response = await client.post(url, request, {
@@ -85,6 +110,7 @@ export async function* chatStream(
   const reader = body.getReader();
   const decoder = new TextDecoder();
   let buffer = '';
+  let currentEventType: string | null = null;
 
   try {
     for (;;) {
@@ -96,9 +122,18 @@ export async function* chatStream(
       buffer = lines.pop()!;
 
       for (const line of lines) {
-        const result = parseSseLine(line);
-        if (result.kind === 'done') return;
-        if (result.kind === 'chunk') yield result.content;
+        const result = parseSseLine(line, currentEventType);
+        if (result.kind === 'event') {
+          currentEventType = result.eventType;
+        } else if (result.kind === 'done') {
+          return;
+        } else if (result.kind === 'chunk') {
+          currentEventType = null;
+          yield { type: 'chunk', content: result.content };
+        } else if (result.kind === 'usage') {
+          currentEventType = null;
+          yield { type: 'usage', usage: result.usage };
+        }
       }
     }
   } finally {

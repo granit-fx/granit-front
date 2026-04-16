@@ -5,10 +5,12 @@ export type {
   AIChatRequest,
   AIChatResponse,
   AIChatStreamChunk,
+  AIChatStreamUsage,
   AIChatUsageResponse,
   AIEmbeddingDataResponse,
   AIEmbeddingRequest,
   AIEmbeddingResponse,
+  AIEmbeddingUsageResponse,
   AIModelCapabilities,
   AIProviderModelResponse,
   AIProviderResponse,
@@ -43,6 +45,7 @@ export {
 
 // API — Chat
 export { chatComplete, chatStream } from './api/ai-chat-api.js';
+export type { ChatStreamEvent } from './api/ai-chat-api.js';
 
 // API — Embeddings
 export { generateEmbeddings } from './api/ai-embeddings-api.js';
