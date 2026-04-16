@@ -1,5 +1,5 @@
 import { TZDate } from '@date-fns/tz';
-import { format } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 import { useCallback } from 'react';
 
 import { useDateLocale } from './date-locale.js';
@@ -37,5 +37,11 @@ export function useDateFormatter() {
     [dateLocale, timezone]
   );
 
-  return { formatDate, formatDateTime };
+  const formatTimeAgo = useCallback(
+    (date: string | Date) =>
+      formatDistanceToNow(toZoned(date, timezone), { addSuffix: true, locale: dateLocale }),
+    [dateLocale, timezone]
+  );
+
+  return { formatDate, formatDateTime, formatTimeAgo };
 }
