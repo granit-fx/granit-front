@@ -60,6 +60,12 @@ describe('formatDateTime', () => {
     expect(typeof result).toBe('string');
     expect(result.length).toBeGreaterThan(0);
   });
+
+  it('should convert to the given timezone', () => {
+    // 10:00 UTC → 11:00 CET (Europe/Brussels, UTC+1 in January)
+    const result = formatDateTime('2026-01-15T10:00:00Z', 'Europe/Brussels');
+    expect(result).toContain('11:00:00');
+  });
 });
 
 describe('formatDate', () => {
@@ -73,6 +79,13 @@ describe('formatDate', () => {
     const result = formatDate('2026-06-15');
     expect(typeof result).toBe('string');
     expect(result).toContain('2026');
+  });
+
+  it('should convert UTC date to the given timezone', () => {
+    // 2026-01-01T03:00:00Z is still Dec 31 in New York (UTC-5)
+    const result = formatDate('2026-01-01T03:00:00Z', 'America/New_York');
+    expect(result).toMatch(/December 31/);
+    expect(result).toContain('2025');
   });
 });
 

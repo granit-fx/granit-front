@@ -22,7 +22,7 @@ const authenticatedResponse = {
 
 const unauthenticatedResponse = { authenticated: false };
 
-const csrfResponse = { token: 'csrf-test-token' };
+const csrfResponse = { csrfToken: 'csrf-test-token' };
 
 function mockFetchSequence(...responses: object[]) {
   const fn = vi.fn();

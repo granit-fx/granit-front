@@ -15,6 +15,7 @@
   },
   "peerDependencies": {
     "clsx": "*",
+    "@date-fns/tz": "*",
     "date-fns": "*",
     "tailwind-merge": "*"
   },

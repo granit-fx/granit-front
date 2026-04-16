@@ -657,6 +657,11 @@
           "signature": "function applyTranslations(instance: i18n, data: ApplicationLocalizationDto): void"
         },
         {
+          "name": "unflattenKeys",
+          "kind": "function",
+          "signature": "function unflattenKeys(flat: Record<string, string>): Record<string, unknown>"
+        },
+        {
           "name": "LOCALE_STORAGE_KEY",
           "kind": "const",
           "signature": "const LOCALE_STORAGE_KEY"
@@ -1995,6 +2000,26 @@
               "signature": "onLocaleChange?: (locale: string) => void"
             }
           ]
+        },
+        {
+          "name": "useDateLocale",
+          "kind": "function",
+          "signature": "function useDateLocale(locale: string): Locale"
+        },
+        {
+          "name": "useDateFormatter",
+          "kind": "function",
+          "signature": "function useDateFormatter()"
+        },
+        {
+          "name": "TimezoneProvider",
+          "kind": "const",
+          "signature": "const TimezoneProvider"
+        },
+        {
+          "name": "useTimezone",
+          "kind": "function",
+          "signature": "function useTimezone(): string"
         }
       ]
     },

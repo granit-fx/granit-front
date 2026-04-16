@@ -23,6 +23,9 @@ importers:
       '@commitlint/config-conventional':
         specifier: ^20.5.0
         version: 20.5.0
+      '@date-fns/tz':
+        specifier: ^1.4.1
+        version: 1.4.1
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.2.0(jiti@2.6.1))
@@ -1104,6 +1107,9 @@ importers:
 
   packages/@granit/react-localization:
     dependencies:
+      '@date-fns/tz':
+        specifier: ^1.0.0
+        version: 1.4.1
       '@granit/localization':
         specifier: workspace:*
         version: link:../localization
@@ -1116,6 +1122,9 @@ importers:
       axios:
         specifier: '*'
         version: 1.15.0
+      date-fns:
+        specifier: ^4.0.0
+        version: 4.1.0
       i18next:
         specifier: ^25.0.0
         version: 25.8.14(typescript@5.9.3)
@@ -1848,6 +1857,9 @@ importers:
 
   packages/@granit/utils:
     dependencies:
+      '@date-fns/tz':
+        specifier: '*'
+        version: 1.4.1
       clsx:
         specifier: '*'
         version: 2.1.1
@@ -2144,6 +2156,9 @@ packages:
   '@csstools/css-tokenizer@4.0.0':
     resolution: {integrity: sha512-QxULHAm7cNu72w97JUNCBFODFaXpbDg+dP8b/oWFAZ2MTRppA3U00Y2L1HqaS4J6yBqxwa/Y3nMBaxVKbB/NsA==}
     engines: {node: '>=20.19.0'}
+
+  '@date-fns/tz@1.4.1':
+    resolution: {integrity: sha512-P5LUNhtbj6YfI3iJjw5EL9eUAG6OitD0W3fWQcpQjDRc/QIsL0tRNuO1PcDvPccWL1fSTXXdE1ds+l95DV/OFA==}
 
   '@emnapi/core@1.9.2':
     resolution: {integrity: sha512-UC+ZhH3XtczQYfOlu3lNEkdW/p4dsJ1r/bP7H8+rhao3TTTMO1ATq/4DdIi23XuGoFY+Cz0JmCbdVl0hz9jZcA==}
@@ -5864,6 +5879,8 @@ snapshots:
       css-tree: 3.2.1
 
   '@csstools/css-tokenizer@4.0.0': {}
+
+  '@date-fns/tz@1.4.1': {}
 
   '@emnapi/core@1.9.2':
     dependencies:
