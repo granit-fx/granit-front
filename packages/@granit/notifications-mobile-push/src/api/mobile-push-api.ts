@@ -1,5 +1,6 @@
-import type { AxiosInstance } from 'axios';
 import { buildApiUrl } from '@granit/api-client';
+
+import type { AxiosInstance } from 'axios';
 
 export type MobilePlatform = 'android' | 'ios';
 

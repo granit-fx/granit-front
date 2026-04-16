@@ -2,9 +2,8 @@
 // QueryProvider — React context for a single query endpoint
 // ---------------------------------------------------------------------------
 
-import { createContext, useContext, useMemo } from 'react';
-
 import { useOptionalGranitClient } from '@granit/react-api-client';
+import { createContext, useContext, useMemo } from 'react';
 
 import type { QueryConfig, ResolvedQueryConfig } from '@granit/query-engine';
 import type { ReactNode } from 'react';

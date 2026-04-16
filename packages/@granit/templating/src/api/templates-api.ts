@@ -1,3 +1,5 @@
+import { buildApiUrl } from '@granit/api-client';
+
 import type {
   SaveTemplateCategoryRequest,
   SaveTemplateRequest,
@@ -14,7 +16,6 @@ import type {
 } from '../types/index.js';
 import type { PagedResult, PaginationParams } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
-import { buildApiUrl } from '@granit/api-client';
 
 function templateUrl(basePath: string, name: string, ...segments: string[]): string {
   return buildApiUrl(basePath, 'templates', encodeURIComponent(name), ...segments);

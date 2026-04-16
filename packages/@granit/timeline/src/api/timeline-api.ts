@@ -1,3 +1,5 @@
+import { buildApiUrl } from '@granit/api-client';
+
 import type {
   CreateTimelineEntryRequest,
   TimelineQueryParams,
@@ -5,7 +7,6 @@ import type {
   TimelineEntryPage,
 } from '../types/index.js';
 import type { AxiosInstance } from 'axios';
-import { buildApiUrl } from '@granit/api-client';
 
 function buildEntityUrl(
   basePath: string,
@@ -13,7 +14,12 @@ function buildEntityUrl(
   entityId: string,
   ...segments: string[]
 ): string {
-  return buildApiUrl(basePath, encodeURIComponent(entityType), encodeURIComponent(entityId), ...segments);
+  return buildApiUrl(
+    basePath,
+    encodeURIComponent(entityType),
+    encodeURIComponent(entityId),
+    ...segments
+  );
 }
 
 export async function getStream(
@@ -23,9 +29,12 @@ export async function getStream(
   entityId: string,
   params?: TimelineQueryParams
 ): Promise<TimelineEntryPage> {
-  const { data } = await client.get<TimelineEntryPage>(buildEntityUrl(basePath, entityType, entityId), {
-    params,
-  });
+  const { data } = await client.get<TimelineEntryPage>(
+    buildEntityUrl(basePath, entityType, entityId),
+    {
+      params,
+    }
+  );
   return data;
 }
 

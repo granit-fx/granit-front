@@ -1,3 +1,5 @@
+import { buildApiUrl } from '@granit/api-client';
+
 import type {
   ActivityFeedPage,
   UserNotificationPage,
@@ -5,7 +7,6 @@ import type {
 } from '../types/index.js';
 import type { PaginationParams } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
-import { buildApiUrl } from '@granit/api-client';
 
 // ---------------------------------------------------------------------------
 // Notifications (inbox)

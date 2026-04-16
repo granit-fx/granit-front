@@ -1,3 +1,5 @@
+import { buildApiUrl } from '@granit/api-client';
+
 import type {
   TransitionHistory,
   WorkflowTransitionRequest,
@@ -6,7 +8,6 @@ import type {
 } from '../types/index.js';
 import type { PagedResult, PaginationParams } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
-import { buildApiUrl } from '@granit/api-client';
 
 function buildEntityUrl(
   basePath: string,
@@ -14,7 +15,12 @@ function buildEntityUrl(
   entityId: string,
   ...segments: string[]
 ): string {
-  return buildApiUrl(basePath, encodeURIComponent(entityType), encodeURIComponent(entityId), ...segments);
+  return buildApiUrl(
+    basePath,
+    encodeURIComponent(entityType),
+    encodeURIComponent(entityId),
+    ...segments
+  );
 }
 
 /** List available transitions for a given state. */

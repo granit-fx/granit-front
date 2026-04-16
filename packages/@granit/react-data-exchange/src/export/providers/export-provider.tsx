@@ -1,6 +1,5 @@
-import { createContext, useContext, useMemo } from 'react';
-
 import { useOptionalGranitClient } from '@granit/react-api-client';
+import { createContext, useContext, useMemo } from 'react';
 
 import { DEFAULT_BASE_PATH } from '../../constants.js';
 
