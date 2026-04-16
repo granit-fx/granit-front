@@ -21,19 +21,6 @@ const gpt4oCaps: AIModelCapabilities = {
   extensions: [],
 };
 
-/** Basic chat model without vision/tools (e.g. older or lightweight models). */
-const basicChatCaps: AIModelCapabilities = {
-  chat: true,
-  embeddings: false,
-  vision: false,
-  imageGeneration: false,
-  audio: false,
-  toolUse: false,
-  streaming: true,
-  structuredOutput: false,
-  extensions: [],
-};
-
 /** Embedding-only model. */
 const embeddingCaps: AIModelCapabilities = {
   chat: false,
