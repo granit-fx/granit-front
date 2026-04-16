@@ -1,4 +1,4 @@
-import { createExportJob, downloadExportFile, fetchExportJobStatus } from '@granit/data-exchange';
+import { createExportJob, downloadExportFile, getExportJobStatus } from '@granit/data-exchange';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -51,7 +51,7 @@ export function useExportJob(): UseExportJobReturn {
 
   const statusQuery = useQuery({
     queryKey: buildExportQueryKey(config, 'job', activeJobId ?? ''),
-    queryFn: () => fetchExportJobStatus(config.client, config.basePath, activeJobId ?? ''),
+    queryFn: () => getExportJobStatus(config.client, config.basePath, activeJobId ?? ''),
     enabled: !!activeJobId && !TERMINAL_STATUSES.has(createMutation.data?.status ?? 'Queued'),
     refetchInterval: (query) => {
       const status = query.state.data?.status;

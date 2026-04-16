@@ -7,7 +7,7 @@ import type { AxiosInstance } from 'axios';
  *
  * `GET {basePath}/users/{userId}/sessions`
  */
-export async function fetchUserSessions(
+export async function listUserSessions(
   client: AxiosInstance,
   basePath: string,
   userId: UserId
@@ -19,11 +19,11 @@ export async function fetchUserSessions(
 }
 
 /**
- * List device activity for a user.
+ * Get device activity for a user.
  *
  * `GET {basePath}/users/{userId}/devices`
  */
-export async function fetchUserDeviceActivity(
+export async function getUserDeviceActivity(
   client: AxiosInstance,
   basePath: string,
   userId: UserId

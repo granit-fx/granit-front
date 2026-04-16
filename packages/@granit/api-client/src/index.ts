@@ -191,6 +191,29 @@ export function createMutator(instance: AxiosInstance) {
 }
 
 // ---------------------------------------------------------------------------
+// URL helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Join a base API path with additional path segments.
+ *
+ * Segments are joined with `/` as-is — callers are responsible for
+ * encoding dynamic values with `encodeURIComponent` before passing them.
+ *
+ * @example
+ * ```ts
+ * buildApiUrl(basePath, 'notifications', 'unread', 'count');
+ * // => `${basePath}/notifications/unread/count`
+ *
+ * buildApiUrl(basePath, encodeURIComponent(entityType), encodeURIComponent(entityId), 'history');
+ * // => `${basePath}/{entityType}/{entityId}/history`
+ * ```
+ */
+export function buildApiUrl(basePath: string, ...segments: string[]): string {
+  return [basePath, ...segments].join('/');
+}
+
+// ---------------------------------------------------------------------------
 // Domain error classes
 // ---------------------------------------------------------------------------
 

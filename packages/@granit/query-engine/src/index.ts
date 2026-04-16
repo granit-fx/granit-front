@@ -36,7 +36,7 @@ export type {
 
 // Config
 export { buildQueryKey } from './config.js';
-export type { QueryConfig } from './config.js';
+export type { QueryConfig, ResolvedQueryConfig } from './config.js';
 
 // Utils
 export {
@@ -54,12 +54,12 @@ export { QUERY_LIMITS } from './validation/query-limits.js';
 export { validateQueryRequest } from './validation/validate-query-request.js';
 
 // API
-export { fetchGrouped, fetchPage, fetchQueryMeta } from './api/query-api.js';
+export { getGrouped, getPage, getQueryMeta } from './api/query-api.js';
 export { parseQueryRequest, serializeQueryRequest } from './api/query-param-serializer.js';
 export {
   createSavedView,
   deleteSavedView,
-  fetchSavedViews,
+  listSavedViews,
   setDefaultSavedView,
   updateSavedView,
 } from './api/saved-views-api.js';

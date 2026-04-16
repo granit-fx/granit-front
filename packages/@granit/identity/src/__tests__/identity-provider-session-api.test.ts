@@ -3,8 +3,8 @@ import { toEntityId, toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
-  fetchUserDeviceActivity,
-  fetchUserSessions,
+  getUserDeviceActivity,
+  listUserSessions,
   terminateAllSessions,
   terminateSession,
 } from '../api/identity-provider-session-api.js';
@@ -35,12 +35,12 @@ const sampleDeviceActivity: IdentityDeviceActivity = {
 const basePath = '/identity/provider';
 
 describe('identity-provider-session-api', () => {
-  describe('fetchUserSessions', () => {
+  describe('listUserSessions', () => {
     it('should GET {basePath}/users/{userId}/sessions', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleSession]));
 
-      const result = await fetchUserSessions(client, basePath, toEntityId<'User'>('user-1'));
+      const result = await listUserSessions(client, basePath, toEntityId<'User'>('user-1'));
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/users/user-1/sessions`);
       expect(result).toEqual([sampleSession]);
@@ -50,7 +50,7 @@ describe('identity-provider-session-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([]));
 
-      await fetchUserSessions(client, basePath, toEntityId<'User'>('user/special@id'));
+      await listUserSessions(client, basePath, toEntityId<'User'>('user/special@id'));
 
       expect(client.get).toHaveBeenCalledWith(
         `${basePath}/users/${encodeURIComponent('user/special@id')}/sessions`
@@ -58,12 +58,12 @@ describe('identity-provider-session-api', () => {
     });
   });
 
-  describe('fetchUserDeviceActivity', () => {
+  describe('getUserDeviceActivity', () => {
     it('should GET {basePath}/users/{userId}/devices', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleDeviceActivity]));
 
-      const result = await fetchUserDeviceActivity(client, basePath, toEntityId<'User'>('user-1'));
+      const result = await getUserDeviceActivity(client, basePath, toEntityId<'User'>('user-1'));
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/users/user-1/devices`);
       expect(result).toEqual([sampleDeviceActivity]);

@@ -4,8 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   createUser,
-  fetchProviderUser,
-  fetchProviderUsers,
+  getProviderUser,
+  listProviderUsers,
   setUserEnabled,
   updateUser,
 } from '../api/identity-provider-user-api.js';
@@ -25,13 +25,13 @@ const sampleUser: IdentityUser = {
 const basePath = '/identity/provider';
 
 describe('identity-provider-user-api', () => {
-  describe('fetchProviderUsers', () => {
+  describe('listProviderUsers', () => {
     it('should GET {basePath}/users without params', async () => {
       const client = createMockClient();
       const users = [sampleUser];
       vi.mocked(client.get).mockResolvedValue(axiosResponse(users));
 
-      const result = await fetchProviderUsers(client, basePath);
+      const result = await listProviderUsers(client, basePath);
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/users`, { params: undefined });
       expect(result).toEqual(users);
@@ -42,19 +42,19 @@ describe('identity-provider-user-api', () => {
       vi.mocked(client.get).mockResolvedValue(axiosResponse([]));
 
       const params = { search: 'john', first: 0, max: 10 };
-      const result = await fetchProviderUsers(client, basePath, params);
+      const result = await listProviderUsers(client, basePath, params);
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/users`, { params });
       expect(result).toEqual([]);
     });
   });
 
-  describe('fetchProviderUser', () => {
+  describe('getProviderUser', () => {
     it('should GET {basePath}/users/{userId}', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse(sampleUser));
 
-      const result = await fetchProviderUser(client, basePath, toEntityId<'User'>('user-1'));
+      const result = await getProviderUser(client, basePath, toEntityId<'User'>('user-1'));
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/users/user-1`);
       expect(result).toEqual(sampleUser);
@@ -64,7 +64,7 @@ describe('identity-provider-user-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse(sampleUser));
 
-      await fetchProviderUser(client, basePath, toEntityId<'User'>('user/special@id'));
+      await getProviderUser(client, basePath, toEntityId<'User'>('user/special@id'));
 
       expect(client.get).toHaveBeenCalledWith(
         `${basePath}/users/${encodeURIComponent('user/special@id')}`

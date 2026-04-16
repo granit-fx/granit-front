@@ -1,5 +1,5 @@
 import {
-  fetchPasswordChangedAt,
+  getPasswordChangedAt,
   sendPasswordResetEmail,
   setTemporaryPassword,
 } from '@granit/identity';
@@ -30,7 +30,7 @@ export function usePasswordChangedAt(
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'users', userId, 'password-changed-at'),
-    queryFn: () => fetchPasswordChangedAt(config.client, basePath, userId),
+    queryFn: () => getPasswordChangedAt(config.client, basePath, userId),
     enabled: userId.length > 0,
   });
 }

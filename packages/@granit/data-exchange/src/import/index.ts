@@ -20,9 +20,9 @@ export {
   downloadCorrectionFile,
   dryRunImport,
   executeImport,
-  fetchImportJob,
-  fetchImportJobs,
-  fetchImportReport,
+  getImportJob,
+  getImportReport,
+  listImportJobs,
   previewImport,
   uploadImportFile,
 } from './api/import-api.js';

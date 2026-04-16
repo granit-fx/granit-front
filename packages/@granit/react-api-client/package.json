@@ -1,0 +1,33 @@
+{
+  "name": "@granit/react-api-client",
+  "description": "React context provider for sharing an Axios instance across Granit framework packages",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "axios": "*",
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@granit/react-testing": "workspace:*",
+    "@granit/testing": "workspace:*"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  }
+}

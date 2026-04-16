@@ -94,13 +94,16 @@ const TracerContext = React.createContext<Tracer | null>(null);
  *
  * @throws If called outside a `TracingProvider`.
  */
-export function useTracer(): Tracer {
+export function useTracingConfig(): Tracer {
   const tracer = React.useContext(TracerContext);
   if (!tracer) {
-    throw new Error('useTracer must be used within a TracingProvider');
+    throw new Error('useTracingConfig must be used within a TracingProvider');
   }
   return tracer;
 }
+
+/** @deprecated Use useTracingConfig instead */
+export const useTracer = useTracingConfig;
 
 // ---------------------------------------------------------------------------
 // Provider
@@ -114,7 +117,7 @@ export function useTracer(): Tracer {
  * unavailable, a warning is logged and trace export is disabled for the session
  * (no continuous 500 errors in the browser console).
  *
- * Provides a `Tracer` via React context (accessible with `useTracer()`).
+ * Provides a `Tracer` via React context (accessible with `useTracingConfig()`).
  * Shuts down the provider on unmount to flush pending spans.
  *
  * @example

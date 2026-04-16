@@ -89,11 +89,11 @@ export async function dryRunImport(
 }
 
 /**
- * Fetches the current status of an import job.
+ * Gets the current status of an import job.
  *
  * `GET {basePath}/import/{jobId}`
  */
-export async function fetchImportJob(
+export async function getImportJob(
   client: AxiosInstance,
   basePath: string,
   jobId: string
@@ -116,11 +116,11 @@ export async function cancelImportJob(
 }
 
 /**
- * Fetches the full execution report for a completed import job.
+ * Gets the full execution report for a completed import job.
  *
  * `GET {basePath}/import/{jobId}/report`
  */
-export async function fetchImportReport(
+export async function getImportReport(
   client: AxiosInstance,
   basePath: string,
   jobId: string
@@ -132,11 +132,11 @@ export async function fetchImportReport(
 }
 
 /**
- * Fetches a paginated list of import jobs.
+ * Lists a paginated list of import jobs.
  *
  * `GET {basePath}/import/jobs`
  */
-export async function fetchImportJobs(
+export async function listImportJobs(
   client: AxiosInstance,
   basePath: string,
   params?: ImportJobListParams

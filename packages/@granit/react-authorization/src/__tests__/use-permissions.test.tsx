@@ -3,7 +3,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { usePermissions } from '../hooks/use-permissions.js';
+import { buildPermissionQueryKey, usePermissions } from '../hooks/use-permissions.js';
 
 import type { PermissionsResponse } from '@granit/authorization';
 import type { AxiosInstance, AxiosResponse } from 'axios';
@@ -42,6 +42,30 @@ function createWrapper() {
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
+
+describe('buildPermissionQueryKey', () => {
+  it('should use default prefix when no queryKeyPrefix is provided', () => {
+    expect(buildPermissionQueryKey({}, 'me')).toEqual(['auth', 'permissions', 'me']);
+  });
+
+  it('should use custom prefix when queryKeyPrefix is provided', () => {
+    const config = { queryKeyPrefix: ['custom', 'auth'] as const };
+    expect(buildPermissionQueryKey(config, 'me')).toEqual(['custom', 'auth', 'me']);
+  });
+
+  it('should return only the prefix when no segments are provided', () => {
+    expect(buildPermissionQueryKey({})).toEqual(['auth', 'permissions']);
+  });
+
+  it('should handle multiple segments', () => {
+    expect(buildPermissionQueryKey({}, 'roles', 'admin')).toEqual([
+      'auth',
+      'permissions',
+      'roles',
+      'admin',
+    ]);
+  });
+});
 
 describe('usePermissions', () => {
   afterEach(() => {

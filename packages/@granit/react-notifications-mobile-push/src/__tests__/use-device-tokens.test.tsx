@@ -1,4 +1,4 @@
-import { fetchDeviceTokens } from '@granit/notifications-mobile-push';
+import { listDeviceTokens } from '@granit/notifications-mobile-push';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -13,7 +13,7 @@ import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
 vi.mock('@granit/notifications-mobile-push', () => ({
-  fetchDeviceTokens: vi.fn(),
+  listDeviceTokens: vi.fn(),
 }));
 
 const mockTokens: readonly MobilePushTokenResponse[] = [
@@ -48,7 +48,7 @@ describe('deviceTokenKeys', () => {
 
 describe('useDeviceTokens', () => {
   it('should fetch device tokens with default basePath', async () => {
-    vi.mocked(fetchDeviceTokens).mockResolvedValueOnce(mockTokens);
+    vi.mocked(listDeviceTokens).mockResolvedValueOnce(mockTokens);
 
     const client = createMockClient();
     const wrapper = createWrapper(client);
@@ -56,12 +56,12 @@ describe('useDeviceTokens', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(fetchDeviceTokens).toHaveBeenCalledWith(client, '/api/v1/notifications');
+    expect(listDeviceTokens).toHaveBeenCalledWith(client, '/api/v1/notifications');
     expect(result.current.data).toEqual(mockTokens);
   });
 
   it('should fetch device tokens with custom basePath', async () => {
-    vi.mocked(fetchDeviceTokens).mockResolvedValueOnce(mockTokens);
+    vi.mocked(listDeviceTokens).mockResolvedValueOnce(mockTokens);
 
     const client = createMockClient();
     const wrapper = createWrapper(client, '/custom/api');
@@ -69,11 +69,11 @@ describe('useDeviceTokens', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(fetchDeviceTokens).toHaveBeenCalledWith(client, '/custom/api');
+    expect(listDeviceTokens).toHaveBeenCalledWith(client, '/custom/api');
   });
 
   it('should handle fetch error', async () => {
-    vi.mocked(fetchDeviceTokens).mockRejectedValueOnce(new Error('Unauthorized'));
+    vi.mocked(listDeviceTokens).mockRejectedValueOnce(new Error('Unauthorized'));
 
     const client = createMockClient();
     const wrapper = createWrapper(client);
@@ -85,7 +85,7 @@ describe('useDeviceTokens', () => {
   });
 
   it('should return empty array when no tokens exist', async () => {
-    vi.mocked(fetchDeviceTokens).mockResolvedValueOnce([]);
+    vi.mocked(listDeviceTokens).mockResolvedValueOnce([]);
 
     const client = createMockClient();
     const wrapper = createWrapper(client);

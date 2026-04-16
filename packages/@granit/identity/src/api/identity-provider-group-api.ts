@@ -7,7 +7,7 @@ import type { AxiosInstance } from 'axios';
  *
  * `GET {basePath}/groups`
  */
-export async function fetchGroups(
+export async function listGroups(
   client: AxiosInstance,
   basePath: string
 ): Promise<readonly IdentityGroup[]> {
@@ -20,7 +20,7 @@ export async function fetchGroups(
  *
  * `GET {basePath}/users/{userId}/groups`
  */
-export async function fetchUserGroups(
+export async function listUserGroups(
   client: AxiosInstance,
   basePath: string,
   userId: UserId

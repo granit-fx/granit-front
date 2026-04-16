@@ -1,15 +1,15 @@
-import { fetchPage } from '@granit/query-engine';
+import { getPage } from '@granit/query-engine';
 
 import type { RescheduleActionRequest, ScheduledActionResponse } from '../types/index.js';
 import type { PagedResult, QueryRequest } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
 
 /**
- * Fetch a scheduled action by ID.
+ * Get a scheduled action by ID.
  *
  * `GET {basePath}/{id}`
  */
-export async function fetchScheduledActionById(
+export async function getScheduledActionById(
   client: AxiosInstance,
   basePath: string,
   id: string
@@ -19,16 +19,16 @@ export async function fetchScheduledActionById(
 }
 
 /**
- * Fetch a paginated, filterable, sortable list of scheduled actions via QueryEngine.
+ * List scheduled actions as a paginated, filterable, sortable collection via QueryEngine.
  *
  * `GET {basePath}?page=&pageSize=&...`
  */
-export async function fetchScheduledActions(
+export async function listScheduledActions(
   client: AxiosInstance,
   basePath: string,
   request: QueryRequest = {}
 ): Promise<PagedResult<ScheduledActionResponse>> {
-  return fetchPage<ScheduledActionResponse>(client, basePath, request);
+  return getPage<ScheduledActionResponse>(client, basePath, request);
 }
 
 /**

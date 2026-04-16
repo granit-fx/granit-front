@@ -13,13 +13,16 @@ const ErrorContext = React.createContext<ErrorContextValue | null>(null);
  *
  * @throws If called outside an `ErrorContextProvider`.
  */
-export function useErrorContext(): ErrorContextValue {
+export function useErrorBoundaryConfig(): ErrorContextValue {
   const ctx = React.useContext(ErrorContext);
   if (!ctx) {
-    throw new Error('useErrorContext must be used within an ErrorContextProvider');
+    throw new Error('useErrorBoundaryConfig must be used within an ErrorContextProvider');
   }
   return ctx;
 }
+
+/** @deprecated Use useErrorBoundaryConfig instead */
+export const useErrorContext = useErrorBoundaryConfig;
 
 // ---------------------------------------------------------------------------
 // Provider

@@ -24,27 +24,17 @@ function createSSEStream(chunks: string[]): ReadableStream<Uint8Array> {
   });
 }
 
-function mockFetch(status: number, body: ReadableStream<Uint8Array> | null) {
-  return vi.fn().mockResolvedValue({
-    ok: status >= 200 && status < 300,
-    status,
-    statusText: status === 200 ? 'OK' : 'Error',
-    body,
-  });
-}
-
 function createWrapper(client: AxiosInstance) {
   return function Wrapper({ children }: { children: ReactNode }) {
     const queryClient = createTestQueryClient();
     const config: AIConfig = {
       client,
       basePath: '/api',
-      streamBaseUrl: 'http://localhost:5000',
     };
     return React.createElement(
       QueryClientProvider,
       { client: queryClient },
-      <AIProvider config={config}>{children}</AIProvider>
+      <AIProvider config={config}>{children}</AIProvider>,
     );
   };
 }
@@ -61,7 +51,7 @@ describe('useAIChatStream', () => {
       'data: {"content":" world"}\n\n',
       'data: [DONE]\n\n',
     ]);
-    vi.stubGlobal('fetch', mockFetch(200, stream));
+    vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
     const { result } = renderHook(() => useAIChatStream(), {
       wrapper: createWrapper(client),
@@ -80,9 +70,9 @@ describe('useAIChatStream', () => {
     expect(result.current.error).toBeNull();
   });
 
-  it('should set error on fetch failure', async () => {
+  it('should set error on request failure', async () => {
     const client = createMockClient();
-    vi.stubGlobal('fetch', mockFetch(500, null));
+    vi.spyOn(client, 'post').mockRejectedValue(new Error('Request failed with status 500'));
 
     const { result } = renderHook(() => useAIChatStream(), {
       wrapper: createWrapper(client),
@@ -103,11 +93,9 @@ describe('useAIChatStream', () => {
 
     const stream1 = createSSEStream(['data: {"content":"First"}\n\ndata: [DONE]\n\n']);
     const stream2 = createSSEStream(['data: {"content":"Second"}\n\ndata: [DONE]\n\n']);
-    const fetchMock = vi
-      .fn()
-      .mockResolvedValueOnce({ ok: true, status: 200, statusText: 'OK', body: stream1 })
-      .mockResolvedValueOnce({ ok: true, status: 200, statusText: 'OK', body: stream2 });
-    vi.stubGlobal('fetch', fetchMock);
+    vi.spyOn(client, 'post')
+      .mockResolvedValueOnce({ data: stream1 })
+      .mockResolvedValueOnce({ data: stream2 });
 
     const { result } = renderHook(() => useAIChatStream(), {
       wrapper: createWrapper(client),
@@ -125,32 +113,14 @@ describe('useAIChatStream', () => {
     await waitFor(() => expect(result.current.content).toBe('Second'));
   });
 
-  it('should pass tenant and auth headers', async () => {
+  it('should call axios with correct URL and options', async () => {
     const client = createMockClient();
     const stream = createSSEStream(['data: [DONE]\n\n']);
-    const fetchMock = mockFetch(200, stream);
-    vi.stubGlobal('fetch', fetchMock);
+    const postSpy = vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
-    const tokenGetter = vi.fn().mockResolvedValue('my-token');
-
-    const config: AIConfig = {
-      client,
-      basePath: '/api',
-      streamBaseUrl: 'http://localhost:5000',
-      tokenGetter,
-      tenantId: 'tenant-1',
-    };
-
-    const wrapper = ({ children }: { children: ReactNode }) => {
-      const queryClient = createTestQueryClient();
-      return React.createElement(
-        QueryClientProvider,
-        { client: queryClient },
-        <AIProvider config={config}>{children}</AIProvider>
-      );
-    };
-
-    const { result } = renderHook(() => useAIChatStream(), { wrapper });
+    const { result } = renderHook(() => useAIChatStream(), {
+      wrapper: createWrapper(client),
+    });
 
     act(() => {
       result.current.send('default', { messages: [{ role: 'user', content: 'Hi' }] });
@@ -158,14 +128,14 @@ describe('useAIChatStream', () => {
 
     await waitFor(() => expect(result.current.isStreaming).toBe(false));
 
-    expect(fetchMock).toHaveBeenCalledWith(
-      'http://localhost:5000/api/ai/chat/default/stream',
+    expect(postSpy).toHaveBeenCalledWith(
+      '/api/ai/chat/default/stream',
+      { messages: [{ role: 'user', content: 'Hi' }] },
       expect.objectContaining({
-        headers: expect.objectContaining({
-          Authorization: 'Bearer my-token',
-          'X-Tenant-Id': 'tenant-1',
-        }),
-      })
+        adapter: 'fetch',
+        responseType: 'stream',
+        headers: { Accept: 'text/event-stream' },
+      }),
     );
   });
 });

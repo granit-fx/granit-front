@@ -13,9 +13,9 @@ export { SETTING_NAMES } from './constants.js';
 // API
 export {
   deleteSetting,
-  fetchAdminAppSettings,
-  fetchSetting,
-  fetchSettings,
+  getAdminAppSettings,
+  getSetting,
+  getSettings,
   saveAdminAppSettings,
   updateSetting,
 } from './api/settings-api.js';

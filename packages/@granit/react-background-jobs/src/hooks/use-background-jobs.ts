@@ -1,6 +1,6 @@
 import {
-  fetchBackgroundJob,
-  fetchBackgroundJobs,
+  getBackgroundJob,
+  listBackgroundJobs,
   pauseJob,
   resumeJob,
   triggerJob,
@@ -22,7 +22,7 @@ export const backgroundJobKeys = {
 };
 
 /**
- * Query hook that fetches a paginated list of all background jobs with their current status.
+ * Query hook that lists a paginated collection of all background jobs with their current status.
  *
  * Polls every 15 seconds to reflect live scheduler state.
  *
@@ -40,13 +40,13 @@ export function useBackgroundJobs(
 
   return useQuery({
     queryKey: backgroundJobKeys.list(params),
-    queryFn: () => fetchBackgroundJobs(client, jobsPath, params),
+    queryFn: () => listBackgroundJobs(client, jobsPath, params),
     refetchInterval: 15_000,
   });
 }
 
 /**
- * Query hook that fetches a single background job by name.
+ * Query hook that gets a single background job by name.
  *
  * Polls every 15 seconds to reflect live scheduler state.
  * The query is disabled when the name is empty.
@@ -64,7 +64,7 @@ export function useBackgroundJob(
 
   return useQuery({
     queryKey: backgroundJobKeys.job(name),
-    queryFn: () => fetchBackgroundJob(client, jobsPath, name),
+    queryFn: () => getBackgroundJob(client, jobsPath, name),
     refetchInterval: 15_000,
     enabled: name.length > 0,
   });

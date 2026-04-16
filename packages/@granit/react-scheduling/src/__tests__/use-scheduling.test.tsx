@@ -6,6 +6,7 @@ import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  buildSchedulingQueryKey,
   useCancelScheduledAction,
   useRescheduleScheduledAction,
   useScheduledAction,
@@ -62,6 +63,30 @@ function createWrapper(client: AxiosInstance, basePath?: string) {
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
+
+describe('buildSchedulingQueryKey', () => {
+  it('should use default prefix when no queryKeyPrefix is provided', () => {
+    expect(buildSchedulingQueryKey({}, 'list')).toEqual(['scheduling', 'actions', 'list']);
+  });
+
+  it('should use custom prefix when queryKeyPrefix is provided', () => {
+    const config = { queryKeyPrefix: ['custom', 'sched'] as const };
+    expect(buildSchedulingQueryKey(config, 'list')).toEqual(['custom', 'sched', 'list']);
+  });
+
+  it('should return only the prefix when no segments are provided', () => {
+    expect(buildSchedulingQueryKey({})).toEqual(['scheduling', 'actions']);
+  });
+
+  it('should handle complex segments', () => {
+    expect(buildSchedulingQueryKey({}, 'detail', 'action-1')).toEqual([
+      'scheduling',
+      'actions',
+      'detail',
+      'action-1',
+    ]);
+  });
+});
 
 describe('use-scheduling', () => {
   afterEach(() => {

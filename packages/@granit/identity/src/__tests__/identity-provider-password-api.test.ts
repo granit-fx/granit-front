@@ -3,7 +3,7 @@ import { toEntityId, toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
-  fetchPasswordChangedAt,
+  getPasswordChangedAt,
   sendPasswordResetEmail,
   setTemporaryPassword,
 } from '../api/identity-provider-password-api.js';
@@ -13,7 +13,7 @@ import type { IdentityPasswordChangedAtResponse } from '../types/index.js';
 const basePath = '/identity/provider';
 
 describe('identity-provider-password-api', () => {
-  describe('fetchPasswordChangedAt', () => {
+  describe('getPasswordChangedAt', () => {
     it('should GET {basePath}/users/{userId}/password/changed-at', async () => {
       const client = createMockClient();
       const response: IdentityPasswordChangedAtResponse = {
@@ -21,7 +21,7 @@ describe('identity-provider-password-api', () => {
       };
       vi.mocked(client.get).mockResolvedValue(axiosResponse(response));
 
-      const result = await fetchPasswordChangedAt(client, basePath, toEntityId<'User'>('user-1'));
+      const result = await getPasswordChangedAt(client, basePath, toEntityId<'User'>('user-1'));
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/users/user-1/password/changed-at`);
       expect(result).toEqual(response);
@@ -32,7 +32,7 @@ describe('identity-provider-password-api', () => {
       const response: IdentityPasswordChangedAtResponse = { changedAt: null };
       vi.mocked(client.get).mockResolvedValue(axiosResponse(response));
 
-      const result = await fetchPasswordChangedAt(client, basePath, toEntityId<'User'>('user-1'));
+      const result = await getPasswordChangedAt(client, basePath, toEntityId<'User'>('user-1'));
 
       expect(result.changedAt).toBeNull();
     });
@@ -41,7 +41,7 @@ describe('identity-provider-password-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse({ changedAt: null }));
 
-      await fetchPasswordChangedAt(client, basePath, toEntityId<'User'>('user/special@id'));
+      await getPasswordChangedAt(client, basePath, toEntityId<'User'>('user/special@id'));
 
       expect(client.get).toHaveBeenCalledWith(
         `${basePath}/users/${encodeURIComponent('user/special@id')}/password/changed-at`

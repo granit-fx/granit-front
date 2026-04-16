@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   NotificationProvider,
+  useNotificationConfig,
   useNotificationContext,
 } from '../providers/notification-provider.js';
 
@@ -57,7 +58,7 @@ describe('NotificationProvider', () => {
   });
 
   it('should provide context with initial values', () => {
-    const { result } = renderHook(() => useNotificationContext(), {
+    const { result } = renderHook(() => useNotificationConfig(), {
       wrapper: createProviderWrapper(client),
     });
 
@@ -69,12 +70,18 @@ describe('NotificationProvider', () => {
 
   it('should throw when used outside provider', () => {
     expect(() => {
+      renderHook(() => useNotificationConfig());
+    }).toThrow('useNotificationConfig must be used within a <NotificationProvider>');
+  });
+
+  it('should still work via deprecated useNotificationContext alias', () => {
+    expect(() => {
       renderHook(() => useNotificationContext());
-    }).toThrow('useNotificationContext must be used within a <NotificationProvider>');
+    }).toThrow('useNotificationConfig must be used within a <NotificationProvider>');
   });
 
   it('should stay disconnected when no transport is provided', () => {
-    const { result } = renderHook(() => useNotificationContext(), {
+    const { result } = renderHook(() => useNotificationConfig(), {
       wrapper: createProviderWrapper(client),
     });
 
@@ -84,7 +91,7 @@ describe('NotificationProvider', () => {
   it('should connect transport and transition to connected state', async () => {
     const transport = createMockTransport();
 
-    const { result } = renderHook(() => useNotificationContext(), {
+    const { result } = renderHook(() => useNotificationConfig(), {
       wrapper: createProviderWrapper(client, transport),
     });
 
@@ -99,7 +106,7 @@ describe('NotificationProvider', () => {
       connect: vi.fn().mockRejectedValue(new Error('Connection failed')),
     });
 
-    const { result } = renderHook(() => useNotificationContext(), {
+    const { result } = renderHook(() => useNotificationConfig(), {
       wrapper: createProviderWrapper(client, transport),
     });
 
@@ -116,7 +123,7 @@ describe('NotificationProvider', () => {
       }),
     });
 
-    const { result } = renderHook(() => useNotificationContext(), {
+    const { result } = renderHook(() => useNotificationConfig(), {
       wrapper: createProviderWrapper(client, transport),
     });
 
@@ -150,7 +157,7 @@ describe('NotificationProvider', () => {
       }),
     });
 
-    const { result } = renderHook(() => useNotificationContext(), {
+    const { result } = renderHook(() => useNotificationConfig(), {
       wrapper: createProviderWrapper(client, transport),
     });
 
@@ -181,7 +188,7 @@ describe('NotificationProvider', () => {
       onStateChange: vi.fn().mockReturnValue(unsubState),
     });
 
-    const { unmount } = renderHook(() => useNotificationContext(), {
+    const { unmount } = renderHook(() => useNotificationConfig(), {
       wrapper: createProviderWrapper(client, transport),
     });
 

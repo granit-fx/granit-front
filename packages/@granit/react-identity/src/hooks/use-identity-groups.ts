@@ -1,7 +1,7 @@
 import {
   addUserToGroup,
-  fetchGroups,
-  fetchUserGroups,
+  listGroups,
+  listUserGroups,
   removeUserFromGroup,
 } from '@granit/identity';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -26,7 +26,7 @@ export function useGroups(): UseQueryResult<readonly IdentityGroup[]> {
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'groups'),
-    queryFn: () => fetchGroups(config.client, basePath),
+    queryFn: () => listGroups(config.client, basePath),
   });
 }
 
@@ -46,7 +46,7 @@ export function useUserGroups(userId: UserId): UseQueryResult<readonly IdentityG
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'users', userId, 'groups'),
-    queryFn: () => fetchUserGroups(config.client, basePath, userId),
+    queryFn: () => listUserGroups(config.client, basePath, userId),
     enabled: userId.length > 0,
   });
 }

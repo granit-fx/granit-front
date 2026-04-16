@@ -3,14 +3,14 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   deleteExportPreset,
-  fetchExportPresets,
+  listExportPresets,
   saveExportPreset,
 } from '../../export/api/preset-api.js';
 
 const BASE = '/api/v1/data-exchange';
 
 describe('preset-api', () => {
-  it('fetchExportPresets calls GET /metadata/presets/{definitionName}', async () => {
+  it('listExportPresets calls GET /metadata/presets/{definitionName}', async () => {
     const client = createMockClient();
     const presets = [
       {
@@ -22,7 +22,7 @@ describe('preset-api', () => {
       },
     ];
     vi.mocked(client.get).mockResolvedValueOnce({ data: presets });
-    const result = await fetchExportPresets(client, BASE, 'Test');
+    const result = await listExportPresets(client, BASE, 'Test');
     expect(client.get).toHaveBeenCalledWith(`${BASE}/metadata/presets/Test`);
     expect(result).toEqual(presets);
   });

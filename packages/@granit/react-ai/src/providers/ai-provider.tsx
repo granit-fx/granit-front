@@ -13,18 +13,6 @@ export interface AIConfig {
   readonly client: AxiosInstance;
   /** Route prefix before `/ai/...` (default: empty string). */
   readonly basePath?: string;
-  /**
-   * Base URL used for streaming endpoints (native fetch, not Axios).
-   * Typically `window.location.origin` or `import.meta.env.VITE_API_URL`.
-   */
-  readonly streamBaseUrl?: string;
-  /**
-   * Returns the current Bearer token for streaming auth.
-   * Streaming uses native `fetch` and cannot reuse Axios interceptors.
-   */
-  readonly tokenGetter?: () => Promise<string | null>;
-  /** Current tenant ID to inject as `X-Tenant-Id` header in streams. */
-  readonly tenantId?: string;
   /** Custom React Query key prefix (default: `['ai']`). */
   readonly queryKeyPrefix?: readonly string[];
 }

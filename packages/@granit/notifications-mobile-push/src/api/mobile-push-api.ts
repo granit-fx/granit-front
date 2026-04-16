@@ -1,4 +1,5 @@
 import type { AxiosInstance } from 'axios';
+import { buildApiUrl } from '@granit/api-client';
 
 export type MobilePlatform = 'android' | 'ios';
 
@@ -8,16 +9,12 @@ export interface DeviceTokenDto {
   readonly deviceId?: string;
 }
 
-function buildUrl(basePath: string, ...segments: string[]): string {
-  return [basePath, ...segments].join('/');
-}
-
 export async function registerDeviceToken(
   client: AxiosInstance,
   basePath: string,
   payload: DeviceTokenDto
 ): Promise<void> {
-  await client.post(buildUrl(basePath, 'notifications', 'mobile-push', 'tokens'), payload);
+  await client.post(buildApiUrl(basePath, 'notifications', 'mobile-push', 'tokens'), payload);
 }
 
 export async function unregisterDeviceToken(
@@ -26,7 +23,7 @@ export async function unregisterDeviceToken(
   token: string
 ): Promise<void> {
   await client.delete(
-    buildUrl(basePath, 'notifications', 'mobile-push', 'tokens', encodeURIComponent(token))
+    buildApiUrl(basePath, 'notifications', 'mobile-push', 'tokens', encodeURIComponent(token))
   );
 }
 
@@ -37,16 +34,16 @@ export interface MobilePushTokenResponse {
 }
 
 /**
- * Fetches all registered device tokens for the current user.
+ * Lists all registered device tokens for the current user.
  *
  * `GET {basePath}/notifications/mobile-push/tokens`
  */
-export async function fetchDeviceTokens(
+export async function listDeviceTokens(
   client: AxiosInstance,
   basePath: string
 ): Promise<readonly MobilePushTokenResponse[]> {
   const { data } = await client.get<MobilePushTokenResponse[]>(
-    buildUrl(basePath, 'notifications', 'mobile-push', 'tokens')
+    buildApiUrl(basePath, 'notifications', 'mobile-push', 'tokens')
   );
   return data;
 }

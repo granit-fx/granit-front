@@ -1,4 +1,4 @@
-import { deleteExportPreset, fetchExportPresets, saveExportPreset } from '@granit/data-exchange';
+import { deleteExportPreset, listExportPresets, saveExportPreset } from '@granit/data-exchange';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { buildExportQueryKey, useExportConfig } from '../providers/export-provider.js';
@@ -26,7 +26,7 @@ export function useExportPresets(definitionName: string | undefined): UseExportP
 
   const presets = useQuery({
     queryKey: presetsQueryKey,
-    queryFn: () => fetchExportPresets(config.client, config.basePath, definitionName!),
+    queryFn: () => listExportPresets(config.client, config.basePath, definitionName!),
     enabled: !!definitionName,
     staleTime: 30 * 1000,
   });

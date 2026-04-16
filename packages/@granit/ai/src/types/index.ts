@@ -20,6 +20,7 @@ export interface AIWorkspaceResponse {
   readonly maxOutputTokens: number | null;
   readonly kind: AIWorkspaceKind;
   readonly isActive: boolean;
+  readonly capabilities: AIModelCapabilities | null;
 }
 
 /** List response wrapper. Mirrors `AIWorkspaceListResponse`. */
@@ -103,6 +104,36 @@ export interface AIEmbeddingResponse {
   readonly workspaceName: string;
   readonly model: string;
   readonly embeddings: readonly AIEmbeddingDataResponse[];
+}
+
+// -- Providers ---------------------------------------------------------------
+
+/** Model capabilities. Mirrors `Granit.AI.AIModelCapabilities`. */
+export interface AIModelCapabilities {
+  readonly chat: boolean;
+  readonly embeddings: boolean;
+  readonly vision: boolean;
+  readonly imageGeneration: boolean;
+  readonly audio: boolean;
+  readonly toolUse: boolean;
+  readonly streaming: boolean;
+  readonly structuredOutput: boolean;
+  readonly extensions: readonly string[];
+}
+
+/** Provider summary returned by the discovery endpoint. Mirrors `AIProviderResponse`. */
+export interface AIProviderResponse {
+  readonly name: string;
+  readonly supportsChat: boolean;
+  readonly supportsEmbeddings: boolean;
+}
+
+/** Model metadata for a given provider. Mirrors `AIProviderModelResponse`. */
+export interface AIProviderModelResponse {
+  readonly id: string;
+  readonly displayName: string;
+  readonly capabilities: AIModelCapabilities;
+  readonly maxContextTokens: number | null;
 }
 
 // -- Usage tracking ----------------------------------------------------------

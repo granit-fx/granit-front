@@ -1,5 +1,5 @@
 import { createLogger } from '@granit/logger';
-import { fetchHistory } from '@granit/workflow';
+import { getHistory } from '@granit/workflow';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useWorkflowConfig } from '../providers/workflow-provider.js';
@@ -26,7 +26,7 @@ export function useWorkflowHistory({
   entityId,
   enabled = true,
 }: UseWorkflowHistoryOptions): UseWorkflowHistoryReturn {
-  const { apiClient, basePath } = useWorkflowConfig();
+  const { client, basePath } = useWorkflowConfig();
 
   const [history, setHistory] = useState<readonly TransitionHistory[]>([]);
   const [loading, setLoading] = useState(enabled);
@@ -43,7 +43,7 @@ export function useWorkflowHistory({
     setError(null);
 
     try {
-      const result = await fetchHistory(apiClient, basePath, entityType, entityId);
+      const result = await getHistory(client, basePath, entityType, entityId);
 
       if (!controller.signal.aborted) {
         setHistory(result.items);
@@ -59,7 +59,7 @@ export function useWorkflowHistory({
         setLoading(false);
       }
     }
-  }, [apiClient, basePath, entityType, entityId]);
+  }, [client, basePath, entityType, entityId]);
 
   useEffect(() => {
     if (enabled) {

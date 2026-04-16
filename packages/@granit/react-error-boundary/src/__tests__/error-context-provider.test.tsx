@@ -3,7 +3,11 @@ import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
 import { useBreadcrumb } from '../hooks/use-breadcrumb.js';
-import { ErrorContextProvider, useErrorContext } from '../providers/error-context-provider.js';
+import {
+  ErrorContextProvider,
+  useErrorBoundaryConfig,
+  useErrorContext,
+} from '../providers/error-context-provider.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -21,7 +25,7 @@ function createWrapper(config?: Parameters<typeof ErrorContextProvider>[0]['conf
 
 describe('ErrorContextProvider', () => {
   it('should provide an empty breadcrumb trail by default', () => {
-    const { result } = renderHook(() => useErrorContext(), {
+    const { result } = renderHook(() => useErrorBoundaryConfig(), {
       wrapper: createWrapper(),
     });
 
@@ -29,7 +33,7 @@ describe('ErrorContextProvider', () => {
   });
 
   it('should add breadcrumbs', () => {
-    const { result } = renderHook(() => useErrorContext(), {
+    const { result } = renderHook(() => useErrorBoundaryConfig(), {
       wrapper: createWrapper(),
     });
 
@@ -46,7 +50,7 @@ describe('ErrorContextProvider', () => {
   });
 
   it('should enforce maxBreadcrumbs (FIFO)', () => {
-    const { result } = renderHook(() => useErrorContext(), {
+    const { result } = renderHook(() => useErrorBoundaryConfig(), {
       wrapper: createWrapper({ maxBreadcrumbs: 3 }),
     });
 
@@ -62,7 +66,7 @@ describe('ErrorContextProvider', () => {
   });
 
   it('should use default maxBreadcrumbs of 20', () => {
-    const { result } = renderHook(() => useErrorContext(), {
+    const { result } = renderHook(() => useErrorBoundaryConfig(), {
       wrapper: createWrapper(),
     });
 
@@ -77,7 +81,7 @@ describe('ErrorContextProvider', () => {
   });
 
   it('should return route info when configured', () => {
-    const { result } = renderHook(() => useErrorContext(), {
+    const { result } = renderHook(() => useErrorBoundaryConfig(), {
       wrapper: createWrapper({ getRouteInfo: () => '/invoices/123' }),
     });
 
@@ -85,7 +89,7 @@ describe('ErrorContextProvider', () => {
   });
 
   it('should return undefined route info when not configured', () => {
-    const { result } = renderHook(() => useErrorContext(), {
+    const { result } = renderHook(() => useErrorBoundaryConfig(), {
       wrapper: createWrapper(),
     });
 
@@ -93,16 +97,22 @@ describe('ErrorContextProvider', () => {
   });
 
   it('should return user info when configured', () => {
-    const { result } = renderHook(() => useErrorContext(), {
+    const { result } = renderHook(() => useErrorBoundaryConfig(), {
       wrapper: createWrapper({ getUserInfo: () => ({ id: 'user-42' }) }),
     });
 
     expect(result.current.getUserInfo()).toEqual({ id: 'user-42' });
   });
 
-  it('should throw when useErrorContext is used outside provider', () => {
+  it('should throw when useErrorBoundaryConfig is used outside provider', () => {
+    expect(() => renderHook(() => useErrorBoundaryConfig())).toThrowError(
+      'useErrorBoundaryConfig must be used within an ErrorContextProvider'
+    );
+  });
+
+  it('should still work via deprecated useErrorContext alias', () => {
     expect(() => renderHook(() => useErrorContext())).toThrowError(
-      'useErrorContext must be used within an ErrorContextProvider'
+      'useErrorBoundaryConfig must be used within an ErrorContextProvider'
     );
   });
 });
@@ -117,7 +127,7 @@ describe('useBreadcrumb', () => {
   });
 
   it('should add breadcrumbs via the hook', () => {
-    const { result: contextResult } = renderHook(() => useErrorContext(), {
+    const { result: contextResult } = renderHook(() => useErrorBoundaryConfig(), {
       wrapper: createWrapper(),
     });
 

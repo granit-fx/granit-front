@@ -1,16 +1,16 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { deleteSetting, fetchSetting, fetchSettings, updateSetting } from '../api/settings-api.js';
+import { deleteSetting, getSetting, getSettings, updateSetting } from '../api/settings-api.js';
 
 describe('settings-api', () => {
-  describe('fetchSettings', () => {
+  describe('getSettings', () => {
     it('should GET /settings/{scope}', async () => {
       const client = createMockClient();
       const data = { 'Granit.Localization.PreferredCulture': 'fr' };
       vi.mocked(client.get).mockResolvedValue({ data });
 
-      const result = await fetchSettings(client, '', 'user');
+      const result = await getSettings(client, '', 'user');
 
       expect(client.get).toHaveBeenCalledWith('/settings/user');
       expect(result).toEqual(data);
@@ -20,19 +20,19 @@ describe('settings-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: {} });
 
-      await fetchSettings(client, '/api/v1', 'global');
+      await getSettings(client, '/api/v1', 'global');
 
       expect(client.get).toHaveBeenCalledWith('/api/v1/settings/global');
     });
   });
 
-  describe('fetchSetting', () => {
+  describe('getSetting', () => {
     it('should GET /settings/{scope}/{name}', async () => {
       const client = createMockClient();
       const data = { name: 'Granit.Localization.PreferredCulture', value: 'fr' };
       vi.mocked(client.get).mockResolvedValue({ data });
 
-      const result = await fetchSetting(client, '', 'user', 'Granit.Localization.PreferredCulture');
+      const result = await getSetting(client, '', 'user', 'Granit.Localization.PreferredCulture');
 
       expect(client.get).toHaveBeenCalledWith(
         '/settings/user/Granit.Localization.PreferredCulture'

@@ -39,7 +39,7 @@ function createWrapperWithQueryClient(client: AxiosInstance) {
   const queryClient = createTestQueryClient();
   const wrapper = ({ children }: Readonly<{ children: React.ReactNode }>) => (
     <QueryClientProvider client={queryClient}>
-      <TemplatingProvider client={client}>{children}</TemplatingProvider>
+      <TemplatingProvider config={{ client }}>{children}</TemplatingProvider>
     </QueryClientProvider>
   );
   return { wrapper, queryClient };

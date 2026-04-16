@@ -24,17 +24,17 @@ pnpm add @granit/ai
 
 ### Functions
 
-- `fetchAIWorkspaces(...)`, `fetchAIWorkspace(...)`, `createAIWorkspace(...)`, `updateAIWorkspace(...)`, `deleteAIWorkspace(...)` -- workspace CRUD
+- `listAIWorkspaces(...)`, `getAIWorkspace(...)`, `createAIWorkspace(...)`, `updateAIWorkspace(...)`, `deleteAIWorkspace(...)` -- workspace CRUD
 - `chatComplete(...)`, `chatStream(...)`, `buildChatStreamUrl(...)` -- chat completion
 - `generateEmbeddings(...)` -- embedding generation
 
 ## Usage
 
 ```ts
-import { chatComplete, fetchAIWorkspaces } from '@granit/ai';
+import { chatComplete, listAIWorkspaces } from '@granit/ai';
 import type { AIChatRequest } from '@granit/ai';
 
-const workspaces = await fetchAIWorkspaces(client, basePath);
+const workspaces = await listAIWorkspaces(client, basePath);
 
 const request: AIChatRequest = {
   workspaceId: '...',

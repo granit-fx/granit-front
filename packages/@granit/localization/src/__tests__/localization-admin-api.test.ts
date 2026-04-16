@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   deleteLocalizationOverride,
-  fetchLanguages,
+  listLanguages,
   setLocalizationOverride,
   updateLanguageStatus,
 } from '../api/localization-admin-api.js';
@@ -13,10 +13,10 @@ afterEach(() => {
 });
 
 // ---------------------------------------------------------------------------
-// fetchLanguages
+// listLanguages
 // ---------------------------------------------------------------------------
 
-describe('fetchLanguages', () => {
+describe('listLanguages', () => {
   it('should GET /localization/languages and return data', async () => {
     const client = createMockClient();
     const languages = [
@@ -25,7 +25,7 @@ describe('fetchLanguages', () => {
     ];
     vi.mocked(client.get).mockResolvedValue(axiosResponse(languages));
 
-    const result = await fetchLanguages(client, '/api');
+    const result = await listLanguages(client, '/api');
 
     expect(client.get).toHaveBeenCalledWith('/api/localization/languages');
     expect(result).toEqual(languages);

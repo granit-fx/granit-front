@@ -13,10 +13,10 @@ export type { ExportPresetResponse, SaveExportPresetRequest } from './types/expo
 export {
   createExportJob,
   downloadExportFile,
-  fetchExportDefinitions,
-  fetchExportFields,
-  fetchExportJobs,
-  fetchExportJobStatus,
+  getExportFields,
+  getExportJobStatus,
+  listExportDefinitions,
+  listExportJobs,
 } from './api/export-api.js';
 export type { ExportJobListParams } from './api/export-api.js';
-export { deleteExportPreset, fetchExportPresets, saveExportPreset } from './api/preset-api.js';
+export { deleteExportPreset, listExportPresets, saveExportPreset } from './api/preset-api.js';

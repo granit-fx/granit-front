@@ -3,8 +3,16 @@
 // ---------------------------------------------------------------------------
 
 // Provider
-export { useWorkflowConfig, WorkflowProvider } from './providers/workflow-provider.js';
-export type { WorkflowProviderProps } from './providers/workflow-provider.js';
+export {
+  buildWorkflowQueryKey,
+  useWorkflowConfig,
+  WorkflowProvider,
+} from './providers/workflow-provider.js';
+export type {
+  ResolvedWorkflowConfig,
+  WorkflowConfig,
+  WorkflowProviderProps,
+} from './providers/workflow-provider.js';
 
 // Hooks
 export { useExecuteTransition } from './hooks/use-execute-transition.js';

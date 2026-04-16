@@ -7,7 +7,7 @@ import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { useApiKey } from '../hooks/use-api-key.js';
-import { useApiKeys } from '../hooks/use-api-keys.js';
+import { buildApiKeyQueryKey, useApiKeys } from '../hooks/use-api-keys.js';
 
 import type { ApiKeyResponse } from '@granit/authentication-api-keys';
 
@@ -40,6 +40,30 @@ const mockApiKey: ApiKeyResponse = {
   cacheBehavior: 'Normal',
   createdAt: toISODateString('2026-01-01T00:00:00Z'),
 };
+
+// ---------------------------------------------------------------------------
+// buildApiKeyQueryKey
+// ---------------------------------------------------------------------------
+
+describe('buildApiKeyQueryKey', () => {
+  it('should use default prefix when no queryKeyPrefix is provided', () => {
+    expect(buildApiKeyQueryKey({}, 'list')).toEqual(['api-keys', 'list']);
+  });
+
+  it('should use custom prefix when queryKeyPrefix is provided', () => {
+    const config = { queryKeyPrefix: ['custom', 'keys'] as const };
+    expect(buildApiKeyQueryKey(config, 'list')).toEqual(['custom', 'keys', 'list']);
+  });
+
+  it('should return only the prefix when no segments are provided', () => {
+    expect(buildApiKeyQueryKey({})).toEqual(['api-keys']);
+  });
+
+  it('should handle complex segments', () => {
+    const params = { search: 'test' };
+    expect(buildApiKeyQueryKey({}, 'list', params)).toEqual(['api-keys', 'list', params]);
+  });
+});
 
 // ---------------------------------------------------------------------------
 // useApiKeys

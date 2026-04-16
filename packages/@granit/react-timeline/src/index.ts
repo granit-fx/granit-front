@@ -1,6 +1,13 @@
 // Provider
-export { TimelineProvider, useTimelineConfig } from './providers/timeline-provider.js';
-export type { TimelineProviderProps } from './providers/timeline-provider.js';
+export {
+  TimelineProvider,
+  useTimelineConfig,
+  buildTimelineQueryKey,
+} from './providers/timeline-provider.js';
+export type {
+  TimelineProviderConfig,
+  TimelineProviderProps,
+} from './providers/timeline-provider.js';
 
 // Hooks
 export { useTimeline } from './hooks/use-timeline.js';

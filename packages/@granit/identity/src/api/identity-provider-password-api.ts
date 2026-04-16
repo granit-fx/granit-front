@@ -7,7 +7,7 @@ import type { AxiosInstance } from 'axios';
  *
  * `GET {basePath}/users/{userId}/password/changed-at`
  */
-export async function fetchPasswordChangedAt(
+export async function getPasswordChangedAt(
   client: AxiosInstance,
   basePath: string,
   userId: UserId

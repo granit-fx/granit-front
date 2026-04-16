@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { TracingProvider, useTracer } from '../providers/tracing-provider.js';
+import { TracingProvider, useTracingConfig, useTracer } from '../providers/tracing-provider.js';
 
 import type { TracingConfig } from '@granit/tracing';
 
@@ -103,8 +103,8 @@ afterEach(() => {
 // ---------------------------------------------------------------------------
 
 describe('TracingProvider', () => {
-  it('should provide a tracer via useTracer()', () => {
-    const { result } = renderHook(() => useTracer(), {
+  it('should provide a tracer via useTracingConfig()', () => {
+    const { result } = renderHook(() => useTracingConfig(), {
       wrapper: createWrapper(),
     });
 
@@ -112,13 +112,13 @@ describe('TracingProvider', () => {
   });
 
   it('should register the WebTracerProvider', () => {
-    renderHook(() => useTracer(), { wrapper: createWrapper() });
+    renderHook(() => useTracingConfig(), { wrapper: createWrapper() });
 
     expect(mockRegister).toHaveBeenCalled();
   });
 
   it('should call shutdown on unmount', () => {
-    const { unmount } = renderHook(() => useTracer(), {
+    const { unmount } = renderHook(() => useTracingConfig(), {
       wrapper: createWrapper(),
     });
 
@@ -134,7 +134,7 @@ describe('TracingProvider', () => {
       exporter: { url: '/v1/traces' },
     };
 
-    renderHook(() => useTracer(), { wrapper: createWrapper(config) });
+    renderHook(() => useTracingConfig(), { wrapper: createWrapper(config) });
 
     expect(mockResourceFromAttributes).toHaveBeenCalledWith(
       expect.objectContaining({ 'service.version': '1.2.3' })
@@ -142,7 +142,7 @@ describe('TracingProvider', () => {
   });
 
   it('should not include serviceVersion when omitted', () => {
-    renderHook(() => useTracer(), { wrapper: createWrapper() });
+    renderHook(() => useTracingConfig(), { wrapper: createWrapper() });
 
     const callArgs = mockResourceFromAttributes.mock.calls[0]![0] as Record<string, string>;
     expect(callArgs).not.toHaveProperty('service.version');
@@ -157,7 +157,7 @@ describe('TracingProvider', () => {
       instrumentDocumentLoad: true,
     };
 
-    renderHook(() => useTracer(), { wrapper: createWrapper(config) });
+    renderHook(() => useTracingConfig(), { wrapper: createWrapper(config) });
 
     // Provider still registers successfully
     expect(mockRegister).toHaveBeenCalled();
@@ -172,7 +172,7 @@ describe('TracingProvider', () => {
       instrumentDocumentLoad: true,
     };
 
-    renderHook(() => useTracer(), { wrapper: createWrapper(config) });
+    renderHook(() => useTracingConfig(), { wrapper: createWrapper(config) });
 
     expect(mockRegister).toHaveBeenCalled();
   });
@@ -186,7 +186,7 @@ describe('TracingProvider', () => {
       instrumentDocumentLoad: false,
     };
 
-    renderHook(() => useTracer(), { wrapper: createWrapper(config) });
+    renderHook(() => useTracingConfig(), { wrapper: createWrapper(config) });
 
     expect(mockRegister).toHaveBeenCalled();
   });
@@ -200,7 +200,7 @@ describe('TracingProvider', () => {
       instrumentDocumentLoad: false,
     };
 
-    renderHook(() => useTracer(), { wrapper: createWrapper(config) });
+    renderHook(() => useTracingConfig(), { wrapper: createWrapper(config) });
 
     expect(mockRegister).toHaveBeenCalled();
   });
@@ -213,7 +213,7 @@ describe('TracingProvider', () => {
       additionalInstrumentations: [instrumentationWithoutEnable],
     };
 
-    renderHook(() => useTracer(), { wrapper: createWrapper(config) });
+    renderHook(() => useTracingConfig(), { wrapper: createWrapper(config) });
 
     expect(mockRegister).toHaveBeenCalled();
   });
@@ -222,7 +222,7 @@ describe('TracingProvider', () => {
     const { trace } = await import('@opentelemetry/api');
     vi.mocked(trace.getTracerProvider).mockReturnValueOnce({} as never);
 
-    const { unmount } = renderHook(() => useTracer(), {
+    const { unmount } = renderHook(() => useTracingConfig(), {
       wrapper: createWrapper(),
     });
 
@@ -231,10 +231,16 @@ describe('TracingProvider', () => {
   });
 });
 
-describe('useTracer', () => {
+describe('useTracingConfig', () => {
   it('should throw when used outside TracingProvider', () => {
+    expect(() => renderHook(() => useTracingConfig())).toThrowError(
+      'useTracingConfig must be used within a TracingProvider'
+    );
+  });
+
+  it('should still work via deprecated useTracer alias', () => {
     expect(() => renderHook(() => useTracer())).toThrowError(
-      'useTracer must be used within a TracingProvider'
+      'useTracingConfig must be used within a TracingProvider'
     );
   });
 });

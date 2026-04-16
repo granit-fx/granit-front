@@ -2,11 +2,11 @@ import type { AdminLanguage } from '../types.js';
 import type { AxiosInstance } from 'axios';
 
 /**
- * Fetch all languages with admin status.
+ * List all languages with admin status.
  *
  * `GET {basePath}/localization/languages`
  */
-export async function fetchLanguages(
+export async function listLanguages(
   client: AxiosInstance,
   basePath: string
 ): Promise<AdminLanguage[]> {

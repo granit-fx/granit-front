@@ -27,7 +27,7 @@ export interface UseExecuteTransitionReturn {
 export function useExecuteTransition(
   options?: UseExecuteTransitionOptions
 ): UseExecuteTransitionReturn {
-  const { apiClient, basePath } = useWorkflowConfig();
+  const { client, basePath } = useWorkflowConfig();
 
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<WorkflowTransitionResult | null>(null);
@@ -43,7 +43,7 @@ export function useExecuteTransition(
       setError(null);
 
       try {
-        const data = await executeStateMachineTransition(apiClient, basePath, currentState, {
+        const data = await executeStateMachineTransition(client, basePath, currentState, {
           targetState,
           comment,
         });
@@ -60,7 +60,7 @@ export function useExecuteTransition(
         setLoading(false);
       }
     },
-    [apiClient, basePath, options?.onSuccess, options?.onError]
+    [client, basePath, options?.onSuccess, options?.onError]
   );
 
   return { transition, loading, result, error };

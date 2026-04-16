@@ -1,4 +1,4 @@
-import { fetchDeviceTokens } from '@granit/notifications-mobile-push';
+import { listDeviceTokens } from '@granit/notifications-mobile-push';
 import { useQuery } from '@tanstack/react-query';
 
 import { useMobilePushConfig } from '../providers/mobile-push-provider.js';
@@ -27,6 +27,6 @@ export function useDeviceTokens(): UseQueryResult<readonly MobilePushTokenRespon
 
   return useQuery({
     queryKey: deviceTokenKeys.list(),
-    queryFn: () => fetchDeviceTokens(client, basePath),
+    queryFn: () => listDeviceTokens(client, basePath),
   });
 }

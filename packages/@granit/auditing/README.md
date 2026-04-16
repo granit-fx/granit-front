@@ -10,9 +10,9 @@ pnpm add @granit/auditing
 
 ## API
 
-- `fetchAuditLogEntries(client, basePath, params?)` — list entries with filters
-- `fetchAuditLogEntry(client, basePath, id)` — get entry with entity change details
-- `fetchEntityAuditTrail(client, basePath, entityType, entityId, params?)` — entity audit trail
+- `listAuditLogEntries(client, basePath, params?)` — list entries with filters
+- `getAuditLogEntry(client, basePath, id)` — get entry with entity change details
+- `listEntityAuditTrail(client, basePath, entityType, entityId, params?)` — entity audit trail
 
 ## Types
 
@@ -28,9 +28,9 @@ pnpm add @granit/auditing
 ## Usage
 
 ```typescript
-import { fetchAuditLogEntries, AuditLogCategory } from '@granit/auditing';
+import { listAuditLogEntries, AuditLogCategory } from '@granit/auditing';
 
-const page = await fetchAuditLogEntries(client, '/audit-log', {
+const page = await listAuditLogEntries(client, '/audit-log', {
   category: AuditLogCategory.DataMutation,
   from: '2026-01-01T00:00:00Z',
   pageSize: 50,

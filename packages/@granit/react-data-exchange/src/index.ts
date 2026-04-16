@@ -33,3 +33,10 @@ export {
   useImportPreview,
   useImportReport,
 } from './import/index.js';
+
+// Data Exchange (combined)
+export {
+  type DataExchangeConfig,
+  type DataExchangeProviderProps,
+  DataExchangeProvider,
+} from './providers/data-exchange-provider.js';

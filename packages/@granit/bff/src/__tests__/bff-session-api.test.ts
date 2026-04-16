@@ -2,7 +2,7 @@ import { toISODateString } from '@granit/types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
-  fetchBffSessions,
+  listBffSessions,
   revokeAllOtherBffSessions,
   revokeBffSession,
 } from '../api/bff-session-api.js';
@@ -19,7 +19,7 @@ describe('BFF session API', () => {
     globalThis.fetch = originalFetch;
   });
 
-  describe('fetchBffSessions', () => {
+  describe('listBffSessions', () => {
     it('should GET /{prefix}/bff/sessions with credentials', async () => {
       const sessions = [
         {
@@ -39,7 +39,7 @@ describe('BFF session API', () => {
         new Response(JSON.stringify({ sessions }), { status: 200 })
       );
 
-      const result = await fetchBffSessions('/admin');
+      const result = await listBffSessions('/admin');
 
       expect(globalThis.fetch).toHaveBeenCalledWith('/admin/bff/sessions', {
         credentials: 'include',
@@ -50,7 +50,7 @@ describe('BFF session API', () => {
     it('should throw on non-ok response', async () => {
       vi.mocked(globalThis.fetch).mockResolvedValue(new Response('Unauthorized', { status: 401 }));
 
-      await expect(fetchBffSessions('/app')).rejects.toThrow('Failed to fetch BFF sessions: 401');
+      await expect(listBffSessions('/app')).rejects.toThrow('Failed to list BFF sessions: 401');
     });
 
     it('should return an empty array when no sessions exist', async () => {
@@ -58,7 +58,7 @@ describe('BFF session API', () => {
         new Response(JSON.stringify({ sessions: [] }), { status: 200 })
       );
 
-      const result = await fetchBffSessions('/app');
+      const result = await listBffSessions('/app');
       expect(result).toEqual([]);
     });
   });
@@ -67,7 +67,7 @@ describe('BFF session API', () => {
     it('should DELETE /{prefix}/bff/sessions/{id} with CSRF token', async () => {
       // Setup CsrfManager with a token
       vi.mocked(globalThis.fetch).mockResolvedValueOnce(
-        new Response(JSON.stringify({ token: 'csrf-123' }), { status: 200 })
+        new Response(JSON.stringify({ csrfToken: 'csrf-123' }), { status: 200 })
       );
       const csrfManager = new CsrfManager('/admin');
       await csrfManager.fetchToken();
@@ -86,7 +86,7 @@ describe('BFF session API', () => {
 
     it('should URL-encode the session ID', async () => {
       vi.mocked(globalThis.fetch).mockResolvedValueOnce(
-        new Response(JSON.stringify({ token: 'csrf-enc' }), { status: 200 })
+        new Response(JSON.stringify({ csrfToken: 'csrf-enc' }), { status: 200 })
       );
       const csrfManager = new CsrfManager('/app');
       await csrfManager.fetchToken();
@@ -101,7 +101,7 @@ describe('BFF session API', () => {
 
     it('should throw on 404 response', async () => {
       vi.mocked(globalThis.fetch).mockResolvedValueOnce(
-        new Response(JSON.stringify({ token: 'csrf-404' }), { status: 200 })
+        new Response(JSON.stringify({ csrfToken: 'csrf-404' }), { status: 200 })
       );
       const csrfManager = new CsrfManager('/admin');
       await csrfManager.fetchToken();
@@ -117,7 +117,7 @@ describe('BFF session API', () => {
   describe('revokeAllOtherBffSessions', () => {
     it('should DELETE /{prefix}/bff/sessions with CSRF token', async () => {
       vi.mocked(globalThis.fetch).mockResolvedValueOnce(
-        new Response(JSON.stringify({ token: 'csrf-all' }), { status: 200 })
+        new Response(JSON.stringify({ csrfToken: 'csrf-all' }), { status: 200 })
       );
       const csrfManager = new CsrfManager('/admin');
       await csrfManager.fetchToken();
@@ -135,7 +135,7 @@ describe('BFF session API', () => {
 
     it('should throw on 401 response', async () => {
       vi.mocked(globalThis.fetch).mockResolvedValueOnce(
-        new Response(JSON.stringify({ token: 'csrf-401' }), { status: 200 })
+        new Response(JSON.stringify({ csrfToken: 'csrf-401' }), { status: 200 })
       );
       const csrfManager = new CsrfManager('/app');
       await csrfManager.fetchToken();

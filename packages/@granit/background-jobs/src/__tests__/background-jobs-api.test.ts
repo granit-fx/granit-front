@@ -2,7 +2,7 @@ import { createMockClient } from '@granit/testing';
 import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
-import { fetchBackgroundJob, fetchBackgroundJobs } from '../api/background-jobs-api.js';
+import { getBackgroundJob, listBackgroundJobs } from '../api/background-jobs-api.js';
 
 import type { BackgroundJobStatus } from '../types/index.js';
 import type { PagedResult } from '@granit/query-engine';
@@ -20,7 +20,7 @@ const mockJob: BackgroundJobStatus = {
   lastError: null,
 };
 
-describe('fetchBackgroundJobs', () => {
+describe('listBackgroundJobs', () => {
   it('calls GET basePath without params', async () => {
     const client = createMockClient();
     const page: PagedResult<BackgroundJobStatus> = {
@@ -30,7 +30,7 @@ describe('fetchBackgroundJobs', () => {
     };
     vi.mocked(client.get).mockResolvedValueOnce({ data: page });
 
-    const result = await fetchBackgroundJobs(client, BASE);
+    const result = await listBackgroundJobs(client, BASE);
     expect(client.get).toHaveBeenCalledWith(BASE, { params: undefined });
     expect(result).toEqual(page);
   });
@@ -44,19 +44,19 @@ describe('fetchBackgroundJobs', () => {
     };
     vi.mocked(client.get).mockResolvedValueOnce({ data: page });
 
-    const result = await fetchBackgroundJobs(client, BASE, { page: 2, pageSize: 10 });
+    const result = await listBackgroundJobs(client, BASE, { page: 2, pageSize: 10 });
     expect(client.get).toHaveBeenCalledWith(BASE, { params: { page: 2, pageSize: 10 } });
     expect(result.totalCount).toBe(5);
     expect(result.hasMore).toBe(true);
   });
 });
 
-describe('fetchBackgroundJob', () => {
+describe('getBackgroundJob', () => {
   it('calls GET /{name}', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockJob });
 
-    const result = await fetchBackgroundJob(client, BASE, 'SendEmails');
+    const result = await getBackgroundJob(client, BASE, 'SendEmails');
     expect(client.get).toHaveBeenCalledWith(`${BASE}/SendEmails`);
     expect(result).toEqual(mockJob);
   });
@@ -65,7 +65,7 @@ describe('fetchBackgroundJob', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: {} });
 
-    await fetchBackgroundJob(client, BASE, 'Send Emails');
+    await getBackgroundJob(client, BASE, 'Send Emails');
     expect(client.get).toHaveBeenCalledWith(`${BASE}/Send%20Emails`);
   });
 
@@ -83,7 +83,7 @@ describe('fetchBackgroundJob', () => {
     };
     vi.mocked(client.get).mockResolvedValueOnce({ data: job });
 
-    const result = await fetchBackgroundJob(client, BASE, 'CleanUp');
+    const result = await getBackgroundJob(client, BASE, 'CleanUp');
     expect(result.isEnabled).toBe(false);
     expect(result.lastError).toBe('Timeout');
     expect(result.consecutiveFailures).toBe(3);

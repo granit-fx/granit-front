@@ -2,37 +2,39 @@ import { createContext, useContext, useMemo } from 'react';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
 
-import type { TemplatingConfig } from '@granit/templating';
+import type { TemplatingConfig as ResolvedTemplatingConfig } from '@granit/templating';
 import type { AxiosInstance } from 'axios';
+import type { ReactNode } from 'react';
 
-const TemplatingConfigContext = createContext<TemplatingConfig | null>(null);
+export interface TemplatingConfig {
+  readonly client: AxiosInstance;
+  readonly basePath?: string;
+  readonly queryKeyPrefix?: readonly string[];
+}
+
+export interface TemplatingProviderProps {
+  readonly config: TemplatingConfig;
+  readonly children: ReactNode;
+}
 
 const DEFAULT_QUERY_KEY_PREFIX = ['templates'] as const;
 
-export interface TemplatingProviderProps {
-  client: AxiosInstance;
-  basePath?: string;
-  queryKeyPrefix?: readonly string[];
-  children: React.ReactNode;
-}
+const TemplatingConfigContext = createContext<ResolvedTemplatingConfig | null>(null);
 
-export function TemplatingProvider({
-  client,
-  basePath = DEFAULT_BASE_PATH,
-  queryKeyPrefix = DEFAULT_QUERY_KEY_PREFIX,
-  children,
-}: Readonly<TemplatingProviderProps>) {
-  const config = useMemo<TemplatingConfig>(
-    () => ({ client, basePath, queryKeyPrefix }),
-    [client, basePath, queryKeyPrefix]
+export function TemplatingProvider({ config, children }: TemplatingProviderProps) {
+  const value = useMemo<ResolvedTemplatingConfig>(
+    () => ({
+      ...config,
+      basePath: config.basePath ?? DEFAULT_BASE_PATH,
+      queryKeyPrefix: config.queryKeyPrefix ?? DEFAULT_QUERY_KEY_PREFIX,
+    }),
+    [config]
   );
 
-  return (
-    <TemplatingConfigContext.Provider value={config}>{children}</TemplatingConfigContext.Provider>
-  );
+  return <TemplatingConfigContext value={value}>{children}</TemplatingConfigContext>;
 }
 
-export function useTemplatingConfig(): TemplatingConfig {
+export function useTemplatingConfig(): ResolvedTemplatingConfig {
   const config = useContext(TemplatingConfigContext);
   if (!config) {
     throw new Error('useTemplatingConfig must be used within a <TemplatingProvider>');

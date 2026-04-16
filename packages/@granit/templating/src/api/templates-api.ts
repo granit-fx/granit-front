@@ -14,10 +14,10 @@ import type {
 } from '../types/index.js';
 import type { PagedResult, PaginationParams } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
+import { buildApiUrl } from '@granit/api-client';
 
 function templateUrl(basePath: string, name: string, ...segments: string[]): string {
-  const base = `${basePath}/templates/${encodeURIComponent(name)}`;
-  return segments.length > 0 ? `${base}/${segments.join('/')}` : base;
+  return buildApiUrl(basePath, 'templates', encodeURIComponent(name), ...segments);
 }
 
 // ---------------------------------------------------------------------------

@@ -8,7 +8,7 @@ import type { AxiosInstance } from 'axios';
 export function createWrapper(client: AxiosInstance, basePath = DEFAULT_BASE_PATH) {
   return function Wrapper({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
-      <WorkflowProvider apiClient={client} basePath={basePath}>
+      <WorkflowProvider config={{ client, basePath }}>
         {children}
       </WorkflowProvider>
     );

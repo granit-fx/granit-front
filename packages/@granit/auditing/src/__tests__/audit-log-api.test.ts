@@ -3,9 +3,9 @@ import { toEntityId, toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
-  fetchAuditLogEntries,
-  fetchAuditLogEntry,
-  fetchEntityAuditTrail,
+  listAuditLogEntries,
+  getAuditLogEntry,
+  listEntityAuditTrail,
 } from '../api/audit-log-api.js';
 import { AuditCategory } from '../types/index.js';
 
@@ -14,7 +14,7 @@ import type { AuditEntryDetail, AuditPage } from '../types/index.js';
 const basePath = '/audit-log';
 
 describe('audit-log-api', () => {
-  describe('fetchAuditLogEntries', () => {
+  describe('listAuditLogEntries', () => {
     it('should call GET with params', async () => {
       const client = createMockClient();
       const page: AuditPage = {
@@ -26,7 +26,7 @@ describe('audit-log-api', () => {
       vi.mocked(client.get).mockResolvedValue(axiosResponse(page));
 
       const params = { category: AuditCategory.DataMutation, page: 1, pageSize: 20 };
-      const result = await fetchAuditLogEntries(client, basePath, params);
+      const result = await listAuditLogEntries(client, basePath, params);
 
       expect(client.get).toHaveBeenCalledWith('/audit-log', { params });
       expect(result).toEqual(page);
@@ -38,13 +38,13 @@ describe('audit-log-api', () => {
         axiosResponse({ items: [], totalCount: 0, hasMore: false, nextCursor: null })
       );
 
-      await fetchAuditLogEntries(client, basePath);
+      await listAuditLogEntries(client, basePath);
 
       expect(client.get).toHaveBeenCalledWith('/audit-log', { params: undefined });
     });
   });
 
-  describe('fetchAuditLogEntry', () => {
+  describe('getAuditLogEntry', () => {
     it('should call GET with encoded id', async () => {
       const client = createMockClient();
       const entry: AuditEntryDetail = {
@@ -60,14 +60,14 @@ describe('audit-log-api', () => {
       };
       vi.mocked(client.get).mockResolvedValue(axiosResponse(entry));
 
-      const result = await fetchAuditLogEntry(client, basePath, 'abc-123');
+      const result = await getAuditLogEntry(client, basePath, 'abc-123');
 
       expect(client.get).toHaveBeenCalledWith('/audit-log/abc-123');
       expect(result).toEqual(entry);
     });
   });
 
-  describe('fetchEntityAuditTrail', () => {
+  describe('listEntityAuditTrail', () => {
     it('should call GET with encoded entity type and id', async () => {
       const client = createMockClient();
       const page: AuditPage = {
@@ -78,7 +78,7 @@ describe('audit-log-api', () => {
       };
       vi.mocked(client.get).mockResolvedValue(axiosResponse(page));
 
-      const result = await fetchEntityAuditTrail(client, basePath, 'Patient', '42', {
+      const result = await listEntityAuditTrail(client, basePath, 'Patient', '42', {
         page: 1,
         pageSize: 10,
       });
@@ -95,7 +95,7 @@ describe('audit-log-api', () => {
         axiosResponse({ items: [], totalCount: 0, hasMore: false, nextCursor: null })
       );
 
-      await fetchEntityAuditTrail(client, basePath, 'Type/Sub', 'id with spaces');
+      await listEntityAuditTrail(client, basePath, 'Type/Sub', 'id with spaces');
 
       expect(client.get).toHaveBeenCalledWith('/audit-log/entity/Type%2FSub/id%20with%20spaces', {
         params: undefined,

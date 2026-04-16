@@ -22,11 +22,11 @@ export { NotificationChannels } from './types/index.js';
 
 // API (pure TypeScript functions)
 export {
-  fetchNotifications,
-  fetchUnreadCount,
+  listNotifications,
+  getUnreadCount,
   markAllAsRead,
   markAsRead,
-  fetchEntityActivityFeed,
-  fetchPreferences,
+  getEntityActivityFeed,
+  getPreferences,
   updatePreference,
 } from './api/notification-api.js';

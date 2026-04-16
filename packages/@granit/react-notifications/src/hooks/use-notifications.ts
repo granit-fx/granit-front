@@ -1,9 +1,9 @@
-import { fetchNotifications, markAllAsRead, markAsRead } from '@granit/notifications';
+import { listNotifications, markAllAsRead, markAsRead } from '@granit/notifications';
 import { toISODateString } from '@granit/types';
 import { useCallback } from 'react';
 
 import { API_BASE_PATH } from '../constants.js';
-import { useNotificationContext } from '../providers/notification-provider.js';
+import { useNotificationConfig } from '../providers/notification-provider.js';
 
 import { usePaginatedFetch } from './use-paginated-fetch.js';
 
@@ -33,12 +33,12 @@ const DEFAULT_PAGE_SIZE = 20;
  */
 export function useNotifications(options: UseNotificationsOptions = {}): UseNotificationsReturn {
   const { pageSize = DEFAULT_PAGE_SIZE } = options;
-  const { config, setUnreadCount } = useNotificationContext();
+  const { config, setUnreadCount } = useNotificationConfig();
   const basePath = config.basePath ?? API_BASE_PATH;
 
   const fetcher = useCallback(
     (p: number, ps: number) =>
-      fetchNotifications(config.apiClient, basePath, { page: p, pageSize: ps }),
+      listNotifications(config.apiClient, basePath, { page: p, pageSize: ps }),
     [config.apiClient, basePath]
   );
 

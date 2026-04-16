@@ -1,7 +1,7 @@
-import { fetchBffSessions, revokeAllOtherBffSessions, revokeBffSession } from '@granit/bff';
+import { listBffSessions, revokeAllOtherBffSessions, revokeBffSession } from '@granit/bff';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useBffContext } from '../providers/bff-provider.js';
+import { useBffConfig } from '../providers/bff-provider.js';
 
 import type { BffSessionInfo } from '@granit/bff';
 
@@ -22,7 +22,7 @@ interface UseBffSessionsResult {
  * Only fetches when the user is authenticated.
  */
 export function useBffSessions(): UseBffSessionsResult {
-  const { isAuthenticated, isLoading: authLoading, pathPrefix } = useBffContext();
+  const { isAuthenticated, isLoading: authLoading, pathPrefix } = useBffConfig();
 
   const [sessions, setSessions] = useState<readonly BffSessionInfo[]>([]);
   const [fetchLoading, setFetchLoading] = useState(false);
@@ -33,7 +33,7 @@ export function useBffSessions(): UseBffSessionsResult {
     try {
       setFetchLoading(true);
       setError(null);
-      const result = await fetchBffSessions(pathPrefix);
+      const result = await listBffSessions(pathPrefix);
       if (mountedRef.current) {
         setSessions(result);
       }
@@ -78,7 +78,7 @@ interface UseRevokeBffSessionResult {
  * Cannot revoke the current session — use logout instead.
  */
 export function useRevokeBffSession(): UseRevokeBffSessionResult {
-  const { pathPrefix, csrfManager } = useBffContext();
+  const { pathPrefix, csrfManager } = useBffConfig();
   const [isRevoking, setIsRevoking] = useState(false);
 
   const revoke = useCallback(
@@ -109,7 +109,7 @@ interface UseRevokeAllOtherBffSessionsResult {
  * Use case: "Log out everywhere else".
  */
 export function useRevokeAllOtherBffSessions(): UseRevokeAllOtherBffSessionsResult {
-  const { pathPrefix, csrfManager } = useBffContext();
+  const { pathPrefix, csrfManager } = useBffConfig();
   const [isRevoking, setIsRevoking] = useState(false);
 
   const revokeAll = useCallback(async () => {

@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Query API — data fetching functions
+// Query API — data retrieval functions
 // ---------------------------------------------------------------------------
 
 import { serializeQueryRequest } from './query-param-serializer.js';
@@ -10,13 +10,13 @@ import type { GroupedResult, PagedResult } from '../types/query-results.js';
 import type { AxiosInstance } from 'axios';
 
 /**
- * Fetch a paginated page of results.
+ * Get a paginated page of results.
  *
  * @param client - Axios instance (from @granit/api-client)
  * @param basePath - API base path (e.g. "/api/v1/patients")
  * @param request - Query request parameters
  */
-export async function fetchPage<T>(
+export async function getPage<T>(
   client: AxiosInstance,
   basePath: string,
   request: QueryRequest
@@ -28,13 +28,13 @@ export async function fetchPage<T>(
 }
 
 /**
- * Fetch grouped results (when groupBy is specified).
+ * Get grouped results (when groupBy is specified).
  *
  * @param client - Axios instance (from @granit/api-client)
  * @param basePath - API base path (e.g. "/api/v1/patients")
  * @param request - Query request parameters (must include groupBy)
  */
-export async function fetchGrouped<T>(
+export async function getGrouped<T>(
   client: AxiosInstance,
   basePath: string,
   request: QueryRequest
@@ -46,12 +46,12 @@ export async function fetchGrouped<T>(
 }
 
 /**
- * Fetch query metadata (columns, filterable fields, presets, etc.).
+ * Get query metadata (columns, filterable fields, presets, etc.).
  *
  * @param client - Axios instance (from @granit/api-client)
  * @param basePath - API base path (e.g. "/api/v1/patients")
  */
-export async function fetchQueryMeta(
+export async function getQueryMeta(
   client: AxiosInstance,
   basePath: string
 ): Promise<QueryMetadata> {

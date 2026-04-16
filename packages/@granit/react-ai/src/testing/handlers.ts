@@ -1,15 +1,45 @@
 import { groupBy as groupByField, paginate } from '@granit/testing/msw';
+import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
-import { mockUsageRecords, mockWorkspaces } from './data.js';
+import { mockProviderModels, mockProviders, mockUsageRecords, mockWorkspaces } from './data.js';
 
 import type {
+  AIUsageRecord,
   AIWorkspaceCreateRequest,
   AIWorkspaceResponse,
   AIWorkspaceUpdateRequest,
 } from '@granit/ai';
 import type { PagedResult, QueryMetadata } from '@granit/query-engine';
 import type { Mutable } from '@granit/testing';
+
+let usageCounter = mockUsageRecords.length;
+
+function addUsageRecord(
+  records: AIUsageRecord[],
+  ws: AIWorkspaceResponse,
+  inputTokens: number,
+  outputTokens: number,
+  estimatedCostUsd: number | null,
+  duration: string
+): void {
+  usageCounter++;
+  records.unshift({
+    id: toEntityId<'AIUsageRecord'>(
+      `a1b2c3d4-0001-0001-0001-${String(usageCounter).padStart(12, '0')}`
+    ),
+    tenantId: toEntityId<'Tenant'>('tenant-1'),
+    userId: toEntityId<'User'>('user-1'),
+    workspaceName: ws.name,
+    provider: ws.provider,
+    model: ws.model,
+    inputTokens,
+    outputTokens,
+    estimatedCostUsd,
+    timestamp: toISODateString(new Date().toISOString()),
+    duration,
+  });
+}
 
 // ---------------------------------------------------------------------------
 // Query metadata for usage endpoint (Granit.QueryEngine contract)
@@ -142,8 +172,24 @@ function buildUsageMeta(): QueryMetadata {
  */
 export function createAIHandlers(baseUrl = '/api/v1/ai') {
   let workspaces: Mutable<AIWorkspaceResponse>[] = [...mockWorkspaces];
+  const usageRecords: Mutable<AIUsageRecord>[] = [...mockUsageRecords];
 
   return [
+    // --- Providers -------------------------------------------------------------
+
+    // GET all providers
+    http.get(`${baseUrl}/providers`, () => {
+      return HttpResponse.json(mockProviders);
+    }),
+
+    // GET models for a provider
+    http.get(`${baseUrl}/providers/:providerName/models`, ({ params }) => {
+      const name = params.providerName as string;
+      const models = mockProviderModels[name];
+      if (!models) return new HttpResponse(null, { status: 404 });
+      return HttpResponse.json(models);
+    }),
+
     // --- Workspaces -----------------------------------------------------------
 
     // GET list
@@ -176,6 +222,8 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
         );
       }
 
+      const model = mockProviderModels[body.provider]?.find((m) => m.id === body.model);
+
       const created: AIWorkspaceResponse = {
         name: body.name,
         provider: body.provider,
@@ -185,6 +233,7 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
         maxOutputTokens: body.maxOutputTokens ?? null,
         kind: 'Dynamic',
         isActive: true,
+        capabilities: model?.capabilities ?? null,
       };
 
       workspaces = [...workspaces, created];
@@ -250,6 +299,40 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
 
     // --- Chat -----------------------------------------------------------------
 
+    // SSE streaming endpoint (must be registered before the non-streaming route)
+    http.post(`${baseUrl}/chat/:workspaceName/stream`, async ({ params, request }) => {
+      const wsName = params.workspaceName as string;
+      const ws = workspaces.find((w) => w.name === wsName);
+
+      if (!ws) {
+        return HttpResponse.json(
+          { title: 'Not Found', status: 404, detail: `AI workspace '${wsName}' was not found.` },
+          { status: 404 }
+        );
+      }
+
+      const body = (await request.json()) as { messages: { role: string; content: string }[] };
+      const lastMessage = body.messages.at(-1)?.content ?? '';
+      const mockContent = `Mock response to: "${lastMessage.slice(0, 50)}${lastMessage.length > 50 ? '...' : ''}"`;
+      const inputTokens = Math.ceil(lastMessage.length / 4);
+      const outputTokens = Math.ceil(mockContent.length / 4);
+
+      addUsageRecord(usageRecords, ws, inputTokens, outputTokens, 0.0012, '00:00:00.350');
+
+      const encoder = new TextEncoder();
+      const stream = new ReadableStream({
+        start(controller) {
+          controller.enqueue(encoder.encode(`data: {"content":"${mockContent}"}\n\n`));
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+          controller.close();
+        },
+      });
+
+      return new HttpResponse(stream, {
+        headers: { 'Content-Type': 'text/event-stream' },
+      });
+    }),
+
     http.post(`${baseUrl}/chat/:workspaceName`, async ({ params, request }) => {
       const wsName = params.workspaceName as string;
       const ws = workspaces.find((w) => w.name === wsName);
@@ -263,14 +346,18 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
 
       const body = (await request.json()) as { messages: { role: string; content: string }[] };
       const lastMessage = body.messages.at(-1)?.content ?? '';
+      const inputTokens = Math.ceil(lastMessage.length / 4);
+      const outputTokens = 42;
+
+      addUsageRecord(usageRecords, ws, inputTokens, outputTokens, 0.0012, '00:00:00.350');
 
       return HttpResponse.json({
         workspaceName: wsName,
         model: ws.model,
         content: `Mock response to: "${lastMessage.slice(0, 50)}${lastMessage.length > 50 ? '...' : ''}"`,
         usage: {
-          inputTokens: Math.ceil(lastMessage.length / 4),
-          outputTokens: 42,
+          inputTokens,
+          outputTokens,
           estimatedCostUsd: 0.0012,
         },
         duration: '00:00:00.350',
@@ -291,6 +378,9 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
       }
 
       const body = (await request.json()) as { inputs: string[] };
+      const totalChars = body.inputs.reduce((sum, s) => sum + s.length, 0);
+
+      addUsageRecord(usageRecords, ws, Math.ceil(totalChars / 4), 0, 0.0001, '00:00:00.120');
 
       return HttpResponse.json({
         workspaceName: wsName,
@@ -312,7 +402,7 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
       const url = new URL(request.url);
       const groupBy = url.searchParams.get('groupBy');
 
-      const records = [...mockUsageRecords];
+      const records = [...usageRecords];
 
       // Basic sorting by timestamp desc
       records.sort((a, b) => b.timestamp.localeCompare(a.timestamp));

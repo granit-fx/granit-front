@@ -1,10 +1,10 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { fetchAdminAppSettings, saveAdminAppSettings } from '../api/settings-api.js';
+import { getAdminAppSettings, saveAdminAppSettings } from '../api/settings-api.js';
 
 describe('settings-admin-api', () => {
-  describe('fetchAdminAppSettings', () => {
+  describe('getAdminAppSettings', () => {
     it('should GET {basePath}/admin/config/settings', async () => {
       const client = createMockClient();
       const data = [
@@ -18,7 +18,7 @@ describe('settings-admin-api', () => {
       ];
       vi.mocked(client.get).mockResolvedValue({ data });
 
-      const result = await fetchAdminAppSettings(client, '/api/v1');
+      const result = await getAdminAppSettings(client, '/api/v1');
 
       expect(client.get).toHaveBeenCalledWith('/api/v1/admin/config/settings');
       expect(result).toEqual(data);
@@ -28,7 +28,7 @@ describe('settings-admin-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: [] });
 
-      await fetchAdminAppSettings(client, '');
+      await getAdminAppSettings(client, '');
 
       expect(client.get).toHaveBeenCalledWith('/admin/config/settings');
     });

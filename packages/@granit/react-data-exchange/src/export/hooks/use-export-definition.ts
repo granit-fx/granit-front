@@ -1,4 +1,4 @@
-import { fetchExportDefinitions, fetchExportFields } from '@granit/data-exchange';
+import { listExportDefinitions, getExportFields } from '@granit/data-exchange';
 import { useQuery } from '@tanstack/react-query';
 
 import { buildExportQueryKey, useExportConfig } from '../providers/export-provider.js';
@@ -14,7 +14,7 @@ export function useExportDefinitions(): UseQueryResult<readonly ExportDefinition
 
   return useQuery({
     queryKey: buildExportQueryKey(config, 'definitions'),
-    queryFn: () => fetchExportDefinitions(config.client, config.basePath),
+    queryFn: () => listExportDefinitions(config.client, config.basePath),
     staleTime: 5 * 60 * 1000,
   });
 }
@@ -29,7 +29,7 @@ export function useExportFields(
 
   return useQuery({
     queryKey: buildExportQueryKey(config, 'fields', definitionName ?? ''),
-    queryFn: () => fetchExportFields(config.client, config.basePath, definitionName!),
+    queryFn: () => getExportFields(config.client, config.basePath, definitionName!),
     enabled: !!definitionName,
     staleTime: 5 * 60 * 1000,
   });

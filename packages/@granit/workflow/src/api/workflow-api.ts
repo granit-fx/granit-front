@@ -6,6 +6,7 @@ import type {
 } from '../types/index.js';
 import type { PagedResult, PaginationParams } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
+import { buildApiUrl } from '@granit/api-client';
 
 function buildEntityUrl(
   basePath: string,
@@ -13,12 +14,11 @@ function buildEntityUrl(
   entityId: string,
   ...segments: string[]
 ): string {
-  const base = `${basePath}/${encodeURIComponent(entityType)}/${encodeURIComponent(entityId)}`;
-  return segments.length > 0 ? `${base}/${segments.join('/')}` : base;
+  return buildApiUrl(basePath, encodeURIComponent(entityType), encodeURIComponent(entityId), ...segments);
 }
 
-/** Fetch available transitions for a given state. */
-export async function fetchTransitions(
+/** List available transitions for a given state. */
+export async function listTransitions(
   client: AxiosInstance,
   basePath: string,
   currentState: string
@@ -45,8 +45,8 @@ export async function executeStateMachineTransition(
 /** Response shape for the paginated workflow history endpoint. */
 export type WorkflowHistoryPage = PagedResult<TransitionHistory>;
 
-/** Fetch the transition history (HDS audit trail) for an entity. */
-export async function fetchHistory(
+/** Get the transition history (HDS audit trail) for an entity. */
+export async function getHistory(
   client: AxiosInstance,
   basePath: string,
   entityType: string,

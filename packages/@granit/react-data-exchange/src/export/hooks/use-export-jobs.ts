@@ -1,4 +1,4 @@
-import { fetchExportJobs } from '@granit/data-exchange';
+import { listExportJobs } from '@granit/data-exchange';
 import { useQuery } from '@tanstack/react-query';
 
 import { buildExportQueryKey, useExportConfig } from '../providers/export-provider.js';
@@ -30,6 +30,6 @@ export function useExportJobs(
       String(params?.page ?? ''),
       String(params?.pageSize ?? '')
     ),
-    queryFn: () => fetchExportJobs(config.client, config.basePath, params),
+    queryFn: () => listExportJobs(config.client, config.basePath, params),
   });
 }

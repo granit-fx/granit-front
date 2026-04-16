@@ -2,11 +2,11 @@ import type { ExportPresetResponse, SaveExportPresetRequest } from '../types/exp
 import type { AxiosInstance } from 'axios';
 
 /**
- * Fetches saved export presets for a given definition.
+ * Lists saved export presets for a given definition.
  *
  * `GET {basePath}/metadata/presets/{definitionName}`
  */
-export async function fetchExportPresets(
+export async function listExportPresets(
   client: AxiosInstance,
   basePath: string,
   definitionName: string

@@ -1,4 +1,4 @@
-import { fetchSettings } from '@granit/settings';
+import { getSettings } from '@granit/settings';
 import { useQuery } from '@tanstack/react-query';
 
 import { buildSettingsQueryKey, useSettingsConfig } from '../providers/settings-provider.js';
@@ -7,7 +7,7 @@ import type { SettingScope, SettingsMap } from '@granit/settings';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /**
- * Fetch all visible settings for a scope.
+ * Get all visible settings for a scope.
  *
  * @example
  * ```tsx
@@ -23,7 +23,7 @@ export function useSettings(
 
   return useQuery({
     queryKey: buildSettingsQueryKey(config, scope),
-    queryFn: () => fetchSettings(config.client, config.basePath ?? '', scope),
+    queryFn: () => getSettings(config.client, config.basePath ?? '', scope),
     enabled: options?.enabled ?? true,
   });
 }

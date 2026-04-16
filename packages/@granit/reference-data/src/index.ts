@@ -12,8 +12,8 @@ export type {
 export {
   createReferenceDataEntry,
   deactivateReferenceDataEntry,
-  fetchReferenceDataChildren,
-  fetchReferenceDataEntry,
-  fetchReferenceDataList,
+  getReferenceDataEntry,
+  listReferenceData,
+  listReferenceDataChildren,
   updateReferenceDataEntry,
 } from './api/reference-data-api.js';

@@ -8,11 +8,11 @@ import type { PagedResult } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
 
 /**
- * Fetch a paginated list of reference data entries.
+ * List reference data entries (paginated).
  *
  * `GET {basePath}?activeOnly=&search=&sortBy=&descending=&page=&pageSize=`
  */
-export async function fetchReferenceDataList<T extends ReferenceDataEntry>(
+export async function listReferenceData<T extends ReferenceDataEntry>(
   client: AxiosInstance,
   basePath: string,
   params?: ReferenceDataQuery
@@ -22,11 +22,11 @@ export async function fetchReferenceDataList<T extends ReferenceDataEntry>(
 }
 
 /**
- * Fetch a single reference data entry by its unique code.
+ * Get a single reference data entry by its unique code.
  *
  * `GET {basePath}/{code}`
  */
-export async function fetchReferenceDataEntry<T extends ReferenceDataEntry>(
+export async function getReferenceDataEntry<T extends ReferenceDataEntry>(
   client: AxiosInstance,
   basePath: string,
   code: string
@@ -63,14 +63,14 @@ export async function updateReferenceDataEntry(
 }
 
 /**
- * Fetch the direct children of a hierarchical reference data entry.
+ * List the direct children of a hierarchical reference data entry.
  *
  * `GET {basePath}/{code}/children`
  *
  * Returns active children ordered by sortOrder, then code.
  * Throws 404 if the parent code does not exist.
  */
-export async function fetchReferenceDataChildren<T extends ReferenceDataEntry>(
+export async function listReferenceDataChildren<T extends ReferenceDataEntry>(
   client: AxiosInstance,
   basePath: string,
   code: string

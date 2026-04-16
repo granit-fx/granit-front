@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
 
-import { apiKeyKeys } from './use-api-keys.js';
+import { buildApiKeyQueryKey } from './use-api-keys.js';
 
 import type { ApiKeyHookOptions } from './use-api-keys.js';
 import type {
@@ -42,7 +42,7 @@ export function useCreateApiKey(
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: apiKeyKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'list') });
     },
   });
 }
@@ -76,8 +76,8 @@ export function useRevokeApiKey(
       await client.post(`${basePath}/api-keys/${id}/revoke`);
     },
     onSuccess: (_data, id) => {
-      queryClient.invalidateQueries({ queryKey: apiKeyKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: apiKeyKeys.detail(id) });
+      queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'list') });
+      queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'detail', id) });
     },
   });
 }
@@ -113,8 +113,8 @@ export function useRotateApiKey(
       return response.data;
     },
     onSuccess: (_data, id) => {
-      queryClient.invalidateQueries({ queryKey: apiKeyKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: apiKeyKeys.detail(id) });
+      queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'list') });
+      queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'detail', id) });
     },
   });
 }
@@ -157,8 +157,8 @@ export function useUpdateApiKeyScopes(
       await client.put(`${basePath}/api-keys/${id}/scopes`, request);
     },
     onSuccess: (_data, { id }) => {
-      queryClient.invalidateQueries({ queryKey: apiKeyKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: apiKeyKeys.detail(id) });
+      queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'list') });
+      queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'detail', id) });
     },
   });
 }

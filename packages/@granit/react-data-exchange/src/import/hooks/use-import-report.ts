@@ -1,4 +1,4 @@
-import { downloadCorrectionFile, fetchImportReport } from '@granit/data-exchange';
+import { downloadCorrectionFile, getImportReport } from '@granit/data-exchange';
 import { useQuery } from '@tanstack/react-query';
 
 import { buildImportQueryKey, useImportConfig } from '../providers/import-provider.js';
@@ -21,7 +21,7 @@ export function useImportReport(jobId: string | undefined): UseImportReportRetur
 
   const report = useQuery({
     queryKey: buildImportQueryKey(config, 'report', jobId ?? ''),
-    queryFn: () => fetchImportReport(config.client, config.basePath, jobId!),
+    queryFn: () => getImportReport(config.client, config.basePath, jobId!),
     enabled: !!jobId,
     staleTime: 30 * 1000,
   });

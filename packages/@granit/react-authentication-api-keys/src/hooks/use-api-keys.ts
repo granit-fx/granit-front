@@ -16,6 +16,8 @@ export interface ApiKeyHookOptions {
   client: AxiosInstance;
   /** API base path. Defaults to `/api/v1/authentication`. */
   basePath?: string;
+  /** Custom prefix for all query keys produced by this module. */
+  queryKeyPrefix?: readonly string[];
 }
 
 /** Query parameters for the paginated API key list. */
@@ -29,16 +31,35 @@ export interface UseApiKeysParams {
 }
 
 // ---------------------------------------------------------------------------
-// Query key factory
+// Query key builder
 // ---------------------------------------------------------------------------
 
-/** Query key factory for API key queries. */
+const DEFAULT_QUERY_KEY_PREFIX = ['api-keys'] as const;
+
+/**
+ * Builds a query key for API key queries.
+ *
+ * @param config - Hook options containing an optional `queryKeyPrefix`.
+ * @param segments - Additional segments appended after the prefix.
+ */
+export function buildApiKeyQueryKey(
+  config: Pick<ApiKeyHookOptions, 'queryKeyPrefix'>,
+  ...segments: readonly unknown[]
+): readonly unknown[] {
+  return [...(config.queryKeyPrefix ?? DEFAULT_QUERY_KEY_PREFIX), ...segments];
+}
+
+// ---------------------------------------------------------------------------
+// Legacy query key factory (delegates to buildApiKeyQueryKey)
+// ---------------------------------------------------------------------------
+
+/** @deprecated Use {@link buildApiKeyQueryKey} instead. */
 export const apiKeyKeys = {
-  all: ['api-keys'] as const,
-  lists: () => [...apiKeyKeys.all, 'list'] as const,
-  list: (params: UseApiKeysParams) => [...apiKeyKeys.lists(), params] as const,
-  details: () => [...apiKeyKeys.all, 'detail'] as const,
-  detail: (id: string) => [...apiKeyKeys.details(), id] as const,
+  all: DEFAULT_QUERY_KEY_PREFIX as readonly string[],
+  lists: () => [...DEFAULT_QUERY_KEY_PREFIX, 'list'] as const,
+  list: (params: UseApiKeysParams) => [...DEFAULT_QUERY_KEY_PREFIX, 'list', params] as const,
+  details: () => [...DEFAULT_QUERY_KEY_PREFIX, 'detail'] as const,
+  detail: (id: string) => [...DEFAULT_QUERY_KEY_PREFIX, 'detail', id] as const,
 };
 
 // ---------------------------------------------------------------------------
@@ -68,7 +89,7 @@ export function useApiKeys(
   const { client, basePath = DEFAULT_BASE_PATH } = options;
 
   return useQuery({
-    queryKey: apiKeyKeys.list(params),
+    queryKey: buildApiKeyQueryKey(options, 'list', params),
     queryFn: async () => {
       const response = await client.get<ApiKeyResponse[]>(`${basePath}/api-keys`, {
         params: {

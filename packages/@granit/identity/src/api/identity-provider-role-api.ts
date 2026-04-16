@@ -7,7 +7,7 @@ import type { AxiosInstance } from 'axios';
  *
  * `GET {basePath}/roles`
  */
-export async function fetchRoles(
+export async function listRoles(
   client: AxiosInstance,
   basePath: string
 ): Promise<readonly IdentityRole[]> {
@@ -20,7 +20,7 @@ export async function fetchRoles(
  *
  * `GET {basePath}/roles/{roleName}/members`
  */
-export async function fetchRoleMembers(
+export async function listRoleMembers(
   client: AxiosInstance,
   basePath: string,
   roleName: string
@@ -36,7 +36,7 @@ export async function fetchRoleMembers(
  *
  * `GET {basePath}/users/{userId}/roles`
  */
-export async function fetchUserRoles(
+export async function listUserRoles(
   client: AxiosInstance,
   basePath: string,
   userId: UserId

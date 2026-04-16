@@ -10,7 +10,7 @@
  * @example
  * ```ts
  * try {
- *   await fetchPage(client, basePath, params);
+ *   await getPage(client, basePath, params);
  * } catch (err) {
  *   if (err instanceof HttpError && err.status === 404) {
  *     // handle not found

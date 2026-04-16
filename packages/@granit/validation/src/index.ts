@@ -28,7 +28,7 @@ export { validateField } from './validate-field.js';
 
 // Server validation API
 export {
-  fetchValidators,
+  listValidators,
   validateFieldServer,
   validateFieldsBatch,
 } from './api/server-validation-api.js';

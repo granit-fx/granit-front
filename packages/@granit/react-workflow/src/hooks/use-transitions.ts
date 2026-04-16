@@ -1,5 +1,5 @@
 import { createLogger } from '@granit/logger';
-import { fetchTransitions } from '@granit/workflow';
+import { listTransitions } from '@granit/workflow';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useWorkflowConfig } from '../providers/workflow-provider.js';
@@ -20,7 +20,7 @@ export interface UseTransitionsReturn {
 }
 
 export function useTransitions({ currentState }: UseTransitionsOptions): UseTransitionsReturn {
-  const { apiClient, basePath } = useWorkflowConfig();
+  const { client, basePath } = useWorkflowConfig();
 
   const [transitions, setTransitions] = useState<readonly WorkflowTransition[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,7 +37,7 @@ export function useTransitions({ currentState }: UseTransitionsOptions): UseTran
     setError(null);
 
     try {
-      const status = await fetchTransitions(apiClient, basePath, currentState);
+      const status = await listTransitions(client, basePath, currentState);
 
       if (!controller.signal.aborted) {
         setTransitions(status.availableTransitions);
@@ -53,7 +53,7 @@ export function useTransitions({ currentState }: UseTransitionsOptions): UseTran
         setLoading(false);
       }
     }
-  }, [apiClient, basePath, currentState]);
+  }, [client, basePath, currentState]);
 
   useEffect(() => {
     refetch().catch(() => {});

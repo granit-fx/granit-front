@@ -1,7 +1,7 @@
 import {
   cancelScheduledAction,
-  fetchScheduledActionById,
-  fetchScheduledActions,
+  getScheduledActionById,
+  listScheduledActions,
   rescheduleScheduledAction,
 } from '@granit/scheduling';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -26,11 +26,34 @@ export interface RescheduleVariables {
   readonly request: RescheduleActionRequest;
 }
 
-/** Query key factory for scheduling queries. */
+// ---------------------------------------------------------------------------
+// Query key builder
+// ---------------------------------------------------------------------------
+
+const DEFAULT_QUERY_KEY_PREFIX = ['scheduling', 'actions'] as const;
+
+/**
+ * Builds a query key for scheduling queries.
+ *
+ * @param config - Scheduling config containing an optional `queryKeyPrefix`.
+ * @param segments - Additional segments appended after the prefix.
+ */
+export function buildSchedulingQueryKey(
+  config: { queryKeyPrefix?: readonly string[] },
+  ...segments: readonly unknown[]
+): readonly unknown[] {
+  return [...(config.queryKeyPrefix ?? DEFAULT_QUERY_KEY_PREFIX), ...segments];
+}
+
+// ---------------------------------------------------------------------------
+// Legacy query key factory (delegates to default prefix)
+// ---------------------------------------------------------------------------
+
+/** @deprecated Use {@link buildSchedulingQueryKey} instead. */
 export const schedulingKeys = {
-  all: ['scheduling', 'actions'] as const,
-  list: (request?: QueryRequest) => [...schedulingKeys.all, 'list', request ?? {}] as const,
-  detail: (id: string) => [...schedulingKeys.all, 'detail', id] as const,
+  all: DEFAULT_QUERY_KEY_PREFIX as readonly string[],
+  list: (request?: QueryRequest) => [...DEFAULT_QUERY_KEY_PREFIX, 'list', request ?? {}] as const,
+  detail: (id: string) => [...DEFAULT_QUERY_KEY_PREFIX, 'detail', id] as const,
 };
 
 /**
@@ -52,8 +75,8 @@ export function useScheduledActions(
   const { request, refetchInterval = 15_000 } = options ?? {};
 
   return useQuery({
-    queryKey: schedulingKeys.list(request),
-    queryFn: () => fetchScheduledActions(config.client, actionsPath, request),
+    queryKey: buildSchedulingQueryKey(config, 'list', request ?? {}),
+    queryFn: () => listScheduledActions(config.client, actionsPath, request),
     refetchInterval,
   });
 }
@@ -77,8 +100,8 @@ export function useScheduledAction(
   const { refetchInterval = 15_000 } = options ?? {};
 
   return useQuery({
-    queryKey: schedulingKeys.detail(id),
-    queryFn: () => fetchScheduledActionById(config.client, actionsPath, id),
+    queryKey: buildSchedulingQueryKey(config, 'detail', id),
+    queryFn: () => getScheduledActionById(config.client, actionsPath, id),
     refetchInterval,
     enabled: id.length > 0,
   });
@@ -105,7 +128,7 @@ export function useCancelScheduledAction(): UseMutationResult<void, Error, strin
       await cancelScheduledAction(config.client, actionsPath, id);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: schedulingKeys.all });
+      await queryClient.invalidateQueries({ queryKey: buildSchedulingQueryKey(config) });
     },
   });
 }
@@ -131,8 +154,8 @@ export function useRescheduleScheduledAction(): UseMutationResult<ScheduledActio
     mutationFn: async ({ id, request }: RescheduleVariables) =>
       rescheduleScheduledAction(config.client, actionsPath, id, request),
     onSuccess: async (_data, { id }) => {
-      await queryClient.invalidateQueries({ queryKey: schedulingKeys.all });
-      await queryClient.invalidateQueries({ queryKey: schedulingKeys.detail(id) });
+      await queryClient.invalidateQueries({ queryKey: buildSchedulingQueryKey(config) });
+      await queryClient.invalidateQueries({ queryKey: buildSchedulingQueryKey(config, 'detail', id) });
     },
   });
 }

@@ -14,7 +14,7 @@ import type { ReactNode } from 'react';
 function createConfig(overrides?: Partial<ExportConfig>): ExportConfig {
   return {
     client: axios.create(),
-    basePath: '/api/v1/data-exchange/metadata',
+    basePath: '/api/v1/data-exchange',
     ...overrides,
   };
 }
@@ -31,7 +31,7 @@ describe('ExportProvider', () => {
     const { result } = renderHook(() => useExportConfig(), {
       wrapper: wrapper(config),
     });
-    expect(result.current.basePath).toBe('/api/v1/data-exchange/metadata');
+    expect(result.current.basePath).toBe('/api/v1/data-exchange');
     expect(result.current.client).toBe(config.client);
   });
 

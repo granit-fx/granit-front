@@ -2,11 +2,11 @@ import type { IdentityProviderCapabilities } from '../types/index.js';
 import type { AxiosInstance } from 'axios';
 
 /**
- * Fetch the active identity provider's capabilities.
+ * Get the active identity provider's capabilities.
  *
  * `GET {basePath}/capabilities`
  */
-export async function fetchIdentityCapabilities(
+export async function getIdentityCapabilities(
   client: AxiosInstance,
   basePath: string
 ): Promise<IdentityProviderCapabilities> {

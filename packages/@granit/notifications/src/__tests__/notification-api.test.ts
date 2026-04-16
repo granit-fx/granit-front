@@ -3,10 +3,10 @@ import { toEntityId } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
-  fetchEntityActivityFeed,
-  fetchNotifications,
-  fetchPreferences,
-  fetchUnreadCount,
+  getEntityActivityFeed,
+  listNotifications,
+  getPreferences,
+  getUnreadCount,
   markAllAsRead,
   markAsRead,
   updatePreference,
@@ -20,9 +20,9 @@ import type {
 
 describe('notification-api', () => {
   // -----------------------------------------------------------------------
-  // fetchNotifications
+  // listNotifications
   // -----------------------------------------------------------------------
-  it('should send GET with pagination params (fetchNotifications)', async () => {
+  it('should send GET with pagination params (listNotifications)', async () => {
     const page: UserNotificationPage = {
       items: [],
       totalCount: 0,
@@ -32,7 +32,7 @@ describe('notification-api', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse(page));
 
-    const result = await fetchNotifications(client, '/api/v1', { page: 1, pageSize: 10 });
+    const result = await listNotifications(client, '/api/v1', { page: 1, pageSize: 10 });
 
     expect(client.get).toHaveBeenCalledWith('/api/v1/notifications', {
       params: { page: 1, pageSize: 10 },
@@ -65,27 +65,27 @@ describe('notification-api', () => {
   });
 
   // -----------------------------------------------------------------------
-  // fetchUnreadCount
+  // getUnreadCount
   // -----------------------------------------------------------------------
-  it('should return the count number (fetchUnreadCount)', async () => {
+  it('should return the count number (getUnreadCount)', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse({ count: 42 }));
 
-    const result = await fetchUnreadCount(client, '/api/v1');
+    const result = await getUnreadCount(client, '/api/v1');
 
     expect(client.get).toHaveBeenCalledWith('/api/v1/notifications/unread/count');
     expect(result).toBe(42);
   });
 
   // -----------------------------------------------------------------------
-  // fetchEntityActivityFeed
+  // getEntityActivityFeed
   // -----------------------------------------------------------------------
-  it('should send GET with entity path (fetchEntityActivityFeed)', async () => {
+  it('should send GET with entity path (getEntityActivityFeed)', async () => {
     const page: ActivityFeedPage = { items: [], totalCount: 0, nextCursor: null };
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse(page));
 
-    const result = await fetchEntityActivityFeed(client, '/api/v1', 'Patient', 'p-1', {
+    const result = await getEntityActivityFeed(client, '/api/v1', 'Patient', 'p-1', {
       page: 1,
       pageSize: 5,
     });
@@ -97,14 +97,14 @@ describe('notification-api', () => {
   });
 
   // -----------------------------------------------------------------------
-  // fetchPreferences
+  // getPreferences
   // -----------------------------------------------------------------------
-  it('should send GET for preferences (fetchPreferences)', async () => {
+  it('should send GET for preferences (getPreferences)', async () => {
     const prefs: NotificationPreference[] = [];
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse(prefs));
 
-    const result = await fetchPreferences(client, '/api/v1');
+    const result = await getPreferences(client, '/api/v1');
 
     expect(client.get).toHaveBeenCalledWith('/api/v1/notifications/preferences');
     expect(result).toEqual([]);

@@ -12,7 +12,7 @@ import type { AxiosInstance } from 'axios';
 /**
  * List all saved views for the current entity type.
  */
-export async function fetchSavedViews(
+export async function listSavedViews(
   client: AxiosInstance,
   basePath: string
 ): Promise<SavedViewSummary[]> {

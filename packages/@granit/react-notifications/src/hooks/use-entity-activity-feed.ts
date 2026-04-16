@@ -1,8 +1,8 @@
-import { fetchEntityActivityFeed } from '@granit/notifications';
+import { getEntityActivityFeed } from '@granit/notifications';
 import { useCallback } from 'react';
 
 import { API_BASE_PATH } from '../constants.js';
-import { useNotificationContext } from '../providers/notification-provider.js';
+import { useNotificationConfig } from '../providers/notification-provider.js';
 
 import { usePaginatedFetch } from './use-paginated-fetch.js';
 
@@ -34,12 +34,12 @@ export function useEntityActivityFeed(
   options: UseEntityActivityFeedOptions
 ): UseEntityActivityFeedReturn {
   const { entityType, entityId, pageSize = DEFAULT_PAGE_SIZE } = options;
-  const { config } = useNotificationContext();
+  const { config } = useNotificationConfig();
   const basePath = config.basePath ?? API_BASE_PATH;
 
   const fetcher = useCallback(
     (page: number, ps: number) =>
-      fetchEntityActivityFeed(config.apiClient, basePath, entityType, entityId, {
+      getEntityActivityFeed(config.apiClient, basePath, entityType, entityId, {
         page,
         pageSize: ps,
       }),

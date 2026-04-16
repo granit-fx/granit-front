@@ -5,9 +5,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   createReferenceDataEntry,
   deactivateReferenceDataEntry,
-  fetchReferenceDataChildren,
-  fetchReferenceDataEntry,
-  fetchReferenceDataList,
+  getReferenceDataEntry,
+  listReferenceData,
+  listReferenceDataChildren,
   updateReferenceDataEntry,
 } from '../api/reference-data-api.js';
 
@@ -41,7 +41,7 @@ const mockEntry: ReferenceDataEntry = {
   extraProperties: null,
 };
 
-describe('fetchReferenceDataList', () => {
+describe('listReferenceData', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
   });
@@ -51,7 +51,7 @@ describe('fetchReferenceDataList', () => {
     const pagedResult = { items: [mockEntry], totalCount: 1 };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(pagedResult));
 
-    const result = await fetchReferenceDataList(client, BASE_PATH, {
+    const result = await listReferenceData(client, BASE_PATH, {
       activeOnly: true,
       search: 'bel',
     });
@@ -67,13 +67,13 @@ describe('fetchReferenceDataList', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [], totalCount: 0 }));
 
-    await fetchReferenceDataList(client, BASE_PATH);
+    await listReferenceData(client, BASE_PATH);
 
     expect(client.get).toHaveBeenCalledWith(BASE_PATH, { params: undefined });
   });
 });
 
-describe('fetchReferenceDataEntry', () => {
+describe('getReferenceDataEntry', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
   });
@@ -82,7 +82,7 @@ describe('fetchReferenceDataEntry', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse(mockEntry));
 
-    const result = await fetchReferenceDataEntry(client, BASE_PATH, 'BE');
+    const result = await getReferenceDataEntry(client, BASE_PATH, 'BE');
 
     expect(client.get).toHaveBeenCalledWith(`${BASE_PATH}/BE`);
     expect(result.code).toBe('BE');
@@ -92,7 +92,7 @@ describe('fetchReferenceDataEntry', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse(mockEntry));
 
-    await fetchReferenceDataEntry(client, BASE_PATH, 'A/B');
+    await getReferenceDataEntry(client, BASE_PATH, 'A/B');
 
     expect(client.get).toHaveBeenCalledWith(`${BASE_PATH}/A%2FB`);
   });
@@ -153,7 +153,7 @@ describe('updateReferenceDataEntry', () => {
   });
 });
 
-describe('fetchReferenceDataChildren', () => {
+describe('listReferenceDataChildren', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
   });
@@ -163,7 +163,7 @@ describe('fetchReferenceDataChildren', () => {
     const children = [{ ...mockEntry, code: 'CHILD-1', parentCode: 'BE' }];
     vi.mocked(client.get).mockResolvedValue(axiosResponse(children));
 
-    const result = await fetchReferenceDataChildren(client, BASE_PATH, 'BE');
+    const result = await listReferenceDataChildren(client, BASE_PATH, 'BE');
 
     expect(client.get).toHaveBeenCalledWith(`${BASE_PATH}/BE/children`);
     expect(result).toHaveLength(1);
@@ -174,7 +174,7 @@ describe('fetchReferenceDataChildren', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse([]));
 
-    await fetchReferenceDataChildren(client, BASE_PATH, 'A/B');
+    await listReferenceDataChildren(client, BASE_PATH, 'A/B');
 
     expect(client.get).toHaveBeenCalledWith(`${BASE_PATH}/A%2FB/children`);
   });
@@ -183,7 +183,7 @@ describe('fetchReferenceDataChildren', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse([]));
 
-    const result = await fetchReferenceDataChildren(client, BASE_PATH, 'LEAF');
+    const result = await listReferenceDataChildren(client, BASE_PATH, 'LEAF');
 
     expect(result).toEqual([]);
   });

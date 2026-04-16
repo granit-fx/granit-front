@@ -51,6 +51,18 @@ Full frontend conventions: `../granit-dotnet/docs/guide/conventions/frontend/`
 - **TypeScript strict** — no implicit `any`
 - **Logging**: `@granit/logger` (`createLogger`), never `console.log`
 - **Imports**: `import type` for type-only imports
+- **HTTP calls — Axios vs native `fetch`**:
+  - **Business/domain API calls** MUST go through the centralized Axios client
+    (`@granit/api-client`) to inherit interceptors (CSRF, auth, tenant headers).
+    For streaming endpoints, use `adapter: 'fetch'` with `responseType: 'stream'`.
+  - **Native `fetch` is allowed only** in infrastructure layers that sit
+    *below* the Axios client in the dependency graph:
+    - `@granit/bff` — auth bootstrap (session check, CSRF token fetch)
+    - `@granit/react-bff` — BFF provider initialization
+    - Telemetry transports (`@granit/logger-otlp`, `@granit/react-tracing`)
+    - Library adapters requiring the Fetch API contract (`@granit/notifications-sse`)
+  - **Never add new `fetch()` calls** for domain endpoints — if you need
+    streaming or SSE for a business API, route it through Axios.
 
 ## API design rules
 

@@ -8,8 +8,8 @@ import type { AxiosInstance } from 'axios';
 
 const DEFAULT_BASE_PATH = '/api/v1/validation';
 
-/** Fetch the list of available server validator error codes. */
-export async function fetchValidators(
+/** List the available server validator error codes. */
+export async function listValidators(
   client: AxiosInstance,
   basePath: string = DEFAULT_BASE_PATH
 ): Promise<string[]> {

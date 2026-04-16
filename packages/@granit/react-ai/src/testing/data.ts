@@ -1,6 +1,121 @@
 import { toEntityId, toISODateString } from '@granit/types';
 
-import type { AIUsageRecord, AIWorkspaceResponse } from '@granit/ai';
+import type {
+  AIModelCapabilities,
+  AIProviderModelResponse,
+  AIProviderResponse,
+  AIUsageRecord,
+  AIWorkspaceResponse,
+} from '@granit/ai';
+
+/** GPT-4o class: chat + vision + tool use + structured output. */
+const gpt4oCaps: AIModelCapabilities = {
+  chat: true,
+  embeddings: false,
+  vision: true,
+  imageGeneration: false,
+  audio: false,
+  toolUse: true,
+  streaming: true,
+  structuredOutput: true,
+  extensions: [],
+};
+
+/** Basic chat model without vision/tools (e.g. older or lightweight models). */
+const basicChatCaps: AIModelCapabilities = {
+  chat: true,
+  embeddings: false,
+  vision: false,
+  imageGeneration: false,
+  audio: false,
+  toolUse: false,
+  streaming: true,
+  structuredOutput: false,
+  extensions: [],
+};
+
+/** Embedding-only model. */
+const embeddingCaps: AIModelCapabilities = {
+  chat: false,
+  embeddings: true,
+  vision: false,
+  imageGeneration: false,
+  audio: false,
+  toolUse: false,
+  streaming: false,
+  structuredOutput: false,
+  extensions: [],
+};
+
+/** Ollama local model: chat + embeddings (capabilities vary by model). */
+const ollamaCaps: AIModelCapabilities = {
+  chat: true,
+  embeddings: true,
+  vision: false,
+  imageGeneration: false,
+  audio: false,
+  toolUse: false,
+  streaming: true,
+  structuredOutput: false,
+  extensions: [],
+};
+
+export const mockProviders: AIProviderResponse[] = [
+  { name: 'OpenAI', supportsChat: true, supportsEmbeddings: true },
+  { name: 'AzureOpenAI', supportsChat: true, supportsEmbeddings: true },
+  { name: 'Ollama', supportsChat: true, supportsEmbeddings: true },
+];
+
+export const mockProviderModels: Record<string, AIProviderModelResponse[]> = {
+  OpenAI: [
+    {
+      id: 'gpt-4o',
+      displayName: 'GPT-4o',
+      capabilities: gpt4oCaps,
+      maxContextTokens: 128_000,
+    },
+    {
+      id: 'gpt-4o-mini',
+      displayName: 'GPT-4o Mini',
+      capabilities: basicChatCaps,
+      maxContextTokens: 128_000,
+    },
+    {
+      id: 'text-embedding-3-small',
+      displayName: 'Text Embedding 3 Small',
+      capabilities: embeddingCaps,
+      maxContextTokens: 8_191,
+    },
+  ],
+  AzureOpenAI: [
+    {
+      id: 'gpt-4o',
+      displayName: 'GPT-4o (Azure)',
+      capabilities: gpt4oCaps,
+      maxContextTokens: 128_000,
+    },
+    {
+      id: 'text-embedding-3-small',
+      displayName: 'Text Embedding 3 Small (Azure)',
+      capabilities: embeddingCaps,
+      maxContextTokens: 8_191,
+    },
+  ],
+  Ollama: [
+    {
+      id: 'llama3.1',
+      displayName: 'Llama 3.1',
+      capabilities: ollamaCaps,
+      maxContextTokens: 131_072,
+    },
+    {
+      id: 'mistral',
+      displayName: 'Mistral 7B',
+      capabilities: ollamaCaps,
+      maxContextTokens: 32_768,
+    },
+  ],
+};
 
 export const mockWorkspaces: AIWorkspaceResponse[] = [
   {
@@ -12,6 +127,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     maxOutputTokens: 4096,
     kind: 'System',
     isActive: true,
+    capabilities: gpt4oCaps,
   },
   {
     name: 'code-review',
@@ -22,6 +138,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     maxOutputTokens: 2048,
     kind: 'Dynamic',
     isActive: true,
+    capabilities: basicChatCaps,
   },
   {
     name: 'translation',
@@ -32,6 +149,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     maxOutputTokens: 4096,
     kind: 'Dynamic',
     isActive: true,
+    capabilities: gpt4oCaps,
   },
   {
     name: 'summarizer',
@@ -42,6 +160,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     maxOutputTokens: 1024,
     kind: 'Dynamic',
     isActive: false,
+    capabilities: ollamaCaps,
   },
 ];
 

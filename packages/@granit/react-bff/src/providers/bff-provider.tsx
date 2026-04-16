@@ -117,10 +117,13 @@ export function BffProvider({ config, children }: BffProviderProps) {
  *
  * @throws Error if used outside of a `<BffProvider>`.
  */
-export function useBffContext(): BffContextType {
+export function useBffConfig(): BffContextType {
   const context = useContext(BffContext);
   if (!context) {
-    throw new Error('useBffContext must be used within a <BffProvider>');
+    throw new Error('useBffConfig must be used within a <BffProvider>');
   }
   return context;
 }
+
+/** @deprecated Use useBffConfig instead */
+export const useBffContext = useBffConfig;

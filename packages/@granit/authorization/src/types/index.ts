@@ -17,6 +17,8 @@ export type UsePermissionsOptions = {
   basePath?: string;
   /** Override the enabled state. Default: `true` when authenticated. */
   enabled?: boolean;
+  /** Custom prefix for all query keys produced by this module. */
+  queryKeyPrefix?: readonly string[];
 };
 
 /** Return type of the {@link usePermissions} hook. */
@@ -65,6 +67,8 @@ export type UsePermissionDefinitionsOptions = {
   client: AxiosInstance;
   basePath?: string;
   enabled?: boolean;
+  /** Custom prefix for all query keys produced by this module. */
+  queryKeyPrefix?: readonly string[];
 };
 
 /** Options for the {@link useRolePermissions} hook. */
@@ -73,12 +77,16 @@ export type UseRolePermissionsOptions = {
   roleName: string;
   basePath?: string;
   enabled?: boolean;
+  /** Custom prefix for all query keys produced by this module. */
+  queryKeyPrefix?: readonly string[];
 };
 
 /** Options for the {@link usePermissionGrant} hook. */
 export type UsePermissionGrantOptions = {
   client: AxiosInstance;
   basePath?: string;
+  /** Custom prefix for all query keys produced by this module. */
+  queryKeyPrefix?: readonly string[];
 };
 
 /** Parameters for granting or revoking a permission. */
