@@ -10,12 +10,10 @@ export const AI_WORKSPACE_KINDS = {
 
 /** AI permission strings. Mirrors `AIPermissions` in Granit.AI.Endpoints. */
 export const AI_PERMISSIONS = {
-  WORKSPACES_VIEW: 'AI.Workspaces.View',
-  WORKSPACES_CREATE: 'AI.Workspaces.Create',
-  WORKSPACES_UPDATE: 'AI.Workspaces.Update',
-  WORKSPACES_DELETE: 'AI.Workspaces.Delete',
-  USAGES_VIEW: 'AI.Usages.View',
-  CHATS_EXECUTE: 'AI.Chats.Execute',
+  WORKSPACES_READ: 'AI.Workspaces.Read',
+  WORKSPACES_MANAGE: 'AI.Workspaces.Manage',
+  USAGE_READ: 'AI.Usage.Read',
+  CHAT_EXECUTE: 'AI.Chat.Execute',
   EMBEDDINGS_EXECUTE: 'AI.Embeddings.Execute',
 } as const;
 
