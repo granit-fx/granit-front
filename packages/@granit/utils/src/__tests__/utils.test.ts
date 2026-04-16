@@ -87,6 +87,11 @@ describe('formatDate', () => {
     expect(result).toMatch(/December 31/);
     expect(result).toContain('2025');
   });
+
+  it('should accept a Date object with timezone', () => {
+    const result = formatDate(new Date('2026-01-01T03:00:00Z'), 'America/New_York');
+    expect(result).toMatch(/December 31/);
+  });
 });
 
 describe('formatTimeAgo', () => {

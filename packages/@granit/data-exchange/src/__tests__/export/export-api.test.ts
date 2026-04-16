@@ -83,7 +83,9 @@ describe('export-api', () => {
       headers: { 'content-disposition': 'attachment; filename="export.xlsx"' },
     });
     const result = await downloadExportFile(client, BASE, 'abc');
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/export/jobs/abc/download`, { responseType: 'blob' });
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/export/jobs/abc/download`, {
+      responseType: 'blob',
+    });
     expect(result.blob).toBe(blob);
     expect(result.fileName).toBe('export.xlsx');
   });
@@ -92,6 +94,17 @@ describe('export-api', () => {
     const client = createMockClient();
     const blob = new Blob(['data']);
     vi.mocked(client.get).mockResolvedValueOnce({ data: blob, headers: {} });
+    const result = await downloadExportFile(client, BASE, 'abc');
+    expect(result.fileName).toBe('export');
+  });
+
+  it('downloadExportFile falls back to "export" when content-disposition has no filename', async () => {
+    const client = createMockClient();
+    const blob = new Blob(['data']);
+    vi.mocked(client.get).mockResolvedValueOnce({
+      data: blob,
+      headers: { 'content-disposition': 'attachment' },
+    });
     const result = await downloadExportFile(client, BASE, 'abc');
     expect(result.fileName).toBe('export');
   });

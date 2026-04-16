@@ -134,6 +134,18 @@ describe('import-api', () => {
     expect(result.fileName).toBe('correction');
   });
 
+  it('downloadCorrectionFile falls back to "correction" when content-disposition has no filename', async () => {
+    const client = createMockClient();
+    const blob = new Blob(['data']);
+    vi.mocked(client.get).mockResolvedValueOnce({
+      data: blob,
+      headers: { 'content-disposition': 'attachment' },
+    });
+
+    const result = await downloadCorrectionFile(client, BASE, 'job-1');
+    expect(result.fileName).toBe('correction');
+  });
+
   it('encodes jobId with special characters', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: {} });
