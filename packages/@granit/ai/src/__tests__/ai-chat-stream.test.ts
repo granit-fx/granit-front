@@ -1,3 +1,4 @@
+import { createMockClient } from '@granit/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { chatStream } from '../api/ai-chat-api.js';
@@ -14,32 +15,23 @@ function createSSEStream(chunks: string[]): ReadableStream<Uint8Array> {
   });
 }
 
-function mockFetch(status: number, body: ReadableStream<Uint8Array> | null) {
-  return vi.fn().mockResolvedValue({
-    ok: status >= 200 && status < 300,
-    status,
-    statusText: status === 200 ? 'OK' : 'Error',
-    body,
-  });
-}
-
 describe('chatStream', () => {
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
   it('should yield content chunks from SSE events', async () => {
+    const client = createMockClient();
     const stream = createSSEStream([
       'data: {"content":"Hello"}\n\n',
       'data: {"content":" world"}\n\n',
       'data: [DONE]\n\n',
     ]);
-    vi.stubGlobal('fetch', mockFetch(200, stream));
+    vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
     const chunks: string[] = [];
-    for await (const chunk of chatStream({
-      url: 'http://localhost/ai/chat/default/stream',
-      request: { messages: [{ role: 'user', content: 'Hi' }] },
+    for await (const chunk of chatStream(client, '', 'default', {
+      messages: [{ role: 'user', content: 'Hi' }],
     })) {
       chunks.push(chunk);
     }
@@ -48,13 +40,13 @@ describe('chatStream', () => {
   });
 
   it('should handle chunks split across reads', async () => {
+    const client = createMockClient();
     const stream = createSSEStream(['data: {"cont', 'ent":"split"}\n\ndata: [DONE]\n\n']);
-    vi.stubGlobal('fetch', mockFetch(200, stream));
+    vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
     const chunks: string[] = [];
-    for await (const chunk of chatStream({
-      url: 'http://localhost/ai/chat/default/stream',
-      request: { messages: [{ role: 'user', content: 'Hi' }] },
+    for await (const chunk of chatStream(client, '', 'default', {
+      messages: [{ role: 'user', content: 'Hi' }],
     })) {
       chunks.push(chunk);
     }
@@ -62,29 +54,29 @@ describe('chatStream', () => {
     expect(chunks).toEqual(['split']);
   });
 
-  it('should throw on non-OK response', async () => {
-    vi.stubGlobal('fetch', mockFetch(401, null));
+  it('should propagate axios errors', async () => {
+    const client = createMockClient();
+    vi.spyOn(client, 'post').mockRejectedValue(new Error('Request failed with status 401'));
 
-    const generator = chatStream({
-      url: 'http://localhost/ai/chat/default/stream',
-      request: { messages: [{ role: 'user', content: 'Hi' }] },
+    const generator = chatStream(client, '', 'default', {
+      messages: [{ role: 'user', content: 'Hi' }],
     });
 
-    await expect(generator.next()).rejects.toThrow('AI chat stream failed: 401');
+    await expect(generator.next()).rejects.toThrow('Request failed with status 401');
   });
 
   it('should skip malformed SSE events', async () => {
+    const client = createMockClient();
     const stream = createSSEStream([
       'data: not-json\n\n',
       'data: {"content":"valid"}\n\n',
       'data: [DONE]\n\n',
     ]);
-    vi.stubGlobal('fetch', mockFetch(200, stream));
+    vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
     const chunks: string[] = [];
-    for await (const chunk of chatStream({
-      url: 'http://localhost/ai/chat/default/stream',
-      request: { messages: [{ role: 'user', content: 'Hi' }] },
+    for await (const chunk of chatStream(client, '', 'default', {
+      messages: [{ role: 'user', content: 'Hi' }],
     })) {
       chunks.push(chunk);
     }
@@ -92,41 +84,35 @@ describe('chatStream', () => {
     expect(chunks).toEqual(['valid']);
   });
 
-  it('should pass headers and request body to fetch', async () => {
+  it('should call axios with correct URL and options', async () => {
+    const client = createMockClient();
     const stream = createSSEStream(['data: [DONE]\n\n']);
-    const fetchMock = mockFetch(200, stream);
-    vi.stubGlobal('fetch', fetchMock);
+    const postSpy = vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
     const request = { messages: [{ role: 'user' as const, content: 'Hi' }] };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for await (const _ of chatStream({
-      url: 'http://localhost/ai/chat/default/stream',
-      request,
-      headers: { Authorization: 'Bearer token', 'X-Tenant-Id': 'tenant-1' },
-    })) {
+    for await (const _ of chatStream(client, '/api', 'default', request)) {
       // consume stream
     }
 
-    expect(fetchMock).toHaveBeenCalledWith('http://localhost/ai/chat/default/stream', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'text/event-stream',
-        Authorization: 'Bearer token',
-        'X-Tenant-Id': 'tenant-1',
-      },
-      body: JSON.stringify(request),
-      signal: undefined,
-    });
+    expect(postSpy).toHaveBeenCalledWith(
+      '/api/ai/chat/default/stream',
+      request,
+      expect.objectContaining({
+        adapter: 'fetch',
+        responseType: 'stream',
+        headers: { Accept: 'text/event-stream' },
+      }),
+    );
   });
 
   it('should handle empty body gracefully', async () => {
-    vi.stubGlobal('fetch', mockFetch(200, null));
+    const client = createMockClient();
+    vi.spyOn(client, 'post').mockResolvedValue({ data: null });
 
     const chunks: string[] = [];
-    for await (const chunk of chatStream({
-      url: 'http://localhost/ai/chat/default/stream',
-      request: { messages: [{ role: 'user', content: 'Hi' }] },
+    for await (const chunk of chatStream(client, '', 'default', {
+      messages: [{ role: 'user', content: 'Hi' }],
     })) {
       chunks.push(chunk);
     }

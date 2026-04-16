@@ -22,7 +22,12 @@ export type {
 } from './types/index.js';
 
 // Constants
-export { AI_PERMISSIONS, AI_STREAM_DONE_MARKER, AI_WORKSPACE_KINDS } from './constants.js';
+export {
+  AI_CAPABILITY_EXTENSIONS,
+  AI_PERMISSIONS,
+  AI_STREAM_DONE_MARKER,
+  AI_WORKSPACE_KINDS,
+} from './constants.js';
 
 // API — Providers
 export { listAIProviderModels, listAIProviders } from './api/ai-providers-api.js';
@@ -37,8 +42,7 @@ export {
 } from './api/ai-workspaces-api.js';
 
 // API — Chat
-export { buildChatStreamUrl, chatComplete, chatStream } from './api/ai-chat-api.js';
-export type { ChatStreamOptions } from './api/ai-chat-api.js';
+export { chatComplete, chatStream } from './api/ai-chat-api.js';
 
 // API — Embeddings
 export { generateEmbeddings } from './api/ai-embeddings-api.js';

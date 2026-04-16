@@ -191,6 +191,8 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
         );
       }
 
+      const model = mockProviderModels[body.provider]?.find((m) => m.id === body.model);
+
       const created: AIWorkspaceResponse = {
         name: body.name,
         provider: body.provider,
@@ -200,6 +202,7 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
         maxOutputTokens: body.maxOutputTokens ?? null,
         kind: 'Dynamic',
         isActive: true,
+        capabilities: model?.capabilities ?? null,
       };
 
       workspaces = [...workspaces, created];
@@ -264,6 +267,36 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
     }),
 
     // --- Chat -----------------------------------------------------------------
+
+    // SSE streaming endpoint (must be registered before the non-streaming route)
+    http.post(`${baseUrl}/chat/:workspaceName/stream`, async ({ params, request }) => {
+      const wsName = params.workspaceName as string;
+      const ws = workspaces.find((w) => w.name === wsName);
+
+      if (!ws) {
+        return HttpResponse.json(
+          { title: 'Not Found', status: 404, detail: `AI workspace '${wsName}' was not found.` },
+          { status: 404 },
+        );
+      }
+
+      const body = (await request.json()) as { messages: { role: string; content: string }[] };
+      const lastMessage = body.messages.at(-1)?.content ?? '';
+      const mockContent = `Mock response to: "${lastMessage.slice(0, 50)}${lastMessage.length > 50 ? '...' : ''}"`;
+
+      const encoder = new TextEncoder();
+      const stream = new ReadableStream({
+        start(controller) {
+          controller.enqueue(encoder.encode(`data: {"content":"${mockContent}"}\n\n`));
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+          controller.close();
+        },
+      });
+
+      return new HttpResponse(stream, {
+        headers: { 'Content-Type': 'text/event-stream' },
+      });
+    }),
 
     http.post(`${baseUrl}/chat/:workspaceName`, async ({ params, request }) => {
       const wsName = params.workspaceName as string;

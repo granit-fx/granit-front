@@ -20,6 +20,7 @@ export interface AIWorkspaceResponse {
   readonly maxOutputTokens: number | null;
   readonly kind: AIWorkspaceKind;
   readonly isActive: boolean;
+  readonly capabilities: AIModelCapabilities | null;
 }
 
 /** List response wrapper. Mirrors `AIWorkspaceListResponse`. */
@@ -111,6 +112,13 @@ export interface AIEmbeddingResponse {
 export interface AIModelCapabilities {
   readonly chat: boolean;
   readonly embeddings: boolean;
+  readonly vision: boolean;
+  readonly imageGeneration: boolean;
+  readonly audio: boolean;
+  readonly toolUse: boolean;
+  readonly streaming: boolean;
+  readonly structuredOutput: boolean;
+  readonly extensions: readonly string[];
 }
 
 /** Provider summary returned by the discovery endpoint. Mirrors `AIProviderResponse`. */

@@ -26,44 +26,6 @@ export async function chatComplete(
   return response.data;
 }
 
-/**
- * Options for opening a streaming chat connection.
- *
- * Uses native `fetch` (not Axios) because Axios does not support
- * reading a `ReadableStream` incrementally.
- */
-export interface ChatStreamOptions {
-  /** Full URL to the stream endpoint (use {@link buildChatStreamUrl} to construct). */
-  readonly url: string;
-  /** Chat request payload. */
-  readonly request: AIChatRequest;
-  /** Extra headers (Authorization, X-Tenant-Id, etc.). */
-  readonly headers?: Readonly<Record<string, string>>;
-  /** Abort signal to cancel the stream. */
-  readonly signal?: AbortSignal;
-}
-
-/**
- * Builds the full URL for the chat stream endpoint.
- *
- * @example
- * ```ts
- * const url = buildChatStreamUrl('http://localhost:5000', '', 'default');
- * // → "http://localhost:5000/ai/chat/default/stream"
- * ```
- */
-export function buildChatStreamUrl(
-  baseUrl: string,
-  basePath: string,
-  workspaceName: string
-): string {
-  let clean = baseUrl;
-  while (clean.endsWith('/')) {
-    clean = clean.slice(0, -1);
-  }
-  return `${clean}${basePath}/ai/chat/${encodeURIComponent(workspaceName)}/stream`;
-}
-
 /** Result of parsing a single SSE data line. */
 type ParsedLine = { kind: 'chunk'; content: string } | { kind: 'done' } | { kind: 'skip' };
 
@@ -83,8 +45,10 @@ function parseSseLine(line: string): ParsedLine {
 }
 
 /**
- * Opens an SSE stream for chat completion.
+ * Opens an SSE stream for chat completion via Axios.
  *
+ * Uses `adapter: 'fetch'` with `responseType: 'stream'` so the request goes
+ * through the full Axios interceptor pipeline (CSRF, auth, tenant headers).
  * Yields content string chunks as they arrive. The stream ends when the
  * server sends `data: [DONE]` or closes the connection.
  *
@@ -92,35 +56,33 @@ function parseSseLine(line: string): ParsedLine {
  *
  * @example
  * ```ts
- * const url = buildChatStreamUrl(baseUrl, basePath, 'default');
  * const controller = new AbortController();
  *
- * for await (const chunk of chatStream({ url, request, signal: controller.signal })) {
+ * for await (const chunk of chatStream(client, '/api', 'default', request, controller.signal)) {
  *   process.stdout.write(chunk);
  * }
  * ```
  */
 export async function* chatStream(
-  options: ChatStreamOptions
+  client: AxiosInstance,
+  basePath: string,
+  workspaceName: string,
+  request: AIChatRequest,
+  signal?: AbortSignal,
 ): AsyncGenerator<string, void, undefined> {
-  const response = await fetch(options.url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'text/event-stream',
-      ...options.headers,
-    },
-    body: JSON.stringify(options.request),
-    signal: options.signal,
+  const url = `${basePath}/ai/chat/${encodeURIComponent(workspaceName)}/stream`;
+
+  const response = await client.post(url, request, {
+    adapter: 'fetch',
+    responseType: 'stream',
+    headers: { Accept: 'text/event-stream' },
+    signal,
   });
 
-  if (!response.ok) {
-    throw new Error(`AI chat stream failed: ${response.status} ${response.statusText}`);
-  }
+  const body = response.data as ReadableStream<Uint8Array> | null;
+  if (!body) return;
 
-  if (!response.body) return;
-
-  const reader = response.body.getReader();
+  const reader = body.getReader();
   const decoder = new TextDecoder();
   let buffer = '';
 

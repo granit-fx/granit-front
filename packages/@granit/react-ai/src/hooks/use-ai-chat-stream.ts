@@ -1,4 +1,4 @@
-import { buildChatStreamUrl, chatStream } from '@granit/ai';
+import { chatStream } from '@granit/ai';
 import { useCallback, useRef, useState } from 'react';
 
 import { useAIConfig } from '../providers/ai-provider.js';
@@ -58,37 +58,21 @@ export function useAIChatStream(): UseAIChatStreamReturn {
       const controller = new AbortController();
       abortRef.current = controller;
 
-      const baseUrl = config.streamBaseUrl ?? config.client.defaults.baseURL ?? '';
-      const url = buildChatStreamUrl(baseUrl, config.basePath ?? '', workspaceName);
-
-      const headers: Record<string, string> = {};
-      if (config.tenantId) {
-        headers['X-Tenant-Id'] = config.tenantId;
-      }
-
       (async () => {
         try {
-          if (config.tokenGetter) {
-            const token = await config.tokenGetter();
-            if (token) {
-              headers['Authorization'] = `Bearer ${token}`;
-            }
-          }
-
           let accumulated = '';
-          for await (const chunk of chatStream({
-            url,
+          for await (const chunk of chatStream(
+            config.client,
+            config.basePath ?? '',
+            workspaceName,
             request,
-            headers,
-            signal: controller.signal,
-          })) {
+            controller.signal,
+          )) {
             accumulated += chunk;
             setContent(accumulated);
           }
         } catch (err) {
-          if (err instanceof DOMException && err.name === 'AbortError') {
-            return;
-          }
+          if (err instanceof DOMException && err.name === 'AbortError') return;
           setError(err instanceof Error ? err : new Error(String(err)));
         } finally {
           setIsStreaming(false);
@@ -96,7 +80,7 @@ export function useAIChatStream(): UseAIChatStreamReturn {
         }
       })();
     },
-    [abort, config]
+    [abort, config],
   );
 
   return { content, isStreaming, error, send, abort };

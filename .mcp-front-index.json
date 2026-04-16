@@ -72,21 +72,6 @@
       "description": "AI workspace management, chat completion, embedding generation, and usage tracking types and API functions — mirrors Granit.AI.Endpoints .NET",
       "exports": [
         {
-          "name": "AI_PERMISSIONS",
-          "kind": "const",
-          "signature": "const AI_PERMISSIONS"
-        },
-        {
-          "name": "AI_STREAM_DONE_MARKER",
-          "kind": "const",
-          "signature": "const AI_STREAM_DONE_MARKER"
-        },
-        {
-          "name": "AI_WORKSPACE_KINDS",
-          "kind": "const",
-          "signature": "const AI_WORKSPACE_KINDS"
-        },
-        {
           "name": "listAIProviderModels",
           "kind": "function",
           "signature": "async function listAIProviderModels( client: AxiosInstance, basePath: string, providerName: string ): Promise<AIProviderModelResponse[]>"
@@ -97,20 +82,9 @@
           "signature": "async function listAIProviders( client: AxiosInstance, basePath: string ): Promise<AIProviderResponse[]>"
         },
         {
-          "name": "buildChatStreamUrl",
-          "kind": "function",
-          "signature": "function buildChatStreamUrl( baseUrl: string, basePath: string, workspaceName: string ): string"
-        },
-        {
           "name": "chatComplete",
           "kind": "function",
           "signature": "async function chatComplete( client: AxiosInstance, basePath: string, workspaceName: string, request: AIChatRequest ): Promise<AIChatResponse>"
-        },
-        {
-          "name": "ChatStreamOptions",
-          "kind": "interface",
-          "signature": "interface ChatStreamOptions",
-          "members": []
         },
         {
           "name": "generateEmbeddings",

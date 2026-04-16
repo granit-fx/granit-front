@@ -1,16 +1,69 @@
 import { toEntityId, toISODateString } from '@granit/types';
 
 import type {
+  AIModelCapabilities,
   AIProviderModelResponse,
   AIProviderResponse,
   AIUsageRecord,
   AIWorkspaceResponse,
 } from '@granit/ai';
 
+/** GPT-4o class: chat + vision + tool use + structured output. */
+const gpt4oCaps: AIModelCapabilities = {
+  chat: true,
+  embeddings: false,
+  vision: true,
+  imageGeneration: false,
+  audio: false,
+  toolUse: true,
+  streaming: true,
+  structuredOutput: true,
+  extensions: [],
+};
+
+/** Basic chat model without vision/tools (e.g. older or lightweight models). */
+const basicChatCaps: AIModelCapabilities = {
+  chat: true,
+  embeddings: false,
+  vision: false,
+  imageGeneration: false,
+  audio: false,
+  toolUse: false,
+  streaming: true,
+  structuredOutput: false,
+  extensions: [],
+};
+
+/** Embedding-only model. */
+const embeddingCaps: AIModelCapabilities = {
+  chat: false,
+  embeddings: true,
+  vision: false,
+  imageGeneration: false,
+  audio: false,
+  toolUse: false,
+  streaming: false,
+  structuredOutput: false,
+  extensions: [],
+};
+
+/** Ollama local model: chat + embeddings (capabilities vary by model). */
+const ollamaCaps: AIModelCapabilities = {
+  chat: true,
+  embeddings: true,
+  vision: false,
+  imageGeneration: false,
+  audio: false,
+  toolUse: false,
+  streaming: true,
+  structuredOutput: false,
+  extensions: [],
+};
+
 export const mockProviders: AIProviderResponse[] = [
   { name: 'OpenAI', supportsChat: true, supportsEmbeddings: true },
   { name: 'AzureOpenAI', supportsChat: true, supportsEmbeddings: true },
-  { name: 'Ollama', supportsChat: true, supportsEmbeddings: false },
+  { name: 'Ollama', supportsChat: true, supportsEmbeddings: true },
 ];
 
 export const mockProviderModels: Record<string, AIProviderModelResponse[]> = {
@@ -18,19 +71,19 @@ export const mockProviderModels: Record<string, AIProviderModelResponse[]> = {
     {
       id: 'gpt-4o',
       displayName: 'GPT-4o',
-      capabilities: { chat: true, embeddings: false },
+      capabilities: gpt4oCaps,
       maxContextTokens: 128_000,
     },
     {
       id: 'gpt-4o-mini',
       displayName: 'GPT-4o Mini',
-      capabilities: { chat: true, embeddings: false },
+      capabilities: gpt4oCaps,
       maxContextTokens: 128_000,
     },
     {
       id: 'text-embedding-3-small',
       displayName: 'Text Embedding 3 Small',
-      capabilities: { chat: false, embeddings: true },
+      capabilities: embeddingCaps,
       maxContextTokens: 8_191,
     },
   ],
@@ -38,13 +91,13 @@ export const mockProviderModels: Record<string, AIProviderModelResponse[]> = {
     {
       id: 'gpt-4o',
       displayName: 'GPT-4o (Azure)',
-      capabilities: { chat: true, embeddings: false },
+      capabilities: gpt4oCaps,
       maxContextTokens: 128_000,
     },
     {
       id: 'text-embedding-3-small',
       displayName: 'Text Embedding 3 Small (Azure)',
-      capabilities: { chat: false, embeddings: true },
+      capabilities: embeddingCaps,
       maxContextTokens: 8_191,
     },
   ],
@@ -52,13 +105,13 @@ export const mockProviderModels: Record<string, AIProviderModelResponse[]> = {
     {
       id: 'llama3.1',
       displayName: 'Llama 3.1',
-      capabilities: { chat: true, embeddings: false },
+      capabilities: ollamaCaps,
       maxContextTokens: 131_072,
     },
     {
       id: 'mistral',
       displayName: 'Mistral 7B',
-      capabilities: { chat: true, embeddings: false },
+      capabilities: ollamaCaps,
       maxContextTokens: 32_768,
     },
   ],
@@ -74,6 +127,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     maxOutputTokens: 4096,
     kind: 'System',
     isActive: true,
+    capabilities: gpt4oCaps,
   },
   {
     name: 'code-review',
@@ -84,6 +138,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     maxOutputTokens: 2048,
     kind: 'Dynamic',
     isActive: true,
+    capabilities: gpt4oCaps,
   },
   {
     name: 'translation',
@@ -94,6 +149,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     maxOutputTokens: 4096,
     kind: 'Dynamic',
     isActive: true,
+    capabilities: gpt4oCaps,
   },
   {
     name: 'summarizer',
@@ -104,6 +160,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     maxOutputTokens: 1024,
     kind: 'Dynamic',
     isActive: false,
+    capabilities: ollamaCaps,
   },
 ];
 
