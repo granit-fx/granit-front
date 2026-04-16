@@ -77,7 +77,7 @@ export const mockProviderModels: Record<string, AIProviderModelResponse[]> = {
     {
       id: 'gpt-4o-mini',
       displayName: 'GPT-4o Mini',
-      capabilities: gpt4oCaps,
+      capabilities: basicChatCaps,
       maxContextTokens: 128_000,
     },
     {
@@ -138,7 +138,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     maxOutputTokens: 2048,
     kind: 'Dynamic',
     isActive: true,
-    capabilities: gpt4oCaps,
+    capabilities: basicChatCaps,
   },
   {
     name: 'translation',
