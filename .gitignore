@@ -7,3 +7,4 @@ dist/
 
 # Claude Code local settings (tracked: .claude/settings.json, .claude/skills/)
 .claude/settings.local.json
+.claude/projects/
