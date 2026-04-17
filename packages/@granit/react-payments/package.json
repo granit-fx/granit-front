@@ -19,6 +19,7 @@
     "@granit/types": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "axios": "*",
+    "lucide-react": "^1.0.0",
     "msw": "^2.12.0",
     "react": "^19.0.0"
   },

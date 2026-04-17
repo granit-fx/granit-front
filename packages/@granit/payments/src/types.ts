@@ -106,3 +106,18 @@ export interface PaymentAvailableMethodResponse {
   readonly providerName: string;
   readonly displayLabel: string;
 }
+
+/** A single payment method declared by a provider with its activation state. */
+export interface PaymentMethodConfigurationItem {
+  readonly methodType: string;
+  readonly displayLabel: string;
+  /** Backend enum value (0=Card, 1=BankRedirect, 2=BankTransfer, 3=BankDebit, 4=Wallet, 5=BuyNowPayLater, 6=Voucher, 7=PointOfSale). */
+  readonly category: number;
+  readonly isActive: boolean;
+}
+
+/** All methods declared by a single provider, with activation state. */
+export interface PaymentProviderConfiguration {
+  readonly providerName: string;
+  readonly methods: readonly PaymentMethodConfigurationItem[];
+}

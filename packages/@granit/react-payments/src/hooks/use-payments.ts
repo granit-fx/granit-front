@@ -1,10 +1,13 @@
 import {
+  activatePaymentMethod,
   attachPaymentMethod,
   createCheckoutSession,
+  deactivatePaymentMethod,
   detachPaymentMethod,
   getAvailablePaymentMethods,
   getPaymentTransaction,
   initiatePaymentCharge,
+  listPaymentMethodConfigurations,
   listPaymentMethods,
   listPaymentTransactions,
   requestPaymentRefund,
@@ -19,7 +22,9 @@ import type {
   PaymentChargeRequest,
   PaymentCheckoutRequest,
   PaymentCheckoutSessionResponse,
+  PaymentMethodConfigurationItem,
   PaymentMethodResponse,
+  PaymentProviderConfiguration,
   PaymentRefundRequest,
   PaymentRefundResponse,
   PaymentTransactionResponse,
@@ -237,6 +242,99 @@ export function useDetachPaymentMethod(): UseMutationResult<void, Error, string>
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildPaymentsQueryKey(config, 'methods'),
+      });
+    },
+  });
+}
+
+interface PaymentMethodToggleArgs {
+  readonly providerName: string;
+  readonly methodType: string;
+}
+
+/**
+ * List platform-level payment method configurations (host admin).
+ * Returns the fused view of all payment methods declared by installed providers,
+ * grouped by provider, with their activation state.
+ *
+ * @example
+ * ```tsx
+ * const { data: providers } = usePaymentMethodConfigurations();
+ * ```
+ */
+export function usePaymentMethodConfigurations(): UseQueryResult<
+  readonly PaymentProviderConfiguration[]
+> {
+  const config = usePaymentsConfig();
+  const basePath = config.basePath!;
+
+  return useQuery({
+    queryKey: buildPaymentsQueryKey(config, 'configuration'),
+    queryFn: () => listPaymentMethodConfigurations(config.client, basePath),
+  });
+}
+
+/**
+ * Activate a payment method for the platform (idempotent).
+ * Invalidates configuration and available-methods queries on success.
+ *
+ * @example
+ * ```tsx
+ * const activate = useActivatePaymentMethod();
+ * await activate.mutateAsync({ providerName: 'stripe', methodType: 'card' });
+ * ```
+ */
+export function useActivatePaymentMethod(): UseMutationResult<
+  PaymentMethodConfigurationItem,
+  Error,
+  PaymentMethodToggleArgs
+> {
+  const config = usePaymentsConfig();
+  const queryClient = useQueryClient();
+  const basePath = config.basePath!;
+
+  return useMutation({
+    mutationFn: ({ providerName, methodType }: PaymentMethodToggleArgs) =>
+      activatePaymentMethod(config.client, basePath, providerName, methodType),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: buildPaymentsQueryKey(config, 'configuration'),
+      });
+      queryClient.invalidateQueries({
+        queryKey: buildPaymentsQueryKey(config, 'methods', 'available'),
+      });
+    },
+  });
+}
+
+/**
+ * Deactivate a payment method for the platform (idempotent).
+ * Invalidates configuration and available-methods queries on success.
+ *
+ * @example
+ * ```tsx
+ * const deactivate = useDeactivatePaymentMethod();
+ * await deactivate.mutateAsync({ providerName: 'stripe', methodType: 'card' });
+ * ```
+ */
+export function useDeactivatePaymentMethod(): UseMutationResult<
+  PaymentMethodConfigurationItem,
+  Error,
+  PaymentMethodToggleArgs
+> {
+  const config = usePaymentsConfig();
+  const queryClient = useQueryClient();
+  const basePath = config.basePath!;
+
+  return useMutation({
+    mutationFn: ({ providerName, methodType }: PaymentMethodToggleArgs) =>
+      deactivatePaymentMethod(config.client, basePath, providerName, methodType),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: buildPaymentsQueryKey(config, 'configuration'),
+      });
+      queryClient.invalidateQueries({
+        queryKey: buildPaymentsQueryKey(config, 'methods', 'available'),
       });
     },
   });

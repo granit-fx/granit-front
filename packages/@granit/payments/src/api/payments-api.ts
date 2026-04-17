@@ -4,7 +4,9 @@ import type {
   PaymentChargeRequest,
   PaymentCheckoutRequest,
   PaymentCheckoutSessionResponse,
+  PaymentMethodConfigurationItem,
   PaymentMethodResponse,
+  PaymentProviderConfiguration,
   PaymentRefundRequest,
   PaymentRefundResponse,
   PaymentTransactionResponse,
@@ -140,4 +142,56 @@ export async function detachPaymentMethod(
   id: string
 ): Promise<void> {
   await client.delete(`${basePath}/methods/${encodeURIComponent(id)}`);
+}
+
+/**
+ * List platform-level payment method configurations (host admin only).
+ * Returns the fused view of all payment methods declared by installed providers,
+ * grouped by provider, with their current activation state.
+ *
+ * `GET {basePath}/configuration`
+ */
+export async function listPaymentMethodConfigurations(
+  client: AxiosInstance,
+  basePath: string
+): Promise<readonly PaymentProviderConfiguration[]> {
+  const response = await client.get<readonly PaymentProviderConfiguration[]>(
+    `${basePath}/configuration`
+  );
+  return response.data;
+}
+
+/**
+ * Activate a payment method for the platform (idempotent).
+ * The admin toggles on/off methods declared by the installed providers.
+ *
+ * `POST {basePath}/configuration/{provider}/{method}/activate`
+ */
+export async function activatePaymentMethod(
+  client: AxiosInstance,
+  basePath: string,
+  providerName: string,
+  methodType: string
+): Promise<PaymentMethodConfigurationItem> {
+  const response = await client.post<PaymentMethodConfigurationItem>(
+    `${basePath}/configuration/${encodeURIComponent(providerName)}/${encodeURIComponent(methodType)}/activate`
+  );
+  return response.data;
+}
+
+/**
+ * Deactivate a payment method for the platform (idempotent).
+ *
+ * `POST {basePath}/configuration/{provider}/{method}/deactivate`
+ */
+export async function deactivatePaymentMethod(
+  client: AxiosInstance,
+  basePath: string,
+  providerName: string,
+  methodType: string
+): Promise<PaymentMethodConfigurationItem> {
+  const response = await client.post<PaymentMethodConfigurationItem>(
+    `${basePath}/configuration/${encodeURIComponent(providerName)}/${encodeURIComponent(methodType)}/deactivate`
+  );
+  return response.data;
 }

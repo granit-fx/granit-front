@@ -6,7 +6,9 @@ export type {
   PaymentCheckoutRequest,
   PaymentCheckoutSessionResponse,
   PaymentDisputeResponse,
+  PaymentMethodConfigurationItem,
   PaymentMethodResponse,
+  PaymentProviderConfiguration,
   PaymentRefundRequest,
   PaymentRefundResponse,
   PaymentTransactionResponse,
@@ -18,12 +20,15 @@ export { PaymentsPermissions } from './permissions.js';
 
 // API
 export {
+  activatePaymentMethod,
   attachPaymentMethod,
   createCheckoutSession,
+  deactivatePaymentMethod,
   detachPaymentMethod,
   getAvailablePaymentMethods,
   getPaymentTransaction,
   initiatePaymentCharge,
+  listPaymentMethodConfigurations,
   listPaymentMethods,
   listPaymentTransactions,
   requestPaymentRefund,
