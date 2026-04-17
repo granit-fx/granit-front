@@ -6,11 +6,14 @@ import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  useActivatePaymentMethod,
   useAttachPaymentMethod,
   useAvailablePaymentMethods,
   useCreateCheckoutSession,
+  useDeactivatePaymentMethod,
   useDetachPaymentMethod,
   useInitiatePaymentCharge,
+  usePaymentMethodConfigurations,
   usePaymentMethods,
   usePaymentTransaction,
   usePaymentTransactions,
@@ -28,6 +31,7 @@ import type {
   PaymentMethodConfigurationItem,
   PaymentMethodResponse,
   PaymentProviderCatalogResponse,
+  PaymentProviderConfiguration,
   PaymentRefundResponse,
   PaymentTransactionResponse,
 } from '@granit/payments';
@@ -371,6 +375,80 @@ describe('use-payments', () => {
 
       expect(result.current.fetchStatus).toBe('idle');
       expect(client.get).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('usePaymentMethodConfigurations', () => {
+    it('fetches the fused provider configuration list', async () => {
+      const client = createMockClient();
+      const payload: readonly PaymentProviderConfiguration[] = [
+        { providerName: 'mollie', methods: [sampleConfigurationItem] },
+      ];
+      vi.mocked(client.get).mockResolvedValue({ data: payload });
+
+      const { result } = renderHook(() => usePaymentMethodConfigurations(), {
+        wrapper: createWrapper(client),
+      });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.get).toHaveBeenCalledWith('/api/v1/payments/configuration');
+      expect(result.current.data).toEqual(payload);
+    });
+  });
+
+  describe('useActivatePaymentMethod', () => {
+    it('posts to the activate endpoint and returns the refreshed config item', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleConfigurationItem });
+
+      const { result } = renderHook(() => useActivatePaymentMethod(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate({ providerName: 'mollie', methodType: 'bancontact' });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.post).toHaveBeenCalledWith(
+        '/api/v1/payments/configuration/mollie/bancontact/activate'
+      );
+      expect(result.current.data).toEqual(sampleConfigurationItem);
+    });
+
+    it('surfaces a 400 when the provider no longer offers the method', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockRejectedValue(new Error('Method no longer offered'));
+
+      const { result } = renderHook(() => useActivatePaymentMethod(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate({ providerName: 'mollie', methodType: 'bancontact' });
+
+      await waitFor(() => expect(result.current.isError).toBe(true));
+      expect(result.current.error?.message).toBe('Method no longer offered');
+    });
+  });
+
+  describe('useDeactivatePaymentMethod', () => {
+    it('posts to the deactivate endpoint and returns the refreshed config item', async () => {
+      const client = createMockClient();
+      const deactivated: PaymentMethodConfigurationItem = {
+        ...sampleConfigurationItem,
+        isActive: false,
+      };
+      vi.mocked(client.post).mockResolvedValue({ data: deactivated });
+
+      const { result } = renderHook(() => useDeactivatePaymentMethod(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate({ providerName: 'mollie', methodType: 'bancontact' });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.post).toHaveBeenCalledWith(
+        '/api/v1/payments/configuration/mollie/bancontact/deactivate'
+      );
+      expect(result.current.data?.isActive).toBe(false);
     });
   });
 
