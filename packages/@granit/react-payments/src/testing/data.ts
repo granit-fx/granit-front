@@ -179,11 +179,13 @@ export const sampleAvailableMethods: PaymentAvailableMethodResponse[] = [
     providerName: 'Stripe',
     displayLabel: 'iDEAL',
     category: 'BankTransfer',
+    capability: null,
   },
   {
     methodType: 'BankTransfer',
     providerName: 'Stripe',
     displayLabel: 'Bancontact',
     category: 'BankTransfer',
+    capability: null,
   },
 ];

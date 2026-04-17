@@ -1,11 +1,13 @@
 import type {
   PaymentAttachMethodRequest,
+  PaymentAvailabilityContext,
   PaymentAvailableMethodResponse,
   PaymentChargeRequest,
   PaymentCheckoutRequest,
   PaymentCheckoutSessionResponse,
   PaymentMethodConfigurationItem,
   PaymentMethodResponse,
+  PaymentProviderCatalogResponse,
   PaymentProviderConfiguration,
   PaymentRefundRequest,
   PaymentRefundResponse,
@@ -103,18 +105,41 @@ export async function listPaymentMethods(
 }
 
 /**
- * Get available payment methods for the current provider.
+ * Get available payment methods, optionally filtered by a runtime `context`
+ * (country / currency / amount / sequence type).
+ *
+ * Each axis is independently optional — only defined keys are sent as query
+ * parameters. Undefined axes are treated as wildcard by the backend. The SDK
+ * intentionally does not re-apply the backend's `sequenceType="oneoff"` default
+ * when `amount` is provided — the backend owns that policy.
  *
  * `GET {basePath}/methods/available`
  */
 export async function getAvailablePaymentMethods(
   client: AxiosInstance,
-  basePath: string
+  basePath: string,
+  context?: PaymentAvailabilityContext
 ): Promise<readonly PaymentAvailableMethodResponse[]> {
+  const params = buildAvailabilityParams(context);
   const response = await client.get<readonly PaymentAvailableMethodResponse[]>(
-    `${basePath}/methods/available`
+    `${basePath}/methods/available`,
+    params ? { params } : undefined
   );
   return response.data;
+}
+
+function buildAvailabilityParams(
+  context: PaymentAvailabilityContext | undefined
+): Record<string, string | number> | undefined {
+  if (!context) {
+    return undefined;
+  }
+  const params: Record<string, string | number> = {};
+  if (context.country !== undefined) params.country = context.country;
+  if (context.currency !== undefined) params.currency = context.currency;
+  if (context.amount !== undefined) params.amount = context.amount;
+  if (context.sequenceType !== undefined) params.sequenceType = context.sequenceType;
+  return Object.keys(params).length > 0 ? params : undefined;
 }
 
 /**
@@ -192,6 +217,44 @@ export async function deactivatePaymentMethod(
 ): Promise<PaymentMethodConfigurationItem> {
   const response = await client.post<PaymentMethodConfigurationItem>(
     `${basePath}/configuration/${encodeURIComponent(providerName)}/${encodeURIComponent(methodType)}/deactivate`
+  );
+  return response.data;
+}
+
+/**
+ * Fetch the live catalog of payment methods advertised by a provider, along
+ * with per-method activation state and snapshot presence. Drives the admin
+ * "Browse provider catalog" view.
+ *
+ * `GET {basePath}/configuration/catalog?providerName={providerName}`
+ */
+export async function getPaymentProviderCatalog(
+  client: AxiosInstance,
+  basePath: string,
+  providerName: string
+): Promise<PaymentProviderCatalogResponse> {
+  const response = await client.get<PaymentProviderCatalogResponse>(
+    `${basePath}/configuration/catalog`,
+    { params: { providerName } }
+  );
+  return response.data;
+}
+
+/**
+ * Re-fetch the provider catalog and overwrite the stored capability snapshot
+ * for an already-activated method. The backend returns 404 when the method is
+ * not activated and 400 when the provider no longer offers it.
+ *
+ * `POST {basePath}/configuration/{provider}/{method}/resync`
+ */
+export async function resyncPaymentMethodConfiguration(
+  client: AxiosInstance,
+  basePath: string,
+  providerName: string,
+  methodType: string
+): Promise<PaymentMethodConfigurationItem> {
+  const response = await client.post<PaymentMethodConfigurationItem>(
+    `${basePath}/configuration/${encodeURIComponent(providerName)}/${encodeURIComponent(methodType)}/resync`
   );
   return response.data;
 }

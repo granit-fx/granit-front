@@ -14,7 +14,9 @@ import {
   usePaymentMethods,
   usePaymentTransaction,
   usePaymentTransactions,
+  useProviderCatalog,
   useRequestPaymentRefund,
+  useResyncPaymentMethod,
 } from '../hooks/use-payments.js';
 import { PaymentsProvider } from '../providers/payments-provider.js';
 
@@ -22,7 +24,10 @@ import type { PaymentsConfig } from '../providers/payments-provider.js';
 import type {
   PaymentAvailableMethodResponse,
   PaymentCheckoutSessionResponse,
+  PaymentMethodCapabilityResponse,
+  PaymentMethodConfigurationItem,
   PaymentMethodResponse,
+  PaymentProviderCatalogResponse,
   PaymentRefundResponse,
   PaymentTransactionResponse,
 } from '@granit/payments';
@@ -80,11 +85,41 @@ const sampleMethod: PaymentMethodResponse = {
   tenantId: null,
 };
 
+const sampleCapability: PaymentMethodCapabilityResponse = {
+  supportedCountries: ['BE'],
+  supportedCurrencies: ['EUR'],
+  supportedSequenceTypes: ['oneoff'],
+  amountBounds: [{ currencyCode: 'EUR', minAmount: 1, maxAmount: 1000000 }],
+};
+
 const sampleAvailableMethod: PaymentAvailableMethodResponse = {
   methodType: 'card',
   category: 'Card',
   providerName: 'Stripe',
   displayLabel: 'Credit / Debit Card',
+  capability: sampleCapability,
+};
+
+const sampleConfigurationItem: PaymentMethodConfigurationItem = {
+  methodType: 'bancontact',
+  displayLabel: 'Bancontact',
+  category: 1,
+  isActive: true,
+  capabilitySnapshot: sampleCapability,
+};
+
+const sampleProviderCatalog: PaymentProviderCatalogResponse = {
+  providerName: 'mollie',
+  methods: [
+    {
+      methodType: 'bancontact',
+      category: 1,
+      displayLabel: 'Bancontact',
+      capability: sampleCapability,
+      isActive: true,
+      hasSnapshot: true,
+    },
+  ],
 };
 
 // ---------------------------------------------------------------------------
@@ -268,7 +303,7 @@ describe('use-payments', () => {
   });
 
   describe('useAvailablePaymentMethods', () => {
-    it('fetches available payment methods', async () => {
+    it('fetches without context — no query params', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: [sampleAvailableMethod] });
 
@@ -277,8 +312,98 @@ describe('use-payments', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/v1/payments/methods/available');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/payments/methods/available', undefined);
       expect(result.current.data).toEqual([sampleAvailableMethod]);
+    });
+
+    it('forwards context axes as params and keys distinct contexts separately', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue({ data: [sampleAvailableMethod] });
+
+      const { result: beResult } = renderHook(
+        () => useAvailablePaymentMethods({ country: 'BE', currency: 'EUR' }),
+        { wrapper: createWrapper(client) }
+      );
+      await waitFor(() => expect(beResult.current.isSuccess).toBe(true));
+
+      expect(client.get).toHaveBeenCalledWith('/api/v1/payments/methods/available', {
+        params: { country: 'BE', currency: 'EUR' },
+      });
+
+      // A distinct context should trigger a separate fetch (different query key).
+      vi.mocked(client.get).mockClear();
+      vi.mocked(client.get).mockResolvedValue({ data: [] });
+
+      const { result: nlResult } = renderHook(
+        () => useAvailablePaymentMethods({ country: 'NL', currency: 'EUR' }),
+        { wrapper: createWrapper(client) }
+      );
+      await waitFor(() => expect(nlResult.current.isSuccess).toBe(true));
+
+      expect(client.get).toHaveBeenCalledWith('/api/v1/payments/methods/available', {
+        params: { country: 'NL', currency: 'EUR' },
+      });
+    });
+  });
+
+  describe('useProviderCatalog', () => {
+    it('fetches catalog for the given provider', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue({ data: sampleProviderCatalog });
+
+      const { result } = renderHook(() => useProviderCatalog('mollie'), {
+        wrapper: createWrapper(client),
+      });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.get).toHaveBeenCalledWith('/api/v1/payments/configuration/catalog', {
+        params: { providerName: 'mollie' },
+      });
+      expect(result.current.data).toEqual(sampleProviderCatalog);
+    });
+
+    it('is disabled when providerName is empty', () => {
+      const client = createMockClient();
+
+      const { result } = renderHook(() => useProviderCatalog(''), {
+        wrapper: createWrapper(client),
+      });
+
+      expect(result.current.fetchStatus).toBe('idle');
+      expect(client.get).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('useResyncPaymentMethod', () => {
+    it('posts to the resync endpoint and returns the refreshed config item', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleConfigurationItem });
+
+      const { result } = renderHook(() => useResyncPaymentMethod(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate({ providerName: 'mollie', methodType: 'bancontact' });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.post).toHaveBeenCalledWith(
+        '/api/v1/payments/configuration/mollie/bancontact/resync'
+      );
+      expect(result.current.data).toEqual(sampleConfigurationItem);
+    });
+
+    it('surfaces backend 400 / 404 errors', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockRejectedValue(new Error('Method no longer offered'));
+
+      const { result } = renderHook(() => useResyncPaymentMethod(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate({ providerName: 'mollie', methodType: 'bancontact' });
+
+      await waitFor(() => expect(result.current.isError).toBe(true));
+      expect(result.current.error?.message).toBe('Method no longer offered');
     });
   });
 

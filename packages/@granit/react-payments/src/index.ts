@@ -19,13 +19,11 @@ export {
   usePaymentMethods,
   usePaymentTransaction,
   usePaymentTransactions,
+  useProviderCatalog,
   useRequestPaymentRefund,
+  useResyncPaymentMethod,
 } from './hooks/use-payments.js';
 
 // Icons
 export { PaymentMethodIcon, ProviderIcon, resolveMethodIconStyle } from './icons/index.js';
-export type {
-  MethodIconStyle,
-  PaymentMethodIconProps,
-  ProviderIconProps,
-} from './icons/index.js';
+export type { MethodIconStyle, PaymentMethodIconProps, ProviderIconProps } from './icons/index.js';

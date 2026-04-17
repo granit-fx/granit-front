@@ -86,10 +86,7 @@ const CATEGORY_STYLES: readonly MethodIconStyle[] = [
  * @param methodType - Stable identifier (e.g., <c>card</c>, <c>bancontact</c>).
  * @param category - Backend category index (0-7).
  */
-export function resolveMethodIconStyle(
-  methodType: string,
-  category: number,
-): MethodIconStyle {
+export function resolveMethodIconStyle(methodType: string, category: number): MethodIconStyle {
   const base = CATEGORY_STYLES[category] ?? CARD;
   const override = METHOD_COLORS[methodType];
   if (!override) {

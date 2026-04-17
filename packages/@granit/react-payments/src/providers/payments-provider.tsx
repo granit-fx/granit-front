@@ -22,10 +22,13 @@ const PaymentsConfigContext = createContext<PaymentsConfig | null>(null);
 
 /** Provides payments configuration to child components and hooks. */
 export function PaymentsProvider({ config, children }: Readonly<PaymentsProviderProps>) {
-  const value = useMemo(() => ({
-    ...config,
-    basePath: config.basePath ?? DEFAULT_BASE_PATH,
-  }), [config]);
+  const value = useMemo(
+    () => ({
+      ...config,
+      basePath: config.basePath ?? DEFAULT_BASE_PATH,
+    }),
+    [config]
+  );
   return <PaymentsConfigContext value={value}>{children}</PaymentsConfigContext>;
 }
 

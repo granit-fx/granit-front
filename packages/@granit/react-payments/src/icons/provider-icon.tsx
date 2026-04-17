@@ -1,7 +1,7 @@
 import { Building2, CircleDollarSign, Landmark, Wallet } from 'lucide-react';
 
-import type { CSSProperties, ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
+import type { CSSProperties, ReactNode } from 'react';
 
 export interface ProviderIconProps {
   /** Provider identifier (e.g., <c>stripe</c>, <c>mollie</c>, <c>sepa-transfer</c>). */
