@@ -48,7 +48,7 @@ const sampleMeter: MeterDefinitionResponse = {
   unit: 'calls',
   description: 'Number of API calls',
   aggregationType: 'Sum',
-  isActive: true,
+  activated: true,
 };
 
 const sampleUsage: UsageAggregateResponse = {

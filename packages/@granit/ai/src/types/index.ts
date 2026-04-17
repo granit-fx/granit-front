@@ -19,7 +19,7 @@ export interface AIWorkspaceResponse {
   readonly temperature: number | null;
   readonly maxOutputTokens: number | null;
   readonly kind: AIWorkspaceKind;
-  readonly isActive: boolean;
+  readonly activated: boolean;
   readonly capabilities: AIModelCapabilities | null;
 }
 
@@ -46,7 +46,7 @@ export interface AIWorkspaceUpdateRequest {
   readonly systemPrompt?: string | null;
   readonly temperature?: number | null;
   readonly maxOutputTokens?: number | null;
-  readonly isActive: boolean;
+  readonly activated: boolean;
 }
 
 // -- Chat completion ---------------------------------------------------------

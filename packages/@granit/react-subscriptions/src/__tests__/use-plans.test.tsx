@@ -41,7 +41,7 @@ const samplePrice: PlanPriceResponse = {
   currency: 'EUR',
   interval: 'Monthly',
   effectiveFrom: '2026-01-01T00:00:00Z',
-  isActive: true,
+  isCurrent: true,
   replacedByPriceId: null,
   replacedAt: null,
 };

@@ -58,7 +58,7 @@ describe('ai-workspaces-api', () => {
     it('should POST /ai/workspaces', async () => {
       const client = createMockClient();
       const request = { name: 'test', provider: 'OpenAI', model: 'gpt-4o' };
-      const response = { ...request, kind: 'Dynamic', isActive: true };
+      const response = { ...request, kind: 'Dynamic', activated: true };
       vi.mocked(client.post).mockResolvedValue({ data: response });
 
       const result = await createAIWorkspace(client, '', request);
@@ -71,7 +71,7 @@ describe('ai-workspaces-api', () => {
   describe('updateAIWorkspace', () => {
     it('should PUT /ai/workspaces/{name}', async () => {
       const client = createMockClient();
-      const request = { provider: 'OpenAI', model: 'gpt-4o-mini', isActive: true };
+      const request = { provider: 'OpenAI', model: 'gpt-4o-mini', activated: true };
       vi.mocked(client.put).mockResolvedValue({ data: { name: 'test', ...request } });
 
       await updateAIWorkspace(client, '', 'test', request);

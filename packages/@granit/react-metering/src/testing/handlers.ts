@@ -20,7 +20,7 @@ export function createMeteringHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
     // GET list active meters
     http.get(`${baseUrl}/meters`, () => {
-      return HttpResponse.json(meters.filter((m) => m.isActive));
+      return HttpResponse.json(meters.filter((m) => m.activated));
     }),
 
     // GET single meter by ID
@@ -39,7 +39,7 @@ export function createMeteringHandlers(baseUrl = DEFAULT_BASE_PATH) {
         description: body.description ?? '',
         aggregationType: body.aggregationType ?? 'Count',
         unit: body.unit ?? '',
-        isActive: true,
+        activated: true,
       };
       meters = [...meters, newMeter];
       return HttpResponse.json(newMeter, { status: 201 });
@@ -67,7 +67,7 @@ export function createMeteringHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const index = meters.findIndex((m) => m.id === id);
       if (index === -1) return notFound();
 
-      meters = meters.map((m) => (m.id === id ? { ...m, isActive: false } : m));
+      meters = meters.map((m) => (m.id === id ? { ...m, activated: false } : m));
       return noContent();
     }),
 

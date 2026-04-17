@@ -38,7 +38,7 @@ describe('@granit/reference-data types', () => {
     });
 
     it('should have active status, sort order, and validity period', () => {
-      expectTypeOf<ReferenceDataEntry['isActive']>().toBeBoolean();
+      expectTypeOf<ReferenceDataEntry['activated']>().toBeBoolean();
       expectTypeOf<ReferenceDataEntry['sortOrder']>().toBeNumber();
       expectTypeOf<ReferenceDataEntry['validFrom']>().toEqualTypeOf<ISODateString | null>();
       expectTypeOf<ReferenceDataEntry['validTo']>().toEqualTypeOf<ISODateString | null>();
@@ -101,8 +101,8 @@ describe('@granit/reference-data types', () => {
       >();
     });
 
-    it('should not have isActive (always true on creation)', () => {
-      expectTypeOf<ReferenceDataCreateRequest>().not.toHaveProperty('isActive');
+    it('should not have activated (always true on creation)', () => {
+      expectTypeOf<ReferenceDataCreateRequest>().not.toHaveProperty('activated');
     });
   });
 
@@ -115,8 +115,8 @@ describe('@granit/reference-data types', () => {
       expectTypeOf<ReferenceDataUpdateRequest>().not.toHaveProperty('code');
     });
 
-    it('should have optional isActive for reactivation', () => {
-      expectTypeOf<ReferenceDataUpdateRequest['isActive']>().toEqualTypeOf<boolean | undefined>();
+    it('should have optional activated for reactivation', () => {
+      expectTypeOf<ReferenceDataUpdateRequest['activated']>().toEqualTypeOf<boolean | undefined>();
     });
 
     it('should have optional parentCode and extraProperties', () => {

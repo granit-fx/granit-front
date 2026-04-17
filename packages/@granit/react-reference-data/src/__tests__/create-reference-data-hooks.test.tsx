@@ -30,7 +30,7 @@ const mockEntry: TestEntity = {
   labelSv: 'Belgien',
   labelCs: 'Belgie',
   label: 'Belgium',
-  isActive: true,
+  activated: true,
   sortOrder: 1,
   validFrom: null,
   validTo: null,

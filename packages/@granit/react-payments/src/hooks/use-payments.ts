@@ -322,7 +322,7 @@ export function useActivatePaymentMethod(): UseMutationResult<
       queryClient.invalidateQueries({
         queryKey: buildPaymentsQueryKey(config, 'methods', 'available'),
       });
-      // Activation flips isActive + hasSnapshot on the catalog row for this provider.
+      // Activation flips activated + hasSnapshot on the catalog row for this provider.
       queryClient.invalidateQueries({
         queryKey: buildPaymentsQueryKey(config, 'catalog', providerName),
       });

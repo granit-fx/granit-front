@@ -76,7 +76,7 @@ const mockFields: Record<
       isNavigation: false,
     },
     {
-      propertyPath: 'isActive',
+      propertyPath: 'activated',
       clrTypeName: 'Boolean',
       header: 'Active',
       format: null,
@@ -403,7 +403,7 @@ export function createDataExchangeHandlers(
     // Export: download file
     http.get(`${exportJobsBase}/:jobId/download`, () => {
       const csv =
-        'code,alpha3,labelEn,labelFr,region,isActive\nBE,BEL,Belgium,Belgique,Europe,true\n';
+        'code,alpha3,labelEn,labelFr,region,activated\nBE,BEL,Belgium,Belgique,Europe,true\n';
       return new HttpResponse(csv, {
         headers: {
           'Content-Type': 'text/csv',
@@ -473,7 +473,7 @@ export function createDataExchangeHandlers(
         mockImportJobs[jobId].status = 'Previewed';
       }
       return HttpResponse.json({
-        headers: ['code', 'alpha3', 'labelEn', 'labelFr', 'region', 'isActive'],
+        headers: ['code', 'alpha3', 'labelEn', 'labelFr', 'region', 'activated'],
         previewRows: [
           ['BE', 'BEL', 'Belgium', 'Belgique', 'Europe', 'true'],
           ['FR', 'FRA', 'France', 'France', 'Europe', 'true'],
@@ -484,7 +484,7 @@ export function createDataExchangeHandlers(
           { sourceColumn: 'labelEn', targetProperty: 'labelEn', confidence: 'Exact' },
           { sourceColumn: 'labelFr', targetProperty: 'labelFr', confidence: 'Exact' },
           { sourceColumn: 'region', targetProperty: 'region', confidence: 'Exact' },
-          { sourceColumn: 'isActive', targetProperty: 'isActive', confidence: 'Exact' },
+          { sourceColumn: 'activated', targetProperty: 'activated', confidence: 'Exact' },
         ],
         fieldMetadata: [
           {
@@ -523,7 +523,7 @@ export function createDataExchangeHandlers(
             isRequired: false,
           },
           {
-            propertyPath: 'isActive',
+            propertyPath: 'activated',
             clrTypeName: 'Boolean',
             displayName: 'Active',
             description: null,

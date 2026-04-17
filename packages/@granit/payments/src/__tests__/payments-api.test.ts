@@ -102,7 +102,7 @@ const sampleConfigurationItem: PaymentMethodConfigurationItem = {
   methodType: 'bancontact',
   displayLabel: 'Bancontact',
   category: 1,
-  isActive: true,
+  activated: true,
   capabilitySnapshot: sampleCapability,
 };
 
@@ -114,7 +114,7 @@ const sampleProviderCatalog: PaymentProviderCatalogResponse = {
       category: 1,
       displayLabel: 'Bancontact',
       capability: sampleCapability,
-      isActive: true,
+      activated: true,
       hasSnapshot: true,
     },
     {
@@ -127,7 +127,7 @@ const sampleProviderCatalog: PaymentProviderCatalogResponse = {
         supportedSequenceTypes: ['oneoff'],
         amountBounds: [],
       },
-      isActive: false,
+      activated: false,
       hasSnapshot: false,
     },
   ],
@@ -299,7 +299,7 @@ describe('payments-api', () => {
       });
       expect(result).toEqual(sampleProviderCatalog);
       expect(result.methods[0]?.hasSnapshot).toBe(true);
-      expect(result.methods[1]?.isActive).toBe(false);
+      expect(result.methods[1]?.activated).toBe(false);
     });
   });
 
@@ -348,7 +348,7 @@ describe('payments-api', () => {
       const client = createMockClient();
       const deactivated: PaymentMethodConfigurationItem = {
         ...sampleConfigurationItem,
-        isActive: false,
+        activated: false,
       };
       vi.mocked(client.post).mockResolvedValue(axiosResponse(deactivated));
 
@@ -357,7 +357,7 @@ describe('payments-api', () => {
       expect(client.post).toHaveBeenCalledWith(
         `${basePath}/configuration/mollie/bancontact/deactivate`
       );
-      expect(result.isActive).toBe(false);
+      expect(result.activated).toBe(false);
     });
   });
 

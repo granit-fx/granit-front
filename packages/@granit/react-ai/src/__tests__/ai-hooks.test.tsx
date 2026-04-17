@@ -136,7 +136,7 @@ describe('useUpdateAIWorkspace', () => {
       wrapper: createWrapper(client, '/api'),
     });
 
-    const request = { provider: 'OpenAI', model: 'gpt-4o-mini', isActive: true };
+    const request = { provider: 'OpenAI', model: 'gpt-4o-mini', activated: true };
     await act(async () => {
       result.current.update('ws', request);
     });

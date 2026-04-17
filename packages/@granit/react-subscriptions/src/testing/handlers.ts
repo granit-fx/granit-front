@@ -93,10 +93,10 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const existing = mockPriceHistory[planId];
       const newId = toEntityId<'PlanPrice'>(`price-${planId}-${existing.length + 1}`);
 
-      // Mark previous active price as replaced
+      // Mark previous current price as replaced
       for (const price of existing) {
-        if (price.isActive) {
-          price.isActive = false;
+        if (price.isCurrent) {
+          price.isCurrent = false;
           price.replacedByPriceId = newId;
           price.replacedAt = toISODateString(new Date().toISOString());
         }
@@ -108,7 +108,7 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
         currency: body.currency as CurrencyCode,
         interval: body.interval,
         effectiveFrom: toISODateString(body.effectiveFrom),
-        isActive: true,
+        isCurrent: true,
         replacedByPriceId: null,
         replacedAt: null,
       };

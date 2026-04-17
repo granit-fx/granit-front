@@ -244,7 +244,7 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
         temperature: body.temperature ?? null,
         maxOutputTokens: body.maxOutputTokens ?? null,
         kind: 'Dynamic',
-        isActive: true,
+        activated: true,
         capabilities: model?.capabilities ?? null,
       };
 
@@ -280,7 +280,7 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
         systemPrompt: body.systemPrompt ?? null,
         temperature: body.temperature ?? null,
         maxOutputTokens: body.maxOutputTokens ?? null,
-        isActive: body.isActive,
+        activated: body.activated,
       };
 
       workspaces = workspaces.map((w) => (w.name === name ? updated : w));

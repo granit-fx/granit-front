@@ -33,7 +33,7 @@ export interface MeterDefinitionResponse {
   readonly unit: string;
   readonly description: string | null;
   readonly aggregationType: AggregationType;
-  readonly isActive: boolean;
+  readonly activated: boolean;
 }
 
 export interface UsageAggregateResponse {

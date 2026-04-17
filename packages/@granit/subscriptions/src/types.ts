@@ -83,7 +83,7 @@ export interface PlanPriceResponse {
   readonly currency: string;
   readonly interval: string;
   readonly effectiveFrom: string;
-  readonly isActive: boolean;
+  readonly isCurrent: boolean;
   readonly replacedByPriceId: string | null;
   readonly replacedAt: string | null;
 }

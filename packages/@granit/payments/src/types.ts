@@ -151,7 +151,7 @@ export interface PaymentMethodConfigurationItem {
   readonly displayLabel: string;
   /** Backend enum value (0=Card, 1=BankRedirect, 2=BankTransfer, 3=BankDebit, 4=Wallet, 5=BuyNowPayLater, 6=Voucher, 7=PointOfSale). */
   readonly category: number;
-  readonly isActive: boolean;
+  readonly activated: boolean;
   /**
    * Capability snapshot captured at activation (or last resync).
    * `null` on legacy records predating snapshotting — UI should flag these as
@@ -177,7 +177,7 @@ export interface PaymentCatalogMethod {
   readonly category: number;
   readonly displayLabel: string;
   readonly capability: PaymentMethodCapabilityResponse;
-  readonly isActive: boolean;
+  readonly activated: boolean;
   /** `true` iff the activation record carries a persisted capability snapshot. */
   readonly hasSnapshot: boolean;
 }

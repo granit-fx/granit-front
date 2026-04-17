@@ -24,7 +24,7 @@ export interface UseUpdateAIWorkspaceReturn {
  * @example
  * ```tsx
  * const { update } = useUpdateAIWorkspace();
- * update('my-ws', { provider: 'OpenAI', model: 'gpt-4o-mini', isActive: true });
+ * update('my-ws', { provider: 'OpenAI', model: 'gpt-4o-mini', activated: true });
  * ```
  */
 export function useUpdateAIWorkspace(): UseUpdateAIWorkspaceReturn {

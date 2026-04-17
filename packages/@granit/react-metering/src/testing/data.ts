@@ -15,7 +15,7 @@ export const sampleMeters: Mutable<MeterDefinitionResponse>[] = [
     description: 'Track API call usage per tenant',
     aggregationType: 'Count',
     unit: 'calls',
-    isActive: true,
+    activated: true,
   },
   {
     id: toEntityId<'MeterDefinition'>('mtr_002'),
@@ -23,7 +23,7 @@ export const sampleMeters: Mutable<MeterDefinitionResponse>[] = [
     description: 'Track storage consumption in bytes',
     aggregationType: 'Sum',
     unit: 'bytes',
-    isActive: true,
+    activated: true,
   },
   {
     id: toEntityId<'MeterDefinition'>('mtr_003'),
@@ -31,7 +31,7 @@ export const sampleMeters: Mutable<MeterDefinitionResponse>[] = [
     description: 'Track compute time usage',
     aggregationType: 'Sum',
     unit: 'minutes',
-    isActive: true,
+    activated: true,
   },
 ];
 

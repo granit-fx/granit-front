@@ -108,7 +108,7 @@ const sampleConfigurationItem: PaymentMethodConfigurationItem = {
   methodType: 'bancontact',
   displayLabel: 'Bancontact',
   category: 1,
-  isActive: true,
+  activated: true,
   capabilitySnapshot: sampleCapability,
 };
 
@@ -120,7 +120,7 @@ const sampleProviderCatalog: PaymentProviderCatalogResponse = {
       category: 1,
       displayLabel: 'Bancontact',
       capability: sampleCapability,
-      isActive: true,
+      activated: true,
       hasSnapshot: true,
     },
   ],
@@ -434,7 +434,7 @@ describe('use-payments', () => {
       const client = createMockClient();
       const deactivated: PaymentMethodConfigurationItem = {
         ...sampleConfigurationItem,
-        isActive: false,
+        activated: false,
       };
       vi.mocked(client.post).mockResolvedValue({ data: deactivated });
 
@@ -448,7 +448,7 @@ describe('use-payments', () => {
       expect(client.post).toHaveBeenCalledWith(
         '/api/v1/payments/configuration/mollie/bancontact/deactivate'
       );
-      expect(result.current.data?.isActive).toBe(false);
+      expect(result.current.data?.activated).toBe(false);
     });
   });
 

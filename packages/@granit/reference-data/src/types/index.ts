@@ -34,7 +34,7 @@ export interface ReferenceDataEntry extends ReferenceDataLabels {
   readonly code: string;
   /** Resolved label for the current UI culture (server-computed, not persisted). */
   readonly label: string;
-  readonly isActive: boolean;
+  readonly activated: boolean;
   readonly sortOrder: number;
   readonly validFrom: ISODateString | null;
   readonly validTo: ISODateString | null;
@@ -48,7 +48,7 @@ export interface ReferenceDataEntry extends ReferenceDataLabels {
  * Request body for creating a new reference data entry.
  * Mirrors Granit.ReferenceData.Endpoints.Dtos.ReferenceDataCreateRequest (.NET).
  *
- * Only `code` and `labelEn` are required. `isActive` is always `true` on creation.
+ * Only `code` and `labelEn` are required. `activated` is always `true` on creation.
  */
 export interface ReferenceDataCreateRequest extends Partial<ReferenceDataLabels> {
   readonly code: string;
@@ -69,7 +69,7 @@ export interface ReferenceDataCreateRequest extends Partial<ReferenceDataLabels>
 export interface ReferenceDataUpdateRequest extends Partial<ReferenceDataLabels> {
   readonly labelEn: string;
   readonly sortOrder?: number;
-  readonly isActive?: boolean;
+  readonly activated?: boolean;
   readonly validFrom?: string | null;
   readonly validTo?: string | null;
   readonly parentCode?: string | null;

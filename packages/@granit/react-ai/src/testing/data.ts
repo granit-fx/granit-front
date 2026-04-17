@@ -126,7 +126,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     temperature: 0.7,
     maxOutputTokens: 4096,
     kind: 'System',
-    isActive: true,
+    activated: true,
     capabilities: gpt4oCaps,
   },
   {
@@ -137,7 +137,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     temperature: 0.3,
     maxOutputTokens: 2048,
     kind: 'Dynamic',
-    isActive: true,
+    activated: true,
     capabilities: basicChatCaps,
   },
   {
@@ -148,7 +148,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     temperature: 0.2,
     maxOutputTokens: 4096,
     kind: 'Dynamic',
-    isActive: true,
+    activated: true,
     capabilities: gpt4oCaps,
   },
   {
@@ -159,7 +159,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     temperature: 0.5,
     maxOutputTokens: 1024,
     kind: 'Dynamic',
-    isActive: false,
+    activated: false,
     capabilities: ollamaCaps,
   },
 ];

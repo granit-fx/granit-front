@@ -33,7 +33,7 @@ const mockEntry: ReferenceDataEntry = {
   labelSv: 'Belgien',
   labelCs: 'Belgie',
   label: 'Belgium',
-  isActive: true,
+  activated: true,
   sortOrder: 1,
   validFrom: null,
   validTo: null,
@@ -135,7 +135,7 @@ describe('updateReferenceDataEntry', () => {
     const client = createMockClient();
     vi.mocked(client.put).mockResolvedValue(axiosResponse(undefined));
 
-    const payload = { labelEn: 'Belgium (updated)', isActive: true };
+    const payload = { labelEn: 'Belgium (updated)', activated: true };
     await updateReferenceDataEntry(client, BASE_PATH, 'BE', payload);
 
     expect(client.put).toHaveBeenCalledWith(`${BASE_PATH}/BE`, payload);
