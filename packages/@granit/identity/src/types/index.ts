@@ -40,4 +40,6 @@ export interface IdentityProviderCapabilities {
   readonly supportsCredentialVerification: boolean;
   /** Whether the provider supports creating new user accounts. */
   readonly supportsUserCreation: boolean;
+  /** Whether tenant admins can create, update, and delete groups via the API. */
+  readonly supportsGroupManagement: boolean;
 }

@@ -101,6 +101,7 @@ const capabilities: IdentityProviderCapabilities = {
   maxCustomAttributes: 20,
   supportsCredentialVerification: true,
   supportsUserCreation: true,
+  supportsGroupManagement: false,
 };
 
 // ---------------------------------------------------------------------------

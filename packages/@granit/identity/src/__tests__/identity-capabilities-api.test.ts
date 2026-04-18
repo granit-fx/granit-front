@@ -14,6 +14,7 @@ const keycloakCapabilities: IdentityProviderCapabilities = {
   maxCustomAttributes: 2147483647,
   supportsCredentialVerification: true,
   supportsUserCreation: true,
+  supportsGroupManagement: true,
 };
 
 describe('identity-capabilities-api', () => {
@@ -46,6 +47,7 @@ describe('identity-capabilities-api', () => {
       maxCustomAttributes: 15,
       supportsCredentialVerification: true,
       supportsUserCreation: true,
+      supportsGroupManagement: false,
     };
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: entraCapabilities });

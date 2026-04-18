@@ -38,6 +38,7 @@ const mockCapabilities: IdentityProviderCapabilities = {
   maxCustomAttributes: 50,
   supportsCredentialVerification: true,
   supportsUserCreation: true,
+  supportsGroupManagement: false,
 };
 
 // ---------------------------------------------------------------------------
