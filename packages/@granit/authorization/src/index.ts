@@ -3,6 +3,7 @@ export type {
   PermissionGrantDto,
   PermissionGrantParams,
   PermissionGroupDto,
+  PermissionMultiTenancySide,
   PermissionsResponse,
   UsePermissionDefinitionsOptions,
   UsePermissionGrantOptions,

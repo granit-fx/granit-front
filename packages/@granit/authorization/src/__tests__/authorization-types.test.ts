@@ -52,6 +52,13 @@ describe('@granit/authorization types', () => {
       expectTypeOf<PermissionDefinitionDto['name']>().toBeString();
       expectTypeOf<PermissionDefinitionDto>().toHaveProperty('displayName');
     });
+
+    it('should carry a multi-tenancy side', () => {
+      expectTypeOf<PermissionDefinitionDto>().toHaveProperty('multiTenancySide');
+      expectTypeOf<PermissionDefinitionDto['multiTenancySide']>().toEqualTypeOf<
+        'Host' | 'Tenant' | 'Both'
+      >();
+    });
   });
 
   describe('PermissionGroupDto', () => {

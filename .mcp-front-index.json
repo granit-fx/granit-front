@@ -921,6 +921,16 @@
           "name": "openIddictAdminKeys",
           "kind": "const",
           "signature": "const openIddictAdminKeys"
+        },
+        {
+          "name": "impersonateUser",
+          "kind": "function",
+          "signature": "async function impersonateUser( client: AxiosInstance, basePath: string, id: string ): Promise<AdminImpersonationResult>"
+        },
+        {
+          "name": "listUsers",
+          "kind": "function",
+          "signature": "async function listUsers( client: AxiosInstance, basePath: string, params?: AdminUserListParams ): Promise<AdminUserPage>"
         }
       ]
     },
@@ -2361,8 +2371,19 @@
     },
     {
       "name": "@granit/react-openiddict-admin",
-      "description": "React hooks for OpenIddict admin management — useAdminUsers, useAdminRoles, useOidcApplications, useOidcScopes",
-      "exports": []
+      "description": "React hooks for the admin module — QueryEngine user listing, impersonation, and OpenIddict (applications, scopes, authorizations)",
+      "exports": [
+        {
+          "name": "useAdminUsers",
+          "kind": "function",
+          "signature": "function useAdminUsers( params?: AdminUserListParams ): UseQueryResult<AdminUserPage>"
+        },
+        {
+          "name": "useImpersonateUser",
+          "kind": "function",
+          "signature": "function useImpersonateUser(): UseMutationResult< AdminImpersonationResult, Error, string >"
+        }
+      ]
     },
     {
       "name": "@granit/react-payments",
@@ -2577,17 +2598,17 @@
         {
           "name": "useAdminAppSettings",
           "kind": "function",
-          "signature": "function useAdminAppSettings(options?:"
+          "signature": "function useAdminAppSettings( scope: AdminSettingsScope, options?:"
         },
         {
           "name": "useSaveAdminAppSettings",
           "kind": "function",
-          "signature": "function useSaveAdminAppSettings(): UseMutationResult< void, Error, SaveAppSettingsVariables >"
+          "signature": "function useSaveAdminAppSettings( scope: AdminSettingsScope ): UseMutationResult<BulkUpdateSettingsResponse, Error, SaveAppSettingsVariables>"
         },
         {
           "name": "SaveAppSettingsVariables",
           "kind": "type",
-          "signature": "type SaveAppSettingsVariables = ReadonlyArray<{ key: string; value: string }>"
+          "signature": "type SaveAppSettingsVariables = readonly BulkSettingEntry[]"
         }
       ]
     },
@@ -3093,6 +3114,11 @@
           "name": "SETTING_NAMES",
           "kind": "const",
           "signature": "const SETTING_NAMES"
+        },
+        {
+          "name": "AdminSettingsScope",
+          "kind": "type",
+          "signature": "type AdminSettingsScope = 'global' | 'tenant'"
         }
       ]
     },

@@ -12,14 +12,16 @@ const MOCK_GROUPS: PermissionGroupDto[] = [
     name: 'Invoices',
     displayName: 'Facturation',
     permissions: [
-      { name: 'Invoices.Create', displayName: 'Créer une facture' },
-      { name: 'Invoices.Delete', displayName: null },
+      { name: 'Invoices.Create', displayName: 'Créer une facture', multiTenancySide: 'Tenant' },
+      { name: 'Invoices.Delete', displayName: null, multiTenancySide: 'Tenant' },
     ],
   },
   {
     name: 'Users',
     displayName: null,
-    permissions: [{ name: 'Users.View', displayName: 'Voir les utilisateurs' }],
+    permissions: [
+      { name: 'Users.View', displayName: 'Voir les utilisateurs', multiTenancySide: 'Both' },
+    ],
   },
 ];
 
