@@ -35,20 +35,20 @@ describe('privacy-api', () => {
   // ── Data Export ──────────────────────────────────────────────────────────
 
   describe('requestExport', () => {
-    it('sends POST to /export', async () => {
+    it('sends POST to /exports', async () => {
       const client = createMockClient();
       const response = { requestId: 'req-1', requestedAt: '2026-03-21T10:00:00Z' };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
       const result = await requestExport(client, BASE);
 
-      expect(client.post).toHaveBeenCalledWith(`${BASE}/export`);
+      expect(client.post).toHaveBeenCalledWith(`${BASE}/exports`);
       expect(result).toEqual(response);
     });
   });
 
   describe('getExportStatus', () => {
-    it('sends GET to /export/{requestId}', async () => {
+    it('sends GET to /exports/{requestId}', async () => {
       const client = createMockClient();
       const response: PrivacyExportStatusResponse = {
         requestId: 'req-1',
@@ -62,20 +62,20 @@ describe('privacy-api', () => {
 
       const result = await getExportStatus(client, BASE, 'req-1');
 
-      expect(client.get).toHaveBeenCalledWith(`${BASE}/export/req-1`);
+      expect(client.get).toHaveBeenCalledWith(`${BASE}/exports/req-1`);
       expect(result).toEqual(response);
     });
   });
 
   describe('listExports', () => {
-    it('sends GET to /export', async () => {
+    it('sends GET to /exports', async () => {
       const client = createMockClient();
       const response: PrivacyExportStatusResponse[] = [];
       vi.mocked(client.get).mockResolvedValueOnce({ data: response });
 
       const result = await listExports(client, BASE);
 
-      expect(client.get).toHaveBeenCalledWith(`${BASE}/export`);
+      expect(client.get).toHaveBeenCalledWith(`${BASE}/exports`);
       expect(result).toEqual(response);
     });
   });
@@ -83,7 +83,7 @@ describe('privacy-api', () => {
   // ── Data Deletion ───────────────────────────────────────────────────────
 
   describe('requestDeletion', () => {
-    it('sends POST to /deletion with reason', async () => {
+    it('sends POST to /deletions with reason', async () => {
       const client = createMockClient();
       const response: PrivacyDeletionResponse = {
         requestId: 'del-1',
@@ -98,13 +98,13 @@ describe('privacy-api', () => {
         reason: 'User requested account deletion',
       });
 
-      expect(client.post).toHaveBeenCalledWith(`${BASE}/deletion`, {
+      expect(client.post).toHaveBeenCalledWith(`${BASE}/deletions`, {
         reason: 'User requested account deletion',
       });
       expect(result).toEqual(response);
     });
 
-    it('sends POST to /deletion with defer flag', async () => {
+    it('sends POST to /deletions with defer flag', async () => {
       const client = createMockClient();
       const response: PrivacyDeletionResponse = {
         requestId: 'del-2',
@@ -121,7 +121,7 @@ describe('privacy-api', () => {
         defer: true,
       });
 
-      expect(client.post).toHaveBeenCalledWith(`${BASE}/deletion`, {
+      expect(client.post).toHaveBeenCalledWith(`${BASE}/deletions`, {
         reason: 'Closing account',
         defer: true,
       });
@@ -130,7 +130,7 @@ describe('privacy-api', () => {
   });
 
   describe('listDeletions', () => {
-    it('sends GET to /deletion', async () => {
+    it('sends GET to /deletions', async () => {
       const client = createMockClient();
       const response: PrivacyDeletionResponse[] = [
         {
@@ -146,13 +146,13 @@ describe('privacy-api', () => {
 
       const result = await listDeletions(client, BASE);
 
-      expect(client.get).toHaveBeenCalledWith(`${BASE}/deletion`);
+      expect(client.get).toHaveBeenCalledWith(`${BASE}/deletions`);
       expect(result).toEqual(response);
     });
   });
 
   describe('getDeletionStatus', () => {
-    it('sends GET to /deletion/{requestId}', async () => {
+    it('sends GET to /deletions/{requestId}', async () => {
       const client = createMockClient();
       const response: PrivacyDeletionResponse = {
         requestId: 'del-1',
@@ -166,19 +166,19 @@ describe('privacy-api', () => {
 
       const result = await getDeletionStatus(client, BASE, 'del-1');
 
-      expect(client.get).toHaveBeenCalledWith(`${BASE}/deletion/del-1`);
+      expect(client.get).toHaveBeenCalledWith(`${BASE}/deletions/del-1`);
       expect(result).toEqual(response);
     });
   });
 
   describe('cancelDeletion', () => {
-    it('sends POST to /deletion/{requestId}/cancel', async () => {
+    it('sends POST to /deletions/{requestId}/cancel', async () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
 
       await cancelDeletion(client, BASE, 'del-1');
 
-      expect(client.post).toHaveBeenCalledWith(`${BASE}/deletion/del-1/cancel`);
+      expect(client.post).toHaveBeenCalledWith(`${BASE}/deletions/del-1/cancel`);
     });
   });
 

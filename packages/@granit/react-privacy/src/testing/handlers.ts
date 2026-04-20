@@ -48,8 +48,8 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
   const legalBase = `${baseUrl}/legal-documents`;
 
   return [
-    // POST /export — request a new data export
-    http.post(`${baseUrl}/export`, () => {
+    // POST /exports — request a new data export
+    http.post(`${baseUrl}/exports`, () => {
       exportCounter++;
       const requestId = `exp-${String(exportCounter).padStart(3, '0')}`;
       const requestedAt = new Date().toISOString();
@@ -65,20 +65,20 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return HttpResponse.json({ requestId, requestedAt }, { status: 202 });
     }),
 
-    // GET /export — list all exports
-    http.get(`${baseUrl}/export`, () => {
+    // GET /exports — list all exports
+    http.get(`${baseUrl}/exports`, () => {
       return HttpResponse.json(exports);
     }),
 
-    // GET /export/:requestId — get status of a specific export
-    http.get(`${baseUrl}/export/:requestId`, ({ params }) => {
+    // GET /exports/:requestId — get status of a specific export
+    http.get(`${baseUrl}/exports/:requestId`, ({ params }) => {
       const exportItem = exports.find((e) => e.requestId === params.requestId);
       if (!exportItem) return notFound();
       return HttpResponse.json(exportItem);
     }),
 
-    // POST /deletion — request account deletion
-    http.post(`${baseUrl}/deletion`, async ({ request }) => {
+    // POST /deletions — request account deletion
+    http.post(`${baseUrl}/deletions`, async ({ request }) => {
       const body = (await request.json()) as { reason: string; defer?: boolean };
       deletionCounter++;
       const requestId = `del-${String(deletionCounter).padStart(3, '0')}`;
@@ -97,20 +97,20 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return HttpResponse.json(response, { status: 202 });
     }),
 
-    // GET /deletion — list all deletion requests
-    http.get(`${baseUrl}/deletion`, () => {
+    // GET /deletions — list all deletion requests
+    http.get(`${baseUrl}/deletions`, () => {
       return HttpResponse.json(deletionRequests);
     }),
 
-    // GET /deletion/:requestId — get status of a specific deletion request
-    http.get(`${baseUrl}/deletion/:requestId`, ({ params }) => {
+    // GET /deletions/:requestId — get status of a specific deletion request
+    http.get(`${baseUrl}/deletions/:requestId`, ({ params }) => {
       const item = deletionRequests.find((r) => r.requestId === params.requestId);
       if (!item) return notFound();
       return HttpResponse.json(item);
     }),
 
-    // POST /deletion/:requestId/cancel — cancel a deferred deletion
-    http.post(`${baseUrl}/deletion/:requestId/cancel`, ({ params }) => {
+    // POST /deletions/:requestId/cancel — cancel a deferred deletion
+    http.post(`${baseUrl}/deletions/:requestId/cancel`, ({ params }) => {
       const item = deletionRequests.find((r) => r.requestId === params.requestId);
       if (!item) return notFound();
       if (item.status !== 'Deferred') {

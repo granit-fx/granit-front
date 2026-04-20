@@ -80,9 +80,9 @@ describe('PrivacyProvider', () => {
     const wrapper = ({ children }: { children: ReactNode }) =>
       React.createElement(QueryClientProvider, { client: queryClient }, children);
 
-    expect(() =>
-      renderHook(() => usePrivacyConfig(), { wrapper })
-    ).toThrow('usePrivacyConfig must be used within a PrivacyProvider');
+    expect(() => renderHook(() => usePrivacyConfig(), { wrapper })).toThrow(
+      'usePrivacyConfig must be used within a PrivacyProvider'
+    );
   });
 });
 
@@ -158,9 +158,7 @@ describe('useAgreementStatuses', () => {
 describe('useAgreementHistory', () => {
   it('should fetch agreement history', async () => {
     const client = createMockClient();
-    const history = [
-      { documentId: 'doc-1', action: 'accepted', performedAt: '2025-01-02' },
-    ];
+    const history = [{ documentId: 'doc-1', action: 'accepted', performedAt: '2025-01-02' }];
     vi.mocked(client.get).mockResolvedValue(axiosResponse(history));
 
     const { result } = renderHook(() => useAgreementHistory(), {
@@ -241,7 +239,7 @@ describe('useRequestDeletion', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/privacy/deletion', {
+    expect(client.post).toHaveBeenCalledWith('/api/privacy/deletions', {
       reason: 'I want my data deleted',
     });
     expect(result.current.data).toEqual(response);
@@ -268,7 +266,7 @@ describe('useRequestDeletion', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/privacy/deletion', {
+    expect(client.post).toHaveBeenCalledWith('/api/privacy/deletions', {
       reason: 'Closing account',
       defer: true,
     });
@@ -317,7 +315,7 @@ describe('useDeletionRequests', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/privacy/deletion');
+    expect(client.get).toHaveBeenCalledWith('/api/privacy/deletions');
     expect(result.current.data).toEqual(deletions);
   });
 });
@@ -344,7 +342,7 @@ describe('useDeletionStatus', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/privacy/deletion/del-1');
+    expect(client.get).toHaveBeenCalledWith('/api/privacy/deletions/del-1');
     expect(result.current.data).toEqual(status);
   });
 
@@ -379,7 +377,7 @@ describe('useCancelDeletion', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/privacy/deletion/del-1/cancel');
+    expect(client.post).toHaveBeenCalledWith('/api/privacy/deletions/del-1/cancel');
   });
 
   it('should expose error when cancellation fails (409 conflict)', async () => {
@@ -406,9 +404,7 @@ describe('useCancelDeletion', () => {
 describe('usePrivacyExports', () => {
   it('should fetch all export requests', async () => {
     const client = createMockClient();
-    const exports = [
-      { requestId: 'exp-1', status: 'completed', requestedAt: '2025-01-01' },
-    ];
+    const exports = [{ requestId: 'exp-1', status: 'completed', requestedAt: '2025-01-01' }];
     vi.mocked(client.get).mockResolvedValue(axiosResponse(exports));
 
     const { result } = renderHook(() => usePrivacyExports(), {
@@ -417,7 +413,7 @@ describe('usePrivacyExports', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/privacy/export');
+    expect(client.get).toHaveBeenCalledWith('/api/privacy/exports');
     expect(result.current.data).toEqual(exports);
   });
 });
@@ -438,7 +434,7 @@ describe('usePrivacyExportStatus', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/privacy/export/exp-1');
+    expect(client.get).toHaveBeenCalledWith('/api/privacy/exports/exp-1');
     expect(result.current.data).toEqual(status);
   });
 
@@ -474,7 +470,7 @@ describe('useRequestExport', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/privacy/export');
+    expect(client.post).toHaveBeenCalledWith('/api/privacy/exports');
     expect(result.current.data).toEqual(response);
   });
 
