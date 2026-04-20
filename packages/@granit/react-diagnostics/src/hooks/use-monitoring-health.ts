@@ -9,7 +9,7 @@ import type { AxiosInstance } from 'axios';
 export interface MonitoringHealthOptions {
   /** Axios instance used for all requests. */
   readonly client: AxiosInstance;
-  /** Base URL for the diagnostics API. Defaults to `/api/granit/diagnostics`. */
+  /** Base URL for the diagnostics API. Defaults to `/api/v1/diagnostics`. */
   readonly basePath?: string;
   /** Polling interval in milliseconds. Defaults to `30_000` (30 seconds). */
   readonly refetchInterval?: number;

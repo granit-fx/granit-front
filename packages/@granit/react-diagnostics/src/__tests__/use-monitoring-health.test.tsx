@@ -5,7 +5,11 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { buildDiagnosticsQueryKey, diagnosticsKeys, useMonitoringHealth } from '../hooks/use-monitoring-health.js';
+import {
+  buildDiagnosticsQueryKey,
+  diagnosticsKeys,
+  useMonitoringHealth,
+} from '../hooks/use-monitoring-health.js';
 
 import type { MonitoringHealthResponse } from '@granit/diagnostics';
 
@@ -68,7 +72,7 @@ describe('useMonitoringHealth', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/granit/diagnostics/health');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/diagnostics/health');
     expect(result.current.data).toEqual(mockResponse);
   });
 
