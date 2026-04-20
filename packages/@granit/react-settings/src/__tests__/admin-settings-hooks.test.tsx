@@ -7,7 +7,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useAdminAppSettings, useSaveAdminAppSettings } from '../hooks/use-admin-app-settings.js';
 import { SettingsProvider } from '../providers/settings-provider.js';
 
-import type { AdminAppSetting } from '@granit/settings';
+import type { AdminAppSetting, BulkUpdateSettingsResponse } from '@granit/settings';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -40,25 +40,28 @@ afterEach(() => {
 
 const mockSettings: AdminAppSetting[] = [
   {
-    key: 'Granit.Locale',
-    label: 'Locale',
-    description: 'Default locale',
-    value: 'fr',
-    type: 'string',
+    key: 'ui.theme',
+    label: 'Theme',
+    description: 'Default theme',
+    defaultValue: 'system',
+    value: 'light',
+    valueKind: 'String',
+    allowedValues: ['light', 'dark', 'system'],
+    isEncrypted: false,
   },
 ];
 
 describe('useAdminAppSettings', () => {
-  it('should fetch admin settings', async () => {
+  it('should fetch admin settings for the given scope', async () => {
     const client = createMockClient();
     vi.mocked(getAdminAppSettings).mockResolvedValue(mockSettings);
 
     const { wrapper } = createWrapper(client, '/api');
-    const { result } = renderHook(() => useAdminAppSettings(), { wrapper });
+    const { result } = renderHook(() => useAdminAppSettings('global'), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(getAdminAppSettings).toHaveBeenCalledWith(client, '/api');
+    expect(getAdminAppSettings).toHaveBeenCalledWith(client, '/api', 'global');
     expect(result.current.data).toEqual(mockSettings);
   });
 
@@ -66,7 +69,9 @@ describe('useAdminAppSettings', () => {
     const client = createMockClient();
 
     const { wrapper } = createWrapper(client);
-    const { result } = renderHook(() => useAdminAppSettings({ enabled: false }), { wrapper });
+    const { result } = renderHook(() => useAdminAppSettings('global', { enabled: false }), {
+      wrapper,
+    });
 
     expect(result.current.isFetching).toBe(false);
     expect(getAdminAppSettings).not.toHaveBeenCalled();
@@ -74,21 +79,52 @@ describe('useAdminAppSettings', () => {
 });
 
 describe('useSaveAdminAppSettings', () => {
-  it('should save settings and invalidate queries', async () => {
+  it('should save settings and invalidate the scope cache', async () => {
     const client = createMockClient();
-    vi.mocked(saveAdminAppSettings).mockResolvedValue(undefined);
+    const envelope: BulkUpdateSettingsResponse = {
+      results: [{ key: 'ui.theme', outcome: 'Updated', errorCode: null }],
+    };
+    vi.mocked(saveAdminAppSettings).mockResolvedValue(envelope);
 
     const { wrapper, queryClient } = createWrapper(client, '/api');
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
-    const { result } = renderHook(() => useSaveAdminAppSettings(), { wrapper });
+    const { result } = renderHook(() => useSaveAdminAppSettings('global'), { wrapper });
 
-    const payload = [{ key: 'Granit.Locale', value: 'en' }];
+    const payload = [{ key: 'ui.theme', value: 'dark' }];
 
+    let returned: BulkUpdateSettingsResponse | undefined;
     await act(async () => {
-      await result.current.mutateAsync(payload);
+      returned = await result.current.mutateAsync(payload);
     });
 
-    expect(saveAdminAppSettings).toHaveBeenCalledWith(client, '/api', payload);
+    expect(saveAdminAppSettings).toHaveBeenCalledWith(client, '/api', 'global', payload);
     expect(invalidateSpy).toHaveBeenCalled();
+    expect(returned).toEqual(envelope);
+  });
+
+  it('should surface non-Updated outcomes via the response envelope (no throw)', async () => {
+    const client = createMockClient();
+    const envelope: BulkUpdateSettingsResponse = {
+      results: [
+        { key: 'ui.theme', outcome: 'Updated', errorCode: null },
+        {
+          key: 'system.maintenance_mode',
+          outcome: 'ProviderNotAllowed',
+          errorCode: 'Granit:Settings:ProviderNotAllowed',
+        },
+      ],
+    };
+    vi.mocked(saveAdminAppSettings).mockResolvedValue(envelope);
+
+    const { wrapper } = createWrapper(client, '/api');
+    const { result } = renderHook(() => useSaveAdminAppSettings('tenant'), { wrapper });
+
+    await act(async () => {
+      const res = await result.current.mutateAsync([
+        { key: 'ui.theme', value: 'dark' },
+        { key: 'system.maintenance_mode', value: 'true' },
+      ]);
+      expect(res.results.filter((r) => r.outcome !== 'Updated')).toHaveLength(1);
+    });
   });
 });

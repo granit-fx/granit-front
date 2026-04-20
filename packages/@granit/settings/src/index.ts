@@ -1,7 +1,13 @@
 // Types
 export type {
   AdminAppSetting,
+  BulkSettingEntry,
+  BulkSettingOutcome,
+  BulkSettingResult,
+  BulkUpdateSettingsRequest,
+  BulkUpdateSettingsResponse,
   SettingScope,
+  SettingValueKind,
   SettingValueResponse,
   SettingsMap,
   UpdateSettingValueRequest,
@@ -19,3 +25,4 @@ export {
   saveAdminAppSettings,
   updateSetting,
 } from './api/settings-api.js';
+export type { AdminSettingsScope } from './api/settings-api.js';

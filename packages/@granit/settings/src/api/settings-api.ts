@@ -1,10 +1,15 @@
 import type {
   AdminAppSetting,
+  BulkSettingEntry,
+  BulkUpdateSettingsResponse,
   SettingValueResponse,
   SettingsMap,
   UpdateSettingValueRequest,
 } from '../types/index.js';
 import type { AxiosInstance } from 'axios';
+
+/** Scopes that expose admin bulk endpoints. `user` is per-user and has no bulk form. */
+export type AdminSettingsScope = 'global' | 'tenant';
 
 /**
  * Get all visible settings for a scope.
@@ -69,27 +74,38 @@ export async function deleteSetting(
 // ── Admin endpoints ─────────────────────────────────────────────────────────
 
 /**
- * Get all application settings with admin metadata.
+ * Get all application settings with admin metadata for a given scope.
  *
- * `GET {basePath}/admin/config/settings`
+ * `GET {basePath}/settings/{scope}/definitions`
  */
 export async function getAdminAppSettings(
   client: AxiosInstance,
-  basePath: string
+  basePath: string,
+  scope: AdminSettingsScope
 ): Promise<AdminAppSetting[]> {
-  const response = await client.get<AdminAppSetting[]>(`${basePath}/admin/config/settings`);
+  const response = await client.get<AdminAppSetting[]>(`${basePath}/settings/${scope}/definitions`);
   return response.data;
 }
 
 /**
- * Batch-update application settings.
+ * Batch-update application settings for a given scope.
  *
- * `PUT {basePath}/admin/config/settings`
+ * `PUT {basePath}/settings/{scope}/bulk`
+ *
+ * The response always has HTTP 200 when the request body parses. Callers must
+ * inspect `results` and filter `outcome !== "Updated"` to surface failures.
+ * A 422 is returned only for structural validation failures on the request
+ * envelope (empty list, too many entries).
  */
 export async function saveAdminAppSettings(
   client: AxiosInstance,
   basePath: string,
-  settings: ReadonlyArray<{ key: string; value: string }>
-): Promise<void> {
-  await client.put(`${basePath}/admin/config/settings`, settings);
+  scope: AdminSettingsScope,
+  settings: readonly BulkSettingEntry[]
+): Promise<BulkUpdateSettingsResponse> {
+  const response = await client.put<BulkUpdateSettingsResponse>(
+    `${basePath}/settings/${scope}/bulk`,
+    { settings }
+  );
+  return response.data;
 }
