@@ -221,9 +221,13 @@ describe('useTemplateMutations', () => {
     result.current.publish.mutate({ name: 'Billing.Invoice' });
 
     await waitFor(() => expect(result.current.publish.isSuccess).toBe(true));
-    expect(client.post).toHaveBeenCalledWith('/api/v1/templating/templates/Billing.Invoice/publish', null, {
-      params: { culture: undefined },
-    });
+    expect(client.post).toHaveBeenCalledWith(
+      '/api/v1/templating/templates/Billing.Invoice/publish',
+      null,
+      {
+        params: { culture: undefined },
+      }
+    );
   });
 
   it('should unpublish template', async () => {
@@ -237,9 +241,13 @@ describe('useTemplateMutations', () => {
     result.current.unpublish.mutate({ name: 'Billing.Invoice', culture: 'fr-BE' });
 
     await waitFor(() => expect(result.current.unpublish.isSuccess).toBe(true));
-    expect(client.post).toHaveBeenCalledWith('/api/v1/templating/templates/Billing.Invoice/unpublish', null, {
-      params: { culture: 'fr-BE' },
-    });
+    expect(client.post).toHaveBeenCalledWith(
+      '/api/v1/templating/templates/Billing.Invoice/unpublish',
+      null,
+      {
+        params: { culture: 'fr-BE' },
+      }
+    );
   });
 
   it('should delete draft', async () => {
@@ -253,9 +261,12 @@ describe('useTemplateMutations', () => {
     result.current.deleteDraft.mutate({ name: 'Billing.Invoice' });
 
     await waitFor(() => expect(result.current.deleteDraft.isSuccess).toBe(true));
-    expect(client.delete).toHaveBeenCalledWith('/api/v1/templating/templates/Billing.Invoice/draft', {
-      params: { culture: undefined },
-    });
+    expect(client.delete).toHaveBeenCalledWith(
+      '/api/v1/templating/templates/Billing.Invoice/draft',
+      {
+        params: { culture: undefined },
+      }
+    );
   });
 
   it('should update draft', async () => {
@@ -499,7 +510,9 @@ describe('useTemplateRevision', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual(revision);
-    expect(client.get).toHaveBeenCalledWith('/api/v1/templating/templates/Billing.Invoice/history/rev-1');
+    expect(client.get).toHaveBeenCalledWith(
+      '/api/v1/templating/templates/Billing.Invoice/history/rev-1'
+    );
   });
 
   it('should not fetch when name is empty', () => {
@@ -774,7 +787,7 @@ describe('useTemplateCategoryMutations', () => {
     result.current.create.mutate({ name: 'Legal', sortOrder: 2 });
 
     await waitFor(() => expect(result.current.create.isSuccess).toBe(true));
-    expect(client.post).toHaveBeenCalledWith('/api/v1/templating/templates/categories', {
+    expect(client.post).toHaveBeenCalledWith('/api/v1/templating/categories', {
       name: 'Legal',
       sortOrder: 2,
     });
@@ -801,7 +814,7 @@ describe('useTemplateCategoryMutations', () => {
     });
 
     await waitFor(() => expect(result.current.update.isSuccess).toBe(true));
-    expect(client.put).toHaveBeenCalledWith('/api/v1/templating/templates/categories/cat-1', {
+    expect(client.put).toHaveBeenCalledWith('/api/v1/templating/categories/cat-1', {
       name: 'Billing Updated',
       sortOrder: 1,
     });
@@ -819,7 +832,7 @@ describe('useTemplateCategoryMutations', () => {
     result.current.delete.mutate('cat-1');
 
     await waitFor(() => expect(result.current.delete.isSuccess).toBe(true));
-    expect(client.delete).toHaveBeenCalledWith('/api/v1/templating/templates/categories/cat-1');
+    expect(client.delete).toHaveBeenCalledWith('/api/v1/templating/categories/cat-1');
   });
 
   it('should expose error state when create fails', async () => {

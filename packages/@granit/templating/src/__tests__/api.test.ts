@@ -340,7 +340,7 @@ describe('templates-api', () => {
 
       const result = await getCategories(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/api/v1/templating/templates/categories');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/templating/categories');
       expect(result).toEqual(categories);
     });
 
@@ -357,7 +357,7 @@ describe('templates-api', () => {
 
       const result = await createCategory(client, basePath, request);
 
-      expect(client.post).toHaveBeenCalledWith('/api/v1/templating/templates/categories', request);
+      expect(client.post).toHaveBeenCalledWith('/api/v1/templating/categories', request);
       expect(result).toEqual(category);
     });
 
@@ -374,10 +374,7 @@ describe('templates-api', () => {
 
       const result = await updateCategory(client, basePath, 'cat-1', request);
 
-      expect(client.put).toHaveBeenCalledWith(
-        '/api/v1/templating/templates/categories/cat-1',
-        request
-      );
+      expect(client.put).toHaveBeenCalledWith('/api/v1/templating/categories/cat-1', request);
       expect(result).toEqual(category);
     });
 
@@ -387,7 +384,7 @@ describe('templates-api', () => {
 
       await deleteCategory(client, basePath, 'cat-1');
 
-      expect(client.delete).toHaveBeenCalledWith('/api/v1/templating/templates/categories/cat-1');
+      expect(client.delete).toHaveBeenCalledWith('/api/v1/templating/categories/cat-1');
     });
   });
 });

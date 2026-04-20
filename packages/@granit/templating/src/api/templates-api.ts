@@ -197,7 +197,7 @@ export async function getCategories(
   client: AxiosInstance,
   basePath: string
 ): Promise<TemplateCategory[]> {
-  const { data } = await client.get<TemplateCategory[]>(`${basePath}/templates/categories`);
+  const { data } = await client.get<TemplateCategory[]>(`${basePath}/categories`);
   return data;
 }
 
@@ -206,7 +206,7 @@ export async function createCategory(
   basePath: string,
   request: SaveTemplateCategoryRequest
 ): Promise<TemplateCategory> {
-  const { data } = await client.post<TemplateCategory>(`${basePath}/templates/categories`, request);
+  const { data } = await client.post<TemplateCategory>(`${basePath}/categories`, request);
   return data;
 }
 
@@ -217,7 +217,7 @@ export async function updateCategory(
   request: SaveTemplateCategoryRequest
 ): Promise<TemplateCategory> {
   const { data } = await client.put<TemplateCategory>(
-    `${basePath}/templates/categories/${encodeURIComponent(id)}`,
+    `${basePath}/categories/${encodeURIComponent(id)}`,
     request
   );
   return data;
@@ -228,5 +228,5 @@ export async function deleteCategory(
   basePath: string,
   id: string
 ): Promise<void> {
-  await client.delete(`${basePath}/templates/categories/${encodeURIComponent(id)}`);
+  await client.delete(`${basePath}/categories/${encodeURIComponent(id)}`);
 }
