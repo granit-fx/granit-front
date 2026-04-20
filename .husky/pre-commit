@@ -1,1 +1,7 @@
 gitleaks git --pre-commit --staged --no-banner && pnpm exec lint-staged && pnpm -r exec -- tsc --noEmit
+
+# Regenerate .mcp-front-index.json if any TypeScript source changed
+if git diff --cached --name-only | grep -q 'packages/@granit/.*/src/'; then
+  python3 scripts/generate-front-index.py
+  git add .mcp-front-index.json
+fi

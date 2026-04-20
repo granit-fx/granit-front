@@ -2,7 +2,7 @@
 . "$(dirname "$0")/_/husky.sh"
 
 # =============================================================================
-# 1. PR state check — block push to branches with a merged or closed PR/MR.
+# PR state check — block push to branches with a merged or closed PR/MR.
 # =============================================================================
 #
 # Protects against orphan commits on already-merged feature branches. Skipped
@@ -73,40 +73,4 @@ $CLOSED_PART"
             fi
             ;;
     esac
-fi
-
-# =============================================================================
-# 2. Heavy regenerator — MCP front-end code index.
-# =============================================================================
-#
-# Run here (not in pre-commit) so local commits stay snappy. If regeneration
-# produces a diff, fold it into HEAD via `git commit --amend` so the push
-# carries the updated artifact in the same ref advance.
-
-set -eu
-
-# Determine the range of commits being pushed. When there is no upstream yet
-# (first push of a branch), fall back to the merge base with origin/develop.
-UPSTREAM="@{upstream}"
-if ! git rev-parse --verify --quiet "$UPSTREAM" >/dev/null 2>&1; then
-    UPSTREAM=$(git merge-base HEAD origin/develop 2>/dev/null || echo "")
-fi
-
-if [ -z "$UPSTREAM" ]; then
-    CHANGED_FILES=$(git diff --name-only HEAD)
-else
-    CHANGED_FILES=$(git diff --name-only "$UPSTREAM"...HEAD)
-fi
-
-if echo "$CHANGED_FILES" | grep -qE 'packages/@granit/.*/src/'; then
-    echo "▶ Regenerating .mcp-front-index.json..."
-    python3 scripts/generate-front-index.py >/dev/null
-fi
-
-# If the regenerator produced a diff, fold the result into HEAD so the push
-# carries the updated artifact together with the commits that require it.
-if ! git diff --quiet -- .mcp-front-index.json 2>/dev/null; then
-    git add .mcp-front-index.json
-    git commit --amend --no-edit --no-verify >/dev/null
-    echo "✓ Amended HEAD with regenerated artifact."
 fi

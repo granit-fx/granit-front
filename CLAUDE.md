@@ -82,5 +82,5 @@ symbols without a deprecation notice.
 
 ## Code index (`.mcp-front-index.json`)
 
-Pre-push hook regenerates on `@granit/*` source changes.
+Pre-commit hook regenerates on `@granit/*` source changes.
 Script: `python3 scripts/generate-front-index.py`. **NEVER edit manually.**
