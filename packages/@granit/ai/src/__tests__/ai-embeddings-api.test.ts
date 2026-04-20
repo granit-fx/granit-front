@@ -5,7 +5,7 @@ import { generateEmbeddings } from '../api/ai-embeddings-api.js';
 
 describe('ai-embeddings-api', () => {
   describe('generateEmbeddings', () => {
-    it('should POST /ai/embeddings/{workspaceName}', async () => {
+    it('should POST {basePath}/embeddings/{workspaceName}', async () => {
       const client = createMockClient();
       const request = { inputs: ['Hello world'] };
       const response = {
@@ -18,7 +18,7 @@ describe('ai-embeddings-api', () => {
 
       const result = await generateEmbeddings(client, '', 'default', request);
 
-      expect(client.post).toHaveBeenCalledWith('/ai/embeddings/default', request);
+      expect(client.post).toHaveBeenCalledWith('/embeddings/default', request);
       expect(result).toEqual(response);
       expect(result.usage).toEqual({ inputTokens: 3 });
     });
@@ -42,7 +42,7 @@ describe('ai-embeddings-api', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue({ data: {} });
 
-      await generateEmbeddings(client, '/api/v1', 'default', { inputs: ['test'] });
+      await generateEmbeddings(client, '/api/v1/ai', 'default', { inputs: ['test'] });
 
       expect(client.post).toHaveBeenCalledWith('/api/v1/ai/embeddings/default', {
         inputs: ['test'],
@@ -55,7 +55,7 @@ describe('ai-embeddings-api', () => {
 
       await generateEmbeddings(client, '', 'my workspace', { inputs: ['test'] });
 
-      expect(client.post).toHaveBeenCalledWith('/ai/embeddings/my%20workspace', expect.anything());
+      expect(client.post).toHaveBeenCalledWith('/embeddings/my%20workspace', expect.anything());
     });
   });
 });

@@ -4,6 +4,8 @@
 
 import { createContext, useContext, useMemo } from 'react';
 
+import { DEFAULT_BASE_PATH } from '../constants.js';
+
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -11,7 +13,7 @@ import type { ReactNode } from 'react';
 export interface AIConfig {
   /** Axios client with auth and tenant interceptors. */
   readonly client: AxiosInstance;
-  /** Route prefix before `/ai/...` (default: empty string). */
+  /** Base path for AI endpoints (default: `/api/v1/ai`). */
   readonly basePath?: string;
   /** Custom React Query key prefix (default: `['ai']`). */
   readonly queryKeyPrefix?: readonly string[];
@@ -26,7 +28,13 @@ const AIConfigContext = createContext<AIConfig | null>(null);
 
 /** Provides AI configuration to child components and hooks. */
 export function AIProvider({ config, children }: Readonly<AIProviderProps>) {
-  const value = useMemo(() => config, [config]);
+  const value = useMemo(
+    () => ({
+      ...config,
+      basePath: config.basePath ?? DEFAULT_BASE_PATH,
+    }),
+    [config]
+  );
   return <AIConfigContext value={value}>{children}</AIConfigContext>;
 }
 

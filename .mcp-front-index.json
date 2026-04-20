@@ -931,6 +931,21 @@
           "name": "listUsers",
           "kind": "function",
           "signature": "async function listUsers( client: AxiosInstance, basePath: string, params?: AdminUserListParams ): Promise<AdminUserPage>"
+        },
+        {
+          "name": "createScope",
+          "kind": "function",
+          "signature": "async function createScope( client: AxiosInstance, basePath: string, request: AdminOidcScopeCreateRequest ): Promise<AdminOidcScope>"
+        },
+        {
+          "name": "deleteScope",
+          "kind": "function",
+          "signature": "async function deleteScope( client: AxiosInstance, basePath: string, scopeName: string ): Promise<void>"
+        },
+        {
+          "name": "listScopes",
+          "kind": "function",
+          "signature": "async function listScopes( client: AxiosInstance, basePath: string ): Promise<readonly AdminOidcScope[]>"
         }
       ]
     },
@@ -2376,12 +2391,27 @@
         {
           "name": "useAdminUsers",
           "kind": "function",
-          "signature": "function useAdminUsers( params?: AdminUserListParams ): UseQueryResult<AdminUserPage>"
+          "signature": "function useAdminUsers(params?: AdminUserListParams): UseQueryResult<AdminUserPage>"
         },
         {
           "name": "useImpersonateUser",
           "kind": "function",
-          "signature": "function useImpersonateUser(): UseMutationResult< AdminImpersonationResult, Error, string >"
+          "signature": "function useImpersonateUser(): UseMutationResult<AdminImpersonationResult, Error, string>"
+        },
+        {
+          "name": "useCreateOidcScope",
+          "kind": "function",
+          "signature": "function useCreateOidcScope(): UseMutationResult< AdminOidcScope, Error, AdminOidcScopeCreateRequest >"
+        },
+        {
+          "name": "useDeleteOidcScope",
+          "kind": "function",
+          "signature": "function useDeleteOidcScope(): UseMutationResult<void, Error, string>"
+        },
+        {
+          "name": "useOidcScopes",
+          "kind": "function",
+          "signature": "function useOidcScopes(): UseQueryResult<readonly AdminOidcScope[]>"
         }
       ]
     },

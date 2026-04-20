@@ -29,7 +29,7 @@ function createWrapper(client: AxiosInstance) {
     const queryClient = createTestQueryClient();
     const config: AIConfig = {
       client,
-      basePath: '/api',
+      basePath: '/api/v1/ai',
     };
     return React.createElement(
       QueryClientProvider,
@@ -130,7 +130,7 @@ describe('useAIChatStream', () => {
     await waitFor(() => expect(result.current.isStreaming).toBe(false));
 
     expect(postSpy).toHaveBeenCalledWith(
-      '/api/ai/chat/default/stream',
+      '/api/v1/ai/chat/default/stream',
       { messages: [{ role: 'user', content: 'Hi' }] },
       expect.objectContaining({
         adapter: 'fetch',

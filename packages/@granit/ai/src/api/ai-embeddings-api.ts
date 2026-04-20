@@ -9,7 +9,7 @@ import type { AxiosInstance } from 'axios';
 /**
  * Generate embeddings for a batch of text inputs.
  *
- * `POST /ai/embeddings/{workspaceName}`
+ * `POST {basePath}/embeddings/{workspaceName}`
  */
 export async function generateEmbeddings(
   client: AxiosInstance,
@@ -18,7 +18,7 @@ export async function generateEmbeddings(
   request: AIEmbeddingRequest
 ): Promise<AIEmbeddingResponse> {
   const response = await client.post<AIEmbeddingResponse>(
-    `${basePath}/ai/embeddings/${encodeURIComponent(workspaceName)}`,
+    `${basePath}/embeddings/${encodeURIComponent(workspaceName)}`,
     request
   );
   return response.data;

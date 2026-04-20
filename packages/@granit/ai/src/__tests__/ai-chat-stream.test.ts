@@ -96,12 +96,12 @@ describe('chatStream', () => {
 
     const request = { messages: [{ role: 'user' as const, content: 'Hi' }] };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for await (const _ of chatStream(client, '/api', 'default', request)) {
+    for await (const _ of chatStream(client, '/api/v1/ai', 'default', request)) {
       // consume stream
     }
 
     expect(postSpy).toHaveBeenCalledWith(
-      '/api/ai/chat/default/stream',
+      '/api/v1/ai/chat/default/stream',
       request,
       expect.objectContaining({
         adapter: 'fetch',

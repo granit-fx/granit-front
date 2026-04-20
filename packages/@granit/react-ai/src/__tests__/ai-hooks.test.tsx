@@ -46,12 +46,12 @@ describe('useAIWorkspaces', () => {
     vi.mocked(client.get).mockResolvedValue(axiosResponse(data));
 
     const { result } = renderHook(() => useAIWorkspaces(), {
-      wrapper: createWrapper(client, '/api'),
+      wrapper: createWrapper(client, '/api/v1/ai'),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/ai/workspaces');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/ai/workspaces');
     expect(result.current.data).toEqual(data);
   });
 
@@ -74,12 +74,12 @@ describe('useAIWorkspace', () => {
     vi.mocked(client.get).mockResolvedValue(axiosResponse(workspace));
 
     const { result } = renderHook(() => useAIWorkspace('default'), {
-      wrapper: createWrapper(client, '/api'),
+      wrapper: createWrapper(client, '/api/v1/ai'),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/ai/workspaces/default');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/ai/workspaces/default');
     expect(result.current.data).toEqual(workspace);
   });
 });
@@ -93,7 +93,7 @@ describe('useCreateAIWorkspace', () => {
     vi.mocked(client.post).mockResolvedValue(axiosResponse(response));
 
     const { result } = renderHook(() => useCreateAIWorkspace(), {
-      wrapper: createWrapper(client, '/api'),
+      wrapper: createWrapper(client, '/api/v1/ai'),
     });
 
     await act(async () => {
@@ -102,7 +102,7 @@ describe('useCreateAIWorkspace', () => {
 
     await waitFor(() => expect(result.current.isPending).toBe(false));
 
-    expect(client.post).toHaveBeenCalledWith('/api/ai/workspaces', {
+    expect(client.post).toHaveBeenCalledWith('/api/v1/ai/workspaces', {
       name: 'test',
       provider: 'OpenAI',
       model: 'gpt-4o',
@@ -133,7 +133,7 @@ describe('useUpdateAIWorkspace', () => {
     vi.mocked(client.put).mockResolvedValue(axiosResponse({ name: 'ws' }));
 
     const { result } = renderHook(() => useUpdateAIWorkspace(), {
-      wrapper: createWrapper(client, '/api'),
+      wrapper: createWrapper(client, '/api/v1/ai'),
     });
 
     const request = { provider: 'OpenAI', model: 'gpt-4o-mini', activated: true };
@@ -143,12 +143,12 @@ describe('useUpdateAIWorkspace', () => {
 
     await waitFor(() => expect(result.current.isPending).toBe(false));
 
-    expect(client.put).toHaveBeenCalledWith('/api/ai/workspaces/ws', request);
+    expect(client.put).toHaveBeenCalledWith('/api/v1/ai/workspaces/ws', request);
   });
 });
 
 describe('useDeleteAIWorkspace', () => {
-  it('should DELETE a workspace', async () => {
+  it('should DELETE a workspace using the default basePath', async () => {
     const client = createMockClient();
     vi.mocked(client.delete).mockResolvedValue(axiosResponse(undefined));
 
@@ -162,7 +162,7 @@ describe('useDeleteAIWorkspace', () => {
 
     await waitFor(() => expect(result.current.isPending).toBe(false));
 
-    expect(client.delete).toHaveBeenCalledWith('/ai/workspaces/test');
+    expect(client.delete).toHaveBeenCalledWith('/api/v1/ai/workspaces/test');
   });
 });
 
@@ -181,7 +181,7 @@ describe('useAIChat', () => {
     vi.mocked(client.post).mockResolvedValue(axiosResponse(response));
 
     const { result } = renderHook(() => useAIChat(), {
-      wrapper: createWrapper(client, '/api'),
+      wrapper: createWrapper(client, '/api/v1/ai'),
     });
 
     await act(async () => {
@@ -190,7 +190,7 @@ describe('useAIChat', () => {
 
     await waitFor(() => expect(result.current.isPending).toBe(false));
 
-    expect(client.post).toHaveBeenCalledWith('/api/ai/chat/default', {
+    expect(client.post).toHaveBeenCalledWith('/api/v1/ai/chat/default', {
       messages: [{ role: 'user', content: 'Hello' }],
     });
     expect(result.current.data).toEqual(response);
@@ -210,7 +210,7 @@ describe('useAIEmbeddings', () => {
     vi.mocked(client.post).mockResolvedValue(axiosResponse(response));
 
     const { result } = renderHook(() => useAIEmbeddings(), {
-      wrapper: createWrapper(client, '/api'),
+      wrapper: createWrapper(client, '/api/v1/ai'),
     });
 
     await act(async () => {
@@ -219,7 +219,7 @@ describe('useAIEmbeddings', () => {
 
     await waitFor(() => expect(result.current.isPending).toBe(false));
 
-    expect(client.post).toHaveBeenCalledWith('/api/ai/embeddings/default', {
+    expect(client.post).toHaveBeenCalledWith('/api/v1/ai/embeddings/default', {
       inputs: ['Hello'],
     });
     expect(result.current.data).toEqual(response);

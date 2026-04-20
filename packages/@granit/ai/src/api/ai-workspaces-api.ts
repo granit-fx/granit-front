@@ -14,20 +14,20 @@ import type { AxiosInstance } from 'axios';
 /**
  * List all AI workspaces.
  *
- * `GET /ai/workspaces`
+ * `GET {basePath}/workspaces`
  */
 export async function listAIWorkspaces(
   client: AxiosInstance,
   basePath: string
 ): Promise<AIWorkspaceListResponse> {
-  const response = await client.get<AIWorkspaceListResponse>(`${basePath}/ai/workspaces`);
+  const response = await client.get<AIWorkspaceListResponse>(`${basePath}/workspaces`);
   return response.data;
 }
 
 /**
  * Get a single AI workspace by name.
  *
- * `GET /ai/workspaces/{name}`
+ * `GET {basePath}/workspaces/{name}`
  */
 export async function getAIWorkspace(
   client: AxiosInstance,
@@ -35,7 +35,7 @@ export async function getAIWorkspace(
   name: string
 ): Promise<AIWorkspaceResponse> {
   const response = await client.get<AIWorkspaceResponse>(
-    `${basePath}/ai/workspaces/${encodeURIComponent(name)}`
+    `${basePath}/workspaces/${encodeURIComponent(name)}`
   );
   return response.data;
 }
@@ -43,21 +43,21 @@ export async function getAIWorkspace(
 /**
  * Create a new dynamic AI workspace.
  *
- * `POST /ai/workspaces`
+ * `POST {basePath}/workspaces`
  */
 export async function createAIWorkspace(
   client: AxiosInstance,
   basePath: string,
   request: AIWorkspaceCreateRequest
 ): Promise<AIWorkspaceResponse> {
-  const response = await client.post<AIWorkspaceResponse>(`${basePath}/ai/workspaces`, request);
+  const response = await client.post<AIWorkspaceResponse>(`${basePath}/workspaces`, request);
   return response.data;
 }
 
 /**
  * Update an existing dynamic AI workspace.
  *
- * `PUT /ai/workspaces/{name}`
+ * `PUT {basePath}/workspaces/{name}`
  */
 export async function updateAIWorkspace(
   client: AxiosInstance,
@@ -66,7 +66,7 @@ export async function updateAIWorkspace(
   request: AIWorkspaceUpdateRequest
 ): Promise<AIWorkspaceResponse> {
   const response = await client.put<AIWorkspaceResponse>(
-    `${basePath}/ai/workspaces/${encodeURIComponent(name)}`,
+    `${basePath}/workspaces/${encodeURIComponent(name)}`,
     request
   );
   return response.data;
@@ -75,12 +75,12 @@ export async function updateAIWorkspace(
 /**
  * Delete a dynamic AI workspace.
  *
- * `DELETE /ai/workspaces/{name}`
+ * `DELETE {basePath}/workspaces/{name}`
  */
 export async function deleteAIWorkspace(
   client: AxiosInstance,
   basePath: string,
   name: string
 ): Promise<void> {
-  await client.delete(`${basePath}/ai/workspaces/${encodeURIComponent(name)}`);
+  await client.delete(`${basePath}/workspaces/${encodeURIComponent(name)}`);
 }

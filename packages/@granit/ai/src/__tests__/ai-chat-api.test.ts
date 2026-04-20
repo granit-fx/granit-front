@@ -5,7 +5,7 @@ import { chatComplete } from '../api/ai-chat-api.js';
 
 describe('ai-chat-api', () => {
   describe('chatComplete', () => {
-    it('should POST /ai/chat/{workspaceName}', async () => {
+    it('should POST {basePath}/chat/{workspaceName}', async () => {
       const client = createMockClient();
       const request = { messages: [{ role: 'user' as const, content: 'Hello' }] };
       const response = {
@@ -19,7 +19,7 @@ describe('ai-chat-api', () => {
 
       const result = await chatComplete(client, '', 'default', request);
 
-      expect(client.post).toHaveBeenCalledWith('/ai/chat/default', request);
+      expect(client.post).toHaveBeenCalledWith('/chat/default', request);
       expect(result).toEqual(response);
     });
 
@@ -28,7 +28,7 @@ describe('ai-chat-api', () => {
       const request = { messages: [{ role: 'user' as const, content: 'Hello' }] };
       vi.mocked(client.post).mockResolvedValue({ data: {} });
 
-      await chatComplete(client, '/api/v1', 'default', request);
+      await chatComplete(client, '/api/v1/ai', 'default', request);
 
       expect(client.post).toHaveBeenCalledWith('/api/v1/ai/chat/default', request);
     });
@@ -41,7 +41,7 @@ describe('ai-chat-api', () => {
         messages: [{ role: 'user', content: 'Hi' }],
       });
 
-      expect(client.post).toHaveBeenCalledWith('/ai/chat/my%20workspace', expect.anything());
+      expect(client.post).toHaveBeenCalledWith('/chat/my%20workspace', expect.anything());
     });
   });
 });

@@ -16,7 +16,7 @@ import type { AxiosInstance } from 'axios';
 /**
  * Send a chat completion request and return the full response.
  *
- * `POST /ai/chat/{workspaceName}`
+ * `POST {basePath}/chat/{workspaceName}`
  */
 export async function chatComplete(
   client: AxiosInstance,
@@ -25,7 +25,7 @@ export async function chatComplete(
   request: AIChatRequest
 ): Promise<AIChatResponse> {
   const response = await client.post<AIChatResponse>(
-    `${basePath}/ai/chat/${encodeURIComponent(workspaceName)}`,
+    `${basePath}/chat/${encodeURIComponent(workspaceName)}`,
     request
   );
   return response.data;
@@ -76,13 +76,13 @@ export type ChatStreamEvent =
  * final usage summary. The stream ends when the server sends `data: [DONE]`
  * or closes the connection.
  *
- * `POST /ai/chat/{workspaceName}/stream`
+ * `POST {basePath}/chat/{workspaceName}/stream`
  *
  * @example
  * ```ts
  * const controller = new AbortController();
  *
- * for await (const event of chatStream(client, '/api', 'default', request, controller.signal)) {
+ * for await (const event of chatStream(client, '/api/v1/ai', 'default', request, controller.signal)) {
  *   if (event.type === 'chunk') process.stdout.write(event.content);
  *   if (event.type === 'usage') console.log('Tokens:', event.usage);
  * }
@@ -95,7 +95,7 @@ export async function* chatStream(
   request: AIChatRequest,
   signal?: AbortSignal
 ): AsyncGenerator<ChatStreamEvent, void, undefined> {
-  const url = `${basePath}/ai/chat/${encodeURIComponent(workspaceName)}/stream`;
+  const url = `${basePath}/chat/${encodeURIComponent(workspaceName)}/stream`;
 
   const response = await client.post(url, request, {
     adapter: 'fetch',
