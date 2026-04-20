@@ -25,14 +25,6 @@ export interface AdminUser {
 /** Paginated list of admin users. */
 export type AdminUserPage = PagedResult<AdminUser>;
 
-/** Request body for `POST /users`. */
-export interface AdminUserCreateRequest {
-  readonly email: string;
-  readonly firstName?: string;
-  readonly lastName?: string;
-  readonly temporaryPassword?: string;
-}
-
 /** Response from impersonation endpoints. */
 export interface AdminImpersonationResult {
   readonly accessToken: string;

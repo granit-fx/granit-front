@@ -11,31 +11,6 @@ describe('openIddictAdminKeys', () => {
     expect(openIddictAdminKeys.users()).toEqual(['openiddict-admin', 'users']);
   });
 
-  it('should return user key with id', () => {
-    expect(openIddictAdminKeys.user('usr-001')).toEqual([
-      'openiddict-admin',
-      'users',
-      'usr-001',
-    ]);
-  });
-
-  it('should return roles key', () => {
-    expect(openIddictAdminKeys.roles()).toEqual(['openiddict-admin', 'roles']);
-  });
-
-  it('should return roleMembers key with name', () => {
-    expect(openIddictAdminKeys.roleMembers('admin')).toEqual([
-      'openiddict-admin',
-      'roles',
-      'admin',
-      'members',
-    ]);
-  });
-
-  it('should return groups key', () => {
-    expect(openIddictAdminKeys.groups()).toEqual(['openiddict-admin', 'groups']);
-  });
-
   it('should return applications key', () => {
     expect(openIddictAdminKeys.applications()).toEqual([
       'openiddict-admin',
@@ -45,11 +20,7 @@ describe('openIddictAdminKeys', () => {
   });
 
   it('should return scopes key', () => {
-    expect(openIddictAdminKeys.scopes()).toEqual([
-      'openiddict-admin',
-      'oidc',
-      'scopes',
-    ]);
+    expect(openIddictAdminKeys.scopes()).toEqual(['openiddict-admin', 'oidc', 'scopes']);
   });
 
   it('should return authorizations key', () => {

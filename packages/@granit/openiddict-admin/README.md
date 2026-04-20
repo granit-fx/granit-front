@@ -1,6 +1,11 @@
 # @granit/openiddict-admin
 
-OpenIddict admin management -- users, roles, groups, OIDC applications, scopes, and authorizations. Mirrors `Granit.OpenIddict.Endpoints` .NET admin contract.
+Admin-module API: QueryEngine user listing, user impersonation, and OpenIddict
+management (OIDC applications, scopes, authorizations). Mirrors the
+`/api/v1/admin/*` surface of `Granit.OpenIddict.Endpoints`.
+
+> User / role / group CRUD lives in `@granit/identity` (`/identity/provider/*`).
+> This package keeps only the endpoints owned by the admin module itself.
 
 ## Installation
 
@@ -12,19 +17,15 @@ pnpm add @granit/openiddict-admin
 
 ### Types
 
-- `AdminUser`, `AdminUserCreateRequest`, `AdminUserListParams`, `AdminUserPage` -- user management
-- `AdminRole`, `AdminRoleCreateRequest`, `AdminRoleMember` -- role management
-- `AdminGroup`, `AdminGroupCreateRequest`, `AdminGroupMemberRequest` -- group management
+- `AdminUser`, `AdminUserListParams`, `AdminUserPage` -- admin user listing
+- `AdminImpersonationResult` -- user impersonation
 - `AdminOidcApplication`, `AdminOidcApplicationCreateRequest`, `AdminOidcApplicationSecretResponse` -- OIDC apps
 - `AdminOidcScope`, `AdminOidcScopeCreateRequest` -- OIDC scopes
 - `AdminOidcAuthorization`, `AdminOidcAuthorizationListParams` -- OIDC authorizations
-- `AdminImpersonationResult` -- user impersonation
 
 ### Functions
 
-- `listUsers(...)`, `getUser(...)`, `createUser(...)`, `deleteUser(...)`, `impersonateUser(...)` -- users
-- `listRoles(...)`, `createRole(...)`, `deleteRole(...)`, `getRoleMembers(...)` -- roles
-- `listGroups(...)`, `createGroup(...)`, `deleteGroup(...)`, `addGroupMember(...)`, `removeGroupMember(...)` -- groups
+- `listUsers(...)`, `impersonateUser(...)` -- admin user listing + impersonation
 - `listApplications(...)`, `createApplication(...)`, `deleteApplication(...)`, `rotateApplicationSecret(...)` -- OIDC apps
 - `listScopes(...)`, `createScope(...)`, `deleteScope(...)` -- OIDC scopes
 - `listAuthorizations(...)`, `revokeAuthorization(...)`, `revokeUserAuthorizations(...)` -- OIDC authorizations
@@ -32,10 +33,10 @@ pnpm add @granit/openiddict-admin
 ## Usage
 
 ```ts
-import { listUsers, createRole } from '@granit/openiddict-admin';
+import { listUsers, impersonateUser } from '@granit/openiddict-admin';
 
-const users = await listUsers(client, basePath, { page: 1, pageSize: 20 });
-await createRole(client, basePath, { name: 'editor' });
+const page = await listUsers(client, basePath, { page: 1, pageSize: 20 });
+const tokens = await impersonateUser(client, basePath, userId);
 ```
 
 ## License

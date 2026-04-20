@@ -1,13 +1,7 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  createUser,
-  deleteUser,
-  getUser,
-  impersonateUser,
-  listUsers,
-} from '../api/admin-user-api.js';
+import { impersonateUser, listUsers } from '../api/admin-user-api.js';
 
 import type { AdminImpersonationResult, AdminUser, AdminUserPage } from '../types/index.js';
 
@@ -29,8 +23,6 @@ const mockUserPage: AdminUserPage = {
 };
 
 describe('admin-user-api', () => {
-  // ── List ──────────────────────────────────────────────────────────────────
-
   describe('listUsers', () => {
     it('sends GET to /users with params', async () => {
       const client = createMockClient();
@@ -54,75 +46,6 @@ describe('admin-user-api', () => {
       expect(result).toEqual(mockUserPage);
     });
   });
-
-  // ── Get ───────────────────────────────────────────────────────────────────
-
-  describe('getUser', () => {
-    it('sends GET to /users/{id}', async () => {
-      const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValueOnce({ data: mockUser });
-
-      const result = await getUser(client, BASE, 'user-001');
-
-      expect(client.get).toHaveBeenCalledWith(`${BASE}/users/user-001`);
-      expect(result).toEqual(mockUser);
-    });
-
-    it('encodes user ID with special characters', async () => {
-      const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValueOnce({ data: mockUser });
-
-      await getUser(client, BASE, 'id/slash');
-
-      expect(client.get).toHaveBeenCalledWith(`${BASE}/users/id%2Fslash`);
-    });
-  });
-
-  // ── Create ────────────────────────────────────────────────────────────────
-
-  describe('createUser', () => {
-    it('sends POST with request body', async () => {
-      const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValueOnce({ data: mockUser });
-
-      const result = await createUser(client, BASE, {
-        email: 'alice@example.com',
-        firstName: 'Alice',
-        lastName: 'Doe',
-      });
-
-      expect(client.post).toHaveBeenCalledWith(`${BASE}/users`, {
-        email: 'alice@example.com',
-        firstName: 'Alice',
-        lastName: 'Doe',
-      });
-      expect(result).toEqual(mockUser);
-    });
-  });
-
-  // ── Delete ────────────────────────────────────────────────────────────────
-
-  describe('deleteUser', () => {
-    it('sends DELETE to /users/{id}', async () => {
-      const client = createMockClient();
-      vi.mocked(client.delete).mockResolvedValueOnce({ data: undefined });
-
-      await deleteUser(client, BASE, 'user-001');
-
-      expect(client.delete).toHaveBeenCalledWith(`${BASE}/users/user-001`);
-    });
-
-    it('encodes user ID with special characters', async () => {
-      const client = createMockClient();
-      vi.mocked(client.delete).mockResolvedValueOnce({ data: undefined });
-
-      await deleteUser(client, BASE, 'id/slash');
-
-      expect(client.delete).toHaveBeenCalledWith(`${BASE}/users/id%2Fslash`);
-    });
-  });
-
-  // ── Impersonate ───────────────────────────────────────────────────────────
 
   describe('impersonateUser', () => {
     it('sends POST to /users/{id}/impersonate', async () => {

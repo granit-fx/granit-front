@@ -3,12 +3,9 @@
 // ---------------------------------------------------------------------------
 
 export {
-  mockAdminGroups,
-  mockAdminRoles,
   mockAdminUsers,
   mockOidcApplications,
   mockOidcAuthorizations,
   mockOidcScopes,
-  mockRoleMembers,
 } from './data.js';
 export { createOpenIddictAdminHandlers } from './handlers.js';

@@ -1,10 +1,4 @@
-import {
-  createUser,
-  deleteUser,
-  getUser,
-  impersonateUser,
-  listUsers,
-} from '@granit/openiddict-admin';
+import { impersonateUser, listUsers } from '@granit/openiddict-admin';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -12,22 +6,13 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import {
-  useAdminUser,
-  useAdminUsers,
-  useCreateAdminUser,
-  useDeleteAdminUser,
-  useImpersonateUser,
-} from '../hooks/use-admin-users.js';
+import { useAdminUsers, useImpersonateUser } from '../hooks/use-admin-users.js';
 import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider.js';
 
 import type { AdminImpersonationResult, AdminUser, AdminUserPage } from '@granit/openiddict-admin';
 
 vi.mock('@granit/openiddict-admin', () => ({
   listUsers: vi.fn(),
-  getUser: vi.fn(),
-  createUser: vi.fn(),
-  deleteUser: vi.fn(),
   impersonateUser: vi.fn(),
 }));
 
@@ -103,98 +88,6 @@ describe('useAdminUsers', () => {
     await waitFor(() => expect(result.current.isError).toBe(true));
 
     expect(result.current.error?.message).toBe('Server Error');
-  });
-});
-
-describe('useAdminUser', () => {
-  it('should fetch a single user by ID', async () => {
-    vi.mocked(getUser).mockResolvedValueOnce(mockUser);
-
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useAdminUser('usr-001'), { wrapper });
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
-
-    expect(getUser).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', 'usr-001');
-    expect(result.current.data).toEqual(mockUser);
-  });
-
-  it('should be disabled when id is empty', () => {
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useAdminUser(''), { wrapper });
-
-    expect(result.current.fetchStatus).toBe('idle');
-    expect(getUser).not.toHaveBeenCalled();
-  });
-});
-
-describe('useCreateAdminUser', () => {
-  it('should create a user and invalidate users query', async () => {
-    vi.mocked(createUser).mockResolvedValueOnce(mockUser);
-
-    const { wrapper, queryClient } = createWrapper();
-    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
-
-    const { result } = renderHook(() => useCreateAdminUser(), { wrapper });
-
-    result.current.mutate({ email: 'admin@example.com', firstName: 'Admin' });
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
-
-    expect(createUser).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', {
-      email: 'admin@example.com',
-      firstName: 'Admin',
-    });
-    expect(result.current.data).toEqual(mockUser);
-    expect(invalidateSpy).toHaveBeenCalledWith({
-      queryKey: ['openiddict-admin', 'users'],
-    });
-  });
-
-  it('should handle creation error', async () => {
-    vi.mocked(createUser).mockRejectedValueOnce(new Error('Bad Request'));
-
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useCreateAdminUser(), { wrapper });
-
-    result.current.mutate({ email: 'invalid' });
-
-    await waitFor(() => expect(result.current.isError).toBe(true));
-
-    expect(result.current.error?.message).toBe('Bad Request');
-  });
-});
-
-describe('useDeleteAdminUser', () => {
-  it('should delete a user and invalidate users query', async () => {
-    vi.mocked(deleteUser).mockResolvedValueOnce(undefined);
-
-    const { wrapper, queryClient } = createWrapper();
-    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
-
-    const { result } = renderHook(() => useDeleteAdminUser(), { wrapper });
-
-    result.current.mutate('usr-001');
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
-
-    expect(deleteUser).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', 'usr-001');
-    expect(invalidateSpy).toHaveBeenCalledWith({
-      queryKey: ['openiddict-admin', 'users'],
-    });
-  });
-
-  it('should handle delete error', async () => {
-    vi.mocked(deleteUser).mockRejectedValueOnce(new Error('Not Found'));
-
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useDeleteAdminUser(), { wrapper });
-
-    result.current.mutate('invalid-id');
-
-    await waitFor(() => expect(result.current.isError).toBe(true));
-
-    expect(result.current.error?.message).toBe('Not Found');
   });
 });
 

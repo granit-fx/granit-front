@@ -9,35 +9,8 @@ export type {
   OpenIddictAdminProviderProps,
 } from './providers/openiddict-admin-provider.js';
 
-// Hooks — Users
-export {
-  useAdminUser,
-  useAdminUsers,
-  useCreateAdminUser,
-  useDeleteAdminUser,
-  useImpersonateUser,
-} from './hooks/use-admin-users.js';
-
-// Hooks — Roles
-export {
-  useAdminRoleMembers,
-  useAdminRoles,
-  useCreateAdminRole,
-  useDeleteAdminRole,
-} from './hooks/use-admin-roles.js';
-
-// Hooks — Groups
-export {
-  useAddGroupMember,
-  useAdminGroups,
-  useCreateAdminGroup,
-  useDeleteAdminGroup,
-  useRemoveGroupMember,
-} from './hooks/use-admin-groups.js';
-export type {
-  AddGroupMemberVariables,
-  RemoveGroupMemberVariables,
-} from './hooks/use-admin-groups.js';
+// Hooks — Users (list + impersonate only; CRUD lives in @granit/react-identity)
+export { useAdminUsers, useImpersonateUser } from './hooks/use-admin-users.js';
 
 // Hooks — OIDC Applications
 export {
@@ -48,11 +21,7 @@ export {
 } from './hooks/use-oidc-applications.js';
 
 // Hooks — OIDC Scopes
-export {
-  useCreateOidcScope,
-  useDeleteOidcScope,
-  useOidcScopes,
-} from './hooks/use-oidc-scopes.js';
+export { useCreateOidcScope, useDeleteOidcScope, useOidcScopes } from './hooks/use-oidc-scopes.js';
 
 // Hooks — OIDC Authorizations
 export {

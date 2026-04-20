@@ -1,10 +1,7 @@
 import type {
-  AdminGroup,
   AdminOidcApplication,
   AdminOidcAuthorization,
   AdminOidcScope,
-  AdminRole,
-  AdminRoleMember,
   AdminUser,
 } from '@granit/openiddict-admin';
 
@@ -41,57 +38,6 @@ export const mockAdminUsers: Mutable<AdminUser>[] = [
     lastName: 'Leblanc',
     enabled: false,
     extraProperties: { department: 'Engineering' },
-  },
-];
-
-// ---------------------------------------------------------------------------
-// Roles
-// ---------------------------------------------------------------------------
-
-export const mockAdminRoles: Mutable<AdminRole>[] = [
-  { name: 'admin', description: 'Full platform administrator' },
-  { name: 'viewer', description: 'Read-only access' },
-  { name: 'editor', description: 'Content management access' },
-];
-
-export const mockRoleMembers: Record<string, Mutable<AdminRoleMember>[]> = {
-  admin: [
-    {
-      userId: 'usr_01HZ9KQX0000000000001',
-      username: 'alice.dupont',
-      email: 'alice@granit-showcase.local',
-      firstName: 'Alice',
-      lastName: 'Dupont',
-    },
-  ],
-  viewer: [
-    {
-      userId: 'usr_01HZ9KQX0000000000002',
-      username: 'bob.martin',
-      email: 'bob@granit-showcase.local',
-      firstName: 'Bob',
-      lastName: 'Martin',
-    },
-  ],
-  editor: [],
-};
-
-// ---------------------------------------------------------------------------
-// Groups
-// ---------------------------------------------------------------------------
-
-export const mockAdminGroups: Mutable<AdminGroup>[] = [
-  {
-    id: 'grp_01HZ9KQX0000000000001',
-    name: 'Platform Admins',
-    description: 'Administrators with full access',
-    tenantId: null,
-  },
-  {
-    id: 'grp_01HZ9KQX0000000000002',
-    name: 'Acme Users',
-    description: 'Users belonging to the Acme tenant',
-    tenantId: 'tnt_01HZ9KQX0000000000001',
   },
 ];
 
