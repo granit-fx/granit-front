@@ -1,12 +1,45 @@
+import {
+  createSavedView,
+  deleteSavedView,
+  getPage,
+  getQueryMeta,
+  listSavedViews,
+  setDefaultSavedView,
+  updateSavedView,
+} from '@granit/query-engine';
+
 import type {
+  MeterDefinition,
   MeterDefinitionCreateRequest,
+  MeterDefinitionListParams,
+  MeterDefinitionPage,
   MeterDefinitionResponse,
   MeterDefinitionUpdateRequest,
   MeteringQuotaStatusResponse,
   RecordUsageRequest,
+  UsageAggregate,
+  UsageAggregateListParams,
+  UsageAggregatePage,
   UsageAggregateResponse,
 } from '../types.js';
+import type {
+  CreateSavedViewRequest,
+  QueryMetadata,
+  SavedViewSummary,
+  UpdateSavedViewRequest,
+} from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
+
+const METER_DEFINITIONS_SUBPATH = 'meter-definitions';
+const USAGE_AGGREGATES_SUBPATH = 'usage-aggregates';
+
+function meterDefinitionsPath(basePath: string): string {
+  return `${basePath}/${METER_DEFINITIONS_SUBPATH}`;
+}
+
+function usageAggregatesPath(basePath: string): string {
+  return `${basePath}/${USAGE_AGGREGATES_SUBPATH}`;
+}
 
 /**
  * List all active meter definitions.
@@ -122,4 +155,194 @@ export async function recordUsageEvents(
   request: RecordUsageRequest
 ): Promise<void> {
   await client.post(`${basePath}/events`, request);
+}
+
+// ---------------------------------------------------------------------------
+// QueryEngine — meter definitions
+// ---------------------------------------------------------------------------
+
+/**
+ * List meter definitions via the QueryEngine endpoint (paginated, filterable).
+ *
+ * `GET {basePath}/meter-definitions`
+ */
+export async function listMeterDefinitions(
+  client: AxiosInstance,
+  basePath: string,
+  params?: MeterDefinitionListParams
+): Promise<MeterDefinitionPage> {
+  return getPage<MeterDefinition>(client, meterDefinitionsPath(basePath), params ?? {});
+}
+
+/**
+ * Get the QueryEngine metadata (columns, filterable fields, presets) for
+ * meter definitions.
+ *
+ * `GET {basePath}/meter-definitions/meta`
+ */
+export async function getMeterDefinitionsQueryMeta(
+  client: AxiosInstance,
+  basePath: string
+): Promise<QueryMetadata> {
+  return getQueryMeta(client, meterDefinitionsPath(basePath));
+}
+
+/**
+ * List saved views for the meter definitions query endpoint.
+ *
+ * `GET {basePath}/meter-definitions/saved-views`
+ */
+export async function listMeterDefinitionsSavedViews(
+  client: AxiosInstance,
+  basePath: string
+): Promise<SavedViewSummary[]> {
+  return listSavedViews(client, meterDefinitionsPath(basePath));
+}
+
+/**
+ * Create a saved view for the meter definitions query endpoint.
+ *
+ * `POST {basePath}/meter-definitions/saved-views`
+ */
+export async function createMeterDefinitionsSavedView(
+  client: AxiosInstance,
+  basePath: string,
+  request: CreateSavedViewRequest
+): Promise<SavedViewSummary> {
+  return createSavedView(client, meterDefinitionsPath(basePath), request);
+}
+
+/**
+ * Update a saved view on the meter definitions query endpoint.
+ *
+ * `PUT {basePath}/meter-definitions/saved-views/{id}`
+ */
+export async function updateMeterDefinitionsSavedView(
+  client: AxiosInstance,
+  basePath: string,
+  id: string,
+  request: UpdateSavedViewRequest
+): Promise<void> {
+  await updateSavedView(client, meterDefinitionsPath(basePath), id, request);
+}
+
+/**
+ * Delete a saved view from the meter definitions query endpoint.
+ *
+ * `DELETE {basePath}/meter-definitions/saved-views/{id}`
+ */
+export async function deleteMeterDefinitionsSavedView(
+  client: AxiosInstance,
+  basePath: string,
+  id: string
+): Promise<void> {
+  await deleteSavedView(client, meterDefinitionsPath(basePath), id);
+}
+
+/**
+ * Set a saved view as the default for the meter definitions query endpoint.
+ *
+ * `POST {basePath}/meter-definitions/saved-views/{id}/set-default`
+ */
+export async function setDefaultMeterDefinitionsSavedView(
+  client: AxiosInstance,
+  basePath: string,
+  id: string
+): Promise<void> {
+  await setDefaultSavedView(client, meterDefinitionsPath(basePath), id);
+}
+
+// ---------------------------------------------------------------------------
+// QueryEngine — usage aggregates
+// ---------------------------------------------------------------------------
+
+/**
+ * List usage aggregates via the QueryEngine endpoint (paginated, filterable).
+ *
+ * `GET {basePath}/usage-aggregates`
+ */
+export async function listUsageAggregates(
+  client: AxiosInstance,
+  basePath: string,
+  params?: UsageAggregateListParams
+): Promise<UsageAggregatePage> {
+  return getPage<UsageAggregate>(client, usageAggregatesPath(basePath), params ?? {});
+}
+
+/**
+ * Get the QueryEngine metadata (columns, filterable fields, presets) for
+ * usage aggregates.
+ *
+ * `GET {basePath}/usage-aggregates/meta`
+ */
+export async function getUsageAggregatesQueryMeta(
+  client: AxiosInstance,
+  basePath: string
+): Promise<QueryMetadata> {
+  return getQueryMeta(client, usageAggregatesPath(basePath));
+}
+
+/**
+ * List saved views for the usage aggregates query endpoint.
+ *
+ * `GET {basePath}/usage-aggregates/saved-views`
+ */
+export async function listUsageAggregatesSavedViews(
+  client: AxiosInstance,
+  basePath: string
+): Promise<SavedViewSummary[]> {
+  return listSavedViews(client, usageAggregatesPath(basePath));
+}
+
+/**
+ * Create a saved view for the usage aggregates query endpoint.
+ *
+ * `POST {basePath}/usage-aggregates/saved-views`
+ */
+export async function createUsageAggregatesSavedView(
+  client: AxiosInstance,
+  basePath: string,
+  request: CreateSavedViewRequest
+): Promise<SavedViewSummary> {
+  return createSavedView(client, usageAggregatesPath(basePath), request);
+}
+
+/**
+ * Update a saved view on the usage aggregates query endpoint.
+ *
+ * `PUT {basePath}/usage-aggregates/saved-views/{id}`
+ */
+export async function updateUsageAggregatesSavedView(
+  client: AxiosInstance,
+  basePath: string,
+  id: string,
+  request: UpdateSavedViewRequest
+): Promise<void> {
+  await updateSavedView(client, usageAggregatesPath(basePath), id, request);
+}
+
+/**
+ * Delete a saved view from the usage aggregates query endpoint.
+ *
+ * `DELETE {basePath}/usage-aggregates/saved-views/{id}`
+ */
+export async function deleteUsageAggregatesSavedView(
+  client: AxiosInstance,
+  basePath: string,
+  id: string
+): Promise<void> {
+  await deleteSavedView(client, usageAggregatesPath(basePath), id);
+}
+
+/**
+ * Set a saved view as the default for the usage aggregates query endpoint.
+ *
+ * `POST {basePath}/usage-aggregates/saved-views/{id}/set-default`
+ */
+export async function setDefaultUsageAggregatesSavedView(
+  client: AxiosInstance,
+  basePath: string,
+  id: string
+): Promise<void> {
+  await setDefaultSavedView(client, usageAggregatesPath(basePath), id);
 }

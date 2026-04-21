@@ -38,7 +38,7 @@ export const sampleMeters: Mutable<MeterDefinitionResponse>[] = [
 export const sampleUsage: Mutable<UsageAggregateResponse> = {
   id: toEntityId<'UsageAggregate'>('usage_001'),
   meterDefinitionId: toEntityId<'MeterDefinition'>('mtr_001'),
-  period: 'Monthly',
+  period: 'BillingPeriod',
   periodStart: toISODateString('2026-04-01T00:00:00Z'),
   periodEnd: toISODateString('2026-04-30T23:59:59Z'),
   aggregatedValue: 45230,

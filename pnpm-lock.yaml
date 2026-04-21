@@ -424,6 +424,12 @@ importers:
 
   packages/@granit/metering:
     dependencies:
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       axios:
         specifier: '*'
         version: 1.15.0

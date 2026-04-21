@@ -1,6 +1,9 @@
-export type AggregationType = 'Sum' | 'Count' | 'Max' | 'Last' | 'UniqueCount';
+import type { PagedResult, QueryRequest } from '@granit/query-engine';
+import type { ISODateString, TenantId } from '@granit/types';
 
-export type AggregationPeriod = 'Hourly' | 'Daily' | 'Monthly';
+export type AggregationType = 'Sum' | 'Count' | 'Max' | 'Last';
+
+export type AggregationPeriod = 'Hourly' | 'Daily' | 'BillingPeriod';
 
 export interface MeterDefinitionCreateRequest {
   readonly name: string;
@@ -53,3 +56,55 @@ export interface MeteringQuotaStatusResponse {
   readonly percentUsed: number | null;
   readonly isExceeded: boolean;
 }
+
+// ---------------------------------------------------------------------------
+// QueryEngine entities — raw (non-projected) shapes returned by
+// `GET /meter-definitions` and `GET /usage-aggregates`.
+// ---------------------------------------------------------------------------
+
+/**
+ * Meter definition entity as returned by the QueryEngine endpoint.
+ *
+ * Distinct from {@link MeterDefinitionResponse}: the query endpoint returns the
+ * raw entity (including `tenantId`, `createdAt`, `modifiedAt`) without the
+ * projection applied by the CRUD endpoints.
+ */
+export interface MeterDefinition {
+  readonly id: string;
+  readonly tenantId: TenantId | null;
+  readonly name: string;
+  readonly unit: string;
+  readonly aggregationType: AggregationType;
+  readonly activated: boolean;
+  readonly createdAt: ISODateString;
+  readonly modifiedAt: ISODateString;
+}
+
+/**
+ * Usage aggregate entity as returned by the QueryEngine endpoint.
+ *
+ * Includes `tenantId` (may be null on host-admin cross-tenant queries) which
+ * is absent from the realtime {@link UsageAggregateResponse} DTO.
+ */
+export interface UsageAggregate {
+  readonly id: string;
+  readonly tenantId: TenantId | null;
+  readonly meterDefinitionId: string;
+  readonly period: AggregationPeriod;
+  readonly periodStart: ISODateString;
+  readonly periodEnd: ISODateString;
+  readonly aggregatedValue: number;
+  readonly eventCount: number;
+}
+
+/** Paginated page of {@link MeterDefinition} entities. */
+export type MeterDefinitionPage = PagedResult<MeterDefinition>;
+
+/** Paginated page of {@link UsageAggregate} entities. */
+export type UsageAggregatePage = PagedResult<UsageAggregate>;
+
+/** Query parameters accepted by `GET /meter-definitions`. */
+export type MeterDefinitionListParams = QueryRequest;
+
+/** Query parameters accepted by `GET /usage-aggregates`. */
+export type UsageAggregateListParams = QueryRequest;

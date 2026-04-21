@@ -4,22 +4,45 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   checkMeteringQuota,
   createMeterDefinition,
+  createMeterDefinitionsSavedView,
+  createUsageAggregatesSavedView,
   deactivateMeterDefinition,
+  deleteMeterDefinitionsSavedView,
+  deleteUsageAggregatesSavedView,
   getMeterDefinition,
+  getMeterDefinitionsQueryMeta,
+  getUsageAggregatesQueryMeta,
   getUsageForPeriod,
   listActiveMeters,
+  listMeterDefinitions,
+  listMeterDefinitionsSavedViews,
+  listUsageAggregates,
+  listUsageAggregatesSavedViews,
   recordUsageEvents,
+  setDefaultMeterDefinitionsSavedView,
+  setDefaultUsageAggregatesSavedView,
   updateMeterDefinition,
+  updateMeterDefinitionsSavedView,
+  updateUsageAggregatesSavedView,
 } from '../api/metering-api.js';
 
 import type {
+  MeterDefinition,
   MeterDefinitionCreateRequest,
   MeterDefinitionResponse,
   MeterDefinitionUpdateRequest,
   MeteringQuotaStatusResponse,
   RecordUsageRequest,
+  UsageAggregate,
   UsageAggregateResponse,
 } from '../types.js';
+import type {
+  CreateSavedViewRequest,
+  QueryMetadata,
+  SavedViewSummary,
+  UpdateSavedViewRequest,
+} from '@granit/query-engine';
+import type { ISODateString, TenantId } from '@granit/types';
 
 const basePath = '/api/granit/metering';
 
@@ -225,5 +248,290 @@ describe('metering-api', () => {
     await listActiveMeters(client, '/custom/metering');
 
     expect(client.get).toHaveBeenCalledWith('/custom/metering/meters');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// QueryEngine wrappers
+// ---------------------------------------------------------------------------
+
+const sampleMeterDefinition: MeterDefinition = {
+  id: 'md-1',
+  tenantId: 'tenant-1' as TenantId,
+  name: 'API Calls',
+  unit: 'calls',
+  aggregationType: 'Sum',
+  activated: true,
+  createdAt: '2026-04-01T00:00:00Z' as ISODateString,
+  modifiedAt: '2026-04-01T00:00:00Z' as ISODateString,
+};
+
+const sampleUsageAggregate: UsageAggregate = {
+  id: 'ua-1',
+  tenantId: 'tenant-1' as TenantId,
+  meterDefinitionId: 'md-1',
+  period: 'Daily',
+  periodStart: '2026-04-01T00:00:00Z' as ISODateString,
+  periodEnd: '2026-04-02T00:00:00Z' as ISODateString,
+  aggregatedValue: 150,
+  eventCount: 30,
+};
+
+const sampleSavedView: SavedViewSummary = {
+  id: 'sv-1',
+  name: 'My view',
+  isShared: false,
+  isDefault: false,
+};
+
+const sampleMeta: QueryMetadata = {
+  columns: [],
+  filterableFields: [],
+} as unknown as QueryMetadata;
+
+describe('metering-api / QueryEngine — meter definitions', () => {
+  describe('listMeterDefinitions', () => {
+    it('should GET {basePath}/meter-definitions with serialized params', async () => {
+      const client = createMockClient();
+      const page = { items: [sampleMeterDefinition], totalCount: 1 };
+      vi.mocked(client.get).mockResolvedValue({ data: page });
+
+      const result = await listMeterDefinitions(client, basePath, {
+        page: 1,
+        pageSize: 25,
+      });
+
+      expect(client.get).toHaveBeenCalledTimes(1);
+      const url = vi.mocked(client.get).mock.calls[0]?.[0] as string;
+      expect(url).toContain('/api/granit/metering/meter-definitions');
+      expect(url).toContain('page=1');
+      expect(url).toContain('pageSize=25');
+      expect(result).toEqual(page);
+    });
+
+    it('should GET {basePath}/meter-definitions with no query string when params omitted', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue({ data: { items: [], totalCount: 0 } });
+
+      await listMeterDefinitions(client, basePath);
+
+      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/meter-definitions');
+    });
+  });
+
+  describe('getMeterDefinitionsQueryMeta', () => {
+    it('should GET {basePath}/meter-definitions/meta', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue({ data: sampleMeta });
+
+      const result = await getMeterDefinitionsQueryMeta(client, basePath);
+
+      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/meter-definitions/meta');
+      expect(result).toEqual(sampleMeta);
+    });
+  });
+
+  describe('listMeterDefinitionsSavedViews', () => {
+    it('should GET {basePath}/meter-definitions/saved-views', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue({ data: [sampleSavedView] });
+
+      const result = await listMeterDefinitionsSavedViews(client, basePath);
+
+      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/meter-definitions/saved-views');
+      expect(result).toEqual([sampleSavedView]);
+    });
+  });
+
+  describe('createMeterDefinitionsSavedView', () => {
+    it('should POST {basePath}/meter-definitions/saved-views', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleSavedView });
+      const request: CreateSavedViewRequest = {
+        name: 'My view',
+        isShared: false,
+        isDefault: false,
+      };
+
+      const result = await createMeterDefinitionsSavedView(client, basePath, request);
+
+      expect(client.post).toHaveBeenCalledWith(
+        '/api/granit/metering/meter-definitions/saved-views',
+        request
+      );
+      expect(result).toEqual(sampleSavedView);
+    });
+  });
+
+  describe('updateMeterDefinitionsSavedView', () => {
+    it('should PUT {basePath}/meter-definitions/saved-views/{id}', async () => {
+      const client = createMockClient();
+      vi.mocked(client.put).mockResolvedValue({ data: undefined });
+      const request: UpdateSavedViewRequest = {
+        name: 'Renamed',
+        isShared: true,
+      };
+
+      await updateMeterDefinitionsSavedView(client, basePath, 'sv-1', request);
+
+      expect(client.put).toHaveBeenCalledWith(
+        '/api/granit/metering/meter-definitions/saved-views/sv-1',
+        request
+      );
+    });
+  });
+
+  describe('deleteMeterDefinitionsSavedView', () => {
+    it('should DELETE {basePath}/meter-definitions/saved-views/{id}', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValue({ data: undefined });
+
+      await deleteMeterDefinitionsSavedView(client, basePath, 'sv-1');
+
+      expect(client.delete).toHaveBeenCalledWith(
+        '/api/granit/metering/meter-definitions/saved-views/sv-1'
+      );
+    });
+  });
+
+  describe('setDefaultMeterDefinitionsSavedView', () => {
+    it('should POST {basePath}/meter-definitions/saved-views/{id}/set-default', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: undefined });
+
+      await setDefaultMeterDefinitionsSavedView(client, basePath, 'sv-1');
+
+      expect(client.post).toHaveBeenCalledWith(
+        '/api/granit/metering/meter-definitions/saved-views/sv-1/set-default'
+      );
+    });
+  });
+});
+
+describe('metering-api / QueryEngine — usage aggregates', () => {
+  describe('listUsageAggregates', () => {
+    it('should GET {basePath}/usage-aggregates with serialized params', async () => {
+      const client = createMockClient();
+      const page = { items: [sampleUsageAggregate], totalCount: 1 };
+      vi.mocked(client.get).mockResolvedValue({ data: page });
+
+      const result = await listUsageAggregates(client, basePath, {
+        page: 1,
+        pageSize: 25,
+        sort: [{ field: 'periodStart', direction: 'desc' }],
+      });
+
+      expect(client.get).toHaveBeenCalledTimes(1);
+      const url = vi.mocked(client.get).mock.calls[0]?.[0] as string;
+      expect(url).toContain('/api/granit/metering/usage-aggregates');
+      expect(url).toContain('sort=-periodStart');
+      expect(result).toEqual(page);
+    });
+
+    it('should GET {basePath}/usage-aggregates with no query string when params omitted', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue({ data: { items: [], totalCount: 0 } });
+
+      await listUsageAggregates(client, basePath);
+
+      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/usage-aggregates');
+    });
+  });
+
+  describe('getUsageAggregatesQueryMeta', () => {
+    it('should GET {basePath}/usage-aggregates/meta', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue({ data: sampleMeta });
+
+      const result = await getUsageAggregatesQueryMeta(client, basePath);
+
+      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/usage-aggregates/meta');
+      expect(result).toEqual(sampleMeta);
+    });
+  });
+
+  describe('listUsageAggregatesSavedViews', () => {
+    it('should GET {basePath}/usage-aggregates/saved-views', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue({ data: [sampleSavedView] });
+
+      const result = await listUsageAggregatesSavedViews(client, basePath);
+
+      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/usage-aggregates/saved-views');
+      expect(result).toEqual([sampleSavedView]);
+    });
+  });
+
+  describe('createUsageAggregatesSavedView', () => {
+    it('should POST {basePath}/usage-aggregates/saved-views', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleSavedView });
+      const request: CreateSavedViewRequest = {
+        name: 'My view',
+        isShared: false,
+        isDefault: false,
+      };
+
+      const result = await createUsageAggregatesSavedView(client, basePath, request);
+
+      expect(client.post).toHaveBeenCalledWith(
+        '/api/granit/metering/usage-aggregates/saved-views',
+        request
+      );
+      expect(result).toEqual(sampleSavedView);
+    });
+  });
+
+  describe('updateUsageAggregatesSavedView', () => {
+    it('should PUT {basePath}/usage-aggregates/saved-views/{id}', async () => {
+      const client = createMockClient();
+      vi.mocked(client.put).mockResolvedValue({ data: undefined });
+      const request: UpdateSavedViewRequest = {
+        name: 'Renamed',
+        isShared: true,
+      };
+
+      await updateUsageAggregatesSavedView(client, basePath, 'sv-1', request);
+
+      expect(client.put).toHaveBeenCalledWith(
+        '/api/granit/metering/usage-aggregates/saved-views/sv-1',
+        request
+      );
+    });
+  });
+
+  describe('deleteUsageAggregatesSavedView', () => {
+    it('should DELETE {basePath}/usage-aggregates/saved-views/{id}', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValue({ data: undefined });
+
+      await deleteUsageAggregatesSavedView(client, basePath, 'sv-1');
+
+      expect(client.delete).toHaveBeenCalledWith(
+        '/api/granit/metering/usage-aggregates/saved-views/sv-1'
+      );
+    });
+  });
+
+  describe('setDefaultUsageAggregatesSavedView', () => {
+    it('should POST {basePath}/usage-aggregates/saved-views/{id}/set-default', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: undefined });
+
+      await setDefaultUsageAggregatesSavedView(client, basePath, 'sv-1');
+
+      expect(client.post).toHaveBeenCalledWith(
+        '/api/granit/metering/usage-aggregates/saved-views/sv-1/set-default'
+      );
+    });
+  });
+
+  it('should work with custom basePath', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ data: { items: [], totalCount: 0 } });
+
+    await listUsageAggregates(client, '/custom/metering');
+
+    expect(client.get).toHaveBeenCalledWith('/custom/metering/usage-aggregates');
   });
 });
