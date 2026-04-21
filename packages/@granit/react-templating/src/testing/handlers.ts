@@ -35,11 +35,12 @@ export function createTemplatesHandlers(baseUrl = DEFAULT_BASE_PATH) {
       HttpResponse.json(['Layout.Email', 'Layout.Pdf', 'Layout.Letter'])
     ),
 
-    // Categories — list
-    http.get(`${BASE}/categories`, () => HttpResponse.json(categories)),
+    // Categories — list. Categories are a sibling module resource, not nested
+    // under /templates, matching the backend path `/api/v1/templating/categories`.
+    http.get(`${baseUrl}/categories`, () => HttpResponse.json(categories)),
 
     // Categories — create
-    http.post(`${BASE}/categories`, async ({ request }) => {
+    http.post(`${baseUrl}/categories`, async ({ request }) => {
       const body = (await request.json()) as SaveTemplateCategoryRequest;
       const newCat: (typeof categories)[number] = {
         id: `cat_${nextCatIdx++}` as TemplateCategory['id'],
@@ -54,7 +55,7 @@ export function createTemplatesHandlers(baseUrl = DEFAULT_BASE_PATH) {
     }),
 
     // Categories — update
-    http.put(`${BASE}/categories/:id`, async ({ params, request }) => {
+    http.put(`${baseUrl}/categories/:id`, async ({ params, request }) => {
       const cat = categories.find((c) => c.id === params.id);
       if (!cat) return notFound();
       const body = (await request.json()) as SaveTemplateCategoryRequest;
@@ -66,7 +67,7 @@ export function createTemplatesHandlers(baseUrl = DEFAULT_BASE_PATH) {
     }),
 
     // Categories — delete
-    http.delete(`${BASE}/categories/:id`, ({ params }) => {
+    http.delete(`${baseUrl}/categories/:id`, ({ params }) => {
       const idx = categories.findIndex((c) => c.id === params.id);
       if (idx === -1) return notFound();
       categories.splice(idx, 1);
