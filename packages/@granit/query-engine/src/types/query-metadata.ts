@@ -4,6 +4,7 @@
 // ---------------------------------------------------------------------------
 
 import type { FilterOperator } from './query-params.js';
+import type { LookupDescriptor } from '@granit/data-lookup';
 
 /** Column definition for display in data tables. */
 export interface ColumnDefinition {
@@ -30,6 +31,13 @@ export interface FilterableField {
   readonly operators: readonly FilterOperator[];
   /** Known values for enum-like fields (shown as suggestions in enterValue phase). */
   readonly enumValues?: readonly string[];
+  /**
+   * Optional descriptor pointing to a Granit.DataLookup source. When set, the
+   * SmartFilterBar routes the "enter value" phase to a server-backed typeahead
+   * picker (`<LookupPicker>` from `@granit/react-data-lookup`) instead of a
+   * free-text input.
+   */
+  readonly lookup?: LookupDescriptor;
 }
 
 /** Sortable field declaration. */

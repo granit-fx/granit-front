@@ -193,3 +193,77 @@ describe('useSmartFilter', () => {
     expect(qfSuggestion!.label).toBe('My Items');
   });
 });
+
+// ---------------------------------------------------------------------------
+// Lookup-backed fields — SmartFilter delegates to <LookupPicker>
+// ---------------------------------------------------------------------------
+
+const METADATA_WITH_LOOKUP: QueryMetadata = {
+  ...MOCK_METADATA,
+  filterableFields: [
+    {
+      name: 'TenantId',
+      type: 'Guid',
+      operators: ['Eq', 'In'],
+      lookup: {
+        name: 'tenants',
+        kind: 'QueryEngine',
+        requiredPermission: 'Platform.Tenants.Read',
+      },
+    },
+    {
+      name: 'MeterId',
+      type: 'Guid',
+      operators: ['Eq', 'In'],
+      lookup: {
+        name: 'meter-definitions',
+        scopeKeys: ['tenantId'],
+      },
+    },
+    ...MOCK_METADATA.filterableFields,
+  ],
+};
+
+describe('useSmartFilter — lookup-backed fields', () => {
+  it('exposes selectedFieldLookup when the selected field declares a lookup', () => {
+    const { result } = renderHook(() => useSmartFilter({ metadata: METADATA_WITH_LOOKUP }));
+    act(() => result.current.selectField('TenantId'));
+
+    expect(result.current.selectedFieldLookup).toEqual({
+      name: 'tenants',
+      kind: 'QueryEngine',
+      requiredPermission: 'Platform.Tenants.Read',
+    });
+  });
+
+  it('exposes scopeKeys via selectedFieldLookup for scoped sources', () => {
+    const { result } = renderHook(() => useSmartFilter({ metadata: METADATA_WITH_LOOKUP }));
+    act(() => result.current.selectField('MeterId'));
+
+    expect(result.current.selectedFieldLookup?.scopeKeys).toEqual(['tenantId']);
+  });
+
+  it('returns undefined selectedFieldLookup for fields without a lookup', () => {
+    const { result } = renderHook(() => useSmartFilter({ metadata: METADATA_WITH_LOOKUP }));
+    act(() => result.current.selectField('LastName'));
+
+    expect(result.current.selectedFieldLookup).toBeUndefined();
+  });
+
+  it('emits NO inline value suggestions during enterValue for lookup-backed fields', () => {
+    const { result } = renderHook(() => useSmartFilter({ metadata: METADATA_WITH_LOOKUP }));
+    act(() => result.current.selectField('TenantId'));
+    act(() => result.current.selectOperator('Eq'));
+
+    expect(result.current.phase).toBe('enterValue');
+    // No enum / boolean suggestions — the consumer renders <LookupPicker> instead.
+    expect(result.current.suggestions).toEqual([]);
+  });
+
+  it('selectedFieldLookup is undefined in idle phase', () => {
+    const { result } = renderHook(() => useSmartFilter({ metadata: METADATA_WITH_LOOKUP }));
+
+    expect(result.current.phase).toBe('idle');
+    expect(result.current.selectedFieldLookup).toBeUndefined();
+  });
+});

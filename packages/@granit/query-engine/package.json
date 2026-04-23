@@ -17,6 +17,7 @@
     "@granit/testing": "workspace:*"
   },
   "peerDependencies": {
+    "@granit/data-lookup": "workspace:*",
     "@granit/utils": "workspace:*",
     "axios": "*"
   },

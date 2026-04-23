@@ -4,6 +4,7 @@
 
 import { useCallback, useMemo, useReducer } from 'react';
 
+import type { LookupDescriptor } from '@granit/data-lookup';
 import type {
   FilterEntry,
   FilterOperator,
@@ -376,6 +377,9 @@ function buildValueSuggestions(
 ): FilterSuggestion[] {
   const field = metadata.filterableFields.find((f) => f.name === state.selectedField);
   if (!field) return [];
+  // Lookup-backed fields delegate value input to <LookupPicker>. The hook stops
+  // emitting inline suggestions so the consumer renders the picker instead.
+  if (field.lookup) return [];
   if (field.type === 'Boolean') {
     return buildBooleanSuggestions(field, options?.booleanLabels);
   }
@@ -446,6 +450,12 @@ export interface UseSmartFilterReturn {
   readonly selectedOperator?: FilterOperator;
   /** Type of the currently selected field (during selectOperator / enterValue phases). */
   readonly selectedFieldType?: string;
+  /**
+   * Data-lookup descriptor for the currently selected field, if any. When set,
+   * the UI should render `<LookupPicker>` during the `enterValue` phase instead
+   * of the free-text / enum input. `undefined` for fields without a lookup source.
+   */
+  readonly selectedFieldLookup?: LookupDescriptor;
   /** Extracted FilterEntry array from current tokens (for useQueryEndpoint). */
   readonly filters: readonly FilterEntry[];
   /** Extracted search string from tokens. */
@@ -599,6 +609,11 @@ export function useSmartFilter(options?: UseSmartFilterOptions): UseSmartFilterR
     return options.metadata.filterableFields.find((f) => f.name === state.selectedField)?.type;
   }, [state.selectedField, options?.metadata]);
 
+  const selectedFieldLookup = useMemo(() => {
+    if (!state.selectedField || !options?.metadata) return undefined;
+    return options.metadata.filterableFields.find((f) => f.name === state.selectedField)?.lookup;
+  }, [state.selectedField, options?.metadata]);
+
   return {
     phase: state.phase,
     inputValue: state.inputValue,
@@ -606,6 +621,7 @@ export function useSmartFilter(options?: UseSmartFilterOptions): UseSmartFilterR
     suggestions,
     selectedOperator: state.selectedOperator,
     selectedFieldType,
+    selectedFieldLookup,
     filters,
     search,
     presets,
