@@ -562,6 +562,9 @@ importers:
 
   packages/@granit/query-engine:
     dependencies:
+      '@granit/data-lookup':
+        specifier: workspace:*
+        version: link:../data-lookup
       '@granit/utils':
         specifier: workspace:*
         version: link:../utils
@@ -1386,6 +1389,9 @@ importers:
 
   packages/@granit/react-query-engine:
     dependencies:
+      '@granit/data-lookup':
+        specifier: workspace:*
+        version: link:../data-lookup
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
