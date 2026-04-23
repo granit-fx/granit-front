@@ -8,6 +8,8 @@ overrides:
   immutable: '>=5.1.5'
   flatted: '>=3.4.2'
   '@tanstack/query-core': ^5.95.0
+  '@tanstack/react-query': 5.99.0
+  axios: 1.15.0
   picomatch: '>=4.0.4'
   yaml: '>=2.8.3'
   smol-toml: '>=1.6.1'
@@ -61,8 +63,8 @@ importers:
         specifier: ^1.40.0
         version: 1.40.0
       '@tanstack/react-query':
-        specifier: ^5.99.2
-        version: 5.99.2(react@19.2.5)
+        specifier: 5.99.0
+        version: 5.99.0(react@19.2.5)
       '@tanstack/react-virtual':
         specifier: ^3.13.24
         version: 3.13.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -85,8 +87,8 @@ importers:
         specifier: ^4.1.4
         version: 4.1.4(vitest@4.1.4)
       axios:
-        specifier: ^1.15.1
-        version: 1.15.1
+        specifier: 1.15.0
+        version: 1.15.0
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -160,7 +162,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -173,7 +175,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -183,7 +185,7 @@ importers:
   packages/@granit/api-client:
     dependencies:
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -199,7 +201,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -253,7 +255,7 @@ importers:
   packages/@granit/authentication-local:
     dependencies:
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -263,7 +265,7 @@ importers:
   packages/@granit/authorization:
     dependencies:
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
 
   packages/@granit/background-jobs:
@@ -275,7 +277,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -291,7 +293,7 @@ importers:
   packages/@granit/blob-storage:
     dependencies:
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -312,7 +314,7 @@ importers:
   packages/@granit/customer-balance:
     dependencies:
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -328,7 +330,17 @@ importers:
         specifier: workspace:*
         version: link:../utils
       axios:
-        specifier: '*'
+        specifier: 1.15.0
+        version: 1.15.0
+    devDependencies:
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
+  packages/@granit/data-lookup:
+    dependencies:
+      axios:
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -338,7 +350,7 @@ importers:
   packages/@granit/diagnostics:
     dependencies:
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -350,7 +362,7 @@ importers:
   packages/@granit/features:
     dependencies:
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -363,7 +375,7 @@ importers:
         specifier: workspace:*
         version: link:../api-client
       axios:
-        specifier: ^1.0.0
+        specifier: 1.15.0
         version: 1.15.0
 
   packages/@granit/identity:
@@ -375,7 +387,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -388,7 +400,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -404,7 +416,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       i18next:
         specifier: ^25.0.0
@@ -431,7 +443,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -444,7 +456,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
 
   packages/@granit/notifications:
@@ -456,7 +468,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/api-client':
@@ -466,7 +478,7 @@ importers:
   packages/@granit/notifications-mobile-push:
     dependencies:
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/api-client':
@@ -505,7 +517,7 @@ importers:
   packages/@granit/notifications-web-push:
     dependencies:
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/api-client':
@@ -521,7 +533,7 @@ importers:
         specifier: workspace:*
         version: link:../query-engine
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -531,7 +543,7 @@ importers:
   packages/@granit/payments:
     dependencies:
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -541,7 +553,7 @@ importers:
   packages/@granit/privacy:
     dependencies:
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -554,7 +566,7 @@ importers:
         specifier: workspace:*
         version: link:../utils
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -567,10 +579,10 @@ importers:
         specifier: workspace:*
         version: link:../account
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -595,10 +607,10 @@ importers:
         specifier: workspace:*
         version: link:../ai
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -623,7 +635,7 @@ importers:
   packages/@granit/react-api-client:
     dependencies:
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       react:
         specifier: ^19.0.0
@@ -645,10 +657,10 @@ importers:
         specifier: workspace:*
         version: link:../query-engine
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -692,10 +704,10 @@ importers:
         specifier: workspace:*
         version: link:../authentication-api-keys
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -804,10 +816,10 @@ importers:
         specifier: workspace:*
         version: link:../authentication-local
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -829,10 +841,10 @@ importers:
         specifier: workspace:*
         version: link:../authorization
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -857,10 +869,10 @@ importers:
         specifier: workspace:*
         version: link:../query-engine
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -894,10 +906,10 @@ importers:
         specifier: workspace:*
         version: link:../blob-storage
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -935,10 +947,10 @@ importers:
         specifier: workspace:*
         version: link:../customer-balance
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -972,10 +984,10 @@ importers:
         specifier: workspace:*
         version: link:../utils
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -994,16 +1006,38 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/react-data-lookup:
+    dependencies:
+      '@granit/data-lookup':
+        specifier: workspace:*
+        version: link:../data-lookup
+      '@tanstack/react-query':
+        specifier: 5.99.0
+        version: 5.99.0(react@19.2.5)
+      axios:
+        specifier: 1.15.0
+        version: 1.15.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.5
+    devDependencies:
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/react-diagnostics:
     dependencies:
       '@granit/diagnostics':
         specifier: workspace:*
         version: link:../diagnostics
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1037,10 +1071,10 @@ importers:
         specifier: workspace:*
         version: link:../features
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1062,10 +1096,10 @@ importers:
         specifier: workspace:*
         version: link:../identity
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1090,10 +1124,10 @@ importers:
         specifier: workspace:*
         version: link:../invoicing
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1124,10 +1158,10 @@ importers:
         specifier: workspace:*
         version: link:../storage
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       date-fns:
         specifier: ^4.0.0
@@ -1158,10 +1192,10 @@ importers:
         specifier: workspace:*
         version: link:../metering
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1189,10 +1223,10 @@ importers:
         specifier: workspace:*
         version: link:../multi-tenancy
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1216,7 +1250,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1238,10 +1272,10 @@ importers:
         specifier: workspace:*
         version: link:../notifications-mobile-push
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       react:
         specifier: ^19.0.0
@@ -1263,7 +1297,7 @@ importers:
         specifier: workspace:*
         version: link:../notifications-web-push
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       react:
         specifier: ^19.0.0
@@ -1275,10 +1309,10 @@ importers:
         specifier: workspace:*
         version: link:../openiddict-admin
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1300,10 +1334,10 @@ importers:
         specifier: workspace:*
         version: link:../payments
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       lucide-react:
         specifier: ^1.0.0
@@ -1331,10 +1365,10 @@ importers:
         specifier: workspace:*
         version: link:../privacy
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1362,10 +1396,10 @@ importers:
         specifier: workspace:*
         version: link:../utils
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       react:
         specifier: ^19.0.0
@@ -1393,10 +1427,10 @@ importers:
         specifier: workspace:*
         version: link:../types
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       react:
         specifier: ^19.0.0
@@ -1418,10 +1452,10 @@ importers:
         specifier: workspace:*
         version: link:../scheduling
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1446,10 +1480,10 @@ importers:
         specifier: workspace:*
         version: link:../settings
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1483,10 +1517,10 @@ importers:
         specifier: workspace:*
         version: link:../subscriptions
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1511,10 +1545,10 @@ importers:
         specifier: workspace:*
         version: link:../tax
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1536,10 +1570,10 @@ importers:
   packages/@granit/react-templating:
     dependencies:
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1570,7 +1604,7 @@ importers:
   packages/@granit/react-testing:
     dependencies:
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       react:
         specifier: ^19.0.0
@@ -1598,7 +1632,7 @@ importers:
         specifier: workspace:*
         version: link:../timeline
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1662,7 +1696,7 @@ importers:
         specifier: workspace:*
         version: link:../validation
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       react:
         specifier: ^19.0.0
@@ -1681,10 +1715,10 @@ importers:
         specifier: workspace:*
         version: link:../webhooks
       '@tanstack/react-query':
-        specifier: ^5.0.0
+        specifier: 5.99.0
         version: 5.99.0(react@19.2.5)
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1715,7 +1749,7 @@ importers:
         specifier: workspace:*
         version: link:../workflow
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1746,7 +1780,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -1762,7 +1796,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -1772,7 +1806,7 @@ importers:
   packages/@granit/settings:
     dependencies:
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -1790,7 +1824,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -1800,7 +1834,7 @@ importers:
   packages/@granit/tax:
     dependencies:
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -1816,7 +1850,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/api-client':
@@ -1826,7 +1860,7 @@ importers:
   packages/@granit/testing:
     dependencies:
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
       msw:
         specifier: ^2.12.0
@@ -1844,7 +1878,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/api-client':
@@ -1883,7 +1917,7 @@ importers:
   packages/@granit/validation:
     dependencies:
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -1893,7 +1927,7 @@ importers:
   packages/@granit/webhooks:
     dependencies:
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/testing':
@@ -1912,7 +1946,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       axios:
-        specifier: '*'
+        specifier: 1.15.0
         version: 1.15.0
     devDependencies:
       '@granit/api-client':
@@ -3384,19 +3418,11 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
-  '@tanstack/query-core@5.99.0':
-    resolution: {integrity: sha512-3Jv3WQG0BCcH7G+7lf/bP8QyBfJOXeY+T08Rin3GZ1bshvwlbPt7NrDHMEzGdKIOmOzvIQmxjk28YEQX60k7pQ==}
-
   '@tanstack/query-core@5.99.2':
     resolution: {integrity: sha512-1HunU0bXVsR1ZJMZbcOPE6VtaBJxsW809RE9xPe4Gz7MlB0GWwQvuTPhMoEmQ/hIzFKJ/DWAuttIe7BOaWx0tA==}
 
   '@tanstack/react-query@5.99.0':
     resolution: {integrity: sha512-OY2bCqPemT1LlqJ8Y2CUau4KELnIhhG9Ol3ZndPbdnB095pRbPo1cHuXTndg8iIwtoHTgwZjyaDnQ0xD0mYwAw==}
-    peerDependencies:
-      react: ^18 || ^19
-
-  '@tanstack/react-query@5.99.2':
-    resolution: {integrity: sha512-vM91UEe45QUS9ED6OklsVL15i8qKcRqNwpWzPTVWvRPRSEgDudDgHpvyTjcdlwHcrKNa80T+xXYcchT2noPnZA==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -3780,9 +3806,6 @@ packages:
 
   axios@1.15.0:
     resolution: {integrity: sha512-wWyJDlAatxk30ZJer+GeCWS209sA42X+N5jU2jy6oHTp7ufw8uzUTVFBX9+wTfAlhiJXGS0Bq7X6efruWjuK9Q==}
-
-  axios@1.15.1:
-    resolution: {integrity: sha512-WOG+Jj8ZOvR0a3rAn+Tuf1UQJRxw5venr6DgdbJzngJE3qG7X0kL83CZGpdHMxEm+ZK3seAbvFsw4FfOfP9vxg==}
 
   balanced-match@4.0.4:
     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
@@ -7204,16 +7227,9 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@tanstack/query-core@5.99.0': {}
-
   '@tanstack/query-core@5.99.2': {}
 
   '@tanstack/react-query@5.99.0(react@19.2.5)':
-    dependencies:
-      '@tanstack/query-core': 5.99.0
-      react: 19.2.5
-
-  '@tanstack/react-query@5.99.2(react@19.2.5)':
     dependencies:
       '@tanstack/query-core': 5.99.2
       react: 19.2.5
@@ -7602,14 +7618,6 @@ snapshots:
   asynckit@0.4.0: {}
 
   axios@1.15.0:
-    dependencies:
-      follow-redirects: 1.16.0
-      form-data: 4.0.5
-      proxy-from-env: 2.1.0
-    transitivePeerDependencies:
-      - debug
-
-  axios@1.15.1:
     dependencies:
       follow-redirects: 1.16.0
       form-data: 4.0.5

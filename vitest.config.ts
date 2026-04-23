@@ -140,6 +140,11 @@ export default defineConfig({
         __dirname,
         'packages/@granit/data-exchange/src/index.ts'
       ),
+      '@granit/data-lookup': path.resolve(__dirname, 'packages/@granit/data-lookup/src/index.ts'),
+      '@granit/react-data-lookup': path.resolve(
+        __dirname,
+        'packages/@granit/react-data-lookup/src/index.ts'
+      ),
       '@granit/error-boundary': path.resolve(
         __dirname,
         'packages/@granit/error-boundary/src/index.ts'

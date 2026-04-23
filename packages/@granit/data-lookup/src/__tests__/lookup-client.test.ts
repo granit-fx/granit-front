@@ -1,0 +1,159 @@
+import { axiosResponse, createMockClient } from '@granit/testing';
+import { describe, expect, it, vi } from 'vitest';
+
+import {
+  DEFAULT_LOOKUP_BASE_PATH,
+  buildSearchQuery,
+  fetchLookupManifest,
+  resolveLookup,
+  searchLookup,
+} from '../api/lookup-client.js';
+
+import type { LookupDescriptor, LookupItem, LookupManifest, LookupResult } from '../types/index.js';
+
+describe('buildSearchQuery', () => {
+  it('uses the default "search" param name', () => {
+    const query = buildSearchQuery({ name: 'tenants' }, { search: 'acme' });
+    expect(query).toEqual({ search: 'acme' });
+  });
+
+  it('honors a custom searchParam', () => {
+    const query = buildSearchQuery({ name: 'x', searchParam: 'q' }, { search: 'hello' });
+    expect(query).toEqual({ q: 'hello' });
+  });
+
+  it('omits empty search term', () => {
+    expect(buildSearchQuery({ name: 't' }, { search: '' })).toEqual({});
+    expect(buildSearchQuery({ name: 't' }, {})).toEqual({});
+  });
+
+  it('serializes page, pageSize, and continuationToken', () => {
+    expect(
+      buildSearchQuery({ name: 't' }, { page: 2, pageSize: 50, continuationToken: 'abc' })
+    ).toEqual({ page: 2, pageSize: 50, continuationToken: 'abc' });
+  });
+
+  it('emits scope.<key> for non-empty values only', () => {
+    const query = buildSearchQuery(
+      { name: 'meters' },
+      { scope: { tenantId: 'abc', empty: '', nothing: null, absent: undefined } }
+    );
+    expect(query).toEqual({ 'scope.tenantId': 'abc' });
+  });
+});
+
+describe('searchLookup', () => {
+  it('hits /api/granit/lookups/{name} by default', async () => {
+    const client = createMockClient();
+    const payload: LookupResult = { items: [{ value: '1', label: 'Acme' }], totalCount: 1 };
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(payload));
+
+    await searchLookup({ name: 'tenants' }, { search: 'acme' }, { client });
+
+    expect(client.get).toHaveBeenCalledWith(
+      `${DEFAULT_LOOKUP_BASE_PATH}/tenants`,
+      expect.objectContaining({ params: { search: 'acme' } })
+    );
+  });
+
+  it('hits the custom endpoint when descriptor.endpoint is set', async () => {
+    const client = createMockClient();
+    const payload: LookupResult = { items: [] };
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(payload));
+
+    const descriptor: LookupDescriptor = {
+      endpoint: '/api/external/stripe/customers',
+      searchParam: 'query',
+    };
+    await searchLookup(descriptor, { search: 'acme' }, { client });
+
+    expect(client.get).toHaveBeenCalledWith(
+      '/api/external/stripe/customers',
+      expect.objectContaining({ params: { query: 'acme' } })
+    );
+  });
+
+  it('throws when neither name nor endpoint is provided', async () => {
+    const client = createMockClient();
+
+    await expect(searchLookup({}, { search: 'x' }, { client })).rejects.toThrow(
+      /LookupDescriptor requires/
+    );
+  });
+});
+
+describe('resolveLookup', () => {
+  it('returns null for null/undefined/empty values without hitting the network', async () => {
+    const client = createMockClient();
+
+    await expect(resolveLookup({ name: 't' }, null, { client })).resolves.toBeNull();
+    await expect(resolveLookup({ name: 't' }, undefined, { client })).resolves.toBeNull();
+    await expect(resolveLookup({ name: 't' }, '', { client })).resolves.toBeNull();
+    expect(client.get).not.toHaveBeenCalled();
+  });
+
+  it('returns the resolved item on 200', async () => {
+    const client = createMockClient();
+    const item: LookupItem = { value: 'BE', label: 'Belgique' };
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(item));
+
+    const result = await resolveLookup({ name: 'ref-country' }, 'BE', { client });
+
+    expect(result).toEqual(item);
+    expect(client.get).toHaveBeenCalledWith(
+      `${DEFAULT_LOOKUP_BASE_PATH}/ref-country/resolve`,
+      expect.objectContaining({ params: { value: 'BE' } })
+    );
+  });
+
+  it('returns null on 404 instead of throwing', async () => {
+    const client = createMockClient();
+    const notFound = Object.assign(new Error('not found'), {
+      response: { status: 404 },
+    });
+    vi.mocked(client.get).mockRejectedValue(notFound);
+
+    const result = await resolveLookup({ name: 't' }, 'missing', { client });
+
+    expect(result).toBeNull();
+  });
+
+  it('rethrows non-404 errors', async () => {
+    const client = createMockClient();
+    const serverError = Object.assign(new Error('boom'), {
+      response: { status: 500 },
+    });
+    vi.mocked(client.get).mockRejectedValue(serverError);
+
+    await expect(resolveLookup({ name: 't' }, 'x', { client })).rejects.toThrow(/boom/);
+  });
+});
+
+describe('fetchLookupManifest', () => {
+  it('returns the discovery manifest', async () => {
+    const client = createMockClient();
+    const manifest: LookupManifest = {
+      lookups: [{ name: 'tenants', kind: 'QueryEngine', requiredPermission: null, scopeKeys: [] }],
+    };
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(manifest));
+
+    const result = await fetchLookupManifest({ client });
+
+    expect(result).toEqual(manifest);
+    expect(client.get).toHaveBeenCalledWith(DEFAULT_LOOKUP_BASE_PATH, expect.any(Object));
+  });
+});
+
+describe('basePath override', () => {
+  it('uses custom basePath for registry lookups', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [] } as LookupResult));
+
+    await searchLookup({ name: 'tenants' }, {}, { client, basePath: '/custom/lookups' });
+
+    expect(client.get).toHaveBeenCalledWith('/custom/lookups/tenants', expect.any(Object));
+  });
+});
+
+// silence noisy unused imports when vi is not referenced elsewhere
+void vi;

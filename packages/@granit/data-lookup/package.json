@@ -1,0 +1,31 @@
+{
+  "name": "@granit/data-lookup",
+  "description": "Framework-agnostic types and HTTP client for Granit Data Lookup — unified typeahead pickers for filters and form dropdowns",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "devDependencies": {
+    "@granit/testing": "workspace:*"
+  },
+  "peerDependencies": {
+    "axios": "*"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  }
+}

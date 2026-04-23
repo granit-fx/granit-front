@@ -507,6 +507,11 @@
       "exports": []
     },
     {
+      "name": "@granit/data-lookup",
+      "description": "Framework-agnostic types and HTTP client for Granit Data Lookup — unified typeahead pickers for filters and form dropdowns",
+      "exports": []
+    },
+    {
       "name": "@granit/diagnostics",
       "description": "Monitoring health types and API — mirrors Granit.Diagnostics .NET contract",
       "exports": [
@@ -1827,6 +1832,95 @@
       "name": "@granit/react-data-exchange",
       "description": "React bindings for @granit/data-exchange — ExportProvider, ImportProvider, hooks",
       "exports": []
+    },
+    {
+      "name": "@granit/react-data-lookup",
+      "description": "React hooks and components for @granit/data-lookup — useLookup, LookupSelect, LookupPicker, LookupBadge",
+      "exports": [
+        {
+          "name": "buildLookupQueryKey",
+          "kind": "function",
+          "signature": "function buildLookupQueryKey( descriptor: LookupDescriptor, params: LookupQueryParams, culture?: string ): readonly unknown[]"
+        },
+        {
+          "name": "useLookup",
+          "kind": "function",
+          "signature": "function useLookup( descriptor: LookupDescriptor, params: LookupQueryParams, options: UseLookupOptions ): UseLookupResult"
+        },
+        {
+          "name": "UseLookupOptions",
+          "kind": "interface",
+          "signature": "interface UseLookupOptions",
+          "members": []
+        },
+        {
+          "name": "UseLookupResult",
+          "kind": "type",
+          "signature": "type UseLookupResult = UseQueryResult<LookupResult> & { /** Name of the scope key that is currently missing, if any (Empty Scope Trap). */ readonly missingScopeKey: string | null; }"
+        },
+        {
+          "name": "useLookupResolve",
+          "kind": "function",
+          "signature": "function useLookupResolve( descriptor: LookupDescriptor, value: unknown, options: UseLookupResolveOptions ): UseQueryResult<LookupItem | null>"
+        },
+        {
+          "name": "UseLookupResolveOptions",
+          "kind": "interface",
+          "signature": "interface UseLookupResolveOptions",
+          "members": []
+        },
+        {
+          "name": "LookupSelect",
+          "kind": "function",
+          "signature": "function LookupSelect(props: LookupSelectProps): ReactElement"
+        },
+        {
+          "name": "LookupSelectProps",
+          "kind": "interface",
+          "signature": "interface LookupSelectProps",
+          "members": []
+        },
+        {
+          "name": "LookupSelectRenderArgs",
+          "kind": "interface",
+          "signature": "interface LookupSelectRenderArgs",
+          "members": []
+        },
+        {
+          "name": "LookupPicker",
+          "kind": "function",
+          "signature": "function LookupPicker(props: LookupPickerProps): ReactElement"
+        },
+        {
+          "name": "LookupPickerProps",
+          "kind": "interface",
+          "signature": "interface LookupPickerProps",
+          "members": []
+        },
+        {
+          "name": "LookupPickerRenderArgs",
+          "kind": "interface",
+          "signature": "interface LookupPickerRenderArgs",
+          "members": []
+        },
+        {
+          "name": "LookupBadge",
+          "kind": "function",
+          "signature": "function LookupBadge(props: LookupBadgeProps): ReactElement"
+        },
+        {
+          "name": "LookupBadgeProps",
+          "kind": "interface",
+          "signature": "interface LookupBadgeProps",
+          "members": []
+        },
+        {
+          "name": "LookupBadgeRenderArgs",
+          "kind": "interface",
+          "signature": "interface LookupBadgeRenderArgs",
+          "members": []
+        }
+      ]
     },
     {
       "name": "@granit/react-diagnostics",
