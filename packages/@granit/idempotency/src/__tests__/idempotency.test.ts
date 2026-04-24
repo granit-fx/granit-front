@@ -176,3 +176,68 @@ describe('disableIdempotency', () => {
     expect(r2.config.headers['Idempotency-Key']).toBeUndefined();
   });
 });
+
+describe('shouldRetryIgnoringTombstone', () => {
+  interface RetryModule {
+    shouldRetryIgnoringTombstone: (
+      failureCount: number,
+      error: unknown,
+      maxAttempts?: number
+    ) => boolean;
+  }
+
+  let idempotencyMod: RetryModule;
+
+  beforeEach(async () => {
+    vi.resetModules();
+    idempotencyMod = (await import('../index.ts')) as unknown as RetryModule;
+  });
+
+  function tombstoneError(reason = 'ResponseTooLarge'): unknown {
+    return {
+      response: {
+        status: 413,
+        headers: { 'x-idempotency-tombstone': reason },
+      },
+      message: 'Payload Too Large',
+    };
+  }
+
+  it('returns false for tombstoned errors regardless of failure count', () => {
+    expect(idempotencyMod.shouldRetryIgnoringTombstone(0, tombstoneError())).toBe(false);
+    expect(idempotencyMod.shouldRetryIgnoringTombstone(1, tombstoneError())).toBe(false);
+  });
+
+  it('returns true below the default max-attempts bound for non-tombstoned errors', () => {
+    const transientError = new Error('network failure');
+
+    expect(idempotencyMod.shouldRetryIgnoringTombstone(0, transientError)).toBe(true);
+    expect(idempotencyMod.shouldRetryIgnoringTombstone(2, transientError)).toBe(true);
+  });
+
+  it('returns false at or above the max-attempts bound', () => {
+    const transientError = new Error('network failure');
+
+    expect(idempotencyMod.shouldRetryIgnoringTombstone(3, transientError)).toBe(false);
+    expect(idempotencyMod.shouldRetryIgnoringTombstone(99, transientError)).toBe(false);
+  });
+
+  it('respects a custom max-attempts value', () => {
+    const transientError = new Error('network failure');
+
+    expect(idempotencyMod.shouldRetryIgnoringTombstone(1, transientError, 1)).toBe(false);
+    expect(idempotencyMod.shouldRetryIgnoringTombstone(0, transientError, 1)).toBe(true);
+  });
+
+  it('returns true for a non-tombstoned 413 (different cause)', () => {
+    // A 413 from Kestrel's max-request-body limit has no tombstone header —
+    // retrying a smaller payload could succeed, so we do not block retries
+    // just because the status was 413.
+    const plain413: unknown = {
+      response: { status: 413, headers: { 'content-length': '0' } },
+      message: 'Payload Too Large',
+    };
+
+    expect(idempotencyMod.shouldRetryIgnoringTombstone(0, plain413)).toBe(true);
+  });
+});

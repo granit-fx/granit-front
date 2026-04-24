@@ -1,6 +1,11 @@
-import { setIdempotencyKeyGenerator } from '@granit/api-client';
+import { isIdempotencyTombstoned, setIdempotencyKeyGenerator } from '@granit/api-client';
 
 import type { InternalAxiosRequestConfig } from 'axios';
+
+// Re-export the tombstone helpers so consumers only need to depend on
+// `@granit/idempotency` to handle idempotency end-to-end (generation + retry).
+export { isIdempotencyTombstoned, readIdempotencyTombstone } from '@granit/api-client';
+export type { IdempotencyTombstoneInfo } from '@granit/api-client';
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -86,4 +91,43 @@ export function disableIdempotency(): void {
 
 function defaultKeyGenerator(_config: InternalAxiosRequestConfig): string {
   return crypto.randomUUID();
+}
+
+// ---------------------------------------------------------------------------
+// React Query retry helper
+// ---------------------------------------------------------------------------
+
+/**
+ * Retry predicate compatible with TanStack Query's `retry` option.
+ *
+ * Returns `false` immediately when the error is a tombstoned idempotency
+ * response — retrying with the same key will always return HTTP 413, so the
+ * default retry-on-error strategy would burn attempts for no benefit.
+ *
+ * For any other error, falls back to the usual `failureCount < maxAttempts`
+ * bound (default 3).
+ *
+ * @example
+ * ```ts
+ * import { shouldRetryIgnoringTombstone } from '@granit/idempotency';
+ *
+ * const queryClient = new QueryClient({
+ *   defaultOptions: {
+ *     mutations: {
+ *       retry: (failureCount, error) =>
+ *         shouldRetryIgnoringTombstone(failureCount, error),
+ *     },
+ *   },
+ * });
+ * ```
+ */
+export function shouldRetryIgnoringTombstone(
+  failureCount: number,
+  error: unknown,
+  maxAttempts = 3
+): boolean {
+  if (isIdempotencyTombstoned(error)) {
+    return false;
+  }
+  return failureCount < maxAttempts;
 }

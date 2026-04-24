@@ -206,6 +206,22 @@
           "kind": "interface",
           "signature": "interface ValidationDetails",
           "members": []
+        },
+        {
+          "name": "isIdempotencyTombstoned",
+          "kind": "function",
+          "signature": "function isIdempotencyTombstoned(error: unknown): boolean"
+        },
+        {
+          "name": "readIdempotencyTombstone",
+          "kind": "function",
+          "signature": "function readIdempotencyTombstone(error: unknown): IdempotencyTombstoneInfo | undefined"
+        },
+        {
+          "name": "IdempotencyTombstoneInfo",
+          "kind": "interface",
+          "signature": "interface IdempotencyTombstoneInfo",
+          "members": []
         }
       ]
     },
@@ -611,6 +627,11 @@
           "name": "disableIdempotency",
           "kind": "function",
           "signature": "function disableIdempotency(): void"
+        },
+        {
+          "name": "shouldRetryIgnoringTombstone",
+          "kind": "function",
+          "signature": "function shouldRetryIgnoringTombstone( failureCount: number, error: unknown, maxAttempts = 3 ): boolean"
         }
       ]
     },

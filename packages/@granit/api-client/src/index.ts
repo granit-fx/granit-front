@@ -219,3 +219,7 @@ export function buildApiUrl(basePath: string, ...segments: string[]): string {
 
 export { HttpError, TimeoutError, ValidationError } from './errors.js';
 export type { ProblemDetailsPayload, ValidationDetails } from './errors.js';
+
+// Idempotency tombstone helpers — see ./idempotency.ts.
+export { isIdempotencyTombstoned, readIdempotencyTombstone } from './idempotency.js';
+export type { IdempotencyTombstoneInfo } from './idempotency.js';
