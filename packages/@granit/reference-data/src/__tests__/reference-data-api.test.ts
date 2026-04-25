@@ -38,7 +38,7 @@ const mockEntry: ReferenceDataEntry = {
   validFrom: null,
   validTo: null,
   parentCode: null,
-  extraProperties: null,
+  metadata: null,
 };
 
 describe('listReferenceData', () => {

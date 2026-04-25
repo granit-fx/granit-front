@@ -49,10 +49,7 @@ describe('@granit/reference-data types', () => {
     });
 
     it('should have extra properties bag', () => {
-      expectTypeOf<ReferenceDataEntry['extraProperties']>().toEqualTypeOf<Record<
-        string,
-        string
-      > | null>();
+      expectTypeOf<ReferenceDataEntry['metadata']>().toEqualTypeOf<Record<string, string> | null>();
     });
 
     it('should have a unique id', () => {
@@ -92,11 +89,11 @@ describe('@granit/reference-data types', () => {
       >();
     });
 
-    it('should have optional parentCode and extraProperties', () => {
+    it('should have optional parentCode and metadata', () => {
       expectTypeOf<ReferenceDataCreateRequest['parentCode']>().toEqualTypeOf<
         string | null | undefined
       >();
-      expectTypeOf<ReferenceDataCreateRequest['extraProperties']>().toEqualTypeOf<
+      expectTypeOf<ReferenceDataCreateRequest['metadata']>().toEqualTypeOf<
         Record<string, string> | null | undefined
       >();
     });
@@ -119,11 +116,11 @@ describe('@granit/reference-data types', () => {
       expectTypeOf<ReferenceDataUpdateRequest['activated']>().toEqualTypeOf<boolean | undefined>();
     });
 
-    it('should have optional parentCode and extraProperties', () => {
+    it('should have optional parentCode and metadata', () => {
       expectTypeOf<ReferenceDataUpdateRequest['parentCode']>().toEqualTypeOf<
         string | null | undefined
       >();
-      expectTypeOf<ReferenceDataUpdateRequest['extraProperties']>().toEqualTypeOf<
+      expectTypeOf<ReferenceDataUpdateRequest['metadata']>().toEqualTypeOf<
         Record<string, string> | null | undefined
       >();
     });

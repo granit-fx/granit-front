@@ -19,7 +19,7 @@ export const mockAdminUsers: Mutable<AdminUser>[] = [
     firstName: 'Alice',
     lastName: 'Dupont',
     enabled: true,
-    extraProperties: {},
+    metadata: {},
   },
   {
     userId: 'usr_01HZ9KQX0000000000002',
@@ -28,7 +28,7 @@ export const mockAdminUsers: Mutable<AdminUser>[] = [
     firstName: 'Bob',
     lastName: 'Martin',
     enabled: true,
-    extraProperties: {},
+    metadata: {},
   },
   {
     userId: 'usr_01HZ9KQX0000000000003',
@@ -37,7 +37,7 @@ export const mockAdminUsers: Mutable<AdminUser>[] = [
     firstName: 'Charlie',
     lastName: 'Leblanc',
     enabled: false,
-    extraProperties: { department: 'Engineering' },
+    metadata: { department: 'Engineering' },
   },
 ];
 

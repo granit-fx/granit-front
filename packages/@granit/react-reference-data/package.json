@@ -1,7 +1,7 @@
 {
   "name": "@granit/react-reference-data",
   "description": "React hooks factory for @granit/reference-data — createReferenceDataHooks",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {

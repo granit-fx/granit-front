@@ -28,7 +28,7 @@ const sampleUser: IdentityUser = {
   firstName: 'John',
   lastName: 'Doe',
   enabled: true,
-  extraProperties: { department: 'Engineering' },
+  metadata: { department: 'Engineering' },
 };
 
 const basePath = '/identity/users';

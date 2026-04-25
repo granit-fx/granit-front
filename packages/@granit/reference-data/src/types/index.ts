@@ -41,7 +41,7 @@ export interface ReferenceDataEntry extends ReferenceDataLabels {
   /** Parent code for hierarchical types (null for root entries). */
   readonly parentCode: string | null;
   /** Custom properties bag (all values are strings). */
-  readonly extraProperties: Record<string, string> | null;
+  readonly metadata: Record<string, string> | null;
 }
 
 /**
@@ -57,7 +57,7 @@ export interface ReferenceDataCreateRequest extends Partial<ReferenceDataLabels>
   readonly validFrom?: string | null;
   readonly validTo?: string | null;
   readonly parentCode?: string | null;
-  readonly extraProperties?: Record<string, string> | null;
+  readonly metadata?: Record<string, string> | null;
 }
 
 /**
@@ -73,7 +73,7 @@ export interface ReferenceDataUpdateRequest extends Partial<ReferenceDataLabels>
   readonly validFrom?: string | null;
   readonly validTo?: string | null;
   readonly parentCode?: string | null;
-  readonly extraProperties?: Record<string, string> | null;
+  readonly metadata?: Record<string, string> | null;
 }
 
 /**

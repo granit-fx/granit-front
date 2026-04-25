@@ -105,7 +105,7 @@ const capabilities: IdentityProviderCapabilities = {
 };
 
 // ---------------------------------------------------------------------------
-// Helper: map IdentityUser to response shape with extraProperties
+// Helper: map IdentityUser to response shape with metadata
 // ---------------------------------------------------------------------------
 
 function toIdentityUser(u: IdentityUser) {
@@ -116,7 +116,7 @@ function toIdentityUser(u: IdentityUser) {
     firstName: u.firstName,
     lastName: u.lastName,
     enabled: u.enabled,
-    extraProperties: { locale: 'fr', timezone: 'Europe/Brussels' },
+    metadata: { locale: 'fr', timezone: 'Europe/Brussels' },
   };
 }
 
@@ -237,7 +237,7 @@ export function createIdentityHandlers(
         firstName: body.firstName ?? null,
         lastName: body.lastName ?? null,
         enabled: body.enabled,
-        extraProperties: {},
+        metadata: {},
       };
       return HttpResponse.json(newUser, { status: 201 });
     }),

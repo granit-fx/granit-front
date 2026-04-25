@@ -37,7 +37,7 @@ const mockUser: IdentityUser = {
   firstName: 'John',
   lastName: 'Doe',
   enabled: true,
-  extraProperties: {},
+  metadata: {},
 };
 
 const mockPage: IdentityUserPage = {

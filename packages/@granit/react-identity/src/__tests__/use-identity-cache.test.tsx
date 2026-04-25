@@ -45,7 +45,7 @@ const mockUsers: IdentityUser[] = [
     firstName: 'John',
     lastName: 'Doe',
     enabled: true,
-    extraProperties: {},
+    metadata: {},
   },
 ];
 

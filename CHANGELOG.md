@@ -62,6 +62,12 @@ Ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ### Modifié
 
+- **@granit/identity, @granit/openiddict-admin, @granit/reference-data**
+  (et leurs `react-*`) : renommage du champ wire format
+  `extraProperties` → `metadata` pour s'aligner sur le renommage backend
+  (Granit dotnet PR #1209). Bump : identity 0.2.0 → 0.3.0,
+  openiddict-admin 0.1.0 → 0.2.0, reference-data 0.2.0 → 0.3.0
+  (idem pour les `react-*`). **Breaking** — voir `MIGRATION.md`. (2026-04-25)
 - **@granit/query-engine** : adaptation de la pagination `skip`/`take` vers
   `page`/`pageSize` (`PagedResult<T>`) (2026-03-08)
 - **@granit/query-engine** : extraction des ternaires imbriqués et réduction de la

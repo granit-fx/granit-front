@@ -25,7 +25,7 @@ const sampleUser: IdentityUser = {
   firstName: 'John',
   lastName: 'Doe',
   enabled: true,
-  extraProperties: {},
+  metadata: {},
 };
 
 const basePath = '/identity/provider';

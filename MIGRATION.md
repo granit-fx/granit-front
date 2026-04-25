@@ -1,5 +1,60 @@
 # Guide de migration
 
+## `extraProperties` → `metadata` (renommage framework-wide)
+
+**Date** : 2026-04-25
+**Packages affectés** : `@granit/identity` (0.3.0),
+`@granit/openiddict-admin` (0.2.0), `@granit/reference-data` (0.3.0),
+et leurs `react-*` correspondants.
+
+### Contexte
+
+Le framework Granit aligne sa terminologie sur le standard de l'industrie
+(Stripe, ORB, AWS, Kubernetes, Shopify) : le champ d'extensibilité
+d'entité s'appelle désormais `metadata`. Voir
+[Granit dotnet PR #1209](https://github.com/granit-fx/granit-dotnet/pull/1209)
+pour le détail côté backend.
+
+Côté frontend, le wire format JSON change en conséquence : `extraProperties`
+n'existe plus, remplacé par `metadata` dans les types TypeScript exportés
+et toutes les fixtures de test.
+
+### Impact sur les consommateurs
+
+Sed mécanique sur le code applicatif :
+
+```bash
+git ls-files '*.ts' '*.tsx' '*.json' | xargs sed -i \
+  -e 's/extraProperties/metadata/g' \
+  -e 's/ExtraProperties/Metadata/g' \
+  -e 's/ExtraProperty/Metadata/g'
+```
+
+Et bumper les dépendances dans `package.json` :
+
+```diff
+- "@granit/identity": "^0.2.0",
++ "@granit/identity": "^0.3.0",
+- "@granit/openiddict-admin": "^0.1.0",
++ "@granit/openiddict-admin": "^0.2.0",
+- "@granit/reference-data": "^0.2.0",
++ "@granit/reference-data": "^0.3.0",
+- "@granit/react-identity": "^0.2.0",
++ "@granit/react-identity": "^0.3.0",
+- "@granit/react-openiddict-admin": "^0.1.0",
++ "@granit/react-openiddict-admin": "^0.2.0",
+- "@granit/react-reference-data": "^0.2.0",
++ "@granit/react-reference-data": "^0.3.0",
+```
+
+### Coordination avec le backend
+
+Le backend doit être déployé **avant** la mise en production du frontend :
+les anciens clients qui envoient `{ extraProperties: ... }` recevront un
+`400 Bad Request` (champ inconnu, pas de fallback de compatibilité).
+Idem dans l'autre sens : un nouveau client face à un ancien backend ne
+recevra pas le champ attendu.
+
 ## Pagination : migration vers `@granit/query-engine`
 
 **Date** : 2026-03-08

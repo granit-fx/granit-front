@@ -35,7 +35,7 @@ const mockEntry: TestEntity = {
   validFrom: null,
   validTo: null,
   parentCode: null,
-  extraProperties: null,
+  metadata: null,
   extra: 'test-value',
 };
 

@@ -19,7 +19,7 @@ export interface AdminUser {
   readonly firstName: string | null;
   readonly lastName: string | null;
   readonly enabled: boolean;
-  readonly extraProperties: Readonly<Record<string, string>>;
+  readonly metadata: Readonly<Record<string, string>>;
 }
 
 /** Paginated list of admin users. */

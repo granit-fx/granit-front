@@ -10,7 +10,7 @@ export const mockUsers: IdentityUser[] = [
     lastName: 'Dupont',
     username: 'marie.dupont',
     enabled: true,
-    extraProperties: {},
+    metadata: {},
   },
   {
     userId: toEntityId<'User'>('user-002'),
@@ -19,7 +19,7 @@ export const mockUsers: IdentityUser[] = [
     lastName: 'Martin',
     username: 'jean.martin',
     enabled: true,
-    extraProperties: {},
+    metadata: {},
   },
   {
     userId: toEntityId<'User'>('user-003'),
@@ -28,7 +28,7 @@ export const mockUsers: IdentityUser[] = [
     lastName: 'Bernard',
     username: 'sophie.bernard',
     enabled: false,
-    extraProperties: {},
+    metadata: {},
   },
   {
     userId: toEntityId<'User'>('user-004'),
@@ -37,7 +37,7 @@ export const mockUsers: IdentityUser[] = [
     lastName: 'Leblanc',
     username: 'pierre.leblanc',
     enabled: true,
-    extraProperties: {},
+    metadata: {},
   },
   {
     userId: toEntityId<'User'>('user-005'),
@@ -46,7 +46,7 @@ export const mockUsers: IdentityUser[] = [
     lastName: 'Moreau',
     username: 'claire.moreau',
     enabled: true,
-    extraProperties: {},
+    metadata: {},
   },
   {
     userId: toEntityId<'User'>('user-006'),
@@ -55,7 +55,7 @@ export const mockUsers: IdentityUser[] = [
     lastName: 'Petit',
     username: 'thomas.petit',
     enabled: true,
-    extraProperties: {},
+    metadata: {},
   },
   {
     userId: toEntityId<'User'>('user-007'),
@@ -64,7 +64,7 @@ export const mockUsers: IdentityUser[] = [
     lastName: 'Robert',
     username: 'alice.robert',
     enabled: false,
-    extraProperties: {},
+    metadata: {},
   },
   {
     userId: toEntityId<'User'>('user-008'),
@@ -73,7 +73,7 @@ export const mockUsers: IdentityUser[] = [
     lastName: 'Simon',
     username: 'paul.simon',
     enabled: true,
-    extraProperties: {},
+    metadata: {},
   },
   {
     userId: toEntityId<'User'>('user-009'),
@@ -82,7 +82,7 @@ export const mockUsers: IdentityUser[] = [
     lastName: 'Garcia',
     username: 'nathalie.garcia',
     enabled: true,
-    extraProperties: {},
+    metadata: {},
   },
   {
     userId: toEntityId<'User'>('user-010'),
@@ -91,7 +91,7 @@ export const mockUsers: IdentityUser[] = [
     lastName: 'Lambert',
     username: 'francois.lambert',
     enabled: true,
-    extraProperties: {},
+    metadata: {},
   },
   {
     userId: toEntityId<'User'>('user-011'),
@@ -100,7 +100,7 @@ export const mockUsers: IdentityUser[] = [
     lastName: 'Rousseau',
     username: 'isabelle.rousseau',
     enabled: true,
-    extraProperties: {},
+    metadata: {},
   },
   {
     userId: toEntityId<'User'>('user-012'),
@@ -109,7 +109,7 @@ export const mockUsers: IdentityUser[] = [
     lastName: 'Fournier',
     username: 'marc.fournier',
     enabled: false,
-    extraProperties: {},
+    metadata: {},
   },
   {
     userId: toEntityId<'User'>('user-013'),
@@ -118,7 +118,7 @@ export const mockUsers: IdentityUser[] = [
     lastName: 'Girard',
     username: 'valerie.girard',
     enabled: true,
-    extraProperties: {},
+    metadata: {},
   },
   {
     userId: toEntityId<'User'>('user-014'),
@@ -127,7 +127,7 @@ export const mockUsers: IdentityUser[] = [
     lastName: 'Bonnet',
     username: 'luc.bonnet',
     enabled: true,
-    extraProperties: {},
+    metadata: {},
   },
   {
     userId: toEntityId<'User'>('user-015'),
@@ -136,7 +136,7 @@ export const mockUsers: IdentityUser[] = [
     lastName: 'Dupuis',
     username: 'emilie.dupuis',
     enabled: true,
-    extraProperties: {},
+    metadata: {},
   },
 ];
 

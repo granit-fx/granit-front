@@ -27,7 +27,7 @@ const sampleUser: IdentityUser = {
   firstName: 'John',
   lastName: 'Doe',
   enabled: true,
-  extraProperties: {},
+  metadata: {},
 };
 
 function createWrapper(client: AxiosInstance, providerBasePath?: string) {

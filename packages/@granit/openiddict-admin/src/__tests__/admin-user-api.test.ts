@@ -14,7 +14,7 @@ const mockUser: AdminUser = {
   firstName: 'Alice',
   lastName: 'Doe',
   enabled: true,
-  extraProperties: {},
+  metadata: {},
 };
 
 const mockUserPage: AdminUserPage = {
