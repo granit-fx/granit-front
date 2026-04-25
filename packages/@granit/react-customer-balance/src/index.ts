@@ -14,4 +14,5 @@ export {
   useAddAdminCredit,
   useBalanceTransactions,
   useCustomerBalance,
+  useDebitCustomerBalance,
 } from './hooks/use-customer-balance.js';

@@ -491,6 +491,17 @@
       ]
     },
     {
+      "name": "@granit/catalog",
+      "description": "Granit.Catalog — Product aggregate (shared billing item) types and API",
+      "exports": [
+        {
+          "name": "CatalogPermissions",
+          "kind": "const",
+          "signature": "const CatalogPermissions"
+        }
+      ]
+    },
+    {
       "name": "@granit/cookies",
       "description": "Cookie consent abstraction with React context and hooks",
       "exports": []
@@ -1829,6 +1840,24 @@
       ]
     },
     {
+      "name": "@granit/react-catalog",
+      "description": "React bindings for @granit/catalog — CatalogProvider and product hooks",
+      "exports": [
+        {
+          "name": "CatalogConfig",
+          "kind": "interface",
+          "signature": "interface CatalogConfig",
+          "members": []
+        },
+        {
+          "name": "CatalogProviderProps",
+          "kind": "interface",
+          "signature": "interface CatalogProviderProps",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/react-cookies",
       "description": "React bindings for @granit/cookies — CookieConsentProvider, useCookieConsent",
       "exports": [
@@ -2183,11 +2212,6 @@
           "kind": "interface",
           "signature": "interface MeteringProviderProps",
           "members": []
-        },
-        {
-          "name": "UpdateMeterDefinitionVariables",
-          "kind": "type",
-          "signature": "type UpdateMeterDefinitionVariables = { readonly id: string; readonly request: MeterDefinitionUpdateRequest; }"
         }
       ]
     },

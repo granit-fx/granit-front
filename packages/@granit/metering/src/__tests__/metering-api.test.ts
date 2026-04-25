@@ -2,6 +2,8 @@ import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  archiveMeterDefinition,
+  backfillUsageEvents,
   checkMeteringQuota,
   createMeterDefinition,
   createMeterDefinitionsSavedView,
@@ -9,6 +11,7 @@ import {
   deactivateMeterDefinition,
   deleteMeterDefinitionsSavedView,
   deleteUsageAggregatesSavedView,
+  deprecateMeterEvent,
   getMeterDefinition,
   getMeterDefinitionsQueryMeta,
   getUsageAggregatesQueryMeta,
@@ -18,6 +21,8 @@ import {
   listMeterDefinitionsSavedViews,
   listUsageAggregates,
   listUsageAggregatesSavedViews,
+  publishMeterDefinition,
+  recomputeMeterUsage,
   recordUsageEvents,
   setDefaultMeterDefinitionsSavedView,
   setDefaultUsageAggregatesSavedView,
@@ -53,6 +58,9 @@ const sampleMeter: MeterDefinitionResponse = {
   description: 'Number of API calls',
   aggregationType: 'Sum',
   activated: true,
+  productId: null,
+  lifecycleStatus: 'Published',
+  distinctProperty: null,
 };
 
 const sampleUsage: UsageAggregateResponse = {
@@ -262,6 +270,9 @@ const sampleMeterDefinition: MeterDefinition = {
   unit: 'calls',
   aggregationType: 'Sum',
   activated: true,
+  lifecycleStatus: 'Published',
+  distinctProperty: null,
+  productId: null,
   createdAt: '2026-04-01T00:00:00Z' as ISODateString,
   modifiedAt: '2026-04-01T00:00:00Z' as ISODateString,
 };
@@ -533,5 +544,106 @@ describe('metering-api / QueryEngine — usage aggregates', () => {
     await listUsageAggregates(client, '/custom/metering');
 
     expect(client.get).toHaveBeenCalledWith('/custom/metering/usage-aggregates');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Lifecycle + admin operations (publish/archive/recompute/backfill/deprecate)
+// ---------------------------------------------------------------------------
+
+describe('metering-api / lifecycle + admin operations', () => {
+  describe('publishMeterDefinition', () => {
+    it('should POST {basePath}/meters/{id}/publish', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleMeter });
+
+      const result = await publishMeterDefinition(client, basePath, 'meter-1');
+
+      expect(client.post).toHaveBeenCalledWith('/api/granit/metering/meters/meter-1/publish');
+      expect(result).toEqual(sampleMeter);
+    });
+  });
+
+  describe('archiveMeterDefinition', () => {
+    it('should POST {basePath}/meters/{id}/archive', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleMeter });
+
+      const result = await archiveMeterDefinition(client, basePath, 'meter-1');
+
+      expect(client.post).toHaveBeenCalledWith('/api/granit/metering/meters/meter-1/archive');
+      expect(result).toEqual(sampleMeter);
+    });
+  });
+
+  describe('recomputeMeterUsage', () => {
+    it('should POST {basePath}/meters/{id}/recompute with window', async () => {
+      const client = createMockClient();
+      const response = {
+        meterDefinitionId: 'meter-1',
+        windowStart: '2026-04-01T00:00:00Z',
+        windowEnd: '2026-04-02T00:00:00Z',
+        eventsScanned: 120,
+        aggregatesRebuilt: 24,
+        durationMilliseconds: 314,
+      };
+      vi.mocked(client.post).mockResolvedValue({ data: response });
+
+      const result = await recomputeMeterUsage(client, basePath, 'meter-1', {
+        from: '2026-04-01T00:00:00Z',
+        to: '2026-04-02T00:00:00Z',
+      });
+
+      expect(client.post).toHaveBeenCalledWith('/api/granit/metering/meters/meter-1/recompute', {
+        from: '2026-04-01T00:00:00Z',
+        to: '2026-04-02T00:00:00Z',
+      });
+      expect(result).toEqual(response);
+    });
+  });
+
+  describe('backfillUsageEvents', () => {
+    it('should POST {basePath}/events/backfill', async () => {
+      const client = createMockClient();
+      const response = { eventsAccepted: 3, metersAffected: 1, aggregatesRebuilt: 5 };
+      vi.mocked(client.post).mockResolvedValue({ data: response });
+
+      const events = [
+        {
+          meterDefinitionId: 'meter-1',
+          idempotencyKey: 'k1',
+          quantity: 1,
+          timestamp: '2025-01-01T00:00:00Z',
+          metadata: null,
+        },
+      ];
+
+      const result = await backfillUsageEvents(client, basePath, { events });
+
+      expect(client.post).toHaveBeenCalledWith('/api/granit/metering/events/backfill', { events });
+      expect(result).toEqual(response);
+    });
+  });
+
+  describe('deprecateMeterEvent', () => {
+    it('should POST {basePath}/events/{id}/deprecate', async () => {
+      const client = createMockClient();
+      const response = {
+        eventId: 'evt-1',
+        meterDefinitionId: 'meter-1',
+        deprecatedAt: '2026-04-25T08:00:00Z',
+        aggregatesRebuilt: 1,
+      };
+      vi.mocked(client.post).mockResolvedValue({ data: response });
+
+      const result = await deprecateMeterEvent(client, basePath, 'evt-1', {
+        reason: 'duplicate from retried client',
+      });
+
+      expect(client.post).toHaveBeenCalledWith('/api/granit/metering/events/evt-1/deprecate', {
+        reason: 'duplicate from retried client',
+      });
+      expect(result).toEqual(response);
+    });
   });
 });

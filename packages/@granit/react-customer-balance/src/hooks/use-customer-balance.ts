@@ -1,5 +1,6 @@
 import {
   addAdminCredit,
+  debitCustomerBalance,
   getCustomerBalance,
   listBalanceTransactions,
 } from '@granit/customer-balance';
@@ -12,6 +13,7 @@ import {
 
 import type {
   AdminCreditRequest,
+  AdminDebitRequest,
   BalanceTransactionResponse,
   CustomerBalanceResponse,
 } from '@granit/customer-balance';
@@ -70,6 +72,46 @@ export function useAddAdminCredit(): UseMutationResult<void, Error, AdminCreditR
 
   return useMutation({
     mutationFn: (request: AdminCreditRequest) => addAdminCredit(config.client, basePath, request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: buildCustomerBalanceQueryKey(config, 'balance'),
+      });
+      queryClient.invalidateQueries({
+        queryKey: buildCustomerBalanceQueryKey(config, 'transactions'),
+      });
+    },
+  });
+}
+
+/**
+ * Debit a tenant's balance manually — admin tooling for corrections,
+ * scheduled drawdowns, and non-invoice adjustments. Invalidates balance
+ * and transaction queries on success.
+ *
+ * @example
+ * ```tsx
+ * const debit = useDebitCustomerBalance();
+ * await debit.mutateAsync({
+ *   amount: 50,
+ *   currency: 'EUR',
+ *   reason: 'Correction after manual reconciliation',
+ *   referenceId: 'adj-2026-04-25-001',
+ *   referenceType: 'AdminAdjustment',
+ * });
+ * ```
+ */
+export function useDebitCustomerBalance(): UseMutationResult<
+  CustomerBalanceResponse,
+  Error,
+  AdminDebitRequest
+> {
+  const config = useCustomerBalanceConfig();
+  const queryClient = useQueryClient();
+  const basePath = config.basePath!;
+
+  return useMutation({
+    mutationFn: (request: AdminDebitRequest) =>
+      debitCustomerBalance(config.client, basePath, request),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildCustomerBalanceQueryKey(config, 'balance'),

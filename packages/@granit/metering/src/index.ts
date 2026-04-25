@@ -2,6 +2,10 @@
 export type {
   AggregationPeriod,
   AggregationType,
+  BackfillUsageRequest,
+  BackfillUsageResponse,
+  DeprecateEventRequest,
+  DeprecateEventResponse,
   MeterDefinition,
   MeterDefinitionCreateRequest,
   MeterDefinitionListParams,
@@ -9,7 +13,10 @@ export type {
   MeterDefinitionResponse,
   MeterDefinitionUpdateRequest,
   MeterEventRequest,
+  MeterLifecycleStatus,
   MeteringQuotaStatusResponse,
+  RecomputeUsageRequest,
+  RecomputeUsageResponse,
   RecordUsageRequest,
   UsageAggregate,
   UsageAggregateListParams,
@@ -22,6 +29,8 @@ export { MeteringPermissions } from './permissions.js';
 
 // API
 export {
+  archiveMeterDefinition,
+  backfillUsageEvents,
   checkMeteringQuota,
   createMeterDefinition,
   createMeterDefinitionsSavedView,
@@ -29,6 +38,7 @@ export {
   deactivateMeterDefinition,
   deleteMeterDefinitionsSavedView,
   deleteUsageAggregatesSavedView,
+  deprecateMeterEvent,
   getMeterDefinition,
   getMeterDefinitionsQueryMeta,
   getUsageAggregatesQueryMeta,
@@ -38,6 +48,8 @@ export {
   listMeterDefinitionsSavedViews,
   listUsageAggregates,
   listUsageAggregatesSavedViews,
+  publishMeterDefinition,
+  recomputeMeterUsage,
   recordUsageEvents,
   setDefaultMeterDefinitionsSavedView,
   setDefaultUsageAggregatesSavedView,

@@ -44,6 +44,7 @@ const samplePrice: PlanPriceResponse = {
   isCurrent: true,
   replacedByPriceId: null,
   replacedAt: null,
+  productId: null,
 };
 
 function createWrapper(client: AxiosInstance, basePath?: string) {

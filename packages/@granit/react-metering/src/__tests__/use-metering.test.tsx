@@ -49,6 +49,9 @@ const sampleMeter: MeterDefinitionResponse = {
   description: 'Number of API calls',
   aggregationType: 'Sum',
   activated: true,
+  productId: null,
+  lifecycleStatus: 'Published',
+  distinctProperty: null,
 };
 
 const sampleUsage: UsageAggregateResponse = {

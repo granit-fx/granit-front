@@ -30,6 +30,17 @@ export interface InvoiceCreateRequest {
   readonly periodEnd: string | null;
 }
 
+/**
+ * Origin of an invoice line item.
+ *
+ * Convention (see Granit dotnet ADR-036):
+ * - `Subscription` / `Usage` → {@link InvoiceLineItemResponse.sourceId} MUST be a
+ *   Guid string referencing the originating `Subscription.Id` / `PlanPrice.Id`
+ *   (Subscription) or `MeterDefinition.Id` (Usage).
+ * - `OneShot` / `Credit` → free-form (SKU, refund reference, or `null`).
+ */
+export type InvoiceSourceType = 'Subscription' | 'Usage' | 'OneShot' | 'Credit';
+
 /** A single line item within an invoice. */
 export interface InvoiceLineItemResponse {
   readonly id: string;
@@ -39,10 +50,18 @@ export interface InvoiceLineItemResponse {
   readonly amount: number;
   readonly taxRate: number | null;
   readonly taxAmount: number;
-  readonly sourceType: string;
+  readonly sourceType: InvoiceSourceType;
   readonly sourceId: string | null;
   readonly periodStart: string | null;
   readonly periodEnd: string | null;
+  /**
+   * Optional `Granit.Catalog.Product` identifier propagated from the upstream
+   * entity (`MeterDefinition.productId` for Usage, `PlanPrice.productId` for
+   * Subscription). Soft reference (no SQL FK across modules); survives meter
+   * or price renames so reporting stays attributable to a stable catalog item.
+   * See Granit dotnet ADR-036.
+   */
+  readonly productId: string | null;
 }
 
 /** Full invoice response from the API. */

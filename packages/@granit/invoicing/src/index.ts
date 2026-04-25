@@ -7,6 +7,7 @@ export type {
   InvoiceId,
   InvoiceLineItemResponse,
   InvoiceResponse,
+  InvoiceSourceType,
 } from './types.js';
 
 // Permissions

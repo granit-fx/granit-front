@@ -56,6 +56,7 @@ const samplePrice: PlanPriceResponse = {
   isCurrent: true,
   replacedByPriceId: null,
   replacedAt: null,
+  productId: null,
 };
 
 const sampleSubscription: SubscriptionResponse = {

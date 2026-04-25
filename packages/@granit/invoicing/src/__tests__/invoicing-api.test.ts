@@ -19,9 +19,11 @@ const sampleLineItem = {
   taxRate: 0.21,
   taxAmount: 1029,
   sourceType: 'Subscription',
-  sourceId: 'sub-1',
+  // ADR-036: Subscription lines carry a Guid sourceId.
+  sourceId: '0a4d76b2-3d9f-4a6f-9fd8-9a92b9abf001',
   periodStart: '2026-03-01T00:00:00Z',
   periodEnd: '2026-04-01T00:00:00Z',
+  productId: null,
 } as const;
 
 const sampleInvoice: InvoiceResponse = {

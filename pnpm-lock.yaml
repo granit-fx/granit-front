@@ -300,6 +300,22 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/catalog:
+    dependencies:
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
+      axios:
+        specifier: 1.15.0
+        version: 1.15.0
+    devDependencies:
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/cookies: {}
 
   packages/@granit/cookies-klaro:
@@ -930,6 +946,34 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+
+  packages/@granit/react-catalog:
+    dependencies:
+      '@granit/catalog':
+        specifier: workspace:*
+        version: link:../catalog
+      '@tanstack/react-query':
+        specifier: 5.99.0
+        version: 5.99.0(react@19.2.5)
+      axios:
+        specifier: 1.15.0
+        version: 1.15.0
+      msw:
+        specifier: ^2.12.0
+        version: 2.13.4(@types/node@25.6.0)(typescript@6.0.3)
+      react:
+        specifier: ^19.0.0
+        version: 19.2.5
+    devDependencies:
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-cookies:
     dependencies:

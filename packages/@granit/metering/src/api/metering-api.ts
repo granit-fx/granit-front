@@ -9,6 +9,10 @@ import {
 } from '@granit/query-engine';
 
 import type {
+  BackfillUsageRequest,
+  BackfillUsageResponse,
+  DeprecateEventRequest,
+  DeprecateEventResponse,
   MeterDefinition,
   MeterDefinitionCreateRequest,
   MeterDefinitionListParams,
@@ -16,6 +20,8 @@ import type {
   MeterDefinitionResponse,
   MeterDefinitionUpdateRequest,
   MeteringQuotaStatusResponse,
+  RecomputeUsageRequest,
+  RecomputeUsageResponse,
   RecordUsageRequest,
   UsageAggregate,
   UsageAggregateListParams,
@@ -106,6 +112,10 @@ export async function updateMeterDefinition(
  * Deactivate a meter definition.
  *
  * `POST {basePath}/meters/{id}/deactivate`
+ *
+ * @deprecated Use {@link archiveMeterDefinition} instead. This endpoint
+ * remains a backend alias for one release; the lifecycle action is now
+ * `Publish → Archive` (see {@link MeterLifecycleStatus}).
  */
 export async function deactivateMeterDefinition(
   client: AxiosInstance,
@@ -113,6 +123,94 @@ export async function deactivateMeterDefinition(
   id: string
 ): Promise<void> {
   await client.post(`${basePath}/meters/${encodeURIComponent(id)}/deactivate`);
+}
+
+/**
+ * Publish a `Draft` meter definition. Only `Published` meters accept ingestion.
+ *
+ * `POST {basePath}/meters/{id}/publish`
+ */
+export async function publishMeterDefinition(
+  client: AxiosInstance,
+  basePath: string,
+  id: string
+): Promise<MeterDefinitionResponse> {
+  const response = await client.post<MeterDefinitionResponse>(
+    `${basePath}/meters/${encodeURIComponent(id)}/publish`
+  );
+  return response.data;
+}
+
+/**
+ * Archive a `Published` meter definition. Existing aggregates remain readable;
+ * new event ingestion is rejected.
+ *
+ * `POST {basePath}/meters/{id}/archive`
+ */
+export async function archiveMeterDefinition(
+  client: AxiosInstance,
+  basePath: string,
+  id: string
+): Promise<MeterDefinitionResponse> {
+  const response = await client.post<MeterDefinitionResponse>(
+    `${basePath}/meters/${encodeURIComponent(id)}/archive`
+  );
+  return response.data;
+}
+
+/**
+ * Recompute the usage aggregates for a meter over an arbitrary window.
+ * Window edges are snapped to hourly buckets server-side; the global ingestion
+ * watermark is never rewound — concurrent ingestion past `to` is unaffected.
+ *
+ * `POST {basePath}/meters/{id}/recompute`
+ */
+export async function recomputeMeterUsage(
+  client: AxiosInstance,
+  basePath: string,
+  id: string,
+  request: RecomputeUsageRequest
+): Promise<RecomputeUsageResponse> {
+  const response = await client.post<RecomputeUsageResponse>(
+    `${basePath}/meters/${encodeURIComponent(id)}/recompute`,
+    request
+  );
+  return response.data;
+}
+
+/**
+ * Backfill historical events older than the standard 7-day ingestion window
+ * (up to 365 days). Triggers automatic recomputes on past `UsageAggregate` rows.
+ *
+ * `POST {basePath}/events/backfill`
+ */
+export async function backfillUsageEvents(
+  client: AxiosInstance,
+  basePath: string,
+  request: BackfillUsageRequest
+): Promise<BackfillUsageResponse> {
+  const response = await client.post<BackfillUsageResponse>(`${basePath}/events/backfill`, request);
+  return response.data;
+}
+
+/**
+ * Soft-deprecate an individual meter event. The event row is preserved
+ * (audit trail); the affected hourly aggregate is auto-rebuilt without the
+ * deprecated event's contribution.
+ *
+ * `POST {basePath}/events/{id}/deprecate`
+ */
+export async function deprecateMeterEvent(
+  client: AxiosInstance,
+  basePath: string,
+  id: string,
+  request: DeprecateEventRequest
+): Promise<DeprecateEventResponse> {
+  const response = await client.post<DeprecateEventResponse>(
+    `${basePath}/events/${encodeURIComponent(id)}/deprecate`,
+    request
+  );
+  return response.data;
 }
 
 /**

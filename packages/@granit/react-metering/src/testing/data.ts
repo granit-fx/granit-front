@@ -16,6 +16,9 @@ export const sampleMeters: Mutable<MeterDefinitionResponse>[] = [
     aggregationType: 'Count',
     unit: 'calls',
     activated: true,
+    productId: null,
+    lifecycleStatus: 'Published',
+    distinctProperty: null,
   },
   {
     id: toEntityId<'MeterDefinition'>('mtr_002'),
@@ -24,6 +27,9 @@ export const sampleMeters: Mutable<MeterDefinitionResponse>[] = [
     aggregationType: 'Sum',
     unit: 'bytes',
     activated: true,
+    productId: null,
+    lifecycleStatus: 'Published',
+    distinctProperty: null,
   },
   {
     id: toEntityId<'MeterDefinition'>('mtr_003'),
@@ -32,6 +38,9 @@ export const sampleMeters: Mutable<MeterDefinitionResponse>[] = [
     aggregationType: 'Sum',
     unit: 'minutes',
     activated: true,
+    productId: null,
+    lifecycleStatus: 'Published',
+    distinctProperty: null,
   },
 ];
 

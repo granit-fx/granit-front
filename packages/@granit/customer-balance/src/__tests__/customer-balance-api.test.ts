@@ -3,12 +3,14 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   addAdminCredit,
+  debitCustomerBalance,
   getCustomerBalance,
   listBalanceTransactions,
 } from '../api/customer-balance-api.js';
 
 import type {
   AdminCreditRequest,
+  AdminDebitRequest,
   BalanceTransactionResponse,
   CustomerBalanceResponse,
 } from '../types.js';
@@ -120,6 +122,42 @@ describe('customer-balance-api', () => {
       await addAdminCredit(client, basePath, request);
 
       expect(client.post).toHaveBeenCalledWith(`${basePath}/credit`, request);
+    });
+  });
+
+  describe('debitCustomerBalance', () => {
+    it('should POST {basePath}/balance/debit and return updated balance', async () => {
+      const client = createMockClient();
+      const updated: CustomerBalanceResponse = { ...sampleBalance, balance: 100.0 };
+      vi.mocked(client.post).mockResolvedValue({ data: updated });
+
+      const request: AdminDebitRequest = {
+        amount: 50.0,
+        currency: 'EUR',
+        reason: 'Manual correction',
+      };
+
+      const result = await debitCustomerBalance(client, basePath, request);
+
+      expect(client.post).toHaveBeenCalledWith(`${basePath}/balance/debit`, request);
+      expect(result).toEqual(updated);
+    });
+
+    it('should support optional referenceId / referenceType for idempotent retries', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleBalance });
+
+      const request: AdminDebitRequest = {
+        amount: 10,
+        currency: 'EUR',
+        reason: 'Scheduled drawdown',
+        referenceId: '49a82c3e-1c50-4c0c-9d2e-4a9b7c0f6de2',
+        referenceType: 'AdminAdjustment',
+      };
+
+      await debitCustomerBalance(client, basePath, request);
+
+      expect(client.post).toHaveBeenCalledWith(`${basePath}/balance/debit`, request);
     });
   });
 });

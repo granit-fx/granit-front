@@ -33,6 +33,11 @@ export interface CreatePriceVersionRequest {
   readonly amount: number;
   readonly currency: string;
   readonly interval: BillingInterval;
+  /**
+   * Optional `Granit.Catalog.Product` identifier — the catalog item this price
+   * tarifs. Soft reference (no SQL FK).
+   */
+  readonly productId?: string | null;
 }
 
 export interface SubscriptionCreateRequest {
@@ -86,6 +91,12 @@ export interface PlanPriceResponse {
   readonly isCurrent: boolean;
   readonly replacedByPriceId: string | null;
   readonly replacedAt: string | null;
+  /**
+   * Optional reference to a `Granit.Catalog.Product` identifier — the catalog
+   * item this price tarifs. Soft reference (no SQL FK across modules);
+   * preserved across price versions.
+   */
+  readonly productId: string | null;
 }
 
 export interface SubscriptionResponse {

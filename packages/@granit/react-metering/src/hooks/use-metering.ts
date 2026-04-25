@@ -1,10 +1,15 @@
 import {
+  archiveMeterDefinition,
+  backfillUsageEvents,
   checkMeteringQuota,
   createMeterDefinition,
   deactivateMeterDefinition,
+  deprecateMeterEvent,
   getMeterDefinition,
   getUsageForPeriod,
   listActiveMeters,
+  publishMeterDefinition,
+  recomputeMeterUsage,
   recordUsageEvents,
   updateMeterDefinition,
 } from '@granit/metering';
@@ -13,10 +18,16 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { buildMeteringQueryKey, useMeteringConfig } from '../providers/metering-provider.js';
 
 import type {
+  BackfillUsageRequest,
+  BackfillUsageResponse,
+  DeprecateEventRequest,
+  DeprecateEventResponse,
   MeterDefinitionCreateRequest,
   MeterDefinitionResponse,
   MeterDefinitionUpdateRequest,
   MeteringQuotaStatusResponse,
+  RecomputeUsageRequest,
+  RecomputeUsageResponse,
   RecordUsageRequest,
   UsageAggregateResponse,
 } from '@granit/metering';
@@ -178,11 +189,9 @@ export function useUpdateMeterDefinition(): UseMutationResult<
  * Deactivate a meter definition.
  * Invalidates meters queries on success.
  *
- * @example
- * ```tsx
- * const deactivate = useDeactivateMeterDefinition();
- * await deactivate.mutateAsync('meter-1');
- * ```
+ * @deprecated Use {@link useArchiveMeterDefinition} instead — the lifecycle action is
+ * now `Publish → Archive`. The backend keeps the deactivate endpoint as an alias for
+ * one release; this hook will be removed in the next major version.
  */
 export function useDeactivateMeterDefinition(): UseMutationResult<void, Error, string> {
   const config = useMeteringConfig();
@@ -195,6 +204,132 @@ export function useDeactivateMeterDefinition(): UseMutationResult<void, Error, s
       queryClient.invalidateQueries({
         queryKey: buildMeteringQueryKey(config, 'meters'),
       });
+    },
+  });
+}
+
+/**
+ * Publish a `Draft` meter definition. Only `Published` meters accept ingestion.
+ * Invalidates meters queries on success.
+ */
+export function usePublishMeterDefinition(): UseMutationResult<
+  MeterDefinitionResponse,
+  Error,
+  string
+> {
+  const config = useMeteringConfig();
+  const queryClient = useQueryClient();
+  const basePath = config.basePath!;
+
+  return useMutation({
+    mutationFn: (id: string) => publishMeterDefinition(config.client, basePath, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: buildMeteringQueryKey(config, 'meters') });
+    },
+  });
+}
+
+/**
+ * Archive a `Published` meter definition. Existing aggregates remain readable;
+ * new event ingestion is rejected.
+ * Invalidates meters queries on success.
+ */
+export function useArchiveMeterDefinition(): UseMutationResult<
+  MeterDefinitionResponse,
+  Error,
+  string
+> {
+  const config = useMeteringConfig();
+  const queryClient = useQueryClient();
+  const basePath = config.basePath!;
+
+  return useMutation({
+    mutationFn: (id: string) => archiveMeterDefinition(config.client, basePath, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: buildMeteringQueryKey(config, 'meters') });
+    },
+  });
+}
+
+/** Variables for `useRecomputeMeterUsage`. */
+export type RecomputeMeterUsageVariables = {
+  readonly id: string;
+  readonly request: RecomputeUsageRequest;
+};
+
+/**
+ * Recompute the usage aggregates of a meter for an arbitrary time window.
+ * Invalidates usage and quota queries on success.
+ */
+export function useRecomputeMeterUsage(): UseMutationResult<
+  RecomputeUsageResponse,
+  Error,
+  RecomputeMeterUsageVariables
+> {
+  const config = useMeteringConfig();
+  const queryClient = useQueryClient();
+  const basePath = config.basePath!;
+
+  return useMutation({
+    mutationFn: ({ id, request }: RecomputeMeterUsageVariables) =>
+      recomputeMeterUsage(config.client, basePath, id, request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: buildMeteringQueryKey(config, 'usage') });
+      queryClient.invalidateQueries({ queryKey: buildMeteringQueryKey(config, 'quota') });
+    },
+  });
+}
+
+/**
+ * Backfill historical events older than the standard 7-day ingestion window
+ * (up to 365 days). Triggers automatic recomputes; invalidates usage and quota
+ * queries on success.
+ */
+export function useBackfillUsageEvents(): UseMutationResult<
+  BackfillUsageResponse,
+  Error,
+  BackfillUsageRequest
+> {
+  const config = useMeteringConfig();
+  const queryClient = useQueryClient();
+  const basePath = config.basePath!;
+
+  return useMutation({
+    mutationFn: (request: BackfillUsageRequest) =>
+      backfillUsageEvents(config.client, basePath, request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: buildMeteringQueryKey(config, 'usage') });
+      queryClient.invalidateQueries({ queryKey: buildMeteringQueryKey(config, 'quota') });
+    },
+  });
+}
+
+/** Variables for `useDeprecateMeterEvent`. */
+export type DeprecateMeterEventVariables = {
+  readonly id: string;
+  readonly request: DeprecateEventRequest;
+};
+
+/**
+ * Soft-deprecate an individual meter event. The event is preserved (audit
+ * trail); the affected aggregate is auto-rebuilt without the deprecated
+ * event's contribution. Invalidates usage and quota queries on success.
+ */
+export function useDeprecateMeterEvent(): UseMutationResult<
+  DeprecateEventResponse,
+  Error,
+  DeprecateMeterEventVariables
+> {
+  const config = useMeteringConfig();
+  const queryClient = useQueryClient();
+  const basePath = config.basePath!;
+
+  return useMutation({
+    mutationFn: ({ id, request }: DeprecateMeterEventVariables) =>
+      deprecateMeterEvent(config.client, basePath, id, request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: buildMeteringQueryKey(config, 'usage') });
+      queryClient.invalidateQueries({ queryKey: buildMeteringQueryKey(config, 'quota') });
     },
   });
 }

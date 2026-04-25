@@ -9,12 +9,14 @@ import {
   useAddAdminCredit,
   useBalanceTransactions,
   useCustomerBalance,
+  useDebitCustomerBalance,
 } from '../hooks/use-customer-balance.js';
 import { CustomerBalanceProvider } from '../providers/customer-balance-provider.js';
 
 import type { CustomerBalanceConfig } from '../providers/customer-balance-provider.js';
 import type {
   AdminCreditRequest,
+  AdminDebitRequest,
   BalanceTransactionResponse,
   CustomerBalanceResponse,
 } from '@granit/customer-balance';
@@ -154,6 +156,30 @@ describe('use-customer-balance', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.post).toHaveBeenCalledWith('/custom/balance/credit', request);
+    });
+  });
+
+  describe('useDebitCustomerBalance', () => {
+    it('posts a debit and returns the updated balance', async () => {
+      const client = createMockClient();
+      const updated: CustomerBalanceResponse = { ...sampleBalance, balance: 100.0 };
+      vi.mocked(client.post).mockResolvedValue({ data: updated });
+
+      const request: AdminDebitRequest = {
+        amount: 50.0,
+        currency: 'EUR',
+        reason: 'Manual correction',
+      };
+
+      const { result } = renderHook(() => useDebitCustomerBalance(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate(request);
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.post).toHaveBeenCalledWith('/api/v1/customer-balance/balance/debit', request);
+      expect(result.current.data).toEqual(updated);
     });
   });
 });

@@ -14,9 +14,11 @@ export const sampleInvoiceLineItems: Mutable<InvoiceLineItemResponse>[] = [
     taxRate: 21,
     taxAmount: 1029,
     sourceType: 'Subscription',
-    sourceId: null,
+    // ADR-036: Subscription lines carry a Guid sourceId.
+    sourceId: '0a4d76b2-3d9f-4a6f-9fd8-9a92b9abf001',
     periodStart: toISODateString('2026-03-01T00:00:00Z'),
     periodEnd: toISODateString('2026-03-31T23:59:59Z'),
+    productId: null,
   },
   {
     id: toEntityId<'InvoiceLineItem'>('li_002'),
@@ -26,10 +28,12 @@ export const sampleInvoiceLineItems: Mutable<InvoiceLineItemResponse>[] = [
     amount: 1000,
     taxRate: 21,
     taxAmount: 210,
-    sourceType: 'Subscription',
-    sourceId: null,
+    sourceType: 'Usage',
+    // ADR-036: Usage lines carry a Guid sourceId (the MeterDefinition.Id).
+    sourceId: '7e9f2c1d-44ab-4f12-a05c-d1fa8b2e7c10',
     periodStart: toISODateString('2026-03-01T00:00:00Z'),
     periodEnd: toISODateString('2026-03-31T23:59:59Z'),
+    productId: null,
   },
 ];
 

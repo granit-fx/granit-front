@@ -41,6 +41,7 @@ export const mockPlans: Mutable<PlanResponse>[] = [
         isCurrent: false,
         replacedByPriceId: toEntityId<'PlanPrice'>('price-002-2'),
         replacedAt: toISODateString('2026-01-01T00:00:00Z'),
+        productId: null,
       },
       {
         id: toEntityId<'PlanPrice'>('price-002-2'),
@@ -51,6 +52,7 @@ export const mockPlans: Mutable<PlanResponse>[] = [
         isCurrent: false,
         replacedByPriceId: toEntityId<'PlanPrice'>('price-002-3'),
         replacedAt: toISODateString('2026-03-01T00:00:00Z'),
+        productId: null,
       },
       {
         id: toEntityId<'PlanPrice'>('price-002-3'),
@@ -61,6 +63,7 @@ export const mockPlans: Mutable<PlanResponse>[] = [
         isCurrent: true,
         replacedByPriceId: null,
         replacedAt: null,
+        productId: null,
       },
     ],
   },
@@ -84,6 +87,7 @@ export const mockPlans: Mutable<PlanResponse>[] = [
         isCurrent: false,
         replacedByPriceId: null,
         replacedAt: null,
+        productId: null,
       },
     ],
   },
@@ -100,6 +104,7 @@ export const mockPriceHistory: Record<string, Mutable<PlanPriceResponse>[]> = {
       isCurrent: false,
       replacedByPriceId: toEntityId<'PlanPrice'>('price-002-2'),
       replacedAt: toISODateString('2026-01-01T00:00:00Z'),
+      productId: null,
     },
     {
       id: toEntityId<'PlanPrice'>('price-002-2'),
@@ -110,6 +115,7 @@ export const mockPriceHistory: Record<string, Mutable<PlanPriceResponse>[]> = {
       isCurrent: false,
       replacedByPriceId: toEntityId<'PlanPrice'>('price-002-3'),
       replacedAt: toISODateString('2026-03-01T00:00:00Z'),
+      productId: null,
     },
     {
       id: toEntityId<'PlanPrice'>('price-002-3'),
@@ -120,6 +126,7 @@ export const mockPriceHistory: Record<string, Mutable<PlanPriceResponse>[]> = {
       isCurrent: true,
       replacedByPriceId: null,
       replacedAt: null,
+      productId: null,
     },
   ],
   'plan-003': [
@@ -132,6 +139,7 @@ export const mockPriceHistory: Record<string, Mutable<PlanPriceResponse>[]> = {
       isCurrent: false,
       replacedByPriceId: null,
       replacedAt: null,
+      productId: null,
     },
   ],
 };

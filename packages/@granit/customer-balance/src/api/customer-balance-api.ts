@@ -1,5 +1,6 @@
 import type {
   AdminCreditRequest,
+  AdminDebitRequest,
   BalanceTransactionResponse,
   CustomerBalanceResponse,
 } from '../types.js';
@@ -44,4 +45,22 @@ export async function addAdminCredit(
   request: AdminCreditRequest
 ): Promise<void> {
   await client.post(`${basePath}/credit`, request);
+}
+
+/**
+ * Debit a tenant's balance manually — admin tooling for corrections,
+ * scheduled drawdowns, and non-invoice adjustments. Returns the updated
+ * balance state.
+ *
+ * `POST {basePath}/balance/debit`
+ *
+ * @returns the refreshed {@link CustomerBalanceResponse} after the debit.
+ */
+export async function debitCustomerBalance(
+  client: AxiosInstance,
+  basePath: string,
+  request: AdminDebitRequest
+): Promise<CustomerBalanceResponse> {
+  const response = await client.post<CustomerBalanceResponse>(`${basePath}/balance/debit`, request);
+  return response.data;
 }

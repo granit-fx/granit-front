@@ -5,7 +5,7 @@ import { DEFAULT_BASE_PATH } from '../constants.js';
 
 import { sampleBalance, sampleTransactions } from './data.js';
 
-import type { AdminCreditRequest } from '@granit/customer-balance';
+import type { AdminCreditRequest, AdminDebitRequest } from '@granit/customer-balance';
 
 /**
  * Create stateful MSW handlers for customer balance endpoints.
@@ -31,6 +31,14 @@ export function createCustomerBalanceHandlers(baseUrl = DEFAULT_BASE_PATH) {
       sampleBalance.balance = sampleBalance.balance + body.amount;
       sampleBalance.updatedAt = toISODateString(new Date().toISOString());
       return HttpResponse.json({ ...sampleBalance }, { status: 201 });
+    }),
+
+    // POST admin debit
+    http.post(`${baseUrl}/balance/debit`, async ({ request }) => {
+      const body = (await request.json()) as AdminDebitRequest;
+      sampleBalance.balance = sampleBalance.balance - body.amount;
+      sampleBalance.updatedAt = toISODateString(new Date().toISOString());
+      return HttpResponse.json({ ...sampleBalance });
     }),
   ];
 }

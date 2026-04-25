@@ -1,7 +1,7 @@
 {
   "name": "@granit/invoicing",
   "description": "Invoice lifecycle — types and API functions for invoices and credit notes",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {

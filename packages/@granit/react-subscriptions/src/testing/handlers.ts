@@ -87,6 +87,7 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
         currency: string;
         interval: string;
         effectiveFrom: string;
+        productId?: string | null;
       };
       const planId = params.planId as string;
       mockPriceHistory[planId] ??= [];
@@ -111,6 +112,7 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
         isCurrent: true,
         replacedByPriceId: null,
         replacedAt: null,
+        productId: body.productId ?? null,
       };
       existing.push(newPrice);
       return HttpResponse.json(newPrice, { status: 201 });

@@ -9,6 +9,29 @@ Ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ### Ajouté
 
+- **@granit/catalog, @granit/react-catalog** : nouveau couple — types, API
+  client et hooks React pour le module `Granit.Catalog` (Product comme
+  agrégat partagé pour Metering / Subscriptions / Invoicing). Couvre la
+  CRUD `/products`, le lifecycle `Publish` / `Archive`, le bag `metadata`,
+  les `external-mappings` (Stripe / Avalara / Odoo), et la grille
+  QueryEngine `/product-records`. (2026-04-25)
+- **@granit/metering** : champs `lifecycleStatus` (`Draft` / `Published` /
+  `Archived`), `distinctProperty`, `productId` ; nouvelle valeur d'enum
+  `AggregationType.CountDistinct` ; nouveaux endpoints `publish` /
+  `archive` / `recompute` / `backfill` / `deprecate-event` exposés via
+  fonctions API + hooks React (`usePublishMeterDefinition`,
+  `useArchiveMeterDefinition`, `useRecomputeMeterUsage`,
+  `useBackfillUsageEvents`, `useDeprecateMeterEvent`). Permissions
+  `Metering.Events.{Manage,Backfill}` ajoutées. (2026-04-25)
+- **@granit/customer-balance, @granit/react-customer-balance** : nouvelle
+  fonction `debitCustomerBalance` + hook `useDebitCustomerBalance` pour
+  l'endpoint admin `POST /balance/debit` (drawdown manuel idempotent via
+  `referenceId`). Type `AdminDebitRequest` exposé. (2026-04-25)
+- **@granit/invoicing** : champ `productId` (soft reference vers
+  `Granit.Catalog.Product`) sur `InvoiceLineItemResponse` ; type
+  `InvoiceSourceType` exporté pour le typage strict de `sourceType`. (2026-04-25)
+- **@granit/subscriptions** : champ `productId` sur `PlanPriceResponse`
+  et `CreatePriceVersionRequest`. (2026-04-25)
 - **@granit/query-engine** : enrichissement de `useSmartFilter` avec support enum, boolean,
   field search et labels localisables (2026-03-07)
 - **@granit/query-engine** : ajout de `labelParts` aux tokens et exposition de
@@ -68,6 +91,18 @@ Ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
   (Granit dotnet PR #1209). Bump : identity 0.2.0 → 0.3.0,
   openiddict-admin 0.1.0 → 0.2.0, reference-data 0.2.0 → 0.3.0
   (idem pour les `react-*`). **Breaking** — voir `MIGRATION.md`. (2026-04-25)
+- **@granit/metering, @granit/react-metering** : `MeterDefinitionResponse.activated`
+  est désormais déprécié au profit de `lifecycleStatus`. Le hook
+  `useDeactivateMeterDefinition` est déprécié — utiliser
+  `useArchiveMeterDefinition`. Bump 0.1.0 → 0.2.0. **Breaking**
+  (voir `MIGRATION.md` pour la nouvelle shape). (2026-04-25)
+- **@granit/subscriptions, @granit/react-subscriptions** : champ
+  `productId` ajouté sur `PlanPriceResponse` (obligatoire dans la réponse
+  backend, peut être `null`). Bump 0.1.0 → 0.2.0. (2026-04-25)
+- **@granit/customer-balance, @granit/react-customer-balance,
+  @granit/invoicing, @granit/react-invoicing** : bump 0.1.0 → 0.2.0
+  (additions non-breaking côté DTOs ; alignement avec le backend Catalog
+  et ADR-036). (2026-04-25)
 - **@granit/query-engine** : adaptation de la pagination `skip`/`take` vers
   `page`/`pageSize` (`PagedResult<T>`) (2026-03-08)
 - **@granit/query-engine** : extraction des ternaires imbriqués et réduction de la
