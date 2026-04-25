@@ -3,7 +3,7 @@
  * double-brace `{{Foo}}`, skipping values that already use double braces.
  */
 function toI18nextPlaceholders(value: string): string {
-  return value.replace(/(?<!\{)\{([A-Za-z]\w*)\}(?!\})/g, '{{$1}}');
+  return value.replaceAll(/(?<!\{)\{([A-Za-z]\w*)\}(?!\})/g, '{{$1}}');
 }
 
 /**

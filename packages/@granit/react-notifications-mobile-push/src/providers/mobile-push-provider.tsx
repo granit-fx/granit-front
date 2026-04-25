@@ -2,7 +2,6 @@ import { createContext, useContext, useMemo } from 'react';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
 
-import type { MobilePlatform } from '@granit/notifications-mobile-push';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -28,7 +27,7 @@ export function MobilePushProvider({ config, children }: Readonly<MobilePushProv
       ...config,
       basePath: config.basePath ?? DEFAULT_BASE_PATH,
     }),
-    [config],
+    [config]
   );
   return <MobilePushConfigContext value={value}>{children}</MobilePushConfigContext>;
 }
@@ -42,4 +41,4 @@ export function useMobilePushConfig(): MobilePushProviderConfig {
   return ctx;
 }
 
-export type { MobilePlatform };
+export type { MobilePlatform } from '@granit/notifications-mobile-push';

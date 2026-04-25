@@ -22,5 +22,6 @@ export {
   isScopeSatisfied,
   resolveLookup,
   searchLookup,
+  stringifyLookupValue,
 } from './api/index.js';
 export type { LookupClientOptions } from './api/index.js';

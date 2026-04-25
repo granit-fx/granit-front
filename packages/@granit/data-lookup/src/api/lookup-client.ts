@@ -71,11 +71,11 @@ export async function resolveLookup(
 
   const { client, signal } = options;
   const baseUrl = resolveLookupUrl(descriptor, options.basePath);
-  const resolveUrl = descriptor.endpoint ? `${baseUrl}/resolve` : `${baseUrl}/resolve`;
+  const resolveUrl = `${baseUrl}/resolve`;
 
   try {
     const { data } = await client.get<LookupItem>(resolveUrl, {
-      params: { value: String(value) },
+      params: { value: stringifyLookupValue(value) },
       signal,
     });
     return data;
@@ -123,6 +123,20 @@ export function buildSearchQuery(
   }
 
   return result;
+}
+
+/**
+ * Stringifies a lookup value for use as an HTTP query parameter. Object values
+ * are serialized as JSON to avoid the default `[object Object]` representation.
+ */
+export function stringifyLookupValue(value: unknown): string {
+  if (value === null || value === undefined) {
+    return '';
+  }
+  if (typeof value === 'object') {
+    return JSON.stringify(value);
+  }
+  return String(value);
 }
 
 /** Resolves the URL for a lookup descriptor (registry name or custom endpoint). */
