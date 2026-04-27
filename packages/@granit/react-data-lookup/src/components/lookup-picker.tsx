@@ -11,8 +11,8 @@ export interface LookupPickerRenderArgs {
   readonly search: string;
   readonly setSearch: (next: string) => void;
   /** Current value(s). String for `Eq`, array for `In`. */
-  readonly value: unknown | readonly unknown[];
-  readonly onChange: (next: unknown | readonly unknown[]) => void;
+  readonly value: unknown;
+  readonly onChange: (next: unknown) => void;
   /** Whether the picker is in multi-select mode (e.g., `In` filter operator). */
   readonly multi: boolean;
   /** Items matching the current search term. */
@@ -23,8 +23,8 @@ export interface LookupPickerRenderArgs {
 
 export interface LookupPickerProps {
   readonly descriptor: LookupDescriptor;
-  readonly value: unknown | readonly unknown[];
-  readonly onChange: (next: unknown | readonly unknown[]) => void;
+  readonly value: unknown;
+  readonly onChange: (next: unknown) => void;
   readonly client: AxiosInstance;
   readonly scope?: Readonly<Record<string, string | null | undefined>>;
   readonly culture?: string;

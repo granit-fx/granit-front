@@ -1,3 +1,5 @@
+import { stringifyLookupValue } from '@granit/data-lookup';
+
 import { useLookupResolve } from '../hooks/use-lookup-resolve.js';
 
 import type { LookupDescriptor } from '@granit/data-lookup';
@@ -39,7 +41,7 @@ export function LookupBadge(props: LookupBadgeProps): ReactElement {
   const { descriptor, value, client, culture, basePath, fallback, render } = props;
   const query = useLookupResolve(descriptor, value, { client, basePath, culture });
 
-  const rawFallback = fallback ?? (value === null || value === undefined ? '' : String(value));
+  const rawFallback = fallback ?? stringifyLookupValue(value);
   const label = query.data?.label ?? rawFallback;
 
   if (render) {
