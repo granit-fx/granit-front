@@ -12,6 +12,7 @@ import {
   archiveParty,
   clearPartyTaxStatus,
   createParty,
+  downloadPartyVCard,
   getPartyById,
   listParties,
   removePartyAddress,
@@ -19,6 +20,7 @@ import {
   removePartyExternalMapping,
   removePartyPhone,
   removePartyRole,
+  replacePartyMetadata,
   setPartyTaxStatus,
   suspendParty,
   updateParty,
@@ -33,6 +35,7 @@ import type {
   PartyExternalMappingRequest,
   PartyId,
   PartyListItemResponse,
+  PartyMetadataRequest,
   PartyPhoneId,
   PartyPhoneRequest,
   PartyResponse,
@@ -76,6 +79,8 @@ const sampleParty: PartyResponse = {
   phones: [],
   externalMappings: [],
   taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
+  metadata: {},
+  internalNotes: null,
 };
 
 describe('parties-api', () => {
@@ -334,6 +339,48 @@ describe('parties-api', () => {
 
       expect(client.delete).toHaveBeenCalledWith(`${basePath}/${partyId}/tax-status`);
       expect(result).toEqual(sampleParty);
+    });
+  });
+
+  describe('metadata', () => {
+    it('PUTs the metadata replace request', async () => {
+      const client = createMockClient();
+      vi.mocked(client.put).mockResolvedValue({ data: sampleParty });
+
+      const request: PartyMetadataRequest = {
+        metadata: { segment: 'enterprise', tier: 'gold' },
+      };
+
+      const result = await replacePartyMetadata(client, basePath, partyId, request);
+
+      expect(client.put).toHaveBeenCalledWith(`${basePath}/${partyId}/metadata`, request);
+      expect(result).toEqual(sampleParty);
+    });
+
+    it('PUTs an empty metadata to clear all entries', async () => {
+      const client = createMockClient();
+      vi.mocked(client.put).mockResolvedValue({ data: sampleParty });
+
+      await replacePartyMetadata(client, basePath, partyId, { metadata: {} });
+
+      expect(client.put).toHaveBeenCalledWith(`${basePath}/${partyId}/metadata`, {
+        metadata: {},
+      });
+    });
+  });
+
+  describe('vCard', () => {
+    it('GETs the vCard as a Blob', async () => {
+      const client = createMockClient();
+      const blob = new Blob(['BEGIN:VCARD'], { type: 'text/vcard; charset=utf-8' });
+      vi.mocked(client.get).mockResolvedValue({ data: blob });
+
+      const result = await downloadPartyVCard(client, basePath, partyId);
+
+      expect(client.get).toHaveBeenCalledWith(`${basePath}/${partyId}/vcard`, {
+        responseType: 'blob',
+      });
+      expect(result).toBe(blob);
     });
   });
 });

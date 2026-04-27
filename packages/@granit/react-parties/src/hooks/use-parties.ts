@@ -15,6 +15,7 @@ import {
   removePartyExternalMapping,
   removePartyPhone,
   removePartyRole,
+  replacePartyMetadata,
   setPartyTaxStatus,
   suspendParty,
   updateParty,
@@ -32,6 +33,7 @@ import type {
   PartyExternalMappingRequest,
   PartyId,
   PartyListItemResponse,
+  PartyMetadataRequest,
   PartyPhoneId,
   PartyPhoneRequest,
   PartyResponse,
@@ -381,5 +383,26 @@ export function useClearPartyTaxStatusMutation(): UseMutationResult<PartyRespons
   return useMutation({
     mutationFn: (id: PartyId) => clearPartyTaxStatus(config.client, basePath, id),
     onSuccess: (_data, id) => invalidateAll(id),
+  });
+}
+
+// ── Mutations: metadata ──────────────────────────────────────────────────
+
+/**
+ * Bulk-replace a party's free-form metadata dictionary. Pass `{ metadata: {} }`
+ * to clear all entries.
+ */
+export function useReplacePartyMetadataMutation(): UseMutationResult<
+  PartyResponse,
+  Error,
+  { readonly id: PartyId; readonly request: PartyMetadataRequest }
+> {
+  const config = usePartiesConfig();
+  const basePath = config.basePath!;
+  const { invalidateAll } = useInvalidator();
+
+  return useMutation({
+    mutationFn: ({ id, request }) => replacePartyMetadata(config.client, basePath, id, request),
+    onSuccess: (_data, { id }) => invalidateAll(id),
   });
 }

@@ -43,7 +43,7 @@ export type PartyRoles = PartyRole | string;
 export type AddressKind = 'Billing' | 'Shipping' | 'Other';
 
 /** Functional type of a {@link PartyPhoneResponse}. Mirrors the .NET `PhoneKind` enum. */
-export type PhoneKind = 'Mobile' | 'Office' | 'Home' | 'Other';
+export type PhoneKind = 'Mobile' | 'Work' | 'Home' | 'Other';
 
 // ── Sub-DTOs ──────────────────────────────────────────────────────────────
 
@@ -118,6 +118,14 @@ export interface PartyResponse {
   readonly phones: readonly PartyPhoneResponse[];
   readonly externalMappings: readonly PartyExternalMappingResponse[];
   readonly taxStatus: PartyTaxStatusResponse;
+  /**
+   * Stripe-style free-form key/value extensibility. Capped at 50 entries
+   * (key ≤ 40 chars, value ≤ 500 chars). Surfaces in audit logs and GDPR
+   * exports — NEVER store PII.
+   */
+  readonly metadata: Readonly<Record<string, string>>;
+  /** Admin-only free-form notes (max 8 000 chars). NEVER store PII. */
+  readonly internalNotes: string | null;
 }
 
 /** Lightweight summary used by list endpoints. */
@@ -146,6 +154,8 @@ export interface PartyCreateRequest {
   readonly timezone?: string | null;
   readonly taxId?: string | null;
   readonly registrationNumber?: string | null;
+  /** Admin-only free-form notes (max 8 000 chars). NEVER store PII. */
+  readonly internalNotes?: string | null;
 }
 
 /** Request payload to update a party's identity fields. */
@@ -154,6 +164,16 @@ export interface PartyUpdateRequest {
   readonly website?: string | null;
   readonly language?: string | null;
   readonly timezone?: string | null;
+  /** Admin-only free-form notes (max 8 000 chars). NEVER store PII. */
+  readonly internalNotes?: string | null;
+}
+
+/**
+ * Bulk-replace request for a party's free-form metadata dictionary. Pass an
+ * empty object to clear all entries.
+ */
+export interface PartyMetadataRequest {
+  readonly metadata: Readonly<Record<string, string>>;
 }
 
 /** Request payload to suspend a party. */

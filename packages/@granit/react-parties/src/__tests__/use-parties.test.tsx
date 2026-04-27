@@ -14,6 +14,7 @@ import {
   useCreatePartyMutation,
   usePartiesQuery,
   usePartyQuery,
+  useReplacePartyMetadataMutation,
   useSetPartyTaxStatusMutation,
   useSuspendPartyMutation,
   useUpdatePartyMutation,
@@ -26,6 +27,7 @@ import type {
   PartyCreateRequest,
   PartyId,
   PartyListItemResponse,
+  PartyMetadataRequest,
   PartyResponse,
   PartyTaxStatusRequest,
   PartyUpdateRequest,
@@ -68,6 +70,8 @@ const sampleParty: PartyResponse = {
   phones: [],
   externalMappings: [],
   taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
+  metadata: {},
+  internalNotes: null,
 };
 
 function createWrapper(client: AxiosInstance, basePath?: string) {
@@ -296,6 +300,26 @@ describe('use-parties', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.delete).toHaveBeenCalledWith(`/api/v1/parties/${partyId}/tax-status`);
+    });
+  });
+
+  describe('useReplacePartyMetadataMutation', () => {
+    it('PUTs the metadata replace request', async () => {
+      const client = createMockClient();
+      vi.mocked(client.put).mockResolvedValue({ data: sampleParty });
+
+      const request: PartyMetadataRequest = {
+        metadata: { segment: 'enterprise', tier: 'gold' },
+      };
+
+      const { result } = renderHook(() => useReplacePartyMetadataMutation(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate({ id: partyId, request });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.put).toHaveBeenCalledWith(`/api/v1/parties/${partyId}/metadata`, request);
     });
   });
 });

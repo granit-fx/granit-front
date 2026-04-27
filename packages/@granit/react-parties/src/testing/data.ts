@@ -56,7 +56,7 @@ export const sampleParty: Mutable<PartyResponse> = {
   phones: [
     {
       id: toEntityId<'PartyPhone'>('phone-001') as PartyPhoneId,
-      kind: 'Office',
+      kind: 'Work',
       number: '+32 2 555 0100',
       isPrimary: true,
       label: null,
@@ -75,6 +75,8 @@ export const sampleParty: Mutable<PartyResponse> = {
     vatin: null,
     evidenceBlobId: null,
   },
+  metadata: { segment: 'enterprise', region: 'EU' },
+  internalNotes: 'Strategic account — escalate billing issues to AM team.',
 };
 
 export const sampleParties: Mutable<PartyListItemResponse>[] = [

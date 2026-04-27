@@ -7,6 +7,7 @@ import type {
   PartyExternalMappingRequest,
   PartyId,
   PartyListItemResponse,
+  PartyMetadataRequest,
   PartyPhoneId,
   PartyPhoneRequest,
   PartyResponse,
@@ -329,5 +330,45 @@ export async function clearPartyTaxStatus(
   const response = await client.delete<PartyResponse>(
     `${basePath}/${encodeURIComponent(id)}/tax-status`
   );
+  return response.data;
+}
+
+// ── Metadata & vCard ─────────────────────────────────────────────────────
+
+/**
+ * Bulk-replace a party's free-form metadata dictionary. Pass `{ metadata: {} }`
+ * to clear all entries. Capped server-side at 50 entries (key ≤ 40 chars,
+ * value ≤ 500 chars).
+ *
+ * `PUT {basePath}/{id}/metadata`
+ */
+export async function replacePartyMetadata(
+  client: AxiosInstance,
+  basePath: string,
+  id: PartyId,
+  request: PartyMetadataRequest
+): Promise<PartyResponse> {
+  const response = await client.put<PartyResponse>(
+    `${basePath}/${encodeURIComponent(id)}/metadata`,
+    request
+  );
+  return response.data;
+}
+
+/**
+ * Download the party's vCard 4.0 (RFC 6350) representation. The returned `Blob`
+ * carries `text/vcard; charset=utf-8` content suitable for client-side download
+ * or import into address-book apps.
+ *
+ * `GET {basePath}/{id}/vcard`
+ */
+export async function downloadPartyVCard(
+  client: AxiosInstance,
+  basePath: string,
+  id: PartyId
+): Promise<Blob> {
+  const response = await client.get<Blob>(`${basePath}/${encodeURIComponent(id)}/vcard`, {
+    responseType: 'blob',
+  });
   return response.data;
 }

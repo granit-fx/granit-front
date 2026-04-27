@@ -24,6 +24,7 @@ export {
   useRemovePartyExternalMappingMutation,
   useRemovePartyPhoneMutation,
   useRemovePartyRoleMutation,
+  useReplacePartyMetadataMutation,
   useSetPartyTaxStatusMutation,
   useSuspendPartyMutation,
   useUpdatePartyMutation,

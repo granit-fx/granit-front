@@ -6,6 +6,7 @@ import { sampleParties, sampleParty } from './data.js';
 
 import type {
   PartyCreateRequest,
+  PartyMetadataRequest,
   PartyTaxStatusRequest,
   PartyUpdateRequest,
 } from '@granit/parties';
@@ -47,6 +48,7 @@ export function createPartiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
       sampleParty.name = body.name;
       sampleParty.kind = body.kind;
       sampleParty.defaultCurrency = body.defaultCurrency;
+      if (body.internalNotes !== undefined) sampleParty.internalNotes = body.internalNotes ?? null;
       return HttpResponse.json(sampleParty, { status: 201 });
     }),
 
@@ -57,6 +59,7 @@ export function createPartiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
       if (body.website !== undefined) sampleParty.website = body.website ?? null;
       if (body.language !== undefined) sampleParty.language = body.language ?? null;
       if (body.timezone !== undefined) sampleParty.timezone = body.timezone ?? sampleParty.timezone;
+      if (body.internalNotes !== undefined) sampleParty.internalNotes = body.internalNotes ?? null;
       return HttpResponse.json(sampleParty);
     }),
 
@@ -119,6 +122,22 @@ export function createPartiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
         evidenceBlobId: null,
       };
       return HttpResponse.json(sampleParty);
+    }),
+
+    // PUT replace metadata
+    http.put(`${baseUrl}/:id/metadata`, async ({ request }) => {
+      const body = (await request.json()) as PartyMetadataRequest;
+      sampleParty.metadata = { ...body.metadata };
+      return HttpResponse.json(sampleParty);
+    }),
+
+    // GET vCard
+    http.get(`${baseUrl}/:id/vcard`, () => {
+      const vcard = 'BEGIN:VCARD\r\nVERSION:4.0\r\nFN:' + sampleParty.name + '\r\nEND:VCARD\r\n';
+      return new HttpResponse(vcard, {
+        status: 200,
+        headers: { 'Content-Type': 'text/vcard; charset=utf-8' },
+      });
     }),
   ];
 }
