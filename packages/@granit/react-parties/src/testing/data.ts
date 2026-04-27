@@ -12,8 +12,12 @@ import type {
 
 type Mutable<T> = { -readonly [K in keyof T]: T[K] };
 
-export const samplePartyId: PartyId = toEntityId<'Party'>('00000000-0000-0000-0000-000000000001');
+const id = (n: number): PartyId =>
+  toEntityId<'Party'>(`00000000-0000-0000-0000-${n.toString(16).padStart(12, '0')}`);
 
+export const samplePartyId: PartyId = id(1);
+
+/** Acme Corp — flagship Company, Customer + Supplier, Active, fully populated. */
 export const sampleParty: Mutable<PartyResponse> = {
   id: samplePartyId,
   tenantId: null,
@@ -44,13 +48,32 @@ export const sampleParty: Mutable<PartyResponse> = {
       line2: null,
       state: null,
     },
+    {
+      id: toEntityId<'PartyAddress'>('addr-002') as PartyAddressId,
+      kind: 'Shipping',
+      isDefault: true,
+      label: 'Warehouse',
+      line1: 'Avenue du Port 86C',
+      city: 'Bruxelles',
+      postalCode: '1000',
+      country: 'BE',
+      companyName: null,
+      line2: 'Bât. 4',
+      state: null,
+    },
   ],
   emails: [
     {
       id: toEntityId<'PartyEmail'>('email-001') as PartyEmailId,
       address: 'billing@acme.example',
       isPrimary: true,
-      label: null,
+      label: 'Billing',
+    },
+    {
+      id: toEntityId<'PartyEmail'>('email-002') as PartyEmailId,
+      address: 'support@acme.example',
+      isPrimary: false,
+      label: 'Support',
     },
   ],
   phones: [
@@ -68,6 +91,11 @@ export const sampleParty: Mutable<PartyResponse> = {
       providerName: 'stripe',
       externalId: 'cus_AcmeBE',
     },
+    {
+      id: toEntityId<'PartyExternalMapping'>('map-002') as PartyExternalMappingId,
+      providerName: 'odoo',
+      externalId: 'res.partner/142',
+    },
   ],
   taxStatus: {
     isExempt: false,
@@ -75,31 +103,288 @@ export const sampleParty: Mutable<PartyResponse> = {
     vatin: null,
     evidenceBlobId: null,
   },
-  metadata: { segment: 'enterprise', region: 'EU' },
+  metadata: { segment: 'enterprise', region: 'EU', tier: 'gold' },
   internalNotes: 'Strategic account — escalate billing issues to AM team.',
 };
 
-export const sampleParties: Mutable<PartyListItemResponse>[] = [
-  {
-    id: sampleParty.id,
-    tenantId: null,
-    kind: sampleParty.kind,
-    name: sampleParty.name,
-    roles: sampleParty.roles,
-    status: sampleParty.status,
-    defaultCurrency: sampleParty.defaultCurrency,
-    primaryEmail: 'billing@acme.example',
-    primaryPhone: '+32 2 555 0100',
+/** Alice Martin — Individual, Lead role. */
+const aliceMartin: Mutable<PartyResponse> = {
+  id: id(2),
+  tenantId: null,
+  kind: 'Individual',
+  name: 'Alice Martin',
+  defaultCurrency: 'EUR',
+  timezone: 'Europe/Paris',
+  language: 'fr-FR',
+  website: null,
+  taxId: null,
+  registrationNumber: null,
+  parentContactId: null,
+  userId: null,
+  avatarBlobId: null,
+  roles: 'Lead',
+  status: 'Active',
+  addresses: [],
+  emails: [
+    {
+      id: toEntityId<'PartyEmail'>('email-101') as PartyEmailId,
+      address: 'alice@example.com',
+      isPrimary: true,
+      label: null,
+    },
+  ],
+  phones: [],
+  externalMappings: [],
+  taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
+  metadata: { source: 'website-form' },
+  internalNotes: null,
+};
+
+/** Globex Inc — Customer, Suspended for overdue invoices. */
+const globex: Mutable<PartyResponse> = {
+  id: id(3),
+  tenantId: null,
+  kind: 'Company',
+  name: 'Globex Inc',
+  defaultCurrency: 'USD',
+  timezone: 'America/New_York',
+  language: 'en-US',
+  website: 'https://globex.example',
+  taxId: null,
+  registrationNumber: 'EIN-12-3456789',
+  parentContactId: null,
+  userId: null,
+  avatarBlobId: null,
+  roles: 'Customer',
+  status: 'Suspended',
+  addresses: [
+    {
+      id: toEntityId<'PartyAddress'>('addr-301') as PartyAddressId,
+      kind: 'Billing',
+      isDefault: true,
+      label: null,
+      line1: '350 5th Ave',
+      city: 'New York',
+      postalCode: '10118',
+      country: 'US',
+      companyName: 'Globex Inc',
+      line2: 'Suite 8800',
+      state: 'NY',
+    },
+  ],
+  emails: [
+    {
+      id: toEntityId<'PartyEmail'>('email-301') as PartyEmailId,
+      address: 'ap@globex.example',
+      isPrimary: true,
+      label: 'AP',
+    },
+  ],
+  phones: [
+    {
+      id: toEntityId<'PartyPhone'>('phone-301') as PartyPhoneId,
+      kind: 'Work',
+      number: '+1 212 555 0199',
+      isPrimary: true,
+      label: null,
+    },
+  ],
+  externalMappings: [],
+  taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
+  metadata: { segment: 'mid-market' },
+  internalNotes: 'Suspended 2026-03-12 — 90+ days overdue on INV-2026-0042.',
+};
+
+/** Initech BV — Customer with intra-EU reverse-charge tax status. */
+const initech: Mutable<PartyResponse> = {
+  id: id(4),
+  tenantId: null,
+  kind: 'Company',
+  name: 'Initech BV',
+  defaultCurrency: 'EUR',
+  timezone: 'Europe/Amsterdam',
+  language: 'nl-NL',
+  website: 'https://initech.example',
+  taxId: 'NL123456789B01',
+  registrationNumber: '12345678',
+  parentContactId: null,
+  userId: null,
+  avatarBlobId: null,
+  roles: 'Customer',
+  status: 'Active',
+  addresses: [
+    {
+      id: toEntityId<'PartyAddress'>('addr-401') as PartyAddressId,
+      kind: 'Billing',
+      isDefault: true,
+      label: null,
+      line1: 'Herengracht 540',
+      city: 'Amsterdam',
+      postalCode: '1017 CG',
+      country: 'NL',
+      companyName: 'Initech BV',
+      line2: null,
+      state: null,
+    },
+  ],
+  emails: [
+    {
+      id: toEntityId<'PartyEmail'>('email-401') as PartyEmailId,
+      address: 'finance@initech.example',
+      isPrimary: true,
+      label: null,
+    },
+  ],
+  phones: [],
+  externalMappings: [],
+  taxStatus: {
+    isExempt: false,
+    reverseCharge: true,
+    vatin: 'NL123456789B01',
+    evidenceBlobId: null,
   },
-  {
-    id: toEntityId<'Party'>('00000000-0000-0000-0000-000000000002'),
-    tenantId: null,
-    kind: 'Individual',
-    name: 'Alice Martin',
-    roles: 'Lead',
-    status: 'Active',
-    defaultCurrency: 'EUR',
-    primaryEmail: 'alice@example.com',
-    primaryPhone: null,
-  },
+  metadata: {},
+  internalNotes: null,
+};
+
+/** Stark Industries — Department under a parent company, Customer. */
+const starkRD: Mutable<PartyResponse> = {
+  id: id(5),
+  tenantId: null,
+  kind: 'Department',
+  name: 'Stark Industries — R&D',
+  defaultCurrency: 'USD',
+  timezone: 'America/Los_Angeles',
+  language: 'en-US',
+  website: null,
+  taxId: null,
+  registrationNumber: null,
+  parentContactId: null,
+  userId: null,
+  avatarBlobId: null,
+  roles: 'Customer',
+  status: 'Active',
+  addresses: [],
+  emails: [
+    {
+      id: toEntityId<'PartyEmail'>('email-501') as PartyEmailId,
+      address: 'rd@stark.example',
+      isPrimary: true,
+      label: null,
+    },
+  ],
+  phones: [],
+  externalMappings: [],
+  taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
+  metadata: { 'cost-center': 'RD-401' },
+  internalNotes: null,
+};
+
+/** Bob Dupont — former Employee, Archived (terminal state). */
+const bobDupont: Mutable<PartyResponse> = {
+  id: id(7),
+  tenantId: null,
+  kind: 'Individual',
+  name: 'Bob Dupont',
+  defaultCurrency: 'EUR',
+  timezone: 'Europe/Brussels',
+  language: 'fr-BE',
+  website: null,
+  taxId: null,
+  registrationNumber: null,
+  parentContactId: null,
+  userId: null,
+  avatarBlobId: null,
+  roles: 'Employee',
+  status: 'Archived',
+  addresses: [],
+  emails: [
+    {
+      id: toEntityId<'PartyEmail'>('email-701') as PartyEmailId,
+      address: 'b.dupont@former.example',
+      isPrimary: true,
+      label: null,
+    },
+  ],
+  phones: [],
+  externalMappings: [],
+  taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
+  metadata: {},
+  internalNotes: 'Left the company 2025-09-30. Kept for legal retention.',
+};
+
+/** NGO Helpers — fully VAT-exempt customer (charity). */
+const ngoHelpers: Mutable<PartyResponse> = {
+  id: id(8),
+  tenantId: null,
+  kind: 'Company',
+  name: 'NGO Helpers ASBL',
+  defaultCurrency: 'EUR',
+  timezone: 'Europe/Brussels',
+  language: 'fr-BE',
+  website: 'https://helpers.example',
+  taxId: null,
+  registrationNumber: '0987.654.321',
+  parentContactId: null,
+  userId: null,
+  avatarBlobId: null,
+  roles: 'Customer',
+  status: 'Active',
+  addresses: [
+    {
+      id: toEntityId<'PartyAddress'>('addr-801') as PartyAddressId,
+      kind: 'Billing',
+      isDefault: true,
+      label: null,
+      line1: 'Rue de la Solidarité 12',
+      city: 'Liège',
+      postalCode: '4000',
+      country: 'BE',
+      companyName: 'NGO Helpers ASBL',
+      line2: null,
+      state: null,
+    },
+  ],
+  emails: [
+    {
+      id: toEntityId<'PartyEmail'>('email-801') as PartyEmailId,
+      address: 'compta@helpers.example',
+      isPrimary: true,
+      label: null,
+    },
+  ],
+  phones: [],
+  externalMappings: [],
+  taxStatus: { isExempt: true, reverseCharge: false, vatin: null, evidenceBlobId: null },
+  metadata: { segment: 'non-profit' },
+  internalNotes: 'VAT exemption certificate on file (BE-NGO-2024-1142).',
+};
+
+/**
+ * In-memory party store used by the MSW handlers. Mutating these objects
+ * is intentional — keeps the demo state stable across requests.
+ */
+export const sampleParties: Mutable<PartyResponse>[] = [
+  sampleParty,
+  aliceMartin,
+  globex,
+  initech,
+  starkRD,
+  bobDupont,
+  ngoHelpers,
 ];
+
+/** Project a {@link PartyResponse} to its list-item shape. */
+export function toListItem(p: PartyResponse): Mutable<PartyListItemResponse> {
+  return {
+    id: p.id,
+    tenantId: p.tenantId,
+    kind: p.kind,
+    name: p.name,
+    roles: p.roles,
+    status: p.status,
+    defaultCurrency: p.defaultCurrency,
+    primaryEmail: p.emails.find((e) => e.isPrimary)?.address ?? null,
+    primaryPhone: p.phones.find((ph) => ph.isPrimary)?.number ?? null,
+  };
+}
