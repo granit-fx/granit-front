@@ -1,4 +1,5 @@
 import type {
+  CreatePartyOptions,
   PartyAddressId,
   PartyAddressRequest,
   PartyCreateRequest,
@@ -55,14 +56,26 @@ export async function getPartyById(
 /**
  * Create a new party.
  *
- * `POST {basePath}`
+ * `POST {basePath}` — returns the created party on 200/201.
+ *
+ * On a Tier-1 (Deterministic) duplicate match the server returns 409 with a
+ * {@link PartyCreateConflictResponse} body in `error.response.data`. Callers
+ * that want to suppress the check on a per-call basis can pass
+ * `options.force: true` (URL flag) or `options.skipDuplicateCheck: true`
+ * (header) — see {@link CreatePartyOptions}.
  */
 export async function createParty(
   client: AxiosInstance,
   basePath: string,
-  request: PartyCreateRequest
+  request: PartyCreateRequest,
+  options?: CreatePartyOptions
 ): Promise<PartyResponse> {
-  const response = await client.post<PartyResponse>(basePath, request);
+  const params = options?.force ? { force: true } : undefined;
+  const headers = options?.skipDuplicateCheck ? { 'X-Skip-Duplicate-Check': 'true' } : undefined;
+  const response = await client.post<PartyResponse>(basePath, request, {
+    params,
+    headers,
+  });
   return response.data;
 }
 

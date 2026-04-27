@@ -1,6 +1,7 @@
 // Types
 export type {
   AddressKind,
+  CreatePartyOptions,
   DuplicateMatchSignalResponse,
   DuplicateMatchTier,
   EvidenceBlobId,
@@ -9,6 +10,7 @@ export type {
   PartyAddressId,
   PartyAddressRequest,
   PartyAddressResponse,
+  PartyCreateConflictResponse,
   PartyCreateRequest,
   PartyDuplicateCandidateId,
   PartyDuplicateCandidateResponse,

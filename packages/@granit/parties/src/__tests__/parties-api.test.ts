@@ -134,8 +134,47 @@ describe('parties-api', () => {
 
       const result = await createParty(client, basePath, request);
 
-      expect(client.post).toHaveBeenCalledWith(basePath, request);
+      expect(client.post).toHaveBeenCalledWith(basePath, request, {
+        params: undefined,
+        headers: undefined,
+      });
       expect(result).toEqual(sampleParty);
+    });
+
+    it('forwards force=true as a query-string flag', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleParty });
+
+      const request: PartyCreateRequest = {
+        kind: 'Company',
+        name: 'Acme Corp',
+        defaultCurrency: 'EUR',
+      };
+
+      await createParty(client, basePath, request, { force: true });
+
+      expect(client.post).toHaveBeenCalledWith(basePath, request, {
+        params: { force: true },
+        headers: undefined,
+      });
+    });
+
+    it('forwards skipDuplicateCheck as the X-Skip-Duplicate-Check header', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleParty });
+
+      const request: PartyCreateRequest = {
+        kind: 'Company',
+        name: 'Acme Corp',
+        defaultCurrency: 'EUR',
+      };
+
+      await createParty(client, basePath, request, { skipDuplicateCheck: true });
+
+      expect(client.post).toHaveBeenCalledWith(basePath, request, {
+        params: undefined,
+        headers: { 'X-Skip-Duplicate-Check': 'true' },
+      });
     });
   });
 

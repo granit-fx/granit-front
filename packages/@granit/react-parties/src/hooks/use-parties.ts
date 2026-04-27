@@ -25,6 +25,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { buildPartiesQueryKey, usePartiesConfig } from '../providers/parties-provider.js';
 
 import type {
+  CreatePartyOptions,
   PartyAddressId,
   PartyAddressRequest,
   PartyCreateRequest,
@@ -109,18 +110,33 @@ function useInvalidator() {
   };
 }
 
+/**
+ * Variables for {@link useCreatePartyMutation}. Carries the request body plus
+ * optional per-call duplicate-check bypass flags ({@link CreatePartyOptions}).
+ *
+ * On a Tier-1 duplicate match the server returns 409; the AxiosError surfaces
+ * a {@link PartyCreateConflictResponse} body in `error.response.data` so the
+ * UI can render the "potential duplicates" dialog (use existing / create
+ * anyway / merge into existing).
+ */
+export interface CreatePartyMutationVariables {
+  readonly request: PartyCreateRequest;
+  readonly options?: CreatePartyOptions;
+}
+
 /** Create a new party. Invalidates the list query on success. */
 export function useCreatePartyMutation(): UseMutationResult<
   PartyResponse,
   Error,
-  PartyCreateRequest
+  CreatePartyMutationVariables
 > {
   const config = usePartiesConfig();
   const basePath = config.basePath!;
   const { invalidateList } = useInvalidator();
 
   return useMutation({
-    mutationFn: (request: PartyCreateRequest) => createParty(config.client, basePath, request),
+    mutationFn: ({ request, options }: CreatePartyMutationVariables) =>
+      createParty(config.client, basePath, request, options),
     onSuccess: () => {
       void invalidateList();
     },

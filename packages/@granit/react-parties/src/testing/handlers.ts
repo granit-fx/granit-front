@@ -9,6 +9,7 @@ import type {
   FieldConflictResponse,
   PartyAddressId,
   PartyAddressRequest,
+  PartyCreateConflictResponse,
   PartyCreateRequest,
   PartyDuplicateMergeRequest,
   PartyEmailId,
@@ -145,6 +146,31 @@ export function createPartiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // ── POST create ──────────────────────────────────────────────────
     http.post(baseUrl, async ({ request }) => {
       const body = (await request.json()) as PartyCreateRequest;
+
+      // Tier-1 (Deterministic) duplicate detection: case-insensitive name
+      // match against active parties. Bypassable via `?force=true` (URL flag)
+      // or `X-Skip-Duplicate-Check: true` (header) — mirrors the production
+      // contract surfaced by `createParty` / `CreatePartyOptions`.
+      const url = new URL(request.url);
+      const forceFlag = url.searchParams.get('force') === 'true';
+      const skipHeader = request.headers.get('x-skip-duplicate-check') === 'true';
+      if (!forceFlag && !skipHeader) {
+        const needle = body.name.trim().toLowerCase();
+        const matches = sampleParties
+          .filter((p) => p.status !== 'Archived' && p.name.toLowerCase() === needle)
+          .map(toListItem)
+          .slice(0, 5);
+        if (matches.length > 0) {
+          const conflict: PartyCreateConflictResponse = {
+            title: 'Duplicate party detected',
+            detail: `A ${matches.length === 1 ? 'party' : 'few parties'} with the name "${body.name}" already exist. Pick how to proceed.`,
+            tier: 'Deterministic',
+            candidates: matches,
+          };
+          return HttpResponse.json(conflict, { status: 409 });
+        }
+      }
+
       createCounter += 1;
       const newParty: Mutable<PartyResponse> = {
         id: toEntityId<'Party'>(

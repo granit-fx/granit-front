@@ -172,10 +172,39 @@ describe('use-parties', () => {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate(request);
+      result.current.mutate({ request });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith('/api/v1/parties', request);
+      expect(client.post).toHaveBeenCalledWith('/api/v1/parties', request, {
+        params: undefined,
+        headers: undefined,
+      });
+    });
+
+    it('forwards force + skipDuplicateCheck options to the request', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleParty });
+
+      const request: PartyCreateRequest = {
+        kind: 'Company',
+        name: 'Acme',
+        defaultCurrency: 'EUR',
+      };
+
+      const { result } = renderHook(() => useCreatePartyMutation(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate({
+        request,
+        options: { force: true, skipDuplicateCheck: true },
+      });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.post).toHaveBeenCalledWith('/api/v1/parties', request, {
+        params: { force: true },
+        headers: { 'X-Skip-Duplicate-Check': 'true' },
+      });
     });
   });
 

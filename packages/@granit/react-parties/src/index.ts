@@ -33,6 +33,7 @@ export {
 // Hooks — merge
 export { useMergePartyMutation, useMergePartyPreviewQuery } from './hooks/use-party-merge.js';
 export type { MergePartyMutationVariables } from './hooks/use-party-merge.js';
+export type { CreatePartyMutationVariables } from './hooks/use-parties.js';
 
 // Hooks — duplicate detection
 export {

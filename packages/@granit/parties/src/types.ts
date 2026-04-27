@@ -161,6 +161,41 @@ export interface PartyCreateRequest {
   readonly internalNotes?: string | null;
 }
 
+/**
+ * Optional knobs on {@link createParty}. Carry the per-call duplicate-check
+ * bypass flags surfaced by the admin endpoints.
+ *
+ * - `force` translates to `?force=true` on the URL — UI flow ("Create anyway"
+ *   button on the conflict dialog).
+ * - `skipDuplicateCheck` translates to the `X-Skip-Duplicate-Check: true`
+ *   header — bulk-import flow where the caller has already de-duplicated
+ *   upstream and doesn't want the per-row Tier-1 check to run.
+ *
+ * Both are independent and can be combined (header wins server-side).
+ */
+export interface CreatePartyOptions {
+  readonly force?: boolean;
+  readonly skipDuplicateCheck?: boolean;
+}
+
+/**
+ * 409 response body returned by `POST {basePath}` when the server's Tier-1
+ * (Deterministic) duplicate detector matches the inbound payload against an
+ * existing party. The client typically renders a "potential duplicates"
+ * dialog letting the operator pick: use the existing party, retry with
+ * `force: true`, or merge into the matched party.
+ *
+ * `candidates` carries the lightweight summary for each match (max 5 rows).
+ * `tier` always equals `'Deterministic'` today — the `Blocking` and `Fuzzy`
+ * tiers run asynchronously via the scan job and never short-circuit a create.
+ */
+export interface PartyCreateConflictResponse {
+  readonly title: string;
+  readonly detail: string;
+  readonly tier: DuplicateMatchTier;
+  readonly candidates: readonly PartyListItemResponse[];
+}
+
 /** Request payload to update a party's identity fields. */
 export interface PartyUpdateRequest {
   readonly name: string;

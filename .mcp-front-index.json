@@ -2574,6 +2574,12 @@
           "members": []
         },
         {
+          "name": "CreatePartyMutationVariables",
+          "kind": "interface",
+          "signature": "interface CreatePartyMutationVariables",
+          "members": []
+        },
+        {
           "name": "MergePartyFromDuplicateMutationVariables",
           "kind": "interface",
           "signature": "interface MergePartyFromDuplicateMutationVariables",
