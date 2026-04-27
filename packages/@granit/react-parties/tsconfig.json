@@ -2,7 +2,8 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "paths": {
-      "@granit/parties": ["../parties/src/index.ts"]
+      "@granit/parties": ["../parties/src/index.ts"],
+      "@granit/react-query-engine": ["../react-query-engine/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]

@@ -3,13 +3,14 @@ import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
 
-import { sampleParties, toListItem } from './data.js';
+import { sampleDuplicates, sampleParties, toListItem } from './data.js';
 
 import type {
   FieldConflictResponse,
   PartyAddressId,
   PartyAddressRequest,
   PartyCreateRequest,
+  PartyDuplicateMergeRequest,
   PartyEmailId,
   PartyEmailRequest,
   PartyExternalMappingId,
@@ -66,6 +67,73 @@ export function createPartiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
           )
         : sampleParties;
       return HttpResponse.json(items.map(toListItem));
+    }),
+
+    // ── Duplicate candidates: paged inbox (QueryEngine shape) ────────
+    // MUST appear before the `/:id` catch-all below so the literal segment
+    // "duplicates" is not interpreted as a party id.
+    http.get(`${baseUrl}/duplicates`, ({ request }) => {
+      const url = new URL(request.url);
+      const page = Number(url.searchParams.get('page') ?? '1');
+      const pageSize = Number(url.searchParams.get('pageSize') ?? '20');
+      const pending = sampleDuplicates.filter((d) => d.dismissedAt == null);
+      const start = (page - 1) * pageSize;
+      const items = pending.slice(start, start + pageSize);
+      return HttpResponse.json({ items, totalCount: pending.length });
+    }),
+
+    // ── Duplicate candidates: per-party flat list ────────────────────
+    http.get(`${baseUrl}/:id/duplicate-candidates`, ({ params }) => {
+      const partyId = params.id as string;
+      const rows = sampleDuplicates.filter(
+        (d) => (d.partyId === partyId || d.candidateId === partyId) && d.dismissedAt == null
+      );
+      return HttpResponse.json(rows);
+    }),
+
+    // ── Duplicate candidates: dismiss ────────────────────────────────
+    http.post(`${baseUrl}/duplicates/:id/dismiss`, ({ params }) => {
+      const row = sampleDuplicates.find((d) => d.id === params.id);
+      if (!row) return notFound();
+      row.dismissedAt = new Date().toISOString();
+      return new HttpResponse(null, { status: 204 });
+    }),
+
+    // ── Duplicate candidates: merge shortcut ─────────────────────────
+    http.post(`${baseUrl}/duplicates/:id/merge`, async ({ params, request }) => {
+      const row = sampleDuplicates.find((d) => d.id === params.id);
+      if (!row) return notFound();
+
+      const body = (await request.json()) as PartyDuplicateMergeRequest;
+      let loserId: string;
+      if (body.survivorId === row.partyId) {
+        loserId = row.candidateId;
+      } else if (body.survivorId === row.candidateId) {
+        loserId = row.partyId;
+      } else {
+        return HttpResponse.json(
+          { detail: 'survivorId is not part of the candidate pair on the supplied id.' },
+          { status: 422 }
+        );
+      }
+
+      const survivor = findById(body.survivorId);
+      const loser = findById(loserId);
+      if (!survivor || !loser) return notFound();
+
+      // Reuse the same merge response shape — apply minimal demo mutations
+      // so the inbox refresh + party detail refresh both observe the change.
+      loser.status = 'Archived';
+      row.dismissedAt = new Date().toISOString();
+
+      const response: PartyMergeResponse = {
+        survivorId: survivor.id,
+        loserId: loser.id,
+        conflicts: computeConflicts(survivor, loser),
+        rewriteCounts: rewriteCountsFor(loser),
+        dryRun: false,
+      };
+      return HttpResponse.json(response);
     }),
 
     // ── GET detail ───────────────────────────────────────────────────

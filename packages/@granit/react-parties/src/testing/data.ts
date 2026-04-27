@@ -2,6 +2,8 @@ import { toEntityId } from '@granit/types';
 
 import type {
   PartyAddressId,
+  PartyDuplicateCandidateId,
+  PartyDuplicateCandidateResponse,
   PartyEmailId,
   PartyExternalMappingId,
   PartyId,
@@ -372,6 +374,67 @@ export const sampleParties: Mutable<PartyResponse>[] = [
   starkRD,
   bobDupont,
   ngoHelpers,
+];
+
+// ── Duplicate candidates ──────────────────────────────────────────────────
+
+const duplicateId = (suffix: string): PartyDuplicateCandidateId =>
+  toEntityId<'PartyDuplicateCandidate'>(`dup-${suffix}`);
+
+/**
+ * In-memory duplicates store used by the MSW handlers. Each row references two
+ * existing parties from {@link sampleParties} so the showcase can dogfood the
+ * inbox + per-party badge end-to-end.
+ *
+ * Demo storyline: Alice Martin (Lead) looks like a duplicate of two other
+ * parties — a strong deterministic match against an existing customer and a
+ * weaker fuzzy match against a different one — so opening her detail page
+ * shows an amber badge, and the inbox grid shows three pending pairs covering
+ * every tier.
+ */
+export const sampleDuplicates: Mutable<PartyDuplicateCandidateResponse>[] = [
+  {
+    id: duplicateId('001'),
+    partyId: id(1),
+    candidateId: id(2),
+    score: 0.97,
+    tier: 'Deterministic',
+    signals: [
+      { kind: 'TaxIdEqual', score: 1.0 },
+      { kind: 'NameTrigram', score: 0.74 },
+    ],
+    dismissedAt: null,
+    createdAt: '2026-04-25T08:30:00Z',
+    updatedAt: '2026-04-27T02:00:00Z',
+  },
+  {
+    id: duplicateId('002'),
+    partyId: id(2),
+    candidateId: id(3),
+    score: 0.81,
+    tier: 'Blocking',
+    signals: [
+      { kind: 'EmailDomainEqual', score: 0.85 },
+      { kind: 'NameTrigram', score: 0.78 },
+    ],
+    dismissedAt: null,
+    createdAt: '2026-04-26T14:15:00Z',
+    updatedAt: null,
+  },
+  {
+    id: duplicateId('003'),
+    partyId: id(4),
+    candidateId: id(8),
+    score: 0.62,
+    tier: 'Fuzzy',
+    signals: [
+      { kind: 'NameTrigram', score: 0.62 },
+      { kind: 'CountryEqual', score: 1.0 },
+    ],
+    dismissedAt: null,
+    createdAt: '2026-04-27T03:00:00Z',
+    updatedAt: null,
+  },
 ];
 
 /** Project a {@link PartyResponse} to its list-item shape. */

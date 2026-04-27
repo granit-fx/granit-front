@@ -18,6 +18,9 @@ export type PartyExternalMappingId = EntityId<'PartyExternalMapping'>;
 /** Branded identifier for an evidence blob attached to a tax status. */
 export type EvidenceBlobId = EntityId<'BlobReference'>;
 
+/** Branded identifier for a row in the duplicate-candidates review table. */
+export type PartyDuplicateCandidateId = EntityId<'PartyDuplicateCandidate'>;
+
 /** Nature of a {@link Party} entity. Mirrors the .NET `PartyKind` enum. */
 export type PartyKind = 'Individual' | 'Company' | 'Department';
 
@@ -295,4 +298,64 @@ export interface PartyMergeResponse {
   readonly rewriteCounts: Readonly<Record<string, number>>;
   /** `true` for previews and explicit dry-runs; `false` for committed merges. */
   readonly dryRun: boolean;
+}
+
+// ── Duplicate detection (3-tier pipeline) ────────────────────────────────
+
+/**
+ * Detection tier reported by the deduplication pipeline. Mirrors the .NET
+ * `DuplicateMatchTier` enum.
+ *
+ * - `Deterministic` — exact match on a discriminating identifier (TaxId, …).
+ * - `Blocking` — strong fuzzy match (e.g. same email domain + similar name).
+ * - `Fuzzy` — weaker similarity, surfaces only via the recurring scan.
+ */
+export type DuplicateMatchTier = 'Deterministic' | 'Blocking' | 'Fuzzy';
+
+/** A single weighted contribution surfaced under a candidate's signals list. */
+export interface DuplicateMatchSignalResponse {
+  /** Signal kind (e.g. `"TaxIdEqual"`, `"NameTrigram"`, `"EmailDomain"`). */
+  readonly kind: string;
+  /** Per-signal score in `[0, 1]`. */
+  readonly score: number;
+}
+
+/**
+ * Wire view of a row in the `parties_duplicate_candidates` review table.
+ * Returned by both `GET /parties/duplicates` (paged via QueryEngine) and
+ * `GET /parties/{id}/duplicate-candidates` (flat per-party listing).
+ */
+export interface PartyDuplicateCandidateResponse {
+  /** Stable id of the candidate-pair row — used to dismiss / merge. */
+  readonly id: PartyDuplicateCandidateId;
+  /** Lower id of the ordered pair. */
+  readonly partyId: PartyId;
+  /** Higher id of the ordered pair. */
+  readonly candidateId: PartyId;
+  /** Aggregated confidence in `[0, 1]`. */
+  readonly score: number;
+  readonly tier: DuplicateMatchTier;
+  /** Per-signal contributions, sorted by score descending. */
+  readonly signals: readonly DuplicateMatchSignalResponse[];
+  /** When an admin marked the pair as "not a duplicate"; `null` while pending. */
+  readonly dismissedAt: string | null;
+  /** When the pair was first detected. */
+  readonly createdAt: string;
+  /** When the pair was last refreshed by a re-scan; `null` on initial detection. */
+  readonly updatedAt: string | null;
+}
+
+/**
+ * Body of `POST /parties/duplicates/{id}/merge` — shortcut that resolves the
+ * candidate row to its (survivor, loser) pair and forwards to the merge
+ * orchestrator. The loser is inferred from the row (the other end of the
+ * pair); 422 if `survivorId` is not part of the pair.
+ */
+export interface PartyDuplicateMergeRequest {
+  /** Which end of the candidate pair survives. */
+  readonly survivorId: PartyId;
+  /** Per-field admin overrides — same semantics as {@link PartyMergeRequest.choices}. */
+  readonly choices?: Readonly<Record<string, MergeWinner>>;
+  /** Optional admin justification — captured in the audit log. */
+  readonly reason?: string | null;
 }

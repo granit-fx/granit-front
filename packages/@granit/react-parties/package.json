@@ -16,6 +16,7 @@
   },
   "peerDependencies": {
     "@granit/parties": "workspace:*",
+    "@granit/react-query-engine": "workspace:*",
     "@granit/types": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "axios": "*",

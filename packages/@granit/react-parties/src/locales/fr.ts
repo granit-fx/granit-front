@@ -52,4 +52,43 @@ export const partiesTranslationsFr = {
     },
     ValueEmpty: '(vide)',
   },
+  Duplicates: {
+    Inbox: {
+      Title: 'Doublons potentiels',
+      Subtitle:
+        'Examinez les paires détectées par le scan récurrent. Rejetez les faux positifs ou fusionnez les doublons confirmés.',
+    },
+    Columns: {
+      Score: 'Score',
+      Tier: 'Niveau',
+      PartyA: 'Tiers A',
+      PartyB: 'Tiers B',
+      Detected: 'Détecté',
+      Refreshed: 'Rafraîchi',
+      Actions: 'Actions',
+    },
+    Tier: {
+      Deterministic: 'Déterministe',
+      Blocking: 'Bloquant',
+      Fuzzy: 'Approximatif',
+    },
+    Actions: {
+      Dismiss: 'Rejeter',
+      Merge: 'Fusionner…',
+      DismissedToast: 'Paire rejetée.',
+      MergedToast: 'Tiers fusionnés.',
+    },
+    EmptyState: 'Aucun doublon en attente.',
+    LoadingState: 'Chargement des doublons…',
+    ErrorState: 'Impossible de charger les doublons.',
+    Pagination: {
+      Previous: 'Précédent',
+      Next: 'Suivant',
+      PageOfTotal: 'Page {{page}} sur {{total}}',
+    },
+    Badge: {
+      PerParty_one: 'Doublon potentiel ({{count}})',
+      PerParty_other: 'Doublons potentiels ({{count}})',
+    },
+  },
 } as const;

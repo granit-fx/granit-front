@@ -2574,6 +2574,12 @@
           "members": []
         },
         {
+          "name": "MergePartyFromDuplicateMutationVariables",
+          "kind": "interface",
+          "signature": "interface MergePartyFromDuplicateMutationVariables",
+          "members": []
+        },
+        {
           "name": "MergeWizard",
           "kind": "function",
           "signature": "function MergeWizard("
@@ -2582,6 +2588,28 @@
           "name": "MergeWizardProps",
           "kind": "interface",
           "signature": "interface MergeWizardProps",
+          "members": []
+        },
+        {
+          "name": "DuplicatesInbox",
+          "kind": "function",
+          "signature": "function DuplicatesInbox(props: Readonly<DuplicatesInboxProps>)"
+        },
+        {
+          "name": "DuplicatesInboxProps",
+          "kind": "interface",
+          "signature": "interface DuplicatesInboxProps",
+          "members": []
+        },
+        {
+          "name": "PartyDuplicatesBadge",
+          "kind": "function",
+          "signature": "function PartyDuplicatesBadge("
+        },
+        {
+          "name": "PartyDuplicatesBadgeProps",
+          "kind": "interface",
+          "signature": "interface PartyDuplicatesBadgeProps",
           "members": []
         }
       ]

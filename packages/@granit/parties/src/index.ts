@@ -1,6 +1,8 @@
 // Types
 export type {
   AddressKind,
+  DuplicateMatchSignalResponse,
+  DuplicateMatchTier,
   EvidenceBlobId,
   FieldConflictResponse,
   MergeWinner,
@@ -8,6 +10,9 @@ export type {
   PartyAddressRequest,
   PartyAddressResponse,
   PartyCreateRequest,
+  PartyDuplicateCandidateId,
+  PartyDuplicateCandidateResponse,
+  PartyDuplicateMergeRequest,
   PartyEmailId,
   PartyEmailRequest,
   PartyEmailResponse,
@@ -38,7 +43,7 @@ export type {
 // Permissions
 export { PartiesPermissions } from './permissions.js';
 
-// API
+// API — core
 export {
   activateParty,
   addPartyAddress,
@@ -64,3 +69,10 @@ export {
   suspendParty,
   updateParty,
 } from './api/parties-api.js';
+
+// API — duplicate detection
+export {
+  dismissPartyDuplicate,
+  listDuplicatesForParty,
+  mergePartyFromDuplicate,
+} from './api/parties-duplicates-api.js';

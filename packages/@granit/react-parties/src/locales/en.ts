@@ -51,4 +51,43 @@ export const partiesTranslationsEn = {
     },
     ValueEmpty: '(empty)',
   },
+  Duplicates: {
+    Inbox: {
+      Title: 'Potential duplicates',
+      Subtitle:
+        'Review pairs flagged by the recurring scan. Dismiss false positives or merge confirmed duplicates.',
+    },
+    Columns: {
+      Score: 'Score',
+      Tier: 'Tier',
+      PartyA: 'Party A',
+      PartyB: 'Party B',
+      Detected: 'Detected',
+      Refreshed: 'Refreshed',
+      Actions: 'Actions',
+    },
+    Tier: {
+      Deterministic: 'Deterministic',
+      Blocking: 'Blocking',
+      Fuzzy: 'Fuzzy',
+    },
+    Actions: {
+      Dismiss: 'Dismiss',
+      Merge: 'Merge…',
+      DismissedToast: 'Pair dismissed.',
+      MergedToast: 'Parties merged.',
+    },
+    EmptyState: 'No pending duplicates.',
+    LoadingState: 'Loading duplicates…',
+    ErrorState: 'Could not load duplicates.',
+    Pagination: {
+      Previous: 'Previous',
+      Next: 'Next',
+      PageOfTotal: 'Page {{page}} of {{total}}',
+    },
+    Badge: {
+      PerParty_one: 'Potential duplicate ({{count}})',
+      PerParty_other: 'Potential duplicates ({{count}})',
+    },
+  },
 } as const;
