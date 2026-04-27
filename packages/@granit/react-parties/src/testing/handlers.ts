@@ -6,6 +6,7 @@ import { DEFAULT_BASE_PATH } from '../constants.js';
 import { sampleParties, toListItem } from './data.js';
 
 import type {
+  FieldConflictResponse,
   PartyAddressId,
   PartyAddressRequest,
   PartyCreateRequest,
@@ -14,6 +15,8 @@ import type {
   PartyExternalMappingId,
   PartyExternalMappingRequest,
   PartyId,
+  PartyMergeRequest,
+  PartyMergeResponse,
   PartyMetadataRequest,
   PartyPhoneId,
   PartyPhoneRequest,
@@ -348,5 +351,190 @@ export function createPartiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
         headers: { 'Content-Type': 'text/vcard; charset=utf-8' },
       });
     }),
+
+    // ── Merge preview ────────────────────────────────────────────────
+    http.get(`${baseUrl}/:survivorId/merge/preview`, ({ params, request }) => {
+      const survivor = findById(params.survivorId as string);
+      const url = new URL(request.url);
+      const loserIdParam = url.searchParams.get('loserId');
+      const loser = loserIdParam ? findById(loserIdParam) : undefined;
+      if (!survivor || !loser) return notFound();
+      return HttpResponse.json(buildMergeResponse(survivor, loser, /* dryRun */ true));
+    }),
+
+    // ── Merge commit ─────────────────────────────────────────────────
+    http.post(`${baseUrl}/:survivorId/merge`, async ({ params, request }) => {
+      const survivor = findById(params.survivorId as string);
+      const body = (await request.json()) as PartyMergeRequest;
+      const loser = findById(body.loserId);
+      if (!survivor || !loser) return notFound();
+
+      // Demo invariants — exercise the 422 + 409 branches the UI must handle.
+      if (loser.status === 'Archived') {
+        return HttpResponse.json({ detail: 'Cannot merge an archived loser.' }, { status: 422 });
+      }
+      if (loser.id === survivor.id) {
+        return HttpResponse.json(
+          { detail: 'Survivor and loser must be different parties.' },
+          { status: 422 }
+        );
+      }
+      if (loser.defaultCurrency !== survivor.defaultCurrency) {
+        return HttpResponse.json(
+          { detail: 'Currency mismatch between survivor and loser.' },
+          { status: 422 }
+        );
+      }
+      if (loser.tenantId !== survivor.tenantId) {
+        return HttpResponse.json({ detail: 'Tenant scope mismatch.' }, { status: 422 });
+      }
+
+      if (body.dryRun) {
+        return HttpResponse.json(buildMergeResponse(survivor, loser, true));
+      }
+
+      // Apply choices: when "Loser" wins on a known scalar, copy the loser's value.
+      const choices = body.choices ?? {};
+      if (choices['Name'] === 'Loser') survivor.name = loser.name;
+      if (choices['Website'] === 'Loser') survivor.website = loser.website;
+      if (choices['Language'] === 'Loser') survivor.language = loser.language;
+      if (choices['Timezone'] === 'Loser') survivor.timezone = loser.timezone;
+      if (choices['TaxId'] === 'Loser') survivor.taxId = loser.taxId;
+      if (choices['RegistrationNumber'] === 'Loser')
+        survivor.registrationNumber = loser.registrationNumber;
+      if (choices['TaxStatus'] === 'Loser') survivor.taxStatus = { ...loser.taxStatus };
+      if (choices['InternalNotes'] === 'Loser') survivor.internalNotes = loser.internalNotes;
+
+      // Per-key metadata overrides (e.g. "Metadata.segment").
+      const mergedMetadata: Record<string, string> = { ...survivor.metadata };
+      for (const [key, value] of Object.entries(loser.metadata)) {
+        if (!(key in mergedMetadata)) {
+          mergedMetadata[key] = value;
+        } else if (choices[`Metadata.${key}`] === 'Loser') {
+          mergedMetadata[key] = value;
+        }
+      }
+      survivor.metadata = mergedMetadata;
+
+      // Tombstone the loser by archiving — simplistic demo behaviour.
+      loser.status = 'Archived';
+
+      return HttpResponse.json(buildMergeResponse(survivor, loser, false));
+    }),
   ];
+}
+
+// ── Merge helpers ─────────────────────────────────────────────────────────
+
+function buildMergeResponse(
+  survivor: PartyResponse,
+  loser: PartyResponse,
+  dryRun: boolean
+): PartyMergeResponse {
+  return {
+    survivorId: survivor.id,
+    loserId: loser.id,
+    conflicts: computeConflicts(survivor, loser),
+    rewriteCounts: rewriteCountsFor(loser),
+    dryRun,
+  };
+}
+
+function computeConflicts(
+  survivor: PartyResponse,
+  loser: PartyResponse
+): readonly FieldConflictResponse[] {
+  const conflicts: FieldConflictResponse[] = [];
+
+  scalarConflict(conflicts, 'Name', survivor.name, loser.name, 'Survivor');
+  scalarConflict(conflicts, 'Website', survivor.website, loser.website, 'Survivor');
+  scalarConflict(conflicts, 'Language', survivor.language, loser.language, 'Survivor');
+  scalarConflict(conflicts, 'Timezone', survivor.timezone, loser.timezone, 'Survivor');
+  scalarConflict(conflicts, 'TaxId', survivor.taxId, loser.taxId, 'Survivor');
+  scalarConflict(
+    conflicts,
+    'RegistrationNumber',
+    survivor.registrationNumber,
+    loser.registrationNumber,
+    'Survivor'
+  );
+
+  // Tax status: prefer the more permissive side (exempt or reverse-charge)
+  // so customers don't accidentally lose a beneficial classification.
+  const sTax = survivor.taxStatus;
+  const lTax = loser.taxStatus;
+  const taxEqual =
+    sTax.isExempt === lTax.isExempt &&
+    sTax.reverseCharge === lTax.reverseCharge &&
+    sTax.vatin === lTax.vatin;
+  if (!taxEqual) {
+    const surfaceLoser =
+      !sTax.isExempt && !sTax.reverseCharge && (lTax.isExempt || lTax.reverseCharge);
+    conflicts.push({
+      fieldPath: 'TaxStatus',
+      survivorValue: stringifyTaxStatus(sTax),
+      loserValue: stringifyTaxStatus(lTax),
+      default: surfaceLoser ? 'Loser' : 'Survivor',
+    });
+  }
+
+  scalarConflict(
+    conflicts,
+    'InternalNotes',
+    survivor.internalNotes,
+    loser.internalNotes,
+    'Survivor'
+  );
+
+  // Per-key metadata overlap.
+  for (const key of Object.keys(loser.metadata)) {
+    const sv = survivor.metadata[key] ?? null;
+    const lv = loser.metadata[key] ?? null;
+    if (sv !== null && lv !== null && sv !== lv) {
+      conflicts.push({
+        fieldPath: `Metadata.${key}`,
+        survivorValue: sv,
+        loserValue: lv,
+        default: 'Survivor',
+      });
+    }
+  }
+
+  return conflicts;
+}
+
+function scalarConflict(
+  out: FieldConflictResponse[],
+  fieldPath: string,
+  survivorValue: string | null,
+  loserValue: string | null,
+  defaultWinner: 'Survivor' | 'Loser'
+) {
+  if (survivorValue === loserValue) return;
+  // Only one side set → no conflict, the populated value will win automatically.
+  if (survivorValue == null || loserValue == null) return;
+  out.push({ fieldPath, survivorValue, loserValue, default: defaultWinner });
+}
+
+function stringifyTaxStatus(t: PartyResponse['taxStatus']): string {
+  if (t.isExempt) return 'Exempt';
+  if (t.reverseCharge) return `ReverseCharge (${t.vatin ?? '?'})`;
+  return 'Standard';
+}
+
+function rewriteCountsFor(loser: PartyResponse): Readonly<Record<string, number>> {
+  // Crude demo heuristic: more populated parties pretend to have more rows.
+  const populationScore =
+    loser.emails.length +
+    loser.phones.length +
+    loser.addresses.length +
+    loser.externalMappings.length;
+  return {
+    'Invoice.PartyId': loser.roles.includes('Customer') ? 12 + populationScore : 0,
+    'Subscription.PartyId': loser.roles.includes('Customer') ? 2 : 0,
+    'BalanceAccount.PartyId': loser.roles.includes('Customer') ? 1 : 0,
+    'Payment.PartyId': loser.roles.includes('Customer') ? 8 : 0,
+    'Party.ParentContactId': 0,
+    'Party.Children': 0,
+  };
 }

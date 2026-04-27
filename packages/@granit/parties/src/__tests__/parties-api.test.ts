@@ -15,6 +15,8 @@ import {
   downloadPartyVCard,
   getPartyById,
   listParties,
+  mergeParty,
+  previewPartyMerge,
   removePartyAddress,
   removePartyEmail,
   removePartyExternalMapping,
@@ -35,6 +37,8 @@ import type {
   PartyExternalMappingRequest,
   PartyId,
   PartyListItemResponse,
+  PartyMergeRequest,
+  PartyMergeResponse,
   PartyMetadataRequest,
   PartyPhoneId,
   PartyPhoneRequest,
@@ -381,6 +385,84 @@ describe('parties-api', () => {
         responseType: 'blob',
       });
       expect(result).toBe(blob);
+    });
+  });
+
+  describe('merge', () => {
+    const loserId: PartyId = toEntityId<'Party'>('00000000-0000-0000-0000-000000000002');
+    const sampleMergeResponse: PartyMergeResponse = {
+      survivorId: partyId,
+      loserId,
+      conflicts: [
+        {
+          fieldPath: 'Name',
+          survivorValue: 'Acme S',
+          loserValue: 'Acme L',
+          default: 'Survivor',
+        },
+      ],
+      rewriteCounts: { 'Invoice.PartyId': 17, 'Subscription.PartyId': 3 },
+      dryRun: true,
+    };
+
+    it('GETs the merge preview with loserId as a query param', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue({ data: sampleMergeResponse });
+
+      const result = await previewPartyMerge(client, basePath, partyId, loserId);
+
+      expect(client.get).toHaveBeenCalledWith(`${basePath}/${partyId}/merge/preview`, {
+        params: { loserId },
+      });
+      expect(result).toEqual(sampleMergeResponse);
+    });
+
+    it('POSTs the merge request without an Idempotency-Key by default', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({
+        data: { ...sampleMergeResponse, dryRun: false },
+      });
+
+      const request: PartyMergeRequest = {
+        loserId,
+        choices: { Name: 'Survivor', TaxStatus: 'Loser' },
+        reason: 'Doublon créé par sync ERP',
+        dryRun: false,
+      };
+
+      await mergeParty(client, basePath, partyId, request);
+
+      expect(client.post).toHaveBeenCalledWith(`${basePath}/${partyId}/merge`, request, undefined);
+    });
+
+    it('POSTs the merge request with an Idempotency-Key header when provided', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({
+        data: { ...sampleMergeResponse, dryRun: false },
+      });
+
+      const idempotencyKey = '11111111-2222-4333-8444-555555555555';
+      const request: PartyMergeRequest = { loserId };
+
+      await mergeParty(client, basePath, partyId, request, idempotencyKey);
+
+      expect(client.post).toHaveBeenCalledWith(`${basePath}/${partyId}/merge`, request, {
+        headers: { 'Idempotency-Key': idempotencyKey },
+      });
+    });
+
+    it('passes through dryRun=true on the merge endpoint for re-validation', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleMergeResponse });
+
+      const request: PartyMergeRequest = { loserId, dryRun: true };
+
+      const result = await mergeParty(client, basePath, partyId, request, 'idem-1');
+
+      expect(client.post).toHaveBeenCalledWith(`${basePath}/${partyId}/merge`, request, {
+        headers: { 'Idempotency-Key': 'idem-1' },
+      });
+      expect(result.dryRun).toBe(true);
     });
   });
 });

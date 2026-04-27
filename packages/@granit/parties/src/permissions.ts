@@ -18,5 +18,12 @@ export const PartiesPermissions = {
     SetTaxStatus: 'Parties.Parties.SetTaxStatus',
     /** Register or remove external provider mappings (Stripe / Mollie / Odoo / …). */
     ExternalMappings: 'Parties.Parties.ExternalMappings',
+    /**
+     * Merge two parties (preview + commit). Tombstones the loser, rewrites
+     * foreign keys across modules (Invoicing, Subscriptions, Payments, …) and
+     * is non-trivially reversible — gated behind its own permission so audit
+     * and approval can be tightened independently.
+     */
+    Merge: 'Parties.Parties.Merge',
   },
 } as const;

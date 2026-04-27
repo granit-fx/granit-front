@@ -1,6 +1,6 @@
 {
   "name": "@granit/react-parties",
-  "description": "React bindings for @granit/parties — PartiesProvider, hooks and TanStack Query mutations",
+  "description": "React bindings for @granit/parties — PartiesProvider, hooks, MergeWizard and TanStack Query mutations",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -20,7 +20,8 @@
     "@tanstack/react-query": "^5.0.0",
     "axios": "*",
     "msw": "^2.12.0",
-    "react": "^19.0.0"
+    "react": "^19.0.0",
+    "react-i18next": "^16.0.0 || ^17.0.0"
   },
   "peerDependenciesMeta": {
     "msw": {

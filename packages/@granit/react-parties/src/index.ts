@@ -6,7 +6,7 @@ export {
 } from './providers/parties-provider.js';
 export type { PartiesConfig, PartiesProviderProps } from './providers/parties-provider.js';
 
-// Hooks
+// Hooks — CRUD + lifecycle + sub-collections + tax status + metadata
 export {
   useActivatePartyMutation,
   useAddPartyAddressMutation,
@@ -29,3 +29,14 @@ export {
   useSuspendPartyMutation,
   useUpdatePartyMutation,
 } from './hooks/use-parties.js';
+
+// Hooks — merge
+export { useMergePartyMutation, useMergePartyPreviewQuery } from './hooks/use-party-merge.js';
+export type { MergePartyMutationVariables } from './hooks/use-party-merge.js';
+
+// Components
+export { MergeWizard } from './components/MergeWizard.js';
+export type { MergeWizardProps } from './components/MergeWizard.js';
+
+// i18n bundles
+export { partiesTranslationsEn, partiesTranslationsFr } from './locales/index.js';

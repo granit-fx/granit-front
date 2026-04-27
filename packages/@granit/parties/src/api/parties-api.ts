@@ -7,6 +7,8 @@ import type {
   PartyExternalMappingRequest,
   PartyId,
   PartyListItemResponse,
+  PartyMergeRequest,
+  PartyMergeResponse,
   PartyMetadataRequest,
   PartyPhoneId,
   PartyPhoneRequest,
@@ -370,5 +372,54 @@ export async function downloadPartyVCard(
   const response = await client.get<Blob>(`${basePath}/${encodeURIComponent(id)}/vcard`, {
     responseType: 'blob',
   });
+  return response.data;
+}
+
+// ── Merge ────────────────────────────────────────────────────────────────
+
+/**
+ * Compute a dry-run preview of merging `loserId` into `survivorId`. Returns
+ * per-field conflicts (with the recommended winner pre-populated) and the
+ * cross-module rewrite counts that a live merge would apply. Pure read — no
+ * DB changes. Powers the admin merge wizard's side-by-side view.
+ *
+ * `GET {basePath}/{survivorId}/merge/preview?loserId={loserId}`
+ */
+export async function previewPartyMerge(
+  client: AxiosInstance,
+  basePath: string,
+  survivorId: PartyId,
+  loserId: PartyId
+): Promise<PartyMergeResponse> {
+  const response = await client.get<PartyMergeResponse>(
+    `${basePath}/${encodeURIComponent(survivorId)}/merge/preview`,
+    { params: { loserId } }
+  );
+  return response.data;
+}
+
+/**
+ * Run the live merge of `request.loserId` into `survivorId`. The loser is
+ * tombstoned and foreign-key references in Invoicing / Subscriptions /
+ * Payments / CustomerBalance are rewritten inside a single transaction.
+ *
+ * Pass an `idempotencyKey` (UUID v4 recommended) to make retries safe — the
+ * orchestrator caches the first result and returns 409 on a key reuse with a
+ * different payload.
+ *
+ * `POST {basePath}/{survivorId}/merge` (with optional `Idempotency-Key` header)
+ */
+export async function mergeParty(
+  client: AxiosInstance,
+  basePath: string,
+  survivorId: PartyId,
+  request: PartyMergeRequest,
+  idempotencyKey?: string
+): Promise<PartyMergeResponse> {
+  const response = await client.post<PartyMergeResponse>(
+    `${basePath}/${encodeURIComponent(survivorId)}/merge`,
+    request,
+    idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : undefined
+  );
   return response.data;
 }

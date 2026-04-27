@@ -228,3 +228,71 @@ export interface PartyTaxStatusRequest {
   readonly vatin?: string | null;
   readonly evidenceBlobId?: EvidenceBlobId | null;
 }
+
+// ── Merge ────────────────────────────────────────────────────────────────
+
+/**
+ * Side that wins a merge conflict. Mirrors the .NET `WinnerSide` enum used
+ * by `Granit.Mergeable` and the merge orchestrator.
+ */
+export type MergeWinner = 'Survivor' | 'Loser';
+
+/**
+ * Wire shape of a single field-level conflict. Both values are pre-stringified
+ * server-side so the JSON payload stays predictable regardless of the
+ * underlying type (`Survivor.ToString()` / `Loser.ToString()`).
+ */
+export interface FieldConflictResponse {
+  /** Dot-separated path; e.g. `"Name"`, `"Metadata.segment"`, `"TaxStatus"`. */
+  readonly fieldPath: string;
+  /** Survivor's current value, stringified — `null` if unset or empty. */
+  readonly survivorValue: string | null;
+  /** Loser's current value, stringified — `null` if unset or empty. */
+  readonly loserValue: string | null;
+  /** Recommended winner pre-populated by the orchestrator. */
+  readonly default: MergeWinner;
+}
+
+/**
+ * Body of `POST /parties/{survivorId}/merge`. Identifies the loser, carries
+ * per-field admin overrides keyed by {@link FieldConflictResponse.fieldPath},
+ * and an optional reason captured in the audit log.
+ */
+export interface PartyMergeRequest {
+  /** Id of the party to merge into the survivor (will be tombstoned). */
+  readonly loserId: PartyId;
+  /**
+   * Per-field admin overrides. Missing keys fall back to the recommended
+   * `default` returned by the preview. Empty / omitted = use defaults.
+   */
+  readonly choices?: Readonly<Record<string, MergeWinner>>;
+  /** Free-form admin justification — captured in the audit log. Max 1 000 chars. */
+  readonly reason?: string | null;
+  /**
+   * When `true`, the orchestrator computes conflicts and rewrite counts without
+   * committing — same shape as the preview endpoint. Useful for re-validating
+   * just before committing the live merge.
+   */
+  readonly dryRun?: boolean;
+}
+
+/**
+ * Response body for both `GET .../merge/preview` and `POST .../merge`. The
+ * survivor aggregate itself is NOT included — fetch it via
+ * `GET /parties/{survivorId}` after a successful live merge.
+ */
+export interface PartyMergeResponse {
+  readonly survivorId: PartyId;
+  readonly loserId: PartyId;
+  /** Per-field conflicts with the recommended winner pre-populated. */
+  readonly conflicts: readonly FieldConflictResponse[];
+  /**
+   * For each cross-module rewriter (`"Invoice.PartyId"`, `"Subscription.PartyId"`,
+   * `"BalanceAccount.PartyId"`, `"Party.ParentContactId"`, `"Party.Children"`, …),
+   * the number of rows that were (or would be) rewritten. Powers the
+   * "what will change" preview.
+   */
+  readonly rewriteCounts: Readonly<Record<string, number>>;
+  /** `true` for previews and explicit dry-runs; `false` for committed merges. */
+  readonly dryRun: boolean;
+}
