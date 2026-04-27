@@ -540,6 +540,19 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/parties:
+    dependencies:
+      axios:
+        specifier: 1.15.0
+        version: 1.15.0
+    devDependencies:
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
+
   packages/@granit/payments:
     dependencies:
       axios:
@@ -1330,6 +1343,34 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+
+  packages/@granit/react-parties:
+    dependencies:
+      '@granit/parties':
+        specifier: workspace:*
+        version: link:../parties
+      '@tanstack/react-query':
+        specifier: 5.99.0
+        version: 5.99.0(react@19.2.5)
+      axios:
+        specifier: 1.15.0
+        version: 1.15.0
+      msw:
+        specifier: ^2.12.0
+        version: 2.13.4(@types/node@25.6.0)(typescript@6.0.3)
+      react:
+        specifier: ^19.0.0
+        version: 19.2.5
+    devDependencies:
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-payments:
     dependencies:

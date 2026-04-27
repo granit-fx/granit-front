@@ -1,0 +1,339 @@
+import { createMockClient } from '@granit/testing';
+import { toEntityId } from '@granit/types';
+import { describe, expect, it, vi } from 'vitest';
+
+import {
+  activateParty,
+  addPartyAddress,
+  addPartyEmail,
+  addPartyExternalMapping,
+  addPartyPhone,
+  addPartyRole,
+  archiveParty,
+  clearPartyTaxStatus,
+  createParty,
+  getPartyById,
+  listParties,
+  removePartyAddress,
+  removePartyEmail,
+  removePartyExternalMapping,
+  removePartyPhone,
+  removePartyRole,
+  setPartyTaxStatus,
+  suspendParty,
+  updateParty,
+} from '../api/parties-api.js';
+
+import type {
+  PartyAddressId,
+  PartyAddressRequest,
+  PartyCreateRequest,
+  PartyEmailId,
+  PartyEmailRequest,
+  PartyExternalMappingRequest,
+  PartyId,
+  PartyListItemResponse,
+  PartyPhoneId,
+  PartyPhoneRequest,
+  PartyResponse,
+  PartyTaxStatusRequest,
+  PartyUpdateRequest,
+} from '../types.js';
+
+const basePath = '/api/v1/parties';
+const partyId: PartyId = toEntityId<'Party'>('00000000-0000-0000-0000-000000000001');
+
+const sampleListItem: PartyListItemResponse = {
+  id: partyId,
+  tenantId: null,
+  kind: 'Company',
+  name: 'Acme Corp',
+  roles: 'Customer',
+  status: 'Active',
+  defaultCurrency: 'EUR',
+  primaryEmail: 'billing@acme.example',
+  primaryPhone: null,
+};
+
+const sampleParty: PartyResponse = {
+  id: partyId,
+  tenantId: null,
+  kind: 'Company',
+  name: 'Acme Corp',
+  defaultCurrency: 'EUR',
+  timezone: 'UTC',
+  language: null,
+  website: null,
+  taxId: null,
+  registrationNumber: null,
+  parentContactId: null,
+  userId: null,
+  avatarBlobId: null,
+  roles: 'Customer',
+  status: 'Active',
+  addresses: [],
+  emails: [],
+  phones: [],
+  externalMappings: [],
+  taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
+};
+
+describe('parties-api', () => {
+  describe('listParties', () => {
+    it('GETs {basePath} without role filter', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue({ data: [sampleListItem] });
+
+      const result = await listParties(client, basePath);
+
+      expect(client.get).toHaveBeenCalledWith(basePath, { params: undefined });
+      expect(result).toEqual([sampleListItem]);
+    });
+
+    it('passes role as query param when provided', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue({ data: [] });
+
+      await listParties(client, basePath, { role: 'Customer' });
+
+      expect(client.get).toHaveBeenCalledWith(basePath, { params: { role: 'Customer' } });
+    });
+  });
+
+  describe('getPartyById', () => {
+    it('GETs {basePath}/{id}', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue({ data: sampleParty });
+
+      const result = await getPartyById(client, basePath, partyId);
+
+      expect(client.get).toHaveBeenCalledWith(`${basePath}/${partyId}`);
+      expect(result).toEqual(sampleParty);
+    });
+  });
+
+  describe('createParty', () => {
+    it('POSTs the create request to {basePath}', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleParty });
+
+      const request: PartyCreateRequest = {
+        kind: 'Company',
+        name: 'Acme Corp',
+        defaultCurrency: 'EUR',
+      };
+
+      const result = await createParty(client, basePath, request);
+
+      expect(client.post).toHaveBeenCalledWith(basePath, request);
+      expect(result).toEqual(sampleParty);
+    });
+  });
+
+  describe('updateParty', () => {
+    it('PATCHes {basePath}/{id} with the update request', async () => {
+      const client = createMockClient();
+      vi.mocked(client.patch).mockResolvedValue({ data: sampleParty });
+
+      const request: PartyUpdateRequest = { name: 'Acme International' };
+
+      await updateParty(client, basePath, partyId, request);
+
+      expect(client.patch).toHaveBeenCalledWith(`${basePath}/${partyId}`, request);
+    });
+  });
+
+  describe('lifecycle', () => {
+    it('suspends with optional reason', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: undefined });
+
+      await suspendParty(client, basePath, partyId, { reason: 'overdue' });
+
+      expect(client.post).toHaveBeenCalledWith(`${basePath}/${partyId}/suspend`, {
+        reason: 'overdue',
+      });
+    });
+
+    it('suspends with empty body when no request supplied', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: undefined });
+
+      await suspendParty(client, basePath, partyId);
+
+      expect(client.post).toHaveBeenCalledWith(`${basePath}/${partyId}/suspend`, {});
+    });
+
+    it('activates', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: undefined });
+
+      await activateParty(client, basePath, partyId);
+
+      expect(client.post).toHaveBeenCalledWith(`${basePath}/${partyId}/activate`);
+    });
+
+    it('archives', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: undefined });
+
+      await archiveParty(client, basePath, partyId);
+
+      expect(client.post).toHaveBeenCalledWith(`${basePath}/${partyId}/archive`);
+    });
+  });
+
+  describe('addresses', () => {
+    it('POSTs the address request', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleParty });
+
+      const request: PartyAddressRequest = {
+        kind: 'Billing',
+        line1: '1 rue de la Paix',
+        city: 'Paris',
+        postalCode: '75001',
+        country: 'FR',
+      };
+
+      await addPartyAddress(client, basePath, partyId, request);
+
+      expect(client.post).toHaveBeenCalledWith(`${basePath}/${partyId}/addresses`, request);
+    });
+
+    it('DELETEs the address by id', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValue({ data: undefined });
+
+      const addressId: PartyAddressId = toEntityId<'PartyAddress'>('addr-1');
+
+      await removePartyAddress(client, basePath, partyId, addressId);
+
+      expect(client.delete).toHaveBeenCalledWith(`${basePath}/${partyId}/addresses/${addressId}`);
+    });
+  });
+
+  describe('emails', () => {
+    it('POSTs the email request', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleParty });
+
+      const request: PartyEmailRequest = { address: 'a@b.com', isPrimary: true };
+
+      await addPartyEmail(client, basePath, partyId, request);
+
+      expect(client.post).toHaveBeenCalledWith(`${basePath}/${partyId}/emails`, request);
+    });
+
+    it('DELETEs the email by id', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValue({ data: undefined });
+
+      const emailId: PartyEmailId = toEntityId<'PartyEmail'>('email-1');
+
+      await removePartyEmail(client, basePath, partyId, emailId);
+
+      expect(client.delete).toHaveBeenCalledWith(`${basePath}/${partyId}/emails/${emailId}`);
+    });
+  });
+
+  describe('phones', () => {
+    it('POSTs the phone request', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleParty });
+
+      const request: PartyPhoneRequest = { kind: 'Mobile', number: '+33600000000' };
+
+      await addPartyPhone(client, basePath, partyId, request);
+
+      expect(client.post).toHaveBeenCalledWith(`${basePath}/${partyId}/phones`, request);
+    });
+
+    it('DELETEs the phone by id', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValue({ data: undefined });
+
+      const phoneId: PartyPhoneId = toEntityId<'PartyPhone'>('phone-1');
+
+      await removePartyPhone(client, basePath, partyId, phoneId);
+
+      expect(client.delete).toHaveBeenCalledWith(`${basePath}/${partyId}/phones/${phoneId}`);
+    });
+  });
+
+  describe('external mappings', () => {
+    it('POSTs the external mapping request', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleParty });
+
+      const request: PartyExternalMappingRequest = {
+        providerName: 'stripe',
+        externalId: 'cus_123',
+      };
+
+      await addPartyExternalMapping(client, basePath, partyId, request);
+
+      expect(client.post).toHaveBeenCalledWith(`${basePath}/${partyId}/external-mappings`, request);
+    });
+
+    it('DELETEs the external mapping by provider name (URL-encoded)', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValue({ data: undefined });
+
+      await removePartyExternalMapping(client, basePath, partyId, 'odoo prod');
+
+      expect(client.delete).toHaveBeenCalledWith(
+        `${basePath}/${partyId}/external-mappings/odoo%20prod`
+      );
+    });
+  });
+
+  describe('roles', () => {
+    it('POSTs a role to add', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: undefined });
+
+      await addPartyRole(client, basePath, partyId, { role: 'Supplier' });
+
+      expect(client.post).toHaveBeenCalledWith(`${basePath}/${partyId}/roles`, {
+        role: 'Supplier',
+      });
+    });
+
+    it('DELETEs a role flag by name', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValue({ data: undefined });
+
+      await removePartyRole(client, basePath, partyId, 'Supplier');
+
+      expect(client.delete).toHaveBeenCalledWith(`${basePath}/${partyId}/roles/Supplier`);
+    });
+  });
+
+  describe('tax status', () => {
+    it('PUTs the tax-status request', async () => {
+      const client = createMockClient();
+      vi.mocked(client.put).mockResolvedValue({ data: sampleParty });
+
+      const request: PartyTaxStatusRequest = {
+        isExempt: false,
+        reverseCharge: true,
+        vatin: 'BE0123456789',
+      };
+
+      await setPartyTaxStatus(client, basePath, partyId, request);
+
+      expect(client.put).toHaveBeenCalledWith(`${basePath}/${partyId}/tax-status`, request);
+    });
+
+    it('DELETEs the tax-status to clear it', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValue({ data: sampleParty });
+
+      const result = await clearPartyTaxStatus(client, basePath, partyId);
+
+      expect(client.delete).toHaveBeenCalledWith(`${basePath}/${partyId}/tax-status`);
+      expect(result).toEqual(sampleParty);
+    });
+  });
+});

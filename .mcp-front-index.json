@@ -976,6 +976,17 @@
       ]
     },
     {
+      "name": "@granit/parties",
+      "description": "Parties (Tiers / Business Partners) — types and API functions",
+      "exports": [
+        {
+          "name": "PartiesPermissions",
+          "kind": "const",
+          "signature": "const PartiesPermissions"
+        }
+      ]
+    },
+    {
       "name": "@granit/payments",
       "description": "Payment processing — charges, refunds, checkout, and payment methods types and API functions",
       "exports": [
@@ -2527,6 +2538,24 @@
           "name": "useOidcScopes",
           "kind": "function",
           "signature": "function useOidcScopes(): UseQueryResult<readonly AdminOidcScope[]>"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-parties",
+      "description": "React bindings for @granit/parties — PartiesProvider, hooks and TanStack Query mutations",
+      "exports": [
+        {
+          "name": "PartiesConfig",
+          "kind": "interface",
+          "signature": "interface PartiesConfig",
+          "members": []
+        },
+        {
+          "name": "PartiesProviderProps",
+          "kind": "interface",
+          "signature": "interface PartiesProviderProps",
+          "members": []
         }
       ]
     },

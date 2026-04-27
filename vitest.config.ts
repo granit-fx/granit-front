@@ -71,6 +71,10 @@ export default defineConfig({
         __dirname,
         'packages/@granit/react-notifications/src/testing/index.ts'
       ),
+      '@granit/react-parties/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-parties/src/testing/index.ts'
+      ),
       '@granit/react-payments/testing': path.resolve(
         __dirname,
         'packages/@granit/react-payments/src/testing/index.ts'
