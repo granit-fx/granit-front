@@ -61,7 +61,8 @@ export type BulkSettingOutcome = 'Updated' | 'NotFound' | 'ProviderNotAllowed' |
  * Per-entry result returned by `PUT /settings/{scope}/bulk`.
  *
  * `errorCode` is a machine-readable i18n key (e.g. `"Granit:Settings:NotFound"`)
- * resolvable via `GET /api/granit/localization`. It is `null` iff `outcome === "Updated"`.
+ * resolvable via the host's localization endpoint (`GET /localization` by default,
+ * mounted under whatever prefix the host configures). `null` iff `outcome === "Updated"`.
  */
 export interface BulkSettingResult {
   readonly key: string;
