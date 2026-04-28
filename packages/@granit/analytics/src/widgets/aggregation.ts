@@ -1,5 +1,8 @@
 /**
- * Aggregation operators. Mirrors `Granit.QueryEngine.Filtering.AggregateFunction`
- * — the same enum used for metric definitions on the backend.
+ * Aggregation operators. Re-exported from `@granit/dashboards` so analytics
+ * widgets can keep importing from `./aggregation.js`. The canonical source
+ * lives alongside `Datasource` (mirrors the backend's
+ * `Granit.Dashboards.Abstractions` → `Granit.QueryEngine.Abstractions`
+ * project reference).
  */
-export type AggregateFunction = 'count' | 'sum' | 'avg' | 'min' | 'max';
+export type { AggregateFunction } from '@granit/dashboards';

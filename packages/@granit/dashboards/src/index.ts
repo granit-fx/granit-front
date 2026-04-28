@@ -2,8 +2,17 @@
 // @granit/dashboards — public API (framework-agnostic)
 // ---------------------------------------------------------------------------
 
-export { DASHBOARD_TIME_WINDOW, DEFAULT_DASHBOARD_LAYOUT, WIDGET_SIZE } from './types/index.js';
+export {
+  DASHBOARD_TIME_WINDOW,
+  Datasource,
+  DEFAULT_DASHBOARD_LAYOUT,
+  isMetricDatasource,
+  isQueryAggregateDatasource,
+  isTelemetryDatasource,
+  WIDGET_SIZE,
+} from './types/index.js';
 export type {
+  AggregateFunction,
   DashboardCategory,
   DashboardDefinition,
   DashboardDefinitionDescriptor,
@@ -11,9 +20,14 @@ export type {
   DashboardLayout,
   DashboardPeriod,
   DashboardTimeWindow,
+  DataKeyFormat,
   FrameworkWidgetDefinition,
   ImageWidgetDefinition,
   MarkdownWidgetDefinition,
+  MetricDatasource,
+  QueryAggregateDatasource,
+  TelemetryAggregation,
+  TelemetryDatasource,
   TextWidgetDefinition,
   TextWidgetStyle,
   TimeWindowKind,

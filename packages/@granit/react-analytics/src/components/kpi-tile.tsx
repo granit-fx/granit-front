@@ -1,3 +1,4 @@
+import { isMetricDatasource } from '@granit/dashboards';
 import { useDashboardContext } from '@granit/react-dashboards';
 import { useTranslation } from 'react-i18next';
 
@@ -18,10 +19,14 @@ const DEFAULT_PERIOD: MetricRequest = {
  * for breadcrumb data, fetches the metric snapshot via {@link useMetric},
  * delegates rendering to {@link KpiTileView}.
  *
- * v1 uses a hardcoded `last_30d / previous_period` request shape — the
+ * v1 only handles {@link MetricDatasource}. Other datasource kinds
+ * ({@link QueryAggregateDatasource}, {@link TelemetryDatasource}) await the
+ * query-engine evaluator (B5) and the SSE telemetry transport (B7-2)
+ * respectively, and currently render an "unsupported" KpiTileView.
+ *
+ * v1 also uses a hardcoded `last_30d / previous_period` request shape — the
  * runtime `DashboardTimeWindow` (proposals doc P1.3) will replace this once
- * `Granit.Dashboards.DashboardTimeWindow` ships and is propagated via
- * dashboard context.
+ * the dashboard context propagates it.
  */
 export interface KpiTileProps {
   readonly widget: KpiWidgetDefinition;
@@ -30,14 +35,36 @@ export interface KpiTileProps {
 export function KpiTile({ widget }: KpiTileProps) {
   const { t, i18n } = useTranslation();
   const dashboardCtx = useDashboardContext();
+  const { datasource } = widget;
 
   const titleKey = dashboardCtx
     ? `Widget:${dashboardCtx.dashboardName}.${widget.slug}.Title`
     : `Widget:${widget.slug}.Title`;
   const translated = t(titleKey, { defaultValue: '' });
-  const title = translated || widget.metricName;
 
-  const query = useMetric(widget.metricName, DEFAULT_PERIOD);
+  const metricName = isMetricDatasource(datasource) ? datasource.metricName : '';
+  const title = translated || metricName || widget.slug;
+
+  const query = useMetric(metricName, DEFAULT_PERIOD, { enabled: metricName !== '' });
+
+  if (!isMetricDatasource(datasource)) {
+    const message = t('Analytics.UnsupportedDatasource', {
+      defaultValue: 'Datasource not supported yet ({{kind}})',
+      kind: datasource.kind,
+    });
+    return (
+      <div
+        data-slot="kpi-tile"
+        data-datasource-kind={datasource.kind}
+        className="flex h-full flex-col gap-3 rounded-xl border bg-card p-4 shadow-sm"
+      >
+        <header data-slot="kpi-tile-header">
+          <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
+        </header>
+        <p className="text-xs text-muted-foreground">{message}</p>
+      </div>
+    );
+  }
 
   return (
     <KpiTileView

@@ -1,15 +1,26 @@
-import type { WidgetDefinitionBase } from '@granit/dashboards';
+import type { Datasource, WidgetDefinitionBase } from '@granit/dashboards';
 
 /**
- * Single-value KPI tile bound to a `MetricDefinition`. Mirrors
- * `Granit.Analytics.Dashboards.Widgets.KpiWidgetDefinition`.
+ * Single-value KPI tile. Mirrors
+ * `Granit.Analytics.Dashboards.Widgets.KpiWidgetDefinition` (P2.2).
  *
- * The widget renders the metric's current value plus an optional comparison
- * delta with favorable / unfavorable color (driven by
- * `MetricSnapshotPayload.previous.isFavorable`).
+ * Renders the tile's value, an optional comparison delta and a
+ * favorable / unfavorable color cue. The cue is driven by
+ * `MetricDefinition.IsHigherBetter` when bound via {@link MetricDatasource};
+ * other datasource kinds render the value as-is.
+ *
+ * Datasource binding (P2.2) decouples the widget from how its data arrives:
+ *
+ * - {@link MetricDatasource} — analytics dashboards (the common case)
+ * - {@link QueryAggregateDatasource} — ad-hoc admin pages reusing the same widget
+ * - {@link TelemetryDatasource} — IoT gauges
  */
 export interface KpiWidgetDefinition extends WidgetDefinitionBase {
   readonly type: 'kpi';
-  /** The `MetricDefinition.Name` this KPI surfaces (e.g. `Granit.Invoicing.UnpaidInvoiceCountMetric`). */
-  readonly metricName: string;
+  /**
+   * Data binding for the KPI value. Use the `Datasource.metric(...)` /
+   * `Datasource.queryAggregate(...)` / `Datasource.telemetry(...)` factories
+   * for compact call sites.
+   */
+  readonly datasource: Datasource;
 }
