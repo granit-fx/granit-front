@@ -99,6 +99,11 @@
       ]
     },
     {
+      "name": "@granit/analytics",
+      "description": "Framework-agnostic types for Granit.Analytics — MetricResponse runtime envelopes plus KPI / Chart / Table / Pivot widget definitions consumed by @granit/dashboards",
+      "exports": []
+    },
+    {
       "name": "@granit/api-client",
       "description": "Axios factory with Bearer token interceptor and shared response types",
       "exports": [
@@ -1367,6 +1372,71 @@
               "signature": "request: AIEmbeddingRequest"
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-analytics",
+      "description": "React hooks and renderers for @granit/analytics — useMetric hook plus KpiTile widget renderer registered into the @granit/dashboards widget registry",
+      "exports": [
+        {
+          "name": "normalizeMetricRequest",
+          "kind": "function",
+          "signature": "function normalizeMetricRequest(request: MetricRequest): MetricRequest"
+        },
+        {
+          "name": "useMetric",
+          "kind": "function",
+          "signature": "function useMetric( metricName: string, request: MetricRequest, options: UseMetricOptions ="
+        },
+        {
+          "name": "UseMetricOptions",
+          "kind": "interface",
+          "signature": "interface UseMetricOptions",
+          "members": []
+        },
+        {
+          "name": "KpiTile",
+          "kind": "function",
+          "signature": "function KpiTile("
+        },
+        {
+          "name": "KpiTileProps",
+          "kind": "interface",
+          "signature": "interface KpiTileProps",
+          "members": []
+        },
+        {
+          "name": "KpiTileView",
+          "kind": "function",
+          "signature": "function KpiTileView("
+        },
+        {
+          "name": "KpiTileViewProps",
+          "kind": "interface",
+          "signature": "interface KpiTileViewProps",
+          "members": []
+        },
+        {
+          "name": "defaultAnalyticsWidgetRegistry",
+          "kind": "const",
+          "signature": "const defaultAnalyticsWidgetRegistry: WidgetRegistry"
+        },
+        {
+          "name": "formatDeltaRatio",
+          "kind": "function",
+          "signature": "function formatDeltaRatio( ratio: number | null, locale?: string, fallback: string = NO_VALUE ): string"
+        },
+        {
+          "name": "formatMetricValue",
+          "kind": "function",
+          "signature": "function formatMetricValue("
+        },
+        {
+          "name": "FormatMetricValueArgs",
+          "kind": "interface",
+          "signature": "interface FormatMetricValueArgs",
+          "members": []
         }
       ]
     },

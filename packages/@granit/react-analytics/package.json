@@ -1,0 +1,45 @@
+{
+  "name": "@granit/react-analytics",
+  "description": "React hooks and renderers for @granit/analytics — useMetric hook plus KpiTile widget renderer registered into the @granit/dashboards widget registry",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/analytics": "workspace:*",
+    "@granit/api-client": "workspace:*",
+    "@granit/dashboards": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-dashboards": "workspace:*",
+    "@tanstack/react-query": "^5.0.0",
+    "lucide-react": "^1.0.0",
+    "react": "^19.0.0",
+    "react-i18next": "^17.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/analytics": "workspace:*",
+    "@granit/api-client": "workspace:*",
+    "@granit/dashboards": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-dashboards": "workspace:*",
+    "@granit/react-testing": "workspace:*",
+    "@granit/testing": "workspace:*"
+  }
+}

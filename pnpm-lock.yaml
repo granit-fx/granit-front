@@ -122,6 +122,9 @@ importers:
       lint-staged:
         specifier: ^16.4.0
         version: 16.4.0
+      lucide-react:
+        specifier: ^1.8.0
+        version: 1.8.0(react@19.2.5)
       markdownlint-cli2:
         specifier: ^0.22.1
         version: 0.22.1
@@ -187,6 +190,12 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+
+  packages/@granit/analytics:
+    devDependencies:
+      '@granit/dashboards':
+        specifier: workspace:*
+        version: link:../dashboards
 
   packages/@granit/api-client:
     dependencies:
@@ -641,6 +650,43 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
+
+  packages/@granit/react-analytics:
+    dependencies:
+      '@tanstack/react-query':
+        specifier: 5.100.5
+        version: 5.100.5(react@19.2.5)
+      lucide-react:
+        specifier: ^1.0.0
+        version: 1.8.0(react@19.2.5)
+      react:
+        specifier: ^19.0.0
+        version: 19.2.5
+      react-i18next:
+        specifier: ^17.0.0
+        version: 17.0.4(i18next@26.0.8(typescript@6.0.3))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.3)
+    devDependencies:
+      '@granit/analytics':
+        specifier: workspace:*
+        version: link:../analytics
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/dashboards':
+        specifier: workspace:*
+        version: link:../dashboards
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
+      '@granit/react-dashboards':
+        specifier: workspace:*
+        version: link:../react-dashboards
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
 
   packages/@granit/react-api-client:
     dependencies:
