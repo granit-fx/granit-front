@@ -161,7 +161,7 @@ export function createCustomerBalanceHandlers(baseUrl = DEFAULT_BASE_PATH) {
     createQueryMetaHandler(`${baseUrl}/transactions`, balanceTransactionQueryMetadata),
 
     // GET current balance
-    http.get(baseUrl, () => {
+    http.get(`${baseUrl}/balance`, () => {
       return HttpResponse.json(sampleBalance);
     }),
 

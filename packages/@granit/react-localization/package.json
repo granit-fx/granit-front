@@ -17,6 +17,8 @@
     "@date-fns/tz": "^1.0.0",
     "@granit/api-client": "workspace:*",
     "@granit/localization": "workspace:*",
+    "@granit/query-engine": "workspace:*",
+    "@granit/react-query-engine": "workspace:*",
     "@granit/storage": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "date-fns": "^4.0.0",
@@ -26,6 +28,12 @@
     "react-i18next": "^16.0.0"
   },
   "peerDependenciesMeta": {
+    "@granit/query-engine": {
+      "optional": true
+    },
+    "@granit/react-query-engine": {
+      "optional": true
+    },
     "msw": {
       "optional": true
     }
