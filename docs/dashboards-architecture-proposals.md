@@ -930,6 +930,164 @@ March 2026".
 
 ---
 
+## P2.6 — Editable persisted dashboards via react-grid-layout
+
+**Goal**: ship the ThingsBoard-grade UX for arranging widgets — drag,
+resize, per-breakpoint layouts, persistence — without forcing the bundle
+weight onto every dashboard view.
+
+### Three layers, one mental model
+
+| Layer                                                        | Source                                                    | Layout strategy                                                                  | Lib                 |
+| ------------------------------------------------------------ | --------------------------------------------------------- | -------------------------------------------------------------------------------- | ------------------- |
+| **Definition** (catalogue, module-shipped)                   | `DashboardDefinition`                                     | Auto-flow CSS grid (`grid-auto-flow: dense`) over `position: int` + `WidgetSize` | none                |
+| **Persisted read-only** (story B2 — imported, end-user view) | `Dashboard` aggregate, explicit `WidgetInstance.Position` | CSS grid with explicit `grid-row`/`grid-column` per widget                       | none                |
+| **Persisted edit** (admin mode — drag/resize)                | Same `Dashboard` aggregate, in edit mode                  | `react-grid-layout` (`<ResponsiveReactGridLayout>`)                              | `react-grid-layout` |
+
+The user-facing components match the layer:
+
+- `<Dashboard definition={...}>` — already shipped. Auto-flow only.
+- `<Dashboard instance={...} mode="readonly">` — new. CSS grid with explicit positions.
+- `<DashboardEditor instance={...}>` — new. `React.lazy()` over `react-grid-layout`,
+  loaded only when the admin enters edit mode.
+
+### Backend additions (B2 follow-up, NOT blocking the merge)
+
+```csharp
+namespace Granit.Dashboards;
+
+public sealed record WidgetInstancePosition(int X, int Y, int Width, int Height);
+
+public class WidgetInstance
+{
+    // ... existing inlined config (B2)
+
+    /// <summary>Default placement on the standard (desktop) breakpoint.</summary>
+    public WidgetInstancePosition Position { get; set; }
+
+    /// <summary>
+    /// Per-breakpoint position overrides keyed by `DashboardBreakpoint`.
+    /// Empty / null = use the default `Position`.
+    /// </summary>
+    public IReadOnlyDictionary<DashboardBreakpoint, WidgetInstancePosition>? PositionOverrides { get; set; }
+}
+```
+
+When the admin imports a `DashboardDefinition`, the framework computes initial
+positions by walking the definition's auto-flow (`position: int` + `size`),
+populates `WidgetInstance.Position`, and lets the admin drag/resize from there.
+
+### Frontend — bundle isolation strategy
+
+`@granit/react-dashboards` ships **read-only rendering** with zero new deps:
+
+```tsx
+// Internal to <Dashboard instance>
+function PersistedDashboard({ instance }: { instance: PersistedDashboard }) {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: ..., gridAutoRows: ... }}>
+      {instance.widgets.map((w) => (
+        <div
+          key={w.slug}
+          style={{
+            gridColumn: `${w.position.x + 1} / span ${w.position.width}`,
+            gridRow: `${w.position.y + 1} / span ${w.position.height}`,
+          }}
+        >
+          <WidgetRenderer widget={w.definition} />
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+The editor lives behind a lazy boundary in the same package:
+
+```tsx
+const DashboardEditor = React.lazy(() => import('./DashboardEditor.js'));
+
+export function Dashboard({ instance, mode }: DashboardProps) {
+  if (mode !== 'edit') return <PersistedDashboard instance={instance} />;
+  return (
+    <Suspense fallback={<DashboardEditorSkeleton />}>
+      <DashboardEditor instance={instance} />
+    </Suspense>
+  );
+}
+```
+
+**Bundle math** — `react-grid-layout` (~30 KB gz) + `react-resizable` (~3 KB gz)
+load only when an admin clicks "Edit dashboard". End-user views stay light.
+
+### `react-grid-layout` configuration mapping
+
+```tsx
+import { Responsive, WidthProvider } from 'react-grid-layout';
+
+const ResponsiveGridLayout = WidthProvider(Responsive);
+
+<ResponsiveGridLayout
+  className="dashboard-editor"
+  layouts={layoutsByBreakpoint} // { lg: WidgetLayout[], md: ..., sm: ..., xs: ... }
+  breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+  cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+  rowHeight={instance.layout.rowHeight}
+  draggableHandle=".widget-drag-handle" // explicit handle prevents accidental drags
+  isDraggable={true}
+  isResizable={true}
+  onLayoutChange={(_, all) => persistLayouts(all)}
+>
+  {instance.widgets.map((w) => (
+    <div key={w.slug} data-grid={dataGridFromInstance(w)}>
+      <WidgetRenderer widget={w.definition} />
+    </div>
+  ))}
+</ResponsiveGridLayout>;
+```
+
+The `WidgetLayout[]` shape r-g-l consumes maps 1:1 onto our
+`WidgetInstancePosition` + breakpoint key — no impedance mismatch.
+
+### What `react-grid-layout` covers vs leaves to us
+
+| ThingsBoard UX                    | r-g-l native?                                                     |
+| --------------------------------- | ----------------------------------------------------------------- |
+| Drag widgets                      | ✅                                                                |
+| Resize from corners               | ✅                                                                |
+| Per-breakpoint layouts            | ✅ (`Responsive` wrapper)                                         |
+| Static (non-editable) widgets     | ✅ (`static: true` per layout entry)                              |
+| Persistence                       | ✅ (`onLayoutChange` callback — we wire it to a backend mutation) |
+| Multiple states / dashboard views | ❌ — handled by P2.1 routing layer                                |
+| Widget actions / drill-down       | ❌ — handled by P1.5                                              |
+
+### Risks logged
+
+- **a11y** — drag-and-drop has weak keyboard / screen-reader support. The
+  editor mode is admin-only; if WCAG 2.2 AA matters for end users, the
+  read-only `<Dashboard instance>` (CSS grid only) is fully accessible
+  already, and the editor stays gated behind a permission flag.
+- **Performance > 50 widgets per state** — r-g-l can sluggish under heavy
+  loads. Validate via prototype if/when a real IoT dashboard exceeds 50
+  widgets per active state. Alternative: virtualize the off-screen widgets
+  (manual, not r-g-l-native).
+- **Maintenance posture** — r-g-l is mature (10 k+ stars, MIT) but commits
+  are modest. We accept that risk; the alternative (dnd-kit + custom layout
+  engine) is multi-week effort with marginal benefit.
+
+### Story phasing
+
+| Step                                                                    | Where                                               |
+| ----------------------------------------------------------------------- | --------------------------------------------------- |
+| Add `WidgetInstance.Position` + `PositionOverrides` to B2 aggregate     | granit-dotnet, follow-up to #1453                   |
+| Computation of initial positions from auto-flow on import               | granit-dotnet (story B4 #1385 — import endpoint)    |
+| `<Dashboard instance mode="readonly">` CSS grid renderer                | `@granit/react-dashboards`, no new deps             |
+| `<DashboardEditor>` lazy boundary + `react-grid-layout` integration     | `@granit/react-dashboards`, dep added (lazy-loaded) |
+| `onLayoutChange` → backend mutation via `useUpdateDashboardLayout` hook | `@granit/react-dashboards`                          |
+| Admin-only edit toggle UI (button + permission gate)                    | consuming app (showcase first)                      |
+
+---
+
 ## P3.1 — `Dashboard:{Name}.Description` localization key
 
 **Current**: `DashboardDefinition` has no description. The catalog UI
@@ -1079,14 +1237,15 @@ If a widget needs computed values, the computation lives in the data pipeline
 B0 / B1 / B2 are already shipped or in review on `granit-dotnet`. The
 phasing below maps to the actual story IDs rather than abstract milestones.
 
-| Real story                           | Proposals                                                                                                                                     | When                                                                                                                                                    |
-| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Pre-merge fix on B2 #1453**        | **P1.1 JsonPolymorphic**                                                                                                                      | **Urgent — must land before B2 merges**. The default `$type` shape is CLR-coupled and would persist into every imported dashboard JSON.                 |
-| **B1.5 follow-up** (after B2 merges) | P1.2 ImageFit + P1.3 TimeWindow (PeriodSpec-aligned) + P1.4 Responsive layouts + P3.1 description doc + P3.3 `${var}` substituter             | Frontend can refactor `@granit/dashboards` types and ship `<DashboardProvider>` against the existing model right now; the additions land progressively. |
-| **B3 #1384 (per-kind validators)**   | P1.5 Actions + P3.2 WidgetInstance overrides                                                                                                  | Originally scoped to validators; widen to actions + the runtime override layer over B2's inlined config.                                                |
-| **B4 #1385**                         | P2.1 Views (renamed from `DashboardState`) + P2.5 Dashboard filters                                                                           | Already a busy story — may need to split filters out into B4.5 if it grows.                                                                             |
-| **B5 (frontend-led)**                | P2.3 EntityAliases (4 resolver kinds, no RelationGraph) + P2.2 Datasource migration                                                           | Datasource migration is a breaking change to KpiWidgetDefinition (drop `MetricName` shorthand, replace with `Datasource`). Front + back coordinated.    |
-| **B6+ — dedicated ticket**           | P2.4 SSE subscriptions (per-metric + per-dashboard multiplexed, snapshot+update events, tenant-pinned producer keying, bounded replay buffer) | New ticket separate from #1387. Endpoint design is a project of its own.                                                                                |
+| Real story                           | Proposals                                                                                                                                                        | When                                                                                                                                                                  |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Pre-merge fix on B2 #1453**        | **P1.1 JsonPolymorphic**                                                                                                                                         | **Urgent — must land before B2 merges**. The default `$type` shape is CLR-coupled and would persist into every imported dashboard JSON.                               |
+| **B1.5 follow-up** (after B2 merges) | P1.2 ImageFit + P1.3 TimeWindow (PeriodSpec-aligned) + P1.4 Responsive layouts + P3.1 description doc + P3.3 `${var}` substituter                                | Frontend can refactor `@granit/dashboards` types and ship `<DashboardProvider>` against the existing model right now; the additions land progressively.               |
+| **B3 #1384 (per-kind validators)**   | P1.5 Actions + P3.2 WidgetInstance overrides                                                                                                                     | Originally scoped to validators; widen to actions + the runtime override layer over B2's inlined config.                                                              |
+| **B4 #1385**                         | P2.1 Views (renamed from `DashboardState`) + P2.5 Dashboard filters                                                                                              | Already a busy story — may need to split filters out into B4.5 if it grows.                                                                                           |
+| **B5 (frontend-led)**                | P2.3 EntityAliases (4 resolver kinds, no RelationGraph) + P2.2 Datasource migration                                                                              | Datasource migration is a breaking change to KpiWidgetDefinition (drop `MetricName` shorthand, replace with `Datasource`). Front + back coordinated.                  |
+| **B6+ — dedicated ticket**           | P2.4 SSE subscriptions (per-metric + per-dashboard multiplexed, snapshot+update events, tenant-pinned producer keying, bounded replay buffer)                    | New ticket separate from #1387. Endpoint design is a project of its own.                                                                                              |
+| **B6+ — dedicated ticket**           | P2.6 `WidgetInstance.Position` (X, Y, W, H) + per-breakpoint `PositionOverrides` on B2 aggregate; auto-flow → explicit position computation on import (B4 #1385) | `<Dashboard instance mode="readonly">` CSS-grid renderer (zero new deps); `<DashboardEditor>` lazy boundary loading `react-grid-layout` (~33 KB gz only on edit mode) |
 
 Frontend work that can proceed **immediately** (no backend dependency): the
 type alignment to current shipped `Granit.Dashboards.Abstractions`
