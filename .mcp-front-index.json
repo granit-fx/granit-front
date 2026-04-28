@@ -491,6 +491,35 @@
       ]
     },
     {
+      "name": "@granit/charts",
+      "description": "Framework-agnostic chart primitives for Granit — typed series shapes, ECharts theme builder from Tailwind tokens, locale-aware tick formatters",
+      "exports": [
+        {
+          "name": "ChartAxis",
+          "kind": "interface",
+          "signature": "interface ChartAxis",
+          "members": []
+        },
+        {
+          "name": "ChartDataPoint",
+          "kind": "type",
+          "signature": "type ChartDataPoint<X = number | string, Y = number> = readonly [X, Y]"
+        },
+        {
+          "name": "ChartDimensions",
+          "kind": "interface",
+          "signature": "interface ChartDimensions",
+          "members": []
+        },
+        {
+          "name": "ChartSeries",
+          "kind": "interface",
+          "signature": "interface ChartSeries<X = number | string, Y = number>",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/cookies",
       "description": "Cookie consent abstraction with React context and hooks",
       "exports": []
@@ -516,6 +545,11 @@
           "signature": "const CustomerBalancePermissions"
         }
       ]
+    },
+    {
+      "name": "@granit/dashboards",
+      "description": "Framework-agnostic types and registry contracts for Granit dashboards — DashboardDefinition, WidgetDefinition discriminated union, layout primitives, and built-in presentation widgets (Markdown / Image / Text)",
+      "exports": []
     },
     {
       "name": "@granit/data-exchange",
@@ -1840,6 +1874,84 @@
       ]
     },
     {
+      "name": "@granit/react-charts",
+      "description": "React chart primitives for Granit — typed <LineChart>, <BarChart>, <PieChart>, <SparklineChart> built on Apache ECharts (modular tree-shaken imports), plus <Chart> escape hatch for raw ECharts options",
+      "exports": [
+        {
+          "name": "Chart",
+          "kind": "function",
+          "signature": "function Chart("
+        },
+        {
+          "name": "ChartProps",
+          "kind": "interface",
+          "signature": "interface ChartProps",
+          "members": []
+        },
+        {
+          "name": "LineChart",
+          "kind": "function",
+          "signature": "function LineChart("
+        },
+        {
+          "name": "LineChartProps",
+          "kind": "interface",
+          "signature": "interface LineChartProps extends ChartDimensions",
+          "members": []
+        },
+        {
+          "name": "BarChart",
+          "kind": "function",
+          "signature": "function BarChart("
+        },
+        {
+          "name": "BarChartProps",
+          "kind": "interface",
+          "signature": "interface BarChartProps extends ChartDimensions",
+          "members": []
+        },
+        {
+          "name": "PieChart",
+          "kind": "function",
+          "signature": "function PieChart("
+        },
+        {
+          "name": "PieChartProps",
+          "kind": "interface",
+          "signature": "interface PieChartProps extends ChartDimensions",
+          "members": []
+        },
+        {
+          "name": "PieDatum",
+          "kind": "interface",
+          "signature": "interface PieDatum",
+          "members": []
+        },
+        {
+          "name": "SparklineChart",
+          "kind": "function",
+          "signature": "function SparklineChart("
+        },
+        {
+          "name": "SparklineChartProps",
+          "kind": "interface",
+          "signature": "interface SparklineChartProps extends ChartDimensions",
+          "members": []
+        },
+        {
+          "name": "useEChartsTheme",
+          "kind": "function",
+          "signature": "function useEChartsTheme(options: UseEChartsThemeOptions): string"
+        },
+        {
+          "name": "UseEChartsThemeOptions",
+          "kind": "interface",
+          "signature": "interface UseEChartsThemeOptions",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/react-cookies",
       "description": "React bindings for @granit/cookies — CookieConsentProvider, useCookieConsent",
       "exports": [
@@ -1859,6 +1971,76 @@
       "name": "@granit/react-customer-balance",
       "description": "React bindings for @granit/customer-balance — CustomerBalanceProvider and hooks",
       "exports": []
+    },
+    {
+      "name": "@granit/react-dashboards",
+      "description": "React renderer for @granit/dashboards — Dashboard layout component, WidgetRegistry provider, and built-in renderers for Markdown / Image / Text widgets",
+      "exports": [
+        {
+          "name": "Dashboard",
+          "kind": "function",
+          "signature": "function Dashboard("
+        },
+        {
+          "name": "DashboardProps",
+          "kind": "interface",
+          "signature": "interface DashboardProps",
+          "members": []
+        },
+        {
+          "name": "WidgetRenderer",
+          "kind": "function",
+          "signature": "function WidgetRenderer("
+        },
+        {
+          "name": "WidgetRendererProps",
+          "kind": "interface",
+          "signature": "interface WidgetRendererProps",
+          "members": []
+        },
+        {
+          "name": "WidgetCard",
+          "kind": "function",
+          "signature": "function WidgetCard("
+        },
+        {
+          "name": "WidgetCardProps",
+          "kind": "interface",
+          "signature": "interface WidgetCardProps",
+          "members": []
+        },
+        {
+          "name": "ImageWidget",
+          "kind": "function",
+          "signature": "function ImageWidget("
+        },
+        {
+          "name": "MarkdownWidget",
+          "kind": "function",
+          "signature": "function MarkdownWidget("
+        },
+        {
+          "name": "TextWidget",
+          "kind": "function",
+          "signature": "function TextWidget("
+        },
+        {
+          "name": "defaultWidgetRegistry",
+          "kind": "const",
+          "signature": "const defaultWidgetRegistry: WidgetRegistry"
+        },
+        {
+          "name": "WidgetRegistryProviderProps",
+          "kind": "interface",
+          "signature": "interface WidgetRegistryProviderProps",
+          "members": []
+        },
+        {
+          "name": "composeRegistries",
+          "kind": "function",
+          "signature": "function composeRegistries(...registries: readonly WidgetRegistry[]): WidgetRegistry"
+        }
+      ]
     },
     {
       "name": "@granit/react-data-exchange",
