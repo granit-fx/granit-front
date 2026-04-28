@@ -12,8 +12,8 @@ Last updated: 2026-04-28
 
 | License      | Package count |
 | ------------ | ------------- |
-| MIT          | 36            |
-| Apache-2.0   | 13            |
+| MIT          | 37            |
+| Apache-2.0   | 14            |
 | BSD-3-Clause | 1             |
 
 ---
@@ -46,6 +46,7 @@ Last updated: 2026-04-28
 | axios                           | 1.15.0  | Copyright (c) Matt Zabriskie               |
 | clsx                            | 2.1.1   | Copyright (c) Luke Edwards                 |
 | date-fns                        | 4.1.0   | Copyright (c) Sasha Koss                   |
+| echarts-for-react               | 3.0.6   | Copyright (c) hustcc                       |
 | eslint                          | 10.2.1  | OpenJS Foundation                          |
 | eslint-plugin-import-x          | 4.16.2  | eslint-plugin-import-x Contributors        |
 | husky                           | 9.1.7   | Copyright (c) typicode                     |
@@ -79,6 +80,7 @@ Last updated: 2026-04-28
 | @opentelemetry/resources                        | 2.7.0   | Copyright The OpenTelemetry Authors |
 | @opentelemetry/sdk-trace-web                    | 2.7.0   | Copyright The OpenTelemetry Authors |
 | @opentelemetry/semantic-conventions             | 1.40.0  | Copyright The OpenTelemetry Authors |
+| echarts                                         | 6.0.0   | Copyright Apache ECharts Authors    |
 | firebase                                        | 12.x    | Copyright Google LLC                |
 | keycloak-js                                     | 26.2.3  | Copyright Red Hat, Inc.             |
 | typescript                                      | 6.0.3   | Copyright (c) Microsoft Corporation |

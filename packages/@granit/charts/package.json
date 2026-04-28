@@ -1,0 +1,25 @@
+{
+  "name": "@granit/charts",
+  "description": "Framework-agnostic chart primitives for Granit — typed series shapes, ECharts theme builder from Tailwind tokens, locale-aware tick formatters",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  }
+}
