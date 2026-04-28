@@ -43,7 +43,7 @@ describe('buildSearchQuery', () => {
 });
 
 describe('searchLookup', () => {
-  it('hits /api/granit/lookups/{name} by default', async () => {
+  it('hits /lookups/{name} by default', async () => {
     const client = createMockClient();
     const payload: LookupResult = { items: [{ value: '1', label: 'Acme' }], totalCount: 1 };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(payload));

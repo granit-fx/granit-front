@@ -33,7 +33,7 @@ export type UseLookupResult = UseQueryResult<LookupResult> & {
 };
 
 /**
- * Fetches a page of items from a lookup source via `GET /api/granit/lookups/{name}`.
+ * Fetches a page of items from a lookup source via `GET /lookups/{name}`.
  *
  * **Empty Scope Trap mitigation** — when the descriptor declares
  * `scopeKeys: ["tenantId"]` and the provided `scope` is missing the value,

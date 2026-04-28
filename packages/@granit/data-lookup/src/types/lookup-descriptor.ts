@@ -11,7 +11,7 @@ export type LookupKind = 'QueryEngine' | 'Simple' | 'ReferenceData' | 'Enum';
  * the frontend to render a typeahead picker.
  *
  * Exactly one of `name` or `endpoint` must be provided:
- * - `name`: resolved against the central `/api/granit/lookups/{name}` registry
+ * - `name`: resolved against the central `/lookups/{name}` registry
  *   (preferred).
  * - `endpoint`: absolute or relative URL for a bespoke source that returns the
  *   canonical {@link LookupResult} shape.

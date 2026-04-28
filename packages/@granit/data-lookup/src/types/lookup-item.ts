@@ -28,7 +28,7 @@ export interface LookupResult {
 
 /**
  * Public metadata about a registered lookup source, returned by
- * `GET /api/granit/lookups`.
+ * `GET /lookups`.
  */
 export interface LookupManifestEntry {
   readonly name: string;
@@ -37,7 +37,7 @@ export interface LookupManifestEntry {
   readonly scopeKeys: readonly string[];
 }
 
-/** Response shape of `GET /api/granit/lookups`. */
+/** Response shape of `GET /lookups`. */
 export interface LookupManifest {
   readonly lookups: readonly LookupManifestEntry[];
 }

@@ -40,7 +40,7 @@ export interface LookupSelectProps {
   readonly scope?: Readonly<Record<string, string | null | undefined>>;
   /** Current UI culture — passed to both hooks so caches are per-language. */
   readonly culture?: string;
-  /** Override the base path. Defaults to `/api/granit/lookups`. */
+  /** Override the base path. Defaults to `/lookups`. */
   readonly basePath?: string;
   /** Page size passed to the search query. Default: `25`. */
   readonly pageSize?: number;
