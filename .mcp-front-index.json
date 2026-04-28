@@ -1988,6 +1988,16 @@
           "members": []
         },
         {
+          "name": "DashboardContextProvider",
+          "kind": "function",
+          "signature": "function DashboardContextProvider("
+        },
+        {
+          "name": "useDashboardContext",
+          "kind": "function",
+          "signature": "function useDashboardContext(): DashboardContextValue | null"
+        },
+        {
           "name": "WidgetRenderer",
           "kind": "function",
           "signature": "function WidgetRenderer("
@@ -2028,6 +2038,16 @@
           "name": "defaultWidgetRegistry",
           "kind": "const",
           "signature": "const defaultWidgetRegistry: WidgetRegistry"
+        },
+        {
+          "name": "WidgetRegistryProvider",
+          "kind": "function",
+          "signature": "function WidgetRegistryProvider("
+        },
+        {
+          "name": "useWidgetRegistry",
+          "kind": "function",
+          "signature": "function useWidgetRegistry(): WidgetRegistry"
         },
         {
           "name": "WidgetRegistryProviderProps",

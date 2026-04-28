@@ -5,6 +5,11 @@
 // Layout + dispatcher
 export { Dashboard } from './components/dashboard.js';
 export type { DashboardProps } from './components/dashboard.js';
+export { DashboardContextProvider, useDashboardContext } from './components/dashboard-context.js';
+export type {
+  DashboardContextProviderProps,
+  DashboardContextValue,
+} from './components/dashboard-context.js';
 export { WidgetRenderer } from './components/widget-renderer.js';
 export type { WidgetRendererProps } from './components/widget-renderer.js';
 export { WidgetCard } from './components/widget-card.js';
@@ -20,4 +25,10 @@ export { defaultWidgetRegistry } from './registry/default-widget-registry.js';
 export { WidgetRegistryProvider, useWidgetRegistry } from './registry/widget-registry-context.js';
 export type { WidgetRegistryProviderProps } from './registry/widget-registry-context.js';
 export { composeRegistries } from './registry/widget-registry.js';
-export type { WidgetRegistry, WidgetRenderer } from './registry/widget-registry.js';
+// Renamed `WidgetRenderer` (type) → `WidgetRendererFn` to avoid collision with
+// the dispatcher component of the same name; consumers register components
+// matching this signature.
+export type {
+  WidgetRegistry,
+  WidgetRenderer as WidgetRendererFn,
+} from './registry/widget-registry.js';

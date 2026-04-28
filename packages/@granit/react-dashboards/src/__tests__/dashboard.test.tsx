@@ -1,4 +1,6 @@
 import { render, screen } from '@testing-library/react';
+import i18n from 'i18next';
+import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { describe, expect, it } from 'vitest';
 
 import { Dashboard } from '../components/dashboard.js';
@@ -7,91 +9,132 @@ import { WidgetRegistryProvider } from '../registry/widget-registry-context.js';
 
 import type { DashboardDefinition } from '@granit/dashboards';
 
+// Bootstraps a minimal i18next instance so Markdown / Text / Image widgets can
+// resolve their localization keys to the English fixture content used below.
+//
+// `nsSeparator: false` and `keySeparator: false` disable i18next's default
+// `namespace:key` and `key.subkey` parsing — Granit uses flat keys with `:`
+// and `.` as plain characters (e.g. `Widget:DashboardName.Slug.Title`).
+const testI18n = i18n.createInstance();
+void testI18n.use(initReactI18next).init({
+  lng: 'en',
+  fallbackLng: 'en',
+  nsSeparator: false,
+  keySeparator: false,
+  resources: {
+    en: {
+      translation: {
+        'Widget:Test.Hello': 'World',
+        'Widget:Test.Heading': '# Heading',
+        'Widget:Test.Caption': 'Read me',
+        'Widget:Test.Logo.Alt': 'Granit logo',
+      },
+    },
+  },
+  interpolation: { escapeValue: false },
+});
+
 function renderDashboard(definition: DashboardDefinition) {
   return render(
-    <WidgetRegistryProvider registries={[defaultWidgetRegistry]}>
-      <Dashboard definition={definition} />
-    </WidgetRegistryProvider>
+    <I18nextProvider i18n={testI18n}>
+      <WidgetRegistryProvider registries={[defaultWidgetRegistry]}>
+        <Dashboard definition={definition} />
+      </WidgetRegistryProvider>
+    </I18nextProvider>
   );
 }
 
 describe('Dashboard', () => {
-  it('renders widgets at their grid positions', () => {
+  it('renders widgets in `position` order with their declared size', () => {
     const { container } = renderDashboard({
-      id: 'test',
       name: 'Test',
       category: 'general',
+      isSystem: false,
+      version: '1.0.0',
+      layout: { columns: 12, rowHeight: 80 },
       widgets: [
-        { id: 'w1', type: 'text', title: 'Hello', content: 'World' },
-        { id: 'w2', type: 'markdown', content: '# Heading' },
+        {
+          slug: 'Hello',
+          type: 'text',
+          position: 1,
+          size: { width: 6, height: 1 },
+          contentLocalizationKey: 'Widget:Test.Hello',
+          style: 'body',
+        },
+        {
+          slug: 'Heading',
+          type: 'markdown',
+          position: 0,
+          size: { width: 6, height: 1 },
+          contentLocalizationKey: 'Widget:Test.Heading',
+        },
       ],
-      layout: {
-        columns: 12,
-        items: [
-          { widgetId: 'w1', position: { x: 0, y: 0, width: 6, height: 1 } },
-          { widgetId: 'w2', position: { x: 6, y: 0, width: 6, height: 1 } },
-        ],
-      },
     });
 
     expect(screen.getByText('World')).toBeInTheDocument();
     expect(screen.getByText('# Heading')).toBeInTheDocument();
-    expect(container.querySelectorAll('[data-slot="dashboard-cell"]')).toHaveLength(2);
-  });
 
-  it('skips layout items with no matching widget', () => {
-    const { container } = renderDashboard({
-      id: 'test',
-      name: 'Test',
-      category: 'general',
-      widgets: [{ id: 'w1', type: 'text', content: 'Only one' }],
-      layout: {
-        columns: 12,
-        items: [
-          { widgetId: 'w1', position: { x: 0, y: 0, width: 6, height: 1 } },
-          { widgetId: 'ghost', position: { x: 6, y: 0, width: 6, height: 1 } },
-        ],
-      },
-    });
-    expect(container.querySelectorAll('[data-slot="dashboard-cell"]')).toHaveLength(1);
-  });
-
-  it('renders an unknown-widget placeholder when the type has no registered renderer', () => {
-    render(
-      <WidgetRegistryProvider registries={[defaultWidgetRegistry]}>
-        <Dashboard
-          definition={{
-            id: 'test',
-            name: 'Test',
-            category: 'general',
-            widgets: [
-              {
-                id: 'w1',
-                type: 'analytics-kpi',
-                metric: 'foo',
-              } as never,
-            ],
-            layout: {
-              columns: 12,
-              items: [{ widgetId: 'w1', position: { x: 0, y: 0, width: 6, height: 1 } }],
-            },
-          }}
-        />
-      </WidgetRegistryProvider>
-    );
-    expect(screen.getByText(/Unknown widget type/i)).toBeInTheDocument();
-    expect(screen.getByText(/analytics-kpi/)).toBeInTheDocument();
+    const cells = container.querySelectorAll('[data-slot="dashboard-cell"]');
+    expect(cells).toHaveLength(2);
+    // The cell with `position: 0` (Heading) renders first in DOM.
+    expect(cells[0]?.getAttribute('data-widget-slug')).toBe('Heading');
+    expect(cells[1]?.getAttribute('data-widget-slug')).toBe('Hello');
   });
 
   it('applies grid-template-columns from layout.columns', () => {
     const { container } = renderDashboard({
-      id: 'test',
-      name: 'Test',
+      name: 'Empty',
       category: 'general',
+      isSystem: false,
+      version: '1.0.0',
+      layout: { columns: 8, rowHeight: 80 },
       widgets: [],
-      layout: { columns: 8, items: [] },
     });
     const dashboard = container.querySelector('[data-slot="dashboard"]');
     expect(dashboard).toHaveStyle({ gridTemplateColumns: 'repeat(8, minmax(0, 1fr))' });
+  });
+
+  it('renders an unknown-widget placeholder when the type has no registered renderer', () => {
+    renderDashboard({
+      name: 'Test',
+      category: 'general',
+      isSystem: false,
+      version: '1.0.0',
+      layout: { columns: 12, rowHeight: 80 },
+      widgets: [
+        {
+          slug: 'Foo',
+          type: 'analytics-kpi',
+          position: 0,
+          size: { width: 3, height: 1 },
+          metric: 'foo',
+        } as never,
+      ],
+    });
+    expect(screen.getByText(/Unknown widget type/i)).toBeInTheDocument();
+    expect(screen.getByText(/analytics-kpi/)).toBeInTheDocument();
+  });
+
+  it('renders the TextWidget with style-aware HTML element', () => {
+    const { container } = renderDashboard({
+      name: 'Test',
+      category: 'general',
+      isSystem: false,
+      version: '1.0.0',
+      layout: { columns: 12, rowHeight: 80 },
+      widgets: [
+        {
+          slug: 'Caption',
+          type: 'text',
+          position: 0,
+          size: { width: 6, height: 1 },
+          contentLocalizationKey: 'Widget:Test.Caption',
+          style: 'caption',
+        },
+      ],
+    });
+    const text = container.querySelector('[data-slot="text-widget"]');
+    expect(text?.tagName).toBe('P');
+    expect(text?.getAttribute('data-style')).toBe('caption');
   });
 });
