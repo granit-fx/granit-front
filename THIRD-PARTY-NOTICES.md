@@ -4,7 +4,7 @@ This file lists the third-party libraries used by the **granit-front** project
 along with their respective licenses. It is updated whenever an external
 dependency is added or modified.
 
-Last updated: 2026-04-27
+Last updated: 2026-04-28
 
 ---
 
@@ -35,7 +35,7 @@ Last updated: 2026-04-27
 | @eslint/js                      | 10.0.1  | OpenJS Foundation                          |
 | @microsoft/fetch-event-source   | 2.0.1   | Copyright (c) Microsoft Corporation        |
 | @microsoft/signalr              | 10.0.0  | Copyright (c) .NET Foundation              |
-| @tanstack/react-query           | 5.99.0  | Copyright (c) Tanner Linsley               |
+| @tanstack/react-query           | 5.100.5 | Copyright (c) Tanner Linsley               |
 | @tanstack/react-virtual         | 3.13.24 | Copyright (c) Tanner Linsley               |
 | @testing-library/jest-dom       | 6.9.1   | Copyright (c) Testing Library Contributors |
 | @testing-library/react          | 16.3.2  | Copyright (c) Testing Library Contributors |
@@ -57,7 +57,7 @@ Last updated: 2026-04-27
 | prettier                        | 3.8.3   | Copyright (c) James Long                   |
 | react                           | 19.2.5  | Copyright (c) Meta Platforms, Inc.         |
 | react-dom                       | 19.2.5  | Copyright (c) Meta Platforms, Inc.         |
-| react-hook-form                 | 7.72.1  | Copyright (c) react-hook-form Contributors |
+| react-hook-form                 | 7.74.0  | Copyright (c) react-hook-form Contributors |
 | react-i18next                   | 17.0.4  | Copyright (c) i18next Contributors         |
 | tailwind-merge                  | 3.5.0   | Copyright (c) Dany Castillo                |
 | tsup                            | 8.5.1   | Copyright (c) EGOIST                       |
