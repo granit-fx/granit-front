@@ -1,3 +1,5 @@
+import { DATE_OPERATORS, ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
+import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { noContent, notFound } from '@granit/testing/msw';
 import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
@@ -11,7 +13,144 @@ import type {
   UserNotification,
   UserNotificationPage,
 } from '@granit/notifications';
+import type { QueryMetadata } from '@granit/query-engine';
 import type { Mutable } from '@granit/testing';
+
+const NOTIFICATION_SEVERITIES = ['Info', 'Success', 'Warning', 'Error', 'Fatal'];
+const NOTIFICATION_STATES = ['Unread', 'Read'];
+
+/** Mock /meta payload for the user-notifications resource. */
+export const notificationQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'id',
+      label: 'ID',
+      type: 'Guid',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'notificationTypeName',
+      label: 'Type',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'severity',
+      label: 'Severity',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'state',
+      label: 'State',
+      type: 'String',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'relatedEntityType',
+      label: 'Related entity',
+      type: 'String',
+      order: 4,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'relatedEntityId',
+      label: 'Related id',
+      type: 'String',
+      order: 5,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: false,
+    },
+    {
+      name: 'recipientUserId',
+      label: 'Recipient',
+      type: 'Guid',
+      order: 6,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: false,
+    },
+    {
+      name: 'createdAt',
+      label: 'Created at',
+      type: 'DateTime',
+      order: 7,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'readAt',
+      label: 'Read at',
+      type: 'DateTime',
+      order: 8,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: false,
+    },
+  ],
+  filterableFields: [
+    { name: 'notificationTypeName', type: 'String', operators: STRING_OPERATORS },
+    {
+      name: 'severity',
+      type: 'String',
+      operators: ENUM_OPERATORS,
+      enumValues: NOTIFICATION_SEVERITIES,
+    },
+    { name: 'state', type: 'String', operators: ENUM_OPERATORS, enumValues: NOTIFICATION_STATES },
+    { name: 'relatedEntityType', type: 'String', operators: STRING_OPERATORS },
+    { name: 'relatedEntityId', type: 'String', operators: STRING_OPERATORS },
+    { name: 'recipientUserId', type: 'Guid', operators: ENUM_OPERATORS },
+    { name: 'createdAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'readAt', type: 'DateTime', operators: DATE_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'notificationTypeName' },
+    { name: 'severity' },
+    { name: 'state' },
+    { name: 'createdAt' },
+    { name: 'readAt' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'unread', label: 'Unread', isDefault: true },
+    { name: 'read', label: 'Read', isDefault: false },
+  ],
+  dateFilters: [
+    {
+      name: 'createdAt',
+      defaultPeriod: 'ThisMonth',
+      availablePeriods: ['Today', 'ThisWeek', 'ThisMonth', 'LastMonth', 'Custom'],
+    },
+  ],
+  groupByFields: [
+    { name: 'severity', type: 'String' },
+    { name: 'notificationTypeName', type: 'String' },
+    { name: 'state', type: 'String' },
+  ],
+  pagination: {
+    defaultPageSize: 20,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: '-createdAt',
+};
 
 /**
  * Create stateful MSW handlers for notification endpoints.
@@ -25,6 +164,9 @@ export function createNotificationsHandlers(baseUrl = API_BASE_PATH) {
   let preferences: Mutable<NotificationPreference>[] = [...mockNotificationPreferences];
 
   return [
+    // GET /notifications/meta — query metadata
+    createQueryMetaHandler(`${baseUrl}/notifications`, notificationQueryMetadata),
+
     // SSE stream — open connection that sends a heartbeat comment
     http.get(`${baseUrl}/notifications/stream`, () => {
       const stream = new ReadableStream({

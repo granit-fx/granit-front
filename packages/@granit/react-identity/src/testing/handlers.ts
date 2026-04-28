@@ -1,3 +1,5 @@
+import { BOOLEAN_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
+import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH, DEFAULT_PROVIDER_BASE_PATH } from '../constants.js';
@@ -5,6 +7,95 @@ import { DEFAULT_BASE_PATH, DEFAULT_PROVIDER_BASE_PATH } from '../constants.js';
 import { mockDevices, mockPasswordChangedAt, mockSessions, mockUsers } from './data.js';
 
 import type { IdentityProviderCapabilities, IdentityUser } from '@granit/identity';
+import type { QueryMetadata } from '@granit/query-engine';
+
+/** Mock /meta payload for the cached identity-users resource. */
+export const identityUserQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'userId',
+      label: 'User ID',
+      type: 'Guid',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'username',
+      label: 'Username',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'email',
+      label: 'Email',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'firstName',
+      label: 'First name',
+      type: 'String',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'lastName',
+      label: 'Last name',
+      type: 'String',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'enabled',
+      label: 'Enabled',
+      type: 'Boolean',
+      order: 5,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'username', type: 'String', operators: STRING_OPERATORS },
+    { name: 'email', type: 'String', operators: STRING_OPERATORS },
+    { name: 'firstName', type: 'String', operators: STRING_OPERATORS },
+    { name: 'lastName', type: 'String', operators: STRING_OPERATORS },
+    { name: 'enabled', type: 'Boolean', operators: BOOLEAN_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'username' },
+    { name: 'email' },
+    { name: 'firstName' },
+    { name: 'lastName' },
+    { name: 'enabled' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'enabled', label: 'Enabled', isDefault: true },
+    { name: 'disabled', label: 'Disabled', isDefault: false },
+  ],
+  dateFilters: [],
+  groupByFields: [],
+  pagination: {
+    defaultPageSize: 20,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: 'username',
+};
 
 // ---------------------------------------------------------------------------
 // Mock role data
@@ -136,6 +227,9 @@ export function createIdentityHandlers(
 ) {
   return [
     // ── Cache endpoints (/identity/users) ───────────────────────────────────
+
+    // GET /identity/users/meta — query metadata
+    createQueryMetaHandler(cacheBase, identityUserQueryMetadata),
 
     http.get(`${cacheBase}/capabilities`, () => {
       return HttpResponse.json(capabilities);

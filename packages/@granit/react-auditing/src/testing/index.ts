@@ -3,4 +3,4 @@
 // ---------------------------------------------------------------------------
 
 export { mockAuditEntries } from './data.js';
-export { createAuditHandlers } from './handlers.js';
+export { auditEntryQueryMetadata, createAuditHandlers } from './handlers.js';

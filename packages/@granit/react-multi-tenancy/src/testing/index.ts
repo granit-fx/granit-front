@@ -3,4 +3,4 @@
 // ---------------------------------------------------------------------------
 
 export { mockTenants } from './data.js';
-export { createTenantHandlers } from './handlers.js';
+export { createTenantHandlers, tenantQueryMetadata } from './handlers.js';

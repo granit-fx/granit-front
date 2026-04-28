@@ -1,3 +1,5 @@
+import { DATE_OPERATORS, NUMBER_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
+import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import {
   applyFilter,
   groupBy as groupByField,
@@ -19,7 +21,137 @@ import {
   mockWebhookSubscriptions,
 } from './data.js';
 
+import type { QueryMetadata } from '@granit/query-engine';
 import type { WebhookSubscriptionResponse } from '@granit/webhooks';
+
+/**
+ * Mock /meta payload for the webhook subscriptions resource.
+ * NOTE: `status` is a numeric enum on the wire (Int32) — see WebhookSubscriptionStatus.
+ */
+export const webhookSubscriptionQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'id',
+      label: 'ID',
+      type: 'Guid',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'targetUrl',
+      label: 'Target URL',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'eventType',
+      label: 'Event type',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'status',
+      label: 'Status',
+      type: 'Int32',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'consecutiveFailureCount',
+      label: 'Failures',
+      type: 'Int32',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'lastSuccessAt',
+      label: 'Last success',
+      type: 'DateTime',
+      order: 5,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'createdAt',
+      label: 'Created at',
+      type: 'DateTime',
+      order: 6,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'modifiedAt',
+      label: 'Modified at',
+      type: 'DateTime',
+      order: 7,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: false,
+    },
+  ],
+  filterableFields: [
+    { name: 'targetUrl', type: 'String', operators: STRING_OPERATORS },
+    { name: 'eventType', type: 'String', operators: STRING_OPERATORS },
+    { name: 'status', type: 'Int32', operators: NUMBER_OPERATORS },
+    { name: 'consecutiveFailureCount', type: 'Int32', operators: NUMBER_OPERATORS },
+    { name: 'lastSuccessAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'createdAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'modifiedAt', type: 'DateTime', operators: DATE_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'targetUrl' },
+    { name: 'eventType' },
+    { name: 'status' },
+    { name: 'consecutiveFailureCount' },
+    { name: 'lastSuccessAt' },
+    { name: 'createdAt' },
+    { name: 'modifiedAt' },
+  ],
+  presetFilterGroups: [
+    {
+      name: 'status',
+      label: 'Status',
+      presets: [
+        { name: 'active', label: 'Active', isDefault: true },
+        { name: 'suspended', label: 'Suspended', isDefault: false },
+        { name: 'deactivated', label: 'Deactivated', isDefault: false },
+      ],
+    },
+  ],
+  quickFilters: [{ name: 'hasFailures', label: 'Has failures', isDefault: false }],
+  dateFilters: [
+    {
+      name: 'createdAt',
+      defaultPeriod: 'ThisMonth',
+      availablePeriods: ['Today', 'ThisWeek', 'ThisMonth', 'LastMonth', 'ThisYear', 'Custom'],
+    },
+  ],
+  groupByFields: [
+    { name: 'status', type: 'Int32' },
+    { name: 'eventType', type: 'String' },
+  ],
+  pagination: {
+    defaultPageSize: 25,
+    maxPageSize: 100,
+    maxStreamSize: 50_000,
+    supportsCursor: false,
+  },
+  defaultSort: '-createdAt',
+};
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -77,6 +209,9 @@ export function createWebhooksHandlers(baseUrl = DEFAULT_WEBHOOKS_BASE_PATH) {
   const deliveryAttempts = [...mockWebhookDeliveryAttempts];
 
   return [
+    // GET /subscriptions/meta — query metadata
+    createQueryMetaHandler(`${baseUrl}/subscriptions`, webhookSubscriptionQueryMetadata),
+
     // -------------------------------------------------------------------------
     // Static routes MUST come before parameterized routes
     // -------------------------------------------------------------------------

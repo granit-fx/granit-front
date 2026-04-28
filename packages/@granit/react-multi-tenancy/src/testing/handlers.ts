@@ -1,3 +1,10 @@
+import {
+  STRING_OPERATORS,
+  ENUM_OPERATORS,
+  BOOLEAN_OPERATORS,
+  DATE_OPERATORS,
+} from '@granit/query-engine';
+import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { noContent, notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
@@ -6,6 +13,104 @@ import { DEFAULT_BASE_PATH } from '../constants.js';
 import { mockTenants } from './data.js';
 
 import type { AdminTenant } from '@granit/multi-tenancy';
+import type { QueryMetadata } from '@granit/query-engine';
+
+/** Mock /meta payload for the tenant resource. */
+export const tenantQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'id',
+      label: 'ID',
+      type: 'Guid',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'name',
+      label: 'Name',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'identifier',
+      label: 'Identifier',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'contactEmail',
+      label: 'Contact email',
+      type: 'String',
+      order: 3,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'isActive',
+      label: 'Active',
+      type: 'Boolean',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'jurisdiction',
+      label: 'Jurisdiction',
+      type: 'String',
+      order: 5,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'createdAt',
+      label: 'Created at',
+      type: 'DateTime',
+      order: 6,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'name', type: 'String', operators: STRING_OPERATORS },
+    { name: 'identifier', type: 'String', operators: STRING_OPERATORS },
+    { name: 'contactEmail', type: 'String', operators: STRING_OPERATORS },
+    { name: 'isActive', type: 'Boolean', operators: BOOLEAN_OPERATORS },
+    { name: 'jurisdiction', type: 'String', operators: ENUM_OPERATORS },
+    { name: 'createdAt', type: 'DateTime', operators: DATE_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'name' },
+    { name: 'identifier' },
+    { name: 'isActive' },
+    { name: 'createdAt' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'active', label: 'Active', isDefault: true },
+    { name: 'inactive', label: 'Inactive', isDefault: false },
+  ],
+  dateFilters: [],
+  groupByFields: [],
+  pagination: {
+    defaultPageSize: 25,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: '-createdAt',
+};
 
 /**
  * Create stateful MSW handlers for tenant admin endpoints.
@@ -16,6 +121,9 @@ import type { AdminTenant } from '@granit/multi-tenancy';
  */
 export function createTenantHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
+    // GET /tenants/meta — query metadata
+    createQueryMetaHandler(`${baseUrl}/tenants`, tenantQueryMetadata),
+
     // GET /tenants — list all
     http.get(`${baseUrl}/tenants`, () => HttpResponse.json(mockTenants)),
 

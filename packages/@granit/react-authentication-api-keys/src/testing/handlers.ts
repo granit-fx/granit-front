@@ -1,3 +1,5 @@
+import { DATE_OPERATORS, ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
+import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { notFound, pagedResponse } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
@@ -11,6 +13,142 @@ import type {
   ApiKeyResponse,
   ApiKeyUpdateScopesRequest,
 } from '@granit/authentication-api-keys';
+import type { QueryMetadata } from '@granit/query-engine';
+
+const API_KEY_TYPES = ['Secret', 'Publishable', 'Webhook', 'Ephemeral'];
+
+/** Mock /meta payload for the API keys resource. */
+export const apiKeyQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'id',
+      label: 'ID',
+      type: 'Guid',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'name',
+      label: 'Name',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'type',
+      label: 'Type',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'environment',
+      label: 'Environment',
+      type: 'String',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'prefix',
+      label: 'Prefix',
+      type: 'String',
+      order: 4,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'lastFourChars',
+      label: 'Last 4',
+      type: 'String',
+      order: 5,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: true,
+    },
+    {
+      name: 'expiresAt',
+      label: 'Expires at',
+      type: 'DateTime',
+      order: 6,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'lastUsedAt',
+      label: 'Last used',
+      type: 'DateTime',
+      order: 7,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'revokedAt',
+      label: 'Revoked at',
+      type: 'DateTime',
+      order: 8,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'createdAt',
+      label: 'Created at',
+      type: 'DateTime',
+      order: 9,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'name', type: 'String', operators: STRING_OPERATORS },
+    { name: 'type', type: 'String', operators: ENUM_OPERATORS, enumValues: API_KEY_TYPES },
+    { name: 'environment', type: 'String', operators: ENUM_OPERATORS },
+    { name: 'prefix', type: 'String', operators: STRING_OPERATORS },
+    { name: 'expiresAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'lastUsedAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'revokedAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'createdAt', type: 'DateTime', operators: DATE_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'name' },
+    { name: 'type' },
+    { name: 'environment' },
+    { name: 'expiresAt' },
+    { name: 'lastUsedAt' },
+    { name: 'revokedAt' },
+    { name: 'createdAt' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'active', label: 'Active', isDefault: true },
+    { name: 'revoked', label: 'Revoked', isDefault: false },
+    { name: 'expired', label: 'Expired', isDefault: false },
+  ],
+  dateFilters: [],
+  groupByFields: [
+    { name: 'type', type: 'String' },
+    { name: 'environment', type: 'String' },
+  ],
+  pagination: {
+    defaultPageSize: 20,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: '-createdAt',
+};
 
 type MutableApiKey = { -readonly [K in keyof ApiKeyResponse]: ApiKeyResponse[K] };
 
@@ -38,6 +176,9 @@ export function createApiKeyHandlers(baseUrl = `${DEFAULT_BASE_PATH}/api-keys`) 
   const apiKeys: MutableApiKey[] = mockApiKeys.map((k) => ({ ...k }));
 
   return [
+    // GET /api-keys/meta — query metadata
+    createQueryMetaHandler(baseUrl, apiKeyQueryMetadata),
+
     // GET list — paginated with filters
     http.get(baseUrl, ({ request }) => {
       const url = new URL(request.url);

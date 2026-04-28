@@ -3,4 +3,4 @@
 // ---------------------------------------------------------------------------
 
 export { sampleBalance, sampleTransactions } from './data.js';
-export { createCustomerBalanceHandlers } from './handlers.js';
+export { balanceTransactionQueryMetadata, createCustomerBalanceHandlers } from './handlers.js';

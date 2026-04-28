@@ -1,3 +1,10 @@
+import {
+  DATE_OPERATORS,
+  ENUM_OPERATORS,
+  NUMBER_OPERATORS,
+  STRING_OPERATORS,
+} from '@granit/query-engine';
+import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { paginate } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
@@ -6,6 +13,258 @@ import { DEFAULT_BASE_PATH } from '../constants.js';
 import { mockExportHistory, mockImportHistory } from './data.js';
 
 import type { ExportJobResponse, ImportJobResponse } from '@granit/data-exchange';
+import type { QueryMetadata } from '@granit/query-engine';
+
+const EXPORT_JOB_STATUSES = ['Queued', 'Exporting', 'Completed', 'Failed'];
+const IMPORT_JOB_STATUSES = [
+  'Created',
+  'Previewed',
+  'Mapped',
+  'Executing',
+  'Completed',
+  'PartiallyCompleted',
+  'Failed',
+  'Cancelled',
+];
+
+/** Mock /meta payload for the export jobs resource. */
+export const exportJobQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'id',
+      label: 'ID',
+      type: 'Guid',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'definitionName',
+      label: 'Definition',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'format',
+      label: 'Format',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'status',
+      label: 'Status',
+      type: 'String',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'rowCount',
+      label: 'Rows',
+      type: 'Int32',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'fileName',
+      label: 'File name',
+      type: 'String',
+      order: 5,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'createdAt',
+      label: 'Created at',
+      type: 'DateTime',
+      order: 6,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'completedAt',
+      label: 'Completed at',
+      type: 'DateTime',
+      order: 7,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'definitionName', type: 'String', operators: ENUM_OPERATORS },
+    { name: 'format', type: 'String', operators: ENUM_OPERATORS },
+    { name: 'status', type: 'String', operators: ENUM_OPERATORS, enumValues: EXPORT_JOB_STATUSES },
+    { name: 'rowCount', type: 'Int32', operators: NUMBER_OPERATORS },
+    { name: 'fileName', type: 'String', operators: STRING_OPERATORS },
+    { name: 'createdAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'completedAt', type: 'DateTime', operators: DATE_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'definitionName' },
+    { name: 'format' },
+    { name: 'status' },
+    { name: 'rowCount' },
+    { name: 'createdAt' },
+    { name: 'completedAt' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'completed', label: 'Completed', isDefault: false },
+    { name: 'failed', label: 'Failed', isDefault: false },
+    { name: 'inProgress', label: 'In progress', isDefault: false },
+  ],
+  dateFilters: [
+    {
+      name: 'createdAt',
+      defaultPeriod: 'ThisMonth',
+      availablePeriods: ['Today', 'ThisWeek', 'ThisMonth', 'LastMonth', 'Custom'],
+    },
+  ],
+  groupByFields: [
+    { name: 'definitionName', type: 'String' },
+    { name: 'status', type: 'String' },
+    { name: 'format', type: 'String' },
+  ],
+  pagination: {
+    defaultPageSize: 20,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: '-createdAt',
+};
+
+/** Mock /meta payload for the import jobs resource. */
+export const importJobQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'id',
+      label: 'ID',
+      type: 'Guid',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'definitionName',
+      label: 'Definition',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'originalFileName',
+      label: 'File name',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'mimeType',
+      label: 'MIME type',
+      type: 'String',
+      order: 3,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'fileSizeBytes',
+      label: 'Size',
+      type: 'Int64',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'status',
+      label: 'Status',
+      type: 'String',
+      order: 5,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'createdAt',
+      label: 'Created at',
+      type: 'DateTime',
+      order: 6,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'completedAt',
+      label: 'Completed at',
+      type: 'DateTime',
+      order: 7,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'definitionName', type: 'String', operators: ENUM_OPERATORS },
+    { name: 'originalFileName', type: 'String', operators: STRING_OPERATORS },
+    { name: 'mimeType', type: 'String', operators: ENUM_OPERATORS },
+    { name: 'fileSizeBytes', type: 'Int64', operators: NUMBER_OPERATORS },
+    { name: 'status', type: 'String', operators: ENUM_OPERATORS, enumValues: IMPORT_JOB_STATUSES },
+    { name: 'createdAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'completedAt', type: 'DateTime', operators: DATE_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'definitionName' },
+    { name: 'originalFileName' },
+    { name: 'fileSizeBytes' },
+    { name: 'status' },
+    { name: 'createdAt' },
+    { name: 'completedAt' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'completed', label: 'Completed', isDefault: false },
+    { name: 'failed', label: 'Failed', isDefault: false },
+    { name: 'inProgress', label: 'In progress', isDefault: false },
+  ],
+  dateFilters: [
+    {
+      name: 'createdAt',
+      defaultPeriod: 'ThisMonth',
+      availablePeriods: ['Today', 'ThisWeek', 'ThisMonth', 'LastMonth', 'Custom'],
+    },
+  ],
+  groupByFields: [
+    { name: 'definitionName', type: 'String' },
+    { name: 'status', type: 'String' },
+  ],
+  pagination: {
+    defaultPageSize: 20,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: '-createdAt',
+};
 
 // ---------------------------------------------------------------------------
 // Static metadata
@@ -318,6 +577,12 @@ export function createDataExchangeHandlers(
   exportJobsBase = `${DEFAULT_BASE_PATH}/export/jobs`
 ) {
   return [
+    // Query metadata: export jobs
+    createQueryMetaHandler(exportJobsBase, exportJobQueryMetadata),
+
+    // Query metadata: import jobs
+    createQueryMetaHandler(`${importBase}/jobs`, importJobQueryMetadata),
+
     // Export: definitions
     http.get(`${metadataBase}/definitions`, () => {
       return HttpResponse.json(mockDefinitions);

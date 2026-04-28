@@ -3,4 +3,8 @@
 // ---------------------------------------------------------------------------
 
 export { mockExportHistory, mockImportHistory } from './data.js';
-export { createDataExchangeHandlers } from './handlers.js';
+export {
+  createDataExchangeHandlers,
+  exportJobQueryMetadata,
+  importJobQueryMetadata,
+} from './handlers.js';

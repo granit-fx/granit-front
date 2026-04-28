@@ -3,4 +3,4 @@
 // ---------------------------------------------------------------------------
 
 export { sampleMeters, sampleQuota, sampleUsage } from './data.js';
-export { createMeteringHandlers } from './handlers.js';
+export { createMeteringHandlers, meterQueryMetadata } from './handlers.js';

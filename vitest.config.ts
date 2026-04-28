@@ -299,6 +299,10 @@ export default defineConfig({
         __dirname,
         'packages/@granit/react-privacy/src/index.ts'
       ),
+      '@granit/react-query-engine/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-query-engine/src/testing/index.ts'
+      ),
       '@granit/react-query-engine': path.resolve(
         __dirname,
         'packages/@granit/react-query-engine/src/index.ts'

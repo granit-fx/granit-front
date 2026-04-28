@@ -8,4 +8,10 @@ export {
   mockOidcAuthorizations,
   mockOidcScopes,
 } from './data.js';
-export { createOpenIddictAdminHandlers } from './handlers.js';
+export {
+  adminUserQueryMetadata,
+  createOpenIddictAdminHandlers,
+  oidcApplicationQueryMetadata,
+  oidcAuthorizationQueryMetadata,
+  oidcScopeQueryMetadata,
+} from './handlers.js';

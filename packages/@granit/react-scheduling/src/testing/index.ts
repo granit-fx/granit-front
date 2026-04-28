@@ -3,4 +3,4 @@
 // ---------------------------------------------------------------------------
 
 export { mockScheduledActions } from './data.js';
-export { createSchedulingHandlers } from './handlers.js';
+export { createSchedulingHandlers, scheduledActionQueryMetadata } from './handlers.js';

@@ -1,3 +1,10 @@
+import {
+  DATE_OPERATORS,
+  ENUM_OPERATORS,
+  NUMBER_OPERATORS,
+  STRING_OPERATORS,
+} from '@granit/query-engine';
+import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { noContent, notFound } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
@@ -6,6 +13,7 @@ import { DEFAULT_BASE_PATH } from '../constants.js';
 
 import { mockPlans, mockPriceHistory, mockSeats, mockSubscriptions } from './data.js';
 
+import type { QueryMetadata } from '@granit/query-engine';
 import type {
   PlanCreateRequest,
   PlanPriceResponse,
@@ -13,6 +21,295 @@ import type {
   SubscriptionResponse,
 } from '@granit/subscriptions';
 import type { CurrencyCode } from '@granit/types';
+
+const PRICING_MODELS = ['Flat', 'PerSeat', 'Tiered', 'UsageBased'];
+const BILLING_INTERVALS = ['Monthly', 'Quarterly', 'SemiAnnual', 'Annual'];
+const PLAN_LIFECYCLE_STATES = ['Draft', 'Published', 'Archived'];
+const SUBSCRIPTION_STATES = ['Active', 'Trial', 'PastDue', 'Canceled', 'Expired'];
+
+/** Mock /meta payload for the plans resource. */
+export const planQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'id',
+      label: 'ID',
+      type: 'Guid',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'name',
+      label: 'Name',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'description',
+      label: 'Description',
+      type: 'String',
+      order: 2,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'pricingModel',
+      label: 'Pricing model',
+      type: 'String',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'defaultInterval',
+      label: 'Interval',
+      type: 'String',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'trialDays',
+      label: 'Trial days',
+      type: 'Int32',
+      order: 5,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'seatLimit',
+      label: 'Seat limit',
+      type: 'Int32',
+      order: 6,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'sortOrder',
+      label: 'Sort order',
+      type: 'Int32',
+      order: 7,
+      isSortable: true,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'lifecycleStatus',
+      label: 'Status',
+      type: 'String',
+      order: 8,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'name', type: 'String', operators: STRING_OPERATORS },
+    { name: 'description', type: 'String', operators: STRING_OPERATORS },
+    { name: 'pricingModel', type: 'String', operators: ENUM_OPERATORS, enumValues: PRICING_MODELS },
+    {
+      name: 'defaultInterval',
+      type: 'String',
+      operators: ENUM_OPERATORS,
+      enumValues: BILLING_INTERVALS,
+    },
+    { name: 'trialDays', type: 'Int32', operators: NUMBER_OPERATORS },
+    { name: 'seatLimit', type: 'Int32', operators: NUMBER_OPERATORS },
+    {
+      name: 'lifecycleStatus',
+      type: 'String',
+      operators: ENUM_OPERATORS,
+      enumValues: PLAN_LIFECYCLE_STATES,
+    },
+  ],
+  sortableFields: [
+    { name: 'name' },
+    { name: 'pricingModel' },
+    { name: 'defaultInterval' },
+    { name: 'trialDays' },
+    { name: 'seatLimit' },
+    { name: 'sortOrder' },
+    { name: 'lifecycleStatus' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'published', label: 'Published', isDefault: true },
+    { name: 'draft', label: 'Drafts', isDefault: false },
+  ],
+  dateFilters: [],
+  groupByFields: [
+    { name: 'lifecycleStatus', type: 'String' },
+    { name: 'pricingModel', type: 'String' },
+  ],
+  pagination: {
+    defaultPageSize: 25,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: 'sortOrder',
+};
+
+/** Mock /meta payload for the subscriptions resource. */
+export const subscriptionQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'id',
+      label: 'ID',
+      type: 'Guid',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'planId',
+      label: 'Plan',
+      type: 'Guid',
+      order: 1,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'status',
+      label: 'Status',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'currency',
+      label: 'Currency',
+      type: 'String',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'currentPeriodStart',
+      label: 'Period start',
+      type: 'DateTime',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'currentPeriodEnd',
+      label: 'Period end',
+      type: 'DateTime',
+      order: 5,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'trialEndsAt',
+      label: 'Trial ends',
+      type: 'DateTime',
+      order: 6,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'cancelAtPeriodEnd',
+      label: 'Cancel at period end',
+      type: 'Boolean',
+      order: 7,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: false,
+    },
+    {
+      name: 'cancelledAt',
+      label: 'Cancelled at',
+      type: 'DateTime',
+      order: 8,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: false,
+    },
+    {
+      name: 'dunningAttempt',
+      label: 'Dunning attempt',
+      type: 'Int32',
+      order: 9,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: false,
+    },
+    {
+      name: 'seatCount',
+      label: 'Seats',
+      type: 'Int32',
+      order: 10,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'planId', type: 'Guid', operators: ENUM_OPERATORS },
+    { name: 'status', type: 'String', operators: ENUM_OPERATORS, enumValues: SUBSCRIPTION_STATES },
+    { name: 'currency', type: 'String', operators: ENUM_OPERATORS },
+    { name: 'currentPeriodStart', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'currentPeriodEnd', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'trialEndsAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'cancelAtPeriodEnd', type: 'Boolean', operators: ENUM_OPERATORS },
+    { name: 'cancelledAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'dunningAttempt', type: 'Int32', operators: NUMBER_OPERATORS },
+    { name: 'seatCount', type: 'Int32', operators: NUMBER_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'status' },
+    { name: 'currency' },
+    { name: 'currentPeriodStart' },
+    { name: 'currentPeriodEnd' },
+    { name: 'trialEndsAt' },
+    { name: 'cancelledAt' },
+    { name: 'seatCount' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'active', label: 'Active', isDefault: true },
+    { name: 'trial', label: 'Trial', isDefault: false },
+    { name: 'pastDue', label: 'Past due', isDefault: false },
+    { name: 'canceled', label: 'Canceled', isDefault: false },
+  ],
+  dateFilters: [
+    {
+      name: 'currentPeriodEnd',
+      defaultPeriod: 'ThisMonth',
+      availablePeriods: ['ThisWeek', 'ThisMonth', 'LastMonth', 'ThisQuarter', 'ThisYear', 'Custom'],
+    },
+  ],
+  groupByFields: [
+    { name: 'status', type: 'String' },
+    { name: 'planId', type: 'Guid' },
+    { name: 'currency', type: 'String' },
+  ],
+  pagination: {
+    defaultPageSize: 25,
+    maxPageSize: 100,
+    maxStreamSize: 50_000,
+    supportsCursor: false,
+  },
+  defaultSort: '-currentPeriodStart',
+};
 
 /**
  * Create stateful MSW handlers for subscriptions endpoints.
@@ -23,6 +320,12 @@ import type { CurrencyCode } from '@granit/types';
  */
 export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
+    // GET /plans/meta — query metadata
+    createQueryMetaHandler(`${baseUrl}/plans`, planQueryMetadata),
+
+    // GET /subscriptions/meta — query metadata
+    createQueryMetaHandler(`${baseUrl}/subscriptions`, subscriptionQueryMetadata),
+
     // ---------------------------------------------------------------------------
     // Plans
     // ---------------------------------------------------------------------------

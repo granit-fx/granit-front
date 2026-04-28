@@ -4,7 +4,9 @@
     "paths": {
       "@granit/multi-tenancy": ["../multi-tenancy/src/index.ts"],
       "@granit/api-client": ["../api-client/src/index.ts"],
-      "@granit/testing/msw": ["../testing/src/msw.ts"]
+      "@granit/testing/msw": ["../testing/src/msw.ts"],
+      "@granit/query-engine": ["../query-engine/src/index.ts"],
+      "@granit/react-query-engine/testing": ["../react-query-engine/src/testing/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]

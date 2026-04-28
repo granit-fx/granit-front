@@ -3,4 +3,4 @@
 // ---------------------------------------------------------------------------
 
 export { mockBlobs, S } from './data.js';
-export { createBlobStorageHandlers } from './handlers.js';
+export { blobQueryMetadata, createBlobStorageHandlers } from './handlers.js';

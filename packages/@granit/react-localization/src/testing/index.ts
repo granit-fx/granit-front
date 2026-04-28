@@ -3,4 +3,4 @@
 // ---------------------------------------------------------------------------
 
 export { buildMockLocalization, mockLanguages, mockLocalizationOverrides } from './data.js';
-export { createLocalizationHandlers } from './handlers.js';
+export { createLocalizationHandlers, localizationOverrideQueryMetadata } from './handlers.js';

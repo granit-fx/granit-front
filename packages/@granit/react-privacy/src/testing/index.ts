@@ -10,4 +10,9 @@ export {
   mockLegalDocumentDetails,
   mockLegalDocuments,
 } from './data.js';
-export { createPrivacyHandlers } from './handlers.js';
+export {
+  createPrivacyHandlers,
+  legalDocumentQueryMetadata,
+  privacyDeletionQueryMetadata,
+  privacyExportQueryMetadata,
+} from './handlers.js';

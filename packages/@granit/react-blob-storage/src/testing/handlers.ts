@@ -1,3 +1,4 @@
+import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import {
   applyStringFilter,
   groupBy as groupByField,
@@ -13,6 +14,103 @@ import { DEFAULT_BASE_PATH } from '../constants.js';
 import { mockBlobs, S } from './data.js';
 
 import type { BlobDescriptorResponse, BlobStatusValue } from '@granit/blob-storage';
+import type { QueryMetadata } from '@granit/query-engine';
+
+/** Mock /meta payload for the blobs resource. */
+export const blobQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'originalFileName',
+      label: 'File name',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'containerName',
+      label: 'Container',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'declaredContentType',
+      label: 'Content type',
+      type: 'String',
+      order: 3,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'declaredSizeBytes',
+      label: 'Size',
+      type: 'Int64',
+      order: 4,
+      isSortable: true,
+      isFilterable: false,
+      isVisible: true,
+    },
+    {
+      name: 'status',
+      label: 'Status',
+      type: 'Int32',
+      order: 5,
+      isSortable: true,
+      isFilterable: false,
+      isVisible: true,
+    },
+    {
+      name: 'createdAt',
+      label: 'Created at',
+      type: 'DateTime',
+      order: 6,
+      isSortable: true,
+      isFilterable: false,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'originalFileName', type: 'String', operators: ['Eq', 'Contains', 'StartsWith'] },
+    { name: 'containerName', type: 'String', operators: ['Eq'] },
+    { name: 'declaredContentType', type: 'String', operators: ['Eq', 'Contains'] },
+  ],
+  sortableFields: [
+    { name: 'originalFileName' },
+    { name: 'containerName' },
+    { name: 'declaredSizeBytes' },
+    { name: 'createdAt' },
+    { name: 'status' },
+  ],
+  presetFilterGroups: [
+    {
+      name: 'status',
+      label: 'Status',
+      presets: [
+        { name: 'valid', label: 'Valid', isDefault: false },
+        { name: 'pending', label: 'Pending', isDefault: false },
+        { name: 'rejected', label: 'Rejected', isDefault: false },
+        { name: 'deleted', label: 'Deleted', isDefault: false },
+      ],
+    },
+  ],
+  quickFilters: [],
+  dateFilters: [],
+  groupByFields: [
+    { name: 'containerName', type: 'String' },
+    { name: 'status', type: 'Int32' },
+  ],
+  pagination: {
+    defaultPageSize: 20,
+    maxPageSize: 50,
+    maxStreamSize: 1000,
+    supportsCursor: false,
+  },
+};
 
 const STATUS_LABELS: Record<BlobStatusValue, string> = {
   0: 'Pending',
@@ -30,102 +128,7 @@ const STATUS_LABELS: Record<BlobStatusValue, string> = {
  */
 export function createBlobStorageHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
-    http.get(`${baseUrl}/blobs/meta`, () => {
-      return HttpResponse.json({
-        columns: [
-          {
-            name: 'originalFileName',
-            label: 'File name',
-            type: 'String',
-            order: 1,
-            isSortable: true,
-            isFilterable: true,
-            isVisible: true,
-          },
-          {
-            name: 'containerName',
-            label: 'Container',
-            type: 'String',
-            order: 2,
-            isSortable: true,
-            isFilterable: true,
-            isVisible: true,
-          },
-          {
-            name: 'declaredContentType',
-            label: 'Content type',
-            type: 'String',
-            order: 3,
-            isSortable: false,
-            isFilterable: true,
-            isVisible: true,
-          },
-          {
-            name: 'declaredSizeBytes',
-            label: 'Size',
-            type: 'Int64',
-            order: 4,
-            isSortable: true,
-            isFilterable: false,
-            isVisible: true,
-          },
-          {
-            name: 'status',
-            label: 'Status',
-            type: 'Int32',
-            order: 5,
-            isSortable: true,
-            isFilterable: false,
-            isVisible: true,
-          },
-          {
-            name: 'createdAt',
-            label: 'Created at',
-            type: 'DateTime',
-            order: 6,
-            isSortable: true,
-            isFilterable: false,
-            isVisible: true,
-          },
-        ],
-        filterableFields: [
-          { name: 'originalFileName', type: 'String', operators: ['Eq', 'Contains', 'StartsWith'] },
-          { name: 'containerName', type: 'String', operators: ['Eq'] },
-          { name: 'declaredContentType', type: 'String', operators: ['Eq', 'Contains'] },
-        ],
-        sortableFields: [
-          { name: 'originalFileName' },
-          { name: 'containerName' },
-          { name: 'declaredSizeBytes' },
-          { name: 'createdAt' },
-          { name: 'status' },
-        ],
-        presetFilterGroups: [
-          {
-            name: 'status',
-            label: 'Status',
-            presets: [
-              { name: 'valid', label: 'Valid', isDefault: false },
-              { name: 'pending', label: 'Pending', isDefault: false },
-              { name: 'rejected', label: 'Rejected', isDefault: false },
-              { name: 'deleted', label: 'Deleted', isDefault: false },
-            ],
-          },
-        ],
-        quickFilters: [],
-        dateFilters: [],
-        groupByFields: [
-          { name: 'containerName', type: 'String' },
-          { name: 'status', type: 'Int32' },
-        ],
-        pagination: {
-          defaultPageSize: 20,
-          maxPageSize: 50,
-          maxStreamSize: 1000,
-          supportsCursor: false,
-        },
-      });
-    }),
+    createQueryMetaHandler(`${baseUrl}/blobs`, blobQueryMetadata),
 
     http.get(`${baseUrl}/blobs`, ({ request }) => {
       const url = new URL(request.url);

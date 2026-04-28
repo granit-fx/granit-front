@@ -1,3 +1,10 @@
+import {
+  DATE_OPERATORS,
+  ENUM_OPERATORS,
+  NUMBER_OPERATORS,
+  STRING_OPERATORS,
+} from '@granit/query-engine';
+import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { notFound } from '@granit/testing/msw';
 import { toEntityId } from '@granit/types';
 import { http, HttpResponse } from 'msw';
@@ -7,6 +14,203 @@ import { DEFAULT_BASE_PATH } from '../constants.js';
 import { sampleInvoices } from './data.js';
 
 import type { InvoiceCreateRequest } from '@granit/invoicing';
+import type { QueryMetadata } from '@granit/query-engine';
+
+const INVOICE_DOCUMENT_TYPES = ['Invoice', 'CreditNote'];
+const INVOICE_STATUSES = ['Draft', 'Open', 'Paid', 'Void', 'Uncollectible'];
+const COLLECTION_METHODS = ['ChargeAutomatically', 'SendInvoice'];
+const BILLING_REASONS = [
+  'Subscription',
+  'SubscriptionCreate',
+  'SubscriptionCycle',
+  'SubscriptionUpdate',
+  'Manual',
+  'Upcoming',
+];
+
+/** Mock /meta payload for the invoices resource. */
+export const invoiceQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'id',
+      label: 'ID',
+      type: 'Guid',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'invoiceNumber',
+      label: 'Invoice number',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'documentType',
+      label: 'Document type',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'status',
+      label: 'Status',
+      type: 'String',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'currency',
+      label: 'Currency',
+      type: 'String',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'total',
+      label: 'Total',
+      type: 'Decimal',
+      order: 5,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'amountRemaining',
+      label: 'Remaining',
+      type: 'Decimal',
+      order: 6,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'collectionMethod',
+      label: 'Collection method',
+      type: 'String',
+      order: 7,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: false,
+    },
+    {
+      name: 'billingReason',
+      label: 'Billing reason',
+      type: 'String',
+      order: 8,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: false,
+    },
+    {
+      name: 'issuedAt',
+      label: 'Issued at',
+      type: 'DateTime',
+      order: 9,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'dueAt',
+      label: 'Due at',
+      type: 'DateTime',
+      order: 10,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'paidAt',
+      label: 'Paid at',
+      type: 'DateTime',
+      order: 11,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: false,
+    },
+  ],
+  filterableFields: [
+    { name: 'invoiceNumber', type: 'String', operators: STRING_OPERATORS },
+    {
+      name: 'documentType',
+      type: 'String',
+      operators: ENUM_OPERATORS,
+      enumValues: INVOICE_DOCUMENT_TYPES,
+    },
+    { name: 'status', type: 'String', operators: ENUM_OPERATORS, enumValues: INVOICE_STATUSES },
+    { name: 'currency', type: 'String', operators: ENUM_OPERATORS },
+    {
+      name: 'collectionMethod',
+      type: 'String',
+      operators: ENUM_OPERATORS,
+      enumValues: COLLECTION_METHODS,
+    },
+    {
+      name: 'billingReason',
+      type: 'String',
+      operators: ENUM_OPERATORS,
+      enumValues: BILLING_REASONS,
+    },
+    { name: 'total', type: 'Decimal', operators: NUMBER_OPERATORS },
+    { name: 'amountRemaining', type: 'Decimal', operators: NUMBER_OPERATORS },
+    { name: 'issuedAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'dueAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'paidAt', type: 'DateTime', operators: DATE_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'invoiceNumber' },
+    { name: 'status' },
+    { name: 'total' },
+    { name: 'amountRemaining' },
+    { name: 'issuedAt' },
+    { name: 'dueAt' },
+    { name: 'paidAt' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'open', label: 'Open', isDefault: true },
+    { name: 'overdue', label: 'Overdue', isDefault: false },
+    { name: 'paid', label: 'Paid', isDefault: false },
+  ],
+  dateFilters: [
+    {
+      name: 'issuedAt',
+      defaultPeriod: 'ThisMonth',
+      availablePeriods: [
+        'Today',
+        'ThisWeek',
+        'ThisMonth',
+        'LastMonth',
+        'ThisQuarter',
+        'ThisYear',
+        'Custom',
+      ],
+    },
+  ],
+  groupByFields: [
+    { name: 'status', type: 'String' },
+    { name: 'documentType', type: 'String' },
+    { name: 'currency', type: 'String' },
+  ],
+  pagination: {
+    defaultPageSize: 25,
+    maxPageSize: 100,
+    maxStreamSize: 50_000,
+    supportsCursor: false,
+  },
+  defaultSort: '-issuedAt',
+};
 
 /**
  * Create stateful MSW handlers for invoicing endpoints.
@@ -16,6 +220,9 @@ import type { InvoiceCreateRequest } from '@granit/invoicing';
  */
 export function createInvoicingHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
+    // GET /invoices/meta — query metadata
+    createQueryMetaHandler(`${baseUrl}/invoices`, invoiceQueryMetadata),
+
     // GET list all invoices
     http.get(`${baseUrl}/invoices`, () => {
       return HttpResponse.json(sampleInvoices);

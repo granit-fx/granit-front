@@ -1,3 +1,5 @@
+import { ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
+import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { toEntityId } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
@@ -27,8 +29,135 @@ import type {
   PartyTaxStatusRequest,
   PartyUpdateRequest,
 } from '@granit/parties';
+import type { QueryMetadata } from '@granit/query-engine';
 
 type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+
+const PARTY_KINDS = ['Individual', 'Company', 'Department'];
+const PARTY_STATUSES = ['Active', 'Suspended', 'Archived'];
+const PARTY_ROLES = ['None', 'Customer', 'Supplier', 'Employee', 'Lead'];
+
+/** Mock /meta payload for the parties resource. */
+export const partyQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'id',
+      label: 'ID',
+      type: 'Guid',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'name',
+      label: 'Name',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'kind',
+      label: 'Kind',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'roles',
+      label: 'Roles',
+      type: 'String',
+      order: 3,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'status',
+      label: 'Status',
+      type: 'String',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'defaultCurrency',
+      label: 'Currency',
+      type: 'String',
+      order: 5,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'primaryEmail',
+      label: 'Primary email',
+      type: 'String',
+      order: 6,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'primaryPhone',
+      label: 'Primary phone',
+      type: 'String',
+      order: 7,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: false,
+    },
+    {
+      name: 'tenantId',
+      label: 'Tenant',
+      type: 'Guid',
+      order: 8,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: false,
+    },
+  ],
+  filterableFields: [
+    { name: 'name', type: 'String', operators: STRING_OPERATORS },
+    { name: 'kind', type: 'String', operators: ENUM_OPERATORS, enumValues: PARTY_KINDS },
+    { name: 'roles', type: 'String', operators: ENUM_OPERATORS, enumValues: PARTY_ROLES },
+    { name: 'status', type: 'String', operators: ENUM_OPERATORS, enumValues: PARTY_STATUSES },
+    { name: 'defaultCurrency', type: 'String', operators: ENUM_OPERATORS },
+    { name: 'primaryEmail', type: 'String', operators: STRING_OPERATORS },
+    { name: 'primaryPhone', type: 'String', operators: STRING_OPERATORS },
+    { name: 'tenantId', type: 'Guid', operators: ENUM_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'name' },
+    { name: 'kind' },
+    { name: 'status' },
+    { name: 'defaultCurrency' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'active', label: 'Active', isDefault: true },
+    { name: 'suspended', label: 'Suspended', isDefault: false },
+    { name: 'archived', label: 'Archived', isDefault: false },
+  ],
+  dateFilters: [],
+  groupByFields: [
+    { name: 'kind', type: 'String' },
+    { name: 'status', type: 'String' },
+    { name: 'defaultCurrency', type: 'String' },
+  ],
+  pagination: {
+    defaultPageSize: 25,
+    maxPageSize: 100,
+    maxStreamSize: 50_000,
+    supportsCursor: false,
+  },
+  defaultSort: 'name',
+};
 
 let createCounter = 1000;
 let subEntityCounter = 1000;
@@ -55,6 +184,9 @@ function notFound() {
  */
 export function createPartiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
+    // ── GET /meta — query metadata ───────────────────────────────────
+    createQueryMetaHandler(baseUrl, partyQueryMetadata),
+
     // ── GET list ─────────────────────────────────────────────────────
     http.get(baseUrl, ({ request }) => {
       const url = new URL(request.url);

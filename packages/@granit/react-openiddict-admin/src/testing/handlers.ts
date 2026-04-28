@@ -1,3 +1,5 @@
+import { BOOLEAN_OPERATORS, ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
+import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { noContent, notFound, pagedResponse } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
@@ -11,6 +13,294 @@ import {
 } from './data.js';
 
 import type { AdminOidcApplication, AdminOidcScope } from '@granit/openiddict-admin';
+import type { QueryMetadata } from '@granit/query-engine';
+
+const OIDC_APPLICATION_TYPES = ['public', 'confidential'];
+const OIDC_AUTHORIZATION_STATUSES = ['valid', 'revoked', 'inactive'];
+const OIDC_AUTHORIZATION_TYPES = ['permanent', 'ad-hoc'];
+
+/** Mock /meta payload for the admin users resource. */
+export const adminUserQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'userId',
+      label: 'User ID',
+      type: 'Guid',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'username',
+      label: 'Username',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'email',
+      label: 'Email',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'firstName',
+      label: 'First name',
+      type: 'String',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'lastName',
+      label: 'Last name',
+      type: 'String',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'enabled',
+      label: 'Enabled',
+      type: 'Boolean',
+      order: 5,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'username', type: 'String', operators: STRING_OPERATORS },
+    { name: 'email', type: 'String', operators: STRING_OPERATORS },
+    { name: 'firstName', type: 'String', operators: STRING_OPERATORS },
+    { name: 'lastName', type: 'String', operators: STRING_OPERATORS },
+    { name: 'enabled', type: 'Boolean', operators: BOOLEAN_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'username' },
+    { name: 'email' },
+    { name: 'firstName' },
+    { name: 'lastName' },
+    { name: 'enabled' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'enabled', label: 'Enabled', isDefault: true },
+    { name: 'disabled', label: 'Disabled', isDefault: false },
+  ],
+  dateFilters: [],
+  groupByFields: [],
+  pagination: {
+    defaultPageSize: 20,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: 'username',
+};
+
+/** Mock /meta payload for the OIDC applications resource. */
+export const oidcApplicationQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'clientId',
+      label: 'Client ID',
+      type: 'String',
+      order: 0,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'displayName',
+      label: 'Display name',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'type',
+      label: 'Type',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'tenantId',
+      label: 'Tenant',
+      type: 'Guid',
+      order: 3,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: false,
+    },
+  ],
+  filterableFields: [
+    { name: 'clientId', type: 'String', operators: STRING_OPERATORS },
+    { name: 'displayName', type: 'String', operators: STRING_OPERATORS },
+    { name: 'type', type: 'String', operators: ENUM_OPERATORS, enumValues: OIDC_APPLICATION_TYPES },
+    { name: 'tenantId', type: 'Guid', operators: ENUM_OPERATORS },
+  ],
+  sortableFields: [{ name: 'clientId' }, { name: 'displayName' }, { name: 'type' }],
+  presetFilterGroups: [],
+  quickFilters: [],
+  dateFilters: [],
+  groupByFields: [{ name: 'type', type: 'String' }],
+  pagination: {
+    defaultPageSize: 25,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: 'clientId',
+};
+
+/** Mock /meta payload for the OIDC scopes resource. */
+export const oidcScopeQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'name',
+      label: 'Name',
+      type: 'String',
+      order: 0,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'displayName',
+      label: 'Display name',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'description',
+      label: 'Description',
+      type: 'String',
+      order: 2,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'name', type: 'String', operators: STRING_OPERATORS },
+    { name: 'displayName', type: 'String', operators: STRING_OPERATORS },
+    { name: 'description', type: 'String', operators: STRING_OPERATORS },
+  ],
+  sortableFields: [{ name: 'name' }, { name: 'displayName' }],
+  presetFilterGroups: [],
+  quickFilters: [],
+  dateFilters: [],
+  groupByFields: [],
+  pagination: {
+    defaultPageSize: 25,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: 'name',
+};
+
+/** Mock /meta payload for the OIDC authorizations resource. */
+export const oidcAuthorizationQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'id',
+      label: 'ID',
+      type: 'Guid',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'subject',
+      label: 'Subject',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'clientId',
+      label: 'Client ID',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'status',
+      label: 'Status',
+      type: 'String',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'type',
+      label: 'Type',
+      type: 'String',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'subject', type: 'String', operators: STRING_OPERATORS },
+    { name: 'clientId', type: 'String', operators: STRING_OPERATORS },
+    {
+      name: 'status',
+      type: 'String',
+      operators: ENUM_OPERATORS,
+      enumValues: OIDC_AUTHORIZATION_STATUSES,
+    },
+    {
+      name: 'type',
+      type: 'String',
+      operators: ENUM_OPERATORS,
+      enumValues: OIDC_AUTHORIZATION_TYPES,
+    },
+  ],
+  sortableFields: [{ name: 'subject' }, { name: 'clientId' }, { name: 'status' }, { name: 'type' }],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'valid', label: 'Valid', isDefault: true },
+    { name: 'revoked', label: 'Revoked', isDefault: false },
+  ],
+  dateFilters: [],
+  groupByFields: [
+    { name: 'status', type: 'String' },
+    { name: 'type', type: 'String' },
+  ],
+  pagination: {
+    defaultPageSize: 25,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: 'subject',
+};
 
 /**
  * Create stateful MSW handlers for OpenIddict admin endpoints.
@@ -20,6 +310,13 @@ import type { AdminOidcApplication, AdminOidcScope } from '@granit/openiddict-ad
  */
 export function createOpenIddictAdminHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
+    // ── Query metadata ───────────────────────────────────────────────────────
+
+    createQueryMetaHandler(`${baseUrl}/users`, adminUserQueryMetadata),
+    createQueryMetaHandler(`${baseUrl}/oidc/applications`, oidcApplicationQueryMetadata),
+    createQueryMetaHandler(`${baseUrl}/oidc/scopes`, oidcScopeQueryMetadata),
+    createQueryMetaHandler(`${baseUrl}/oidc/authorizations`, oidcAuthorizationQueryMetadata),
+
     // ── Users ────────────────────────────────────────────────────────────────
 
     http.get(`${baseUrl}/users`, ({ request }) => {

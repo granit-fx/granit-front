@@ -8,4 +8,4 @@ export {
   mockWebhookStats,
   mockWebhookSubscriptions,
 } from './data.js';
-export { createWebhooksHandlers } from './handlers.js';
+export { createWebhooksHandlers, webhookSubscriptionQueryMetadata } from './handlers.js';

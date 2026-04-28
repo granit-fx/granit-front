@@ -3,4 +3,4 @@
 // ---------------------------------------------------------------------------
 
 export { mockProviderModels, mockProviders, mockUsageRecords, mockWorkspaces } from './data.js';
-export { createAIHandlers } from './handlers.js';
+export { aiWorkspaceQueryMetadata, createAIHandlers } from './handlers.js';

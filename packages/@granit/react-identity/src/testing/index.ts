@@ -3,4 +3,4 @@
 // ---------------------------------------------------------------------------
 
 export { mockDevices, mockPasswordChangedAt, mockSessions, mockUsers } from './data.js';
-export { createIdentityHandlers } from './handlers.js';
+export { createIdentityHandlers, identityUserQueryMetadata } from './handlers.js';

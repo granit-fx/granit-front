@@ -1,3 +1,5 @@
+import { DATE_OPERATORS, ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
+import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
@@ -21,6 +23,292 @@ import type {
   PrivacyDeletionResponse,
   PrivacyExportStatusResponse,
 } from '@granit/privacy';
+import type { QueryMetadata } from '@granit/query-engine';
+
+const EXPORT_STATES = ['Pending', 'Completed', 'PartiallyCompleted', 'TimedOut'];
+const DELETION_STATES = ['Deferred', 'Executed', 'Cancelled'];
+const LEGAL_LIFECYCLE_STATES = ['Draft', 'Published', 'Archived'];
+
+/** Mock /meta payload for the privacy exports resource. */
+export const privacyExportQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'requestId',
+      label: 'Request ID',
+      type: 'String',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'requestedAt',
+      label: 'Requested at',
+      type: 'DateTime',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'state',
+      label: 'State',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'completedAt',
+      label: 'Completed at',
+      type: 'DateTime',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'archiveBlobReferenceId',
+      label: 'Archive',
+      type: 'String',
+      order: 4,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+  ],
+  filterableFields: [
+    { name: 'requestedAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'state', type: 'String', operators: ENUM_OPERATORS, enumValues: EXPORT_STATES },
+    { name: 'completedAt', type: 'DateTime', operators: DATE_OPERATORS },
+  ],
+  sortableFields: [{ name: 'requestedAt' }, { name: 'state' }, { name: 'completedAt' }],
+  presetFilterGroups: [],
+  quickFilters: [],
+  dateFilters: [
+    {
+      name: 'requestedAt',
+      defaultPeriod: 'ThisMonth',
+      availablePeriods: ['Today', 'ThisWeek', 'ThisMonth', 'LastMonth', 'ThisYear', 'Custom'],
+    },
+  ],
+  groupByFields: [{ name: 'state', type: 'String' }],
+  pagination: {
+    defaultPageSize: 25,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: '-requestedAt',
+};
+
+/** Mock /meta payload for the privacy deletions resource. */
+export const privacyDeletionQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'requestId',
+      label: 'Request ID',
+      type: 'String',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'status',
+      label: 'Status',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'reason',
+      label: 'Reason',
+      type: 'String',
+      order: 2,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'requestedAt',
+      label: 'Requested at',
+      type: 'DateTime',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'executedAt',
+      label: 'Executed at',
+      type: 'DateTime',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'scheduledDeletionAt',
+      label: 'Scheduled at',
+      type: 'DateTime',
+      order: 5,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'cancelledAt',
+      label: 'Cancelled at',
+      type: 'DateTime',
+      order: 6,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: false,
+    },
+  ],
+  filterableFields: [
+    { name: 'status', type: 'String', operators: ENUM_OPERATORS, enumValues: DELETION_STATES },
+    { name: 'reason', type: 'String', operators: STRING_OPERATORS },
+    { name: 'requestedAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'executedAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'scheduledDeletionAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'cancelledAt', type: 'DateTime', operators: DATE_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'status' },
+    { name: 'requestedAt' },
+    { name: 'executedAt' },
+    { name: 'scheduledDeletionAt' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [],
+  dateFilters: [
+    {
+      name: 'requestedAt',
+      defaultPeriod: 'ThisMonth',
+      availablePeriods: ['Today', 'ThisWeek', 'ThisMonth', 'LastMonth', 'ThisYear', 'Custom'],
+    },
+  ],
+  groupByFields: [{ name: 'status', type: 'String' }],
+  pagination: {
+    defaultPageSize: 25,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: '-requestedAt',
+};
+
+/** Mock /meta payload for the legal-documents admin resource. */
+export const legalDocumentQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'id',
+      label: 'ID',
+      type: 'String',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'documentId',
+      label: 'Document',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'displayName',
+      label: 'Display name',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'version',
+      label: 'Version',
+      type: 'Int32',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'lifecycleStatus',
+      label: 'Status',
+      type: 'String',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'createdAt',
+      label: 'Created at',
+      type: 'DateTime',
+      order: 5,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'lastModifiedAt',
+      label: 'Modified at',
+      type: 'DateTime',
+      order: 6,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'documentId', type: 'String', operators: STRING_OPERATORS },
+    { name: 'displayName', type: 'String', operators: STRING_OPERATORS },
+    { name: 'version', type: 'Int32', operators: ENUM_OPERATORS },
+    {
+      name: 'lifecycleStatus',
+      type: 'String',
+      operators: ENUM_OPERATORS,
+      enumValues: LEGAL_LIFECYCLE_STATES,
+    },
+    { name: 'createdAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'lastModifiedAt', type: 'DateTime', operators: DATE_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'documentId' },
+    { name: 'displayName' },
+    { name: 'version' },
+    { name: 'lifecycleStatus' },
+    { name: 'createdAt' },
+    { name: 'lastModifiedAt' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'draft', label: 'Drafts', isDefault: false },
+    { name: 'published', label: 'Published', isDefault: true },
+  ],
+  dateFilters: [],
+  groupByFields: [
+    { name: 'lifecycleStatus', type: 'String' },
+    { name: 'documentId', type: 'String' },
+  ],
+  pagination: {
+    defaultPageSize: 25,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: '-lastModifiedAt',
+};
 
 type Mutable<T> = { -readonly [K in keyof T]: T[K] };
 
@@ -48,6 +336,15 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
   const legalBase = `${baseUrl}/legal-documents`;
 
   return [
+    // GET /exports/meta — query metadata
+    createQueryMetaHandler(`${baseUrl}/exports`, privacyExportQueryMetadata),
+
+    // GET /deletions/meta — query metadata
+    createQueryMetaHandler(`${baseUrl}/deletions`, privacyDeletionQueryMetadata),
+
+    // GET /legal-documents/meta — query metadata
+    createQueryMetaHandler(legalBase, legalDocumentQueryMetadata),
+
     // POST /exports — request a new data export
     http.post(`${baseUrl}/exports`, () => {
       exportCounter++;

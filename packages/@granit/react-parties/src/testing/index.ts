@@ -3,4 +3,4 @@
 // ---------------------------------------------------------------------------
 
 export { sampleDuplicates, sampleParties, sampleParty, samplePartyId, toListItem } from './data.js';
-export { createPartiesHandlers } from './handlers.js';
+export { createPartiesHandlers, partyQueryMetadata } from './handlers.js';

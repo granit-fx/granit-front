@@ -3,4 +3,4 @@
 // ---------------------------------------------------------------------------
 
 export { mockApiKeys } from './data.js';
-export { createApiKeyHandlers } from './handlers.js';
+export { apiKeyQueryMetadata, createApiKeyHandlers } from './handlers.js';

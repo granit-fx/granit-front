@@ -1,3 +1,5 @@
+import { DATE_OPERATORS, ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
+import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { noContent, notFound, pagedResponse } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
@@ -7,6 +9,104 @@ import { DEFAULT_BASE_PATH } from '../constants.js';
 import { buildMockLocalization, mockLanguages, mockLocalizationOverrides } from './data.js';
 
 import type { LocalizationOverride } from '@granit/localization';
+import type { QueryMetadata } from '@granit/query-engine';
+
+/** Mock /meta payload for the localization overrides resource. */
+export const localizationOverrideQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'id',
+      label: 'ID',
+      type: 'Guid',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'resourceName',
+      label: 'Resource',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'cultureName',
+      label: 'Culture',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'key',
+      label: 'Key',
+      type: 'String',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'value',
+      label: 'Value',
+      type: 'String',
+      order: 4,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'lastModifiedAt',
+      label: 'Modified at',
+      type: 'DateTime',
+      order: 5,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'lastModifiedBy',
+      label: 'Modified by',
+      type: 'String',
+      order: 6,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'resourceName', type: 'String', operators: ENUM_OPERATORS },
+    { name: 'cultureName', type: 'String', operators: ENUM_OPERATORS },
+    { name: 'key', type: 'String', operators: STRING_OPERATORS },
+    { name: 'value', type: 'String', operators: STRING_OPERATORS },
+    { name: 'lastModifiedAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'lastModifiedBy', type: 'String', operators: STRING_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'resourceName' },
+    { name: 'cultureName' },
+    { name: 'key' },
+    { name: 'lastModifiedAt' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [],
+  dateFilters: [],
+  groupByFields: [
+    { name: 'resourceName', type: 'String' },
+    { name: 'cultureName', type: 'String' },
+  ],
+  pagination: {
+    defaultPageSize: 20,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: 'key',
+};
 
 /**
  * Create stateful MSW handlers for localization endpoints (languages,
@@ -20,6 +120,9 @@ export function createLocalizationHandlers(baseUrl = DEFAULT_BASE_PATH) {
   const overridesBase = `${baseUrl}/overrides`;
 
   return [
+    // GET /overrides/meta — query metadata
+    createQueryMetaHandler(overridesBase, localizationOverrideQueryMetadata),
+
     // GET /languages — list all languages
     http.get(`${baseUrl}/languages`, () => {
       return HttpResponse.json(languages);

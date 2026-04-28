@@ -1,3 +1,10 @@
+import {
+  DATE_OPERATORS,
+  ENUM_OPERATORS,
+  BOOLEAN_OPERATORS,
+  STRING_OPERATORS,
+} from '@granit/query-engine';
+import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { TemplateLifecycleStatus } from '@granit/templating';
 import { noContent, notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
@@ -12,7 +19,137 @@ import {
 } from './data.js';
 
 import type { MockTemplate } from './data.js';
+import type { QueryMetadata } from '@granit/query-engine';
 import type { SaveTemplateCategoryRequest, TemplateCategory } from '@granit/templating';
+
+/**
+ * Mock /meta payload for the templates resource.
+ * NOTE: `lifecycleStatus` is a numeric enum on the wire (Int32) — see TemplateLifecycleStatus.
+ */
+export const templateQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'name',
+      label: 'Name',
+      type: 'String',
+      order: 0,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'culture',
+      label: 'Culture',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'category',
+      label: 'Category',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'layoutName',
+      label: 'Layout',
+      type: 'String',
+      order: 3,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'currentStatus',
+      label: 'Status',
+      type: 'Int32',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'mimeType',
+      label: 'MIME type',
+      type: 'String',
+      order: 5,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: false,
+    },
+    {
+      name: 'hasPublishedVersion',
+      label: 'Published',
+      type: 'Boolean',
+      order: 6,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'lastModifiedAt',
+      label: 'Modified at',
+      type: 'DateTime',
+      order: 7,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'lastModifiedBy',
+      label: 'Modified by',
+      type: 'String',
+      order: 8,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'name', type: 'String', operators: STRING_OPERATORS },
+    { name: 'culture', type: 'String', operators: ENUM_OPERATORS },
+    { name: 'category', type: 'String', operators: STRING_OPERATORS },
+    { name: 'layoutName', type: 'String', operators: STRING_OPERATORS },
+    { name: 'currentStatus', type: 'Int32', operators: ENUM_OPERATORS },
+    { name: 'mimeType', type: 'String', operators: ENUM_OPERATORS },
+    { name: 'hasPublishedVersion', type: 'Boolean', operators: BOOLEAN_OPERATORS },
+    { name: 'lastModifiedAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'lastModifiedBy', type: 'String', operators: STRING_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'name' },
+    { name: 'culture' },
+    { name: 'category' },
+    { name: 'currentStatus' },
+    { name: 'hasPublishedVersion' },
+    { name: 'lastModifiedAt' },
+    { name: 'lastModifiedBy' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'draft', label: 'Drafts', isDefault: false },
+    { name: 'published', label: 'Published', isDefault: true },
+    { name: 'archived', label: 'Archived', isDefault: false },
+  ],
+  dateFilters: [],
+  groupByFields: [
+    { name: 'category', type: 'String' },
+    { name: 'currentStatus', type: 'Int32' },
+    { name: 'culture', type: 'String' },
+  ],
+  pagination: {
+    defaultPageSize: 20,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: 'name',
+};
 
 /**
  * Create stateful MSW handlers for templating endpoints.
@@ -28,6 +165,9 @@ export function createTemplatesHandlers(baseUrl = DEFAULT_BASE_PATH) {
   let nextCatIdx = categories.length + 1;
 
   return [
+    // GET /templates/meta — query metadata
+    createQueryMetaHandler(BASE, templateQueryMetadata),
+
     // ── Static routes MUST come before parameterized /:name routes ────────────
 
     // Layouts

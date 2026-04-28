@@ -4,4 +4,4 @@
 
 export { mockTemplateCategories, mockTemplatesData } from './data.js';
 export type { MockTemplate } from './data.js';
-export { createTemplatesHandlers } from './handlers.js';
+export { createTemplatesHandlers, templateQueryMetadata } from './handlers.js';

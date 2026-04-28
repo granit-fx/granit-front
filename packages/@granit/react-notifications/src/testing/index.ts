@@ -3,4 +3,4 @@
 // ---------------------------------------------------------------------------
 
 export { mockNotificationPreferences, mockNotifications } from './data.js';
-export { createNotificationsHandlers } from './handlers.js';
+export { createNotificationsHandlers, notificationQueryMetadata } from './handlers.js';

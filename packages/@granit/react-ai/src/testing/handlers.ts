@@ -1,3 +1,5 @@
+import { BOOLEAN_OPERATORS, ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
+import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { groupBy as groupByField, paginate } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
@@ -12,6 +14,106 @@ import type {
 } from '@granit/ai';
 import type { PagedResult, QueryMetadata } from '@granit/query-engine';
 import type { Mutable } from '@granit/testing';
+
+/** Mock /meta payload for the AI workspaces resource. */
+export const aiWorkspaceQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'name',
+      label: 'Name',
+      type: 'String',
+      order: 0,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'provider',
+      label: 'Provider',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'model',
+      label: 'Model',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'kind',
+      label: 'Kind',
+      type: 'String',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'activated',
+      label: 'Activated',
+      type: 'Boolean',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'temperature',
+      label: 'Temperature',
+      type: 'Double',
+      order: 5,
+      isSortable: true,
+      isFilterable: false,
+      isVisible: true,
+    },
+    {
+      name: 'maxOutputTokens',
+      label: 'Max output tokens',
+      type: 'Int32',
+      order: 6,
+      isSortable: true,
+      isFilterable: false,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'name', type: 'String', operators: STRING_OPERATORS },
+    { name: 'provider', type: 'String', operators: ENUM_OPERATORS },
+    { name: 'model', type: 'String', operators: ENUM_OPERATORS },
+    { name: 'kind', type: 'String', operators: ENUM_OPERATORS },
+    { name: 'activated', type: 'Boolean', operators: BOOLEAN_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'name' },
+    { name: 'provider' },
+    { name: 'model' },
+    { name: 'kind' },
+    { name: 'activated' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'activated', label: 'Activated', isDefault: true },
+    { name: 'deactivated', label: 'Deactivated', isDefault: false },
+  ],
+  dateFilters: [],
+  groupByFields: [
+    { name: 'provider', type: 'String' },
+    { name: 'kind', type: 'String' },
+  ],
+  pagination: {
+    defaultPageSize: 25,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: 'name',
+};
 
 let usageCounter = mockUsageRecords.length;
 
@@ -187,6 +289,11 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
   const usageRecords: Mutable<AIUsageRecord>[] = [...mockUsageRecords];
 
   return [
+    // --- Query metadata -------------------------------------------------------
+
+    // GET /workspaces/meta — query metadata
+    createQueryMetaHandler(`${baseUrl}/workspaces`, aiWorkspaceQueryMetadata),
+
     // --- Providers -------------------------------------------------------------
 
     // GET all providers

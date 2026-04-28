@@ -9,4 +9,4 @@ export {
   sampleRefunds,
   sampleTransactions,
 } from './data.js';
-export { createPaymentsHandlers } from './handlers.js';
+export { createPaymentsHandlers, paymentTransactionQueryMetadata } from './handlers.js';
