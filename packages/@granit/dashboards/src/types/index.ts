@@ -1,4 +1,10 @@
 export type { DashboardCategory } from './dashboard-category.js';
+export { DASHBOARD_TIME_WINDOW } from './dashboard-time-window.js';
+export type {
+  DashboardPeriod,
+  DashboardTimeWindow,
+  TimeWindowKind,
+} from './dashboard-time-window.js';
 export type {
   DashboardDefinitionDescriptor,
   DashboardDefinitionRegistry,

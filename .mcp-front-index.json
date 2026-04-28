@@ -2058,14 +2058,9 @@
           "members": []
         },
         {
-          "name": "DashboardContextProvider",
+          "name": "useEffectiveTimeWindow",
           "kind": "function",
-          "signature": "function DashboardContextProvider("
-        },
-        {
-          "name": "useDashboardContext",
-          "kind": "function",
-          "signature": "function useDashboardContext(): DashboardContextValue | null"
+          "signature": "function useEffectiveTimeWindow(override?: DashboardTimeWindow): DashboardTimeWindow"
         },
         {
           "name": "WidgetRenderer",

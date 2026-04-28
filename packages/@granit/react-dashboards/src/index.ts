@@ -5,11 +5,16 @@
 // Layout + dispatcher
 export { Dashboard } from './components/dashboard.js';
 export type { DashboardProps } from './components/dashboard.js';
-export { DashboardContextProvider, useDashboardContext } from './components/dashboard-context.js';
+export {
+  DashboardContextProvider,
+  useDashboardContext,
+  useDashboardTimeWindowState,
+} from './components/dashboard-context.js';
 export type {
   DashboardContextProviderProps,
   DashboardContextValue,
 } from './components/dashboard-context.js';
+export { useEffectiveTimeWindow } from './hooks/use-effective-time-window.js';
 export { WidgetRenderer } from './components/widget-renderer.js';
 export type { WidgetRendererProps } from './components/widget-renderer.js';
 export { WidgetCard } from './components/widget-card.js';
