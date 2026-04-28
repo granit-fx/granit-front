@@ -3,8 +3,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { DEFAULT_WEBHOOKS_BASE_PATH } from '../constants.js';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { UseMutationResult } from '@tanstack/react-query';
-import type { AxiosInstance } from 'axios';
 
 export interface RetryDeliveryOptions {
   readonly client: AxiosInstance;

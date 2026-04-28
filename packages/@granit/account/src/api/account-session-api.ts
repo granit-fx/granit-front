@@ -1,5 +1,5 @@
 import type { AccountImpersonationResult } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Send a session heartbeat to prevent idle timeout.
@@ -7,10 +7,7 @@ import type { AxiosInstance } from 'axios';
  *
  * `POST {basePath}/session/heartbeat`
  */
-export async function sessionHeartbeat(
-  client: AxiosInstance,
-  basePath: string
-): Promise<void> {
+export async function sessionHeartbeat(client: AxiosInstance, basePath: string): Promise<void> {
   await client.post(`${basePath}/session/heartbeat`);
 }
 

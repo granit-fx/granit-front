@@ -1,16 +1,25 @@
+import { useOptionalGranitClient } from '@granit/react-api-client';
 import { createContext, useContext, useMemo } from 'react';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
 
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
 
 /** Configuration for the customer-balance provider. */
 export interface CustomerBalanceConfig {
-  readonly client: AxiosInstance;
+  readonly client?: AxiosInstance;
   /** Base path for customer-balance endpoints (default: `/api/v1/customer-balance`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
+}
+
+/**
+ * CustomerBalanceConfig after the provider has resolved `client` from
+ * `config.client` or the nearest `<GranitClientProvider>`.
+ */
+export interface ResolvedCustomerBalanceConfig extends CustomerBalanceConfig {
+  readonly client: AxiosInstance;
 }
 
 export interface CustomerBalanceProviderProps {
@@ -18,22 +27,32 @@ export interface CustomerBalanceProviderProps {
   readonly children: ReactNode;
 }
 
-const CustomerBalanceConfigContext = createContext<CustomerBalanceConfig | null>(null);
+const CustomerBalanceConfigContext = createContext<ResolvedCustomerBalanceConfig | null>(null);
 
 /** Provides customer-balance configuration to child components and hooks. */
 export function CustomerBalanceProvider({
   config,
   children,
 }: Readonly<CustomerBalanceProviderProps>) {
-  const value = useMemo(() => ({
-    ...config,
-    basePath: config.basePath ?? DEFAULT_BASE_PATH,
-  }), [config]);
+  const contextClient = useOptionalGranitClient();
+  const value = useMemo<ResolvedCustomerBalanceConfig>(() => {
+    const client = config.client ?? contextClient;
+    if (!client) {
+      throw new Error(
+        'CustomerBalanceProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
+      );
+    }
+    return {
+      ...config,
+      basePath: config.basePath ?? DEFAULT_BASE_PATH,
+      client,
+    };
+  }, [config, contextClient]);
   return <CustomerBalanceConfigContext value={value}>{children}</CustomerBalanceConfigContext>;
 }
 
 /** Returns the customer-balance configuration from the nearest `CustomerBalanceProvider`. */
-export function useCustomerBalanceConfig(): CustomerBalanceConfig {
+export function useCustomerBalanceConfig(): ResolvedCustomerBalanceConfig {
   const ctx = useContext(CustomerBalanceConfigContext);
   if (!ctx) {
     throw new Error('useCustomerBalanceConfig must be used within a CustomerBalanceProvider');

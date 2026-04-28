@@ -1,6 +1,6 @@
 import { isIdempotencyTombstoned, setIdempotencyKeyGenerator } from '@granit/api-client';
 
-import type { InternalAxiosRequestConfig } from 'axios';
+import type { InternalAxiosRequestConfig } from '@granit/api-client';
 
 // Re-export the tombstone helpers so consumers only need to depend on
 // `@granit/idempotency` to handle idempotency end-to-end (generation + retry).

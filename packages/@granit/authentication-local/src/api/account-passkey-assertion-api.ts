@@ -2,7 +2,7 @@ import type {
   AccountLoginResponse,
   AccountPasskeyAssertionCompleteRequest,
 } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Begin a WebAuthn assertion ceremony for passkey login (anonymous).

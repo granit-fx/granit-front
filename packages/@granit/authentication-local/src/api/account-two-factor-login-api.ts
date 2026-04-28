@@ -1,5 +1,5 @@
 import type { AccountLoginResponse, AccountTwoFactorLoginRequest } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Complete a two-factor login after the initial login returned

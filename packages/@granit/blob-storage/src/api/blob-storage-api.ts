@@ -9,7 +9,7 @@ import type {
   BlobUploadInitiateRequest,
   BlobUploadInitiateResponse,
 } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Initiate a direct-to-cloud upload and get a pre-signed URL.

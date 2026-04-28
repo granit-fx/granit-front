@@ -5,8 +5,8 @@ import type {
   UserNotificationPage,
   NotificationPreference,
 } from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 import type { PaginationParams } from '@granit/query-engine';
-import type { AxiosInstance } from 'axios';
 
 // ---------------------------------------------------------------------------
 // Notifications (inbox)

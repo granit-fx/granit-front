@@ -34,7 +34,7 @@ import type {
   PaymentTransactionResponse,
 } from '../types.js';
 
-const basePath = '/api/granit/payments';
+const basePath = '/payments';
 
 const sampleTransaction: PaymentTransactionResponse = {
   id: 'txn-1',

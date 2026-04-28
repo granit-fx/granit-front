@@ -8,6 +8,7 @@ import {
 } from '@granit/reference-data';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult } from '@granit/query-engine';
 import type {
   ReferenceDataCreateRequest,
@@ -16,7 +17,6 @@ import type {
   ReferenceDataUpdateRequest,
 } from '@granit/reference-data';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
-import type { AxiosInstance } from 'axios';
 
 // ---------------------------------------------------------------------------
 // Public option types

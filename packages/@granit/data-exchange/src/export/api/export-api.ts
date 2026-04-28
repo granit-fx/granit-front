@@ -1,7 +1,7 @@
 import type { ExportDefinitionResponse, ExportField } from '../types/export-definition.js';
 import type { CreateExportJobRequest, ExportJobResponse } from '../types/export-job.js';
+import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult, PaginationParams } from '@granit/query-engine';
-import type { AxiosInstance } from 'axios';
 
 /** Query parameters for listing export jobs. */
 export type ExportJobListParams = PaginationParams & {

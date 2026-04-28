@@ -1,6 +1,6 @@
 import type { IdentityPasswordChangedAtResponse } from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 import type { UserId } from '@granit/types';
-import type { AxiosInstance } from 'axios';
 
 /**
  * Get the last password change timestamp for a user.

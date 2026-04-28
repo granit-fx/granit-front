@@ -4,8 +4,8 @@ import type {
   ReferenceDataQuery,
   ReferenceDataUpdateRequest,
 } from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult } from '@granit/query-engine';
-import type { AxiosInstance } from 'axios';
 
 /**
  * List reference data entries (paginated).

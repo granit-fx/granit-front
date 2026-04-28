@@ -1,6 +1,6 @@
 import type { IdentityDeviceActivity, IdentitySession, IdentitySessionId } from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 import type { UserId } from '@granit/types';
-import type { AxiosInstance } from 'axios';
 
 /**
  * List active sessions for a user.

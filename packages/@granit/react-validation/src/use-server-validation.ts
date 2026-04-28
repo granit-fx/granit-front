@@ -2,8 +2,8 @@ import { validateField, validateFieldServer } from '@granit/validation';
 import { useEffect, useRef, useState } from 'react';
 
 import type { TranslateFunction } from './create-constraints-resolver.js';
+import type { AxiosInstance } from '@granit/api-client';
 import type { FieldConstraint } from '@granit/validation';
-import type { AxiosInstance } from 'axios';
 
 export interface ServerValidationState {
   readonly status: 'idle' | 'validating' | 'valid' | 'invalid' | 'error';

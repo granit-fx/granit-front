@@ -1,5 +1,5 @@
 import type { TaxRateResponse, TaxValidateRequest, TaxValidateResponse } from '../types.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Validate a tax ID (e.g. VAT number) against the configured tax service.

@@ -11,7 +11,7 @@ import type {
   WebhookSubscriptionTestPingResponse,
   WebhookSubscriptionUpdateRequest,
 } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 // ── Subscription CRUD ───────────────────────────────────────────────────────
 

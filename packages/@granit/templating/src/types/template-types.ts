@@ -1,6 +1,6 @@
+import type { AxiosInstance } from '@granit/api-client';
 import type { PaginationParams } from '@granit/query-engine';
 import type { EntityId, ISODateString } from '@granit/types';
-import type { AxiosInstance } from 'axios';
 
 // ── Template lifecycle status (mirrors .NET Granit.Templating.Domain.TemplateLifecycleStatus) ──
 

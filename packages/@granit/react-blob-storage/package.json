@@ -15,9 +15,9 @@
     "build": "tsup"
   },
   "peerDependencies": {
+    "@granit/api-client": "workspace:*",
     "@granit/blob-storage": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
-    "axios": "*",
     "msw": "^2.12.0",
     "react": "^19.0.0"
   },
@@ -27,9 +27,10 @@
     }
   },
   "devDependencies": {
-    "@granit/testing": "workspace:*",
+    "@granit/api-client": "workspace:*",
+    "@granit/query-engine": "workspace:*",
     "@granit/react-testing": "workspace:*",
-    "@granit/query-engine": "workspace:*"
+    "@granit/testing": "workspace:*"
   },
   "publishConfig": {
     "exports": {

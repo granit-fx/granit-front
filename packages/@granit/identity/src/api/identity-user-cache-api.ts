@@ -6,8 +6,8 @@ import type {
   IdentityUserListParams,
   IdentityUserPage,
 } from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 import type { UserId } from '@granit/types';
-import type { AxiosInstance } from 'axios';
 
 /**
  * Search cached identity users with optional filtering and pagination.

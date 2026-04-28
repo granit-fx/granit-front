@@ -7,7 +7,7 @@ import type {
   SavedViewSummary,
   UpdateSavedViewRequest,
 } from '../types/saved-views.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * List all saved views for the current entity type.

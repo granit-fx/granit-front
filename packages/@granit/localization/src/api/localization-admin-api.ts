@@ -1,5 +1,5 @@
 import type { AdminLanguage } from '../types.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * List all languages with admin status.

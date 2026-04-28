@@ -6,7 +6,7 @@ import type {
   SettingsMap,
   UpdateSettingValueRequest,
 } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /** Scopes that expose admin bulk endpoints. `user` is per-user and has no bulk form. */
 export type AdminSettingsScope = 'global' | 'tenant';

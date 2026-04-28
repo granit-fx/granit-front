@@ -54,9 +54,9 @@ describe('invoicing-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: [sampleInvoice] });
 
-      const result = await listInvoices(client, '/api/granit/invoicing');
+      const result = await listInvoices(client, '/invoicing');
 
-      expect(client.get).toHaveBeenCalledWith('/api/granit/invoicing/invoices');
+      expect(client.get).toHaveBeenCalledWith('/invoicing/invoices');
       expect(result).toEqual([sampleInvoice]);
     });
 
@@ -75,9 +75,9 @@ describe('invoicing-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: sampleInvoice });
 
-      const result = await getInvoiceById(client, '/api/granit/invoicing', 'inv-1');
+      const result = await getInvoiceById(client, '/invoicing', 'inv-1');
 
-      expect(client.get).toHaveBeenCalledWith('/api/granit/invoicing/invoices/inv-1');
+      expect(client.get).toHaveBeenCalledWith('/invoicing/invoices/inv-1');
       expect(result).toEqual(sampleInvoice);
     });
 
@@ -85,10 +85,10 @@ describe('invoicing-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: sampleInvoice });
 
-      await getInvoiceById(client, '/api/granit/invoicing', 'inv/special&id');
+      await getInvoiceById(client, '/invoicing', 'inv/special&id');
 
       expect(client.get).toHaveBeenCalledWith(
-        `/api/granit/invoicing/invoices/${encodeURIComponent('inv/special&id')}`
+        `/invoicing/invoices/${encodeURIComponent('inv/special&id')}`
       );
     });
   });
@@ -99,9 +99,9 @@ describe('invoicing-api', () => {
       const pdfBlob = new Blob(['%PDF-1.4'], { type: 'application/pdf' });
       vi.mocked(client.get).mockResolvedValue({ data: pdfBlob });
 
-      const result = await downloadInvoicePdf(client, '/api/granit/invoicing', 'inv-1');
+      const result = await downloadInvoicePdf(client, '/invoicing', 'inv-1');
 
-      expect(client.get).toHaveBeenCalledWith('/api/granit/invoicing/invoices/inv-1/pdf', {
+      expect(client.get).toHaveBeenCalledWith('/invoicing/invoices/inv-1/pdf', {
         responseType: 'blob',
       });
       expect(result).toBe(pdfBlob);
@@ -112,10 +112,10 @@ describe('invoicing-api', () => {
       const pdfBlob = new Blob(['%PDF-1.4'], { type: 'application/pdf' });
       vi.mocked(client.get).mockResolvedValue({ data: pdfBlob });
 
-      await downloadInvoicePdf(client, '/api/granit/invoicing', 'inv/special&id');
+      await downloadInvoicePdf(client, '/invoicing', 'inv/special&id');
 
       expect(client.get).toHaveBeenCalledWith(
-        `/api/granit/invoicing/invoices/${encodeURIComponent('inv/special&id')}/pdf`,
+        `/invoicing/invoices/${encodeURIComponent('inv/special&id')}/pdf`,
         { responseType: 'blob' }
       );
     });
@@ -137,9 +137,9 @@ describe('invoicing-api', () => {
         periodEnd: '2026-04-01T00:00:00Z',
       };
 
-      const result = await createInvoice(client, '/api/granit/invoicing', request);
+      const result = await createInvoice(client, '/invoicing', request);
 
-      expect(client.post).toHaveBeenCalledWith('/api/granit/invoicing/invoices', request);
+      expect(client.post).toHaveBeenCalledWith('/invoicing/invoices', request);
       expect(result).toEqual(sampleInvoice);
     });
 
@@ -166,7 +166,7 @@ describe('invoicing-api', () => {
         periodEnd: null,
       };
 
-      const result = await createInvoice(client, '/api/granit/invoicing', request);
+      const result = await createInvoice(client, '/invoicing', request);
 
       expect(result.documentType).toBe('CreditNote');
       expect(result.parentInvoiceId).toBe('inv-1');

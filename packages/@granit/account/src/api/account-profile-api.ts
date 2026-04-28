@@ -1,8 +1,5 @@
-import type {
-  AccountProfileResponse,
-  AccountProfileUpdateRequest,
-} from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AccountProfileResponse, AccountProfileUpdateRequest } from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Get the current user's profile.

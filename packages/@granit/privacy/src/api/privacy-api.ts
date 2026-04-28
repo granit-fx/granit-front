@@ -12,7 +12,7 @@ import type {
   PrivacyExportRequestResponse,
   PrivacyExportStatusResponse,
 } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 // ── Data Export (GDPR Art. 15/20) ────────────────────────────────────────────
 

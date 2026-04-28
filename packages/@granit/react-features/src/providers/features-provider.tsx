@@ -1,16 +1,25 @@
+import { useOptionalGranitClient } from '@granit/react-api-client';
 import { createContext, useContext, useMemo } from 'react';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
 
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
 
 /** Configuration for the features provider. */
 export interface FeaturesConfig {
-  readonly client: AxiosInstance;
+  readonly client?: AxiosInstance;
   /** Base path for features endpoints (default: `/api/v1/features`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
+}
+
+/**
+ * FeaturesConfig after the provider has resolved `client` from
+ * `config.client` or the nearest `<GranitClientProvider>`.
+ */
+export interface ResolvedFeaturesConfig extends FeaturesConfig {
+  readonly client: AxiosInstance;
 }
 
 export interface FeaturesProviderProps {
@@ -18,19 +27,29 @@ export interface FeaturesProviderProps {
   readonly children: ReactNode;
 }
 
-const FeaturesConfigContext = createContext<FeaturesConfig | null>(null);
+const FeaturesConfigContext = createContext<ResolvedFeaturesConfig | null>(null);
 
 /** Provides features configuration to child components and hooks. */
 export function FeaturesProvider({ config, children }: Readonly<FeaturesProviderProps>) {
-  const value = useMemo(() => ({
-    ...config,
-    basePath: config.basePath ?? DEFAULT_BASE_PATH,
-  }), [config]);
+  const contextClient = useOptionalGranitClient();
+  const value = useMemo<ResolvedFeaturesConfig>(() => {
+    const client = config.client ?? contextClient;
+    if (!client) {
+      throw new Error(
+        'FeaturesProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
+      );
+    }
+    return {
+      ...config,
+      basePath: config.basePath ?? DEFAULT_BASE_PATH,
+      client,
+    };
+  }, [config, contextClient]);
   return <FeaturesConfigContext value={value}>{children}</FeaturesConfigContext>;
 }
 
 /** Returns the features configuration from the nearest `FeaturesProvider`. */
-export function useFeaturesConfig(): FeaturesConfig {
+export function useFeaturesConfig(): ResolvedFeaturesConfig {
   const ctx = useContext(FeaturesConfigContext);
   if (!ctx) {
     throw new Error('useFeaturesConfig must be used within a FeaturesProvider');

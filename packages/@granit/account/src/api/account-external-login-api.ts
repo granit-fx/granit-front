@@ -2,7 +2,7 @@ import type {
   AccountExternalLoginCallbackResponse,
   AccountExternalLoginInfo,
 } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * List linked external login providers for the current user.

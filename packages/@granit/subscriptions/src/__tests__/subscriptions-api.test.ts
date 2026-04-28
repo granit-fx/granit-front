@@ -32,7 +32,7 @@ import type {
 } from '../types.js';
 import type { PagedResult } from '@granit/query-engine';
 
-const basePath = '/api/granit/subscriptions';
+const basePath = '/subscriptions';
 
 const samplePlan: PlanResponse = {
   id: 'plan-1',

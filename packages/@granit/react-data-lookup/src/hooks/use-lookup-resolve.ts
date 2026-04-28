@@ -1,9 +1,9 @@
 import { resolveLookup } from '@granit/data-lookup';
 import { useQuery } from '@tanstack/react-query';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { LookupDescriptor, LookupItem } from '@granit/data-lookup';
 import type { UseQueryResult } from '@tanstack/react-query';
-import type { AxiosInstance } from 'axios';
 
 /** Options accepted by {@link useLookupResolve}. */
 export interface UseLookupResolveOptions {

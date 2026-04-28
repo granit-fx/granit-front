@@ -2,8 +2,8 @@ import { stringifyLookupValue } from '@granit/data-lookup';
 
 import { useLookupResolve } from '../hooks/use-lookup-resolve.js';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { LookupDescriptor } from '@granit/data-lookup';
-import type { AxiosInstance } from 'axios';
 import type { ReactElement } from 'react';
 
 /** Render-prop signature. */

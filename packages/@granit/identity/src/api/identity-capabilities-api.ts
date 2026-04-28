@@ -1,5 +1,5 @@
 import type { IdentityProviderCapabilities } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Get the active identity provider's capabilities.

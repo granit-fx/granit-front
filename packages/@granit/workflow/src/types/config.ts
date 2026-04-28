@@ -1,4 +1,4 @@
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /** Configuration for the workflow provider context. */
 export interface WorkflowConfig {

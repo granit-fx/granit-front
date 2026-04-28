@@ -2,7 +2,7 @@ import type {
   AccountChangeEmailRequest,
   AccountConfirmEmailChangeRequest,
 } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Request an email change (authenticated).

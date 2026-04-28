@@ -3,9 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { BlobDescriptorResponse } from '@granit/blob-storage';
 import type { UseQueryResult } from '@tanstack/react-query';
-import type { AxiosInstance } from 'axios';
 
 /** Options accepted by all blob-storage hooks. */
 export interface BlobStorageOptions {

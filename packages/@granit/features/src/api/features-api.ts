@@ -3,7 +3,7 @@ import type {
   FeatureValueResponse,
   SetFeatureOverrideRequest,
 } from '../types.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Fetch all feature definitions grouped by category.

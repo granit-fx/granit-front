@@ -7,7 +7,7 @@ import { serializeQueryRequest } from './query-param-serializer.js';
 import type { QueryMetadata } from '../types/query-metadata.js';
 import type { QueryRequest } from '../types/query-params.js';
 import type { GroupedResult, PagedResult } from '../types/query-results.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Get a paginated page of results.

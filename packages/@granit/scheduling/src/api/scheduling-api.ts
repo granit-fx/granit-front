@@ -1,8 +1,8 @@
 import { getPage } from '@granit/query-engine';
 
 import type { RescheduleActionRequest, ScheduledActionResponse } from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult, QueryRequest } from '@granit/query-engine';
-import type { AxiosInstance } from 'axios';
 
 /**
  * Get a scheduled action by ID.

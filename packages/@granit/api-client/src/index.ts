@@ -223,3 +223,21 @@ export type { ProblemDetailsPayload, ValidationDetails } from './errors.js';
 // Idempotency tombstone helpers — see ./idempotency.ts.
 export { isIdempotencyTombstoned, readIdempotencyTombstone } from './idempotency.js';
 export type { IdempotencyTombstoneInfo } from './idempotency.js';
+
+// ---------------------------------------------------------------------------
+// Axios type façade — single entry point for the framework
+// ---------------------------------------------------------------------------
+// All Granit packages MUST import these types from `@granit/api-client`,
+// never directly from `axios`. This keeps the HTTP client implementation
+// behind a single seam: future swaps, branding, or interceptor contracts can
+// land here without touching every consumer.
+//
+// The ESLint rule `no-restricted-imports` enforces this — see eslint.config.mjs.
+
+export type {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from 'axios';

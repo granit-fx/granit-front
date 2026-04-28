@@ -1,4 +1,4 @@
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /** Configuration for a single query endpoint. */
 export interface QueryConfig {

@@ -3,7 +3,7 @@ import type {
   BalanceTransactionResponse,
   CustomerBalanceResponse,
 } from '../types.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Fetch the current customer balance.

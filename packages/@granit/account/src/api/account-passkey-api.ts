@@ -4,7 +4,7 @@ import type {
   AccountPasskeyRegistrationRequest,
   AccountPasskeyRenameRequest,
 } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * List all registered passkeys for the current user.

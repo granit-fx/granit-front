@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { usePartyQuery } from '../hooks/use-parties.js';
 import { useMergePartyMutation, useMergePartyPreviewQuery } from '../hooks/use-party-merge.js';
 
+import type { AxiosError } from '@granit/api-client';
 import type { FieldConflictResponse, MergeWinner, PartyId, PartyResponse } from '@granit/parties';
-import type { AxiosError } from 'axios';
 
 const REASON_MAX_LENGTH = 1000;
 const PARTIES_NAMESPACE = 'parties';

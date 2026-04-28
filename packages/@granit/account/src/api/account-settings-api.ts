@@ -1,5 +1,5 @@
 import type { AccountSettingsResponse } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Fetch the public account configuration (anonymous).

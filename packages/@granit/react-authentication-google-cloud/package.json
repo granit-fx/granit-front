@@ -29,5 +29,8 @@
       }
     },
     "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*"
   }
 }

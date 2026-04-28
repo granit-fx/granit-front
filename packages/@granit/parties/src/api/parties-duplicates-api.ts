@@ -5,7 +5,7 @@ import type {
   PartyId,
   PartyMergeResponse,
 } from '../types.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * List pending duplicate-candidate pairs that involve the given party. Flat —

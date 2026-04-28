@@ -22,13 +22,13 @@ import type {
   UsageAggregatePage,
   UsageAggregateResponse,
 } from '../types.js';
+import type { AxiosInstance } from '@granit/api-client';
 import type {
   CreateSavedViewRequest,
   QueryMetadata,
   SavedViewSummary,
   UpdateSavedViewRequest,
 } from '@granit/query-engine';
-import type { AxiosInstance } from 'axios';
 
 const METER_DEFINITIONS_SUBPATH = 'meter-definitions';
 const USAGE_AGGREGATES_SUBPATH = 'usage-aggregates';

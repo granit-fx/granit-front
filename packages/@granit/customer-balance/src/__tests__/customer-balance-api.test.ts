@@ -32,7 +32,7 @@ const sampleTransaction: BalanceTransactionResponse = {
   createdAt: '2026-04-01T10:00:00Z',
 };
 
-const basePath = '/api/granit/customer-balance';
+const basePath = '/customer-balance';
 
 describe('customer-balance-api', () => {
   describe('getCustomerBalance', () => {

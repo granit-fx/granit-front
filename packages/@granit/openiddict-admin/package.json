@@ -14,10 +14,11 @@
     "build": "tsup"
   },
   "peerDependencies": {
-    "@granit/query-engine": "workspace:*",
-    "axios": "*"
+    "@granit/api-client": "workspace:*",
+    "@granit/query-engine": "workspace:*"
   },
   "devDependencies": {
+    "@granit/api-client": "workspace:*",
     "@granit/testing": "workspace:*"
   },
   "publishConfig": {

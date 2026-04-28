@@ -1,8 +1,5 @@
-import type {
-  AdminOidcScope,
-  AdminOidcScopeCreateRequest,
-} from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AdminOidcScope, AdminOidcScopeCreateRequest } from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 
 // ── OIDC Scope CRUD ──────────────────────────────────────────────────────────
 
@@ -15,9 +12,7 @@ export async function listScopes(
   client: AxiosInstance,
   basePath: string
 ): Promise<readonly AdminOidcScope[]> {
-  const { data } = await client.get<readonly AdminOidcScope[]>(
-    `${basePath}/oidc/scopes`
-  );
+  const { data } = await client.get<readonly AdminOidcScope[]>(`${basePath}/oidc/scopes`);
   return data;
 }
 
@@ -31,10 +26,7 @@ export async function createScope(
   basePath: string,
   request: AdminOidcScopeCreateRequest
 ): Promise<AdminOidcScope> {
-  const { data } = await client.post<AdminOidcScope>(
-    `${basePath}/oidc/scopes`,
-    request
-  );
+  const { data } = await client.post<AdminOidcScope>(`${basePath}/oidc/scopes`, request);
   return data;
 }
 
@@ -48,7 +40,5 @@ export async function deleteScope(
   basePath: string,
   scopeName: string
 ): Promise<void> {
-  await client.delete(
-    `${basePath}/oidc/scopes/${encodeURIComponent(scopeName)}`
-  );
+  await client.delete(`${basePath}/oidc/scopes/${encodeURIComponent(scopeName)}`);
 }

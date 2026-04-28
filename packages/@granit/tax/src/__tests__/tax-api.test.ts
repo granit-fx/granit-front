@@ -52,9 +52,9 @@ describe('validateTaxId', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValue({ data: mockValidateResponse });
 
-    const result = await validateTaxId(client, '/api/granit/tax', mockValidateRequest);
+    const result = await validateTaxId(client, '/tax', mockValidateRequest);
 
-    expect(client.post).toHaveBeenCalledWith('/api/granit/tax/ids/validate', mockValidateRequest);
+    expect(client.post).toHaveBeenCalledWith('/tax/ids/validate', mockValidateRequest);
     expect(result).toEqual(mockValidateResponse);
   });
 
@@ -79,7 +79,7 @@ describe('validateTaxId', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValue({ data: invalid });
 
-    const result = await validateTaxId(client, '/api/granit/tax', mockValidateRequest);
+    const result = await validateTaxId(client, '/tax', mockValidateRequest);
 
     expect(result.isValid).toBe(false);
     expect(result.companyName).toBeNull();
@@ -96,9 +96,9 @@ describe('getTaxRates', () => {
     const rates = [mockBelgiumRate, mockLuxembourgRate];
     vi.mocked(client.get).mockResolvedValue({ data: rates });
 
-    const result = await getTaxRates(client, '/api/granit/tax');
+    const result = await getTaxRates(client, '/tax');
 
-    expect(client.get).toHaveBeenCalledWith('/api/granit/tax/rates');
+    expect(client.get).toHaveBeenCalledWith('/tax/rates');
     expect(result).toEqual(rates);
     expect(result).toHaveLength(2);
   });
@@ -116,7 +116,7 @@ describe('getTaxRates', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: [] });
 
-    const result = await getTaxRates(client, '/api/granit/tax');
+    const result = await getTaxRates(client, '/tax');
 
     expect(result).toEqual([]);
   });
@@ -131,9 +131,9 @@ describe('getTaxRateByCountry', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: mockBelgiumRate });
 
-    const result = await getTaxRateByCountry(client, '/api/granit/tax', 'BE');
+    const result = await getTaxRateByCountry(client, '/tax', 'BE');
 
-    expect(client.get).toHaveBeenCalledWith('/api/granit/tax/rates/BE');
+    expect(client.get).toHaveBeenCalledWith('/tax/rates/BE');
     expect(result).toEqual(mockBelgiumRate);
   });
 
@@ -141,9 +141,9 @@ describe('getTaxRateByCountry', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: mockBelgiumRate });
 
-    await getTaxRateByCountry(client, '/api/granit/tax', 'GB/NI');
+    await getTaxRateByCountry(client, '/tax', 'GB/NI');
 
-    expect(client.get).toHaveBeenCalledWith('/api/granit/tax/rates/GB%2FNI');
+    expect(client.get).toHaveBeenCalledWith('/tax/rates/GB%2FNI');
   });
 
   it('should work with custom basePath', async () => {

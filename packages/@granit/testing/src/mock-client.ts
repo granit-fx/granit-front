@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 
-import type { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import type { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from '@granit/api-client';
 
 /**
  * Create a fully mocked AxiosInstance with vi.fn() stubs for all methods.

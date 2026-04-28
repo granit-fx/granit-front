@@ -15,15 +15,18 @@
   },
   "peerDependencies": {
     "@capacitor/push-notifications": ">=6.0.0",
+    "@granit/api-client": "workspace:*",
     "@granit/notifications-mobile-push": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
-    "axios": "*",
     "react": "^19.0.0"
   },
   "devDependencies": {
     "@capacitor/push-notifications": "^8.0.3",
-    "@granit/testing": "workspace:*",
-    "@granit/react-testing": "workspace:*"
+    "@granit/api-client": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-testing": "workspace:*",
+    "@granit/testing": "workspace:*"
   },
   "publishConfig": {
     "exports": {

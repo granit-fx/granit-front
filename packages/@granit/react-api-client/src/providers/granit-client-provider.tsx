@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
 
 const GranitClientContext = createContext<AxiosInstance | null>(null);

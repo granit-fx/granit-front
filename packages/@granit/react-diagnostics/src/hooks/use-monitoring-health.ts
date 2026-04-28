@@ -1,9 +1,9 @@
 import { DEFAULT_DIAGNOSTICS_BASE_PATH, getMonitoringHealth } from '@granit/diagnostics';
 import { useQuery } from '@tanstack/react-query';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { MonitoringHealthResponse } from '@granit/diagnostics';
 import type { UseQueryResult } from '@tanstack/react-query';
-import type { AxiosInstance } from 'axios';
 
 /** Options accepted by the useMonitoringHealth hook. */
 export interface MonitoringHealthOptions {

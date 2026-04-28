@@ -43,7 +43,7 @@
         {
           "name": "sessionHeartbeat",
           "kind": "function",
-          "signature": "async function sessionHeartbeat( client: AxiosInstance, basePath: string ): Promise<void>"
+          "signature": "async function sessionHeartbeat(client: AxiosInstance, basePath: string): Promise<void>"
         },
         {
           "name": "getAccountSettings",
@@ -1212,7 +1212,7 @@
         {
           "name": "useAIConfig",
           "kind": "function",
-          "signature": "function useAIConfig(): AIConfig"
+          "signature": "function useAIConfig(): ResolvedAIConfig"
         },
         {
           "name": "AIConfig",
@@ -1353,7 +1353,7 @@
         {
           "name": "useAuditLogConfig",
           "kind": "function",
-          "signature": "function useAuditLogConfig(): AuditLogConfig"
+          "signature": "function useAuditLogConfig(): ResolvedAuditLogConfig"
         },
         {
           "name": "AuditLogConfig",
@@ -2468,7 +2468,7 @@
         {
           "name": "useMobilePushConfig",
           "kind": "function",
-          "signature": "function useMobilePushConfig(): MobilePushProviderConfig"
+          "signature": "function useMobilePushConfig(): ResolvedMobilePushProviderConfig"
         }
       ]
     },
@@ -2906,7 +2906,7 @@
         {
           "name": "useTaxConfig",
           "kind": "function",
-          "signature": "function useTaxConfig(): TaxConfig"
+          "signature": "function useTaxConfig(): ResolvedTaxConfig"
         },
         {
           "name": "TaxConfig",

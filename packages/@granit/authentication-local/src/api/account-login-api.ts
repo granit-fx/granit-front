@@ -1,5 +1,5 @@
 import type { AccountLoginRequest, AccountLoginResponse } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Authenticate a user via local credentials (email/username + password).

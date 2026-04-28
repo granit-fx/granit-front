@@ -15,14 +15,15 @@
     "build": "tsup"
   },
   "devDependencies": {
-    "@granit/testing": "workspace:*",
+    "@granit/api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
+    "@granit/testing": "workspace:*",
     "@granit/types": "workspace:*"
   },
   "peerDependencies": {
+    "@granit/api-client": "workspace:*",
     "@granit/authentication-api-keys": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
-    "axios": "*",
     "msw": "^2.12.0",
     "react": "^19.0.0"
   },

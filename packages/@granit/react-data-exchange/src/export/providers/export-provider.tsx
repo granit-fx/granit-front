@@ -3,7 +3,7 @@ import { createContext, useContext, useMemo } from 'react';
 
 import { DEFAULT_BASE_PATH } from '../../constants.js';
 
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
 
 /**

@@ -13,7 +13,7 @@ import type {
   PaymentRefundResponse,
   PaymentTransactionResponse,
 } from '../types.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * List all payment transactions.

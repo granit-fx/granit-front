@@ -1,6 +1,6 @@
 import type { IdentityRole, IdentityUser } from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 import type { UserId } from '@granit/types';
-import type { AxiosInstance } from 'axios';
 
 /**
  * List all roles from the identity provider.

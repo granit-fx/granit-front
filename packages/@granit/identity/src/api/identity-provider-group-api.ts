@@ -1,6 +1,6 @@
 import type { IdentityGroup } from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 import type { UserId } from '@granit/types';
-import type { AxiosInstance } from 'axios';
 
 /**
  * List all groups from the identity provider.

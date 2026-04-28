@@ -6,9 +6,9 @@ import {
 } from '@granit/localization';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { AdminLanguage } from '@granit/localization';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
-import type { AxiosInstance } from 'axios';
 
 export interface LocalizationAdminOptions {
   readonly client: AxiosInstance;

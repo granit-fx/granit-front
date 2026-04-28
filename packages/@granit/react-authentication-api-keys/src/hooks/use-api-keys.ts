@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { ApiKeyResponse } from '@granit/authentication-api-keys';
 import type { UseQueryResult } from '@tanstack/react-query';
-import type { AxiosInstance } from 'axios';
 
 // ---------------------------------------------------------------------------
 // Types

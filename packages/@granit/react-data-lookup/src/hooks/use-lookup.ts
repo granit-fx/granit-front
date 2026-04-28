@@ -1,9 +1,9 @@
 import { findMissingScopeKey, searchLookup } from '@granit/data-lookup';
 import { useQuery } from '@tanstack/react-query';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { LookupDescriptor, LookupQueryParams, LookupResult } from '@granit/data-lookup';
 import type { UseQueryResult } from '@tanstack/react-query';
-import type { AxiosInstance } from 'axios';
 
 /** Options accepted by {@link useLookup}. */
 export interface UseLookupOptions {

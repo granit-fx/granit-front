@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react';
 
 import { useLookup } from '../hooks/use-lookup.js';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { LookupDescriptor, LookupItem } from '@granit/data-lookup';
-import type { AxiosInstance } from 'axios';
 import type { ReactElement } from 'react';
 
 /** Render-prop signature for the SmartFilterBar typeahead. */

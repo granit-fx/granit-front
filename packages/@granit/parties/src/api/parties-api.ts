@@ -21,7 +21,7 @@ import type {
   PartyTaxStatusRequest,
   PartyUpdateRequest,
 } from '../types.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * List parties in the active scope, optionally filtered by role flag.

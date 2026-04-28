@@ -1,5 +1,5 @@
 import type { InvoiceCreateRequest, InvoiceResponse } from '../types.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * List all invoices.

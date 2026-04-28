@@ -3,7 +3,7 @@ import type {
   AdminOidcApplicationCreateRequest,
   AdminOidcApplicationSecretResponse,
 } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 // ── OIDC Application CRUD ────────────────────────────────────────────────────
 
@@ -49,9 +49,7 @@ export async function deleteApplication(
   basePath: string,
   clientId: string
 ): Promise<void> {
-  await client.delete(
-    `${basePath}/oidc/applications/${encodeURIComponent(clientId)}`
-  );
+  await client.delete(`${basePath}/oidc/applications/${encodeURIComponent(clientId)}`);
 }
 
 /**

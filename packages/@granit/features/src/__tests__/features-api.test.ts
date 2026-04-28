@@ -11,7 +11,7 @@ import {
 
 import type { FeatureGroupResponse, FeatureValueResponse } from '../types.js';
 
-const basePath = '/api/granit/features';
+const basePath = '/features';
 
 const sampleGroup: FeatureGroupResponse = {
   name: 'ui',

@@ -3,7 +3,7 @@ import type {
   AccountPasswordChangeRequest,
   AccountPasswordResetRequest,
 } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Change the current user's password (authenticated).

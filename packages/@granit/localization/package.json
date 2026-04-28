@@ -14,12 +14,13 @@
     "build": "tsup"
   },
   "peerDependencies": {
+    "@granit/api-client": "workspace:*",
     "@granit/storage": "workspace:*",
     "@granit/types": "workspace:*",
-    "axios": "*",
     "i18next": "^25.0.0"
   },
   "devDependencies": {
+    "@granit/api-client": "workspace:*",
     "@granit/testing": "workspace:*"
   },
   "publishConfig": {

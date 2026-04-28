@@ -6,8 +6,8 @@ import type {
   WorkflowTransitionResult,
   WorkflowStatus,
 } from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult, PaginationParams } from '@granit/query-engine';
-import type { AxiosInstance } from 'axios';
 
 function buildEntityUrl(
   basePath: string,

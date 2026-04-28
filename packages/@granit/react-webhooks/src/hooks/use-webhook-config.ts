@@ -3,9 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_WEBHOOKS_BASE_PATH } from '../constants.js';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { WebhookModuleConfig } from '@granit/webhooks';
 import type { UseQueryResult } from '@tanstack/react-query';
-import type { AxiosInstance } from 'axios';
 
 export interface WebhookConfigOptions {
   readonly client: AxiosInstance;

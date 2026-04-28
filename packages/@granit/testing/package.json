@@ -15,7 +15,7 @@
     "build": "tsup"
   },
   "peerDependencies": {
-    "axios": "*",
+    "@granit/api-client": "workspace:*",
     "msw": "^2.12.0",
     "vitest": "^4.0.0"
   },
@@ -36,5 +36,8 @@
       }
     },
     "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*"
   }
 }

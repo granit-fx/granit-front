@@ -1,6 +1,6 @@
+import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult } from '@granit/query-engine';
 import type { EntityId, ISODateString, UserId } from '@granit/types';
-import type { AxiosInstance } from 'axios';
 
 // ---------------------------------------------------------------------------
 // Notification types — aligned with Granit.Notifications .NET backend

@@ -1,16 +1,25 @@
+import { useOptionalGranitClient } from '@granit/react-api-client';
 import { createContext, useContext, useMemo } from 'react';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
 
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
 
 /** Configuration for the payments provider. */
 export interface PaymentsConfig {
-  readonly client: AxiosInstance;
+  readonly client?: AxiosInstance;
   /** Base path for payment endpoints (default: `/api/v1/payments`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
+}
+
+/**
+ * PaymentsConfig after the provider has resolved `client` from
+ * `config.client` or the nearest `<GranitClientProvider>`.
+ */
+export interface ResolvedPaymentsConfig extends PaymentsConfig {
+  readonly client: AxiosInstance;
 }
 
 export interface PaymentsProviderProps {
@@ -18,22 +27,29 @@ export interface PaymentsProviderProps {
   readonly children: ReactNode;
 }
 
-const PaymentsConfigContext = createContext<PaymentsConfig | null>(null);
+const PaymentsConfigContext = createContext<ResolvedPaymentsConfig | null>(null);
 
 /** Provides payments configuration to child components and hooks. */
 export function PaymentsProvider({ config, children }: Readonly<PaymentsProviderProps>) {
-  const value = useMemo(
-    () => ({
+  const contextClient = useOptionalGranitClient();
+  const value = useMemo<ResolvedPaymentsConfig>(() => {
+    const client = config.client ?? contextClient;
+    if (!client) {
+      throw new Error(
+        'PaymentsProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
+      );
+    }
+    return {
       ...config,
       basePath: config.basePath ?? DEFAULT_BASE_PATH,
-    }),
-    [config]
-  );
+      client,
+    };
+  }, [config, contextClient]);
   return <PaymentsConfigContext value={value}>{children}</PaymentsConfigContext>;
 }
 
 /** Returns the payments configuration from the nearest `PaymentsProvider`. */
-export function usePaymentsConfig(): PaymentsConfig {
+export function usePaymentsConfig(): ResolvedPaymentsConfig {
   const ctx = useContext(PaymentsConfigContext);
   if (!ctx) {
     throw new Error('usePaymentsConfig must be used within a PaymentsProvider');

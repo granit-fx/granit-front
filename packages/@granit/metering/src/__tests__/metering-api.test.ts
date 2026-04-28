@@ -44,7 +44,7 @@ import type {
 } from '@granit/query-engine';
 import type { ISODateString, TenantId } from '@granit/types';
 
-const basePath = '/api/granit/metering';
+const basePath = '/metering';
 
 const sampleMeter: MeterDefinitionResponse = {
   id: 'meter-1',
@@ -81,7 +81,7 @@ describe('metering-api', () => {
 
       const result = await listActiveMeters(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/meters');
+      expect(client.get).toHaveBeenCalledWith('/metering/meters');
       expect(result).toEqual([sampleMeter]);
     });
   });
@@ -93,7 +93,7 @@ describe('metering-api', () => {
 
       const result = await getMeterDefinition(client, basePath, 'meter-1');
 
-      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/meters/meter-1');
+      expect(client.get).toHaveBeenCalledWith('/metering/meters/meter-1');
       expect(result).toEqual(sampleMeter);
     });
 
@@ -103,7 +103,7 @@ describe('metering-api', () => {
 
       await getMeterDefinition(client, basePath, 'meter/special');
 
-      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/meters/meter%2Fspecial');
+      expect(client.get).toHaveBeenCalledWith('/metering/meters/meter%2Fspecial');
     });
   });
 
@@ -121,7 +121,7 @@ describe('metering-api', () => {
 
       const result = await createMeterDefinition(client, basePath, request);
 
-      expect(client.post).toHaveBeenCalledWith('/api/granit/metering/meters', request);
+      expect(client.post).toHaveBeenCalledWith('/metering/meters', request);
       expect(result).toEqual(sampleMeter);
     });
   });
@@ -140,7 +140,7 @@ describe('metering-api', () => {
 
       const result = await updateMeterDefinition(client, basePath, 'meter-1', request);
 
-      expect(client.put).toHaveBeenCalledWith('/api/granit/metering/meters/meter-1', request);
+      expect(client.put).toHaveBeenCalledWith('/metering/meters/meter-1', request);
       expect(result).toEqual(updated);
     });
 
@@ -156,10 +156,7 @@ describe('metering-api', () => {
 
       await updateMeterDefinition(client, basePath, 'meter/special', request);
 
-      expect(client.put).toHaveBeenCalledWith(
-        '/api/granit/metering/meters/meter%2Fspecial',
-        request
-      );
+      expect(client.put).toHaveBeenCalledWith('/metering/meters/meter%2Fspecial', request);
     });
   });
 
@@ -170,7 +167,7 @@ describe('metering-api', () => {
 
       await deactivateMeterDefinition(client, basePath, 'meter-1');
 
-      expect(client.post).toHaveBeenCalledWith('/api/granit/metering/meters/meter-1/deactivate');
+      expect(client.post).toHaveBeenCalledWith('/metering/meters/meter-1/deactivate');
     });
 
     it('should encode the id', async () => {
@@ -179,9 +176,7 @@ describe('metering-api', () => {
 
       await deactivateMeterDefinition(client, basePath, 'meter/special');
 
-      expect(client.post).toHaveBeenCalledWith(
-        '/api/granit/metering/meters/meter%2Fspecial/deactivate'
-      );
+      expect(client.post).toHaveBeenCalledWith('/metering/meters/meter%2Fspecial/deactivate');
     });
   });
 
@@ -192,7 +187,7 @@ describe('metering-api', () => {
 
       const result = await getUsageForPeriod(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/usage');
+      expect(client.get).toHaveBeenCalledWith('/metering/usage');
       expect(result).toEqual([sampleUsage]);
     });
   });
@@ -204,7 +199,7 @@ describe('metering-api', () => {
 
       const result = await checkMeteringQuota(client, basePath, 'meter-1');
 
-      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/quota/meter-1');
+      expect(client.get).toHaveBeenCalledWith('/metering/quota/meter-1');
       expect(result).toEqual(sampleQuota);
     });
 
@@ -214,7 +209,7 @@ describe('metering-api', () => {
 
       await checkMeteringQuota(client, basePath, 'meter/special');
 
-      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/quota/meter%2Fspecial');
+      expect(client.get).toHaveBeenCalledWith('/metering/quota/meter%2Fspecial');
     });
   });
 
@@ -237,7 +232,7 @@ describe('metering-api', () => {
 
       await recordUsageEvents(client, basePath, request);
 
-      expect(client.post).toHaveBeenCalledWith('/api/granit/metering/events', request);
+      expect(client.post).toHaveBeenCalledWith('/metering/events', request);
     });
   });
 
@@ -303,7 +298,7 @@ describe('metering-api / QueryEngine — meter definitions', () => {
 
       expect(client.get).toHaveBeenCalledTimes(1);
       const url = vi.mocked(client.get).mock.calls[0]?.[0] as string;
-      expect(url).toContain('/api/granit/metering/meter-definitions');
+      expect(url).toContain('/metering/meter-definitions');
       expect(url).toContain('page=1');
       expect(url).toContain('pageSize=25');
       expect(result).toEqual(page);
@@ -315,7 +310,7 @@ describe('metering-api / QueryEngine — meter definitions', () => {
 
       await listMeterDefinitions(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/meter-definitions');
+      expect(client.get).toHaveBeenCalledWith('/metering/meter-definitions');
     });
   });
 
@@ -326,7 +321,7 @@ describe('metering-api / QueryEngine — meter definitions', () => {
 
       const result = await getMeterDefinitionsQueryMeta(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/meter-definitions/meta');
+      expect(client.get).toHaveBeenCalledWith('/metering/meter-definitions/meta');
       expect(result).toEqual(sampleMeta);
     });
   });
@@ -338,7 +333,7 @@ describe('metering-api / QueryEngine — meter definitions', () => {
 
       const result = await listMeterDefinitionsSavedViews(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/meter-definitions/saved-views');
+      expect(client.get).toHaveBeenCalledWith('/metering/meter-definitions/saved-views');
       expect(result).toEqual([sampleSavedView]);
     });
   });
@@ -355,10 +350,7 @@ describe('metering-api / QueryEngine — meter definitions', () => {
 
       const result = await createMeterDefinitionsSavedView(client, basePath, request);
 
-      expect(client.post).toHaveBeenCalledWith(
-        '/api/granit/metering/meter-definitions/saved-views',
-        request
-      );
+      expect(client.post).toHaveBeenCalledWith('/metering/meter-definitions/saved-views', request);
       expect(result).toEqual(sampleSavedView);
     });
   });
@@ -375,7 +367,7 @@ describe('metering-api / QueryEngine — meter definitions', () => {
       await updateMeterDefinitionsSavedView(client, basePath, 'sv-1', request);
 
       expect(client.put).toHaveBeenCalledWith(
-        '/api/granit/metering/meter-definitions/saved-views/sv-1',
+        '/metering/meter-definitions/saved-views/sv-1',
         request
       );
     });
@@ -388,9 +380,7 @@ describe('metering-api / QueryEngine — meter definitions', () => {
 
       await deleteMeterDefinitionsSavedView(client, basePath, 'sv-1');
 
-      expect(client.delete).toHaveBeenCalledWith(
-        '/api/granit/metering/meter-definitions/saved-views/sv-1'
-      );
+      expect(client.delete).toHaveBeenCalledWith('/metering/meter-definitions/saved-views/sv-1');
     });
   });
 
@@ -402,7 +392,7 @@ describe('metering-api / QueryEngine — meter definitions', () => {
       await setDefaultMeterDefinitionsSavedView(client, basePath, 'sv-1');
 
       expect(client.post).toHaveBeenCalledWith(
-        '/api/granit/metering/meter-definitions/saved-views/sv-1/set-default'
+        '/metering/meter-definitions/saved-views/sv-1/set-default'
       );
     });
   });
@@ -423,7 +413,7 @@ describe('metering-api / QueryEngine — usage aggregates', () => {
 
       expect(client.get).toHaveBeenCalledTimes(1);
       const url = vi.mocked(client.get).mock.calls[0]?.[0] as string;
-      expect(url).toContain('/api/granit/metering/usage-aggregates');
+      expect(url).toContain('/metering/usage-aggregates');
       expect(url).toContain('sort=-periodStart');
       expect(result).toEqual(page);
     });
@@ -434,7 +424,7 @@ describe('metering-api / QueryEngine — usage aggregates', () => {
 
       await listUsageAggregates(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/usage-aggregates');
+      expect(client.get).toHaveBeenCalledWith('/metering/usage-aggregates');
     });
   });
 
@@ -445,7 +435,7 @@ describe('metering-api / QueryEngine — usage aggregates', () => {
 
       const result = await getUsageAggregatesQueryMeta(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/usage-aggregates/meta');
+      expect(client.get).toHaveBeenCalledWith('/metering/usage-aggregates/meta');
       expect(result).toEqual(sampleMeta);
     });
   });
@@ -457,7 +447,7 @@ describe('metering-api / QueryEngine — usage aggregates', () => {
 
       const result = await listUsageAggregatesSavedViews(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/api/granit/metering/usage-aggregates/saved-views');
+      expect(client.get).toHaveBeenCalledWith('/metering/usage-aggregates/saved-views');
       expect(result).toEqual([sampleSavedView]);
     });
   });
@@ -474,10 +464,7 @@ describe('metering-api / QueryEngine — usage aggregates', () => {
 
       const result = await createUsageAggregatesSavedView(client, basePath, request);
 
-      expect(client.post).toHaveBeenCalledWith(
-        '/api/granit/metering/usage-aggregates/saved-views',
-        request
-      );
+      expect(client.post).toHaveBeenCalledWith('/metering/usage-aggregates/saved-views', request);
       expect(result).toEqual(sampleSavedView);
     });
   });
@@ -494,7 +481,7 @@ describe('metering-api / QueryEngine — usage aggregates', () => {
       await updateUsageAggregatesSavedView(client, basePath, 'sv-1', request);
 
       expect(client.put).toHaveBeenCalledWith(
-        '/api/granit/metering/usage-aggregates/saved-views/sv-1',
+        '/metering/usage-aggregates/saved-views/sv-1',
         request
       );
     });
@@ -507,9 +494,7 @@ describe('metering-api / QueryEngine — usage aggregates', () => {
 
       await deleteUsageAggregatesSavedView(client, basePath, 'sv-1');
 
-      expect(client.delete).toHaveBeenCalledWith(
-        '/api/granit/metering/usage-aggregates/saved-views/sv-1'
-      );
+      expect(client.delete).toHaveBeenCalledWith('/metering/usage-aggregates/saved-views/sv-1');
     });
   });
 
@@ -521,7 +506,7 @@ describe('metering-api / QueryEngine — usage aggregates', () => {
       await setDefaultUsageAggregatesSavedView(client, basePath, 'sv-1');
 
       expect(client.post).toHaveBeenCalledWith(
-        '/api/granit/metering/usage-aggregates/saved-views/sv-1/set-default'
+        '/metering/usage-aggregates/saved-views/sv-1/set-default'
       );
     });
   });

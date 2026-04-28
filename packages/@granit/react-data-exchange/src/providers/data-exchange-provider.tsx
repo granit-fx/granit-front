@@ -5,7 +5,7 @@ import { ImportProvider } from '../import/providers/import-provider.js';
 
 import type { ExportConfig } from '../export/providers/export-provider.js';
 import type { ImportConfig } from '../import/providers/import-provider.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
 
 /**
@@ -51,14 +51,15 @@ const EMPTY_CONFIG: DataExchangeConfig = {};
  * </DataExchangeProvider>
  * ```
  */
-export function DataExchangeProvider({ config = EMPTY_CONFIG, children }: Readonly<DataExchangeProviderProps>) {
+export function DataExchangeProvider({
+  config = EMPTY_CONFIG,
+  children,
+}: Readonly<DataExchangeProviderProps>) {
   const exportConfig = useMemo<ExportConfig>(
     () => ({
       client: config.client,
       basePath: config.basePath,
-      ...(config.queryKeyPrefix
-        ? { queryKeyPrefix: [...config.queryKeyPrefix, 'export'] }
-        : {}),
+      ...(config.queryKeyPrefix ? { queryKeyPrefix: [...config.queryKeyPrefix, 'export'] } : {}),
     }),
     [config]
   );
@@ -67,9 +68,7 @@ export function DataExchangeProvider({ config = EMPTY_CONFIG, children }: Readon
     () => ({
       client: config.client,
       basePath: config.basePath,
-      ...(config.queryKeyPrefix
-        ? { queryKeyPrefix: [...config.queryKeyPrefix, 'import'] }
-        : {}),
+      ...(config.queryKeyPrefix ? { queryKeyPrefix: [...config.queryKeyPrefix, 'import'] } : {}),
     }),
     [config]
   );

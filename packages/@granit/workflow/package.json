@@ -17,9 +17,9 @@
     "@granit/api-client": "workspace:*"
   },
   "peerDependencies": {
+    "@granit/api-client": "workspace:*",
     "@granit/query-engine": "workspace:*",
-    "@granit/types": "workspace:*",
-    "axios": "*"
+    "@granit/types": "workspace:*"
   },
   "publishConfig": {
     "exports": {

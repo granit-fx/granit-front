@@ -9,10 +9,11 @@
   },
   "scripts": {},
   "peerDependencies": {
-    "axios": "*",
+    "@granit/api-client": "workspace:*",
     "react": "^19.0.0"
   },
   "devDependencies": {
+    "@granit/api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*"
   },

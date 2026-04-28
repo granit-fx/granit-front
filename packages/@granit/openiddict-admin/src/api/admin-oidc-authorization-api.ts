@@ -1,8 +1,5 @@
-import type {
-  AdminOidcAuthorization,
-  AdminOidcAuthorizationListParams,
-} from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AdminOidcAuthorization, AdminOidcAuthorizationListParams } from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 
 // ── OIDC Authorization management ────────────────────────────────────────────
 
@@ -33,9 +30,7 @@ export async function revokeAuthorization(
   basePath: string,
   id: string
 ): Promise<void> {
-  await client.delete(
-    `${basePath}/oidc/authorizations/${encodeURIComponent(id)}`
-  );
+  await client.delete(`${basePath}/oidc/authorizations/${encodeURIComponent(id)}`);
 }
 
 /**
@@ -48,7 +43,5 @@ export async function revokeUserAuthorizations(
   basePath: string,
   userId: string
 ): Promise<void> {
-  await client.delete(
-    `${basePath}/oidc/authorizations/user/${encodeURIComponent(userId)}`
-  );
+  await client.delete(`${basePath}/oidc/authorizations/user/${encodeURIComponent(userId)}`);
 }

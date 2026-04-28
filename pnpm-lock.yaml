@@ -161,10 +161,10 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -174,10 +174,10 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -200,10 +200,10 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -253,20 +253,19 @@ importers:
         version: 26.2.3
 
   packages/@granit/authentication-local:
-    dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
 
   packages/@granit/authorization:
-    dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
 
   packages/@granit/background-jobs:
     dependencies:
@@ -276,10 +275,10 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -291,11 +290,10 @@ importers:
         version: link:../types
 
   packages/@granit/blob-storage:
-    dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -312,11 +310,10 @@ importers:
         version: 0.7.21(@babel/core@7.29.0)(eslint@10.2.1(jiti@2.6.1))
 
   packages/@granit/customer-balance:
-    dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -329,30 +326,28 @@ importers:
       '@granit/utils':
         specifier: workspace:*
         version: link:../utils
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
 
   packages/@granit/data-lookup:
-    dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
 
   packages/@granit/diagnostics:
-    dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -360,23 +355,19 @@ importers:
   packages/@granit/error-boundary: {}
 
   packages/@granit/features:
-    dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
 
   packages/@granit/idempotency:
-    dependencies:
+    devDependencies:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
 
   packages/@granit/identity:
     dependencies:
@@ -386,10 +377,10 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -399,10 +390,10 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -415,13 +406,13 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       i18next:
         specifier: ^25.0.0
         version: 25.8.14(typescript@5.9.3)
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -442,10 +433,10 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -455,9 +446,10 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
 
   packages/@granit/notifications:
     dependencies:
@@ -467,19 +459,12 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
 
   packages/@granit/notifications-mobile-push:
-    dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -515,10 +500,6 @@ importers:
         version: 2.0.1
 
   packages/@granit/notifications-web-push:
-    dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -532,20 +513,19 @@ importers:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
 
   packages/@granit/parties:
-    dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -554,21 +534,19 @@ importers:
         version: link:../types
 
   packages/@granit/payments:
-    dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
 
   packages/@granit/privacy:
-    dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -581,10 +559,10 @@ importers:
       '@granit/utils':
         specifier: workspace:*
         version: link:../utils
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -597,9 +575,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -607,6 +582,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -625,9 +606,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -635,9 +613,15 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -650,13 +634,13 @@ importers:
 
   packages/@granit/react-api-client:
     dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       react:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -675,9 +659,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -685,6 +666,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -722,9 +709,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -732,6 +716,9 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -744,9 +731,6 @@ importers:
 
   packages/@granit/react-authentication-cognito:
     dependencies:
-      '@granit/api-client':
-        specifier: workspace:*
-        version: link:../api-client
       '@granit/authentication':
         specifier: workspace:*
         version: link:../authentication
@@ -762,15 +746,16 @@ importers:
       react:
         specifier: ^19.0.0
         version: 19.2.5
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
 
   packages/@granit/react-authentication-entraid:
     dependencies:
       '@azure/msal-browser':
         specifier: '>=3.0.0'
         version: 5.6.2
-      '@granit/api-client':
-        specifier: workspace:*
-        version: link:../api-client
       '@granit/authentication':
         specifier: workspace:*
         version: link:../authentication
@@ -783,12 +768,13 @@ importers:
       react:
         specifier: ^19.0.0
         version: 19.2.5
-
-  packages/@granit/react-authentication-google-cloud:
-    dependencies:
+    devDependencies:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+
+  packages/@granit/react-authentication-google-cloud:
+    dependencies:
       '@granit/authentication':
         specifier: workspace:*
         version: link:../authentication
@@ -804,12 +790,13 @@ importers:
       react:
         specifier: ^19.0.0
         version: 19.2.5
-
-  packages/@granit/react-authentication-keycloak:
-    dependencies:
+    devDependencies:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+
+  packages/@granit/react-authentication-keycloak:
+    dependencies:
       '@granit/authentication':
         specifier: workspace:*
         version: link:../authentication
@@ -825,6 +812,10 @@ importers:
       react:
         specifier: ^19.0.0
         version: 19.2.5
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
 
   packages/@granit/react-authentication-local:
     dependencies:
@@ -834,9 +825,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -844,6 +832,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -887,9 +881,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -897,6 +888,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -924,9 +921,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -934,6 +928,9 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
@@ -965,9 +962,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -975,6 +969,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1002,9 +1002,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -1015,6 +1012,9 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5(react@19.2.5)
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1030,13 +1030,13 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       react:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1052,9 +1052,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -1062,6 +1059,9 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1089,9 +1089,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -1099,6 +1096,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1114,9 +1117,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -1124,6 +1124,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1142,9 +1148,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -1152,6 +1155,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1176,9 +1185,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       date-fns:
         specifier: ^4.0.0
         version: 4.1.0
@@ -1195,6 +1201,9 @@ importers:
         specifier: ^16.0.0
         version: 16.5.4(i18next@25.8.14(typescript@5.9.3))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@5.9.3)
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1210,9 +1219,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -1220,6 +1226,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1232,24 +1244,25 @@ importers:
 
   packages/@granit/react-multi-tenancy:
     dependencies:
-      '@granit/api-client':
-        specifier: workspace:*
-        version: link:../api-client
       '@granit/multi-tenancy':
         specifier: workspace:*
         version: link:../multi-tenancy
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
       react:
         specifier: ^19.0.0
         version: 19.2.5
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
 
   packages/@granit/react-notifications:
     dependencies:
@@ -1265,9 +1278,6 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -1275,6 +1285,9 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1290,9 +1303,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       react:
         specifier: ^19.0.0
         version: 19.2.5
@@ -1300,6 +1310,12 @@ importers:
       '@capacitor/push-notifications':
         specifier: ^8.0.3
         version: 8.0.3(@capacitor/core@8.2.0)
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1312,12 +1328,16 @@ importers:
       '@granit/notifications-web-push':
         specifier: workspace:*
         version: link:../notifications-web-push
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       react:
         specifier: ^19.0.0
         version: 19.2.5
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
 
   packages/@granit/react-openiddict-admin:
     dependencies:
@@ -1327,9 +1347,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -1337,6 +1354,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1355,9 +1378,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.4(@types/node@25.6.0)(typescript@6.0.3)
@@ -1368,6 +1388,12 @@ importers:
         specifier: ^16.0.0 || ^17.0.0
         version: 17.0.4(i18next@26.0.8(typescript@6.0.3))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.3)
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1386,9 +1412,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       lucide-react:
         specifier: ^1.0.0
         version: 1.8.0(react@19.2.5)
@@ -1399,6 +1422,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1417,9 +1446,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -1427,6 +1453,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1482,13 +1514,13 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       react:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1507,9 +1539,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -1517,6 +1546,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1535,9 +1570,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -1545,6 +1577,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1572,9 +1610,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -1582,6 +1617,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1600,9 +1641,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -1610,6 +1648,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1625,9 +1669,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -1641,6 +1682,9 @@ importers:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1684,9 +1728,6 @@ importers:
       '@granit/timeline':
         specifier: workspace:*
         version: link:../timeline
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -1697,6 +1738,9 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1748,13 +1792,13 @@ importers:
       '@granit/validation':
         specifier: workspace:*
         version: link:../validation
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       react:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1770,9 +1814,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.100.5
         version: 5.100.5(react@19.2.5)
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -1780,6 +1821,9 @@ importers:
         specifier: ^19.0.0
         version: 19.2.5
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1801,9 +1845,6 @@ importers:
       '@granit/workflow':
         specifier: workspace:*
         version: link:../workflow
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
@@ -1814,6 +1855,9 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1832,10 +1876,10 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1848,20 +1892,19 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
 
   packages/@granit/settings:
-    dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1876,20 +1919,19 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
 
   packages/@granit/tax:
-    dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1902,9 +1944,6 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -1912,15 +1951,16 @@ importers:
 
   packages/@granit/testing:
     dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
       msw:
         specifier: ^2.12.0
         version: 2.13.2(@types/node@25.6.0)(typescript@6.0.3)
       vitest:
         specifier: ^4.0.0
         version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(jsdom@29.1.0)(msw@2.13.2(@types/node@25.6.0)(typescript@6.0.3))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.7)(jiti@2.6.1)(sass@1.97.3)(yaml@2.8.3))
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
 
   packages/@granit/timeline:
     dependencies:
@@ -1930,9 +1970,6 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -1968,21 +2005,19 @@ importers:
         version: 3.5.0
 
   packages/@granit/validation:
-    dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
 
   packages/@granit/webhooks:
-    dependencies:
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1998,9 +2033,6 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
-      axios:
-        specifier: 1.15.2
-        version: 1.15.2
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*

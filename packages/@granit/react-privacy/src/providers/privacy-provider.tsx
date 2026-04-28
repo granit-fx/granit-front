@@ -1,14 +1,23 @@
+import { useOptionalGranitClient } from '@granit/react-api-client';
 import { createContext, useContext, useMemo } from 'react';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
 
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
 
 export interface PrivacyConfig {
-  readonly client: AxiosInstance;
+  readonly client?: AxiosInstance;
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
+}
+
+/**
+ * PrivacyConfig after the provider has resolved `client` from
+ * `config.client` or the nearest `<GranitClientProvider>`.
+ */
+export interface ResolvedPrivacyConfig extends PrivacyConfig {
+  readonly client: AxiosInstance;
 }
 
 export interface PrivacyProviderProps {
@@ -18,9 +27,9 @@ export interface PrivacyProviderProps {
 
 const DEFAULT_KEY_PREFIX = ['privacy'] as const;
 
-const PrivacyContext = createContext<PrivacyConfig | null>(null);
+const PrivacyContext = createContext<ResolvedPrivacyConfig | null>(null);
 
-export function usePrivacyConfig(): PrivacyConfig {
+export function usePrivacyConfig(): ResolvedPrivacyConfig {
   const config = useContext(PrivacyContext);
   if (!config) throw new Error('usePrivacyConfig must be used within a PrivacyProvider');
   return config;
@@ -34,14 +43,21 @@ export function buildPrivacyQueryKey(
 }
 
 export function PrivacyProvider({ config, children }: PrivacyProviderProps) {
-  const value = useMemo<PrivacyConfig>(
-    () => ({
+  const contextClient = useOptionalGranitClient();
+  const value = useMemo(() => {
+    const client = config.client ?? contextClient;
+    if (!client) {
+      throw new Error(
+        'PrivacyProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
+      );
+    }
+    return {
       ...config,
       basePath: config.basePath ?? DEFAULT_BASE_PATH,
       queryKeyPrefix: config.queryKeyPrefix ?? DEFAULT_KEY_PREFIX,
-    }),
-    [config]
-  );
+      client,
+    };
+  }, [config, contextClient]);
 
   return <PrivacyContext value={value}>{children}</PrivacyContext>;
 }

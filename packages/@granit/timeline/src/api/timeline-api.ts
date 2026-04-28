@@ -6,7 +6,7 @@ import type {
   TimelineEntry,
   TimelineEntryPage,
 } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 function buildEntityUrl(
   basePath: string,

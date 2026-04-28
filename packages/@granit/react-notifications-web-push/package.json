@@ -14,8 +14,9 @@
     "build": "tsup"
   },
   "peerDependencies": {
+    "@granit/api-client": "workspace:*",
     "@granit/notifications-web-push": "workspace:*",
-    "axios": "*",
+    "@granit/react-api-client": "workspace:*",
     "react": "^19.0.0"
   },
   "publishConfig": {
@@ -26,5 +27,9 @@
       }
     },
     "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/react-api-client": "workspace:*"
   }
 }

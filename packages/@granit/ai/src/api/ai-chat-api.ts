@@ -11,7 +11,7 @@ import type {
   AIChatStreamChunk,
   AIChatStreamUsage,
 } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Send a chat completion request and return the full response.

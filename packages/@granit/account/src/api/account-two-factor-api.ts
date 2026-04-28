@@ -5,7 +5,7 @@ import type {
   AccountTwoFactorEnableResponse,
   AccountTwoFactorStatusResponse,
 } from '../types/index.js';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Get the current user's 2FA status.
@@ -57,10 +57,7 @@ export async function enableTwoFactor(
  *
  * `POST {basePath}/two-factor/disable`
  */
-export async function disableTwoFactor(
-  client: AxiosInstance,
-  basePath: string
-): Promise<void> {
+export async function disableTwoFactor(client: AxiosInstance, basePath: string): Promise<void> {
   await client.post(`${basePath}/two-factor/disable`);
 }
 

@@ -14,8 +14,8 @@
     "build": "tsup"
   },
   "peerDependencies": {
-    "@granit/types": "workspace:*",
-    "axios": "*"
+    "@granit/api-client": "workspace:*",
+    "@granit/types": "workspace:*"
   },
   "publishConfig": {
     "exports": {
@@ -25,5 +25,8 @@
       }
     },
     "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*"
   }
 }
