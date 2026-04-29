@@ -1,5 +1,9 @@
-import { useDashboardRender, type UseDashboardRenderOptions } from '../api/use-dashboard-render.js';
+import { useMemo } from 'react';
 
+import { useDashboardRender, type UseDashboardRenderOptions } from '../api/use-dashboard-render.js';
+import { mergeFilterValuesIntoRequest } from '../lib/merge-filter-values.js';
+
+import { useDashboardFilters } from './dashboard-filter-context.js';
 import { RenderedWidget } from './rendered-widget.js';
 
 import type { DashboardRenderRequest } from '@granit/dashboards';
@@ -45,7 +49,17 @@ export function RenderedDashboard({
   options,
   className,
 }: RenderedDashboardProps) {
-  const query = useDashboardRender(dashboardId, request, options);
+  // Surrounding `<DashboardFilterProvider>` (when mounted) drives live
+  // filter values into the bundle render request. Apps wanting fully
+  // static rendering omit the provider entirely; the merge becomes a
+  // no-op identity.
+  const filters = useDashboardFilters();
+  const effectiveRequest = useMemo(
+    () => mergeFilterValuesIntoRequest(request ?? {}, filters?.values),
+    [request, filters?.values]
+  );
+
+  const query = useDashboardRender(dashboardId, effectiveRequest, options);
 
   if (query.isLoading) {
     return <LoadingSkeleton className={className} />;

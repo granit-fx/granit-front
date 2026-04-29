@@ -59,6 +59,18 @@ export { DashboardViewSwitcher } from './components/dashboard-view-switcher.js';
 export type { DashboardViewSwitcherProps } from './components/dashboard-view-switcher.js';
 export { resolveActiveView } from './lib/resolve-active-view.js';
 export type { ActiveDashboardView } from './lib/resolve-active-view.js';
+export {
+  DashboardFilterProvider,
+  useDashboardFilters,
+} from './components/dashboard-filter-context.js';
+export type {
+  DashboardFilterContextValue,
+  DashboardFilterProviderProps,
+  DashboardFilterValues,
+} from './components/dashboard-filter-context.js';
+export { DashboardFilterToolbar } from './components/dashboard-filter-toolbar.js';
+export type { DashboardFilterToolbarProps } from './components/dashboard-filter-toolbar.js';
+export { mergeFilterValuesIntoRequest } from './lib/merge-filter-values.js';
 export { useEffectiveTimeWindow } from './hooks/use-effective-time-window.js';
 export {
   DASHBOARD_BREAKPOINT_MIN_WIDTH,

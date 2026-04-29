@@ -2309,6 +2309,22 @@
           "members": []
         },
         {
+          "name": "DashboardFilterToolbar",
+          "kind": "function",
+          "signature": "function DashboardFilterToolbar("
+        },
+        {
+          "name": "DashboardFilterToolbarProps",
+          "kind": "interface",
+          "signature": "interface DashboardFilterToolbarProps",
+          "members": []
+        },
+        {
+          "name": "mergeFilterValuesIntoRequest",
+          "kind": "function",
+          "signature": "function mergeFilterValuesIntoRequest( request: DashboardRenderRequest, values: DashboardFilterValues | null | undefined ): DashboardRenderRequest"
+        },
+        {
           "name": "useEffectiveTimeWindow",
           "kind": "function",
           "signature": "function useEffectiveTimeWindow(override?: DashboardTimeWindow): DashboardTimeWindow"
