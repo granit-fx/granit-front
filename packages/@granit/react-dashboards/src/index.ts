@@ -71,6 +71,23 @@ export type {
 export { DashboardFilterToolbar } from './components/dashboard-filter-toolbar.js';
 export type { DashboardFilterToolbarProps } from './components/dashboard-filter-toolbar.js';
 export { mergeFilterValuesIntoRequest } from './lib/merge-filter-values.js';
+
+// Entity alias runtime (P2.3) — resolution context, provider, helpers
+export {
+  DashboardAliasProvider,
+  useDashboardAliases,
+} from './components/dashboard-alias-context.js';
+export type {
+  DashboardAliasProviderProps,
+  DashboardAliasValues,
+} from './components/dashboard-alias-context.js';
+export {
+  resolveDashboardAliases,
+  resolveEntityAlias,
+  resolveEntityAliasResolver,
+} from './lib/resolve-entity-alias.js';
+export type { AliasResolutionContext } from './lib/resolve-entity-alias.js';
+export { substituteAliases, substituteAliasesInRecord } from './lib/substitute-aliases.js';
 export { useEffectiveTimeWindow } from './hooks/use-effective-time-window.js';
 export {
   DASHBOARD_BREAKPOINT_MIN_WIDTH,

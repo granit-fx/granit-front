@@ -2325,6 +2325,22 @@
           "signature": "function mergeFilterValuesIntoRequest( request: DashboardRenderRequest, values: DashboardFilterValues | null | undefined ): DashboardRenderRequest"
         },
         {
+          "name": "AliasResolutionContext",
+          "kind": "interface",
+          "signature": "interface AliasResolutionContext",
+          "members": []
+        },
+        {
+          "name": "substituteAliases",
+          "kind": "function",
+          "signature": "function substituteAliases( value: string, aliases: DashboardAliasValues | null | undefined ): string"
+        },
+        {
+          "name": "substituteAliasesInRecord",
+          "kind": "function",
+          "signature": "function substituteAliasesInRecord( record: Readonly<Record<string, string>>, aliases: DashboardAliasValues | null | undefined ): Readonly<Record<string, string>>"
+        },
+        {
           "name": "useEffectiveTimeWindow",
           "kind": "function",
           "signature": "function useEffectiveTimeWindow(override?: DashboardTimeWindow): DashboardTimeWindow"
