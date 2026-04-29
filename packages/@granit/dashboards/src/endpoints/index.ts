@@ -13,3 +13,15 @@ export type { DashboardSummaryResponse } from './dashboard-summary-response.js';
 export type { PagedResponse } from './paged-response.js';
 export type { WidgetInstanceResponse } from './widget-instance-response.js';
 export type { AddWidgetRequest, UpdateWidgetRequest } from './widget-requests.js';
+
+// Bridge: persistence ↔ definition
+export {
+  STRUCTURAL_WIDGET_FIELDS,
+  dashboardDetailToDefinition,
+  diffDashboardWidgets,
+  extractSlugFromTitleKey,
+  widgetDefinitionToAddRequest,
+  widgetDefinitionToUpdateRequest,
+  widgetInstanceToDefinition,
+} from './widget-bridge.js';
+export type { DashboardWidgetDiff } from './widget-bridge.js';

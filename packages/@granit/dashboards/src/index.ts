@@ -77,6 +77,20 @@ export type {
   WidgetInstanceResponse,
 } from './endpoints/index.js';
 
+// Bridge between persistence (`WidgetInstanceResponse`) and declarative
+// (`WidgetDefinition`) views — used by editor surfaces saving back through
+// the per-widget CRUD endpoints.
+export {
+  STRUCTURAL_WIDGET_FIELDS,
+  dashboardDetailToDefinition,
+  diffDashboardWidgets,
+  extractSlugFromTitleKey,
+  widgetDefinitionToAddRequest,
+  widgetDefinitionToUpdateRequest,
+  widgetInstanceToDefinition,
+} from './endpoints/index.js';
+export type { DashboardWidgetDiff } from './endpoints/index.js';
+
 // Rendering — wire contracts for the dashboard render pipeline plus per-kind
 // snapshots (B3-1 / B3-2 / B3-3, ADR-039).
 export {
