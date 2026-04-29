@@ -31,6 +31,7 @@ export type { DashboardLayout } from './dashboard-layout.js';
 export type { WidgetAction, WidgetActionKind, WidgetActionTrigger } from './widget-action.js';
 export type {
   FrameworkWidgetDefinition,
+  ImageFit,
   ImageWidgetDefinition,
   MarkdownWidgetDefinition,
   TextWidgetDefinition,

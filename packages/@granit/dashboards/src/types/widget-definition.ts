@@ -62,6 +62,19 @@ export interface MarkdownWidgetDefinition extends WidgetDefinitionBase {
   readonly contentLocalizationKey: string;
 }
 
+/**
+ * How an {@link ImageWidgetDefinition} fills its grid cell. Mirrors
+ * `Granit.Dashboards.Widgets.ImageFit`. PascalCase wire values — backend's
+ * host registers a `JsonStringEnumConverter()` with no naming policy.
+ */
+export type ImageFit =
+  /** Preserve aspect ratio, letterbox to fit. Right for logos. */
+  | 'Contain'
+  /** Fill the cell, crop to maintain aspect. Right for banner photos. */
+  | 'Cover'
+  /** Stretch to fill (rarely correct — distorts the image). */
+  | 'Fill';
+
 /** Renders a static image — typically a logo or visual divider. */
 export interface ImageWidgetDefinition extends WidgetDefinitionBase {
   readonly type: 'image';
@@ -69,6 +82,11 @@ export interface ImageWidgetDefinition extends WidgetDefinitionBase {
   readonly source: string;
   /** Localization key for the alt text (accessibility). */
   readonly altLocalizationKey: string;
+  /**
+   * How the image fills its grid cell. Backend default is `'Contain'`
+   * (preserves aspect, letterboxes); fixtures that omit it are accepted.
+   */
+  readonly fit?: ImageFit;
 }
 
 /**

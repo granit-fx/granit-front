@@ -22,6 +22,7 @@ export type {
   DashboardTimeWindow,
   DataKeyFormat,
   FrameworkWidgetDefinition,
+  ImageFit,
   ImageWidgetDefinition,
   MarkdownWidgetDefinition,
   MetricDatasource,
@@ -41,8 +42,20 @@ export type {
   WidgetSize,
 } from './types/index.js';
 
-// Rendering — wire contracts for the dashboard render pipeline (B3-1, ADR-039).
+// Rendering — wire contracts for the dashboard render pipeline plus per-kind
+// snapshots (B3-1 / B3-2 / B3-3, ADR-039).
+export {
+  isImageSnapshotEnvelope,
+  isMarkdownSnapshotEnvelope,
+  isTextSnapshotEnvelope,
+} from './rendering/index.js';
 export type {
+  ImageSnapshotEnvelope,
+  ImageWidgetSnapshot,
+  MarkdownSnapshotEnvelope,
+  MarkdownWidgetSnapshot,
+  TextSnapshotEnvelope,
+  TextWidgetSnapshot,
   WidgetSnapshotEnvelope,
   WidgetSnapshotEnvelopeOf,
   WidgetSnapshotStatus,
