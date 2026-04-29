@@ -12,7 +12,12 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
-import { DashboardContextProvider, WidgetRenderer } from '@granit/react-dashboards';
+import {
+  DashboardContextProvider,
+  resolveEffectiveLayout,
+  useDashboardBreakpoint,
+  WidgetRenderer,
+} from '@granit/react-dashboards';
 import { useMemo, type CSSProperties } from 'react';
 
 import { reorderWidgets } from '../lib/reorder-widgets.js';
@@ -61,9 +66,11 @@ export function EditableDashboard({
   className,
   rowHeight,
 }: EditableDashboardProps) {
-  const orderedWidgets = useMemo(
-    () => [...definition.widgets].sort((a, b) => a.position - b.position),
-    [definition.widgets]
+  const breakpoint = useDashboardBreakpoint();
+
+  const { layout, widgets: orderedWidgets } = useMemo(
+    () => resolveEffectiveLayout(definition.layout, definition.widgets, breakpoint),
+    [definition.layout, definition.widgets, breakpoint]
   );
   const sortableIds = useMemo(() => orderedWidgets.map((w) => w.slug), [orderedWidgets]);
 
@@ -75,12 +82,12 @@ export function EditableDashboard({
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  const effectiveRowHeight = rowHeight ?? definition.layout.rowHeight;
+  const effectiveRowHeight = rowHeight ?? layout.rowHeight;
 
   const gridStyle: CSSProperties = {
     display: 'grid',
     gridAutoFlow: 'dense',
-    gridTemplateColumns: `repeat(${definition.layout.columns}, minmax(0, 1fr))`,
+    gridTemplateColumns: `repeat(${layout.columns}, minmax(0, 1fr))`,
     gridAutoRows: `${effectiveRowHeight}px`,
     gap: '1rem',
   };
@@ -99,6 +106,7 @@ export function EditableDashboard({
           <div
             data-slot="editable-dashboard"
             data-dashboard-name={definition.name}
+            data-breakpoint={breakpoint}
             className={className}
             style={gridStyle}
           >

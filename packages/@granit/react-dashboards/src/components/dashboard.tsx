@@ -1,5 +1,8 @@
 import { useMemo, type CSSProperties } from 'react';
 
+import { useDashboardBreakpoint } from '../hooks/use-dashboard-breakpoint.js';
+import { resolveEffectiveLayout } from '../lib/resolve-effective-layout.js';
+
 import { DashboardContextProvider } from './dashboard-context.js';
 import { WidgetRenderer } from './widget-renderer.js';
 
@@ -9,10 +12,9 @@ export interface DashboardProps {
   readonly definition: DashboardDefinition;
   readonly className?: string;
   /**
-   * Override the row height (in pixels). Falls back to
-   * `definition.layout.rowHeight`. The grid columns scale to available width;
-   * only row height is fixed so widget heights remain stable across viewport
-   * changes.
+   * Override the row height (in pixels). Falls back to the active
+   * breakpoint's resolved row height (or `definition.layout.rowHeight`
+   * when the dashboard ships no breakpoint overrides).
    */
   readonly rowHeight?: number;
 }
@@ -20,24 +22,36 @@ export interface DashboardProps {
 /**
  * Renders a {@link DashboardDefinition} as a CSS auto-flow grid.
  *
- * v1 implementation — widgets fill the grid in `position` order, each taking
- * its declared `size.width × size.height`. The browser handles placement via
- * `grid-auto-flow: dense`. v2 will swap this for `react-grid-layout` to
- * enable drag/resize/persist; the public API (just pass a `definition`)
- * remains stable across that swap.
+ * Resolves the active {@link DashboardBreakpoint} via
+ * {@link useDashboardBreakpoint} and merges
+ * `definition.layout.breakpoints[active]` over the base via
+ * {@link resolveEffectiveLayout}. Per-breakpoint overrides apply:
  *
- * Wraps children in a {@link DashboardContextProvider} so widget renderers
- * (and future TimeWindow / alias hooks) have a stable handle on the active
- * dashboard.
+ * - **columns / rowHeight** — replace the base for the active viewport.
+ * - **widgetSizes** — replace per-widget `size` for the active layout.
+ * - **widgetOrder** — replace the rendered order; un-listed widgets
+ *   keep their declared `position`.
+ * - **hiddenWidgets** — slugs are dropped from the layout but stay in
+ *   the widget pool (state survives a viewport flip back).
+ *
+ * Wraps children in a {@link DashboardContextProvider} so widget
+ * renderers (and future TimeWindow / alias hooks) have a stable handle
+ * on the active dashboard.
  */
 export function Dashboard({ definition, className, rowHeight }: DashboardProps) {
-  const orderedWidgets = useMemo(() => sortByPosition(definition.widgets), [definition.widgets]);
-  const effectiveRowHeight = rowHeight ?? definition.layout.rowHeight;
+  const breakpoint = useDashboardBreakpoint();
+
+  const { layout, widgets } = useMemo(
+    () => resolveEffectiveLayout(definition.layout, definition.widgets, breakpoint),
+    [definition.layout, definition.widgets, breakpoint]
+  );
+
+  const effectiveRowHeight = rowHeight ?? layout.rowHeight;
 
   const gridStyle: CSSProperties = {
     display: 'grid',
     gridAutoFlow: 'dense',
-    gridTemplateColumns: `repeat(${definition.layout.columns}, minmax(0, 1fr))`,
+    gridTemplateColumns: `repeat(${layout.columns}, minmax(0, 1fr))`,
     gridAutoRows: `${effectiveRowHeight}px`,
     gap: '1rem',
   };
@@ -47,10 +61,11 @@ export function Dashboard({ definition, className, rowHeight }: DashboardProps) 
       <div
         data-slot="dashboard"
         data-dashboard-name={definition.name}
+        data-breakpoint={breakpoint}
         className={className}
         style={gridStyle}
       >
-        {orderedWidgets.map((widget) => (
+        {widgets.map((widget) => (
           <DashboardCell key={widget.slug} widget={widget}>
             <WidgetRenderer widget={widget} />
           </DashboardCell>
@@ -76,10 +91,4 @@ function DashboardCell({
       {children}
     </div>
   );
-}
-
-function sortByPosition(widgets: readonly WidgetDefinition[]): readonly WidgetDefinition[] {
-  // Stable sort on `position` so authors can declare widgets in any order in
-  // their definition and the renderer respects the explicit `Position`.
-  return [...widgets].sort((a, b) => a.position - b.position);
 }

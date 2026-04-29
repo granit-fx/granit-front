@@ -51,6 +51,13 @@ export type {
   DashboardContextValue,
 } from './components/dashboard-context.js';
 export { useEffectiveTimeWindow } from './hooks/use-effective-time-window.js';
+export {
+  DASHBOARD_BREAKPOINT_MIN_WIDTH,
+  resolveBreakpoint,
+  useDashboardBreakpoint,
+} from './hooks/use-dashboard-breakpoint.js';
+export { applyLayoutOverride, resolveEffectiveLayout } from './lib/resolve-effective-layout.js';
+export type { EffectiveDashboardLayout } from './lib/resolve-effective-layout.js';
 export { WidgetRenderer } from './components/widget-renderer.js';
 export type { WidgetRendererProps } from './components/widget-renderer.js';
 export { WidgetCard } from './components/widget-card.js';

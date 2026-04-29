@@ -2282,6 +2282,22 @@
           "signature": "function useEffectiveTimeWindow(override?: DashboardTimeWindow): DashboardTimeWindow"
         },
         {
+          "name": "applyLayoutOverride",
+          "kind": "function",
+          "signature": "function applyLayoutOverride( base: DashboardLayout, override: DashboardLayoutOverride | undefined ): EffectiveDashboardLayout"
+        },
+        {
+          "name": "resolveEffectiveLayout",
+          "kind": "function",
+          "signature": "function resolveEffectiveLayout( base: DashboardLayout, widgets: readonly WidgetDefinition[], breakpoint: DashboardBreakpoint ):"
+        },
+        {
+          "name": "EffectiveDashboardLayout",
+          "kind": "interface",
+          "signature": "interface EffectiveDashboardLayout",
+          "members": []
+        },
+        {
           "name": "WidgetRenderer",
           "kind": "function",
           "signature": "function WidgetRenderer("
