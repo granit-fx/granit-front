@@ -379,7 +379,7 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // Price versions
     // ---------------------------------------------------------------------------
 
-    http.get(`${baseUrl}/plans/:planId/prices`, ({ params }) => {
+    http.get(`${baseUrl}/plans/:planId/prices/history`, ({ params }) => {
       const prices = mockPriceHistory[params.planId as string] ?? [];
       return HttpResponse.json(prices);
     }),
