@@ -13,6 +13,17 @@ export {
 export type { UseDashboardRenderOptions } from './api/use-dashboard-render.js';
 export { useDashboardWidget } from './api/use-dashboard-widget.js';
 
+// CRUD hooks (B4-write — list / get / create / update / delete)
+export {
+  dashboardListQueryKey,
+  dashboardQueryKey,
+  useCreateDashboard,
+  useDashboard,
+  useDashboards,
+  useDeleteDashboard,
+  useUpdateDashboard,
+} from './api/use-dashboard-crud.js';
+
 // Layout + dispatcher
 export { Dashboard } from './components/dashboard.js';
 export type { DashboardProps } from './components/dashboard.js';
