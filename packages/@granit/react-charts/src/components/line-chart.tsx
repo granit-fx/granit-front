@@ -11,6 +11,12 @@ export interface LineChartProps extends ChartDimensions {
   readonly yAxis?: ChartAxis;
   /** Smooth out the line interpolation. Defaults to `false` for fidelity. */
   readonly smooth?: boolean;
+  /**
+   * Fill the area under each series line. Defaults to `false`. Drives the
+   * frontend mapping for the `'Area'` chart type from the dashboard render
+   * pipeline.
+   */
+  readonly area?: boolean;
   /** Show the legend above the plot area. Defaults to `true` when >1 series. */
   readonly showLegend?: boolean;
   readonly className?: string;
@@ -31,6 +37,7 @@ export function LineChart({
   xAxis,
   yAxis,
   smooth = false,
+  area = false,
   showLegend,
   height,
   width,
@@ -68,11 +75,12 @@ export function LineChart({
         // ECharts' option types want mutable arrays; spread to drop readonly.
         data: s.data.map((p) => [...p]) as (number | string)[][],
         smooth,
+        areaStyle: area ? {} : undefined,
         itemStyle: s.color ? { color: s.color } : undefined,
         lineStyle: s.color ? { color: s.color } : undefined,
       })),
     };
-  }, [series, xAxis, yAxis, smooth, showLegend]);
+  }, [series, xAxis, yAxis, smooth, area, showLegend]);
 
   return (
     <Chart options={options} height={height ?? width ?? 320} className={className} theme={theme} />

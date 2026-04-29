@@ -2028,6 +2028,16 @@
           "kind": "interface",
           "signature": "interface UseEChartsThemeOptions",
           "members": []
+        },
+        {
+          "name": "ChartSnapshotWidget",
+          "kind": "function",
+          "signature": "function ChartSnapshotWidget("
+        },
+        {
+          "name": "defaultChartSnapshotWidgetRegistry",
+          "kind": "const",
+          "signature": "const defaultChartSnapshotWidgetRegistry: SnapshotWidgetRegistry"
         }
       ]
     },

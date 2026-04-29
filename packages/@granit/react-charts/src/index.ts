@@ -19,3 +19,7 @@ export type { SparklineChartProps } from './components/sparkline-chart.js';
 // Theming
 export { useEChartsTheme } from './hooks/use-echarts-theme.js';
 export type { UseEChartsThemeOptions } from './hooks/use-echarts-theme.js';
+
+// Snapshot rendering (B5-B — registry-driven Chart kind for <RenderedDashboard>)
+export { ChartSnapshotWidget } from './snapshot/chart-snapshot-widget.js';
+export { defaultChartSnapshotWidgetRegistry } from './snapshot/default-chart-snapshot-widget-registry.js';
