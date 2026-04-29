@@ -42,6 +42,27 @@ const KPI_UNAVAILABLE_FIXTURE: KpiSnapshotEnvelope = {
   unavailableReasonLocalizationKey: 'Widget:Unavailable.QueryAggregateNotImplemented',
 };
 
+// Currency-bearing variant emitted by the QueryAggregateDatasourceEvaluator
+// when the aggregated column carries `.Currency("EUR")` (B3-8). Locks the
+// promotion: valueKind goes from 'Number' to 'Currency' and `currency` carries
+// the ISO 4217 code that drives Intl.NumberFormat formatting downstream.
+const KPI_QUERY_AGGREGATE_CURRENCY_FIXTURE: KpiSnapshotEnvelope = {
+  status: 'Snapshot',
+  widgetType: 'Kpi',
+  snapshot: {
+    value: 18540.5,
+    valueKind: 'Currency',
+    currency: 'EUR',
+    isHigherBetter: true,
+    noData: false,
+    previous: null,
+  },
+  sequence: 1,
+  emittedAt: '2026-04-29T12:34:56.789Z',
+  refreshHint: 'Dynamic',
+  unavailableReasonLocalizationKey: null,
+};
+
 describe('KpiSnapshotEnvelope — wire format', () => {
   it('accepts the snapshot variant with a fully-populated MetricSnapshotPayload', () => {
     expect(KPI_SNAPSHOT_FIXTURE.widgetType).toBe('Kpi');
@@ -56,8 +77,20 @@ describe('KpiSnapshotEnvelope — wire format', () => {
     );
   });
 
+  it('accepts the currency variant emitted by the QueryAggregate path (B3-8)', () => {
+    // ValueKind promotes from 'Number' to 'Currency' when the aggregated column
+    // carries a declared currency code; `currency` then surfaces the ISO 4217
+    // value the column metadata declared.
+    expect(KPI_QUERY_AGGREGATE_CURRENCY_FIXTURE.snapshot?.valueKind).toBe('Currency');
+    expect(KPI_QUERY_AGGREGATE_CURRENCY_FIXTURE.snapshot?.currency).toBe('EUR');
+  });
+
   it('round-trips through JSON without mutation', () => {
-    for (const fixture of [KPI_SNAPSHOT_FIXTURE, KPI_UNAVAILABLE_FIXTURE]) {
+    for (const fixture of [
+      KPI_SNAPSHOT_FIXTURE,
+      KPI_UNAVAILABLE_FIXTURE,
+      KPI_QUERY_AGGREGATE_CURRENCY_FIXTURE,
+    ]) {
       expect(JSON.parse(JSON.stringify(fixture))).toEqual(fixture);
     }
   });
