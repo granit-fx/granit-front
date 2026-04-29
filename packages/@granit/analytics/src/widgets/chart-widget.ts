@@ -2,10 +2,12 @@ import type { AggregateFunction } from './aggregation.js';
 import type { WidgetDefinitionBase } from '@granit/dashboards';
 
 /**
- * Visual hint for chart widgets, interpreted by the frontend renderer. Mirrors
- * `Granit.Analytics.Dashboards.Widgets.ChartType`.
+ * Visual hint for chart widgets, interpreted by the frontend renderer.
+ * Mirrors `Granit.Analytics.Dashboards.Widgets.ChartType`. PascalCase wire
+ * values — the framework's host registers a `JsonStringEnumConverter()`
+ * with no naming policy. Order matches the backend numeric declaration.
  */
-export type ChartType = 'bar' | 'horizontalBar' | 'line' | 'area' | 'pie' | 'donut';
+export type ChartType = 'Bar' | 'HorizontalBar' | 'Line' | 'Area' | 'Pie' | 'Donut';
 
 /**
  * Aggregated chart bound to a `QueryDefinition`. Mirrors
@@ -21,7 +23,7 @@ export interface ChartWidgetDefinition extends WidgetDefinitionBase {
   /** Field used as the chart's category axis (e.g. `IssuedAtMonth`). */
   readonly groupBy: string;
   readonly aggregation: AggregateFunction;
-  /** Field aggregated. Null when `aggregation === 'count'`. */
+  /** Field aggregated. Null when `aggregation === 'Count'`. */
   readonly field: string | null;
   readonly chartType: ChartType;
 }

@@ -13,7 +13,7 @@ export interface PivotWidgetDefinition extends WidgetDefinitionBase {
   readonly rowFields: readonly string[];
   /** Fields used as column dimensions (in order). */
   readonly columnFields: readonly string[];
-  /** Field aggregated in each cell. Null when `valueAggregation === 'count'`. */
+  /** Field aggregated in each cell. Null when `valueAggregation === 'Count'`. */
   readonly valueField: string | null;
   readonly valueAggregation: AggregateFunction;
 }
