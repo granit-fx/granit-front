@@ -12,7 +12,7 @@
  */
 export interface DashboardTimeWindow {
   readonly period: DashboardPeriod;
-  /** Refresh semantics: `history` (frozen, refetch on range change) vs `realtime` (sliding window). */
+  /** Refresh semantics: `History` (frozen, refetch on range change) vs `Realtime` (sliding window). */
   readonly kind?: TimeWindowKind;
   /** Optional comparison window (e.g. `previous_period`). */
   readonly compareTo?: { readonly token: string };
@@ -23,7 +23,12 @@ export interface DashboardTimeWindow {
   readonly aggregationMs?: number;
 }
 
-export type TimeWindowKind = 'history' | 'realtime';
+/**
+ * Mirrors `Granit.Dashboards.TimeWindowKind`. PascalCase wire values — the
+ * framework's host registers a `JsonStringEnumConverter()` with no naming
+ * policy.
+ */
+export type TimeWindowKind = 'History' | 'Realtime';
 
 /**
  * Period selector — token-based (`last_30d`, `mtd`, `ytd`, `last_5m`, ...) or
@@ -36,13 +41,13 @@ export type DashboardPeriod =
 
 /** Convenience constants matching the conventional tokens. */
 export const DASHBOARD_TIME_WINDOW = Object.freeze({
-  Last24Hours: { period: { token: 'last_24h' }, kind: 'history' } satisfies DashboardTimeWindow,
-  Last7Days: { period: { token: 'last_7d' }, kind: 'history' } satisfies DashboardTimeWindow,
-  Last30Days: { period: { token: 'last_30d' }, kind: 'history' } satisfies DashboardTimeWindow,
-  Mtd: { period: { token: 'mtd' }, kind: 'history' } satisfies DashboardTimeWindow,
-  Ytd: { period: { token: 'ytd' }, kind: 'history' } satisfies DashboardTimeWindow,
+  Last24Hours: { period: { token: 'last_24h' }, kind: 'History' } satisfies DashboardTimeWindow,
+  Last7Days: { period: { token: 'last_7d' }, kind: 'History' } satisfies DashboardTimeWindow,
+  Last30Days: { period: { token: 'last_30d' }, kind: 'History' } satisfies DashboardTimeWindow,
+  Mtd: { period: { token: 'mtd' }, kind: 'History' } satisfies DashboardTimeWindow,
+  Ytd: { period: { token: 'ytd' }, kind: 'History' } satisfies DashboardTimeWindow,
   RealtimeLast5Minutes: {
     period: { token: 'last_5m' },
-    kind: 'realtime',
+    kind: 'Realtime',
   } satisfies DashboardTimeWindow,
 });

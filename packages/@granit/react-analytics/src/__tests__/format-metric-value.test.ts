@@ -8,20 +8,20 @@ const normalize = (s: string) => s.replace(/[\u0020\u00A0\u202F]+/g, ' ');
 
 describe('formatMetricValue', () => {
   it('returns the fallback when the value is null', () => {
-    expect(formatMetricValue({ value: null, valueKind: 'count', locale: 'en-US' })).toBe('—');
+    expect(formatMetricValue({ value: null, valueKind: 'Count', locale: 'en-US' })).toBe('—');
   });
 
   it('returns a custom fallback when provided', () => {
     expect(
-      formatMetricValue({ value: null, valueKind: 'count', locale: 'en-US', fallback: 'N/A' })
+      formatMetricValue({ value: null, valueKind: 'Count', locale: 'en-US', fallback: 'N/A' })
     ).toBe('N/A');
   });
 
   it.each<{ kind: ValueKind; value: number; en: string; fr: string; currency?: string }>([
-    { kind: 'count', value: 1234, en: '1,234', fr: '1 234' },
-    { kind: 'currency', value: 12450.5, currency: 'EUR', en: '€12,450.50', fr: '12 450,50 €' },
-    { kind: 'percentage', value: 0.1507, en: '15.07%', fr: '15,07 %' },
-    { kind: 'number', value: 3.14159, en: '3.14', fr: '3,14' },
+    { kind: 'Count', value: 1234, en: '1,234', fr: '1 234' },
+    { kind: 'Currency', value: 12450.5, currency: 'EUR', en: '€12,450.50', fr: '12 450,50 €' },
+    { kind: 'Percentage', value: 0.1507, en: '15.07%', fr: '15,07 %' },
+    { kind: 'Number', value: 3.14159, en: '3.14', fr: '3,14' },
   ])('formats $kind=$value across en-US / fr-FR', ({ kind, value, en, fr, currency }) => {
     expect(
       normalize(formatMetricValue({ value, valueKind: kind, currency, locale: 'en-US' }))
@@ -32,11 +32,11 @@ describe('formatMetricValue', () => {
   });
 
   it('formats sub-minute durations as seconds', () => {
-    expect(formatMetricValue({ value: 42, valueKind: 'duration', locale: 'en-US' })).toBe('42s');
+    expect(formatMetricValue({ value: 42, valueKind: 'Duration', locale: 'en-US' })).toBe('42s');
   });
 
   it('formats minute-and-second durations', () => {
-    expect(formatMetricValue({ value: 125, valueKind: 'duration', locale: 'en-US' })).toBe('2m 5s');
+    expect(formatMetricValue({ value: 125, valueKind: 'Duration', locale: 'en-US' })).toBe('2m 5s');
   });
 });
 

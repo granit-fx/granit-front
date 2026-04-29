@@ -71,8 +71,13 @@ export interface ImageWidgetDefinition extends WidgetDefinitionBase {
   readonly altLocalizationKey: string;
 }
 
-/** Visual style hint for `TextWidgetDefinition`. */
-export type TextWidgetStyle = 'body' | 'heading' | 'subheading' | 'caption';
+/**
+ * Visual style hint for `TextWidgetDefinition`. Mirrors
+ * `Granit.Dashboards.Widgets.TextStyle`. PascalCase wire values — the
+ * framework's host registers a `JsonStringEnumConverter()` with no naming
+ * policy.
+ */
+export type TextWidgetStyle = 'Body' | 'Heading' | 'Subheading' | 'Caption';
 
 /**
  * Plain text tile — short label or heading without markdown formatting.

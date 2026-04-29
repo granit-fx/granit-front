@@ -10,10 +10,10 @@ function makeResponse(overrides: Partial<MetricResponse['snapshot']> = {}): Metr
     name: 'Test.Metric',
     sequence: 1,
     emittedAt: '2026-04-28T12:00:00Z',
-    refreshHint: 'dynamic',
+    refreshHint: 'Dynamic',
     snapshot: {
       value: 12,
-      valueKind: 'count',
+      valueKind: 'Count',
       currency: null,
       isHigherBetter: true,
       noData: false,

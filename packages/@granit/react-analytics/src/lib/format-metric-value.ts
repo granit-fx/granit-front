@@ -8,7 +8,7 @@ import type { ValueKind } from '@granit/analytics';
 export interface FormatMetricValueArgs {
   readonly value: number | null;
   readonly valueKind: ValueKind;
-  /** ISO 4217 currency code. Required when `valueKind === 'currency'`. */
+  /** ISO 4217 currency code. Required when `valueKind === 'Currency'`. */
   readonly currency?: string | null;
   /** BCP 47 tag. Defaults to runtime default (`undefined` → host default). */
   readonly locale?: string;
@@ -28,28 +28,28 @@ export function formatMetricValue({
   if (value === null || Number.isNaN(value)) return fallback;
 
   switch (valueKind) {
-    case 'count':
+    case 'Count':
       return new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(value);
 
-    case 'currency': {
+    case 'Currency': {
       if (!currency) return new Intl.NumberFormat(locale).format(value);
       return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(value);
     }
 
-    case 'percentage':
+    case 'Percentage':
       return new Intl.NumberFormat(locale, {
         style: 'percent',
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       }).format(value);
 
-    case 'duration':
+    case 'Duration':
       return formatDuration(value, locale);
 
-    case 'date':
+    case 'Date':
       return new Intl.DateTimeFormat(locale).format(new Date(value));
 
-    case 'number':
+    case 'Number':
       return new Intl.NumberFormat(locale, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,

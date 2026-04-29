@@ -8,9 +8,9 @@ import type { MetricRequest, MetricResponse } from '@granit/analytics';
 const METRIC_PATH = '/analytics/metrics';
 
 const POLLING_INTERVAL_MS: Readonly<Record<MetricResponse['refreshHint'], number | false>> = {
-  static: false,
-  dynamic: false,
-  realtime: 5_000,
+  Static: false,
+  Dynamic: false,
+  Realtime: 5_000,
 };
 
 export interface UseMetricOptions {

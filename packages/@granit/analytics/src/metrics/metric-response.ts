@@ -6,11 +6,27 @@
  * directly without depending on a generated client.
  */
 
-export type ValueKind = 'count' | 'currency' | 'percentage' | 'duration' | 'date' | 'number';
+/**
+ * Mirrors `Granit.Analytics.MetricValueKind`. PascalCase wire values — the
+ * framework's host registers a `JsonStringEnumConverter()` with no naming
+ * policy, so enum names land verbatim. Order matches the backend enum
+ * declaration so a numeric drift surfaces in code review.
+ */
+export type ValueKind = 'Count' | 'Number' | 'Currency' | 'Percentage' | 'Duration' | 'Date';
 
+/**
+ * Direction of the previous-period delta. Backend ships this as a plain
+ * `string` (not an enum) on `MetricPreviousPayload.Trend`, with the
+ * documented values `"up"`, `"down"`, `"flat"` — lowercase, no
+ * `JsonStringEnumConverter` involvement. Stays lowercase here.
+ */
 export type Trend = 'up' | 'down' | 'flat';
 
-export type RefreshHint = 'static' | 'dynamic' | 'realtime';
+/**
+ * Mirrors `Granit.Analytics.RefreshHint`. PascalCase wire values — same
+ * convention as {@link ValueKind}.
+ */
+export type RefreshHint = 'Static' | 'Dynamic' | 'Realtime';
 
 /**
  * Calendar-aware period token. Backend (`Granit.Analytics.Metrics.PeriodSpec`)
@@ -55,7 +71,7 @@ export interface MetricPreviousPayload {
 export interface MetricSnapshotPayload {
   readonly value: number | null;
   readonly valueKind: ValueKind;
-  /** ISO 4217 currency code when `valueKind === 'currency'`. Null otherwise. */
+  /** ISO 4217 currency code when `valueKind === 'Currency'`. Null otherwise. */
   readonly currency: string | null;
   readonly isHigherBetter: boolean;
   readonly noData: boolean;
