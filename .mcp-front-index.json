@@ -1423,6 +1423,11 @@
           "signature": "function KpiSnapshotTile("
         },
         {
+          "name": "PivotSnapshotWidget",
+          "kind": "function",
+          "signature": "function PivotSnapshotWidget("
+        },
+        {
           "name": "TableSnapshotWidget",
           "kind": "function",
           "signature": "function TableSnapshotWidget("

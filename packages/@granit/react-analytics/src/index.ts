@@ -14,6 +14,7 @@ export type { KpiTileViewProps } from './components/kpi-tile-view.js';
 
 // Snapshot renderers (B5 — bundle-driven, consume the pre-rendered envelope)
 export { KpiSnapshotTile } from './components/kpi-snapshot-tile.js';
+export { PivotSnapshotWidget } from './components/pivot-snapshot-widget.js';
 export { TableSnapshotWidget } from './components/table-snapshot-widget.js';
 
 // Registries
