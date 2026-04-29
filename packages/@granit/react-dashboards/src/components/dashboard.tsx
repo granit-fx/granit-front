@@ -1,9 +1,11 @@
-import { useMemo, type CSSProperties } from 'react';
+import { useCallback, useMemo, useState, type CSSProperties } from 'react';
 
 import { useDashboardBreakpoint } from '../hooks/use-dashboard-breakpoint.js';
+import { resolveActiveView } from '../lib/resolve-active-view.js';
 import { resolveEffectiveLayout } from '../lib/resolve-effective-layout.js';
 
 import { DashboardContextProvider } from './dashboard-context.js';
+import { DashboardViewProvider } from './dashboard-view-context.js';
 import { WidgetRenderer } from './widget-renderer.js';
 
 import type { DashboardDefinition, WidgetDefinition } from '@granit/dashboards';
@@ -13,37 +15,86 @@ export interface DashboardProps {
   readonly className?: string;
   /**
    * Override the row height (in pixels). Falls back to the active
-   * breakpoint's resolved row height (or `definition.layout.rowHeight`
-   * when the dashboard ships no breakpoint overrides).
+   * breakpoint's resolved row height (or the active view's layout
+   * row height when the dashboard ships views).
    */
   readonly rowHeight?: number;
+  /**
+   * Active view name (controlled). Falls back to
+   * `definition.defaultView`, then the first view, then null
+   * (single-view dashboards). Required when the parent owns the view
+   * state (URL-bound, breadcrumb-bound, etc.).
+   */
+  readonly currentView?: string;
+  /**
+   * Notification when an action handler or view switcher requests a
+   * different view. When omitted, `<Dashboard>` falls back to internal
+   * state — fine for self-contained demos.
+   */
+  readonly onViewChange?: (name: string) => void;
 }
 
 /**
  * Renders a {@link DashboardDefinition} as a CSS auto-flow grid.
  *
- * Resolves the active {@link DashboardBreakpoint} via
- * {@link useDashboardBreakpoint} and merges
- * `definition.layout.breakpoints[active]` over the base via
- * {@link resolveEffectiveLayout}. Per-breakpoint overrides apply:
+ * Pipeline:
  *
- * - **columns / rowHeight** — replace the base for the active viewport.
- * - **widgetSizes** — replace per-widget `size` for the active layout.
- * - **widgetOrder** — replace the rendered order; un-listed widgets
- *   keep their declared `position`.
- * - **hiddenWidgets** — slugs are dropped from the layout but stay in
- *   the widget pool (state survives a viewport flip back).
+ * 1. **Active view** — {@link resolveActiveView} picks the view's
+ *    widgets + layout from `definition.views[currentView]` (with the
+ *    standard fallback chain: prop → `defaultView` → first view →
+ *    top-level pool).
+ * 2. **Active breakpoint** — {@link useDashboardBreakpoint} resolves
+ *    the viewport class.
+ * 3. **Effective layout** — {@link resolveEffectiveLayout} merges the
+ *    active breakpoint's overrides over the view's layout (per-widget
+ *    sizes, ordering, hidden slugs).
  *
  * Wraps children in a {@link DashboardContextProvider} so widget
  * renderers (and future TimeWindow / alias hooks) have a stable handle
- * on the active dashboard.
+ * on the active dashboard, plus a {@link DashboardViewProvider} so
+ * action handlers and view switchers can read / write the active view.
  */
-export function Dashboard({ definition, className, rowHeight }: DashboardProps) {
+export function Dashboard({
+  definition,
+  className,
+  rowHeight,
+  currentView,
+  onViewChange,
+}: DashboardProps) {
+  // Internal view state for uncontrolled usage. Initial value follows
+  // the same fallback chain `resolveActiveView` uses, so the very first
+  // render picks the right view without an extra reconciliation.
+  const [internalView, setInternalView] = useState<string | null>(
+    currentView ?? definition.defaultView ?? definition.views?.[0]?.name ?? null
+  );
+  const activeViewName = currentView ?? internalView;
+
+  const setView = useCallback(
+    (name: string) => {
+      if (currentView === undefined) setInternalView(name);
+      onViewChange?.(name);
+    },
+    [currentView, onViewChange]
+  );
+
   const breakpoint = useDashboardBreakpoint();
 
+  const {
+    layout: viewLayout,
+    widgets: viewWidgets,
+    resolvedView,
+  } = useMemo(() => {
+    const active = resolveActiveView(definition, activeViewName);
+    return {
+      layout: active.layout,
+      widgets: active.widgets,
+      resolvedView: active.activeViewName,
+    };
+  }, [definition, activeViewName]);
+
   const { layout, widgets } = useMemo(
-    () => resolveEffectiveLayout(definition.layout, definition.widgets, breakpoint),
-    [definition.layout, definition.widgets, breakpoint]
+    () => resolveEffectiveLayout(viewLayout, viewWidgets, breakpoint),
+    [viewLayout, viewWidgets, breakpoint]
   );
 
   const effectiveRowHeight = rowHeight ?? layout.rowHeight;
@@ -58,19 +109,22 @@ export function Dashboard({ definition, className, rowHeight }: DashboardProps) 
 
   return (
     <DashboardContextProvider value={{ dashboardName: definition.name }}>
-      <div
-        data-slot="dashboard"
-        data-dashboard-name={definition.name}
-        data-breakpoint={breakpoint}
-        className={className}
-        style={gridStyle}
-      >
-        {widgets.map((widget) => (
-          <DashboardCell key={widget.slug} widget={widget}>
-            <WidgetRenderer widget={widget} />
-          </DashboardCell>
-        ))}
-      </div>
+      <DashboardViewProvider value={{ currentView: resolvedView, setCurrentView: setView }}>
+        <div
+          data-slot="dashboard"
+          data-dashboard-name={definition.name}
+          data-breakpoint={breakpoint}
+          data-current-view={resolvedView ?? undefined}
+          className={className}
+          style={gridStyle}
+        >
+          {widgets.map((widget) => (
+            <DashboardCell key={widget.slug} widget={widget}>
+              <WidgetRenderer widget={widget} />
+            </DashboardCell>
+          ))}
+        </div>
+      </DashboardViewProvider>
     </DashboardContextProvider>
   );
 }

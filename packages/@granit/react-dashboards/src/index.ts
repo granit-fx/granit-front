@@ -50,6 +50,15 @@ export type {
   DashboardContextProviderProps,
   DashboardContextValue,
 } from './components/dashboard-context.js';
+export { DashboardViewProvider, useDashboardView } from './components/dashboard-view-context.js';
+export type {
+  DashboardViewContextValue,
+  DashboardViewProviderProps,
+} from './components/dashboard-view-context.js';
+export { DashboardViewSwitcher } from './components/dashboard-view-switcher.js';
+export type { DashboardViewSwitcherProps } from './components/dashboard-view-switcher.js';
+export { resolveActiveView } from './lib/resolve-active-view.js';
+export type { ActiveDashboardView } from './lib/resolve-active-view.js';
 export { useEffectiveTimeWindow } from './hooks/use-effective-time-window.js';
 export {
   DASHBOARD_BREAKPOINT_MIN_WIDTH,

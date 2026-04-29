@@ -2277,6 +2277,38 @@
           "members": []
         },
         {
+          "name": "DashboardViewProvider",
+          "kind": "function",
+          "signature": "function DashboardViewProvider("
+        },
+        {
+          "name": "useDashboardView",
+          "kind": "function",
+          "signature": "function useDashboardView(): DashboardViewContextValue | null"
+        },
+        {
+          "name": "DashboardViewSwitcher",
+          "kind": "function",
+          "signature": "function DashboardViewSwitcher("
+        },
+        {
+          "name": "DashboardViewSwitcherProps",
+          "kind": "interface",
+          "signature": "interface DashboardViewSwitcherProps",
+          "members": []
+        },
+        {
+          "name": "resolveActiveView",
+          "kind": "function",
+          "signature": "function resolveActiveView( definition: DashboardDefinition, currentViewName: string | null = null ): ActiveDashboardView"
+        },
+        {
+          "name": "ActiveDashboardView",
+          "kind": "interface",
+          "signature": "interface ActiveDashboardView",
+          "members": []
+        },
+        {
           "name": "useEffectiveTimeWindow",
           "kind": "function",
           "signature": "function useEffectiveTimeWindow(override?: DashboardTimeWindow): DashboardTimeWindow"
