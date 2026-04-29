@@ -1,5 +1,6 @@
 import type { WidgetSnapshotStatus } from './widget-snapshot-status.js';
 import type { RefreshHint } from '../types/refresh-hint.js';
+import type { WidgetAction } from '../types/widget-action.js';
 
 /**
  * Wire shape for `POST /dashboards/{id}/render`. Mirrors
@@ -23,6 +24,14 @@ export interface DashboardRenderResponse {
    * bounds.
    */
   readonly period: DashboardRenderPeriod | null;
+  /**
+   * Active view name when the dashboard ships multi-view (P2.1) — `null`
+   * for single-view dashboards or when the renderer falls back to the
+   * top-level pool. Lets the frontend's view switcher reflect which
+   * view the bundle was rendered against (request fallback chain:
+   * `request.viewName → DashboardDefinition.DefaultView → first view`).
+   */
+  readonly activeViewName: string | null;
   /** One flat record per widget, in `WidgetInstance.Position` order. */
   readonly widgets: readonly DashboardRenderedWidget[];
 }
@@ -59,6 +68,39 @@ export interface DashboardRenderedWidget {
    * `[JsonDerivedType]` tag (`'Kpi'`, `'Markdown'`, …).
    */
   readonly widgetType: string;
+  /**
+   * Widget-local identifier (PascalCase) extracted from
+   * {@link titleLocalizationKey} server-side. Stable across reorder,
+   * matches the `WidgetDefinition.slug` invariant on the definition
+   * side. Used for the `key` prop + `data-widget-slug` attributes.
+   */
+  readonly slug: string;
+  /** Dense-ranked grid order — 0-based, contiguous. */
+  readonly position: number;
+  /** Grid columns occupied by the widget. */
+  readonly width: number;
+  /** Grid rows occupied by the widget. */
+  readonly height: number;
+  /**
+   * Localization key for the widget's title — typically
+   * `Widget:{DashboardName}.{Slug}`. Resolved via `useTranslation()`
+   * by the frame component (`<WidgetCard>`).
+   */
+  readonly titleLocalizationKey: string;
+  /**
+   * Declarative click-handler descriptors copied from the source
+   * `WidgetDefinition.actions`. `null` when the widget declares no
+   * actions; the framework's dispatcher leaves the renderer
+   * non-interactive in that case.
+   */
+  readonly actions: readonly WidgetAction[] | null;
+  /**
+   * Optional per-widget permission override echoed from
+   * `WidgetInstance.RequiredPermission`. Already enforced server-side;
+   * surfaced to the frontend only for defensive UI hides (preserves
+   * cache identity stable across permission flips).
+   */
+  readonly requiredPermission: string | null;
   /** Runtime outcome (`'Snapshot'` / `'Unavailable'` / `'Error'`). */
   readonly status: WidgetSnapshotStatus;
   /**

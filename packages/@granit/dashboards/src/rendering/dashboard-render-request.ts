@@ -27,4 +27,12 @@ export interface DashboardRenderRequest {
    * doesn't interpret the values. `null` / missing = no filters.
    */
   readonly filters?: Readonly<Record<string, string>> | null;
+  /**
+   * Optional view name to render (P2.1 multi-view dispatch). When set,
+   * the renderer materialises the named view's widgets; when omitted,
+   * the server falls back to
+   * `DashboardDefinition.DefaultView → first declared view → top-level pool`.
+   * Mirrors the frontend `resolveActiveView` chain.
+   */
+  readonly viewName?: string;
 }

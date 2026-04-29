@@ -185,6 +185,7 @@ export function normalizeDashboardRenderRequest(
   if (request.filters !== undefined && request.filters !== null) {
     normalized['filters'] = canonicalizeFilters(request.filters);
   }
+  if (request.viewName !== undefined) normalized['viewName'] = request.viewName;
   return normalized as DashboardRenderRequest;
 }
 
