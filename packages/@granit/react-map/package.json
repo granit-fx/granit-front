@@ -1,0 +1,49 @@
+{
+  "name": "@granit/react-map",
+  "description": "React Map primitives for Granit — vanilla Leaflet wrapper with multi-provider tile support (OpenStreetMap default, SPW Walloon geoportal, ArcGIS, custom). Ships <MapSnapshotWidget> registered into the dashboard snapshot widget registry; mandatory tile-provider attribution. No react-leaflet dep (Hippocratic license rejected for compliance).",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/analytics": "workspace:*",
+    "@granit/dashboards": "workspace:*",
+    "@granit/react-dashboards": "workspace:*",
+    "leaflet": "^1.9.4",
+    "leaflet.markercluster": "^1.5.3",
+    "react": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "leaflet.markercluster": {
+      "optional": true
+    }
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/analytics": "workspace:*",
+    "@granit/dashboards": "workspace:*",
+    "@granit/react-dashboards": "workspace:*",
+    "@granit/react-testing": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@types/leaflet": "^1.9.18",
+    "@types/leaflet.markercluster": "^1.5.5",
+    "leaflet": "^1.9.4",
+    "leaflet.markercluster": "^1.5.3"
+  }
+}
