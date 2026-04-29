@@ -1423,6 +1423,11 @@
           "signature": "function KpiSnapshotTile("
         },
         {
+          "name": "TableSnapshotWidget",
+          "kind": "function",
+          "signature": "function TableSnapshotWidget("
+        },
+        {
           "name": "defaultAnalyticsWidgetRegistry",
           "kind": "const",
           "signature": "const defaultAnalyticsWidgetRegistry: WidgetRegistry"

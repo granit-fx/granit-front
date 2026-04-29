@@ -1,4 +1,5 @@
 import { KpiSnapshotTile } from '../components/kpi-snapshot-tile.js';
+import { TableSnapshotWidget } from '../components/table-snapshot-widget.js';
 
 import type { SnapshotWidgetRegistry } from '@granit/react-dashboards';
 
@@ -21,4 +22,5 @@ import type { SnapshotWidgetRegistry } from '@granit/react-dashboards';
  */
 export const defaultAnalyticsSnapshotWidgetRegistry: SnapshotWidgetRegistry = Object.freeze({
   Kpi: KpiSnapshotTile,
+  Table: TableSnapshotWidget,
 });

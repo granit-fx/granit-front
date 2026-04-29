@@ -12,8 +12,9 @@ export type { KpiTileProps } from './components/kpi-tile.js';
 export { KpiTileView } from './components/kpi-tile-view.js';
 export type { KpiTileViewProps } from './components/kpi-tile-view.js';
 
-// Snapshot renderer (B5 — bundle-driven, consumes the pre-rendered envelope)
+// Snapshot renderers (B5 — bundle-driven, consume the pre-rendered envelope)
 export { KpiSnapshotTile } from './components/kpi-snapshot-tile.js';
+export { TableSnapshotWidget } from './components/table-snapshot-widget.js';
 
 // Registries
 export { defaultAnalyticsWidgetRegistry } from './registry/default-analytics-widget-registry.js';
