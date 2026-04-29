@@ -50,3 +50,24 @@ export interface WidgetSnapshotEnvelope {
    */
   readonly unavailableReasonLocalizationKey: string | null;
 }
+
+/**
+ * Narrowed flavour of {@link WidgetSnapshotEnvelope} for a specific widget
+ * kind. Per-kind packages (e.g. `@granit/analytics`) compose their own typed
+ * envelope by binding `TKind` to the discriminator value (`'Kpi'`, `'Chart'`,
+ * …) and `TSnapshot` to the kind's payload shape:
+ *
+ *     export type KpiSnapshotEnvelope =
+ *       WidgetSnapshotEnvelopeOf<'Kpi', MetricSnapshotPayload>;
+ *
+ * Pair with a runtime type guard (`widgetType === 'Kpi'`) to narrow a
+ * generic envelope obtained from the dashboard render endpoint to the
+ * kind-specific shape.
+ */
+export type WidgetSnapshotEnvelopeOf<TKind extends string, TSnapshot> = Omit<
+  WidgetSnapshotEnvelope,
+  'widgetType' | 'snapshot'
+> & {
+  readonly widgetType: TKind;
+  readonly snapshot: TSnapshot | null;
+};

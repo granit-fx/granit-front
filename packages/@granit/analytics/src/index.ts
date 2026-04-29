@@ -18,11 +18,14 @@ export type {
 } from './metrics/index.js';
 
 // Widgets — catalog declarations consumed by @granit/dashboards
+export { isKpiSnapshotEnvelope } from './widgets/index.js';
 export type {
   AggregateFunction,
   AnalyticsWidgetDefinition,
   ChartType,
   ChartWidgetDefinition,
+  KpiSnapshot,
+  KpiSnapshotEnvelope,
   KpiWidgetDefinition,
   PivotWidgetDefinition,
   TableWidgetDefinition,
