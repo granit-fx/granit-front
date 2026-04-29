@@ -1,4 +1,4 @@
-import type { WidgetDefinition } from '@granit/dashboards';
+import type { WidgetDefinition, WidgetDefinitionBase } from '@granit/dashboards';
 import type { ComponentType } from 'react';
 
 /**
@@ -12,8 +12,15 @@ import type { ComponentType } from 'react';
  * (composes the localization key + drives DnD identity); position is
  * owned by `reorderWidgets`; size is owned by the (future) resize gesture
  * + the catalog's `defaultSize`.
+ *
+ * `T` is constrained to `WidgetDefinitionBase` (not `WidgetDefinition`) so
+ * downstream packages can type their forms against their own concrete
+ * definitions (`KpiWidgetDefinition`, `ChartWidgetDefinition`, etc.) —
+ * those extend the base but don't satisfy the open
+ * `Readonly<Record<string, unknown>>` half of the `WidgetDefinition`
+ * union.
  */
-export interface WidgetConfigFormProps<T extends WidgetDefinition = WidgetDefinition> {
+export interface WidgetConfigFormProps<T extends WidgetDefinitionBase = WidgetDefinition> {
   readonly widget: T;
   readonly onChange: (next: T) => void;
 }
@@ -24,7 +31,7 @@ export interface WidgetConfigFormProps<T extends WidgetDefinition = WidgetDefini
  * callers can wire their own validation / submission pipeline (typically
  * a controlled form mirroring the parent dashboard state).
  */
-export type WidgetConfigForm<T extends WidgetDefinition = WidgetDefinition> = ComponentType<
+export type WidgetConfigForm<T extends WidgetDefinitionBase = WidgetDefinition> = ComponentType<
   WidgetConfigFormProps<T>
 >;
 

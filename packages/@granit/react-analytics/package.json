@@ -5,7 +5,8 @@
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./editor": "./src/editor/index.ts"
   },
   "files": [
     "dist"
@@ -18,17 +19,27 @@
     "@granit/api-client": "workspace:*",
     "@granit/dashboards": "workspace:*",
     "@granit/react-api-client": "workspace:*",
+    "@granit/react-dashboard-editor": "workspace:*",
     "@granit/react-dashboards": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "lucide-react": "^1.0.0",
     "react": "^19.0.0",
     "react-i18next": "^17.0.0"
   },
+  "peerDependenciesMeta": {
+    "@granit/react-dashboard-editor": {
+      "optional": true
+    }
+  },
   "publishConfig": {
     "exports": {
       ".": {
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js"
+      },
+      "./editor": {
+        "types": "./dist/editor/index.d.ts",
+        "import": "./dist/editor/index.js"
       }
     },
     "registry": "https://npm.pkg.github.com"
@@ -38,6 +49,7 @@
     "@granit/api-client": "workspace:*",
     "@granit/dashboards": "workspace:*",
     "@granit/react-api-client": "workspace:*",
+    "@granit/react-dashboard-editor": "workspace:*",
     "@granit/react-dashboards": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*"

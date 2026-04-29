@@ -1,6 +1,6 @@
 import { WIDGET_SIZE } from '@granit/dashboards';
 
-import type { WidgetDefinition, WidgetSize } from '@granit/dashboards';
+import type { WidgetDefinition, WidgetDefinitionBase, WidgetSize } from '@granit/dashboards';
 
 /**
  * Descriptor an editor uses to surface "add widget" buttons in a
@@ -31,16 +31,23 @@ export interface WidgetCatalogEntry {
   /** Grid size assigned to a freshly added widget. */
   readonly defaultSize: WidgetSize;
   /**
-   * Factory producing a fresh {@link WidgetDefinition} for this kind.
-   * Receives the slug + position {@link addWidget} computed for it; the
-   * factory fills in the kind-specific fields (content localization key,
-   * source URL, query name, etc.).
+   * Factory producing a fresh widget for this kind. Receives the slug +
+   * position {@link addWidget} computed for it; the factory fills in the
+   * kind-specific fields (content localization key, source URL, query
+   * name, etc.).
+   *
+   * Return type is the open `WidgetDefinitionBase` rather than the closed
+   * {@link WidgetDefinition} union so downstream packages can return
+   * their concrete definitions (`KpiWidgetDefinition`,
+   * `ChartWidgetDefinition`, etc.) without an unchecked cast — those
+   * extend the base but don't satisfy the open
+   * `Readonly<Record<string, unknown>>` half of the framework union.
    *
    * Factories should NOT pre-generate `slug` / `position` themselves —
    * those two fields are owned by {@link addWidget} so unique-slug
    * generation stays centralized.
    */
-  readonly createDefaultWidget: (slug: string, position: number) => WidgetDefinition;
+  readonly createDefaultWidget: (slug: string, position: number) => WidgetDefinitionBase;
 }
 
 /**
@@ -106,12 +113,18 @@ export function addWidget<TDefinition extends { readonly widgets: readonly Widge
   const slug = nextUniqueSlug(entry.type, existingSlugs);
   const position = definition.widgets.length;
   const created = entry.createDefaultWidget(slug, position);
-  const widget: WidgetDefinition = {
+  // Cast to the open `WidgetDefinition` union after stamping the
+  // editor-owned fields (slug / position / size). Downstream factories
+  // return concrete `WidgetDefinitionBase` extensions which don't satisfy
+  // the union's open `Record<string, unknown>` half, but are still valid
+  // wire shapes — the runtime contract is enforced by the renderer
+  // registry, not the type.
+  const widget = {
     ...created,
     slug,
     position,
     size: entry.defaultSize,
-  };
+  } as WidgetDefinition;
   return { ...definition, widgets: [...definition.widgets, widget] };
 }
 

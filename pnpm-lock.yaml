@@ -682,6 +682,9 @@ importers:
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
+      '@granit/react-dashboard-editor':
+        specifier: workspace:*
+        version: link:../react-dashboard-editor
       '@granit/react-dashboards':
         specifier: workspace:*
         version: link:../react-dashboards
@@ -1105,6 +1108,9 @@ importers:
       react:
         specifier: ^19.0.0
         version: 19.2.5
+      react-i18next:
+        specifier: ^17.0.0
+        version: 17.0.4(i18next@26.0.8(typescript@6.0.3))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.3)
     devDependencies:
       '@dnd-kit/core':
         specifier: ^6.3.0
