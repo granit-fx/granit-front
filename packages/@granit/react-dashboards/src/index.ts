@@ -12,6 +12,12 @@ export {
 } from './api/use-dashboard-render.js';
 export type { UseDashboardRenderOptions } from './api/use-dashboard-render.js';
 export { useDashboardWidget } from './api/use-dashboard-widget.js';
+export { useWidgetRender, widgetRenderQueryKey } from './api/use-widget-render.js';
+export type {
+  UseWidgetRenderOptions,
+  WidgetRenderContext,
+  WidgetRenderKind,
+} from './api/use-widget-render.js';
 
 // Lifecycle / CRUD hooks (B4-write — Granit.Dashboards.Endpoints).
 // Surface mirrors the persisted-Dashboard aggregate model: the catalog

@@ -1418,6 +1418,39 @@
           "members": []
         },
         {
+          "name": "ChartTile",
+          "kind": "function",
+          "signature": "function ChartTile("
+        },
+        {
+          "name": "ChartTileProps",
+          "kind": "interface",
+          "signature": "interface ChartTileProps",
+          "members": []
+        },
+        {
+          "name": "TableTile",
+          "kind": "function",
+          "signature": "function TableTile("
+        },
+        {
+          "name": "TableTileProps",
+          "kind": "interface",
+          "signature": "interface TableTileProps",
+          "members": []
+        },
+        {
+          "name": "PivotTile",
+          "kind": "function",
+          "signature": "function PivotTile("
+        },
+        {
+          "name": "PivotTileProps",
+          "kind": "interface",
+          "signature": "interface PivotTileProps",
+          "members": []
+        },
+        {
           "name": "KpiSnapshotTile",
           "kind": "function",
           "signature": "function KpiSnapshotTile("
@@ -2199,6 +2232,16 @@
           "signature": "function useDashboardWidget( dashboardId: string, widgetId: string ): UseQueryResult<DashboardRenderedWidget>"
         },
         {
+          "name": "useWidgetRender",
+          "kind": "function",
+          "signature": "function useWidgetRender<TDefinition extends WidgetDefinitionBase>( kind: WidgetRenderKind, definition: TDefinition, context: WidgetRenderContext ="
+        },
+        {
+          "name": "widgetRenderQueryKey",
+          "kind": "const",
+          "signature": "const widgetRenderQueryKey"
+        },
+        {
           "name": "dashboardCatalogQueryKey",
           "kind": "const",
           "signature": "const dashboardCatalogQueryKey"
@@ -2826,6 +2869,22 @@
           "name": "defaultMapSnapshotWidgetRegistry",
           "kind": "const",
           "signature": "const defaultMapSnapshotWidgetRegistry: SnapshotWidgetRegistry"
+        },
+        {
+          "name": "MapTile",
+          "kind": "function",
+          "signature": "function MapTile("
+        },
+        {
+          "name": "MapTileProps",
+          "kind": "interface",
+          "signature": "interface MapTileProps",
+          "members": []
+        },
+        {
+          "name": "defaultMapWidgetRegistry",
+          "kind": "const",
+          "signature": "const defaultMapWidgetRegistry: WidgetRegistry"
         },
         {
           "name": "MapTileProviderProviderProps",

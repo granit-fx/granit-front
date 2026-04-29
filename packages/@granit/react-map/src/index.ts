@@ -6,6 +6,11 @@
 export { MapSnapshotWidget } from './snapshot/map-snapshot-widget.js';
 export { defaultMapSnapshotWidgetRegistry } from './snapshot/default-map-snapshot-widget-registry.js';
 
+// Definition-path renderer (P3) — fetches via POST /widgets/map/render
+export { MapTile } from './components/map-tile.js';
+export type { MapTileProps } from './components/map-tile.js';
+export { defaultMapWidgetRegistry } from './registry/default-map-widget-registry.js';
+
 // Tile provider context — apps select the active provider once at the root
 export {
   MapTileProviderProvider,
