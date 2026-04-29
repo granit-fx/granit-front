@@ -25,3 +25,8 @@ export {
   widgetInstanceToDefinition,
 } from './widget-bridge.js';
 export type { DashboardWidgetDiff } from './widget-bridge.js';
+
+// Drift detection (ADR-038) — compares persisted instance's source
+// version against the catalog's current version.
+export { detectVersionDrift } from './detect-version-drift.js';
+export type { DashboardVersionDrift } from './detect-version-drift.js';

@@ -91,6 +91,11 @@ export {
 } from './endpoints/index.js';
 export type { DashboardWidgetDiff } from './endpoints/index.js';
 
+// Drift detection (ADR-038) — semver comparison between persisted
+// instances and their source-definition catalog entry.
+export { detectVersionDrift } from './endpoints/index.js';
+export type { DashboardVersionDrift } from './endpoints/index.js';
+
 // Rendering — wire contracts for the dashboard render pipeline plus per-kind
 // snapshots (B3-1 / B3-2 / B3-3, ADR-039).
 export {
