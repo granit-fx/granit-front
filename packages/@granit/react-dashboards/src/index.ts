@@ -13,16 +13,30 @@ export {
 export type { UseDashboardRenderOptions } from './api/use-dashboard-render.js';
 export { useDashboardWidget } from './api/use-dashboard-widget.js';
 
-// CRUD hooks (B4-write — list / get / create / update / delete)
+// Lifecycle / CRUD hooks (B4-write — Granit.Dashboards.Endpoints).
+// Surface mirrors the persisted-Dashboard aggregate model: the catalog
+// lists *available definitions*, the list lists *imported instances*, and
+// dashboards are addressed by Guid. Lifecycle is publish/archive/restore
+// (no DELETE), metadata edits are name+layout only, widget pool is
+// managed via dedicated endpoints.
+export { dashboardCatalogQueryKey, useDashboardCatalog } from './api/use-dashboard-catalog.js';
+export { dashboardListQueryKey, useDashboardList } from './api/use-dashboard-list.js';
+export type { UseDashboardListParams } from './api/use-dashboard-list.js';
+export { dashboardDetailQueryKey, useDashboardDetail } from './api/use-dashboard-detail.js';
+export { useImportDashboard } from './api/use-import-dashboard.js';
+export { useUpdateDashboardMetadata } from './api/use-update-dashboard-metadata.js';
+export type { UpdateDashboardMetadataVariables } from './api/use-update-dashboard-metadata.js';
 export {
-  dashboardListQueryKey,
-  dashboardQueryKey,
-  useCreateDashboard,
-  useDashboard,
-  useDashboards,
-  useDeleteDashboard,
-  useUpdateDashboard,
-} from './api/use-dashboard-crud.js';
+  useArchiveDashboard,
+  usePublishDashboard,
+  useRestoreDashboard,
+} from './api/use-dashboard-state-transitions.js';
+export { useAddWidget, useRemoveWidget, useUpdateWidget } from './api/use-widget-crud.js';
+export type {
+  AddWidgetVariables,
+  RemoveWidgetVariables,
+  UpdateWidgetVariables,
+} from './api/use-widget-crud.js';
 
 // Layout + dispatcher
 export { Dashboard } from './components/dashboard.js';

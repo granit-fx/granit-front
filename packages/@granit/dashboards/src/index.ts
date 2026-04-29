@@ -42,6 +42,20 @@ export type {
   WidgetSize,
 } from './types/index.js';
 
+// Lifecycle / persistence DTOs (B4-write — Granit.Dashboards.Endpoints)
+export type {
+  AddWidgetRequest,
+  DashboardCatalogEntryResponse,
+  DashboardDetailResponse,
+  DashboardImportResponse,
+  DashboardMetadataUpdateRequest,
+  DashboardStatus,
+  DashboardSummaryResponse,
+  PagedResponse,
+  UpdateWidgetRequest,
+  WidgetInstanceResponse,
+} from './endpoints/index.js';
+
 // Rendering — wire contracts for the dashboard render pipeline plus per-kind
 // snapshots (B3-1 / B3-2 / B3-3, ADR-039).
 export {

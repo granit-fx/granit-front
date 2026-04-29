@@ -2199,6 +2199,73 @@
           "signature": "function useDashboardWidget( dashboardId: string, widgetId: string ): UseQueryResult<DashboardRenderedWidget>"
         },
         {
+          "name": "dashboardCatalogQueryKey",
+          "kind": "const",
+          "signature": "const dashboardCatalogQueryKey"
+        },
+        {
+          "name": "useDashboardCatalog",
+          "kind": "function",
+          "signature": "function useDashboardCatalog( options:"
+        },
+        {
+          "name": "dashboardListQueryKey",
+          "kind": "const",
+          "signature": "const dashboardListQueryKey"
+        },
+        {
+          "name": "useDashboardList",
+          "kind": "function",
+          "signature": "function useDashboardList( params: UseDashboardListParams ="
+        },
+        {
+          "name": "UseDashboardListParams",
+          "kind": "interface",
+          "signature": "interface UseDashboardListParams",
+          "members": []
+        },
+        {
+          "name": "dashboardDetailQueryKey",
+          "kind": "const",
+          "signature": "const dashboardDetailQueryKey"
+        },
+        {
+          "name": "useDashboardDetail",
+          "kind": "function",
+          "signature": "function useDashboardDetail( id: string, options:"
+        },
+        {
+          "name": "useImportDashboard",
+          "kind": "function",
+          "signature": "function useImportDashboard(): UseMutationResult<DashboardImportResponse, Error, string>"
+        },
+        {
+          "name": "useUpdateDashboardMetadata",
+          "kind": "function",
+          "signature": "function useUpdateDashboardMetadata(): UseMutationResult< DashboardSummaryResponse, Error, UpdateDashboardMetadataVariables >"
+        },
+        {
+          "name": "UpdateDashboardMetadataVariables",
+          "kind": "interface",
+          "signature": "interface UpdateDashboardMetadataVariables",
+          "members": []
+        },
+        {
+          "name": "useAddWidget",
+          "kind": "function",
+          "signature": "function useAddWidget(): UseMutationResult< WidgetInstanceResponse, Error, AddWidgetVariables >"
+        },
+        {
+          "name": "useRemoveWidget",
+          "kind": "function",
+          "signature": "function useRemoveWidget(): UseMutationResult<void, Error, RemoveWidgetVariables>"
+        },
+        {
+          "name": "useUpdateWidget",
+          "kind": "function",
+          "signature": "function useUpdateWidget(): UseMutationResult< WidgetInstanceResponse, Error, UpdateWidgetVariables >"
+        },
+        {
           "name": "Dashboard",
           "kind": "function",
           "signature": "function Dashboard("
