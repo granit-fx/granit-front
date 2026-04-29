@@ -1,5 +1,7 @@
 import { useSnapshotWidgetRegistry } from '../registry/snapshot-widget-registry-context.js';
 
+import { WidgetCard } from './widget-card.js';
+
 import type { DashboardRenderedWidget } from '@granit/dashboards';
 
 /**
@@ -21,9 +23,21 @@ import type { DashboardRenderedWidget } from '@granit/dashboards';
  */
 export interface RenderedWidgetProps {
   readonly widget: DashboardRenderedWidget;
+  /**
+   * When `true` (default), the widget body is wrapped in a {@link WidgetCard}
+   * for chrome consistency with the definition path's `<WidgetRenderer>`.
+   * Set to `false` when the snapshot renderer ships its own chrome
+   * (e.g. an Image widget that bleeds to the cell edges).
+   *
+   * `title` is intentionally not resolved here — the bundle envelope
+   * does not yet carry a title localization key (backend gap). Apps
+   * needing titles in the bundle path render their own frame layer
+   * keyed off the parent definition.
+   */
+  readonly framed?: boolean;
 }
 
-export function RenderedWidget({ widget }: RenderedWidgetProps) {
+export function RenderedWidget({ widget, framed = true }: RenderedWidgetProps) {
   const registry = useSnapshotWidgetRegistry();
 
   if (widget.status === 'Unavailable') {
@@ -49,11 +63,13 @@ export function RenderedWidget({ widget }: RenderedWidgetProps) {
     return <UnknownKindSlot widgetType={widget.widgetType} />;
   }
 
-  return (
+  const body = (
     <div data-slot="rendered-widget" data-widget-type={widget.widgetType}>
       <Renderer widget={widget} />
     </div>
   );
+
+  return framed ? <WidgetCard>{body}</WidgetCard> : body;
 }
 
 function UnavailableSlot({

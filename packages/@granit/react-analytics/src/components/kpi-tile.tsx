@@ -1,5 +1,4 @@
 import { isMetricDatasource } from '@granit/dashboards';
-import { useDashboardContext } from '@granit/react-dashboards';
 import { useTranslation } from 'react-i18next';
 
 import { useMetric } from '../api/use-metric.js';
@@ -34,16 +33,9 @@ export interface KpiTileProps {
 
 export function KpiTile({ widget }: KpiTileProps) {
   const { t, i18n } = useTranslation();
-  const dashboardCtx = useDashboardContext();
   const { datasource } = widget;
 
-  const titleKey = dashboardCtx
-    ? `Widget:${dashboardCtx.dashboardName}.${widget.slug}.Title`
-    : `Widget:${widget.slug}.Title`;
-  const translated = t(titleKey, { defaultValue: '' });
-
   const metricName = isMetricDatasource(datasource) ? datasource.metricName : '';
-  const title = translated || metricName || widget.slug;
 
   const query = useMetric(metricName, DEFAULT_PERIOD, { enabled: metricName !== '' });
 
@@ -56,19 +48,15 @@ export function KpiTile({ widget }: KpiTileProps) {
       <div
         data-slot="kpi-tile"
         data-datasource-kind={datasource.kind}
-        className="flex h-full flex-col gap-3 rounded-xl border bg-card p-4 shadow-sm"
+        className="flex h-full items-center text-xs text-muted-foreground"
       >
-        <header data-slot="kpi-tile-header">
-          <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
-        </header>
-        <p className="text-xs text-muted-foreground">{message}</p>
+        {message}
       </div>
     );
   }
 
   return (
     <KpiTileView
-      title={title}
       data={query.data}
       isLoading={query.isLoading}
       error={query.error}

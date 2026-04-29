@@ -46,8 +46,15 @@ export interface KpiTileViewProps {
 
 /**
  * Pure presentational KPI tile. Decoupled from data fetching so Storybook
- * stories drive it directly with fixtures (no QueryClient required) and the
- * smart wrapper {@link KpiTile} handles loading / error / success transitions.
+ * stories drive it directly with fixtures (no QueryClient required) and
+ * the smart wrapper {@link KpiTile} handles loading / error / success
+ * transitions.
+ *
+ * Renders **body only** (value + delta + optional trend visual). Card
+ * chrome (border, shadow, padding) and title rendering are owned by the
+ * surrounding `<WidgetCard>` — the framework's universal frame the
+ * dispatcher (`<WidgetRenderer>` / `<RenderedWidget>`) wraps every widget
+ * in. Standalone usages outside a dashboard wrap manually.
  */
 export function KpiTileView({
   title,
@@ -63,13 +70,7 @@ export function KpiTileView({
   trendVisual,
 }: KpiTileViewProps) {
   return (
-    <div
-      data-slot="kpi-tile"
-      className={joinClasses(
-        'flex h-full flex-col gap-3 rounded-xl border bg-card p-4 shadow-sm',
-        className
-      )}
-    >
+    <div data-slot="kpi-tile" className={joinClasses('flex h-full flex-col gap-3', className)}>
       {title ? (
         <header data-slot="kpi-tile-header">
           <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
