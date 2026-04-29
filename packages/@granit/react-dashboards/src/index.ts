@@ -48,3 +48,30 @@ export type {
   WidgetRegistry,
   WidgetRenderer as WidgetRendererFn,
 } from './registry/widget-registry.js';
+
+// ---------------------------------------------------------------------------
+// Read-mode rendering (B5 — bundle-driven, snapshot-aware)
+// ---------------------------------------------------------------------------
+
+export { RenderedDashboard } from './components/rendered-dashboard.js';
+export type { RenderedDashboardProps } from './components/rendered-dashboard.js';
+export { RenderedWidget } from './components/rendered-widget.js';
+export type { RenderedWidgetProps } from './components/rendered-widget.js';
+
+// Built-in snapshot renderers (mirror of the definition-side widgets)
+export { ImageSnapshotWidget } from './components/widgets/image-snapshot-widget.js';
+export { MarkdownSnapshotWidget } from './components/widgets/markdown-snapshot-widget.js';
+export { TextSnapshotWidget } from './components/widgets/text-snapshot-widget.js';
+
+// Snapshot widget registry (PascalCase widgetType discriminator — B5)
+export { defaultSnapshotWidgetRegistry } from './registry/default-snapshot-widget-registry.js';
+export {
+  SnapshotWidgetRegistryProvider,
+  useSnapshotWidgetRegistry,
+} from './registry/snapshot-widget-registry-context.js';
+export type { SnapshotWidgetRegistryProviderProps } from './registry/snapshot-widget-registry-context.js';
+export { composeSnapshotRegistries } from './registry/snapshot-widget-registry.js';
+export type {
+  SnapshotWidgetRegistry,
+  SnapshotWidgetRenderer,
+} from './registry/snapshot-widget-registry.js';

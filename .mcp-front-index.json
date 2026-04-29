@@ -1418,9 +1418,19 @@
           "members": []
         },
         {
+          "name": "KpiSnapshotTile",
+          "kind": "function",
+          "signature": "function KpiSnapshotTile("
+        },
+        {
           "name": "defaultAnalyticsWidgetRegistry",
           "kind": "const",
           "signature": "const defaultAnalyticsWidgetRegistry: WidgetRegistry"
+        },
+        {
+          "name": "defaultAnalyticsSnapshotWidgetRegistry",
+          "kind": "const",
+          "signature": "const defaultAnalyticsSnapshotWidgetRegistry: SnapshotWidgetRegistry"
         },
         {
           "name": "formatDeltaRatio",
@@ -2135,6 +2145,59 @@
           "name": "composeRegistries",
           "kind": "function",
           "signature": "function composeRegistries(...registries: readonly WidgetRegistry[]): WidgetRegistry"
+        },
+        {
+          "name": "RenderedDashboard",
+          "kind": "function",
+          "signature": "function RenderedDashboard("
+        },
+        {
+          "name": "RenderedDashboardProps",
+          "kind": "interface",
+          "signature": "interface RenderedDashboardProps",
+          "members": []
+        },
+        {
+          "name": "RenderedWidget",
+          "kind": "function",
+          "signature": "function RenderedWidget("
+        },
+        {
+          "name": "RenderedWidgetProps",
+          "kind": "interface",
+          "signature": "interface RenderedWidgetProps",
+          "members": []
+        },
+        {
+          "name": "ImageSnapshotWidget",
+          "kind": "function",
+          "signature": "function ImageSnapshotWidget("
+        },
+        {
+          "name": "MarkdownSnapshotWidget",
+          "kind": "function",
+          "signature": "function MarkdownSnapshotWidget("
+        },
+        {
+          "name": "TextSnapshotWidget",
+          "kind": "function",
+          "signature": "function TextSnapshotWidget("
+        },
+        {
+          "name": "defaultSnapshotWidgetRegistry",
+          "kind": "const",
+          "signature": "const defaultSnapshotWidgetRegistry: SnapshotWidgetRegistry"
+        },
+        {
+          "name": "SnapshotWidgetRegistryProviderProps",
+          "kind": "interface",
+          "signature": "interface SnapshotWidgetRegistryProviderProps",
+          "members": []
+        },
+        {
+          "name": "composeSnapshotRegistries",
+          "kind": "function",
+          "signature": "function composeSnapshotRegistries( ...registries: readonly SnapshotWidgetRegistry[] ): SnapshotWidgetRegistry"
         }
       ]
     },
