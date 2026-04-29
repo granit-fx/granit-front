@@ -2110,6 +2110,32 @@
           "members": []
         },
         {
+          "name": "WidgetConfigDrawer",
+          "kind": "function",
+          "signature": "function WidgetConfigDrawer("
+        },
+        {
+          "name": "WidgetConfigDrawerProps",
+          "kind": "interface",
+          "signature": "interface WidgetConfigDrawerProps",
+          "members": []
+        },
+        {
+          "name": "ImageConfigForm",
+          "kind": "function",
+          "signature": "function ImageConfigForm("
+        },
+        {
+          "name": "MarkdownConfigForm",
+          "kind": "function",
+          "signature": "function MarkdownConfigForm("
+        },
+        {
+          "name": "TextConfigForm",
+          "kind": "function",
+          "signature": "function TextConfigForm("
+        },
+        {
           "name": "reorderWidgets",
           "kind": "function",
           "signature": "function reorderWidgets( definition: DashboardDefinition, sourceSlug: string, targetSlug: string ): DashboardDefinition"
@@ -2134,6 +2160,26 @@
           "kind": "interface",
           "signature": "interface WidgetCatalogEntry",
           "members": []
+        },
+        {
+          "name": "removeWidget",
+          "kind": "function",
+          "signature": "function removeWidget(definition: DashboardDefinition, slug: string): DashboardDefinition"
+        },
+        {
+          "name": "updateWidget",
+          "kind": "function",
+          "signature": "function updateWidget( definition: DashboardDefinition, slug: string, next: WidgetDefinition ): DashboardDefinition"
+        },
+        {
+          "name": "defaultWidgetConfigFormRegistry",
+          "kind": "const",
+          "signature": "const defaultWidgetConfigFormRegistry: WidgetConfigFormRegistry"
+        },
+        {
+          "name": "composeWidgetConfigFormRegistries",
+          "kind": "function",
+          "signature": "function composeWidgetConfigFormRegistries( ...registries: readonly WidgetConfigFormRegistry[] ): WidgetConfigFormRegistry"
         }
       ]
     },
