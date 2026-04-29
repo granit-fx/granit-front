@@ -18,6 +18,7 @@ export type {
   LatLngMapPointSource,
   MapCenter,
   MapPointSource,
+  MapTileLayerKind,
   MapWidgetDefinition,
 } from './map-widget.js';
 export { isPivotSnapshotEnvelope } from './pivot-snapshot.js';

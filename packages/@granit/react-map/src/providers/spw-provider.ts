@@ -28,7 +28,7 @@ export const spwProvider: MapTileProvider = {
     {
       id: 'spw-plan-parcellaire',
       labelLocalizationKey: 'Map:Layer.Plan',
-      kind: 'plan',
+      kind: 'Plan',
       url: 'https://geoservices.wallonie.be/arcgis/rest/services/PLAN_REGLEMENTAIRE/PLAN_PARCELLAIRE/MapServer/tile/{z}/{y}/{x}',
       attribution:
         '&copy; <a href="https://geoportail.wallonie.be">SPW — Service Public de Wallonie</a>',
@@ -37,7 +37,7 @@ export const spwProvider: MapTileProvider = {
     {
       id: 'spw-ortho',
       labelLocalizationKey: 'Map:Layer.Satellite',
-      kind: 'satellite',
+      kind: 'Satellite',
       url: 'https://geoservices.wallonie.be/arcgis/rest/services/IMAGERIE/ORTHO_LAST/MapServer/tile/{z}/{y}/{x}',
       attribution:
         '&copy; <a href="https://geoportail.wallonie.be">SPW — Service Public de Wallonie</a>',
@@ -46,7 +46,7 @@ export const spwProvider: MapTileProvider = {
     {
       id: 'spw-hybride',
       labelLocalizationKey: 'Map:Layer.Hybrid',
-      kind: 'hybrid',
+      kind: 'Hybrid',
       url: 'https://geoservices.wallonie.be/arcgis/rest/services/IMAGERIE/ORTHO_LAST_HYBRIDE/MapServer/tile/{z}/{y}/{x}',
       attribution:
         '&copy; <a href="https://geoportail.wallonie.be">SPW — Service Public de Wallonie</a>',

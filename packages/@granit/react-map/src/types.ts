@@ -1,20 +1,17 @@
 /**
  * Map tile layer kind. Drives default ordering in the layer-switcher control
- * (plan first, then satellite, then hybrid composites). Frontend renderers
- * interpret the kind for grouping; the value carries no semantic meaning
- * beyond presentation.
+ * (Plan first, then Satellite, then Hybrid composites). Frontend renderers
+ * interpret the kind for grouping; the same union doubles as the wire-format
+ * value carried by `MapWidgetDefinition.defaultLayerKind` /
+ * `MapWidgetSnapshot.defaultLayerKind` (B7-3).
+ *
+ * Re-exported from `@granit/analytics` so the wire identity and the editor
+ * surface share a single source of truth — backend's PascalCase enum
+ * (`Granit.Analytics.Dashboards.Widgets.MapTileLayerKind`) is the
+ * authoritative ordering / spelling.
  */
-export type MapTileLayerKind =
-  /** Standard road / street map (raster or vector tiles). */
-  | 'plan'
-  /** Aerial / satellite imagery without labels. */
-  | 'satellite'
-  /** Imagery + label overlay ("hybride" in French geoportals). */
-  | 'hybrid'
-  /** Topographic map with elevation contours. */
-  | 'topo'
-  /** Anything else — apps register their own kind for ad-hoc layers. */
-  | 'custom';
+import type { MapTileLayerKind } from '@granit/analytics';
+export type { MapTileLayerKind };
 
 /**
  * One tile layer offered by a {@link MapTileProvider}. Mirrors the inputs

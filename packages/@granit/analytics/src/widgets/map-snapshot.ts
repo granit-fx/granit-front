@@ -1,3 +1,4 @@
+import type { MapTileLayerKind } from './map-widget.js';
 import type { WidgetSnapshotEnvelope, WidgetSnapshotEnvelopeOf } from '@granit/dashboards';
 
 /**
@@ -65,6 +66,14 @@ export interface MapWidgetSnapshot {
    * default (typically OpenStreetMap).
    */
   readonly tileUrlTemplate: string | null;
+  /**
+   * Preferred layer kind echoed from the declarative
+   * `MapWidgetDefinition.defaultLayerKind`. The frontend resolves it
+   * against the active `MapTileProvider` layers (B7-3); `null` (or
+   * missing on legacy snapshots that predate B7-3) = use the provider's
+   * first layer.
+   */
+  readonly defaultLayerKind?: MapTileLayerKind | null;
 }
 
 /** Narrowed {@link WidgetSnapshotEnvelope} for the `'Map'` widget kind. */

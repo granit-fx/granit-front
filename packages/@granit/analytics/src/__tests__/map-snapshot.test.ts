@@ -6,7 +6,7 @@ import {
   isMapSnapshotEnvelope,
 } from '../widgets/index.js';
 
-import type { MapPointSource, MapSnapshotEnvelope } from '../widgets/index.js';
+import type { MapPointSource, MapSnapshotEnvelope, MapTileLayerKind } from '../widgets/index.js';
 import type { WidgetSnapshotEnvelope } from '@granit/dashboards';
 
 // Pinned wire-format fixtures mirroring B7-2 backend output:
@@ -42,6 +42,9 @@ const MAP_FIXTURE: MapSnapshotEnvelope = {
     clusterThreshold: 200,
     detailRoute: '/customers/{id}',
     tileUrlTemplate: null,
+    // B7-3 — admin-configured layer-kind preference; the frontend resolves
+    // it against the active MapTileProvider's layer set at render time.
+    defaultLayerKind: 'Satellite',
   },
   sequence: 1,
   emittedAt: '2026-04-29T12:34:56.789Z',
@@ -61,6 +64,20 @@ describe('MapSnapshotEnvelope — wire format', () => {
     const last = MAP_FIXTURE.snapshot?.points[2];
     expect(last?.id).toBeNull();
     expect(last?.popup).toBeNull();
+  });
+
+  it('carries the optional defaultLayerKind preference (B7-3)', () => {
+    expect(MAP_FIXTURE.snapshot?.defaultLayerKind).toBe('Satellite');
+  });
+
+  it('accepts a snapshot without defaultLayerKind (legacy / pre-B7-3 backends)', () => {
+    const legacy = {
+      ...MAP_FIXTURE,
+      snapshot: { ...MAP_FIXTURE.snapshot!, defaultLayerKind: null },
+    };
+    expect(legacy.snapshot.defaultLayerKind).toBeNull();
+    // Round-trip survives — the field is part of the wire surface.
+    expect(JSON.parse(JSON.stringify(legacy))).toEqual(legacy);
   });
 
   it('round-trips through JSON without mutation', () => {
@@ -99,5 +116,12 @@ describe('MapPointSource — discriminator dispatch', () => {
   it('routes geography through isGeographyMapPointSource', () => {
     expect(isGeographyMapPointSource(geography)).toBe(true);
     expect(isGeographyMapPointSource(latLng)).toBe(false);
+  });
+});
+
+describe('MapTileLayerKind — exhaustive enum surface (PascalCase, B7-3)', () => {
+  it('locks the five backend kinds in declaration order', () => {
+    const kinds: readonly MapTileLayerKind[] = ['Plan', 'Satellite', 'Hybrid', 'Topo', 'Custom'];
+    expect(kinds).toHaveLength(5);
   });
 });

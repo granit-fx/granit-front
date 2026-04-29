@@ -16,7 +16,7 @@ export const osmProvider: MapTileProvider = {
     {
       id: 'osm-standard',
       labelLocalizationKey: 'Map:Layer.Plan',
-      kind: 'plan',
+      kind: 'Plan',
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',

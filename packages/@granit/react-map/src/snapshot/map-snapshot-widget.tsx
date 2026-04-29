@@ -60,7 +60,7 @@ function MapBody({ snapshot }: { readonly snapshot: MapWidgetSnapshot }) {
       return [
         {
           id: 'snapshot-override',
-          kind: 'custom',
+          kind: 'Custom',
           url: snapshot.tileUrlTemplate,
           // Per-widget overrides: the host already controls attribution
           // visibility (it owns the URL choice), but we keep a non-empty
@@ -106,9 +106,18 @@ function MapBody({ snapshot }: { readonly snapshot: MapWidgetSnapshot }) {
       );
     }
 
-    // Default = first layer.
-    const firstLayer = layers[0];
-    const defaultTile = firstLayer ? tileLayerById.get(firstLayer.id) : undefined;
+    // Default layer resolution (B7-3): when the snapshot ships a
+    // `defaultLayerKind` preference, prefer the matching provider layer;
+    // otherwise fall back to the first layer. The escape-hatch single-
+    // layer override (snapshot.tileUrlTemplate) is already collapsed to
+    // a one-element `layers` array upstream — `find` matches its
+    // synthetic `kind: 'Custom'` only when the snapshot also asks for
+    // 'Custom', which is intentional.
+    const preferredLayer =
+      (snapshot.defaultLayerKind != null
+        ? layers.find((layer) => layer.kind === snapshot.defaultLayerKind)
+        : undefined) ?? layers[0];
+    const defaultTile = preferredLayer ? tileLayerById.get(preferredLayer.id) : undefined;
     defaultTile?.addTo(map);
 
     // Mount the layer-switcher only when more than one layer is offered.
@@ -135,7 +144,7 @@ function MapBody({ snapshot }: { readonly snapshot: MapWidgetSnapshot }) {
         tile.remove();
       }
     };
-  }, [layers]);
+  }, [layers, snapshot.defaultLayerKind]);
 
   // Camera (zoom + center). Falls back to bounding-box fit when no center
   // is supplied; falls back to world view when there are zero points.

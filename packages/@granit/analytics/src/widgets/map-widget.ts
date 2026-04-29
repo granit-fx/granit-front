@@ -1,6 +1,27 @@
 import type { WidgetDefinitionBase } from '@granit/dashboards';
 
 /**
+ * Wire-format enum for the **default layer kind** preference shipped on
+ * `MapWidgetDefinition` / `MapWidgetSnapshot` (B7-3, granit-dotnet
+ * `Granit.Analytics.Dashboards.Widgets.MapTileLayerKind`). PascalCase wire
+ * values per ADR-039 §6.1.
+ *
+ * Lives in `@granit/analytics` as the canonical wire identity. Editor-side
+ * concerns (`@granit/react-map`) re-export the same union so a single
+ * source of truth drives both the wire shape and the runtime layer
+ * resolution.
+ *
+ * The frontend resolves at render time:
+ *
+ *     provider.layers.find(l => l.kind === defaultLayerKind) ?? provider.layers[0]
+ *
+ * — so a widget configured for `'Satellite'` falls back gracefully when the
+ * active provider only ships a `'Plan'` layer (e.g. OSM); never blocks the
+ * render.
+ */
+export type MapTileLayerKind = 'Plan' | 'Satellite' | 'Hybrid' | 'Topo' | 'Custom';
+
+/**
  * Describes how a {@link MapWidgetDefinition} reads coordinates from the rows
  * produced by its backing query. Mirrors
  * `Granit.Analytics.Dashboards.Widgets.MapPointSource`.
@@ -97,4 +118,12 @@ export interface MapWidgetDefinition extends WidgetDefinitionBase {
    * provider's licence.
    */
   readonly tileUrlTemplate?: string | null;
+  /**
+   * Preferred layer kind to mount by default when the active
+   * `MapTileProvider` (host-app context) ships multiple layers. Lets a
+   * dashboard admin pick "this delivery-tracking map should default to
+   * satellite" without forcing the whole app onto a specific provider id.
+   * `null` (or missing) = use the provider's first layer. B7-3.
+   */
+  readonly defaultLayerKind?: MapTileLayerKind | null;
 }

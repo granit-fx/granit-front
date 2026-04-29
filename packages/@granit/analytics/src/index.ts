@@ -45,6 +45,7 @@ export type {
   MapPoint,
   MapPointSource,
   MapSnapshotEnvelope,
+  MapTileLayerKind,
   MapWidgetDefinition,
   MapWidgetSnapshot,
   PivotCell,

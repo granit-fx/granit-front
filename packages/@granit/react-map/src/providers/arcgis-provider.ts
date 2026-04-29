@@ -25,7 +25,7 @@ export const arcGisProvider: MapTileProvider = {
     {
       id: 'arcgis-world-street',
       labelLocalizationKey: 'Map:Layer.Plan',
-      kind: 'plan',
+      kind: 'Plan',
       url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
       attribution:
         'Tiles &copy; <a href="https://www.esri.com/">Esri</a> — Sources: Esri, HERE, Garmin, USGS, Intermap, INCREMENT P, NRCan, OpenStreetMap contributors',
@@ -34,7 +34,7 @@ export const arcGisProvider: MapTileProvider = {
     {
       id: 'arcgis-world-imagery',
       labelLocalizationKey: 'Map:Layer.Satellite',
-      kind: 'satellite',
+      kind: 'Satellite',
       url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       attribution:
         'Tiles &copy; <a href="https://www.esri.com/">Esri</a> — Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community',
@@ -43,7 +43,7 @@ export const arcGisProvider: MapTileProvider = {
     {
       id: 'arcgis-world-topo',
       labelLocalizationKey: 'Map:Layer.Topo',
-      kind: 'topo',
+      kind: 'Topo',
       url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
       attribution:
         'Tiles &copy; <a href="https://www.esri.com/">Esri</a> — Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, NRCan, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community',
