@@ -1,21 +1,30 @@
 import type { DashboardCategory } from './dashboard-category.js';
 import type { DashboardDefinition } from './dashboard-definition.js';
+import type { DashboardFilter } from './dashboard-filter.js';
 import type { DashboardLayout } from './dashboard-layout.js';
+import type { DashboardTimeWindow } from './dashboard-time-window.js';
+import type { DashboardView } from './dashboard-view.js';
+import type { EntityAlias } from './entity-alias.js';
 import type { WidgetDefinition } from './widget-definition.js';
 
 /**
- * Lightweight descriptor returned by the dashboard registry's catalogue
- * endpoint. Lists every dashboard the host knows about without dragging in
- * widget payloads — useful for catalog screens (left rail, picker) where
- * only metadata matters.
+ * Type-erased descriptor exposed by `IDashboardDefinitionRegistry`. Mirrors
+ * `Granit.Dashboards.IDashboardDefinitionDescriptor` 1-for-1 — i.e. the
+ * same shape `DashboardDefinition` carries, but reachable as an interface
+ * (the framework's lookup APIs don't need the concrete subclass).
  *
- * Mirrors `IDashboardDefinitionDescriptor` on the backend.
+ * Distinct from the `DashboardCatalogEntryResponse` exposed by
+ * `GET /dashboards/catalog`: that response is a stripped projection
+ * (name + version + feature flags) used for the import dialog. The
+ * descriptor here carries the full declarative content.
  *
- * User-facing strings are resolved from localization:
+ * User-facing strings are not on the descriptor — they resolve from
+ * localization keys composed off the descriptor's `name`:
  *
- * - `Dashboard:{name}` — title (required)
+ * - `Dashboard:{name}` — title (required, ships in all default cultures)
  * - `Dashboard:{name}.Description` — secondary description (optional, P3.1)
- * - `Widget:{dashboardName}.{slug}` — widget content (per widget convention)
+ * - `Widget:{name}.{slug}` — per-widget content (the exact key is on each
+ *   widget's `*LocalizationKey` property)
  *
  * Modules ship the keys for their default cultures; tenants override them
  * via `Granit.Localization.Overrides`.
@@ -26,13 +35,33 @@ export interface DashboardDefinitionDescriptor {
   readonly isSystem: boolean;
   readonly version: string;
   readonly layout: DashboardLayout;
+  /**
+   * Default time window applied to every data-bound widget that does
+   * not carry its own override. `null` / missing = the frontend falls
+   * back to its global default.
+   */
+  readonly defaultTimeWindow?: DashboardTimeWindow | null;
+  /** Widgets shipped by this dashboard, in declared order (single-view dashboards). */
   readonly widgets: readonly WidgetDefinition[];
+  /**
+   * Named views — separate widget arrangements within the same
+   * dashboard. `null` / missing = single-view dashboard rendering
+   * {@link widgets}.
+   */
+  readonly views?: readonly DashboardView[] | null;
+  /** Entry-view name when {@link views} is non-null. */
+  readonly defaultView?: string | null;
+  /** Dashboard-scoped filters declared by this dashboard. */
+  readonly filters?: readonly DashboardFilter[] | null;
+  /** Named entity bindings — see `EntityAlias`. */
+  readonly aliases?: readonly EntityAlias[] | null;
 }
 
 /**
- * Frontend-facing analogue of `IDashboardDefinitionRegistry`. Hosts plug in
- * their preferred fetching strategy (REST, embedded JSON, GraphQL) behind
- * this contract; the React layer consumes only the interface.
+ * Frontend-facing analogue of `IDashboardDefinitionRegistry`. Hosts
+ * plug in their preferred fetching strategy (REST, embedded JSON,
+ * GraphQL) behind this contract; the React layer consumes only the
+ * interface.
  */
 export interface DashboardDefinitionRegistry {
   /** Returns descriptors for every dashboard the host exposes to the caller. */

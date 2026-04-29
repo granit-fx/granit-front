@@ -27,7 +27,35 @@ export type {
 } from './dashboard-definition-descriptor.js';
 export type { DashboardDefinition } from './dashboard-definition.js';
 export { DEFAULT_DASHBOARD_LAYOUT } from './dashboard-layout.js';
-export type { DashboardLayout } from './dashboard-layout.js';
+export type {
+  DashboardBreakpoint,
+  DashboardLayout,
+  DashboardLayoutOverride,
+} from './dashboard-layout.js';
+export type {
+  DashboardFilter,
+  DashboardFilterClause,
+  DashboardFilterOperation,
+  DashboardFilterOperator,
+} from './dashboard-filter.js';
+export type { DashboardView } from './dashboard-view.js';
+export {
+  isRouteParamResolver,
+  isStaticEntityResolver,
+  isTenantContextResolver,
+  isUserSelectionResolver,
+  isViewEntityResolver,
+} from './entity-alias.js';
+export type {
+  EntityAlias,
+  EntityAliasResolver,
+  RouteParamResolver,
+  StaticEntityResolver,
+  TenantContextResolver,
+  UserSelectionResolver,
+  ViewEntityResolver,
+} from './entity-alias.js';
+export { formatDurationFromMs, parseDurationToMs } from './parse-duration.js';
 export type { WidgetAction, WidgetActionKind, WidgetActionTrigger } from './widget-action.js';
 export type {
   FrameworkWidgetDefinition,

@@ -1,6 +1,6 @@
 /**
- * Time window applied to every data-bound widget on a dashboard. Mirrors the
- * proposed `Granit.Dashboards.DashboardTimeWindow` (proposals doc P1.3).
+ * Time window applied to every data-bound widget on a dashboard. Mirrors
+ * `Granit.Dashboards.DashboardTimeWindow` (P1.3).
  *
  * The frontend surfaces it as a top-of-dashboard control ("Last 30 days ▾");
  * user changes propagate to all widgets that don't carry their own override.
@@ -17,16 +17,21 @@ export interface DashboardTimeWindow {
   /** Optional comparison window (e.g. `previous_period`). */
   readonly compareTo?: { readonly token: string };
   /**
-   * Bucket size for time-series aggregation, in milliseconds. When omitted,
-   * the widget's data source picks a default.
+   * Bucket size for time-series aggregation, serialized as
+   * `System.TimeSpan` (`"00:01:00"` = 1 minute, `"1.00:00:00"` = 1 day).
+   * `System.Text.Json` emits this constant-format string by default; the
+   * frontend keeps the wire shape and parses on read via
+   * {@link parseDurationToMs} from `./parse-duration.js`.
+   *
+   * `null` / missing = the widget's data source picks a sensible default
+   * (e.g. day for last-30d, hour for last-24h).
    */
-  readonly aggregationMs?: number;
+  readonly aggregation?: string | null;
 }
 
 /**
- * Mirrors `Granit.Dashboards.TimeWindowKind`. PascalCase wire values — the
- * framework's host registers a `JsonStringEnumConverter()` with no naming
- * policy.
+ * Mirrors `Granit.Dashboards.TimeWindowKind`. PascalCase wire values per
+ * ADR-039 §6.1.
  */
 export type TimeWindowKind = 'History' | 'Realtime';
 
