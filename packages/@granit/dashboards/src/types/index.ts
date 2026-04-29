@@ -1,4 +1,6 @@
 export type { AggregateFunction } from './aggregate-function.js';
+export type { RefreshHint } from './refresh-hint.js';
+export type { ResolvedPeriod } from './resolved-period.js';
 export type { DataKeyFormat } from './data-key-format.js';
 export type { DashboardCategory } from './dashboard-category.js';
 export { DASHBOARD_TIME_WINDOW } from './dashboard-time-window.js';

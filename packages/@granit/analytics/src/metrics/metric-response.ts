@@ -22,11 +22,13 @@ export type ValueKind = 'Count' | 'Number' | 'Currency' | 'Percentage' | 'Durati
  */
 export type Trend = 'up' | 'down' | 'flat';
 
-/**
- * Mirrors `Granit.Analytics.RefreshHint`. PascalCase wire values — same
- * convention as {@link ValueKind}.
- */
-export type RefreshHint = 'Static' | 'Dynamic' | 'Realtime';
+// `RefreshHint` is shared between metric responses (this module) and the
+// dashboard widget envelope (`@granit/dashboards/rendering`). It lives in
+// `@granit/dashboards` to mirror the backend's `Granit.Analytics.Abstractions`
+// promotion (ADR-039) and keep the dependency arrow analytics → dashboards
+// clean. Re-exported here for source-level back-compat.
+import type { RefreshHint } from '@granit/dashboards';
+export type { RefreshHint };
 
 /**
  * Calendar-aware period token. Backend (`Granit.Analytics.Metrics.PeriodSpec`)
