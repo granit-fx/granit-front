@@ -54,6 +54,13 @@ export interface PivotWidgetSnapshot {
    * them; the frontend pivots into a row-major matrix.
    */
   readonly cells: readonly PivotCell[];
+  /**
+   * ISO 4217 alpha-3 currency code from the value field's
+   * `ColumnBuilder.Currency(...)` declaration; `null` when the field is not
+   * monetary or for `'Count'`. All cells share this currency since they
+   * aggregate the same value field. B3-8b.
+   */
+  readonly currency?: string | null;
 }
 
 /** Narrowed {@link WidgetSnapshotEnvelope} for the `'Pivot'` widget kind. */

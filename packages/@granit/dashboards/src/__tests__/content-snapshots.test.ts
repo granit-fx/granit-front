@@ -30,7 +30,7 @@ const MARKDOWN_FIXTURE: MarkdownSnapshotEnvelope = {
   sequence: 1,
   emittedAt: '2026-04-29T12:34:56.789Z',
   refreshHint: 'Static',
-  unavailableReasonLocalizationKey: null,
+  reasonLocalizationKey: null,
 };
 
 const TEXT_FIXTURE: TextSnapshotEnvelope = {
@@ -43,7 +43,7 @@ const TEXT_FIXTURE: TextSnapshotEnvelope = {
   sequence: 1,
   emittedAt: '2026-04-29T12:34:56.789Z',
   refreshHint: 'Static',
-  unavailableReasonLocalizationKey: null,
+  reasonLocalizationKey: null,
 };
 
 const IMAGE_FIXTURE: ImageSnapshotEnvelope = {
@@ -57,7 +57,7 @@ const IMAGE_FIXTURE: ImageSnapshotEnvelope = {
   sequence: 1,
   emittedAt: '2026-04-29T12:34:56.789Z',
   refreshHint: 'Static',
-  unavailableReasonLocalizationKey: null,
+  reasonLocalizationKey: null,
 };
 
 describe('MarkdownSnapshotEnvelope — wire format', () => {

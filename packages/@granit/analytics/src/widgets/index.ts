@@ -5,6 +5,21 @@ export type { ChartType, ChartWidgetDefinition } from './chart-widget.js';
 export { isKpiSnapshotEnvelope } from './kpi-snapshot.js';
 export type { KpiSnapshot, KpiSnapshotEnvelope } from './kpi-snapshot.js';
 export type { KpiWidgetDefinition } from './kpi-widget.js';
+export { isMapSnapshotEnvelope } from './map-snapshot.js';
+export type {
+  MapCenterPayload,
+  MapPoint,
+  MapSnapshotEnvelope,
+  MapWidgetSnapshot,
+} from './map-snapshot.js';
+export { isGeographyMapPointSource, isLatLngMapPointSource } from './map-widget.js';
+export type {
+  GeographyMapPointSource,
+  LatLngMapPointSource,
+  MapCenter,
+  MapPointSource,
+  MapWidgetDefinition,
+} from './map-widget.js';
 export { isPivotSnapshotEnvelope } from './pivot-snapshot.js';
 export type { PivotCell, PivotSnapshotEnvelope, PivotWidgetSnapshot } from './pivot-snapshot.js';
 export type { PivotWidgetDefinition } from './pivot-widget.js';
@@ -18,6 +33,7 @@ export type { TableWidgetDefinition } from './table-widget.js';
 
 import type { ChartWidgetDefinition } from './chart-widget.js';
 import type { KpiWidgetDefinition } from './kpi-widget.js';
+import type { MapWidgetDefinition } from './map-widget.js';
 import type { PivotWidgetDefinition } from './pivot-widget.js';
 import type { TableWidgetDefinition } from './table-widget.js';
 
@@ -30,4 +46,5 @@ export type AnalyticsWidgetDefinition =
   | KpiWidgetDefinition
   | ChartWidgetDefinition
   | TableWidgetDefinition
-  | PivotWidgetDefinition;
+  | PivotWidgetDefinition
+  | MapWidgetDefinition;

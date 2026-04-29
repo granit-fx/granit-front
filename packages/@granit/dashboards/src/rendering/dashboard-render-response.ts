@@ -78,8 +78,9 @@ export interface DashboardRenderedWidget {
    */
   readonly snapshot: unknown | null;
   /**
-   * Localization key for the user-facing reason when {@link status} is
-   * `'Unavailable'`; `null` otherwise.
+   * Localization key for the user-facing reason. Set on both
+   * `'Unavailable'` and `'Error'` envelopes (defaults `'Widget:Unavailable'`
+   * / `'Widget:Error'`); `null` on `'Snapshot'`.
    */
-  readonly unavailableReasonLocalizationKey: string | null;
+  readonly reasonLocalizationKey: string | null;
 }

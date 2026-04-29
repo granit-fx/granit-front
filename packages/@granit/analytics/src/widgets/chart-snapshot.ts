@@ -44,6 +44,14 @@ export interface ChartWidgetSnapshot {
    * produces it.
    */
   readonly buckets: readonly ChartBucket[];
+  /**
+   * ISO 4217 alpha-3 currency code from the value field's
+   * `ColumnBuilder.Currency(...)` declaration; `null` when the field is not
+   * monetary or for `'Count'`. All buckets share this currency since they
+   * aggregate the same value field. B3-8b — when present, the frontend
+   * formats every bucket value with the matching currency symbol + locale.
+   */
+  readonly currency?: string | null;
 }
 
 /** Narrowed {@link WidgetSnapshotEnvelope} for the `'Chart'` widget kind. */

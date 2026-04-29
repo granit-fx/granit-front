@@ -29,7 +29,7 @@ const KPI_SNAPSHOT_FIXTURE: KpiSnapshotEnvelope = {
   sequence: 1,
   emittedAt: '2026-04-29T12:34:56.789Z',
   refreshHint: 'Dynamic',
-  unavailableReasonLocalizationKey: null,
+  reasonLocalizationKey: null,
 };
 
 const KPI_UNAVAILABLE_FIXTURE: KpiSnapshotEnvelope = {
@@ -39,7 +39,7 @@ const KPI_UNAVAILABLE_FIXTURE: KpiSnapshotEnvelope = {
   sequence: 1,
   emittedAt: '2026-04-29T12:34:56.789Z',
   refreshHint: 'Static',
-  unavailableReasonLocalizationKey: 'Widget:Unavailable.QueryAggregateNotImplemented',
+  reasonLocalizationKey: 'Widget:Unavailable.QueryAggregateNotImplemented',
 };
 
 // Currency-bearing variant emitted by the QueryAggregateDatasourceEvaluator
@@ -60,7 +60,7 @@ const KPI_QUERY_AGGREGATE_CURRENCY_FIXTURE: KpiSnapshotEnvelope = {
   sequence: 1,
   emittedAt: '2026-04-29T12:34:56.789Z',
   refreshHint: 'Dynamic',
-  unavailableReasonLocalizationKey: null,
+  reasonLocalizationKey: null,
 };
 
 describe('KpiSnapshotEnvelope — wire format', () => {
@@ -72,7 +72,7 @@ describe('KpiSnapshotEnvelope — wire format', () => {
 
   it('accepts the unavailable variant emitted by stub datasource evaluators', () => {
     expect(KPI_UNAVAILABLE_FIXTURE.snapshot).toBeNull();
-    expect(KPI_UNAVAILABLE_FIXTURE.unavailableReasonLocalizationKey).toBe(
+    expect(KPI_UNAVAILABLE_FIXTURE.reasonLocalizationKey).toBe(
       'Widget:Unavailable.QueryAggregateNotImplemented'
     );
   });

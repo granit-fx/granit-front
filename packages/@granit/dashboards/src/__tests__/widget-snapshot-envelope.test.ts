@@ -18,7 +18,7 @@ const SNAPSHOT_FIXTURE: WidgetSnapshotEnvelope = {
   sequence: 1,
   emittedAt: '2026-04-29T12:34:56.789Z',
   refreshHint: 'Dynamic',
-  unavailableReasonLocalizationKey: null,
+  reasonLocalizationKey: null,
 };
 
 const UNAVAILABLE_FIXTURE: WidgetSnapshotEnvelope = {
@@ -28,7 +28,7 @@ const UNAVAILABLE_FIXTURE: WidgetSnapshotEnvelope = {
   sequence: 1,
   emittedAt: '2026-04-29T12:34:56.789Z',
   refreshHint: 'Dynamic',
-  unavailableReasonLocalizationKey: 'Widget:Unavailable',
+  reasonLocalizationKey: 'Widget:Unavailable',
 };
 
 const ERROR_FIXTURE: WidgetSnapshotEnvelope = {
@@ -38,7 +38,11 @@ const ERROR_FIXTURE: WidgetSnapshotEnvelope = {
   sequence: 1,
   emittedAt: '2026-04-29T12:34:56.789Z',
   refreshHint: 'Static',
-  unavailableReasonLocalizationKey: null,
+  // Error envelopes now also carry a localization key (default 'Widget:Error',
+  // overridable per call site for renderer-specific causes such as
+  // 'Widget:Error.UnknownWidgetType'). The dashboard render endpoint never
+  // resolves the key server-side — it stays a wire-level identifier.
+  reasonLocalizationKey: 'Widget:Error.UnknownWidgetType',
 };
 
 describe('WidgetSnapshotEnvelope — wire format', () => {
@@ -46,19 +50,19 @@ describe('WidgetSnapshotEnvelope — wire format', () => {
     expect(SNAPSHOT_FIXTURE.status).toBe('Snapshot');
     expect(SNAPSHOT_FIXTURE.widgetType).toBe('Kpi');
     expect(SNAPSHOT_FIXTURE.snapshot).not.toBeNull();
-    expect(SNAPSHOT_FIXTURE.unavailableReasonLocalizationKey).toBeNull();
+    expect(SNAPSHOT_FIXTURE.reasonLocalizationKey).toBeNull();
   });
 
   it('accepts the Unavailable variant — snapshot null, reason key set', () => {
     expect(UNAVAILABLE_FIXTURE.status).toBe('Unavailable');
     expect(UNAVAILABLE_FIXTURE.snapshot).toBeNull();
-    expect(UNAVAILABLE_FIXTURE.unavailableReasonLocalizationKey).toBe('Widget:Unavailable');
+    expect(UNAVAILABLE_FIXTURE.reasonLocalizationKey).toBe('Widget:Unavailable');
   });
 
-  it('accepts the Error variant — snapshot null, reason key null (server-side log only)', () => {
+  it('accepts the Error variant — snapshot null, reason key now set symmetrically with Unavailable', () => {
     expect(ERROR_FIXTURE.status).toBe('Error');
     expect(ERROR_FIXTURE.snapshot).toBeNull();
-    expect(ERROR_FIXTURE.unavailableReasonLocalizationKey).toBeNull();
+    expect(ERROR_FIXTURE.reasonLocalizationKey).toBe('Widget:Error.UnknownWidgetType');
   });
 
   it('round-trips through JSON without mutation', () => {

@@ -14,6 +14,14 @@ export interface TableWidgetColumn {
    * declared no localized label — the frontend falls back to {@link name}.
    */
   readonly labelLocalizationKey: string | null;
+  /**
+   * ISO 4217 alpha-3 currency code from the column's
+   * `ColumnBuilder.Currency(...)` declaration. When present the frontend
+   * formats the column's row values with the matching currency symbol +
+   * locale; `null` for non-monetary columns. B3-8b — per-column metadata,
+   * so a table mixing AmountEur and AmountUsd surfaces both independently.
+   */
+  readonly currencyCode?: string | null;
 }
 
 /**

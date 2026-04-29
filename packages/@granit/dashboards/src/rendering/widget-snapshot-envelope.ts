@@ -45,10 +45,15 @@ export interface WidgetSnapshotEnvelope {
   /** Pull / push transport hint inherited from the underlying definition. */
   readonly refreshHint: RefreshHint;
   /**
-   * Localization key for the user-facing reason (e.g. `'Widget:Unavailable'`)
-   * when {@link status} is `'Unavailable'`; `null` otherwise.
+   * Localization key for the user-facing reason. Set on both
+   * `'Unavailable'` envelopes (e.g. `'Widget:Unavailable.MetricNotFound'`,
+   * default `'Widget:Unavailable'`) and `'Error'` envelopes
+   * (e.g. `'Widget:Error.UnknownWidgetType'`, default `'Widget:Error'`);
+   * `null` on `'Snapshot'`. The dashboard render endpoint never resolves
+   * the key server-side — the frontend is the only translation point so
+   * the same envelope can be cached across user locales.
    */
-  readonly unavailableReasonLocalizationKey: string | null;
+  readonly reasonLocalizationKey: string | null;
 }
 
 /**

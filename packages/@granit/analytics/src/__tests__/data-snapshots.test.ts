@@ -26,7 +26,9 @@ const TABLE_FIXTURE: TableSnapshotEnvelope = {
   snapshot: {
     columns: [
       { name: 'id', labelLocalizationKey: null },
-      { name: 'amount', labelLocalizationKey: 'Column:Invoice.Amount' },
+      // B3-8b — currency code is per-column, so a table mixing
+      // AmountEur and AmountUsd surfaces both independently on the wire.
+      { name: 'amount', labelLocalizationKey: 'Column:Invoice.Amount', currencyCode: 'EUR' },
       { name: 'status', labelLocalizationKey: 'Column:Invoice.Status' },
     ],
     rows: [
@@ -38,7 +40,7 @@ const TABLE_FIXTURE: TableSnapshotEnvelope = {
   sequence: 1,
   emittedAt: '2026-04-29T12:34:56.789Z',
   refreshHint: 'Dynamic',
-  unavailableReasonLocalizationKey: null,
+  reasonLocalizationKey: null,
 };
 
 const CHART_FIXTURE: ChartSnapshotEnvelope = {
@@ -54,11 +56,13 @@ const CHART_FIXTURE: ChartSnapshotEnvelope = {
       { label: '2026-03', value: 18200 },
       { label: '2026-04', value: null },
     ],
+    // B3-8b — value field declared `.Currency("EUR")` propagates here.
+    currency: 'EUR',
   },
   sequence: 1,
   emittedAt: '2026-04-29T12:34:56.789Z',
   refreshHint: 'Dynamic',
-  unavailableReasonLocalizationKey: null,
+  reasonLocalizationKey: null,
 };
 
 const PIVOT_FIXTURE: PivotSnapshotEnvelope = {
@@ -74,14 +78,22 @@ const PIVOT_FIXTURE: PivotSnapshotEnvelope = {
       { rowKeys: ['EU'], columnKeys: ['Paid'], value: 12300 },
       { rowKeys: ['NA'], columnKeys: ['Open'], value: null },
     ],
+    // B3-8b — every cell shares the same currency (same value field).
+    currency: 'EUR',
   },
   sequence: 1,
   emittedAt: '2026-04-29T12:34:56.789Z',
   refreshHint: 'Dynamic',
-  unavailableReasonLocalizationKey: null,
+  reasonLocalizationKey: null,
 };
 
 describe('TableSnapshotEnvelope — wire format', () => {
+  it('surfaces per-column currencyCode (B3-8b) — null for non-monetary columns', () => {
+    expect(TABLE_FIXTURE.snapshot?.columns[0]?.currencyCode).toBeUndefined();
+    expect(TABLE_FIXTURE.snapshot?.columns[1]?.currencyCode).toBe('EUR');
+    expect(TABLE_FIXTURE.snapshot?.columns[2]?.currencyCode).toBeUndefined();
+  });
+
   it('carries columns + rows + totalRowCount', () => {
     expect(TABLE_FIXTURE.snapshot?.columns).toHaveLength(3);
     expect(TABLE_FIXTURE.snapshot?.rows[0]?.['amount']).toBe(1240.5);
@@ -100,6 +112,10 @@ describe('ChartSnapshotEnvelope — wire format', () => {
     expect(CHART_FIXTURE.snapshot?.buckets).toHaveLength(3);
   });
 
+  it('surfaces value-field currency at the snapshot level (B3-8b)', () => {
+    expect(CHART_FIXTURE.snapshot?.currency).toBe('EUR');
+  });
+
   it('accepts null bucket values (Avg / Min / Max over empty groups)', () => {
     expect(CHART_FIXTURE.snapshot?.buckets[2]?.value).toBeNull();
   });
@@ -113,6 +129,10 @@ describe('PivotSnapshotEnvelope — wire format', () => {
   it('carries the flat (rowKeys × columnKeys × value) cell list', () => {
     expect(PIVOT_FIXTURE.snapshot?.cells).toHaveLength(3);
     expect(PIVOT_FIXTURE.snapshot?.cells[0]?.rowKeys).toEqual(['EU']);
+  });
+
+  it('surfaces value-field currency at the snapshot level (B3-8b)', () => {
+    expect(PIVOT_FIXTURE.snapshot?.currency).toBe('EUR');
   });
 
   it('accepts null cell values for empty groups', () => {

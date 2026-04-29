@@ -25,7 +25,7 @@ const KPI_WIDGET: DashboardRenderedWidget = {
     noData: false,
     previous: null,
   },
-  unavailableReasonLocalizationKey: null,
+  reasonLocalizationKey: null,
 };
 
 const MARKDOWN_WIDGET: DashboardRenderedWidget = {
@@ -36,7 +36,7 @@ const MARKDOWN_WIDGET: DashboardRenderedWidget = {
   emittedAt: '2026-04-29T12:34:56.789Z',
   refreshHint: 'Static',
   snapshot: { contentLocalizationKey: 'Widget:Test.Banner' },
-  unavailableReasonLocalizationKey: null,
+  reasonLocalizationKey: null,
 };
 
 const UNAVAILABLE_WIDGET: DashboardRenderedWidget = {
@@ -47,7 +47,7 @@ const UNAVAILABLE_WIDGET: DashboardRenderedWidget = {
   emittedAt: '2026-04-29T12:34:56.789Z',
   refreshHint: 'Static',
   snapshot: null,
-  unavailableReasonLocalizationKey: 'Widget:Unavailable',
+  reasonLocalizationKey: 'Widget:Unavailable',
 };
 
 const BUNDLE_FIXTURE: DashboardRenderResponse = {
