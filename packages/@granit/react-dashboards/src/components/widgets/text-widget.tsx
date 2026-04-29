@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next';
 import type { TextWidgetDefinition, TextWidgetStyle } from '@granit/dashboards';
 
 const STYLE_CLASSES: Readonly<Record<TextWidgetStyle, string>> = {
-  body: 'text-sm text-foreground',
-  heading: 'text-2xl font-semibold tracking-tight text-foreground',
-  subheading: 'text-lg font-semibold text-foreground',
-  caption: 'text-xs text-muted-foreground',
+  Body: 'text-sm text-foreground',
+  Heading: 'text-2xl font-semibold tracking-tight text-foreground',
+  Subheading: 'text-lg font-semibold text-foreground',
+  Caption: 'text-xs text-muted-foreground',
 };
 
 /**
@@ -21,14 +21,14 @@ export function TextWidget({ widget }: { readonly widget: TextWidgetDefinition }
   const content = t(widget.contentLocalizationKey);
   const className = `whitespace-pre-wrap break-words ${STYLE_CLASSES[widget.style]}`;
 
-  if (widget.style === 'heading') {
+  if (widget.style === 'Heading') {
     return (
       <h2 data-slot="text-widget" data-style="heading" className={className}>
         {content}
       </h2>
     );
   }
-  if (widget.style === 'subheading') {
+  if (widget.style === 'Subheading') {
     return (
       <h3 data-slot="text-widget" data-style="subheading" className={className}>
         {content}
@@ -36,7 +36,7 @@ export function TextWidget({ widget }: { readonly widget: TextWidgetDefinition }
     );
   }
   return (
-    <p data-slot="text-widget" data-style={widget.style} className={className}>
+    <p data-slot="text-widget" data-style={widget.style.toLowerCase()} className={className}>
       {content}
     </p>
   );

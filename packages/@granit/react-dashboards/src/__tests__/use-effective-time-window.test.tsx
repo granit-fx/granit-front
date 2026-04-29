@@ -28,7 +28,7 @@ describe('useEffectiveTimeWindow', () => {
   it('prefers an explicit override over the dashboard timeWindow', () => {
     const override: DashboardTimeWindow = {
       period: { token: 'mtd' },
-      kind: 'history',
+      kind: 'History',
     };
     const wrapper = ({ children }: { children: ReactNode }) => (
       <DashboardContextProvider

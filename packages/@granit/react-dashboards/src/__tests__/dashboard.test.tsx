@@ -48,7 +48,7 @@ describe('Dashboard', () => {
   it('renders widgets in `position` order with their declared size', () => {
     const { container } = renderDashboard({
       name: 'Test',
-      category: 'general',
+      category: 'General',
       isSystem: false,
       version: '1.0.0',
       layout: { columns: 12, rowHeight: 80 },
@@ -59,7 +59,7 @@ describe('Dashboard', () => {
           position: 1,
           size: { width: 6, height: 1 },
           contentLocalizationKey: 'Widget:Test.Hello',
-          style: 'body',
+          style: 'Body',
         },
         {
           slug: 'Heading',
@@ -84,7 +84,7 @@ describe('Dashboard', () => {
   it('applies grid-template-columns from layout.columns', () => {
     const { container } = renderDashboard({
       name: 'Empty',
-      category: 'general',
+      category: 'General',
       isSystem: false,
       version: '1.0.0',
       layout: { columns: 8, rowHeight: 80 },
@@ -97,7 +97,7 @@ describe('Dashboard', () => {
   it('renders an unknown-widget placeholder when the type has no registered renderer', () => {
     renderDashboard({
       name: 'Test',
-      category: 'general',
+      category: 'General',
       isSystem: false,
       version: '1.0.0',
       layout: { columns: 12, rowHeight: 80 },
@@ -118,7 +118,7 @@ describe('Dashboard', () => {
   it('renders the TextWidget with style-aware HTML element', () => {
     const { container } = renderDashboard({
       name: 'Test',
-      category: 'general',
+      category: 'General',
       isSystem: false,
       version: '1.0.0',
       layout: { columns: 12, rowHeight: 80 },
@@ -129,7 +129,7 @@ describe('Dashboard', () => {
           position: 0,
           size: { width: 6, height: 1 },
           contentLocalizationKey: 'Widget:Test.Caption',
-          style: 'caption',
+          style: 'Caption',
         },
       ],
     });
