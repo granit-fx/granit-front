@@ -42,4 +42,8 @@ export type {
 } from './types/index.js';
 
 // Rendering — wire contracts for the dashboard render pipeline (B3-1, ADR-039).
-export type { WidgetSnapshotEnvelope, WidgetSnapshotStatus } from './rendering/index.js';
+export type {
+  WidgetSnapshotEnvelope,
+  WidgetSnapshotEnvelopeOf,
+  WidgetSnapshotStatus,
+} from './rendering/index.js';

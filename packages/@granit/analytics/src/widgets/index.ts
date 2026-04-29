@@ -1,5 +1,7 @@
 export type { AggregateFunction } from './aggregation.js';
 export type { ChartType, ChartWidgetDefinition } from './chart-widget.js';
+export { isKpiSnapshotEnvelope } from './kpi-snapshot.js';
+export type { KpiSnapshot, KpiSnapshotEnvelope } from './kpi-snapshot.js';
 export type { KpiWidgetDefinition } from './kpi-widget.js';
 export type { PivotWidgetDefinition } from './pivot-widget.js';
 export type { TableWidgetDefinition } from './table-widget.js';
