@@ -5,7 +5,8 @@
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./editor": "./src/editor/index.ts"
   },
   "files": [
     "dist"
@@ -16,13 +17,21 @@
   "peerDependencies": {
     "@granit/analytics": "workspace:*",
     "@granit/dashboards": "workspace:*",
+    "@granit/react-dashboard-editor": "workspace:*",
     "@granit/react-dashboards": "workspace:*",
     "leaflet": "^1.9.4",
     "leaflet.markercluster": "^1.5.3",
-    "react": "^19.0.0"
+    "react": "^19.0.0",
+    "react-i18next": "^17.0.0"
   },
   "peerDependenciesMeta": {
+    "@granit/react-dashboard-editor": {
+      "optional": true
+    },
     "leaflet.markercluster": {
+      "optional": true
+    },
+    "react-i18next": {
       "optional": true
     }
   },
@@ -31,6 +40,10 @@
       ".": {
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js"
+      },
+      "./editor": {
+        "types": "./dist/editor/index.d.ts",
+        "import": "./dist/editor/index.js"
       }
     },
     "registry": "https://npm.pkg.github.com"
@@ -38,6 +51,7 @@
   "devDependencies": {
     "@granit/analytics": "workspace:*",
     "@granit/dashboards": "workspace:*",
+    "@granit/react-dashboard-editor": "workspace:*",
     "@granit/react-dashboards": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
