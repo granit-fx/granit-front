@@ -88,6 +88,29 @@ export {
 } from './lib/resolve-entity-alias.js';
 export type { AliasResolutionContext } from './lib/resolve-entity-alias.js';
 export { substituteAliases, substituteAliasesInRecord } from './lib/substitute-aliases.js';
+
+// Widget action dispatcher (P1.5) — declarative click handlers
+export {
+  useStableWidgetActionDispatcher,
+  useWidgetActionDispatcher,
+  WidgetActionProvider,
+} from './components/widget-action-context.js';
+export type {
+  WidgetActionDispatcher,
+  WidgetActionProviderProps,
+} from './components/widget-action-context.js';
+export { defaultWidgetActionHandlers } from './lib/default-widget-action-handlers.js';
+export {
+  expandActionParams,
+  expandActionPlaceholders,
+  expandActionTargetAndParams,
+} from './lib/expand-action-params.js';
+export { composeWidgetActionHandlers } from './lib/widget-action-handler.js';
+export type {
+  WidgetActionDispatchContext,
+  WidgetActionHandler,
+  WidgetActionHandlerRegistry,
+} from './lib/widget-action-handler.js';
 export { useEffectiveTimeWindow } from './hooks/use-effective-time-window.js';
 export {
   DASHBOARD_BREAKPOINT_MIN_WIDTH,

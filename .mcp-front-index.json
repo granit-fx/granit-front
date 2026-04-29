@@ -2341,6 +2341,16 @@
           "signature": "function substituteAliasesInRecord( record: Readonly<Record<string, string>>, aliases: DashboardAliasValues | null | undefined ): Readonly<Record<string, string>>"
         },
         {
+          "name": "defaultWidgetActionHandlers",
+          "kind": "const",
+          "signature": "const defaultWidgetActionHandlers: WidgetActionHandlerRegistry"
+        },
+        {
+          "name": "composeWidgetActionHandlers",
+          "kind": "function",
+          "signature": "function composeWidgetActionHandlers( ...registries: readonly Partial<WidgetActionHandlerRegistry>[] ): WidgetActionHandlerRegistry"
+        },
+        {
           "name": "useEffectiveTimeWindow",
           "kind": "function",
           "signature": "function useEffectiveTimeWindow(override?: DashboardTimeWindow): DashboardTimeWindow"
