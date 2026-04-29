@@ -1,4 +1,5 @@
 import { isMetricDatasource } from '@granit/dashboards';
+import { useWidgetTriggerHandler } from '@granit/react-dashboards';
 import { useTranslation } from 'react-i18next';
 
 import { useMetric } from '../api/use-metric.js';
@@ -39,6 +40,12 @@ export function KpiTile({ widget }: KpiTileProps) {
 
   const query = useMetric(metricName, DEFAULT_PERIOD, { enabled: metricName !== '' });
 
+  // `Click` actions on the widget definition. Hook lives at the top
+  // of the component (before any conditional return) so the rules-of-
+  // hooks order is stable across the metric-vs-unsupported branches.
+  const onClick = useWidgetTriggerHandler('Click', widget.actions);
+  const handleClick = onClick ? () => onClick() : undefined;
+
   if (!isMetricDatasource(datasource)) {
     const message = t('Analytics.UnsupportedDatasource', {
       defaultValue: 'Datasource not supported yet ({{kind}})',
@@ -65,6 +72,7 @@ export function KpiTile({ widget }: KpiTileProps) {
       noDataLabel={t('Analytics.NoData', { defaultValue: 'No data for this period' })}
       errorTitle={t('Analytics.Error.Title', { defaultValue: 'Failed to load metric' })}
       errorRetryLabel={t('Analytics.Error.Retry', { defaultValue: 'Retry' })}
+      onClick={handleClick}
     />
   );
 }

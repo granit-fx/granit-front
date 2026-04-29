@@ -2356,6 +2356,11 @@
           "signature": "function useEffectiveTimeWindow(override?: DashboardTimeWindow): DashboardTimeWindow"
         },
         {
+          "name": "useWidgetTriggerHandler",
+          "kind": "function",
+          "signature": "function useWidgetTriggerHandler( trigger: WidgetActionTrigger, actions: readonly WidgetAction[] | null | undefined ): ((data?: Readonly<Record<string, unknown>>) => void) | null"
+        },
+        {
           "name": "applyLayoutOverride",
           "kind": "function",
           "signature": "function applyLayoutOverride( base: DashboardLayout, override: DashboardLayoutOverride | undefined ): EffectiveDashboardLayout"

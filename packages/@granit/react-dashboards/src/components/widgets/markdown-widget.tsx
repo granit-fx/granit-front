@@ -1,26 +1,48 @@
 import { useTranslation } from 'react-i18next';
 
+import { useWidgetTriggerHandler } from '../../hooks/use-widget-trigger-handler.js';
+
 import type { MarkdownWidgetDefinition } from '@granit/dashboards';
 
 /**
  * Built-in renderer for `MarkdownWidgetDefinition`.
  *
- * v1 ships a minimal pre-formatted fallback — the resolved Markdown renders
- * verbatim with whitespace preserved. To enable full Markdown rendering
- * (headings, lists, code blocks, links), apps register their own renderer in
- * the registry, typically backed by `react-markdown`. Keeping the fallback
- * dependency-free means `@granit/react-dashboards` doesn't drag react-markdown
- * into bundles that never use it.
+ * v1 ships a minimal pre-formatted fallback — the resolved Markdown
+ * renders verbatim with whitespace preserved. Full Markdown rendering
+ * (headings, lists, code blocks, links) is opt-in via a downstream
+ * renderer registered in the registry, typically backed by
+ * `react-markdown`. Keeping the fallback dependency-free means
+ * `@granit/react-dashboards` doesn't drag react-markdown into bundles
+ * that never use it.
  *
- * The widget's `contentLocalizationKey` is resolved directly via
- * `useTranslation()` — the backend ships the key fully composed
- * (`Widget:{DashboardName}.{Slug}`).
+ * `Click` actions declared on `widget.actions` fire on body click via
+ * {@link useWidgetTriggerHandler}. Cursor + role + keyboard
+ * affordances apply only when at least one Click action is wired —
+ * widgets without actions stay non-interactive.
  */
 export function MarkdownWidget({ widget }: { readonly widget: MarkdownWidgetDefinition }) {
   const { t } = useTranslation();
   const content = t(widget.contentLocalizationKey);
+  const onClick = useWidgetTriggerHandler('Click', widget.actions);
   return (
-    <div data-slot="markdown-widget" className="prose prose-sm max-w-none">
+    <div
+      data-slot="markdown-widget"
+      data-interactive={onClick ? '' : undefined}
+      onClick={onClick ? () => onClick() : undefined}
+      onKeyDown={
+        onClick
+          ? (event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                onClick();
+              }
+            }
+          : undefined
+      }
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      className={`prose prose-sm max-w-none${onClick ? ' cursor-pointer' : ''}`}
+    >
       <pre className="whitespace-pre-wrap break-words font-sans text-sm text-foreground">
         {content}
       </pre>

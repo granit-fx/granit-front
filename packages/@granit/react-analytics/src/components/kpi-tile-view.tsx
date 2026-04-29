@@ -42,6 +42,13 @@ export interface KpiTileViewProps {
    * without trend visualization don't pull in the chart bundle.
    */
   readonly trendVisual?: ReactNode;
+  /**
+   * Click handler fired on body interaction. When set, the tile gains
+   * cursor / `role="button"` / keyboard activation affordances. Wired
+   * by the smart `<KpiTile>` from `widget.actions` (Click trigger);
+   * standalone consumers can wire their own.
+   */
+  readonly onClick?: () => void;
 }
 
 /**
@@ -68,9 +75,31 @@ export function KpiTileView({
   errorRetryLabel = 'Retry',
   className,
   trendVisual,
+  onClick,
 }: KpiTileViewProps) {
   return (
-    <div data-slot="kpi-tile" className={joinClasses('flex h-full flex-col gap-3', className)}>
+    <div
+      data-slot="kpi-tile"
+      data-interactive={onClick ? '' : undefined}
+      onClick={onClick}
+      onKeyDown={
+        onClick
+          ? (event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                onClick();
+              }
+            }
+          : undefined
+      }
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      className={joinClasses(
+        'flex h-full flex-col gap-3',
+        onClick ? 'cursor-pointer' : undefined,
+        className
+      )}
+    >
       {title ? (
         <header data-slot="kpi-tile-header">
           <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>

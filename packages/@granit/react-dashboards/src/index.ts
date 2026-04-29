@@ -112,6 +112,7 @@ export type {
   WidgetActionHandlerRegistry,
 } from './lib/widget-action-handler.js';
 export { useEffectiveTimeWindow } from './hooks/use-effective-time-window.js';
+export { useWidgetTriggerHandler } from './hooks/use-widget-trigger-handler.js';
 export {
   DASHBOARD_BREAKPOINT_MIN_WIDTH,
   resolveBreakpoint,
