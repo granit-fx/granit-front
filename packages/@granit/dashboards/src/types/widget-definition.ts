@@ -1,3 +1,5 @@
+import type { DashboardTimeWindow } from './dashboard-time-window.js';
+import type { WidgetAction } from './widget-action.js';
 import type { WidgetSize } from './widget-size.js';
 
 /**
@@ -8,7 +10,7 @@ import type { WidgetSize } from './widget-size.js';
  *
  * The `type` discriminator is the JSON polymorphism marker exposed by the
  * backend's `[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]`
- * attribute (proposed in P1.1 of the architecture doc).
+ * attribute (P1.1).
  */
 export interface WidgetDefinitionBase {
   /**
@@ -30,6 +32,23 @@ export interface WidgetDefinitionBase {
    * widgets ignore this field.
    */
   readonly requiredPermission?: string;
+  /**
+   * Optional override of the dashboard-wide
+   * {@link DashboardDefinition.defaultTimeWindow} for this widget specifically.
+   * Useful when (a) the widget is rendered standalone outside a dashboard
+   * (e.g. a KPI tile above an invoice list — no surrounding dashboard
+   * context), or (b) the widget needs a different range than its peers
+   * (e.g. a year-to-date KPI next to last-30-days widgets). P1.3.
+   * Presentation-only widgets ignore this field.
+   */
+  readonly timeWindowOverride?: DashboardTimeWindow;
+  /**
+   * Declarative click-handler descriptors. Each {@link WidgetAction} binds a
+   * trigger to a typed dispatch kind plus an optional param map. The frontend
+   * dispatches them — no code injection, no expression evaluation. P1.5.
+   * `null` or missing = the widget has no actions wired.
+   */
+  readonly actions?: readonly WidgetAction[] | null;
 }
 
 /**

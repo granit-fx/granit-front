@@ -26,6 +26,7 @@ export type {
 export type { DashboardDefinition } from './dashboard-definition.js';
 export { DEFAULT_DASHBOARD_LAYOUT } from './dashboard-layout.js';
 export type { DashboardLayout } from './dashboard-layout.js';
+export type { WidgetAction, WidgetActionKind, WidgetActionTrigger } from './widget-action.js';
 export type {
   FrameworkWidgetDefinition,
   ImageWidgetDefinition,
