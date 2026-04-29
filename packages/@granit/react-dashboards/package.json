@@ -14,7 +14,10 @@
     "build": "tsup"
   },
   "peerDependencies": {
+    "@granit/api-client": "workspace:*",
     "@granit/dashboards": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@tanstack/react-query": "^5.0.0",
     "react": "^19.0.0",
     "react-i18next": "^17.0.0"
   },
@@ -28,7 +31,9 @@
     "registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
+    "@granit/api-client": "workspace:*",
     "@granit/dashboards": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*"
   }

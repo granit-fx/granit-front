@@ -2047,6 +2047,17 @@
       "description": "React renderer for @granit/dashboards — Dashboard layout component, WidgetRegistry provider, and built-in renderers for Markdown / Image / Text widgets",
       "exports": [
         {
+          "name": "UseDashboardRenderOptions",
+          "kind": "interface",
+          "signature": "interface UseDashboardRenderOptions",
+          "members": []
+        },
+        {
+          "name": "useDashboardWidget",
+          "kind": "function",
+          "signature": "function useDashboardWidget( dashboardId: string, widgetId: string ): UseQueryResult<DashboardRenderedWidget>"
+        },
+        {
           "name": "Dashboard",
           "kind": "function",
           "signature": "function Dashboard("

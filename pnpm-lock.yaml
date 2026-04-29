@@ -1090,6 +1090,9 @@ importers:
 
   packages/@granit/react-dashboards:
     dependencies:
+      '@tanstack/react-query':
+        specifier: 5.100.5
+        version: 5.100.5(react@19.2.5)
       react:
         specifier: ^19.0.0
         version: 19.2.5
@@ -1097,9 +1100,15 @@ importers:
         specifier: ^17.0.0
         version: 17.0.4(i18next@26.0.8(typescript@6.0.3))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.3)
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/dashboards':
         specifier: workspace:*
         version: link:../dashboards
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing

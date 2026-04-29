@@ -50,6 +50,10 @@ export {
   isTextSnapshotEnvelope,
 } from './rendering/index.js';
 export type {
+  DashboardRenderedWidget,
+  DashboardRenderPeriod,
+  DashboardRenderRequest,
+  DashboardRenderResponse,
   ImageSnapshotEnvelope,
   ImageWidgetSnapshot,
   MarkdownSnapshotEnvelope,

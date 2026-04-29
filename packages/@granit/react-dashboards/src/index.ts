@@ -2,6 +2,17 @@
 // @granit/react-dashboards — public API
 // ---------------------------------------------------------------------------
 
+// Render hook (B4-render — POST /dashboards/{id}/render bundle + per-widget cache split)
+export {
+  dashboardRenderQueryKey,
+  dashboardWidgetQueryKey,
+  normalizeDashboardRenderRequest,
+  strongestRefreshHint,
+  useDashboardRender,
+} from './api/use-dashboard-render.js';
+export type { UseDashboardRenderOptions } from './api/use-dashboard-render.js';
+export { useDashboardWidget } from './api/use-dashboard-widget.js';
+
 // Layout + dispatcher
 export { Dashboard } from './components/dashboard.js';
 export type { DashboardProps } from './components/dashboard.js';
