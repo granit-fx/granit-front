@@ -2099,9 +2099,41 @@
           "members": []
         },
         {
+          "name": "WidgetPalette",
+          "kind": "function",
+          "signature": "function WidgetPalette("
+        },
+        {
+          "name": "WidgetPaletteProps",
+          "kind": "interface",
+          "signature": "interface WidgetPaletteProps",
+          "members": []
+        },
+        {
           "name": "reorderWidgets",
           "kind": "function",
           "signature": "function reorderWidgets( definition: DashboardDefinition, sourceSlug: string, targetSlug: string ): DashboardDefinition"
+        },
+        {
+          "name": "addWidget",
+          "kind": "function",
+          "signature": "function addWidget<TDefinition extends"
+        },
+        {
+          "name": "composeCatalogs",
+          "kind": "function",
+          "signature": "function composeCatalogs( ...catalogs: readonly (readonly WidgetCatalogEntry[])[] ): readonly WidgetCatalogEntry[]"
+        },
+        {
+          "name": "defaultWidgetCatalog",
+          "kind": "const",
+          "signature": "const defaultWidgetCatalog: readonly WidgetCatalogEntry[]"
+        },
+        {
+          "name": "WidgetCatalogEntry",
+          "kind": "interface",
+          "signature": "interface WidgetCatalogEntry",
+          "members": []
         }
       ]
     },

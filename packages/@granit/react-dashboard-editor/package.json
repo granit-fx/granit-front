@@ -19,7 +19,8 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@granit/dashboards": "workspace:*",
     "@granit/react-dashboards": "workspace:*",
-    "react": "^19.0.0"
+    "react": "^19.0.0",
+    "react-i18next": "^17.0.0"
   },
   "publishConfig": {
     "exports": {
