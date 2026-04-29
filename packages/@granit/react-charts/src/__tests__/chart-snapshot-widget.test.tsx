@@ -8,7 +8,7 @@ import type { DashboardRenderedWidget } from '@granit/dashboards';
 // jsdom doesn't implement Canvas; ECharts queries it on init. Stub the
 // echarts-for-react module the same way the typed-primitive tests do —
 // we only assert dispatch behaviour, not the rendered Canvas.
-vi.mock('echarts-for-react/lib/core', () => ({
+vi.mock('echarts-for-react/esm/core', () => ({
   default: ({ option }: { readonly option: unknown }) => (
     <div data-testid="echarts-mock" data-option={JSON.stringify(option)} />
   ),

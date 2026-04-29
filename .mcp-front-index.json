@@ -2073,6 +2073,39 @@
       "exports": []
     },
     {
+      "name": "@granit/react-dashboard-editor",
+      "description": "React dashboard editor primitives for Granit — drag-and-drop reorderable widget grid built on dnd-kit. Pairs with the read-mode <RenderedDashboard> from @granit/react-dashboards. Frontend half of EPIC #1366 story B5-C (dashboard composer).",
+      "exports": [
+        {
+          "name": "EditableDashboard",
+          "kind": "function",
+          "signature": "function EditableDashboard("
+        },
+        {
+          "name": "EditableDashboardProps",
+          "kind": "interface",
+          "signature": "interface EditableDashboardProps",
+          "members": []
+        },
+        {
+          "name": "SortableWidgetCell",
+          "kind": "function",
+          "signature": "function SortableWidgetCell("
+        },
+        {
+          "name": "SortableWidgetCellProps",
+          "kind": "interface",
+          "signature": "interface SortableWidgetCellProps",
+          "members": []
+        },
+        {
+          "name": "reorderWidgets",
+          "kind": "function",
+          "signature": "function reorderWidgets( definition: DashboardDefinition, sourceSlug: string, targetSlug: string ): DashboardDefinition"
+        }
+      ]
+    },
+    {
       "name": "@granit/react-dashboards",
       "description": "React renderer for @granit/dashboards — Dashboard layout component, WidgetRegistry provider, and built-in renderers for Markdown / Image / Text widgets",
       "exports": [

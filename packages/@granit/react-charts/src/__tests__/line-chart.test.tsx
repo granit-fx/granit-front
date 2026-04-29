@@ -9,7 +9,7 @@ import { SparklineChart } from '../components/sparkline-chart.js';
 import type { ChartSeries } from '@granit/charts';
 
 // jsdom doesn't implement Canvas; ECharts queries it on init. Stub the call.
-vi.mock('echarts-for-react/lib/core', () => ({
+vi.mock('echarts-for-react/esm/core', () => ({
   default: ({ option }: { readonly option: unknown }) => (
     <div data-testid="echarts-mock" data-option={JSON.stringify(option)} />
   ),

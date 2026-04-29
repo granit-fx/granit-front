@@ -1,4 +1,11 @@
-import EChartsReactCore from 'echarts-for-react/lib/core';
+// Use the package's ESM entry — the CJS `lib/core` path leaks the
+// `{ default: ... }` shim into Vite's import graph (the `default`
+// property holds the class, not the import binding itself), which
+// surfaces at runtime as
+//   "Element type is invalid... got: object. Check the render method of `Chart`."
+// when the bundler can't unwrap the CJS interop. The ESM path ships a
+// real `export default EChartsReactCore` that Vite consumes verbatim.
+import EChartsReactCore from 'echarts-for-react/esm/core';
 
 import { echarts } from '../echarts-instance.js';
 
