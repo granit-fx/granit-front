@@ -13,6 +13,13 @@
 // `IReadOnlyList<T>` → `readonly T[]`, `IReadOnlyDictionary<string, T>` →
 // `Readonly<Record<string, T>>`.
 
+export {
+  buildEntityUrl,
+  buildWorkspaceUrl,
+  parseEntityUrl,
+  parseWorkspaceUrl,
+} from './url/index.js';
+export type { ParsedEntityUrl, ParsedWorkspaceUrl } from './url/index.js';
 export { WORKSPACE_TREE_SCHEMA_VERSION } from './types/index.js';
 export type {
   LandingRouteResponse,
