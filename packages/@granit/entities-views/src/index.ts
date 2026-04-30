@@ -1,9 +1,21 @@
-// @granit/entities-views — public API
+// ---------------------------------------------------------------------------
+// @granit/entities-views — public API (framework-agnostic)
+// ---------------------------------------------------------------------------
 //
-// Framework-agnostic contracts for Granit saved views (EntityView aggregate
-// from Granit.Entities.Views). Visibility (Personal / Shared / Tenant),
-// flags (isPinned / isDefault / isPersonalDefault), and the basedOn delta
-// model that lets a view stack onto a base view without copying its state.
+// Mirrors the .NET DTOs from Granit.Entities.Views.Abstractions +
+// Granit.Entities.Views.Endpoints.Dtos so any consumer (React renderer,
+// mobile app) can read the /entities/{name}/views payloads with full
+// type safety.
 //
-// Implementation lands in subsequent stories of granit-fx/granit-front#301.
-export {};
+// Wire conventions match @granit/entities: camelCase property names,
+// PascalCase string-literal enums, readonly arrays / records.
+
+export type {
+  EntityViewCreateBodyRequest,
+  EntityViewResponse,
+  EntityViewShareBodyRequest,
+  EntityViewSharedWith,
+  EntityViewToggleFlagRequest,
+  EntityViewUpdateBodyRequest,
+  EntityViewVisibility,
+} from './types/index.js';
