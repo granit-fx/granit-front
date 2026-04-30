@@ -14,5 +14,15 @@ export {
   useUpdateEntityView,
 } from './api/use-entity-view-crud.js';
 export type { UpdateEntityViewVariables } from './api/use-entity-view-crud.js';
+export {
+  useSetEntityViewPersonalDefault,
+  useSetEntityViewPinned,
+  useSetEntityViewTenantDefault,
+  useShareEntityView,
+} from './api/use-entity-view-flags.js';
+export type {
+  ShareEntityViewVariables,
+  ToggleEntityViewFlagVariables,
+} from './api/use-entity-view-flags.js';
 export { entityViewQueryKey, useEntityView } from './api/use-entity-view.js';
 export { entityViewsQueryKey, useEntityViews } from './api/use-entity-views.js';
