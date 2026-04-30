@@ -23,8 +23,9 @@ pnpm add @granit/react-query-engine
 
 - `useQueryEndpoint(options)` -- fetch data from a query endpoint with filters, sorting, pagination
 - `useQueryMeta(options)` -- fetch metadata (available columns, filters) for a query endpoint
-- `useSavedViews(options)` -- manage saved views (filters + column configurations)
 - `useSmartFilter(options)` -- manage smart filter state
+
+> Saved views moved to [`@granit/react-entities-views`](../react-entities-views) — see `useEntityViews`, `useCreateEntityView`, etc.
 
 ### Utilities
 
@@ -36,7 +37,6 @@ pnpm add @granit/react-query-engine
 - `UseQueryEndpointOptions`, `UseQueryEndpointReturn` -- query endpoint hook types
 - `UsePaginationOptions`, `UsePaginationReturn`, `PaginationPage` -- pagination types
 - `UseInfiniteScrollOptions`, `UseInfiniteScrollReturn`, `InfiniteScrollPage` -- infinite scroll types
-- `UseSavedViewsReturn` -- saved views hook return type
 - `UseSmartFilterOptions`, `UseSmartFilterReturn` -- smart filter hook types
 
 ## Usage

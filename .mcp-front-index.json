@@ -3592,17 +3592,6 @@
           "signature": "function useQueryMeta(): UseQueryResult<QueryMetadata>"
         },
         {
-          "name": "useSavedViews",
-          "kind": "function",
-          "signature": "function useSavedViews(): UseSavedViewsReturn"
-        },
-        {
-          "name": "UseSavedViewsReturn",
-          "kind": "interface",
-          "signature": "interface UseSavedViewsReturn",
-          "members": []
-        },
-        {
           "name": "useSmartFilter",
           "kind": "function",
           "signature": "function useSmartFilter(options?: UseSmartFilterOptions): UseSmartFilterReturn"

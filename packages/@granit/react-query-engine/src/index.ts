@@ -23,7 +23,5 @@ export type {
   UseQueryEndpointReturn,
 } from './hooks/use-query-endpoint.js';
 export { useQueryMeta } from './hooks/use-query-meta.js';
-export { useSavedViews } from './hooks/use-saved-views.js';
-export type { UseSavedViewsReturn } from './hooks/use-saved-views.js';
 export { useSmartFilter } from './hooks/use-smart-filter.js';
 export type { UseSmartFilterOptions, UseSmartFilterReturn } from './hooks/use-smart-filter.js';
