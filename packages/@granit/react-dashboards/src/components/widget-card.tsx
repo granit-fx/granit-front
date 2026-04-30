@@ -26,7 +26,7 @@ export function WidgetCard({ title, children, className }: WidgetCardProps) {
           <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
         </header>
       ) : null}
-      <div data-slot="widget-card-body" className="flex-1 min-h-0">
+      <div data-slot="widget-card-body" className="flex-1 min-h-0 overflow-hidden">
         {children}
       </div>
     </div>
