@@ -43,11 +43,17 @@ export interface EntityDetailProps {
    * together with `entityName` + `entityId`, every relation surfaces in
    * the layout slot matching its `display` mode:
    *
+   * - `Tab` — full-width tab strip at the very top of the article
    * - `SmartButton` — header strip above the section column
    * - `InlineChips` — chip strip below the section column
    * - `Sidebar` — vertical group at the top of the right rail
-   * - `Tab` — passed through unchanged for now (renderer lands in a
-   *   follow-up under #302)
+   *
+   * The framework only paints the navigation surface — clicking a Tab
+   * fires `onRelationClick` like any other display mode. Apps own the
+   * decision to swap the section column for a related list (typically
+   * by routing to `/w/{workspace}/{relatedEntity}?source={sourceId}`)
+   * or to render a side-peek; the framework deliberately stays
+   * router-agnostic.
    */
   readonly relations?: readonly EntityRelationManifest[];
   /**
@@ -105,6 +111,7 @@ export function EntityDetail({
   const allDisplayedNames = useMemo(
     () =>
       [
+        ...groupedRelations.Tab,
         ...groupedRelations.SmartButton,
         ...groupedRelations.InlineChips,
         ...groupedRelations.Sidebar,
@@ -112,13 +119,14 @@ export function EntityDetail({
     [groupedRelations]
   );
 
-  // Single batched fetch covers SmartButton + InlineChips + Sidebar relations.
+  // Single batched fetch covers every display mode.
   const aggregatesQuery = useEntityRelationAggregates(entityName ?? '', entityId ?? '', {
     relations: allDisplayedNames,
     enabled: Boolean(entityName) && Boolean(entityId) && allDisplayedNames.length > 0,
   });
 
   const renderable = Boolean(entityName) && Boolean(entityId);
+  const showTabs = renderable && groupedRelations.Tab.length > 0;
   const showSmartButtons = renderable && groupedRelations.SmartButton.length > 0;
   const showInlineChips = renderable && groupedRelations.InlineChips.length > 0;
   const showSidebars = renderable && groupedRelations.Sidebar.length > 0;
@@ -126,6 +134,14 @@ export function EntityDetail({
 
   return (
     <article data-granit-entity-detail="" data-variant={variant.name} className={className}>
+      {showTabs ? (
+        <RelationGroup
+          display="Tab"
+          relations={groupedRelations.Tab}
+          aggregates={aggregatesQuery}
+          onRelationClick={onRelationClick}
+        />
+      ) : null}
       {showSmartButtons ? (
         <RelationGroup
           display="SmartButton"
@@ -304,19 +320,21 @@ function formatValue(value: unknown): string {
 }
 
 interface RelationGroupProps {
-  readonly display: Exclude<RelationDisplay, 'Tab'>;
+  readonly display: RelationDisplay;
   readonly relations: readonly EntityRelationManifest[];
   readonly aggregates: UseQueryResult<RelationAggregatesResponse>;
   readonly onRelationClick: ((relation: EntityRelationManifest) => void) | undefined;
 }
 
-const GROUP_DATA_ATTRIBUTE: Record<RelationGroupProps['display'], string> = {
+const GROUP_DATA_ATTRIBUTE: Record<RelationDisplay, string> = {
+  Tab: 'data-granit-detail-tabs',
   SmartButton: 'data-granit-detail-smart-buttons',
   InlineChips: 'data-granit-detail-inline-chips',
   Sidebar: 'data-granit-detail-relation-sidebar',
 };
 
-const GROUP_ARIA_LABEL: Record<RelationGroupProps['display'], string> = {
+const GROUP_ARIA_LABEL: Record<RelationDisplay, string> = {
+  Tab: 'Related (tabs)',
   SmartButton: 'Related',
   InlineChips: 'Related (chips)',
   Sidebar: 'Related (sidebar)',
@@ -349,7 +367,7 @@ function RelationGroup({
 }
 
 interface RelationItemProps {
-  readonly display: RelationGroupProps['display'];
+  readonly display: RelationDisplay;
   readonly relation: EntityRelationManifest;
   readonly value: RelationAggregateValue | undefined;
   readonly isLoading: boolean;

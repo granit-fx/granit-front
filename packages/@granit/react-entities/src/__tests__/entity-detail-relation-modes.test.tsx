@@ -194,8 +194,79 @@ describe('EntityDetail InlineChips relations', () => {
   });
 });
 
+describe('EntityDetail Tab relations', () => {
+  it('renders tab relations at the top of the article, above SmartButtons', async () => {
+    const { wrapper: Wrapper } = makeWrapper();
+    const { container } = render(
+      <Wrapper>
+        <EntityDetail
+          variant={variant}
+          values={{}}
+          entityName={ENTITY}
+          entityId={ID}
+          relations={[relation('Invoices', 0, 'SmartButton'), relation('Activities', 0, 'Tab')]}
+        />
+      </Wrapper>
+    );
+    await waitFor(() =>
+      expect(container.querySelector('[data-granit-detail-tabs]')).not.toBeNull()
+    );
+    const tabs = container.querySelector('[data-granit-detail-tabs]') as HTMLElement;
+    const smart = container.querySelector('[data-granit-detail-smart-buttons]') as HTMLElement;
+    expect(tabs.compareDocumentPosition(smart) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it('shows the count after the response lands', async () => {
+    const { wrapper: Wrapper } = makeWrapper();
+    const { container } = render(
+      <Wrapper>
+        <EntityDetail
+          variant={variant}
+          values={{}}
+          entityName={ENTITY}
+          entityId={ID}
+          relations={[relation('Invoices', 0, 'Tab')]}
+        />
+      </Wrapper>
+    );
+    await waitFor(() => {
+      const count = container.querySelector(
+        '[data-display="Tab"] [data-granit-relation-item-count]'
+      );
+      expect(count?.textContent).toBe('12');
+    });
+  });
+
+  it('forwards onRelationClick from a tab', async () => {
+    const { wrapper: Wrapper } = makeWrapper();
+    const onRelationClick = vi.fn();
+    const tab = relation('Invoices', 0, 'Tab');
+    const { container } = render(
+      <Wrapper>
+        <EntityDetail
+          variant={variant}
+          values={{}}
+          entityName={ENTITY}
+          entityId={ID}
+          relations={[tab]}
+          onRelationClick={onRelationClick}
+        />
+      </Wrapper>
+    );
+    await waitFor(() =>
+      expect(container.querySelector('[data-granit-detail-tabs]')).not.toBeNull()
+    );
+    fireEvent.click(
+      container.querySelector(
+        '[data-display="Tab"] [data-granit-relation-item]'
+      ) as HTMLButtonElement
+    );
+    expect(onRelationClick).toHaveBeenCalledWith(tab);
+  });
+});
+
 describe('EntityDetail batched aggregates', () => {
-  it('issues a single POST for SmartButton + Sidebar + InlineChips relations together', async () => {
+  it('issues a single POST for every display mode (Tab + SmartButton + Sidebar + InlineChips) together', async () => {
     const { wrapper: Wrapper } = makeWrapper();
     render(
       <Wrapper>
@@ -208,13 +279,16 @@ describe('EntityDetail batched aggregates', () => {
             relation('Invoices', 0, 'SmartButton'),
             relation('AuditTrail', 0, 'Sidebar'),
             relation('Tags', 0, 'InlineChips'),
+            relation('Activities', 0, 'Tab'),
           ]}
         />
       </Wrapper>
     );
     await waitFor(() => expect(postCalls).toBeGreaterThan(0));
     expect(postCalls).toBe(1);
-    expect(lastBody).toEqual({ relations: ['AuditTrail', 'Invoices', 'Tags'] });
+    expect(lastBody).toEqual({
+      relations: ['Activities', 'AuditTrail', 'Invoices', 'Tags'],
+    });
   });
 
   it('fires onRelationClick for any display mode', async () => {
