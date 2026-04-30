@@ -4142,7 +4142,18 @@
     {
       "name": "@granit/react-workspaces",
       "description": "React renderer for @granit/workspaces — WorkspaceNav sidebar, /w/{workspace}/... routing, Notion-style SidePeek with ⌘+⇧+. expand, and the landing-route resolver hook",
-      "exports": []
+      "exports": [
+        {
+          "name": "useWorkspaces",
+          "kind": "function",
+          "signature": "function useWorkspaces( options:"
+        },
+        {
+          "name": "workspaceTreeQueryKey",
+          "kind": "const",
+          "signature": "const workspaceTreeQueryKey"
+        }
+      ]
     },
     {
       "name": "@granit/reference-data",
