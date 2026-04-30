@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState, type CSSProperties } from 'react';
 
-import { useDashboardRender, type UseDashboardRenderOptions } from '../api/use-dashboard-render.js';
+import { type UseDashboardRenderOptions } from '../api/use-dashboard-render.js';
+import { usePushedDashboard } from '../api/use-pushed-dashboard.js';
 import { mergeFilterValuesIntoRequest } from '../lib/merge-filter-values.js';
 
 import { useDashboardFilters } from './dashboard-filter-context.js';
@@ -11,10 +12,12 @@ import type { DashboardRenderRequest, DashboardRenderedWidget } from '@granit/da
 
 /**
  * Read-mode dashboard component. Calls
- * {@link useDashboardRender}(`dashboardId`) to fetch the bundle, then
- * iterates `data.widgets` and dispatches each through
- * {@link RenderedWidget} (which reads the active
- * {@link SnapshotWidgetRegistry}).
+ * {@link usePushedDashboard}(`dashboardId`) to fetch the seed bundle and
+ * subscribe to live updates when the backend's push transport
+ * (ADR-043) is wired, then iterates `data.widgets` and dispatches each
+ * through {@link RenderedWidget} (which reads the active
+ * {@link SnapshotWidgetRegistry}). Pull-only dashboards never open a
+ * stream — the hook collapses to a plain pull fetch.
  *
  * The grid layout reconstructs from the structural metadata each
  * widget envelope carries (`width` / `height` / `position` — backend
@@ -110,7 +113,11 @@ export function RenderedDashboard({
     [request, filters?.values, activeViewName]
   );
 
-  const query = useDashboardRender(dashboardId, effectiveRequest, options);
+  // Push-aware fetch: identical to useDashboardRender for pull-only
+  // dashboards (no stream opens), then surgically merges live snapshot
+  // events into the per-widget cache when the bundle declares
+  // `transport: 'Push'` on at least one widget. ADR-043 §6.
+  const query = usePushedDashboard(dashboardId, effectiveRequest, options);
 
   // Once the first response lands, mirror the server's
   // `activeViewName` into our internal state so an uncontrolled view
