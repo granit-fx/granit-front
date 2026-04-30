@@ -19,6 +19,16 @@ export type {
   WidgetRenderKind,
 } from './api/use-widget-render.js';
 
+// Push transport (P2.4 — ADR-043). SSE-driven live updates that
+// surgically merge into the per-widget cache entries; pull-only
+// dashboards bypass the stream entirely.
+export { applyStreamSnapshot, useDashboardStream } from './api/use-dashboard-stream.js';
+export type {
+  DashboardStreamSnapshot,
+  UseDashboardStreamOptions,
+} from './api/use-dashboard-stream.js';
+export { usePushedDashboard } from './api/use-pushed-dashboard.js';
+
 // Lifecycle / CRUD hooks (B4-write — Granit.Dashboards.Endpoints).
 // Surface mirrors the persisted-Dashboard aggregate model: the catalog
 // lists *available definitions*, the list lists *imported instances*, and

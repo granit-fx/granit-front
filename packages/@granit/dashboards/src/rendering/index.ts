@@ -27,3 +27,4 @@ export type {
   WidgetSnapshotEnvelopeOf,
 } from './widget-snapshot-envelope.js';
 export type { WidgetSnapshotStatus } from './widget-snapshot-status.js';
+export type { WidgetTransport } from './widget-transport.js';

@@ -119,4 +119,5 @@ export type {
   WidgetSnapshotEnvelope,
   WidgetSnapshotEnvelopeOf,
   WidgetSnapshotStatus,
+  WidgetTransport,
 } from './rendering/index.js';

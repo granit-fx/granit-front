@@ -2247,6 +2247,21 @@
           "signature": "const widgetRenderQueryKey"
         },
         {
+          "name": "applyStreamSnapshot",
+          "kind": "function",
+          "signature": "function applyStreamSnapshot( current: DashboardRenderedWidget | undefined, event: DashboardStreamSnapshot ): DashboardRenderedWidget | undefined"
+        },
+        {
+          "name": "useDashboardStream",
+          "kind": "function",
+          "signature": "function useDashboardStream( dashboardId: string, options: UseDashboardStreamOptions ="
+        },
+        {
+          "name": "usePushedDashboard",
+          "kind": "function",
+          "signature": "function usePushedDashboard( dashboardId: string, request: DashboardRenderRequest ="
+        },
+        {
           "name": "dashboardCatalogQueryKey",
           "kind": "const",
           "signature": "const dashboardCatalogQueryKey"

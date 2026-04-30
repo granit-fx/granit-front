@@ -1,5 +1,6 @@
 import type { DashboardDriftStatus } from './dashboard-drift-status.js';
 import type { WidgetSnapshotStatus } from './widget-snapshot-status.js';
+import type { WidgetTransport } from './widget-transport.js';
 import type { RefreshHint } from '../types/refresh-hint.js';
 import type { WidgetAction } from '../types/widget-action.js';
 
@@ -133,6 +134,18 @@ export interface DashboardRenderedWidget {
   readonly emittedAt: string;
   /** Pull / push transport hint — drives the per-widget cache TTL. */
   readonly refreshHint: RefreshHint;
+  /**
+   * Effective transport selected for this widget at render time
+   * (ADR-043 §2.3). `'Push'` means the frontend should consume live
+   * updates from `GET /dashboards/{id}/stream`; `'Pull'` means polling
+   * via the render endpoint per `refreshHint` cadence. Hosts that
+   * haven't loaded `Granit.Dashboards.Push` always emit `'Pull'`.
+   *
+   * Optional on the wire for backwards compatibility — older bundles
+   * served before P2.4 omit the field, in which case the framework
+   * treats the widget as `'Pull'`.
+   */
+  readonly transport?: WidgetTransport;
   /**
    * Pre-serialised typed payload. `null` when {@link status} is not
    * `'Snapshot'`. Frontend renderers narrow this to a kind-specific shape
