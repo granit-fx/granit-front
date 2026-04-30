@@ -1,6 +1,7 @@
 import { evaluateVisibility } from '@granit/entities';
 import { useMemo, type ReactNode } from 'react';
 
+import { useEntityRelationAggregates } from '../api/use-entity-relation-aggregates.js';
 import { useEntityRenderer } from '../provider/entity-renderer-provider.js';
 
 import type {
@@ -9,6 +10,8 @@ import type {
   EntityDetailSidePanelManifest,
   EntityFormFieldManifest,
   EntityFormManifest,
+  EntityRelationManifest,
+  RelationAggregateValue,
 } from '@granit/entities';
 
 export interface EntityDetailProps {
@@ -32,6 +35,21 @@ export interface EntityDetailProps {
    * declares side panels and the provider catalog has matching renderers.
    */
   readonly entityId?: string;
+  /**
+   * Relations declared on the entity (`manifest.relations`). When set
+   * together with `entityName` + `entityId`, every relation with
+   * `display === 'SmartButton'` renders in a header strip with its
+   * batched aggregate count. Other display modes (Tab / Sidebar /
+   * InlineChips) are emitted as placeholder slots; their renderers
+   * land in a follow-up story.
+   */
+  readonly relations?: readonly EntityRelationManifest[];
+  /**
+   * Optional handler invoked when a smart-button relation is clicked.
+   * Receives the relation manifest entry; the host typically navigates
+   * to the related list scoped to the source row.
+   */
+  readonly onRelationClick?: (relation: EntityRelationManifest) => void;
   /**
    * Optional class for the root element. The root layout is a
    * `<article>` containing the section column + side-panel rail; apps
@@ -65,6 +83,8 @@ export function EntityDetail({
   formVariants,
   entityName,
   entityId,
+  relations,
+  onRelationClick,
   className,
 }: EntityDetailProps): ReactNode {
   const sortedSections = useMemo(
@@ -75,9 +95,24 @@ export function EntityDetail({
     () => [...variant.sidePanels].sort((a, b) => a.order - b.order),
     [variant.sidePanels]
   );
+  const smartButtons = useMemo(
+    () =>
+      (relations ?? [])
+        .filter((r) => r.display === 'SmartButton')
+        .sort((a, b) => a.order - b.order),
+    [relations]
+  );
 
   return (
     <article data-granit-entity-detail="" data-variant={variant.name} className={className}>
+      {smartButtons.length > 0 && entityName && entityId ? (
+        <SmartButtonsStrip
+          entityName={entityName}
+          entityId={entityId}
+          relations={smartButtons}
+          onRelationClick={onRelationClick}
+        />
+      ) : null}
       <div data-granit-detail-sections="">
         {sortedSections.map((section) => (
           <EntityDetailSection
@@ -229,4 +264,66 @@ function formatValue(value: unknown): string {
   if (value === null || value === undefined) return '—';
   if (typeof value === 'boolean') return value ? '✓' : '✗';
   return String(value);
+}
+
+interface SmartButtonsStripProps {
+  readonly entityName: string;
+  readonly entityId: string;
+  readonly relations: readonly EntityRelationManifest[];
+  readonly onRelationClick: ((relation: EntityRelationManifest) => void) | undefined;
+}
+
+function SmartButtonsStrip({
+  entityName,
+  entityId,
+  relations,
+  onRelationClick,
+}: SmartButtonsStripProps): ReactNode {
+  const relationNames = useMemo(() => relations.map((r) => r.name), [relations]);
+  const aggregates = useEntityRelationAggregates(entityName, entityId, {
+    relations: relationNames,
+  });
+
+  return (
+    <nav data-granit-detail-smart-buttons="" aria-label="Related">
+      {relations.map((relation) => (
+        <SmartButton
+          key={relation.name}
+          relation={relation}
+          value={aggregates.data?.aggregates[relation.name]}
+          isLoading={aggregates.isLoading}
+          onClick={onRelationClick}
+        />
+      ))}
+    </nav>
+  );
+}
+
+interface SmartButtonProps {
+  readonly relation: EntityRelationManifest;
+  readonly value: RelationAggregateValue | undefined;
+  readonly isLoading: boolean;
+  readonly onClick: ((relation: EntityRelationManifest) => void) | undefined;
+}
+
+function SmartButton({ relation, value, isLoading, onClick }: SmartButtonProps): ReactNode {
+  const { resolveLabel } = useEntityRenderer();
+  const label = relation.displayKey ? resolveLabel(relation.displayKey) : relation.name;
+  const count = value?.count ?? null;
+
+  return (
+    <button
+      type="button"
+      data-granit-smart-button=""
+      data-relation={relation.name}
+      data-cardinality={relation.cardinality}
+      onClick={onClick ? () => onClick(relation) : undefined}
+      disabled={!onClick}
+    >
+      <span data-granit-smart-button-label="">{label}</span>
+      <span data-granit-smart-button-count="">
+        {isLoading ? '…' : count !== null ? String(count) : '—'}
+      </span>
+    </button>
+  );
 }
