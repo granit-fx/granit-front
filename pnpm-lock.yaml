@@ -1271,9 +1271,15 @@ importers:
       '@granit/entities':
         specifier: workspace:*
         version: link:../entities
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
+      '@granit/react-query-engine':
+        specifier: workspace:*
+        version: link:../react-query-engine
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing

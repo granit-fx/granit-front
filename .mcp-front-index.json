@@ -2720,6 +2720,17 @@
           "members": []
         },
         {
+          "name": "EntityList",
+          "kind": "function",
+          "signature": "function EntityList("
+        },
+        {
+          "name": "EntityListProps",
+          "kind": "interface",
+          "signature": "interface EntityListProps",
+          "members": []
+        },
+        {
           "name": "entityDiscoveryQueryKey",
           "kind": "const",
           "signature": "const entityDiscoveryQueryKey"
