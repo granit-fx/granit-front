@@ -6,6 +6,8 @@
 // @granit/entities. Implementation tracked under
 // granit-fx/granit-front#298 (hooks) and #299 (renderers).
 
+export { EntityDetail } from './components/entity-detail.js';
+export type { EntityDetailProps } from './components/entity-detail.js';
 export { EntityForm } from './components/entity-form.js';
 export type { EntityFormProps } from './components/entity-form.js';
 export { STANDARD_FORM_WIDGETS } from './widgets/index.js';

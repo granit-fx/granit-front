@@ -2698,6 +2698,17 @@
       "description": "React renderer for @granit/entities — manifest hooks (useEntityDiscovery / useEntityMetadata) and the four generic renderers (EntityList, EntityKanban, EntityForm, EntityDetail) wired to the standard widget catalog",
       "exports": [
         {
+          "name": "EntityDetail",
+          "kind": "function",
+          "signature": "function EntityDetail("
+        },
+        {
+          "name": "EntityDetailProps",
+          "kind": "interface",
+          "signature": "interface EntityDetailProps",
+          "members": []
+        },
+        {
           "name": "EntityForm",
           "kind": "function",
           "signature": "function EntityForm("
