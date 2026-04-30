@@ -119,11 +119,20 @@ export type FrameworkWidgetDefinition =
   | TextWidgetDefinition;
 
 /**
- * Open-ended widget definition — accepts any `type` string plus arbitrary
- * extra fields. This is what dashboard payloads are typed as on the wire
- * (a host can persist Analytics widgets, IoT widgets, etc., and the framework
- * treats them uniformly until a registered renderer is found for the `type`).
+ * Open-ended widget definition — accepts any `type` string plus the
+ * common base fields. Downstream packages (`@granit/analytics`,
+ * `@granit/iot`, …) ship their own `extends WidgetDefinitionBase`
+ * interfaces and feed them through this generic alias so the framework
+ * treats every widget uniformly until a registered renderer narrows on
+ * the `type` discriminator.
+ *
+ * The fallback alternative is `WidgetDefinitionBase` directly — not
+ * `WidgetDefinitionBase & Readonly<Record<string, unknown>>`. The
+ * intersection with an index signature was meant to encode "you may
+ * have extra fields", but typed interfaces don't structurally satisfy
+ * `Record<string, unknown>` (no implicit index signatures), so it
+ * rejected every concrete extension. The framework never reads extra
+ * fields by index — registered renderers narrow on `type` and access
+ * their own typed fields.
  */
-export type WidgetDefinition =
-  | FrameworkWidgetDefinition
-  | (WidgetDefinitionBase & Readonly<Record<string, unknown>>);
+export type WidgetDefinition = FrameworkWidgetDefinition | WidgetDefinitionBase;
