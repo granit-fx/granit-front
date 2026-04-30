@@ -37,6 +37,7 @@ export {
   usePublishDashboard,
   useRestoreDashboard,
 } from './api/use-dashboard-state-transitions.js';
+export { useResyncDashboard } from './api/use-resync-dashboard.js';
 export { useAddWidget, useRemoveWidget, useUpdateWidget } from './api/use-widget-crud.js';
 export type {
   AddWidgetVariables,

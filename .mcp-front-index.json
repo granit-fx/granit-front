@@ -2294,6 +2294,11 @@
           "members": []
         },
         {
+          "name": "useResyncDashboard",
+          "kind": "function",
+          "signature": "function useResyncDashboard(): UseMutationResult<DashboardResyncResponse, Error, string>"
+        },
+        {
           "name": "useAddWidget",
           "kind": "function",
           "signature": "function useAddWidget(): UseMutationResult< WidgetInstanceResponse, Error, AddWidgetVariables >"

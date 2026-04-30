@@ -15,6 +15,7 @@ import {
   useRestoreDashboard,
 } from '../api/use-dashboard-state-transitions.js';
 import { useImportDashboard } from '../api/use-import-dashboard.js';
+import { useResyncDashboard } from '../api/use-resync-dashboard.js';
 import { useUpdateDashboardMetadata } from '../api/use-update-dashboard-metadata.js';
 import { useAddWidget, useRemoveWidget, useUpdateWidget } from '../api/use-widget-crud.js';
 
@@ -122,6 +123,19 @@ function freshHandlers() {
     http.post(
       `http://localhost/dashboards/${encodeURIComponent(ID)}/restore`,
       () => new HttpResponse(null, { status: 204 })
+    ),
+    http.post(`http://localhost/dashboards/${encodeURIComponent(ID)}/resync`, () =>
+      HttpResponse.json({
+        id: ID,
+        name: 'Invoicing overview',
+        status: 'Draft',
+        sourceDefinitionName: DEFINITION_NAME,
+        previousSourceDefinitionVersion: '1.0.0',
+        sourceDefinitionVersion: '1.1.0',
+        widgetsAdded: 1,
+        widgetsRemoved: 0,
+        overridesCarriedOver: 3,
+      })
     ),
     http.post(
       `http://localhost/dashboards/${encodeURIComponent(ID)}/widgets`,
@@ -267,6 +281,23 @@ describe('useArchiveDashboard / useRestoreDashboard / usePublishDashboard', () =
     const { wrapper } = makeWrapper();
     const { result } = renderHook(() => useRestoreDashboard(), { wrapper });
     await expect(result.current.mutateAsync(ID)).resolves.toBeUndefined();
+  });
+});
+
+describe('useResyncDashboard', () => {
+  it('POSTs to /resync, returns the change summary, and invalidates list + detail + render', async () => {
+    const { wrapper, queryClient } = makeWrapper();
+    queryClient.setQueryData(dashboardDetailQueryKey(ID), DETAIL);
+    const { result } = renderHook(() => useResyncDashboard(), { wrapper });
+    const summary = await result.current.mutateAsync(ID);
+    expect(summary).toMatchObject({
+      previousSourceDefinitionVersion: '1.0.0',
+      sourceDefinitionVersion: '1.1.0',
+      widgetsAdded: 1,
+      widgetsRemoved: 0,
+      overridesCarriedOver: 3,
+    });
+    expect(queryClient.getQueryState(dashboardDetailQueryKey(ID))?.isInvalidated).toBe(true);
   });
 });
 

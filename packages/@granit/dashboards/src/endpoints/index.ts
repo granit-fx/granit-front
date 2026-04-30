@@ -8,6 +8,7 @@ export type { DashboardCatalogEntryResponse } from './dashboard-catalog-entry-re
 export type { DashboardDetailResponse } from './dashboard-detail-response.js';
 export type { DashboardImportResponse } from './dashboard-import-response.js';
 export type { DashboardMetadataUpdateRequest } from './dashboard-metadata-update-request.js';
+export type { DashboardResyncResponse } from './dashboard-resync-response.js';
 export type { DashboardStatus } from './dashboard-status.js';
 export type { DashboardSummaryResponse } from './dashboard-summary-response.js';
 export type { PagedResponse } from './paged-response.js';

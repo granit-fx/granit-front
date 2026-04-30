@@ -70,6 +70,7 @@ export type {
   DashboardDetailResponse,
   DashboardImportResponse,
   DashboardMetadataUpdateRequest,
+  DashboardResyncResponse,
   DashboardStatus,
   DashboardSummaryResponse,
   PagedResponse,
