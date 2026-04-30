@@ -6,6 +6,8 @@
 // @granit/entities. Implementation tracked under
 // granit-fx/granit-front#298 (hooks) and #299 (renderers).
 
+export { EntityForm } from './components/entity-form.js';
+export type { EntityFormProps } from './components/entity-form.js';
 export { entityDiscoveryQueryKey, useEntityDiscovery } from './api/use-entity-discovery.js';
 export { entityManifestQueryKey, useEntityMetadata } from './api/use-entity-metadata.js';
 export {
