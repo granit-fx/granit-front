@@ -30,6 +30,9 @@ function ChartBody({ snapshot }: { readonly snapshot: ChartWidgetSnapshot }) {
 
   const seriesName = field ? `${aggregation}(${field})` : aggregation;
 
+  // The widget cell is sized by the dashboard grid; charts must fill it
+  // rather than render at the typed primitives' default 320px (which
+  // overflows tight cells and leaves whitespace in tall ones).
   if (chartType === 'Pie' || chartType === 'Donut') {
     const pieData = buckets.map((b) => ({
       id: b.label,
@@ -37,8 +40,8 @@ function ChartBody({ snapshot }: { readonly snapshot: ChartWidgetSnapshot }) {
       value: b.value ?? 0,
     }));
     return (
-      <div data-slot="chart-snapshot-widget" data-chart-type={chartType}>
-        <PieChart data={pieData} innerRadiusRatio={chartType === 'Donut' ? 0.5 : 0} />
+      <div data-slot="chart-snapshot-widget" data-chart-type={chartType} className="h-full w-full">
+        <PieChart data={pieData} innerRadiusRatio={chartType === 'Donut' ? 0.5 : 0} height="100%" />
       </div>
     );
   }
@@ -55,12 +58,13 @@ function ChartBody({ snapshot }: { readonly snapshot: ChartWidgetSnapshot }) {
 
   if (chartType === 'Line' || chartType === 'Area') {
     return (
-      <div data-slot="chart-snapshot-widget" data-chart-type={chartType}>
+      <div data-slot="chart-snapshot-widget" data-chart-type={chartType} className="h-full w-full">
         <LineChart
           series={series}
           xAxis={{ label: groupBy }}
           yAxis={{ label: valueAxisLabel }}
           area={chartType === 'Area'}
+          height="100%"
         />
       </div>
     );
@@ -69,12 +73,13 @@ function ChartBody({ snapshot }: { readonly snapshot: ChartWidgetSnapshot }) {
   // 'Bar' or 'HorizontalBar' — the union is exhaustive over ChartType.
   const horizontal = chartType === 'HorizontalBar';
   return (
-    <div data-slot="chart-snapshot-widget" data-chart-type={chartType}>
+    <div data-slot="chart-snapshot-widget" data-chart-type={chartType} className="h-full w-full">
       <BarChart
         series={series}
         xAxis={{ label: horizontal ? valueAxisLabel : groupBy }}
         yAxis={{ label: horizontal ? groupBy : valueAxisLabel }}
         horizontal={horizontal}
+        height="100%"
       />
     </div>
   );
