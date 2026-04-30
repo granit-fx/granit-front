@@ -10,6 +10,8 @@ export { EntityDetail } from './components/entity-detail.js';
 export type { EntityDetailProps } from './components/entity-detail.js';
 export { EntityForm } from './components/entity-form.js';
 export type { EntityFormProps } from './components/entity-form.js';
+export { EntityKanban } from './components/entity-kanban.js';
+export type { EntityKanbanProps } from './components/entity-kanban.js';
 export { EntityList } from './components/entity-list.js';
 export type { EntityListProps } from './components/entity-list.js';
 export { STANDARD_FORM_WIDGETS } from './widgets/index.js';
