@@ -2706,6 +2706,16 @@
           "name": "useEntityDiscovery",
           "kind": "function",
           "signature": "function useEntityDiscovery( options:"
+        },
+        {
+          "name": "entityManifestQueryKey",
+          "kind": "function",
+          "signature": "function entityManifestQueryKey( name: string, facets?: readonly EntityFacet[] ): readonly ['entities', 'manifest', string, string | null]"
+        },
+        {
+          "name": "useEntityMetadata",
+          "kind": "function",
+          "signature": "function useEntityMetadata( name: string, options:"
         }
       ]
     },
