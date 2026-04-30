@@ -2766,7 +2766,38 @@
     {
       "name": "@granit/react-entities-views",
       "description": "React hooks + view tab strip for @granit/entities-views — CRUD / pin / star / share / set-default hooks plus the EntityViewTabStrip component (dirty badge, save-as-new, Notion-style 'Save for everyone' promotion)",
-      "exports": []
+      "exports": [
+        {
+          "name": "defaultEntityViewQueryKey",
+          "kind": "const",
+          "signature": "const defaultEntityViewQueryKey"
+        },
+        {
+          "name": "useDefaultEntityView",
+          "kind": "function",
+          "signature": "function useDefaultEntityView( entityName: string, options:"
+        },
+        {
+          "name": "entityViewQueryKey",
+          "kind": "const",
+          "signature": "const entityViewQueryKey"
+        },
+        {
+          "name": "useEntityView",
+          "kind": "function",
+          "signature": "function useEntityView( entityName: string, id: string, options:"
+        },
+        {
+          "name": "entityViewsQueryKey",
+          "kind": "const",
+          "signature": "const entityViewsQueryKey"
+        },
+        {
+          "name": "useEntityViews",
+          "kind": "function",
+          "signature": "function useEntityViews( entityName: string, options:"
+        }
+      ]
     },
     {
       "name": "@granit/react-error-boundary",
