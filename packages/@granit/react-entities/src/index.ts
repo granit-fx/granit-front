@@ -8,6 +8,8 @@
 
 export { EntityForm } from './components/entity-form.js';
 export type { EntityFormProps } from './components/entity-form.js';
+export { STANDARD_FORM_WIDGETS } from './widgets/index.js';
+export type { SelectWidgetOption } from './widgets/index.js';
 export { entityDiscoveryQueryKey, useEntityDiscovery } from './api/use-entity-discovery.js';
 export { entityManifestQueryKey, useEntityMetadata } from './api/use-entity-metadata.js';
 export {
