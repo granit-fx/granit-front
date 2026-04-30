@@ -2778,6 +2778,12 @@
           "signature": "function useDefaultEntityView( entityName: string, options:"
         },
         {
+          "name": "UpdateEntityViewVariables",
+          "kind": "interface",
+          "signature": "interface UpdateEntityViewVariables",
+          "members": []
+        },
+        {
           "name": "entityViewQueryKey",
           "kind": "const",
           "signature": "const entityViewQueryKey"

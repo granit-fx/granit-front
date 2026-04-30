@@ -8,5 +8,11 @@
 // granit-fx/granit-front#301.
 
 export { defaultEntityViewQueryKey, useDefaultEntityView } from './api/use-default-entity-view.js';
+export {
+  useCreateEntityView,
+  useDeleteEntityView,
+  useUpdateEntityView,
+} from './api/use-entity-view-crud.js';
+export type { UpdateEntityViewVariables } from './api/use-entity-view-crud.js';
 export { entityViewQueryKey, useEntityView } from './api/use-entity-view.js';
 export { entityViewsQueryKey, useEntityViews } from './api/use-entity-views.js';
