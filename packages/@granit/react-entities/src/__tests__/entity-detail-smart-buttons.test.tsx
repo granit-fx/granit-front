@@ -112,7 +112,7 @@ describe('EntityDetail smart buttons', () => {
         />
       </Wrapper>
     );
-    const count = container.querySelector('[data-granit-smart-button-count]');
+    const count = container.querySelector('[data-granit-relation-item-count]');
     expect(count?.textContent).toBe('…');
   });
 
@@ -133,9 +133,9 @@ describe('EntityDetail smart buttons', () => {
       </Wrapper>
     );
     await waitFor(() => {
-      const counts = Array.from(container.querySelectorAll('[data-granit-smart-button-count]')).map(
-        (el) => el.textContent
-      );
+      const counts = Array.from(
+        container.querySelectorAll('[data-granit-relation-item-count]')
+      ).map((el) => el.textContent);
       expect(counts).toEqual(['12', '5']);
     });
   });

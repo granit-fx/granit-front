@@ -12,7 +12,10 @@ import type {
   EntityFormManifest,
   EntityRelationManifest,
   RelationAggregateValue,
+  RelationAggregatesResponse,
+  RelationDisplay,
 } from '@granit/entities';
+import type { UseQueryResult } from '@tanstack/react-query';
 
 export interface EntityDetailProps {
   /** Detail variant from the manifest (one of `manifest.details`). */
@@ -37,17 +40,20 @@ export interface EntityDetailProps {
   readonly entityId?: string;
   /**
    * Relations declared on the entity (`manifest.relations`). When set
-   * together with `entityName` + `entityId`, every relation with
-   * `display === 'SmartButton'` renders in a header strip with its
-   * batched aggregate count. Other display modes (Tab / Sidebar /
-   * InlineChips) are emitted as placeholder slots; their renderers
-   * land in a follow-up story.
+   * together with `entityName` + `entityId`, every relation surfaces in
+   * the layout slot matching its `display` mode:
+   *
+   * - `SmartButton` — header strip above the section column
+   * - `InlineChips` — chip strip below the section column
+   * - `Sidebar` — vertical group at the top of the right rail
+   * - `Tab` — passed through unchanged for now (renderer lands in a
+   *   follow-up under #302)
    */
   readonly relations?: readonly EntityRelationManifest[];
   /**
-   * Optional handler invoked when a smart-button relation is clicked.
-   * Receives the relation manifest entry; the host typically navigates
-   * to the related list scoped to the source row.
+   * Optional handler invoked when a relation is clicked. Receives the
+   * relation manifest entry; the host typically navigates to the
+   * related list scoped to the source row.
    */
   readonly onRelationClick?: (relation: EntityRelationManifest) => void;
   /**
@@ -95,21 +101,36 @@ export function EntityDetail({
     () => [...variant.sidePanels].sort((a, b) => a.order - b.order),
     [variant.sidePanels]
   );
-  const smartButtons = useMemo(
+  const groupedRelations = useMemo(() => groupRelationsByDisplay(relations ?? []), [relations]);
+  const allDisplayedNames = useMemo(
     () =>
-      (relations ?? [])
-        .filter((r) => r.display === 'SmartButton')
-        .sort((a, b) => a.order - b.order),
-    [relations]
+      [
+        ...groupedRelations.SmartButton,
+        ...groupedRelations.InlineChips,
+        ...groupedRelations.Sidebar,
+      ].map((r) => r.name),
+    [groupedRelations]
   );
+
+  // Single batched fetch covers SmartButton + InlineChips + Sidebar relations.
+  const aggregatesQuery = useEntityRelationAggregates(entityName ?? '', entityId ?? '', {
+    relations: allDisplayedNames,
+    enabled: Boolean(entityName) && Boolean(entityId) && allDisplayedNames.length > 0,
+  });
+
+  const renderable = Boolean(entityName) && Boolean(entityId);
+  const showSmartButtons = renderable && groupedRelations.SmartButton.length > 0;
+  const showInlineChips = renderable && groupedRelations.InlineChips.length > 0;
+  const showSidebars = renderable && groupedRelations.Sidebar.length > 0;
+  const showRail = showSidebars || sortedSidePanels.length > 0;
 
   return (
     <article data-granit-entity-detail="" data-variant={variant.name} className={className}>
-      {smartButtons.length > 0 && entityName && entityId ? (
-        <SmartButtonsStrip
-          entityName={entityName}
-          entityId={entityId}
-          relations={smartButtons}
+      {showSmartButtons ? (
+        <RelationGroup
+          display="SmartButton"
+          relations={groupedRelations.SmartButton}
+          aggregates={aggregatesQuery}
           onRelationClick={onRelationClick}
         />
       ) : null}
@@ -123,8 +144,24 @@ export function EntityDetail({
           />
         ))}
       </div>
-      {sortedSidePanels.length > 0 ? (
+      {showInlineChips ? (
+        <RelationGroup
+          display="InlineChips"
+          relations={groupedRelations.InlineChips}
+          aggregates={aggregatesQuery}
+          onRelationClick={onRelationClick}
+        />
+      ) : null}
+      {showRail ? (
         <aside data-granit-detail-rail="">
+          {showSidebars ? (
+            <RelationGroup
+              display="Sidebar"
+              relations={groupedRelations.Sidebar}
+              aggregates={aggregatesQuery}
+              onRelationClick={onRelationClick}
+            />
+          ) : null}
           {sortedSidePanels.map((panel) => (
             <EntityDetailSidePanelSlot
               key={panel.kind}
@@ -266,29 +303,41 @@ function formatValue(value: unknown): string {
   return String(value);
 }
 
-interface SmartButtonsStripProps {
-  readonly entityName: string;
-  readonly entityId: string;
+interface RelationGroupProps {
+  readonly display: Exclude<RelationDisplay, 'Tab'>;
   readonly relations: readonly EntityRelationManifest[];
+  readonly aggregates: UseQueryResult<RelationAggregatesResponse>;
   readonly onRelationClick: ((relation: EntityRelationManifest) => void) | undefined;
 }
 
-function SmartButtonsStrip({
-  entityName,
-  entityId,
-  relations,
-  onRelationClick,
-}: SmartButtonsStripProps): ReactNode {
-  const relationNames = useMemo(() => relations.map((r) => r.name), [relations]);
-  const aggregates = useEntityRelationAggregates(entityName, entityId, {
-    relations: relationNames,
-  });
+const GROUP_DATA_ATTRIBUTE: Record<RelationGroupProps['display'], string> = {
+  SmartButton: 'data-granit-detail-smart-buttons',
+  InlineChips: 'data-granit-detail-inline-chips',
+  Sidebar: 'data-granit-detail-relation-sidebar',
+};
 
+const GROUP_ARIA_LABEL: Record<RelationGroupProps['display'], string> = {
+  SmartButton: 'Related',
+  InlineChips: 'Related (chips)',
+  Sidebar: 'Related (sidebar)',
+};
+
+function RelationGroup({
+  display,
+  relations,
+  aggregates,
+  onRelationClick,
+}: RelationGroupProps): ReactNode {
   return (
-    <nav data-granit-detail-smart-buttons="" aria-label="Related">
+    <nav
+      {...{ [GROUP_DATA_ATTRIBUTE[display]]: '' }}
+      data-display={display}
+      aria-label={GROUP_ARIA_LABEL[display]}
+    >
       {relations.map((relation) => (
-        <SmartButton
+        <RelationItem
           key={relation.name}
+          display={display}
           relation={relation}
           value={aggregates.data?.aggregates[relation.name]}
           isLoading={aggregates.isLoading}
@@ -299,14 +348,21 @@ function SmartButtonsStrip({
   );
 }
 
-interface SmartButtonProps {
+interface RelationItemProps {
+  readonly display: RelationGroupProps['display'];
   readonly relation: EntityRelationManifest;
   readonly value: RelationAggregateValue | undefined;
   readonly isLoading: boolean;
   readonly onClick: ((relation: EntityRelationManifest) => void) | undefined;
 }
 
-function SmartButton({ relation, value, isLoading, onClick }: SmartButtonProps): ReactNode {
+function RelationItem({
+  display,
+  relation,
+  value,
+  isLoading,
+  onClick,
+}: RelationItemProps): ReactNode {
   const { resolveLabel } = useEntityRenderer();
   const label = relation.displayKey ? resolveLabel(relation.displayKey) : relation.name;
   const count = value?.count ?? null;
@@ -314,16 +370,42 @@ function SmartButton({ relation, value, isLoading, onClick }: SmartButtonProps):
   return (
     <button
       type="button"
-      data-granit-smart-button=""
+      data-granit-relation-item=""
+      data-display={display}
       data-relation={relation.name}
       data-cardinality={relation.cardinality}
+      // SmartButton retains its legacy data attribute so existing styles + tests stay valid.
+      {...(display === 'SmartButton' ? { 'data-granit-smart-button': '' } : {})}
       onClick={onClick ? () => onClick(relation) : undefined}
       disabled={!onClick}
     >
-      <span data-granit-smart-button-label="">{label}</span>
-      <span data-granit-smart-button-count="">
+      <span data-granit-relation-item-label="">{label}</span>
+      <span data-granit-relation-item-count="">
         {isLoading ? '…' : count !== null ? String(count) : '—'}
       </span>
     </button>
   );
+}
+
+interface GroupedRelations {
+  readonly SmartButton: readonly EntityRelationManifest[];
+  readonly InlineChips: readonly EntityRelationManifest[];
+  readonly Sidebar: readonly EntityRelationManifest[];
+  readonly Tab: readonly EntityRelationManifest[];
+}
+
+function groupRelationsByDisplay(relations: readonly EntityRelationManifest[]): GroupedRelations {
+  const grouped: { [K in RelationDisplay]: EntityRelationManifest[] } = {
+    SmartButton: [],
+    InlineChips: [],
+    Sidebar: [],
+    Tab: [],
+  };
+  for (const relation of relations) {
+    grouped[relation.display].push(relation);
+  }
+  for (const key of Object.keys(grouped) as RelationDisplay[]) {
+    grouped[key].sort((a, b) => a.order - b.order);
+  }
+  return grouped;
 }
