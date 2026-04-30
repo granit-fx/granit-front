@@ -19,6 +19,7 @@ export { TextConfigForm } from './components/forms/text-config-form.js';
 
 // Pure helpers — exported for tests + custom palette / DnD wrappers
 export { reorderWidgets } from './lib/reorder-widgets.js';
+export { resizeWidget } from './lib/resize-widget.js';
 export { addWidget, composeCatalogs, defaultWidgetCatalog } from './lib/widget-catalog.js';
 export type { WidgetCatalogEntry } from './lib/widget-catalog.js';
 export { removeWidget, updateWidget } from './lib/update-widget.js';

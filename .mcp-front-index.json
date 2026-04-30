@@ -2174,6 +2174,11 @@
           "signature": "function reorderWidgets( definition: DashboardDefinition, sourceSlug: string, targetSlug: string ): DashboardDefinition"
         },
         {
+          "name": "resizeWidget",
+          "kind": "function",
+          "signature": "function resizeWidget( definition: DashboardDefinition, slug: string, size: WidgetSize ): DashboardDefinition"
+        },
+        {
           "name": "addWidget",
           "kind": "function",
           "signature": "function addWidget<TDefinition extends"
