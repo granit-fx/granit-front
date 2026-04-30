@@ -1,3 +1,4 @@
+import type { DashboardDriftStatus } from './dashboard-drift-status.js';
 import type { WidgetSnapshotStatus } from './widget-snapshot-status.js';
 import type { RefreshHint } from '../types/refresh-hint.js';
 import type { WidgetAction } from '../types/widget-action.js';
@@ -32,6 +33,26 @@ export interface DashboardRenderResponse {
    * `request.viewName → DashboardDefinition.DefaultView → first view`).
    */
   readonly activeViewName: string | null;
+  /**
+   * Drift status between the persisted dashboard's
+   * `sourceDefinitionVersion` and the currently-registered descriptor's
+   * version (ADR-038 §3, semver-aware on the backend). Lets the
+   * frontend surface a "Dashboard outdated, click to resync" affordance
+   * without an extra round-trip.
+   */
+  readonly driftStatus: DashboardDriftStatus;
+  /**
+   * Persisted version captured at import time. `null` when the dashboard
+   * was custom-built (no source definition).
+   */
+  readonly sourceDefinitionVersion: string | null;
+  /**
+   * Currently-registered descriptor version. `null` when the source
+   * definition is no longer registered (`driftStatus` =
+   * `'SourceUnregistered'`) or the dashboard has no source
+   * (`driftStatus` = `'NotApplicable'`).
+   */
+  readonly registeredVersion: string | null;
   /** One flat record per widget, in `WidgetInstance.Position` order. */
   readonly widgets: readonly DashboardRenderedWidget[];
 }

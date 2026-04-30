@@ -80,6 +80,9 @@ const BUNDLE_FIXTURE: DashboardRenderResponse = {
     token: 'mtd',
   },
   activeViewName: null,
+  driftStatus: 'Aligned',
+  sourceDefinitionVersion: '1.0.0',
+  registeredVersion: '1.0.0',
   widgets: [KPI_WIDGET, MARKDOWN_WIDGET, UNAVAILABLE_WIDGET],
 };
 

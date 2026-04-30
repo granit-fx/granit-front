@@ -6,6 +6,7 @@
 // (B3-1 / B3-3 / B4-render, ADR-039).
 // ---------------------------------------------------------------------------
 
+export type { DashboardDriftStatus } from './dashboard-drift-status.js';
 export type { DashboardRenderRequest } from './dashboard-render-request.js';
 export type {
   DashboardRenderedWidget,
