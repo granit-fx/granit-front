@@ -22,6 +22,17 @@ export interface EntityDetailProps {
    */
   readonly formVariants?: readonly EntityFormManifest[];
   /**
+   * Wire identifier of the entity (e.g. `"Granit.Parties.Party"`,
+   * available from `manifest.identity.name`). Required when the variant
+   * declares side panels and the provider catalog has matching renderers.
+   */
+  readonly entityName?: string;
+  /**
+   * Id of the current entity instance. Required when the variant
+   * declares side panels and the provider catalog has matching renderers.
+   */
+  readonly entityId?: string;
+  /**
    * Optional class for the root element. The root layout is a
    * `<article>` containing the section column + side-panel rail; apps
    * style them via this className + the `data-granit-*` attributes.
@@ -52,6 +63,8 @@ export function EntityDetail({
   variant,
   values,
   formVariants,
+  entityName,
+  entityId,
   className,
 }: EntityDetailProps): ReactNode {
   const sortedSections = useMemo(
@@ -78,7 +91,12 @@ export function EntityDetail({
       {sortedSidePanels.length > 0 ? (
         <aside data-granit-detail-rail="">
           {sortedSidePanels.map((panel) => (
-            <EntityDetailSidePanelSlot key={panel.kind} panel={panel} />
+            <EntityDetailSidePanelSlot
+              key={panel.kind}
+              panel={panel}
+              entityName={entityName}
+              entityId={entityId}
+            />
           ))}
         </aside>
       ) : null}
@@ -164,12 +182,25 @@ function InheritedFieldRow({ field, values, resolveLabel }: InheritedFieldRowPro
   );
 }
 
+interface EntityDetailSidePanelSlotProps {
+  readonly panel: EntityDetailSidePanelManifest;
+  readonly entityName: string | undefined;
+  readonly entityId: string | undefined;
+}
+
 function EntityDetailSidePanelSlot({
   panel,
-}: {
-  readonly panel: EntityDetailSidePanelManifest;
-}): ReactNode {
-  return <div data-granit-side-panel-slot="" data-kind={panel.kind} data-order={panel.order} />;
+  entityName,
+  entityId,
+}: EntityDetailSidePanelSlotProps): ReactNode {
+  const { widgets } = useEntityRenderer();
+  const Renderer = widgets.sidePanels?.[panel.kind];
+  const canRender = Renderer && entityName && entityId;
+  return (
+    <div data-granit-side-panel-slot="" data-kind={panel.kind} data-order={panel.order}>
+      {canRender ? <Renderer entityName={entityName} entityId={entityId} /> : null}
+    </div>
+  );
 }
 
 /**

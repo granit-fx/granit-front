@@ -2,7 +2,11 @@ import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { EntityDetail } from '../components/entity-detail.js';
-import { EntityRendererProvider } from '../provider/index.js';
+import {
+  EntityRendererProvider,
+  type EntitySidePanel,
+  type EntityWidgetCatalog,
+} from '../provider/index.js';
 
 import type {
   EntityDetailManifest,
@@ -56,8 +60,16 @@ function variant(overrides: Partial<EntityDetailManifest> = {}): EntityDetailMan
   };
 }
 
-function withProvider(children: ReactNode, resolveLabel?: (key: string) => string) {
-  return <EntityRendererProvider resolveLabel={resolveLabel}>{children}</EntityRendererProvider>;
+function withProvider(
+  children: ReactNode,
+  resolveLabel?: (key: string) => string,
+  widgets?: EntityWidgetCatalog
+) {
+  return (
+    <EntityRendererProvider resolveLabel={resolveLabel} widgets={widgets}>
+      {children}
+    </EntityRendererProvider>
+  );
 }
 
 describe('EntityDetail', () => {
@@ -249,6 +261,43 @@ describe('EntityDetail', () => {
     const v = variant();
     const { container } = render(withProvider(<EntityDetail variant={v} values={{}} />));
     expect(container.querySelector('[data-granit-detail-rail]')).toBeNull();
+  });
+
+  it('mounts a registered side-panel renderer when entityName + entityId are supplied', () => {
+    const v = variant({
+      sidePanels: [
+        { kind: 'Timeline', order: 20 },
+        { kind: 'Audit', order: 10 },
+      ],
+    });
+    const audit: EntitySidePanel = ({ entityName, entityId }) => (
+      <div data-testid="audit-panel">
+        {entityName}#{entityId}
+      </div>
+    );
+    const widgets: EntityWidgetCatalog = { form: {}, sidePanels: { Audit: audit } };
+    const { container, getByTestId } = render(
+      withProvider(
+        <EntityDetail variant={v} values={{}} entityName="Granit.Parties.Party" entityId="42" />,
+        undefined,
+        widgets
+      )
+    );
+    expect(getByTestId('audit-panel').textContent).toBe('Granit.Parties.Party#42');
+    // Timeline has no registered renderer — slot stays empty but present.
+    const timelineSlot = container.querySelector('[data-kind="Timeline"]');
+    expect(timelineSlot).not.toBeNull();
+    expect(timelineSlot?.children.length).toBe(0);
+  });
+
+  it('falls back to an empty slot when entityName / entityId are missing', () => {
+    const v = variant({ sidePanels: [{ kind: 'Audit', order: 0 }] });
+    const audit: EntitySidePanel = () => <div data-testid="audit-panel" />;
+    const widgets: EntityWidgetCatalog = { form: {}, sidePanels: { Audit: audit } };
+    const { queryByTestId } = render(
+      withProvider(<EntityDetail variant={v} values={{}} />, undefined, widgets)
+    );
+    expect(queryByTestId('audit-panel')).toBeNull();
   });
 
   it('resolves section label keys via the provider resolver', () => {

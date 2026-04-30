@@ -1,4 +1,4 @@
-import type { EntityFormFieldManifest } from '@granit/entities';
+import type { EntityFormFieldManifest, SidePanelKind } from '@granit/entities';
 import type { ReactNode } from 'react';
 
 /**
@@ -19,13 +19,37 @@ export interface EntityFormWidgetProps {
 export type EntityFormWidget = (props: EntityFormWidgetProps) => ReactNode;
 
 /**
+ * Props passed to a side-panel renderer mounted by `<EntityDetail />` in
+ * one of the right-rail slots declared by the manifest. The kinds map to
+ * existing Granit modules (Audit / Timeline / Comments / Documents /
+ * Activities); apps that have those modules wired register the matching
+ * components in the catalog.
+ */
+export interface EntitySidePanelProps {
+  /** Wire identifier of the entity (e.g. `"Granit.Parties.Party"`). */
+  readonly entityName: string;
+  /** Id of the current entity instance. */
+  readonly entityId: string;
+}
+
+/** Renderer for one side panel kind in `<EntityDetail />`. */
+export type EntitySidePanel = (props: EntitySidePanelProps) => ReactNode;
+
+/**
  * Catalog mapping widget identifiers (the `field.widget` value from the
- * manifest) → renderers. Apps register the standard catalog plus any
+ * manifest) → renderers, plus the optional side-panel registry keyed by
+ * `SidePanelKind`. Apps register the standard catalog plus any
  * `custom:`-namespaced widgets they own (per ADR-041).
  */
 export interface EntityWidgetCatalog {
   /** Form-context widgets, keyed by `field.widget`. */
   readonly form: Readonly<Record<string, EntityFormWidget>>;
+  /**
+   * Side-panel renderers keyed by `SidePanelKind`. Optional — when a
+   * side-panel kind is missing or the registry is absent, `<EntityDetail />`
+   * falls back to an empty slot placeholder.
+   */
+  readonly sidePanels?: Partial<Readonly<Record<SidePanelKind, EntitySidePanel>>>;
 }
 
 /** Empty catalog — useful as a default and in tests. */

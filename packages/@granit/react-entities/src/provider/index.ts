@@ -8,5 +8,7 @@ export type {
 export type {
   EntityFormWidget,
   EntityFormWidgetProps,
+  EntitySidePanel,
+  EntitySidePanelProps,
   EntityWidgetCatalog,
 } from './widget-catalog.js';

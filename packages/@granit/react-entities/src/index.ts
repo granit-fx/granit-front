@@ -24,6 +24,8 @@ export type {
   EntityFormWidgetProps,
   EntityRendererContextValue,
   EntityRendererProviderProps,
+  EntitySidePanel,
+  EntitySidePanelProps,
   EntityWidgetCatalog,
   ResolveLabel,
 } from './provider/index.js';
