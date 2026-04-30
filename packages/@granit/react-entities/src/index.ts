@@ -18,6 +18,8 @@ export { STANDARD_FORM_WIDGETS } from './widgets/index.js';
 export type { SelectWidgetOption } from './widgets/index.js';
 export { entityDiscoveryQueryKey, useEntityDiscovery } from './api/use-entity-discovery.js';
 export { entityManifestQueryKey, useEntityMetadata } from './api/use-entity-metadata.js';
+export { useEntityForm } from './hooks/index.js';
+export type { UseEntityFormOptions, UseEntityFormReturn } from './hooks/index.js';
 export {
   EMPTY_WIDGET_CATALOG,
   EntityRendererProvider,
