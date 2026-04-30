@@ -4,8 +4,48 @@ import { describe, expect, it, vi } from 'vitest';
 import { EntityDetail } from '../components/entity-detail.js';
 import { EntityRendererProvider } from '../provider/index.js';
 
-import type { EntityDetailManifest } from '@granit/entities';
+import type {
+  EntityDetailManifest,
+  EntityFormFieldManifest,
+  EntityFormManifest,
+} from '@granit/entities';
 import type { ReactNode } from 'react';
+
+function field(
+  propertyName: string,
+  order: number,
+  overrides: Partial<EntityFormFieldManifest> = {}
+): EntityFormFieldManifest {
+  return {
+    propertyName,
+    clrTypeName: 'String',
+    widget: 'text',
+    config: null,
+    labelKey: `Field.${propertyName}.Label`,
+    helpKey: null,
+    order,
+    readOnly: false,
+    visibleIf: null,
+    ...overrides,
+  };
+}
+
+function formVariant(
+  name: string,
+  sections: ReadonlyArray<{ key: string; order: number; fields: EntityFormFieldManifest[] }>
+): EntityFormManifest {
+  return {
+    name,
+    customizable: false,
+    sections: sections.map((s) => ({
+      key: s.key,
+      labelKey: null,
+      order: s.order,
+      collapsedByDefault: false,
+      fields: s.fields,
+    })),
+  };
+}
 
 function variant(overrides: Partial<EntityDetailManifest> = {}): EntityDetailManifest {
   return {
@@ -71,7 +111,7 @@ describe('EntityDetail', () => {
     expect(byProperty('Missing')?.querySelector('dd')?.textContent).toBe('—');
   });
 
-  it('emits the inherits-from-form placeholder when inheritsFromFormVariant is set', () => {
+  it('emits a missing-variant marker when formVariants is not provided', () => {
     const v = variant({
       sections: [
         {
@@ -84,10 +124,110 @@ describe('EntityDetail', () => {
       ],
     });
     const { container } = render(withProvider(<EntityDetail variant={v} values={{}} />));
-    const marker = container.querySelector('[data-granit-detail-inherits]');
+    const marker = container.querySelector('[data-granit-detail-inherits-missing]');
     expect(marker).not.toBeNull();
     expect(marker?.getAttribute('data-form-variant')).toBe('default');
-    expect(container.querySelector('[data-granit-detail-fields]')).toBeNull();
+  });
+
+  it('emits a missing-variant marker when the named variant is absent from formVariants', () => {
+    const v = variant({
+      sections: [
+        {
+          key: 'identity',
+          labelKey: null,
+          order: 0,
+          inheritsFromFormVariant: 'wizard',
+          fields: null,
+        },
+      ],
+    });
+    const { container } = render(
+      withProvider(
+        <EntityDetail variant={v} values={{}} formVariants={[formVariant('default', [])]} />
+      )
+    );
+    expect(container.querySelector('[data-granit-detail-inherits-missing]')).not.toBeNull();
+  });
+
+  it('flattens inherited form variant fields in section order then field order', () => {
+    const v = variant({
+      sections: [
+        {
+          key: 'identity',
+          labelKey: null,
+          order: 0,
+          inheritsFromFormVariant: 'default',
+          fields: null,
+        },
+      ],
+    });
+    const variants = [
+      formVariant('default', [
+        { key: 'b', order: 20, fields: [field('Email', 10), field('Phone', 0)] },
+        { key: 'a', order: 10, fields: [field('Number', 0), field('Name', 1)] },
+      ]),
+    ];
+    const { container } = render(
+      withProvider(
+        <EntityDetail
+          variant={v}
+          values={{ Number: '001', Name: 'ACME', Phone: '555', Email: 'a@b' }}
+          formVariants={variants}
+        />
+      )
+    );
+    const rows = Array.from(container.querySelectorAll('[data-granit-detail-row][data-inherited]'));
+    expect(rows.map((r) => r.getAttribute('data-property'))).toEqual([
+      'Number',
+      'Name',
+      'Phone',
+      'Email',
+    ]);
+  });
+
+  it('renders inherited field labels via the provider resolver and skips visibleIf=false', () => {
+    const v = variant({
+      sections: [
+        {
+          key: 'identity',
+          labelKey: null,
+          order: 0,
+          inheritsFromFormVariant: 'default',
+          fields: null,
+        },
+      ],
+    });
+    const variants = [
+      formVariant('default', [
+        {
+          key: 'main',
+          order: 0,
+          fields: [
+            field('Status', 0),
+            field('ClosureReason', 1, {
+              visibleIf: { field: 'Status', op: 'Eq', value: 'Closed' },
+            }),
+          ],
+        },
+      ]),
+    ];
+    const resolve = vi.fn((key: string) => `[${key}]`);
+    const { container, rerender } = render(
+      withProvider(
+        <EntityDetail variant={v} values={{ Status: 'Active' }} formVariants={variants} />,
+        resolve
+      )
+    );
+    expect(container.textContent).toContain('[Field.Status.Label]');
+    expect(container.querySelector('[data-property="ClosureReason"]')).toBeNull();
+
+    rerender(
+      withProvider(
+        <EntityDetail variant={v} values={{ Status: 'Closed' }} formVariants={variants} />,
+        resolve
+      )
+    );
+    expect(container.querySelector('[data-property="ClosureReason"]')).not.toBeNull();
   });
 
   it('renders side-panel slots sorted by order with kind data attribute', () => {

@@ -1,3 +1,4 @@
+import { evaluateVisibility } from '@granit/entities';
 import { useMemo, type ReactNode } from 'react';
 
 import { useEntityRenderer } from '../provider/entity-renderer-provider.js';
@@ -6,6 +7,8 @@ import type {
   EntityDetailManifest,
   EntityDetailSectionManifest,
   EntityDetailSidePanelManifest,
+  EntityFormFieldManifest,
+  EntityFormManifest,
 } from '@granit/entities';
 
 export interface EntityDetailProps {
@@ -13,6 +16,11 @@ export interface EntityDetailProps {
   readonly variant: EntityDetailManifest;
   /** Current entity values keyed by PascalCase property name. */
   readonly values: Readonly<Record<string, unknown>>;
+  /**
+   * Form variants from the manifest (`manifest.forms`). Required when any
+   * detail section sets `inheritsFromFormVariant`; ignored otherwise.
+   */
+  readonly formVariants?: readonly EntityFormManifest[];
   /**
    * Optional class for the root element. The root layout is a
    * `<article>` containing the section column + side-panel rail; apps
@@ -28,19 +36,24 @@ export interface EntityDetailProps {
  * actual panel components (Audit / Timeline / Comments / Documents /
  * Activities) at the right position via DOM-based composition.
  *
- * **Skeleton scope** — supports free-form `section.fields` only. When
- * `section.inheritsFromFormVariant` is set, the section renders a TODO
- * marker (`<div data-granit-detail-inherits>`) that the
- * [inheritsFromFormVariant story](https://github.com/granit-fx/granit-front/issues/299)
- * will replace with the inherited form-variant rendering. Side-panel
- * slots are placeholders pending the rail registry story.
+ * Sections may inherit a form variant's structure via
+ * `inheritsFromFormVariant` — the form's fields (across all its sections)
+ * are flattened into the detail section in declaration order, with their
+ * `labelKey` resolved via the provider and `visibleIf` evaluated against
+ * the current values. The form's section grouping is dropped on purpose:
+ * the detail section already provides one header, nesting two would
+ * surprise readers.
  *
  * Values are displayed via `String(value)`, with `null` / `undefined`
  * collapsed to `'—'`. A read-mode widget catalog (currency / date / link
- * formatting) is a follow-up — for now apps that need richer rendering
- * wrap or replace the row component via DOM substitution.
+ * formatting) is a follow-up.
  */
-export function EntityDetail({ variant, values, className }: EntityDetailProps): ReactNode {
+export function EntityDetail({
+  variant,
+  values,
+  formVariants,
+  className,
+}: EntityDetailProps): ReactNode {
   const sortedSections = useMemo(
     () => [...variant.sections].sort((a, b) => a.order - b.order),
     [variant.sections]
@@ -54,7 +67,12 @@ export function EntityDetail({ variant, values, className }: EntityDetailProps):
     <article data-granit-entity-detail="" data-variant={variant.name} className={className}>
       <div data-granit-detail-sections="">
         {sortedSections.map((section) => (
-          <EntityDetailSection key={section.key} section={section} values={values} />
+          <EntityDetailSection
+            key={section.key}
+            section={section}
+            values={values}
+            formVariants={formVariants}
+          />
         ))}
       </div>
       {sortedSidePanels.length > 0 ? (
@@ -71,10 +89,22 @@ export function EntityDetail({ variant, values, className }: EntityDetailProps):
 interface EntityDetailSectionProps {
   readonly section: EntityDetailSectionManifest;
   readonly values: Readonly<Record<string, unknown>>;
+  readonly formVariants: readonly EntityFormManifest[] | undefined;
 }
 
-function EntityDetailSection({ section, values }: EntityDetailSectionProps): ReactNode {
+function EntityDetailSection({
+  section,
+  values,
+  formVariants,
+}: EntityDetailSectionProps): ReactNode {
   const { resolveLabel } = useEntityRenderer();
+  const inheritedFields = useMemo(
+    () =>
+      section.inheritsFromFormVariant
+        ? resolveInheritedFields(section.inheritsFromFormVariant, formVariants)
+        : null,
+    [section.inheritsFromFormVariant, formVariants]
+  );
 
   return (
     <section data-granit-detail-section="" data-section-key={section.key}>
@@ -82,9 +112,25 @@ function EntityDetailSection({ section, values }: EntityDetailSectionProps): Rea
         <header data-granit-section-header="">{resolveLabel(section.labelKey)}</header>
       ) : null}
       {section.inheritsFromFormVariant ? (
-        <div data-granit-detail-inherits="" data-form-variant={section.inheritsFromFormVariant}>
-          {/* Inherits-from-form rendering lands in a follow-up story under #299. */}
-        </div>
+        inheritedFields ? (
+          <dl data-granit-detail-fields="" data-inherits-from={section.inheritsFromFormVariant}>
+            {inheritedFields.map((field) => (
+              <InheritedFieldRow
+                key={field.propertyName}
+                field={field}
+                values={values}
+                resolveLabel={resolveLabel}
+              />
+            ))}
+          </dl>
+        ) : (
+          <div
+            data-granit-detail-inherits-missing=""
+            data-form-variant={section.inheritsFromFormVariant}
+          >
+            {/* Form variant referenced by the section was not supplied via formVariants. */}
+          </div>
+        )
       ) : (
         <dl data-granit-detail-fields="">
           {(section.fields ?? []).map((property) => (
@@ -99,12 +145,53 @@ function EntityDetailSection({ section, values }: EntityDetailSectionProps): Rea
   );
 }
 
+interface InheritedFieldRowProps {
+  readonly field: EntityFormFieldManifest;
+  readonly values: Readonly<Record<string, unknown>>;
+  readonly resolveLabel: (key: string, fallback?: string) => string;
+}
+
+function InheritedFieldRow({ field, values, resolveLabel }: InheritedFieldRowProps): ReactNode {
+  if (field.visibleIf && !evaluateVisibility(field.visibleIf, values)) {
+    return null;
+  }
+  const label = field.labelKey ? resolveLabel(field.labelKey) : field.propertyName;
+  return (
+    <div data-granit-detail-row="" data-property={field.propertyName} data-inherited="">
+      <dt data-granit-detail-label="">{label}</dt>
+      <dd data-granit-detail-value="">{formatValue(values[field.propertyName])}</dd>
+    </div>
+  );
+}
+
 function EntityDetailSidePanelSlot({
   panel,
 }: {
   readonly panel: EntityDetailSidePanelManifest;
 }): ReactNode {
   return <div data-granit-side-panel-slot="" data-kind={panel.kind} data-order={panel.order} />;
+}
+
+/**
+ * Walks a form variant in declaration order (sections sorted by `order`,
+ * fields sorted by `order` within each section) and returns the flat
+ * field list. Returns `null` when the variant is unknown so the caller
+ * can render a missing-variant marker.
+ */
+function resolveInheritedFields(
+  variantName: string,
+  formVariants: readonly EntityFormManifest[] | undefined
+): readonly EntityFormFieldManifest[] | null {
+  if (!formVariants) return null;
+  const variant = formVariants.find((v) => v.name === variantName);
+  if (!variant) return null;
+  const sortedSections = [...variant.sections].sort((a, b) => a.order - b.order);
+  const fields: EntityFormFieldManifest[] = [];
+  for (const section of sortedSections) {
+    const sortedFields = [...section.fields].sort((a, b) => a.order - b.order);
+    fields.push(...sortedFields);
+  }
+  return fields;
 }
 
 function formatValue(value: unknown): string {
