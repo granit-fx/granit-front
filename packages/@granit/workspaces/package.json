@@ -1,0 +1,25 @@
+{
+  "name": "@granit/workspaces",
+  "description": "Framework-agnostic types and helpers for the Granit workspace tree — WorkspaceDefinition / sections / items, landing route response, typed preset overlay (mirrors Granit.Workspaces.Abstractions + Granit.Workspaces.Endpoints.Dtos)",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  }
+}

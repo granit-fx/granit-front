@@ -600,6 +600,16 @@
       ]
     },
     {
+      "name": "@granit/entities",
+      "description": "Framework-agnostic types and helpers for the Granit entity manifest — EntityDefinition discovery / metadata DTOs, form / detail / relation descriptors, visibility DSL evaluator (mirrors Granit.Entities.Abstractions + Granit.Entities.Endpoints.Dtos)",
+      "exports": []
+    },
+    {
+      "name": "@granit/entities-views",
+      "description": "Framework-agnostic types and helpers for Granit saved views — EntityView aggregate, visibility (Personal / Shared / Tenant), pin / default / personal-default flags, basedOn delta model (mirrors Granit.Entities.Views.Domain)",
+      "exports": []
+    },
+    {
       "name": "@granit/error-boundary",
       "description": "Structured error capture with React error boundary and global listeners",
       "exports": [
@@ -2684,6 +2694,16 @@
       ]
     },
     {
+      "name": "@granit/react-entities",
+      "description": "React renderer for @granit/entities — manifest hooks (useEntityDiscovery / useEntityMetadata) and the four generic renderers (EntityList, EntityKanban, EntityForm, EntityDetail) wired to the standard widget catalog",
+      "exports": []
+    },
+    {
+      "name": "@granit/react-entities-views",
+      "description": "React hooks + view tab strip for @granit/entities-views — CRUD / pin / star / share / set-default hooks plus the EntityViewTabStrip component (dirty badge, save-as-new, Notion-style 'Save for everyone' promotion)",
+      "exports": []
+    },
+    {
       "name": "@granit/react-error-boundary",
       "description": "React bindings for @granit/error-boundary — GranitErrorBoundary, GlobalErrorCapture, ErrorContextProvider",
       "exports": [
@@ -4099,6 +4119,11 @@
       ]
     },
     {
+      "name": "@granit/react-workspaces",
+      "description": "React renderer for @granit/workspaces — WorkspaceNav sidebar, /w/{workspace}/... routing, Notion-style SidePeek with ⌘+⇧+. expand, and the landing-route resolver hook",
+      "exports": []
+    },
+    {
       "name": "@granit/reference-data",
       "description": "Generic reference data types and API — mirrors Granit.ReferenceData .NET",
       "exports": []
@@ -4457,6 +4482,11 @@
           "signature": "type WorkflowHistoryPage = PagedResult<TransitionHistory>"
         }
       ]
+    },
+    {
+      "name": "@granit/workspaces",
+      "description": "Framework-agnostic types and helpers for the Granit workspace tree — WorkspaceDefinition / sections / items, landing route response, typed preset overlay (mirrors Granit.Workspaces.Abstractions + Granit.Workspaces.Endpoints.Dtos)",
+      "exports": []
     }
   ]
 }

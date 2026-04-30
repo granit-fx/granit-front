@@ -1,0 +1,42 @@
+{
+  "name": "@granit/react-workspaces",
+  "description": "React renderer for @granit/workspaces — WorkspaceNav sidebar, /w/{workspace}/... routing, Notion-style SidePeek with ⌘+⇧+. expand, and the landing-route resolver hook",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/entities": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/workspaces": "workspace:*",
+    "@tanstack/react-query": "^5.0.0",
+    "react": "^19.0.0",
+    "react-i18next": "^17.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/entities": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-testing": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@granit/workspaces": "workspace:*"
+  }
+}

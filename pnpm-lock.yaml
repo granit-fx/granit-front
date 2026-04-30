@@ -372,6 +372,10 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/entities: {}
+
+  packages/@granit/entities-views: {}
+
   packages/@granit/error-boundary: {}
 
   packages/@granit/features:
@@ -1242,6 +1246,62 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
+  packages/@granit/react-entities:
+    dependencies:
+      '@tanstack/react-query':
+        specifier: 5.100.5
+        version: 5.100.5(react@19.2.5)
+      react:
+        specifier: ^19.0.0
+        version: 19.2.5
+      react-i18next:
+        specifier: ^17.0.0
+        version: 17.0.4(i18next@26.0.8(typescript@6.0.3))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.3)
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/entities':
+        specifier: workspace:*
+        version: link:../entities
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
+  packages/@granit/react-entities-views:
+    dependencies:
+      '@tanstack/react-query':
+        specifier: 5.100.5
+        version: 5.100.5(react@19.2.5)
+      react:
+        specifier: ^19.0.0
+        version: 19.2.5
+      react-i18next:
+        specifier: ^17.0.0
+        version: 17.0.4(i18next@26.0.8(typescript@6.0.3))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.3)
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/entities-views':
+        specifier: workspace:*
+        version: link:../entities-views
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -2157,6 +2217,37 @@ importers:
         specifier: workspace:*
         version: link:../types
 
+  packages/@granit/react-workspaces:
+    dependencies:
+      '@tanstack/react-query':
+        specifier: 5.100.5
+        version: 5.100.5(react@19.2.5)
+      react:
+        specifier: ^19.0.0
+        version: 19.2.5
+      react-i18next:
+        specifier: ^17.0.0
+        version: 17.0.4(i18next@26.0.8(typescript@6.0.3))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.3)
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/entities':
+        specifier: workspace:*
+        version: link:../entities
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@granit/workspaces':
+        specifier: workspace:*
+        version: link:../workspaces
+
   packages/@granit/reference-data:
     dependencies:
       '@granit/query-engine':
@@ -2326,6 +2417,8 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+
+  packages/@granit/workspaces: {}
 
 packages:
 
