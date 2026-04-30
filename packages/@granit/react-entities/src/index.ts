@@ -17,6 +17,10 @@ export type { EntityListProps } from './components/entity-list.js';
 export { STANDARD_FORM_WIDGETS } from './widgets/index.js';
 export type { SelectWidgetOption } from './widgets/index.js';
 export { entityDiscoveryQueryKey, useEntityDiscovery } from './api/use-entity-discovery.js';
+export {
+  entityRelationAggregatesQueryKey,
+  useEntityRelationAggregates,
+} from './api/use-entity-relation-aggregates.js';
 export { entityManifestQueryKey, useEntityMetadata } from './api/use-entity-metadata.js';
 export { useEntityForm } from './hooks/index.js';
 export type { UseEntityFormOptions, UseEntityFormReturn } from './hooks/index.js';
