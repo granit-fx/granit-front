@@ -14,11 +14,17 @@ import type { DashboardRenderedWidget } from '@granit/dashboards';
 // Pin them to the CDN so apps don't need to import PNG assets manually.
 // Apps that prefer self-hosted icons override `L.Icon.Default.mergeOptions`
 // at the entry point.
-const LEAFLET_ICON_CDN = 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images';
+//
+// `imagePath` carries the full CDN base; the *Url options carry the bare
+// filenames. Leaflet's Icon.Default._getIconUrl concatenates them as
+// `imagePath + url`, so passing absolute CDN URLs in iconUrl alone
+// double-prefixes when Leaflet's auto-detected imagePath kicks in (Vite
+// resolves it to the local node_modules path under /@fs/...).
 L.Icon.Default.mergeOptions({
-  iconUrl: `${LEAFLET_ICON_CDN}/marker-icon.png`,
-  iconRetinaUrl: `${LEAFLET_ICON_CDN}/marker-icon-2x.png`,
-  shadowUrl: `${LEAFLET_ICON_CDN}/marker-shadow.png`,
+  imagePath: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/',
+  iconUrl: 'marker-icon.png',
+  iconRetinaUrl: 'marker-icon-2x.png',
+  shadowUrl: 'marker-shadow.png',
 });
 
 /**

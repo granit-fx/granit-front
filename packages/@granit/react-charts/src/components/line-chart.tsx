@@ -54,7 +54,10 @@ export function LineChart({
         right: 16,
         top: wantLegend ? 32 : 8,
         bottom: 8,
-        containLabel: true,
+        // ECharts 6 deprecated `containLabel: true`; the equivalent is
+        // outerBoundsMode 'same' + outerBoundsContain 'axisLabel'.
+        outerBoundsMode: 'same',
+        outerBoundsContain: 'axisLabel',
       },
       xAxis: {
         type: xAxis?.type ?? 'category',

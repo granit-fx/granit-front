@@ -55,7 +55,10 @@ export function BarChart({
         right: 16,
         top: wantLegend ? 32 : 8,
         bottom: 8,
-        containLabel: true,
+        // ECharts 6 deprecated `containLabel: true`; the equivalent is
+        // outerBoundsMode 'same' + outerBoundsContain 'axisLabel'.
+        outerBoundsMode: 'same',
+        outerBoundsContain: 'axisLabel',
       },
       xAxis: horizontal ? valueAxis : categoryAxis,
       yAxis: horizontal ? categoryAxis : valueAxis,
