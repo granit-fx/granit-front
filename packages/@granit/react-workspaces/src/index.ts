@@ -14,5 +14,11 @@ export {
   useSetLandingPin,
 } from './api/use-landing-route.js';
 export { useWorkspaces, workspaceTreeQueryKey } from './api/use-workspaces.js';
-export { useSidePeek } from './hooks/index.js';
-export type { SidePeekEntry, UseSidePeekOptions, UseSidePeekReturn } from './hooks/index.js';
+export { useLandingRedirect, useSidePeek } from './hooks/index.js';
+export type {
+  SidePeekEntry,
+  UseLandingRedirectOptions,
+  UseLandingRedirectReturn,
+  UseSidePeekOptions,
+  UseSidePeekReturn,
+} from './hooks/index.js';
