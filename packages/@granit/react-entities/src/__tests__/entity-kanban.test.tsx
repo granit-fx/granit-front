@@ -65,6 +65,7 @@ function manifest(hasQuery: boolean): EntityManifestResponse {
           icon: null,
           permissionGroup: null,
           displayProperty: 'name',
+          subtitleProperty: null,
         }
       : null,
     permissions: null,

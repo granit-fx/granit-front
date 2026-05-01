@@ -24,6 +24,7 @@ const FULL: EntityManifestResponse = {
     icon: 'users',
     permissionGroup: 'Parties.Parties',
     displayProperty: 'Number',
+    subtitleProperty: 'Kind',
   },
   permissions: {
     canRead: true,

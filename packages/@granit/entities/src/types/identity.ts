@@ -15,4 +15,11 @@ export interface EntityIdentitySection {
   readonly permissionGroup: string | null;
   /** Property used to label references to this entity (e.g. `"Number"`). */
   readonly displayProperty: string | null;
+  /**
+   * Optional secondary property displayed alongside `displayProperty`
+   * for context. E.g. an Invoice's `displayProperty: 'Number'` +
+   * `subtitleProperty: 'PartyName'` renders "INV-001 — Acme Corp".
+   * `null` when the entity declares no subtitle.
+   */
+  readonly subtitleProperty: string | null;
 }
