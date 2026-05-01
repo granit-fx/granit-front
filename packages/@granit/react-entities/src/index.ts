@@ -16,10 +16,10 @@ export { EntityList } from './components/entity-list.js';
 export type { EntityListProps } from './components/entity-list.js';
 export {
   defaultDetailFormat,
-  STANDARD_DETAIL_WIDGETS,
-  STANDARD_FORM_WIDGETS,
-} from './widgets/index.js';
-export type { SelectWidgetOption } from './widgets/index.js';
+  STANDARD_DETAIL_COMPONENTS,
+  STANDARD_FORM_COMPONENTS,
+} from './field-components/index.js';
+export type { SelectComponentOption } from './field-components/index.js';
 export { entityDiscoveryQueryKey, useEntityDiscovery } from './api/use-entity-discovery.js';
 export {
   entityRelationAggregatesQueryKey,
@@ -29,19 +29,19 @@ export { entityManifestQueryKey, useEntityMetadata } from './api/use-entity-meta
 export { useEntityForm } from './hooks/index.js';
 export type { UseEntityFormOptions, UseEntityFormReturn } from './hooks/index.js';
 export {
-  EMPTY_WIDGET_CATALOG,
+  EMPTY_COMPONENT_CATALOG,
   EntityRendererProvider,
   useEntityRenderer,
 } from './provider/index.js';
 export type {
-  EntityDetailWidget,
-  EntityDetailWidgetProps,
-  EntityFormWidget,
-  EntityFormWidgetProps,
+  EntityComponentCatalog,
+  EntityDetailComponent,
+  EntityDetailComponentProps,
+  EntityFormComponent,
+  EntityFormComponentProps,
   EntityRendererContextValue,
   EntityRendererProviderProps,
   EntitySidePanel,
   EntitySidePanelProps,
-  EntityWidgetCatalog,
   ResolveLabel,
 } from './provider/index.js';

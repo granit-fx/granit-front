@@ -5,8 +5,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { EntityForm } from '../components/entity-form.js';
 import {
   EntityRendererProvider,
-  type EntityFormWidget,
-  type EntityWidgetCatalog,
+  type EntityFormComponent,
+  type EntityComponentCatalog,
 } from '../provider/index.js';
 
 import type {
@@ -16,16 +16,16 @@ import type {
 } from '@granit/entities';
 import type { ReactNode } from 'react';
 
-const textWidget: EntityFormWidget = ({ field, value, onChange, readOnly }) => (
+const textWidget: EntityFormComponent = ({ field, value, onChange, readOnly }) => (
   <input
-    data-testid={`widget-${field.propertyName}`}
+    data-testid={`component-${field.propertyName}`}
     value={typeof value === 'string' ? value : ''}
     onChange={(e) => onChange(e.target.value)}
     readOnly={readOnly}
   />
 );
 
-const catalog: EntityWidgetCatalog = {
+const catalog: EntityComponentCatalog = {
   form: { text: textWidget },
 };
 
@@ -37,7 +37,7 @@ function field(
   return {
     propertyName,
     clrTypeName: 'String',
-    widget: 'text',
+    component: 'text',
     config: null,
     labelKey: `Field.${propertyName}.Label`,
     helpKey: null,
@@ -70,11 +70,11 @@ function manifest(...sections: EntityFormSectionManifest[]): EntityFormManifest 
 
 function withProvider(
   children: ReactNode,
-  widgets: EntityWidgetCatalog = catalog,
+  widgets: EntityComponentCatalog = catalog,
   resolveLabel?: (key: string, fallback?: string) => string
 ) {
   return (
-    <EntityRendererProvider widgets={widgets} resolveLabel={resolveLabel}>
+    <EntityRendererProvider components={widgets} resolveLabel={resolveLabel}>
       {children}
     </EntityRendererProvider>
   );
@@ -117,26 +117,26 @@ describe('EntityForm', () => {
         <EntityForm variant={variant} values={{ Status: 'Active' }} onChange={() => undefined} />
       )
     );
-    expect(queryByTestId('widget-ClosureReason')).toBeNull();
+    expect(queryByTestId('component-ClosureReason')).toBeNull();
 
     rerender(
       withProvider(
         <EntityForm variant={variant} values={{ Status: 'Closed' }} onChange={() => undefined} />
       )
     );
-    expect(queryByTestId('widget-ClosureReason')).not.toBeNull();
+    expect(queryByTestId('component-ClosureReason')).not.toBeNull();
   });
 
-  it('renders MissingWidget when the catalog has no widget for the id', () => {
+  it('renders MissingComponent when the catalog has no component for the id', () => {
     const variant = manifest(
-      section('main', 0, [field('Number', 0, { widget: 'unknown-widget' })])
+      section('main', 0, [field('Number', 0, { component: 'unknown-component' })])
     );
     const { container } = render(
       withProvider(<EntityForm variant={variant} values={{}} onChange={() => undefined} />)
     );
-    const missing = container.querySelector('[data-granit-missing-widget]');
+    const missing = container.querySelector('[data-granit-missing-component]');
     expect(missing).not.toBeNull();
-    expect(missing?.getAttribute('data-widget')).toBe('unknown-widget');
+    expect(missing?.getAttribute('data-component')).toBe('unknown-component');
   });
 
   it('forwards readOnly to widgets (form prop OR field flag)', () => {
@@ -146,14 +146,14 @@ describe('EntityForm', () => {
     const { getByTestId, rerender, unmount } = render(
       withProvider(<EntityForm variant={variant} values={{}} onChange={() => undefined} />)
     );
-    expect((getByTestId('widget-Editable') as HTMLInputElement).readOnly).toBe(false);
-    expect((getByTestId('widget-LockedByField') as HTMLInputElement).readOnly).toBe(true);
+    expect((getByTestId('component-Editable') as HTMLInputElement).readOnly).toBe(false);
+    expect((getByTestId('component-LockedByField') as HTMLInputElement).readOnly).toBe(true);
 
     rerender(
       withProvider(<EntityForm variant={variant} values={{}} onChange={() => undefined} readOnly />)
     );
-    expect((getByTestId('widget-Editable') as HTMLInputElement).readOnly).toBe(true);
-    expect((getByTestId('widget-LockedByField') as HTMLInputElement).readOnly).toBe(true);
+    expect((getByTestId('component-Editable') as HTMLInputElement).readOnly).toBe(true);
+    expect((getByTestId('component-LockedByField') as HTMLInputElement).readOnly).toBe(true);
     unmount();
   });
 
@@ -165,7 +165,7 @@ describe('EntityForm', () => {
         <EntityForm variant={variant} values={{ Number: 'ACME-001' }} onChange={onChange} />
       )
     );
-    fireEvent.change(getByTestId('widget-Name'), { target: { value: 'ACME' } });
+    fireEvent.change(getByTestId('component-Name'), { target: { value: 'ACME' } });
     expect(onChange).toHaveBeenCalledWith({ Number: 'ACME-001', Name: 'ACME' });
   });
 
@@ -176,9 +176,9 @@ describe('EntityForm', () => {
       return <EntityForm variant={variant} values={values} onChange={setValues} />;
     }
     const { getByTestId } = render(withProvider(<Host />));
-    const input = getByTestId('widget-Name') as HTMLInputElement;
+    const input = getByTestId('component-Name') as HTMLInputElement;
     fireEvent.change(input, { target: { value: 'Smith' } });
-    expect((getByTestId('widget-Name') as HTMLInputElement).value).toBe('Smith');
+    expect((getByTestId('component-Name') as HTMLInputElement).value).toBe('Smith');
   });
 
   it('resolves label keys via the provider resolver', () => {

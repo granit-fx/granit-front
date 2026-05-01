@@ -5,8 +5,8 @@ import { EntityForm } from '../components/entity-form.js';
 import { useEntityForm } from '../hooks/use-entity-form.js';
 import {
   EntityRendererProvider,
-  type EntityFormWidget,
-  type EntityWidgetCatalog,
+  type EntityFormComponent,
+  type EntityComponentCatalog,
 } from '../provider/index.js';
 
 import type {
@@ -16,15 +16,15 @@ import type {
 } from '@granit/entities';
 import type { ReactNode } from 'react';
 
-const textWidget: EntityFormWidget = ({ field, value, onChange }) => (
+const textWidget: EntityFormComponent = ({ field, value, onChange }) => (
   <input
-    data-testid={`widget-${field.propertyName}`}
+    data-testid={`component-${field.propertyName}`}
     value={value == null ? '' : String(value)}
     onChange={(e) => onChange(e.target.value)}
   />
 );
 
-const catalog: EntityWidgetCatalog = { form: { text: textWidget, integer: textWidget } };
+const catalog: EntityComponentCatalog = { form: { text: textWidget, integer: textWidget } };
 
 function field(
   propertyName: string,
@@ -34,7 +34,7 @@ function field(
   return {
     propertyName,
     clrTypeName,
-    widget: clrTypeName === 'Int32' ? 'integer' : 'text',
+    component: clrTypeName === 'Int32' ? 'integer' : 'text',
     config: null,
     labelKey: null,
     helpKey: null,
@@ -64,7 +64,7 @@ function manifest(...sections: EntityFormSectionManifest[]): EntityFormManifest 
 }
 
 function withProvider(children: ReactNode) {
-  return <EntityRendererProvider widgets={catalog}>{children}</EntityRendererProvider>;
+  return <EntityRendererProvider components={catalog}>{children}</EntityRendererProvider>;
 }
 
 describe('useEntityForm', () => {
@@ -115,10 +115,10 @@ describe('useEntityForm', () => {
       return <EntityForm variant={variant} {...formProps} />;
     }
     const { getByTestId } = render(withProvider(<Host />));
-    const input = getByTestId('widget-Name') as HTMLInputElement;
+    const input = getByTestId('component-Name') as HTMLInputElement;
     expect(input.value).toBe('');
     fireEvent.change(input, { target: { value: 'Smith' } });
-    expect((getByTestId('widget-Name') as HTMLInputElement).value).toBe('Smith');
+    expect((getByTestId('component-Name') as HTMLInputElement).value).toBe('Smith');
   });
 
   it('handleSubmit invokes the callback with current values when valid', async () => {

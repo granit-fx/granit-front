@@ -2,8 +2,8 @@ import { fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { EntityForm } from '../components/entity-form.js';
+import { STANDARD_FORM_COMPONENTS } from '../field-components/index.js';
 import { EntityRendererProvider } from '../provider/index.js';
-import { STANDARD_FORM_WIDGETS } from '../widgets/index.js';
 
 import type { EntityFormFieldManifest, EntityFormManifest } from '@granit/entities';
 
@@ -24,13 +24,13 @@ function singleFieldVariant(field: EntityFormFieldManifest): EntityFormManifest 
 }
 
 function field(
-  widget: string,
+  component: string,
   overrides: Partial<EntityFormFieldManifest> = {}
 ): EntityFormFieldManifest {
   return {
     propertyName: 'X',
     clrTypeName: 'String',
-    widget,
+    component,
     config: null,
     labelKey: null,
     helpKey: null,
@@ -44,14 +44,14 @@ function field(
 function harness(variant: EntityFormManifest, value: unknown) {
   const onChange = vi.fn();
   const utils = render(
-    <EntityRendererProvider widgets={STANDARD_FORM_WIDGETS}>
+    <EntityRendererProvider components={STANDARD_FORM_COMPONENTS}>
       <EntityForm variant={variant} values={{ X: value }} onChange={onChange} />
     </EntityRendererProvider>
   );
   return { ...utils, onChange };
 }
 
-describe('STANDARD_FORM_WIDGETS', () => {
+describe('STANDARD_FORM_COMPONENTS', () => {
   it('text — renders a text input and forwards value', () => {
     const { container, onChange } = harness(singleFieldVariant(field('text')), 'hello');
     const input = container.querySelector('input[type="text"]') as HTMLInputElement;
@@ -98,16 +98,16 @@ describe('STANDARD_FORM_WIDGETS', () => {
 
   it('date / time / datetime — corresponding input types, empty becomes null', () => {
     const cases: ReadonlyArray<{
-      readonly widget: string;
+      readonly component: string;
       readonly inputType: string;
       readonly seed: string;
     }> = [
-      { widget: 'date', inputType: 'date', seed: '2026-04-30' },
-      { widget: 'time', inputType: 'time', seed: '12:30' },
-      { widget: 'datetime', inputType: 'datetime-local', seed: '2026-04-30T12:30' },
+      { component: 'date', inputType: 'date', seed: '2026-04-30' },
+      { component: 'time', inputType: 'time', seed: '12:30' },
+      { component: 'datetime', inputType: 'datetime-local', seed: '2026-04-30T12:30' },
     ];
-    for (const { widget, inputType, seed } of cases) {
-      const { container, onChange, unmount } = harness(singleFieldVariant(field(widget)), seed);
+    for (const { component, inputType, seed } of cases) {
+      const { container, onChange, unmount } = harness(singleFieldVariant(field(component)), seed);
       const input = container.querySelector(`input[type="${inputType}"]`) as HTMLInputElement;
       expect(input).not.toBeNull();
       fireEvent.change(input, { target: { value: '' } });
@@ -169,16 +169,17 @@ describe('STANDARD_FORM_WIDGETS', () => {
   });
 
   it('readOnly — text/textarea expose readOnly, boolean/select expose disabled', () => {
-    function renderRO(widget: string) {
+    function renderRO(component: string) {
       const { container, unmount } = render(
-        <EntityRendererProvider widgets={STANDARD_FORM_WIDGETS}>
+        <EntityRendererProvider components={STANDARD_FORM_COMPONENTS}>
           <EntityForm
             variant={singleFieldVariant(
-              field(widget, {
-                config: widget === 'select' ? { options: [{ value: 'A', labelKey: null }] } : null,
+              field(component, {
+                config:
+                  component === 'select' ? { options: [{ value: 'A', labelKey: null }] } : null,
               })
             )}
-            values={{ X: widget === 'select' ? 'A' : '' }}
+            values={{ X: component === 'select' ? 'A' : '' }}
             onChange={() => undefined}
             readOnly
           />
@@ -208,7 +209,7 @@ describe('STANDARD_FORM_WIDGETS', () => {
   it('aria-invalid — set when an errorMessage is provided', () => {
     const variant = singleFieldVariant(field('text'));
     const { container } = render(
-      <EntityRendererProvider widgets={STANDARD_FORM_WIDGETS}>
+      <EntityRendererProvider components={STANDARD_FORM_COMPONENTS}>
         <EntityForm
           variant={variant}
           values={{ X: '' }}

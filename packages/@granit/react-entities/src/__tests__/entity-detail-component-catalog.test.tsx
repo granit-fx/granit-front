@@ -5,8 +5,8 @@ import axios from 'axios';
 import { describe, expect, it } from 'vitest';
 
 import { EntityDetail } from '../components/entity-detail.js';
+import { STANDARD_DETAIL_COMPONENTS } from '../field-components/standard-detail-components.js';
 import { EntityRendererProvider } from '../provider/index.js';
-import { STANDARD_DETAIL_WIDGETS } from '../widgets/standard-detail-widgets.js';
 
 import type {
   EntityDetailManifest,
@@ -15,13 +15,15 @@ import type {
 } from '@granit/entities';
 import type { ReactNode } from 'react';
 
-function withProvider(children: ReactNode, detail = STANDARD_DETAIL_WIDGETS.detail) {
+function withProvider(children: ReactNode, detail = STANDARD_DETAIL_COMPONENTS.detail) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const apiClient = axios.create({ baseURL: 'http://localhost' });
   return (
     <QueryClientProvider client={queryClient}>
       <GranitClientProvider client={apiClient}>
-        <EntityRendererProvider widgets={{ form: {}, detail }}>{children}</EntityRendererProvider>
+        <EntityRendererProvider components={{ form: {}, detail }}>
+          {children}
+        </EntityRendererProvider>
       </GranitClientProvider>
     </QueryClientProvider>
   );
@@ -61,13 +63,13 @@ function inherited(formVariant: string): EntityDetailManifest {
 
 function field(
   propertyName: string,
-  widget: string,
+  component: string,
   overrides: Partial<EntityFormFieldManifest> = {}
 ): EntityFormFieldManifest {
   return {
     propertyName,
     clrTypeName: 'String',
-    widget,
+    component,
     config: null,
     labelKey: null,
     helpKey: null,
@@ -86,14 +88,14 @@ function formVariantWith(name: string, fields: EntityFormFieldManifest[]): Entit
   };
 }
 
-describe('STANDARD_DETAIL_WIDGETS — url widget', () => {
+describe('STANDARD_DETAIL_COMPONENTS — url widget', () => {
   it('renders an external URL with target=_blank rel=noreferrer', () => {
     const { container } = render(
       withProvider(
         <EntityDetail
           variant={freeForm('Website')}
           values={{ Website: 'https://example.com' }}
-          propertyWidgets={{ Website: 'url' }}
+          propertyComponents={{ Website: 'url' }}
         />
       )
     );
@@ -112,7 +114,7 @@ describe('STANDARD_DETAIL_WIDGETS — url widget', () => {
         <EntityDetail
           variant={freeForm('Website')}
           values={{ Website: '/parties/42' }}
-          propertyWidgets={{ Website: 'url' }}
+          propertyComponents={{ Website: 'url' }}
         />
       )
     );
@@ -129,7 +131,7 @@ describe('STANDARD_DETAIL_WIDGETS — url widget', () => {
         <EntityDetail
           variant={freeForm('Website')}
           values={{ Website: null }}
-          propertyWidgets={{ Website: 'url' }}
+          propertyComponents={{ Website: 'url' }}
         />
       )
     );
@@ -139,14 +141,14 @@ describe('STANDARD_DETAIL_WIDGETS — url widget', () => {
   });
 });
 
-describe('STANDARD_DETAIL_WIDGETS — email widget', () => {
+describe('STANDARD_DETAIL_COMPONENTS — email widget', () => {
   it('renders a mailto: link', () => {
     const { container } = render(
       withProvider(
         <EntityDetail
           variant={freeForm('Email')}
           values={{ Email: 'jane@example.com' }}
-          propertyWidgets={{ Email: 'email' }}
+          propertyComponents={{ Email: 'email' }}
         />
       )
     );
@@ -156,14 +158,14 @@ describe('STANDARD_DETAIL_WIDGETS — email widget', () => {
   });
 });
 
-describe('STANDARD_DETAIL_WIDGETS — tel widget', () => {
+describe('STANDARD_DETAIL_COMPONENTS — tel widget', () => {
   it('renders a tel: link with whitespace stripped from the href', () => {
     const { container } = render(
       withProvider(
         <EntityDetail
           variant={freeForm('Phone')}
           values={{ Phone: '+32 471 23 45 67' }}
-          propertyWidgets={{ Phone: 'tel' }}
+          propertyComponents={{ Phone: 'tel' }}
         />
       )
     );
@@ -175,14 +177,14 @@ describe('STANDARD_DETAIL_WIDGETS — tel widget', () => {
   });
 });
 
-describe('EntityDetail — propertyWidgets free-form fallback', () => {
+describe('EntityDetail — propertyComponents free-form fallback', () => {
   it('falls back to text formatter when widget id not in catalog', () => {
     const { container } = render(
       withProvider(
         <EntityDetail
           variant={freeForm('Mystery')}
           values={{ Mystery: 'just text' }}
-          propertyWidgets={{ Mystery: 'unknown-widget' }}
+          propertyComponents={{ Mystery: 'unknown-widget' }}
         />
       )
     );
@@ -208,7 +210,7 @@ describe('EntityDetail — propertyWidgets free-form fallback', () => {
   });
 });
 
-describe('EntityDetail — inherited mode reads field.widget', () => {
+describe('EntityDetail — inherited mode reads field.component', () => {
   it('uses the form field widget id to look up the detail widget', () => {
     const variant = inherited('default');
     const formVariants = [formVariantWith('default', [field('Website', 'url')])];
@@ -239,7 +241,7 @@ describe('EntityDetail — inherited mode reads field.widget', () => {
       )
     );
     const dd = container.querySelector('[data-property="Notes"] dd');
-    // STANDARD_DETAIL_WIDGETS maps 'text' → text formatter, so it renders plainly.
+    // STANDARD_DETAIL_COMPONENTS maps 'text' → text formatter, so it renders plainly.
     expect(dd?.textContent).toBe('plain text');
     expect(dd?.querySelector('a')).toBeNull();
   });

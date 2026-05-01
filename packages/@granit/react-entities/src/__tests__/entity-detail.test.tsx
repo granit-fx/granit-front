@@ -1,11 +1,14 @@
+import { GranitClientProvider } from '@granit/react-api-client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
+import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 
 import { EntityDetail } from '../components/entity-detail.js';
 import {
   EntityRendererProvider,
   type EntitySidePanel,
-  type EntityWidgetCatalog,
+  type EntityComponentCatalog,
 } from '../provider/index.js';
 
 import type {
@@ -23,7 +26,7 @@ function field(
   return {
     propertyName,
     clrTypeName: 'String',
-    widget: 'text',
+    component: 'text',
     config: null,
     labelKey: `Field.${propertyName}.Label`,
     helpKey: null,
@@ -63,12 +66,18 @@ function variant(overrides: Partial<EntityDetailManifest> = {}): EntityDetailMan
 function withProvider(
   children: ReactNode,
   resolveLabel?: (key: string) => string,
-  widgets?: EntityWidgetCatalog
+  widgets?: EntityComponentCatalog
 ) {
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const apiClient = axios.create({ baseURL: 'http://localhost' });
   return (
-    <EntityRendererProvider resolveLabel={resolveLabel} widgets={widgets}>
-      {children}
-    </EntityRendererProvider>
+    <QueryClientProvider client={queryClient}>
+      <GranitClientProvider client={apiClient}>
+        <EntityRendererProvider resolveLabel={resolveLabel} components={widgets}>
+          {children}
+        </EntityRendererProvider>
+      </GranitClientProvider>
+    </QueryClientProvider>
   );
 }
 
@@ -275,7 +284,7 @@ describe('EntityDetail', () => {
         {entityName}#{entityId}
       </div>
     );
-    const widgets: EntityWidgetCatalog = { form: {}, sidePanels: { Audit: audit } };
+    const widgets: EntityComponentCatalog = { form: {}, sidePanels: { Audit: audit } };
     const { container, getByTestId } = render(
       withProvider(
         <EntityDetail variant={v} values={{}} entityName="Granit.Parties.Party" entityId="42" />,
@@ -293,7 +302,7 @@ describe('EntityDetail', () => {
   it('falls back to an empty slot when entityName / entityId are missing', () => {
     const v = variant({ sidePanels: [{ kind: 'Audit', order: 0 }] });
     const audit: EntitySidePanel = () => <div data-testid="audit-panel" />;
-    const widgets: EntityWidgetCatalog = { form: {}, sidePanels: { Audit: audit } };
+    const widgets: EntityComponentCatalog = { form: {}, sidePanels: { Audit: audit } };
     const { queryByTestId } = render(
       withProvider(<EntityDetail variant={v} values={{}} />, undefined, widgets)
     );

@@ -5,8 +5,8 @@ import axios from 'axios';
 import { describe, expect, it } from 'vitest';
 
 import { EntityDetail } from '../components/entity-detail.js';
+import { STANDARD_DETAIL_COMPONENTS } from '../field-components/standard-detail-components.js';
 import { EntityRendererProvider } from '../provider/index.js';
-import { STANDARD_DETAIL_WIDGETS } from '../widgets/standard-detail-widgets.js';
 
 import type {
   EntityDetailManifest,
@@ -21,7 +21,9 @@ function withProvider(children: ReactNode) {
   return (
     <QueryClientProvider client={queryClient}>
       <GranitClientProvider client={apiClient}>
-        <EntityRendererProvider widgets={{ form: {}, detail: STANDARD_DETAIL_WIDGETS.detail }}>
+        <EntityRendererProvider
+          components={{ form: {}, detail: STANDARD_DETAIL_COMPONENTS.detail }}
+        >
           {children}
         </EntityRendererProvider>
       </GranitClientProvider>
@@ -45,13 +47,13 @@ const detailVariant: EntityDetailManifest = {
 
 function field(
   propertyName: string,
-  widget: string,
+  component: string,
   overrides: Partial<EntityFormFieldManifest> = {}
 ): EntityFormFieldManifest {
   return {
     propertyName,
     clrTypeName: 'String',
-    widget,
+    component,
     config: null,
     labelKey: null,
     helpKey: null,
@@ -70,8 +72,8 @@ function formVariant(name: string, fields: EntityFormFieldManifest[]): EntityFor
   };
 }
 
-describe('EntityDetail — propertyWidgets auto-derive from formVariants', () => {
-  it('derives the widget for free-form section properties from supplied form variants', () => {
+describe('EntityDetail — propertyComponents auto-derive from formVariants', () => {
+  it('derives the component for free-form section properties from supplied form variants', () => {
     const formVariants = [
       formVariant('default', [
         field('Website', 'url'),
@@ -103,7 +105,7 @@ describe('EntityDetail — propertyWidgets auto-derive from formVariants', () =>
     expect(phoneLink?.getAttribute('href')).toBe('tel:+321');
   });
 
-  it('explicit propertyWidgets merges on top of the auto-derived map (per-key override)', () => {
+  it('explicit propertyComponents merges on top of the auto-derived map (per-key override)', () => {
     const formVariants = [
       formVariant('default', [field('Website', 'text'), field('Email', 'email')]),
     ];
@@ -113,7 +115,7 @@ describe('EntityDetail — propertyWidgets auto-derive from formVariants', () =>
           variant={detailVariant}
           values={{ Website: 'https://example.com', Email: 'a@b' }}
           formVariants={formVariants}
-          propertyWidgets={{ Website: 'url' }} // override only Website
+          propertyComponents={{ Website: 'url' }} // override only Website
         />
       )
     );
@@ -121,18 +123,18 @@ describe('EntityDetail — propertyWidgets auto-derive from formVariants', () =>
     // Website overridden to url → renders as <a>
     const websiteLink = container.querySelector('[data-property="Website"] a');
     expect(websiteLink?.getAttribute('href')).toBe('https://example.com');
-    // Email not overridden → still picks up auto-derived 'email' widget
+    // Email not overridden → still picks up auto-derived 'email' component
     const emailLink = container.querySelector('[data-property="Email"] a');
     expect(emailLink?.getAttribute('href')).toBe('mailto:a@b');
   });
 
-  it('explicit propertyWidgets without formVariants still works (no auto-derive)', () => {
+  it('explicit propertyComponents without formVariants still works (no auto-derive)', () => {
     const { container } = render(
       withProvider(
         <EntityDetail
           variant={detailVariant}
           values={{ Website: 'https://example.com' }}
-          propertyWidgets={{ Website: 'url' }}
+          propertyComponents={{ Website: 'url' }}
         />
       )
     );
@@ -140,7 +142,7 @@ describe('EntityDetail — propertyWidgets auto-derive from formVariants', () =>
     expect(websiteLink?.getAttribute('href')).toBe('https://example.com');
   });
 
-  it('falls back to text formatter when neither formVariants nor propertyWidgets supplied', () => {
+  it('falls back to text formatter when neither formVariants nor propertyComponents supplied', () => {
     const { container } = render(
       withProvider(
         <EntityDetail variant={detailVariant} values={{ Website: 'https://example.com' }} />

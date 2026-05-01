@@ -1,16 +1,16 @@
 export { EntityRendererProvider, useEntityRenderer } from './entity-renderer-provider.js';
-export { EMPTY_WIDGET_CATALOG } from './widget-catalog.js';
+export { EMPTY_COMPONENT_CATALOG } from './component-catalog.js';
 export type {
   EntityRendererContextValue,
   EntityRendererProviderProps,
   ResolveLabel,
 } from './entity-renderer-provider.js';
 export type {
-  EntityDetailWidget,
-  EntityDetailWidgetProps,
-  EntityFormWidget,
-  EntityFormWidgetProps,
+  EntityComponentCatalog,
+  EntityDetailComponent,
+  EntityDetailComponentProps,
+  EntityFormComponent,
+  EntityFormComponentProps,
   EntitySidePanel,
   EntitySidePanelProps,
-  EntityWidgetCatalog,
-} from './widget-catalog.js';
+} from './component-catalog.js';

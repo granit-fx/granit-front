@@ -64,31 +64,32 @@ export interface EntityDetailProps {
   readonly onRelationClick?: (relation: EntityRelationManifest) => void;
   /**
    * Maps free-form section property names (`section.fields: string[]`)
-   * to detail-widget ids registered on the provider. Lets apps render
-   * `Website` as a clickable URL or `Phone` as a `tel:` link without
-   * switching the section to `inheritsFromFormVariant`. Inherited-mode
-   * sections take their widget id from `field.widget` and ignore this
-   * map.
+   * to detail-component ids registered on the provider. Lets apps
+   * render `Website` as a clickable URL or `Phone` as a `tel:` link
+   * without switching the section to `inheritsFromFormVariant`.
+   * Inherited-mode sections take their component id from
+   * `field.component` and ignore this map.
    *
-   * Widget ids belong to the same ADR-041 catalog as
-   * `EntityFormFieldManifest.widget` — there is **no separate "format"
-   * concept** on the wire. `widget: 'money'` + `config: { currencyCode }`
-   * covers what other libraries call `format: 'currency'`; the framework
-   * dispatches via the widget id in both edit (`<EntityForm />`) and
-   * read (`<EntityDetail />`) contexts.
+   * Component ids belong to the same ADR-041 catalog as
+   * `EntityFormFieldManifest.component` — there is **no separate
+   * "format" concept** on the wire. `component: 'money'` +
+   * `config: { currencyCode }` covers what other libraries call
+   * `format: 'currency'`; the framework dispatches via the component
+   * id in both edit (`<EntityForm />`) and read (`<EntityDetail />`)
+   * contexts.
    *
    * When `formVariants` is supplied, `<EntityDetail />` auto-derives a
-   * `(propertyName → widget)` map from the form variants' fields and
-   * uses it as the fallback. The explicit `propertyWidgets` prop, when
-   * provided, is **merged on top** of the auto-derived map per key —
-   * apps override only the entries they care about.
+   * `(propertyName → component)` map from the form variants' fields
+   * and uses it as the fallback. The explicit `propertyComponents`
+   * prop, when provided, is **merged on top** of the auto-derived map
+   * per key — apps override only the entries they care about.
    *
    * @example
    * ```tsx
-   * <EntityDetail propertyWidgets={{ Website: 'url', Email: 'email' }} />
+   * <EntityDetail propertyComponents={{ Website: 'url', Email: 'email' }} />
    * ```
    */
-  readonly propertyWidgets?: Readonly<Record<string, string>>;
+  readonly propertyComponents?: Readonly<Record<string, string>>;
   /**
    * Optional class for the root element. The root layout is a
    * `<article>` containing the section column + side-panel rail; apps
@@ -113,7 +114,7 @@ export interface EntityDetailProps {
  * surprise readers.
  *
  * Values are displayed via `String(value)`, with `null` / `undefined`
- * collapsed to `'—'`. A read-mode widget catalog (currency / date / link
+ * collapsed to `'—'`. A read-mode component catalog (currency / date / link
  * formatting) is a follow-up.
  */
 export function EntityDetail({
@@ -124,7 +125,7 @@ export function EntityDetail({
   entityId,
   relations,
   onRelationClick,
-  propertyWidgets,
+  propertyComponents,
   className,
 }: EntityDetailProps): ReactNode {
   const sortedSections = useMemo(
@@ -135,9 +136,9 @@ export function EntityDetail({
     () => [...variant.sidePanels].sort((a, b) => a.order - b.order),
     [variant.sidePanels]
   );
-  const resolvedPropertyWidgets = useMemo(
-    () => composePropertyWidgets(formVariants, propertyWidgets),
-    [formVariants, propertyWidgets]
+  const resolvedPropertyComponents = useMemo(
+    () => composePropertyComponents(formVariants, propertyComponents),
+    [formVariants, propertyComponents]
   );
   const groupedRelations = useMemo(() => groupRelationsByDisplay(relations ?? []), [relations]);
   const allDisplayedNames = useMemo(
@@ -189,7 +190,7 @@ export function EntityDetail({
             section={section}
             values={values}
             formVariants={formVariants}
-            propertyWidgets={resolvedPropertyWidgets}
+            propertyComponents={resolvedPropertyComponents}
           />
         ))}
       </div>
@@ -229,14 +230,14 @@ interface EntityDetailSectionProps {
   readonly section: EntityDetailSectionManifest;
   readonly values: Readonly<Record<string, unknown>>;
   readonly formVariants: readonly EntityFormManifest[] | undefined;
-  readonly propertyWidgets: Readonly<Record<string, string>> | undefined;
+  readonly propertyComponents: Readonly<Record<string, string>> | undefined;
 }
 
 function EntityDetailSection({
   section,
   values,
   formVariants,
-  propertyWidgets,
+  propertyComponents,
 }: EntityDetailSectionProps): ReactNode {
   const { resolveLabel } = useEntityRenderer();
   const inheritedFields = useMemo(
@@ -279,7 +280,7 @@ function EntityDetailSection({
               key={property}
               property={property}
               value={values[property]}
-              widgetId={propertyWidgets?.[property]}
+              componentId={propertyComponents?.[property]}
             />
           ))}
         </dl>
@@ -295,19 +296,19 @@ interface InheritedFieldRowProps {
 }
 
 function InheritedFieldRow({ field, values, resolveLabel }: InheritedFieldRowProps): ReactNode {
-  const { widgets } = useEntityRenderer();
+  const { components } = useEntityRenderer();
   if (field.visibleIf && !evaluateVisibility(field.visibleIf, values)) {
     return null;
   }
   const label = field.labelKey ? resolveLabel(field.labelKey) : field.propertyName;
   const value = values[field.propertyName];
-  const Widget = widgets.detail?.[field.widget];
+  const Component = components.detail?.[field.component];
   return (
     <div data-granit-detail-row="" data-property={field.propertyName} data-inherited="">
       <dt data-granit-detail-label="">{label}</dt>
       <dd data-granit-detail-value="">
-        {Widget ? (
-          <Widget propertyName={field.propertyName} value={value} field={field} />
+        {Component ? (
+          <Component propertyName={field.propertyName} value={value} field={field} />
         ) : (
           formatValue(value)
         )}
@@ -319,17 +320,17 @@ function InheritedFieldRow({ field, values, resolveLabel }: InheritedFieldRowPro
 interface FreeFormFieldRowProps {
   readonly property: string;
   readonly value: unknown;
-  readonly widgetId: string | undefined;
+  readonly componentId: string | undefined;
 }
 
-function FreeFormFieldRow({ property, value, widgetId }: FreeFormFieldRowProps): ReactNode {
-  const { widgets } = useEntityRenderer();
-  const Widget = widgetId ? widgets.detail?.[widgetId] : undefined;
+function FreeFormFieldRow({ property, value, componentId }: FreeFormFieldRowProps): ReactNode {
+  const { components } = useEntityRenderer();
+  const Component = componentId ? components.detail?.[componentId] : undefined;
   return (
     <div data-granit-detail-row="" data-property={property}>
       <dt data-granit-detail-label="">{property}</dt>
       <dd data-granit-detail-value="">
-        {Widget ? <Widget propertyName={property} value={value} /> : formatValue(value)}
+        {Component ? <Component propertyName={property} value={value} /> : formatValue(value)}
       </dd>
     </div>
   );
@@ -346,8 +347,8 @@ function EntityDetailSidePanelSlot({
   entityName,
   entityId,
 }: EntityDetailSidePanelSlotProps): ReactNode {
-  const { widgets } = useEntityRenderer();
-  const Renderer = widgets.sidePanels?.[panel.kind];
+  const { components } = useEntityRenderer();
+  const Renderer = components.sidePanels?.[panel.kind];
   const canRender = Renderer && entityName && entityId;
   return (
     <div data-granit-side-panel-slot="" data-kind={panel.kind} data-order={panel.order}>
@@ -357,20 +358,20 @@ function EntityDetailSidePanelSlot({
 }
 
 /**
- * Auto-derives a `(propertyName → widget)` map from the supplied form
- * variants and merges any explicit `propertyWidgets` override on top.
+ * Auto-derives a `(propertyName → component)` map from the supplied form
+ * variants and merges any explicit `propertyComponents` override on top.
  *
  * - Walks every form variant + every section + every field, recording
- *   `field.widget` keyed by `field.propertyName`. Last form wins on
+ *   `field.component` keyed by `field.propertyName`. Last form wins on
  *   conflicts (subsequent variants tend to be more specialised).
  * - The explicit override map merges per-key so apps can correct
  *   individual entries without rebuilding the whole map.
  *
  * Returns `undefined` (not an empty object) when neither input yields
- * any mapping, so the renderer can keep its "no propertyWidgets" code
- * path simple.
+ * any mapping, so the renderer can keep its "no propertyComponents"
+ * code path simple.
  */
-function composePropertyWidgets(
+function composePropertyComponents(
   formVariants: readonly EntityFormManifest[] | undefined,
   override: Readonly<Record<string, string>> | undefined
 ): Readonly<Record<string, string>> | undefined {
@@ -378,15 +379,15 @@ function composePropertyWidgets(
   for (const variant of formVariants ?? []) {
     for (const section of variant.sections) {
       for (const field of section.fields) {
-        if (field.widget) {
-          derived[field.propertyName] = field.widget;
+        if (field.component) {
+          derived[field.propertyName] = field.component;
         }
       }
     }
   }
   if (override) {
-    for (const [key, widget] of Object.entries(override)) {
-      derived[key] = widget;
+    for (const [key, component] of Object.entries(override)) {
+      derived[key] = component;
     }
   }
   return Object.keys(derived).length > 0 ? derived : undefined;
