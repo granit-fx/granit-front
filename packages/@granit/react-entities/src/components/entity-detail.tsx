@@ -66,9 +66,22 @@ export interface EntityDetailProps {
    * Maps free-form section property names (`section.fields: string[]`)
    * to detail-widget ids registered on the provider. Lets apps render
    * `Website` as a clickable URL or `Phone` as a `tel:` link without
-   * switching the section to inheritsFromFormVariant. Inherited-mode
+   * switching the section to `inheritsFromFormVariant`. Inherited-mode
    * sections take their widget id from `field.widget` and ignore this
    * map.
+   *
+   * Widget ids belong to the same ADR-041 catalog as
+   * `EntityFormFieldManifest.widget` — there is **no separate "format"
+   * concept** on the wire. `widget: 'money'` + `config: { currencyCode }`
+   * covers what other libraries call `format: 'currency'`; the framework
+   * dispatches via the widget id in both edit (`<EntityForm />`) and
+   * read (`<EntityDetail />`) contexts.
+   *
+   * When `formVariants` is supplied, `<EntityDetail />` auto-derives a
+   * `(propertyName → widget)` map from the form variants' fields and
+   * uses it as the fallback. The explicit `propertyWidgets` prop, when
+   * provided, is **merged on top** of the auto-derived map per key —
+   * apps override only the entries they care about.
    *
    * @example
    * ```tsx
@@ -122,6 +135,10 @@ export function EntityDetail({
     () => [...variant.sidePanels].sort((a, b) => a.order - b.order),
     [variant.sidePanels]
   );
+  const resolvedPropertyWidgets = useMemo(
+    () => composePropertyWidgets(formVariants, propertyWidgets),
+    [formVariants, propertyWidgets]
+  );
   const groupedRelations = useMemo(() => groupRelationsByDisplay(relations ?? []), [relations]);
   const allDisplayedNames = useMemo(
     () =>
@@ -172,7 +189,7 @@ export function EntityDetail({
             section={section}
             values={values}
             formVariants={formVariants}
-            propertyWidgets={propertyWidgets}
+            propertyWidgets={resolvedPropertyWidgets}
           />
         ))}
       </div>
@@ -337,6 +354,42 @@ function EntityDetailSidePanelSlot({
       {canRender ? <Renderer entityName={entityName} entityId={entityId} /> : null}
     </div>
   );
+}
+
+/**
+ * Auto-derives a `(propertyName → widget)` map from the supplied form
+ * variants and merges any explicit `propertyWidgets` override on top.
+ *
+ * - Walks every form variant + every section + every field, recording
+ *   `field.widget` keyed by `field.propertyName`. Last form wins on
+ *   conflicts (subsequent variants tend to be more specialised).
+ * - The explicit override map merges per-key so apps can correct
+ *   individual entries without rebuilding the whole map.
+ *
+ * Returns `undefined` (not an empty object) when neither input yields
+ * any mapping, so the renderer can keep its "no propertyWidgets" code
+ * path simple.
+ */
+function composePropertyWidgets(
+  formVariants: readonly EntityFormManifest[] | undefined,
+  override: Readonly<Record<string, string>> | undefined
+): Readonly<Record<string, string>> | undefined {
+  const derived: Record<string, string> = {};
+  for (const variant of formVariants ?? []) {
+    for (const section of variant.sections) {
+      for (const field of section.fields) {
+        if (field.widget) {
+          derived[field.propertyName] = field.widget;
+        }
+      }
+    }
+  }
+  if (override) {
+    for (const [key, widget] of Object.entries(override)) {
+      derived[key] = widget;
+    }
+  }
+  return Object.keys(derived).length > 0 ? derived : undefined;
 }
 
 /**
