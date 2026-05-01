@@ -3,7 +3,7 @@ import { useCallback, useMemo, type ReactNode } from 'react';
 
 import { useEntityRenderer } from '../provider/entity-renderer-provider.js';
 
-import { MissingWidget } from './missing-widget.js';
+import { MissingComponent } from './missing-component.js';
 
 import type {
   EntityFormFieldManifest,
@@ -16,9 +16,9 @@ export interface EntityFormProps {
   readonly variant: EntityFormManifest;
   /** Current form values keyed by PascalCase property name. */
   readonly values: Readonly<Record<string, unknown>>;
-  /** Called whenever a widget changes its field — receives the next full values bag. */
+  /** Called whenever a component changes its field — receives the next full values bag. */
   readonly onChange: (next: Readonly<Record<string, unknown>>) => void;
-  /** When `true`, every widget renders read-only regardless of `field.readOnly`. */
+  /** When `true`, every component renders read-only regardless of `field.readOnly`. */
   readonly readOnly?: boolean;
   /** First validation message keyed by property name, when any. */
   readonly errors?: Readonly<Record<string, string | undefined>>;
@@ -27,12 +27,12 @@ export interface EntityFormProps {
 }
 
 /**
- * Generic form renderer driven by an `EntityFormManifest`. Reads the widget
- * catalog + i18n bridge from `<EntityRendererProvider>`, sorts sections /
- * fields by their declared `order`, evaluates `visibleIf` against the
- * current values to gate fields, and forwards `readOnly` to every widget
- * (a field is read-only if either the form prop or the manifest field
- * declares it).
+ * Generic form renderer driven by an `EntityFormManifest`. Reads the
+ * component catalog + i18n bridge from `<EntityRendererProvider>`, sorts
+ * sections / fields by their declared `order`, evaluates `visibleIf`
+ * against the current values to gate fields, and forwards `readOnly` to
+ * every component (a field is read-only if either the form prop or the
+ * manifest field declares it).
  *
  * The component is **fully controlled** — it owns no state. The host
  * wires React Hook Form, Zod validation, autosave, etc. above it. That
@@ -138,21 +138,25 @@ function EntityFormField({
   readOnly,
   errorMessage,
 }: EntityFormFieldProps): ReactNode {
-  const { widgets, resolveLabel } = useEntityRenderer();
+  const { components, resolveLabel } = useEntityRenderer();
 
   if (field.visibleIf && !evaluateVisibility(field.visibleIf, values)) {
     return null;
   }
 
-  const Widget = widgets.form[field.widget];
+  const Component = components.form[field.component];
 
   return (
-    <div data-granit-form-field="" data-property={field.propertyName} data-widget={field.widget}>
+    <div
+      data-granit-form-field=""
+      data-property={field.propertyName}
+      data-component={field.component}
+    >
       {field.labelKey ? (
         <label data-granit-field-label="">{resolveLabel(field.labelKey)}</label>
       ) : null}
-      {Widget ? (
-        <Widget
+      {Component ? (
+        <Component
           field={field}
           value={values[field.propertyName]}
           onChange={(next) => onFieldChange(field.propertyName, next)}
@@ -160,7 +164,7 @@ function EntityFormField({
           errorMessage={errorMessage}
         />
       ) : (
-        <MissingWidget field={field} />
+        <MissingComponent field={field} />
       )}
       {field.helpKey ? (
         <small data-granit-field-help="">{resolveLabel(field.helpKey)}</small>

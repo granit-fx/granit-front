@@ -64,18 +64,24 @@ export interface EntityDetailProps {
   readonly onRelationClick?: (relation: EntityRelationManifest) => void;
   /**
    * Maps free-form section property names (`section.fields: string[]`)
-   * to detail-widget ids registered on the provider. Lets apps render
-   * `Website` as a clickable URL or `Phone` as a `tel:` link without
-   * switching the section to inheritsFromFormVariant. Inherited-mode
-   * sections take their widget id from `field.widget` and ignore this
-   * map.
+   * to detail-component ids registered on the provider. Lets apps
+   * render `Website` as a clickable URL or `Phone` as a `tel:` link
+   * without switching the section to `inheritsFromFormVariant`.
+   * Inherited-mode sections take their component id from
+   * `field.component` and ignore this map.
+   *
+   * Component ids belong to the same ADR-041 catalog as
+   * `EntityFormFieldManifest.component` — there is no separate
+   * "format" concept on the wire. `component: 'money'` +
+   * `config: { currencyCode }` covers what other libraries call
+   * `format: 'currency'`.
    *
    * @example
    * ```tsx
-   * <EntityDetail propertyWidgets={{ Website: 'url', Email: 'email' }} />
+   * <EntityDetail propertyComponents={{ Website: 'url', Email: 'email' }} />
    * ```
    */
-  readonly propertyWidgets?: Readonly<Record<string, string>>;
+  readonly propertyComponents?: Readonly<Record<string, string>>;
   /**
    * Optional class for the root element. The root layout is a
    * `<article>` containing the section column + side-panel rail; apps
@@ -111,7 +117,7 @@ export function EntityDetail({
   entityId,
   relations,
   onRelationClick,
-  propertyWidgets,
+  propertyComponents,
   className,
 }: EntityDetailProps): ReactNode {
   const sortedSections = useMemo(
@@ -172,7 +178,7 @@ export function EntityDetail({
             section={section}
             values={values}
             formVariants={formVariants}
-            propertyWidgets={propertyWidgets}
+            propertyComponents={propertyComponents}
           />
         ))}
       </div>
@@ -212,14 +218,14 @@ interface EntityDetailSectionProps {
   readonly section: EntityDetailSectionManifest;
   readonly values: Readonly<Record<string, unknown>>;
   readonly formVariants: readonly EntityFormManifest[] | undefined;
-  readonly propertyWidgets: Readonly<Record<string, string>> | undefined;
+  readonly propertyComponents: Readonly<Record<string, string>> | undefined;
 }
 
 function EntityDetailSection({
   section,
   values,
   formVariants,
-  propertyWidgets,
+  propertyComponents,
 }: EntityDetailSectionProps): ReactNode {
   const { resolveLabel } = useEntityRenderer();
   const inheritedFields = useMemo(
@@ -262,7 +268,7 @@ function EntityDetailSection({
               key={property}
               property={property}
               value={values[property]}
-              widgetId={propertyWidgets?.[property]}
+              componentId={propertyComponents?.[property]}
             />
           ))}
         </dl>
@@ -278,19 +284,19 @@ interface InheritedFieldRowProps {
 }
 
 function InheritedFieldRow({ field, values, resolveLabel }: InheritedFieldRowProps): ReactNode {
-  const { widgets } = useEntityRenderer();
+  const { components } = useEntityRenderer();
   if (field.visibleIf && !evaluateVisibility(field.visibleIf, values)) {
     return null;
   }
   const label = field.labelKey ? resolveLabel(field.labelKey) : field.propertyName;
   const value = values[field.propertyName];
-  const Widget = widgets.detail?.[field.widget];
+  const Component = components.detail?.[field.component];
   return (
     <div data-granit-detail-row="" data-property={field.propertyName} data-inherited="">
       <dt data-granit-detail-label="">{label}</dt>
       <dd data-granit-detail-value="">
-        {Widget ? (
-          <Widget propertyName={field.propertyName} value={value} field={field} />
+        {Component ? (
+          <Component propertyName={field.propertyName} value={value} field={field} />
         ) : (
           formatValue(value)
         )}
@@ -302,17 +308,17 @@ function InheritedFieldRow({ field, values, resolveLabel }: InheritedFieldRowPro
 interface FreeFormFieldRowProps {
   readonly property: string;
   readonly value: unknown;
-  readonly widgetId: string | undefined;
+  readonly componentId: string | undefined;
 }
 
-function FreeFormFieldRow({ property, value, widgetId }: FreeFormFieldRowProps): ReactNode {
-  const { widgets } = useEntityRenderer();
-  const Widget = widgetId ? widgets.detail?.[widgetId] : undefined;
+function FreeFormFieldRow({ property, value, componentId }: FreeFormFieldRowProps): ReactNode {
+  const { components } = useEntityRenderer();
+  const Component = componentId ? components.detail?.[componentId] : undefined;
   return (
     <div data-granit-detail-row="" data-property={property}>
       <dt data-granit-detail-label="">{property}</dt>
       <dd data-granit-detail-value="">
-        {Widget ? <Widget propertyName={property} value={value} /> : formatValue(value)}
+        {Component ? <Component propertyName={property} value={value} /> : formatValue(value)}
       </dd>
     </div>
   );
@@ -329,8 +335,8 @@ function EntityDetailSidePanelSlot({
   entityName,
   entityId,
 }: EntityDetailSidePanelSlotProps): ReactNode {
-  const { widgets } = useEntityRenderer();
-  const Renderer = widgets.sidePanels?.[panel.kind];
+  const { components } = useEntityRenderer();
+  const Renderer = components.sidePanels?.[panel.kind];
   const canRender = Renderer && entityName && entityId;
   return (
     <div data-granit-side-panel-slot="" data-kind={panel.kind} data-order={panel.order}>

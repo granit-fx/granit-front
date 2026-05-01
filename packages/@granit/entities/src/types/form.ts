@@ -7,14 +7,15 @@ import type { VisibilityCondition } from './visibility.js';
 export interface EntityFormFieldManifest {
   /** PascalCase property name on the entity. */
   readonly propertyName: string;
-  /** Short CLR type name — drives the renderer when `widget` doesn't override it. */
+  /** Short CLR type name — drives the renderer when `component` doesn't override it. */
   readonly clrTypeName: string;
   /**
-   * Widget identifier — either from the standard catalog or the `custom:`
-   * namespace (ADR-041).
+   * Component identifier — either from the standard catalog or the
+   * `custom:` namespace (ADR-041). Mirrors the .NET
+   * `FieldDescriptor.Component` (renamed from `Widget`).
    */
-  readonly widget: string;
-  /** Opaque widget-specific configuration. */
+  readonly component: string;
+  /** Opaque component-specific configuration. */
   readonly config: Readonly<Record<string, unknown>> | null;
   /** i18n key for the field label. */
   readonly labelKey: string | null;
