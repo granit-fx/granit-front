@@ -17,6 +17,18 @@ export type {
   EntityFormSectionManifest,
 } from './form.js';
 export type { EntityIdentitySection } from './identity.js';
+export type {
+  EntityCalendarLayoutManifest,
+  EntityKanbanCardActionManifest,
+  EntityKanbanCardManifest,
+  EntityKanbanCardRelationManifest,
+  EntityKanbanColumnManifest,
+  EntityKanbanLayoutManifest,
+  EntityListLayoutKind,
+  EntityListLayoutManifest,
+  KanbanColor,
+  KanbanColumnState,
+} from './layouts.js';
 export { ALL_ENTITY_FACETS, MANIFEST_SCHEMA_VERSION } from './manifest.js';
 export type { EntityFacet, EntityManifestResponse } from './manifest.js';
 export type { EntityPermissionsSection } from './permissions.js';
