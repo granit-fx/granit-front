@@ -18,6 +18,8 @@ export type {
 } from './form.js';
 export type { EntityIdentitySection } from './identity.js';
 export type {
+  CalendarItemResponse,
+  CalendarRangeRequest,
   EntityCalendarLayoutManifest,
   EntityKanbanCardActionManifest,
   EntityKanbanCardManifest,

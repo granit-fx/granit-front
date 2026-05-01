@@ -162,3 +162,50 @@ export interface EntityKanbanColumnManifest {
   /** Open / Collapsed / Hidden — initial render state per ADR-040. */
   readonly defaultState: KanbanColumnState;
 }
+
+/**
+ * Wire shape for the range-query parameters of
+ * `GET /api/entities/{name}/calendar`. Bound from the query string.
+ *
+ * The server enforces `to >= from` and a window cap of 366 days; out-of-range
+ * requests come back as a 400 ValidationProblem.
+ *
+ * Mirrors `Granit.Entities.Endpoints.Dtos.CalendarRangeRequest`.
+ */
+export interface CalendarRangeRequest {
+  /** Inclusive start of the requested window (ISO 8601 datetime offset). */
+  readonly from: string;
+  /** Inclusive end of the requested window (ISO 8601 datetime offset). */
+  readonly to: string;
+  /**
+   * Optional name of the target calendar layout when the entity declares
+   * more than one. Reserved for future kinds — leaving `null` always
+   * picks the entity's single calendar today.
+   */
+  readonly calendar: string | null;
+}
+
+/**
+ * One event positioned on the calendar's time axis. The renderer reads
+ * this shape to lay out tiles.
+ *
+ * Mirrors `Granit.Entities.Endpoints.Dtos.CalendarItemResponse`.
+ */
+export interface CalendarItemResponse {
+  /** Stable identifier of the underlying entity row — drives the detail-page link. */
+  readonly id: string;
+  /** Event start (ISO 8601 datetime offset). */
+  readonly start: string;
+  /** Event end (ISO 8601 datetime offset). `null` renders a point-in-time marker. */
+  readonly end: string | null;
+  /**
+   * Event headline — projected from the calendar's `titlePropertyName` when
+   * set, else from the entity's `displayProperty`.
+   */
+  readonly title: string;
+  /**
+   * Stable colour bucket projected from `colorByPropertyName`. `null`
+   * falls back to the theme default.
+   */
+  readonly color: string | null;
+}

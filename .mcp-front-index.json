@@ -2742,6 +2742,16 @@
           "members": []
         },
         {
+          "name": "entityCalendarQueryKey",
+          "kind": "function",
+          "signature": "function entityCalendarQueryKey( entityName: string, from: string, to: string, calendar?: string | null ): readonly ['entities', 'calendar', string, string, string, string | null]"
+        },
+        {
+          "name": "useEntityCalendar",
+          "kind": "function",
+          "signature": "function useEntityCalendar( entityName: string, from: string, to: string, options:"
+        },
+        {
           "name": "entityDiscoveryQueryKey",
           "kind": "const",
           "signature": "const entityDiscoveryQueryKey"
