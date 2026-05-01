@@ -14,7 +14,11 @@ export { EntityKanban } from './components/entity-kanban.js';
 export type { EntityKanbanProps } from './components/entity-kanban.js';
 export { EntityList } from './components/entity-list.js';
 export type { EntityListProps } from './components/entity-list.js';
-export { STANDARD_FORM_WIDGETS } from './widgets/index.js';
+export {
+  defaultDetailFormat,
+  STANDARD_DETAIL_WIDGETS,
+  STANDARD_FORM_WIDGETS,
+} from './widgets/index.js';
 export type { SelectWidgetOption } from './widgets/index.js';
 export { entityDiscoveryQueryKey, useEntityDiscovery } from './api/use-entity-discovery.js';
 export {
@@ -30,6 +34,8 @@ export {
   useEntityRenderer,
 } from './provider/index.js';
 export type {
+  EntityDetailWidget,
+  EntityDetailWidgetProps,
   EntityFormWidget,
   EntityFormWidgetProps,
   EntityRendererContextValue,

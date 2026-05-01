@@ -63,6 +63,20 @@ export interface EntityDetailProps {
    */
   readonly onRelationClick?: (relation: EntityRelationManifest) => void;
   /**
+   * Maps free-form section property names (`section.fields: string[]`)
+   * to detail-widget ids registered on the provider. Lets apps render
+   * `Website` as a clickable URL or `Phone` as a `tel:` link without
+   * switching the section to inheritsFromFormVariant. Inherited-mode
+   * sections take their widget id from `field.widget` and ignore this
+   * map.
+   *
+   * @example
+   * ```tsx
+   * <EntityDetail propertyWidgets={{ Website: 'url', Email: 'email' }} />
+   * ```
+   */
+  readonly propertyWidgets?: Readonly<Record<string, string>>;
+  /**
    * Optional class for the root element. The root layout is a
    * `<article>` containing the section column + side-panel rail; apps
    * style them via this className + the `data-granit-*` attributes.
@@ -97,6 +111,7 @@ export function EntityDetail({
   entityId,
   relations,
   onRelationClick,
+  propertyWidgets,
   className,
 }: EntityDetailProps): ReactNode {
   const sortedSections = useMemo(
@@ -157,6 +172,7 @@ export function EntityDetail({
             section={section}
             values={values}
             formVariants={formVariants}
+            propertyWidgets={propertyWidgets}
           />
         ))}
       </div>
@@ -196,12 +212,14 @@ interface EntityDetailSectionProps {
   readonly section: EntityDetailSectionManifest;
   readonly values: Readonly<Record<string, unknown>>;
   readonly formVariants: readonly EntityFormManifest[] | undefined;
+  readonly propertyWidgets: Readonly<Record<string, string>> | undefined;
 }
 
 function EntityDetailSection({
   section,
   values,
   formVariants,
+  propertyWidgets,
 }: EntityDetailSectionProps): ReactNode {
   const { resolveLabel } = useEntityRenderer();
   const inheritedFields = useMemo(
@@ -240,10 +258,12 @@ function EntityDetailSection({
       ) : (
         <dl data-granit-detail-fields="">
           {(section.fields ?? []).map((property) => (
-            <div key={property} data-granit-detail-row="" data-property={property}>
-              <dt data-granit-detail-label="">{property}</dt>
-              <dd data-granit-detail-value="">{formatValue(values[property])}</dd>
-            </div>
+            <FreeFormFieldRow
+              key={property}
+              property={property}
+              value={values[property]}
+              widgetId={propertyWidgets?.[property]}
+            />
           ))}
         </dl>
       )}
@@ -258,14 +278,42 @@ interface InheritedFieldRowProps {
 }
 
 function InheritedFieldRow({ field, values, resolveLabel }: InheritedFieldRowProps): ReactNode {
+  const { widgets } = useEntityRenderer();
   if (field.visibleIf && !evaluateVisibility(field.visibleIf, values)) {
     return null;
   }
   const label = field.labelKey ? resolveLabel(field.labelKey) : field.propertyName;
+  const value = values[field.propertyName];
+  const Widget = widgets.detail?.[field.widget];
   return (
     <div data-granit-detail-row="" data-property={field.propertyName} data-inherited="">
       <dt data-granit-detail-label="">{label}</dt>
-      <dd data-granit-detail-value="">{formatValue(values[field.propertyName])}</dd>
+      <dd data-granit-detail-value="">
+        {Widget ? (
+          <Widget propertyName={field.propertyName} value={value} field={field} />
+        ) : (
+          formatValue(value)
+        )}
+      </dd>
+    </div>
+  );
+}
+
+interface FreeFormFieldRowProps {
+  readonly property: string;
+  readonly value: unknown;
+  readonly widgetId: string | undefined;
+}
+
+function FreeFormFieldRow({ property, value, widgetId }: FreeFormFieldRowProps): ReactNode {
+  const { widgets } = useEntityRenderer();
+  const Widget = widgetId ? widgets.detail?.[widgetId] : undefined;
+  return (
+    <div data-granit-detail-row="" data-property={property}>
+      <dt data-granit-detail-label="">{property}</dt>
+      <dd data-granit-detail-value="">
+        {Widget ? <Widget propertyName={property} value={value} /> : formatValue(value)}
+      </dd>
     </div>
   );
 }

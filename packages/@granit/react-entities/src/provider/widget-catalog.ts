@@ -1,6 +1,10 @@
 import type { EntityFormFieldManifest, SidePanelKind } from '@granit/entities';
 import type { ReactNode } from 'react';
 
+// ---------------------------------------------------------------------------
+// Form widgets
+// ---------------------------------------------------------------------------
+
 /**
  * Props passed to a form-widget renderer when `<EntityForm />` paints one
  * field. The renderer is fully controlled — `<EntityForm />` owns the
@@ -35,11 +39,37 @@ export interface EntitySidePanelProps {
 /** Renderer for one side panel kind in `<EntityDetail />`. */
 export type EntitySidePanel = (props: EntitySidePanelProps) => ReactNode;
 
+// ---------------------------------------------------------------------------
+// Detail widgets (read-mode formatters)
+// ---------------------------------------------------------------------------
+
+/**
+ * Props passed to a detail-widget renderer when `<EntityDetail />` paints
+ * one read-mode field. The field manifest is **only present in inherited
+ * mode** (when the section reuses a form variant via
+ * `inheritsFromFormVariant`); free-form sections (`section.fields:
+ * string[]`) carry just the property name.
+ */
+export interface EntityDetailWidgetProps {
+  readonly propertyName: string;
+  readonly value: unknown;
+  /** Field manifest — present in inherited-mode rendering, undefined otherwise. */
+  readonly field?: EntityFormFieldManifest;
+}
+
+/** Renderer for one read-mode field in `<EntityDetail />`. */
+export type EntityDetailWidget = (props: EntityDetailWidgetProps) => ReactNode;
+
+// ---------------------------------------------------------------------------
+// Catalog
+// ---------------------------------------------------------------------------
+
 /**
  * Catalog mapping widget identifiers (the `field.widget` value from the
  * manifest) → renderers, plus the optional side-panel registry keyed by
- * `SidePanelKind`. Apps register the standard catalog plus any
- * `custom:`-namespaced widgets they own (per ADR-041).
+ * `SidePanelKind`, plus the optional read-mode detail registry. Apps
+ * register the standard catalog plus any `custom:`-namespaced widgets
+ * they own (per ADR-041).
  */
 export interface EntityWidgetCatalog {
   /** Form-context widgets, keyed by `field.widget`. */
@@ -50,6 +80,14 @@ export interface EntityWidgetCatalog {
    * falls back to an empty slot placeholder.
    */
   readonly sidePanels?: Partial<Readonly<Record<SidePanelKind, EntitySidePanel>>>;
+  /**
+   * Detail-context (read-mode) widgets keyed by widget id — same key
+   * namespace as `form`, so a widget id like `'url'` or `'currency'`
+   * reuses the same string in both contexts. Optional — when a widget
+   * isn't registered, `<EntityDetail />` falls back to a default text
+   * formatter.
+   */
+  readonly detail?: Readonly<Record<string, EntityDetailWidget>>;
 }
 
 /** Empty catalog — useful as a default and in tests. */

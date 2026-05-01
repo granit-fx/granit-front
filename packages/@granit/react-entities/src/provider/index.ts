@@ -6,6 +6,8 @@ export type {
   ResolveLabel,
 } from './entity-renderer-provider.js';
 export type {
+  EntityDetailWidget,
+  EntityDetailWidgetProps,
   EntityFormWidget,
   EntityFormWidgetProps,
   EntitySidePanel,
