@@ -151,6 +151,41 @@ describe('useMergePartyFromDuplicateMutation', () => {
     expect(invalidatedKeys).toContainEqual(['parties', 'detail', partyB]);
   });
 
+  it('falls back to a Math.random UUID when crypto.randomUUID is unavailable', async () => {
+    const client = createMockClient();
+    vi.mocked(client.post).mockResolvedValue(axiosResponse(mergeResponse));
+
+    const originalRandomUUID = globalThis.crypto.randomUUID;
+    Object.defineProperty(globalThis.crypto, 'randomUUID', {
+      configurable: true,
+      writable: true,
+      value: undefined,
+    });
+
+    try {
+      const { result } = renderHook(() => useMergePartyFromDuplicateMutation(), {
+        wrapper: makeWrapper(client),
+      });
+
+      result.current.mutate({ id: dupId, request: { survivorId: partyA } });
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+      const call = vi.mocked(client.post).mock.calls[0]!;
+      const idempotencyKey = (call[2] as { headers: { 'Idempotency-Key': string } }).headers[
+        'Idempotency-Key'
+      ];
+      expect(idempotencyKey).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+      );
+    } finally {
+      Object.defineProperty(globalThis.crypto, 'randomUUID', {
+        configurable: true,
+        writable: true,
+        value: originalRandomUUID,
+      });
+    }
+  });
+
   it('uses an explicit idempotencyKey when supplied', async () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValue(axiosResponse(mergeResponse));

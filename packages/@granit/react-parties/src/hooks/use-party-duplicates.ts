@@ -25,8 +25,8 @@ function newIdempotencyKey(): string {
   if (typeof globalThis.crypto?.randomUUID === 'function') {
     return globalThis.crypto.randomUUID();
   }
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replaceAll(/[xy]/g, (c) => {
+    const r = Math.trunc(Math.random() * 16);
     const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
@@ -75,15 +75,14 @@ export function useDismissPartyDuplicateMutation(): UseMutationResult<
 
   return useMutation({
     mutationFn: ({ id }) => dismissPartyDuplicate(config.client, basePath, id),
-    onSuccess: () => {
-      // Covers both the per-party badge (`[parties, 'duplicates', 'for-party', …]`)
-      // and the inbox grid when its `<QueryProvider>` is configured with
-      // `queryKeyPrefix: ['parties', 'duplicates', 'inbox']` — the default
-      // <DuplicatesInbox> below wires that automatically.
-      void queryClient.invalidateQueries({
+    // Covers both the per-party badge (`[parties, 'duplicates', 'for-party', …]`)
+    // and the inbox grid when its `<QueryProvider>` is configured with
+    // `queryKeyPrefix: ['parties', 'duplicates', 'inbox']` — the default
+    // <DuplicatesInbox> below wires that automatically.
+    onSuccess: () =>
+      queryClient.invalidateQueries({
         queryKey: buildPartiesQueryKey(config, 'duplicates'),
-      });
-    },
+      }),
   });
 }
 
@@ -125,19 +124,21 @@ export function useMergePartyFromDuplicateMutation(): UseMutationResult<
         request,
         idempotencyKey ?? newIdempotencyKey()
       ),
-    onSuccess: (data, { request }) => {
-      void queryClient.invalidateQueries({
-        queryKey: buildPartiesQueryKey(config, 'duplicates'),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: buildPartiesQueryKey(config, 'list'),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: buildPartiesQueryKey(config, 'detail', request.survivorId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: buildPartiesQueryKey(config, 'detail', data.loserId),
-      });
+    onSuccess: async (data, { request }) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: buildPartiesQueryKey(config, 'duplicates'),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildPartiesQueryKey(config, 'list'),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildPartiesQueryKey(config, 'detail', request.survivorId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildPartiesQueryKey(config, 'detail', data.loserId),
+        }),
+      ]);
     },
   });
 }

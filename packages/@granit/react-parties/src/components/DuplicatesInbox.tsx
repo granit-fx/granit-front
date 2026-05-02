@@ -107,26 +107,14 @@ function DuplicatesInboxBody({
             </tr>
           </thead>
           <tbody>
-            {query.isLoading ? (
-              <tr>
-                <td colSpan={7} className="px-3 py-8 text-center text-muted-foreground">
-                  {t('Duplicates.LoadingState')}
-                </td>
-              </tr>
-            ) : query.isError ? (
-              <tr>
-                <td colSpan={7} role="alert" className="px-3 py-8 text-center text-destructive">
-                  {t('Duplicates.ErrorState')}
-                </td>
-              </tr>
-            ) : items.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="px-3 py-8 text-center text-muted-foreground">
-                  {t('Duplicates.EmptyState')}
-                </td>
-              </tr>
-            ) : (
-              items.map((row) => (
+            {renderTableBody({
+              isLoading: query.isLoading,
+              isError: query.isError,
+              items,
+              loadingLabel: t('Duplicates.LoadingState'),
+              errorLabel: t('Duplicates.ErrorState'),
+              emptyLabel: t('Duplicates.EmptyState'),
+              renderRow: (row) => (
                 <DuplicateRow
                   key={row.id}
                   row={row}
@@ -142,8 +130,8 @@ function DuplicatesInboxBody({
                     Fuzzy: t('Duplicates.Tier.Fuzzy'),
                   }}
                 />
-              ))
-            )}
+              ),
+            })}
           </tbody>
         </table>
       </div>
@@ -255,4 +243,53 @@ function formatDate(value: string | null | undefined): string {
   // formatting via their own theming layer if needed. The framework package
   // intentionally avoids pulling in date-fns / Intl here.
   return value.slice(0, 10);
+}
+
+interface RenderTableBodyArgs {
+  readonly isLoading: boolean;
+  readonly isError: boolean;
+  readonly items: readonly PartyDuplicateCandidateResponse[];
+  readonly loadingLabel: string;
+  readonly errorLabel: string;
+  readonly emptyLabel: string;
+  readonly renderRow: (row: PartyDuplicateCandidateResponse) => ReactNode;
+}
+
+function renderTableBody({
+  isLoading,
+  isError,
+  items,
+  loadingLabel,
+  errorLabel,
+  emptyLabel,
+  renderRow,
+}: RenderTableBodyArgs): ReactNode {
+  if (isLoading) {
+    return (
+      <tr>
+        <td colSpan={7} className="px-3 py-8 text-center text-muted-foreground">
+          {loadingLabel}
+        </td>
+      </tr>
+    );
+  }
+  if (isError) {
+    return (
+      <tr>
+        <td colSpan={7} className="px-3 py-8 text-center text-destructive">
+          <span role="alert">{errorLabel}</span>
+        </td>
+      </tr>
+    );
+  }
+  if (items.length === 0) {
+    return (
+      <tr>
+        <td colSpan={7} className="px-3 py-8 text-center text-muted-foreground">
+          {emptyLabel}
+        </td>
+      </tr>
+    );
+  }
+  return items.map(renderRow);
 }

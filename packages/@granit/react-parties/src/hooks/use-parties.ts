@@ -101,11 +101,13 @@ function useInvalidator() {
       queryClient.invalidateQueries({ queryKey: buildPartiesQueryKey(config, 'list') }),
     invalidateDetail: (id: PartyId) =>
       queryClient.invalidateQueries({ queryKey: buildPartiesQueryKey(config, 'detail', id) }),
-    invalidateAll: (id: PartyId) => {
-      void queryClient.invalidateQueries({ queryKey: buildPartiesQueryKey(config, 'list') });
-      void queryClient.invalidateQueries({
-        queryKey: buildPartiesQueryKey(config, 'detail', id),
-      });
+    invalidateAll: async (id: PartyId) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: buildPartiesQueryKey(config, 'list') }),
+        queryClient.invalidateQueries({
+          queryKey: buildPartiesQueryKey(config, 'detail', id),
+        }),
+      ]);
     },
   };
 }
@@ -137,9 +139,7 @@ export function useCreatePartyMutation(): UseMutationResult<
   return useMutation({
     mutationFn: ({ request, options }: CreatePartyMutationVariables) =>
       createParty(config.client, basePath, request, options),
-    onSuccess: () => {
-      void invalidateList();
-    },
+    onSuccess: () => invalidateList(),
   });
 }
 

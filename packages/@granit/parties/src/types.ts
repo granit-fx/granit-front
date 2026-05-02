@@ -37,10 +37,12 @@ export type PartyStatus = 'Active' | 'Suspended' | 'Archived';
 export type PartyRole = 'None' | 'Customer' | 'Supplier' | 'Employee' | 'Lead';
 
 /**
- * Wire representation of {@link PartyRole} flags. Either a single role or a
- * comma-separated list (matching the JSON serialisation of a `[Flags]` enum).
+ * Wire representation of {@link PartyRole} flags. Either a single role
+ * (`"Customer"`) or a comma-separated list (`"Customer, Supplier"`),
+ * matching the JSON serialisation of a `[Flags]` enum. Typed as `string`
+ * because `[Flags]` combinations are open-ended (any subset of {@link PartyRole}).
  */
-export type PartyRoles = PartyRole | string;
+export type PartyRoles = string;
 
 /** Functional purpose of a {@link PartyAddressResponse}. Mirrors the .NET `AddressKind` enum. */
 export type AddressKind = 'Billing' | 'Shipping' | 'Other';

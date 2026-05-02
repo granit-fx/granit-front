@@ -15,8 +15,8 @@ function newIdempotencyKey(): string {
   if (typeof globalThis.crypto?.randomUUID === 'function') {
     return globalThis.crypto.randomUUID();
   }
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replaceAll(/[xy]/g, (c) => {
+    const r = Math.trunc(Math.random() * 16);
     const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
@@ -90,22 +90,24 @@ export function useMergePartyMutation(
         request,
         idempotencyKey ?? newIdempotencyKey()
       ),
-    onSuccess: (_data, { request }) => {
+    onSuccess: async (_data, { request }) => {
       // Live merges only — dry-runs never commit so don't invalidate caches.
       if (request.dryRun) return;
 
-      void queryClient.invalidateQueries({
-        queryKey: buildPartiesQueryKey(config, 'list'),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: buildPartiesQueryKey(config, 'detail', survivorId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: buildPartiesQueryKey(config, 'detail', request.loserId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: buildPartiesQueryKey(config, 'merge', 'preview', survivorId, request.loserId),
-      });
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: buildPartiesQueryKey(config, 'list'),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildPartiesQueryKey(config, 'detail', survivorId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildPartiesQueryKey(config, 'detail', request.loserId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildPartiesQueryKey(config, 'merge', 'preview', survivorId, request.loserId),
+        }),
+      ]);
     },
   });
 }

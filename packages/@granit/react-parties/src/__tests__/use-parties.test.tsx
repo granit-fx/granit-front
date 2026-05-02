@@ -9,11 +9,20 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   useActivatePartyMutation,
   useAddPartyAddressMutation,
+  useAddPartyEmailMutation,
+  useAddPartyExternalMappingMutation,
+  useAddPartyPhoneMutation,
+  useAddPartyRoleMutation,
   useArchivePartyMutation,
   useClearPartyTaxStatusMutation,
   useCreatePartyMutation,
   usePartiesQuery,
   usePartyQuery,
+  useRemovePartyAddressMutation,
+  useRemovePartyEmailMutation,
+  useRemovePartyExternalMappingMutation,
+  useRemovePartyPhoneMutation,
+  useRemovePartyRoleMutation,
   useReplacePartyMetadataMutation,
   useSetPartyTaxStatusMutation,
   useSuspendPartyMutation,
@@ -23,11 +32,17 @@ import { PartiesProvider } from '../providers/parties-provider.js';
 
 import type { PartiesConfig } from '../providers/parties-provider.js';
 import type {
+  PartyAddressId,
   PartyAddressRequest,
   PartyCreateRequest,
+  PartyEmailId,
+  PartyEmailRequest,
+  PartyExternalMappingRequest,
   PartyId,
   PartyListItemResponse,
   PartyMetadataRequest,
+  PartyPhoneId,
+  PartyPhoneRequest,
   PartyResponse,
   PartyTaxStatusRequest,
   PartyUpdateRequest,
@@ -329,6 +344,160 @@ describe('use-parties', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.delete).toHaveBeenCalledWith(`/api/v1/parties/${partyId}/tax-status`);
+    });
+  });
+
+  describe('address mutations', () => {
+    it('removes an address', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValue({ data: undefined });
+
+      const addressId = toEntityId<'PartyAddress'>('a1') as PartyAddressId;
+      const { result } = renderHook(() => useRemovePartyAddressMutation(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate({ id: partyId, addressId });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.delete).toHaveBeenCalledWith(
+        `/api/v1/parties/${partyId}/addresses/${addressId}`
+      );
+    });
+  });
+
+  describe('email mutations', () => {
+    it('adds an email', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleParty });
+
+      const request: PartyEmailRequest = { address: 'a@b.test', isPrimary: true };
+      const { result } = renderHook(() => useAddPartyEmailMutation(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate({ id: partyId, request });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.post).toHaveBeenCalledWith(`/api/v1/parties/${partyId}/emails`, request);
+    });
+
+    it('removes an email', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValue({ data: undefined });
+
+      const emailId = toEntityId<'PartyEmail'>('e1') as PartyEmailId;
+      const { result } = renderHook(() => useRemovePartyEmailMutation(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate({ id: partyId, emailId });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.delete).toHaveBeenCalledWith(`/api/v1/parties/${partyId}/emails/${emailId}`);
+    });
+  });
+
+  describe('phone mutations', () => {
+    it('adds a phone', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleParty });
+
+      const request: PartyPhoneRequest = { kind: 'Mobile', number: '+32123' };
+      const { result } = renderHook(() => useAddPartyPhoneMutation(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate({ id: partyId, request });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.post).toHaveBeenCalledWith(`/api/v1/parties/${partyId}/phones`, request);
+    });
+
+    it('removes a phone', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValue({ data: undefined });
+
+      const phoneId = toEntityId<'PartyPhone'>('p1') as PartyPhoneId;
+      const { result } = renderHook(() => useRemovePartyPhoneMutation(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate({ id: partyId, phoneId });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.delete).toHaveBeenCalledWith(`/api/v1/parties/${partyId}/phones/${phoneId}`);
+    });
+  });
+
+  describe('external-mapping mutations', () => {
+    it('adds an external mapping', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleParty });
+
+      const request: PartyExternalMappingRequest = {
+        providerName: 'stripe',
+        externalId: 'cus_123',
+      };
+      const { result } = renderHook(() => useAddPartyExternalMappingMutation(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate({ id: partyId, request });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.post).toHaveBeenCalledWith(
+        `/api/v1/parties/${partyId}/external-mappings`,
+        request
+      );
+    });
+
+    it('removes an external mapping by provider name', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValue({ data: undefined });
+
+      const { result } = renderHook(() => useRemovePartyExternalMappingMutation(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate({ id: partyId, providerName: 'stripe' });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.delete).toHaveBeenCalledWith(
+        `/api/v1/parties/${partyId}/external-mappings/stripe`
+      );
+    });
+  });
+
+  describe('role mutations', () => {
+    it('adds a role flag', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: undefined });
+
+      const { result } = renderHook(() => useAddPartyRoleMutation(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate({ id: partyId, request: { role: 'Customer' } });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.post).toHaveBeenCalledWith(`/api/v1/parties/${partyId}/roles`, {
+        role: 'Customer',
+      });
+    });
+
+    it('removes a role flag', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValue({ data: undefined });
+
+      const { result } = renderHook(() => useRemovePartyRoleMutation(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate({ id: partyId, role: 'Supplier' });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.delete).toHaveBeenCalledWith(`/api/v1/parties/${partyId}/roles/Supplier`);
     });
   });
 

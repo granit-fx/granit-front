@@ -136,32 +136,22 @@ export function MergeWizard({
       {/* Conflicts */}
       <section data-slot="merge-conflicts" className="space-y-3">
         <h3 className="text-base font-semibold">{t('MergeWizard.Conflicts')}</h3>
-        {previewLoading ? (
-          <p className="text-sm text-muted-foreground">{t('MergeWizard.Loading')}</p>
-        ) : previewQuery.isError ? (
-          <p role="alert" className="text-sm text-destructive">
-            {t('MergeWizard.Errors.PreviewFailed')}
-          </p>
-        ) : conflicts.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t('MergeWizard.ConflictsEmpty')}</p>
-        ) : (
-          <ul className="space-y-2">
-            {conflicts.map((conflict) => (
-              <ConflictRow
-                key={conflict.fieldPath}
-                conflict={conflict}
-                selected={choices[conflict.fieldPath] ?? conflict.default}
-                onChange={handleChoiceChange}
-                survivorLabel={t('MergeWizard.Survivor')}
-                loserLabel={t('MergeWizard.Loser')}
-                emptyLabel={t('MergeWizard.ValueEmpty')}
-                fieldLabel={t(`MergeWizard.Fields.${conflict.fieldPath}`, {
-                  defaultValue: conflict.fieldPath,
-                })}
-              />
-            ))}
-          </ul>
-        )}
+        <ConflictsBody
+          isLoading={previewLoading}
+          isError={previewQuery.isError}
+          conflicts={conflicts}
+          choices={choices}
+          onChange={handleChoiceChange}
+          loadingLabel={t('MergeWizard.Loading')}
+          errorLabel={t('MergeWizard.Errors.PreviewFailed')}
+          emptyLabel={t('MergeWizard.ConflictsEmpty')}
+          survivorLabel={t('MergeWizard.Survivor')}
+          loserLabel={t('MergeWizard.Loser')}
+          valueEmptyLabel={t('MergeWizard.ValueEmpty')}
+          translateField={(fieldPath) =>
+            t(`MergeWizard.Fields.${fieldPath}`, { defaultValue: fieldPath })
+          }
+        />
       </section>
 
       {/* Rewrite counts */}
@@ -225,6 +215,66 @@ export function MergeWizard({
 }
 
 // ── Sub-components ─────────────────────────────────────────────────────────
+
+interface ConflictsBodyProps {
+  readonly isLoading: boolean;
+  readonly isError: boolean;
+  readonly conflicts: readonly FieldConflictResponse[];
+  readonly choices: Readonly<Record<string, MergeWinner>>;
+  readonly onChange: (fieldPath: string, winner: MergeWinner) => void;
+  readonly loadingLabel: string;
+  readonly errorLabel: string;
+  readonly emptyLabel: string;
+  readonly survivorLabel: string;
+  readonly loserLabel: string;
+  readonly valueEmptyLabel: string;
+  readonly translateField: (fieldPath: string) => string;
+}
+
+function ConflictsBody({
+  isLoading,
+  isError,
+  conflicts,
+  choices,
+  onChange,
+  loadingLabel,
+  errorLabel,
+  emptyLabel,
+  survivorLabel,
+  loserLabel,
+  valueEmptyLabel,
+  translateField,
+}: Readonly<ConflictsBodyProps>) {
+  if (isLoading) {
+    return <p className="text-sm text-muted-foreground">{loadingLabel}</p>;
+  }
+  if (isError) {
+    return (
+      <p role="alert" className="text-sm text-destructive">
+        {errorLabel}
+      </p>
+    );
+  }
+  if (conflicts.length === 0) {
+    return <p className="text-sm text-muted-foreground">{emptyLabel}</p>;
+  }
+  return (
+    <ul className="space-y-2">
+      {conflicts.map((conflict) => (
+        <ConflictRow
+          key={conflict.fieldPath}
+          conflict={conflict}
+          selected={choices[conflict.fieldPath] ?? conflict.default}
+          onChange={onChange}
+          survivorLabel={survivorLabel}
+          loserLabel={loserLabel}
+          emptyLabel={valueEmptyLabel}
+          fieldLabel={translateField(conflict.fieldPath)}
+        />
+      ))}
+    </ul>
+  );
+}
 
 interface PartyCardProps {
   readonly variant: 'survivor' | 'loser';
@@ -360,6 +410,7 @@ function ChoiceRadio({
     <label
       data-slot="choice-radio"
       data-checked={checked || undefined}
+      aria-label={`${label}: ${displayValue}`}
       className="flex cursor-pointer items-start gap-2 rounded-md border bg-background p-2 text-sm has-checked:border-primary"
     >
       <input
