@@ -5,7 +5,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { EntityGallery } from '../components/entity-gallery.js';
 
@@ -15,51 +15,108 @@ import type { ReactNode } from 'react';
 const BASE_PATH = '/api/v1/parties';
 const ENTITY_NAME = 'Granit.Parties.Party';
 
-const META = {
-  columns: [
-    {
-      name: 'name',
-      label: 'Name',
-      type: 'String',
-      order: 0,
-      isSortable: true,
-      isFilterable: true,
-      isVisible: true,
-    },
-  ],
-  filterableFields: [],
-  sortableFields: [],
-  presetFilterGroups: [],
-  quickFilters: [],
-  dateFilters: [],
-  groupByFields: [],
-  pagination: {
-    defaultPageSize: 20,
-    maxPageSize: 100,
-    maxStreamSize: 10000,
-    supportsCursor: false,
-  },
-};
+// ---------------------------------------------------------------------------
+// IntersectionObserver mock — drives the auto-fetch sentinel deterministically.
+// ---------------------------------------------------------------------------
 
-const PAGE = {
-  items: [
-    {
-      id: '8c6b1e10-0000-4000-8000-000000000001',
-      name: 'ACME Corp',
-      kind: 'Customer',
-      avatarBlobId: 'parties/avatars/acme.jpg',
-    },
-    {
-      id: '8c6b1e10-0000-4000-8000-000000000002',
-      name: 'Globex',
-      kind: 'Customer',
-      avatarBlobId: null,
-    },
-  ],
-  totalCount: 2,
-  page: 1,
-  pageSize: 20,
-};
+interface FakeObserver {
+  readonly observed: Element[];
+  trigger(intersecting?: boolean): void;
+}
+
+const observers: FakeObserver[] = [];
+
+class MockIntersectionObserver implements FakeObserver {
+  readonly observed: Element[] = [];
+  constructor(private readonly cb: IntersectionObserverCallback) {
+    observers.push(this);
+  }
+  observe(node: Element): void {
+    this.observed.push(node);
+  }
+  unobserve(node: Element): void {
+    const idx = this.observed.indexOf(node);
+    if (idx >= 0) this.observed.splice(idx, 1);
+  }
+  disconnect(): void {
+    this.observed.length = 0;
+    const idx = observers.indexOf(this);
+    if (idx >= 0) observers.splice(idx, 1);
+  }
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
+  trigger(intersecting = true): void {
+    const entries = this.observed.map(
+      (target) =>
+        ({
+          target,
+          isIntersecting: intersecting,
+          intersectionRatio: intersecting ? 1 : 0,
+          time: Date.now(),
+          rootBounds: null,
+          boundingClientRect: target.getBoundingClientRect(),
+          intersectionRect: target.getBoundingClientRect(),
+        }) as IntersectionObserverEntry
+    );
+    this.cb(entries, this as unknown as IntersectionObserver);
+  }
+}
+
+beforeAll(() => {
+  vi.stubGlobal('IntersectionObserver', MockIntersectionObserver);
+});
+beforeEach(() => {
+  observers.length = 0;
+});
+
+function triggerLastObserver(intersecting = true): void {
+  const last = observers[observers.length - 1];
+  if (last) last.trigger(intersecting);
+}
+
+// ---------------------------------------------------------------------------
+// Server fixtures
+// ---------------------------------------------------------------------------
+
+interface PartyRow {
+  readonly id: string;
+  readonly name: string;
+  readonly kind: string;
+  readonly avatarBlobId: string | null;
+}
+
+function makeParty(idx: number): PartyRow {
+  return {
+    id: `00000000-0000-4000-8000-${String(idx).padStart(12, '0')}`,
+    name: `Party ${idx}`,
+    kind: idx % 2 === 0 ? 'Customer' : 'Supplier',
+    avatarBlobId: idx % 3 === 0 ? null : `parties/avatars/p${idx}.jpg`,
+  };
+}
+
+function pageHandler(items: PartyRow[], opts: { hasMoreOnPage1?: boolean } = {}) {
+  const hasMoreOnPage1 = opts.hasMoreOnPage1 ?? false;
+  return http.get(`http://localhost${BASE_PATH}`, ({ request }) => {
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get('page') ?? '1');
+    const pageSize = Number(url.searchParams.get('pageSize') ?? '50');
+    const start = (page - 1) * pageSize;
+    const slice = items.slice(start, start + pageSize);
+    const hasMore = start + slice.length < items.length;
+    return HttpResponse.json({
+      items: slice,
+      totalCount: items.length,
+      hasMore: page === 1 && hasMoreOnPage1 ? true : hasMore,
+    });
+  });
+}
+
+const server = setupServer();
+
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 function manifest(
   options: {
@@ -114,19 +171,6 @@ function manifest(
   };
 }
 
-function freshHandlers() {
-  return [
-    http.get(`http://localhost${BASE_PATH}/meta`, () => HttpResponse.json(META)),
-    http.get(`http://localhost${BASE_PATH}`, () => HttpResponse.json(PAGE)),
-  ];
-}
-
-const server = setupServer(...freshHandlers());
-
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-afterEach(() => server.resetHandlers(...freshHandlers()));
-afterAll(() => server.close());
-
 function makeWrapper() {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const apiClient = axios.create({ baseURL: 'http://localhost' });
@@ -163,6 +207,7 @@ describe('EntityGallery', () => {
   });
 
   it('exposes card-size + entity name as data attributes on the root', async () => {
+    server.use(pageHandler([makeParty(1)]));
     const { wrapper: Wrapper } = makeWrapper();
     const { container } = render(
       <Wrapper>
@@ -178,6 +223,7 @@ describe('EntityGallery', () => {
   });
 
   it('renders one card per row with image-blob-id, title and subtitle slots', async () => {
+    server.use(pageHandler([makeParty(1), makeParty(2)]));
     const { wrapper: Wrapper } = makeWrapper();
     const { container } = render(
       <Wrapper>
@@ -187,15 +233,16 @@ describe('EntityGallery', () => {
     await waitFor(() =>
       expect(container.querySelectorAll('[data-granit-gallery-card]').length).toBe(2)
     );
-    const acme = container.querySelector(
-      '[data-row-id="8c6b1e10-0000-4000-8000-000000000001"]'
-    ) as HTMLElement;
-    expect(acme.getAttribute('data-image-blob-id')).toBe('parties/avatars/acme.jpg');
-    expect(acme.querySelector('[data-granit-gallery-card-title]')?.textContent).toBe('ACME Corp');
-    expect(acme.querySelector('[data-granit-gallery-card-subtitle]')?.textContent).toBe('Customer');
+    const first = container.querySelector(`[data-row-id="${makeParty(1).id}"]`) as HTMLElement;
+    expect(first.getAttribute('data-image-blob-id')).toBe('parties/avatars/p1.jpg');
+    expect(first.querySelector('[data-granit-gallery-card-title]')?.textContent).toBe('Party 1');
+    expect(first.querySelector('[data-granit-gallery-card-subtitle]')?.textContent).toBe(
+      'Supplier'
+    );
   });
 
   it('omits data-image-blob-id when the row has no blob reference', async () => {
+    server.use(pageHandler([makeParty(3)])); // idx 3 → avatarBlobId null
     const { wrapper: Wrapper } = makeWrapper();
     const { container } = render(
       <Wrapper>
@@ -203,17 +250,15 @@ describe('EntityGallery', () => {
       </Wrapper>
     );
     await waitFor(() =>
-      expect(container.querySelectorAll('[data-granit-gallery-card]').length).toBe(2)
+      expect(container.querySelector('[data-granit-gallery-card]')).not.toBeNull()
     );
-    const globex = container.querySelector(
-      '[data-row-id="8c6b1e10-0000-4000-8000-000000000002"]'
-    ) as HTMLElement;
-    expect(globex.hasAttribute('data-image-blob-id')).toBe(false);
+    const card = container.querySelector('[data-granit-gallery-card]') as HTMLElement;
+    expect(card.hasAttribute('data-image-blob-id')).toBe(false);
   });
 
   it('falls back to identity.displayProperty when titlePropertyName is null', async () => {
+    server.use(pageHandler([makeParty(1)]));
     const m = manifest();
-    // mutate the layout to drop the title pointer
     (
       m.collections!.listLayouts[0].gallery as { titlePropertyName: string | null }
     ).titlePropertyName = null;
@@ -226,14 +271,13 @@ describe('EntityGallery', () => {
     await waitFor(() =>
       expect(container.querySelector('[data-granit-gallery-card-title]')).not.toBeNull()
     );
-    // identity.displayProperty === 'name', so first card shows ACME Corp.
-    const titles = Array.from(container.querySelectorAll('[data-granit-gallery-card-title]')).map(
-      (n) => n.textContent
+    expect(container.querySelector('[data-granit-gallery-card-title]')?.textContent).toBe(
+      'Party 1'
     );
-    expect(titles).toEqual(['ACME Corp', 'Globex']);
   });
 
   it('omits the subtitle slot when subtitlePropertyName is null', async () => {
+    server.use(pageHandler([makeParty(1)]));
     const m = manifest();
     (
       m.collections!.listLayouts[0].gallery as { subtitlePropertyName: string | null }
@@ -251,6 +295,7 @@ describe('EntityGallery', () => {
   });
 
   it('emits a loading marker before the response lands', () => {
+    server.use(pageHandler([makeParty(1)]));
     const { wrapper: Wrapper } = makeWrapper();
     const { container } = render(
       <Wrapper>
@@ -281,6 +326,7 @@ describe('EntityGallery', () => {
   });
 
   it('invokes onCardClick with the full row object', async () => {
+    server.use(pageHandler([makeParty(1)]));
     const onCardClick = vi.fn();
     const { wrapper: Wrapper } = makeWrapper();
     const { container } = render(
@@ -291,16 +337,15 @@ describe('EntityGallery', () => {
     await waitFor(() =>
       expect(container.querySelector('[data-granit-gallery-card]')).not.toBeNull()
     );
-    const acme = container.querySelector(
-      '[data-row-id="8c6b1e10-0000-4000-8000-000000000001"]'
-    ) as HTMLElement;
-    fireEvent.click(acme);
+    const card = container.querySelector('[data-granit-gallery-card]') as HTMLElement;
+    fireEvent.click(card);
     expect(onCardClick).toHaveBeenCalledWith(
-      expect.objectContaining({ id: '8c6b1e10-0000-4000-8000-000000000001', name: 'ACME Corp' })
+      expect.objectContaining({ id: makeParty(1).id, name: 'Party 1' })
     );
   });
 
   it('uses an explicit layout prop over the manifest auto-pick', async () => {
+    server.use(pageHandler([makeParty(1)]));
     const { wrapper: Wrapper } = makeWrapper();
     const m = manifest({ hasGallery: false });
     const { container } = render(
@@ -321,5 +366,47 @@ describe('EntityGallery', () => {
     );
     const root = container.querySelector('[data-granit-entity-gallery]') as HTMLElement;
     expect(root.getAttribute('data-card-size')).toBe('Small');
+  });
+
+  it('renders a sentinel marked exhausted when the first page returns every item', async () => {
+    server.use(pageHandler([makeParty(1), makeParty(2)]));
+    const { wrapper: Wrapper } = makeWrapper();
+    const { container } = render(
+      <Wrapper>
+        <EntityGallery manifest={manifest()} />
+      </Wrapper>
+    );
+    await waitFor(() =>
+      expect(container.querySelector('[data-granit-gallery-sentinel]')).not.toBeNull()
+    );
+    const sentinel = container.querySelector('[data-granit-gallery-sentinel]') as HTMLElement;
+    expect(sentinel.hasAttribute('data-exhausted')).toBe(true);
+    expect(sentinel.hasAttribute('data-fetching')).toBe(false);
+  });
+
+  it('fetches the next page when the sentinel intersects the viewport', async () => {
+    // 60 rows ⇒ 2 pages of 50 + 10
+    const rows = Array.from({ length: 60 }, (_, i) => makeParty(i + 1));
+    server.use(pageHandler(rows));
+    const { wrapper: Wrapper } = makeWrapper();
+    const { container } = render(
+      <Wrapper>
+        <EntityGallery manifest={manifest()} />
+      </Wrapper>
+    );
+    // First page (50 rows) lands.
+    await waitFor(() =>
+      expect(container.querySelectorAll('[data-granit-gallery-card]').length).toBe(50)
+    );
+    const sentinelBefore = container.querySelector('[data-granit-gallery-sentinel]') as HTMLElement;
+    expect(sentinelBefore.hasAttribute('data-exhausted')).toBe(false);
+
+    // Trigger the IntersectionObserver — second page should fetch and append.
+    triggerLastObserver(true);
+    await waitFor(() =>
+      expect(container.querySelectorAll('[data-granit-gallery-card]').length).toBe(60)
+    );
+    const sentinelAfter = container.querySelector('[data-granit-gallery-sentinel]') as HTMLElement;
+    expect(sentinelAfter.hasAttribute('data-exhausted')).toBe(true);
   });
 });

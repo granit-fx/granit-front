@@ -1,7 +1,10 @@
-import { useQueryEndpoint } from '@granit/react-query-engine';
-import { useMemo, type ReactNode } from 'react';
+import { getPage } from '@granit/query-engine';
+import { useQueryConfig } from '@granit/react-query-engine';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useEffect, useMemo, useRef, type ReactNode } from 'react';
 
 import type { EntityGalleryLayoutManifest, EntityManifestResponse } from '@granit/entities';
+import type { PagedResult } from '@granit/query-engine';
 
 export interface EntityGalleryProps {
   /** The entity manifest (typically from `useEntityMetadata`). */
@@ -13,17 +16,26 @@ export interface EntityGalleryProps {
    * declares multiple galleries (reserved for a future kind today).
    */
   readonly layout?: EntityGalleryLayoutManifest;
+  /**
+   * Items per page fetched from the server. Defaults to 50 — higher than
+   * the standard list pageSize so each scroll batch covers a meaningful
+   * viewport without thrashing the API. The server caps via the
+   * `Pagination.MaxPageSize` limit declared by the entity's
+   * `QueryDefinition`.
+   */
+  readonly pageSize?: number;
   /** Optional card activation handler — receives the full row object. */
   readonly onCardClick?: (row: Readonly<Record<string, unknown>>) => void;
   /** Optional class for the root element. */
   readonly className?: string;
 }
 
+const DEFAULT_PAGE_SIZE = 50;
+
 /**
  * Generic read-only image-card grid renderer. Bridges the entity manifest's
- * gallery layout to the host's ambient `<QueryProvider>`, fetches a page of
- * rows via `useQueryEndpoint`, and surfaces each row as a card slot the
- * host styles via CSS Grid:
+ * gallery layout to the host's ambient `<QueryProvider>` and paginates via
+ * `useInfiniteQuery` + an `IntersectionObserver` sentinel:
  *
  * ```html
  * <div data-granit-entity-gallery data-entity="…" data-card-size="Medium">
@@ -34,27 +46,36 @@ export interface EntityGalleryProps {
  *       <span data-granit-gallery-card-title>ACME Corp</span>
  *       <span data-granit-gallery-card-subtitle>Customer</span>
  *     </li>
+ *     …
+ *     <li data-granit-gallery-sentinel
+ *         data-fetching=""
+ *         data-exhausted="" />
  *   </ol>
  * </div>
  * ```
  *
- * The framework does **not** mount `<img>` tags directly — `BlobReference`
- * properties are opaque IDs the host resolves through its own blob-storage
- * URL scheme (auth, presigning, CDN). Apps wrap the `data-image-blob-id`
- * attribute with their own `<BlobImage />` component (see
- * `@granit/react-blob-storage`). The renderer surfaces the ID; the host
- * decides how to resolve it.
+ * The sentinel is the last child of the cards list. When it scrolls into
+ * view it calls `fetchNextPage()`, append the new items, and re-arm itself
+ * for the next scroll. Once `hasNextPage` flips to `false` the sentinel
+ * gains `data-exhausted` so apps can render their own end-of-list marker
+ * (or rely on the absence of further reflow).
  *
- * Title and subtitle are projected from the layout's `titlePropertyName`
+ * The framework deliberately does **not** mount `<img>` tags directly —
+ * `BlobReference` properties are opaque IDs the host resolves through its
+ * own blob-storage URL scheme (auth, presigning, CDN). Apps wrap the
+ * `data-image-blob-id` attribute with their own `<BlobImage />` (see
+ * `@granit/react-blob-storage`).
+ *
+ * Title and subtitle project from the layout's `titlePropertyName`
  * (falling back to `manifest.identity.displayProperty`) and
- * `subtitlePropertyName`. Loading / error / empty states surface as
- * dedicated data attributes (`data-granit-gallery-loading`, `…-error`,
- * `…-empty`) so apps render their own placeholders without inspecting
- * React state.
+ * `subtitlePropertyName`. Loading / error / empty surface as dedicated
+ * data attributes so apps render their own placeholders without
+ * inspecting React state.
  */
 export function EntityGallery({
   manifest,
   layout,
+  pageSize = DEFAULT_PAGE_SIZE,
   onCardClick,
   className,
 }: EntityGalleryProps): ReactNode {
@@ -81,6 +102,7 @@ export function EntityGallery({
       <EntityGalleryBody
         layout={resolvedLayout}
         titleFallback={manifest.identity?.displayProperty}
+        pageSize={pageSize}
         onCardClick={onCardClick}
       />
     </div>
@@ -90,16 +112,50 @@ export function EntityGallery({
 interface EntityGalleryBodyProps {
   readonly layout: EntityGalleryLayoutManifest;
   readonly titleFallback: string | null | undefined;
+  readonly pageSize: number;
   readonly onCardClick: ((row: Readonly<Record<string, unknown>>) => void) | undefined;
 }
 
 function EntityGalleryBody({
   layout,
   titleFallback,
+  pageSize,
   onCardClick,
 }: EntityGalleryBodyProps): ReactNode {
-  const { query } = useQueryEndpoint<Readonly<Record<string, unknown>>>();
-  const items = query.data?.items ?? [];
+  const config = useQueryConfig();
+  const sentinelRef = useRef<HTMLLIElement | null>(null);
+
+  const query = useInfiniteQuery({
+    queryKey: ['granit', 'entity-gallery', config.basePath, pageSize] as const,
+    queryFn: ({ pageParam }) =>
+      getPage<Readonly<Record<string, unknown>>>(config.client, config.basePath, {
+        page: pageParam,
+        pageSize,
+      }),
+    initialPageParam: 1,
+    getNextPageParam: nextPageParam,
+  });
+
+  const items = useMemo(() => flattenPages(query.data?.pages), [query.data]);
+  const exhausted = !query.hasNextPage && !query.isLoading;
+
+  useEffect(() => {
+    const node = sentinelRef.current;
+    if (!node) return;
+    if (!query.hasNextPage || query.isFetchingNextPage) return;
+    if (typeof IntersectionObserver === 'undefined') return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          void query.fetchNextPage();
+        }
+      },
+      { rootMargin: '256px' }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [query.hasNextPage, query.isFetchingNextPage, query.fetchNextPage, items.length]);
 
   if (query.isError) {
     return (
@@ -129,6 +185,13 @@ function EntityGalleryBody({
           onCardClick={onCardClick}
         />
       ))}
+      <li
+        ref={sentinelRef}
+        data-granit-gallery-sentinel=""
+        data-fetching={query.isFetchingNextPage ? '' : undefined}
+        data-exhausted={exhausted ? '' : undefined}
+        aria-hidden="true"
+      />
     </ol>
   );
 }
@@ -175,6 +238,38 @@ function pickGalleryLayout(manifest: EntityManifestResponse): EntityGalleryLayou
     }
   }
   return null;
+}
+
+/**
+ * Decides whether to fetch another page. Honours `hasMore` when the server
+ * sets it (preferred — works with both keyset and offset paging). Falls
+ * back to comparing `items.length` against `totalCount` for hosts that
+ * don't surface `hasMore` yet.
+ */
+function nextPageParam(
+  last: PagedResult<Readonly<Record<string, unknown>>>,
+  pages: readonly PagedResult<Readonly<Record<string, unknown>>>[]
+): number | undefined {
+  if (last.hasMore !== undefined) {
+    return last.hasMore ? pages.length + 1 : undefined;
+  }
+  if (last.totalCount !== null) {
+    const fetched = pages.reduce((sum, page) => sum + page.items.length, 0);
+    return fetched < last.totalCount ? pages.length + 1 : undefined;
+  }
+  // No bound — stop after one page rather than loop forever on a buggy server.
+  return undefined;
+}
+
+function flattenPages(
+  pages: readonly PagedResult<Readonly<Record<string, unknown>>>[] | undefined
+): readonly Readonly<Record<string, unknown>>[] {
+  if (!pages) return [];
+  const out: Readonly<Record<string, unknown>>[] = [];
+  for (const page of pages) {
+    out.push(...page.items);
+  }
+  return out;
 }
 
 function readScalar(value: unknown): string | null {
