@@ -67,8 +67,8 @@ export function usePushedDashboard(
     [queryClient, dashboardId]
   );
 
-  const handleResumeFailed = useCallback(() => {
-    void queryClient.invalidateQueries({
+  const handleResumeFailed = useCallback(async () => {
+    await queryClient.invalidateQueries({
       queryKey: dashboardRenderQueryKey(dashboardId, request),
     });
   }, [queryClient, dashboardId, request]);

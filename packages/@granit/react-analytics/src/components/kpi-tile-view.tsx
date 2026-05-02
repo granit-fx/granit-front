@@ -77,45 +77,84 @@ export function KpiTileView({
   trendVisual,
   onClick,
 }: KpiTileViewProps) {
-  return (
-    <div
-      data-slot="kpi-tile"
-      data-interactive={onClick ? '' : undefined}
-      onClick={onClick}
-      onKeyDown={
-        onClick
-          ? (event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                onClick();
-              }
-            }
-          : undefined
-      }
-      role={onClick ? 'button' : undefined}
-      tabIndex={onClick ? 0 : undefined}
-      className={joinClasses(
-        'flex h-full flex-col gap-3',
-        onClick ? 'cursor-pointer' : undefined,
-        className
-      )}
-    >
+  const containerClass = joinClasses('flex h-full flex-col gap-3', className);
+  const inner = (
+    <>
       {title ? (
         <header data-slot="kpi-tile-header">
           <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
         </header>
       ) : null}
       <div data-slot="kpi-tile-body" className="flex-1 min-h-0">
-        {isLoading && !data ? (
-          <Skeleton />
-        ) : error ? (
-          <ErrorState title={errorTitle} retryLabel={errorRetryLabel} onRetry={onRetry} />
-        ) : data ? (
-          <Body data={data} locale={locale} noDataLabel={noDataLabel} trendVisual={trendVisual} />
-        ) : null}
+        {renderBody({
+          data,
+          isLoading,
+          error,
+          locale,
+          noDataLabel,
+          errorTitle,
+          errorRetryLabel,
+          onRetry,
+          trendVisual,
+        })}
       </div>
+    </>
+  );
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        data-slot="kpi-tile"
+        data-interactive=""
+        onClick={onClick}
+        className={joinClasses(
+          containerClass,
+          'cursor-pointer text-left bg-transparent border-0 p-0'
+        )}
+      >
+        {inner}
+      </button>
+    );
+  }
+  return (
+    <div data-slot="kpi-tile" className={containerClass}>
+      {inner}
     </div>
   );
+}
+
+interface RenderBodyArgs {
+  readonly data: MetricResponse | undefined;
+  readonly isLoading: boolean;
+  readonly error: unknown;
+  readonly locale: string | undefined;
+  readonly noDataLabel: string;
+  readonly errorTitle: string;
+  readonly errorRetryLabel: string;
+  readonly onRetry?: () => void;
+  readonly trendVisual: ReactNode;
+}
+
+function renderBody({
+  data,
+  isLoading,
+  error,
+  locale,
+  noDataLabel,
+  errorTitle,
+  errorRetryLabel,
+  onRetry,
+  trendVisual,
+}: RenderBodyArgs): ReactNode {
+  if (isLoading && !data) return <Skeleton />;
+  if (error) {
+    return <ErrorState title={errorTitle} retryLabel={errorRetryLabel} onRetry={onRetry} />;
+  }
+  if (data) {
+    return <Body data={data} locale={locale} noDataLabel={noDataLabel} trendVisual={trendVisual} />;
+  }
+  return null;
 }
 
 function Skeleton() {
@@ -207,12 +246,7 @@ function Delta({
   if (!previous || previous.deltaRatio === null) return null;
 
   const Icon = TREND_ICON[previous.trend];
-  const colourClass =
-    previous.isFavorable === true
-      ? 'text-success-600'
-      : previous.isFavorable === false
-        ? 'text-destructive'
-        : 'text-muted-foreground';
+  const colourClass = resolveDeltaColourClass(previous.isFavorable);
 
   return (
     <div
@@ -223,6 +257,12 @@ function Delta({
       <span>{formatDeltaRatio(previous.deltaRatio, locale)}</span>
     </div>
   );
+}
+
+function resolveDeltaColourClass(isFavorable: boolean | null | undefined): string {
+  if (isFavorable === true) return 'text-success-600';
+  if (isFavorable === false) return 'text-destructive';
+  return 'text-muted-foreground';
 }
 
 function joinClasses(...parts: ReadonlyArray<string | undefined>): string {

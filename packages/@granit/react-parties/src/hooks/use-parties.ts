@@ -40,7 +40,6 @@ import type {
   PartyResponse,
   PartyRole,
   PartyRoleRequest,
-  PartyRoles,
   PartySuspendRequest,
   PartyTaxStatusRequest,
   PartyUpdateRequest,
@@ -59,7 +58,7 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
  * ```
  */
 export function usePartiesQuery(options?: {
-  readonly role?: PartyRoles;
+  readonly role?: string;
 }): UseQueryResult<readonly PartyListItemResponse[]> {
   const config = usePartiesConfig();
   const basePath = config.basePath!;

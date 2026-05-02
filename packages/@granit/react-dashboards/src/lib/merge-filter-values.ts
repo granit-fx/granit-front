@@ -22,7 +22,7 @@ export function mergeFilterValuesIntoRequest(
 ): DashboardRenderRequest {
   if (!values || Object.keys(values).length === 0) return request;
 
-  const merged: Record<string, string> = { ...(request.filters ?? {}) };
+  const merged: Record<string, string> = request.filters ? { ...request.filters } : {};
   for (const [name, value] of Object.entries(values)) {
     if (value === null) {
       delete merged[name];

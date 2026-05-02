@@ -14,7 +14,7 @@ function appendParamsToUrl(url: string, params: Readonly<Record<string, string>>
 
 /**
  * `Navigate` — frontend route navigation. v1 default uses
- * `window.location.assign(target)` which preserves the browser's
+ * `globalThis.location.assign(target)` which preserves the browser's
  * history but triggers a full page load. Apps wanting React Router
  * (or any in-app SPA navigator) compose a custom handler that calls
  * `useNavigate()` instead.
@@ -22,9 +22,9 @@ function appendParamsToUrl(url: string, params: Readonly<Record<string, string>>
  * Resolved params are appended to the URL as a query string when set.
  */
 const navigateHandler: WidgetActionHandler = (action, context) => {
-  if (typeof window === 'undefined') return;
+  if (typeof globalThis.window === 'undefined') return;
   const url = appendParamsToUrl(action.target, context.params);
-  window.location.assign(url);
+  globalThis.location.assign(url);
 };
 
 /**
@@ -44,9 +44,9 @@ const openDashboardViewHandler: WidgetActionHandler = (action, context) => {
  * with a different routing scheme override.
  */
 const openDashboardHandler: WidgetActionHandler = (action, context) => {
-  if (typeof window === 'undefined') return;
+  if (typeof globalThis.window === 'undefined') return;
   const url = appendParamsToUrl(`/dashboards/${encodeURIComponent(action.target)}`, context.params);
-  window.location.assign(url);
+  globalThis.location.assign(url);
 };
 
 /**
@@ -60,8 +60,8 @@ const openDashboardHandler: WidgetActionHandler = (action, context) => {
  * the framework's "no opinionated UI" default.
  */
 const exportDataHandler: WidgetActionHandler = (action, context) => {
-  if (typeof window === 'undefined') return;
-  window.dispatchEvent(
+  if (typeof globalThis.window === 'undefined') return;
+  globalThis.dispatchEvent(
     new CustomEvent('granit:dashboard:export', {
       detail: { target: action.target, params: context.params, row: context.row ?? null },
     })
@@ -74,8 +74,8 @@ const exportDataHandler: WidgetActionHandler = (action, context) => {
  * framework doesn't ship a default drawer UI.
  */
 const openDetailHandler: WidgetActionHandler = (action, context) => {
-  if (typeof window === 'undefined') return;
-  window.dispatchEvent(
+  if (typeof globalThis.window === 'undefined') return;
+  globalThis.dispatchEvent(
     new CustomEvent('granit:dashboard:open-detail', {
       detail: { target: action.target, params: context.params, row: context.row ?? null },
     })

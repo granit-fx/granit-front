@@ -195,7 +195,7 @@ function canonicalizeFilters(
   // Sort keys so semantically-identical filter maps share a JSON-stringified
   // identity (same TanStack queryKey hash, same SSE topic later).
   const sorted: Record<string, string> = {};
-  for (const key of Object.keys(filters).sort()) {
+  for (const key of Object.keys(filters).sort((a, b) => a.localeCompare(b))) {
     sorted[key] = filters[key]!;
   }
   return sorted;

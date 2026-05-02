@@ -41,9 +41,11 @@ export function useCreateEntityView(
       );
       return data;
     },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) });
-      void queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) });
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) }),
+        queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) }),
+      ]);
     },
   });
 }
@@ -68,10 +70,12 @@ export function useUpdateEntityView(
       );
       return data;
     },
-    onSuccess: (updated, { id }) => {
+    onSuccess: async (updated, { id }) => {
       queryClient.setQueryData(entityViewQueryKey(entityName, id), updated);
-      void queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) });
-      void queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) }),
+        queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) }),
+      ]);
     },
   });
 }
@@ -90,10 +94,12 @@ export function useDeleteEntityView(entityName: string): UseMutationResult<void,
         `/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}`
       );
     },
-    onSuccess: (_void, id) => {
+    onSuccess: async (_void, id) => {
       queryClient.removeQueries({ queryKey: entityViewQueryKey(entityName, id) });
-      void queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) });
-      void queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) }),
+        queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) }),
+      ]);
     },
   });
 }

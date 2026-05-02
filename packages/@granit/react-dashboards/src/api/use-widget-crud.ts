@@ -60,9 +60,8 @@ export function useAddWidget(): UseMutationResult<
       );
       return data;
     },
-    onSuccess: (_widget, { dashboardId }) => {
-      void queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) });
-    },
+    onSuccess: (_widget, { dashboardId }) =>
+      queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) }),
   });
 }
 
@@ -89,9 +88,8 @@ export function useUpdateWidget(): UseMutationResult<
       );
       return data;
     },
-    onSuccess: (_widget, { dashboardId }) => {
-      void queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) });
-    },
+    onSuccess: (_widget, { dashboardId }) =>
+      queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) }),
   });
 }
 
@@ -109,8 +107,7 @@ export function useRemoveWidget(): UseMutationResult<void, Error, RemoveWidgetVa
         `${DASHBOARDS_PATH}/${encodeURIComponent(dashboardId)}/widgets/${encodeURIComponent(widgetId)}`
       );
     },
-    onSuccess: (_void, { dashboardId }) => {
-      void queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) });
-    },
+    onSuccess: (_void, { dashboardId }) =>
+      queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) }),
   });
 }

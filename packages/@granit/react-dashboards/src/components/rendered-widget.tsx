@@ -6,6 +6,7 @@ import { useSnapshotWidgetRegistry } from '../registry/snapshot-widget-registry-
 import { WidgetCard } from './widget-card.js';
 
 import type { DashboardRenderedWidget } from '@granit/dashboards';
+import type { ReactElement } from 'react';
 
 /**
  * Per-widget dispatcher for the bundle response. Switches on
@@ -48,51 +49,35 @@ export function RenderedWidget({ widget, framed = true }: RenderedWidgetProps) {
   const { t } = useTranslation();
   const onClick = useWidgetTriggerHandler('Click', widget.actions);
 
-  if (widget.status === 'Unavailable') {
-    return (
-      <UnavailableSlot
-        reasonKey={widget.reasonLocalizationKey ?? 'Widget:Unavailable'}
-        widgetType={widget.widgetType}
-      />
-    );
-  }
-
-  if (widget.status === 'Error') {
-    return (
-      <ErrorSlot
-        reasonKey={widget.reasonLocalizationKey ?? 'Widget:Error'}
-        widgetType={widget.widgetType}
-      />
-    );
-  }
+  const fallback = renderFallbackForStatus(widget);
+  if (fallback) return fallback;
 
   const Renderer = registry[widget.widgetType];
   if (!Renderer) {
     return <UnknownKindSlot widgetType={widget.widgetType} />;
   }
 
-  const body = (
+  const renderedBody = <Renderer widget={widget} />;
+  const body = onClick ? (
+    <button
+      type="button"
+      data-slot="rendered-widget"
+      data-widget-type={widget.widgetType}
+      data-widget-slug={widget.slug}
+      data-interactive=""
+      onClick={() => onClick()}
+      className="h-full w-full cursor-pointer text-left bg-transparent border-0 p-0"
+    >
+      {renderedBody}
+    </button>
+  ) : (
     <div
       data-slot="rendered-widget"
       data-widget-type={widget.widgetType}
       data-widget-slug={widget.slug}
-      data-interactive={onClick ? '' : undefined}
-      onClick={onClick ? () => onClick() : undefined}
-      onKeyDown={
-        onClick
-          ? (event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                onClick();
-              }
-            }
-          : undefined
-      }
-      role={onClick ? 'button' : undefined}
-      tabIndex={onClick ? 0 : undefined}
-      className={`h-full${onClick ? ' cursor-pointer' : ''}`}
+      className="h-full"
     >
-      <Renderer widget={widget} />
+      {renderedBody}
     </div>
   );
 
@@ -103,6 +88,26 @@ export function RenderedWidget({ widget, framed = true }: RenderedWidgetProps) {
   // missing key collapses cleanly).
   const title = t(widget.titleLocalizationKey, { defaultValue: '' });
   return <WidgetCard title={title || undefined}>{body}</WidgetCard>;
+}
+
+function renderFallbackForStatus(widget: DashboardRenderedWidget): ReactElement | null {
+  if (widget.status === 'Unavailable') {
+    return (
+      <UnavailableSlot
+        reasonKey={widget.reasonLocalizationKey ?? 'Widget:Unavailable'}
+        widgetType={widget.widgetType}
+      />
+    );
+  }
+  if (widget.status === 'Error') {
+    return (
+      <ErrorSlot
+        reasonKey={widget.reasonLocalizationKey ?? 'Widget:Error'}
+        widgetType={widget.widgetType}
+      />
+    );
+  }
+  return null;
 }
 
 function UnavailableSlot({

@@ -71,11 +71,11 @@ export function DashboardFilterProvider({
   children,
 }: DashboardFilterProviderProps) {
   const declaredFilters = useMemo(() => filters ?? [], [filters]);
-  const [values, setValuesState] = useState<DashboardFilterValues>(initialValues ?? {});
+  const [values, setValues] = useState<DashboardFilterValues>(initialValues ?? {});
 
   const setValue = useCallback(
     (filterName: string, value: string | null) => {
-      setValuesState((current) => {
+      setValues((current) => {
         const next: Record<string, string | null> = { ...current, [filterName]: value };
         onChange?.(next);
         return next;
@@ -85,7 +85,7 @@ export function DashboardFilterProvider({
   );
 
   const resetAll = useCallback(() => {
-    setValuesState(() => {
+    setValues(() => {
       const cleared = initialValues ?? {};
       onChange?.(cleared);
       return cleared;

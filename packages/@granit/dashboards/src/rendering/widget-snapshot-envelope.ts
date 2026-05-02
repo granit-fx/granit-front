@@ -34,7 +34,7 @@ export interface WidgetSnapshotEnvelope {
    * (e.g. `KpiSnapshot`) by inspecting {@link widgetType} via the widget
    * registry.
    */
-  readonly snapshot: unknown | null;
+  readonly snapshot: unknown;
   /**
    * Always `1` in pull mode; future push transport increments per
    * (widget instance, tenant). Locked v1 per EPIC #1366 invariant #2.

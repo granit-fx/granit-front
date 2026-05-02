@@ -26,7 +26,7 @@ export interface DashboardStreamSnapshot {
   readonly sequence: number;
   readonly emittedAt: string;
   readonly refreshHint: RefreshHint;
-  readonly snapshot: unknown | null;
+  readonly snapshot: unknown;
   readonly reasonLocalizationKey: string | null;
 }
 

@@ -47,7 +47,7 @@ export function DashboardViewSwitcher({
   const dashboardCtx = useDashboardContext();
   const viewCtx = useDashboardView();
 
-  const activeView = currentView !== undefined ? currentView : (viewCtx?.currentView ?? null);
+  const activeView = currentView === undefined ? (viewCtx?.currentView ?? null) : currentView;
   const setView = onChange ?? viewCtx?.setCurrentView;
 
   if (!views || views.length === 0 || !setView) return null;

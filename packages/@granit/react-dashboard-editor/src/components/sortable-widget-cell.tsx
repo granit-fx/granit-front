@@ -100,13 +100,13 @@ export function SortableWidgetCell({
       const onUp = (ev: PointerEvent) => {
         startRef.current = null;
         if (cap.hasPointerCapture(ev.pointerId)) cap.releasePointerCapture(ev.pointerId);
-        window.removeEventListener('pointermove', onMove);
-        window.removeEventListener('pointerup', onUp);
-        window.removeEventListener('pointercancel', onUp);
+        globalThis.removeEventListener('pointermove', onMove);
+        globalThis.removeEventListener('pointerup', onUp);
+        globalThis.removeEventListener('pointercancel', onUp);
       };
-      window.addEventListener('pointermove', onMove);
-      window.addEventListener('pointerup', onUp);
-      window.addEventListener('pointercancel', onUp);
+      globalThis.addEventListener('pointermove', onMove);
+      globalThis.addEventListener('pointerup', onUp);
+      globalThis.addEventListener('pointercancel', onUp);
     },
     [onResize, size, columnPx, rowPx, gapPx, maxWidth]
   );

@@ -36,27 +36,32 @@ export function ImageWidget({ widget }: { readonly widget: ImageWidgetDefinition
   const objectFit = OBJECT_FIT_CLASS[widget.fit ?? 'Contain'];
   const onClick = useWidgetTriggerHandler('Click', widget.actions);
 
+  const innerClass = `flex h-full w-full items-center justify-center${
+    onClick ? ' cursor-pointer' : ''
+  }`;
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        data-slot="image-widget"
+        data-interactive=""
+        onClick={() => onClick()}
+        className={`${innerClass} bg-transparent border-0 p-0`}
+      >
+        <img
+          src={widget.source}
+          alt={alt}
+          loading="lazy"
+          style={{ objectFit }}
+          className="h-full w-full"
+        />
+      </button>
+    );
+  }
+
   return (
-    <div
-      data-slot="image-widget"
-      data-interactive={onClick ? '' : undefined}
-      onClick={onClick ? () => onClick() : undefined}
-      onKeyDown={
-        onClick
-          ? (event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                onClick();
-              }
-            }
-          : undefined
-      }
-      role={onClick ? 'button' : undefined}
-      tabIndex={onClick ? 0 : undefined}
-      className={`flex h-full w-full items-center justify-center${
-        onClick ? ' cursor-pointer' : ''
-      }`}
-    >
+    <div data-slot="image-widget" className={innerClass}>
       <img
         src={widget.source}
         alt={alt}

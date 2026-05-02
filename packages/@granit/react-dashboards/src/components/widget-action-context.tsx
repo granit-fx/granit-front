@@ -92,15 +92,14 @@ export function useWidgetActionDispatcher(): WidgetActionDispatcher {
         // can use `action.target` directly without re-parsing.
         {
           ...action,
-          target: action.target.replace(
+          target: action.target.replaceAll(
             /\$\{([A-Za-z][A-Za-z0-9_.]*)\}/g,
             (match, expr: string) => {
               if (expr.startsWith('row.') && data) {
                 const value = data[expr.slice(4)];
                 return value !== undefined && value !== null ? String(value) : match;
               }
-              const alias = aliases?.[expr];
-              return alias !== undefined ? alias : match;
+              return aliases?.[expr] ?? match;
             }
           ),
         },

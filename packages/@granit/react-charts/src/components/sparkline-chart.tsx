@@ -46,7 +46,7 @@ export function SparklineChart({
           showSymbol: false,
           lineStyle: color ? { color, width: 2 } : { width: 2 },
           itemStyle: color ? { color } : undefined,
-          areaStyle: area ? (color ? { color, opacity: 0.2 } : { opacity: 0.2 }) : undefined,
+          areaStyle: area ? buildAreaStyle(color) : undefined,
         },
       ],
     }),
@@ -54,4 +54,8 @@ export function SparklineChart({
   );
 
   return <Chart options={options} height={height} className={className} theme={theme} />;
+}
+
+function buildAreaStyle(color: string | undefined): { color?: string; opacity: number } {
+  return color ? { color, opacity: 0.2 } : { opacity: 0.2 };
 }

@@ -10,12 +10,14 @@ const DASHBOARDS_PATH = '/dashboards';
  * (status filter changes which dashboards a query returns) plus the
  * specific detail entry.
  */
-function invalidateAfterTransition(
+async function invalidateAfterTransition(
   queryClient: ReturnType<typeof useQueryClient>,
   id: string
-): void {
-  void queryClient.invalidateQueries({ queryKey: ['dashboards', 'list'] });
-  void queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(id) });
+): Promise<void> {
+  await Promise.all([
+    queryClient.invalidateQueries({ queryKey: ['dashboards', 'list'] }),
+    queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(id) }),
+  ]);
 }
 
 /**

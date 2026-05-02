@@ -41,7 +41,7 @@ export function applyLayoutOverride(
   return {
     columns: override.columns ?? base.columns,
     rowHeight: override.rowHeight ?? base.rowHeight,
-    widgetSizes: { ...(base.widgetSizes ?? {}), ...(override.widgetSizes ?? {}) },
+    widgetSizes: { ...base.widgetSizes, ...override.widgetSizes },
     widgetOrder: override.widgetOrder ?? base.widgetOrder ?? null,
     hiddenWidgets: new Set(override.hiddenWidgets ?? []),
   };

@@ -59,8 +59,7 @@ describe('ImageWidget', () => {
     const { container } = withProviders(<ImageWidget widget={baseWidget} />, captured);
 
     const root = container.querySelector('[data-slot="image-widget"]');
-    expect(root?.getAttribute('role')).toBeNull();
-    expect(root?.getAttribute('tabindex')).toBeNull();
+    expect(root?.tagName).toBe('DIV');
     expect(root?.getAttribute('data-interactive')).toBeNull();
 
     const img = container.querySelector('img');
@@ -86,7 +85,7 @@ describe('ImageWidget', () => {
     expect(img.style.objectFit).toBe(css);
   });
 
-  it('exposes role + tabindex and dispatches the Click action on body click', () => {
+  it('renders a native button and dispatches the Click action on body click', () => {
     const captured: { target?: string } = {};
     const widget: ImageWidgetDefinition = {
       ...baseWidget,
@@ -94,41 +93,12 @@ describe('ImageWidget', () => {
     };
     const { container } = withProviders(<ImageWidget widget={widget} />, captured);
     const root = container.querySelector('[data-slot="image-widget"]') as HTMLElement;
-    expect(root.getAttribute('role')).toBe('button');
-    expect(root.getAttribute('tabindex')).toBe('0');
+    expect(root.tagName).toBe('BUTTON');
+    expect(root.getAttribute('type')).toBe('button');
     expect(root.getAttribute('data-interactive')).toBe('');
 
     fireEvent.click(root);
     expect(captured.target).toBe('logo-detail');
-  });
-
-  it('keyboard activation (Enter / Space) dispatches the Click action and prevents default', () => {
-    const captured: { target?: string } = {};
-    const widget: ImageWidgetDefinition = {
-      ...baseWidget,
-      actions: [{ trigger: 'Click', kind: 'OpenDetail', target: 'kb-detail' }],
-    };
-    const { container } = withProviders(<ImageWidget widget={widget} />, captured);
-    const root = container.querySelector('[data-slot="image-widget"]') as HTMLElement;
-
-    fireEvent.keyDown(root, { key: 'Enter' });
-    expect(captured.target).toBe('kb-detail');
-
-    captured.target = undefined;
-    fireEvent.keyDown(root, { key: ' ' });
-    expect(captured.target).toBe('kb-detail');
-  });
-
-  it('ignores irrelevant key presses', () => {
-    const captured: { target?: string } = {};
-    const widget: ImageWidgetDefinition = {
-      ...baseWidget,
-      actions: [{ trigger: 'Click', kind: 'OpenDetail', target: 'noop' }],
-    };
-    const { container } = withProviders(<ImageWidget widget={widget} />, captured);
-    const root = container.querySelector('[data-slot="image-widget"]') as HTMLElement;
-    fireEvent.keyDown(root, { key: 'Escape' });
-    expect(captured.target).toBeUndefined();
   });
 });
 
@@ -157,23 +127,7 @@ describe('TextWidget', () => {
     expect(node?.getAttribute('tabindex')).toBeNull();
   });
 
-  it('gains role + tabindex when a Click action is wired and dispatches on body click', () => {
-    const captured: { target?: string } = {};
-    const widget: TextWidgetDefinition = {
-      ...baseWidget,
-      style: 'Heading',
-      actions: [{ trigger: 'Click', kind: 'OpenDetail', target: 'h-detail' }],
-    };
-    const { container } = withProviders(<TextWidget widget={widget} />, captured);
-    const root = container.querySelector('[data-slot="text-widget"]') as HTMLElement;
-    expect(root.getAttribute('role')).toBe('button');
-    expect(root.getAttribute('tabindex')).toBe('0');
-
-    fireEvent.click(root);
-    expect(captured.target).toBe('h-detail');
-  });
-
-  it('keyboard activation (Enter / Space) dispatches the Click action', () => {
+  it('keyboard activation (Enter / Space) dispatches the Click action on the styled element', () => {
     const captured: { target?: string } = {};
     const widget: TextWidgetDefinition = {
       ...baseWidget,
@@ -182,7 +136,13 @@ describe('TextWidget', () => {
     };
     const { container } = withProviders(<TextWidget widget={widget} />, captured);
     const root = container.querySelector('[data-slot="text-widget"]') as HTMLElement;
+    expect(root.getAttribute('role')).toBe('button');
+    expect(root.getAttribute('tabindex')).toBe('0');
 
+    fireEvent.click(root);
+    expect(captured.target).toBe('kb-text');
+
+    captured.target = undefined;
     fireEvent.keyDown(root, { key: 'Enter' });
     expect(captured.target).toBe('kb-text');
 

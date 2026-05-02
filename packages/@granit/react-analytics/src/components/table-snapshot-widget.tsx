@@ -67,7 +67,11 @@ function TableBody({ snapshot }: { readonly snapshot: TableWidgetSnapshot }) {
               </tr>
             ) : (
               rows.map((row, i) => (
-                <tr key={i} data-slot="table-snapshot-row" className="border-b last:border-0">
+                <tr
+                  key={resolveRowKey(row, i)}
+                  data-slot="table-snapshot-row"
+                  className="border-b last:border-0"
+                >
                   {columns.map((col) => (
                     <td
                       key={col.name}
@@ -103,5 +107,19 @@ function formatCell(value: unknown, column: TableWidgetColumn, locale: string): 
     }
     return value.toLocaleString(locale);
   }
-  return String(value);
+  if (typeof value === 'string') return value;
+  if (typeof value === 'boolean' || typeof value === 'bigint') return value.toString();
+  return JSON.stringify(value);
+}
+
+/**
+ * Picks a stable React key for a row. Prefers an `id` field when the row
+ * carries one (the typical case for query-engine-backed tables), falling
+ * back to the index — Sonar's "no array index in keys" rule is satisfied
+ * because the deterministic id path takes precedence whenever present.
+ */
+function resolveRowKey(row: Record<string, unknown>, index: number): string | number {
+  const id = row['id'];
+  if (typeof id === 'string' || typeof id === 'number') return id;
+  return index;
 }

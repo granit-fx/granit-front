@@ -130,10 +130,27 @@ export function EntityCalendar({
                     data-start={event.start}
                     data-end={event.end ?? undefined}
                     data-color={event.color ?? undefined}
-                    onClick={onItemClick ? () => onItemClick(event) : undefined}
-                    style={onItemClick ? { cursor: 'pointer' } : undefined}
                   >
-                    {event.title}
+                    {onItemClick ? (
+                      <button
+                        type="button"
+                        onClick={() => onItemClick(event)}
+                        style={{
+                          cursor: 'pointer',
+                          background: 'transparent',
+                          border: 0,
+                          padding: 0,
+                          textAlign: 'left',
+                          font: 'inherit',
+                          color: 'inherit',
+                          width: '100%',
+                        }}
+                      >
+                        {event.title}
+                      </button>
+                    ) : (
+                      event.title
+                    )}
                   </li>
                 ))}
               </ol>

@@ -32,11 +32,11 @@ export function useImportDashboard(): UseMutationResult<DashboardImportResponse,
       );
       return data;
     },
-    onSuccess: (imported) => {
-      void queryClient.invalidateQueries({ queryKey: ['dashboards', 'list'] });
+    onSuccess: async (imported) => {
       // Drop any stale detail cache for the freshly imported id (most
       // likely none, but cheap to clear).
       queryClient.removeQueries({ queryKey: dashboardDetailQueryKey(imported.id) });
+      await queryClient.invalidateQueries({ queryKey: ['dashboards', 'list'] });
     },
   });
 }

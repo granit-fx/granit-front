@@ -18,7 +18,10 @@ export function entityRelationAggregatesQueryKey(
   entityId: string,
   relations?: readonly string[]
 ): readonly ['entities', 'relations', string, string, string | null] {
-  const relationsKey = relations && relations.length > 0 ? [...relations].sort().join(',') : null;
+  const relationsKey =
+    relations && relations.length > 0
+      ? [...relations].sort((a, b) => a.localeCompare(b)).join(',')
+      : null;
   return ['entities', 'relations', entityName, entityId, relationsKey] as const;
 }
 
@@ -51,7 +54,10 @@ export function useEntityRelationAggregates(
   return useQuery({
     queryKey: entityRelationAggregatesQueryKey(entityName, entityId, relations),
     queryFn: async ({ signal }) => {
-      const body = relations && relations.length > 0 ? { relations: [...relations].sort() } : null;
+      const body =
+        relations && relations.length > 0
+          ? { relations: [...relations].sort((a, b) => a.localeCompare(b)) }
+          : null;
       const { data } = await api.post<RelationAggregatesResponse>(
         `/entities/${encodeURIComponent(entityName)}/${encodeURIComponent(entityId)}/relations/aggregates`,
         body,

@@ -17,7 +17,8 @@ export function entityManifestQueryKey(
   name: string,
   facets?: readonly EntityFacet[]
 ): readonly ['entities', 'manifest', string, string | null] {
-  const facetsKey = facets && facets.length > 0 ? [...facets].sort().join(',') : null;
+  const facetsKey =
+    facets && facets.length > 0 ? [...facets].sort((a, b) => a.localeCompare(b)).join(',') : null;
   return ['entities', 'manifest', name, facetsKey] as const;
 }
 
@@ -64,7 +65,9 @@ export function useEntityMetadata(
         {
           signal,
           params:
-            facets && facets.length > 0 ? { facets: [...facets].sort().join(',') } : undefined,
+            facets && facets.length > 0
+              ? { facets: [...facets].sort((a, b) => a.localeCompare(b)).join(',') }
+              : undefined,
           headers,
           validateStatus: (status) => status === 304 || (status >= 200 && status < 300),
         }

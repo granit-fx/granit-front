@@ -33,7 +33,6 @@ export type {
   PartyResponse,
   PartyRole,
   PartyRoleRequest,
-  PartyRoles,
   PartyStatus,
   PartySuspendRequest,
   PartyTaxStatusRequest,

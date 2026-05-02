@@ -119,7 +119,7 @@ describe('Definition-side widgets — Click integration', () => {
     expect(root?.getAttribute('tabindex')).toBeNull();
   });
 
-  it('MarkdownWidget with a Click action gains role+tabindex and dispatches on click', () => {
+  it('MarkdownWidget with a Click action becomes a native button and dispatches on click', () => {
     const widget: MarkdownWidgetDefinition = {
       slug: 'Banner',
       type: 'markdown',
@@ -131,8 +131,8 @@ describe('Definition-side widgets — Click integration', () => {
     const captured: { target?: string } = {};
     const { container } = withProviders(<MarkdownWidget widget={widget} />, captured);
     const root = container.querySelector('[data-slot="markdown-widget"]');
-    expect(root?.getAttribute('role')).toBe('button');
-    expect(root?.getAttribute('tabindex')).toBe('0');
+    expect(root?.tagName).toBe('BUTTON');
+    expect(root?.getAttribute('type')).toBe('button');
     if (!(root instanceof HTMLElement)) throw new Error('root not found');
     fireEvent.click(root);
     expect(captured.target).toBe('banner-detail');
@@ -151,11 +151,8 @@ describe('Definition-side widgets — Click integration', () => {
     const { container } = withProviders(<MarkdownWidget widget={widget} />, captured);
     const root = container.querySelector('[data-slot="markdown-widget"]');
     if (!(root instanceof HTMLElement)) throw new Error('root not found');
-    fireEvent.keyDown(root, { key: 'Enter' });
-    expect(captured.target).toBe('kb-detail');
-
-    captured.target = undefined;
-    fireEvent.keyDown(root, { key: ' ' });
+    // Native <button> handles Enter / Space synthetically as a click event.
+    fireEvent.click(root);
     expect(captured.target).toBe('kb-detail');
   });
 });

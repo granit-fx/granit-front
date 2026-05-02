@@ -40,11 +40,13 @@ export function useResyncDashboard(): UseMutationResult<DashboardResyncResponse,
       );
       return response.data;
     },
-    onSuccess: (_response, id) => {
-      void queryClient.invalidateQueries({ queryKey: ['dashboards', 'list'] });
-      void queryClient.invalidateQueries({ queryKey: ['dashboards', 'catalog'] });
-      void queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(id) });
-      void queryClient.invalidateQueries({ queryKey: ['dashboard', id, 'render'] });
+    onSuccess: async (_response, id) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['dashboards', 'list'] }),
+        queryClient.invalidateQueries({ queryKey: ['dashboards', 'catalog'] }),
+        queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(id) }),
+        queryClient.invalidateQueries({ queryKey: ['dashboard', id, 'render'] }),
+      ]);
     },
   });
 }

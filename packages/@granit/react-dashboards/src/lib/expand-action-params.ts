@@ -27,10 +27,14 @@ function resolvePlaceholder(
   if (expression.startsWith('row.')) {
     const key = expression.slice(4);
     const value = context.row?.[key];
-    return value !== undefined && value !== null ? String(value) : null;
+    if (value === undefined || value === null) return null;
+    if (typeof value === 'string') return value;
+    if (typeof value === 'number' || typeof value === 'boolean' || typeof value === 'bigint') {
+      return value.toString();
+    }
+    return JSON.stringify(value);
   }
-  const alias = context.aliases?.[expression];
-  return alias !== undefined ? alias : null;
+  return context.aliases?.[expression] ?? null;
 }
 
 /**
@@ -43,7 +47,7 @@ export function expandActionPlaceholders(
   value: string,
   context: Pick<WidgetActionDispatchContext, 'row' | 'aliases'>
 ): string {
-  return value.replace(PLACEHOLDER, (match, expression: string) => {
+  return value.replaceAll(PLACEHOLDER, (match, expression: string) => {
     const resolved = resolvePlaceholder(expression, context);
     return resolved ?? match;
   });

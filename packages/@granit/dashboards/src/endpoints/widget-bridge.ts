@@ -103,7 +103,7 @@ function denormalizeReferences(widget: WidgetDefinitionBase): {
     return { metricName: null, queryName: null };
   }
   // Chart / Table / Pivot / Map all expose `queryName` at the top level.
-  const queryName = typeof w['queryName'] === 'string' ? (w['queryName'] as string) : null;
+  const queryName = typeof w['queryName'] === 'string' ? w['queryName'] : null;
   return { metricName: null, queryName };
 }
 
@@ -164,9 +164,9 @@ export function widgetInstanceToDefinition(
     type: instance.widgetType.charAt(0).toLowerCase() + instance.widgetType.slice(1),
     position: instance.position,
     size: { width: instance.width, height: instance.height },
-    ...(instance.requiredPermission !== null
-      ? { requiredPermission: instance.requiredPermission }
-      : {}),
+    ...(instance.requiredPermission === null
+      ? undefined
+      : { requiredPermission: instance.requiredPermission }),
   };
   return widget as WidgetDefinition;
 }

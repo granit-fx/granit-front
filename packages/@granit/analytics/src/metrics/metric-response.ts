@@ -27,8 +27,8 @@ export type Trend = 'up' | 'down' | 'flat';
 // `@granit/dashboards` to mirror the backend's `Granit.Analytics.Abstractions`
 // promotion (ADR-039) and keep the dependency arrow analytics → dashboards
 // clean. Re-exported here for source-level back-compat.
+export type { RefreshHint } from '@granit/dashboards';
 import type { RefreshHint } from '@granit/dashboards';
-export type { RefreshHint };
 
 /**
  * Calendar-aware period token. Backend (`Granit.Analytics.Metrics.PeriodSpec`)

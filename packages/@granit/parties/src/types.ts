@@ -36,13 +36,12 @@ export type PartyStatus = 'Active' | 'Suspended' | 'Archived';
  */
 export type PartyRole = 'None' | 'Customer' | 'Supplier' | 'Employee' | 'Lead';
 
-/**
- * Wire representation of {@link PartyRole} flags. Either a single role
- * (`"Customer"`) or a comma-separated list (`"Customer, Supplier"`),
- * matching the JSON serialisation of a `[Flags]` enum. Typed as `string`
- * because `[Flags]` combinations are open-ended (any subset of {@link PartyRole}).
- */
-export type PartyRoles = string;
+// Note: the wire representation of {@link PartyRole} flags is a plain `string` —
+// either a single role (`"Customer"`) or a comma-separated list
+// (`"Customer, Supplier"`), matching the JSON serialisation of a `[Flags]` enum.
+// We deliberately do not introduce a `type PartyRoles = string` alias because the
+// alias adds no semantic value and Sonar (S6564) flags it as redundant; APIs
+// that previously accepted `PartyRoles` now accept `string` directly.
 
 /** Functional purpose of a {@link PartyAddressResponse}. Mirrors the .NET `AddressKind` enum. */
 export type AddressKind = 'Billing' | 'Shipping' | 'Other';
@@ -116,7 +115,7 @@ export interface PartyResponse {
   readonly parentContactId: PartyId | null;
   readonly userId: UserId | null;
   readonly avatarBlobId: EvidenceBlobId | null;
-  readonly roles: PartyRoles;
+  readonly roles: string;
   readonly status: PartyStatus;
   readonly addresses: readonly PartyAddressResponse[];
   readonly emails: readonly PartyEmailResponse[];
@@ -139,7 +138,7 @@ export interface PartyListItemResponse {
   readonly tenantId: TenantId | null;
   readonly kind: PartyKind;
   readonly name: string;
-  readonly roles: PartyRoles;
+  readonly roles: string;
   readonly status: PartyStatus;
   readonly defaultCurrency: string;
   readonly primaryEmail: string | null;
@@ -153,7 +152,7 @@ export interface PartyCreateRequest {
   readonly kind: PartyKind;
   readonly name: string;
   readonly defaultCurrency: string;
-  readonly roles?: PartyRoles | null;
+  readonly roles?: string | null;
   readonly website?: string | null;
   readonly language?: string | null;
   readonly timezone?: string | null;

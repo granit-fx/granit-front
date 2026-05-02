@@ -185,10 +185,11 @@ describe('EntityCalendar', () => {
     await waitFor(() =>
       expect(container.querySelector('[data-granit-calendar-event]')).not.toBeNull()
     );
-    const inv001 = container.querySelector(
+    const inv001Li = container.querySelector(
       '[data-event-id="8c6b1e10-0000-4000-8000-000000000001"]'
     ) as HTMLElement;
-    fireEvent.click(inv001);
+    const inv001Button = inv001Li.querySelector('button') as HTMLButtonElement;
+    fireEvent.click(inv001Button);
     expect(onItemClick).toHaveBeenCalledWith(
       expect.objectContaining({ id: '8c6b1e10-0000-4000-8000-000000000001', title: 'INV-001' })
     );

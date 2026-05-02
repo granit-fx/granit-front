@@ -44,9 +44,11 @@ export function useUpdateDashboardMetadata(): UseMutationResult<
       );
       return data;
     },
-    onSuccess: (_summary, { id }) => {
-      void queryClient.invalidateQueries({ queryKey: ['dashboards', 'list'] });
-      void queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(id) });
+    onSuccess: async (_summary, { id }) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['dashboards', 'list'] }),
+        queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(id) }),
+      ]);
     },
   });
 }

@@ -67,7 +67,11 @@ export function KpiTile({ widget }: KpiTileProps) {
       data={query.data}
       isLoading={query.isLoading}
       error={query.error}
-      onRetry={() => void query.refetch()}
+      onRetry={() => {
+        query.refetch().catch(() => {
+          // refetch errors are surfaced via query.error in the next render
+        });
+      }}
       locale={i18n.language}
       noDataLabel={t('Analytics.NoData', { defaultValue: 'No data for this period' })}
       errorTitle={t('Analytics.Error.Title', { defaultValue: 'Failed to load metric' })}

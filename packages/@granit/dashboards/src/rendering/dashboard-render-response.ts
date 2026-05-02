@@ -152,7 +152,7 @@ export interface DashboardRenderedWidget {
    * (e.g. `KpiSnapshot`) by inspecting {@link widgetType} via the widget
    * registry.
    */
-  readonly snapshot: unknown | null;
+  readonly snapshot: unknown;
   /**
    * Localization key for the user-facing reason. Set on both
    * `'Unavailable'` and `'Error'` envelopes (defaults `'Widget:Unavailable'`

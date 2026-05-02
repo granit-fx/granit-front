@@ -105,9 +105,7 @@ export function RenderedDashboard({
   const effectiveRequest = useMemo(
     () =>
       mergeFilterValuesIntoRequest(
-        activeViewName !== null
-          ? { ...(request ?? {}), viewName: activeViewName }
-          : (request ?? {}),
+        activeViewName === null ? (request ?? {}) : { ...request, viewName: activeViewName },
         filters?.values
       ),
     [request, filters?.values, activeViewName]

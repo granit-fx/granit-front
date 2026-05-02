@@ -30,10 +30,7 @@ export function substituteAliases(
   aliases: DashboardAliasValues | null | undefined
 ): string {
   if (!aliases) return value;
-  return value.replace(PLACEHOLDER, (match, name: string) => {
-    const resolved = aliases[name];
-    return resolved !== undefined ? resolved : match;
-  });
+  return value.replaceAll(PLACEHOLDER, (match, name: string) => aliases[name] ?? match);
 }
 
 /**

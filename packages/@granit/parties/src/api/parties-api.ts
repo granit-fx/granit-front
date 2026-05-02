@@ -16,7 +16,6 @@ import type {
   PartyResponse,
   PartyRole,
   PartyRoleRequest,
-  PartyRoles,
   PartySuspendRequest,
   PartyTaxStatusRequest,
   PartyUpdateRequest,
@@ -31,7 +30,7 @@ import type { AxiosInstance } from '@granit/api-client';
 export async function listParties(
   client: AxiosInstance,
   basePath: string,
-  options?: { readonly role?: PartyRoles }
+  options?: { readonly role?: string }
 ): Promise<readonly PartyListItemResponse[]> {
   const response = await client.get<readonly PartyListItemResponse[]>(basePath, {
     params: options?.role ? { role: options.role } : undefined,

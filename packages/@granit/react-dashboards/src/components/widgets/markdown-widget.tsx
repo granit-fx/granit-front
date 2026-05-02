@@ -24,28 +24,28 @@ export function MarkdownWidget({ widget }: { readonly widget: MarkdownWidgetDefi
   const { t } = useTranslation();
   const content = t(widget.contentLocalizationKey);
   const onClick = useWidgetTriggerHandler('Click', widget.actions);
+  const inner = (
+    <pre className="whitespace-pre-wrap break-words font-sans text-sm text-foreground">
+      {content}
+    </pre>
+  );
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        data-slot="markdown-widget"
+        data-interactive=""
+        onClick={() => onClick()}
+        className="prose prose-sm max-w-none cursor-pointer text-left bg-transparent border-0 p-0 w-full"
+      >
+        {inner}
+      </button>
+    );
+  }
   return (
-    <div
-      data-slot="markdown-widget"
-      data-interactive={onClick ? '' : undefined}
-      onClick={onClick ? () => onClick() : undefined}
-      onKeyDown={
-        onClick
-          ? (event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                onClick();
-              }
-            }
-          : undefined
-      }
-      role={onClick ? 'button' : undefined}
-      tabIndex={onClick ? 0 : undefined}
-      className={`prose prose-sm max-w-none${onClick ? ' cursor-pointer' : ''}`}
-    >
-      <pre className="whitespace-pre-wrap break-words font-sans text-sm text-foreground">
-        {content}
-      </pre>
+    <div data-slot="markdown-widget" className="prose prose-sm max-w-none">
+      {inner}
     </div>
   );
 }

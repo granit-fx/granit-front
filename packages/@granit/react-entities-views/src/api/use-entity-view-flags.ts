@@ -39,10 +39,12 @@ export function useSetEntityViewPinned(
       );
       return data;
     },
-    onSuccess: (updated, { id }) => {
+    onSuccess: async (updated, { id }) => {
       queryClient.setQueryData(entityViewQueryKey(entityName, id), updated);
-      void queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) });
-      void queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) }),
+        queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) }),
+      ]);
     },
   });
 }
@@ -68,10 +70,12 @@ export function useSetEntityViewTenantDefault(
       );
       return data;
     },
-    onSuccess: (updated, { id }) => {
+    onSuccess: async (updated, { id }) => {
       queryClient.setQueryData(entityViewQueryKey(entityName, id), updated);
-      void queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) });
-      void queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) }),
+        queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) }),
+      ]);
     },
   });
 }
@@ -96,10 +100,12 @@ export function useSetEntityViewPersonalDefault(
       );
       return data;
     },
-    onSuccess: (updated, { id }) => {
+    onSuccess: async (updated, { id }) => {
       queryClient.setQueryData(entityViewQueryKey(entityName, id), updated);
-      void queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) });
-      void queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) }),
+        queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) }),
+      ]);
     },
   });
 }
@@ -123,10 +129,12 @@ export function useShareEntityView(
       );
       return data;
     },
-    onSuccess: (updated, { id }) => {
+    onSuccess: async (updated, { id }) => {
       queryClient.setQueryData(entityViewQueryKey(entityName, id), updated);
-      void queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) });
-      void queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) }),
+        queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) }),
+      ]);
     },
   });
 }
