@@ -76,6 +76,13 @@ export interface EntityGalleryLayoutManifest {
   readonly titlePropertyName: string | null;
   /** Optional secondary line under the title, or `null` for none. */
   readonly subtitlePropertyName: string | null;
+  /**
+   * Optional categorical property used to bucket cards into sections.
+   * `null` for a flat grid. When set, the renderer threads `groupBy` into
+   * the underlying query so the server returns grouped buckets and the
+   * grid paints one section per distinct value.
+   */
+  readonly groupByPropertyName: string | null;
   /** Card size — drives CSS-grid track sizing in the renderer. */
   readonly cardSize: GalleryCardSize;
 }

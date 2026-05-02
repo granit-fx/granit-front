@@ -3604,6 +3604,12 @@
           "members": []
         },
         {
+          "name": "QueryEndpointStateProviderProps",
+          "kind": "interface",
+          "signature": "interface QueryEndpointStateProviderProps",
+          "members": []
+        },
+        {
           "name": "useInfiniteScroll",
           "kind": "function",
           "signature": "function useInfiniteScroll<T, P extends InfiniteScrollPage<T> = InfiniteScrollPage<T>>( options: UseInfiniteScrollOptions<T, P> ): UseInfiniteScrollReturn<T>"

@@ -1,5 +1,5 @@
 import { GranitClientProvider } from '@granit/react-api-client';
-import { QueryProvider } from '@granit/react-query-engine';
+import { QueryEndpointStateProvider, QueryProvider } from '@granit/react-query-engine';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import axios from 'axios';
@@ -95,10 +95,17 @@ function makeParty(idx: number): PartyRow {
   };
 }
 
+let lastQuery: Record<string, string> | null = null;
+
+beforeEach(() => {
+  lastQuery = null;
+});
+
 function pageHandler(items: PartyRow[], opts: { hasMoreOnPage1?: boolean } = {}) {
   const hasMoreOnPage1 = opts.hasMoreOnPage1 ?? false;
   return http.get(`http://localhost${BASE_PATH}`, ({ request }) => {
     const url = new URL(request.url);
+    lastQuery = Object.fromEntries(url.searchParams.entries());
     const page = Number(url.searchParams.get('page') ?? '1');
     const pageSize = Number(url.searchParams.get('pageSize') ?? '50');
     const start = (page - 1) * pageSize;
@@ -160,6 +167,7 @@ function manifest(
                     imagePropertyName: 'avatarBlobId',
                     titlePropertyName: 'name',
                     subtitlePropertyName: 'kind',
+                    groupByPropertyName: null,
                     cardSize,
                   },
                 },
@@ -356,6 +364,7 @@ describe('EntityGallery', () => {
             imagePropertyName: 'avatarBlobId',
             titlePropertyName: 'name',
             subtitlePropertyName: null,
+            groupByPropertyName: null,
             cardSize: 'Small',
           }}
         />
@@ -408,5 +417,78 @@ describe('EntityGallery', () => {
     );
     const sentinelAfter = container.querySelector('[data-granit-gallery-sentinel]') as HTMLElement;
     expect(sentinelAfter.hasAttribute('data-exhausted')).toBe(true);
+  });
+
+  it('threads ambient filter / search / sort from QueryEndpointStateProvider into the request', async () => {
+    server.use(pageHandler([makeParty(1)]));
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const apiClient = axios.create({ baseURL: 'http://localhost' });
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <QueryClientProvider client={queryClient}>
+        <GranitClientProvider client={apiClient}>
+          <QueryProvider config={{ basePath: BASE_PATH }}>
+            <QueryEndpointStateProvider
+              initialParams={{
+                page: 1,
+                pageSize: 20,
+                search: 'acme',
+                filters: [{ field: 'kind', operator: 'eq', value: 'Customer' }],
+                sort: [{ field: 'name', direction: 'asc' }],
+              }}
+            >
+              {children}
+            </QueryEndpointStateProvider>
+          </QueryProvider>
+        </GranitClientProvider>
+      </QueryClientProvider>
+    );
+    const { container } = render(
+      <>
+        <EntityGallery manifest={manifest()} />
+      </>,
+      { wrapper }
+    );
+    await waitFor(() =>
+      expect(container.querySelector('[data-granit-gallery-card]')).not.toBeNull()
+    );
+    expect(lastQuery?.search).toBe('acme');
+    expect(lastQuery?.sort).toContain('name');
+    // Filter encoded — the query-engine's serializer puts it under `filter`.
+    expect(JSON.stringify(lastQuery)).toContain('Customer');
+    // Gallery's own pageSize override (default 50) wins over the provider's 20.
+    expect(lastQuery?.pageSize).toBe('50');
+  });
+
+  it('falls back to plain pagination when no QueryEndpointStateProvider is mounted', async () => {
+    server.use(pageHandler([makeParty(1)]));
+    const { wrapper: Wrapper } = makeWrapper();
+    const { container } = render(
+      <Wrapper>
+        <EntityGallery manifest={manifest()} />
+      </Wrapper>
+    );
+    await waitFor(() =>
+      expect(container.querySelector('[data-granit-gallery-card]')).not.toBeNull()
+    );
+    expect(lastQuery?.search).toBeUndefined();
+    expect(lastQuery?.pageSize).toBe('50');
+    expect(lastQuery?.page).toBe('1');
+  });
+
+  it('threads layout.groupByPropertyName as groupBy on every page request', async () => {
+    server.use(pageHandler([makeParty(1)]));
+    const m = manifest();
+    (
+      m.collections!.listLayouts[0].gallery as { groupByPropertyName: string | null }
+    ).groupByPropertyName = 'kind';
+    const { wrapper: Wrapper } = makeWrapper();
+    const { container } = render(
+      <Wrapper>
+        <EntityGallery manifest={m} />
+      </Wrapper>
+    );
+    await waitFor(() => expect(lastQuery).not.toBeNull());
+    expect(lastQuery?.groupBy).toBe('kind');
+    expect(container.querySelector('[data-granit-entity-gallery]')).not.toBeNull();
   });
 });

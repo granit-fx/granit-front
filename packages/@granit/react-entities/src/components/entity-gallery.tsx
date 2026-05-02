@@ -1,10 +1,10 @@
 import { getPage } from '@granit/query-engine';
-import { useQueryConfig } from '@granit/react-query-engine';
+import { useQueryConfig, useQueryEndpointState } from '@granit/react-query-engine';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, type ReactNode } from 'react';
 
 import type { EntityGalleryLayoutManifest, EntityManifestResponse } from '@granit/entities';
-import type { PagedResult } from '@granit/query-engine';
+import type { PagedResult, QueryRequest } from '@granit/query-engine';
 
 export interface EntityGalleryProps {
   /** The entity manifest (typically from `useEntityMetadata`). */
@@ -35,7 +35,20 @@ const DEFAULT_PAGE_SIZE = 50;
 /**
  * Generic read-only image-card grid renderer. Bridges the entity manifest's
  * gallery layout to the host's ambient `<QueryProvider>` and paginates via
- * `useInfiniteQuery` + an `IntersectionObserver` sentinel:
+ * `useInfiniteQuery` + an `IntersectionObserver` sentinel.
+ *
+ * When wrapped in a `<QueryEndpointStateProvider>`, automatically subscribes
+ * to the shared filter / sort / search / quickFilters / presets — host-side
+ * controls (SmartFilterBar, SortSelector, preset toggles) work transparently
+ * without per-renderer wiring. Without that provider the renderer falls
+ * back to pagination-only fetches (page / pageSize), useful for embed
+ * scenarios where no toolbar is wired up.
+ *
+ * `groupByPropertyName` on the layout, when set, threads the property
+ * through `params.groupBy` so the server returns grouped buckets the
+ * renderer can paint as sections (currently flat — section rendering
+ * lands in a follow-up).
+ *
  *
  * ```html
  * <div data-granit-entity-gallery data-entity="…" data-card-size="Medium">
@@ -123,14 +136,29 @@ function EntityGalleryBody({
   onCardClick,
 }: EntityGalleryBodyProps): ReactNode {
   const config = useQueryConfig();
+  const { params } = useQueryEndpointState();
   const sentinelRef = useRef<HTMLLIElement | null>(null);
 
+  // Compose the base request once: the host's ambient filter / sort /
+  // search / quickFilters / presets, plus the gallery's own page-size
+  // override and (optionally) the layout's `groupByPropertyName`. The
+  // infinite query owns the `page` cursor — we don't read it from the
+  // shared state because the shared `page` is single-cursor while the
+  // gallery accumulates pages through scroll.
+  const baseRequest = useMemo<QueryRequest>(() => {
+    const rest: QueryRequest = { ...params };
+    delete (rest as { page?: number }).page;
+    return layout.groupByPropertyName
+      ? { ...rest, pageSize, groupBy: layout.groupByPropertyName }
+      : { ...rest, pageSize };
+  }, [params, pageSize, layout.groupByPropertyName]);
+
   const query = useInfiniteQuery({
-    queryKey: ['granit', 'entity-gallery', config.basePath, pageSize] as const,
+    queryKey: ['granit', 'entity-gallery', config.basePath, baseRequest] as const,
     queryFn: ({ pageParam }) =>
       getPage<Readonly<Record<string, unknown>>>(config.client, config.basePath, {
+        ...baseRequest,
         page: pageParam,
-        pageSize,
       }),
     initialPageParam: 1,
     getNextPageParam: nextPageParam,
