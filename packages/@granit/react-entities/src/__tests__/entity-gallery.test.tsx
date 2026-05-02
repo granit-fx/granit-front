@@ -491,4 +491,58 @@ describe('EntityGallery', () => {
     expect(lastQuery?.groupBy).toBe('kind');
     expect(container.querySelector('[data-granit-entity-gallery]')).not.toBeNull();
   });
+
+  it('mounts the renderImage slot per card with the row blobId', async () => {
+    server.use(pageHandler([makeParty(1), makeParty(2)]));
+    const { wrapper: Wrapper } = makeWrapper();
+    const renderImage = vi.fn((blobId: string | null) =>
+      blobId ? <img data-testid="card-img" src={`https://cdn.example.com/${blobId}`} /> : null
+    );
+    const { container } = render(
+      <Wrapper>
+        <EntityGallery manifest={manifest()} renderImage={renderImage} />
+      </Wrapper>
+    );
+    await waitFor(() =>
+      expect(container.querySelectorAll('[data-granit-gallery-card]').length).toBe(2)
+    );
+    // Both rows in the fixture have a blobId — both calls receive a non-null value.
+    expect(renderImage).toHaveBeenCalledWith('parties/avatars/p1.jpg', expect.any(Object));
+    expect(renderImage).toHaveBeenCalledWith('parties/avatars/p2.jpg', expect.any(Object));
+    const imgs = container.querySelectorAll('[data-testid="card-img"]');
+    expect(imgs).toHaveLength(2);
+    expect(imgs[0].getAttribute('src')).toBe('https://cdn.example.com/parties/avatars/p1.jpg');
+  });
+
+  it('passes null to the renderImage slot when the row has no blob reference', async () => {
+    server.use(pageHandler([makeParty(3)])); // idx 3 → avatarBlobId null
+    const { wrapper: Wrapper } = makeWrapper();
+    const renderImage = vi.fn(() => null);
+    render(
+      <Wrapper>
+        <EntityGallery manifest={manifest()} renderImage={renderImage} />
+      </Wrapper>
+    );
+    await waitFor(() => expect(renderImage).toHaveBeenCalled());
+    expect(renderImage).toHaveBeenCalledWith(null, expect.objectContaining({ name: 'Party 3' }));
+  });
+
+  it('omits the renderImage call entirely when the slot is not provided', async () => {
+    server.use(pageHandler([makeParty(1)]));
+    const { wrapper: Wrapper } = makeWrapper();
+    const { container } = render(
+      <Wrapper>
+        <EntityGallery manifest={manifest()} />
+      </Wrapper>
+    );
+    await waitFor(() =>
+      expect(container.querySelector('[data-granit-gallery-card]')).not.toBeNull()
+    );
+    // Card structure still rendered (data-image-blob-id attr stays for CSS hooks),
+    // but no <img> is mounted by the framework.
+    expect(container.querySelector('[data-granit-gallery-card] img')).toBeNull();
+    expect(
+      container.querySelector('[data-granit-gallery-card]')?.getAttribute('data-image-blob-id')
+    ).toBe('parties/avatars/p1.jpg');
+  });
 });

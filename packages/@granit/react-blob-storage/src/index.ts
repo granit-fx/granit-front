@@ -1,3 +1,7 @@
+// Components
+export { BlobImage } from './components/blob-image.js';
+export type { BlobImageProps } from './components/blob-image.js';
+
 // Hooks
 export { useBlob } from './hooks/use-blob.js';
 export { useConfirmUpload, useDeleteBlob, useInitiateUpload } from './hooks/use-blob-mutations.js';

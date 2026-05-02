@@ -24,6 +24,26 @@ export interface EntityGalleryProps {
    * `QueryDefinition`.
    */
   readonly pageSize?: number;
+  /**
+   * Slot that mounts the actual image inside each card. Receives the
+   * raw `BlobReference` value read off the row at
+   * `layout.imagePropertyName` (a string id, or `null` when the row
+   * has no image) plus the full row object for context.
+   *
+   * Apps typically pass `<BlobImage blobId={…} fallback={…} />` from
+   * `@granit/react-blob-storage`, but the slot stays renderer-agnostic
+   * — hosts with non-blob backends (CDN URLs, data-URI thumbnails,
+   * SVG icons …) plug in their own component.
+   *
+   * When omitted, the renderer paints the card structure (title /
+   * subtitle slots, `data-image-blob-id` data attribute, sentinel)
+   * but no `<img>` tag — useful for data-only screens or hosts that
+   * still need to migrate their image layer.
+   */
+  readonly renderImage?: (
+    blobId: string | null,
+    row: Readonly<Record<string, unknown>>
+  ) => ReactNode;
   /** Optional card activation handler — receives the full row object. */
   readonly onCardClick?: (row: Readonly<Record<string, unknown>>) => void;
   /** Optional class for the root element. */
@@ -73,11 +93,14 @@ const DEFAULT_PAGE_SIZE = 50;
  * gains `data-exhausted` so apps can render their own end-of-list marker
  * (or rely on the absence of further reflow).
  *
- * The framework deliberately does **not** mount `<img>` tags directly —
- * `BlobReference` properties are opaque IDs the host resolves through its
- * own blob-storage URL scheme (auth, presigning, CDN). Apps wrap the
- * `data-image-blob-id` attribute with their own `<BlobImage />` (see
- * `@granit/react-blob-storage`).
+ * Image mounting goes through the `renderImage` slot — the renderer
+ * passes the row's `BlobReference` (read off `layout.imagePropertyName`)
+ * to the slot, which decides how to turn the id into pixels. Hosts
+ * typically pass `<BlobImage blobId={id} fallback={…} />` from
+ * `@granit/react-blob-storage`; apps with non-blob backends plug in
+ * their own component. When the slot is omitted the renderer paints
+ * the card structure (title / subtitle / `data-image-blob-id`) but
+ * no `<img>` tag.
  *
  * Title and subtitle project from the layout's `titlePropertyName`
  * (falling back to `manifest.identity.displayProperty`) and
@@ -89,6 +112,7 @@ export function EntityGallery({
   manifest,
   layout,
   pageSize = DEFAULT_PAGE_SIZE,
+  renderImage,
   onCardClick,
   className,
 }: EntityGalleryProps): ReactNode {
@@ -116,6 +140,7 @@ export function EntityGallery({
         layout={resolvedLayout}
         titleFallback={manifest.identity?.displayProperty}
         pageSize={pageSize}
+        renderImage={renderImage}
         onCardClick={onCardClick}
       />
     </div>
@@ -126,6 +151,9 @@ interface EntityGalleryBodyProps {
   readonly layout: EntityGalleryLayoutManifest;
   readonly titleFallback: string | null | undefined;
   readonly pageSize: number;
+  readonly renderImage:
+    | ((blobId: string | null, row: Readonly<Record<string, unknown>>) => ReactNode)
+    | undefined;
   readonly onCardClick: ((row: Readonly<Record<string, unknown>>) => void) | undefined;
 }
 
@@ -133,6 +161,7 @@ function EntityGalleryBody({
   layout,
   titleFallback,
   pageSize,
+  renderImage,
   onCardClick,
 }: EntityGalleryBodyProps): ReactNode {
   const config = useQueryConfig();
@@ -210,6 +239,7 @@ function EntityGalleryBody({
           imageProperty={layout.imagePropertyName}
           titleProperty={titleProperty}
           subtitleProperty={layout.subtitlePropertyName}
+          renderImage={renderImage}
           onCardClick={onCardClick}
         />
       ))}
@@ -229,6 +259,9 @@ interface GalleryCardProps {
   readonly imageProperty: string;
   readonly titleProperty: string | null;
   readonly subtitleProperty: string | null;
+  readonly renderImage:
+    | ((blobId: string | null, row: Readonly<Record<string, unknown>>) => ReactNode)
+    | undefined;
   readonly onCardClick: ((row: Readonly<Record<string, unknown>>) => void) | undefined;
 }
 
@@ -237,6 +270,7 @@ function GalleryCard({
   imageProperty,
   titleProperty,
   subtitleProperty,
+  renderImage,
   onCardClick,
 }: GalleryCardProps): ReactNode {
   const blobId = readScalar(row[imageProperty]);
@@ -252,6 +286,7 @@ function GalleryCard({
       onClick={onCardClick ? () => onCardClick(row) : undefined}
       style={onCardClick ? { cursor: 'pointer' } : undefined}
     >
+      {renderImage ? renderImage(blobId, row) : null}
       {title !== null ? <span data-granit-gallery-card-title="">{title}</span> : null}
       {subtitle !== null ? <span data-granit-gallery-card-subtitle="">{subtitle}</span> : null}
     </li>

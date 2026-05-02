@@ -1964,6 +1964,17 @@
       "description": "React hooks for blob storage — useBlob, useInitiateUpload, useConfirmUpload, useBlobUpload, useDownloadUrl, useDeleteBlob",
       "exports": [
         {
+          "name": "BlobImage",
+          "kind": "function",
+          "signature": "function BlobImage("
+        },
+        {
+          "name": "BlobImageProps",
+          "kind": "interface",
+          "signature": "interface BlobImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'>",
+          "members": []
+        },
+        {
           "name": "useBlob",
           "kind": "function",
           "signature": "function useBlob( id: string, containerName: string, options: BlobStorageOptions ): UseQueryResult<BlobDescriptorResponse>"
@@ -2739,7 +2750,18 @@
           "name": "EntityGalleryProps",
           "kind": "interface",
           "signature": "interface EntityGalleryProps",
-          "members": []
+          "members": [
+            {
+              "name": "blobId",
+              "kind": "property",
+              "signature": "blobId: string | null,"
+            },
+            {
+              "name": "row",
+              "kind": "property",
+              "signature": "row: Readonly<Record<string, unknown>>"
+            }
+          ]
         },
         {
           "name": "EntityKanban",
