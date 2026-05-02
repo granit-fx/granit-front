@@ -1,5 +1,5 @@
 import { GranitClientProvider } from '@granit/react-api-client';
-import { QueryProvider } from '@granit/react-query-engine';
+import { QueryEndpointStateProvider, QueryProvider } from '@granit/react-query-engine';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import axios from 'axios';
@@ -85,17 +85,26 @@ function manifest(hasQuery: boolean): EntityManifestResponse {
   };
 }
 
+let lastQuery: Record<string, string> | null = null;
+
 function freshHandlers() {
   return [
     http.get(`http://localhost${BASE_PATH}/meta`, () => HttpResponse.json(META)),
-    http.get(`http://localhost${BASE_PATH}`, () => HttpResponse.json(PAGE)),
+    http.get(`http://localhost${BASE_PATH}`, ({ request }) => {
+      const url = new URL(request.url);
+      lastQuery = Object.fromEntries(url.searchParams.entries());
+      return HttpResponse.json(PAGE);
+    }),
   ];
 }
 
 const server = setupServer(...freshHandlers());
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-afterEach(() => server.resetHandlers(...freshHandlers()));
+afterEach(() => {
+  server.resetHandlers(...freshHandlers());
+  lastQuery = null;
+});
 afterAll(() => server.close());
 
 function makeWrapper() {
@@ -207,5 +216,72 @@ describe('EntityKanban', () => {
     await waitFor(() =>
       expect(container.querySelector('[data-granit-entity-kanban-error]')).not.toBeNull()
     );
+  });
+
+  it('strips ambient params.groupBy before fetching (layout-locked per matrix)', async () => {
+    // Wrap with a QueryEndpointStateProvider that sets groupBy='status' (a
+    // List-view toolbar might do that). Kanban must ignore it so the server
+    // returns flat rows that the renderer can bucket client-side.
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const apiClient = axios.create({ baseURL: 'http://localhost' });
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <QueryClientProvider client={queryClient}>
+        <GranitClientProvider client={apiClient}>
+          <QueryProvider config={{ basePath: BASE_PATH }}>
+            <QueryEndpointStateProvider
+              initialParams={{ page: 1, pageSize: 20, groupBy: 'status' }}
+            >
+              <EntityRendererProvider>{children}</EntityRendererProvider>
+            </QueryEndpointStateProvider>
+          </QueryProvider>
+        </GranitClientProvider>
+      </QueryClientProvider>
+    );
+    const { container } = render(
+      <>
+        <EntityKanban manifest={manifest(true)} groupBy="status" />
+      </>,
+      { wrapper }
+    );
+    await waitFor(() =>
+      expect(container.querySelector('[data-granit-kanban-card]')).not.toBeNull()
+    );
+    expect(lastQuery?.groupBy).toBeUndefined();
+  });
+
+  it('forwards ambient filter / search / sort from QueryEndpointStateProvider', async () => {
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const apiClient = axios.create({ baseURL: 'http://localhost' });
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <QueryClientProvider client={queryClient}>
+        <GranitClientProvider client={apiClient}>
+          <QueryProvider config={{ basePath: BASE_PATH }}>
+            <QueryEndpointStateProvider
+              initialParams={{
+                page: 1,
+                pageSize: 20,
+                search: 'acme',
+                filters: [{ field: 'status', operator: 'eq', value: 'Active' }],
+                sort: [{ field: 'name', direction: 'asc' }],
+              }}
+            >
+              <EntityRendererProvider>{children}</EntityRendererProvider>
+            </QueryEndpointStateProvider>
+          </QueryProvider>
+        </GranitClientProvider>
+      </QueryClientProvider>
+    );
+    const { container } = render(
+      <>
+        <EntityKanban manifest={manifest(true)} groupBy="status" />
+      </>,
+      { wrapper }
+    );
+    await waitFor(() =>
+      expect(container.querySelector('[data-granit-kanban-card]')).not.toBeNull()
+    );
+    expect(lastQuery?.search).toBe('acme');
+    expect(lastQuery?.sort).toContain('name');
+    expect(JSON.stringify(lastQuery)).toContain('Active');
   });
 });

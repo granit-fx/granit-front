@@ -1,3 +1,4 @@
+import { useQueryEndpointState } from '@granit/react-query-engine';
 import { useMemo, type ReactNode } from 'react';
 
 import { useEntityCalendar } from '../api/use-entity-calendar.js';
@@ -67,6 +68,13 @@ export interface EntityCalendarProps {
  * Loading / error / empty states surface via dedicated data attributes
  * (`data-granit-calendar-loading`, `…-error`, `…-empty`) so apps can
  * render their own placeholders without inspecting React state.
+ *
+ * When wrapped in a `<QueryEndpointStateProvider>`, automatically
+ * forwards the ambient `filter` and `search` to the calendar range
+ * endpoint so SmartFilterBar tokens narrow which events surface
+ * inside the visible window. `sort` / `groupBy` / `page` / `pageSize`
+ * are deliberately ignored — they have no meaning on a time-axis
+ * layout (the time-axis IS the bucketing).
  */
 export function EntityCalendar({
   entityName,
@@ -76,7 +84,16 @@ export function EntityCalendar({
   onItemClick,
   className,
 }: EntityCalendarProps): ReactNode {
-  const query = useEntityCalendar(entityName, range.from, range.to, { calendar });
+  // Per the Phase 1.5 renderer matrix the calendar consumes only
+  // `filter` and `search` from ambient query state — `sort`, `groupBy`,
+  // `page`, `pageSize` have no meaning on a time-axis layout. The
+  // visible window stays owned by `range`.
+  const { params } = useQueryEndpointState();
+  const query = useEntityCalendar(entityName, range.from, range.to, {
+    calendar,
+    filters: params.filters,
+    search: params.search,
+  });
   const days = useMemo(() => groupItemsByStartDay(query.data ?? []), [query.data]);
 
   if (query.isError) {

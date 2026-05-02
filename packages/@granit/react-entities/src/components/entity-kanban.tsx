@@ -1,7 +1,10 @@
-import { useQueryEndpoint, useQueryMeta } from '@granit/react-query-engine';
+import { getPage } from '@granit/query-engine';
+import { useQueryConfig, useQueryEndpointState, useQueryMeta } from '@granit/react-query-engine';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useMemo, type ReactNode } from 'react';
 
 import type { EntityManifestResponse } from '@granit/entities';
+import type { QueryRequest } from '@granit/query-engine';
 
 export interface EntityKanbanProps {
   /** The entity manifest (typically from `useEntityMetadata`). */
@@ -88,7 +91,26 @@ function EntityKanbanBody({
   onCardClick,
 }: EntityKanbanBodyProps): ReactNode {
   const meta = useQueryMeta();
-  const { query } = useQueryEndpoint<Readonly<Record<string, unknown>>>();
+  const config = useQueryConfig();
+  const { params } = useQueryEndpointState();
+
+  // Kanban's groupBy is layout-locked: the `groupBy` prop drives client-side
+  // bucketing per `manifest.collections.listLayouts[].kanban.groupByPropertyName`;
+  // any ambient `params.groupBy` (e.g. set by a List-view toolbar in the
+  // same `<QueryEndpointStateProvider>`) is deliberately stripped before
+  // the request so Kanban keeps fetching flat rows it can bucket itself.
+  const baseRequest = useMemo<QueryRequest>(() => {
+    const next: QueryRequest = { ...params };
+    delete (next as { groupBy?: string }).groupBy;
+    return next;
+  }, [params]);
+
+  const query = useQuery({
+    queryKey: ['granit', 'entity-kanban', config.basePath, baseRequest] as const,
+    queryFn: () =>
+      getPage<Readonly<Record<string, unknown>>>(config.client, config.basePath, baseRequest),
+    placeholderData: keepPreviousData,
+  });
 
   const groups = useMemo(
     () => bucketByField(query.data?.items ?? [], groupBy),

@@ -137,4 +137,39 @@ describe('useEntityCalendar', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual([]);
   });
+
+  it('forwards filters as filter[field.op]=value query params', async () => {
+    const { wrapper } = makeWrapper();
+    renderHook(
+      () =>
+        useEntityCalendar(ENTITY, FROM, TO, {
+          filters: [
+            { field: 'status', operator: 'eq', value: 'Active' },
+            { field: 'kind', operator: 'eq', value: 'Customer' },
+          ],
+        }),
+      { wrapper }
+    );
+    await waitFor(() => expect(lastQuery).not.toBeNull());
+    expect(lastQuery?.['filter[status.eq]']).toBe('Active');
+    expect(lastQuery?.['filter[kind.eq]']).toBe('Customer');
+  });
+
+  it('forwards search as a top-level query param', async () => {
+    const { wrapper } = makeWrapper();
+    renderHook(() => useEntityCalendar(ENTITY, FROM, TO, { search: 'acme' }), { wrapper });
+    await waitFor(() => expect(lastQuery).not.toBeNull());
+    expect(lastQuery?.search).toBe('acme');
+  });
+
+  it('uses different cache slots when filters or search change', () => {
+    const a = entityCalendarQueryKey(ENTITY, FROM, TO);
+    const b = entityCalendarQueryKey(ENTITY, FROM, TO, null, [
+      { field: 'status', operator: 'eq', value: 'Active' },
+    ]);
+    const c = entityCalendarQueryKey(ENTITY, FROM, TO, null, undefined, 'acme');
+    expect(a).not.toEqual(b);
+    expect(a).not.toEqual(c);
+    expect(b).not.toEqual(c);
+  });
 });

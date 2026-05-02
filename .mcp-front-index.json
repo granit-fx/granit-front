@@ -2766,12 +2766,12 @@
         {
           "name": "entityCalendarQueryKey",
           "kind": "function",
-          "signature": "function entityCalendarQueryKey( entityName: string, from: string, to: string, calendar?: string | null ): readonly ['entities', 'calendar', string, string, string, string | null]"
+          "signature": "function entityCalendarQueryKey( entityName: string, from: string, to: string, calendar?: string | null, filters?: readonly FilterEntry[], search?: string ): readonly ["
         },
         {
           "name": "useEntityCalendar",
           "kind": "function",
-          "signature": "function useEntityCalendar( entityName: string, from: string, to: string, options:"
+          "signature": "function useEntityCalendar( entityName: string, from: string, to: string, options: UseEntityCalendarOptions ="
         },
         {
           "name": "entityDiscoveryQueryKey",

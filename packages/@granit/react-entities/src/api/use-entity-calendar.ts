@@ -2,59 +2,129 @@ import { useGranitClient } from '@granit/react-api-client';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
 import type { CalendarItemResponse } from '@granit/entities';
+import type { FilterEntry } from '@granit/query-engine';
 
 /**
  * Cache key for one calendar range query. Keyed by
- * `(entityName, from, to, calendar)` so distinct windows or
- * named-calendar selections don't collide. Calling
+ * `(entityName, from, to, calendar, filtersKey, search)` so distinct
+ * windows, named-calendar selections, or filter / search criteria
+ * don't collide. Calling
  * `queryClient.invalidateQueries({ queryKey: ['entities', 'calendar', entityName] })`
- * blasts every cached window for one entity, which is what apps typically
- * want after a relevant mutation.
+ * blasts every cached window for one entity, which is what apps
+ * typically want after a relevant mutation.
  */
 export function entityCalendarQueryKey(
   entityName: string,
   from: string,
   to: string,
-  calendar?: string | null
-): readonly ['entities', 'calendar', string, string, string, string | null] {
-  return ['entities', 'calendar', entityName, from, to, calendar ?? null] as const;
+  calendar?: string | null,
+  filters?: readonly FilterEntry[],
+  search?: string
+): readonly [
+  'entities',
+  'calendar',
+  string,
+  string,
+  string,
+  string | null,
+  string | null,
+  string | null,
+] {
+  const filtersKey =
+    filters && filters.length > 0
+      ? [...filters]
+          .map((f) => `${f.field}.${f.operator}=${f.value}`)
+          .sort()
+          .join('&')
+      : null;
+  return [
+    'entities',
+    'calendar',
+    entityName,
+    from,
+    to,
+    calendar ?? null,
+    filtersKey,
+    search ?? null,
+  ] as const;
+}
+
+export interface UseEntityCalendarOptions {
+  /**
+   * Optional name selector when the entity declares more than one
+   * calendar layout. Reserved for future kinds — leaving `null`
+   * always picks the entity's single calendar today.
+   */
+  readonly calendar?: string | null;
+  readonly enabled?: boolean;
+  /**
+   * Filter entries forwarded as `filter[field.op]=value` query params.
+   * Filters narrow the events surfaced inside the visible window;
+   * the time bounds remain owned by `from` / `to`. Per the Phase 1.5
+   * matrix, the calendar endpoint accepts the same filter wire shape
+   * as the standard list endpoint.
+   */
+  readonly filters?: readonly FilterEntry[];
+  /**
+   * Free-text search forwarded as `search=…`. Same role as `filters`
+   * — narrows the events inside the visible window.
+   */
+  readonly search?: string;
 }
 
 /**
- * `GET /entities/{name}/calendar?from=&to=&calendar=` — returns calendar
- * items whose start/end overlaps `[from, to]`. Mirrors
+ * `GET /entities/{name}/calendar?from=&to=&calendar=&filter[…]=&search=`
+ * — returns calendar items whose start/end overlaps `[from, to]`,
+ * narrowed by the optional filter / search criteria. Mirrors
  * `Granit.Entities.Endpoints.CalendarRangeEndpoint.HandleAsync`.
  *
- * `from` / `to` are ISO 8601 datetime offset strings — the same shape the
- * .NET handler binds via `[AsParameters] CalendarRangeRequest`. Apps
- * typically build them by serialising the renderer's current visible
- * window; the server enforces `to >= from` and a 366-day cap and surfaces
+ * `from` / `to` are ISO 8601 datetime offset strings — the same shape
+ * the .NET handler binds via `[AsParameters] CalendarRangeRequest`.
+ * The server enforces `to >= from` and a 366-day cap and surfaces
  * out-of-range windows as 400 ValidationProblem.
+ *
+ * `filters` / `search` follow the standard list endpoint's wire shape
+ * (`filter[field.op]=value`, `search=…`); per the Phase 1.5 renderer
+ * matrix they narrow which events surface inside the visible window
+ * but never widen / shift the window itself. `sort` / `groupBy` /
+ * `page` / `pageSize` have no meaning on a time-axis layout and are
+ * deliberately not part of the request shape.
  *
  * Pass `calendar` to disambiguate when the entity declares multiple
  * calendar layouts; omitted when there's only one (the common case
- * today). The cache key splits per `(from, to, calendar)` so paging the
- * window forward keeps prior tiles cached for back-navigation.
+ * today). The cache key splits per
+ * `(from, to, calendar, filters, search)` so paging the window
+ * forward keeps prior tiles cached for back-navigation and toggling
+ * a filter doesn't invalidate other windows.
  *
- * The handler returns an empty array — not 404 — when the entity has no
- * calendar layout, so the renderer can mount the endpoint generically
- * from the manifest without special-casing missing layouts.
+ * The handler returns an empty array — not 404 — when the entity has
+ * no calendar layout, so the renderer can mount the endpoint
+ * generically from the manifest without special-casing missing
+ * layouts.
  */
 export function useEntityCalendar(
   entityName: string,
   from: string,
   to: string,
-  options: { readonly calendar?: string | null; readonly enabled?: boolean } = {}
+  options: UseEntityCalendarOptions = {}
 ): UseQueryResult<readonly CalendarItemResponse[]> {
   const api = useGranitClient();
   const calendar = options.calendar ?? null;
+  const filters = options.filters;
+  const search = options.search;
 
   return useQuery({
-    queryKey: entityCalendarQueryKey(entityName, from, to, calendar),
+    queryKey: entityCalendarQueryKey(entityName, from, to, calendar, filters, search),
     queryFn: async ({ signal }) => {
-      const params: Record<string, string> = { from, to };
-      if (calendar) {
-        params.calendar = calendar;
+      const params = new URLSearchParams();
+      params.set('from', from);
+      params.set('to', to);
+      if (calendar) params.set('calendar', calendar);
+      if (search) params.set('search', search);
+      if (filters) {
+        for (const filter of filters) {
+          params.append(`filter[${filter.field}.${filter.operator}]`, filter.value);
+        }
       }
       const { data } = await api.get<readonly CalendarItemResponse[]>(
         `/entities/${encodeURIComponent(entityName)}/calendar`,
