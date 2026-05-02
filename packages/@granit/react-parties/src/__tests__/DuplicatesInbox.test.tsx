@@ -69,7 +69,11 @@ afterEach(() => vi.restoreAllMocks());
 
 function renderInbox(
   client: AxiosInstance,
-  onMerge?: (row: PartyDuplicateCandidateResponse) => void
+  options?: {
+    onMerge?: (row: PartyDuplicateCandidateResponse) => void;
+    pageSize?: number;
+    renderPartyLink?: (partyId: string) => ReactNode;
+  }
 ) {
   const queryClient = createTestQueryClient();
   const config: PartiesConfig = { client };
@@ -82,7 +86,14 @@ function renderInbox(
       </I18nextProvider>
     );
   }
-  return render(<DuplicatesInbox onMerge={onMerge} />, { wrapper: Wrapper });
+  return render(
+    <DuplicatesInbox
+      onMerge={options?.onMerge}
+      pageSize={options?.pageSize}
+      renderPartyLink={options?.renderPartyLink}
+    />,
+    { wrapper: Wrapper }
+  );
 }
 
 describe('DuplicatesInbox', () => {
@@ -147,7 +158,7 @@ describe('DuplicatesInbox', () => {
     );
 
     const onMerge = vi.fn();
-    const { container } = renderInbox(client, onMerge);
+    const { container } = renderInbox(client, { onMerge });
 
     await waitFor(() =>
       expect(container.querySelectorAll('[data-slot="duplicate-row"]').length).toBe(rows.length)
@@ -159,6 +170,61 @@ describe('DuplicatesInbox', () => {
     fireEvent.click(mergeButtons[1]!);
 
     expect(onMerge).toHaveBeenCalledWith(rows[1]);
+  });
+
+  it('renders the error state when the QueryEngine call fails', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockRejectedValue(new Error('boom'));
+
+    renderInbox(client);
+
+    const alert = await screen.findByRole('alert');
+    expect(alert.textContent).toBe(partiesTranslationsEn.Duplicates.ErrorState);
+  });
+
+  it('renders pagination buttons when totalCount exceeds the page size', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [rows[0]!], totalCount: 5 }));
+
+    renderInbox(client, { pageSize: 1 });
+
+    const next = await waitFor(() =>
+      screen.getByRole('button', { name: partiesTranslationsEn.Duplicates.Pagination.Next })
+    );
+    const previous = screen.getByRole('button', {
+      name: partiesTranslationsEn.Duplicates.Pagination.Previous,
+    }) as HTMLButtonElement;
+    expect(previous.disabled).toBe(true);
+
+    fireEvent.click(next);
+
+    await waitFor(() => expect((previous as HTMLButtonElement).disabled).toBe(false));
+  });
+
+  it('uses renderPartyLink when provided and falls back to "—" for missing dates', async () => {
+    const client = createMockClient();
+    const rowWithoutUpdate: PartyDuplicateCandidateResponse = {
+      ...rows[1]!,
+      updatedAt: null,
+    };
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse({ items: [rowWithoutUpdate], totalCount: 1 })
+    );
+
+    const renderPartyLink = vi.fn((id: string) => <span data-slot="ext-link">{id}</span>);
+    const { container } = renderInbox(client, { renderPartyLink });
+
+    await waitFor(() =>
+      expect(container.querySelectorAll('[data-slot="duplicate-row"]').length).toBe(1)
+    );
+
+    expect(renderPartyLink).toHaveBeenCalledWith(rowWithoutUpdate.partyId);
+    expect(renderPartyLink).toHaveBeenCalledWith(rowWithoutUpdate.candidateId);
+    expect(container.querySelectorAll('[data-slot="ext-link"]').length).toBe(2);
+
+    // Refreshed column shows "—" because updatedAt is null
+    const row = container.querySelector('[data-slot="duplicate-row"]') as HTMLElement;
+    expect(row.textContent).toContain('—');
   });
 
   it('does not render Merge buttons when onMerge is omitted', async () => {

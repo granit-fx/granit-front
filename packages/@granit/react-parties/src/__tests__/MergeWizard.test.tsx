@@ -239,6 +239,81 @@ describe('MergeWizard', () => {
     expect(alert.textContent).toBe(partiesTranslationsEn.MergeWizard.Errors.AlreadyMerged);
   });
 
+  it('renders the preview-error state when the preview request fails', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockImplementation((url: string) => {
+      if (url.endsWith(`/parties/${survivorId}`)) return Promise.resolve(axiosResponse(survivor));
+      if (url.endsWith(`/parties/${loserId}`)) return Promise.resolve(axiosResponse(loser));
+      return Promise.reject(new Error('preview boom'));
+    });
+    renderWizard(client);
+
+    const alert = await screen.findByRole('alert');
+    expect(alert.textContent).toBe(partiesTranslationsEn.MergeWizard.Errors.PreviewFailed);
+
+    const submitButton = screen.getByRole('button', {
+      name: partiesTranslationsEn.MergeWizard.Merge,
+    }) as HTMLButtonElement;
+    expect(submitButton.disabled).toBe(true);
+  });
+
+  it('renders the empty-conflicts message when the preview returns no conflicts', async () => {
+    const client = createMockClient();
+    stubReads(client, {
+      previewResponse: { ...previewResponse, conflicts: [], rewriteCounts: {} },
+    });
+    renderWizard(client);
+
+    await waitFor(() =>
+      expect(screen.queryByText(partiesTranslationsEn.MergeWizard.ConflictsEmpty)).not.toBeNull()
+    );
+    expect(screen.queryByText(partiesTranslationsEn.MergeWizard.RewritesEmpty)).not.toBeNull();
+  });
+
+  it('falls back to the unknown-error label on a non-axios mutation failure', async () => {
+    const client = createMockClient();
+    stubReads(client);
+    vi.mocked(client.post).mockRejectedValue(new Error('network down'));
+    renderWizard(client);
+
+    const submitButton = screen.getByRole('button', {
+      name: partiesTranslationsEn.MergeWizard.Merge,
+    }) as HTMLButtonElement;
+    await waitFor(() => expect(submitButton.disabled).toBe(false));
+
+    fireEvent.click(submitButton);
+
+    const alert = await screen.findByRole('alert');
+    expect(alert.textContent).toBe(partiesTranslationsEn.MergeWizard.Errors.Unknown);
+  });
+
+  it('surfaces the response detail directly when the status is neither 409 nor 422', async () => {
+    const client = createMockClient();
+    stubReads(client);
+    const error: Partial<AxiosError> = {
+      isAxiosError: true,
+      response: {
+        status: 500,
+        data: { title: 'Internal Server Error' },
+        statusText: '',
+        headers: {},
+        config: {} as never,
+      },
+    };
+    vi.mocked(client.post).mockRejectedValue(error);
+    renderWizard(client);
+
+    const submitButton = screen.getByRole('button', {
+      name: partiesTranslationsEn.MergeWizard.Merge,
+    }) as HTMLButtonElement;
+    await waitFor(() => expect(submitButton.disabled).toBe(false));
+
+    fireEvent.click(submitButton);
+
+    const alert = await screen.findByRole('alert');
+    expect(alert.textContent).toBe('Internal Server Error');
+  });
+
   it('calls onCancel when the Cancel button is clicked', async () => {
     const client = createMockClient();
     stubReads(client);

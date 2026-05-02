@@ -54,7 +54,13 @@ beforeAll(async () => {
 
 afterEach(() => vi.restoreAllMocks());
 
-function renderBadge(client: AxiosInstance, props?: { href?: string }) {
+function renderBadge(
+  client: AxiosInstance,
+  props?: {
+    href?: string;
+    renderLink?: (linkProps: { href: string; children: ReactNode }) => ReactNode;
+  }
+) {
   const queryClient = createTestQueryClient();
   const config: PartiesConfig = { client };
   function Wrapper({ children }: { children: ReactNode }) {
@@ -66,9 +72,10 @@ function renderBadge(client: AxiosInstance, props?: { href?: string }) {
       </I18nextProvider>
     );
   }
-  return render(<PartyDuplicatesBadge partyId={partyA} href={props?.href} />, {
-    wrapper: Wrapper,
-  });
+  return render(
+    <PartyDuplicatesBadge partyId={partyA} href={props?.href} renderLink={props?.renderLink} />,
+    { wrapper: Wrapper }
+  );
 }
 
 describe('PartyDuplicatesBadge', () => {
@@ -130,6 +137,32 @@ describe('PartyDuplicatesBadge', () => {
     const { container } = renderBadge(client);
     await waitFor(() => expect(client.get).toHaveBeenCalled());
     expect(container.querySelector('[data-slot="party-duplicates-badge"]')).toBeNull();
+  });
+
+  it('uses renderLink when provided alongside href', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse([candidateBuilder({ tier: 'Deterministic' })])
+    );
+
+    const renderLink = vi.fn(({ href, children }: { href: string; children: ReactNode }) => (
+      <button data-slot="custom-link" data-href={href} type="button">
+        {children}
+      </button>
+    ));
+
+    const { container } = renderBadge(client, { href: '/inbox', renderLink });
+
+    const wrapper = await waitFor(() => {
+      const el = container.querySelector('[data-slot="custom-link"]');
+      expect(el).not.toBeNull();
+      return el as HTMLElement;
+    });
+
+    expect(wrapper.getAttribute('data-href')).toBe('/inbox');
+    expect(renderLink).toHaveBeenCalled();
+    // The inner pill is still rendered as a span inside the consumer's wrapper.
+    expect(wrapper.querySelector('[data-slot="party-duplicates-badge"]')?.tagName).toBe('SPAN');
   });
 
   it('renders as an anchor when href is supplied', async () => {
