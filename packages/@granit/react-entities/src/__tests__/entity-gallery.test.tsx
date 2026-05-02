@@ -169,13 +169,16 @@ function manifest(
                     subtitlePropertyName: 'kind',
                     groupByPropertyName: null,
                     cardSize,
+                    actions: [],
                   },
                 },
               ]
             : [],
+          headerActions: [],
         }
       : null,
     relations: null,
+    actions: null,
   };
 }
 
@@ -366,6 +369,7 @@ describe('EntityGallery', () => {
             subtitlePropertyName: null,
             groupByPropertyName: null,
             cardSize: 'Small',
+            actions: [],
           }}
         />
       </Wrapper>
@@ -568,5 +572,89 @@ describe('EntityGallery', () => {
     expect(
       container.querySelector('[data-granit-gallery-card]')?.getAttribute('data-image-blob-id')
     ).toBe('parties/avatars/p1.jpg');
+  });
+
+  it('paints layout.actions as icon-buttons inside each card and dispatches via the custom navigate handler', async () => {
+    server.use(pageHandler([makeParty(1)]));
+    const m = manifest();
+    (m.collections!.listLayouts[0].gallery as { actions: unknown }).actions = [
+      {
+        name: 'edit',
+        displayKey: 'Parties.Action.Edit',
+        icon: 'pencil',
+        contributorAssemblyName: null,
+      },
+    ];
+    (m as { actions: unknown }).actions = [
+      {
+        name: 'edit',
+        kind: 'Navigate',
+        displayKey: 'Parties.Action.Edit',
+        icon: 'pencil',
+        order: 0,
+        urlTemplate: '/parties/{id}/edit',
+        httpMethod: null,
+        confirmationKey: null,
+        workflowTransitionName: null,
+        contributorAssemblyName: null,
+      },
+    ];
+    const navigate = vi.fn();
+    const { wrapper: Wrapper } = makeWrapper();
+    const { container } = render(
+      <Wrapper>
+        <EntityGallery manifest={m} actionHandlers={{ navigate }} />
+      </Wrapper>
+    );
+    await waitFor(() =>
+      expect(container.querySelector('[data-granit-entity-action]')).not.toBeNull()
+    );
+    const button = container.querySelector('[data-granit-entity-action]') as HTMLElement;
+    expect(button.getAttribute('data-action-kind')).toBe('Navigate');
+    expect(button.getAttribute('data-action-icon')).toBe('pencil');
+    fireEvent.click(button);
+    expect(navigate).toHaveBeenCalledOnce();
+    expect(navigate).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'edit', kind: 'Navigate' }),
+      makeParty(1).id,
+      expect.objectContaining({ id: makeParty(1).id }),
+      expect.anything()
+    );
+  });
+
+  it('does not bubble action button clicks to the card onCardClick handler', async () => {
+    server.use(pageHandler([makeParty(1)]));
+    const m = manifest();
+    (m.collections!.listLayouts[0].gallery as { actions: unknown }).actions = [
+      { name: 'edit', displayKey: null, icon: null, contributorAssemblyName: null },
+    ];
+    (m as { actions: unknown }).actions = [
+      {
+        name: 'edit',
+        kind: 'Navigate',
+        displayKey: null,
+        icon: null,
+        order: 0,
+        urlTemplate: '/parties/{id}/edit',
+        httpMethod: null,
+        confirmationKey: null,
+        workflowTransitionName: null,
+        contributorAssemblyName: null,
+      },
+    ];
+    const navigate = vi.fn();
+    const onCardClick = vi.fn();
+    const { wrapper: Wrapper } = makeWrapper();
+    const { container } = render(
+      <Wrapper>
+        <EntityGallery manifest={m} onCardClick={onCardClick} actionHandlers={{ navigate }} />
+      </Wrapper>
+    );
+    await waitFor(() =>
+      expect(container.querySelector('[data-granit-entity-action]')).not.toBeNull()
+    );
+    fireEvent.click(container.querySelector('[data-granit-entity-action]') as HTMLElement);
+    expect(navigate).toHaveBeenCalledOnce();
+    expect(onCardClick).not.toHaveBeenCalled();
   });
 });

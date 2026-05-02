@@ -53,6 +53,30 @@ export interface EntityCalendarLayoutManifest {
    * for the theme default.
    */
   readonly colorByPropertyName: string | null;
+  /**
+   * Compact references to the entity's actions that opted into calendar
+   * tiles via `OnCalendarTile()`. Already permission-filtered server-side.
+   */
+  readonly actions: readonly EntityCalendarTileActionManifest[];
+}
+
+/**
+ * Compact reference to one action pinned on a calendar tile. Carries
+ * only the fields the renderer needs to draw the icon-button — the full
+ * descriptor stays addressable via the entity's `actions` facet by
+ * `name`.
+ *
+ * Mirrors `Granit.Entities.Endpoints.Dtos.EntityCalendarTileActionManifest`.
+ */
+export interface EntityCalendarTileActionManifest {
+  /** Stable action name — matches the entry in `actions`. */
+  readonly name: string;
+  /** i18n key for the user-facing label (rendered as tooltip). */
+  readonly displayKey: string | null;
+  /** Icon name from the catalog. */
+  readonly icon: string | null;
+  /** Contributing assembly. `null` for intra-module declarations. */
+  readonly contributorAssemblyName: string | null;
 }
 
 /**
@@ -85,6 +109,29 @@ export interface EntityGalleryLayoutManifest {
   readonly groupByPropertyName: string | null;
   /** Card size — drives CSS-grid track sizing in the renderer. */
   readonly cardSize: GalleryCardSize;
+  /**
+   * Compact references to the entity's actions that opted into gallery
+   * cards via `OnGalleryCard()`. Already permission-filtered server-side.
+   */
+  readonly actions: readonly EntityGalleryCardActionManifest[];
+}
+
+/**
+ * Compact reference to one action pinned on a gallery card. The full
+ * descriptor stays addressable via the entity's `actions` facet by
+ * `name`.
+ *
+ * Mirrors `Granit.Entities.Endpoints.Dtos.EntityGalleryCardActionManifest`.
+ */
+export interface EntityGalleryCardActionManifest {
+  /** Stable action name — matches the entry in `actions`. */
+  readonly name: string;
+  /** i18n key for the user-facing label (rendered as tooltip). */
+  readonly displayKey: string | null;
+  /** Icon name from the catalog. */
+  readonly icon: string | null;
+  /** Contributing assembly. `null` for intra-module declarations. */
+  readonly contributorAssemblyName: string | null;
 }
 
 /**

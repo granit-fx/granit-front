@@ -3,7 +3,17 @@ import { useQueryConfig, useQueryEndpointState } from '@granit/react-query-engin
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, type KeyboardEvent, type ReactNode } from 'react';
 
-import type { EntityGalleryLayoutManifest, EntityManifestResponse } from '@granit/entities';
+import { EntityActionButton, resolveAction } from '../actions/entity-action-button.js';
+import {
+  useEntityActionDispatcher,
+  type EntityActionHandlers,
+} from '../actions/use-entity-action-dispatcher.js';
+
+import type {
+  EntityActionManifest,
+  EntityGalleryLayoutManifest,
+  EntityManifestResponse,
+} from '@granit/entities';
 import type { PagedResult, QueryRequest } from '@granit/query-engine';
 
 export interface EntityGalleryProps {
@@ -46,6 +56,13 @@ export interface EntityGalleryProps {
   ) => ReactNode;
   /** Optional card activation handler — receives the full row object. */
   readonly onCardClick?: (row: Readonly<Record<string, unknown>>) => void;
+  /**
+   * Per-kind handler overrides forwarded to
+   * `useEntityActionDispatcher`. Apps with SPA routers / workflow
+   * runtimes wire `navigate` / `workflowTransition` here so card
+   * action buttons execute through the host's stack.
+   */
+  readonly actionHandlers?: EntityActionHandlers;
   /** Optional class for the root element. */
   readonly className?: string;
 }
@@ -116,6 +133,7 @@ export function EntityGallery({
   pageSize = DEFAULT_PAGE_SIZE,
   renderImage,
   onCardClick,
+  actionHandlers,
   className,
 }: EntityGalleryProps): ReactNode {
   const resolvedLayout = useMemo(() => layout ?? pickGalleryLayout(manifest), [layout, manifest]);
@@ -140,6 +158,8 @@ export function EntityGallery({
     >
       <EntityGalleryBody
         layout={resolvedLayout}
+        actions={resolveCardActions(resolvedLayout.actions, manifest.actions)}
+        actionHandlers={actionHandlers}
         titleFallback={manifest.identity?.displayProperty}
         pageSize={pageSize}
         renderImage={renderImage}
@@ -149,8 +169,23 @@ export function EntityGallery({
   );
 }
 
+function resolveCardActions(
+  refs: readonly { readonly name: string }[],
+  actions: readonly EntityActionManifest[] | null
+): readonly EntityActionManifest[] {
+  if (refs.length === 0 || !actions) return [];
+  const resolved: EntityActionManifest[] = [];
+  for (const ref of refs) {
+    const action = resolveAction(ref, actions);
+    if (action) resolved.push(action);
+  }
+  return resolved;
+}
+
 interface EntityGalleryBodyProps {
   readonly layout: EntityGalleryLayoutManifest;
+  readonly actions: readonly EntityActionManifest[];
+  readonly actionHandlers: EntityActionHandlers | undefined;
   readonly titleFallback: string | null | undefined;
   readonly pageSize: number;
   readonly renderImage:
@@ -161,11 +196,14 @@ interface EntityGalleryBodyProps {
 
 function EntityGalleryBody({
   layout,
+  actions,
+  actionHandlers,
   titleFallback,
   pageSize,
   renderImage,
   onCardClick,
 }: EntityGalleryBodyProps): ReactNode {
+  const dispatch = useEntityActionDispatcher(actionHandlers);
   const config = useQueryConfig();
   const { params } = useQueryEndpointState();
   const sentinelRef = useRef<HTMLLIElement | null>(null);
@@ -245,6 +283,8 @@ function EntityGalleryBody({
           subtitleProperty={layout.subtitlePropertyName}
           renderImage={renderImage}
           onCardClick={onCardClick}
+          actions={actions}
+          dispatch={dispatch}
         />
       ))}
       <li
@@ -267,6 +307,8 @@ interface GalleryCardProps {
     | ((blobId: string | null, row: Readonly<Record<string, unknown>>) => ReactNode)
     | undefined;
   readonly onCardClick: ((row: Readonly<Record<string, unknown>>) => void) | undefined;
+  readonly actions: readonly EntityActionManifest[];
+  readonly dispatch: ReturnType<typeof useEntityActionDispatcher>;
 }
 
 function GalleryCard({
@@ -276,6 +318,8 @@ function GalleryCard({
   subtitleProperty,
   renderImage,
   onCardClick,
+  actions,
+  dispatch,
 }: GalleryCardProps): ReactNode {
   const blobId = readScalar(row[imageProperty]);
   const title = titleProperty ? readScalar(row[titleProperty]) : null;
@@ -306,6 +350,19 @@ function GalleryCard({
       {renderImage ? renderImage(blobId, row) : null}
       {title === null ? null : <span data-granit-gallery-card-title="">{title}</span>}
       {subtitle === null ? null : <span data-granit-gallery-card-subtitle="">{subtitle}</span>}
+      {actions.length > 0 ? (
+        <div data-granit-gallery-card-actions="">
+          {actions.map((action) => (
+            <EntityActionButton
+              key={action.name}
+              action={action}
+              rowId={rowId}
+              row={row}
+              dispatch={dispatch}
+            />
+          ))}
+        </div>
+      ) : null}
     </li>
   );
 }

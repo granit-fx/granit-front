@@ -21,6 +21,7 @@ const LAYOUT: EntityCalendarLayoutManifest = {
   endPropertyName: 'EndDate',
   titlePropertyName: 'Number',
   colorByPropertyName: 'Status',
+  actions: [],
 };
 
 const ITEMS: readonly CalendarItemResponse[] = [
@@ -201,6 +202,7 @@ describe('EntityCalendar', () => {
       endPropertyName: null,
       titlePropertyName: null,
       colorByPropertyName: null,
+      actions: [],
     };
     const { wrapper: Wrapper } = makeWrapper();
     const { container } = render(
@@ -215,5 +217,87 @@ describe('EntityCalendar', () => {
     expect(root.getAttribute('data-start-property')).toBe('StartDate');
     expect(root.hasAttribute('data-end-property')).toBe(false);
     expect(root.hasAttribute('data-color-property')).toBe(false);
+  });
+
+  it('paints layout.actions on each calendar event tile and dispatches via the custom navigate handler', async () => {
+    const layoutWithAction: EntityCalendarLayoutManifest = {
+      ...LAYOUT,
+      actions: [
+        {
+          name: 'join',
+          displayKey: 'Calendar.Action.Join',
+          icon: 'video',
+          contributorAssemblyName: null,
+        },
+      ],
+    };
+    const manifestWithActions = {
+      schemaVersion: 1,
+      identity: null,
+      permissions: null,
+      forms: null,
+      details: null,
+      collections: null,
+      relations: null,
+      actions: [
+        {
+          name: 'join',
+          kind: 'Navigate' as const,
+          displayKey: 'Calendar.Action.Join',
+          icon: 'video',
+          order: 0,
+          urlTemplate: '/meetings/{id}/join',
+          httpMethod: null,
+          confirmationKey: null,
+          workflowTransitionName: null,
+          contributorAssemblyName: null,
+        },
+      ],
+    };
+    const navigate = vi.fn();
+    const { wrapper: Wrapper } = makeWrapper();
+    const { container } = render(
+      <Wrapper>
+        <EntityCalendar
+          entityName={ENTITY}
+          layout={layoutWithAction}
+          range={{ from: FROM, to: TO }}
+          manifest={manifestWithActions}
+          actionHandlers={{ navigate }}
+        />
+      </Wrapper>
+    );
+    await waitFor(() =>
+      expect(container.querySelectorAll('[data-granit-entity-action]').length).toBe(ITEMS.length)
+    );
+    fireEvent.click(container.querySelector('[data-granit-entity-action]') as HTMLElement);
+    expect(navigate).toHaveBeenCalledOnce();
+    expect(navigate).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'join', kind: 'Navigate' }),
+      expect.any(String),
+      expect.objectContaining({ start: expect.any(String) }),
+      expect.anything()
+    );
+  });
+
+  it('omits the action bar when no manifest is supplied (graceful degradation)', async () => {
+    const layoutWithAction: EntityCalendarLayoutManifest = {
+      ...LAYOUT,
+      actions: [{ name: 'join', displayKey: null, icon: 'video', contributorAssemblyName: null }],
+    };
+    const { wrapper: Wrapper } = makeWrapper();
+    const { container } = render(
+      <Wrapper>
+        <EntityCalendar
+          entityName={ENTITY}
+          layout={layoutWithAction}
+          range={{ from: FROM, to: TO }}
+        />
+      </Wrapper>
+    );
+    await waitFor(() =>
+      expect(container.querySelector('[data-granit-calendar-event]')).not.toBeNull()
+    );
+    expect(container.querySelector('[data-granit-entity-action]')).toBeNull();
   });
 });

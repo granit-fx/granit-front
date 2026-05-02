@@ -6,6 +6,17 @@
 // @granit/entities. Implementation tracked under
 // granit-fx/granit-front#298 (hooks) and #299 (renderers).
 
+export { EntityActionButton, resolveAction } from './actions/entity-action-button.js';
+export type { EntityActionButtonProps } from './actions/entity-action-button.js';
+export {
+  resolveActionUrl,
+  useEntityActionDispatcher,
+} from './actions/use-entity-action-dispatcher.js';
+export type {
+  EntityActionDispatch,
+  EntityActionHandler,
+  EntityActionHandlers,
+} from './actions/use-entity-action-dispatcher.js';
 export { EntityCalendar } from './components/entity-calendar.js';
 export type { EntityCalendarProps } from './components/entity-calendar.js';
 export { EntityDetail } from './components/entity-detail.js';
@@ -18,6 +29,8 @@ export { EntityKanban } from './components/entity-kanban.js';
 export type { EntityKanbanProps } from './components/entity-kanban.js';
 export { EntityList } from './components/entity-list.js';
 export type { EntityListProps } from './components/entity-list.js';
+export { EntityListPageHeader } from './components/entity-list-page-header.js';
+export type { EntityListPageHeaderProps } from './components/entity-list-page-header.js';
 export {
   defaultDetailFormat,
   STANDARD_DETAIL_COMPONENTS,

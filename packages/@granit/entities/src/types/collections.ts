@@ -40,4 +40,33 @@ export interface EntityCollectionsSection {
    * entity ships with the default tabular layout only.
    */
   readonly listLayouts: readonly EntityListLayoutManifest[];
+  /**
+   * Compact references to actions pinned on the list-page header
+   * (entity-scope, surfaced above the layout tabs — Odoo-style action
+   * bar). Already permission-filtered server-side.
+   *
+   * `urlTemplate` resolved through the entity's `actions` facet **must
+   * not** carry an `{id}` placeholder — the .NET builder rejects this
+   * misconfiguration at host-startup since no row is selected when the
+   * header bar fires.
+   */
+  readonly headerActions: readonly EntityHeaderActionManifest[];
+}
+
+/**
+ * Compact reference to one action pinned on the list-page header
+ * (entity-scope). The full descriptor stays addressable via the
+ * entity's `actions` facet by `name`.
+ *
+ * Mirrors `Granit.Entities.Endpoints.Dtos.EntityHeaderActionManifest`.
+ */
+export interface EntityHeaderActionManifest {
+  /** Stable action name — matches the entry in `actions`. */
+  readonly name: string;
+  /** i18n key for the user-facing label (button caption). */
+  readonly displayKey: string | null;
+  /** Icon name from the catalog. */
+  readonly icon: string | null;
+  /** Contributing assembly. `null` for intra-module declarations. */
+  readonly contributorAssemblyName: string | null;
 }

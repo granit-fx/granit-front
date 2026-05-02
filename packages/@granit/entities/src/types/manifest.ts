@@ -1,3 +1,4 @@
+import type { EntityActionManifest } from './actions.js';
 import type { EntityCollectionsSection } from './collections.js';
 import type { EntityDetailManifest } from './detail.js';
 import type { EntityFormManifest } from './form.js';
@@ -24,7 +25,8 @@ export type EntityFacet =
   | 'dashboards'
   | 'exports'
   | 'views'
-  | 'relations';
+  | 'relations'
+  | 'actions';
 
 /** All facets — handy default value for callers that want everything explicit. */
 export const ALL_ENTITY_FACETS: readonly EntityFacet[] = Object.freeze([
@@ -37,6 +39,7 @@ export const ALL_ENTITY_FACETS: readonly EntityFacet[] = Object.freeze([
   'exports',
   'views',
   'relations',
+  'actions',
 ]);
 
 /**
@@ -57,6 +60,7 @@ export interface EntityManifestResponse {
   readonly details: readonly EntityDetailManifest[] | null;
   readonly collections: EntityCollectionsSection | null;
   readonly relations: readonly EntityRelationManifest[] | null;
+  readonly actions: readonly EntityActionManifest[] | null;
 }
 
 /**

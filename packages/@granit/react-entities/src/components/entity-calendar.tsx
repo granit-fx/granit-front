@@ -1,9 +1,19 @@
 import { useQueryEndpointState } from '@granit/react-query-engine';
 import { useMemo, type ReactNode } from 'react';
 
+import { EntityActionButton, resolveAction } from '../actions/entity-action-button.js';
+import {
+  useEntityActionDispatcher,
+  type EntityActionHandlers,
+} from '../actions/use-entity-action-dispatcher.js';
 import { useEntityCalendar } from '../api/use-entity-calendar.js';
 
-import type { CalendarItemResponse, EntityCalendarLayoutManifest } from '@granit/entities';
+import type {
+  CalendarItemResponse,
+  EntityActionManifest,
+  EntityCalendarLayoutManifest,
+  EntityManifestResponse,
+} from '@granit/entities';
 
 export interface EntityCalendarProps {
   /** Wire identifier of the entity (e.g. `"Granit.Invoicing.Invoice"`). */
@@ -29,6 +39,21 @@ export interface EntityCalendarProps {
   readonly calendar?: string;
   /** Optional event activation handler — receives the full item. */
   readonly onItemClick?: (item: CalendarItemResponse) => void;
+  /**
+   * Optional manifest — when provided, the calendar resolves the
+   * compact `layout.actions` references to the full descriptors in
+   * `manifest.actions` and paints icon-buttons on each tile. Omit it
+   * (or omit the `actions` facet on the manifest) to render the
+   * tiles without action affordances.
+   */
+  readonly manifest?: EntityManifestResponse;
+  /**
+   * Per-kind handler overrides forwarded to
+   * `useEntityActionDispatcher`. Apps with SPA routers / workflow
+   * runtimes wire `navigate` / `workflowTransition` here so tile
+   * action buttons execute through the host's stack.
+   */
+  readonly actionHandlers?: EntityActionHandlers;
   /** Optional class for the root element. */
   readonly className?: string;
 }
@@ -82,6 +107,8 @@ export function EntityCalendar({
   range,
   calendar,
   onItemClick,
+  manifest,
+  actionHandlers,
   className,
 }: EntityCalendarProps): ReactNode {
   // Per the Phase 1.5 renderer matrix the calendar consumes only
@@ -95,6 +122,16 @@ export function EntityCalendar({
     search: params.search,
   });
   const days = useMemo(() => groupItemsByStartDay(query.data ?? []), [query.data]);
+  const dispatch = useEntityActionDispatcher(actionHandlers);
+  const tileActions = useMemo<readonly EntityActionManifest[]>(() => {
+    if (!manifest?.actions || layout.actions.length === 0) return [];
+    const resolved: EntityActionManifest[] = [];
+    for (const ref of layout.actions) {
+      const action = resolveAction(ref, manifest.actions);
+      if (action) resolved.push(action);
+    }
+    return resolved;
+  }, [layout.actions, manifest?.actions]);
 
   if (query.isError) {
     return (
@@ -168,6 +205,19 @@ export function EntityCalendar({
                     ) : (
                       event.title
                     )}
+                    {tileActions.length > 0 ? (
+                      <div data-granit-calendar-event-actions="">
+                        {tileActions.map((action) => (
+                          <EntityActionButton
+                            key={action.name}
+                            action={action}
+                            rowId={event.id}
+                            row={event as unknown as Readonly<Record<string, unknown>>}
+                            dispatch={dispatch}
+                          />
+                        ))}
+                      </div>
+                    ) : null}
                   </li>
                 ))}
               </ol>

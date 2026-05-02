@@ -1,4 +1,9 @@
-export type { EntityCollectionReference, EntityCollectionsSection } from './collections.js';
+export type { EntityActionKind, EntityActionManifest } from './actions.js';
+export type {
+  EntityCollectionReference,
+  EntityCollectionsSection,
+  EntityHeaderActionManifest,
+} from './collections.js';
 export type {
   EntityDetailManifest,
   EntityDetailSectionManifest,
@@ -21,6 +26,8 @@ export type {
   CalendarItemResponse,
   CalendarRangeRequest,
   EntityCalendarLayoutManifest,
+  EntityCalendarTileActionManifest,
+  EntityGalleryCardActionManifest,
   EntityGalleryLayoutManifest,
   EntityKanbanCardActionManifest,
   EntityKanbanCardManifest,

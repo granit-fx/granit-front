@@ -38,6 +38,7 @@ const FULL: EntityManifestResponse = {
   details: [],
   collections: null,
   relations: [],
+  actions: null,
 };
 
 let lastRequest: { url: string; ifNoneMatch: string | null } | null = null;

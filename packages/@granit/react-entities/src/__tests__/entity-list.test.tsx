@@ -89,9 +89,11 @@ function manifest(hasQuery: boolean): EntityManifestResponse {
           dashboards: [],
           defaultViewId: null,
           listLayouts: [],
+          headerActions: [],
         }
       : null,
     relations: null,
+    actions: null,
   };
 }
 
