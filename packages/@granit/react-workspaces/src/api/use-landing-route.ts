@@ -56,7 +56,7 @@ export function useSetLandingPin(): UseMutationResult<void, Error, SetPinnedLand
       await api.put(LANDING_ROUTE_PINNED_PATH, request);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: landingRouteQueryKey() });
+      queryClient.invalidateQueries({ queryKey: landingRouteQueryKey() }).catch(() => {});
     },
   });
 }

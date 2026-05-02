@@ -11,7 +11,8 @@
  * authoritative ordering / spelling.
  */
 import type { MapTileLayerKind } from '@granit/analytics';
-export type { MapTileLayerKind };
+
+export type { MapTileLayerKind } from '@granit/analytics';
 
 /**
  * One tile layer offered by a {@link MapTileProvider}. Mirrors the inputs

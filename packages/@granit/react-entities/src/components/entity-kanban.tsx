@@ -1,7 +1,7 @@
 import { getPage } from '@granit/query-engine';
 import { useQueryConfig, useQueryEndpointState, useQueryMeta } from '@granit/react-query-engine';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { useMemo, type ReactNode } from 'react';
+import { useMemo, type KeyboardEvent, type ReactNode } from 'react';
 
 import type { EntityManifestResponse } from '@granit/entities';
 import type { QueryRequest } from '@granit/query-engine';
@@ -138,14 +138,13 @@ function EntityKanbanBody({
           </header>
           <ul data-granit-kanban-cards="">
             {items.map((row, idx) => (
-              <li
+              <KanbanCard
                 key={readRowKey(row, idx)}
-                data-granit-kanban-card=""
-                onClick={onCardClick ? () => onCardClick(row) : undefined}
-                style={onCardClick ? { cursor: 'pointer' } : undefined}
-              >
-                {formatTitle(row[titleProperty]) ?? readRowKey(row, idx)}
-              </li>
+                row={row}
+                titleProperty={titleProperty}
+                fallbackKey={readRowKey(row, idx)}
+                onCardClick={onCardClick}
+              />
             ))}
           </ul>
         </section>
@@ -173,8 +172,9 @@ function bucketByField(
   const buckets = new Map<string, { label: string; items: Readonly<Record<string, unknown>>[] }>();
   for (const item of items) {
     const raw = item[groupBy];
-    const key = raw === null || raw === undefined ? '∅' : String(raw);
-    const label = raw === null || raw === undefined ? '—' : String(raw);
+    const stringified = stringifyScalar(raw);
+    const key = stringified ?? '∅';
+    const label = stringified ?? '—';
     let bucket = buckets.get(key);
     if (!bucket) {
       bucket = { label, items: [] };
@@ -192,7 +192,44 @@ function readRowKey(row: Readonly<Record<string, unknown>>, fallbackIndex: numbe
 }
 
 function formatTitle(value: unknown): string | null {
-  if (value === null || value === undefined) return null;
-  if (typeof value === 'object') return null;
-  return String(value);
+  return stringifyScalar(value);
+}
+
+function stringifyScalar(value: unknown): string | null {
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number' || typeof value === 'boolean' || typeof value === 'bigint') {
+    return String(value);
+  }
+  return null;
+}
+
+interface KanbanCardProps {
+  readonly row: Readonly<Record<string, unknown>>;
+  readonly titleProperty: string;
+  readonly fallbackKey: string;
+  readonly onCardClick: ((row: Readonly<Record<string, unknown>>) => void) | undefined;
+}
+
+function KanbanCard({ row, titleProperty, fallbackKey, onCardClick }: KanbanCardProps): ReactNode {
+  const handleClick = onCardClick ? () => onCardClick(row) : undefined;
+  const handleKeyDown = onCardClick
+    ? (event: KeyboardEvent<HTMLLIElement>) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onCardClick(row);
+        }
+      }
+    : undefined;
+  return (
+    <li
+      data-granit-kanban-card=""
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      role={onCardClick ? 'button' : undefined}
+      tabIndex={onCardClick ? 0 : undefined}
+      style={onCardClick ? { cursor: 'pointer' } : undefined}
+    >
+      {formatTitle(row[titleProperty]) ?? fallbackKey}
+    </li>
+  );
 }

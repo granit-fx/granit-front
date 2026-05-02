@@ -26,8 +26,8 @@ const BooleanDetailComponent: EntityDetailComponent = ({ value }) => {
 };
 
 const UrlDetailComponent: EntityDetailComponent = ({ value, propertyName }) => {
-  if (value === null || value === undefined || value === '') return EMPTY_DASH;
-  const href = String(value);
+  const href = readScalarString(value);
+  if (href === null || href === '') return EMPTY_DASH;
   const isExternal = /^https?:\/\//i.test(href);
   return (
     <a
@@ -43,8 +43,8 @@ const UrlDetailComponent: EntityDetailComponent = ({ value, propertyName }) => {
 };
 
 const EmailDetailComponent: EntityDetailComponent = ({ value, propertyName }) => {
-  if (value === null || value === undefined || value === '') return EMPTY_DASH;
-  const address = String(value);
+  const address = readScalarString(value);
+  if (address === null || address === '') return EMPTY_DASH;
   return (
     <a
       data-granit-detail-link=""
@@ -58,14 +58,14 @@ const EmailDetailComponent: EntityDetailComponent = ({ value, propertyName }) =>
 };
 
 const TelDetailComponent: EntityDetailComponent = ({ value, propertyName }) => {
-  if (value === null || value === undefined || value === '') return EMPTY_DASH;
-  const number = String(value);
+  const number = readScalarString(value);
+  if (number === null || number === '') return EMPTY_DASH;
   return (
     <a
       data-granit-detail-link=""
       data-property={propertyName}
       data-scheme="tel"
-      href={`tel:${number.replace(/\s+/g, '')}`}
+      href={`tel:${number.replaceAll(/\s+/g, '')}`}
     >
       {number}
     </a>
@@ -78,7 +78,15 @@ function formatText(value: unknown): string {
   if (value === null || value === undefined) return EMPTY_DASH;
   if (typeof value === 'boolean') return value ? '✓' : '✗';
   if (typeof value === 'object') return JSON.stringify(value);
-  return String(value);
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number' || typeof value === 'bigint') return String(value);
+  return EMPTY_DASH;
+}
+
+function readScalarString(value: unknown): string | null {
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number' || typeof value === 'bigint') return String(value);
+  return null;
 }
 
 /**

@@ -34,7 +34,7 @@ export function entityCalendarQueryKey(
     filters && filters.length > 0
       ? [...filters]
           .map((f) => `${f.field}.${f.operator}=${f.value}`)
-          .sort()
+          .sort((a, b) => a.localeCompare(b))
           .join('&')
       : null;
   return [

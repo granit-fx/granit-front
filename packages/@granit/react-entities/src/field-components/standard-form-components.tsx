@@ -176,7 +176,7 @@ const SelectComponent: EntityFormComponent = ({
       </div>
     );
   }
-  const stringValue = value == null ? '' : String(value);
+  const stringValue = stringifySelectValue(value);
   return (
     <select
       {...commonProps(field, errorMessage)}
@@ -222,10 +222,20 @@ function readOptions(
     ) {
       return null;
     }
-    const labelKey = typeof record['labelKey'] === 'string' ? (record['labelKey'] as string) : null;
+    const rawLabelKey = record['labelKey'];
+    const labelKey = typeof rawLabelKey === 'string' ? rawLabelKey : null;
     options.push({ value, labelKey });
   }
   return options;
+}
+
+function stringifySelectValue(value: unknown): string {
+  if (value === null || value === undefined) return '';
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number' || typeof value === 'boolean' || typeof value === 'bigint') {
+    return String(value);
+  }
+  return '';
 }
 
 /**

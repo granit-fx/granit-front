@@ -1,5 +1,4 @@
 import { DATE_OPERATORS, ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
-import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { noContent, notFound, pagedResponse } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
@@ -10,6 +9,7 @@ import { buildMockLocalization, mockLanguages, mockLocalizationOverrides } from 
 
 import type { LocalizationOverride } from '@granit/localization';
 import type { QueryMetadata } from '@granit/query-engine';
+import type { RequestHandler } from 'msw';
 
 /** Mock /meta payload for the localization overrides resource. */
 export const localizationOverrideQueryMetadata: QueryMetadata = {
@@ -114,14 +114,19 @@ export const localizationOverrideQueryMetadata: QueryMetadata = {
  *
  * @param baseUrl - API base path (default: `/api/v1/localization`)
  */
-export function createLocalizationHandlers(baseUrl = DEFAULT_BASE_PATH) {
+export function createLocalizationHandlers(baseUrl = DEFAULT_BASE_PATH): RequestHandler[] {
   const languages = [...mockLanguages];
   let overrides: LocalizationOverride[] = [...mockLocalizationOverrides];
   const overridesBase = `${baseUrl}/overrides`;
 
   return [
-    // GET /overrides/meta — query metadata
-    createQueryMetaHandler(overridesBase, localizationOverrideQueryMetadata),
+    // GET /overrides/meta — query metadata. Inlined (rather than reusing
+    // `createQueryMetaHandler` from `@granit/react-query-engine/testing`)
+    // to keep this package's emitted DTS independent of that other
+    // package's MSW resolution — pnpm hoists two `msw` copies under
+    // different TS variants and the cross-package `RequestHandler` then
+    // breaks portable type emission (TS2883).
+    http.get(`${overridesBase}/meta`, () => HttpResponse.json(localizationOverrideQueryMetadata)),
 
     // GET /languages — list all languages
     http.get(`${baseUrl}/languages`, () => {

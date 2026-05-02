@@ -475,7 +475,7 @@ describe('EntityGallery', () => {
     expect(lastQuery?.page).toBe('1');
   });
 
-  it('threads layout.groupByPropertyName as groupBy on every page request', async () => {
+  it('falls back to layout.groupByPropertyName when ambient groupBy is unset', async () => {
     server.use(pageHandler([makeParty(1)]));
     const m = manifest();
     (
@@ -490,6 +490,30 @@ describe('EntityGallery', () => {
     await waitFor(() => expect(lastQuery).not.toBeNull());
     expect(lastQuery?.groupBy).toBe('kind');
     expect(container.querySelector('[data-granit-entity-gallery]')).not.toBeNull();
+  });
+
+  it('lets ambient groupBy from the provider override layout.groupByPropertyName', async () => {
+    server.use(pageHandler([makeParty(1)]));
+    const m = manifest();
+    (
+      m.collections!.listLayouts[0].gallery as { groupByPropertyName: string | null }
+    ).groupByPropertyName = 'kind';
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const apiClient = axios.create({ baseURL: 'http://localhost' });
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <QueryClientProvider client={queryClient}>
+        <GranitClientProvider client={apiClient}>
+          <QueryProvider config={{ basePath: BASE_PATH }}>
+            <QueryEndpointStateProvider initialParams={{ groupBy: 'name' }}>
+              {children}
+            </QueryEndpointStateProvider>
+          </QueryProvider>
+        </GranitClientProvider>
+      </QueryClientProvider>
+    );
+    render(<EntityGallery manifest={m} />, { wrapper });
+    await waitFor(() => expect(lastQuery).not.toBeNull());
+    expect(lastQuery?.groupBy).toBe('name');
   });
 
   it('mounts the renderImage slot per card with the row blobId', async () => {

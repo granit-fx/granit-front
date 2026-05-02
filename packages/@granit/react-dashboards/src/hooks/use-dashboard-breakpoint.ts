@@ -43,7 +43,7 @@ export function resolveBreakpoint(viewportWidth: number): DashboardBreakpoint {
  * default) until the client hydrates.
  */
 function readViewportWidth(): number | null {
-  if (typeof globalThis.window === 'undefined') return null;
+  if (globalThis.window === undefined) return null;
   return globalThis.innerWidth;
 }
 
@@ -66,7 +66,7 @@ export function useDashboardBreakpoint(): DashboardBreakpoint {
   });
 
   useEffect(() => {
-    if (typeof globalThis.window === 'undefined') return undefined;
+    if (globalThis.window === undefined) return undefined;
     const handleResize = () => setBreakpoint(resolveBreakpoint(globalThis.innerWidth));
     globalThis.addEventListener('resize', handleResize);
     // Run once after mount to flip from the SSR-safe `'Xs'` to the actual

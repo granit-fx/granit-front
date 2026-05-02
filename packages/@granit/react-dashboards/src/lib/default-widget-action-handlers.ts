@@ -22,7 +22,7 @@ function appendParamsToUrl(url: string, params: Readonly<Record<string, string>>
  * Resolved params are appended to the URL as a query string when set.
  */
 const navigateHandler: WidgetActionHandler = (action, context) => {
-  if (typeof globalThis.window === 'undefined') return;
+  if (globalThis.window === undefined) return;
   const url = appendParamsToUrl(action.target, context.params);
   globalThis.location.assign(url);
 };
@@ -44,7 +44,7 @@ const openDashboardViewHandler: WidgetActionHandler = (action, context) => {
  * with a different routing scheme override.
  */
 const openDashboardHandler: WidgetActionHandler = (action, context) => {
-  if (typeof globalThis.window === 'undefined') return;
+  if (globalThis.window === undefined) return;
   const url = appendParamsToUrl(`/dashboards/${encodeURIComponent(action.target)}`, context.params);
   globalThis.location.assign(url);
 };
@@ -60,7 +60,7 @@ const openDashboardHandler: WidgetActionHandler = (action, context) => {
  * the framework's "no opinionated UI" default.
  */
 const exportDataHandler: WidgetActionHandler = (action, context) => {
-  if (typeof globalThis.window === 'undefined') return;
+  if (globalThis.window === undefined) return;
   globalThis.dispatchEvent(
     new CustomEvent('granit:dashboard:export', {
       detail: { target: action.target, params: context.params, row: context.row ?? null },
@@ -74,7 +74,7 @@ const exportDataHandler: WidgetActionHandler = (action, context) => {
  * framework doesn't ship a default drawer UI.
  */
 const openDetailHandler: WidgetActionHandler = (action, context) => {
-  if (typeof globalThis.window === 'undefined') return;
+  if (globalThis.window === undefined) return;
   globalThis.dispatchEvent(
     new CustomEvent('granit:dashboard:open-detail', {
       detail: { target: action.target, params: context.params, row: context.row ?? null },

@@ -1,7 +1,7 @@
 import { getPage } from '@granit/query-engine';
 import { useQueryConfig, useQueryEndpointState } from '@granit/react-query-engine';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useEffect, useMemo, useRef, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, type KeyboardEvent, type ReactNode } from 'react';
 
 import type { EntityGalleryLayoutManifest, EntityManifestResponse } from '@granit/entities';
 import type { PagedResult, QueryRequest } from '@granit/query-engine';
@@ -64,10 +64,12 @@ const DEFAULT_PAGE_SIZE = 50;
  * back to pagination-only fetches (page / pageSize), useful for embed
  * scenarios where no toolbar is wired up.
  *
- * `groupByPropertyName` on the layout, when set, threads the property
- * through `params.groupBy` so the server returns grouped buckets the
- * renderer can paint as sections (currently flat — section rendering
- * lands in a follow-up).
+ * `groupByPropertyName` on the layout seeds the request as a default —
+ * ambient `params.groupBy` from the provider (driven by a host-side
+ * `GroupBySelector`) wins when set, so users can repivot the grid at
+ * runtime, matching the table renderer's behavior. The server returns
+ * grouped buckets the renderer threads through to the cards (currently
+ * flat — section rendering lands in a follow-up).
  *
  *
  * ```html
@@ -169,17 +171,19 @@ function EntityGalleryBody({
   const sentinelRef = useRef<HTMLLIElement | null>(null);
 
   // Compose the base request once: the host's ambient filter / sort /
-  // search / quickFilters / presets, plus the gallery's own page-size
-  // override and (optionally) the layout's `groupByPropertyName`. The
-  // infinite query owns the `page` cursor — we don't read it from the
-  // shared state because the shared `page` is single-cursor while the
-  // gallery accumulates pages through scroll.
+  // search / groupBy / quickFilters / presets, plus the gallery's own
+  // page-size override. The layout's `groupByPropertyName` only acts
+  // as a fallback when ambient `groupBy` is unset — toolbar pivots
+  // win, mirroring the table renderer. The infinite query owns the
+  // `page` cursor (the shared `page` is single-cursor while the gallery
+  // accumulates pages through scroll).
   const baseRequest = useMemo<QueryRequest>(() => {
     const rest: QueryRequest = { ...params };
     delete (rest as { page?: number }).page;
-    return layout.groupByPropertyName
-      ? { ...rest, pageSize, groupBy: layout.groupByPropertyName }
-      : { ...rest, pageSize };
+    if (rest.groupBy == null && layout.groupByPropertyName) {
+      return { ...rest, pageSize, groupBy: layout.groupByPropertyName };
+    }
+    return { ...rest, pageSize };
   }, [params, pageSize, layout.groupByPropertyName]);
 
   const query = useInfiniteQuery({
@@ -205,7 +209,7 @@ function EntityGalleryBody({
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {
-          void query.fetchNextPage();
+          query.fetchNextPage().catch(() => {});
         }
       },
       { rootMargin: '256px' }
@@ -278,17 +282,30 @@ function GalleryCard({
   const subtitle = subtitleProperty ? readScalar(row[subtitleProperty]) : null;
   const rowId = readScalar(row['id'] ?? row['Id']);
 
+  const handleClick = onCardClick ? () => onCardClick(row) : undefined;
+  const handleKeyDown = onCardClick
+    ? (event: KeyboardEvent<HTMLLIElement>) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onCardClick(row);
+        }
+      }
+    : undefined;
+
   return (
     <li
       data-granit-gallery-card=""
       data-row-id={rowId ?? undefined}
       data-image-blob-id={blobId ?? undefined}
-      onClick={onCardClick ? () => onCardClick(row) : undefined}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      role={onCardClick ? 'button' : undefined}
+      tabIndex={onCardClick ? 0 : undefined}
       style={onCardClick ? { cursor: 'pointer' } : undefined}
     >
       {renderImage ? renderImage(blobId, row) : null}
-      {title !== null ? <span data-granit-gallery-card-title="">{title}</span> : null}
-      {subtitle !== null ? <span data-granit-gallery-card-subtitle="">{subtitle}</span> : null}
+      {title === null ? null : <span data-granit-gallery-card-title="">{title}</span>}
+      {subtitle === null ? null : <span data-granit-gallery-card-subtitle="">{subtitle}</span>}
     </li>
   );
 }
@@ -336,9 +353,11 @@ function flattenPages(
 }
 
 function readScalar(value: unknown): string | null {
-  if (value === null || value === undefined) return null;
-  if (typeof value === 'object') return null;
-  return String(value);
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number' || typeof value === 'boolean' || typeof value === 'bigint') {
+    return String(value);
+  }
+  return null;
 }
 
 function readRowKey(row: Readonly<Record<string, unknown>>, fallbackIndex: number): string {

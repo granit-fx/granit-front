@@ -120,9 +120,9 @@ function MapBody({ snapshot }: { readonly snapshot: MapWidgetSnapshot }) {
     // synthetic `kind: 'Custom'` only when the snapshot also asks for
     // 'Custom', which is intentional.
     const preferredLayer =
-      (snapshot.defaultLayerKind != null
-        ? layers.find((layer) => layer.kind === snapshot.defaultLayerKind)
-        : undefined) ?? layers[0];
+      (snapshot.defaultLayerKind == null
+        ? undefined
+        : layers.find((layer) => layer.kind === snapshot.defaultLayerKind)) ?? layers[0];
     const defaultTile = preferredLayer ? tileLayerById.get(preferredLayer.id) : undefined;
     defaultTile?.addTo(map);
 
@@ -190,16 +190,12 @@ function MapBody({ snapshot }: { readonly snapshot: MapWidgetSnapshot }) {
     let clusterGroup: L.LayerGroup | null = null;
 
     type ClusterFactory = () => L.LayerGroup;
-    type ClusterModule = { default?: ClusterFactory } | { markerClusterGroup?: ClusterFactory };
     const lWithCluster = L as unknown as { markerClusterGroup?: ClusterFactory };
     if (useCluster && typeof lWithCluster.markerClusterGroup === 'function') {
       clusterGroup = lWithCluster.markerClusterGroup();
-    } else if (useCluster) {
-      // leaflet.markercluster augments the L namespace at import time.
-      // When the optional peer isn't installed the cluster threshold
-      // becomes a soft hint — markers render unclustered.
-      void (null as unknown as ClusterModule);
     }
+    // When the optional peer isn't installed (no `markerClusterGroup` on `L`)
+    // the cluster threshold becomes a soft hint — markers render unclustered.
 
     for (const point of snapshot.points) {
       const marker = L.marker([point.latitude, point.longitude]);
@@ -213,8 +209,8 @@ function MapBody({ snapshot }: { readonly snapshot: MapWidgetSnapshot }) {
         const route = snapshot.detailRoute.replace('{id}', encodeURIComponent(point.id));
         marker.on('click', () => {
           // Apps wanting React Router integration override this snapshot
-          // renderer with `useNavigate()` instead of `window.location.href`.
-          window.location.href = route;
+          // renderer with `useNavigate()` instead of `globalThis.location.href`.
+          globalThis.location.href = route;
         });
         marker.options.alt = route;
       }
@@ -241,9 +237,9 @@ function MapBody({ snapshot }: { readonly snapshot: MapWidgetSnapshot }) {
 
 function escapeHtml(value: string): string {
   return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
 }

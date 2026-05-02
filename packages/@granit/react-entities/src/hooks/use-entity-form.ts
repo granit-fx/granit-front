@@ -52,7 +52,10 @@ export function useEntityForm(
   options: UseEntityFormOptions = {}
 ): UseEntityFormReturn {
   const initialDefaults = useMemo(
-    () => ({ ...deriveDefaults(variant), ...(options.defaultValues ?? {}) }),
+    () =>
+      options.defaultValues
+        ? { ...deriveDefaults(variant), ...options.defaultValues }
+        : deriveDefaults(variant),
     [variant, options.defaultValues]
   );
 

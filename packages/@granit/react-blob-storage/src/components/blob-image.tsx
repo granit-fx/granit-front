@@ -113,6 +113,7 @@ export function BlobImage({
 
   return (
     <img
+      alt=""
       {...imgProps}
       src={resolved}
       loading={loading}

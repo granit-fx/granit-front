@@ -59,7 +59,7 @@ export function useEChartsTheme(options: UseEChartsThemeOptions): string {
   const [isDark, setIsDark] = useState(() => detectDarkMode(darkModeStrategy));
 
   useEffect(() => {
-    if (typeof globalThis.window === 'undefined') return;
+    if (globalThis.window === undefined) return;
 
     if (darkModeStrategy === 'media') {
       const mq = globalThis.matchMedia('(prefers-color-scheme: dark)');
@@ -79,7 +79,7 @@ export function useEChartsTheme(options: UseEChartsThemeOptions): string {
 }
 
 function detectDarkMode(strategy: 'class' | 'media'): boolean {
-  if (typeof globalThis.window === 'undefined') return false;
+  if (globalThis.window === undefined) return false;
   if (strategy === 'media') {
     return globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
   }

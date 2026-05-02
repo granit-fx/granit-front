@@ -248,43 +248,46 @@ function EntityDetailSection({
     [section.inheritsFromFormVariant, formVariants]
   );
 
+  let body: ReactNode;
+  if (section.inheritsFromFormVariant) {
+    body = inheritedFields ? (
+      <dl data-granit-detail-fields="" data-inherits-from={section.inheritsFromFormVariant}>
+        {inheritedFields.map((field) => (
+          <InheritedFieldRow
+            key={field.propertyName}
+            field={field}
+            values={values}
+            resolveLabel={resolveLabel}
+          />
+        ))}
+      </dl>
+    ) : (
+      <div
+        data-granit-detail-inherits-missing=""
+        data-form-variant={section.inheritsFromFormVariant}
+      />
+    );
+  } else {
+    body = (
+      <dl data-granit-detail-fields="">
+        {(section.fields ?? []).map((property) => (
+          <FreeFormFieldRow
+            key={property}
+            property={property}
+            value={values[property]}
+            componentId={propertyComponents?.[property]}
+          />
+        ))}
+      </dl>
+    );
+  }
+
   return (
     <section data-granit-detail-section="" data-section-key={section.key}>
       {section.labelKey ? (
         <header data-granit-section-header="">{resolveLabel(section.labelKey)}</header>
       ) : null}
-      {section.inheritsFromFormVariant ? (
-        inheritedFields ? (
-          <dl data-granit-detail-fields="" data-inherits-from={section.inheritsFromFormVariant}>
-            {inheritedFields.map((field) => (
-              <InheritedFieldRow
-                key={field.propertyName}
-                field={field}
-                values={values}
-                resolveLabel={resolveLabel}
-              />
-            ))}
-          </dl>
-        ) : (
-          <div
-            data-granit-detail-inherits-missing=""
-            data-form-variant={section.inheritsFromFormVariant}
-          >
-            {/* Form variant referenced by the section was not supplied via formVariants. */}
-          </div>
-        )
-      ) : (
-        <dl data-granit-detail-fields="">
-          {(section.fields ?? []).map((property) => (
-            <FreeFormFieldRow
-              key={property}
-              property={property}
-              value={values[property]}
-              componentId={propertyComponents?.[property]}
-            />
-          ))}
-        </dl>
-      )}
+      {body}
     </section>
   );
 }
@@ -418,6 +421,7 @@ function resolveInheritedFields(
 function formatValue(value: unknown): string {
   if (value === null || value === undefined) return '—';
   if (typeof value === 'boolean') return value ? '✓' : '✗';
+  if (typeof value === 'object') return JSON.stringify(value);
   return String(value);
 }
 
@@ -486,6 +490,7 @@ function RelationItem({
   const { resolveLabel } = useEntityRenderer();
   const label = relation.displayKey ? resolveLabel(relation.displayKey) : relation.name;
   const count = value?.count ?? null;
+  const countLabel = isLoading ? '…' : (count?.toString() ?? '—');
 
   return (
     <button
@@ -500,9 +505,7 @@ function RelationItem({
       disabled={!onClick}
     >
       <span data-granit-relation-item-label="">{label}</span>
-      <span data-granit-relation-item-count="">
-        {isLoading ? '…' : count !== null ? String(count) : '—'}
-      </span>
+      <span data-granit-relation-item-count="">{countLabel}</span>
     </button>
   );
 }
