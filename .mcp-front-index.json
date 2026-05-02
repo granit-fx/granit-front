@@ -2731,6 +2731,17 @@
           "members": []
         },
         {
+          "name": "EntityGallery",
+          "kind": "function",
+          "signature": "function EntityGallery("
+        },
+        {
+          "name": "EntityGalleryProps",
+          "kind": "interface",
+          "signature": "interface EntityGalleryProps",
+          "members": []
+        },
+        {
           "name": "EntityKanban",
           "kind": "function",
           "signature": "function EntityKanban("

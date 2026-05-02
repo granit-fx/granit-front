@@ -21,6 +21,7 @@ export type {
   CalendarItemResponse,
   CalendarRangeRequest,
   EntityCalendarLayoutManifest,
+  EntityGalleryLayoutManifest,
   EntityKanbanCardActionManifest,
   EntityKanbanCardManifest,
   EntityKanbanCardRelationManifest,
@@ -28,6 +29,7 @@ export type {
   EntityKanbanLayoutManifest,
   EntityListLayoutKind,
   EntityListLayoutManifest,
+  GalleryCardSize,
   KanbanColor,
   KanbanColumnState,
 } from './layouts.js';

@@ -8,12 +8,12 @@ import type { EntityFormFieldManifest } from './form.js';
  *
  * Mirrors `Granit.Entities.Layouts.EntityListLayoutKind`.
  */
-export type EntityListLayoutKind = 'List' | 'Kanban' | 'Calendar';
+export type EntityListLayoutKind = 'List' | 'Kanban' | 'Calendar' | 'Gallery';
 
 /**
  * One alternative list-view layout exposed in the manifest. The kind drives
  * front-end component selection; per-kind config lives in `kanban` /
- * `calendar` (and future `map` / `gallery` slots). Exactly one of the
+ * `calendar` / `gallery` (and a future `map` slot). Exactly one of the
  * config slots is populated, matching `kind`.
  *
  * Mirrors `Granit.Entities.Endpoints.Dtos.EntityListLayoutManifest`.
@@ -27,6 +27,8 @@ export interface EntityListLayoutManifest {
   readonly kanban: EntityKanbanLayoutManifest | null;
   /** Calendar-specific configuration when `kind === 'Calendar'`, else `null`. */
   readonly calendar: EntityCalendarLayoutManifest | null;
+  /** Gallery-specific configuration when `kind === 'Gallery'`, else `null`. */
+  readonly gallery: EntityGalleryLayoutManifest | null;
 }
 
 /**
@@ -52,6 +54,40 @@ export interface EntityCalendarLayoutManifest {
    */
   readonly colorByPropertyName: string | null;
 }
+
+/**
+ * Gallery-specific layout configuration. Property names address fields on
+ * the entity; the renderer reads each row's image via the host's
+ * blob-storage download endpoint and labels the card with `titlePropertyName`
+ * / `subtitlePropertyName`.
+ *
+ * `imagePropertyName` MUST resolve to a `BlobReference` (or nullable) on
+ * the entity — enforced server-side via an architecture test.
+ *
+ * Mirrors `Granit.Entities.Endpoints.Dtos.EntityGalleryLayoutManifest`.
+ */
+export interface EntityGalleryLayoutManifest {
+  /** Entity property carrying the card image (typed `BlobReference`). Required. */
+  readonly imagePropertyName: string;
+  /**
+   * Entity property used as the card headline, or `null` to fall back to
+   * the entity's `displayProperty`.
+   */
+  readonly titlePropertyName: string | null;
+  /** Optional secondary line under the title, or `null` for none. */
+  readonly subtitlePropertyName: string | null;
+  /** Card size — drives CSS-grid track sizing in the renderer. */
+  readonly cardSize: GalleryCardSize;
+}
+
+/**
+ * Closed catalog of gallery card sizes. Drives CSS-grid track sizing in the
+ * renderer; the wire never carries pixel widths so theme + breakpoint logic
+ * stays declarative.
+ *
+ * Mirrors `Granit.Entities.Layouts.GalleryCardSize`.
+ */
+export type GalleryCardSize = 'Small' | 'Medium' | 'Large';
 
 /**
  * Kanban-specific layout configuration.

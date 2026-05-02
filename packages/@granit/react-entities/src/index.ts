@@ -12,6 +12,8 @@ export { EntityDetail } from './components/entity-detail.js';
 export type { EntityDetailProps } from './components/entity-detail.js';
 export { EntityForm } from './components/entity-form.js';
 export type { EntityFormProps } from './components/entity-form.js';
+export { EntityGallery } from './components/entity-gallery.js';
+export type { EntityGalleryProps } from './components/entity-gallery.js';
 export { EntityKanban } from './components/entity-kanban.js';
 export type { EntityKanbanProps } from './components/entity-kanban.js';
 export { EntityList } from './components/entity-list.js';
