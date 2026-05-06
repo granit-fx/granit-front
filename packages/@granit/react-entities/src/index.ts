@@ -64,6 +64,7 @@ export {
   STANDARD_FORM_COMPONENTS,
 } from './field-components/index.js';
 export type { SelectComponentOption } from './field-components/index.js';
+export { executeBulkAction } from './api/bulk-action.js';
 export { entityCalendarQueryKey, useEntityCalendar } from './api/use-entity-calendar.js';
 export { entityDiscoveryQueryKey, useEntityDiscovery } from './api/use-entity-discovery.js';
 export {

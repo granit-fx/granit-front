@@ -2986,6 +2986,11 @@
           "members": []
         },
         {
+          "name": "executeBulkAction",
+          "kind": "function",
+          "signature": "async function executeBulkAction( client: AxiosInstance, entityName: string, action: string, request: BulkActionRequest ): Promise<BulkActionResponse>"
+        },
+        {
           "name": "entityCalendarQueryKey",
           "kind": "function",
           "signature": "function entityCalendarQueryKey( entityName: string, from: string, to: string, calendar?: string | null, filters?: readonly FilterEntry[], search?: string ): readonly ["

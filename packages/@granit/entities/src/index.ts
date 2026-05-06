@@ -16,6 +16,9 @@
 export { evaluateVisibility } from './helpers/index.js';
 export { ALL_ENTITY_FACETS, MANIFEST_SCHEMA_VERSION } from './types/index.js';
 export type {
+  BulkActionFailure,
+  BulkActionRequest,
+  BulkActionResponse,
   CalendarItemResponse,
   CalendarRangeRequest,
   EntityActionKind,

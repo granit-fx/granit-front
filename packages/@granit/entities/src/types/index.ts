@@ -1,4 +1,5 @@
 export type { EntityActionKind, EntityActionManifest } from './actions.js';
+export type { BulkActionFailure, BulkActionRequest, BulkActionResponse } from './bulk.js';
 export type {
   EntityCollectionReference,
   EntityCollectionsSection,
