@@ -1293,6 +1293,34 @@
           "name": "useActivity",
           "kind": "function",
           "signature": "function useActivity(id: string): UseQueryResult<ActivityResponse>"
+        },
+        {
+          "name": "ActivityList",
+          "kind": "function",
+          "signature": "function ActivityList("
+        },
+        {
+          "name": "ActivityActionLabels",
+          "kind": "interface",
+          "signature": "interface ActivityActionLabels",
+          "members": []
+        },
+        {
+          "name": "ActivityListProps",
+          "kind": "interface",
+          "signature": "interface ActivityListProps",
+          "members": []
+        },
+        {
+          "name": "ActivityDetailPanel",
+          "kind": "function",
+          "signature": "function ActivityDetailPanel("
+        },
+        {
+          "name": "ActivityDetailPanelProps",
+          "kind": "interface",
+          "signature": "interface ActivityDetailPanelProps",
+          "members": []
         }
       ]
     },

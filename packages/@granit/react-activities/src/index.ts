@@ -24,3 +24,9 @@ export {
   useReassignActivity,
   useRescheduleActivity,
 } from './hooks/use-activity-mutations.js';
+
+// Components
+export { ActivityList } from './components/activity-list.js';
+export type { ActivityActionLabels, ActivityListProps } from './components/activity-list.js';
+export { ActivityDetailPanel } from './components/activity-detail-panel.js';
+export type { ActivityDetailPanelProps } from './components/activity-detail-panel.js';

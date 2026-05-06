@@ -1,7 +1,7 @@
 import { GranitClientProvider } from '@granit/react-api-client';
 import { act, fireEvent, render, renderHook, waitFor } from '@testing-library/react';
 import axios from 'axios';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   EntitySelectionBar,
@@ -151,7 +151,9 @@ describe('fanOutWithCap', () => {
     const recap = await fanOutWithCap(
       ids,
       async (id) =>
-        id === 'b' || id === 'd' ? { kind: 'err', id, error: new Error('nope') } : { kind: 'ok', id },
+        id === 'b' || id === 'd'
+          ? { kind: 'err', id, error: new Error('nope') }
+          : { kind: 'ok', id },
       2
     );
     expect(recap.succeeded.sort()).toEqual(['a', 'c']);
@@ -441,9 +443,7 @@ describe('SelectionContext + EntitySelectionBar interplay', () => {
       </Wrapper>
     );
     expect(observedSize).toBe(2);
-    fireEvent.click(
-      container.querySelector('[data-granit-selection-bar-clear]') as HTMLElement
-    );
+    fireEvent.click(container.querySelector('[data-granit-selection-bar-clear]') as HTMLElement);
     expect(observedSize).toBe(0);
   });
 
