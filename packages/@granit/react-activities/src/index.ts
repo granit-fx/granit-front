@@ -15,3 +15,12 @@ export { API_VERSION, DEFAULT_BASE_PATH, DEFAULT_QUERY_KEY_PREFIX, MODULE } from
 
 // Read hooks
 export { useActivities, useActivitiesCalendar, useActivity } from './hooks/use-activities.js';
+
+// Mutation hooks
+export {
+  useCancelActivity,
+  useCompleteActivity,
+  useCreateActivity,
+  useReassignActivity,
+  useRescheduleActivity,
+} from './hooks/use-activity-mutations.js';
