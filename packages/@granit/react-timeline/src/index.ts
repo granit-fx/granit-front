@@ -24,3 +24,6 @@ export type {
   UseTimelineFollowersOptions,
   UseTimelineFollowersReturn,
 } from './hooks/use-timeline-followers.js';
+
+export { toggleReactionList, useToggleReaction } from './hooks/use-toggle-reaction.js';
+export type { ToggleReactionVariables } from './hooks/use-toggle-reaction.js';

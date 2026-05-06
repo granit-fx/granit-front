@@ -4272,6 +4272,22 @@
           "name": "useTimelineFollowers",
           "kind": "function",
           "signature": "function useTimelineFollowers("
+        },
+        {
+          "name": "toggleReactionList",
+          "kind": "function",
+          "signature": "function toggleReactionList( reactions: readonly Reaction[] | undefined, emoji: ReactionEmoji ): readonly Reaction[]"
+        },
+        {
+          "name": "useToggleReaction",
+          "kind": "function",
+          "signature": "function useToggleReaction(): UseMutationResult< TimelineEntry, Error, ToggleReactionVariables, ToggleReactionContext >"
+        },
+        {
+          "name": "ToggleReactionVariables",
+          "kind": "interface",
+          "signature": "interface ToggleReactionVariables",
+          "members": []
         }
       ]
     },
