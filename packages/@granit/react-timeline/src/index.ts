@@ -30,3 +30,7 @@ export type { ToggleReactionVariables } from './hooks/use-toggle-reaction.js';
 
 export { ReactionBar } from './components/reaction-bar.js';
 export type { ReactionBarLabels, ReactionBarProps } from './components/reaction-bar.js';
+
+// i18n resource bundles (namespace: 'timeline')
+export { timelineTranslationsEn, timelineTranslationsFr } from './locales/index.js';
+export type { TimelineTranslations } from './locales/index.js';
