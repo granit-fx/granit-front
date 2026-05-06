@@ -1,5 +1,6 @@
 // Types
 export {
+  REACTION_EMOJIS,
   TimelineEntryType,
   type BlobId,
   type TimelineAttachmentId,
@@ -12,7 +13,12 @@ export {
   type TimelineQueryParams,
   type TimelineConfig,
   type MentionSuggestion,
+  type Reaction,
+  type ReactionEmoji,
 } from './types/index.js';
+
+// Permissions
+export { TimelinePermissions } from './permissions.js';
 
 // API
 export {
@@ -23,3 +29,4 @@ export {
   followEntity,
   unfollowEntity,
 } from './api/timeline-api.js';
+export { toggleReaction } from './api/reaction-api.js';

@@ -1,4 +1,5 @@
 import type { TimelineEntryTypeValue } from './entry-type.js';
+import type { Reaction } from './reaction.js';
 import type { PagedResult } from '@granit/query-engine';
 import type { EntityId, ISODateString, UserId } from '@granit/types';
 
@@ -32,6 +33,15 @@ export interface TimelineEntry {
   readonly parentEntryId: TimelineEntryId | null;
   readonly occurredAt: ISODateString;
   readonly attachments: readonly TimelineAttachmentInfo[];
+  /**
+   * Aggregated reactions on this entry — one entry per emoji that has
+   * at least one reactor. Optional for backward compatibility while
+   * the backend reaction module rolls out
+   * (granit-fx/granit-dotnet#1811); once C-stream lands end-to-end,
+   * every entry carries the field (empty array when no reactions are
+   * present).
+   */
+  readonly reactions?: readonly Reaction[];
 }
 
 export type TimelineEntryPage = PagedResult<TimelineEntry>;

@@ -4719,7 +4719,18 @@
     {
       "name": "@granit/timeline",
       "description": "Unified activity feed hooks for audit trails",
-      "exports": []
+      "exports": [
+        {
+          "name": "TimelinePermissions",
+          "kind": "const",
+          "signature": "const TimelinePermissions"
+        },
+        {
+          "name": "toggleReaction",
+          "kind": "function",
+          "signature": "async function toggleReaction( client: AxiosInstance, basePath: string, entryId: TimelineEntryId, emoji: ReactionEmoji ): Promise<TimelineEntry>"
+        }
+      ]
     },
     {
       "name": "@granit/tracing",
