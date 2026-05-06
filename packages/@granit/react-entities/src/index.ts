@@ -9,6 +9,16 @@
 export { EntityActionButton, resolveAction } from './actions/entity-action-button.js';
 export type { EntityActionButtonProps } from './actions/entity-action-button.js';
 export {
+  EntityActionDrawerContext,
+  EntityActionModalContext,
+  useEntityActionDrawer,
+  useEntityActionModal,
+} from './actions/entity-action-overlay-context.js';
+export type {
+  EntityActionOverlayContextValue,
+  EntityActionOverlayState,
+} from './actions/entity-action-overlay-context.js';
+export {
   resolveActionUrl,
   useEntityActionDispatcher,
 } from './actions/use-entity-action-dispatcher.js';
@@ -17,6 +27,10 @@ export type {
   EntityActionHandler,
   EntityActionHandlers,
 } from './actions/use-entity-action-dispatcher.js';
+export { EntityActionDrawerHost } from './components/entity-action-drawer-host.js';
+export type { EntityActionDrawerHostProps } from './components/entity-action-drawer-host.js';
+export { EntityActionModalHost } from './components/entity-action-modal-host.js';
+export type { EntityActionModalHostProps } from './components/entity-action-modal-host.js';
 export { EntityCalendar } from './components/entity-calendar.js';
 export type { EntityCalendarProps } from './components/entity-calendar.js';
 export { EntityDetail } from './components/entity-detail.js';
@@ -31,6 +45,19 @@ export { EntityList } from './components/entity-list.js';
 export type { EntityListProps } from './components/entity-list.js';
 export { EntityListPageHeader } from './components/entity-list-page-header.js';
 export type { EntityListPageHeaderProps } from './components/entity-list-page-header.js';
+export {
+  EntitySelectionBar,
+  fanOutWithCap,
+  SELECTION_FANOUT_CONCURRENCY_CAP,
+} from './components/entity-selection-bar.js';
+export type {
+  EntitySelectionBarProps,
+  EntitySelectionBarRecap,
+} from './components/entity-selection-bar.js';
+export { SelectionContext, useSelection } from './selection/selection-context.js';
+export type { SelectionContextValue } from './selection/selection-context.js';
+export { SelectionProvider } from './selection/selection-provider.js';
+export type { SelectionProviderProps } from './selection/selection-provider.js';
 export {
   defaultDetailFormat,
   STANDARD_DETAIL_COMPONENTS,

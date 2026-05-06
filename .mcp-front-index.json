@@ -2736,6 +2736,28 @@
           "members": []
         },
         {
+          "name": "EntityActionDrawerHost",
+          "kind": "function",
+          "signature": "function EntityActionDrawerHost("
+        },
+        {
+          "name": "EntityActionDrawerHostProps",
+          "kind": "interface",
+          "signature": "interface EntityActionDrawerHostProps",
+          "members": []
+        },
+        {
+          "name": "EntityActionModalHost",
+          "kind": "function",
+          "signature": "function EntityActionModalHost("
+        },
+        {
+          "name": "EntityActionModalHostProps",
+          "kind": "interface",
+          "signature": "interface EntityActionModalHostProps",
+          "members": []
+        },
+        {
           "name": "EntityCalendar",
           "kind": "function",
           "signature": "function EntityCalendar("
@@ -2821,6 +2843,33 @@
           "name": "EntityListPageHeaderProps",
           "kind": "interface",
           "signature": "interface EntityListPageHeaderProps",
+          "members": []
+        },
+        {
+          "name": "SelectionContext",
+          "kind": "const",
+          "signature": "const SelectionContext"
+        },
+        {
+          "name": "useSelection",
+          "kind": "function",
+          "signature": "function useSelection(): SelectionContextValue"
+        },
+        {
+          "name": "SelectionContextValue",
+          "kind": "interface",
+          "signature": "interface SelectionContextValue",
+          "members": []
+        },
+        {
+          "name": "SelectionProvider",
+          "kind": "function",
+          "signature": "function SelectionProvider("
+        },
+        {
+          "name": "SelectionProviderProps",
+          "kind": "interface",
+          "signature": "interface SelectionProviderProps",
           "members": []
         },
         {

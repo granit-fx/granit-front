@@ -51,6 +51,22 @@ export interface EntityCollectionsSection {
    * header bar fires.
    */
   readonly headerActions: readonly EntityHeaderActionManifest[];
+  /**
+   * Compact references to actions pinned on the selection bar
+   * (visible when the row-selection set is non-empty — bulk surface).
+   * Already permission-filtered server-side.
+   *
+   * Wire-shape note: `selectionActions[]` and `headerActions[]` are
+   * mutually exclusive on the same action — `OnSelection()` requires
+   * a `{id}` placeholder (fan-out across the selected ids), while
+   * `OnListHeader()` forbids it (fire-once, no row context). The
+   * .NET builder enforces the split at host startup.
+   *
+   * The renderer iterates the selected ids, substitutes `{id}` per
+   * id, fires N requests in parallel (concurrency capped at 10 per
+   * the front matrix), then surfaces a per-id success/failure recap.
+   */
+  readonly selectionActions: readonly EntitySelectionActionManifest[];
 }
 
 /**
@@ -67,6 +83,37 @@ export interface EntityHeaderActionManifest {
   readonly displayKey: string | null;
   /** Icon name from the catalog. */
   readonly icon: string | null;
+  /** Contributing assembly. `null` for intra-module declarations. */
+  readonly contributorAssemblyName: string | null;
+}
+
+/**
+ * Compact reference to one action pinned on the selection bar (bulk
+ * surface). The full descriptor stays addressable via the entity's
+ * `actions` facet by `name`.
+ *
+ * Unlike the other compact references, this shape carries
+ * `confirmationKey` inline — bulk operations are typically destructive
+ * and the UX-critical "are you sure (about N rows)" flow needs the
+ * key without an extra round-trip through the actions facet, so the
+ * server inlines it server-side.
+ *
+ * Mirrors `Granit.Entities.Endpoints.Dtos.EntitySelectionActionManifest`.
+ */
+export interface EntitySelectionActionManifest {
+  /** Stable action name — matches the entry in `actions`. */
+  readonly name: string;
+  /** i18n key for the user-facing label. */
+  readonly displayKey: string | null;
+  /** Icon name from the catalog. */
+  readonly icon: string | null;
+  /**
+   * Optional i18n key for the confirmation modal that fires before the
+   * fan-out. Inlined here (not just on the full descriptor) because
+   * bulk destructive operations need the key without an extra
+   * actions-facet lookup at click time.
+   */
+  readonly confirmationKey: string | null;
   /** Contributing assembly. `null` for intra-module declarations. */
   readonly contributorAssemblyName: string | null;
 }

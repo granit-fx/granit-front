@@ -175,6 +175,7 @@ function manifest(
               ]
             : [],
           headerActions: [],
+          selectionActions: [],
         }
       : null,
     relations: null,

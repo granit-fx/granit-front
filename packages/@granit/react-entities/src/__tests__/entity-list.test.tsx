@@ -90,6 +90,7 @@ function manifest(hasQuery: boolean): EntityManifestResponse {
           defaultViewId: null,
           listLayouts: [],
           headerActions: [],
+          selectionActions: [],
         }
       : null,
     relations: null,

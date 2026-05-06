@@ -6,6 +6,10 @@ import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  EntityActionDrawerContext,
+  EntityActionModalContext,
+} from '../actions/entity-action-overlay-context.js';
+import {
   resolveActionUrl,
   useEntityActionDispatcher,
   type EntityActionHandlers,
@@ -196,6 +200,61 @@ describe('useEntityActionDispatcher — WorkflowTransition', () => {
     const row = { id: 'abc', workflowState: 'Draft' };
     await result.current(action, 'abc', row);
     expect(workflowTransition).toHaveBeenCalledWith(action, 'abc', row, expect.anything());
+  });
+});
+
+describe('useEntityActionDispatcher — OpenDrawer / OpenModal', () => {
+  it('OpenDrawer opens the drawer host context when mounted', async () => {
+    const { wrapper: BaseWrapper } = makeWrapper();
+    const drawerStub = { open: vi.fn(), close: vi.fn(), current: null };
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <BaseWrapper>
+        <EntityActionDrawerContext.Provider value={drawerStub}>
+          {children}
+        </EntityActionDrawerContext.Provider>
+      </BaseWrapper>
+    );
+    const { result } = renderHook(() => useEntityActionDispatcher(), { wrapper });
+    const action = makeAction({ kind: 'OpenDrawer', urlTemplate: null });
+    await result.current(action, 'abc', { id: 'abc' });
+    expect(drawerStub.open).toHaveBeenCalledOnce();
+    expect(drawerStub.open).toHaveBeenCalledWith(
+      expect.objectContaining({ action, rowId: 'abc', row: expect.objectContaining({ id: 'abc' }) })
+    );
+  });
+
+  it('OpenDrawer warns when no host context and no handler is supplied', async () => {
+    const warn = vi.spyOn(globalThis.console, 'warn').mockImplementation(() => undefined);
+    const { wrapper } = makeWrapper();
+    const { result } = renderHook(() => useEntityActionDispatcher(), { wrapper });
+    await result.current(makeAction({ kind: 'OpenDrawer' }), 'abc', null);
+    expect(warn).toHaveBeenCalledOnce();
+    expect(String(warn.mock.calls[0]?.[0])).toContain('OpenDrawer');
+  });
+
+  it('OpenModal delegates to the openModal handler override when supplied', async () => {
+    const openModal = vi.fn();
+    const { wrapper } = makeWrapper();
+    const { result } = renderHook(() => useEntityActionDispatcher({ openModal }), { wrapper });
+    const action = makeAction({ kind: 'OpenModal', urlTemplate: '/import?ids=1,2' });
+    await result.current(action, null, null);
+    expect(openModal).toHaveBeenCalledOnce();
+    expect(openModal).toHaveBeenCalledWith(action, null, null, expect.anything());
+  });
+
+  it('OpenModal opens the modal host context when mounted', async () => {
+    const { wrapper: BaseWrapper } = makeWrapper();
+    const modalStub = { open: vi.fn(), close: vi.fn(), current: null };
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <BaseWrapper>
+        <EntityActionModalContext.Provider value={modalStub}>
+          {children}
+        </EntityActionModalContext.Provider>
+      </BaseWrapper>
+    );
+    const { result } = renderHook(() => useEntityActionDispatcher(), { wrapper });
+    await result.current(makeAction({ kind: 'OpenModal' }), 'abc', null);
+    expect(modalStub.open).toHaveBeenCalledOnce();
   });
 });
 
