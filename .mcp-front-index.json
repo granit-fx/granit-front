@@ -1326,6 +1326,28 @@
           "name": "ActivityCalendar",
           "kind": "function",
           "signature": "function ActivityCalendar("
+        },
+        {
+          "name": "ActivitiesSidePanel",
+          "kind": "function",
+          "signature": "function ActivitiesSidePanel("
+        },
+        {
+          "name": "ActivitiesSidePanelProps",
+          "kind": "interface",
+          "signature": "interface ActivitiesSidePanelProps",
+          "members": []
+        },
+        {
+          "name": "activitiesSidePanel",
+          "kind": "function",
+          "signature": "function activitiesSidePanel( options: ActivitiesSidePanelContributionOptions ="
+        },
+        {
+          "name": "ActivitiesSidePanelContributionOptions",
+          "kind": "interface",
+          "signature": "interface ActivitiesSidePanelContributionOptions",
+          "members": []
         }
       ]
     },

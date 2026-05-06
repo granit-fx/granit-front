@@ -36,3 +36,9 @@ export type {
   ActivityCalendarProps,
   ActivityCalendarView,
 } from './components/activity-calendar.js';
+export { ActivitiesSidePanel } from './components/activities-side-panel.js';
+export type { ActivitiesSidePanelProps } from './components/activities-side-panel.js';
+
+// Contributions for @granit/react-entities (optional peer)
+export { activitiesSidePanel } from './contributions/entity-side-panel.js';
+export type { ActivitiesSidePanelContributionOptions } from './contributions/entity-side-panel.js';

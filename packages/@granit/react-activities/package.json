@@ -16,9 +16,19 @@
   "peerDependencies": {
     "@granit/activities": "workspace:*",
     "@granit/api-client": "workspace:*",
+    "@granit/entities": "workspace:*",
     "@granit/react-api-client": "workspace:*",
+    "@granit/react-entities": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "react": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@granit/entities": {
+      "optional": true
+    },
+    "@granit/react-entities": {
+      "optional": true
+    }
   },
   "publishConfig": {
     "exports": {
@@ -32,7 +42,9 @@
   "devDependencies": {
     "@granit/activities": "workspace:*",
     "@granit/api-client": "workspace:*",
+    "@granit/entities": "workspace:*",
     "@granit/react-api-client": "workspace:*",
+    "@granit/react-entities": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*"
   }

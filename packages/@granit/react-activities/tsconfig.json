@@ -2,7 +2,9 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "paths": {
-      "@granit/activities": ["../activities/src/index.ts"]
+      "@granit/activities": ["../activities/src/index.ts"],
+      "@granit/entities": ["../entities/src/index.ts"],
+      "@granit/react-entities": ["../react-entities/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
