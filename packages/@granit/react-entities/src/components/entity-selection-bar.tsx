@@ -90,9 +90,38 @@ export interface EntitySelectionBarProps {
    * Default: `false` (per-row fan-out — the pre-D2 behaviour).
    */
   readonly useBulkEndpoint?: BulkDispatchPredicate;
+  /**
+   * Override the English defaults for the visible labels (selection
+   * summary + clear button). Apps wire `t('entities:SelectionBar.*')`
+   * results here from the bundles shipped under `@granit/react-entities`'s
+   * `'entities'` namespace.
+   */
+  readonly labels?: EntitySelectionBarLabels;
   /** Optional class for the root element. */
   readonly className?: string;
 }
+
+/**
+ * App-supplied label overrides for `<EntitySelectionBar>`. Each entry
+ * is optional — omitted keys fall back to English defaults. Shipped
+ * separately from the catalog so apps can pass `t()` results directly
+ * (with i18next plural resolution baked in via `t('…', { count })`).
+ */
+export interface EntitySelectionBarLabels {
+  /**
+   * Summary string rendered next to the selected count. Receives the
+   * count so apps can pluralize via `t('entities:SelectionBar.SelectedSummary', { count })`.
+   * Default: `"{count} selected"`.
+   */
+  readonly selectedSummary?: (count: number) => string;
+  /** Label for the clear-selection button. Default: `"Clear selection"`. */
+  readonly clearSelection?: string;
+}
+
+const DEFAULT_LABELS: Required<EntitySelectionBarLabels> = {
+  selectedSummary: (count) => `${count} selected`,
+  clearSelection: 'Clear selection',
+};
 
 /**
  * Selection-bar surface — appears whenever the row-selection set is
@@ -129,8 +158,10 @@ export function EntitySelectionBar({
   onComplete,
   confirm,
   useBulkEndpoint,
+  labels,
   className,
 }: EntitySelectionBarProps): ReactNode {
+  const mergedLabels = { ...DEFAULT_LABELS, ...labels };
   const dispatch = useEntityActionDispatcher(handlers);
   const client = useGranitClient();
   const selection = useSelection();
@@ -206,7 +237,9 @@ export function EntitySelectionBar({
       data-selected-count={selection.size}
       className={className}
     >
-      <span data-granit-selection-bar-summary="">{selection.size} selected</span>
+      <span data-granit-selection-bar-summary="">
+        {mergedLabels.selectedSummary(selection.size)}
+      </span>
       {selectionActions.map((ref) => {
         const action = resolveAction(ref, manifest.actions);
         if (!action) return null;
@@ -239,7 +272,7 @@ export function EntitySelectionBar({
         onClick={() => selection.clear()}
         disabled={running !== null}
       >
-        Clear selection
+        {mergedLabels.clearSelection}
       </button>
     </div>
   );

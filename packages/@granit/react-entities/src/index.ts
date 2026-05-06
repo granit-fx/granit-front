@@ -51,6 +51,8 @@ export {
   SELECTION_FANOUT_CONCURRENCY_CAP,
 } from './components/entity-selection-bar.js';
 export type {
+  BulkDispatchPredicate,
+  EntitySelectionBarLabels,
   EntitySelectionBarProps,
   EntitySelectionBarRecap,
 } from './components/entity-selection-bar.js';
@@ -65,6 +67,10 @@ export {
 } from './field-components/index.js';
 export type { SelectComponentOption } from './field-components/index.js';
 export { executeBulkAction } from './api/bulk-action.js';
+
+// i18n resource bundles (namespace: 'entities')
+export { entitiesTranslationsEn, entitiesTranslationsFr } from './locales/index.js';
+export type { EntitiesTranslations } from './locales/index.js';
 export { entityCalendarQueryKey, useEntityCalendar } from './api/use-entity-calendar.js';
 export { entityDiscoveryQueryKey, useEntityDiscovery } from './api/use-entity-discovery.js';
 export {
