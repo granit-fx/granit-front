@@ -649,6 +649,9 @@ importers:
       '@granit/entities':
         specifier: workspace:*
         version: link:../entities
+      '@granit/notifications':
+        specifier: workspace:*
+        version: link:../notifications
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client

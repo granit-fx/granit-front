@@ -4,6 +4,7 @@
     "paths": {
       "@granit/activities": ["../activities/src/index.ts"],
       "@granit/entities": ["../entities/src/index.ts"],
+      "@granit/notifications": ["../notifications/src/index.ts"],
       "@granit/react-entities": ["../react-entities/src/index.ts"]
     }
   },

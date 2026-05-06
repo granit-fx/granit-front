@@ -42,3 +42,21 @@ export type { ActivitiesSidePanelProps } from './components/activities-side-pane
 // Contributions for @granit/react-entities (optional peer)
 export { activitiesSidePanel } from './contributions/entity-side-panel.js';
 export type { ActivitiesSidePanelContributionOptions } from './contributions/entity-side-panel.js';
+
+// Notifications integration (Assigned / Reminder / Overdue)
+export {
+  ACTIVITY_NOTIFICATION_RELATED_ENTITY_TYPE,
+  ActivityNotificationTypes,
+} from './notifications/types.js';
+export type {
+  ActivityNotificationAction,
+  ActivityNotificationType,
+} from './notifications/types.js';
+export {
+  isActivityNotification,
+  isAssignedActivityNotification,
+  isOverdueActivityNotification,
+  isReminderActivityNotification,
+  resolveActivityNotificationAction,
+} from './notifications/register.js';
+export type { ActivityNotificationLike } from './notifications/register.js';

@@ -17,6 +17,7 @@
     "@granit/activities": "workspace:*",
     "@granit/api-client": "workspace:*",
     "@granit/entities": "workspace:*",
+    "@granit/notifications": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-entities": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
@@ -24,6 +25,9 @@
   },
   "peerDependenciesMeta": {
     "@granit/entities": {
+      "optional": true
+    },
+    "@granit/notifications": {
       "optional": true
     },
     "@granit/react-entities": {
@@ -43,6 +47,7 @@
     "@granit/activities": "workspace:*",
     "@granit/api-client": "workspace:*",
     "@granit/entities": "workspace:*",
+    "@granit/notifications": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-entities": "workspace:*",
     "@granit/react-testing": "workspace:*",

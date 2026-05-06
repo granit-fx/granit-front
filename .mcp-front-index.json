@@ -1348,6 +1348,12 @@
           "kind": "interface",
           "signature": "interface ActivitiesSidePanelContributionOptions",
           "members": []
+        },
+        {
+          "name": "ActivityNotificationLike",
+          "kind": "interface",
+          "signature": "interface ActivityNotificationLike",
+          "members": []
         }
       ]
     },
