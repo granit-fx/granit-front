@@ -30,3 +30,9 @@ export { ActivityList } from './components/activity-list.js';
 export type { ActivityActionLabels, ActivityListProps } from './components/activity-list.js';
 export { ActivityDetailPanel } from './components/activity-detail-panel.js';
 export type { ActivityDetailPanelProps } from './components/activity-detail-panel.js';
+export { ActivityCalendar } from './components/activity-calendar.js';
+export type {
+  ActivityCalendarLabels,
+  ActivityCalendarProps,
+  ActivityCalendarView,
+} from './components/activity-calendar.js';

@@ -1321,6 +1321,11 @@
           "kind": "interface",
           "signature": "interface ActivityDetailPanelProps",
           "members": []
+        },
+        {
+          "name": "ActivityCalendar",
+          "kind": "function",
+          "signature": "function ActivityCalendar("
         }
       ]
     },
