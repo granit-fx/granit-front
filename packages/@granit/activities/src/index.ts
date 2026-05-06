@@ -17,3 +17,15 @@ export type {
 
 // Permissions
 export { ActivitiesPermissions } from './permissions.js';
+
+// API
+export {
+  cancelActivity,
+  completeActivity,
+  createActivity,
+  getActivitiesCalendar,
+  getActivity,
+  listActivities,
+  reassignActivity,
+  rescheduleActivity,
+} from './api/activities-api.js';
