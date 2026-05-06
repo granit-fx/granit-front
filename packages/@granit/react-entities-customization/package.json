@@ -1,0 +1,39 @@
+{
+  "name": "@granit/react-entities-customization",
+  "description": "React bindings + headless editors for @granit/entities-customization (Layer 1)",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/entities-customization": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@tanstack/react-query": "^5.0.0",
+    "react": "^19.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/entities-customization": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-testing": "workspace:*",
+    "@granit/testing": "workspace:*"
+  }
+}

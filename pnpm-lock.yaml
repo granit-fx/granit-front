@@ -383,6 +383,15 @@ importers:
 
   packages/@granit/entities: {}
 
+  packages/@granit/entities-customization:
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/entities-views: {}
 
   packages/@granit/error-boundary: {}
@@ -1329,6 +1338,31 @@ importers:
       '@granit/react-query-engine':
         specifier: workspace:*
         version: link:../react-query-engine
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
+  packages/@granit/react-entities-customization:
+    dependencies:
+      '@tanstack/react-query':
+        specifier: 5.100.9
+        version: 5.100.9(react@19.2.5)
+      react:
+        specifier: ^19.0.0
+        version: 19.2.5
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/entities-customization':
+        specifier: workspace:*
+        version: link:../entities-customization
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing

@@ -616,6 +616,27 @@
       "exports": []
     },
     {
+      "name": "@granit/entities-customization",
+      "description": "Layer 1 customization (forms + workspaces) — types, API client, and permissions",
+      "exports": [
+        {
+          "name": "CustomizationPermissions",
+          "kind": "const",
+          "signature": "const CustomizationPermissions"
+        },
+        {
+          "name": "getFormCustomization",
+          "kind": "function",
+          "signature": "async function getFormCustomization( client: AxiosInstance, apiBase: string, entityName: string, variant: FormVariant ): Promise<FormCustomizationResponse>"
+        },
+        {
+          "name": "putFormCustomization",
+          "kind": "function",
+          "signature": "async function putFormCustomization( client: AxiosInstance, apiBase: string, entityName: string, variant: FormVariant, request: FormCustomizationRequest ): Promise<FormCustomizationResponse>"
+        }
+      ]
+    },
+    {
       "name": "@granit/entities-views",
       "description": "Framework-agnostic types and helpers for Granit saved views — EntityView aggregate, visibility (Personal / Shared / Tenant), pin / default / personal-default flags, basedOn delta model (mirrors Granit.Entities.Views.Domain)",
       "exports": []
@@ -3025,6 +3046,86 @@
           "name": "useEntityMetadata",
           "kind": "function",
           "signature": "function useEntityMetadata( name: string, options:"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-entities-customization",
+      "description": "React bindings + headless editors for @granit/entities-customization (Layer 1)",
+      "exports": [
+        {
+          "name": "API_VERSION",
+          "kind": "const",
+          "signature": "const API_VERSION"
+        },
+        {
+          "name": "DEFAULT_API_BASE",
+          "kind": "const",
+          "signature": "const DEFAULT_API_BASE"
+        },
+        {
+          "name": "DEFAULT_QUERY_KEY_PREFIX",
+          "kind": "const",
+          "signature": "const DEFAULT_QUERY_KEY_PREFIX"
+        },
+        {
+          "name": "useFormCustomization",
+          "kind": "function",
+          "signature": "function useFormCustomization("
+        },
+        {
+          "name": "usePutFormCustomization",
+          "kind": "function",
+          "signature": "function usePutFormCustomization(): UseMutationResult< FormCustomizationResponse, Error, PutFormCustomizationArgs >"
+        },
+        {
+          "name": "EffectiveField",
+          "kind": "interface",
+          "signature": "interface EffectiveField",
+          "members": []
+        },
+        {
+          "name": "SchemaField",
+          "kind": "interface",
+          "signature": "interface SchemaField",
+          "members": []
+        },
+        {
+          "name": "FormLayoutEditor",
+          "kind": "function",
+          "signature": "function FormLayoutEditor("
+        },
+        {
+          "name": "FormLayoutEditorProps",
+          "kind": "interface",
+          "signature": "interface FormLayoutEditorProps",
+          "members": []
+        },
+        {
+          "name": "LayoutEditorLabels",
+          "kind": "interface",
+          "signature": "interface LayoutEditorLabels",
+          "members": []
+        },
+        {
+          "name": "WorkspaceLayoutEditor",
+          "kind": "function",
+          "signature": "function WorkspaceLayoutEditor(props: WorkspaceLayoutEditorProps): ReactNode"
+        },
+        {
+          "name": "WorkspaceLayoutEditorProps",
+          "kind": "type",
+          "signature": "type WorkspaceLayoutEditorProps = FormLayoutEditorProps"
+        },
+        {
+          "name": "FieldInspectorOverlay",
+          "kind": "function",
+          "signature": "function FieldInspectorOverlay("
+        },
+        {
+          "name": "RESOLUTION_LAYERS",
+          "kind": "const",
+          "signature": "const RESOLUTION_LAYERS: readonly ResolutionLayer[]"
         }
       ]
     },
