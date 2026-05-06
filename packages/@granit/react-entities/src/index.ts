@@ -71,6 +71,11 @@ export {
   entityRelationAggregatesQueryKey,
   useEntityRelationAggregates,
 } from './api/use-entity-relation-aggregates.js';
+export {
+  parseRelationAggregateParentMarker,
+  useInvalidateEntityRelationAggregates,
+} from './api/use-invalidate-entity-relation-aggregates.js';
+export type { RelationAggregateParentRef } from './api/use-invalidate-entity-relation-aggregates.js';
 export { entityManifestQueryKey, useEntityMetadata } from './api/use-entity-metadata.js';
 export { useEntityForm } from './hooks/index.js';
 export type { UseEntityFormOptions, UseEntityFormReturn } from './hooks/index.js';

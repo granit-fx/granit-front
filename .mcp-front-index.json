@@ -3011,6 +3011,12 @@
           "signature": "function useEntityDiscovery( options:"
         },
         {
+          "name": "RelationAggregateParentRef",
+          "kind": "interface",
+          "signature": "interface RelationAggregateParentRef",
+          "members": []
+        },
+        {
           "name": "entityManifestQueryKey",
           "kind": "function",
           "signature": "function entityManifestQueryKey( name: string, facets?: readonly EntityFacet[] ): readonly ['entities', 'manifest', string, string | null]"
