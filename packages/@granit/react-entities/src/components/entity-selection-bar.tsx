@@ -1,3 +1,4 @@
+import { useGranitClient } from '@granit/react-api-client';
 import { useCallback, useState, type KeyboardEvent, type ReactNode } from 'react';
 
 import { resolveAction } from '../actions/entity-action-button.js';
@@ -5,9 +6,11 @@ import {
   useEntityActionDispatcher,
   type EntityActionHandlers,
 } from '../actions/use-entity-action-dispatcher.js';
+import { executeBulkAction } from '../api/bulk-action.js';
 import { useSelection } from '../selection/selection-context.js';
 
 import type {
+  BulkActionResponse,
   EntityActionManifest,
   EntityManifestResponse,
   EntitySelectionActionManifest,
@@ -26,7 +29,28 @@ export interface EntitySelectionBarRecap {
   readonly succeeded: readonly string[];
   /** Per-id failures with the rejection reason (the dispatcher's thrown error). */
   readonly failed: readonly { readonly id: string; readonly error: unknown }[];
+  /**
+   * Distinct parent markers (`"{ParentEntityName}:{ParentId}"`) returned
+   * by the bulk endpoint. Present only when the click routed through
+   * `executeBulkAction()` (i.e. `useBulkEndpoint` was opt'd in for the
+   * action); `undefined` for the per-row fan-out path. Apps consume
+   * this list to invalidate exactly the impacted relation-aggregate
+   * caches in one step per parent (D3).
+   */
+  readonly parents?: readonly string[];
 }
+
+/**
+ * Predicate / flag controlling whether the selection bar should route a
+ * given action through the bulk endpoint (one batched POST) instead of
+ * the default per-row fan-out (N parallel POSTs capped at 10).
+ *
+ * Apps opt in when their backend exposes
+ * `POST /entities/{name}/bulk/{action}` for the action — the backend
+ * owns dedup, and the response surfaces the impacted parents in one
+ * step. Set `false` (the default) to keep the per-row fan-out.
+ */
+export type BulkDispatchPredicate = boolean | ((action: EntitySelectionActionManifest) => boolean);
 
 export interface EntitySelectionBarProps {
   /** Entity manifest — provides `actions[]` + `collections.selectionActions[]`. */
@@ -56,6 +80,16 @@ export interface EntitySelectionBarProps {
     action: EntitySelectionActionManifest,
     selectedIds: ReadonlySet<string>
   ) => boolean | Promise<boolean>;
+  /**
+   * Opt-in: route the click through the bulk endpoint
+   * (`POST /entities/{name}/bulk/{action}`) instead of the per-row
+   * fan-out. Pass `true` to enable for every selection action, or a
+   * predicate to enable per action (typical: a closed allow-list of
+   * action names known to support bulk on the host backend).
+   *
+   * Default: `false` (per-row fan-out — the pre-D2 behaviour).
+   */
+  readonly useBulkEndpoint?: BulkDispatchPredicate;
   /** Optional class for the root element. */
   readonly className?: string;
 }
@@ -94,9 +128,11 @@ export function EntitySelectionBar({
   handlers,
   onComplete,
   confirm,
+  useBulkEndpoint,
   className,
 }: EntitySelectionBarProps): ReactNode {
   const dispatch = useEntityActionDispatcher(handlers);
+  const client = useGranitClient();
   const selection = useSelection();
   const [running, setRunning] = useState<string | null>(null);
 
@@ -118,17 +154,24 @@ export function EntitySelectionBar({
         if (!proceed) return;
       }
 
+      const useBulk =
+        typeof useBulkEndpoint === 'function' ? useBulkEndpoint(ref) : useBulkEndpoint === true;
+      const entityName = manifest.identity?.name;
+
       setRunning(ref.name);
       try {
-        const recap = await fanOutWithCap(
-          ids,
-          (id) =>
-            dispatch(action, id, null).then(
-              () => ({ kind: 'ok' as const, id }),
-              (error: unknown) => ({ kind: 'err' as const, id, error })
-            ),
-          SELECTION_FANOUT_CONCURRENCY_CAP
-        );
+        const recap =
+          useBulk && entityName
+            ? await dispatchBulk(client, entityName, ref.name, ids)
+            : await fanOutWithCap(
+                ids,
+                (id) =>
+                  dispatch(action, id, null).then(
+                    () => ({ kind: 'ok' as const, id }),
+                    (error: unknown) => ({ kind: 'err' as const, id, error })
+                  ),
+                SELECTION_FANOUT_CONCURRENCY_CAP
+              );
         onComplete?.(ref, recap);
         // Best-effort: clear the selection on full success so the user
         // doesn't accidentally re-fire on the same set. Failures are
@@ -142,7 +185,16 @@ export function EntitySelectionBar({
         setRunning(null);
       }
     },
-    [running, selection, dispatch, confirm, onComplete]
+    [
+      running,
+      selection,
+      dispatch,
+      confirm,
+      onComplete,
+      useBulkEndpoint,
+      client,
+      manifest.identity?.name,
+    ]
   );
 
   if (selectionActions.length === 0 || selection.size === 0) return null;
@@ -154,9 +206,7 @@ export function EntitySelectionBar({
       data-selected-count={selection.size}
       className={className}
     >
-      <span data-granit-selection-bar-summary="">
-        {selection.size} selected
-      </span>
+      <span data-granit-selection-bar-summary="">{selection.size} selected</span>
       {selectionActions.map((ref) => {
         const action = resolveAction(ref, manifest.actions);
         if (!action) return null;
@@ -193,6 +243,38 @@ export function EntitySelectionBar({
       </button>
     </div>
   );
+}
+
+/**
+ * Single-shot bulk dispatch. Calls
+ * `POST /entities/{name}/bulk/{action}` with all ids and maps the
+ * response into the existing recap shape (`succeeded` / `failed`)
+ * extended with `parents` for downstream cache-eviction wiring (D3).
+ *
+ * If the endpoint itself rejects (network / 4xx / 5xx), every id is
+ * surfaced as failed against the same root error — the user-visible
+ * recap stays uniform between the bulk and fan-out paths.
+ */
+async function dispatchBulk(
+  client: Parameters<typeof executeBulkAction>[0],
+  entityName: string,
+  actionName: string,
+  ids: readonly string[]
+): Promise<EntitySelectionBarRecap> {
+  let response: BulkActionResponse;
+  try {
+    response = await executeBulkAction(client, entityName, actionName, { ids });
+  } catch (error) {
+    return {
+      succeeded: [],
+      failed: ids.map((id) => ({ id, error })),
+    };
+  }
+  return {
+    succeeded: response.ok,
+    failed: response.failed.map((f) => ({ id: f.id, error: f })),
+    parents: response.parents,
+  };
 }
 
 function swallowEnterSpace(event: KeyboardEvent<HTMLButtonElement>): void {
