@@ -43,6 +43,10 @@ export type { ActivitiesSidePanelProps } from './components/activities-side-pane
 export { activitiesSidePanel } from './contributions/entity-side-panel.js';
 export type { ActivitiesSidePanelContributionOptions } from './contributions/entity-side-panel.js';
 
+// i18n resource bundles (namespace: 'activities')
+export { activitiesTranslationsEn, activitiesTranslationsFr } from './locales/index.js';
+export type { ActivitiesTranslations } from './locales/index.js';
+
 // Notifications integration (Assigned / Reminder / Overdue)
 export {
   ACTIVITY_NOTIFICATION_RELATED_ENTITY_TYPE,
