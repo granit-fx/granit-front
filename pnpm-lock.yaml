@@ -179,6 +179,15 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/activities:
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/ai:
     dependencies:
       '@granit/types':

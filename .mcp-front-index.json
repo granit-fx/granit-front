@@ -68,6 +68,17 @@
       ]
     },
     {
+      "name": "@granit/activities",
+      "description": "Cross-entity polymorphic to-do module — types, API client, and permissions",
+      "exports": [
+        {
+          "name": "ActivitiesPermissions",
+          "kind": "const",
+          "signature": "const ActivitiesPermissions"
+        }
+      ]
+    },
+    {
       "name": "@granit/ai",
       "description": "AI workspace management, chat completion, embedding generation, and usage tracking types and API functions — mirrors Granit.AI.Endpoints .NET",
       "exports": [
