@@ -13,7 +13,14 @@ import { DEFAULT_BASE_PATH } from '../constants.js';
 
 import { mockBlobs, S } from './data.js';
 
-import type { BlobDescriptorResponse, BlobStatusValue } from '@granit/blob-storage';
+import type {
+  BlobConfirmUploadRequest,
+  BlobConfirmUploadResponse,
+  BlobDescriptorResponse,
+  BlobStatusValue,
+  BlobUploadInitiateRequest,
+  BlobUploadInitiateResponse,
+} from '@granit/blob-storage';
 import type { QueryMetadata } from '@granit/query-engine';
 
 /** Mock /meta payload for the blobs resource. */
@@ -195,5 +202,83 @@ export function createBlobStorageHandlers(baseUrl = DEFAULT_BASE_PATH) {
       if (!blob) return new HttpResponse(null, { status: 404 });
       return HttpResponse.json(blob);
     }),
+
+    // Direct-to-cloud upload flow — three handlers covering the
+    // initiate → PUT → confirm shape `useBlobUpload` orchestrates. The
+    // pre-signed URL points back at this same MSW deployment so the
+    // PUT is interceptable in mock mode (real hosts hit S3 / Azure /
+    // GCS pre-signed URLs that bypass the API). Uploads are tracked
+    // in-memory by `pendingUploads` so the confirm step can echo back
+    // the right metadata.
+    http.post<never, BlobUploadInitiateRequest>(`${baseUrl}/blobs/upload`, async ({ request }) => {
+      const body = await request.json();
+      const blobId = `${body.containerName}/${randomId()}-${body.fileName}`;
+      pendingUploads.set(blobId, body);
+      const response: BlobUploadInitiateResponse = {
+        blobId,
+        uploadUrl: `${baseUrl}/blobs/${encodeURIComponent(blobId)}/_mock-upload-target`,
+        httpMethod: 'PUT',
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+        requiredHeaders: {},
+      };
+      return HttpResponse.json(response);
+    }),
+
+    http.put(`${baseUrl}/blobs/:id/_mock-upload-target`, () => {
+      // Stand-in for the real provider's pre-signed PUT — accept the
+      // bytes, no body, no headers. The bytes are discarded; the
+      // confirm step is what surfaces a "Valid" descriptor.
+      return new HttpResponse(null, { status: 200 });
+    }),
+
+    http.post<{ id: string }, BlobConfirmUploadRequest>(
+      `${baseUrl}/blobs/:id/confirm`,
+      ({ params }) => {
+        const blobId = decodeURIComponent(params.id);
+        const tracked = pendingUploads.get(blobId);
+        if (!tracked) return new HttpResponse(null, { status: 404 });
+        pendingUploads.delete(blobId);
+        const response: BlobConfirmUploadResponse = {
+          blobId,
+          isValid: true,
+          status: S.Valid,
+          verifiedContentType: tracked.contentType,
+          sizeBytes: tracked.sizeBytes,
+          rejectionReason: null,
+        };
+        // Stash the descriptor so subsequent `GET /blobs/:id` requests
+        // (typically issued by `<BlobImage>` or the blob list page)
+        // find the freshly-uploaded record.
+        const now = new Date().toISOString();
+        const descriptor: BlobDescriptorResponse = {
+          id: blobId,
+          containerName: tracked.containerName,
+          originalFileName: tracked.fileName,
+          declaredContentType: tracked.contentType,
+          verifiedContentType: tracked.contentType,
+          declaredSizeBytes: tracked.sizeBytes,
+          actualSizeBytes: tracked.sizeBytes,
+          status: S.Valid,
+          rejectionReason: null,
+          deletionReason: null,
+          createdAt: now,
+          validatedAt: now,
+          deletedAt: null,
+        };
+        mockBlobs.push(descriptor);
+        return HttpResponse.json(response);
+      }
+    ),
   ];
+}
+
+const pendingUploads = new Map<string, BlobUploadInitiateRequest>();
+
+function randomId(): string {
+  // Crypto-grade ids are overkill for the mock; the goal is just a
+  // collision-free token within a session.
+  if (typeof globalThis.crypto?.randomUUID === 'function') {
+    return globalThis.crypto.randomUUID();
+  }
+  return Math.random().toString(36).slice(2, 12);
 }

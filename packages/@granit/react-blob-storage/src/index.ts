@@ -1,6 +1,8 @@
 // Components
 export { BlobImage } from './components/blob-image.js';
 export type { BlobImageProps } from './components/blob-image.js';
+export { BlobUploadField } from './components/blob-upload-field.js';
+export type { BlobUploadFieldProps } from './components/blob-upload-field.js';
 
 // Hooks
 export { useBlob } from './hooks/use-blob.js';
