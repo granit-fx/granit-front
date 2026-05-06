@@ -27,3 +27,6 @@ export type {
 
 export { toggleReactionList, useToggleReaction } from './hooks/use-toggle-reaction.js';
 export type { ToggleReactionVariables } from './hooks/use-toggle-reaction.js';
+
+export { ReactionBar } from './components/reaction-bar.js';
+export type { ReactionBarLabels, ReactionBarProps } from './components/reaction-bar.js';

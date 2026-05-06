@@ -4288,6 +4288,23 @@
           "kind": "interface",
           "signature": "interface ToggleReactionVariables",
           "members": []
+        },
+        {
+          "name": "ReactionBar",
+          "kind": "function",
+          "signature": "function ReactionBar("
+        },
+        {
+          "name": "ReactionBarLabels",
+          "kind": "interface",
+          "signature": "interface ReactionBarLabels",
+          "members": []
+        },
+        {
+          "name": "ReactionBarProps",
+          "kind": "interface",
+          "signature": "interface ReactionBarProps",
+          "members": []
         }
       ]
     },
