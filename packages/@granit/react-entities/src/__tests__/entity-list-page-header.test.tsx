@@ -56,6 +56,7 @@ function makeManifest(args: {
       defaultViewId: null,
       listLayouts: [],
       headerActions: args.headerActions,
+      selectionActions: [],
     },
     relations: null,
     actions: args.actions,

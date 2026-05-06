@@ -50,6 +50,7 @@ export type {
   EntityPermissionsSection,
   EntityRelationAggregateManifest,
   EntityRelationManifest,
+  EntitySelectionActionManifest,
   FieldOp,
   GalleryCardSize,
   KanbanColor,

@@ -3,6 +3,7 @@ export type {
   EntityCollectionReference,
   EntityCollectionsSection,
   EntityHeaderActionManifest,
+  EntitySelectionActionManifest,
 } from './collections.js';
 export type {
   EntityDetailManifest,

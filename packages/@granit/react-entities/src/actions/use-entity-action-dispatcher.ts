@@ -1,5 +1,10 @@
 import { useGranitClient } from '@granit/react-api-client';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
+
+import {
+  EntityActionDrawerContext,
+  EntityActionModalContext,
+} from './entity-action-overlay-context.js';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { EntityActionManifest } from '@granit/entities';
@@ -39,6 +44,21 @@ export interface EntityActionHandlers {
    * with workflow-bearing entities must wire this slot.
    */
   readonly workflowTransition?: EntityActionHandler;
+  /**
+   * `OpenDrawer` — opens a side drawer on the row. Default delegates
+   * to the nearest `<EntityActionDrawerHost>` context (when mounted)
+   * by calling its `open()` callback; without the host context, the
+   * default short-circuits with a `console.warn`. Apps that want
+   * direct dispatch (no host) override this slot to mount their own
+   * drawer state.
+   */
+  readonly openDrawer?: EntityActionHandler;
+  /**
+   * `OpenModal` — opens a modal on the row. Symmetric counterpart of
+   * `openDrawer` — defaults to the nearest `<EntityActionModalHost>`
+   * context.
+   */
+  readonly openModal?: EntityActionHandler;
 }
 
 /**
@@ -88,10 +108,14 @@ export function useEntityActionDispatcher(
   handlers: EntityActionHandlers = {}
 ): EntityActionDispatch {
   const client = useGranitClient();
+  const drawerCtx = useContext(EntityActionDrawerContext);
+  const modalCtx = useContext(EntityActionModalContext);
   const apiCall = handlers.apiCall ?? defaultApiCall;
   const download = handlers.download ?? defaultDownload;
   const navigate = handlers.navigate ?? defaultNavigate;
   const workflowTransition = handlers.workflowTransition ?? defaultWorkflowTransition;
+  const openDrawer = handlers.openDrawer;
+  const openModal = handlers.openModal;
 
   return useCallback<EntityActionDispatch>(
     async (action, rowId, row) => {
@@ -108,9 +132,41 @@ export function useEntityActionDispatcher(
         case 'WorkflowTransition':
           await workflowTransition(action, rowId, row, client);
           return;
+        case 'OpenDrawer':
+          if (openDrawer) {
+            await openDrawer(action, rowId, row, client);
+          } else if (drawerCtx) {
+            drawerCtx.open({ action, rowId, row });
+          } else {
+            globalThis.console.warn(
+              `EntityAction "${action.name}" is OpenDrawer but no <EntityActionDrawerHost> is mounted in the tree and no \`openDrawer\` handler override was supplied.`
+            );
+          }
+          return;
+        case 'OpenModal':
+          if (openModal) {
+            await openModal(action, rowId, row, client);
+          } else if (modalCtx) {
+            modalCtx.open({ action, rowId, row });
+          } else {
+            globalThis.console.warn(
+              `EntityAction "${action.name}" is OpenModal but no <EntityActionModalHost> is mounted in the tree and no \`openModal\` handler override was supplied.`
+            );
+          }
+          return;
       }
     },
-    [client, apiCall, download, navigate, workflowTransition]
+    [
+      client,
+      apiCall,
+      download,
+      navigate,
+      workflowTransition,
+      openDrawer,
+      openModal,
+      drawerCtx,
+      modalCtx,
+    ]
   );
 }
 

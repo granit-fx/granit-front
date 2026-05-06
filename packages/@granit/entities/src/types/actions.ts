@@ -6,7 +6,13 @@
  *
  * Mirrors `Granit.Entities.Actions.EntityActionKind`.
  */
-export type EntityActionKind = 'ApiCall' | 'Download' | 'Navigate' | 'WorkflowTransition';
+export type EntityActionKind =
+  | 'ApiCall'
+  | 'Download'
+  | 'Navigate'
+  | 'WorkflowTransition'
+  | 'OpenDrawer'
+  | 'OpenModal';
 
 /**
  * Wire shape for one action exposed on an entity manifest. Carries the
