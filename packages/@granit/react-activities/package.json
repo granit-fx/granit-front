@@ -1,0 +1,39 @@
+{
+  "name": "@granit/react-activities",
+  "description": "React bindings for @granit/activities — ActivitiesProvider and hooks",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/activities": "workspace:*",
+    "@granit/api-client": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@tanstack/react-query": "^5.0.0",
+    "react": "^19.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/activities": "workspace:*",
+    "@granit/api-client": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-testing": "workspace:*",
+    "@granit/testing": "workspace:*"
+  }
+}

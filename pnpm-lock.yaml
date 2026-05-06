@@ -631,6 +631,31 @@ importers:
         specifier: workspace:*
         version: link:../types
 
+  packages/@granit/react-activities:
+    dependencies:
+      '@tanstack/react-query':
+        specifier: 5.100.5
+        version: 5.100.5(react@19.2.5)
+      react:
+        specifier: ^19.0.0
+        version: 19.2.5
+    devDependencies:
+      '@granit/activities':
+        specifier: workspace:*
+        version: link:../activities
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/react-ai:
     dependencies:
       '@granit/ai':

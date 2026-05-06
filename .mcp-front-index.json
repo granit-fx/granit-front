@@ -1256,6 +1256,47 @@
       ]
     },
     {
+      "name": "@granit/react-activities",
+      "description": "React bindings for @granit/activities — ActivitiesProvider and hooks",
+      "exports": [
+        {
+          "name": "API_VERSION",
+          "kind": "const",
+          "signature": "const API_VERSION"
+        },
+        {
+          "name": "DEFAULT_BASE_PATH",
+          "kind": "const",
+          "signature": "const DEFAULT_BASE_PATH"
+        },
+        {
+          "name": "DEFAULT_QUERY_KEY_PREFIX",
+          "kind": "const",
+          "signature": "const DEFAULT_QUERY_KEY_PREFIX"
+        },
+        {
+          "name": "MODULE",
+          "kind": "const",
+          "signature": "const MODULE"
+        },
+        {
+          "name": "useActivities",
+          "kind": "function",
+          "signature": "function useActivities(filter?: ActivityListFilter): UseQueryResult<ActivityListResponse>"
+        },
+        {
+          "name": "useActivitiesCalendar",
+          "kind": "function",
+          "signature": "function useActivitiesCalendar( filter: ActivityCalendarFilter ): UseQueryResult<readonly ActivityCalendarItemResponse[]>"
+        },
+        {
+          "name": "useActivity",
+          "kind": "function",
+          "signature": "function useActivity(id: string): UseQueryResult<ActivityResponse>"
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ai",
       "description": "React bindings for @granit/ai — AIProvider, useAIWorkspaces, useAIChat, useAIChatStream, useAIEmbeddings, workspace CRUD mutations",
       "exports": [
