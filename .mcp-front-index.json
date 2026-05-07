@@ -4782,6 +4782,22 @@
       ]
     },
     {
+      "name": "@granit/taxonomy",
+      "description": "Cross-entity Tags and Categories module — types, API client, and permissions",
+      "exports": [
+        {
+          "name": "isHexColor",
+          "kind": "function",
+          "signature": "function isHexColor(value: string): value is HexColor"
+        },
+        {
+          "name": "TaxonomyPermissions",
+          "kind": "const",
+          "signature": "const TaxonomyPermissions"
+        }
+      ]
+    },
+    {
       "name": "@granit/templating",
       "description": "Template management types and API functions — mirrors Granit.Templating .NET",
       "exports": [

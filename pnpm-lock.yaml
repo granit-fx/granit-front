@@ -2405,6 +2405,15 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/taxonomy:
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/templating:
     dependencies:
       '@granit/query-engine':
