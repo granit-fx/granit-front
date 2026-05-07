@@ -18,3 +18,22 @@ export { useTagAssignments, useTags } from './hooks/use-tags.js';
 export { useCategories, useCategory } from './hooks/use-categories.js';
 export { useTaxonomySearch } from './hooks/use-taxonomy-search.js';
 export type { UseTaxonomySearchOptions } from './hooks/use-taxonomy-search.js';
+
+// Mutation hooks — Tags
+export {
+  useAssignTag,
+  useCreateTag,
+  useDeleteTag,
+  useUnassignTag,
+  useUpdateTag,
+} from './hooks/use-tag-mutations.js';
+
+// Mutation hooks — Categories
+export {
+  useAssignCategory,
+  useCreateCategory,
+  useDeleteCategory,
+  useMoveCategory,
+  useUnassignCategory,
+  useUpdateCategory,
+} from './hooks/use-category-mutations.js';
