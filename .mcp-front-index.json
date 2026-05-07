@@ -4224,7 +4224,7 @@
         {
           "name": "useCategories",
           "kind": "function",
-          "signature": "function useCategories( filter: CategoryListFilter ): UseQueryResult<readonly CategoryResponse[]>"
+          "signature": "function useCategories( filter: CategoryListFilter, options?:"
         },
         {
           "name": "useCategory",
@@ -4241,6 +4241,116 @@
           "kind": "interface",
           "signature": "interface UseTaxonomySearchOptions extends TaxonomySearchFilter",
           "members": []
+        },
+        {
+          "name": "DocumentTagsBindings",
+          "kind": "interface",
+          "signature": "interface DocumentTagsBindings",
+          "members": []
+        },
+        {
+          "name": "TagChip",
+          "kind": "function",
+          "signature": "function TagChip("
+        },
+        {
+          "name": "TagChipProps",
+          "kind": "interface",
+          "signature": "interface TagChipProps",
+          "members": []
+        },
+        {
+          "name": "TagAutocomplete",
+          "kind": "function",
+          "signature": "function TagAutocomplete("
+        },
+        {
+          "name": "TagChipStrip",
+          "kind": "function",
+          "signature": "function TagChipStrip("
+        },
+        {
+          "name": "TagChipStripLabels",
+          "kind": "interface",
+          "signature": "interface TagChipStripLabels extends TagAutocompleteLabels",
+          "members": []
+        },
+        {
+          "name": "TagChipStripProps",
+          "kind": "interface",
+          "signature": "interface TagChipStripProps",
+          "members": []
+        },
+        {
+          "name": "DocumentTagChipStrip",
+          "kind": "function",
+          "signature": "function DocumentTagChipStrip("
+        },
+        {
+          "name": "DocumentTagChipStripProps",
+          "kind": "interface",
+          "signature": "interface DocumentTagChipStripProps",
+          "members": []
+        },
+        {
+          "name": "TagManager",
+          "kind": "function",
+          "signature": "function TagManager("
+        },
+        {
+          "name": "TagManagerLabels",
+          "kind": "interface",
+          "signature": "interface TagManagerLabels",
+          "members": []
+        },
+        {
+          "name": "TagManagerProps",
+          "kind": "interface",
+          "signature": "interface TagManagerProps",
+          "members": []
+        },
+        {
+          "name": "CategoryBreadcrumb",
+          "kind": "function",
+          "signature": "function CategoryBreadcrumb("
+        },
+        {
+          "name": "CategoryBreadcrumbProps",
+          "kind": "interface",
+          "signature": "interface CategoryBreadcrumbProps",
+          "members": []
+        },
+        {
+          "name": "CategoryTree",
+          "kind": "function",
+          "signature": "function CategoryTree("
+        },
+        {
+          "name": "CategoryTreeLabels",
+          "kind": "interface",
+          "signature": "interface CategoryTreeLabels",
+          "members": []
+        },
+        {
+          "name": "CategoryTreeProps",
+          "kind": "interface",
+          "signature": "interface CategoryTreeProps",
+          "members": []
+        },
+        {
+          "name": "CategorySelector",
+          "kind": "function",
+          "signature": "function CategorySelector("
+        },
+        {
+          "name": "TaxonomySearchBar",
+          "kind": "function",
+          "signature": "function TaxonomySearchBar("
+        },
+        {
+          "name": "entityTaxonomy",
+          "kind": "function",
+          "signature": "function entityTaxonomy( options: EntityTaxonomyContributionOptions ): (props: EntityTaxonomyProps) => ReactNode"
         }
       ]
     },

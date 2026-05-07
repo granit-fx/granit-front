@@ -22,13 +22,15 @@ import type { UseQueryResult } from '@tanstack/react-query';
  * ```
  */
 export function useCategories(
-  filter: CategoryListFilter
+  filter: CategoryListFilter,
+  options?: { readonly enabled?: boolean }
 ): UseQueryResult<readonly CategoryResponse[]> {
   const config = useTaxonomyConfig();
 
   return useQuery({
     queryKey: buildTaxonomyQueryKey(config, 'categories', filter),
     queryFn: () => listCategories(config.client, config.basePath, filter),
+    enabled: options?.enabled ?? true,
   });
 }
 
