@@ -4794,6 +4794,11 @@
           "name": "TaxonomyPermissions",
           "kind": "const",
           "signature": "const TaxonomyPermissions"
+        },
+        {
+          "name": "searchTaxonomy",
+          "kind": "function",
+          "signature": "async function searchTaxonomy( client: AxiosInstance, basePath: string, filter: TaxonomySearchFilter ): Promise<readonly TaxonomySearchResultGroup[]>"
         }
       ]
     },
