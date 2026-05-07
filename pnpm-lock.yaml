@@ -2093,6 +2093,31 @@ importers:
         specifier: workspace:*
         version: link:../types
 
+  packages/@granit/react-taxonomy:
+    dependencies:
+      '@tanstack/react-query':
+        specifier: 5.100.9
+        version: 5.100.9(react@19.2.5)
+      react:
+        specifier: ^19.0.0
+        version: 19.2.5
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/taxonomy':
+        specifier: workspace:*
+        version: link:../taxonomy
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/react-templating:
     dependencies:
       '@granit/react-query-engine':

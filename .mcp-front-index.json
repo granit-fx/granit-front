@@ -4188,6 +4188,63 @@
       ]
     },
     {
+      "name": "@granit/react-taxonomy",
+      "description": "React bindings for @granit/taxonomy — TaxonomyProvider, hooks, components",
+      "exports": [
+        {
+          "name": "API_VERSION",
+          "kind": "const",
+          "signature": "const API_VERSION"
+        },
+        {
+          "name": "DEFAULT_BASE_PATH",
+          "kind": "const",
+          "signature": "const DEFAULT_BASE_PATH"
+        },
+        {
+          "name": "DEFAULT_QUERY_KEY_PREFIX",
+          "kind": "const",
+          "signature": "const DEFAULT_QUERY_KEY_PREFIX"
+        },
+        {
+          "name": "MODULE",
+          "kind": "const",
+          "signature": "const MODULE"
+        },
+        {
+          "name": "useTagAssignments",
+          "kind": "function",
+          "signature": "function useTagAssignments( target: TaxonomyTargetRef ): UseQueryResult<readonly TagAssignmentResponse[]>"
+        },
+        {
+          "name": "useTags",
+          "kind": "function",
+          "signature": "function useTags(filter: TagListFilter): UseQueryResult<readonly TagResponse[]>"
+        },
+        {
+          "name": "useCategories",
+          "kind": "function",
+          "signature": "function useCategories( filter: CategoryListFilter ): UseQueryResult<readonly CategoryResponse[]>"
+        },
+        {
+          "name": "useCategory",
+          "kind": "function",
+          "signature": "function useCategory(id: string): UseQueryResult<CategoryDetailResponse>"
+        },
+        {
+          "name": "useTaxonomySearch",
+          "kind": "function",
+          "signature": "function useTaxonomySearch( options: UseTaxonomySearchOptions ): UseQueryResult<readonly TaxonomySearchResultGroup[]>"
+        },
+        {
+          "name": "UseTaxonomySearchOptions",
+          "kind": "interface",
+          "signature": "interface UseTaxonomySearchOptions extends TaxonomySearchFilter",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/react-templating",
       "description": "React bindings for @granit/templating — TemplatingProvider, hooks",
       "exports": [
