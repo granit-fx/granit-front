@@ -79,6 +79,36 @@ describe('DocumentsList', () => {
     expect(onOpenDocument).toHaveBeenCalledWith('doc-1');
   });
 
+  it('renders the error state when the QueryEngine call fails', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockRejectedValue(new Error('boom'));
+
+    render(<DocumentsList folderId="fld-err" />, { wrapper: createWrapper(client) });
+
+    await waitFor(() => expect(screen.getByText('Failed to load documents.')).toBeInTheDocument());
+  });
+
+  it('renders a row without onOpenDocument as a plain span (no button)', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({
+      data: {
+        items: [{ id: 'doc-1', folderId: 'fld-1', name: 'readonly.pdf', status: 'Active' }],
+        totalCount: 1,
+        page: 1,
+        pageSize: 50,
+      },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: { headers: {} } as never,
+    });
+
+    render(<DocumentsList folderId="fld-1" />, { wrapper: createWrapper(client) });
+
+    await waitFor(() => expect(screen.getByText('readonly.pdf')).toBeInTheDocument());
+    expect(screen.queryByRole('button', { name: 'readonly.pdf' })).not.toBeInTheDocument();
+  });
+
   it('hits the QueryEngine endpoint /documents/query with the folderId + status Active filters', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({

@@ -75,6 +75,82 @@ describe('DocumentDetail', () => {
     expect(screen.getByText('Active')).toBeInTheDocument();
   });
 
+  it('renders the not-found state when the document query returns null', async () => {
+    const client = createMockClient();
+    mockGet(client, null);
+
+    render(<DocumentDetail documentId="missing" />, { wrapper: createWrapper(client) });
+
+    await waitFor(() => expect(screen.getByText('Document not found.')).toBeInTheDocument());
+  });
+
+  it('renders the no-description fallback and onOpenVersions / onOpenShares callbacks', async () => {
+    const client = createMockClient();
+    const noDesc: DocumentResponse = { ...sampleDocument, description: null };
+    mockGet(client, noDesc);
+    const onOpenVersions = vi.fn();
+    const onOpenShares = vi.fn();
+
+    render(
+      <DocumentDetail
+        documentId="doc-1"
+        onOpenVersions={onOpenVersions}
+        onOpenShares={onOpenShares}
+      />,
+      { wrapper: createWrapper(client) }
+    );
+
+    await waitFor(() => expect(screen.getByText('No description.')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: /Versions/ }));
+    expect(onOpenVersions).toHaveBeenCalledWith('doc-1');
+    await userEvent.click(screen.getByRole('button', { name: /Shares/ }));
+    expect(onOpenShares).toHaveBeenCalledWith('doc-1');
+  });
+
+  it('triggers a download (refetches the URL and opens a new window)', async () => {
+    const client = createMockClient();
+    mockGet(client, sampleDocument);
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
+
+    render(<DocumentDetail documentId="doc-1" />, { wrapper: createWrapper(client) });
+
+    await waitFor(() => expect(screen.getByText('Contract.pdf')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Download current version' }));
+
+    await waitFor(() => expect(openSpy).toHaveBeenCalled());
+    expect(openSpy.mock.calls[0]?.[0]).toBe('https://blob/x');
+  });
+
+  it('cancels the inline rename when Escape is pressed', async () => {
+    const client = createMockClient();
+    mockGet(client, sampleDocument);
+
+    render(<DocumentDetail documentId="doc-1" canManage />, { wrapper: createWrapper(client) });
+
+    await waitFor(() => expect(screen.getByText('Contract.pdf')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Rename' }));
+    const input = await screen.findByDisplayValue('Contract.pdf');
+    await userEvent.type(input, '{Escape}');
+
+    expect(screen.queryByDisplayValue('Contract.pdf')).not.toBeInTheDocument();
+    expect(client.patch).not.toHaveBeenCalled();
+  });
+
+  it('no-ops the rename when the trimmed name is unchanged', async () => {
+    const client = createMockClient();
+    mockGet(client, sampleDocument);
+
+    render(<DocumentDetail documentId="doc-1" canManage />, { wrapper: createWrapper(client) });
+
+    await waitFor(() => expect(screen.getByText('Contract.pdf')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Rename' }));
+    const input = await screen.findByDisplayValue('Contract.pdf');
+    // blur with the same name → commits, but no-op
+    input.blur();
+    await waitFor(() => expect(screen.queryByDisplayValue('Contract.pdf')).not.toBeInTheDocument());
+    expect(client.patch).not.toHaveBeenCalled();
+  });
+
   it('triggers a rename mutation when the inline edit is committed', async () => {
     const client = createMockClient();
     mockGet(client, sampleDocument);

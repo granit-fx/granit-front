@@ -100,4 +100,97 @@ describe('TrashBin', () => {
     const url = vi.mocked(client.post).mock.calls[0]?.[0];
     expect(url).toContain('/restore');
   });
+
+  it('does not render manage action column when canManage is false', async () => {
+    const client = createMockClient();
+    const response: ListTrashedDocumentsResponse = {
+      documents: [trashed],
+      totalCount: 1,
+      skip: 0,
+      take: 20,
+    };
+    vi.mocked(client.get).mockResolvedValue({ data: response });
+
+    render(<TrashBin />, { wrapper: createWrapper(client) });
+
+    await waitFor(() => expect(screen.getByText('Old.pdf')).toBeInTheDocument());
+    expect(screen.queryByRole('button', { name: 'Restore' })).toBeNull();
+  });
+
+  it('runs the permanent-delete flow when both confirms return true', async () => {
+    const client = createMockClient();
+    const response: ListTrashedDocumentsResponse = {
+      documents: [trashed],
+      totalCount: 1,
+      skip: 0,
+      take: 20,
+    };
+    vi.mocked(client.get).mockResolvedValue({ data: response });
+    vi.mocked(client.delete).mockResolvedValue({ data: undefined });
+
+    render(<TrashBin canManage />, { wrapper: createWrapper(client) });
+    await waitFor(() => expect(screen.getByText('Old.pdf')).toBeInTheDocument());
+
+    await userEvent.click(screen.getByRole('button', { name: 'Permanently delete' }));
+    await waitFor(() => expect(client.delete).toHaveBeenCalled());
+  });
+
+  it('aborts permanent-delete when the first confirm is cancelled', async () => {
+    vi.mocked(window.confirm).mockReturnValue(false);
+    const client = createMockClient();
+    const response: ListTrashedDocumentsResponse = {
+      documents: [trashed],
+      totalCount: 1,
+      skip: 0,
+      take: 20,
+    };
+    vi.mocked(client.get).mockResolvedValue({ data: response });
+
+    render(<TrashBin canManage />, { wrapper: createWrapper(client) });
+    await waitFor(() => expect(screen.getByText('Old.pdf')).toBeInTheDocument());
+
+    await userEvent.click(screen.getByRole('button', { name: 'Permanently delete' }));
+    expect(client.delete).not.toHaveBeenCalled();
+  });
+
+  it('aborts permanent-delete when only the second confirm is cancelled', async () => {
+    const confirmSpy = vi.spyOn(window, 'confirm');
+    confirmSpy.mockReturnValueOnce(true).mockReturnValueOnce(false);
+    const client = createMockClient();
+    const response: ListTrashedDocumentsResponse = {
+      documents: [trashed],
+      totalCount: 1,
+      skip: 0,
+      take: 20,
+    };
+    vi.mocked(client.get).mockResolvedValue({ data: response });
+
+    render(<TrashBin canManage />, { wrapper: createWrapper(client) });
+    await waitFor(() => expect(screen.getByText('Old.pdf')).toBeInTheDocument());
+
+    await userEvent.click(screen.getByRole('button', { name: 'Permanently delete' }));
+    expect(client.delete).not.toHaveBeenCalled();
+  });
+
+  it('paginates next/previous when totalCount exceeds the page size', async () => {
+    const client = createMockClient();
+    const response: ListTrashedDocumentsResponse = {
+      documents: [trashed],
+      totalCount: 5,
+      skip: 0,
+      take: 1,
+    };
+    vi.mocked(client.get).mockResolvedValue({ data: response });
+
+    render(<TrashBin pageSize={1} />, { wrapper: createWrapper(client) });
+    await waitFor(() => expect(screen.getByText('Old.pdf')).toBeInTheDocument());
+
+    const next = screen.getByRole('button', { name: 'Next' });
+    expect(next).not.toBeDisabled();
+    await userEvent.click(next);
+
+    const prev = screen.getByRole('button', { name: 'Previous' });
+    expect(prev).not.toBeDisabled();
+    await userEvent.click(prev);
+  });
 });

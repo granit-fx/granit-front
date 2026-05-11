@@ -92,4 +92,96 @@ describe('ShareDialog', () => {
 
     await waitFor(() => expect(screen.getByText('No shares yet.')).toBeInTheDocument());
   });
+
+  it('grants a folder share through the draft form and clears the draft on success', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ data: { items: [] } });
+    vi.mocked(client.post).mockResolvedValue({ data: { ...folderShare, id: 'share-new' } });
+
+    render(<ShareDialog target={{ type: 'Folder', id: 'fld-1' }} canManage />, {
+      wrapper: createWrapper(client),
+    });
+
+    await waitFor(() => expect(screen.getByText('No shares yet.')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Add share' }));
+    const granteeInput = screen.getByLabelText('Grantee');
+    await userEvent.type(granteeInput, 'bob');
+    // Exercise the type, permission, expiresAt, isDefault setters.
+    await userEvent.selectOptions(screen.getByLabelText('Type'), 'Group');
+    await userEvent.selectOptions(screen.getByLabelText('Permission'), 'Edit');
+    const expiresInput = screen.getByLabelText('Expires');
+    await userEvent.type(expiresInput, '2026-12-31T23:59');
+    const checkbox = screen.getByRole('checkbox');
+    await userEvent.click(checkbox); // toggle isDefault off
+
+    await userEvent.click(screen.getByRole('button', { name: 'Grant' }));
+
+    await waitFor(() => expect(client.post).toHaveBeenCalled());
+    const [url, body] = vi.mocked(client.post).mock.calls[0] ?? [];
+    expect(url).toContain('/folders/fld-1/shares');
+    expect(body).toMatchObject({
+      granteeType: 'Group',
+      granteeId: 'bob',
+      permission: 'Edit',
+      isDefault: false,
+    });
+  });
+
+  it('does not submit when the granteeId is empty (whitespace only)', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ data: { items: [] } });
+
+    render(<ShareDialog target={{ type: 'Folder', id: 'fld-1' }} canManage />, {
+      wrapper: createWrapper(client),
+    });
+
+    await waitFor(() => expect(screen.getByText('No shares yet.')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Add share' }));
+    await userEvent.type(screen.getByLabelText('Grantee'), '   ');
+    await userEvent.click(screen.getByRole('button', { name: 'Grant' }));
+
+    // Draft is still open, post was never called.
+    expect(client.post).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: 'Grant' })).toBeInTheDocument();
+  });
+
+  it('cancels the draft when Cancel is clicked', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ data: { items: [] } });
+
+    render(<ShareDialog target={{ type: 'Folder', id: 'fld-1' }} canManage />, {
+      wrapper: createWrapper(client),
+    });
+
+    await waitFor(() => expect(screen.getByText('No shares yet.')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Add share' }));
+    expect(screen.getByRole('button', { name: 'Grant' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(screen.queryByRole('button', { name: 'Grant' })).not.toBeInTheDocument();
+  });
+
+  it('grants a document share (no isDefault checkbox) and omits the isDefault field', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ data: { items: [] } });
+    vi.mocked(client.post).mockResolvedValue({
+      data: { ...folderShare, id: 'share-doc', targetType: 'Document', documentId: 'doc-1' },
+    });
+
+    render(<ShareDialog target={{ type: 'Document', id: 'doc-1' }} canManage />, {
+      wrapper: createWrapper(client),
+    });
+
+    await waitFor(() => expect(screen.getByText('No shares yet.')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Add share' }));
+    // No checkbox shown for documents.
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText('Grantee'), 'carol');
+    await userEvent.click(screen.getByRole('button', { name: 'Grant' }));
+
+    await waitFor(() => expect(client.post).toHaveBeenCalled());
+    const [url, body] = vi.mocked(client.post).mock.calls[0] ?? [];
+    expect(url).toContain('/documents/doc-1/shares');
+    expect(body).toMatchObject({ granteeType: 'User', granteeId: 'carol', permission: 'Read' });
+    expect((body as { isDefault?: unknown }).isDefault).toBeUndefined();
+  });
 });
