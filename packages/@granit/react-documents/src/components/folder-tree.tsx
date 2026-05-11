@@ -24,6 +24,12 @@ export interface FolderTreeProps {
   /** Filter shown folders by lifecycle status. Defaults to `Active`. */
   readonly status?: FolderStatus;
   readonly onSelect?: (folder: FolderResponse) => void;
+  /**
+   * Fired with the folder id once a trash (soft-delete) mutation succeeds.
+   * Consumers (e.g. `DocumentsExplorer`) use this to drop a stale current
+   * selection. Not invoked on mutation error.
+   */
+  readonly onDeleted?: (folderId: string) => void;
   readonly labels?: FolderTreeLabels;
   readonly className?: string;
 }
@@ -45,6 +51,7 @@ interface FolderNodeProps {
   readonly status: FolderStatus;
   readonly labels: Required<FolderTreeLabels>;
   readonly onSelect?: (folder: FolderResponse) => void;
+  readonly onDeleted?: (folderId: string) => void;
 }
 
 function FolderNode({
@@ -53,6 +60,7 @@ function FolderNode({
   status,
   labels,
   onSelect,
+  onDeleted,
 }: Readonly<FolderNodeProps>): ReactNode {
   const [expanded, setExpanded] = useState(false);
   const childrenQuery = useFolders({ parentId: folder.id, status }, { enabled: expanded });
@@ -88,6 +96,7 @@ function FolderNode({
   function handleDelete(): void {
     if (typeof window === 'undefined' || !window.confirm(labels.deleteConfirm)) return;
     trashFolder.mutate(folder.id, {
+      onSuccess: () => onDeleted?.(folder.id),
       onError: (err) => setError(err.message),
     });
   }
@@ -146,6 +155,7 @@ function FolderNode({
               status={status}
               labels={labels}
               onSelect={onSelect}
+              onDeleted={onDeleted}
             />
           ))}
         </ul>
@@ -169,6 +179,7 @@ export function FolderTree({
   canManage = false,
   status = 'Active',
   onSelect,
+  onDeleted,
   labels,
   className,
 }: FolderTreeProps): ReactNode {
@@ -224,6 +235,7 @@ export function FolderTree({
               status={status}
               labels={labelStrings}
               onSelect={onSelect}
+              onDeleted={onDeleted}
             />
           ))}
         </ul>

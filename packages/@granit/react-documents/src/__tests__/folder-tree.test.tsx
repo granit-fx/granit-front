@@ -217,6 +217,38 @@ describe('FolderTree', () => {
     await waitFor(() => expect(client.delete).toHaveBeenCalled());
   });
 
+  it('invokes onDeleted with the folder id once the trash mutation succeeds', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ data: { folders: [root] } });
+    vi.mocked(client.delete).mockResolvedValue({ data: undefined });
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    const onDeleted = vi.fn();
+
+    render(<FolderTree canManage onDeleted={onDeleted} />, { wrapper: createWrapper(client) });
+    await waitFor(() => expect(screen.getByText('Contracts')).toBeInTheDocument());
+
+    await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+
+    await waitFor(() => expect(onDeleted).toHaveBeenCalledWith(root.id));
+    expect(onDeleted).toHaveBeenCalledTimes(1);
+  });
+
+  it('does NOT invoke onDeleted when the trash mutation fails', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ data: { folders: [root] } });
+    vi.mocked(client.delete).mockRejectedValue(new Error('forbidden'));
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    const onDeleted = vi.fn();
+
+    render(<FolderTree canManage onDeleted={onDeleted} />, { wrapper: createWrapper(client) });
+    await waitFor(() => expect(screen.getByText('Contracts')).toBeInTheDocument());
+
+    await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+
+    await waitFor(() => expect(screen.getByRole('alert').textContent).toMatch(/forbidden/));
+    expect(onDeleted).not.toHaveBeenCalled();
+  });
+
   it('creates a sub-folder via the node-level add button', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: { folders: [root] } });

@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
+import { useFolder } from '../hooks/use-folders.js';
 
 import { DocumentsList } from './documents-list.js';
 import { FolderBreadcrumb } from './folder-breadcrumb.js';
@@ -45,12 +47,36 @@ export function DocumentsExplorer({
   const labelStrings = { ...DEFAULT_LABELS, ...labels };
   const [currentFolder, setCurrentFolder] = useState<FolderResponse | null>(null);
 
+  // Watch the live status of the current selection. After a trash mutation
+  // (direct or cascading from an ancestor), the cache is invalidated and
+  // this query refetches. We null the selection when the backend either
+  // 404s/403s OR returns a non-Active folder — both signal the panel is
+  // stale.
+  const currentFolderQuery = useFolder(currentFolder?.id ?? '', {
+    enabled: currentFolder !== null,
+  });
+
+  useEffect(() => {
+    if (!currentFolder) return;
+    if (currentFolderQuery.isError) {
+      setCurrentFolder(null);
+      return;
+    }
+    const fresh = currentFolderQuery.data;
+    if (fresh && fresh.status !== 'Active') {
+      setCurrentFolder(null);
+    }
+  }, [currentFolder, currentFolderQuery.data, currentFolderQuery.isError]);
+
+  const handleFolderDeleted = useCallback((deletedId: string) => {
+    setCurrentFolder((prev) => (prev?.id === deletedId ? null : prev));
+  }, []);
+
   const folderId = currentFolder?.id ?? '';
 
   function handleUploadComplete(_document: DocumentResponse): void {
     // The finalize hook already invalidates the folders + quota query
-    // families, so the right pane will refresh on its own once a real
-    // listing endpoint backs DocumentsList.
+    // families, so the right pane refreshes on its own.
   }
 
   return (
@@ -65,6 +91,7 @@ export function DocumentsExplorer({
             rootFolderId={rootFolderId}
             canManage={canManage}
             onSelect={setCurrentFolder}
+            onDeleted={handleFolderDeleted}
           />
         </aside>
         <section data-granit-documents-explorer-main="">
