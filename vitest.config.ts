@@ -39,6 +39,10 @@ export default defineConfig({
         __dirname,
         'packages/@granit/react-customer-balance/src/testing/index.ts'
       ),
+      '@granit/react-documents/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-documents/src/testing/index.ts'
+      ),
       '@granit/react-data-exchange/testing': path.resolve(
         __dirname,
         'packages/@granit/react-data-exchange/src/testing/index.ts'

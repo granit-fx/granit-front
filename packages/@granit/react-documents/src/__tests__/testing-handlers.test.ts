@@ -1,0 +1,61 @@
+import { setupServer } from 'msw/node';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+
+import {
+  FOLDER_CONTRACTS_ID,
+  createDocumentsHandlers,
+  documentQueryMetadata,
+  mockQuotaData,
+} from '../testing/index.js';
+
+const BASE = 'http://api.test/api/v1/documents';
+const server = setupServer();
+
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+
+describe('createDocumentsHandlers', () => {
+  it('returns a non-empty handler array', () => {
+    const handlers = createDocumentsHandlers({ basePath: BASE });
+    expect(handlers.length).toBeGreaterThanOrEqual(25);
+  });
+
+  it('responds with the documentQueryMetadata at /documents/query/meta', async () => {
+    server.use(...createDocumentsHandlers({ basePath: BASE }));
+    const response = await fetch(`${BASE}/documents/query/meta`);
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual(documentQueryMetadata);
+  });
+
+  it('responds with the tenant quota payload at /quota', async () => {
+    server.use(...createDocumentsHandlers({ basePath: BASE }));
+    const response = await fetch(`${BASE}/quota`);
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual(mockQuotaData);
+  });
+
+  it('filters /documents/query by folderId Eq', async () => {
+    server.use(...createDocumentsHandlers({ basePath: BASE }));
+    const response = await fetch(
+      `${BASE}/documents/query?filter[folderId.Eq]=${FOLDER_CONTRACTS_ID}&filter[status.Eq]=Active&page=1&pageSize=50`
+    );
+    expect(response.status).toBe(200);
+    const body = (await response.json()) as { items: { folderId: string }[] };
+    expect(body.items.length).toBeGreaterThan(0);
+    for (const item of body.items) {
+      expect(item.folderId).toBe(FOLDER_CONTRACTS_ID);
+    }
+  });
+
+  it('exposes the 5 expected query metadata columns', () => {
+    expect(documentQueryMetadata.columns).toHaveLength(5);
+    expect(documentQueryMetadata.columns.map((c) => c.name)).toEqual([
+      'name',
+      'status',
+      'folderId',
+      'ownerUserId',
+      'createdAt',
+    ]);
+  });
+});
