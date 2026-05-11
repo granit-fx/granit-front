@@ -611,6 +611,37 @@
       ]
     },
     {
+      "name": "@granit/documents",
+      "description": "Granit.Documents Phase 1 module — types, API client, and permissions",
+      "exports": [
+        {
+          "name": "DocumentsPermissions",
+          "kind": "const",
+          "signature": "const DocumentsPermissions"
+        },
+        {
+          "name": "assignDocumentTag",
+          "kind": "function",
+          "signature": "async function assignDocumentTag( client: AxiosInstance, basePath: string, documentId: string, tagId: string ): Promise<DocumentTagAssignmentResponse>"
+        },
+        {
+          "name": "listDocumentTags",
+          "kind": "function",
+          "signature": "async function listDocumentTags( client: AxiosInstance, basePath: string, documentId: string ): Promise<ListDocumentTagsResponse>"
+        },
+        {
+          "name": "unassignDocumentTag",
+          "kind": "function",
+          "signature": "async function unassignDocumentTag( client: AxiosInstance, basePath: string, documentId: string, tagId: string ): Promise<void>"
+        },
+        {
+          "name": "getTenantStorageQuota",
+          "kind": "function",
+          "signature": "async function getTenantStorageQuota( client: AxiosInstance, basePath: string ): Promise<TenantStorageQuotaResponse>"
+        }
+      ]
+    },
+    {
       "name": "@granit/entities",
       "description": "Framework-agnostic types and helpers for the Granit entity manifest — EntityDefinition discovery / metadata DTOs, form / detail / relation descriptors, visibility DSL evaluator (mirrors Granit.Entities.Abstractions + Granit.Entities.Endpoints.Dtos)",
       "exports": []
@@ -2846,6 +2877,206 @@
           "kind": "interface",
           "signature": "interface MonitoringHealthOptions",
           "members": []
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-documents",
+      "description": "React bindings for @granit/documents — DocumentsProvider, hooks, components",
+      "exports": [
+        {
+          "name": "API_VERSION",
+          "kind": "const",
+          "signature": "const API_VERSION"
+        },
+        {
+          "name": "DEFAULT_BASE_PATH",
+          "kind": "const",
+          "signature": "const DEFAULT_BASE_PATH"
+        },
+        {
+          "name": "DEFAULT_QUERY_KEY_PREFIX",
+          "kind": "const",
+          "signature": "const DEFAULT_QUERY_KEY_PREFIX"
+        },
+        {
+          "name": "MODULE",
+          "kind": "const",
+          "signature": "const MODULE"
+        },
+        {
+          "name": "useFolder",
+          "kind": "function",
+          "signature": "function useFolder( id: string, options?:"
+        },
+        {
+          "name": "useFolderBreadcrumb",
+          "kind": "function",
+          "signature": "function useFolderBreadcrumb( id: string, options?:"
+        },
+        {
+          "name": "useFolders",
+          "kind": "function",
+          "signature": "function useFolders( filter: ListFoldersFilter ="
+        },
+        {
+          "name": "useDocumentShares",
+          "kind": "function",
+          "signature": "function useDocumentShares( documentId: string, options?:"
+        },
+        {
+          "name": "useFolderShares",
+          "kind": "function",
+          "signature": "function useFolderShares( folderId: string, options?:"
+        },
+        {
+          "name": "useTenantStorageQuota",
+          "kind": "function",
+          "signature": "function useTenantStorageQuota(options?:"
+        },
+        {
+          "name": "DocumentDetail",
+          "kind": "function",
+          "signature": "function DocumentDetail("
+        },
+        {
+          "name": "DocumentDetailLabels",
+          "kind": "interface",
+          "signature": "interface DocumentDetailLabels",
+          "members": []
+        },
+        {
+          "name": "DocumentDetailProps",
+          "kind": "interface",
+          "signature": "interface DocumentDetailProps",
+          "members": []
+        },
+        {
+          "name": "DocumentsExplorer",
+          "kind": "function",
+          "signature": "function DocumentsExplorer("
+        },
+        {
+          "name": "DocumentsList",
+          "kind": "function",
+          "signature": "function DocumentsList(props: Readonly<DocumentsListProps>): ReactNode"
+        },
+        {
+          "name": "DocumentsListLabels",
+          "kind": "interface",
+          "signature": "interface DocumentsListLabels",
+          "members": []
+        },
+        {
+          "name": "DocumentsListProps",
+          "kind": "interface",
+          "signature": "interface DocumentsListProps",
+          "members": []
+        },
+        {
+          "name": "FolderBreadcrumb",
+          "kind": "function",
+          "signature": "function FolderBreadcrumb("
+        },
+        {
+          "name": "FolderTree",
+          "kind": "function",
+          "signature": "function FolderTree("
+        },
+        {
+          "name": "FolderTreeLabels",
+          "kind": "interface",
+          "signature": "interface FolderTreeLabels",
+          "members": []
+        },
+        {
+          "name": "FolderTreeProps",
+          "kind": "interface",
+          "signature": "interface FolderTreeProps",
+          "members": []
+        },
+        {
+          "name": "QuotaBadge",
+          "kind": "function",
+          "signature": "function QuotaBadge("
+        },
+        {
+          "name": "QuotaBadgeLabels",
+          "kind": "interface",
+          "signature": "interface QuotaBadgeLabels",
+          "members": []
+        },
+        {
+          "name": "QuotaBadgeProps",
+          "kind": "interface",
+          "signature": "interface QuotaBadgeProps",
+          "members": []
+        },
+        {
+          "name": "QuotaPanel",
+          "kind": "function",
+          "signature": "function QuotaPanel("
+        },
+        {
+          "name": "QuotaPanelLabels",
+          "kind": "interface",
+          "signature": "interface QuotaPanelLabels",
+          "members": []
+        },
+        {
+          "name": "QuotaPanelProps",
+          "kind": "interface",
+          "signature": "interface QuotaPanelProps",
+          "members": []
+        },
+        {
+          "name": "ShareDialog",
+          "kind": "function",
+          "signature": "function ShareDialog("
+        },
+        {
+          "name": "TrashBin",
+          "kind": "function",
+          "signature": "function TrashBin("
+        },
+        {
+          "name": "TrashBinLabels",
+          "kind": "interface",
+          "signature": "interface TrashBinLabels",
+          "members": []
+        },
+        {
+          "name": "TrashBinProps",
+          "kind": "interface",
+          "signature": "interface TrashBinProps",
+          "members": []
+        },
+        {
+          "name": "UploadButton",
+          "kind": "function",
+          "signature": "function UploadButton("
+        },
+        {
+          "name": "UploadButtonLabels",
+          "kind": "interface",
+          "signature": "interface UploadButtonLabels",
+          "members": []
+        },
+        {
+          "name": "UploadButtonProps",
+          "kind": "interface",
+          "signature": "interface UploadButtonProps",
+          "members": []
+        },
+        {
+          "name": "VersionsTimeline",
+          "kind": "function",
+          "signature": "function VersionsTimeline("
+        },
+        {
+          "name": "formatBytes",
+          "kind": "function",
+          "signature": "function formatBytes(bytes: number): string"
         }
       ]
     },

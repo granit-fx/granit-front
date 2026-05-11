@@ -1,0 +1,127 @@
+import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { UploadButton } from '../components/upload-button.tsx';
+import { DocumentsProvider } from '../providers/documents-provider.js';
+
+import type { AxiosInstance } from '@granit/api-client';
+import type { ReactNode } from 'react';
+
+function createWrapper(client: AxiosInstance) {
+  return function Wrapper({ children }: { children: ReactNode }) {
+    const qc = createTestQueryClient();
+    return (
+      <QueryClientProvider client={qc}>
+        <DocumentsProvider config={{ client }}>{children}</DocumentsProvider>
+      </QueryClientProvider>
+    );
+  };
+}
+
+interface MockXhr {
+  open: (method: string, url: string) => void;
+  setRequestHeader: (key: string, value: string) => void;
+  send: (body: unknown) => void;
+  upload: { onprogress: ((event: ProgressEvent) => void) | null };
+  onload: (() => void) | null;
+  onerror: (() => void) | null;
+  status: number;
+}
+
+describe('UploadButton', () => {
+  let xhrInstances: MockXhr[];
+  let OriginalXhr: typeof XMLHttpRequest;
+
+  beforeEach(() => {
+    xhrInstances = [];
+    OriginalXhr = globalThis.XMLHttpRequest;
+    class FakeXhr implements MockXhr {
+      open = vi.fn();
+      setRequestHeader = vi.fn();
+      upload: MockXhr['upload'] = { onprogress: null };
+      onload: (() => void) | null = null;
+      onerror: (() => void) | null = null;
+      status = 0;
+      send = vi.fn(() => {
+        queueMicrotask(() => {
+          this.status = 200;
+          this.onload?.();
+        });
+      });
+      constructor() {
+        xhrInstances.push(this);
+      }
+    }
+    (globalThis as { XMLHttpRequest: typeof XMLHttpRequest }).XMLHttpRequest =
+      FakeXhr as unknown as typeof XMLHttpRequest;
+  });
+
+  afterEach(() => {
+    globalThis.XMLHttpRequest = OriginalXhr;
+    vi.restoreAllMocks();
+  });
+
+  it('renders the upload button', () => {
+    const client = createMockClient();
+    render(<UploadButton folderId="fld-1" />, { wrapper: createWrapper(client) });
+    expect(screen.getByText('Upload')).toBeInTheDocument();
+  });
+
+  it('runs the upload flow: ticket → blob PUT → finalize → onComplete', async () => {
+    const client = createMockClient();
+    const ticket = {
+      blobId: 'blob-1',
+      uploadUrl: 'https://blob.example/put',
+      httpMethod: 'PUT',
+      expiresAt: '2026-05-12T00:00:00Z',
+      requiredHeaders: { 'x-ms-blob-type': 'BlockBlob' },
+    };
+    const documentResponse = {
+      id: 'doc-1',
+      folderId: 'fld-1',
+      name: 'sample.txt',
+      description: null,
+      ownerUserId: 'user-1',
+      currentVersionId: 'ver-1',
+      status: 'Active' as const,
+      trashedAt: null,
+      permission: null,
+    };
+    vi.mocked(client.post).mockImplementation(((url: string) => {
+      if (url.endsWith('/upload-ticket')) {
+        return Promise.resolve({ data: ticket });
+      }
+      return Promise.resolve({ data: documentResponse });
+    }) as AxiosInstance['post']);
+
+    const onComplete = vi.fn();
+    render(<UploadButton folderId="fld-1" onComplete={onComplete} />, {
+      wrapper: createWrapper(client),
+    });
+
+    const input = screen.getByText('Upload').previousSibling as HTMLInputElement;
+    const file = new File(['hello'], 'sample.txt', { type: 'text/plain' });
+    await userEvent.upload(input, file);
+
+    await waitFor(() => expect(onComplete).toHaveBeenCalled());
+    expect(onComplete.mock.calls[0]?.[0]).toEqual(documentResponse);
+    expect(xhrInstances).toHaveLength(1);
+    expect(xhrInstances[0]?.open).toHaveBeenCalledWith('PUT', ticket.uploadUrl);
+  });
+
+  it('surfaces the TooLarge label when the file exceeds maxAllowedBytes', async () => {
+    const client = createMockClient();
+    render(<UploadButton folderId="fld-1" maxAllowedBytes={1} />, {
+      wrapper: createWrapper(client),
+    });
+
+    const input = screen.getByText('Upload').previousSibling as HTMLInputElement;
+    const file = new File(['hello world'], 'big.txt', { type: 'text/plain' });
+    await userEvent.upload(input, file);
+
+    await waitFor(() => expect(screen.getByText('File is too large.')).toBeInTheDocument());
+  });
+});
