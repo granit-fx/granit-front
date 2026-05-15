@@ -20,6 +20,8 @@ export {
   parseWorkspaceUrl,
 } from './url/index.js';
 export type { ParsedEntityUrl, ParsedWorkspaceUrl } from './url/index.js';
+export { InvalidFeatureNameError, resolveFeatureRoute } from './routes/index.js';
+export type { FeatureRouteSpec, FeatureRouteTable } from './routes/index.js';
 export { WORKSPACE_TREE_SCHEMA_VERSION } from './types/index.js';
 export type {
   LandingRouteResponse,

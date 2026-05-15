@@ -15,6 +15,13 @@ export {
 } from './api/use-landing-route.js';
 export { useWorkspaces, workspaceTreeQueryKey } from './api/use-workspaces.js';
 export { useLandingRedirect, useSidePeek } from './hooks/index.js';
+export {
+  FeatureRouteTableProvider,
+  resolveWorkspaceItem,
+  useFeatureRouteTable,
+  useResolvedWorkspaceItem,
+} from './routes/index.js';
+export type { FeatureRouteTableProviderProps, ResolvedWorkspaceItem } from './routes/index.js';
 export type {
   SidePeekEntry,
   UseLandingRedirectOptions,

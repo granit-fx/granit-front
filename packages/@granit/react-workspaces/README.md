@@ -24,6 +24,41 @@ This package is the React layer on top of [`@granit/workspaces`](../workspaces).
   `⌘+⇧+.` to expand to full page, stacked peeks)
 - `<LandingRedirect />` — calls `useLandingRoute()` on login, honours the
   5-tier precedence and URL whitelist
+- `<FeatureRouteTableProvider />` + `useResolvedWorkspaceItem()` —
+  host-supplied route table for `Feature` items (ADR-057 §5)
+
+## Feature route table (ADR-057)
+
+Items of kind `Feature` carry a logical `routeName`; the host's React
+app owns the mapping to SPA paths. Wrap the nav root once at startup:
+
+```tsx
+import { FeatureRouteTableProvider, useResolvedWorkspaceItem } from '@granit/react-workspaces';
+import type { FeatureRouteTable } from '@granit/workspaces';
+
+const ROUTES: FeatureRouteTable = {
+  'identity.users.list': { path: '/users' },
+  'invoicing.invoices.list': { path: '/invoicing' },
+  'parties.parties.list': { path: '/crm/parties' },
+};
+
+export function AppShell({ children }: { children: ReactNode }) {
+  return <FeatureRouteTableProvider table={ROUTES}>{children}</FeatureRouteTableProvider>;
+}
+
+function WorkspaceItemLink({ item }: { item: WorkspaceItemResponse }) {
+  const { href, missingRoute, featureName } = useResolvedWorkspaceItem(item);
+  if (missingRoute) {
+    return <span title={`Route not registered for feature ${featureName}`}>{item.displayKey}</span>;
+  }
+  return href ? <a href={href}>{item.displayKey}</a> : null;
+}
+```
+
+When a feature is missing from the host table, the hook returns
+`missingRoute: true` and `href: null` — render a disabled placeholder
+rather than navigating. `linkUrl` on `Link` items is unaffected and
+remains valid for internal SPA routes and external URLs.
 
 ## Status
 
