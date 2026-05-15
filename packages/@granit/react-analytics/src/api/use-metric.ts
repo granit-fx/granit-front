@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 
 import type { MetricRequest, MetricResponse } from '@granit/analytics';
 
-const METRIC_PATH = '/analytics/metrics';
+const METRIC_PATH = '/api/v1/analytics/metrics';
 
 const POLLING_INTERVAL_MS: Readonly<Record<MetricResponse['refreshHint'], number | false>> = {
   Static: false,

@@ -17,10 +17,10 @@ describe('expandActionPlaceholders', () => {
 
   it('substitutes ${aliasName} placeholders from the alias map', () => {
     expect(
-      expandActionPlaceholders('/dashboards/${currentTenant}', {
+      expandActionPlaceholders('/api/v1/dashboards/${currentTenant}', {
         aliases: { currentTenant: 't-7' },
       })
-    ).toBe('/dashboards/t-7');
+    ).toBe('/api/v1/dashboards/t-7');
   });
 
   it('mixes row + alias placeholders in the same value', () => {

@@ -25,6 +25,7 @@ import type {
 import type { AxiosInstance } from '@granit/api-client';
 import type {
   CreateSavedViewRequest,
+  PagedResult,
   QueryMetadata,
   SavedViewSummary,
   UpdateSavedViewRequest,
@@ -44,14 +45,15 @@ function usageAggregatesPath(basePath: string): string {
 /**
  * List all active meter definitions.
  *
- * `GET {basePath}/meters`
+ * `GET {basePath}/meters` — QueryEngine-backed, returns a paged envelope which
+ * is unwrapped to a flat array for callers that just want the active set.
  */
 export async function listActiveMeters(
   client: AxiosInstance,
   basePath: string
 ): Promise<readonly MeterDefinitionResponse[]> {
-  const response = await client.get<readonly MeterDefinitionResponse[]>(`${basePath}/meters`);
-  return response.data;
+  const response = await client.get<PagedResult<MeterDefinitionResponse>>(`${basePath}/meters`);
+  return response.data.items;
 }
 
 /**

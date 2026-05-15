@@ -45,23 +45,23 @@ let listCalls = 0;
 
 function freshHandlers() {
   return [
-    http.get(`http://localhost/entities/${ENCODED}/views`, () => {
+    http.get(`http://localhost/api/v1/entities/${ENCODED}/views`, () => {
       listCalls += 1;
       return HttpResponse.json([VIEW]);
     }),
-    http.post(`http://localhost/entities/${ENCODED}/views`, async ({ request }) => {
+    http.post(`http://localhost/api/v1/entities/${ENCODED}/views`, async ({ request }) => {
       lastBody = await request.json();
       return HttpResponse.json(VIEW, { status: 201 });
     }),
     http.put(
-      `http://localhost/entities/${ENCODED}/views/${encodeURIComponent(VIEW_ID)}`,
+      `http://localhost/api/v1/entities/${ENCODED}/views/${encodeURIComponent(VIEW_ID)}`,
       async ({ request }) => {
         lastBody = await request.json();
         return HttpResponse.json({ ...VIEW, name: 'Renamed' });
       }
     ),
     http.delete(
-      `http://localhost/entities/${ENCODED}/views/${encodeURIComponent(VIEW_ID)}`,
+      `http://localhost/api/v1/entities/${ENCODED}/views/${encodeURIComponent(VIEW_ID)}`,
       () => new HttpResponse(null, { status: 204 })
     ),
   ];

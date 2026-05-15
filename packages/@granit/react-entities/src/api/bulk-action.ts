@@ -26,7 +26,7 @@ export async function executeBulkAction(
   request: BulkActionRequest
 ): Promise<BulkActionResponse> {
   const response = await client.post<BulkActionResponse>(
-    `/entities/${encodeURIComponent(entityName)}/bulk/${encodeURIComponent(action)}`,
+    `/api/v1/entities/${encodeURIComponent(entityName)}/bulk/${encodeURIComponent(action)}`,
     request
   );
   return response.data;

@@ -9,14 +9,14 @@ import {
 
 import type { LandingRouteResponse, SetPinnedLandingRouteRequest } from '@granit/workspaces';
 
-const LANDING_ROUTE_PATH = '/me/landing-route';
-const LANDING_ROUTE_PINNED_PATH = '/me/landing-route/pinned';
+const LANDING_ROUTE_PATH = '/api/v1/me/landing-route';
+const LANDING_ROUTE_PINNED_PATH = '/api/v1/me/landing-route/pinned';
 
 /** Cache key for the resolved landing route. */
 export const landingRouteQueryKey = () => ['workspaces', 'landing-route'] as const;
 
 /**
- * `GET /me/landing-route` — returns the route the user should be sent to
+ * `GET /api/v1/me/landing-route` — returns the route the user should be sent to
  * after login, plus the tier of the 5-tier resolver that produced it
  * (PersonalSticky / PersonalPinned / Role / Tenant / Framework). Mirrors
  * `Granit.Workspaces.Endpoints.LandingRouteEndpoints.GetAsync`.
@@ -41,7 +41,7 @@ export function useLandingRoute(
 }
 
 /**
- * `PUT /me/landing-route/pinned` — sets (or clears, with `route: null`)
+ * `PUT /api/v1/me/landing-route/pinned` — sets (or clears, with `route: null`)
  * the user's personal pin in the precedence chain. Mirrors
  * `Granit.Workspaces.Endpoints.LandingRouteEndpoints.SetPinnedAsync`.
  *

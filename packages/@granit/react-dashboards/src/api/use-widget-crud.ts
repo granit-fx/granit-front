@@ -9,7 +9,7 @@ import type {
   WidgetInstanceResponse,
 } from '@granit/dashboards';
 
-const DASHBOARDS_PATH = '/dashboards';
+const DASHBOARDS_PATH = '/api/v1/dashboards';
 
 /**
  * Variables for `useAddWidget().mutate()`.

@@ -12,7 +12,7 @@ import type { CalendarItemResponse, EntityCalendarLayoutManifest } from '@granit
 import type { ReactNode } from 'react';
 
 const ENTITY = 'Granit.Invoicing.Invoice';
-const PATH = `http://localhost/entities/${encodeURIComponent(ENTITY)}/calendar`;
+const PATH = `http://localhost/api/v1/entities/${encodeURIComponent(ENTITY)}/calendar`;
 const FROM = '2026-05-01T00:00:00Z';
 const TO = '2026-05-31T23:59:59Z';
 

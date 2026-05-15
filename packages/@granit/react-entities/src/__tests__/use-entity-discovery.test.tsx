@@ -36,7 +36,7 @@ let getCalls = 0;
 
 function freshHandlers() {
   return [
-    http.get('http://localhost/entities', () => {
+    http.get('http://localhost/api/v1/entities', () => {
       getCalls += 1;
       return HttpResponse.json(DISCOVERY);
     }),
@@ -93,7 +93,7 @@ describe('useEntityDiscovery', () => {
 
   it('surfaces the error when the endpoint returns 500', async () => {
     server.use(
-      http.get('http://localhost/entities', () =>
+      http.get('http://localhost/api/v1/entities', () =>
         HttpResponse.json({ error: 'boom' }, { status: 500 })
       )
     );

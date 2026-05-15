@@ -20,7 +20,7 @@ let getCalls = 0;
 
 function freshHandlers() {
   return [
-    http.get('http://localhost/me/landing-route', () => {
+    http.get('http://localhost/api/v1/me/landing-route', () => {
       getCalls += 1;
       return HttpResponse.json(ROUTE);
     }),

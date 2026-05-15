@@ -36,7 +36,7 @@ export function useCreateEntityView(
   return useMutation({
     mutationFn: async (request) => {
       const { data } = await api.post<EntityViewResponse>(
-        `/entities/${encodeURIComponent(entityName)}/views`,
+        `/api/v1/entities/${encodeURIComponent(entityName)}/views`,
         request
       );
       return data;
@@ -65,7 +65,7 @@ export function useUpdateEntityView(
   return useMutation({
     mutationFn: async ({ id, request }) => {
       const { data } = await api.put<EntityViewResponse>(
-        `/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}`,
+        `/api/v1/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}`,
         request
       );
       return data;
@@ -91,7 +91,7 @@ export function useDeleteEntityView(entityName: string): UseMutationResult<void,
   return useMutation({
     mutationFn: async (id) => {
       await api.delete(
-        `/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}`
+        `/api/v1/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}`
       );
     },
     onSuccess: async (_void, id) => {

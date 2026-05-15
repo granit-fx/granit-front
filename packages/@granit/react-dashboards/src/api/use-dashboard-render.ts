@@ -16,7 +16,7 @@ import type {
   RefreshHint,
 } from '@granit/dashboards';
 
-const DASHBOARD_PATH = '/dashboards';
+const DASHBOARD_PATH = '/api/v1/dashboards';
 
 /**
  * Polling cadence per {@link RefreshHint} for the bundle-level refetch. The

@@ -25,11 +25,11 @@ let lastPinBody: unknown = null;
 
 function freshHandlers() {
   return [
-    http.get('http://localhost/me/landing-route', () => {
+    http.get('http://localhost/api/v1/me/landing-route', () => {
       getCalls += 1;
       return HttpResponse.json(ROUTE);
     }),
-    http.put('http://localhost/me/landing-route/pinned', async ({ request }) => {
+    http.put('http://localhost/api/v1/me/landing-route/pinned', async ({ request }) => {
       lastPinBody = await request.json();
       return new HttpResponse(null, { status: 204 });
     }),
@@ -85,7 +85,7 @@ describe('useLandingRoute', () => {
 });
 
 describe('useSetLandingPin', () => {
-  it('PUTs the route to /me/landing-route/pinned', async () => {
+  it('PUTs the route to /api/v1/me/landing-route/pinned', async () => {
     const { wrapper } = makeWrapper();
     const { result } = renderHook(() => useSetLandingPin(), { wrapper });
 

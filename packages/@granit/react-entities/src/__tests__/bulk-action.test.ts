@@ -9,7 +9,7 @@ import type { BulkActionResponse } from '@granit/entities';
 
 const ENTITY = 'Granit.Sales.Quote';
 const ACTION = 'Approve';
-const PATH = `http://localhost/entities/${encodeURIComponent(ENTITY)}/bulk/${encodeURIComponent(ACTION)}`;
+const PATH = `http://localhost/api/v1/entities/${encodeURIComponent(ENTITY)}/bulk/${encodeURIComponent(ACTION)}`;
 
 const RESPONSE: BulkActionResponse = {
   ok: ['q-1', 'q-2'],
@@ -67,7 +67,7 @@ describe('executeBulkAction', () => {
   it('URI-encodes the entity name and the action segment', async () => {
     const tricky = 'Tenant.Module.Entity Name';
     const trickyAction = 'Mark Done';
-    const url = `http://localhost/entities/${encodeURIComponent(tricky)}/bulk/${encodeURIComponent(trickyAction)}`;
+    const url = `http://localhost/api/v1/entities/${encodeURIComponent(tricky)}/bulk/${encodeURIComponent(trickyAction)}`;
     server.use(http.post(url, () => HttpResponse.json(RESPONSE)));
 
     const response = await executeBulkAction(client, tricky, trickyAction, { ids: ['x-1'] });

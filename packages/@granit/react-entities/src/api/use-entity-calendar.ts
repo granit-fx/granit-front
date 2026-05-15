@@ -127,7 +127,7 @@ export function useEntityCalendar(
         }
       }
       const { data } = await api.get<readonly CalendarItemResponse[]>(
-        `/entities/${encodeURIComponent(entityName)}/calendar`,
+        `/api/v1/entities/${encodeURIComponent(entityName)}/calendar`,
         { params, signal }
       );
       return data;

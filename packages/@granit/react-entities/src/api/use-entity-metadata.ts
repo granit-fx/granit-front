@@ -61,7 +61,7 @@ export function useEntityMetadata(
       }
 
       const response = await api.get<EntityManifestResponse>(
-        `/entities/${encodeURIComponent(name)}`,
+        `/api/v1/entities/${encodeURIComponent(name)}`,
         {
           signal,
           params:

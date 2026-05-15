@@ -26,7 +26,7 @@ export function useEntityView(
     queryKey: entityViewQueryKey(entityName, id),
     queryFn: async ({ signal }) => {
       const { data } = await api.get<EntityViewResponse>(
-        `/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}`,
+        `/api/v1/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}`,
         { signal }
       );
       return data;

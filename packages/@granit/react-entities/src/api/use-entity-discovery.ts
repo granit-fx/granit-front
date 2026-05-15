@@ -3,7 +3,7 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
 import type { EntityDiscoveryResponse } from '@granit/entities';
 
-const DISCOVERY_PATH = '/entities';
+const DISCOVERY_PATH = '/api/v1/entities';
 
 /**
  * Cache key for the entity discovery tree. Distinct from the per-entity

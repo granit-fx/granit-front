@@ -148,9 +148,10 @@ export function createMeteringHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // GET /meters/meta — query metadata
     createQueryMetaHandler(`${baseUrl}/meters`, meterQueryMetadata),
 
-    // GET list active meters
+    // GET list active meters — QueryEngine-backed paged envelope
     http.get(`${baseUrl}/meters`, () => {
-      return HttpResponse.json(meters.filter((m) => m.activated));
+      const items = meters.filter((m) => m.activated);
+      return HttpResponse.json({ items, totalCount: items.length });
     }),
 
     // GET single meter by ID

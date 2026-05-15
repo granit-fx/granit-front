@@ -122,7 +122,7 @@ beforeEach(() => {
 
 let nextBundle: DashboardRenderResponse = PUSH_BUNDLE;
 const server = setupServer(
-  http.post(`http://localhost/dashboards/${DASHBOARD_ID}/render`, async () =>
+  http.post(`http://localhost/api/v1/dashboards/${DASHBOARD_ID}/render`, async () =>
     HttpResponse.json(nextBundle)
   )
 );
@@ -200,7 +200,7 @@ describe('usePushedDashboard', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     await waitFor(() => expect(MockEventSource.instances).toHaveLength(1));
     expect(MockEventSource.instances[0]?.url).toBe(
-      `http://localhost/dashboards/${DASHBOARD_ID}/stream`
+      `http://localhost/api/v1/dashboards/${DASHBOARD_ID}/stream`
     );
   });
 

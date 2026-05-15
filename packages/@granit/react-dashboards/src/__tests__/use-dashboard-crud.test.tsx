@@ -90,8 +90,10 @@ let lastBody: unknown = null;
 
 function freshHandlers() {
   return [
-    http.get('http://localhost/dashboards/catalog', () => HttpResponse.json([CATALOG_ENTRY])),
-    http.get('http://localhost/dashboards', ({ request }) => {
+    http.get('http://localhost/api/v1/dashboards/catalog', () =>
+      HttpResponse.json([CATALOG_ENTRY])
+    ),
+    http.get('http://localhost/api/v1/dashboards', ({ request }) => {
       lastQueryParams = new URL(request.url).searchParams;
       const response: PagedResponse<DashboardSummaryResponse> = {
         items: [SUMMARY],
@@ -101,30 +103,33 @@ function freshHandlers() {
       };
       return HttpResponse.json(response);
     }),
-    http.get(`http://localhost/dashboards/${encodeURIComponent(ID)}`, () =>
+    http.get(`http://localhost/api/v1/dashboards/${encodeURIComponent(ID)}`, () =>
       HttpResponse.json(DETAIL)
     ),
     http.post(
-      `http://localhost/dashboards/from-definition/${encodeURIComponent(DEFINITION_NAME)}`,
+      `http://localhost/api/v1/dashboards/from-definition/${encodeURIComponent(DEFINITION_NAME)}`,
       () => HttpResponse.json(IMPORTED, { status: 201 })
     ),
-    http.put(`http://localhost/dashboards/${encodeURIComponent(ID)}`, async ({ request }) => {
-      lastBody = await request.json();
-      return HttpResponse.json(SUMMARY);
-    }),
+    http.put(
+      `http://localhost/api/v1/dashboards/${encodeURIComponent(ID)}`,
+      async ({ request }) => {
+        lastBody = await request.json();
+        return HttpResponse.json(SUMMARY);
+      }
+    ),
     http.post(
-      `http://localhost/dashboards/${encodeURIComponent(ID)}/publish`,
+      `http://localhost/api/v1/dashboards/${encodeURIComponent(ID)}/publish`,
       () => new HttpResponse(null, { status: 204 })
     ),
     http.post(
-      `http://localhost/dashboards/${encodeURIComponent(ID)}/archive`,
+      `http://localhost/api/v1/dashboards/${encodeURIComponent(ID)}/archive`,
       () => new HttpResponse(null, { status: 204 })
     ),
     http.post(
-      `http://localhost/dashboards/${encodeURIComponent(ID)}/restore`,
+      `http://localhost/api/v1/dashboards/${encodeURIComponent(ID)}/restore`,
       () => new HttpResponse(null, { status: 204 })
     ),
-    http.post(`http://localhost/dashboards/${encodeURIComponent(ID)}/resync`, () =>
+    http.post(`http://localhost/api/v1/dashboards/${encodeURIComponent(ID)}/resync`, () =>
       HttpResponse.json({
         id: ID,
         name: 'Invoicing overview',
@@ -138,21 +143,21 @@ function freshHandlers() {
       })
     ),
     http.post(
-      `http://localhost/dashboards/${encodeURIComponent(ID)}/widgets`,
+      `http://localhost/api/v1/dashboards/${encodeURIComponent(ID)}/widgets`,
       async ({ request }) => {
         lastBody = await request.json();
         return HttpResponse.json(WIDGET, { status: 201 });
       }
     ),
     http.put(
-      `http://localhost/dashboards/${encodeURIComponent(ID)}/widgets/${encodeURIComponent(WIDGET_ID)}`,
+      `http://localhost/api/v1/dashboards/${encodeURIComponent(ID)}/widgets/${encodeURIComponent(WIDGET_ID)}`,
       async ({ request }) => {
         lastBody = await request.json();
         return HttpResponse.json(WIDGET);
       }
     ),
     http.delete(
-      `http://localhost/dashboards/${encodeURIComponent(ID)}/widgets/${encodeURIComponent(WIDGET_ID)}`,
+      `http://localhost/api/v1/dashboards/${encodeURIComponent(ID)}/widgets/${encodeURIComponent(WIDGET_ID)}`,
       () => new HttpResponse(null, { status: 204 })
     ),
   ];

@@ -67,7 +67,7 @@ const BUNDLE: DashboardRenderResponse = {
 };
 
 const server = setupServer(
-  http.post(`http://localhost/dashboards/${DASHBOARD_ID}/render`, async () =>
+  http.post(`http://localhost/api/v1/dashboards/${DASHBOARD_ID}/render`, async () =>
     HttpResponse.json(BUNDLE)
   )
 );

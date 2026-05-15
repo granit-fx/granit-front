@@ -3,7 +3,7 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
 import type { DashboardStatus, DashboardSummaryResponse, PagedResponse } from '@granit/dashboards';
 
-const DASHBOARDS_PATH = '/dashboards';
+const DASHBOARDS_PATH = '/api/v1/dashboards';
 
 export interface UseDashboardListParams {
   /** Filter by lifecycle state. `undefined` = all statuses. */

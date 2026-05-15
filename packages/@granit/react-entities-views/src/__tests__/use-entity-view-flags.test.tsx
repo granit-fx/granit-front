@@ -22,7 +22,7 @@ import type { ReactNode } from 'react';
 const ENTITY = 'Granit.Parties.Party';
 const ENCODED = encodeURIComponent(ENTITY);
 const VIEW_ID = '8c6b1e10-0000-4000-8000-000000000001';
-const VIEW_PATH = `http://localhost/entities/${ENCODED}/views/${encodeURIComponent(VIEW_ID)}`;
+const VIEW_PATH = `http://localhost/api/v1/entities/${ENCODED}/views/${encodeURIComponent(VIEW_ID)}`;
 
 const VIEW: EntityViewResponse = {
   id: VIEW_ID,

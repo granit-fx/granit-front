@@ -47,13 +47,14 @@ const VIEW_B: EntityViewResponse = {
 
 function freshHandlers() {
   return [
-    http.get(`http://localhost/entities/${ENCODED}/views`, () =>
+    http.get(`http://localhost/api/v1/entities/${ENCODED}/views`, () =>
       HttpResponse.json([VIEW_A, VIEW_B])
     ),
-    http.get(`http://localhost/entities/${ENCODED}/views/${encodeURIComponent(VIEW_A.id)}`, () =>
-      HttpResponse.json(VIEW_A)
+    http.get(
+      `http://localhost/api/v1/entities/${ENCODED}/views/${encodeURIComponent(VIEW_A.id)}`,
+      () => HttpResponse.json(VIEW_A)
     ),
-    http.get(`http://localhost/entities/${ENCODED}/views/_default`, () =>
+    http.get(`http://localhost/api/v1/entities/${ENCODED}/views/_default`, () =>
       HttpResponse.json(VIEW_A)
     ),
   ];
@@ -103,8 +104,9 @@ describe('useEntityView', () => {
 
   it('reports 404 as an error', async () => {
     server.use(
-      http.get(`http://localhost/entities/${ENCODED}/views/${encodeURIComponent(VIEW_A.id)}`, () =>
-        HttpResponse.json({ error: 'not found' }, { status: 404 })
+      http.get(
+        `http://localhost/api/v1/entities/${ENCODED}/views/${encodeURIComponent(VIEW_A.id)}`,
+        () => HttpResponse.json({ error: 'not found' }, { status: 404 })
       )
     );
     const { wrapper } = makeWrapper();
@@ -130,7 +132,7 @@ describe('useDefaultEntityView', () => {
 
   it('normalises 204 No Content into null', async () => {
     server.use(
-      http.get(`http://localhost/entities/${ENCODED}/views/_default`, () =>
+      http.get(`http://localhost/api/v1/entities/${ENCODED}/views/_default`, () =>
         HttpResponse.text('', { status: 204 })
       )
     );

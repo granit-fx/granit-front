@@ -3,7 +3,7 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
 import type { DashboardDetailResponse } from '@granit/dashboards';
 
-const DASHBOARDS_PATH = '/dashboards';
+const DASHBOARDS_PATH = '/api/v1/dashboards';
 
 /**
  * Cache key for a single persisted dashboard, keyed by its Guid. Used by

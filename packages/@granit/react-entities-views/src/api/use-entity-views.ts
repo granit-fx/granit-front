@@ -32,7 +32,7 @@ export function useEntityViews(
     queryKey: entityViewsQueryKey(entityName),
     queryFn: async ({ signal }) => {
       const { data } = await api.get<readonly EntityViewResponse[]>(
-        `/entities/${encodeURIComponent(entityName)}/views`,
+        `/api/v1/entities/${encodeURIComponent(entityName)}/views`,
         { signal }
       );
       return data;

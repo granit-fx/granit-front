@@ -59,7 +59,7 @@ export function useEntityRelationAggregates(
           ? { relations: [...relations].sort((a, b) => a.localeCompare(b)) }
           : null;
       const { data } = await api.post<RelationAggregatesResponse>(
-        `/entities/${encodeURIComponent(entityName)}/${encodeURIComponent(entityId)}/relations/aggregates`,
+        `/api/v1/entities/${encodeURIComponent(entityName)}/${encodeURIComponent(entityId)}/relations/aggregates`,
         body,
         { signal }
       );

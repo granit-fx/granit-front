@@ -75,9 +75,11 @@ const sampleQuota: MeteringQuotaStatusResponse = {
 
 describe('metering-api', () => {
   describe('listActiveMeters', () => {
-    it('should GET {basePath}/meters', async () => {
+    it('should GET {basePath}/meters and unwrap the paged envelope', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [sampleMeter] });
+      vi.mocked(client.get).mockResolvedValue({
+        data: { items: [sampleMeter], totalCount: 1 },
+      });
 
       const result = await listActiveMeters(client, basePath);
 
@@ -238,7 +240,9 @@ describe('metering-api', () => {
 
   it('should work with custom basePath', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue({ data: [sampleMeter] });
+    vi.mocked(client.get).mockResolvedValue({
+      data: { items: [sampleMeter], totalCount: 1 },
+    });
 
     await listActiveMeters(client, '/custom/metering');
 

@@ -30,7 +30,7 @@ export function useDefaultEntityView(
     queryKey: defaultEntityViewQueryKey(entityName),
     queryFn: async ({ signal }) => {
       const response = await api.get<EntityViewResponse | ''>(
-        `/entities/${encodeURIComponent(entityName)}/views/_default`,
+        `/api/v1/entities/${encodeURIComponent(entityName)}/views/_default`,
         { signal }
       );
       if (response.status === 204) {

@@ -34,7 +34,7 @@ export function useSetEntityViewPinned(
   return useMutation({
     mutationFn: async ({ id, value }) => {
       const { data } = await api.post<EntityViewResponse>(
-        `/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}/pin`,
+        `/api/v1/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}/pin`,
         { value }
       );
       return data;
@@ -65,7 +65,7 @@ export function useSetEntityViewTenantDefault(
   return useMutation({
     mutationFn: async ({ id, value }) => {
       const { data } = await api.post<EntityViewResponse>(
-        `/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}/set-default`,
+        `/api/v1/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}/set-default`,
         { value }
       );
       return data;
@@ -95,7 +95,7 @@ export function useSetEntityViewPersonalDefault(
   return useMutation({
     mutationFn: async ({ id, value }) => {
       const { data } = await api.post<EntityViewResponse>(
-        `/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}/star`,
+        `/api/v1/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}/star`,
         { value }
       );
       return data;
@@ -124,7 +124,7 @@ export function useShareEntityView(
   return useMutation({
     mutationFn: async ({ id, request }) => {
       const { data } = await api.post<EntityViewResponse>(
-        `/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}/share`,
+        `/api/v1/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}/share`,
         request
       );
       return data;

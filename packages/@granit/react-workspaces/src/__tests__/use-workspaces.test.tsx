@@ -50,7 +50,7 @@ let getCalls = 0;
 
 function freshHandlers() {
   return [
-    http.get('http://localhost/workspaces', () => {
+    http.get('http://localhost/api/v1/workspaces', () => {
       getCalls += 1;
       return HttpResponse.json(TREE);
     }),
@@ -106,7 +106,7 @@ describe('useWorkspaces', () => {
 
   it('surfaces the error when the endpoint returns 500', async () => {
     server.use(
-      http.get('http://localhost/workspaces', () =>
+      http.get('http://localhost/api/v1/workspaces', () =>
         HttpResponse.json({ error: 'boom' }, { status: 500 })
       )
     );

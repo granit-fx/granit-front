@@ -12,7 +12,7 @@ import type {
   WidgetDefinitionBase,
 } from '@granit/dashboards';
 
-const WIDGET_RENDER_PATH = '/widgets';
+const WIDGET_RENDER_PATH = '/api/v1/widgets';
 
 /**
  * Polling cadence per {@link RefreshHint} for the per-widget render

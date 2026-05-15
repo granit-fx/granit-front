@@ -3,7 +3,7 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
 import type { WorkspaceTreeResponse } from '@granit/workspaces';
 
-const WORKSPACES_PATH = '/workspaces';
+const WORKSPACES_PATH = '/api/v1/workspaces';
 
 /**
  * Cache key for the workspace tree. Bumped via
@@ -13,7 +13,7 @@ const WORKSPACES_PATH = '/workspaces';
 export const workspaceTreeQueryKey = () => ['workspaces', 'tree'] as const;
 
 /**
- * `GET /workspaces` — returns the workspace tree the requesting user can
+ * `GET /api/v1/workspaces` — returns the workspace tree the requesting user can
  * see, with permission-filtered sections / items, sorted by `order` then
  * `name`. Mirrors `Granit.Workspaces.Endpoints.WorkspacesEndpoints`.
  *

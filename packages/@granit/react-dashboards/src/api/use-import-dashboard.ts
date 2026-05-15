@@ -5,7 +5,7 @@ import { dashboardDetailQueryKey } from './use-dashboard-detail.js';
 
 import type { DashboardImportResponse } from '@granit/dashboards';
 
-const DASHBOARDS_PATH = '/dashboards';
+const DASHBOARDS_PATH = '/api/v1/dashboards';
 
 /**
  * `POST /dashboards/from-definition/{name}` — imports a dashboard

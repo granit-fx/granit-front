@@ -81,7 +81,9 @@ describe('use-metering', () => {
   describe('useActiveMeters', () => {
     it('fetches active meters with default basePath', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [sampleMeter] });
+      vi.mocked(client.get).mockResolvedValue({
+        data: { items: [sampleMeter], totalCount: 1 },
+      });
 
       const { result } = renderHook(() => useActiveMeters(), {
         wrapper: createWrapper(client),
@@ -94,7 +96,9 @@ describe('use-metering', () => {
 
     it('uses custom basePath', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [] });
+      vi.mocked(client.get).mockResolvedValue({
+        data: { items: [], totalCount: 0 },
+      });
 
       const { result } = renderHook(() => useActiveMeters(), {
         wrapper: createWrapper(client, '/custom/metering'),

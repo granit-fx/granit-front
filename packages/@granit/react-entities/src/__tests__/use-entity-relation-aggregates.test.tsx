@@ -16,7 +16,7 @@ import type { ReactNode } from 'react';
 
 const ENTITY = 'Granit.Parties.Party';
 const ID = '8c6b1e10-0000-4000-8000-000000000001';
-const PATH = `http://localhost/entities/${encodeURIComponent(ENTITY)}/${encodeURIComponent(ID)}/relations/aggregates`;
+const PATH = `http://localhost/api/v1/entities/${encodeURIComponent(ENTITY)}/${encodeURIComponent(ID)}/relations/aggregates`;
 
 const RESPONSE: RelationAggregatesResponse = {
   aggregates: {

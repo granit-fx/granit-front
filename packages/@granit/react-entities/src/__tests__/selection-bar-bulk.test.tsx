@@ -17,7 +17,7 @@ import type {
 import type { ReactNode } from 'react';
 
 const ENTITY_NAME = 'Granit.Sales.Quote';
-const BULK_PATH = `http://localhost/entities/${encodeURIComponent(ENTITY_NAME)}/bulk/approve`;
+const BULK_PATH = `http://localhost/api/v1/entities/${encodeURIComponent(ENTITY_NAME)}/bulk/approve`;
 
 const FULL_SUCCESS: BulkActionResponse = {
   ok: ['q1', 'q2', 'q3'],

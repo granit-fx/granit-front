@@ -3,7 +3,7 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
 import type { DashboardCatalogEntryResponse } from '@granit/dashboards';
 
-const CATALOG_PATH = '/dashboards/catalog';
+const CATALOG_PATH = '/api/v1/dashboards/catalog';
 
 /**
  * Cache key for the dashboard catalog. Distinct from the persisted-instance

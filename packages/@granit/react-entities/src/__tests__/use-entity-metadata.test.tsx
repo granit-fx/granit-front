@@ -46,7 +46,7 @@ let getCalls = 0;
 
 function freshHandlers() {
   return [
-    http.get(`http://localhost/entities/${ENCODED}`, ({ request }) => {
+    http.get(`http://localhost/api/v1/entities/${ENCODED}`, ({ request }) => {
       getCalls += 1;
       const url = new URL(request.url);
       lastRequest = {
@@ -91,7 +91,7 @@ describe('useEntityMetadata', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual(FULL);
-    expect(lastRequest?.url).toBe(`/entities/${ENCODED}`);
+    expect(lastRequest?.url).toBe(`/api/v1/entities/${ENCODED}`);
   });
 
   it('serialises facets as a sorted CSV under ?facets=', async () => {
@@ -100,7 +100,7 @@ describe('useEntityMetadata', () => {
       wrapper,
     });
     await waitFor(() => expect(lastRequest?.url.includes('facets=')).toBe(true));
-    expect(lastRequest?.url).toBe(`/entities/${ENCODED}?facets=forms,identity`);
+    expect(lastRequest?.url).toBe(`/api/v1/entities/${ENCODED}?facets=forms,identity`);
   });
 
   it('shares the cache slot regardless of the facets array order', () => {
@@ -142,7 +142,7 @@ describe('useEntityMetadata', () => {
 
   it('surfaces the error when the endpoint returns 500', async () => {
     server.use(
-      http.get(`http://localhost/entities/${ENCODED}`, () =>
+      http.get(`http://localhost/api/v1/entities/${ENCODED}`, () =>
         HttpResponse.json({ error: 'boom' }, { status: 500 })
       )
     );

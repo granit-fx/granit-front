@@ -3,7 +3,7 @@ import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/r
 
 import { dashboardDetailQueryKey } from './use-dashboard-detail.js';
 
-const DASHBOARDS_PATH = '/dashboards';
+const DASHBOARDS_PATH = '/api/v1/dashboards';
 
 /**
  * Shared invalidation routine — all three transitions affect the list
