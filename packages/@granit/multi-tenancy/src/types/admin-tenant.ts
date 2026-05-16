@@ -9,7 +9,7 @@ export interface AdminTenant {
   readonly name: string;
   readonly identifier: string;
   readonly contactEmail: string | null;
-  readonly isActive: boolean;
+  readonly activated: boolean;
   readonly jurisdiction: string | null;
   readonly createdAt: string;
 }

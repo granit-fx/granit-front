@@ -55,7 +55,7 @@ export const tenantQueryMetadata: QueryMetadata = {
       isVisible: true,
     },
     {
-      name: 'isActive',
+      name: 'activated',
       label: 'Active',
       type: 'Boolean',
       order: 4,
@@ -86,14 +86,14 @@ export const tenantQueryMetadata: QueryMetadata = {
     { name: 'name', type: 'String', operators: STRING_OPERATORS },
     { name: 'identifier', type: 'String', operators: STRING_OPERATORS },
     { name: 'contactEmail', type: 'String', operators: STRING_OPERATORS },
-    { name: 'isActive', type: 'Boolean', operators: BOOLEAN_OPERATORS },
+    { name: 'activated', type: 'Boolean', operators: BOOLEAN_OPERATORS },
     { name: 'jurisdiction', type: 'String', operators: ENUM_OPERATORS },
     { name: 'createdAt', type: 'DateTime', operators: DATE_OPERATORS },
   ],
   sortableFields: [
     { name: 'name' },
     { name: 'identifier' },
-    { name: 'isActive' },
+    { name: 'activated' },
     { name: 'createdAt' },
   ],
   presetFilterGroups: [],
@@ -142,7 +142,7 @@ export function createTenantHandlers(baseUrl = DEFAULT_BASE_PATH) {
         name: body.name ?? 'New Tenant',
         identifier: body.identifier ?? `tenant-${Date.now()}`,
         contactEmail: body.contactEmail ?? null,
-        isActive: true,
+        activated: true,
         jurisdiction: body.jurisdiction ?? null,
         createdAt: new Date().toISOString(),
       };
@@ -167,7 +167,7 @@ export function createTenantHandlers(baseUrl = DEFAULT_BASE_PATH) {
     http.post(`${baseUrl}/tenants/:id/activate`, ({ params }) => {
       const tenant = mockTenants.find((t) => t.id === params.id);
       if (!tenant) return notFound();
-      tenant.isActive = true;
+      tenant.activated = true;
       return noContent();
     }),
 
@@ -175,7 +175,7 @@ export function createTenantHandlers(baseUrl = DEFAULT_BASE_PATH) {
     http.post(`${baseUrl}/tenants/:id/deactivate`, ({ params }) => {
       const tenant = mockTenants.find((t) => t.id === params.id);
       if (!tenant) return notFound();
-      tenant.isActive = false;
+      tenant.activated = false;
       return noContent();
     }),
   ];
