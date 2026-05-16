@@ -23,8 +23,8 @@ const SAMPLE_ENTRY = {
   occurredAt: '2026-05-09T15:00:00Z' as ISODateString,
   attachments: [],
   reactions: [
-    { emoji: ':thumbs_up:' as const, count: 3, hasReacted: true },
-    { emoji: ':tada:' as const, count: 1, hasReacted: false },
+    { emoji: 'thumbs_up' as const, count: 3, hasReacted: true },
+    { emoji: 'tada' as const, count: 1, hasReacted: false },
   ],
 };
 
@@ -38,10 +38,10 @@ describe('toggleReaction', () => {
   it('POSTs to /entries/{entryId}/reactions/{emoji} with URI-encoded segments', async () => {
     vi.mocked(client.post).mockResolvedValue(axiosResponse(SAMPLE_ENTRY));
 
-    const result = await toggleReaction(client, BASE_PATH, ENTRY_ID, ':thumbs_up:');
+    const result = await toggleReaction(client, BASE_PATH, ENTRY_ID, 'thumbs_up');
 
     expect(client.post).toHaveBeenCalledWith(
-      '/api/v1/timeline/entries/e-42/reactions/%3Athumbs_up%3A'
+      '/api/v1/timeline/entries/e-42/reactions/thumbs_up'
     );
     expect(result).toEqual(SAMPLE_ENTRY);
   });
@@ -49,18 +49,18 @@ describe('toggleReaction', () => {
   it('returns the refreshed entry — caller patches its cache from this payload', async () => {
     vi.mocked(client.post).mockResolvedValue(axiosResponse(SAMPLE_ENTRY));
 
-    const refreshed = await toggleReaction(client, BASE_PATH, ENTRY_ID, ':heart:');
+    const refreshed = await toggleReaction(client, BASE_PATH, ENTRY_ID, 'heart');
 
     expect(refreshed.reactions).toEqual([
-      { emoji: ':thumbs_up:', count: 3, hasReacted: true },
-      { emoji: ':tada:', count: 1, hasReacted: false },
+      { emoji: 'thumbs_up', count: 3, hasReacted: true },
+      { emoji: 'tada', count: 1, hasReacted: false },
     ]);
   });
 
-  it('propagates 403 when the caller lacks Timeline.React', async () => {
+  it('propagates 403 when the caller lacks Timeline.Reactions.React', async () => {
     vi.mocked(client.post).mockRejectedValue(new Error('Request failed with status code 403'));
 
-    await expect(toggleReaction(client, BASE_PATH, ENTRY_ID, ':eyes:')).rejects.toThrow(/403/);
+    await expect(toggleReaction(client, BASE_PATH, ENTRY_ID, 'eyes')).rejects.toThrow(/403/);
   });
 
   it('accepts every code in the closed REACTION_EMOJIS catalog', async () => {
@@ -78,6 +78,6 @@ describe('toggleReaction', () => {
 
 describe('TimelinePermissions', () => {
   it('exposes the React permission key matching the backend wire string', () => {
-    expect(TimelinePermissions.Timeline.React).toBe('Timeline.React');
+    expect(TimelinePermissions.Timeline.Reactions.React).toBe('Timeline.Reactions.React');
   });
 });

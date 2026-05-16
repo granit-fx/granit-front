@@ -1,4 +1,4 @@
-import { REACTION_EMOJIS, type Reaction, type ReactionEmoji } from '@granit/timeline';
+import { REACTION_EMOJIS, type ReactionEmoji, type ReactionMap } from '@granit/timeline';
 import { type ReactNode } from 'react';
 
 import type { TimelineEntryId } from '@granit/timeline';
@@ -7,7 +7,7 @@ export interface ReactionBarLabels {
   /**
    * Aria label for one reaction button. Receives the emoji code so apps
    * can localize per emoji via
-   * `t('timeline:Reaction.AriaLabel.' + emoji.replaceAll(':', ''))`.
+   * `t('timeline:Reaction.AriaLabel.' + emoji)`.
    */
   readonly buttonAriaLabel?: (emoji: ReactionEmoji) => string;
 }
@@ -20,15 +20,16 @@ export interface ReactionBarProps {
   /** Id of the entry this bar belongs to — passed to the toggle callback. */
   readonly entryId: TimelineEntryId;
   /**
-   * Current reactions for the entry — typically `entry.reactions ?? []`.
-   * Missing emojis render as `count=0, hasReacted=false` so the bar
-   * always shows the full closed catalog.
+   * Current reactions for the entry — typically `entry.reactions`
+   * straight from the stream payload. Missing emojis render as
+   * `count=0, byCurrentUser=false` so the bar always shows the full
+   * closed catalog.
    */
-  readonly reactions: readonly Reaction[];
+  readonly reactions: ReactionMap | undefined;
   /**
    * Click handler. When `undefined`, the bar renders as a read-only
    * tally — buttons disabled, no toggle. Apps gate by the
-   * `Timeline.React` permission via this callback's presence.
+   * `Timeline.Reactions.React` permission via this callback's presence.
    */
   readonly onToggle?: (args: { entryId: TimelineEntryId; emoji: ReactionEmoji }) => void;
   /** Override the English defaults for aria labels (i18n in C4). */
@@ -59,7 +60,6 @@ export function ReactionBar({
   className,
 }: ReactionBarProps): ReactNode {
   const merged = { ...DEFAULT_LABELS, ...labels };
-  const byEmoji = indexReactions(reactions);
   const isInteractive = onToggle != null;
 
   return (
@@ -71,9 +71,9 @@ export function ReactionBar({
       className={className}
     >
       {REACTION_EMOJIS.map((emoji) => {
-        const reaction = byEmoji.get(emoji);
-        const count = reaction?.count ?? 0;
-        const hasReacted = reaction?.hasReacted ?? false;
+        const aggregate = reactions?.[emoji];
+        const count = aggregate?.count ?? 0;
+        const hasReacted = aggregate?.byCurrentUser ?? false;
         return (
           <button
             key={emoji}
@@ -94,12 +94,4 @@ export function ReactionBar({
       })}
     </div>
   );
-}
-
-function indexReactions(reactions: readonly Reaction[]): Map<ReactionEmoji, Reaction> {
-  const map = new Map<ReactionEmoji, Reaction>();
-  for (const r of reactions) {
-    map.set(r.emoji, r);
-  }
-  return map;
 }

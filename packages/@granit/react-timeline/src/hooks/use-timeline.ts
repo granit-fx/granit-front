@@ -1,10 +1,10 @@
 import { useInfiniteScroll } from '@granit/react-query-engine';
 import { getStream } from '@granit/timeline';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 import { useTimelineConfig } from '../providers/timeline-provider.js';
 
-import type { TimelineEntry } from '@granit/timeline';
+import type { TimelineEntry, TimelineEntryPage, TimelineStreamPage } from '@granit/timeline';
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -25,6 +25,22 @@ export interface UseTimelineReturn {
   refresh: () => void;
   addOptimisticEntry: (entry: TimelineEntry) => void;
   removeOptimisticEntry: (entryId: string) => void;
+  /**
+   * Patch one entry in place. The `updater` receives the matching
+   * entry and must return its replacement (return the input to skip).
+   * Entries with non-matching ids pass through untouched. Useful for
+   * surgical updates (reaction toggles, edits) that should not trigger
+   * a full stream refresh.
+   */
+  patchEntry: (entryId: string, updater: (entry: TimelineEntry) => TimelineEntry) => void;
+  /**
+   * Source keys reported degraded by the latest stream fetch. Empty
+   * unless one or more registered `ITimelineSource` contributors timed
+   * out or threw under the `DegradeGracefully` policy on the backend.
+   * Hosts typically render a "partial data" banner when this is
+   * non-empty.
+   */
+  degradedSources: readonly string[];
 }
 
 /**
@@ -39,10 +55,20 @@ export function useTimeline({
   pageSize = DEFAULT_PAGE_SIZE,
 }: UseTimelineOptions): UseTimelineReturn {
   const { client, basePath } = useTimelineConfig();
+  const [degradedSources, setDegradedSources] = useState<readonly string[]>([]);
 
   const fetcher = useCallback(
-    (page: number, ps: number) =>
-      getStream(client, basePath, entityType, entityId, { page, pageSize: ps }),
+    async (page: number, ps: number): Promise<TimelineEntryPage> => {
+      const result: TimelineStreamPage = await getStream(client, basePath, entityType, entityId, {
+        page,
+        pageSize: ps,
+      });
+      // Latest call wins — degraded set reflects the most recent stream
+      // response, not the union across pagination. Empty array reset on
+      // a healthy page so the host can clear its banner.
+      setDegradedSources(result.degradedSources);
+      return result.page;
+    },
     [client, basePath, entityType, entityId]
   );
 
@@ -72,6 +98,13 @@ export function useTimeline({
     [setEntries]
   );
 
+  const patchEntry = useCallback(
+    (entryId: string, updater: (entry: TimelineEntry) => TimelineEntry) => {
+      setEntries((prev) => prev.map((e) => (e.id === entryId ? updater(e) : e)));
+    },
+    [setEntries]
+  );
+
   return {
     entries,
     totalCount,
@@ -83,5 +116,7 @@ export function useTimeline({
     refresh,
     addOptimisticEntry,
     removeOptimisticEntry,
+    patchEntry,
+    degradedSources,
   };
 }

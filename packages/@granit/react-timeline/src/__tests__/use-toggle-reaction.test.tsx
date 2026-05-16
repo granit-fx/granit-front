@@ -5,10 +5,16 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { toggleReactionList, useToggleReaction } from '../hooks/use-toggle-reaction.js';
+import { toggleReactionMap, useToggleReaction } from '../hooks/use-toggle-reaction.js';
 import { TimelineProvider } from '../providers/timeline-provider.js';
 
-import type { Reaction, TimelineEntry, TimelineEntryId, TimelineEntryPage } from '@granit/timeline';
+import type {
+  ReactionMap,
+  ReactionToggleResult,
+  TimelineEntry,
+  TimelineEntryId,
+  TimelineEntryPage,
+} from '@granit/timeline';
 import type { ISODateString } from '@granit/types';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
@@ -16,7 +22,7 @@ import type { ReactNode } from 'react';
 const ENTRY_ID = toEntityId<'TimelineEntry'>('e-1') as TimelineEntryId;
 const OTHER_ENTRY_ID = toEntityId<'TimelineEntry'>('e-99') as TimelineEntryId;
 
-function makeEntry(id: TimelineEntryId, reactions: readonly Reaction[] = []): TimelineEntry {
+function makeEntry(id: TimelineEntryId, reactions?: ReactionMap): TimelineEntry {
   return {
     id,
     entryType: 0,
@@ -32,6 +38,15 @@ function makeEntry(id: TimelineEntryId, reactions: readonly Reaction[] = []): Ti
 
 function makePage(items: readonly TimelineEntry[]): TimelineEntryPage {
   return { items, totalCount: items.length, nextCursor: null };
+}
+
+function makeToggleResult(
+  entryId: string,
+  emoji: ReactionToggleResult['emoji'],
+  count: number,
+  byCurrentUser: boolean
+): ReactionToggleResult {
+  return { entryId, emoji, count, currentUserHasReacted: byCurrentUser };
 }
 
 interface Harness {
@@ -54,30 +69,30 @@ function createHarness(): Harness {
   return { client, queryClient, wrapper };
 }
 
-describe('toggleReactionList', () => {
-  it('adds a fresh reaction with count=1, hasReacted=true', () => {
-    expect(toggleReactionList(undefined, ':thumbs_up:')).toEqual([
-      { emoji: ':thumbs_up:', count: 1, hasReacted: true },
-    ]);
+describe('toggleReactionMap', () => {
+  it('adds a fresh reaction with count=1, byCurrentUser=true', () => {
+    expect(toggleReactionMap(undefined, 'thumbs_up')).toEqual({
+      thumbs_up: { count: 1, byCurrentUser: true },
+    });
   });
 
-  it('increments count + flips hasReacted when caller had not reacted', () => {
-    const before: Reaction[] = [{ emoji: ':heart:', count: 5, hasReacted: false }];
-    expect(toggleReactionList(before, ':heart:')).toEqual([
-      { emoji: ':heart:', count: 6, hasReacted: true },
-    ]);
+  it('increments count + flips byCurrentUser when caller had not reacted', () => {
+    const before: ReactionMap = { heart: { count: 5, byCurrentUser: false } };
+    expect(toggleReactionMap(before, 'heart')).toEqual({
+      heart: { count: 6, byCurrentUser: true },
+    });
   });
 
-  it('decrements count + flips hasReacted when caller had reacted', () => {
-    const before: Reaction[] = [{ emoji: ':tada:', count: 3, hasReacted: true }];
-    expect(toggleReactionList(before, ':tada:')).toEqual([
-      { emoji: ':tada:', count: 2, hasReacted: false },
-    ]);
+  it('decrements count + flips byCurrentUser when caller had reacted', () => {
+    const before: ReactionMap = { tada: { count: 3, byCurrentUser: true } };
+    expect(toggleReactionMap(before, 'tada')).toEqual({
+      tada: { count: 2, byCurrentUser: false },
+    });
   });
 
   it('removes the entry entirely when toggling off the last reactor', () => {
-    const before: Reaction[] = [{ emoji: ':eyes:', count: 1, hasReacted: true }];
-    expect(toggleReactionList(before, ':eyes:')).toEqual([]);
+    const before: ReactionMap = { eyes: { count: 1, byCurrentUser: true } };
+    expect(toggleReactionMap(before, 'eyes')).toBeUndefined();
   });
 });
 
@@ -89,8 +104,8 @@ describe('useToggleReaction — optimistic update', () => {
     const initial = makePage([makeEntry(ENTRY_ID), makeEntry(OTHER_ENTRY_ID)]);
     queryClient.setQueryData(['timeline', 'Quote', 'q-1'], initial);
 
-    let resolveNetwork: (value: TimelineEntry) => void = () => {};
-    const networkPromise = new Promise<TimelineEntry>((resolve) => {
+    let resolveNetwork: (value: ReactionToggleResult) => void = () => {};
+    const networkPromise = new Promise<ReactionToggleResult>((resolve) => {
       resolveNetwork = resolve;
     });
     vi.mocked(client.post).mockImplementation(
@@ -99,39 +114,35 @@ describe('useToggleReaction — optimistic update', () => {
 
     const { result } = renderHook(() => useToggleReaction(), { wrapper });
 
-    // Fire and forget so we can observe the mid-flight cache state.
     result.current.mutate({
       entityType: 'Quote',
       entityId: 'q-1',
       entryId: ENTRY_ID,
-      emoji: ':thumbs_up:',
+      emoji: 'thumbs_up',
     });
 
-    // Optimistic patch is synchronous after onMutate runs.
     await waitFor(() => {
       const page = queryClient.getQueryData<TimelineEntryPage>(['timeline', 'Quote', 'q-1']);
-      expect(page?.items[0]?.reactions).toEqual([
-        { emoji: ':thumbs_up:', count: 1, hasReacted: true },
-      ]);
+      expect(page?.items[0]?.reactions).toEqual({
+        thumbs_up: { count: 1, byCurrentUser: true },
+      });
     });
-    // The unrelated entry in the same page is untouched.
     const page = queryClient.getQueryData<TimelineEntryPage>(['timeline', 'Quote', 'q-1']);
-    expect(page?.items[1]?.reactions).toEqual([]);
+    expect(page?.items[1]?.reactions).toBeUndefined();
 
-    // Resolve the network with server truth (count overrides optimistic).
-    resolveNetwork(makeEntry(ENTRY_ID, [{ emoji: ':thumbs_up:', count: 7, hasReacted: true }]));
+    resolveNetwork(makeToggleResult(ENTRY_ID, 'thumbs_up', 7, true));
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     const finalPage = queryClient.getQueryData<TimelineEntryPage>(['timeline', 'Quote', 'q-1']);
-    expect(finalPage?.items[0]?.reactions).toEqual([
-      { emoji: ':thumbs_up:', count: 7, hasReacted: true },
-    ]);
+    expect(finalPage?.items[0]?.reactions).toEqual({
+      thumbs_up: { count: 7, byCurrentUser: true },
+    });
   });
 
   it('rolls back to the snapshot when the mutation rejects', async () => {
     const { client, queryClient, wrapper } = createHarness();
     const initial = makePage([
-      makeEntry(ENTRY_ID, [{ emoji: ':heart:', count: 5, hasReacted: false }]),
+      makeEntry(ENTRY_ID, { heart: { count: 5, byCurrentUser: false } }),
     ]);
     queryClient.setQueryData(['timeline', 'Quote', 'q-1'], initial);
 
@@ -142,13 +153,13 @@ describe('useToggleReaction — optimistic update', () => {
       entityType: 'Quote',
       entityId: 'q-1',
       entryId: ENTRY_ID,
-      emoji: ':heart:',
+      emoji: 'heart',
     });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 
     const page = queryClient.getQueryData<TimelineEntryPage>(['timeline', 'Quote', 'q-1']);
-    expect(page?.items[0]?.reactions).toEqual([{ emoji: ':heart:', count: 5, hasReacted: false }]);
+    expect(page?.items[0]?.reactions).toEqual({ heart: { count: 5, byCurrentUser: false } });
   });
 });
 
@@ -158,23 +169,19 @@ describe('useToggleReaction — scoped invalidation', () => {
   it("does not touch unrelated streams' caches", async () => {
     const { client, queryClient, wrapper } = createHarness();
 
-    // Target stream
     queryClient.setQueryData(['timeline', 'Quote', 'q-1'], makePage([makeEntry(ENTRY_ID)]));
-    // Sibling stream — different entityId
     queryClient.setQueryData(
       ['timeline', 'Quote', 'q-2'],
       makePage([makeEntry(toEntityId<'TimelineEntry'>('e-other-1') as TimelineEntryId)])
     );
-    // Sibling stream — different entityType
     queryClient.setQueryData(
       ['timeline', 'Party', 'p-7'],
       makePage([makeEntry(toEntityId<'TimelineEntry'>('e-other-2') as TimelineEntryId)])
     );
-    // Foreign cache prefix entirely
     queryClient.setQueryData(['unrelated'], 'keep-me');
 
     vi.mocked(client.post).mockResolvedValue(
-      axiosResponse(makeEntry(ENTRY_ID, [{ emoji: ':eyes:', count: 1, hasReacted: true }]))
+      axiosResponse(makeToggleResult(ENTRY_ID, 'eyes', 1, true))
     );
 
     const { result } = renderHook(() => useToggleReaction(), { wrapper });
@@ -182,12 +189,11 @@ describe('useToggleReaction — scoped invalidation', () => {
       entityType: 'Quote',
       entityId: 'q-1',
       entryId: ENTRY_ID,
-      emoji: ':eyes:',
+      emoji: 'eyes',
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    // Sibling caches are not invalidated.
     const sibling1 = queryClient.getQueryCache().find({
       queryKey: ['timeline', 'Quote', 'q-2'],
     });

@@ -4759,6 +4759,16 @@
               "name": "removeOptimisticEntry",
               "kind": "method",
               "signature": "removeOptimisticEntry: (entryId: string) => void"
+            },
+            {
+              "name": "patchEntry",
+              "kind": "method",
+              "signature": "patchEntry: (entryId: string, updater: (entry: TimelineEntry) => TimelineEntry) => void"
+            },
+            {
+              "name": "degradedSources",
+              "kind": "property",
+              "signature": "degradedSources: readonly string[]"
             }
           ]
         },
@@ -4773,14 +4783,14 @@
           "signature": "function useTimelineFollowers("
         },
         {
-          "name": "toggleReactionList",
+          "name": "useAnchorEntry",
           "kind": "function",
-          "signature": "function toggleReactionList( reactions: readonly Reaction[] | undefined, emoji: ReactionEmoji ): readonly Reaction[]"
+          "signature": "function useAnchorEntry(): UseMutationResult< TimelineEntryId, Error, AnchorEntryVariables >"
         },
         {
-          "name": "useToggleReaction",
+          "name": "useUpdateEntryBody",
           "kind": "function",
-          "signature": "function useToggleReaction(): UseMutationResult< TimelineEntry, Error, ToggleReactionVariables, ToggleReactionContext >"
+          "signature": "function useUpdateEntryBody(): UseMutationResult< void, Error, UpdateEntryBodyVariables >"
         },
         {
           "name": "ToggleReactionVariables",
@@ -5281,7 +5291,7 @@
         {
           "name": "toggleReaction",
           "kind": "function",
-          "signature": "async function toggleReaction( client: AxiosInstance, basePath: string, entryId: TimelineEntryId, emoji: ReactionEmoji ): Promise<TimelineEntry>"
+          "signature": "async function toggleReaction( client: AxiosInstance, basePath: string, entryId: TimelineEntryId, emoji: ReactionEmoji ): Promise<ReactionToggleResult>"
         }
       ]
     },

@@ -6,9 +6,25 @@ export type {
   TimelineEntry,
   TimelineEntryId,
   TimelineEntryPage,
+  TimelineStreamPage,
 } from './stream.js';
 export type { CreateTimelineEntryRequest, TimelineQueryParams } from './request.js';
 export type { TimelineConfig } from './config.js';
 export type { MentionSuggestion } from './mention.js';
 export { REACTION_EMOJIS } from './reaction.js';
-export type { Reaction, ReactionEmoji } from './reaction.js';
+export type {
+  ReactionAggregate,
+  ReactionEmoji,
+  ReactionMap,
+  ReactionToggleResult,
+} from './reaction.js';
+export {
+  TimelineEntryNotEditableReason,
+  TimelineEntryOrigin,
+  TimelineSourceKeys,
+  isValidSourceKey,
+} from './source.js';
+export type {
+  TimelineEntryNotEditableReasonValue,
+  TimelineEntryOriginValue,
+} from './source.js';

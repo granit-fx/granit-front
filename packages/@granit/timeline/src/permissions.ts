@@ -4,7 +4,9 @@
  */
 export const TimelinePermissions = {
   Timeline: {
-    /** Required to react / un-react on a timeline entry (C-stream). */
-    React: 'Timeline.React',
+    Reactions: {
+      /** Required to react / un-react on a timeline entry (C-stream). */
+      React: 'Timeline.Reactions.React',
+    },
   },
 } as const;

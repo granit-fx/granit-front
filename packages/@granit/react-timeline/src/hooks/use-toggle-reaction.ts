@@ -4,8 +4,9 @@ import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/r
 import { buildTimelineQueryKey, useTimelineConfig } from '../providers/timeline-provider.js';
 
 import type {
-  Reaction,
   ReactionEmoji,
+  ReactionMap,
+  ReactionToggleResult,
   TimelineEntry,
   TimelineEntryId,
   TimelineEntryPage,
@@ -16,6 +17,11 @@ import type {
  * surrounding stream's `(entityType, entityId)` so the hook scopes
  * cache patches + invalidation to that stream's query keys —
  * unrelated streams' caches survive untouched.
+ *
+ * For entries with `origin === 'External'` that have no native shadow
+ * row yet, the caller must first call {@link useAnchorEntry} to
+ * materialise the shadow, then pass the returned shadow id as
+ * `entryId` here. The reaction endpoint only operates on native ids.
  */
 export interface ToggleReactionVariables {
   readonly entityType: string;
@@ -43,8 +49,9 @@ interface ToggleReactionContext {
  *   single-entry cache) so the matching entry's `reactions[]` reflects
  *   the toggle immediately.
  * - `onError` restores the snapshot taken in `onMutate`.
- * - `onSuccess` writes server truth (the refreshed `TimelineEntry`)
- *   over any matching entries, then invalidates the prefix so any
+ * - `onSuccess` writes server truth (the authoritative
+ *   `ReactionToggleResult` for the toggled emoji) into the map of
+ *   any matching cached entries, then invalidates the prefix so any
  *   in-flight subscribers refetch from authority.
  * - The prefix is `[...queryKeyPrefix, entityType, entityId]` — a
  *   100-toggle session on `Quote/q-1` never invalidates the cache
@@ -57,7 +64,7 @@ interface ToggleReactionContext {
  * Query stream cache benefit from the scoped patching out of the box.
  */
 export function useToggleReaction(): UseMutationResult<
-  TimelineEntry,
+  ReactionToggleResult,
   Error,
   ToggleReactionVariables,
   ToggleReactionContext
@@ -65,7 +72,7 @@ export function useToggleReaction(): UseMutationResult<
   const config = useTimelineConfig();
   const queryClient = useQueryClient();
 
-  return useMutation<TimelineEntry, Error, ToggleReactionVariables, ToggleReactionContext>({
+  return useMutation<ReactionToggleResult, Error, ToggleReactionVariables, ToggleReactionContext>({
     mutationFn: ({ entryId, emoji }) =>
       toggleReaction(config.client, config.basePath, entryId, emoji),
 
@@ -76,7 +83,9 @@ export function useToggleReaction(): UseMutationResult<
       const previousQueries = queryClient.getQueriesData({ queryKey: prefix });
 
       queryClient.setQueriesData<unknown>({ queryKey: prefix }, (old: unknown) =>
-        patchOptimistic(old, vars.entryId, vars.emoji)
+        patchEntries(old, vars.entryId, (reactions) =>
+          toggleReactionMap(reactions, vars.emoji)
+        )
       );
 
       return { previousQueries };
@@ -89,10 +98,12 @@ export function useToggleReaction(): UseMutationResult<
       }
     },
 
-    onSuccess: (refreshed, vars) => {
+    onSuccess: (result, vars) => {
       const prefix = streamPrefix(config, vars);
       queryClient.setQueriesData<unknown>({ queryKey: prefix }, (old: unknown) =>
-        replaceServerTruth(old, refreshed)
+        patchEntries(old, vars.entryId, (reactions) =>
+          applyToggleResult(reactions, result)
+        )
       );
       queryClient.invalidateQueries({ queryKey: prefix });
     },
@@ -107,66 +118,78 @@ function streamPrefix(
 }
 
 /**
- * Patch every cached entry matching `entryId` with the optimistic
- * reaction toggle. Walks the two known cache shapes:
- *   - `TimelineEntryPage` (paginated stream slot)
- *   - single `TimelineEntry` (per-entry cache)
- * Other shapes pass through unchanged so apps with custom caches
- * aren't affected.
+ * Patch every cached entry matching `entryId` by replacing its
+ * `reactions` map with `mutate(entry.reactions)`. Walks the two known
+ * cache shapes (`TimelineEntryPage` + bare `TimelineEntry`); other
+ * shapes pass through unchanged.
  */
-function patchOptimistic(old: unknown, entryId: TimelineEntryId, emoji: ReactionEmoji): unknown {
+function patchEntries(
+  old: unknown,
+  entryId: TimelineEntryId,
+  mutate: (reactions: ReactionMap | undefined) => ReactionMap | undefined
+): unknown {
   if (isTimelineEntryPage(old)) {
     return {
       ...old,
       items: old.items.map((entry) =>
-        entry.id === entryId ? toggleEntryReaction(entry, emoji) : entry
+        entry.id === entryId ? { ...entry, reactions: mutate(entry.reactions) } : entry
       ),
     };
   }
   if (isTimelineEntry(old) && old.id === entryId) {
-    return toggleEntryReaction(old, emoji);
+    return { ...old, reactions: mutate(old.reactions) };
   }
   return old;
-}
-
-function replaceServerTruth(old: unknown, refreshed: TimelineEntry): unknown {
-  if (isTimelineEntryPage(old)) {
-    return {
-      ...old,
-      items: old.items.map((entry) => (entry.id === refreshed.id ? refreshed : entry)),
-    };
-  }
-  if (isTimelineEntry(old) && old.id === refreshed.id) {
-    return refreshed;
-  }
-  return old;
-}
-
-function toggleEntryReaction(entry: TimelineEntry, emoji: ReactionEmoji): TimelineEntry {
-  return { ...entry, reactions: toggleReactionList(entry.reactions, emoji) };
 }
 
 /**
- * Pure toggle of one emoji on a reactions list — exported so apps
- * doing optimistic UI outside the React Query cache (e.g. against
- * `useTimeline`'s internal state) can reuse the same logic.
+ * Pure optimistic toggle of one emoji on a {@link ReactionMap} —
+ * exported so apps doing optimistic UI outside the React Query cache
+ * (e.g. against `useTimeline`'s internal state) can reuse the same
+ * logic. The server's authoritative count is applied later via
+ * {@link applyToggleResult}.
  */
-export function toggleReactionList(
-  reactions: readonly Reaction[] | undefined,
+export function toggleReactionMap(
+  reactions: ReactionMap | undefined,
   emoji: ReactionEmoji
-): readonly Reaction[] {
-  const list = reactions ?? [];
-  const existing = list.find((r) => r.emoji === emoji);
-  if (!existing) {
-    return [...list, { emoji, count: 1, hasReacted: true }];
+): ReactionMap | undefined {
+  const current = reactions?.[emoji];
+  if (!current) {
+    return { ...(reactions ?? {}), [emoji]: { count: 1, byCurrentUser: true } };
   }
-  if (existing.hasReacted) {
-    const next: Reaction = { emoji, count: existing.count - 1, hasReacted: false };
-    return next.count <= 0
-      ? list.filter((r) => r.emoji !== emoji)
-      : list.map((r) => (r.emoji === emoji ? next : r));
+  if (current.byCurrentUser) {
+    const nextCount = current.count - 1;
+    if (nextCount <= 0) {
+      const { [emoji]: _, ...rest } = reactions ?? {};
+      return Object.keys(rest).length === 0 ? undefined : rest;
+    }
+    return { ...(reactions ?? {}), [emoji]: { count: nextCount, byCurrentUser: false } };
   }
-  return list.map((r) => (r.emoji === emoji ? { emoji, count: r.count + 1, hasReacted: true } : r));
+  return {
+    ...(reactions ?? {}),
+    [emoji]: { count: current.count + 1, byCurrentUser: true },
+  };
+}
+
+/**
+ * Apply the backend's authoritative `(emoji, count, byCurrentUser)` to a
+ * {@link ReactionMap}. Exported so apps using `useTimeline` (or any other
+ * non-React-Query stream state) can merge the {@link ReactionToggleResult}
+ * straight into their entry without a full refetch.
+ */
+export function applyToggleResult(
+  reactions: ReactionMap | undefined,
+  result: ReactionToggleResult
+): ReactionMap | undefined {
+  if (result.count <= 0) {
+    if (!reactions) return undefined;
+    const { [result.emoji]: _, ...rest } = reactions;
+    return Object.keys(rest).length === 0 ? undefined : rest;
+  }
+  return {
+    ...(reactions ?? {}),
+    [result.emoji]: { count: result.count, byCurrentUser: result.currentUserHasReacted },
+  };
 }
 
 function isTimelineEntryPage(value: unknown): value is TimelineEntryPage {

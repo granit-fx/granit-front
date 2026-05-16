@@ -25,7 +25,17 @@ export type {
   UseTimelineFollowersReturn,
 } from './hooks/use-timeline-followers.js';
 
-export { toggleReactionList, useToggleReaction } from './hooks/use-toggle-reaction.js';
+export {
+  applyToggleResult,
+  toggleReactionMap,
+  useToggleReaction,
+} from './hooks/use-toggle-reaction.js';
+
+export { useAnchorEntry, useUpdateEntryBody } from './hooks/use-entry-mutations.js';
+export type {
+  AnchorEntryVariables,
+  UpdateEntryBodyVariables,
+} from './hooks/use-entry-mutations.js';
 export type { ToggleReactionVariables } from './hooks/use-toggle-reaction.js';
 
 export { ReactionBar } from './components/reaction-bar.js';
