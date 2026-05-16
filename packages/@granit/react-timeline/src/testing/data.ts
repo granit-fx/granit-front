@@ -17,7 +17,7 @@ export const mockTimelineEntries: Mutable<TimelineEntry>[] = [
   },
   {
     id: toEntityId<'TimelineEntry'>('tl-2'),
-    entryType: 1,
+    entryType: 2,
     body: 'Reviewed user access — confirmed granit-showcase-admin role required for project onboarding.',
     authorId: toEntityId<'User'>('admin-002'),
     authorName: 'Security Officer',
@@ -27,7 +27,7 @@ export const mockTimelineEntries: Mutable<TimelineEntry>[] = [
   },
   {
     id: toEntityId<'TimelineEntry'>('tl-3'),
-    entryType: 2,
+    entryType: 1,
     body: 'Role granit-showcase-readonly removed by admin.',
     authorId: toEntityId<'User'>('system'),
     authorName: 'System',
