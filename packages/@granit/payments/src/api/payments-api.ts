@@ -16,16 +16,19 @@ import type {
 import type { AxiosInstance } from '@granit/api-client';
 
 /**
- * List all payment transactions.
+ * List payment transactions belonging to the current tenant.
  *
- * `GET {basePath}/transactions`
+ * `GET {basePath}/transactions/mine`
+ *
+ * Tenant-scoped read. For cross-tenant admin grids with filtering, use
+ * the QueryEngine endpoint on `${basePath}/transactions`.
  */
 export async function listPaymentTransactions(
   client: AxiosInstance,
   basePath: string
 ): Promise<readonly PaymentTransactionResponse[]> {
   const response = await client.get<readonly PaymentTransactionResponse[]>(
-    `${basePath}/transactions`
+    `${basePath}/transactions/mine`
   );
   return response.data;
 }
@@ -92,15 +95,18 @@ export async function createCheckoutSession(
 }
 
 /**
- * List attached payment methods.
+ * List payment methods attached to the current tenant.
  *
- * `GET {basePath}/methods`
+ * `GET {basePath}/methods/mine`
+ *
+ * Tenant-scoped read. For cross-tenant admin grids with filtering, use
+ * the QueryEngine endpoint on `${basePath}/methods`.
  */
 export async function listPaymentMethods(
   client: AxiosInstance,
   basePath: string
 ): Promise<readonly PaymentMethodResponse[]> {
-  const response = await client.get<readonly PaymentMethodResponse[]>(`${basePath}/methods`);
+  const response = await client.get<readonly PaymentMethodResponse[]>(`${basePath}/methods/mine`);
   return response.data;
 }
 

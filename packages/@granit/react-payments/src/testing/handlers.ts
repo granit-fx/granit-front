@@ -197,8 +197,8 @@ export function createPaymentsHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // GET /transactions/meta — query metadata
     createQueryMetaHandler(`${baseUrl}/transactions`, paymentTransactionQueryMetadata),
 
-    // GET all transactions
-    http.get(`${baseUrl}/transactions`, () => {
+    // GET transactions for the current tenant
+    http.get(`${baseUrl}/transactions/mine`, () => {
       return HttpResponse.json(sampleTransactions);
     }),
 
@@ -262,8 +262,8 @@ export function createPaymentsHandlers(baseUrl = DEFAULT_BASE_PATH) {
       );
     }),
 
-    // GET payment methods
-    http.get(`${baseUrl}/methods`, () => {
+    // GET payment methods for the current tenant
+    http.get(`${baseUrl}/methods/mine`, () => {
       return HttpResponse.json(samplePaymentMethods);
     }),
 

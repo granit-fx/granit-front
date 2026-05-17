@@ -135,13 +135,13 @@ const sampleProviderCatalog: PaymentProviderCatalogResponse = {
 
 describe('payments-api', () => {
   describe('listPaymentTransactions', () => {
-    it('should GET {basePath}/transactions', async () => {
+    it('should GET {basePath}/transactions/mine', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleTransaction]));
 
       const result = await listPaymentTransactions(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith(`${basePath}/transactions`);
+      expect(client.get).toHaveBeenCalledWith(`${basePath}/transactions/mine`);
       expect(result).toEqual([sampleTransaction]);
     });
   });
@@ -227,13 +227,13 @@ describe('payments-api', () => {
   });
 
   describe('listPaymentMethods', () => {
-    it('should GET {basePath}/methods', async () => {
+    it('should GET {basePath}/methods/mine', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleMethod]));
 
       const result = await listPaymentMethods(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith(`${basePath}/methods`);
+      expect(client.get).toHaveBeenCalledWith(`${basePath}/methods/mine`);
       expect(result).toEqual([sampleMethod]);
     });
   });

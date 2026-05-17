@@ -161,7 +161,7 @@ describe('use-payments', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/v1/payments/transactions');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/payments/transactions/mine');
       expect(result.current.data).toEqual([sampleTransaction]);
     });
 
@@ -174,7 +174,7 @@ describe('use-payments', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/custom/payments/transactions');
+      expect(client.get).toHaveBeenCalledWith('/custom/payments/transactions/mine');
     });
   });
 
@@ -301,7 +301,7 @@ describe('use-payments', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/v1/payments/methods');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/payments/methods/mine');
       expect(result.current.data).toEqual([sampleMethod]);
     });
   });
