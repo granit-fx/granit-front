@@ -177,5 +177,26 @@ describe('CsrfManager', () => {
       const [, init] = vi.mocked(globalThis.fetch).mock.calls[0];
       expect(init?.credentials).toBe('include');
     });
+
+    it('should reject cross-origin requests to prevent BFF cookie leakage', async () => {
+      const manager = new CsrfManager('/app');
+      vi.mocked(globalThis.fetch).mockResolvedValue(new Response('ok'));
+      const wrappedFetch = manager.createFetchWithCsrf();
+
+      await expect(wrappedFetch('https://evil.example.com/steal')).rejects.toThrow(
+        /refuses cross-origin request/
+      );
+      expect(globalThis.fetch).not.toHaveBeenCalled();
+    });
+
+    it('should accept same-origin absolute URLs', async () => {
+      const manager = new CsrfManager('/app');
+      vi.mocked(globalThis.fetch).mockResolvedValue(new Response('ok'));
+      const wrappedFetch = manager.createFetchWithCsrf();
+
+      const sameOrigin = `${globalThis.location.origin}/app/bff/anything`;
+      await wrappedFetch(sameOrigin);
+      expect(globalThis.fetch).toHaveBeenCalledOnce();
+    });
   });
 });

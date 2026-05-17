@@ -152,6 +152,11 @@
               "name": "csrfTokenGetter",
               "kind": "property",
               "signature": "csrfTokenGetter?: CsrfTokenGetter"
+            },
+            {
+              "name": "refreshCsrfToken",
+              "kind": "method",
+              "signature": "refreshCsrfToken?: () => Promise<string | null>"
             }
           ]
         },
@@ -388,6 +393,11 @@
               "name": "onSessionEnd",
               "kind": "method",
               "signature": "onSessionEnd?: () => void"
+            },
+            {
+              "name": "cacheLocation",
+              "kind": "property",
+              "signature": "cacheLocation?: 'memory' | 'sessionStorage' | 'localStorage'"
             }
           ]
         }
@@ -3774,7 +3784,18 @@
           "name": "TenantProviderProps",
           "kind": "interface",
           "signature": "interface TenantProviderProps",
-          "members": []
+          "members": [
+            {
+              "name": "tenantId",
+              "kind": "property",
+              "signature": "tenantId: string | undefined,"
+            },
+            {
+              "name": "previousTenantId",
+              "kind": "property",
+              "signature": "previousTenantId: string | undefined"
+            }
+          ]
         },
         {
           "name": "useKeycloakTenantResolvers",
@@ -3786,6 +3807,11 @@
           "kind": "interface",
           "signature": "interface UseKeycloakTenantResolversOptions",
           "members": []
+        },
+        {
+          "name": "useClearQueriesOnTenantChange",
+          "kind": "function",
+          "signature": "function useClearQueriesOnTenantChange(): void"
         }
       ]
     },

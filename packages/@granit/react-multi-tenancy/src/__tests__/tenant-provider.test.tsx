@@ -69,6 +69,45 @@ describe('TenantProvider', () => {
 
     expect(setTenantGetter).toHaveBeenCalledWith(expect.any(Function));
   });
+
+  it('does not fire onTenantChange on initial mount', () => {
+    const onTenantChange = vi.fn();
+    const resolvers: TenantResolver[] = [
+      { order: 100, name: 'test', resolve: () => ({ id: 'tenant-1' }) },
+    ];
+
+    renderHook(() => useTenant(), {
+      wrapper: ({ children }: { children: ReactNode }) => (
+        <TenantProvider resolvers={resolvers} onTenantChange={onTenantChange}>
+          {children}
+        </TenantProvider>
+      ),
+    });
+
+    expect(onTenantChange).not.toHaveBeenCalled();
+  });
+
+  it('fires onTenantChange when the resolved tenant id changes', () => {
+    const onTenantChange = vi.fn();
+    let currentTenantId = 'tenant-a';
+    const resolvers: TenantResolver[] = [
+      { order: 100, name: 'dynamic', resolve: () => ({ id: currentTenantId }) },
+    ];
+
+    const { rerender } = renderHook(() => useTenant(), {
+      wrapper: ({ children }: { children: ReactNode }) => (
+        <TenantProvider resolvers={[...resolvers]} onTenantChange={onTenantChange}>
+          {children}
+        </TenantProvider>
+      ),
+    });
+
+    currentTenantId = 'tenant-b';
+    rerender();
+
+    expect(onTenantChange).toHaveBeenCalledTimes(1);
+    expect(onTenantChange).toHaveBeenCalledWith('tenant-b', 'tenant-a');
+  });
 });
 
 describe('useTenant', () => {

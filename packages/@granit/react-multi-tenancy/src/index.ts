@@ -16,6 +16,7 @@ export type {
 // Hooks — Runtime
 export { useKeycloakTenantResolvers } from './hooks/use-keycloak-tenant-resolvers.js';
 export type { UseKeycloakTenantResolversOptions } from './hooks/use-keycloak-tenant-resolvers.js';
+export { useClearQueriesOnTenantChange } from './hooks/use-clear-queries-on-tenant-change.js';
 
 // Hooks — Tenant admin
 export {

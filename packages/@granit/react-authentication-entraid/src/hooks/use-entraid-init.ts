@@ -63,7 +63,10 @@ export function useEntraIdInit(config: EntraIdCoreConfig): EntraIdCoreResult {
             authority: config.authority,
             redirectUri: config.redirectUri,
           },
-          cache: { cacheLocation: 'sessionStorage' },
+          // Default to in-memory cache — OIDC tokens stored in
+          // localStorage/sessionStorage are readable by any same-origin script
+          // (XSS, malicious extensions). See EntraIdCoreConfig.cacheLocation.
+          cache: { cacheLocation: config.cacheLocation ?? 'memory' },
         });
 
         await msalInstance.initialize();
@@ -98,8 +101,11 @@ export function useEntraIdInit(config: EntraIdCoreConfig): EntraIdCoreResult {
             msalInstance.logoutRedirect();
           });
         }
-      } catch {
-        // MSAL init failed — stay unauthenticated
+      } catch (error) {
+        globalThis.console.warn(
+          '[@granit/react-authentication-entraid] MSAL initialization failed',
+          error
+        );
       } finally {
         setLoading(false);
       }

@@ -28,6 +28,14 @@ export interface ApiClientConfig {
    * Typically obtained from `CsrfManager.getToken` in `@granit/bff`.
    */
   csrfTokenGetter?: CsrfTokenGetter;
+  /**
+   * Optional async fetch-and-cache callback invoked when a BFF mutation is
+   * about to be sent and `csrfTokenGetter()` returns `null` (bootstrap race
+   * window). Typically `csrfManager.fetchToken` from `@granit/bff`. When
+   * provided, the interceptor awaits a fresh token instead of sending the
+   * request without `X-CSRF-Token`, eliminating defense-in-depth gaps.
+   */
+  refreshCsrfToken?: () => Promise<string | null>;
 }
 
 // ---------------------------------------------------------------------------
@@ -120,11 +128,20 @@ export function createApiClient(config: ApiClientConfig): AxiosInstance {
   instance.interceptors.request.use(
     async (req: InternalAxiosRequestConfig) => {
       if (isBff) {
-        // BFF mode: inject CSRF token on mutation methods
-        if (config.csrfTokenGetter && MUTATION_METHODS.has(req.method ?? '')) {
-          const csrfToken = config.csrfTokenGetter();
+        // BFF mode: inject CSRF token on mutation methods. If the cached token
+        // is not yet available (bootstrap race), await the refresh callback
+        // instead of silently sending the request without X-CSRF-Token.
+        if (MUTATION_METHODS.has(req.method ?? '')) {
+          let csrfToken = config.csrfTokenGetter?.() ?? null;
+          if (!csrfToken && config.refreshCsrfToken) {
+            csrfToken = await config.refreshCsrfToken();
+          }
           if (csrfToken) {
             req.headers['X-CSRF-Token'] = csrfToken;
+          } else if (config.csrfTokenGetter || config.refreshCsrfToken) {
+            globalThis.console.warn(
+              '[@granit/api-client] BFF mutation sent without X-CSRF-Token — token unavailable. Request will likely be rejected by the BFF.'
+            );
           }
         }
       } else if (_tokenGetter) {

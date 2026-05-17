@@ -53,17 +53,40 @@ export function BffProvider({ config, children }: BffProviderProps) {
         const response = await fetch(`${configRef.current.pathPrefix}/bff/user`, {
           credentials: 'include',
         });
-        const data = await response.json();
         if (cancelled) return;
-        if (data.authenticated) {
+
+        // Validate transport-level success and content-type before parsing —
+        // captive portals, proxy error pages and HTML redirects can otherwise
+        // flow attacker-influenced fields into the auth context.
+        if (!response.ok) {
+          setUser(null);
+          configRef.current.onUnauthenticated?.();
+          return;
+        }
+        // JSON.parse will throw on HTML captive-portal responses; the shape
+        // check below ensures attacker-controlled fields cannot flow into the
+        // auth context even when the body parses as some other JSON.
+        const data = (await response.json()) as unknown;
+        if (cancelled) return;
+
+        // Minimal shape validation — defense in depth, do not trust the
+        // response just because the BFF is first-party.
+        if (
+          typeof data === 'object' &&
+          data !== null &&
+          'authenticated' in data &&
+          (data as { authenticated: unknown }).authenticated === true
+        ) {
           setUser(data as BffUser);
           await csrfManager.fetchToken();
         } else {
           setUser(null);
           configRef.current.onUnauthenticated?.();
         }
-      } catch {
-        if (!cancelled) setUser(null);
+      } catch (error) {
+        if (cancelled) return;
+        globalThis.console.warn('[@granit/react-bff] BFF session check failed', error);
+        setUser(null);
       } finally {
         if (!cancelled) setIsLoading(false);
       }
@@ -73,10 +96,37 @@ export function BffProvider({ config, children }: BffProviderProps) {
 
     const interval = configRef.current.sessionCheckInterval ?? 60_000;
     if (interval > 0) {
-      const timer = setInterval(() => void checkSession(), interval);
+      // ±10% jitter prevents a synchronised request herd across tabs/users,
+      // and visibilitychange gating avoids polling background tabs.
+      const jitter = () => interval * (0.9 + Math.random() * 0.2);
+      let timer: ReturnType<typeof setTimeout> | undefined;
+
+      const schedule = () => {
+        timer = setTimeout(() => {
+          if (cancelled) return;
+          if (typeof document === 'undefined' || !document.hidden) {
+            void checkSession();
+          }
+          schedule();
+        }, jitter());
+      };
+      schedule();
+
+      const onVisibility = () => {
+        if (typeof document !== 'undefined' && !document.hidden && !cancelled) {
+          void checkSession();
+        }
+      };
+      if (typeof document !== 'undefined') {
+        document.addEventListener('visibilitychange', onVisibility);
+      }
+
       return () => {
         cancelled = true;
-        clearInterval(timer);
+        if (timer) clearTimeout(timer);
+        if (typeof document !== 'undefined') {
+          document.removeEventListener('visibilitychange', onVisibility);
+        }
       };
     }
 

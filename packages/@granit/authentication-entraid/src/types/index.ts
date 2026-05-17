@@ -29,4 +29,14 @@ export interface EntraIdCoreConfig {
   onAcquireTokenFailure?: () => void;
   /** Called when the user's session is terminated. */
   onSessionEnd?: () => void;
+
+  /**
+   * MSAL token cache location. Defaults to `'memory'` so OIDC tokens are not
+   * readable by same-origin JavaScript (XSS, malicious browser extensions).
+   * Override only when cross-tab persistence is required AND the app ships an
+   * XSS-hardened CSP. Storing tokens in `localStorage`/`sessionStorage` is a
+   * known high-severity risk (CWE-922) — prefer the BFF cookie pattern
+   * (`@granit/bff`) for persistent sessions.
+   */
+  cacheLocation?: 'memory' | 'sessionStorage' | 'localStorage';
 }

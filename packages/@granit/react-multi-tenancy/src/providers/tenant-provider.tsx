@@ -16,6 +16,24 @@ export interface TenantProviderProps {
   readonly resolvers: readonly TenantResolver[];
   /** Multi-tenancy options. */
   readonly options?: MultiTenancyOptions;
+  /**
+   * Fired when the resolved tenant id changes (not on mount). Use to clear
+   * tenant-scoped caches — typically `queryClient.clear()` — to prevent
+   * cross-tenant data leakage via stale React Query entries.
+   *
+   * @example
+   * ```tsx
+   * const queryClient = useQueryClient();
+   * <TenantProvider
+   *   resolvers={resolvers}
+   *   onTenantChange={() => queryClient.clear()}
+   * >...</TenantProvider>
+   * ```
+   */
+  readonly onTenantChange?: (
+    tenantId: string | undefined,
+    previousTenantId: string | undefined
+  ) => void;
   readonly children: ReactNode;
 }
 
@@ -24,6 +42,7 @@ const TenantContext = createContext<CurrentTenant | null>(null);
 export function TenantProvider({
   resolvers,
   options,
+  onTenantChange,
   children,
 }: Readonly<TenantProviderProps>): React.JSX.Element {
   const isEnabled = options?.isEnabled !== false;
@@ -45,6 +64,18 @@ export function TenantProvider({
     if (!isEnabled) return;
     setTenantGetter(() => tenantRef.current.tenantId);
   }, [isEnabled]);
+
+  const previousTenantIdRef = useRef<string | undefined>(tenant.tenantId);
+  const onTenantChangeRef = useRef(onTenantChange);
+  onTenantChangeRef.current = onTenantChange;
+
+  useEffect(() => {
+    const previous = previousTenantIdRef.current;
+    if (previous !== tenant.tenantId) {
+      onTenantChangeRef.current?.(tenant.tenantId, previous);
+      previousTenantIdRef.current = tenant.tenantId;
+    }
+  }, [tenant.tenantId]);
 
   return <TenantContext value={tenant}>{children}</TenantContext>;
 }

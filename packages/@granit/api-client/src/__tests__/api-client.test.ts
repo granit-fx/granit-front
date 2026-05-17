@@ -451,6 +451,7 @@ describe('BFF mode', () => {
   });
 
   it('should NOT inject X-CSRF-Token when csrfTokenGetter returns null', async () => {
+    const warnSpy = vi.spyOn(globalThis.console, 'warn').mockImplementation(() => undefined);
     const client = mod.createApiClient({
       baseURL: 'https://api.example.com',
       mode: 'bff',
@@ -460,6 +461,40 @@ describe('BFF mode', () => {
 
     const response = await client.post('/test', {});
     expect(response.config.headers['X-CSRF-Token']).toBeUndefined();
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('BFF mutation sent without X-CSRF-Token')
+    );
+    warnSpy.mockRestore();
+  });
+
+  it('should self-heal: await refreshCsrfToken when cached token is null', async () => {
+    const refreshCsrfToken = vi.fn().mockResolvedValue('fresh-csrf');
+    const client = mod.createApiClient({
+      baseURL: 'https://api.example.com',
+      mode: 'bff',
+      csrfTokenGetter: () => null,
+      refreshCsrfToken,
+    });
+    client.defaults.adapter = captureAdapter;
+
+    const response = await client.post('/test', {});
+    expect(refreshCsrfToken).toHaveBeenCalledOnce();
+    expect(response.config.headers['X-CSRF-Token']).toBe('fresh-csrf');
+  });
+
+  it('should prefer the cached token over the refresh callback when available', async () => {
+    const refreshCsrfToken = vi.fn().mockResolvedValue('refreshed');
+    const client = mod.createApiClient({
+      baseURL: 'https://api.example.com',
+      mode: 'bff',
+      csrfTokenGetter: () => 'cached',
+      refreshCsrfToken,
+    });
+    client.defaults.adapter = captureAdapter;
+
+    const response = await client.post('/test', {});
+    expect(refreshCsrfToken).not.toHaveBeenCalled();
+    expect(response.config.headers['X-CSRF-Token']).toBe('cached');
   });
 
   it('should NOT inject Authorization header in BFF mode', async () => {
