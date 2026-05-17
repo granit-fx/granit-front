@@ -35,7 +35,7 @@ describe('timeline API', () => {
       expect(client.get).toHaveBeenCalledWith('/api/v1/timeline/Patient/p-1', {
         params: { page: 1, pageSize: 20 },
       });
-      expect(result).toEqual(page);
+      expect(result).toEqual({ page, degradedSources: [] });
     });
   });
 
