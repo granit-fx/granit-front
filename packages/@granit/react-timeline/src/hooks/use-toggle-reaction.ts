@@ -83,9 +83,7 @@ export function useToggleReaction(): UseMutationResult<
       const previousQueries = queryClient.getQueriesData({ queryKey: prefix });
 
       queryClient.setQueriesData<unknown>({ queryKey: prefix }, (old: unknown) =>
-        patchEntries(old, vars.entryId, (reactions) =>
-          toggleReactionMap(reactions, vars.emoji)
-        )
+        patchEntries(old, vars.entryId, (reactions) => toggleReactionMap(reactions, vars.emoji))
       );
 
       return { previousQueries };
@@ -101,9 +99,7 @@ export function useToggleReaction(): UseMutationResult<
     onSuccess: (result, vars) => {
       const prefix = streamPrefix(config, vars);
       queryClient.setQueriesData<unknown>({ queryKey: prefix }, (old: unknown) =>
-        patchEntries(old, vars.entryId, (reactions) =>
-          applyToggleResult(reactions, result)
-        )
+        patchEntries(old, vars.entryId, (reactions) => applyToggleResult(reactions, result))
       );
       queryClient.invalidateQueries({ queryKey: prefix });
     },
@@ -160,8 +156,10 @@ export function toggleReactionMap(
   if (current.byCurrentUser) {
     const nextCount = current.count - 1;
     if (nextCount <= 0) {
-      const { [emoji]: _, ...rest } = reactions ?? {};
-      return Object.keys(rest).length === 0 ? undefined : rest;
+      const rest = Object.fromEntries(
+        Object.entries(reactions ?? {}).filter(([key]) => key !== emoji)
+      );
+      return Object.keys(rest).length === 0 ? undefined : (rest as ReactionMap);
     }
     return { ...(reactions ?? {}), [emoji]: { count: nextCount, byCurrentUser: false } };
   }
@@ -183,8 +181,10 @@ export function applyToggleResult(
 ): ReactionMap | undefined {
   if (result.count <= 0) {
     if (!reactions) return undefined;
-    const { [result.emoji]: _, ...rest } = reactions;
-    return Object.keys(rest).length === 0 ? undefined : rest;
+    const rest = Object.fromEntries(
+      Object.entries(reactions).filter(([key]) => key !== result.emoji)
+    );
+    return Object.keys(rest).length === 0 ? undefined : (rest as ReactionMap);
   }
   return {
     ...(reactions ?? {}),
