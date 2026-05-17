@@ -1,19 +1,12 @@
-import { blobStorageKeys, getBlob } from '@granit/blob-storage';
+import { getBlob } from '@granit/blob-storage';
 import { useQuery } from '@tanstack/react-query';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { useBlobStorageConfig } from '../providers/blob-storage-provider.js';
 
-import type { AxiosInstance } from '@granit/api-client';
+import { blobStorageKeys } from './query-keys.js';
+
 import type { BlobDescriptorResponse } from '@granit/blob-storage';
 import type { UseQueryResult } from '@tanstack/react-query';
-
-/** Options accepted by all blob-storage hooks. */
-export interface BlobStorageOptions {
-  /** Axios instance used for all requests. */
-  readonly client: AxiosInstance;
-  /** Base URL for the blob-storage API. Defaults to `/api/v1/blob-storage`. */
-  readonly basePath?: string;
-}
 
 /**
  * Query hook that fetches a single blob descriptor by ID.
@@ -22,15 +15,14 @@ export interface BlobStorageOptions {
  *
  * @example
  * ```tsx
- * const { data: blob } = useBlob('abc-123', 'medical-images', { client: api });
+ * const { data: blob } = useBlob('abc-123', 'medical-images');
  * ```
  */
 export function useBlob(
   id: string,
-  containerName: string,
-  options: BlobStorageOptions
+  containerName: string
 ): UseQueryResult<BlobDescriptorResponse> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+  const { client, basePath } = useBlobStorageConfig();
 
   return useQuery({
     queryKey: blobStorageKeys.blob(id, containerName),

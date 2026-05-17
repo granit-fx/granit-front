@@ -1,7 +1,7 @@
 import type {
   EntityComponentCatalog,
   EntityDetailComponent,
-} from '../provider/component-catalog.js';
+} from '../providers/component-catalog.js';
 import type { ReactNode } from 'react';
 
 // ---------------------------------------------------------------------------

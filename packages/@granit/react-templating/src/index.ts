@@ -18,3 +18,6 @@ export { useTemplateMutations } from './hooks/use-template-mutations.js';
 export { useTemplateBinaryPreview, useTemplatePreview } from './hooks/use-template-preview.js';
 export { useTemplateVariables } from './hooks/use-template-variables.js';
 export { useTemplates } from './hooks/use-templates.js';
+
+// Query keys
+export { templateKeys } from './hooks/query-keys.js';

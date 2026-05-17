@@ -9,7 +9,7 @@ import type {
   CreateActivityRequest,
   ReassignActivityRequest,
   RescheduleActivityRequest,
-} from '../types.js';
+} from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

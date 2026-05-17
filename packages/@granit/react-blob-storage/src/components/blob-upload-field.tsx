@@ -1,4 +1,3 @@
-import { useGranitClient } from '@granit/react-api-client';
 import { useCallback, useRef, useState, type ChangeEvent, type ReactNode } from 'react';
 
 import { useBlobUpload, type BlobUploadState } from '../hooks/use-blob-upload.js';
@@ -137,8 +136,7 @@ export function BlobUploadField({
   renderClear,
   className,
 }: BlobUploadFieldProps): ReactNode {
-  const client = useGranitClient();
-  const { upload, state, reset } = useBlobUpload({ client });
+  const { upload, state, reset } = useBlobUpload();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
 

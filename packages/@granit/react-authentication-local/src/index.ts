@@ -16,3 +16,6 @@ export type {
 export { useVerifyTwoFactorLogin } from './hooks/use-verify-two-factor-login.js';
 export { useBeginPasskeyAssertion } from './hooks/use-begin-passkey-assertion.js';
 export { useCompletePasskeyAssertion } from './hooks/use-complete-passkey-assertion.js';
+
+// Query keys
+export { localAuthKeys } from './hooks/query-keys.js';

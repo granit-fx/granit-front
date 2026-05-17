@@ -14,7 +14,6 @@ export type {
 } from './types/index.js';
 
 // Query keys
-export { openIddictAdminKeys } from './hooks/query-keys.js';
 
 // API — Users (list + impersonate only; CRUD lives in @granit/identity)
 export { impersonateUser, listUsers } from './api/admin-user-api.js';
@@ -36,3 +35,4 @@ export {
   revokeAuthorization,
   revokeUserAuthorizations,
 } from './api/admin-oidc-authorization-api.js';
+export { OpenIddictPermissions } from './permissions.js';

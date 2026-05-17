@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { searchTaxonomy } from '../api/search-api.js';
 
-import type { TaxonomySearchResultGroup } from '../types.js';
+import type { TaxonomySearchResultGroup } from '../types/index.js';
 
 const basePath = '/api/v1/taxonomy';
 

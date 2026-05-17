@@ -6,11 +6,6 @@
       "description": "Account self-service types and API functions — mirrors Granit.OpenIddict.Endpoints .NET contract",
       "exports": [
         {
-          "name": "accountKeys",
-          "kind": "const",
-          "signature": "const accountKeys"
-        },
-        {
           "name": "getProfile",
           "kind": "function",
           "signature": "async function getProfile( client: AxiosInstance, basePath: string ): Promise<AccountProfileResponse>"
@@ -106,6 +101,11 @@
           "name": "generateEmbeddings",
           "kind": "function",
           "signature": "async function generateEmbeddings( client: AxiosInstance, basePath: string, workspaceName: string, request: AIEmbeddingRequest ): Promise<AIEmbeddingResponse>"
+        },
+        {
+          "name": "AIPermissions",
+          "kind": "const",
+          "signature": "const AIPermissions"
         }
       ]
     },
@@ -254,6 +254,11 @@
           "name": "AuditChangeType",
           "kind": "const",
           "signature": "const AuditChangeType"
+        },
+        {
+          "name": "AuditingPermissions",
+          "kind": "const",
+          "signature": "const AuditingPermissions"
         }
       ]
     },
@@ -265,7 +270,13 @@
     {
       "name": "@granit/authentication-api-keys",
       "description": "API key types — TypeScript mirror of Granit.Authentication.ApiKeys .NET",
-      "exports": []
+      "exports": [
+        {
+          "name": "ApiKeyPermissions",
+          "kind": "const",
+          "signature": "const ApiKeyPermissions"
+        }
+      ]
     },
     {
       "name": "@granit/authentication-cognito",
@@ -447,11 +458,6 @@
       "description": "Local credential authentication types and API — headless login, passkey assertion — mirrors Granit.Identity.Local.Endpoints .NET contract",
       "exports": [
         {
-          "name": "localAuthKeys",
-          "kind": "const",
-          "signature": "const localAuthKeys"
-        },
-        {
           "name": "loginAccount",
           "kind": "function",
           "signature": "async function loginAccount( client: AxiosInstance, basePath: string, request: AccountLoginRequest ): Promise<AccountLoginResponse>"
@@ -465,13 +471,24 @@
           "name": "extractReturnUrl",
           "kind": "function",
           "signature": "function extractReturnUrl(search?: string): string | null"
+        },
+        {
+          "name": "IdentityLocalPermissions",
+          "kind": "const",
+          "signature": "const IdentityLocalPermissions"
         }
       ]
     },
     {
       "name": "@granit/authorization",
       "description": "Permission and role authorization types — TypeScript mirror of Granit.Authorization .NET",
-      "exports": []
+      "exports": [
+        {
+          "name": "AuthorizationEndpointsPermissions",
+          "kind": "const",
+          "signature": "const AuthorizationEndpointsPermissions"
+        }
+      ]
     },
     {
       "name": "@granit/background-jobs",
@@ -482,6 +499,11 @@
           "kind": "interface",
           "signature": "interface BackgroundJobStatus",
           "members": []
+        },
+        {
+          "name": "BackgroundJobsPermissions",
+          "kind": "const",
+          "signature": "const BackgroundJobsPermissions"
         }
       ]
     },
@@ -500,9 +522,9 @@
           "signature": "const BlobStatus"
         },
         {
-          "name": "blobStorageKeys",
+          "name": "BlobStoragePermissions",
           "kind": "const",
-          "signature": "const blobStorageKeys"
+          "signature": "const BlobStoragePermissions"
         }
       ]
     },
@@ -570,12 +592,24 @@
     {
       "name": "@granit/data-exchange",
       "description": "Tabular data import/export hooks and providers",
-      "exports": []
+      "exports": [
+        {
+          "name": "DataExchangePermissions",
+          "kind": "const",
+          "signature": "const DataExchangePermissions"
+        }
+      ]
     },
     {
       "name": "@granit/data-lookup",
       "description": "Framework-agnostic types and HTTP client for Granit Data Lookup — unified typeahead pickers for filters and form dropdowns",
-      "exports": []
+      "exports": [
+        {
+          "name": "DataLookupPermissions",
+          "kind": "const",
+          "signature": "const DataLookupPermissions"
+        }
+      ]
     },
     {
       "name": "@granit/diagnostics",
@@ -607,6 +641,11 @@
           "name": "getMonitoringHealth",
           "kind": "function",
           "signature": "async function getMonitoringHealth( client: AxiosInstance, basePath: string ): Promise<MonitoringHealthResponse>"
+        },
+        {
+          "name": "DiagnosticsPermissions",
+          "kind": "const",
+          "signature": "const DiagnosticsPermissions"
         }
       ]
     },
@@ -766,6 +805,11 @@
           "name": "IdentityProviderUserListParams",
           "kind": "type",
           "signature": "type IdentityProviderUserListParams = { readonly search?: string; readonly first?: number; readonly max?: number; }"
+        },
+        {
+          "name": "IdentityPermissions",
+          "kind": "const",
+          "signature": "const IdentityPermissions"
         }
       ]
     },
@@ -808,6 +852,11 @@
           "name": "LOCALE_STORAGE_KEY",
           "kind": "const",
           "signature": "const LOCALE_STORAGE_KEY"
+        },
+        {
+          "name": "LocalizationOverridesPermissions",
+          "kind": "const",
+          "signature": "const LocalizationOverridesPermissions"
         }
       ]
     },
@@ -988,6 +1037,11 @@
           "name": "NotificationChannels",
           "kind": "const",
           "signature": "const NotificationChannels"
+        },
+        {
+          "name": "NotificationPermissions",
+          "kind": "const",
+          "signature": "const NotificationPermissions"
         }
       ]
     },
@@ -1056,11 +1110,6 @@
       "description": "OpenIddict admin management types and API functions — mirrors Granit.OpenIddict.Endpoints .NET contract",
       "exports": [
         {
-          "name": "openIddictAdminKeys",
-          "kind": "const",
-          "signature": "const openIddictAdminKeys"
-        },
-        {
           "name": "impersonateUser",
           "kind": "function",
           "signature": "async function impersonateUser( client: AxiosInstance, basePath: string, id: string ): Promise<AdminImpersonationResult>"
@@ -1084,6 +1133,11 @@
           "name": "listScopes",
           "kind": "function",
           "signature": "async function listScopes( client: AxiosInstance, basePath: string ): Promise<readonly AdminOidcScope[]>"
+        },
+        {
+          "name": "OpenIddictPermissions",
+          "kind": "const",
+          "signature": "const OpenIddictPermissions"
         }
       ]
     },
@@ -1147,6 +1201,11 @@
           "name": "requestExport",
           "kind": "function",
           "signature": "async function requestExport( client: AxiosInstance, basePath: string ): Promise<PrivacyExportRequestResponse>"
+        },
+        {
+          "name": "PrivacyPermissions",
+          "kind": "const",
+          "signature": "const PrivacyPermissions"
         }
       ]
     },
@@ -1304,6 +1363,11 @@
           "name": "useDeleteAccount",
           "kind": "function",
           "signature": "function useDeleteAccount(): UseMutationResult<void, Error, AccountDeleteRequest>"
+        },
+        {
+          "name": "accountKeys",
+          "kind": "const",
+          "signature": "const accountKeys"
         }
       ]
     },
@@ -2016,6 +2080,11 @@
           "name": "useCompletePasskeyAssertion",
           "kind": "function",
           "signature": "function useCompletePasskeyAssertion(): UseMutationResult< AccountLoginResponse, Error, AccountPasskeyAssertionCompleteRequest >"
+        },
+        {
+          "name": "localAuthKeys",
+          "kind": "const",
+          "signature": "const localAuthKeys"
         }
       ]
     },
@@ -2153,43 +2222,42 @@
         {
           "name": "useBlob",
           "kind": "function",
-          "signature": "function useBlob( id: string, containerName: string, options: BlobStorageOptions ): UseQueryResult<BlobDescriptorResponse>"
+          "signature": "function useBlob( id: string, containerName: string ): UseQueryResult<BlobDescriptorResponse>"
         },
         {
           "name": "useConfirmUpload",
           "kind": "function",
-          "signature": "function useConfirmUpload( options: BlobStorageOptions ): UseMutationResult< BlobConfirmUploadResponse, Error,"
+          "signature": "function useConfirmUpload(): UseMutationResult< BlobConfirmUploadResponse, Error,"
         },
         {
           "name": "useDeleteBlob",
           "kind": "function",
-          "signature": "function useDeleteBlob( options: BlobStorageOptions ): UseMutationResult<void, Error,"
+          "signature": "function useDeleteBlob(): UseMutationResult< void, Error,"
         },
         {
           "name": "useInitiateUpload",
           "kind": "function",
-          "signature": "function useInitiateUpload( options: BlobStorageOptions ): UseMutationResult<BlobUploadInitiateResponse, Error, BlobUploadInitiateRequest>"
+          "signature": "function useInitiateUpload(): UseMutationResult< BlobUploadInitiateResponse, Error, BlobUploadInitiateRequest >"
         },
         {
           "name": "useDownloadUrl",
           "kind": "function",
-          "signature": "function useDownloadUrl( options: BlobStorageOptions ): UseMutationResult< BlobDownloadUrlResponse, Error,"
+          "signature": "function useDownloadUrl(): UseMutationResult< BlobDownloadUrlResponse, Error,"
         },
         {
           "name": "useCleanupOrphans",
           "kind": "function",
-          "signature": "function useCleanupOrphans( options: BlobStorageOptions ): UseMutationResult<BlobCleanupOrphansResponse, Error, void>"
+          "signature": "function useCleanupOrphans(): UseMutationResult<BlobCleanupOrphansResponse, Error, void>"
         },
         {
           "name": "useBlobUpload",
           "kind": "function",
-          "signature": "function useBlobUpload(options: BlobStorageOptions): UseBlobUploadReturn"
+          "signature": "function useBlobUpload(): UseBlobUploadReturn"
         },
         {
-          "name": "BlobStorageOptions",
-          "kind": "interface",
-          "signature": "interface BlobStorageOptions",
-          "members": []
+          "name": "blobStorageKeys",
+          "kind": "const",
+          "signature": "const blobStorageKeys"
         }
       ]
     },
@@ -4024,6 +4092,11 @@
           "name": "useOidcScopes",
           "kind": "function",
           "signature": "function useOidcScopes(): UseQueryResult<readonly AdminOidcScope[]>"
+        },
+        {
+          "name": "openIddictAdminKeys",
+          "kind": "const",
+          "signature": "const openIddictAdminKeys"
         }
       ]
     },
@@ -4655,6 +4728,11 @@
           "name": "useTemplates",
           "kind": "function",
           "signature": "function useTemplates(params?: TemplateListParams)"
+        },
+        {
+          "name": "templateKeys",
+          "kind": "const",
+          "signature": "const templateKeys"
         }
       ]
     },
@@ -4897,68 +4975,59 @@
       "description": "React hooks for webhook subscription management — useSubscription, useCreateSubscription, useTestPing, useWebhookStats",
       "exports": [
         {
+          "name": "WebhooksProvider",
+          "kind": "function",
+          "signature": "function WebhooksProvider("
+        },
+        {
+          "name": "useWebhooksConfig",
+          "kind": "function",
+          "signature": "function useWebhooksConfig(): ResolvedWebhooksConfig"
+        },
+        {
           "name": "useSubscription",
           "kind": "function",
-          "signature": "function useSubscription( id: string, options: WebhooksOptions ): UseQueryResult<WebhookSubscriptionResponse>"
+          "signature": "function useSubscription(id: string): UseQueryResult<WebhookSubscriptionResponse>"
         },
         {
           "name": "useRotateSecret",
           "kind": "function",
-          "signature": "function useRotateSecret( options: WebhooksOptions ): UseMutationResult<WebhookSubscriptionRotateSecretResponse, Error, string>"
+          "signature": "function useRotateSecret(): UseMutationResult< WebhookSubscriptionRotateSecretResponse, Error, string >"
         },
         {
           "name": "useTestPing",
           "kind": "function",
-          "signature": "function useTestPing( options: WebhooksOptions ): UseMutationResult<WebhookSubscriptionTestPingResponse, Error, string>"
+          "signature": "function useTestPing(): UseMutationResult< WebhookSubscriptionTestPingResponse, Error, string >"
         },
         {
           "name": "useDeliveries",
           "kind": "function",
-          "signature": "function useDeliveries( subscriptionId: string, options: WebhooksOptions ): UseQueryResult<WebhookDeliveryAttemptResponse[]>"
+          "signature": "function useDeliveries( subscriptionId: string ): UseQueryResult<WebhookDeliveryAttemptResponse[]>"
         },
         {
           "name": "useRetryDelivery",
           "kind": "function",
-          "signature": "function useRetryDelivery( options: RetryDeliveryOptions ): UseMutationResult<void, Error,"
+          "signature": "function useRetryDelivery(): UseMutationResult< void, Error,"
         },
         {
           "name": "useEventTypes",
           "kind": "function",
-          "signature": "function useEventTypes( options: EventTypesOptions ): UseQueryResult<WebhookEventTypeResponse[]>"
+          "signature": "function useEventTypes(): UseQueryResult<WebhookEventTypeResponse[]>"
         },
         {
           "name": "useWebhookConfig",
           "kind": "function",
-          "signature": "function useWebhookConfig( options: WebhookConfigOptions ): UseQueryResult<WebhookModuleConfig>"
+          "signature": "function useWebhookConfig(): UseQueryResult<WebhookModuleConfig>"
         },
         {
           "name": "useWebhookStats",
           "kind": "function",
-          "signature": "function useWebhookStats( options: WebhooksOptions ): UseQueryResult<WebhookSubscriptionStatsResponse>"
+          "signature": "function useWebhookStats(): UseQueryResult<WebhookSubscriptionStatsResponse>"
         },
         {
-          "name": "WebhooksOptions",
-          "kind": "interface",
-          "signature": "interface WebhooksOptions",
-          "members": []
-        },
-        {
-          "name": "EventTypesOptions",
-          "kind": "interface",
-          "signature": "interface EventTypesOptions",
-          "members": []
-        },
-        {
-          "name": "WebhookConfigOptions",
-          "kind": "interface",
-          "signature": "interface WebhookConfigOptions",
-          "members": []
-        },
-        {
-          "name": "RetryDeliveryOptions",
-          "kind": "interface",
-          "signature": "interface RetryDeliveryOptions",
-          "members": []
+          "name": "webhooksKeys",
+          "kind": "const",
+          "signature": "const webhooksKeys"
         }
       ]
     },
@@ -5046,7 +5115,13 @@
     {
       "name": "@granit/scheduling",
       "description": "Scheduled action types and API — mirrors Granit.Scheduling .NET contract",
-      "exports": []
+      "exports": [
+        {
+          "name": "SchedulingPermissions",
+          "kind": "const",
+          "signature": "const SchedulingPermissions"
+        }
+      ]
     },
     {
       "name": "@granit/settings",
@@ -5061,6 +5136,11 @@
           "name": "AdminSettingsScope",
           "kind": "type",
           "signature": "type AdminSettingsScope = 'global' | 'tenant'"
+        },
+        {
+          "name": "SettingsPermissions",
+          "kind": "const",
+          "signature": "const SettingsPermissions"
         }
       ]
     },
@@ -5215,9 +5295,9 @@
       "description": "Template management types and API functions — mirrors Granit.Templating .NET",
       "exports": [
         {
-          "name": "templateKeys",
+          "name": "TemplatingPermissions",
           "kind": "const",
-          "signature": "const templateKeys"
+          "signature": "const TemplatingPermissions"
         }
       ]
     },
@@ -5413,9 +5493,9 @@
           "signature": "const WebhookSubscriptionStatus"
         },
         {
-          "name": "webhooksKeys",
+          "name": "WebhooksPermissions",
           "kind": "const",
-          "signature": "const webhooksKeys"
+          "signature": "const WebhooksPermissions"
         }
       ]
     },
@@ -5427,6 +5507,11 @@
           "name": "WorkflowHistoryPage",
           "kind": "type",
           "signature": "type WorkflowHistoryPage = PagedResult<TransitionHistory>"
+        },
+        {
+          "name": "WorkflowPermissions",
+          "kind": "const",
+          "signature": "const WorkflowPermissions"
         }
       ]
     },

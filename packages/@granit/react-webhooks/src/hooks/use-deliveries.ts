@@ -1,9 +1,10 @@
-import { getDeliveries, webhooksKeys } from '@granit/webhooks';
+import { getDeliveries } from '@granit/webhooks';
 import { useQuery } from '@tanstack/react-query';
 
-import { DEFAULT_WEBHOOKS_BASE_PATH } from '../constants.js';
+import { useWebhooksConfig } from '../providers/webhooks-provider.js';
 
-import type { WebhooksOptions } from './use-subscription.js';
+import { webhooksKeys } from './query-keys.js';
+
 import type { WebhookDeliveryAttemptResponse } from '@granit/webhooks';
 import type { UseQueryResult } from '@tanstack/react-query';
 
@@ -13,10 +14,9 @@ import type { UseQueryResult } from '@tanstack/react-query';
  * The query is disabled when `subscriptionId` is empty.
  */
 export function useDeliveries(
-  subscriptionId: string,
-  options: WebhooksOptions
+  subscriptionId: string
 ): UseQueryResult<WebhookDeliveryAttemptResponse[]> {
-  const { client, basePath = DEFAULT_WEBHOOKS_BASE_PATH } = options;
+  const { client, basePath } = useWebhooksConfig();
 
   return useQuery({
     queryKey: webhooksKeys.deliveries(subscriptionId),

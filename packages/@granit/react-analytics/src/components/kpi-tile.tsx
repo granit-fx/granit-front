@@ -2,7 +2,7 @@ import { isMetricDatasource } from '@granit/dashboards';
 import { useWidgetTriggerHandler } from '@granit/react-dashboards';
 import { useTranslation } from 'react-i18next';
 
-import { useMetric } from '../api/use-metric.js';
+import { useMetric } from '../hooks/use-metric.js';
 
 import { KpiTileView } from './kpi-tile-view.js';
 

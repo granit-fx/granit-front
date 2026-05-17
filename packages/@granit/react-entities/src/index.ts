@@ -66,30 +66,30 @@ export {
   STANDARD_FORM_COMPONENTS,
 } from './field-components/index.js';
 export type { SelectComponentOption } from './field-components/index.js';
-export { executeBulkAction } from './api/bulk-action.js';
+export { executeBulkAction } from './hooks/bulk-action.js';
 
 // i18n resource bundles (namespace: 'entities')
 export { entitiesTranslationsEn, entitiesTranslationsFr } from './locales/index.js';
 export type { EntitiesTranslations } from './locales/index.js';
-export { entityCalendarQueryKey, useEntityCalendar } from './api/use-entity-calendar.js';
-export { entityDiscoveryQueryKey, useEntityDiscovery } from './api/use-entity-discovery.js';
+export { entityCalendarQueryKey, useEntityCalendar } from './hooks/use-entity-calendar.js';
+export { entityDiscoveryQueryKey, useEntityDiscovery } from './hooks/use-entity-discovery.js';
 export {
   entityRelationAggregatesQueryKey,
   useEntityRelationAggregates,
-} from './api/use-entity-relation-aggregates.js';
+} from './hooks/use-entity-relation-aggregates.js';
 export {
   parseRelationAggregateParentMarker,
   useInvalidateEntityRelationAggregates,
-} from './api/use-invalidate-entity-relation-aggregates.js';
-export type { RelationAggregateParentRef } from './api/use-invalidate-entity-relation-aggregates.js';
-export { entityManifestQueryKey, useEntityMetadata } from './api/use-entity-metadata.js';
+} from './hooks/use-invalidate-entity-relation-aggregates.js';
+export type { RelationAggregateParentRef } from './hooks/use-invalidate-entity-relation-aggregates.js';
+export { entityManifestQueryKey, useEntityMetadata } from './hooks/use-entity-metadata.js';
 export { useEntityForm } from './hooks/index.js';
 export type { UseEntityFormOptions, UseEntityFormReturn } from './hooks/index.js';
 export {
   EMPTY_COMPONENT_CATALOG,
   EntityRendererProvider,
   useEntityRenderer,
-} from './provider/index.js';
+} from './providers/index.js';
 export type {
   EntityComponentCatalog,
   EntityDetailComponent,
@@ -101,4 +101,4 @@ export type {
   EntitySidePanel,
   EntitySidePanelProps,
   ResolveLabel,
-} from './provider/index.js';
+} from './providers/index.js';

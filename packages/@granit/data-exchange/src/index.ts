@@ -55,3 +55,4 @@ export {
   previewImport,
   uploadImportFile,
 } from './import/index.js';
+export { DataExchangePermissions } from './permissions.js';

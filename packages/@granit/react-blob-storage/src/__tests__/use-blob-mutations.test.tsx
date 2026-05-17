@@ -1,4 +1,4 @@
-import { blobStorageKeys, BlobStatus } from '@granit/blob-storage';
+import { BlobStatus } from '@granit/blob-storage';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -6,15 +6,20 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { blobStorageKeys } from '../hooks/query-keys.js';
 import { useConfirmUpload, useDeleteBlob, useInitiateUpload } from '../hooks/use-blob-mutations.js';
+import { BlobStorageProvider } from '../providers/blob-storage-provider.js';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { BlobConfirmUploadResponse, BlobUploadInitiateResponse } from '@granit/blob-storage';
 
-function createWrapper() {
+function createWrapper(client: AxiosInstance, basePath?: string) {
   const queryClient = createTestQueryClient();
   return {
     wrapper: ({ children }: { children: React.ReactNode }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <BlobStorageProvider config={{ client, basePath }}>{children}</BlobStorageProvider>
+      </QueryClientProvider>
     ),
     queryClient,
   };
@@ -32,8 +37,8 @@ describe('useInitiateUpload', () => {
     };
     vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useInitiateUpload({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useInitiateUpload(), { wrapper });
 
     result.current.mutate({
       containerName: 'docs',
@@ -57,10 +62,8 @@ describe('useInitiateUpload', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValueOnce({ data: {} });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useInitiateUpload({ client, basePath: '/api/v2/blob-storage' }), {
-      wrapper,
-    });
+    const { wrapper } = createWrapper(client, '/api/v2/blob-storage');
+    const { result } = renderHook(() => useInitiateUpload(), { wrapper });
 
     result.current.mutate({
       containerName: 'docs',
@@ -78,8 +81,8 @@ describe('useInitiateUpload', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockRejectedValueOnce(new Error('Forbidden'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useInitiateUpload({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useInitiateUpload(), { wrapper });
 
     result.current.mutate({
       containerName: 'docs',
@@ -107,10 +110,10 @@ describe('useConfirmUpload', () => {
     };
     vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
-    const { wrapper, queryClient } = createWrapper();
+    const { wrapper, queryClient } = createWrapper(client);
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
-    const { result } = renderHook(() => useConfirmUpload({ client }), { wrapper });
+    const { result } = renderHook(() => useConfirmUpload(), { wrapper });
 
     result.current.mutate({ id: 'abc-123', request: { containerName: 'docs' } });
 
@@ -128,8 +131,8 @@ describe('useConfirmUpload', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockRejectedValueOnce(new Error('Bad Request'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useConfirmUpload({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useConfirmUpload(), { wrapper });
 
     result.current.mutate({ id: 'abc-123', request: { containerName: 'docs' } });
 
@@ -144,10 +147,10 @@ describe('useDeleteBlob', () => {
     const client = createMockClient();
     vi.mocked(client.delete).mockResolvedValueOnce({ data: undefined });
 
-    const { wrapper, queryClient } = createWrapper();
+    const { wrapper, queryClient } = createWrapper(client);
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
-    const { result } = renderHook(() => useDeleteBlob({ client }), { wrapper });
+    const { result } = renderHook(() => useDeleteBlob(), { wrapper });
 
     result.current.mutate({
       id: 'abc-123',
@@ -168,8 +171,8 @@ describe('useDeleteBlob', () => {
     const client = createMockClient();
     vi.mocked(client.delete).mockRejectedValueOnce(new Error('Conflict'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useDeleteBlob({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useDeleteBlob(), { wrapper });
 
     result.current.mutate({ id: 'abc-123', request: { containerName: 'docs' } });
 

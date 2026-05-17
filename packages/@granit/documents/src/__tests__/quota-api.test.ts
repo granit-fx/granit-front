@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { getTenantStorageQuota } from '../api/quota-api.js';
 
-import type { TenantStorageQuotaResponse } from '../types.js';
+import type { TenantStorageQuotaResponse } from '../types/index.js';
 
 const basePath = '/api/v1/documents';
 

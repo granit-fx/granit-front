@@ -32,7 +32,7 @@ import type {
   PaymentRefundRequest,
   PaymentRefundResponse,
   PaymentTransactionResponse,
-} from '../types.js';
+} from '../types/index.js';
 
 const basePath = '/payments';
 

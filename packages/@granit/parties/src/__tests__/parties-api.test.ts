@@ -45,7 +45,7 @@ import type {
   PartyResponse,
   PartyTaxStatusRequest,
   PartyUpdateRequest,
-} from '../types.js';
+} from '../types/index.js';
 
 const basePath = '/api/v1/parties';
 const partyId: PartyId = toEntityId<'Party'>('00000000-0000-0000-0000-000000000001');

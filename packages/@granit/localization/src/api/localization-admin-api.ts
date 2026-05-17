@@ -1,4 +1,4 @@
-import type { AdminLanguage } from '../types.js';
+import type { AdminLanguage } from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

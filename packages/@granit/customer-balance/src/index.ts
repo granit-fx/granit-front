@@ -3,7 +3,7 @@ export type {
   AdminCreditRequest,
   BalanceTransactionResponse,
   CustomerBalanceResponse,
-} from './types.js';
+} from './types/index.js';
 
 // Permissions
 export { CustomerBalancePermissions } from './permissions.js';

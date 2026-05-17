@@ -12,4 +12,7 @@ export const PaymentsPermissions = {
     Read: 'Payments.Methods.Read',
     Manage: 'Payments.Methods.Manage',
   },
+  Configuration: {
+    Manage: 'Payments.Configuration.Manage',
+  },
 } as const;

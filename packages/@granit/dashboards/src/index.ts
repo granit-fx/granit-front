@@ -76,7 +76,7 @@ export type {
   PagedResponse,
   UpdateWidgetRequest,
   WidgetInstanceResponse,
-} from './endpoints/index.js';
+} from './types/index.js';
 
 // Bridge between persistence (`WidgetInstanceResponse`) and declarative
 // (`WidgetDefinition`) views — used by editor surfaces saving back through
@@ -89,13 +89,13 @@ export {
   widgetDefinitionToAddRequest,
   widgetDefinitionToUpdateRequest,
   widgetInstanceToDefinition,
-} from './endpoints/index.js';
-export type { DashboardWidgetDiff } from './endpoints/index.js';
+} from './types/index.js';
+export type { DashboardWidgetDiff } from './types/index.js';
 
 // Drift detection (ADR-038) — semver comparison between persisted
 // instances and their source-definition catalog entry.
-export { detectVersionDrift } from './endpoints/index.js';
-export type { DashboardVersionDrift } from './endpoints/index.js';
+export { detectVersionDrift } from './types/index.js';
+export type { DashboardVersionDrift } from './types/index.js';
 
 // Rendering — wire contracts for the dashboard render pipeline plus per-kind
 // snapshots (B3-1 / B3-2 / B3-3, ADR-039).

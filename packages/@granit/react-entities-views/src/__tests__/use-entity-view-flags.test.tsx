@@ -6,15 +6,15 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { defaultEntityViewQueryKey } from '../api/use-default-entity-view.js';
+import { defaultEntityViewQueryKey } from '../hooks/use-default-entity-view.js';
 import {
   useSetEntityViewPersonalDefault,
   useSetEntityViewPinned,
   useSetEntityViewTenantDefault,
   useShareEntityView,
-} from '../api/use-entity-view-flags.js';
-import { entityViewQueryKey } from '../api/use-entity-view.js';
-import { entityViewsQueryKey } from '../api/use-entity-views.js';
+} from '../hooks/use-entity-view-flags.js';
+import { entityViewQueryKey } from '../hooks/use-entity-view.js';
+import { entityViewsQueryKey } from '../hooks/use-entity-views.js';
 
 import type { EntityViewResponse } from '@granit/entities-views';
 import type { ReactNode } from 'react';

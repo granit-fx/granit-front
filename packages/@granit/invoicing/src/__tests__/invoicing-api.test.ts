@@ -8,7 +8,7 @@ import {
   listInvoices,
 } from '../api/invoicing-api.js';
 
-import type { InvoiceCreateRequest, InvoiceResponse } from '../types.js';
+import type { InvoiceCreateRequest, InvoiceResponse } from '../types/index.js';
 
 const sampleLineItem = {
   id: 'li-1',

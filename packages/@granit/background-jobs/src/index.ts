@@ -9,3 +9,4 @@ export {
   resumeJob,
   triggerJob,
 } from './api/background-jobs-api.js';
+export { BackgroundJobsPermissions } from './permissions.js';

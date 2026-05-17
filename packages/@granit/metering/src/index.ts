@@ -15,7 +15,7 @@ export type {
   UsageAggregateListParams,
   UsageAggregatePage,
   UsageAggregateResponse,
-} from './types.js';
+} from './types/index.js';
 
 // Permissions
 export { MeteringPermissions } from './permissions.js';

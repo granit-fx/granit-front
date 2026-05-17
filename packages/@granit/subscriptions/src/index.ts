@@ -21,7 +21,7 @@ export type {
   SubscriptionId,
   SubscriptionResponse,
   SubscriptionStatus,
-} from './types.js';
+} from './types/index.js';
 
 // Permissions
 export { SubscriptionsPermissions } from './permissions.js';

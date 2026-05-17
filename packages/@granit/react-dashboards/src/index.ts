@@ -2,6 +2,17 @@
 // @granit/react-dashboards — public API
 // ---------------------------------------------------------------------------
 
+// Provider
+export {
+  DashboardsProvider,
+  useDashboardsConfig,
+} from './providers/dashboards-provider.js';
+export type {
+  DashboardsConfig,
+  DashboardsProviderProps,
+  ResolvedDashboardsConfig,
+} from './providers/dashboards-provider.js';
+
 // Render hook (B4-render — POST /dashboards/{id}/render bundle + per-widget cache split)
 export {
   dashboardRenderQueryKey,
@@ -9,25 +20,25 @@ export {
   normalizeDashboardRenderRequest,
   strongestRefreshHint,
   useDashboardRender,
-} from './api/use-dashboard-render.js';
-export type { UseDashboardRenderOptions } from './api/use-dashboard-render.js';
-export { useDashboardWidget } from './api/use-dashboard-widget.js';
-export { useWidgetRender, widgetRenderQueryKey } from './api/use-widget-render.js';
+} from './hooks/use-dashboard-render.js';
+export type { UseDashboardRenderOptions } from './hooks/use-dashboard-render.js';
+export { useDashboardWidget } from './hooks/use-dashboard-widget.js';
+export { useWidgetRender, widgetRenderQueryKey } from './hooks/use-widget-render.js';
 export type {
   UseWidgetRenderOptions,
   WidgetRenderContext,
   WidgetRenderKind,
-} from './api/use-widget-render.js';
+} from './hooks/use-widget-render.js';
 
 // Push transport (P2.4 — ADR-043). SSE-driven live updates that
 // surgically merge into the per-widget cache entries; pull-only
 // dashboards bypass the stream entirely.
-export { applyStreamSnapshot, useDashboardStream } from './api/use-dashboard-stream.js';
+export { applyStreamSnapshot, useDashboardStream } from './hooks/use-dashboard-stream.js';
 export type {
   DashboardStreamSnapshot,
   UseDashboardStreamOptions,
-} from './api/use-dashboard-stream.js';
-export { usePushedDashboard } from './api/use-pushed-dashboard.js';
+} from './hooks/use-dashboard-stream.js';
+export { usePushedDashboard } from './hooks/use-pushed-dashboard.js';
 
 // Lifecycle / CRUD hooks (B4-write — Granit.Dashboards.Endpoints).
 // Surface mirrors the persisted-Dashboard aggregate model: the catalog
@@ -35,25 +46,25 @@ export { usePushedDashboard } from './api/use-pushed-dashboard.js';
 // dashboards are addressed by Guid. Lifecycle is publish/archive/restore
 // (no DELETE), metadata edits are name+layout only, widget pool is
 // managed via dedicated endpoints.
-export { dashboardCatalogQueryKey, useDashboardCatalog } from './api/use-dashboard-catalog.js';
-export { dashboardListQueryKey, useDashboardList } from './api/use-dashboard-list.js';
-export type { UseDashboardListParams } from './api/use-dashboard-list.js';
-export { dashboardDetailQueryKey, useDashboardDetail } from './api/use-dashboard-detail.js';
-export { useImportDashboard } from './api/use-import-dashboard.js';
-export { useUpdateDashboardMetadata } from './api/use-update-dashboard-metadata.js';
-export type { UpdateDashboardMetadataVariables } from './api/use-update-dashboard-metadata.js';
+export { dashboardCatalogQueryKey, useDashboardCatalog } from './hooks/use-dashboard-catalog.js';
+export { dashboardListQueryKey, useDashboardList } from './hooks/use-dashboard-list.js';
+export type { UseDashboardListParams } from './hooks/use-dashboard-list.js';
+export { dashboardDetailQueryKey, useDashboardDetail } from './hooks/use-dashboard-detail.js';
+export { useImportDashboard } from './hooks/use-import-dashboard.js';
+export { useUpdateDashboardMetadata } from './hooks/use-update-dashboard-metadata.js';
+export type { UpdateDashboardMetadataVariables } from './hooks/use-update-dashboard-metadata.js';
 export {
   useArchiveDashboard,
   usePublishDashboard,
   useRestoreDashboard,
-} from './api/use-dashboard-state-transitions.js';
-export { useResyncDashboard } from './api/use-resync-dashboard.js';
-export { useAddWidget, useRemoveWidget, useUpdateWidget } from './api/use-widget-crud.js';
+} from './hooks/use-dashboard-state-transitions.js';
+export { useResyncDashboard } from './hooks/use-resync-dashboard.js';
+export { useAddWidget, useRemoveWidget, useUpdateWidget } from './hooks/use-widget-crud.js';
 export type {
   AddWidgetVariables,
   RemoveWidgetVariables,
   UpdateWidgetVariables,
-} from './api/use-widget-crud.js';
+} from './hooks/use-widget-crud.js';
 
 // Layout + dispatcher
 export { Dashboard } from './components/dashboard.js';

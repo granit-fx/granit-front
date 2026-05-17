@@ -7,14 +7,18 @@ import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useBlobUpload } from '../hooks/use-blob-upload.js';
+import { BlobStorageProvider } from '../providers/blob-storage-provider.js';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { BlobConfirmUploadResponse, BlobUploadInitiateResponse } from '@granit/blob-storage';
 
-function createWrapper() {
+function createWrapper(client: AxiosInstance) {
   const queryClient = createTestQueryClient();
   return {
     wrapper: ({ children }: { children: React.ReactNode }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <BlobStorageProvider config={{ client }}>{children}</BlobStorageProvider>
+      </QueryClientProvider>
     ),
     queryClient,
   };
@@ -78,8 +82,8 @@ beforeEach(() => {
 describe('useBlobUpload', () => {
   it('should start in idle state', () => {
     const client = createMockClient();
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useBlobUpload({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useBlobUpload(), { wrapper });
 
     expect(result.current.state.phase).toBe('idle');
     expect(result.current.state.progress).toBe(0);
@@ -94,8 +98,8 @@ describe('useBlobUpload', () => {
       .mockResolvedValueOnce({ data: mockTicket })
       .mockResolvedValueOnce({ data: mockConfirmation });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useBlobUpload({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useBlobUpload(), { wrapper });
 
     const file = new File(['test content'], 'test.png', { type: 'image/png' });
 
@@ -137,8 +141,8 @@ describe('useBlobUpload', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockRejectedValueOnce(new Error('Unauthorized'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useBlobUpload({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useBlobUpload(), { wrapper });
 
     const file = new File(['content'], 'test.txt', { type: 'text/plain' });
 
@@ -156,8 +160,8 @@ describe('useBlobUpload', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValueOnce({ data: mockTicket });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useBlobUpload({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useBlobUpload(), { wrapper });
 
     const file = new File(['content'], 'test.txt', { type: 'text/plain' });
 
@@ -180,8 +184,8 @@ describe('useBlobUpload', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockRejectedValueOnce(new Error('fail'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useBlobUpload({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useBlobUpload(), { wrapper });
 
     const file = new File(['x'], 'x.txt', { type: 'text/plain' });
 
@@ -204,8 +208,8 @@ describe('useBlobUpload', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValueOnce({ data: mockTicket });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useBlobUpload({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useBlobUpload(), { wrapper });
 
     const file = new File(['data'], 'unknown', { type: '' });
 

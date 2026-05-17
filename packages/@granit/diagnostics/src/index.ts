@@ -3,3 +3,4 @@ export type { MonitoringHealthResponse, ServiceHealth, ServiceStatus } from './t
 
 // API
 export { DEFAULT_DIAGNOSTICS_BASE_PATH, getMonitoringHealth } from './api/diagnostics-api.js';
+export { DiagnosticsPermissions } from './permissions.js';

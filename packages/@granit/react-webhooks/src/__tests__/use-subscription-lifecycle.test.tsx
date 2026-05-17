@@ -1,25 +1,30 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
 import { toEntityId, toISODateString } from '@granit/types';
-import { WebhookSubscriptionStatus, webhooksKeys } from '@granit/webhooks';
+import { WebhookSubscriptionStatus } from '@granit/webhooks';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { webhooksKeys } from '../hooks/query-keys.js';
 import {
   useActivateSubscription,
   useDeactivateSubscription,
   useSuspendSubscription,
 } from '../hooks/use-subscription-lifecycle.js';
+import { WebhooksProvider } from '../providers/webhooks-provider.js';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { WebhookSubscriptionResponse } from '@granit/webhooks';
 
-function createWrapper() {
+function createWrapper(client: AxiosInstance) {
   const queryClient = createTestQueryClient();
   return {
     wrapper: ({ children }: { children: React.ReactNode }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <WebhooksProvider config={{ client }}>{children}</WebhooksProvider>
+      </QueryClientProvider>
     ),
     queryClient,
   };
@@ -41,10 +46,10 @@ describe('useActivateSubscription', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValueOnce({ data: mockSubscription });
 
-    const { wrapper, queryClient } = createWrapper();
+    const { wrapper, queryClient } = createWrapper(client);
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
-    const { result } = renderHook(() => useActivateSubscription({ client }), { wrapper });
+    const { result } = renderHook(() => useActivateSubscription(), { wrapper });
 
     result.current.mutate('sub-001');
 
@@ -60,8 +65,8 @@ describe('useActivateSubscription', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockRejectedValueOnce(new Error('Conflict'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useActivateSubscription({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useActivateSubscription(), { wrapper });
 
     result.current.mutate('sub-001');
 
@@ -77,10 +82,10 @@ describe('useSuspendSubscription', () => {
     const suspended = { ...mockSubscription, status: WebhookSubscriptionStatus.Suspended };
     vi.mocked(client.post).mockResolvedValueOnce({ data: suspended });
 
-    const { wrapper, queryClient } = createWrapper();
+    const { wrapper, queryClient } = createWrapper(client);
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
-    const { result } = renderHook(() => useSuspendSubscription({ client }), { wrapper });
+    const { result } = renderHook(() => useSuspendSubscription(), { wrapper });
 
     result.current.mutate('sub-001');
 
@@ -99,10 +104,10 @@ describe('useDeactivateSubscription', () => {
     const deactivated = { ...mockSubscription, status: WebhookSubscriptionStatus.Deactivated };
     vi.mocked(client.post).mockResolvedValueOnce({ data: deactivated });
 
-    const { wrapper, queryClient } = createWrapper();
+    const { wrapper, queryClient } = createWrapper(client);
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
-    const { result } = renderHook(() => useDeactivateSubscription({ client }), { wrapper });
+    const { result } = renderHook(() => useDeactivateSubscription(), { wrapper });
 
     result.current.mutate({
       id: 'sub-001',
@@ -123,8 +128,8 @@ describe('useDeactivateSubscription', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockRejectedValueOnce(new Error('Forbidden'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useDeactivateSubscription({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useDeactivateSubscription(), { wrapper });
 
     result.current.mutate({
       id: 'sub-001',

@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------
 
 // Types
-export type { ChartAxis, ChartDataPoint, ChartDimensions, ChartSeries } from './types.js';
+export type { ChartAxis, ChartDataPoint, ChartDimensions, ChartSeries } from './types/index.js';
 
 // Theme
 export { buildEChartsTheme } from './theme/index.js';

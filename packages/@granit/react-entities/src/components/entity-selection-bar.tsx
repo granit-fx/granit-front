@@ -6,7 +6,7 @@ import {
   useEntityActionDispatcher,
   type EntityActionHandlers,
 } from '../actions/use-entity-action-dispatcher.js';
-import { executeBulkAction } from '../api/bulk-action.js';
+import { executeBulkAction } from '../hooks/bulk-action.js';
 import { useSelection } from '../selection/selection-context.js';
 
 import type {

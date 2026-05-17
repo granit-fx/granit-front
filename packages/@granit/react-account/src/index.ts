@@ -53,3 +53,6 @@ export { useChangeEmail, useConfirmEmailChange } from './hooks/use-email.js';
 
 // Hooks — Deletion
 export { useDeleteAccount } from './hooks/use-account-deletion.js';
+
+// Query keys
+export { accountKeys } from './hooks/query-keys.js';

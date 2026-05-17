@@ -18,8 +18,8 @@ export type {
   PaymentRefundRequest,
   PaymentRefundResponse,
   PaymentTransactionResponse,
-} from './types.js';
-export type { DisputeStatus, PaymentMethodCategory, PaymentStatus, RefundStatus } from './types.js';
+} from './types/index.js';
+export type { DisputeStatus, PaymentMethodCategory, PaymentStatus, RefundStatus } from './types/index.js';
 
 // Permissions
 export { PaymentsPermissions } from './permissions.js';

@@ -3,8 +3,8 @@
 // ---------------------------------------------------------------------------
 
 // Hook
-export { normalizeMetricRequest, useMetric } from './api/use-metric.js';
-export type { UseMetricOptions } from './api/use-metric.js';
+export { normalizeMetricRequest, useMetric } from './hooks/use-metric.js';
+export type { UseMetricOptions } from './hooks/use-metric.js';
 
 // Widget renderers — definition-driven. `KpiTile` predates the
 // per-widget render endpoint (P3) and uses the `useMetric` path which

@@ -6,9 +6,9 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { defaultEntityViewQueryKey, useDefaultEntityView } from '../api/use-default-entity-view.js';
-import { entityViewQueryKey, useEntityView } from '../api/use-entity-view.js';
-import { entityViewsQueryKey, useEntityViews } from '../api/use-entity-views.js';
+import { defaultEntityViewQueryKey, useDefaultEntityView } from '../hooks/use-default-entity-view.js';
+import { entityViewQueryKey, useEntityView } from '../hooks/use-entity-view.js';
+import { entityViewsQueryKey, useEntityViews } from '../hooks/use-entity-views.js';
 
 import type { EntityViewResponse } from '@granit/entities-views';
 import type { ReactNode } from 'react';

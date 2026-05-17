@@ -19,7 +19,7 @@ import type {
   CategoryResponse,
   CreateCategoryRequest,
   MoveCategoryRequest,
-} from '../types.js';
+} from '../types/index.js';
 
 const basePath = '/api/v1/taxonomy';
 

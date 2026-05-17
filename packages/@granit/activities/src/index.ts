@@ -13,7 +13,7 @@ export type {
   CreateActivityRequest,
   ReassignActivityRequest,
   RescheduleActivityRequest,
-} from './types.js';
+} from './types/index.js';
 
 // Permissions
 export { ActivitiesPermissions } from './permissions.js';

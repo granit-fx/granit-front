@@ -6,7 +6,9 @@ import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { useWebhookConfig } from '../hooks/use-webhook-config.js';
+import { WebhooksProvider } from '../providers/webhooks-provider.js';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { WebhookModuleConfig } from '@granit/webhooks';
 
 vi.mock('@granit/webhooks', async (importOriginal) => {
@@ -19,11 +21,13 @@ vi.mock('@granit/webhooks', async (importOriginal) => {
 
 const { getConfig } = await import('@granit/webhooks');
 
-function createWrapper() {
+function createWrapper(client: AxiosInstance, basePath?: string) {
   const queryClient = createTestQueryClient();
   return {
     wrapper: ({ children }: { children: React.ReactNode }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <WebhooksProvider config={{ client, basePath }}>{children}</WebhooksProvider>
+      </QueryClientProvider>
     ),
     queryClient,
   };
@@ -42,8 +46,8 @@ describe('useWebhookConfig', () => {
     const client = createMockClient();
     vi.mocked(getConfig).mockResolvedValue(mockConfig);
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useWebhookConfig({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useWebhookConfig(), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
@@ -55,8 +59,8 @@ describe('useWebhookConfig', () => {
     const client = createMockClient();
     vi.mocked(getConfig).mockResolvedValue(mockConfig);
 
-    const { wrapper } = createWrapper();
-    renderHook(() => useWebhookConfig({ client, basePath: '/custom' }), { wrapper });
+    const { wrapper } = createWrapper(client, '/custom');
+    renderHook(() => useWebhookConfig(), { wrapper });
 
     await waitFor(() => expect(getConfig).toHaveBeenCalledWith(client, '/custom'));
   });

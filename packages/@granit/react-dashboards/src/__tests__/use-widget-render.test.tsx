@@ -6,7 +6,8 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { useWidgetRender, widgetRenderQueryKey } from '../api/use-widget-render.js';
+import { useWidgetRender, widgetRenderQueryKey } from '../hooks/use-widget-render.js';
+import { DashboardsProvider } from '../providers/dashboards-provider.js';
 
 import type { DashboardRenderedWidget, WidgetDefinitionBase } from '@granit/dashboards';
 import type { ReactNode } from 'react';
@@ -70,7 +71,9 @@ function makeWrapper() {
   const apiClient = axios.create({ baseURL: 'http://localhost' });
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={queryClient}>
-      <GranitClientProvider client={apiClient}>{children}</GranitClientProvider>
+      <GranitClientProvider client={apiClient}>
+        <DashboardsProvider config={{}}>{children}</DashboardsProvider>
+      </GranitClientProvider>
     </QueryClientProvider>
   );
   return { wrapper, queryClient };

@@ -29,3 +29,6 @@ export {
   useRevokeAuthorization,
   useRevokeUserAuthorizations,
 } from './hooks/use-oidc-authorizations.js';
+
+// Query keys
+export { openIddictAdminKeys } from './hooks/query-keys.js';

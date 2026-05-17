@@ -7,7 +7,6 @@ export type {
 } from './types/index.js';
 
 // Query keys
-export { localAuthKeys } from './hooks/query-keys.js';
 
 // API — Login
 export { loginAccount } from './api/account-login-api.js';
@@ -23,3 +22,4 @@ export {
 
 // Utilities
 export { extractReturnUrl } from './utils/extract-return-url.js';
+export { IdentityLocalPermissions } from './permissions.js';

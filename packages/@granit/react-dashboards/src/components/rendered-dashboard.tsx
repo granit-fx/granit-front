@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState, type CSSProperties } from 'react';
 
-import { type UseDashboardRenderOptions } from '../api/use-dashboard-render.js';
-import { usePushedDashboard } from '../api/use-pushed-dashboard.js';
+import { type UseDashboardRenderOptions } from '../hooks/use-dashboard-render.js';
+import { usePushedDashboard } from '../hooks/use-pushed-dashboard.js';
 import { mergeFilterValuesIntoRequest } from '../lib/merge-filter-values.js';
 
 import { useDashboardFilters } from './dashboard-filter-context.js';

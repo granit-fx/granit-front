@@ -19,7 +19,6 @@ export type {
 } from './types/index.js';
 
 // Query keys
-export { webhooksKeys } from './hooks/query-keys.js';
 
 // API
 export {
@@ -38,3 +37,4 @@ export {
   testPing,
   updateSubscription,
 } from './api/webhooks-api.js';
+export { WebhooksPermissions } from './permissions.js';

@@ -38,6 +38,42 @@ pnpm --filter @granit/utils lint   # Per package
 - **Peer deps**: declared in `peerDependencies`, not `dependencies`
 - **No bundling**: consumed directly as TypeScript source via Vite path aliases
 
+### Canonical package structure
+
+**Core package** `@granit/{module}` (framework-agnostic):
+
+```text
+{module}/src/
+├── __tests__/
+├── api/             # Axios calls — required if module exposes HTTP endpoints
+├── types/           # DTOs and domain types — directory with index.ts barrel
+│                    # (use types/ even when ≤3 types; never types.ts at root)
+├── permissions.ts   # Optional — only if module exposes backend permissions
+└── index.ts         # Single barrel re-exporting the public API
+```
+
+**React package** `@granit/react-{module}` (React-specific):
+
+```
+react-{module}/src/
+├── __tests__/
+├── components/      # Optional — React components
+├── constants.ts     # Optional — small constants (defaults, enums for UI)
+├── hooks/           # Required — React Query hooks AND query-key factories
+│                    # (query-keys.ts lives here, never in the core package)
+├── locales/         # Optional — i18n bundles
+├── providers/       # Required when config is consumed via context
+├── testing/         # Optional — MSW handlers and test utilities
+└── index.ts         # Single barrel re-exporting the public API
+```
+
+**Forbidden mixes**:
+
+- No `hooks/` directory in a core `@granit/{module}` package
+- No `api/` directory in a `react-{module}` package (hooks live in `hooks/`)
+- No `types.ts` flat file at the root of `src/` — always use `types/index.ts`
+- No `endpoints/` directory — DTOs go in `types/`
+
 ## Coding conventions
 
 Full frontend conventions: `../granit-dotnet/docs/guide/conventions/frontend/`

@@ -2,13 +2,13 @@ import {
   activateSubscription,
   deactivateSubscription,
   suspendSubscription,
-  webhooksKeys,
 } from '@granit/webhooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { useWebhooksConfig } from '../providers/webhooks-provider.js';
 
-import type { WebhooksOptions } from './use-subscription.js';
+import { webhooksKeys } from './query-keys.js';
+
 import type {
   WebhookSubscriptionDeactivateRequest,
   WebhookSubscriptionResponse,
@@ -20,14 +20,16 @@ import type { UseMutationResult } from '@tanstack/react-query';
  *
  * Invalidates subscription queries on success.
  */
-export function useActivateSubscription(
-  options: WebhooksOptions
-): UseMutationResult<WebhookSubscriptionResponse, Error, string> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+export function useActivateSubscription(): UseMutationResult<
+  WebhookSubscriptionResponse,
+  Error,
+  string
+> {
+  const { client, basePath } = useWebhooksConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => activateSubscription(client, basePath, id),
+    mutationFn: (id: string) => activateSubscription(client, `${basePath}/subscriptions`, id),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: webhooksKeys.subscriptions() });
     },
@@ -39,14 +41,16 @@ export function useActivateSubscription(
  *
  * Invalidates subscription queries on success.
  */
-export function useSuspendSubscription(
-  options: WebhooksOptions
-): UseMutationResult<WebhookSubscriptionResponse, Error, string> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+export function useSuspendSubscription(): UseMutationResult<
+  WebhookSubscriptionResponse,
+  Error,
+  string
+> {
+  const { client, basePath } = useWebhooksConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => suspendSubscription(client, basePath, id),
+    mutationFn: (id: string) => suspendSubscription(client, `${basePath}/subscriptions`, id),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: webhooksKeys.subscriptions() });
     },
@@ -58,18 +62,17 @@ export function useSuspendSubscription(
  *
  * Invalidates subscription queries on success.
  */
-export function useDeactivateSubscription(
-  options: WebhooksOptions
-): UseMutationResult<
+export function useDeactivateSubscription(): UseMutationResult<
   WebhookSubscriptionResponse,
   Error,
   { id: string; request: WebhookSubscriptionDeactivateRequest }
 > {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+  const { client, basePath } = useWebhooksConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, request }) => deactivateSubscription(client, basePath, id, request),
+    mutationFn: ({ id, request }) =>
+      deactivateSubscription(client, `${basePath}/subscriptions`, id, request),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: webhooksKeys.subscriptions() });
     },

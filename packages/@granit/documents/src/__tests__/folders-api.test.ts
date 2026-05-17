@@ -18,7 +18,7 @@ import type {
   FolderResponse,
   ListFoldersResponse,
   MoveFolderRequest,
-} from '../types.js';
+} from '../types/index.js';
 
 const basePath = '/api/v1/documents';
 

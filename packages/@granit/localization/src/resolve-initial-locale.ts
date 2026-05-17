@@ -2,7 +2,7 @@ import { createStorage } from '@granit/storage';
 
 import { LOCALE_STORAGE_KEY } from './constants.js';
 
-import type { LanguageInfo } from './types.js';
+import type { LanguageInfo } from './types/index.js';
 
 /**
  * Resolve the initial locale before backend data is available.

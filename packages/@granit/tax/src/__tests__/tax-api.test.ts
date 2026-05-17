@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { getTaxRateByCountry, getTaxRates, validateTaxId } from '../api/tax-api.js';
 
-import type { TaxRateResponse, TaxValidateRequest, TaxValidateResponse } from '../types.js';
+import type { TaxRateResponse, TaxValidateRequest, TaxValidateResponse } from '../types/index.js';
 
 // ---------------------------------------------------------------------------
 // Fixtures

@@ -1,9 +1,10 @@
-import { rotateSecret, testPing, webhooksKeys } from '@granit/webhooks';
+import { rotateSecret, testPing } from '@granit/webhooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { useWebhooksConfig } from '../providers/webhooks-provider.js';
 
-import type { WebhooksOptions } from './use-subscription.js';
+import { webhooksKeys } from './query-keys.js';
+
 import type {
   WebhookSubscriptionRotateSecretResponse,
   WebhookSubscriptionTestPingResponse,
@@ -16,14 +17,16 @@ import type { UseMutationResult } from '@tanstack/react-query';
  * The new secret is returned once — store it securely.
  * Invalidates the specific subscription query on success.
  */
-export function useRotateSecret(
-  options: WebhooksOptions
-): UseMutationResult<WebhookSubscriptionRotateSecretResponse, Error, string> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+export function useRotateSecret(): UseMutationResult<
+  WebhookSubscriptionRotateSecretResponse,
+  Error,
+  string
+> {
+  const { client, basePath } = useWebhooksConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => rotateSecret(client, basePath, id),
+    mutationFn: (id: string) => rotateSecret(client, `${basePath}/subscriptions`, id),
     onSuccess: async (_data, id) => {
       await queryClient.invalidateQueries({ queryKey: webhooksKeys.subscription(id) });
     },
@@ -33,12 +36,14 @@ export function useRotateSecret(
 /**
  * Mutation hook to send a test ping to a subscription's target URL.
  */
-export function useTestPing(
-  options: WebhooksOptions
-): UseMutationResult<WebhookSubscriptionTestPingResponse, Error, string> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+export function useTestPing(): UseMutationResult<
+  WebhookSubscriptionTestPingResponse,
+  Error,
+  string
+> {
+  const { client, basePath } = useWebhooksConfig();
 
   return useMutation({
-    mutationFn: (id: string) => testPing(client, basePath, id),
+    mutationFn: (id: string) => testPing(client, `${basePath}/subscriptions`, id),
   });
 }

@@ -1,3 +1,14 @@
+// Provider
+export {
+  BlobStorageProvider,
+  useBlobStorageConfig,
+} from './providers/blob-storage-provider.js';
+export type {
+  BlobStorageConfig,
+  BlobStorageProviderProps,
+  ResolvedBlobStorageConfig,
+} from './providers/blob-storage-provider.js';
+
 // Components
 export { BlobImage } from './components/blob-image.js';
 export type { BlobImageProps } from './components/blob-image.js';
@@ -12,9 +23,11 @@ export { useCleanupOrphans } from './hooks/use-blob-cleanup.js';
 export { useBlobUpload } from './hooks/use-blob-upload.js';
 
 // Types
-export type { BlobStorageOptions } from './hooks/use-blob.js';
 export type {
   BlobUploadParams,
   BlobUploadPhase,
   BlobUploadState,
 } from './hooks/use-blob-upload.js';
+
+// Query keys
+export { blobStorageKeys } from './hooks/query-keys.js';

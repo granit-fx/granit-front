@@ -35,7 +35,7 @@ import type {
   RecordUsageRequest,
   UsageAggregate,
   UsageAggregateResponse,
-} from '../types.js';
+} from '../types/index.js';
 import type {
   CreateSavedViewRequest,
   QueryMetadata,

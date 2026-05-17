@@ -25,3 +25,4 @@ export {
   stringifyLookupValue,
 } from './api/index.js';
 export type { LookupClientOptions } from './api/index.js';
+export { DataLookupPermissions } from './permissions.js';

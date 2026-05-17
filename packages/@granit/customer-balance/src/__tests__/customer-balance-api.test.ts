@@ -11,7 +11,7 @@ import type {
   AdminCreditRequest,
   BalanceTransactionResponse,
   CustomerBalanceResponse,
-} from '../types.js';
+} from '../types/index.js';
 
 const sampleBalance: CustomerBalanceResponse = {
   balanceAccountId: 'ba-001',

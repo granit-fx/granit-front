@@ -16,8 +16,9 @@ import {
   normalizeDashboardRenderRequest,
   strongestRefreshHint,
   useDashboardRender,
-} from '../api/use-dashboard-render.js';
-import { useDashboardWidget } from '../api/use-dashboard-widget.js';
+} from '../hooks/use-dashboard-render.js';
+import { useDashboardWidget } from '../hooks/use-dashboard-widget.js';
+import { DashboardsProvider } from '../providers/dashboards-provider.js';
 
 import type {
   DashboardRenderedWidget,
@@ -83,7 +84,9 @@ function makeWrapper() {
   const apiClient = axios.create({ baseURL: 'http://localhost' });
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={queryClient}>
-      <GranitClientProvider client={apiClient}>{children}</GranitClientProvider>
+      <GranitClientProvider client={apiClient}>
+        <DashboardsProvider config={{}}>{children}</DashboardsProvider>
+      </GranitClientProvider>
     </QueryClientProvider>
   );
   return { wrapper, queryClient };

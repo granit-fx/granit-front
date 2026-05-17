@@ -9,7 +9,7 @@ import {
   setFeatureOverride,
 } from '../api/features-api.js';
 
-import type { FeatureGroupResponse, FeatureValueResponse } from '../types.js';
+import type { FeatureGroupResponse, FeatureValueResponse } from '../types/index.js';
 
 const basePath = '/features';
 

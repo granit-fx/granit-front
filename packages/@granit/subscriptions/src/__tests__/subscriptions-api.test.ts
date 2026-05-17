@@ -29,7 +29,7 @@ import type {
   PlanResponse,
   SeatResponse,
   SubscriptionResponse,
-} from '../types.js';
+} from '../types/index.js';
 import type { PagedResult } from '@granit/query-engine';
 
 const basePath = '/subscriptions';

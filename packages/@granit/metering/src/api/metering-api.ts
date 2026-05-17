@@ -21,7 +21,7 @@ import type {
   UsageAggregateListParams,
   UsageAggregatePage,
   UsageAggregateResponse,
-} from '../types.js';
+} from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
 import type {
   CreateSavedViewRequest,

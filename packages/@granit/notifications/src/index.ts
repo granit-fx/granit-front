@@ -30,3 +30,4 @@ export {
   getPreferences,
   updatePreference,
 } from './api/notification-api.js';
+export { NotificationPermissions } from './permissions.js';

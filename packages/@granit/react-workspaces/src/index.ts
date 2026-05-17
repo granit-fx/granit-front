@@ -12,8 +12,8 @@ export {
   landingRouteQueryKey,
   useLandingRoute,
   useSetLandingPin,
-} from './api/use-landing-route.js';
-export { useWorkspaces, workspaceTreeQueryKey } from './api/use-workspaces.js';
+} from './hooks/use-landing-route.js';
+export { useWorkspaces, workspaceTreeQueryKey } from './hooks/use-workspaces.js';
 export { useLandingRedirect, useSidePeek } from './hooks/index.js';
 export {
   FeatureRouteTableProvider,

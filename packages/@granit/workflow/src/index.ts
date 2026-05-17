@@ -24,3 +24,4 @@ export {
   listTransitions,
 } from './api/workflow-api.js';
 export type { WorkflowHistoryPage } from './api/workflow-api.js';
+export { WorkflowPermissions } from './permissions.js';

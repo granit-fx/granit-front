@@ -1,4 +1,4 @@
-import type { EntityComponentCatalog, EntityFormComponent } from '../provider/component-catalog.js';
+import type { EntityComponentCatalog, EntityFormComponent } from '../providers/component-catalog.js';
 import type { ReactNode } from 'react';
 
 // ---------------------------------------------------------------------------

@@ -1,9 +1,8 @@
 import { cleanupOrphans } from '@granit/blob-storage';
 import { useMutation } from '@tanstack/react-query';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { useBlobStorageConfig } from '../providers/blob-storage-provider.js';
 
-import type { BlobStorageOptions } from './use-blob.js';
 import type { BlobCleanupOrphansResponse } from '@granit/blob-storage';
 import type { UseMutationResult } from '@tanstack/react-query';
 
@@ -14,14 +13,12 @@ import type { UseMutationResult } from '@tanstack/react-query';
  *
  * @example
  * ```tsx
- * const { mutateAsync: cleanup } = useCleanupOrphans({ client: api });
+ * const { mutateAsync: cleanup } = useCleanupOrphans();
  * const { cleanedCount } = await cleanup();
  * ```
  */
-export function useCleanupOrphans(
-  options: BlobStorageOptions
-): UseMutationResult<BlobCleanupOrphansResponse, Error, void> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+export function useCleanupOrphans(): UseMutationResult<BlobCleanupOrphansResponse, Error, void> {
+  const { client, basePath } = useBlobStorageConfig();
 
   return useMutation({
     mutationFn: () => cleanupOrphans(client, `${basePath}/blobs`),

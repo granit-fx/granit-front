@@ -6,18 +6,19 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { dashboardCatalogQueryKey, useDashboardCatalog } from '../api/use-dashboard-catalog.js';
-import { dashboardDetailQueryKey, useDashboardDetail } from '../api/use-dashboard-detail.js';
-import { useDashboardList } from '../api/use-dashboard-list.js';
+import { dashboardCatalogQueryKey, useDashboardCatalog } from '../hooks/use-dashboard-catalog.js';
+import { dashboardDetailQueryKey, useDashboardDetail } from '../hooks/use-dashboard-detail.js';
+import { useDashboardList } from '../hooks/use-dashboard-list.js';
 import {
   useArchiveDashboard,
   usePublishDashboard,
   useRestoreDashboard,
-} from '../api/use-dashboard-state-transitions.js';
-import { useImportDashboard } from '../api/use-import-dashboard.js';
-import { useResyncDashboard } from '../api/use-resync-dashboard.js';
-import { useUpdateDashboardMetadata } from '../api/use-update-dashboard-metadata.js';
-import { useAddWidget, useRemoveWidget, useUpdateWidget } from '../api/use-widget-crud.js';
+} from '../hooks/use-dashboard-state-transitions.js';
+import { useImportDashboard } from '../hooks/use-import-dashboard.js';
+import { useResyncDashboard } from '../hooks/use-resync-dashboard.js';
+import { useUpdateDashboardMetadata } from '../hooks/use-update-dashboard-metadata.js';
+import { useAddWidget, useRemoveWidget, useUpdateWidget } from '../hooks/use-widget-crud.js';
+import { DashboardsProvider } from '../providers/dashboards-provider.js';
 
 import type {
   DashboardCatalogEntryResponse,
@@ -180,7 +181,9 @@ function makeWrapper() {
   const apiClient = axios.create({ baseURL: 'http://localhost' });
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={queryClient}>
-      <GranitClientProvider client={apiClient}>{children}</GranitClientProvider>
+      <GranitClientProvider client={apiClient}>
+        <DashboardsProvider config={{}}>{children}</DashboardsProvider>
+      </GranitClientProvider>
     </QueryClientProvider>
   );
   return { wrapper, queryClient };

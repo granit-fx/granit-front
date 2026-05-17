@@ -44,3 +44,4 @@ export {
   publishLegalDocument,
   updateLegalDocument,
 } from './api/privacy-api.js';
+export { PrivacyPermissions } from './permissions.js';

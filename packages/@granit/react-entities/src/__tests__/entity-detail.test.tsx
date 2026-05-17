@@ -9,7 +9,7 @@ import {
   EntityRendererProvider,
   type EntitySidePanel,
   type EntityComponentCatalog,
-} from '../provider/index.js';
+} from '../providers/index.js';
 
 import type {
   EntityDetailManifest,

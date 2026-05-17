@@ -1,14 +1,10 @@
-import {
-  createSubscription,
-  deleteSubscription,
-  updateSubscription,
-  webhooksKeys,
-} from '@granit/webhooks';
+import { createSubscription, deleteSubscription, updateSubscription } from '@granit/webhooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { useWebhooksConfig } from '../providers/webhooks-provider.js';
 
-import type { WebhooksOptions } from './use-subscription.js';
+import { webhooksKeys } from './query-keys.js';
+
 import type {
   WebhookSubscriptionCreateRequest,
   WebhookSubscriptionCreatedResponse,
@@ -23,15 +19,17 @@ import type { UseMutationResult } from '@tanstack/react-query';
  * Returns the created subscription with the signing secret (shown once).
  * Invalidates subscription queries on success.
  */
-export function useCreateSubscription(
-  options: WebhooksOptions
-): UseMutationResult<WebhookSubscriptionCreatedResponse, Error, WebhookSubscriptionCreateRequest> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+export function useCreateSubscription(): UseMutationResult<
+  WebhookSubscriptionCreatedResponse,
+  Error,
+  WebhookSubscriptionCreateRequest
+> {
+  const { client, basePath } = useWebhooksConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (request: WebhookSubscriptionCreateRequest) =>
-      createSubscription(client, basePath, request),
+      createSubscription(client, `${basePath}/subscriptions`, request),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: webhooksKeys.subscriptions() });
     },
@@ -43,18 +41,17 @@ export function useCreateSubscription(
  *
  * Invalidates subscription queries on success.
  */
-export function useUpdateSubscription(
-  options: WebhooksOptions
-): UseMutationResult<
+export function useUpdateSubscription(): UseMutationResult<
   WebhookSubscriptionResponse,
   Error,
   { id: string; request: WebhookSubscriptionUpdateRequest }
 > {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+  const { client, basePath } = useWebhooksConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, request }) => updateSubscription(client, basePath, id, request),
+    mutationFn: ({ id, request }) =>
+      updateSubscription(client, `${basePath}/subscriptions`, id, request),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: webhooksKeys.subscriptions() });
     },
@@ -66,14 +63,12 @@ export function useUpdateSubscription(
  *
  * Invalidates subscription queries on success.
  */
-export function useDeleteSubscription(
-  options: WebhooksOptions
-): UseMutationResult<void, Error, string> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+export function useDeleteSubscription(): UseMutationResult<void, Error, string> {
+  const { client, basePath } = useWebhooksConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => deleteSubscription(client, basePath, id),
+    mutationFn: (id: string) => deleteSubscription(client, `${basePath}/subscriptions`, id),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: webhooksKeys.subscriptions() });
     },

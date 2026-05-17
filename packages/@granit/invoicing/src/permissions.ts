@@ -2,6 +2,7 @@
 export const InvoicingPermissions = {
   Invoices: {
     Read: 'Invoicing.Invoices.Read',
+    Create: 'Invoicing.Invoices.Create',
     Manage: 'Invoicing.Invoices.Manage',
     Download: 'Invoicing.Invoices.Download',
   },

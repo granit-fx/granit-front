@@ -49,3 +49,4 @@ export type { ChatStreamEvent } from './api/ai-chat-api.js';
 
 // API — Embeddings
 export { generateEmbeddings } from './api/ai-embeddings-api.js';
+export { AIPermissions } from './permissions.js';

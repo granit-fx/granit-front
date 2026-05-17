@@ -7,7 +7,7 @@ import {
   listDocumentTags,
 } from '../api/documents-proxy-api.js';
 
-import type { TagResponse } from '../types.js';
+import type { TagResponse } from '../types/index.js';
 
 const basePath = '/api/v1';
 

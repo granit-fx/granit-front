@@ -7,14 +7,18 @@ import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useBlob } from '../hooks/use-blob.js';
+import { BlobStorageProvider } from '../providers/blob-storage-provider.js';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { BlobDescriptorResponse } from '@granit/blob-storage';
 
-function createWrapper() {
+function createWrapper(client: AxiosInstance, basePath?: string) {
   const queryClient = createTestQueryClient();
   return {
     wrapper: ({ children }: { children: React.ReactNode }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <BlobStorageProvider config={{ client, basePath }}>{children}</BlobStorageProvider>
+      </QueryClientProvider>
     ),
     queryClient,
   };
@@ -41,10 +45,8 @@ describe('useBlob', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockDescriptor });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useBlob('abc-123', 'medical-images', { client }), {
-      wrapper,
-    });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useBlob('abc-123', 'medical-images'), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
@@ -58,11 +60,8 @@ describe('useBlob', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockDescriptor });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(
-      () => useBlob('abc-123', 'docs', { client, basePath: '/api/v2/blob-storage' }),
-      { wrapper }
-    );
+    const { wrapper } = createWrapper(client, '/api/v2/blob-storage');
+    const { result } = renderHook(() => useBlob('abc-123', 'docs'), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
@@ -74,8 +73,8 @@ describe('useBlob', () => {
   it('should be disabled when id is empty', () => {
     const client = createMockClient();
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useBlob('', 'docs', { client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useBlob('', 'docs'), { wrapper });
 
     expect(result.current.fetchStatus).toBe('idle');
     expect(client.get).not.toHaveBeenCalled();
@@ -84,8 +83,8 @@ describe('useBlob', () => {
   it('should be disabled when containerName is empty', () => {
     const client = createMockClient();
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useBlob('abc-123', '', { client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useBlob('abc-123', ''), { wrapper });
 
     expect(result.current.fetchStatus).toBe('idle');
     expect(client.get).not.toHaveBeenCalled();
@@ -95,8 +94,8 @@ describe('useBlob', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockRejectedValueOnce(new Error('Not Found'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useBlob('abc-123', 'docs', { client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useBlob('abc-123', 'docs'), { wrapper });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 

@@ -4,7 +4,7 @@ import type {
   PartyDuplicateMergeRequest,
   PartyId,
   PartyMergeResponse,
-} from '../types.js';
+} from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

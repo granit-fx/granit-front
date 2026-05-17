@@ -390,8 +390,8 @@ function nextPageParam(
   if (last.hasMore !== undefined) {
     return last.hasMore ? pages.length + 1 : undefined;
   }
-  if (last.totalCount !== null) {
-    const fetched = pages.reduce((sum, page) => sum + page.items.length, 0);
+  if (last.totalCount !== null && last.totalCount !== undefined) {
+    const fetched = pages.reduce((sum, page) => sum + (page.items?.length ?? 0), 0);
     return fetched < last.totalCount ? pages.length + 1 : undefined;
   }
   // No bound — stop after one page rather than loop forever on a buggy server.
@@ -404,7 +404,7 @@ function flattenPages(
   if (!pages) return [];
   const out: Readonly<Record<string, unknown>>[] = [];
   for (const page of pages) {
-    out.push(...page.items);
+    if (page.items) out.push(...page.items);
   }
   return out;
 }

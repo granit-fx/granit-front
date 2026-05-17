@@ -11,3 +11,4 @@ export type {
   UsePermissionsReturn,
   UseRolePermissionsOptions,
 } from './types/index.js';
+export { AuthorizationEndpointsPermissions } from './permissions.js';

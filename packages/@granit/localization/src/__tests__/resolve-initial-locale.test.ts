@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { resolveInitialLocale } from '../resolve-initial-locale.js';
 
-import type { LanguageInfo } from '../types.js';
+import type { LanguageInfo } from '../types/index.js';
 
 const languages: LanguageInfo[] = [
   { cultureName: 'fr', displayName: 'Français', isDefault: true },

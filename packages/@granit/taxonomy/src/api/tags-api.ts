@@ -5,7 +5,7 @@ import type {
   TagListFilter,
   TagResponse,
   UpdateTagRequest,
-} from '../types.js';
+} from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

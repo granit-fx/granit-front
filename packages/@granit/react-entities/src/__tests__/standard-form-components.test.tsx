@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { EntityForm } from '../components/entity-form.js';
 import { STANDARD_FORM_COMPONENTS } from '../field-components/index.js';
-import { EntityRendererProvider } from '../provider/index.js';
+import { EntityRendererProvider } from '../providers/index.js';
 
 import type { EntityFormFieldManifest, EntityFormManifest } from '@granit/entities';
 

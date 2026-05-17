@@ -6,14 +6,18 @@ import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useWebhookStats } from '../hooks/use-webhook-stats.js';
+import { WebhooksProvider } from '../providers/webhooks-provider.js';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { WebhookSubscriptionStatsResponse } from '@granit/webhooks';
 
-function createWrapper() {
+function createWrapper(client: AxiosInstance, basePath?: string) {
   const queryClient = createTestQueryClient();
   return {
     wrapper: ({ children }: { children: React.ReactNode }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <WebhooksProvider config={{ client, basePath }}>{children}</WebhooksProvider>
+      </QueryClientProvider>
     ),
     queryClient,
   };
@@ -34,8 +38,8 @@ describe('useWebhookStats', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockStats });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useWebhookStats({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useWebhookStats(), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
@@ -47,10 +51,8 @@ describe('useWebhookStats', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockStats });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useWebhookStats({ client, basePath: '/api/v2/webhooks' }), {
-      wrapper,
-    });
+    const { wrapper } = createWrapper(client, '/api/v2/webhooks');
+    const { result } = renderHook(() => useWebhookStats(), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
@@ -61,8 +63,8 @@ describe('useWebhookStats', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockRejectedValueOnce(new Error('Forbidden'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useWebhookStats({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useWebhookStats(), { wrapper });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 

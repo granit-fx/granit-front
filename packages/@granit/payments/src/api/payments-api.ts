@@ -12,7 +12,7 @@ import type {
   PaymentRefundRequest,
   PaymentRefundResponse,
   PaymentTransactionResponse,
-} from '../types.js';
+} from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

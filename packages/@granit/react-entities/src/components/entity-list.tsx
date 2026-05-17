@@ -1,7 +1,7 @@
 import { useQueryEndpoint, useQueryMeta } from '@granit/react-query-engine';
 import { useMemo, type ReactNode } from 'react';
 
-import { useEntityRenderer } from '../provider/entity-renderer-provider.js';
+import { useEntityRenderer } from '../providers/entity-renderer-provider.js';
 
 import type { EntityManifestResponse } from '@granit/entities';
 import type { ColumnDefinition } from '@granit/query-engine';

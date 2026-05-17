@@ -6,6 +6,7 @@ import axios from 'axios';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BlobUploadField } from '../components/blob-upload-field.js';
+import { BlobStorageProvider } from '../providers/blob-storage-provider.js';
 
 import type { ReactNode } from 'react';
 
@@ -82,7 +83,9 @@ function makeWrapper() {
   });
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={queryClient}>
-      <GranitClientProvider client={apiClient}>{children}</GranitClientProvider>
+      <GranitClientProvider client={apiClient}>
+        <BlobStorageProvider config={{}}>{children}</BlobStorageProvider>
+      </GranitClientProvider>
     </QueryClientProvider>
   );
   return { wrapper };

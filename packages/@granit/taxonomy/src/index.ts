@@ -19,10 +19,10 @@ export type {
   TaxonomyTargetRef,
   UpdateCategoryRequest,
   UpdateTagRequest,
-} from './types.js';
+} from './types/index.js';
 
 // Type guards
-export { isHexColor } from './types.js';
+export { isHexColor } from './types/index.js';
 
 // Permissions
 export { TaxonomyPermissions } from './permissions.js';

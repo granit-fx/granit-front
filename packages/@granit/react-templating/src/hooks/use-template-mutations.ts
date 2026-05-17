@@ -2,13 +2,15 @@ import {
   deleteDraft,
   publishTemplate,
   saveDraft,
-  templateKeys,
   unpublishTemplate,
   updateDraft,
 } from '@granit/templating';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useTemplatingConfig } from '../providers/templating-provider.js';
+
+import { templateKeys } from './query-keys.js';
+
 
 import type { SaveTemplateRequest } from '@granit/templating';
 

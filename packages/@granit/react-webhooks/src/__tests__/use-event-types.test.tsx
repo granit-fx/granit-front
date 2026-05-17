@@ -6,7 +6,9 @@ import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { useEventTypes } from '../hooks/use-event-types.js';
+import { WebhooksProvider } from '../providers/webhooks-provider.js';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { WebhookEventTypeResponse } from '@granit/webhooks';
 
 vi.mock('@granit/webhooks', async (importOriginal) => {
@@ -19,11 +21,13 @@ vi.mock('@granit/webhooks', async (importOriginal) => {
 
 const { getEventTypes } = await import('@granit/webhooks');
 
-function createWrapper() {
+function createWrapper(client: AxiosInstance, basePath?: string) {
   const queryClient = createTestQueryClient();
   return {
     wrapper: ({ children }: { children: React.ReactNode }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <WebhooksProvider config={{ client, basePath }}>{children}</WebhooksProvider>
+      </QueryClientProvider>
     ),
     queryClient,
   };
@@ -47,8 +51,8 @@ describe('useEventTypes', () => {
     const client = createMockClient();
     vi.mocked(getEventTypes).mockResolvedValue(mockEventTypes);
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useEventTypes({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useEventTypes(), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
@@ -60,8 +64,8 @@ describe('useEventTypes', () => {
     const client = createMockClient();
     vi.mocked(getEventTypes).mockResolvedValue([]);
 
-    const { wrapper } = createWrapper();
-    renderHook(() => useEventTypes({ client, basePath: '/custom' }), { wrapper });
+    const { wrapper } = createWrapper(client, '/custom');
+    renderHook(() => useEventTypes(), { wrapper });
 
     await waitFor(() => expect(getEventTypes).toHaveBeenCalledWith(client, '/custom'));
   });

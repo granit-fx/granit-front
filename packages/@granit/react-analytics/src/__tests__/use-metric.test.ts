@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { normalizeMetricRequest } from '../api/use-metric.js';
+import { normalizeMetricRequest } from '../hooks/use-metric.js';
 
 import type { MetricRequest } from '@granit/analytics';
 

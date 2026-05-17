@@ -33,7 +33,7 @@ export type {
   TrashedDocumentResponse,
   UploadTicketRequest,
   UploadTicketResponse,
-} from './types.js';
+} from './types/index.js';
 
 // Permissions
 export { DocumentsPermissions } from './permissions.js';

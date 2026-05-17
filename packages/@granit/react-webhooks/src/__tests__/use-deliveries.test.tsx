@@ -7,14 +7,18 @@ import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useDeliveries } from '../hooks/use-deliveries.js';
+import { WebhooksProvider } from '../providers/webhooks-provider.js';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { WebhookDeliveryAttemptResponse } from '@granit/webhooks';
 
-function createWrapper() {
+function createWrapper(client: AxiosInstance, basePath?: string) {
   const queryClient = createTestQueryClient();
   return {
     wrapper: ({ children }: { children: React.ReactNode }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <WebhooksProvider config={{ client, basePath }}>{children}</WebhooksProvider>
+      </QueryClientProvider>
     ),
     queryClient,
   };
@@ -56,8 +60,8 @@ describe('useDeliveries', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockDeliveries });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useDeliveries('sub-001', { client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useDeliveries('sub-001'), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
@@ -70,8 +74,8 @@ describe('useDeliveries', () => {
   it('should be disabled when subscriptionId is empty', () => {
     const client = createMockClient();
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useDeliveries('', { client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useDeliveries(''), { wrapper });
 
     expect(result.current.fetchStatus).toBe('idle');
     expect(client.get).not.toHaveBeenCalled();
@@ -81,11 +85,8 @@ describe('useDeliveries', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: [] });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(
-      () => useDeliveries('sub-001', { client, basePath: '/api/v2/webhooks' }),
-      { wrapper }
-    );
+    const { wrapper } = createWrapper(client, '/api/v2/webhooks');
+    const { result } = renderHook(() => useDeliveries('sub-001'), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
@@ -98,8 +99,8 @@ describe('useDeliveries', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockRejectedValueOnce(new Error('Forbidden'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useDeliveries('sub-001', { client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useDeliveries('sub-001'), { wrapper });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 

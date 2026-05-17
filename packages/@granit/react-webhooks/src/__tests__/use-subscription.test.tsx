@@ -8,14 +8,18 @@ import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useSubscription } from '../hooks/use-subscription.js';
+import { WebhooksProvider } from '../providers/webhooks-provider.js';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { WebhookSubscriptionResponse } from '@granit/webhooks';
 
-function createWrapper() {
+function createWrapper(client: AxiosInstance, basePath?: string) {
   const queryClient = createTestQueryClient();
   return {
     wrapper: ({ children }: { children: React.ReactNode }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <WebhooksProvider config={{ client, basePath }}>{children}</WebhooksProvider>
+      </QueryClientProvider>
     ),
     queryClient,
   };
@@ -37,8 +41,8 @@ describe('useSubscription', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockSubscription });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useSubscription('sub-001', { client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useSubscription('sub-001'), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
@@ -50,22 +54,19 @@ describe('useSubscription', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockSubscription });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(
-      () => useSubscription('sub-001', { client, basePath: '/api/v2/webhooks' }),
-      { wrapper }
-    );
+    const { wrapper } = createWrapper(client, '/api/v2/webhooks');
+    const { result } = renderHook(() => useSubscription('sub-001'), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/v2/webhooks/sub-001');
+    expect(client.get).toHaveBeenCalledWith('/api/v2/webhooks/subscriptions/sub-001');
   });
 
   it('should be disabled when id is empty', () => {
     const client = createMockClient();
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useSubscription('', { client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useSubscription(''), { wrapper });
 
     expect(result.current.fetchStatus).toBe('idle');
     expect(client.get).not.toHaveBeenCalled();
@@ -75,8 +76,8 @@ describe('useSubscription', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockRejectedValueOnce(new Error('Not Found'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useSubscription('sub-001', { client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useSubscription('sub-001'), { wrapper });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 

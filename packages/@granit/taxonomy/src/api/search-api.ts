@@ -1,4 +1,4 @@
-import type { TaxonomySearchFilter, TaxonomySearchResultGroup } from '../types.js';
+import type { TaxonomySearchFilter, TaxonomySearchResultGroup } from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

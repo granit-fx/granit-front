@@ -39,7 +39,7 @@ export type {
   PartyTaxStatusResponse,
   PartyUpdateRequest,
   PhoneKind,
-} from './types.js';
+} from './types/index.js';
 
 // Permissions
 export { PartiesPermissions } from './permissions.js';

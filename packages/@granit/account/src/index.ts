@@ -2,7 +2,6 @@
 export type * from './types/index.js';
 
 // Query keys
-export { accountKeys } from './hooks/query-keys.js';
 
 // API — Registration
 export {

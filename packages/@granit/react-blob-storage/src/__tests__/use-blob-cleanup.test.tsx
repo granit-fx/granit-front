@@ -6,14 +6,18 @@ import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useCleanupOrphans } from '../hooks/use-blob-cleanup.js';
+import { BlobStorageProvider } from '../providers/blob-storage-provider.js';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { BlobCleanupOrphansResponse } from '@granit/blob-storage';
 
-function createWrapper() {
+function createWrapper(client: AxiosInstance, basePath?: string) {
   const queryClient = createTestQueryClient();
   return {
     wrapper: ({ children }: { children: React.ReactNode }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <BlobStorageProvider config={{ client, basePath }}>{children}</BlobStorageProvider>
+      </QueryClientProvider>
     ),
     queryClient,
   };
@@ -25,8 +29,8 @@ describe('useCleanupOrphans', () => {
     const response: BlobCleanupOrphansResponse = { cleanedCount: 3 };
     vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useCleanupOrphans({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useCleanupOrphans(), { wrapper });
 
     result.current.mutate();
 
@@ -40,10 +44,8 @@ describe('useCleanupOrphans', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValueOnce({ data: { cleanedCount: 0 } });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useCleanupOrphans({ client, basePath: '/api/v2/blob-storage' }), {
-      wrapper,
-    });
+    const { wrapper } = createWrapper(client, '/api/v2/blob-storage');
+    const { result } = renderHook(() => useCleanupOrphans(), { wrapper });
 
     result.current.mutate();
 
@@ -56,8 +58,8 @@ describe('useCleanupOrphans', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockRejectedValueOnce(new Error('Forbidden'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useCleanupOrphans({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useCleanupOrphans(), { wrapper });
 
     result.current.mutate();
 

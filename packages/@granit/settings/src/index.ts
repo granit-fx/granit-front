@@ -26,3 +26,4 @@ export {
   updateSetting,
 } from './api/settings-api.js';
 export type { AdminSettingsScope } from './api/settings-api.js';
+export { SettingsPermissions } from './permissions.js';

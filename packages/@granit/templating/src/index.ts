@@ -30,7 +30,6 @@ export type {
 } from './types/index.js';
 
 // Query keys (for advanced usage / custom queries)
-export { templateKeys } from './hooks/query-keys.js';
 
 // API
 export {
@@ -53,3 +52,4 @@ export {
   updateCategory,
   updateDraft,
 } from './api/templates-api.js';
+export { TemplatingPermissions } from './permissions.js';

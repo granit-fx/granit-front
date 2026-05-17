@@ -65,3 +65,4 @@ export {
   sendPasswordResetEmail,
   setTemporaryPassword,
 } from './api/identity-provider-password-api.js';
+export { IdentityPermissions } from './permissions.js';

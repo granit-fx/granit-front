@@ -7,7 +7,7 @@ import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { EntityDetail } from '../components/entity-detail.js';
-import { EntityRendererProvider } from '../provider/index.js';
+import { EntityRendererProvider } from '../providers/index.js';
 
 import type {
   EntityDetailManifest,

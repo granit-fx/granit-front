@@ -11,7 +11,7 @@ import type {
   RenameDocumentRequest,
   UploadTicketRequest,
   UploadTicketResponse,
-} from '../types.js';
+} from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

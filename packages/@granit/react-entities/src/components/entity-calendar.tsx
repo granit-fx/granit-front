@@ -6,7 +6,7 @@ import {
   useEntityActionDispatcher,
   type EntityActionHandlers,
 } from '../actions/use-entity-action-dispatcher.js';
-import { useEntityCalendar } from '../api/use-entity-calendar.js';
+import { useEntityCalendar } from '../hooks/use-entity-calendar.js';
 
 import type {
   CalendarItemResponse,

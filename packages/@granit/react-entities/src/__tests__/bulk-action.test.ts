@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { executeBulkAction } from '../api/bulk-action.js';
+import { executeBulkAction } from '../hooks/bulk-action.js';
 
 import type { BulkActionResponse } from '@granit/entities';
 

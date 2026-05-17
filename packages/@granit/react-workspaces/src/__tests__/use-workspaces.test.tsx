@@ -6,7 +6,7 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { useWorkspaces, workspaceTreeQueryKey } from '../api/use-workspaces.js';
+import { useWorkspaces, workspaceTreeQueryKey } from '../hooks/use-workspaces.js';
 
 import type { WorkspaceTreeResponse } from '@granit/workspaces';
 import type { ReactNode } from 'react';

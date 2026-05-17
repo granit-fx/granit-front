@@ -15,7 +15,6 @@ export type {
 } from './types/index.js';
 
 // Query keys
-export { blobStorageKeys } from './hooks/query-keys.js';
 
 // API
 export {
@@ -26,3 +25,4 @@ export {
   getDownloadUrl,
   initiateUpload,
 } from './api/blob-storage-api.js';
+export { BlobStoragePermissions } from './permissions.js';

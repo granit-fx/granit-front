@@ -6,9 +6,10 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { dashboardRenderQueryKey, dashboardWidgetQueryKey } from '../api/use-dashboard-render.js';
-import { applyStreamSnapshot, type DashboardStreamSnapshot } from '../api/use-dashboard-stream.js';
-import { usePushedDashboard } from '../api/use-pushed-dashboard.js';
+import { dashboardRenderQueryKey, dashboardWidgetQueryKey } from '../hooks/use-dashboard-render.js';
+import { applyStreamSnapshot, type DashboardStreamSnapshot } from '../hooks/use-dashboard-stream.js';
+import { usePushedDashboard } from '../hooks/use-pushed-dashboard.js';
+import { DashboardsProvider } from '../providers/dashboards-provider.js';
 
 import type { DashboardRenderedWidget, DashboardRenderResponse } from '@granit/dashboards';
 import type { ReactNode } from 'react';
@@ -142,7 +143,9 @@ function makeWrapper() {
   const apiClient = axios.create({ baseURL: 'http://localhost' });
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={queryClient}>
-      <GranitClientProvider client={apiClient}>{children}</GranitClientProvider>
+      <GranitClientProvider client={apiClient}>
+        <DashboardsProvider config={{}}>{children}</DashboardsProvider>
+      </GranitClientProvider>
     </QueryClientProvider>
   );
   return { wrapper, queryClient };

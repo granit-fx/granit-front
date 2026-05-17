@@ -7,7 +7,7 @@ import {
   EntityRendererProvider,
   type EntityFormComponent,
   type EntityComponentCatalog,
-} from '../provider/index.js';
+} from '../providers/index.js';
 
 import type {
   EntityFormFieldManifest,

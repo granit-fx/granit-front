@@ -17,7 +17,7 @@ import type {
   TagAssignmentResponse,
   TagResponse,
   UpdateTagRequest,
-} from '../types.js';
+} from '../types/index.js';
 
 const basePath = '/api/v1/taxonomy';
 

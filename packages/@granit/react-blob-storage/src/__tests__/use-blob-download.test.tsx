@@ -6,14 +6,18 @@ import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useDownloadUrl } from '../hooks/use-blob-download.js';
+import { BlobStorageProvider } from '../providers/blob-storage-provider.js';
 
+import type { AxiosInstance } from '@granit/api-client';
 import type { BlobDownloadUrlResponse } from '@granit/blob-storage';
 
-function createWrapper() {
+function createWrapper(client: AxiosInstance, basePath?: string) {
   const queryClient = createTestQueryClient();
   return {
     wrapper: ({ children }: { children: React.ReactNode }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <BlobStorageProvider config={{ client, basePath }}>{children}</BlobStorageProvider>
+      </QueryClientProvider>
     ),
     queryClient,
   };
@@ -28,8 +32,8 @@ describe('useDownloadUrl', () => {
     };
     vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useDownloadUrl({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useDownloadUrl(), { wrapper });
 
     result.current.mutate({
       id: 'abc-123',
@@ -49,11 +53,8 @@ describe('useDownloadUrl', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValueOnce({ data: {} });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(
-      () => useDownloadUrl({ client, basePath: '/api/v2/blob-storage' }),
-      { wrapper }
-    );
+    const { wrapper } = createWrapper(client, '/api/v2/blob-storage');
+    const { result } = renderHook(() => useDownloadUrl(), { wrapper });
 
     result.current.mutate({
       id: 'abc-123',
@@ -72,8 +73,8 @@ describe('useDownloadUrl', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockRejectedValueOnce(new Error('Not Found'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useDownloadUrl({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useDownloadUrl(), { wrapper });
 
     result.current.mutate({
       id: 'abc-123',

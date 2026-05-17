@@ -1,10 +1,11 @@
-import { blobStorageKeys, confirmUpload, initiateUpload } from '@granit/blob-storage';
+import { confirmUpload, initiateUpload } from '@granit/blob-storage';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useRef, useState } from 'react';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { useBlobStorageConfig } from '../providers/blob-storage-provider.js';
 
-import type { BlobStorageOptions } from './use-blob.js';
+import { blobStorageKeys } from './query-keys.js';
+
 import type { BlobConfirmUploadResponse } from '@granit/blob-storage';
 
 /** Upload progress phase. */
@@ -117,7 +118,7 @@ const IDLE_STATE: BlobUploadState = {
  *
  * @example
  * ```tsx
- * const { upload, state, reset } = useBlobUpload({ client: api });
+ * const { upload, state, reset } = useBlobUpload();
  *
  * const handleFile = async (file: File) => {
  *   const result = await upload({ file, containerName: 'documents' });
@@ -125,8 +126,8 @@ const IDLE_STATE: BlobUploadState = {
  * };
  * ```
  */
-export function useBlobUpload(options: BlobStorageOptions): UseBlobUploadReturn {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+export function useBlobUpload(): UseBlobUploadReturn {
+  const { client, basePath } = useBlobStorageConfig();
   const queryClient = useQueryClient();
   const [state, setState] = useState<BlobUploadState>(IDLE_STATE);
   const abortRef = useRef<XMLHttpRequest | null>(null);

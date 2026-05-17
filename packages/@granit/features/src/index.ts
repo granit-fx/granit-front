@@ -5,7 +5,7 @@ export type {
   FeatureNumericConstraintResponse,
   FeatureValueResponse,
   SetFeatureOverrideRequest,
-} from './types.js';
+} from './types/index.js';
 
 // Permissions
 export { FeaturesPermissions } from './permissions.js';

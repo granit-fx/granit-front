@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import { useLandingRoute } from '../api/use-landing-route.js';
+import { useLandingRoute } from '../hooks/use-landing-route.js';
 
 import type { LandingRouteResponse } from '@granit/workspaces';
 

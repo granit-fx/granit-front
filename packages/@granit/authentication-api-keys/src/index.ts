@@ -8,3 +8,4 @@ export type {
   ApiKeyRotateResponse,
   ApiKeyUpdateScopesRequest,
 } from './types/index.js';
+export { ApiKeyPermissions } from './permissions.js';

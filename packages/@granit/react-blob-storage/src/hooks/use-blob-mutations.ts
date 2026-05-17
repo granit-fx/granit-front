@@ -1,9 +1,10 @@
-import { blobStorageKeys, confirmUpload, deleteBlob, initiateUpload } from '@granit/blob-storage';
+import { confirmUpload, deleteBlob, initiateUpload } from '@granit/blob-storage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { useBlobStorageConfig } from '../providers/blob-storage-provider.js';
 
-import type { BlobStorageOptions } from './use-blob.js';
+import { blobStorageKeys } from './query-keys.js';
+
 import type {
   BlobConfirmUploadRequest,
   BlobConfirmUploadResponse,
@@ -20,14 +21,16 @@ import type { UseMutationResult } from '@tanstack/react-query';
  *
  * @example
  * ```tsx
- * const { mutateAsync: initiate } = useInitiateUpload({ client: api });
+ * const { mutateAsync: initiate } = useInitiateUpload();
  * const ticket = await initiate({ containerName: 'docs', fileName: 'report.pdf', contentType: 'application/pdf', sizeBytes: 4096 });
  * ```
  */
-export function useInitiateUpload(
-  options: BlobStorageOptions
-): UseMutationResult<BlobUploadInitiateResponse, Error, BlobUploadInitiateRequest> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+export function useInitiateUpload(): UseMutationResult<
+  BlobUploadInitiateResponse,
+  Error,
+  BlobUploadInitiateRequest
+> {
+  const { client, basePath } = useBlobStorageConfig();
 
   return useMutation({
     mutationFn: (request: BlobUploadInitiateRequest) =>
@@ -43,18 +46,16 @@ export function useInitiateUpload(
  *
  * @example
  * ```tsx
- * const { mutateAsync: confirm } = useConfirmUpload({ client: api });
+ * const { mutateAsync: confirm } = useConfirmUpload();
  * const result = await confirm({ id: 'abc-123', request: { containerName: 'docs' } });
  * ```
  */
-export function useConfirmUpload(
-  options: BlobStorageOptions
-): UseMutationResult<
+export function useConfirmUpload(): UseMutationResult<
   BlobConfirmUploadResponse,
   Error,
   { id: string; request: BlobConfirmUploadRequest }
 > {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+  const { client, basePath } = useBlobStorageConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -73,14 +74,16 @@ export function useConfirmUpload(
  *
  * @example
  * ```tsx
- * const { mutate: remove } = useDeleteBlob({ client: api });
+ * const { mutate: remove } = useDeleteBlob();
  * remove({ id: 'abc-123', request: { containerName: 'docs', deletionReason: 'RGPD Art. 17' } });
  * ```
  */
-export function useDeleteBlob(
-  options: BlobStorageOptions
-): UseMutationResult<void, Error, { id: string; request: BlobDeleteRequest }> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+export function useDeleteBlob(): UseMutationResult<
+  void,
+  Error,
+  { id: string; request: BlobDeleteRequest }
+> {
+  const { client, basePath } = useBlobStorageConfig();
   const queryClient = useQueryClient();
 
   return useMutation({

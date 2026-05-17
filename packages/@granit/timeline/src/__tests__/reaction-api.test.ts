@@ -70,6 +70,6 @@ describe('toggleReaction', () => {
 
 describe('TimelinePermissions', () => {
   it('exposes the React permission key matching the backend wire string', () => {
-    expect(TimelinePermissions.Timeline.Reactions.React).toBe('Timeline.Reactions.React');
+    expect(TimelinePermissions.Reactions.React).toBe('Timeline.Reactions.React');
   });
 });

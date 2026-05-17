@@ -22,7 +22,7 @@ import type {
   CreateActivityRequest,
   ReassignActivityRequest,
   RescheduleActivityRequest,
-} from '../types.js';
+} from '../types/index.js';
 
 const basePath = '/activities';
 

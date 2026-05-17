@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { isHexColor } from '../types.js';
+import { isHexColor } from '../types/index.js';
 
 import type {
   CategoryAssignmentRequest,
@@ -12,7 +12,7 @@ import type {
   TaxonomySearchResultGroup,
   TaxonomySearchResultItem,
   TaxonomyTargetRef,
-} from '../types.js';
+} from '../types/index.js';
 
 describe('Taxonomy types', () => {
   it('TagResponse carries the readonly hex color contract + audit timestamps', () => {

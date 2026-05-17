@@ -11,7 +11,7 @@ export type {
   LocalizationConfig,
   LocalizationOverride,
   LocalizationOverrideId,
-} from './types.js';
+} from './types/index.js';
 
 // API — Admin
 export {
@@ -20,3 +20,4 @@ export {
   setLocalizationOverride,
   updateLanguageStatus,
 } from './api/localization-admin-api.js';
+export { LocalizationOverridesPermissions } from './permissions.js';

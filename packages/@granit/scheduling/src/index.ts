@@ -20,3 +20,4 @@ export {
   listScheduledActions,
   rescheduleScheduledAction,
 } from './api/scheduling-api.js';
+export { SchedulingPermissions } from './permissions.js';

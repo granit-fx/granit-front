@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { applyTranslations } from '../apply-translations.js';
 
-import type { ApplicationLocalizationDto } from '../types.js';
+import type { ApplicationLocalizationDto } from '../types/index.js';
 
 function createMockI18n(language = 'fr') {
   return {

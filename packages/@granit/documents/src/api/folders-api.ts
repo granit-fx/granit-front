@@ -6,7 +6,7 @@ import type {
   ListFoldersResponse,
   MoveFolderRequest,
   RenameFolderRequest,
-} from '../types.js';
+} from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

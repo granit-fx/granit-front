@@ -1,7 +1,9 @@
-import { getTemplate, templateKeys } from '@granit/templating';
+import { getTemplate } from '@granit/templating';
 import { useQuery } from '@tanstack/react-query';
 
 import { useTemplatingConfig } from '../providers/templating-provider.js';
+
+import { templateKeys } from './query-keys.js';
 
 export function useTemplate(name: string, culture?: string) {
   const { client, basePath, queryKeyPrefix } = useTemplatingConfig();

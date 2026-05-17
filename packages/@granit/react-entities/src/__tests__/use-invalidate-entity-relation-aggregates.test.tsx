@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   parseRelationAggregateParentMarker,
   useInvalidateEntityRelationAggregates,
-} from '../api/use-invalidate-entity-relation-aggregates.js';
+} from '../hooks/use-invalidate-entity-relation-aggregates.js';
 
 import type { ReactNode } from 'react';
 

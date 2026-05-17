@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 
 import { EntityDetail } from '../components/entity-detail.js';
 import { STANDARD_DETAIL_COMPONENTS } from '../field-components/standard-detail-components.js';
-import { EntityRendererProvider } from '../provider/index.js';
+import { EntityRendererProvider } from '../providers/index.js';
 
 import type {
   EntityDetailManifest,

@@ -15,7 +15,7 @@ import type {
   SubscriptionChangePlanRequest,
   SubscriptionCreateRequest,
   SubscriptionResponse,
-} from '../types.js';
+} from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult, QueryRequest } from '@granit/query-engine';
 
