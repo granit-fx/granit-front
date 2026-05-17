@@ -1,3 +1,4 @@
+import { createWidget, deleteWidget, updateWidget } from '@granit/dashboards';
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 
 import { useDashboardsConfig } from '../providers/dashboards-provider.js';
@@ -52,13 +53,8 @@ export function useAddWidget(): UseMutationResult<
   const { client, basePath } = useDashboardsConfig();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ dashboardId, request }: AddWidgetVariables) => {
-      const { data } = await client.post<WidgetInstanceResponse>(
-        `${basePath}/${encodeURIComponent(dashboardId)}/widgets`,
-        request
-      );
-      return data;
-    },
+    mutationFn: ({ dashboardId, request }: AddWidgetVariables) =>
+      createWidget(client, basePath, dashboardId, request),
     onSuccess: (_widget, { dashboardId }) =>
       queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) }),
   });
@@ -80,13 +76,8 @@ export function useUpdateWidget(): UseMutationResult<
   const { client, basePath } = useDashboardsConfig();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ dashboardId, widgetId, request }: UpdateWidgetVariables) => {
-      const { data } = await client.put<WidgetInstanceResponse>(
-        `${basePath}/${encodeURIComponent(dashboardId)}/widgets/${encodeURIComponent(widgetId)}`,
-        request
-      );
-      return data;
-    },
+    mutationFn: ({ dashboardId, widgetId, request }: UpdateWidgetVariables) =>
+      updateWidget(client, basePath, dashboardId, widgetId, request),
     onSuccess: (_widget, { dashboardId }) =>
       queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) }),
   });
@@ -101,11 +92,8 @@ export function useRemoveWidget(): UseMutationResult<void, Error, RemoveWidgetVa
   const { client, basePath } = useDashboardsConfig();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ dashboardId, widgetId }: RemoveWidgetVariables) => {
-      await client.delete(
-        `${basePath}/${encodeURIComponent(dashboardId)}/widgets/${encodeURIComponent(widgetId)}`
-      );
-    },
+    mutationFn: ({ dashboardId, widgetId }: RemoveWidgetVariables) =>
+      deleteWidget(client, basePath, dashboardId, widgetId),
     onSuccess: (_void, { dashboardId }) =>
       queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) }),
   });

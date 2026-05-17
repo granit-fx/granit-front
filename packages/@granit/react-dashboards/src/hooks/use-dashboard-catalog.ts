@@ -1,3 +1,4 @@
+import { getDashboardCatalog } from '@granit/dashboards';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
 import { useDashboardsConfig } from '../providers/dashboards-provider.js';
@@ -30,13 +31,7 @@ export function useDashboardCatalog(
   const { client, basePath } = useDashboardsConfig();
   return useQuery({
     queryKey: dashboardCatalogQueryKey(),
-    queryFn: async ({ signal }) => {
-      const { data } = await client.get<readonly DashboardCatalogEntryResponse[]>(
-        `${basePath}/catalog`,
-        { signal }
-      );
-      return data;
-    },
+    queryFn: ({ signal }) => getDashboardCatalog(client, basePath, { signal }),
     enabled: options.enabled ?? true,
     staleTime: 5 * 60_000,
   });

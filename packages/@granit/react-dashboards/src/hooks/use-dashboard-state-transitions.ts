@@ -1,3 +1,4 @@
+import { archiveDashboard, publishDashboard, restoreDashboard } from '@granit/dashboards';
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 
 import { useDashboardsConfig } from '../providers/dashboards-provider.js';
@@ -31,9 +32,7 @@ export function usePublishDashboard(): UseMutationResult<void, Error, string> {
   const { client, basePath } = useDashboardsConfig();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (id: string) => {
-      await client.post(`${basePath}/${encodeURIComponent(id)}/publish`);
-    },
+    mutationFn: (id: string) => publishDashboard(client, basePath, id),
     onSuccess: (_void, id) => invalidateAfterTransition(queryClient, id),
   });
 }
@@ -50,9 +49,7 @@ export function useArchiveDashboard(): UseMutationResult<void, Error, string> {
   const { client, basePath } = useDashboardsConfig();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (id: string) => {
-      await client.post(`${basePath}/${encodeURIComponent(id)}/archive`);
-    },
+    mutationFn: (id: string) => archiveDashboard(client, basePath, id),
     onSuccess: (_void, id) => invalidateAfterTransition(queryClient, id),
   });
 }
@@ -66,9 +63,7 @@ export function useRestoreDashboard(): UseMutationResult<void, Error, string> {
   const { client, basePath } = useDashboardsConfig();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (id: string) => {
-      await client.post(`${basePath}/${encodeURIComponent(id)}/restore`);
-    },
+    mutationFn: (id: string) => restoreDashboard(client, basePath, id),
     onSuccess: (_void, id) => invalidateAfterTransition(queryClient, id),
   });
 }

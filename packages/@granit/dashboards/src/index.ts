@@ -104,6 +104,32 @@ export {
   isMarkdownSnapshotEnvelope,
   isTextSnapshotEnvelope,
 } from './rendering/index.js';
+// HTTP API — Axios-based, framework-agnostic. React Query hooks live in
+// @granit/react-dashboards and delegate to these functions.
+export {
+  archiveDashboard,
+  createWidget,
+  deleteWidget,
+  getDashboard,
+  getDashboardCatalog,
+  importDashboard,
+  listDashboards,
+  publishDashboard,
+  renderDashboard,
+  renderWidget,
+  restoreDashboard,
+  resyncDashboard,
+  updateDashboardMetadata,
+  updateWidget,
+} from './api/index.js';
+export type {
+  DashboardListParams,
+  DashboardsRequestOptions,
+  WidgetRenderBody,
+  WidgetRenderContextPayload,
+  WidgetRenderKind,
+} from './api/index.js';
+
 export type {
   DashboardDriftStatus,
   DashboardRenderedWidget,

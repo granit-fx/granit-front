@@ -1,3 +1,4 @@
+import { getDashboard } from '@granit/dashboards';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
 import { useDashboardsConfig } from '../providers/dashboards-provider.js';
@@ -27,13 +28,7 @@ export function useDashboardDetail(
   const { client, basePath } = useDashboardsConfig();
   return useQuery({
     queryKey: dashboardDetailQueryKey(id),
-    queryFn: async ({ signal }) => {
-      const { data } = await client.get<DashboardDetailResponse>(
-        `${basePath}/${encodeURIComponent(id)}`,
-        { signal }
-      );
-      return data;
-    },
+    queryFn: ({ signal }) => getDashboard(client, basePath, id, { signal }),
     enabled: (options.enabled ?? true) && id.length > 0,
     staleTime: 60_000,
   });

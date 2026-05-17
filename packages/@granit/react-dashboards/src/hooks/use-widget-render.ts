@@ -1,4 +1,5 @@
 import { HttpError } from '@granit/api-client';
+import { renderWidget } from '@granit/dashboards';
 import { useQuery, type Query, type UseQueryResult } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
@@ -121,14 +122,14 @@ export function useWidgetRender<TDefinition extends WidgetDefinitionBase>(
 
   return useQuery({
     queryKey,
-    queryFn: async ({ signal }) => {
-      const { data } = await client.post<DashboardRenderedWidget>(
-        `${WIDGET_RENDER_PATH}/${kind}/render`,
+    queryFn: ({ signal }) =>
+      renderWidget(
+        client,
+        WIDGET_RENDER_PATH,
+        kind,
         { definition, context: effectiveContext },
         { signal }
-      );
-      return data;
-    },
+      ),
     enabled: options.enabled ?? true,
     retry: shouldRetry,
     staleTime: 60_000,

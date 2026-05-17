@@ -1,4 +1,5 @@
 import { HttpError } from '@granit/api-client';
+import { renderDashboard } from '@granit/dashboards';
 import {
   useQuery,
   useQueryClient,
@@ -97,14 +98,8 @@ export function useDashboardRender(
 
   const result = useQuery({
     queryKey,
-    queryFn: async ({ signal }) => {
-      const { data } = await client.post<DashboardRenderResponse>(
-        `${basePath}/${encodeURIComponent(dashboardId)}/render`,
-        normalizedRequest,
-        { signal }
-      );
-      return data;
-    },
+    queryFn: ({ signal }) =>
+      renderDashboard(client, basePath, dashboardId, normalizedRequest, { signal }),
     enabled: options.enabled ?? true,
     retry: shouldRetry,
     staleTime: 60_000,

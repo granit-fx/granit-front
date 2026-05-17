@@ -1,3 +1,4 @@
+import { updateDashboardMetadata } from '@granit/dashboards';
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 
 import { useDashboardsConfig } from '../providers/dashboards-provider.js';
@@ -36,13 +37,8 @@ export function useUpdateDashboardMetadata(): UseMutationResult<
   const { client, basePath } = useDashboardsConfig();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, request }: UpdateDashboardMetadataVariables) => {
-      const { data } = await client.put<DashboardSummaryResponse>(
-        `${basePath}/${encodeURIComponent(id)}`,
-        request
-      );
-      return data;
-    },
+    mutationFn: ({ id, request }: UpdateDashboardMetadataVariables) =>
+      updateDashboardMetadata(client, basePath, id, request),
     onSuccess: async (_summary, { id }) => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['dashboards', 'list'] }),

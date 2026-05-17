@@ -1,3 +1,4 @@
+import { resyncDashboard } from '@granit/dashboards';
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 
 import { useDashboardsConfig } from '../providers/dashboards-provider.js';
@@ -33,12 +34,7 @@ export function useResyncDashboard(): UseMutationResult<DashboardResyncResponse,
   const { client, basePath } = useDashboardsConfig();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (id: string) => {
-      const response = await client.post<DashboardResyncResponse>(
-        `${basePath}/${encodeURIComponent(id)}/resync`
-      );
-      return response.data;
-    },
+    mutationFn: (id: string) => resyncDashboard(client, basePath, id),
     onSuccess: async (_response, id) => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['dashboards', 'list'] }),
