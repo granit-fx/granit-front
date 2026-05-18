@@ -71,9 +71,15 @@ export class CsrfManager {
  * Throws if `input` resolves to a different origin than the current document.
  * Relative URLs (`/bff/...`) and same-origin absolute URLs are accepted.
  */
+function extractRawUrl(input: RequestInfo | URL): string {
+  if (typeof input === 'string') return input;
+  if (input instanceof URL) return input.href;
+  return input.url;
+}
+
 function assertSameOrigin(input: RequestInfo | URL): void {
   if (globalThis.location === undefined) return; // SSR / Node tests
-  const rawUrl = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
+  const rawUrl = extractRawUrl(input);
   let resolved: URL;
   try {
     resolved = new URL(rawUrl, globalThis.location.href);
