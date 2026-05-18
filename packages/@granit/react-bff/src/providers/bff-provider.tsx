@@ -97,8 +97,15 @@ export function BffProvider({ config, children }: BffProviderProps) {
     const interval = configRef.current.sessionCheckInterval ?? 60_000;
     if (interval > 0) {
       // ±10% jitter prevents a synchronised request herd across tabs/users,
-      // and visibilitychange gating avoids polling background tabs.
-      const jitter = () => interval * (0.9 + Math.random() * 0.2);
+      // and visibilitychange gating avoids polling background tabs. Uses
+      // crypto.getRandomValues() rather than Math.random() — not for
+      // security but to keep Sonar's S2245 rule clean across the codebase.
+      const jitter = () => {
+        const buf = new Uint32Array(1);
+        crypto.getRandomValues(buf);
+        const r = buf[0]! / 0x1_0000_0000;
+        return interval * (0.9 + r * 0.2);
+      };
       let timer: ReturnType<typeof setTimeout> | undefined;
 
       const schedule = () => {
