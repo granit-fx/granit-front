@@ -151,20 +151,20 @@ export function toggleReactionMap(
 ): ReactionMap | undefined {
   const current = reactions?.[emoji];
   if (!current) {
-    return { ...(reactions ?? {}), [emoji]: { count: 1, byCurrentUser: true } };
+    return { ...reactions, [emoji]: { count: 1, byCurrentUser: true } };
   }
   if (current.byCurrentUser) {
     const nextCount = current.count - 1;
     if (nextCount <= 0) {
-      const rest = Object.fromEntries(
+      const rest: ReactionMap = Object.fromEntries(
         Object.entries(reactions ?? {}).filter(([key]) => key !== emoji)
       );
-      return Object.keys(rest).length === 0 ? undefined : (rest as ReactionMap);
+      return Object.keys(rest).length === 0 ? undefined : rest;
     }
-    return { ...(reactions ?? {}), [emoji]: { count: nextCount, byCurrentUser: false } };
+    return { ...reactions, [emoji]: { count: nextCount, byCurrentUser: false } };
   }
   return {
-    ...(reactions ?? {}),
+    ...reactions,
     [emoji]: { count: current.count + 1, byCurrentUser: true },
   };
 }
@@ -181,13 +181,13 @@ export function applyToggleResult(
 ): ReactionMap | undefined {
   if (result.count <= 0) {
     if (!reactions) return undefined;
-    const rest = Object.fromEntries(
+    const rest: ReactionMap = Object.fromEntries(
       Object.entries(reactions).filter(([key]) => key !== result.emoji)
     );
-    return Object.keys(rest).length === 0 ? undefined : (rest as ReactionMap);
+    return Object.keys(rest).length === 0 ? undefined : rest;
   }
   return {
-    ...(reactions ?? {}),
+    ...reactions,
     [result.emoji]: { count: result.count, byCurrentUser: result.currentUserHasReacted },
   };
 }
