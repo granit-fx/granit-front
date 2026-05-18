@@ -1,5 +1,7 @@
 import { useCallback, type KeyboardEvent, type ReactNode } from 'react';
 
+import { useEntityRendererLogger } from '../providers/entity-renderer-provider.js';
+
 import type { EntityActionDispatch } from './use-entity-action-dispatcher.js';
 import type { EntityActionManifest } from '@granit/entities';
 
@@ -43,11 +45,14 @@ export function EntityActionButton({
   row,
   dispatch,
 }: EntityActionButtonProps): ReactNode {
+  const logger = useEntityRendererLogger();
   const handleClick = useCallback(() => {
     dispatch(action, rowId, row).catch((error: unknown) => {
-      globalThis.console.error(`EntityAction "${action.name}" failed:`, error);
+      logger.error(`EntityAction "${action.name}" failed`, error, {
+        actionName: action.name,
+      });
     });
-  }, [dispatch, action, rowId, row]);
+  }, [dispatch, action, rowId, row, logger]);
 
   const handleKeyDown = useCallback((event: KeyboardEvent<HTMLButtonElement>) => {
     // Native <button> handles Enter / Space already, but we stop

@@ -2,6 +2,57 @@ import js from '@eslint/js';
 import importPlugin from 'eslint-plugin-import-x';
 import tseslint from 'typescript-eslint';
 
+// XSS sink bans — applied everywhere in the framework, including allow-listed
+// files. Kept as a const so the console allow-list block can re-declare
+// `no-restricted-syntax` with these rules only (omitting the console bans).
+const XSS_SINK_BANS = [
+  {
+    selector: "JSXAttribute[name.name='dangerouslySetInnerHTML']",
+    message:
+      'dangerouslySetInnerHTML is banned in framework code. Render text via JSX (auto-escaped) or sanitize with DOMPurify and disable this rule locally with a justification.',
+  },
+  {
+    selector: "AssignmentExpression[left.property.name='innerHTML']",
+    message:
+      'Assigning to .innerHTML is banned (XSS sink). Use textContent, JSX, or sanitize with DOMPurify.',
+  },
+  {
+    selector: "AssignmentExpression[left.property.name='outerHTML']",
+    message: 'Assigning to .outerHTML is banned (XSS sink).',
+  },
+  {
+    selector: "CallExpression[callee.name='eval']",
+    message: 'eval() is banned (CSP-incompatible, RCE risk).',
+  },
+  {
+    selector: "NewExpression[callee.name='Function']",
+    message: 'new Function() is banned (CSP-incompatible, eval-equivalent).',
+  },
+  {
+    selector: "CallExpression[callee.object.name='document'][callee.property.name='write']",
+    message: 'document.write is banned (XSS sink, blocks parser).',
+  },
+];
+
+// Console bans — applied to every package EXCEPT the allow-list (fallback
+// shims that run before any Logger can be wired). `no-console` catches
+// direct `console.foo` calls; these selectors also catch the
+// `globalThis.console.foo` / `window.console.foo` workarounds.
+const CONSOLE_BANS = [
+  {
+    selector:
+      "CallExpression[callee.object.object.name='globalThis'][callee.object.property.name='console']",
+    message:
+      'globalThis.console.* is banned. Inject a Logger from `@granit/logger` instead. If this is a bootstrap-time fallback (no logger wired yet), add the file to the eslint allow-list with a justification.',
+  },
+  {
+    selector:
+      "CallExpression[callee.object.object.name='window'][callee.object.property.name='console'], CallExpression[callee.object.object.name='self'][callee.object.property.name='console']",
+    message:
+      'window.console / self.console is banned. Inject a Logger from `@granit/logger`.',
+  },
+];
+
 export default tseslint.config(
   { ignores: ['**/node_modules/**', '**/coverage/**', 'storybook-static/**'] },
 
@@ -37,40 +88,9 @@ export default tseslint.config(
           ],
         },
       ],
-      // Ban DOM-XSS sinks framework-wide. Use `@granit/utils/assertSafeUrl`
-      // for any server-controlled URL, and prefer React text rendering over
-      // raw HTML injection. If a package genuinely needs to render HTML
-      // (markdown viewer, etc.), it must sanitize with DOMPurify and add a
-      // file-local eslint-disable with a justification.
-      'no-restricted-syntax': [
-        'error',
-        {
-          selector: "JSXAttribute[name.name='dangerouslySetInnerHTML']",
-          message:
-            'dangerouslySetInnerHTML is banned in framework code. Render text via JSX (auto-escaped) or sanitize with DOMPurify and disable this rule locally with a justification.',
-        },
-        {
-          selector: "AssignmentExpression[left.property.name='innerHTML']",
-          message:
-            'Assigning to .innerHTML is banned (XSS sink). Use textContent, JSX, or sanitize with DOMPurify.',
-        },
-        {
-          selector: "AssignmentExpression[left.property.name='outerHTML']",
-          message: 'Assigning to .outerHTML is banned (XSS sink).',
-        },
-        {
-          selector: "CallExpression[callee.name='eval']",
-          message: 'eval() is banned (CSP-incompatible, RCE risk).',
-        },
-        {
-          selector: "NewExpression[callee.name='Function']",
-          message: 'new Function() is banned (CSP-incompatible, eval-equivalent).',
-        },
-        {
-          selector: "CallExpression[callee.object.name='document'][callee.property.name='write']",
-          message: 'document.write is banned (XSS sink, blocks parser).',
-        },
-      ],
+      // Ban DOM-XSS sinks + console.* framework-wide. Allow-list for
+      // bootstrap-time fallback shims at the bottom of this file.
+      'no-restricted-syntax': ['error', ...XSS_SINK_BANS, ...CONSOLE_BANS],
     },
   },
 
@@ -102,6 +122,26 @@ export default tseslint.config(
   {
     files: ['**/__tests__/**/*.{ts,tsx}', '**/*.test.{ts,tsx}'],
     rules: { '@typescript-eslint/no-explicit-any': 'off' },
+  },
+
+  // Allow-list for legitimate `globalThis.console.*` fallback shims — these
+  // sites run BEFORE any Logger can be wired (config bootstrap, default
+  // renderer shim) or are explicitly the fallback path when the consumer
+  // omits the optional `logger` config. Every entry here must stay tightly
+  // scoped to a single file. Other migrations are tracked in the /security
+  // audit Tactical roadmap (VULN-302). XSS sink bans remain active.
+  {
+    files: [
+      'packages/@granit/api-client/src/index.ts',
+      'packages/@granit/react-bff/src/providers/bff-provider.tsx',
+      'packages/@granit/react-entities/src/providers/entity-renderer-provider.tsx',
+      // Tactical migration pending (VULN-302):
+      'packages/@granit/react-authentication-entraid/src/hooks/use-entraid-init.ts',
+    ],
+    rules: {
+      'no-restricted-syntax': ['error', ...XSS_SINK_BANS],
+      'no-console': 'off',
+    },
   },
 
 );

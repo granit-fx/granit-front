@@ -157,6 +157,11 @@
               "name": "refreshCsrfToken",
               "kind": "method",
               "signature": "refreshCsrfToken?: () => Promise<string | null>"
+            },
+            {
+              "name": "logger",
+              "kind": "property",
+              "signature": "logger?: Logger"
             }
           ]
         },

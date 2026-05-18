@@ -215,6 +215,9 @@ importers:
         specifier: 1.16.1
         version: 1.16.1
     devDependencies:
+      '@granit/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -315,6 +318,10 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
+    devDependencies:
+      '@granit/logger':
+        specifier: workspace:*
+        version: link:../logger
 
   packages/@granit/blob-storage:
     devDependencies:
@@ -1381,6 +1388,9 @@ importers:
       '@granit/entities':
         specifier: workspace:*
         version: link:../entities
+      '@granit/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
