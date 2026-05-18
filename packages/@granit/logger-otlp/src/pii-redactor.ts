@@ -41,8 +41,8 @@ function passesLuhn(digits: string): boolean {
   let sum = 0;
   let alt = false;
   for (let i = digits.length - 1; i >= 0; i--) {
-    const c = digits.charCodeAt(i);
-    if (c < 48 || c > 57) return false;
+    const c = digits.codePointAt(i);
+    if (c === undefined || c < 48 || c > 57) return false;
     let n = c - 48;
     if (alt) {
       n *= 2;
