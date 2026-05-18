@@ -36,6 +36,12 @@ const DEFAULT_LABELS: Required<DocumentsExplorerLabels> = {
  * document list itself is a seam ({@link DocumentsList}) until
  * `granit-fx/granit-dotnet#1990` ships the flat folder-documents endpoint.
  */
+// The finalize hook invalidates folders + quota query families, so the
+// right pane refreshes on its own — no per-callback work needed.
+function noopUploadComplete(_document: DocumentResponse): void {
+  /* intentional no-op */
+}
+
 export function DocumentsExplorer({
   rootFolderId = null,
   canManage = false,
@@ -74,11 +80,6 @@ export function DocumentsExplorer({
 
   const folderId = currentFolder?.id ?? '';
 
-  function handleUploadComplete(_document: DocumentResponse): void {
-    // The finalize hook already invalidates the folders + quota query
-    // families, so the right pane refreshes on its own.
-  }
-
   return (
     <div data-granit-documents-explorer="" className={className}>
       <header data-granit-documents-explorer-header="">
@@ -100,7 +101,7 @@ export function DocumentsExplorer({
           )}
           <DocumentsList folderId={folderId} onOpenDocument={onOpenDocument} />
           {canManage && (
-            <UploadButton folderId={currentFolder?.id ?? null} onComplete={handleUploadComplete} />
+            <UploadButton folderId={currentFolder?.id ?? null} onComplete={noopUploadComplete} />
           )}
         </section>
       </div>
