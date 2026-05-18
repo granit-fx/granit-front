@@ -7,8 +7,8 @@
 
 const EMAIL_RE = /(?<local>[A-Za-z0-9._%+-]{1,64})@(?<domain>[A-Za-z0-9.-]+\.[A-Za-z]{2,})/g;
 
-// `Authorization: Bearer xxx` and variants
-const BEARER_RE = /(Bearer\s+)([A-Za-z0-9._-]{8,})/gi;
+// `Authorization: Bearer xxx` and variants (token chars; `i` flag covers a-z).
+const BEARER_RE = /(Bearer\s+)([A-Z0-9._-]{8,})/gi;
 
 // Raw JWT (three base64url segments separated by dots, header starts with eyJ)
 const JWT_RE = /\beyJ[A-Za-z0-9_-]{4,}\.[A-Za-z0-9_-]{4,}\.[A-Za-z0-9_-]{4,}\b/g;
