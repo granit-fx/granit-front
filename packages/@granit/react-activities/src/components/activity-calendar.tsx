@@ -97,7 +97,7 @@ export function ActivityCalendar({
         <span data-granit-activity-calendar-range="">
           {window.from.toISOString().slice(0, 10)} → {window.to.toISOString().slice(0, 10)}
         </span>
-        <div data-granit-activity-calendar-view-switcher="" role="group" aria-label="View">
+        <div data-granit-activity-calendar-view-switcher="" role="toolbar" aria-label="View">
           {(['day', 'week', 'month'] as const).map((v) => (
             <button
               key={v}
@@ -112,44 +112,53 @@ export function ActivityCalendar({
         </div>
       </div>
 
-      {query.isLoading ? (
-        <div data-granit-activity-calendar-loading="">Loading…</div>
-      ) : query.isError ? (
-        <div data-granit-activity-calendar-error="" role="alert">
-          {query.error?.message ?? 'Failed to load calendar.'}
-        </div>
-      ) : days.every((d) => d.items.length === 0) ? (
-        <div data-granit-activity-calendar-empty="">No activities in this window.</div>
-      ) : (
-        <ol data-granit-activity-calendar-grid="">
-          {days.map((d) => (
-            <li
-              key={d.iso}
-              data-granit-activity-calendar-day=""
-              data-activity-calendar-date={d.iso}
-            >
-              <header>{d.iso}</header>
-              <ul data-granit-activity-calendar-items="">
-                {d.items.map((item) => (
-                  <li key={item.id}>
-                    <button
-                      type="button"
-                      data-granit-activity-calendar-item=""
-                      data-activity-id={item.id}
-                      data-activity-color={item.color}
-                      data-activity-status={item.status}
-                      onClick={onItemClick ? () => onItemClick(item) : undefined}
-                    >
-                      {item.title}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ))}
-        </ol>
-      )}
+      {renderCalendarBody(query, days, onItemClick)}
     </div>
+  );
+}
+
+function renderCalendarBody(
+  query: ReturnType<typeof useActivitiesCalendar>,
+  days: readonly CalendarDay[],
+  onItemClick: ((item: ActivityCalendarItemResponse) => void) | undefined
+): ReactNode {
+  if (query.isLoading) {
+    return <div data-granit-activity-calendar-loading="">Loading…</div>;
+  }
+  if (query.isError) {
+    return (
+      <div data-granit-activity-calendar-error="" role="alert">
+        {query.error?.message ?? 'Failed to load calendar.'}
+      </div>
+    );
+  }
+  if (days.every((d) => d.items.length === 0)) {
+    return <div data-granit-activity-calendar-empty="">No activities in this window.</div>;
+  }
+  return (
+    <ol data-granit-activity-calendar-grid="">
+      {days.map((d) => (
+        <li key={d.iso} data-granit-activity-calendar-day="" data-activity-calendar-date={d.iso}>
+          <header>{d.iso}</header>
+          <ul data-granit-activity-calendar-items="">
+            {d.items.map((item) => (
+              <li key={item.id}>
+                <button
+                  type="button"
+                  data-granit-activity-calendar-item=""
+                  data-activity-id={item.id}
+                  data-activity-color={item.color}
+                  data-activity-status={item.status}
+                  onClick={onItemClick ? () => onItemClick(item) : undefined}
+                >
+                  {item.title}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </ol>
   );
 }
 

@@ -177,7 +177,7 @@ describe('<ActivityCalendar>', () => {
     );
 
     await waitFor(() => expect(client.get).toHaveBeenCalled());
-    const switcher = screen.getByRole('group', { name: 'View' });
+    const switcher = screen.getByRole('toolbar', { name: 'View' });
     fireEvent.click(within(switcher).getByRole('button', { name: 'Day' }));
 
     await waitFor(() => {

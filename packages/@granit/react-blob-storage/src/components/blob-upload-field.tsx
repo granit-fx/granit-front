@@ -187,29 +187,9 @@ export function BlobUploadField({
     onChange(null);
   }, [disabled, busy, reset, onChange]);
 
-  const preview =
-    renderPreview === null ? null : renderPreview ? (
-      renderPreview(value, state)
-    ) : value ? (
-      <BlobImage blobId={value} alt="" loading="lazy" />
-    ) : null;
-
+  const preview = computePreview(renderPreview, value, state);
   const showClear = value !== null && !busy;
-  const clearSlot =
-    renderClear === null ? null : showClear ? (
-      renderClear ? (
-        renderClear({ clear: handleClear, disabled: disabled ?? false })
-      ) : (
-        <button
-          type="button"
-          onClick={handleClear}
-          disabled={disabled}
-          data-granit-blob-upload-clear=""
-        >
-          Clear
-        </button>
-      )
-    ) : null;
+  const clearSlot = computeClearSlot(renderClear, showClear, handleClear, disabled ?? false);
 
   return (
     <div
@@ -238,15 +218,56 @@ export function BlobUploadField({
           aria-label="Upload progress"
         />
       ) : null}
-      {validationError ? (
-        <span role="alert" data-granit-blob-upload-error="" data-error-kind="validation">
-          {validationError}
-        </span>
-      ) : state.phase === 'error' && state.error ? (
-        <span role="alert" data-granit-blob-upload-error="" data-error-kind="upload">
-          {state.error.message}
-        </span>
-      ) : null}
+      {renderErrorBanner(validationError, state)}
     </div>
+  );
+}
+
+function renderErrorBanner(validationError: string | null, state: BlobUploadState): ReactNode {
+  if (validationError) {
+    return (
+      <span role="alert" data-granit-blob-upload-error="" data-error-kind="validation">
+        {validationError}
+      </span>
+    );
+  }
+  if (state.phase === 'error' && state.error) {
+    return (
+      <span role="alert" data-granit-blob-upload-error="" data-error-kind="upload">
+        {state.error.message}
+      </span>
+    );
+  }
+  return null;
+}
+
+function computePreview(
+  renderPreview: BlobUploadFieldProps['renderPreview'],
+  value: string | null,
+  state: BlobUploadState
+): ReactNode {
+  if (renderPreview === null) return null;
+  if (renderPreview) return renderPreview(value, state);
+  if (value) return <BlobImage blobId={value} alt="" loading="lazy" />;
+  return null;
+}
+
+function computeClearSlot(
+  renderClear: BlobUploadFieldProps['renderClear'],
+  showClear: boolean,
+  handleClear: () => void,
+  disabled: boolean
+): ReactNode {
+  if (renderClear === null || !showClear) return null;
+  if (renderClear) return renderClear({ clear: handleClear, disabled });
+  return (
+    <button
+      type="button"
+      onClick={handleClear}
+      disabled={disabled}
+      data-granit-blob-upload-clear=""
+    >
+      Clear
+    </button>
   );
 }
