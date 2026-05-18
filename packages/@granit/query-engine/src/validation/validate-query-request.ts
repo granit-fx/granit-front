@@ -78,5 +78,5 @@ export function validateQueryRequest(params: QueryRequest): QueryRequest {
     result.sort = clampSort(params.sort);
   }
 
-  return result as QueryRequest;
+  return result;
 }

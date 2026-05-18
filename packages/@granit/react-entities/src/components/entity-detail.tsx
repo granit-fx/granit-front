@@ -422,7 +422,8 @@ function formatValue(value: unknown): string {
   if (value === null || value === undefined) return '—';
   if (typeof value === 'boolean') return value ? '✓' : '✗';
   if (typeof value === 'object') return JSON.stringify(value);
-  return String(value);
+  // After the guards above, value is a primitive with well-defined String() coercion.
+  return String(value as string | number | bigint);
 }
 
 interface RelationGroupProps {

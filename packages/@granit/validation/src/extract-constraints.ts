@@ -104,7 +104,7 @@ function buildFieldConstraint(prop: OpenApiSchemaProperty, isRequired: boolean):
   if (prop['x-granit-pattern-hint'] !== undefined)
     constraint['patternHint'] = prop['x-granit-pattern-hint'];
 
-  return constraint as FieldConstraint;
+  return constraint;
 }
 
 function filterSchemaNames(names: string[], options?: ExtractOptions): string[] {

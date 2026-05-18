@@ -129,7 +129,7 @@ export function TagManager({
       id: tag.id,
       request: {
         name: patch.name,
-        color: patch.color as HexColor | undefined,
+        color: patch.color,
         hideOnEntityCard: patch.hideOnEntityCard,
       },
     });

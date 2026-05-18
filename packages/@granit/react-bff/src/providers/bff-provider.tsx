@@ -75,7 +75,7 @@ export function BffProvider({ config, children }: BffProviderProps) {
           typeof data === 'object' &&
           data !== null &&
           'authenticated' in data &&
-          (data as { authenticated: unknown }).authenticated === true
+          data.authenticated === true
         ) {
           setUser(data as BffUser);
           await csrfManager.fetchToken();

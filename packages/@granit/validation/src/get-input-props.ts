@@ -40,5 +40,5 @@ export function getInputProps(constraint: FieldConstraint): InputConstraintProps
     props['max'] = constraint.exclusiveMaximum - 1;
   }
 
-  return props as InputConstraintProps;
+  return props;
 }

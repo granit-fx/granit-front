@@ -168,7 +168,7 @@ export function widgetInstanceToDefinition(
       ? undefined
       : { requiredPermission: instance.requiredPermission }),
   };
-  return widget as WidgetDefinition;
+  return widget;
 }
 
 /**
