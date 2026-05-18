@@ -15,7 +15,7 @@ overrides:
   smol-toml: '>=1.6.1'
   brace-expansion: '>=5.0.5'
   protobufjs: ^7.5.6
-  msw: ^2.14.5
+  msw: ^2.14.6
   react: 19.2.6
   react-dom: 19.2.6
 
@@ -132,7 +132,7 @@ importers:
         specifier: ^0.22.1
         version: 0.22.1
       msw:
-        specifier: ^2.14.5
+        specifier: ^2.14.6
         version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       prettier:
         specifier: ^3.8.3
@@ -633,8 +633,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -701,8 +701,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -797,8 +797,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -825,8 +825,8 @@ importers:
         specifier: workspace:*
         version: link:../authentication
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -853,8 +853,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -969,8 +969,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1000,8 +1000,8 @@ importers:
         specifier: 1.16.1
         version: 1.16.1
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1028,8 +1028,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1071,8 +1071,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1155,8 +1155,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1257,8 +1257,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1307,8 +1307,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1354,7 +1354,7 @@ importers:
         specifier: workspace:*
         version: link:../testing
       msw:
-        specifier: ^2.14.5
+        specifier: ^2.14.6
         version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
 
   packages/@granit/react-entities:
@@ -1468,8 +1468,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1502,8 +1502,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1539,8 +1539,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1588,8 +1588,8 @@ importers:
         specifier: ^25.0.0
         version: 25.8.14(typescript@5.9.3)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@5.9.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@5.9.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1662,8 +1662,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1699,8 +1699,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1727,8 +1727,8 @@ importers:
         specifier: workspace:*
         version: link:../types
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1802,8 +1802,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1836,8 +1836,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1879,8 +1879,8 @@ importers:
         specifier: ^1.0.0
         version: 1.8.0(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1916,8 +1916,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -1956,8 +1956,8 @@ importers:
         specifier: 1.16.1
         version: 1.16.1
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -2015,8 +2015,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -2046,8 +2046,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -2089,8 +2089,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -2120,8 +2120,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -2176,8 +2176,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -2235,8 +2235,8 @@ importers:
         specifier: workspace:*
         version: link:../timeline
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -2327,8 +2327,8 @@ importers:
         specifier: 5.100.10
         version: 5.100.10(react@19.2.6)
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -2361,8 +2361,8 @@ importers:
         specifier: workspace:*
         version: link:../workflow
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -2507,11 +2507,11 @@ importers:
   packages/@granit/testing:
     dependencies:
       msw:
-        specifier: ^2.14.5
-        version: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.8.0)(typescript@6.0.3)
       vitest:
         specifier: ^4.0.0
-        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.8.0)(@vitest/coverage-v8@4.1.4)(jsdom@29.1.1)(msw@2.14.5(@types/node@25.8.0)(typescript@6.0.3))(vite@8.0.13(@types/node@25.8.0)(esbuild@0.27.7)(jiti@2.6.1)(sass@1.97.3)(yaml@2.9.0))
+        version: 4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.8.0)(@vitest/coverage-v8@4.1.4)(jsdom@29.1.1)(msw@2.14.6(@types/node@25.8.0)(typescript@6.0.3))(vite@8.0.13(@types/node@25.8.0)(esbuild@0.27.7)(jiti@2.6.1)(sass@1.97.3)(yaml@2.9.0))
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -3381,10 +3381,6 @@ packages:
   '@microsoft/signalr@10.0.0':
     resolution: {integrity: sha512-0BRqz/uCx3JdrOqiqgFhih/+hfTERaUfCZXFB52uMaZJrKaPRzHzMuqVsJC/V3pt7NozcNXGspjKiQEK+X7P2w==}
 
-  '@mswjs/interceptors@0.41.8':
-    resolution: {integrity: sha512-pRLMNKTSGRoLq+KnEB/7OY5vijw1XmcheAAOiv6pj7W1FG32kAGqj1C/RK/cqxRGr1Fh+zBi8sDur8kj3EQv6A==}
-    engines: {node: '>=18'}
-
   '@mswjs/interceptors@0.41.9':
     resolution: {integrity: sha512-VVPPgHyQ6ShqnrmDWuxjmUIsO9gWyOZFmuOfLd9LfBGQJwZfy0gvv9pbHSJuoFNIYC7ZDX9aoFwowjcdSC4E8w==}
     engines: {node: '>=18'}
@@ -3702,36 +3698,42 @@ packages:
     engines: {node: '>= 10.0.0'}
     cpu: [arm]
     os: [linux]
+    libc: [glibc]
 
   '@parcel/watcher-linux-arm-musl@2.5.6':
     resolution: {integrity: sha512-Ve3gUCG57nuUUSyjBq/MAM0CzArtuIOxsBdQ+ftz6ho8n7s1i9E1Nmk/xmP323r2YL0SONs1EuwqBp2u1k5fxg==}
     engines: {node: '>= 10.0.0'}
     cpu: [arm]
     os: [linux]
+    libc: [musl]
 
   '@parcel/watcher-linux-arm64-glibc@2.5.6':
     resolution: {integrity: sha512-f2g/DT3NhGPdBmMWYoxixqYr3v/UXcmLOYy16Bx0TM20Tchduwr4EaCbmxh1321TABqPGDpS8D/ggOTaljijOA==}
     engines: {node: '>= 10.0.0'}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@parcel/watcher-linux-arm64-musl@2.5.6':
     resolution: {integrity: sha512-qb6naMDGlbCwdhLj6hgoVKJl2odL34z2sqkC7Z6kzir8b5W65WYDpLB6R06KabvZdgoHI/zxke4b3zR0wAbDTA==}
     engines: {node: '>= 10.0.0'}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@parcel/watcher-linux-x64-glibc@2.5.6':
     resolution: {integrity: sha512-kbT5wvNQlx7NaGjzPFu8nVIW1rWqV780O7ZtkjuWaPUgpv2NMFpjYERVi0UYj1msZNyCzGlaCWEtzc+exjMGbQ==}
     engines: {node: '>= 10.0.0'}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@parcel/watcher-linux-x64-musl@2.5.6':
     resolution: {integrity: sha512-1JRFeC+h7RdXwldHzTsmdtYR/Ku8SylLgTU/reMuqdVD7CtLwf0VR1FqeprZ0eHQkO0vqsbvFLXUmYm/uNKJBg==}
     engines: {node: '>= 10.0.0'}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@parcel/watcher-win32-arm64@2.5.6':
     resolution: {integrity: sha512-3ukyebjc6eGlw9yRt678DxVF7rjXatWiHvTXqphZLvo7aC5NdEgFufVwjFfY51ijYEWpXbqF5jtrK275z52D4Q==}
@@ -3820,36 +3822,42 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@rolldown/binding-linux-arm64-musl@1.0.1':
     resolution: {integrity: sha512-uwNwFpwKeNiZawfAWBgg0VIztPTV3ihhh1vV334h9ivnNLorxnQMU6Fz8wG1Zb4Qh9LC1/MkcyT3YlDXG3Rsgg==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@rolldown/binding-linux-ppc64-gnu@1.0.1':
     resolution: {integrity: sha512-zY1bul7OWr7DFBiJ++wofXvnr8B45ce3QsQUhKrIhXsygAh7bTkwyeM1bi1a2g5C/yC/N8TZyGDEoMfm/l9mpg==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [ppc64]
     os: [linux]
+    libc: [glibc]
 
   '@rolldown/binding-linux-s390x-gnu@1.0.1':
     resolution: {integrity: sha512-0frlsT/f4Ft6I7SMESTKnF3cZsdicQn1dCMkF/jT9wDLE+gGoiQfv1nmT9e+s7s/fekvvy6tZM2jHvI2tkbJDQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [s390x]
     os: [linux]
+    libc: [glibc]
 
   '@rolldown/binding-linux-x64-gnu@1.0.1':
     resolution: {integrity: sha512-XABVmGp9Tg0WspTVvwduTc4fpqy6JnAUrSQe6OuyqD/03nI7r0O9OWUkMIwFrjKAIqolvqoA4ZrJppgwE0Gxmw==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@rolldown/binding-linux-x64-musl@1.0.1':
     resolution: {integrity: sha512-bV4fzswuzVcKD90o/VM6QqKxnxlDq0g2BISDLNVmxrnhpv1DDbyPhCIjYfvzYLV+MvkKKnQt2Q6AO86SEBULUQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@rolldown/binding-openharmony-arm64@1.0.1':
     resolution: {integrity: sha512-/Mh0Zhq3OP7fVs0kcQHZP6lZEthMGTaSf8UBQYSFEZDWGXXlEC+nJ6EqenaK2t4LBXMe3A+K/G2BVXXdtOr4PQ==}
@@ -3911,66 +3919,79 @@ packages:
     resolution: {integrity: sha512-EIPRXTVQpHyF8WOo219AD2yEltPehLTcTMz2fn6JsatLYSzQf00hj3rulF+yauOlF9/FtM2WpkT/hJh/KJFGhA==}
     cpu: [arm]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-arm-musleabihf@4.60.4':
     resolution: {integrity: sha512-J3Yh9PzzF1Ovah2At+lHiGQdsYgArxBbXv/zHfSyaiFQEqvNv7DcW98pCrmdjCZBrqBiKrKKe2V+aaSGWuBe/w==}
     cpu: [arm]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-linux-arm64-gnu@4.60.4':
     resolution: {integrity: sha512-BFDEZMYfUvLn37ONE1yMBojPxnMlTFsdyNoqncT0qFq1mAfllL+ATMMJd8TeuVMiX84s1KbcxcZbXInmcO2mRg==}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-arm64-musl@4.60.4':
     resolution: {integrity: sha512-pc9EYOSlOgdQ2uPl1o9PF6/kLSgaUosia7gOuS8mB69IxJvlclko1MECXysjs5ryez1/5zjYqx3+xYU0TU6R1A==}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-linux-loong64-gnu@4.60.4':
     resolution: {integrity: sha512-NxnomyxYerDh5n4iLrNa+sH+Z+U4BMEE46V2PgQ/hoB909i8gV1M5wPojWg9fk1jWpO3IQnOs20K4wyZuFLEFQ==}
     cpu: [loong64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-loong64-musl@4.60.4':
     resolution: {integrity: sha512-nbJnQ8a3z1mtmrwImCYhc6BGpThAyYVRQxw9uKSKG4wR6aAYno9sVjJ0zaZcW9BPJX1GbrDPf+SvdWjgTuDmnw==}
     cpu: [loong64]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-linux-ppc64-gnu@4.60.4':
     resolution: {integrity: sha512-2EU6acNrQLd8tYvo/LXW535wupT3m6fo7HKo6lr7ktQoItxTyOL1ZCR/GfGCuXl2vR+zmfI6eRXkSemafv+iVg==}
     cpu: [ppc64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-ppc64-musl@4.60.4':
     resolution: {integrity: sha512-WeBtoMuaMxiiIrO2IYP3xs6GMWkJP2C0EoT8beTLkUPmzV1i/UcOSVw1d5r9KBODtHKilG5yFxsGRnBbK3wJ4A==}
     cpu: [ppc64]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-linux-riscv64-gnu@4.60.4':
     resolution: {integrity: sha512-FJHFfqpKUI3A10WrWKiFbBZ7yVbGT4q4B5o1qKFFojqpaYoh9LrQgqWCmmcxQzVSXYtyB5bzkXrYzlHTs21MYA==}
     cpu: [riscv64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-riscv64-musl@4.60.4':
     resolution: {integrity: sha512-mcEl6CUT5IAUmQf1m9FYSmVqCJlpQ8r8eyftFUHG8i9OhY7BkBXSUdnLH5DOf0wCOjcP9v/QO93zpmF1SptCCw==}
     cpu: [riscv64]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-linux-s390x-gnu@4.60.4':
     resolution: {integrity: sha512-ynt3JxVd2w2buzoKDWIyiV1pJW93xlQic1THVLXilz429oijRpSHivZAgp65KBu+cMcgf1eVVjdnTLvPxgCuoQ==}
     cpu: [s390x]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-x64-gnu@4.60.4':
     resolution: {integrity: sha512-Boiz5+MsaROEWDf+GGEwF8VMHGhlUoQMtIPjOgA5fv4osupqTVnJteQNKJwUcnUog2G55jYXH7KZFFiJe0TEzQ==}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-x64-musl@4.60.4':
     resolution: {integrity: sha512-+qfSY27qIrFfI/Hom04KYFw3GKZSGU4lXus51wsb5EuySfFlWRwjkKWoE9emgRw/ukoT4Udsj4W/+xxG8VbPKg==}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-openbsd-x64@4.60.4':
     resolution: {integrity: sha512-VpTfOPHgVXEBeeR8hZ2O0F3aSso+JDWqTWmTmzcQKted54IAdUVbxE+j/MVxUsKa8L20HJhv3vUezVPoquqWjA==}
@@ -4225,41 +4246,49 @@ packages:
     resolution: {integrity: sha512-34gw7PjDGB9JgePJEmhEqBhWvCiiWCuXsL9hYphDF7crW7UgI05gyBAi6MF58uGcMOiOqSJ2ybEeCvHcq0BCmQ==}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@unrs/resolver-binding-linux-arm64-musl@1.11.1':
     resolution: {integrity: sha512-RyMIx6Uf53hhOtJDIamSbTskA99sPHS96wxVE/bJtePJJtpdKGXO1wY90oRdXuYOGOTuqjT8ACccMc4K6QmT3w==}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@unrs/resolver-binding-linux-ppc64-gnu@1.11.1':
     resolution: {integrity: sha512-D8Vae74A4/a+mZH0FbOkFJL9DSK2R6TFPC9M+jCWYia/q2einCubX10pecpDiTmkJVUH+y8K3BZClycD8nCShA==}
     cpu: [ppc64]
     os: [linux]
+    libc: [glibc]
 
   '@unrs/resolver-binding-linux-riscv64-gnu@1.11.1':
     resolution: {integrity: sha512-frxL4OrzOWVVsOc96+V3aqTIQl1O2TjgExV4EKgRY09AJ9leZpEg8Ak9phadbuX0BA4k8U5qtvMSQQGGmaJqcQ==}
     cpu: [riscv64]
     os: [linux]
+    libc: [glibc]
 
   '@unrs/resolver-binding-linux-riscv64-musl@1.11.1':
     resolution: {integrity: sha512-mJ5vuDaIZ+l/acv01sHoXfpnyrNKOk/3aDoEdLO/Xtn9HuZlDD6jKxHlkN8ZhWyLJsRBxfv9GYM2utQ1SChKew==}
     cpu: [riscv64]
     os: [linux]
+    libc: [musl]
 
   '@unrs/resolver-binding-linux-s390x-gnu@1.11.1':
     resolution: {integrity: sha512-kELo8ebBVtb9sA7rMe1Cph4QHreByhaZ2QEADd9NzIQsYNQpt9UkM9iqr2lhGr5afh885d/cB5QeTXSbZHTYPg==}
     cpu: [s390x]
     os: [linux]
+    libc: [glibc]
 
   '@unrs/resolver-binding-linux-x64-gnu@1.11.1':
     resolution: {integrity: sha512-C3ZAHugKgovV5YvAMsxhq0gtXuwESUKc5MhEtjBpLoHPLYM+iuwSj3lflFwK3DPm68660rZ7G8BMcwSro7hD5w==}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@unrs/resolver-binding-linux-x64-musl@1.11.1':
     resolution: {integrity: sha512-rV0YSoyhK2nZ4vEswT/QwqzqQXw5I6CjoaYMOX0TqBlWhojUf8P94mvI7nuJTeaCkkds3QE4+zS8Ko+GdXuZtA==}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@unrs/resolver-binding-wasm32-wasi@1.11.1':
     resolution: {integrity: sha512-5u4RkfxJm+Ng7IWgkzi3qrFOvLvQYnPBmjmZQ8+szTK/b31fQCnleNl1GgEt7nIsZRIf5PLhPwT0WM+q45x/UQ==}
@@ -4321,7 +4350,7 @@ packages:
   '@vitest/mocker@4.1.4':
     resolution: {integrity: sha512-R9HTZBhW6yCSGbGQnDnH3QHfJxokKN4KB+Yvk9Q1le7eQNYwiCyKxmLmurSpFy6BzJanSLuEUDrD+j97Q+ZLPg==}
     peerDependencies:
-      msw: ^2.14.5
+      msw: ^2.14.6
       vite: ^6.0.0 || ^7.0.0 || ^8.0.0
     peerDependenciesMeta:
       msw:
@@ -4332,7 +4361,7 @@ packages:
   '@vitest/mocker@4.1.6':
     resolution: {integrity: sha512-MCFc63czMjEInOlcY2cpQCvCN+KgbAn+60xu9cMgP4sKaLC5JNAKw7JH8QdAnoAC88hW1IiSNZ+GgVXlN1UcMQ==}
     peerDependencies:
-      msw: ^2.14.5
+      msw: ^2.14.6
       vite: ^6.0.0 || ^7.0.0 || ^8.0.0
     peerDependenciesMeta:
       msw:
@@ -5337,24 +5366,28 @@ packages:
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   lightningcss-linux-arm64-musl@1.32.0:
     resolution: {integrity: sha512-UpQkoenr4UJEzgVIYpI80lDFvRmPVg6oqboNHfoH4CQIfNA+HOrZ7Mo7KZP02dC6LjghPQJeBsvXhJod/wnIBg==}
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   lightningcss-linux-x64-gnu@1.32.0:
     resolution: {integrity: sha512-V7Qr52IhZmdKPVr+Vtw8o+WLsQJYCTd8loIfpDaMRWGUZfBOYEJeyJIkqGIDMZPwPx24pUMfwSxxI8phr/MbOA==}
     engines: {node: '>= 12.0.0'}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   lightningcss-linux-x64-musl@1.32.0:
     resolution: {integrity: sha512-bYcLp+Vb0awsiXg/80uCRezCYHNg1/l3mt0gzHnWV9XP1W5sKa5/TCdGWaR/zBM2PeF/HbsQv/j2URNOiVuxWg==}
     engines: {node: '>= 12.0.0'}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   lightningcss-win32-arm64-msvc@1.32.0:
     resolution: {integrity: sha512-8SbC8BR40pS6baCM8sbtYDSwEVQd4JlFTOlaD3gWGHfThTcABnNDBda6eTZeqbofalIJhFx0qKzgHJmcPTnGdw==}
@@ -5583,16 +5616,6 @@ packages:
 
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
-
-  msw@2.14.5:
-    resolution: {integrity: sha512-X6G05oX4x0e+CNI55KMdhMmwHCBKf2iwazGr+iwsdoJ94JA1ED7wSXb6V+lLPdqFkmIlPiGYvayqnaNcOzobDA==}
-    engines: {node: '>=18'}
-    hasBin: true
-    peerDependencies:
-      typescript: '>= 4.8.x'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
 
   msw@2.14.6:
     resolution: {integrity: sha512-ALe+N10S72cyx94cMcy3Zs4HhXCj35sgeAL4c+WTvKi0zWnbd8/h0lcFqv0mb2P+aSgAdD7p9HzvA0DiUPxsyg==}
@@ -7366,15 +7389,6 @@ snapshots:
       - encoding
       - utf-8-validate
 
-  '@mswjs/interceptors@0.41.8':
-    dependencies:
-      '@open-draft/deferred-promise': 2.2.0
-      '@open-draft/logger': 0.3.0
-      '@open-draft/until': 2.1.0
-      is-node-process: 1.2.0
-      outvariant: 1.4.3
-      strict-event-emitter: 0.5.1
-
   '@mswjs/interceptors@0.41.9':
     dependencies:
       '@open-draft/deferred-promise': 2.2.0
@@ -8255,15 +8269,6 @@ snapshots:
       '@vitest/utils': 4.1.6
       chai: 6.2.2
       tinyrainbow: 3.1.0
-
-  '@vitest/mocker@4.1.4(msw@2.14.5(@types/node@25.8.0)(typescript@6.0.3))(vite@8.0.13(@types/node@25.8.0)(esbuild@0.27.7)(jiti@2.6.1)(sass@1.97.3)(yaml@2.9.0))':
-    dependencies:
-      '@vitest/spy': 4.1.4
-      estree-walker: 3.0.3
-      magic-string: 0.30.21
-    optionalDependencies:
-      msw: 2.14.5(@types/node@25.8.0)(typescript@6.0.3)
-      vite: 8.0.13(@types/node@25.8.0)(esbuild@0.27.7)(jiti@2.6.1)(sass@1.97.3)(yaml@2.9.0)
 
   '@vitest/mocker@4.1.4(msw@2.14.6(@types/node@25.8.0)(typescript@6.0.3))(vite@8.0.13(@types/node@25.8.0)(esbuild@0.27.7)(jiti@2.6.1)(sass@1.97.3)(yaml@2.9.0))':
     dependencies:
@@ -9653,10 +9658,10 @@ snapshots:
 
   ms@2.1.3: {}
 
-  msw@2.14.5(@types/node@25.8.0)(typescript@5.9.3):
+  msw@2.14.6(@types/node@25.8.0)(typescript@5.9.3):
     dependencies:
       '@inquirer/confirm': 6.0.13(@types/node@25.8.0)
-      '@mswjs/interceptors': 0.41.8
+      '@mswjs/interceptors': 0.41.9
       '@open-draft/deferred-promise': 3.0.0
       '@types/statuses': 2.0.6
       cookie: 1.1.1
@@ -9675,31 +9680,6 @@ snapshots:
       yargs: 17.7.2
     optionalDependencies:
       typescript: 5.9.3
-    transitivePeerDependencies:
-      - '@types/node'
-
-  msw@2.14.5(@types/node@25.8.0)(typescript@6.0.3):
-    dependencies:
-      '@inquirer/confirm': 6.0.13(@types/node@25.8.0)
-      '@mswjs/interceptors': 0.41.8
-      '@open-draft/deferred-promise': 3.0.0
-      '@types/statuses': 2.0.6
-      cookie: 1.1.1
-      graphql: 16.14.0
-      headers-polyfill: 5.0.1
-      is-node-process: 1.2.0
-      outvariant: 1.4.3
-      path-to-regexp: 6.3.0
-      picocolors: 1.1.1
-      rettime: 0.11.11
-      statuses: 2.0.2
-      strict-event-emitter: 0.5.1
-      tough-cookie: 6.0.1
-      type-fest: 5.6.0
-      until-async: 3.0.2
-      yargs: 17.7.2
-    optionalDependencies:
-      typescript: 6.0.3
     transitivePeerDependencies:
       - '@types/node'
 
@@ -10352,36 +10332,6 @@ snapshots:
       jiti: 2.6.1
       sass: 1.97.3
       yaml: 2.9.0
-
-  vitest@4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.8.0)(@vitest/coverage-v8@4.1.4)(jsdom@29.1.1)(msw@2.14.5(@types/node@25.8.0)(typescript@6.0.3))(vite@8.0.13(@types/node@25.8.0)(esbuild@0.27.7)(jiti@2.6.1)(sass@1.97.3)(yaml@2.9.0)):
-    dependencies:
-      '@vitest/expect': 4.1.4
-      '@vitest/mocker': 4.1.4(msw@2.14.5(@types/node@25.8.0)(typescript@6.0.3))(vite@8.0.13(@types/node@25.8.0)(esbuild@0.27.7)(jiti@2.6.1)(sass@1.97.3)(yaml@2.9.0))
-      '@vitest/pretty-format': 4.1.4
-      '@vitest/runner': 4.1.4
-      '@vitest/snapshot': 4.1.4
-      '@vitest/spy': 4.1.4
-      '@vitest/utils': 4.1.4
-      es-module-lexer: 2.0.0
-      expect-type: 1.3.0
-      magic-string: 0.30.21
-      obug: 2.1.1
-      pathe: 2.0.3
-      picomatch: 4.0.4
-      std-env: 4.0.0
-      tinybench: 2.9.0
-      tinyexec: 1.1.1
-      tinyglobby: 0.2.16
-      tinyrainbow: 3.1.0
-      vite: 8.0.13(@types/node@25.8.0)(esbuild@0.27.7)(jiti@2.6.1)(sass@1.97.3)(yaml@2.9.0)
-      why-is-node-running: 2.3.0
-    optionalDependencies:
-      '@opentelemetry/api': 1.9.1
-      '@types/node': 25.8.0
-      '@vitest/coverage-v8': 4.1.4(vitest@4.1.4)
-      jsdom: 29.1.1
-    transitivePeerDependencies:
-      - msw
 
   vitest@4.1.4(@opentelemetry/api@1.9.1)(@types/node@25.8.0)(@vitest/coverage-v8@4.1.4)(jsdom@29.1.1)(msw@2.14.6(@types/node@25.8.0)(typescript@6.0.3))(vite@8.0.13(@types/node@25.8.0)(esbuild@0.27.7)(jiti@2.6.1)(sass@1.97.3)(yaml@2.9.0)):
     dependencies:
