@@ -23,3 +23,9 @@ export { scanBarrelDefaultExports, scanLeakedInternals } from './scanners/barrel
 export type { BarrelScanOptions } from './scanners/barrels.js';
 
 export { scanLocaleParity } from './scanners/i18n.js';
+
+export {
+  scanAnonymousDefaultExports,
+  scanWallClockInApi,
+  scanUseFormResolver,
+} from './scanners/patterns.js';
