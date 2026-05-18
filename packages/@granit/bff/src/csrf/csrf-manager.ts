@@ -72,7 +72,7 @@ export class CsrfManager {
  * Relative URLs (`/bff/...`) and same-origin absolute URLs are accepted.
  */
 function assertSameOrigin(input: RequestInfo | URL): void {
-  if (typeof globalThis.location === 'undefined') return; // SSR / Node tests
+  if (globalThis.location === undefined) return; // SSR / Node tests
   const rawUrl = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
   let resolved: URL;
   try {
