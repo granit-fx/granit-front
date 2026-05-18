@@ -70,7 +70,7 @@ export function ReactionBar({
       data-granit-reaction-bar=""
       data-entry-id={entryId}
       data-readonly={isInteractive ? undefined : ''}
-      role="group"
+      role="toolbar"
       className={className}
     >
       {REACTION_EMOJIS.map((emoji) => {

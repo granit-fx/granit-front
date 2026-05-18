@@ -95,11 +95,7 @@ export function CategorySelector({
         )}
       </div>
       {open && (
-        <div
-          role="dialog"
-          aria-label={labelStrings.dialogTitle}
-          data-granit-category-selector-dialog=""
-        >
+        <dialog open aria-label={labelStrings.dialogTitle} data-granit-category-selector-dialog="">
           <header data-granit-category-selector-dialog-header="">
             <h3>{labelStrings.dialogTitle}</h3>
             <button type="button" onClick={() => setOpen(false)}>
@@ -107,7 +103,7 @@ export function CategorySelector({
             </button>
           </header>
           <CategoryTree scope={scope} onSelect={handleSelect} />
-        </div>
+        </dialog>
       )}
     </div>
   );
