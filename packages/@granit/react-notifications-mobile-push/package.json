@@ -22,7 +22,7 @@
     "react": "^19.0.0"
   },
   "devDependencies": {
-    "@capacitor/push-notifications": "^8.0.4",
+    "@capacitor/push-notifications": "^8.1.1",
     "@granit/api-client": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
