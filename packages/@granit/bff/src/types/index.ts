@@ -1,3 +1,4 @@
+import type { Logger } from '@granit/logger';
 import type { EntityId, ISODateString, TenantId } from '@granit/types';
 
 // ---------------------------------------------------------------------------
@@ -71,4 +72,11 @@ export interface BffConfig {
   readonly onUnauthenticated?: () => void;
   /** Polling interval for session check in ms. Default: 60000 (1 minute). 0 = disabled. */
   readonly sessionCheckInterval?: number;
+  /**
+   * Optional logger from `@granit/logger`. Receives session-check failures
+   * (network errors, malformed responses). Production apps should wire a
+   * redacting logger so transient auth errors don't leak PII into `console`.
+   * Defaults to a `console.warn` fallback when omitted.
+   */
+  readonly logger?: Logger;
 }

@@ -1,6 +1,8 @@
 import { useGranitClient } from '@granit/react-api-client';
 import { assertSafeUrl } from '@granit/utils';
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
+
+import { useEntityRendererLogger } from '../providers/entity-renderer-provider.js';
 
 import {
   EntityActionDrawerContext,
@@ -9,6 +11,7 @@ import {
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { EntityActionManifest } from '@granit/entities';
+import type { Logger } from '@granit/logger';
 
 /**
  * Per-kind override hooks for {@link useEntityActionDispatcher}. Apps
@@ -111,10 +114,14 @@ export function useEntityActionDispatcher(
   const client = useGranitClient();
   const drawerCtx = useContext(EntityActionDrawerContext);
   const modalCtx = useContext(EntityActionModalContext);
+  const logger = useEntityRendererLogger();
   const apiCall = handlers.apiCall ?? defaultApiCall;
   const download = handlers.download ?? defaultDownload;
   const navigate = handlers.navigate ?? defaultNavigate;
-  const workflowTransition = handlers.workflowTransition ?? defaultWorkflowTransition;
+  const workflowTransition = useMemo(
+    () => handlers.workflowTransition ?? makeDefaultWorkflowTransition(logger),
+    [handlers.workflowTransition, logger]
+  );
   const openDrawer = handlers.openDrawer;
   const openModal = handlers.openModal;
 
@@ -139,8 +146,9 @@ export function useEntityActionDispatcher(
           } else if (drawerCtx) {
             drawerCtx.open({ action, rowId, row });
           } else {
-            globalThis.console.warn(
-              `EntityAction "${action.name}" is OpenDrawer but no <EntityActionDrawerHost> is mounted in the tree and no \`openDrawer\` handler override was supplied.`
+            logger.warn(
+              `EntityAction "${action.name}" is OpenDrawer but no <EntityActionDrawerHost> is mounted in the tree and no \`openDrawer\` handler override was supplied.`,
+              { actionName: action.name, kind: 'OpenDrawer' }
             );
           }
           return;
@@ -150,8 +158,9 @@ export function useEntityActionDispatcher(
           } else if (modalCtx) {
             modalCtx.open({ action, rowId, row });
           } else {
-            globalThis.console.warn(
-              `EntityAction "${action.name}" is OpenModal but no <EntityActionModalHost> is mounted in the tree and no \`openModal\` handler override was supplied.`
+            logger.warn(
+              `EntityAction "${action.name}" is OpenModal but no <EntityActionModalHost> is mounted in the tree and no \`openModal\` handler override was supplied.`,
+              { actionName: action.name, kind: 'OpenModal' }
             );
           }
           return;
@@ -167,6 +176,7 @@ export function useEntityActionDispatcher(
       openModal,
       drawerCtx,
       modalCtx,
+      logger,
     ]
   );
 }
@@ -219,11 +229,14 @@ const defaultNavigate: EntityActionHandler = (action, rowId) => {
   globalThis.location.href = assertSafeUrl(url);
 };
 
-const defaultWorkflowTransition: EntityActionHandler = (action) => {
-  globalThis.console.warn(
-    `EntityAction "${action.name}" is a WorkflowTransition; the framework's default dispatcher does not execute transitions. Pass a \`workflowTransition\` handler to \`useEntityActionDispatcher\` (typically wired through \`useExecuteTransition()\` from \`@granit/react-workflow\`).`
-  );
-};
+function makeDefaultWorkflowTransition(logger: Logger): EntityActionHandler {
+  return (action) => {
+    logger.warn(
+      `EntityAction "${action.name}" is a WorkflowTransition; the framework's default dispatcher does not execute transitions. Pass a \`workflowTransition\` handler to \`useEntityActionDispatcher\` (typically wired through \`useExecuteTransition()\` from \`@granit/react-workflow\`).`,
+      { actionName: action.name, kind: 'WorkflowTransition' }
+    );
+  };
+}
 
 function readFilename(headers: Record<string, string>): string | null {
   const disposition = headers['content-disposition'] ?? headers['Content-Disposition'];

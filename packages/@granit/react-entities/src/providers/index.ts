@@ -1,4 +1,8 @@
-export { EntityRendererProvider, useEntityRenderer } from './entity-renderer-provider.js';
+export {
+  EntityRendererProvider,
+  useEntityRenderer,
+  useEntityRendererLogger,
+} from './entity-renderer-provider.js';
 export { EMPTY_COMPONENT_CATALOG } from './component-catalog.js';
 export type {
   EntityRendererContextValue,

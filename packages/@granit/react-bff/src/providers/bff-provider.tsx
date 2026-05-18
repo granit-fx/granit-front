@@ -89,7 +89,12 @@ export function BffProvider({ config, children }: BffProviderProps) {
         }
       } catch (error) {
         if (cancelled) return;
-        globalThis.console.warn('[@granit/react-bff] BFF session check failed', error);
+        const message = '[@granit/react-bff] BFF session check failed';
+        if (configRef.current.logger) {
+          configRef.current.logger.warn(message, { error: String(error) });
+        } else {
+          globalThis.console.warn(message, error);
+        }
         setUser(null);
       } finally {
         if (!cancelled) setIsLoading(false);

@@ -7,6 +7,7 @@ import {
   useEntityActionDispatcher,
   type EntityActionHandlers,
 } from '../actions/use-entity-action-dispatcher.js';
+import { useEntityRendererLogger } from '../providers/entity-renderer-provider.js';
 import { useSelection } from '../selection/selection-context.js';
 
 import type {
@@ -165,6 +166,7 @@ export function EntitySelectionBar({
   const dispatch = useEntityActionDispatcher(handlers);
   const client = useGranitClient();
   const selection = useSelection();
+  const logger = useEntityRendererLogger();
   const [running, setRunning] = useState<string | null>(null);
 
   const selectionActions = manifest.collections?.selectionActions ?? [];
@@ -257,7 +259,9 @@ export function EntitySelectionBar({
             disabled={isRunning || running !== null}
             onClick={() => {
               handleClick(ref, action).catch((error: unknown) => {
-                globalThis.console.error(`Selection action "${ref.name}" failed:`, error);
+                logger.error(`Selection action "${ref.name}" failed`, error, {
+                  actionName: ref.name,
+                });
               });
             }}
             onKeyDown={swallowEnterSpace}

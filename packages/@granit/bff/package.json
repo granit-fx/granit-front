@@ -14,7 +14,16 @@
     "build": "tsup"
   },
   "peerDependencies": {
+    "@granit/logger": "workspace:*",
     "@granit/types": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@granit/logger": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@granit/logger": "workspace:*"
   },
   "publishConfig": {
     "exports": {

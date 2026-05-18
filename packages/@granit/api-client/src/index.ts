@@ -5,6 +5,8 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from 'axios';
 
+import type { Logger } from '@granit/logger';
+
 /** Authentication mode for the API client. */
 export type ApiClientMode = 'bearer' | 'bff';
 
@@ -36,6 +38,14 @@ export interface ApiClientConfig {
    * request without `X-CSRF-Token`, eliminating defense-in-depth gaps.
    */
   refreshCsrfToken?: () => Promise<string | null>;
+  /**
+   * Optional logger from `@granit/logger`. Used to report interceptor-level
+   * warnings (e.g. missing CSRF token on a BFF mutation). When omitted, the
+   * client falls back to `console.warn` so framework-level diagnostics are
+   * never lost — but production apps should always wire a redacting logger
+   * to keep PII out of `console` and route diagnostics to OTLP.
+   */
+  logger?: Logger;
 }
 
 // ---------------------------------------------------------------------------
@@ -158,9 +168,13 @@ export function createApiClient(config: ApiClientConfig): AxiosInstance {
           if (csrfToken) {
             req.headers['X-CSRF-Token'] = csrfToken;
           } else if (config.csrfTokenGetter || config.refreshCsrfToken) {
-            globalThis.console.warn(
-              '[@granit/api-client] BFF mutation sent without X-CSRF-Token — token unavailable. Request will likely be rejected by the BFF.'
-            );
+            const message =
+              '[@granit/api-client] BFF mutation sent without X-CSRF-Token — token unavailable. Request will likely be rejected by the BFF.';
+            if (config.logger) {
+              config.logger.warn(message, { method: req.method, url: req.url });
+            } else {
+              globalThis.console.warn(message);
+            }
           }
         }
       } else if (_tokenGetter) {
