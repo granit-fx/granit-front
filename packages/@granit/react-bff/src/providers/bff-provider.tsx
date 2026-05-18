@@ -103,7 +103,7 @@ export function BffProvider({ config, children }: BffProviderProps) {
       const jitter = () => {
         const buf = new Uint32Array(1);
         crypto.getRandomValues(buf);
-        const r = buf[0]! / 0x1_0000_0000;
+        const r = buf[0]! / 2 ** 32;
         return interval * (0.9 + r * 0.2);
       };
       let timer: ReturnType<typeof setTimeout> | undefined;
