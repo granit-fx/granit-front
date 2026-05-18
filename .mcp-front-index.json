@@ -944,6 +944,11 @@
               "name": "getTraceContext",
               "kind": "method",
               "signature": "getTraceContext?: () => TraceContext | undefined"
+            },
+            {
+              "name": "redact",
+              "kind": "method",
+              "signature": "redact?: (text: string) => string"
             }
           ]
         },
@@ -963,6 +968,11 @@
               "signature": "spanId: string"
             }
           ]
+        },
+        {
+          "name": "defaultPiiRedactor",
+          "kind": "function",
+          "signature": "function defaultPiiRedactor(input: string): string"
         }
       ]
     },

@@ -41,6 +41,12 @@ export interface OtlpTransportOptions {
   flushInterval?: number;
   /** Optional callback to retrieve trace context for log-to-trace correlation */
   getTraceContext?: () => TraceContext | undefined;
+  /**
+   * Optional PII scrubber applied to the log body and every attribute
+   * value before serialization. Use `defaultPiiRedactor` for a built-in
+   * baseline (email, JWT, Bearer tokens, IBAN, credit card, E.164 phone).
+   */
+  redact?: (text: string) => string;
 }
 
 // ---------------------------------------------------------------------------
@@ -72,7 +78,11 @@ function errorToAttributes(error: unknown): OtlpAttribute[] {
   return attrs;
 }
 
-function buildLogRecord(entry: LogEntry, traceContext?: TraceContext) {
+function buildLogRecord(
+  entry: LogEntry,
+  traceContext?: TraceContext,
+  redact?: (text: string) => string
+) {
   const attributes: OtlpAttribute[] = [toStringAttribute('logger.prefix', entry.prefix)];
   if (entry.context) {
     attributes.push(...contextToAttributes(entry.context));
@@ -81,11 +91,18 @@ function buildLogRecord(entry: LogEntry, traceContext?: TraceContext) {
     attributes.push(...errorToAttributes(entry.error));
   }
 
+  if (redact) {
+    for (const attr of attributes) {
+      attr.value.stringValue = redact(attr.value.stringValue);
+    }
+  }
+
+  const rawBody = `${entry.prefix} ${entry.message}`;
   return {
     timeUnixNano: String(BigInt(entry.timestamp) * 1_000_000n),
     severityNumber: SEVERITY_NUMBER[entry.level],
     severityText: entry.level,
-    body: { stringValue: `${entry.prefix} ${entry.message}` },
+    body: { stringValue: redact ? redact(rawBody) : rawBody },
     attributes,
     traceId: traceContext?.traceId ?? '',
     spanId: traceContext?.spanId ?? '',
@@ -110,7 +127,9 @@ function buildPayload(entries: LogEntry[], options: OtlpTransportOptions) {
         scopeLogs: [
           {
             scope: { name: '@granit/logger-otlp' },
-            logRecords: entries.map((entry) => buildLogRecord(entry, options.getTraceContext?.())),
+            logRecords: entries.map((entry) =>
+              buildLogRecord(entry, options.getTraceContext?.(), options.redact)
+            ),
           },
         ],
       },

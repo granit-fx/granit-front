@@ -9,3 +9,14 @@ export type {
   LoggerOptions,
   LogTransport,
 } from './logger.js';
+
+export {
+  emailDomain,
+  hashPrefix,
+  redact,
+  redactEmail,
+  redactIpAddress,
+  redactPhone,
+  redactToken,
+  redactUsername,
+} from './redaction.js';
