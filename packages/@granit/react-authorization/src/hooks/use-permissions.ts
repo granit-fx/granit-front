@@ -1,3 +1,4 @@
+import { getMyPermissions } from '@granit/authorization';
 import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 
@@ -71,10 +72,7 @@ export function usePermissions(options: UsePermissionsOptions): UsePermissionsRe
 
   const query = useQuery<PermissionsResponse>({
     queryKey: buildPermissionQueryKey(options, 'me'),
-    queryFn: async () => {
-      const response = await client.get<PermissionsResponse>(`${basePath}/permissions`);
-      return response.data;
-    },
+    queryFn: () => getMyPermissions(client, basePath),
     enabled: enabled ?? true,
     staleTime: Infinity,
   });

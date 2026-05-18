@@ -123,6 +123,49 @@ export interface NotificationPreference {
 }
 
 // ---------------------------------------------------------------------------
+// Notification type definitions — mirrors NotificationDefinition .NET
+// ---------------------------------------------------------------------------
+
+/**
+ * Metadata for a notification type, returned by `GET /types`. Mirrors
+ * `Granit.Notifications.NotificationDefinition`.
+ */
+export interface NotificationDefinition {
+  readonly name: string;
+  readonly defaultSeverity: NotificationSeverity;
+  readonly defaultChannels: readonly string[];
+  readonly displayName: string | null;
+  readonly description: string | null;
+  readonly groupName: string | null;
+  /**
+   * When `false`, the notification is always sent regardless of user
+   * preferences (e.g. security alerts, GDPR breach notifications).
+   */
+  readonly allowUserOptOut: boolean;
+}
+
+// ---------------------------------------------------------------------------
+// Subscriptions and entity followers — mirrors NotificationSubscriptionResponse
+// ---------------------------------------------------------------------------
+
+/** Branded notification subscription identifier. */
+export type NotificationSubscriptionId = EntityId<'NotificationSubscription'>;
+
+/**
+ * A notification subscription or entity-follower entry. Mirrors
+ * `Granit.Notifications.Endpoints.Dtos.NotificationSubscriptionResponse`.
+ */
+export interface NotificationSubscriptionResponse {
+  readonly id: NotificationSubscriptionId;
+  readonly userId: UserId;
+  readonly notificationTypeName: string;
+  /** Entity type for follower subscriptions (null for type-level subscriptions). */
+  readonly entityType: string | null;
+  /** Entity id for follower subscriptions (null for type-level subscriptions). */
+  readonly entityId: string | null;
+}
+
+// ---------------------------------------------------------------------------
 // Transport abstraction — adapters (SignalR, SSE) implement this interface
 // ---------------------------------------------------------------------------
 

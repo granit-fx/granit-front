@@ -1,9 +1,10 @@
 import { useGranitClient } from '@granit/react-api-client';
+import { getWorkspaceTree } from '@granit/workspaces';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
 import type { WorkspaceTreeResponse } from '@granit/workspaces';
 
-const WORKSPACES_PATH = '/api/v1/workspaces';
+const API_PREFIX = '/api/v1';
 
 /**
  * Cache key for the workspace tree. Bumped via
@@ -28,10 +29,7 @@ export function useWorkspaces(
   const api = useGranitClient();
   return useQuery({
     queryKey: workspaceTreeQueryKey(),
-    queryFn: async ({ signal }) => {
-      const { data } = await api.get<WorkspaceTreeResponse>(WORKSPACES_PATH, { signal });
-      return data;
-    },
+    queryFn: ({ signal }) => getWorkspaceTree(api, API_PREFIX, { signal }),
     enabled: options.enabled ?? true,
     staleTime: 5 * 60_000,
   });

@@ -1,3 +1,9 @@
+import {
+  setEntityViewPersonalDefault,
+  setEntityViewPinned,
+  setEntityViewTenantDefault,
+  shareEntityView,
+} from '@granit/entities-views';
 import { useGranitClient } from '@granit/react-api-client';
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 
@@ -6,6 +12,8 @@ import { entityViewQueryKey } from './use-entity-view.js';
 import { entityViewsQueryKey } from './use-entity-views.js';
 
 import type { EntityViewResponse, EntityViewShareBodyRequest } from '@granit/entities-views';
+
+const ENTITIES_BASE_PATH = '/api/v1/entities';
 
 /** Variables shared by every boolean-flag mutation (pin / star / set-default). */
 export interface ToggleEntityViewFlagVariables {
@@ -17,6 +25,19 @@ export interface ToggleEntityViewFlagVariables {
 export interface ShareEntityViewVariables {
   readonly id: string;
   readonly request: EntityViewShareBodyRequest;
+}
+
+function invalidateAll(
+  queryClient: ReturnType<typeof useQueryClient>,
+  entityName: string,
+  id: string,
+  updated: EntityViewResponse
+): Promise<unknown> {
+  queryClient.setQueryData(entityViewQueryKey(entityName, id), updated);
+  return Promise.all([
+    queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) }),
+    queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) }),
+  ]);
 }
 
 /**
@@ -32,20 +53,9 @@ export function useSetEntityViewPinned(
   const api = useGranitClient();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, value }) => {
-      const { data } = await api.post<EntityViewResponse>(
-        `/api/v1/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}/pin`,
-        { value }
-      );
-      return data;
-    },
-    onSuccess: async (updated, { id }) => {
-      queryClient.setQueryData(entityViewQueryKey(entityName, id), updated);
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) }),
-        queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) }),
-      ]);
-    },
+    mutationFn: ({ id, value }) =>
+      setEntityViewPinned(api, ENTITIES_BASE_PATH, entityName, id, value),
+    onSuccess: (updated, { id }) => invalidateAll(queryClient, entityName, id, updated),
   });
 }
 
@@ -63,20 +73,9 @@ export function useSetEntityViewTenantDefault(
   const api = useGranitClient();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, value }) => {
-      const { data } = await api.post<EntityViewResponse>(
-        `/api/v1/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}/set-default`,
-        { value }
-      );
-      return data;
-    },
-    onSuccess: async (updated, { id }) => {
-      queryClient.setQueryData(entityViewQueryKey(entityName, id), updated);
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) }),
-        queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) }),
-      ]);
-    },
+    mutationFn: ({ id, value }) =>
+      setEntityViewTenantDefault(api, ENTITIES_BASE_PATH, entityName, id, value),
+    onSuccess: (updated, { id }) => invalidateAll(queryClient, entityName, id, updated),
   });
 }
 
@@ -93,20 +92,9 @@ export function useSetEntityViewPersonalDefault(
   const api = useGranitClient();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, value }) => {
-      const { data } = await api.post<EntityViewResponse>(
-        `/api/v1/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}/star`,
-        { value }
-      );
-      return data;
-    },
-    onSuccess: async (updated, { id }) => {
-      queryClient.setQueryData(entityViewQueryKey(entityName, id), updated);
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) }),
-        queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) }),
-      ]);
-    },
+    mutationFn: ({ id, value }) =>
+      setEntityViewPersonalDefault(api, ENTITIES_BASE_PATH, entityName, id, value),
+    onSuccess: (updated, { id }) => invalidateAll(queryClient, entityName, id, updated),
   });
 }
 
@@ -122,19 +110,8 @@ export function useShareEntityView(
   const api = useGranitClient();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, request }) => {
-      const { data } = await api.post<EntityViewResponse>(
-        `/api/v1/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}/share`,
-        request
-      );
-      return data;
-    },
-    onSuccess: async (updated, { id }) => {
-      queryClient.setQueryData(entityViewQueryKey(entityName, id), updated);
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) }),
-        queryClient.invalidateQueries({ queryKey: defaultEntityViewQueryKey(entityName) }),
-      ]);
-    },
+    mutationFn: ({ id, request }) =>
+      shareEntityView(api, ENTITIES_BASE_PATH, entityName, id, request),
+    onSuccess: (updated, { id }) => invalidateAll(queryClient, entityName, id, updated),
   });
 }

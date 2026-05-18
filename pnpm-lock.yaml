@@ -204,6 +204,10 @@ importers:
         version: link:../testing
 
   packages/@granit/analytics:
+    dependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
     devDependencies:
       '@granit/dashboards':
         specifier: workspace:*
@@ -239,6 +243,9 @@ importers:
 
   packages/@granit/authentication-api-keys:
     dependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/types':
         specifier: workspace:*
         version: link:../types
@@ -325,6 +332,16 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/catalog:
+    dependencies:
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+
   packages/@granit/charts: {}
 
   packages/@granit/cookies: {}
@@ -396,7 +413,11 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
-  packages/@granit/entities: {}
+  packages/@granit/entities:
+    dependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
 
   packages/@granit/entities-customization:
     devDependencies:
@@ -407,7 +428,11 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
-  packages/@granit/entities-views: {}
+  packages/@granit/entities-views:
+    dependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
 
   packages/@granit/error-boundary: {}
 
@@ -2602,7 +2627,11 @@ importers:
         specifier: workspace:*
         version: link:../api-client
 
-  packages/@granit/workspaces: {}
+  packages/@granit/workspaces:
+    dependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
 
 packages:
 

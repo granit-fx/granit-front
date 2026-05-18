@@ -1,4 +1,5 @@
 import { useGranitClient } from '@granit/react-api-client';
+import { getLandingRoute, setPinnedLandingRoute } from '@granit/workspaces';
 import {
   useMutation,
   useQuery,
@@ -9,8 +10,7 @@ import {
 
 import type { LandingRouteResponse, SetPinnedLandingRouteRequest } from '@granit/workspaces';
 
-const LANDING_ROUTE_PATH = '/api/v1/me/landing-route';
-const LANDING_ROUTE_PINNED_PATH = '/api/v1/me/landing-route/pinned';
+const API_PREFIX = '/api/v1';
 
 /** Cache key for the resolved landing route. */
 export const landingRouteQueryKey = () => ['workspaces', 'landing-route'] as const;
@@ -31,10 +31,7 @@ export function useLandingRoute(
   const api = useGranitClient();
   return useQuery({
     queryKey: landingRouteQueryKey(),
-    queryFn: async ({ signal }) => {
-      const { data } = await api.get<LandingRouteResponse>(LANDING_ROUTE_PATH, { signal });
-      return data;
-    },
+    queryFn: ({ signal }) => getLandingRoute(api, API_PREFIX, { signal }),
     enabled: options.enabled ?? true,
     staleTime: 60_000,
   });
@@ -52,9 +49,8 @@ export function useSetLandingPin(): UseMutationResult<void, Error, SetPinnedLand
   const api = useGranitClient();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (request: SetPinnedLandingRouteRequest) => {
-      await api.put(LANDING_ROUTE_PINNED_PATH, request);
-    },
+    mutationFn: (request: SetPinnedLandingRouteRequest) =>
+      setPinnedLandingRoute(api, API_PREFIX, request),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: landingRouteQueryKey() }).catch(() => {});
     },

@@ -112,7 +112,13 @@
     {
       "name": "@granit/analytics",
       "description": "Framework-agnostic types for Granit.Analytics — MetricResponse runtime envelopes plus KPI / Chart / Table / Pivot widget definitions consumed by @granit/dashboards",
-      "exports": []
+      "exports": [
+        {
+          "name": "evaluateMetric",
+          "kind": "function",
+          "signature": "async function evaluateMetric( client: AxiosInstance, basePath: string, metricName: string, request: MetricRequest, config?: AxiosRequestConfig ): Promise<MetricResponse>"
+        }
+      ]
     },
     {
       "name": "@granit/api-client",
@@ -280,6 +286,43 @@
           "name": "ApiKeyPermissions",
           "kind": "const",
           "signature": "const ApiKeyPermissions"
+        },
+        {
+          "name": "ListApiKeysParams",
+          "kind": "interface",
+          "signature": "interface ListApiKeysParams",
+          "members": [
+            {
+              "name": "search",
+              "kind": "property",
+              "signature": "search?: string"
+            },
+            {
+              "name": "type",
+              "kind": "property",
+              "signature": "type?: readonly string[]"
+            },
+            {
+              "name": "environment",
+              "kind": "property",
+              "signature": "environment?: string"
+            },
+            {
+              "name": "includeRevoked",
+              "kind": "property",
+              "signature": "includeRevoked?: boolean"
+            },
+            {
+              "name": "page",
+              "kind": "property",
+              "signature": "page?: number"
+            },
+            {
+              "name": "pageSize",
+              "kind": "property",
+              "signature": "pageSize?: number"
+            }
+          ]
         }
       ]
     },
@@ -539,6 +582,17 @@
       ]
     },
     {
+      "name": "@granit/catalog",
+      "description": "Product catalog types and API functions — mirrors Granit.Catalog .NET (products, lifecycle, external mappings)",
+      "exports": [
+        {
+          "name": "CatalogPermissions",
+          "kind": "const",
+          "signature": "const CatalogPermissions"
+        }
+      ]
+    },
+    {
       "name": "@granit/charts",
       "description": "Framework-agnostic chart primitives for Granit — typed series shapes, ECharts theme builder from Tailwind tokens, locale-aware tick formatters",
       "exports": [
@@ -693,7 +747,13 @@
     {
       "name": "@granit/entities",
       "description": "Framework-agnostic types and helpers for the Granit entity manifest — EntityDefinition discovery / metadata DTOs, form / detail / relation descriptors, visibility DSL evaluator (mirrors Granit.Entities.Abstractions + Granit.Entities.Endpoints.Dtos)",
-      "exports": []
+      "exports": [
+        {
+          "name": "executeBulkAction",
+          "kind": "function",
+          "signature": "async function executeBulkAction( client: AxiosInstance, entityName: string, action: string, request: BulkActionRequest ): Promise<BulkActionResponse>"
+        }
+      ]
     },
     {
       "name": "@granit/entities-customization",
@@ -862,6 +922,11 @@
           "name": "LOCALE_STORAGE_KEY",
           "kind": "const",
           "signature": "const LOCALE_STORAGE_KEY"
+        },
+        {
+          "name": "getApplicationLocalization",
+          "kind": "function",
+          "signature": "async function getApplicationLocalization( client: AxiosInstance, basePath: string, cultureName?: string ): Promise<ApplicationLocalizationDto>"
         },
         {
           "name": "LocalizationOverridesPermissions",
@@ -3326,11 +3391,6 @@
           "members": []
         },
         {
-          "name": "executeBulkAction",
-          "kind": "function",
-          "signature": "async function executeBulkAction( client: AxiosInstance, entityName: string, action: string, request: BulkActionRequest ): Promise<BulkActionResponse>"
-        },
-        {
           "name": "entityCalendarQueryKey",
           "kind": "function",
           "signature": "function entityCalendarQueryKey( entityName: string, from: string, to: string, calendar?: string | null, filters?: readonly FilterEntry[], search?: string ): readonly ["
@@ -5575,7 +5635,23 @@
     {
       "name": "@granit/workspaces",
       "description": "Framework-agnostic types and helpers for the Granit workspace tree — WorkspaceDefinition / sections / items, landing route response, typed preset overlay (mirrors Granit.Workspaces.Abstractions + Granit.Workspaces.Endpoints.Dtos)",
-      "exports": []
+      "exports": [
+        {
+          "name": "getLandingRoute",
+          "kind": "function",
+          "signature": "async function getLandingRoute( client: AxiosInstance, basePath: string, config?: AxiosRequestConfig ): Promise<LandingRouteResponse>"
+        },
+        {
+          "name": "getWorkspaceTree",
+          "kind": "function",
+          "signature": "async function getWorkspaceTree( client: AxiosInstance, basePath: string, config?: AxiosRequestConfig ): Promise<WorkspaceTreeResponse>"
+        },
+        {
+          "name": "setPinnedLandingRoute",
+          "kind": "function",
+          "signature": "async function setPinnedLandingRoute( client: AxiosInstance, basePath: string, request: SetPinnedLandingRouteRequest ): Promise<void>"
+        }
+      ]
     }
   ]
 }

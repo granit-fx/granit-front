@@ -31,6 +31,22 @@ export async function getAuditLogEntry(
 }
 
 /**
+ * Pseudonymize all audit entries for a specific user (GDPR Art. 17).
+ *
+ * Replaces personal data (UserId, UserName, IpAddress, UserAgent) with a
+ * SHA-256 hash to preserve audit trail correlation without re-identification.
+ *
+ * `POST {basePath}/pseudonymize/{userId}`
+ */
+export async function pseudonymizeUserAuditLogs(
+  client: AxiosInstance,
+  basePath: string,
+  userId: string
+): Promise<void> {
+  await client.post(`${basePath}/pseudonymize/${encodeURIComponent(userId)}`);
+}
+
+/**
  * Get the audit trail for a specific entity (paginated).
  *
  * `GET {basePath}/entity/{entityType}/{entityId}`

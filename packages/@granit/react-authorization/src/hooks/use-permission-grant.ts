@@ -1,3 +1,4 @@
+import { grantPermission, revokePermission } from '@granit/authorization';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
@@ -38,23 +39,18 @@ export function usePermissionGrant(options: UsePermissionGrantOptions): UsePermi
   const { client, basePath = DEFAULT_BASE_PATH } = options;
   const queryClient = useQueryClient();
 
-  const buildUrl = ({ roleName, permissionName }: PermissionGrantParams) =>
-    `${basePath}/roles/${encodeURIComponent(roleName)}/${encodeURIComponent(permissionName)}`;
-
   const invalidateRole = (params: PermissionGrantParams) =>
-    queryClient.invalidateQueries({ queryKey: buildPermissionQueryKey(options, 'roles', params.roleName) });
+    queryClient.invalidateQueries({
+      queryKey: buildPermissionQueryKey(options, 'roles', params.roleName),
+    });
 
   const grant = useMutation({
-    mutationFn: async (params: PermissionGrantParams) => {
-      await client.put(buildUrl(params));
-    },
+    mutationFn: (params: PermissionGrantParams) => grantPermission(client, basePath, params),
     onSuccess: (_data, params) => invalidateRole(params),
   });
 
   const revoke = useMutation({
-    mutationFn: async (params: PermissionGrantParams) => {
-      await client.delete(buildUrl(params));
-    },
+    mutationFn: (params: PermissionGrantParams) => revokePermission(client, basePath, params),
     onSuccess: (_data, params) => invalidateRole(params),
   });
 

@@ -1,3 +1,4 @@
+import { getApiKey } from '@granit/authentication-api-keys';
 import { useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
@@ -26,10 +27,7 @@ export function useApiKey(id: string, options: ApiKeyHookOptions): UseQueryResul
 
   return useQuery({
     queryKey: buildApiKeyQueryKey(options, 'detail', id),
-    queryFn: async () => {
-      const response = await client.get<ApiKeyResponse>(`${basePath}/api-keys/${id}`);
-      return response.data;
-    },
+    queryFn: () => getApiKey(client, basePath, id),
     enabled: Boolean(id),
   });
 }

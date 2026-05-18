@@ -14,6 +14,7 @@
 // `Readonly<Record<string, T>>`.
 
 export { evaluateVisibility } from './helpers/index.js';
+export { executeBulkAction } from './api/bulk-action-api.js';
 export { ALL_ENTITY_FACETS, MANIFEST_SCHEMA_VERSION } from './types/index.js';
 export type {
   BulkActionFailure,

@@ -1,3 +1,9 @@
+import {
+  createApiKey,
+  revokeApiKey,
+  rotateApiKey,
+  updateApiKeyScopes,
+} from '@granit/authentication-api-keys';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
@@ -37,10 +43,7 @@ export function useCreateApiKey(
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (request: ApiKeyCreateRequest) => {
-      const response = await client.post<ApiKeyCreateResponse>(`${basePath}/api-keys`, request);
-      return response.data;
-    },
+    mutationFn: (request: ApiKeyCreateRequest) => createApiKey(client, basePath, request),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'list') });
     },
@@ -72,9 +75,7 @@ export function useRevokeApiKey(
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: string) => {
-      await client.post(`${basePath}/api-keys/${id}/revoke`);
-    },
+    mutationFn: (id: string) => revokeApiKey(client, basePath, id),
     onSuccess: (_data, id) => {
       queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'list') });
       queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'detail', id) });
@@ -108,10 +109,7 @@ export function useRotateApiKey(
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: string) => {
-      const response = await client.post<ApiKeyRotateResponse>(`${basePath}/api-keys/${id}/rotate`);
-      return response.data;
-    },
+    mutationFn: (id: string) => rotateApiKey(client, basePath, id),
     onSuccess: (_data, id) => {
       queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'list') });
       queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'detail', id) });
@@ -153,9 +151,8 @@ export function useUpdateApiKeyScopes(
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, request }: UpdateApiKeyScopesVariables) => {
-      await client.put(`${basePath}/api-keys/${id}/scopes`, request);
-    },
+    mutationFn: ({ id, request }: UpdateApiKeyScopesVariables) =>
+      updateApiKeyScopes(client, basePath, id, request),
     onSuccess: (_data, { id }) => {
       queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'list') });
       queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'detail', id) });

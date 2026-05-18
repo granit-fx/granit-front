@@ -1,6 +1,6 @@
 {
-  "name": "@granit/analytics",
-  "description": "Framework-agnostic types for Granit.Analytics — MetricResponse runtime envelopes plus KPI / Chart / Table / Pivot widget definitions consumed by @granit/dashboards",
+  "name": "@granit/catalog",
+  "description": "Product catalog types and API functions — mirrors Granit.Catalog .NET (products, lifecycle, external mappings)",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -13,9 +13,12 @@
   "scripts": {
     "build": "tsup"
   },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*"
+  },
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
-    "@granit/dashboards": "workspace:*"
+    "@granit/types": "workspace:*"
   },
   "publishConfig": {
     "exports": {
@@ -25,8 +28,5 @@
       }
     },
     "registry": "https://npm.pkg.github.com"
-  },
-  "devDependencies": {
-    "@granit/dashboards": "workspace:*"
   }
 }

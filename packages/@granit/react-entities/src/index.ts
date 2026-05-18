@@ -66,7 +66,7 @@ export {
   STANDARD_FORM_COMPONENTS,
 } from './field-components/index.js';
 export type { SelectComponentOption } from './field-components/index.js';
-export { executeBulkAction } from './hooks/bulk-action.js';
+export { executeBulkAction } from '@granit/entities';
 
 // i18n resource bundles (namespace: 'entities')
 export { entitiesTranslationsEn, entitiesTranslationsFr } from './locales/index.js';

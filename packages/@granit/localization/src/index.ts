@@ -13,6 +13,9 @@ export type {
   LocalizationOverrideId,
 } from './types/index.js';
 
+// API — Consumer
+export { getApplicationLocalization } from './api/localization-api.js';
+
 // API — Admin
 export {
   deleteLocalizationOverride,

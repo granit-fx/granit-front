@@ -2,6 +2,9 @@
 // @granit/analytics — public API (framework-agnostic)
 // ---------------------------------------------------------------------------
 
+// API — runtime metric evaluation
+export { evaluateMetric } from './api/metrics-api.js';
+
 // Metrics — runtime evaluation envelopes
 export type {
   CompareSpec,

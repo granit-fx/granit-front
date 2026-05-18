@@ -14,6 +14,7 @@
     "build": "tsup"
   },
   "peerDependencies": {
+    "@granit/api-client": "workspace:*",
     "@granit/types": "workspace:*"
   },
   "publishConfig": {

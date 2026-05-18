@@ -19,3 +19,16 @@ export type {
   EntityViewUpdateBodyRequest,
   EntityViewVisibility,
 } from './types/index.js';
+
+export {
+  createEntityView,
+  deleteEntityView,
+  getDefaultEntityView,
+  getEntityView,
+  listEntityViews,
+  setEntityViewPersonalDefault,
+  setEntityViewPinned,
+  setEntityViewTenantDefault,
+  shareEntityView,
+  updateEntityView,
+} from './api/entity-views-api.js';

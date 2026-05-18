@@ -1,7 +1,10 @@
+import { getEntityView } from '@granit/entities-views';
 import { useGranitClient } from '@granit/react-api-client';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
 import type { EntityViewResponse } from '@granit/entities-views';
+
+const ENTITIES_BASE_PATH = '/api/v1/entities';
 
 /** Cache key for one saved view. */
 export const entityViewQueryKey = (entityName: string, id: string) =>
@@ -24,13 +27,7 @@ export function useEntityView(
   const api = useGranitClient();
   return useQuery({
     queryKey: entityViewQueryKey(entityName, id),
-    queryFn: async ({ signal }) => {
-      const { data } = await api.get<EntityViewResponse>(
-        `/api/v1/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}`,
-        { signal }
-      );
-      return data;
-    },
+    queryFn: ({ signal }) => getEntityView(api, ENTITIES_BASE_PATH, entityName, id, { signal }),
     enabled: (options.enabled ?? true) && Boolean(entityName) && Boolean(id),
     staleTime: 60_000,
   });

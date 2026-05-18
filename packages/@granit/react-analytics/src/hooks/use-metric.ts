@@ -1,3 +1,4 @@
+import { evaluateMetric } from '@granit/analytics';
 import { HttpError } from '@granit/api-client';
 import { useGranitClient } from '@granit/react-api-client';
 import { useQuery, type Query, type UseQueryResult } from '@tanstack/react-query';
@@ -5,7 +6,7 @@ import { useMemo } from 'react';
 
 import type { MetricRequest, MetricResponse } from '@granit/analytics';
 
-const METRIC_PATH = '/api/v1/analytics/metrics';
+const ANALYTICS_BASE_PATH = '/api/v1/analytics';
 
 const POLLING_INTERVAL_MS: Readonly<Record<MetricResponse['refreshHint'], number | false>> = {
   Static: false,
@@ -56,14 +57,8 @@ export function useMetric(
 
   return useQuery({
     queryKey,
-    queryFn: async ({ signal }) => {
-      const { data } = await api.post<MetricResponse>(
-        `${METRIC_PATH}/${encodeURIComponent(metricName)}`,
-        normalizedRequest,
-        { signal }
-      );
-      return data;
-    },
+    queryFn: ({ signal }) =>
+      evaluateMetric(api, ANALYTICS_BASE_PATH, metricName, normalizedRequest, { signal }),
     enabled: options.enabled ?? true,
     retry: shouldRetry,
     staleTime: 60_000,

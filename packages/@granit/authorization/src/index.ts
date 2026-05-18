@@ -12,3 +12,10 @@ export type {
   UseRolePermissionsOptions,
 } from './types/index.js';
 export { AuthorizationEndpointsPermissions } from './permissions.js';
+export {
+  getMyPermissions,
+  getRolePermissions,
+  grantPermission,
+  listPermissionDefinitions,
+  revokePermission,
+} from './api/permissions-api.js';

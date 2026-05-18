@@ -1,3 +1,4 @@
+import { createEntityView, deleteEntityView, updateEntityView } from '@granit/entities-views';
 import { useGranitClient } from '@granit/react-api-client';
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 
@@ -10,6 +11,8 @@ import type {
   EntityViewResponse,
   EntityViewUpdateBodyRequest,
 } from '@granit/entities-views';
+
+const ENTITIES_BASE_PATH = '/api/v1/entities';
 
 /**
  * Variables passed to `useUpdateEntityView().mutate()` — the view id
@@ -34,13 +37,7 @@ export function useCreateEntityView(
   const api = useGranitClient();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (request) => {
-      const { data } = await api.post<EntityViewResponse>(
-        `/api/v1/entities/${encodeURIComponent(entityName)}/views`,
-        request
-      );
-      return data;
-    },
+    mutationFn: (request) => createEntityView(api, ENTITIES_BASE_PATH, entityName, request),
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: entityViewsQueryKey(entityName) }),
@@ -63,13 +60,8 @@ export function useUpdateEntityView(
   const api = useGranitClient();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, request }) => {
-      const { data } = await api.put<EntityViewResponse>(
-        `/api/v1/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}`,
-        request
-      );
-      return data;
-    },
+    mutationFn: ({ id, request }) =>
+      updateEntityView(api, ENTITIES_BASE_PATH, entityName, id, request),
     onSuccess: async (updated, { id }) => {
       queryClient.setQueryData(entityViewQueryKey(entityName, id), updated);
       await Promise.all([
@@ -89,11 +81,7 @@ export function useDeleteEntityView(entityName: string): UseMutationResult<void,
   const api = useGranitClient();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (id) => {
-      await api.delete(
-        `/api/v1/entities/${encodeURIComponent(entityName)}/views/${encodeURIComponent(id)}`
-      );
-    },
+    mutationFn: (id) => deleteEntityView(api, ENTITIES_BASE_PATH, entityName, id),
     onSuccess: async (_void, id) => {
       queryClient.removeQueries({ queryKey: entityViewQueryKey(entityName, id) });
       await Promise.all([

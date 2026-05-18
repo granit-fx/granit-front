@@ -6,10 +6,13 @@ export type {
   ConnectionState,
   NotificationChannel,
   NotificationConfig,
+  NotificationDefinition,
   NotificationId,
   NotificationPreference,
   NotificationPreferenceId,
   NotificationSeverity,
+  NotificationSubscriptionId,
+  NotificationSubscriptionResponse,
   NotificationTransport,
   NotificationTransportMessage,
   UserNotification,
@@ -22,12 +25,19 @@ export { NotificationChannels } from './types/index.js';
 
 // API (pure TypeScript functions)
 export {
-  listNotifications,
-  getUnreadCount,
-  markAllAsRead,
-  markAsRead,
+  followEntity,
   getEntityActivityFeed,
   getPreferences,
+  getUnreadCount,
+  listEntityFollowers,
+  listNotificationTypes,
+  listNotifications,
+  listSubscriptions,
+  markAllAsRead,
+  markAsRead,
+  subscribeToNotificationType,
+  unfollowEntity,
+  unsubscribeFromNotificationType,
   updatePreference,
 } from './api/notification-api.js';
 export { NotificationPermissions } from './permissions.js';

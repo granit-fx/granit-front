@@ -22,5 +22,6 @@ export {
   listAuditLogEntries,
   getAuditLogEntry,
   listEntityAuditTrail,
+  pseudonymizeUserAuditLogs,
 } from './api/audit-log-api.js';
 export { AuditingPermissions } from './permissions.js';

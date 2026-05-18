@@ -1,3 +1,4 @@
+import { listPermissionDefinitions } from '@granit/authorization';
 import { useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
@@ -31,12 +32,7 @@ export function usePermissionDefinitions(
 
   return useQuery({
     queryKey: buildPermissionQueryKey(options, 'definitions'),
-    queryFn: async () => {
-      const response = await client.get<PermissionGroupDto[]>(
-        `${basePath}/permissions/definitions`
-      );
-      return response.data;
-    },
+    queryFn: () => listPermissionDefinitions(client, basePath),
     enabled: enabled ?? true,
     staleTime: 5 * 60 * 1000,
   });

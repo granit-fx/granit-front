@@ -1,3 +1,4 @@
+import { getRolePermissions } from '@granit/authorization';
 import { useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
@@ -34,12 +35,7 @@ export function useRolePermissions(
 
   return useQuery({
     queryKey: buildPermissionQueryKey(options, 'roles', roleName),
-    queryFn: async () => {
-      const response = await client.get<PermissionGrantDto>(
-        `${basePath}/roles/${encodeURIComponent(roleName)}`
-      );
-      return response.data;
-    },
+    queryFn: () => getRolePermissions(client, basePath, roleName),
     enabled: enabled ?? true,
   });
 }
