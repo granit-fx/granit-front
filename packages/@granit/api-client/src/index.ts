@@ -69,11 +69,28 @@ let _onUnauthorized: (() => void) | null = null;
 let _idempotencyKeyGenerator: ((config: InternalAxiosRequestConfig) => string | undefined) | null =
   null;
 
+/**
+ * In development, warn when a global setter is re-wired. A second call usually
+ * means an unintended override (provider double-mount, supply-chain hijack
+ * attempt, or competing auth providers). Production stays silent.
+ */
+function warnIfAlreadySet(name: string, previous: unknown): void {
+  if (previous === null) return;
+  const env = (import.meta as { env?: { DEV?: boolean } }).env;
+  if (env?.DEV !== true) return;
+  globalThis.console.warn(
+    `[@granit/api-client] ${name} called more than once — the previous getter has been replaced. ` +
+      `Check for provider double-mount or unintended override.`
+  );
+}
+
 export function setTokenGetter(getter: () => Promise<string | undefined>): void {
+  warnIfAlreadySet('setTokenGetter', _tokenGetter);
   _tokenGetter = getter;
 }
 
 export function setTenantGetter(getter: () => string | undefined): void {
+  warnIfAlreadySet('setTenantGetter', _tenantGetter);
   _tenantGetter = getter;
 }
 
@@ -84,6 +101,7 @@ export function setTenantGetter(getter: () => string | undefined): void {
  * backend rejects a token (e.g. session revoked via back-channel logout).
  */
 export function setOnUnauthorized(callback: () => void): void {
+  warnIfAlreadySet('setOnUnauthorized', _onUnauthorized);
   _onUnauthorized = callback;
 }
 
@@ -99,6 +117,7 @@ export function setOnUnauthorized(callback: () => void): void {
 export function setIdempotencyKeyGenerator(
   generator: (config: InternalAxiosRequestConfig) => string | undefined
 ): void {
+  warnIfAlreadySet('setIdempotencyKeyGenerator', _idempotencyKeyGenerator);
   _idempotencyKeyGenerator = generator;
 }
 

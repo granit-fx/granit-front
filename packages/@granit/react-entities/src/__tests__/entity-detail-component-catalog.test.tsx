@@ -89,7 +89,7 @@ function formVariantWith(name: string, fields: EntityFormFieldManifest[]): Entit
 }
 
 describe('STANDARD_DETAIL_COMPONENTS — url widget', () => {
-  it('renders an external URL with target=_blank rel=noreferrer', () => {
+  it('renders an external URL with target=_blank rel=noopener noreferrer', () => {
     const { container } = render(
       withProvider(
         <EntityDetail
@@ -103,7 +103,7 @@ describe('STANDARD_DETAIL_COMPONENTS — url widget', () => {
     expect(link).not.toBeNull();
     expect(link.getAttribute('href')).toBe('https://example.com');
     expect(link.getAttribute('target')).toBe('_blank');
-    expect(link.getAttribute('rel')).toBe('noreferrer');
+    expect(link.getAttribute('rel')).toBe('noopener noreferrer');
     expect(link.getAttribute('data-external')).toBe('');
     expect(link.textContent).toBe('https://example.com');
   });

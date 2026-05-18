@@ -37,6 +37,40 @@ export default tseslint.config(
           ],
         },
       ],
+      // Ban DOM-XSS sinks framework-wide. Use `@granit/utils/assertSafeUrl`
+      // for any server-controlled URL, and prefer React text rendering over
+      // raw HTML injection. If a package genuinely needs to render HTML
+      // (markdown viewer, etc.), it must sanitize with DOMPurify and add a
+      // file-local eslint-disable with a justification.
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "JSXAttribute[name.name='dangerouslySetInnerHTML']",
+          message:
+            'dangerouslySetInnerHTML is banned in framework code. Render text via JSX (auto-escaped) or sanitize with DOMPurify and disable this rule locally with a justification.',
+        },
+        {
+          selector: "AssignmentExpression[left.property.name='innerHTML']",
+          message:
+            'Assigning to .innerHTML is banned (XSS sink). Use textContent, JSX, or sanitize with DOMPurify.',
+        },
+        {
+          selector: "AssignmentExpression[left.property.name='outerHTML']",
+          message: 'Assigning to .outerHTML is banned (XSS sink).',
+        },
+        {
+          selector: "CallExpression[callee.name='eval']",
+          message: 'eval() is banned (CSP-incompatible, RCE risk).',
+        },
+        {
+          selector: "NewExpression[callee.name='Function']",
+          message: 'new Function() is banned (CSP-incompatible, eval-equivalent).',
+        },
+        {
+          selector: "CallExpression[callee.object.name='document'][callee.property.name='write']",
+          message: 'document.write is banned (XSS sink, blocks parser).',
+        },
+      ],
     },
   },
 

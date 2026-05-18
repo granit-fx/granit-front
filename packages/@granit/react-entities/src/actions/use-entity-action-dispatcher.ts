@@ -1,4 +1,5 @@
 import { useGranitClient } from '@granit/react-api-client';
+import { assertSafeUrl } from '@granit/utils';
 import { useCallback, useContext } from 'react';
 
 import {
@@ -213,7 +214,9 @@ const defaultDownload: EntityActionHandler = async (action, rowId, _row, client)
 const defaultNavigate: EntityActionHandler = (action, rowId) => {
   if (!action.urlTemplate) return;
   const url = resolveActionUrl(action.urlTemplate, rowId);
-  globalThis.location.href = url;
+  // Reject `javascript:` / `data:` / protocol-relative URLs sourced from
+  // server-defined `urlTemplate` before assigning to `location.href`.
+  globalThis.location.href = assertSafeUrl(url);
 };
 
 const defaultWorkflowTransition: EntityActionHandler = (action) => {

@@ -5486,7 +5486,28 @@
     {
       "name": "@granit/utils",
       "description": "Shared utilities (cn, formatDate, formatNumber, ...)",
-      "exports": []
+      "exports": [
+        {
+          "name": "LINK_URL_SCHEMES",
+          "kind": "const",
+          "signature": "const LINK_URL_SCHEMES: ReadonlySet<string>"
+        },
+        {
+          "name": "NAV_URL_SCHEMES",
+          "kind": "const",
+          "signature": "const NAV_URL_SCHEMES: ReadonlySet<string>"
+        },
+        {
+          "name": "assertSafeUrl",
+          "kind": "function",
+          "signature": "function assertSafeUrl( input: string, allowedSchemes: ReadonlySet<string> = NAV_URL_SCHEMES ): string"
+        },
+        {
+          "name": "isSafeUrl",
+          "kind": "function",
+          "signature": "function isSafeUrl( input: string, allowedSchemes: ReadonlySet<string> = NAV_URL_SCHEMES ): boolean"
+        }
+      ]
     },
     {
       "name": "@granit/validation",

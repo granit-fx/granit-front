@@ -19,6 +19,7 @@
     "@granit/query-engine": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-query-engine": "workspace:*",
+    "@granit/utils": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "react": "^19.0.0",
     "react-hook-form": "^7.0.0",
@@ -40,6 +41,7 @@
     "@granit/react-api-client": "workspace:*",
     "@granit/react-query-engine": "workspace:*",
     "@granit/react-testing": "workspace:*",
-    "@granit/testing": "workspace:*"
+    "@granit/testing": "workspace:*",
+    "@granit/utils": "workspace:*"
   }
 }

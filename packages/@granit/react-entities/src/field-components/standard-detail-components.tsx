@@ -1,3 +1,5 @@
+import { LINK_URL_SCHEMES, isSafeUrl } from '@granit/utils';
+
 import type {
   EntityComponentCatalog,
   EntityDetailComponent,
@@ -28,6 +30,16 @@ const BooleanDetailComponent: EntityDetailComponent = ({ value }) => {
 const UrlDetailComponent: EntityDetailComponent = ({ value, propertyName }) => {
   const href = readScalarString(value);
   if (href === null || href === '') return EMPTY_DASH;
+  // Reject `javascript:` / `data:` / protocol-relative URLs — server-stored
+  // values may carry attacker-controlled schemes. Render as plain text with a
+  // `data-invalid-url` marker so apps can style/log the rejection.
+  if (!isSafeUrl(href, LINK_URL_SCHEMES)) {
+    return (
+      <span data-granit-detail-link="" data-property={propertyName} data-invalid-url="">
+        {href}
+      </span>
+    );
+  }
   const isExternal = /^https?:\/\//i.test(href);
   return (
     <a
@@ -35,7 +47,7 @@ const UrlDetailComponent: EntityDetailComponent = ({ value, propertyName }) => {
       data-property={propertyName}
       data-external={isExternal ? '' : undefined}
       href={href}
-      {...(isExternal ? { target: '_blank', rel: 'noreferrer' } : {})}
+      {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
     >
       {href}
     </a>

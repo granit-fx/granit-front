@@ -1,3 +1,5 @@
+import { assertSafeUrl } from '@granit/utils';
+
 import type { WidgetActionHandler, WidgetActionHandlerRegistry } from './widget-action-handler.js';
 
 /**
@@ -24,7 +26,9 @@ function appendParamsToUrl(url: string, params: Readonly<Record<string, string>>
 const navigateHandler: WidgetActionHandler = (action, context) => {
   if (globalThis.window === undefined) return;
   const url = appendParamsToUrl(action.target, context.params);
-  globalThis.location.assign(url);
+  // Reject `javascript:` / protocol-relative URLs sourced from widget config
+  // before navigation — defense in depth against compromised dashboard data.
+  globalThis.location.assign(assertSafeUrl(url));
 };
 
 /**
@@ -46,7 +50,7 @@ const openDashboardViewHandler: WidgetActionHandler = (action, context) => {
 const openDashboardHandler: WidgetActionHandler = (action, context) => {
   if (globalThis.window === undefined) return;
   const url = appendParamsToUrl(`/dashboards/${encodeURIComponent(action.target)}`, context.params);
-  globalThis.location.assign(url);
+  globalThis.location.assign(assertSafeUrl(url));
 };
 
 /**

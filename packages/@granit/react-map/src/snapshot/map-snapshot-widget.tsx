@@ -1,4 +1,5 @@
 import { isMapSnapshotEnvelope } from '@granit/analytics';
+import { assertSafeUrl } from '@granit/utils';
 import L from 'leaflet';
 import { useEffect, useMemo, useRef } from 'react';
 
@@ -207,12 +208,15 @@ function MapBody({ snapshot }: { readonly snapshot: MapWidgetSnapshot }) {
       }
       if (snapshot.detailRoute && point.id) {
         const route = snapshot.detailRoute.replace('{id}', encodeURIComponent(point.id));
+        // Reject `javascript:` / protocol-relative templates before they hit
+        // the DOM — `detailRoute` is server-defined widget config.
+        const safeRoute = assertSafeUrl(route);
         marker.on('click', () => {
           // Apps wanting React Router integration override this snapshot
           // renderer with `useNavigate()` instead of `globalThis.location.href`.
-          globalThis.location.href = route;
+          globalThis.location.href = safeRoute;
         });
-        marker.options.alt = route;
+        marker.options.alt = safeRoute;
       }
       (clusterGroup ?? layer).addLayer(marker);
     }

@@ -13,6 +13,30 @@ export interface SseTransportConfig {
   readonly tokenGetter?: () => Promise<string | null>;
   /** Event type name used for heartbeats. Filtered from notification callbacks. Default: '__heartbeat__'. */
   readonly heartbeatTypeName?: string;
+  /**
+   * Allow cross-origin `streamUrl`. Default `false` — same-origin only, to
+   * prevent leaking the Bearer token to a third party when `streamUrl` is
+   * misconfigured. Opt in explicitly when streaming from a separate origin
+   * controlled by the same trust boundary.
+   */
+  readonly allowCrossOrigin?: boolean;
+}
+
+function assertStreamUrlOrigin(streamUrl: string, allowCrossOrigin: boolean): void {
+  if (allowCrossOrigin) return;
+  if (globalThis.location === undefined) return;
+  let resolved: URL;
+  try {
+    resolved = new URL(streamUrl, globalThis.location.href);
+  } catch {
+    throw new TypeError(`[@granit/notifications-sse] Invalid streamUrl: "${streamUrl}"`);
+  }
+  if (resolved.origin !== globalThis.location.origin) {
+    throw new Error(
+      `[@granit/notifications-sse] Refusing cross-origin stream to ${resolved.origin}. ` +
+        `Set \`allowCrossOrigin: true\` to opt in if the target origin shares your trust boundary.`
+    );
+  }
 }
 
 class RetriableError extends Error {}
@@ -35,6 +59,7 @@ class FatalError extends Error {}
  * ```
  */
 export function createSseTransport(config: SseTransportConfig): NotificationTransport {
+  assertStreamUrlOrigin(config.streamUrl, config.allowCrossOrigin === true);
   const heartbeatType = config.heartbeatTypeName ?? '__heartbeat__';
   let abortController: AbortController | null = null;
   let currentState: ConnectionState = 'disconnected';
