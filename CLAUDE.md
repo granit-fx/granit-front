@@ -5,7 +5,7 @@
 
 ## Project
 
-- **Type**: TypeScript/React framework library — 87 `@granit/*` packages
+- **Type**: TypeScript/React framework library — 130+ `@granit/*` packages
 - **Purpose**: Shared framework for Digital Dynamics front-end applications
 - **Equivalent**: JavaScript/TypeScript counterpart of `granit-dotnet`
 - **Consumers**: showcase-admin-react (via pnpm `link:` + Vite aliases)
@@ -24,12 +24,18 @@ pnpm lint               # ESLint (--max-warnings 0)
 pnpm tsc                # TypeScript check (pnpm -r exec tsc --noEmit)
 pnpm test               # Vitest (all packages, watch mode)
 pnpm test:coverage      # Vitest coverage (v8, lcov + html)
+pnpm check:csp          # Arch-test: every package using DOM script sinks exposes <pkg>/csp
 pnpm --filter @granit/utils lint   # Per package
 ```
 
 ## Package conventions
 
-- **Source-direct**: packages export `.ts` source — no build step, no `dist/`
+- **Source-direct (default)**: packages export `.ts` source — no build step,
+  no `dist/`, consumed directly via Vite path aliases
+- **Published packages (exception)**: a few packages distributed via
+  `npm.pkg.github.com` (e.g. `@granit/csp`, `@granit/arch-tests-kit`) ship a
+  `tsup` build with `dist/` + `publishConfig`. Keep source-direct unless the
+  package is explicitly meant for external publication.
 - **Exports**: `"exports": { ".": "./src/index.ts" }` in each `package.json`
 - **Entry point**: single `src/index.ts` per package (re-exports public API)
 - **Tests**: co-located `src/**/*.test.ts` or `src/__tests__/`
@@ -108,13 +114,32 @@ Full frontend conventions: `../granit-dotnet/docs/guide/conventions/frontend/`
   (no FHIR, no Capacitor, no admin roles, no HDS-specific behavior)
 - **`@granit/authentication` base**: `BaseAuthContextType` is the shared
   base — provider packages extend it, consuming apps extend further
-- **Hooks**: commitlint enforced, pre-commit runs `pnpm lint && pnpm tsc`
+- **Git hooks** (`.husky/`):
+  - `commit-msg`: commitlint (Conventional Commits)
+  - `pre-commit`: `gitleaks` → `lint-staged` → `tsc -r --noEmit` →
+    regenerate `.mcp-front-index.json` when `packages/@granit/*/src/` changed
 
 ## Refactoring — framework-specific
 
 Any change to public API (`src/index.ts` exports) may break consumers.
 Check which apps import the symbol before changing. Never rename exported
 symbols without a deprecation notice.
+
+## Architecture tests
+
+Framework-wide conformance lives in dedicated packages — check / extend them
+before adding new runtime patterns:
+
+- **`@granit/arch-tests`**: framework-wide suite (e.g. bans `console.*` in
+  runtime code, enforces the `createLogger` façade, import boundaries).
+- **`@granit/arch-tests-kit`**: reusable helpers consumed by per-package
+  arch-tests. Published package — see "Published packages" above.
+- **`scripts/check-csp-policies.mjs`** (run via `pnpm check:csp`): any
+  `@granit/*` package that writes to a DOM script sink (`.innerHTML`,
+  `.outerHTML`, `.insertAdjacentHTML`, `iframe/script.setAttribute('src', …)`,
+  direct `.src =` on iframe/script) MUST expose a `<pkg>/csp` subpath with an
+  idempotent `installPolicy()` (Trusted Types). Exceptions are hard-coded in
+  the script with a justification — add a new exception only as a last resort.
 
 ## Code index (`.mcp-front-index.json`)
 

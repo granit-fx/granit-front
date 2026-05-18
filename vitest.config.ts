@@ -353,6 +353,19 @@ export default defineConfig({
       '@granit/testing': path.resolve(__dirname, 'packages/@granit/testing/src/index.ts'),
       '@granit/timeline': path.resolve(__dirname, 'packages/@granit/timeline/src/index.ts'),
       '@granit/tracing': path.resolve(__dirname, 'packages/@granit/tracing/src/index.ts'),
+      '@granit/csp/testing': path.resolve(
+        __dirname,
+        'packages/@granit/csp/src/testing/index.ts'
+      ),
+      '@granit/csp': path.resolve(__dirname, 'packages/@granit/csp/src/index.ts'),
+      '@granit/react-map/csp': path.resolve(
+        __dirname,
+        'packages/@granit/react-map/src/csp/index.ts'
+      ),
+      '@granit/react-authentication-keycloak/csp': path.resolve(
+        __dirname,
+        'packages/@granit/react-authentication-keycloak/src/csp/index.ts'
+      ),
       '@granit/utils': path.resolve(__dirname, 'packages/@granit/utils/src/index.ts'),
       '@granit/webhooks': path.resolve(__dirname, 'packages/@granit/webhooks/src/index.ts'),
       '@granit/react-webhooks': path.resolve(

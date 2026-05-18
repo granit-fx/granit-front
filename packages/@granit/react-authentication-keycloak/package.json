@@ -5,7 +5,8 @@
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./csp": "./src/csp/index.ts"
   },
   "files": [
     "dist"
@@ -17,6 +18,7 @@
     "@granit/api-client": "workspace:*",
     "@granit/authentication": "workspace:*",
     "@granit/authentication-keycloak": "workspace:*",
+    "@granit/csp": "workspace:*",
     "@granit/react-authentication": "workspace:*",
     "keycloak-js": "*",
     "react": "^19.0.0"
@@ -26,11 +28,16 @@
       ".": {
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js"
+      },
+      "./csp": {
+        "types": "./dist/csp/index.d.ts",
+        "import": "./dist/csp/index.js"
       }
     },
     "registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
-    "@granit/api-client": "workspace:*"
+    "@granit/api-client": "workspace:*",
+    "@granit/csp": "workspace:*"
   }
 }

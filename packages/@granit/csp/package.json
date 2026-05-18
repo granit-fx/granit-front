@@ -1,0 +1,30 @@
+{
+  "name": "@granit/csp",
+  "description": "Content Security Policy + Trusted Types helpers for Granit apps. Idempotent installers for the core `granit` policy plus a per-package registry, and helpers to build the `trusted-types` directive from the policies the app actually installs.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./testing": "./src/testing/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      },
+      "./testing": {
+        "types": "./dist/testing/index.d.ts",
+        "import": "./dist/testing/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  }
+}

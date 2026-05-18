@@ -10,6 +10,7 @@
     "build": "pnpm -r run build",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
+    "check:csp": "node scripts/check-csp-policies.mjs",
     "format": "prettier --write \"packages/@granit/*/src/**/*.{ts,tsx}\"",
     "prepare": "husky"
   },

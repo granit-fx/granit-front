@@ -799,6 +799,27 @@
       ]
     },
     {
+      "name": "@granit/csp",
+      "description": "Content Security Policy + Trusted Types helpers for Granit apps. Idempotent installers for the core `granit` policy plus a per-package registry, and helpers to build the `trusted-types` directive from the policies the app actually installs.",
+      "exports": [
+        {
+          "name": "installPolicy",
+          "kind": "function",
+          "signature": "function installPolicy(): InstallResult"
+        },
+        {
+          "name": "GRANIT_CORE_POLICY_NAME",
+          "kind": "const",
+          "signature": "const GRANIT_CORE_POLICY_NAME"
+        },
+        {
+          "name": "installNamedPolicy",
+          "kind": "function",
+          "signature": "function installNamedPolicy( name: GranitPolicyName, options: TrustedTypePolicyOptions ): InstallResult"
+        }
+      ]
+    },
+    {
       "name": "@granit/customer-balance",
       "description": "Customer balance and credits — types and API functions",
       "exports": [
