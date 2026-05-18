@@ -118,7 +118,7 @@ export function ActivityCalendar({
         <div data-granit-activity-calendar-error="" role="alert">
           {query.error?.message ?? 'Failed to load calendar.'}
         </div>
-      ) : days.length === 0 || days.every((d) => d.items.length === 0) ? (
+      ) : days.every((d) => d.items.length === 0) ? (
         <div data-granit-activity-calendar-empty="">No activities in this window.</div>
       ) : (
         <ol data-granit-activity-calendar-grid="">
@@ -183,7 +183,7 @@ function computeWindow(anchor: Date, view: ActivityCalendarView): CalendarWindow
 }
 
 function addDays(d: Date, days: number): Date {
-  const next = new Date(d.getTime());
+  const next = new Date(d);
   next.setUTCDate(next.getUTCDate() + days);
   return next;
 }
