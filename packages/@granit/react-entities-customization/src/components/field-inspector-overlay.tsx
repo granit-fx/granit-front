@@ -89,7 +89,7 @@ export function FieldInspectorOverlay({
     >
       <header data-granit-field-inspector-header="">
         <h2 data-granit-field-inspector-title="">{merged.title(fieldName)}</h2>
-        {onClose !== undefined ? (
+        {onClose === undefined ? null : (
           <button
             type="button"
             data-granit-field-inspector-close=""
@@ -98,7 +98,7 @@ export function FieldInspectorOverlay({
           >
             {merged.close}
           </button>
-        ) : null}
+        )}
       </header>
       <ol data-granit-field-inspector-layers="">
         {RESOLUTION_LAYERS.map((layer) => {

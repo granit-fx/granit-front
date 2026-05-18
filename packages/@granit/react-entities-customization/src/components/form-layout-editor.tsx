@@ -111,7 +111,7 @@ export function FormLayoutEditor({
           >
             {field.hidden ? merged.show : merged.hide}
           </button>
-          {availableGroups !== undefined ? (
+          {availableGroups === undefined ? null : (
             <select
               data-granit-form-layout-editor-group=""
               aria-label={merged.groupSelectAriaLabel(field.name)}
@@ -126,7 +126,7 @@ export function FormLayoutEditor({
                 </option>
               ))}
             </select>
-          ) : null}
+          )}
         </li>
       ))}
     </ol>

@@ -61,7 +61,7 @@ export function applyDeltas(
       if (anchorIdx === -1 || anchor === delta.fieldName) continue;
       order.splice(fromIdx, 1);
       const reAnchor = order.indexOf(anchor);
-      const targetIdx = delta.beforeFieldName !== undefined ? reAnchor : reAnchor + 1;
+      const targetIdx = delta.beforeFieldName === undefined ? reAnchor + 1 : reAnchor;
       order.splice(targetIdx, 0, delta.fieldName);
     }
   }
