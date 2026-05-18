@@ -55,7 +55,7 @@ function VersionRow({ documentId, version, labels }: Readonly<VersionRowProps>):
 
   async function handleDownload(): Promise<void> {
     const result = await downloadUrl.refetch();
-    if (result.data && typeof globalThis.window !== 'undefined') {
+    if (result.data && globalThis.window !== undefined) {
       globalThis.open(result.data.url, '_blank', 'noopener,noreferrer');
     }
   }
