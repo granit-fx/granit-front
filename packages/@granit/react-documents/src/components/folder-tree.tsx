@@ -70,8 +70,8 @@ function FolderNode({
   const [error, setError] = useState<string | null>(null);
 
   function handleAdd(): void {
-    if (typeof window === 'undefined') return;
-    const name = window.prompt(labels.newFolderName);
+    if (typeof globalThis.window === 'undefined') return;
+    const name = globalThis.prompt(labels.newFolderName);
     if (!name?.trim()) return;
     createFolder.mutate(
       { parentFolderId: folder.id, name: name.trim() },
@@ -82,8 +82,8 @@ function FolderNode({
   }
 
   function handleRename(): void {
-    if (typeof window === 'undefined') return;
-    const next = window.prompt(labels.rename, folder.name);
+    if (typeof globalThis.window === 'undefined') return;
+    const next = globalThis.prompt(labels.rename, folder.name);
     if (!next?.trim() || next.trim() === folder.name) return;
     renameFolder.mutate(
       { id: folder.id, request: { name: next.trim() } },
@@ -94,7 +94,8 @@ function FolderNode({
   }
 
   function handleDelete(): void {
-    if (typeof window === 'undefined' || !window.confirm(labels.deleteConfirm)) return;
+    if (typeof globalThis.window === 'undefined' || !globalThis.confirm(labels.deleteConfirm))
+      return;
     trashFolder.mutate(folder.id, {
       onSuccess: () => onDeleted?.(folder.id),
       onError: (err) => setError(err.message),
@@ -188,8 +189,8 @@ export function FolderTree({
   const createFolder = useCreateFolder();
 
   function handleAddRoot(): void {
-    if (typeof window === 'undefined') return;
-    const name = window.prompt(labelStrings.newFolderName);
+    if (typeof globalThis.window === 'undefined') return;
+    const name = globalThis.prompt(labelStrings.newFolderName);
     if (!name?.trim()) return;
     createFolder.mutate({ parentFolderId: rootFolderId, name: name.trim() });
   }

@@ -136,7 +136,8 @@ export function TagManager({
   }
 
   function confirmDelete(tag: TagResponse): void {
-    if (typeof window !== 'undefined' && !window.confirm(labelStrings.deleteConfirm)) return;
+    if (typeof globalThis.window !== 'undefined' && !globalThis.confirm(labelStrings.deleteConfirm))
+      return;
     deleteTag.mutate(tag.id);
   }
 

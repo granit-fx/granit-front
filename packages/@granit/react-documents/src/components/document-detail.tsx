@@ -114,8 +114,8 @@ export function DocumentDetail({
 
   async function handleDownload(): Promise<void> {
     const result = await downloadUrl.refetch();
-    if (result.data && typeof window !== 'undefined') {
-      window.open(result.data.url, '_blank', 'noopener,noreferrer');
+    if (result.data && typeof globalThis.window !== 'undefined') {
+      globalThis.open(result.data.url, '_blank', 'noopener,noreferrer');
     }
   }
 

@@ -67,9 +67,9 @@ export function TrashBin({
   const permanentlyDeleteDocument = usePermanentlyDeleteDocument();
 
   function handlePermanentDelete(id: string): void {
-    if (typeof window === 'undefined') return;
-    if (!window.confirm(labelStrings.permanentlyDeleteConfirm)) return;
-    if (!window.confirm(labelStrings.permanentlyDeleteConfirm)) return;
+    if (typeof globalThis.window === 'undefined') return;
+    if (!globalThis.confirm(labelStrings.permanentlyDeleteConfirm)) return;
+    if (!globalThis.confirm(labelStrings.permanentlyDeleteConfirm)) return;
     permanentlyDeleteDocument.mutate(id);
   }
 

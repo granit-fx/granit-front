@@ -79,22 +79,22 @@ function CategoryNode({
   const [error, setError] = useState<string | null>(null);
 
   function handleAdd(): void {
-    if (typeof window === 'undefined') return;
-    const name = window.prompt('Category name?');
+    if (typeof globalThis.window === 'undefined') return;
+    const name = globalThis.prompt('Category name?');
     if (!name?.trim()) return;
     createCategory.mutate({ scope, parentId: category.id, name: name.trim() });
   }
 
   function handleRename(): void {
-    if (typeof window === 'undefined') return;
-    const next = window.prompt('Rename category', category.name);
+    if (typeof globalThis.window === 'undefined') return;
+    const next = globalThis.prompt('Rename category', category.name);
     if (!next?.trim() || next.trim() === category.name) return;
     updateCategory.mutate({ id: category.id, request: { name: next.trim() } });
   }
 
   function handleMove(): void {
-    if (typeof window === 'undefined') return;
-    const next = window.prompt(labels.movePrompt, '');
+    if (typeof globalThis.window === 'undefined') return;
+    const next = globalThis.prompt(labels.movePrompt, '');
     if (next === null) return;
     if (next === category.id) {
       setError(labels.error422Cycle);
@@ -121,7 +121,8 @@ function CategoryNode({
   }
 
   function handleDelete(): void {
-    if (typeof window === 'undefined' || !window.confirm(labels.deleteConfirm)) return;
+    if (typeof globalThis.window === 'undefined' || !globalThis.confirm(labels.deleteConfirm))
+      return;
     deleteCategory.mutate(category.id, {
       onError: (err) => {
         const status = (err as { response?: { status?: number; data?: { detail?: string } } })
@@ -236,8 +237,8 @@ export function CategoryTree({
   const createCategory = useCreateCategory(scope);
 
   function handleAddRoot(): void {
-    if (typeof window === 'undefined') return;
-    const name = window.prompt('Root category name?');
+    if (typeof globalThis.window === 'undefined') return;
+    const name = globalThis.prompt('Root category name?');
     if (!name?.trim()) return;
     createCategory.mutate({ scope, parentId: null, name: name.trim() });
   }
