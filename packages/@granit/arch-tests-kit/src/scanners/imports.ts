@@ -5,8 +5,10 @@ import type { AllowlistedScanContext, ScanContext, Violation } from '../types.js
 const IMPORT_RE = /from\s+['"]([^'"\n]+)['"]/g;
 
 export function collectImports(file: string): string[] {
+  // Strip comments first — JSDoc examples often quote `import … from '@granit/x'`
+  // which would otherwise be miscounted as a real dep and create phantom cycles.
   const out: string[] = [];
-  for (const m of readFile(file).matchAll(IMPORT_RE)) {
+  for (const m of stripComments(readFile(file)).matchAll(IMPORT_RE)) {
     if (m[1]) out.push(m[1]);
   }
   return out;

@@ -1,6 +1,6 @@
 import { installNamedPolicy } from './install-policy.js';
 
-import type { InstallResult } from './types.js';
+import type { InstallResult } from './types/index.js';
 
 /** Name of the core Granit policy — to be listed first in `trusted-types`. */
 export const GRANIT_CORE_POLICY_NAME = 'granit' as const;

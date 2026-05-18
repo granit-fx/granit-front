@@ -3,7 +3,7 @@
 // CSP header that lists exactly the policies in use — narrow by default,
 // no opaque catch-all.
 
-import type { GranitPolicyName } from './types.js';
+import type { GranitPolicyName } from './types/index.js';
 
 const installed = new Set<GranitPolicyName>();
 

@@ -8,7 +8,7 @@ import {
   resetGranitPoliciesForTests,
 } from '../registry.js';
 
-import type { TrustedTypePolicyOptions } from '../types.js';
+import type { TrustedTypePolicyOptions } from '../types/index.js';
 
 interface FakeFactory {
   createPolicy: ReturnType<typeof vi.fn>;

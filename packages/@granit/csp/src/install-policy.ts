@@ -4,7 +4,7 @@ import {
   type GranitPolicyName,
   type InstallResult,
   type TrustedTypePolicyOptions,
-} from './types.js';
+} from './types/index.js';
 
 const installed = new Set<GranitPolicyName>();
 
@@ -27,7 +27,10 @@ export function installNamedPolicy(
   if (installed.has(name)) {
     return { status: 'already-installed', name };
   }
-  if (typeof globalThis === 'undefined' || typeof (globalThis as { window?: unknown }).window === 'undefined') {
+  if (
+    typeof globalThis === 'undefined' ||
+    typeof (globalThis as { window?: unknown }).window === 'undefined'
+  ) {
     return { status: 'unsupported', reason: 'no-window' };
   }
   const factory = getTrustedTypesFactory();

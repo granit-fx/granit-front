@@ -12,15 +12,8 @@
 
 export { installPolicy, GRANIT_CORE_POLICY_NAME } from './core-policy.js';
 
-export {
-  getCspTrustedTypesDirective,
-  listInstalledGranitPolicies,
-} from './registry.js';
+export { getCspTrustedTypesDirective, listInstalledGranitPolicies } from './registry.js';
 
 export { installNamedPolicy } from './install-policy.js';
 
-export type {
-  GranitPolicyName,
-  InstallResult,
-  TrustedTypePolicyOptions,
-} from './types.js';
+export type { GranitPolicyName, InstallResult, TrustedTypePolicyOptions } from './types/index.js';
