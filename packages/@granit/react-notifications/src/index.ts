@@ -23,3 +23,14 @@ export type {
 
 export { useNotificationPreferences } from './hooks/use-notification-preferences.js';
 export type { UseNotificationPreferencesReturn } from './hooks/use-notification-preferences.js';
+
+export {
+  useEntityFollowers,
+  useFollowEntity,
+  useNotificationSubscriptions,
+  useNotificationTypes,
+  useSubscribeToNotificationType,
+  useUnfollowEntity,
+  useUnsubscribeFromNotificationType,
+} from './hooks/use-notification-subscriptions.js';
+export type { EntityFollowVariables } from './hooks/use-notification-subscriptions.js';

@@ -1129,6 +1129,28 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/react-catalog:
+    dependencies:
+      '@granit/catalog':
+        specifier: workspace:*
+        version: link:../catalog
+      '@tanstack/react-query':
+        specifier: 5.100.10
+        version: 5.100.10(react@19.2.6)
+      react:
+        specifier: 19.2.6
+        version: 19.2.6
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
+
   packages/@granit/react-charts:
     dependencies:
       echarts:

@@ -1,11 +1,16 @@
-import { listAuditLogEntries, getAuditLogEntry, listEntityAuditTrail } from '@granit/auditing';
-import { useQuery } from '@tanstack/react-query';
+import {
+  getAuditLogEntry,
+  listAuditLogEntries,
+  listEntityAuditTrail,
+  pseudonymizeUserAuditLogs,
+} from '@granit/auditing';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { buildAuditLogQueryKey, useAuditLogConfig } from '../providers/audit-log-provider.js';
 
 import type { AuditEntryDetail, AuditListParams, AuditPage } from '@granit/auditing';
 import type { PaginationParams } from '@granit/query-engine';
-import type { UseQueryResult } from '@tanstack/react-query';
+import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /**
  * List paginated audit log entries with optional filters.
@@ -65,7 +70,36 @@ export function useEntityAuditTrail(
 
   return useQuery({
     queryKey: buildAuditLogQueryKey(config, 'entity', entityType, entityId, params),
-    queryFn: () => listEntityAuditTrail(config.client, auditEntriesPath, entityType, entityId, params),
+    queryFn: () =>
+      listEntityAuditTrail(config.client, auditEntriesPath, entityType, entityId, params),
     enabled: entityType.length > 0 && entityId.length > 0,
+  });
+}
+
+/**
+ * Pseudonymize all audit entries for a specific user (GDPR Art. 17).
+ *
+ * Replaces personal data with a SHA-256 hash to preserve audit trail
+ * correlation without re-identification. Invalidates the cached audit log
+ * list on success.
+ *
+ * @example
+ * ```tsx
+ * const pseudonymize = usePseudonymizeUserAuditLogs();
+ * await pseudonymize.mutateAsync(userId);
+ * ```
+ */
+export function usePseudonymizeUserAuditLogs(): UseMutationResult<void, Error, string> {
+  const config = useAuditLogConfig();
+  const basePath = config.basePath;
+  const auditEntriesPath = `${basePath}/audit-entries`;
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (userId: string) =>
+      pseudonymizeUserAuditLogs(config.client, auditEntriesPath, userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: buildAuditLogQueryKey(config) });
+    },
   });
 }

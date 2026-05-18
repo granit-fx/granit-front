@@ -1,0 +1,37 @@
+{
+  "name": "@granit/react-catalog",
+  "description": "React bindings for @granit/catalog — CatalogProvider + React Query hooks for products CRUD, lifecycle (publish/archive) and external mappings",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/types": "workspace:*"
+  },
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/catalog": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@tanstack/react-query": "^5.0.0",
+    "react": "^19.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  }
+}

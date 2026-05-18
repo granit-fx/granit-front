@@ -2513,6 +2513,11 @@
       ]
     },
     {
+      "name": "@granit/react-catalog",
+      "description": "React bindings for @granit/catalog — CatalogProvider + React Query hooks for products CRUD, lifecycle (publish/archive) and external mappings",
+      "exports": []
+    },
+    {
       "name": "@granit/react-charts",
       "description": "React chart primitives for Granit — typed <LineChart>, <BarChart>, <PieChart>, <SparklineChart> built on Apache ECharts (modular tree-shaken imports), plus <Chart> escape hatch for raw ECharts options",
       "exports": [
@@ -3893,6 +3898,17 @@
           ]
         },
         {
+          "name": "useApplicationLocalization",
+          "kind": "function",
+          "signature": "function useApplicationLocalization( options: UseApplicationLocalizationOptions ): UseQueryResult<ApplicationLocalizationDto>"
+        },
+        {
+          "name": "UseApplicationLocalizationOptions",
+          "kind": "interface",
+          "signature": "interface UseApplicationLocalizationOptions",
+          "members": []
+        },
+        {
           "name": "useDateLocale",
           "kind": "function",
           "signature": "function useDateLocale(locale: string): Locale"
@@ -4236,6 +4252,12 @@
               "signature": "refresh: () => void"
             }
           ]
+        },
+        {
+          "name": "EntityFollowVariables",
+          "kind": "interface",
+          "signature": "interface EntityFollowVariables",
+          "members": []
         }
       ]
     },

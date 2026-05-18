@@ -2,6 +2,10 @@ export { createReactLocalization } from './create-react-localization.js';
 export { useLocale } from './use-locale.js';
 export type { UseLocaleOptions } from './use-locale.js';
 
+// Hooks — Consumer
+export { useApplicationLocalization } from './hooks/use-application-localization.js';
+export type { UseApplicationLocalizationOptions } from './hooks/use-application-localization.js';
+
 // Hooks — Admin
 export {
   useDeleteLocalizationOverride,

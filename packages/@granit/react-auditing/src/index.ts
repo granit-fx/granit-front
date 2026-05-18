@@ -11,4 +11,5 @@ export {
   useAuditLogEntries,
   useAuditLogEntry,
   useEntityAuditTrail,
+  usePseudonymizeUserAuditLogs,
 } from './hooks/use-audit-log.js';
