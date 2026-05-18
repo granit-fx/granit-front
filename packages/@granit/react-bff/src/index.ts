@@ -4,6 +4,7 @@ export type { BffContextType, BffProviderProps } from './providers/bff-provider.
 export { useBffAuth } from './hooks/use-bff-auth.js';
 export { useBffCsrf } from './hooks/use-bff-csrf.js';
 export { useBffFetch } from './hooks/use-bff-fetch.js';
+export { resolveBffTenantId, useBffTenantGetter } from './hooks/use-bff-tenant.js';
 
 export {
   useBffSessions,

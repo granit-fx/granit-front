@@ -13,6 +13,7 @@ import type { BffConfig } from '@granit/bff';
 
 const authenticatedResponse = {
   authenticated: true,
+  isHost: false,
   sub: 'user-123',
   name: 'Alice',
   email: 'alice@test.com',

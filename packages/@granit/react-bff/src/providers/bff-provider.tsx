@@ -1,4 +1,4 @@
-import { CsrfManager } from '@granit/bff';
+import { CsrfManager, parseBffSessionResponse } from '@granit/bff';
 import {
   createContext,
   useCallback,
@@ -63,21 +63,25 @@ export function BffProvider({ config, children }: BffProviderProps) {
           configRef.current.onUnauthenticated?.();
           return;
         }
-        // JSON.parse will throw on HTML captive-portal responses; the shape
-        // check below ensures attacker-controlled fields cannot flow into the
-        // auth context even when the body parses as some other JSON.
-        const data = (await response.json()) as unknown;
+        // JSON.parse will throw on HTML captive-portal responses; the
+        // discriminated-union parser below enforces the granit-dotnet contract
+        // (IsHost ⇔ tenantId absent), so attacker-influenced or malformed
+        // payloads cannot flow into the auth context — see VULN-205.
+        const raw = (await response.json()) as unknown;
         if (cancelled) return;
 
-        // Minimal shape validation — defense in depth, do not trust the
-        // response just because the BFF is first-party.
-        if (
-          typeof data === 'object' &&
-          data !== null &&
-          'authenticated' in data &&
-          data.authenticated === true
-        ) {
-          setUser(data as BffUser);
+        const parsed = parseBffSessionResponse(raw);
+        if (!parsed.success) {
+          globalThis.console.warn(
+            '[@granit/react-bff] Malformed /bff/user response — treating as unauthenticated',
+            { issues: parsed.issues }
+          );
+          setUser(null);
+          configRef.current.onUnauthenticated?.();
+          return;
+        }
+        if (parsed.data.authenticated) {
+          setUser(parsed.data);
           await csrfManager.fetchToken();
         } else {
           setUser(null);

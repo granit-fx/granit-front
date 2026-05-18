@@ -1,8 +1,10 @@
 export type {
   BffConfig,
+  BffHostUser,
   BffSessionId,
   BffSessionInfo,
   BffSessionListResponse,
+  BffTenantUser,
   BffUnauthenticated,
   BffUser,
   BffUserResponse,
@@ -15,3 +17,6 @@ export {
   revokeAllOtherBffSessions,
   revokeBffSession,
 } from './api/bff-session-api.js';
+
+export { parseBffSessionResponse } from './validation/index.js';
+export type { ParseResult } from './validation/index.js';

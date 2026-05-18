@@ -2,18 +2,38 @@ import type { EntityId, ISODateString, TenantId } from '@granit/types';
 
 // ---------------------------------------------------------------------------
 // BFF authentication types — mirrors Granit.Bff .NET contract
+//
+// Since granit-dotnet EPIC #2133 (Story #2134), `BffUserResponse.IsHost`
+// is the authoritative Host/Tenant marker emitted by the BFF, with the
+// invariant `IsHost ⇔ tenant_id claim absent`. The front mirrors that
+// invariant in the type system via a discriminated union — a tenant user
+// is guaranteed to carry `tenantId: string`, a host user is guaranteed to
+// have no `tenantId` field.
 // ---------------------------------------------------------------------------
 
-/** Authenticated user returned by GET /{prefix}/bff/user. */
-export interface BffUser {
+/** Common fields shared by every authenticated user. */
+interface BffAuthenticatedUserBase {
   readonly authenticated: true;
   readonly sub: string;
   readonly name: string;
   readonly email: string;
   readonly roles: readonly string[];
-  readonly tenantId?: TenantId;
   readonly sessionExpiresAt: ISODateString;
 }
+
+/** Tenant-scoped user — must carry a non-empty `tenantId`. */
+export interface BffTenantUser extends BffAuthenticatedUserBase {
+  readonly isHost: false;
+  readonly tenantId: TenantId;
+}
+
+/** Host (cross-tenant) user — must NOT carry a `tenantId`. */
+export interface BffHostUser extends BffAuthenticatedUserBase {
+  readonly isHost: true;
+}
+
+/** Authenticated user returned by GET /{prefix}/bff/user. */
+export type BffUser = BffTenantUser | BffHostUser;
 
 /** Unauthenticated response from GET /{prefix}/bff/user. */
 export interface BffUnauthenticated {
