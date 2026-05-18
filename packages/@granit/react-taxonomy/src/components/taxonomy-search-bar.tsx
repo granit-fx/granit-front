@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 
 import { useTaxonomySearch } from '../hooks/use-taxonomy-search.js';
 
@@ -61,6 +61,7 @@ export function TaxonomySearchBar({
   className,
 }: TaxonomySearchBarProps): ReactNode {
   const labelStrings = { ...DEFAULT_LABELS, ...labels };
+  const listboxId = useId();
   const [input, setInput] = useState('');
   const [debounced, setDebounced] = useState('');
   const [highlight, setHighlight] = useState(0);
@@ -120,7 +121,7 @@ export function TaxonomySearchBar({
   } else {
     let cursor = 0;
     content = (
-      <ul role="listbox" data-granit-taxonomy-search-list="">
+      <ul id={listboxId} role="listbox" data-granit-taxonomy-search-list="">
         {groups.map((group) => {
           const heading =
             targetTypeLabels?.[group.targetType] ?? fallbackTargetTypeLabel(group.targetType);
@@ -165,6 +166,7 @@ export function TaxonomySearchBar({
         type="search"
         role="combobox"
         aria-expanded={open}
+        aria-controls={listboxId}
         aria-autocomplete="list"
         data-granit-taxonomy-search-input=""
         placeholder={labelStrings.placeholder}

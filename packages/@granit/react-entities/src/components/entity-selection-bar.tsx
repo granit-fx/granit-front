@@ -32,7 +32,7 @@ export interface EntitySelectionBarRecap {
   /**
    * Distinct parent markers (`"{ParentEntityName}:{ParentId}"`) returned
    * by the bulk endpoint. Present only when the click routed through
-   * `executeBulkAction()` (i.e. `useBulkEndpoint` was opt'd in for the
+   * `executeBulkAction()` (i.e. `bulkEndpoint` was opt'd in for the
    * action); `undefined` for the per-row fan-out path. Apps consume
    * this list to invalidate exactly the impacted relation-aggregate
    * caches in one step per parent (D3).
@@ -89,7 +89,7 @@ export interface EntitySelectionBarProps {
    *
    * Default: `false` (per-row fan-out — the pre-D2 behaviour).
    */
-  readonly useBulkEndpoint?: BulkDispatchPredicate;
+  readonly bulkEndpoint?: BulkDispatchPredicate;
   /**
    * Override the English defaults for the visible labels (selection
    * summary + clear button). Apps wire `t('entities:SelectionBar.*')`
@@ -157,7 +157,7 @@ export function EntitySelectionBar({
   handlers,
   onComplete,
   confirm,
-  useBulkEndpoint,
+  bulkEndpoint,
   labels,
   className,
 }: EntitySelectionBarProps): ReactNode {
@@ -186,7 +186,7 @@ export function EntitySelectionBar({
       }
 
       const useBulk =
-        typeof useBulkEndpoint === 'function' ? useBulkEndpoint(ref) : useBulkEndpoint === true;
+        typeof bulkEndpoint === 'function' ? bulkEndpoint(ref) : bulkEndpoint === true;
       const entityName = manifest.identity?.name;
 
       setRunning(ref.name);
@@ -222,7 +222,7 @@ export function EntitySelectionBar({
       dispatch,
       confirm,
       onComplete,
-      useBulkEndpoint,
+      bulkEndpoint,
       client,
       manifest.identity?.name,
     ]

@@ -1,7 +1,7 @@
 import { getPage } from '@granit/query-engine';
 import { useQueryConfig, useQueryEndpointState, useQueryMeta } from '@granit/react-query-engine';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { useMemo, type KeyboardEvent, type ReactNode } from 'react';
+import { useMemo, type ReactNode } from 'react';
 
 import type { EntityManifestResponse } from '@granit/entities';
 import type { QueryRequest } from '@granit/query-engine';
@@ -211,25 +211,15 @@ interface KanbanCardProps {
 }
 
 function KanbanCard({ row, titleProperty, fallbackKey, onCardClick }: KanbanCardProps): ReactNode {
-  const handleClick = onCardClick ? () => onCardClick(row) : undefined;
-  const handleKeyDown = onCardClick
-    ? (event: KeyboardEvent<HTMLLIElement>) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          onCardClick(row);
-        }
-      }
-    : undefined;
-  return (
-    <li
-      data-granit-kanban-card=""
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      role={onCardClick ? 'button' : undefined}
-      tabIndex={onCardClick ? 0 : undefined}
-      style={onCardClick ? { cursor: 'pointer' } : undefined}
-    >
-      {formatTitle(row[titleProperty]) ?? fallbackKey}
-    </li>
-  );
+  const label = formatTitle(row[titleProperty]) ?? fallbackKey;
+  if (onCardClick) {
+    return (
+      <li data-granit-kanban-card="">
+        <button type="button" onClick={() => onCardClick(row)} style={{ cursor: 'pointer' }}>
+          {label}
+        </button>
+      </li>
+    );
+  }
+  return <li data-granit-kanban-card="">{label}</li>;
 }

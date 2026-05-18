@@ -1,7 +1,7 @@
 import { getPage } from '@granit/query-engine';
 import { useQueryConfig, useQueryEndpointState } from '@granit/react-query-engine';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useEffect, useMemo, useRef, type KeyboardEvent, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, type ReactNode } from 'react';
 
 import { EntityActionButton, resolveAction } from '../actions/entity-action-button.js';
 import {
@@ -326,30 +326,27 @@ function GalleryCard({
   const subtitle = subtitleProperty ? readScalar(row[subtitleProperty]) : null;
   const rowId = readScalar(row['id'] ?? row['Id']);
 
-  const handleClick = onCardClick ? () => onCardClick(row) : undefined;
-  const handleKeyDown = onCardClick
-    ? (event: KeyboardEvent<HTMLLIElement>) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          onCardClick(row);
-        }
-      }
-    : undefined;
+  const cardContent = (
+    <>
+      {renderImage ? renderImage(blobId, row) : null}
+      {title === null ? null : <span data-granit-gallery-card-title="">{title}</span>}
+      {subtitle === null ? null : <span data-granit-gallery-card-subtitle="">{subtitle}</span>}
+    </>
+  );
 
   return (
     <li
       data-granit-gallery-card=""
       data-row-id={rowId ?? undefined}
       data-image-blob-id={blobId ?? undefined}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      role={onCardClick ? 'button' : undefined}
-      tabIndex={onCardClick ? 0 : undefined}
-      style={onCardClick ? { cursor: 'pointer' } : undefined}
     >
-      {renderImage ? renderImage(blobId, row) : null}
-      {title === null ? null : <span data-granit-gallery-card-title="">{title}</span>}
-      {subtitle === null ? null : <span data-granit-gallery-card-subtitle="">{subtitle}</span>}
+      {onCardClick ? (
+        <button type="button" onClick={() => onCardClick(row)} style={{ cursor: 'pointer' }}>
+          {cardContent}
+        </button>
+      ) : (
+        cardContent
+      )}
       {actions.length > 0 ? (
         <div data-granit-gallery-card-actions="">
           {actions.map((action) => (

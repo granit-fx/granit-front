@@ -125,14 +125,14 @@ function makeWrapper() {
 }
 
 describe('EntitySelectionBar — bulk endpoint dispatch', () => {
-  it('routes a click through POST /bulk/{action} with all ids when useBulkEndpoint=true', async () => {
+  it('routes a click through POST /bulk/{action} with all ids when bulkEndpoint=true', async () => {
     const Wrapper = makeWrapper();
     const onComplete = vi.fn();
 
     const { container } = render(
       <Wrapper>
         <SelectionProvider initialSelectedIds={['q1', 'q2', 'q3']}>
-          <EntitySelectionBar manifest={makeManifest()} useBulkEndpoint onComplete={onComplete} />
+          <EntitySelectionBar manifest={makeManifest()} bulkEndpoint onComplete={onComplete} />
         </SelectionProvider>
       </Wrapper>
     );
@@ -152,7 +152,7 @@ describe('EntitySelectionBar — bulk endpoint dispatch', () => {
     const { container } = render(
       <Wrapper>
         <SelectionProvider initialSelectedIds={['q1', 'q2', 'q3']}>
-          <EntitySelectionBar manifest={makeManifest()} useBulkEndpoint onComplete={onComplete} />
+          <EntitySelectionBar manifest={makeManifest()} bulkEndpoint onComplete={onComplete} />
         </SelectionProvider>
       </Wrapper>
     );
@@ -175,7 +175,7 @@ describe('EntitySelectionBar — bulk endpoint dispatch', () => {
     const { container } = render(
       <Wrapper>
         <SelectionProvider initialSelectedIds={['q1', 'q2', 'q3']}>
-          <EntitySelectionBar manifest={makeManifest()} useBulkEndpoint onComplete={onComplete} />
+          <EntitySelectionBar manifest={makeManifest()} bulkEndpoint onComplete={onComplete} />
         </SelectionProvider>
       </Wrapper>
     );
@@ -204,7 +204,7 @@ describe('EntitySelectionBar — bulk endpoint dispatch', () => {
     const { container } = render(
       <Wrapper>
         <SelectionProvider initialSelectedIds={['q1', 'q2', 'q3']}>
-          <EntitySelectionBar manifest={makeManifest()} useBulkEndpoint onComplete={onComplete} />
+          <EntitySelectionBar manifest={makeManifest()} bulkEndpoint onComplete={onComplete} />
         </SelectionProvider>
       </Wrapper>
     );
@@ -229,7 +229,7 @@ describe('EntitySelectionBar — bulk endpoint dispatch', () => {
         <SelectionProvider initialSelectedIds={['q1', 'q2']}>
           <EntitySelectionBar
             manifest={makeManifest()}
-            useBulkEndpoint={predicate}
+            bulkEndpoint={predicate}
             handlers={{ apiCall }}
             onComplete={onComplete}
           />
@@ -245,7 +245,7 @@ describe('EntitySelectionBar — bulk endpoint dispatch', () => {
     expect(apiCall).not.toHaveBeenCalled(); // per-row dispatcher bypassed
   });
 
-  it('useBulkEndpoint=false keeps the per-row fan-out (regression)', async () => {
+  it('bulkEndpoint=false keeps the per-row fan-out (regression)', async () => {
     const Wrapper = makeWrapper();
     const onComplete = vi.fn();
     const apiCall = vi.fn(async () => {});
@@ -255,7 +255,7 @@ describe('EntitySelectionBar — bulk endpoint dispatch', () => {
         <SelectionProvider initialSelectedIds={['q1', 'q2', 'q3']}>
           <EntitySelectionBar
             manifest={makeManifest()}
-            useBulkEndpoint={false}
+            bulkEndpoint={false}
             handlers={{ apiCall }}
             onComplete={onComplete}
           />

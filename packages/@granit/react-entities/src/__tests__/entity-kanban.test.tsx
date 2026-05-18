@@ -200,7 +200,9 @@ describe('EntityKanban', () => {
     await waitFor(() =>
       expect(container.querySelector('[data-granit-kanban-card]')).not.toBeNull()
     );
-    fireEvent.click(container.querySelector('[data-granit-kanban-card]') as HTMLLIElement);
+    fireEvent.click(
+      container.querySelector('[data-granit-kanban-card] button') as HTMLButtonElement
+    );
     expect(onCardClick).toHaveBeenCalledWith(PAGE.items[0]);
   });
 

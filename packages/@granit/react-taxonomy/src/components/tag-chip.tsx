@@ -19,9 +19,9 @@ const FALLBACK_TEXT_DARK = '#111827';
  */
 function pickTextColor(background: string): string {
   if (!/^#[0-9a-fA-F]{6}$/.test(background)) return FALLBACK_TEXT_DARK;
-  const r = parseInt(background.slice(1, 3), 16);
-  const g = parseInt(background.slice(3, 5), 16);
-  const b = parseInt(background.slice(5, 7), 16);
+  const r = Number.parseInt(background.slice(1, 3), 16);
+  const g = Number.parseInt(background.slice(3, 5), 16);
+  const b = Number.parseInt(background.slice(5, 7), 16);
   // Rec. 709 luma — close enough for chip readability.
   const luma = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
   return luma > 0.6 ? FALLBACK_TEXT_DARK : FALLBACK_TEXT_LIGHT;

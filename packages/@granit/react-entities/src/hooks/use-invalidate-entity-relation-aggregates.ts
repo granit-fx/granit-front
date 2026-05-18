@@ -51,7 +51,7 @@ export function parseRelationAggregateParentMarker(
  * const invalidateParents = useInvalidateEntityRelationAggregates();
  * <EntitySelectionBar
  *   manifest={…}
- *   useBulkEndpoint
+ *   bulkEndpoint
  *   onComplete={(_action, recap) => {
  *     if (recap.parents) invalidateParents(recap.parents);
  *   }}

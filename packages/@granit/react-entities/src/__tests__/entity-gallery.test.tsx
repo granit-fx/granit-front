@@ -349,8 +349,10 @@ describe('EntityGallery', () => {
     await waitFor(() =>
       expect(container.querySelector('[data-granit-gallery-card]')).not.toBeNull()
     );
-    const card = container.querySelector('[data-granit-gallery-card]') as HTMLElement;
-    fireEvent.click(card);
+    const cardButton = container.querySelector(
+      '[data-granit-gallery-card] button'
+    ) as HTMLButtonElement;
+    fireEvent.click(cardButton);
     expect(onCardClick).toHaveBeenCalledWith(
       expect.objectContaining({ id: makeParty(1).id, name: 'Party 1' })
     );
