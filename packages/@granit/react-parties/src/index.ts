@@ -44,12 +44,12 @@ export {
 export type { MergePartyFromDuplicateMutationVariables } from './hooks/use-party-duplicates.js';
 
 // Components
-export { MergeWizard } from './components/MergeWizard.js';
-export type { MergeWizardProps } from './components/MergeWizard.js';
-export { DuplicatesInbox } from './components/DuplicatesInbox.js';
-export type { DuplicatesInboxProps } from './components/DuplicatesInbox.js';
-export { PartyDuplicatesBadge } from './components/PartyDuplicatesBadge.js';
-export type { PartyDuplicatesBadgeProps } from './components/PartyDuplicatesBadge.js';
+export { MergeWizard } from './components/merge-wizard.js';
+export type { MergeWizardProps } from './components/merge-wizard.js';
+export { DuplicatesInbox } from './components/duplicates-inbox.js';
+export type { DuplicatesInboxProps } from './components/duplicates-inbox.js';
+export { PartyDuplicatesBadge } from './components/party-duplicates-badge.js';
+export type { PartyDuplicatesBadgeProps } from './components/party-duplicates-badge.js';
 
 // i18n bundles
 export { partiesTranslationsEn, partiesTranslationsFr } from './locales/index.js';

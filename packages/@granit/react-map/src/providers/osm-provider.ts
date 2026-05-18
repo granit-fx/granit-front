@@ -1,4 +1,4 @@
-import type { MapTileProvider } from '../types.js';
+import type { MapTileProvider } from '../types/index.js';
 
 /**
  * OpenStreetMap default raster tiles. Free, world coverage, no API key.

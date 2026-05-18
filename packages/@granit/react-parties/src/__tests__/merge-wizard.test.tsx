@@ -8,7 +8,7 @@ import * as React from 'react';
 import { initReactI18next, I18nextProvider } from 'react-i18next';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { MergeWizard } from '../components/MergeWizard.js';
+import { MergeWizard } from '../components/merge-wizard.js';
 import { partiesTranslationsEn } from '../locales/en.js';
 import { PartiesProvider } from '../providers/parties-provider.js';
 

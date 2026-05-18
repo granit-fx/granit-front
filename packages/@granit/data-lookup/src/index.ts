@@ -17,7 +17,7 @@ export type {
 export {
   DEFAULT_LOOKUP_BASE_PATH,
   buildSearchQuery,
-  fetchLookupManifest,
+  getLookupManifest,
   findMissingScopeKey,
   isScopeSatisfied,
   resolveLookup,

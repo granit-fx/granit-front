@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   DEFAULT_LOOKUP_BASE_PATH,
   buildSearchQuery,
-  fetchLookupManifest,
+  getLookupManifest,
   resolveLookup,
   searchLookup,
 } from '../api/lookup-client.js';
@@ -129,7 +129,7 @@ describe('resolveLookup', () => {
   });
 });
 
-describe('fetchLookupManifest', () => {
+describe('getLookupManifest', () => {
   it('returns the discovery manifest', async () => {
     const client = createMockClient();
     const manifest: LookupManifest = {
@@ -137,7 +137,7 @@ describe('fetchLookupManifest', () => {
     };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(manifest));
 
-    const result = await fetchLookupManifest({ client });
+    const result = await getLookupManifest({ client });
 
     expect(result).toEqual(manifest);
     expect(client.get).toHaveBeenCalledWith(DEFAULT_LOOKUP_BASE_PATH, expect.any(Object));

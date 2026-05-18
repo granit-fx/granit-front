@@ -10,6 +10,10 @@ export default defineConfig({
         'packages/@granit/api-client/src/test-utils.ts'
       ),
       '@granit/api-client': path.resolve(__dirname, 'packages/@granit/api-client/src/index.ts'),
+      '@granit/arch-tests-kit': path.resolve(
+        __dirname,
+        'packages/@granit/arch-tests-kit/src/index.ts'
+      ),
       '@granit/testing/msw': path.resolve(__dirname, 'packages/@granit/testing/src/msw.ts'),
       '@granit/react-auditing/testing': path.resolve(
         __dirname,

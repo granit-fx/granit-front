@@ -247,6 +247,162 @@
       ]
     },
     {
+      "name": "@granit/arch-tests",
+      "description": "Architecture tests — enforce framework-wide structural, naming, and dependency conventions.",
+      "exports": []
+    },
+    {
+      "name": "@granit/arch-tests-kit",
+      "description": "Reusable architecture-test primitives — pure scanner functions returning violations. Consumed by `@granit/arch-tests` (framework) and by downstream app test suites (showcase, future DD apps).",
+      "exports": [
+        {
+          "name": "walkSourceFiles",
+          "kind": "function",
+          "signature": "function walkSourceFiles(rootDir: string, filter?: (file: string) => boolean): string[]"
+        },
+        {
+          "name": "isTestFile",
+          "kind": "function",
+          "signature": "function isTestFile(file: string): boolean"
+        },
+        {
+          "name": "isTestingDir",
+          "kind": "function",
+          "signature": "function isTestingDir(file: string): boolean"
+        },
+        {
+          "name": "rel",
+          "kind": "function",
+          "signature": "function rel(file: string, repoRoot: string): string"
+        },
+        {
+          "name": "readFile",
+          "kind": "function",
+          "signature": "function readFile(file: string): string"
+        },
+        {
+          "name": "stripComments",
+          "kind": "function",
+          "signature": "function stripComments(src: string): string"
+        },
+        {
+          "name": "Module",
+          "kind": "interface",
+          "signature": "interface Module",
+          "members": [
+            {
+              "name": "name",
+              "kind": "property",
+              "signature": "name: string"
+            },
+            {
+              "name": "dir",
+              "kind": "property",
+              "signature": "dir: string"
+            },
+            {
+              "name": "srcDir",
+              "kind": "property",
+              "signature": "srcDir: string"
+            },
+            {
+              "name": "isReact",
+              "kind": "property",
+              "signature": "isReact?: boolean"
+            }
+          ]
+        },
+        {
+          "name": "ScanContext",
+          "kind": "interface",
+          "signature": "interface ScanContext",
+          "members": [
+            {
+              "name": "modules",
+              "kind": "property",
+              "signature": "modules: ReadonlyArray<Module>"
+            },
+            {
+              "name": "repoRoot",
+              "kind": "property",
+              "signature": "repoRoot: string"
+            }
+          ]
+        },
+        {
+          "name": "AllowlistedScanContext",
+          "kind": "interface",
+          "signature": "interface AllowlistedScanContext extends ScanContext",
+          "members": [
+            {
+              "name": "allowedModules",
+              "kind": "property",
+              "signature": "allowedModules?: ReadonlyArray<string>"
+            },
+            {
+              "name": "allowedFiles",
+              "kind": "property",
+              "signature": "allowedFiles?: ReadonlyArray<string>"
+            }
+          ]
+        },
+        {
+          "name": "Violation",
+          "kind": "interface",
+          "signature": "interface Violation",
+          "members": [
+            {
+              "name": "rule",
+              "kind": "property",
+              "signature": "rule: string"
+            },
+            {
+              "name": "module",
+              "kind": "property",
+              "signature": "module: string"
+            },
+            {
+              "name": "file",
+              "kind": "property",
+              "signature": "file: string"
+            },
+            {
+              "name": "message",
+              "kind": "property",
+              "signature": "message: string"
+            }
+          ]
+        },
+        {
+          "name": "scanBarrelDefaultExports",
+          "kind": "function",
+          "signature": "function scanBarrelDefaultExports(opts: BarrelScanOptions): Violation[]"
+        },
+        {
+          "name": "scanLeakedInternals",
+          "kind": "function",
+          "signature": "function scanLeakedInternals(opts: BarrelScanOptions): Violation[]"
+        },
+        {
+          "name": "BarrelScanOptions",
+          "kind": "interface",
+          "signature": "interface BarrelScanOptions extends ScanContext",
+          "members": [
+            {
+              "name": "barrelFile",
+              "kind": "property",
+              "signature": "barrelFile?: string"
+            }
+          ]
+        },
+        {
+          "name": "scanLocaleParity",
+          "kind": "function",
+          "signature": "function scanLocaleParity(ctx: ScanContext): Violation[]"
+        }
+      ]
+    },
+    {
       "name": "@granit/auditing",
       "description": "Audit log types and API functions — mirrors Granit.Auditing .NET",
       "exports": [

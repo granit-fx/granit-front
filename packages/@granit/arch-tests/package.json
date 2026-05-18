@@ -1,0 +1,14 @@
+{
+  "name": "@granit/arch-tests",
+  "description": "Architecture tests — enforce framework-wide structural, naming, and dependency conventions.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@granit/arch-tests-kit": "workspace:*"
+  }
+}

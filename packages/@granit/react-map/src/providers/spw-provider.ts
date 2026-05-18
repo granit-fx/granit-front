@@ -1,4 +1,4 @@
-import type { MapTileProvider } from '../types.js';
+import type { MapTileProvider } from '../types/index.js';
 
 /**
  * Walloon Public Service geoportal — official tile services for the Walloon

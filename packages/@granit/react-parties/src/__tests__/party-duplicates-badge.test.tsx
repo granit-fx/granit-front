@@ -7,7 +7,7 @@ import i18next from 'i18next';
 import { initReactI18next, I18nextProvider } from 'react-i18next';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { PartyDuplicatesBadge } from '../components/PartyDuplicatesBadge.js';
+import { PartyDuplicatesBadge } from '../components/party-duplicates-badge.js';
 import { partiesTranslationsEn } from '../locales/en.js';
 import { PartiesProvider } from '../providers/parties-provider.js';
 

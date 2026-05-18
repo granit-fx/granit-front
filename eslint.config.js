@@ -14,6 +14,17 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
       'no-console': 'error',
+      // Native `fetch()` bypasses the centralized Axios client (interceptors,
+      // auth, CSRF, ProblemDetails). Allowed only in infra packages that sit
+      // below the Axios client in the dependency graph — see override below.
+      'no-restricted-globals': [
+        'error',
+        {
+          name: 'fetch',
+          message:
+            "Native fetch() bypasses @granit/api-client. Use the centralized Axios client; for streaming, configure axios with adapter: 'fetch'.",
+        },
+      ],
       'import-x/order': [
         'error',
         {
@@ -95,7 +106,7 @@ export default tseslint.config(
       '**/__tests__/**/*.{ts,tsx}',
       '**/*.test.{ts,tsx}',
     ],
-    rules: { 'no-restricted-imports': 'off' },
+    rules: { 'no-restricted-imports': 'off', 'no-restricted-globals': 'off' },
   },
 
   // Test files — relax some rules

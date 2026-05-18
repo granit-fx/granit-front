@@ -7,7 +7,7 @@ import { useMapTileProvider } from '../components/map-tile-provider-context.js';
 
 import 'leaflet/dist/leaflet.css';
 
-import type { MapTileLayer } from '../types.js';
+import type { MapTileLayer } from '../types/index.js';
 import type { MapWidgetSnapshot } from '@granit/analytics';
 import type { DashboardRenderedWidget } from '@granit/dashboards';
 

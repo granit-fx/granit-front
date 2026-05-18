@@ -24,4 +24,4 @@ export { spwProvider } from './providers/spw-provider.js';
 export { arcGisProvider } from './providers/arcgis-provider.js';
 
 // Provider / layer types — apps compose custom providers with this shape
-export type { MapTileLayer, MapTileLayerKind, MapTileProvider } from './types.js';
+export type { MapTileLayer, MapTileLayerKind, MapTileProvider } from './types/index.js';

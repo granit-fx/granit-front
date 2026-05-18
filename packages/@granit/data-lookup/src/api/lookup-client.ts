@@ -25,7 +25,7 @@ export interface LookupClientOptions {
  *
  * `GET {basePath}` → {@link LookupManifest}.
  */
-export async function fetchLookupManifest(options: LookupClientOptions): Promise<LookupManifest> {
+export async function getLookupManifest(options: LookupClientOptions): Promise<LookupManifest> {
   const { client, basePath = DEFAULT_LOOKUP_BASE_PATH, signal } = options;
   const { data } = await client.get<LookupManifest>(basePath, { signal });
   return data;

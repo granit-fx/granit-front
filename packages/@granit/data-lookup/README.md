@@ -8,7 +8,7 @@ QueryEngine filters and form dropdowns.
 
 - `LookupDescriptor`, `LookupKind`, `LookupItem`, `LookupResult`, `LookupManifest`,
   `LookupQueryParams` — wire types mirroring the backend contract.
-- `searchLookup`, `resolveLookup`, `fetchLookupManifest` — `axios` helpers for the
+- `searchLookup`, `resolveLookup`, `getLookupManifest` — `axios` helpers for the
   `/lookups` endpoints.
 - `findMissingScopeKey`, `isScopeSatisfied` — Empty Scope Trap guards shared with
   the React hook layer.

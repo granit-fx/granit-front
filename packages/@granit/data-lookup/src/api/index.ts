@@ -1,7 +1,7 @@
 export {
   DEFAULT_LOOKUP_BASE_PATH,
   buildSearchQuery,
-  fetchLookupManifest,
+  getLookupManifest,
   resolveLookup,
   searchLookup,
   stringifyLookupValue,
