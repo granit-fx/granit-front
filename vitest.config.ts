@@ -353,10 +353,7 @@ export default defineConfig({
       '@granit/testing': path.resolve(__dirname, 'packages/@granit/testing/src/index.ts'),
       '@granit/timeline': path.resolve(__dirname, 'packages/@granit/timeline/src/index.ts'),
       '@granit/tracing': path.resolve(__dirname, 'packages/@granit/tracing/src/index.ts'),
-      '@granit/csp/testing': path.resolve(
-        __dirname,
-        'packages/@granit/csp/src/testing/index.ts'
-      ),
+      '@granit/csp/testing': path.resolve(__dirname, 'packages/@granit/csp/src/testing/index.ts'),
       '@granit/csp': path.resolve(__dirname, 'packages/@granit/csp/src/index.ts'),
       '@granit/react-map/csp': path.resolve(
         __dirname,
@@ -396,6 +393,10 @@ export default defineConfig({
         '**/__tests__/test-utils.tsx',
         '**/api-client/src/test-utils.ts',
         '**/src/testing/**',
+        // @granit/testing is the framework's test-infra package — its source is
+        // tooling for other packages' tests, not runtime code under coverage.
+        'packages/@granit/testing/**',
+        'packages/@granit/react-testing/**',
       ],
       thresholds: {
         lines: 80,
