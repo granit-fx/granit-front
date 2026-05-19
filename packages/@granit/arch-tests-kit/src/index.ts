@@ -29,3 +29,9 @@ export {
   scanWallClockInApi,
   scanUseFormResolver,
 } from './scanners/patterns.js';
+
+export { scanReadmePresence, scanSharedDepVersions } from './scanners/uniformity.js';
+export type {
+  ReadmePresenceOptions,
+  SharedDepVersionsOptions,
+} from './scanners/uniformity.js';

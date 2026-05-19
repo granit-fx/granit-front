@@ -410,6 +410,16 @@
           "name": "scanLocaleParity",
           "kind": "function",
           "signature": "function scanLocaleParity(ctx: ScanContext): Violation[]"
+        },
+        {
+          "name": "scanReadmePresence",
+          "kind": "function",
+          "signature": "function scanReadmePresence(opts: ReadmePresenceOptions): Violation[]"
+        },
+        {
+          "name": "scanSharedDepVersions",
+          "kind": "function",
+          "signature": "function scanSharedDepVersions(opts: SharedDepVersionsOptions): Violation[]"
         }
       ]
     },
