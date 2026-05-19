@@ -67,4 +67,9 @@ describe('assertSafeUrl', () => {
     const long = `javascript:${'a'.repeat(200)}`;
     expect(() => assertSafeUrl(long)).toThrow(/.{0,80}/);
   });
+
+  it('coerces non-string input via String() in the error message', () => {
+    // @ts-expect-error — exercising defensive branch (non-string sink input)
+    expect(() => assertSafeUrl(null)).toThrow(/Unsafe URL rejected: "null"/);
+  });
 });
