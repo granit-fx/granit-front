@@ -4005,6 +4005,11 @@
           "name": "useTimezone",
           "kind": "function",
           "signature": "function useTimezone(): string"
+        },
+        {
+          "name": "useTranslation",
+          "kind": "function",
+          "signature": "function useTranslation< Ns extends FlatNamespace | readonly [FlatNamespace?, ...FlatNamespace[]] = 'translation', KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined, >( ns?: Ns, options?: UseTranslationOptions<KPrefix> ): UseTranslationResponse<FallbackNs<Ns>, KPrefix>"
         }
       ]
     },

@@ -28,4 +28,8 @@ export { useDateFormatter } from './use-date-formatter.js';
 export { TimezoneProvider, useTimezone } from './use-timezone.js';
 
 // Re-export from react-i18next so apps import everything from @granit/react-localization.
-export { I18nextProvider, Trans, useTranslation } from 'react-i18next';
+export { I18nextProvider, Trans } from 'react-i18next';
+
+// Custom useTranslation wrapper that auto-applies standard separators for
+// custom namespaces when the app disables them globally. See use-translation.ts.
+export { useTranslation } from './use-translation.js';
