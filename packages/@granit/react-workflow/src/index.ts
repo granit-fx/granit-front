@@ -29,3 +29,12 @@ export type {
   UseWorkflowHistoryOptions,
   UseWorkflowHistoryReturn,
 } from './hooks/use-workflow-history.js';
+
+// Lifecycle transition prompt metadata + i18n bundles
+export { buildLifecycleTransitionPrompt } from './transitions/lifecycle-transition-prompt.js';
+export type {
+  LifecycleTransitionPrompt,
+  LifecycleTransitionSeverity,
+} from './transitions/lifecycle-transition-prompt.js';
+export { workflowTranslationsEn, workflowTranslationsFr } from './locales/index.js';
+export type { WorkflowTranslations } from './locales/index.js';

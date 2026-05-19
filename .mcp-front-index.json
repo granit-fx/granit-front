@@ -5455,6 +5455,11 @@
           "name": "useWorkflowHistory",
           "kind": "function",
           "signature": "function useWorkflowHistory("
+        },
+        {
+          "name": "buildLifecycleTransitionPrompt",
+          "kind": "function",
+          "signature": "function buildLifecycleTransitionPrompt( fromStatus: WorkflowLifecycleStatusValue, toStatus: WorkflowLifecycleStatusValue ): LifecycleTransitionPrompt"
         }
       ]
     },
