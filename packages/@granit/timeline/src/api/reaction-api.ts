@@ -9,6 +9,12 @@ import type { AxiosInstance } from '@granit/api-client';
  *
  * `POST {basePath}/entries/{entryId}/reactions/{emoji}`
  *
+ * `emoji` is the literal Unicode sequence (e.g. `'👍'`,
+ * `'👨‍👩‍👧'`). `encodeURIComponent` widens it to its UTF-8
+ * percent-encoding (`'👍'` → `%F0%9F%91%8D`); the backend
+ * `EmojiValidator` decodes and validates against the same
+ * Extended_Pictographic grammar as {@link parseReactionEmoji}.
+ *
  * The backend treats the call as a toggle keyed on
  * `(entryId, emoji, callerUserId)`: a fresh call adds the reaction;
  * a repeat call from the same caller removes it. The response is the
@@ -16,8 +22,9 @@ import type { AxiosInstance } from '@granit/api-client';
  * apps patch their local cache by merging this aggregate back into
  * the entry's `reactions` map.
  *
- * Mirror of the dotnet endpoint shipped in
- * granit-fx/granit-dotnet#1811. Permission: `Timeline.Reactions.React`.
+ * Wire opened to any well-formed emoji sequence in
+ * granit-fx/granit-dotnet#2188 (ADR-040 amendment).
+ * Permission: `Timeline.Reactions.React`.
  */
 export async function toggleReaction(
   client: AxiosInstance,

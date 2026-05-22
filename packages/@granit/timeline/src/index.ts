@@ -1,6 +1,7 @@
 // Types
 export {
-  REACTION_EMOJIS,
+  parseReactionEmoji,
+  toReactionEmoji,
   TimelineEntryType,
   type BlobId,
   type TimelineAttachmentId,

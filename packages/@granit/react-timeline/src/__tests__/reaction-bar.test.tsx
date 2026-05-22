@@ -1,6 +1,6 @@
-import { REACTION_EMOJIS } from '@granit/timeline';
+import { toReactionEmoji } from '@granit/timeline';
 import { toEntityId } from '@granit/types';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ReactionBar } from '../components/reaction-bar.js';
@@ -8,90 +8,124 @@ import { ReactionBar } from '../components/reaction-bar.js';
 import type { ReactionMap, TimelineEntryId } from '@granit/timeline';
 
 const ENTRY_ID = toEntityId<'TimelineEntry'>('e-42') as TimelineEntryId;
+const THUMBS_UP = toReactionEmoji('👍');
+const HEART = toReactionEmoji('❤️');
+
+function buttonFor(container: HTMLElement, emoji: string): HTMLButtonElement {
+  const buttons = container.querySelectorAll<HTMLButtonElement>(
+    '[data-granit-reaction-bar-button]'
+  );
+  for (const btn of buttons) {
+    if (btn.getAttribute('data-emoji') === emoji) return btn;
+  }
+  throw new Error(`No reaction button found for emoji ${emoji}`);
+}
 
 describe('<ReactionBar>', () => {
-  it('renders the full closed catalog (5 buttons, regardless of input shape)', () => {
-    const { container } = render(
-      <ReactionBar entryId={ENTRY_ID} reactions={undefined} onToggle={vi.fn()} />
-    );
-
-    const buttons = container.querySelectorAll('[data-granit-reaction-bar-button]');
-    expect(buttons).toHaveLength(REACTION_EMOJIS.length);
-    REACTION_EMOJIS.forEach((emoji, i) => {
-      expect(buttons[i]?.getAttribute('data-emoji')).toBe(emoji);
-    });
-  });
-
-  it('reflects per-emoji count and aria-pressed from the reactions prop', () => {
+  it('renders one button per present reaction — no closed catalog anymore', () => {
     const reactions: ReactionMap = {
-      thumbs_up: { count: 5, byCurrentUser: true },
-      eyes: { count: 2, byCurrentUser: false },
+      [THUMBS_UP]: { count: 5, byCurrentUser: true },
+      [HEART]: { count: 2, byCurrentUser: false },
     };
     const { container } = render(
       <ReactionBar entryId={ENTRY_ID} reactions={reactions} onToggle={vi.fn()} />
     );
 
-    const thumbs = container.querySelector('[data-emoji="thumbs_up"]') as HTMLElement;
+    const buttons = container.querySelectorAll('[data-granit-reaction-bar-button]');
+    expect(buttons).toHaveLength(2);
+    expect(buttons[0]?.getAttribute('data-emoji')).toBe(THUMBS_UP);
+    expect(buttons[1]?.getAttribute('data-emoji')).toBe(HEART);
+  });
+
+  it('renders zero buttons when reactions is empty or undefined', () => {
+    const { container, rerender } = render(
+      <ReactionBar entryId={ENTRY_ID} reactions={undefined} onToggle={vi.fn()} />
+    );
+    expect(container.querySelectorAll('[data-granit-reaction-bar-button]')).toHaveLength(0);
+
+    rerender(<ReactionBar entryId={ENTRY_ID} reactions={{}} onToggle={vi.fn()} />);
+    expect(container.querySelectorAll('[data-granit-reaction-bar-button]')).toHaveLength(0);
+  });
+
+  it('does not render an "add reaction" trigger — picker UX is the consumer\'s job', () => {
+    const reactions: ReactionMap = { [THUMBS_UP]: { count: 1, byCurrentUser: true } };
+    const { container } = render(
+      <ReactionBar entryId={ENTRY_ID} reactions={reactions} onToggle={vi.fn()} />
+    );
+
+    expect(container.querySelector('[data-granit-reaction-bar-add]')).toBeNull();
+    expect(container.querySelectorAll('[data-granit-reaction-bar-button]')).toHaveLength(1);
+  });
+
+  it('renders the emoji glyph as plain text inside <span data-granit-reaction-bar-emoji>', () => {
+    const reactions: ReactionMap = { [THUMBS_UP]: { count: 3, byCurrentUser: false } };
+    const { container } = render(
+      <ReactionBar entryId={ENTRY_ID} reactions={reactions} onToggle={vi.fn()} />
+    );
+
+    const span = buttonFor(container, THUMBS_UP).querySelector(
+      'span[data-granit-reaction-bar-emoji]'
+    );
+    expect(span).not.toBeNull();
+    expect(span?.textContent).toBe(THUMBS_UP);
+    expect(span?.querySelector('img')).toBeNull();
+  });
+
+  it('reflects per-emoji count + aria-pressed from the reactions prop', () => {
+    const reactions: ReactionMap = {
+      [THUMBS_UP]: { count: 5, byCurrentUser: true },
+      [HEART]: { count: 2, byCurrentUser: false },
+    };
+    const { container } = render(
+      <ReactionBar entryId={ENTRY_ID} reactions={reactions} onToggle={vi.fn()} />
+    );
+
+    const thumbs = buttonFor(container, THUMBS_UP);
     expect(thumbs.getAttribute('aria-pressed')).toBe('true');
     expect(thumbs.getAttribute('data-count')).toBe('5');
     expect(thumbs.getAttribute('data-has-reacted')).toBe('');
 
-    const eyes = container.querySelector('[data-emoji="eyes"]') as HTMLElement;
-    expect(eyes.getAttribute('aria-pressed')).toBe('false');
-    expect(eyes.getAttribute('data-count')).toBe('2');
-    expect(eyes.getAttribute('data-has-reacted')).toBeNull();
-
-    const unused = container.querySelector('[data-emoji="heart"]') as HTMLElement;
-    expect(unused.getAttribute('data-count')).toBe('0');
-    expect(unused.getAttribute('aria-pressed')).toBe('false');
+    const heart = buttonFor(container, HEART);
+    expect(heart.getAttribute('aria-pressed')).toBe('false');
+    expect(heart.getAttribute('data-count')).toBe('2');
+    expect(heart.getAttribute('data-has-reacted')).toBeNull();
   });
 
-  it('hides the count badge when count is zero', () => {
-    const { container } = render(
-      <ReactionBar entryId={ENTRY_ID} reactions={undefined} onToggle={vi.fn()} />
-    );
-
-    expect(container.querySelectorAll('[data-granit-reaction-bar-count]')).toHaveLength(0);
-  });
-
-  it('fires onToggle with { entryId, emoji } when a button is clicked', () => {
+  it('fires onToggle with { entryId, emoji } when an existing reaction is clicked', () => {
+    const reactions: ReactionMap = { [THUMBS_UP]: { count: 1, byCurrentUser: true } };
     const onToggle = vi.fn();
     const { container } = render(
-      <ReactionBar entryId={ENTRY_ID} reactions={undefined} onToggle={onToggle} />
+      <ReactionBar entryId={ENTRY_ID} reactions={reactions} onToggle={onToggle} />
     );
 
-    fireEvent.click(container.querySelector('[data-emoji="tada"]') as HTMLElement);
+    fireEvent.click(buttonFor(container, THUMBS_UP));
 
-    expect(onToggle).toHaveBeenCalledTimes(1);
-    expect(onToggle).toHaveBeenCalledWith({ entryId: ENTRY_ID, emoji: 'tada' });
+    expect(onToggle).toHaveBeenCalledExactlyOnceWith({ entryId: ENTRY_ID, emoji: THUMBS_UP });
   });
 
-  it('renders read-only when no onToggle callback is provided (permission gating)', () => {
-    const { container } = render(<ReactionBar entryId={ENTRY_ID} reactions={undefined} />);
+  it('renders read-only — present buttons disabled, no onToggle firing — when callback is omitted', () => {
+    const reactions: ReactionMap = { [THUMBS_UP]: { count: 1, byCurrentUser: false } };
+    const { container } = render(<ReactionBar entryId={ENTRY_ID} reactions={reactions} />);
 
     const root = container.querySelector('[data-granit-reaction-bar]') as HTMLElement;
     expect(root.getAttribute('data-readonly')).toBe('');
-
-    container.querySelectorAll('button').forEach((btn) => {
-      expect(btn.disabled).toBe(true);
-    });
-
-    fireEvent.click(container.querySelector('[data-emoji="heart"]') as HTMLElement);
+    expect(buttonFor(container, THUMBS_UP).disabled).toBe(true);
   });
 
   it('uses the buttonAriaLabel override when supplied', () => {
-    render(
+    const reactions: ReactionMap = { [THUMBS_UP]: { count: 1, byCurrentUser: true } };
+    const { container } = render(
       <ReactionBar
         entryId={ENTRY_ID}
-        reactions={undefined}
+        reactions={reactions}
         onToggle={vi.fn()}
-        labels={{
-          buttonAriaLabel: (emoji) => `Réagir avec ${emoji}`,
-        }}
+        labels={{ buttonAriaLabel: (emoji) => `Réagir avec ${emoji}` }}
       />
     );
 
-    expect(screen.getByRole('button', { name: 'Réagir avec thumbs_up' })).toBeDefined();
+    expect(buttonFor(container, THUMBS_UP).getAttribute('aria-label')).toBe(
+      `Réagir avec ${THUMBS_UP}`
+    );
   });
 
   it('exposes the entry id on the root for app-level styling / instrumentation', () => {

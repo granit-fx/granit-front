@@ -1,16 +1,12 @@
-import {
-  REACTION_EMOJIS,
-  type ReactionEmoji,
-  type ReactionMap,
-  type TimelineEntryId,
-} from '@granit/timeline';
+import { type ReactionEmoji, type ReactionMap } from '@granit/timeline';
 import { type ReactNode } from 'react';
+
+import type { TimelineEntryId } from '@granit/timeline';
 
 export interface ReactionBarLabels {
   /**
-   * Aria label for one reaction button. Receives the emoji code so apps
-   * can localize per emoji via
-   * `t('timeline:Reaction.AriaLabel.' + emoji)`.
+   * Aria label for one reaction button. Receives the emoji glyph so apps
+   * can localize via `t('timeline:Reaction.AriaLabel', { emoji })`.
    */
   readonly buttonAriaLabel?: (emoji: ReactionEmoji) => string;
 }
@@ -24,14 +20,13 @@ export interface ReactionBarProps {
   readonly entryId: TimelineEntryId;
   /**
    * Current reactions for the entry — typically `entry.reactions`
-   * straight from the stream payload. Missing emojis render as
-   * `count=0, byCurrentUser=false` so the bar always shows the full
-   * closed catalog.
+   * straight from the stream payload. The bar renders one button per
+   * present emoji. An entry with no reactions renders nothing.
    */
   readonly reactions: ReactionMap | undefined;
   /**
    * Click handler. When `undefined`, the bar renders as a read-only
-   * tally — buttons disabled, no toggle. Apps gate by the
+   * tally — present buttons disabled, no toggle. Apps gate by the
    * `Timeline.Reactions.React` permission via this callback's presence.
    */
   readonly onToggle?: (args: { entryId: TimelineEntryId; emoji: ReactionEmoji }) => void;
@@ -41,19 +36,24 @@ export interface ReactionBarProps {
 }
 
 /**
- * Headless reaction picker — five buttons (the closed v1 catalog from
- * `@granit/timeline`) with per-button count and `aria-pressed`
- * reflecting the caller's `hasReacted` state.
+ * Headless tally of reactions on one entry — one button per emoji
+ * currently present in `entry.reactions`, with `aria-pressed` reflecting
+ * the caller's `byCurrentUser` state. The glyph is rendered as plain
+ * text inside `<span data-granit-reaction-bar-emoji>`; apps style it
+ * (CSS pseudo-elements, native font, an `<img>` overlay…) by selecting
+ * on `data-emoji`.
  *
- * Visual chrome (emoji glyph rendering, theme tokens, hover/focus
- * styling) is the consuming app's responsibility — the bar exposes
- * `data-emoji` / `data-granit-reaction-bar-*` markers and renders the
- * raw `:short_name:` codes by default. Apps can swap to Twemoji or
- * native via CSS pseudo-elements keyed on `data-emoji`.
+ * **Adding a new reaction is strictly the consumer's responsibility.**
+ * Each product owns its own picker UX (a third-party picker library,
+ * a static palette, a keyboard shortcut, …) and feeds the chosen glyph
+ * back through `onToggle({ entryId, emoji: parseReactionEmoji(picked)! })`.
+ * The framework stays neutral on emoji rendering and picker chrome so
+ * apps with different design systems, CSP policies, and bundle budgets
+ * can each pick their own.
  *
- * Apps wire `onToggle` to `useToggleReaction()` from this package
- * (the hook handles optimistic + rollback against the React Query
- * cache when present).
+ * Apps wire `onToggle` to `useToggleReaction()` from this package (the
+ * hook handles optimistic + rollback against the React Query cache when
+ * present).
  */
 export function ReactionBar({
   entryId,
@@ -65,6 +65,11 @@ export function ReactionBar({
   const merged = { ...DEFAULT_LABELS, ...labels };
   const isInteractive = onToggle != null;
 
+  const present = Object.entries(reactions ?? {}) as unknown as readonly [
+    ReactionEmoji,
+    { count: number; byCurrentUser: boolean },
+  ][];
+
   return (
     <div
       data-granit-reaction-bar=""
@@ -73,17 +78,15 @@ export function ReactionBar({
       role="toolbar"
       className={className}
     >
-      {REACTION_EMOJIS.map((emoji) => {
-        const aggregate = reactions?.[emoji];
-        const count = aggregate?.count ?? 0;
-        const hasReacted = aggregate?.byCurrentUser ?? false;
+      {present.map(([emoji, aggregate]) => {
+        const hasReacted = aggregate.byCurrentUser;
         return (
           <button
             key={emoji}
             type="button"
             data-granit-reaction-bar-button=""
             data-emoji={emoji}
-            data-count={count}
+            data-count={aggregate.count}
             data-has-reacted={hasReacted ? '' : undefined}
             aria-pressed={hasReacted}
             aria-label={merged.buttonAriaLabel(emoji)}
@@ -91,7 +94,7 @@ export function ReactionBar({
             onClick={isInteractive ? () => onToggle({ entryId, emoji }) : undefined}
           >
             <span data-granit-reaction-bar-emoji="">{emoji}</span>
-            {count > 0 ? <span data-granit-reaction-bar-count="">{count}</span> : null}
+            <span data-granit-reaction-bar-count="">{aggregate.count}</span>
           </button>
         );
       })}

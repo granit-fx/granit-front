@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toReactionEmoji } from '@granit/timeline';
 import { toEntityId } from '@granit/types';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
@@ -21,6 +22,11 @@ import type { ReactNode } from 'react';
 
 const ENTRY_ID = toEntityId<'TimelineEntry'>('e-1') as TimelineEntryId;
 const OTHER_ENTRY_ID = toEntityId<'TimelineEntry'>('e-99') as TimelineEntryId;
+
+const THUMBS_UP = toReactionEmoji('👍');
+const HEART = toReactionEmoji('❤️');
+const TADA = toReactionEmoji('🎉');
+const EYES = toReactionEmoji('👀');
 
 function makeEntry(id: TimelineEntryId, reactions?: ReactionMap): TimelineEntry {
   return {
@@ -71,28 +77,28 @@ function createHarness(): Harness {
 
 describe('toggleReactionMap', () => {
   it('adds a fresh reaction with count=1, byCurrentUser=true', () => {
-    expect(toggleReactionMap(undefined, 'thumbs_up')).toEqual({
-      thumbs_up: { count: 1, byCurrentUser: true },
+    expect(toggleReactionMap(undefined, THUMBS_UP)).toEqual({
+      [THUMBS_UP]: { count: 1, byCurrentUser: true },
     });
   });
 
   it('increments count + flips byCurrentUser when caller had not reacted', () => {
-    const before: ReactionMap = { heart: { count: 5, byCurrentUser: false } };
-    expect(toggleReactionMap(before, 'heart')).toEqual({
-      heart: { count: 6, byCurrentUser: true },
+    const before: ReactionMap = { [HEART]: { count: 5, byCurrentUser: false } };
+    expect(toggleReactionMap(before, HEART)).toEqual({
+      [HEART]: { count: 6, byCurrentUser: true },
     });
   });
 
   it('decrements count + flips byCurrentUser when caller had reacted', () => {
-    const before: ReactionMap = { tada: { count: 3, byCurrentUser: true } };
-    expect(toggleReactionMap(before, 'tada')).toEqual({
-      tada: { count: 2, byCurrentUser: false },
+    const before: ReactionMap = { [TADA]: { count: 3, byCurrentUser: true } };
+    expect(toggleReactionMap(before, TADA)).toEqual({
+      [TADA]: { count: 2, byCurrentUser: false },
     });
   });
 
   it('removes the entry entirely when toggling off the last reactor', () => {
-    const before: ReactionMap = { eyes: { count: 1, byCurrentUser: true } };
-    expect(toggleReactionMap(before, 'eyes')).toBeUndefined();
+    const before: ReactionMap = { [EYES]: { count: 1, byCurrentUser: true } };
+    expect(toggleReactionMap(before, EYES)).toBeUndefined();
   });
 });
 
@@ -118,31 +124,31 @@ describe('useToggleReaction — optimistic update', () => {
       entityType: 'Quote',
       entityId: 'q-1',
       entryId: ENTRY_ID,
-      emoji: 'thumbs_up',
+      emoji: THUMBS_UP,
     });
 
     await waitFor(() => {
       const page = queryClient.getQueryData<TimelineEntryPage>(['timeline', 'Quote', 'q-1']);
       expect(page?.items[0]?.reactions).toEqual({
-        thumbs_up: { count: 1, byCurrentUser: true },
+        [THUMBS_UP]: { count: 1, byCurrentUser: true },
       });
     });
     const page = queryClient.getQueryData<TimelineEntryPage>(['timeline', 'Quote', 'q-1']);
     expect(page?.items[1]?.reactions).toBeUndefined();
 
-    resolveNetwork(makeToggleResult(ENTRY_ID, 'thumbs_up', 7, true));
+    resolveNetwork(makeToggleResult(ENTRY_ID, THUMBS_UP, 7, true));
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     const finalPage = queryClient.getQueryData<TimelineEntryPage>(['timeline', 'Quote', 'q-1']);
     expect(finalPage?.items[0]?.reactions).toEqual({
-      thumbs_up: { count: 7, byCurrentUser: true },
+      [THUMBS_UP]: { count: 7, byCurrentUser: true },
     });
   });
 
   it('rolls back to the snapshot when the mutation rejects', async () => {
     const { client, queryClient, wrapper } = createHarness();
     const initial = makePage([
-      makeEntry(ENTRY_ID, { heart: { count: 5, byCurrentUser: false } }),
+      makeEntry(ENTRY_ID, { [HEART]: { count: 5, byCurrentUser: false } }),
     ]);
     queryClient.setQueryData(['timeline', 'Quote', 'q-1'], initial);
 
@@ -153,13 +159,13 @@ describe('useToggleReaction — optimistic update', () => {
       entityType: 'Quote',
       entityId: 'q-1',
       entryId: ENTRY_ID,
-      emoji: 'heart',
+      emoji: HEART,
     });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 
     const page = queryClient.getQueryData<TimelineEntryPage>(['timeline', 'Quote', 'q-1']);
-    expect(page?.items[0]?.reactions).toEqual({ heart: { count: 5, byCurrentUser: false } });
+    expect(page?.items[0]?.reactions).toEqual({ [HEART]: { count: 5, byCurrentUser: false } });
   });
 });
 
@@ -181,7 +187,7 @@ describe('useToggleReaction — scoped invalidation', () => {
     queryClient.setQueryData(['unrelated'], 'keep-me');
 
     vi.mocked(client.post).mockResolvedValue(
-      axiosResponse(makeToggleResult(ENTRY_ID, 'eyes', 1, true))
+      axiosResponse(makeToggleResult(ENTRY_ID, EYES, 1, true))
     );
 
     const { result } = renderHook(() => useToggleReaction(), { wrapper });
@@ -189,7 +195,7 @@ describe('useToggleReaction — scoped invalidation', () => {
       entityType: 'Quote',
       entityId: 'q-1',
       entryId: ENTRY_ID,
-      emoji: 'eyes',
+      emoji: EYES,
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
