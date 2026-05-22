@@ -19,24 +19,35 @@
 export type ReactionEmoji = string & { readonly __reactionEmoji: unique symbol };
 
 /**
- * Matches one well-formed emoji sequence — two shapes:
+ * Matches one well-formed emoji sequence — four shapes:
  *
- * 1. Keycap: `[0-9#*]` + optional VS-16 + mandatory keycap combiner
- *    (`⃣`). `'1'` alone is not a valid emoji; `'1️⃣'` is.
- * 2. Pictographic: one `\p{Extended_Pictographic}` codepoint, optional
- *    VS-16, optional Fitzpatrick skin-tone modifier, optionally followed
- *    by ZWJ-joined `\p{Extended_Pictographic}` continuations (families,
- *    flag-of-…, professions).
+ * 1. Keycap: `[0-9#*]` + optional VS-16 + mandatory U+20E3 combiner.
+ *    `'1'` alone is not a valid emoji; `'1️⃣'` is.
+ * 2. Regional Indicator pair: two consecutive
+ *    `\p{Regional_Indicator}` codepoints (no ZWJ). Country flags like
+ *    `🇧🇪`, `🇫🇷`, `🇺🇸`. The pair is matched as a unit so a single
+ *    stray RI never validates.
+ * 3. Pictographic: one `\p{Extended_Pictographic}` codepoint, optional
+ *    VS-16, optional Fitzpatrick skin-tone modifier, optionally
+ *    chained via ZWJ (families, professions, flag-of-… ZWJ forms).
+ * 4. Tag sequence: the pictographic shape above, followed by one or
+ *    more tag chars (U+E0020–U+E007E) terminated by U+E007F. Used by
+ *    subdivision flags `🏴󠁧󠁢󠁥󠁮󠁧󠁿` (England), `🏴󠁧󠁢󠁳󠁣󠁴󠁿` (Scotland),
+ *    `🏴󠁧󠁢󠁷󠁬󠁳󠁿` (Wales).
  */
 const EMOJI_SEQUENCE = new RegExp(
   '^' +
     '(?:' +
-    // keycap: digit / # / * + optional VS-16 + mandatory combiner
+    // Keycap
     '[0-9#*]\\uFE0F?\\u20E3' +
     '|' +
-    // pictographic sequence
+    // Regional Indicator pair (flag)
+    '\\p{Regional_Indicator}\\p{Regional_Indicator}' +
+    '|' +
+    // Pictographic + optional tag sequence
     '\\p{Extended_Pictographic}\\uFE0F?[\\u{1F3FB}-\\u{1F3FF}]?' +
     '(?:\\u200D\\p{Extended_Pictographic}\\uFE0F?[\\u{1F3FB}-\\u{1F3FF}]?)*' +
+    '(?:[\\u{E0020}-\\u{E007E}]+\\u{E007F})?' +
     ')' +
     '$',
   'u'
