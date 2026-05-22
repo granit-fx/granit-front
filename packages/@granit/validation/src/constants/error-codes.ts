@@ -3,15 +3,15 @@
  * These keys mirror the .NET Granit.Validation error code convention.
  */
 export const VALIDATION_ERROR_CODES = {
-  required: 'Granit:Validation:NotEmptyValidator',
-  maxLength: 'Granit:Validation:MaximumLengthValidator',
-  minLength: 'Granit:Validation:MinimumLengthValidator',
-  pattern: 'Granit:Validation:RegularExpressionValidator',
-  formatEmail: 'Granit:Validation:EmailValidator',
-  minimum: 'Granit:Validation:GreaterThanOrEqualValidator',
-  maximum: 'Granit:Validation:LessThanOrEqualValidator',
-  exclusiveMinimum: 'Granit:Validation:GreaterThanValidator',
-  exclusiveMaximum: 'Granit:Validation:LessThanValidator',
+  required: 'Validation:NotEmptyValidator',
+  maxLength: 'Validation:MaximumLengthValidator',
+  minLength: 'Validation:MinimumLengthValidator',
+  pattern: 'Validation:RegularExpressionValidator',
+  formatEmail: 'Validation:EmailValidator',
+  minimum: 'Validation:GreaterThanOrEqualValidator',
+  maximum: 'Validation:LessThanOrEqualValidator',
+  exclusiveMinimum: 'Validation:GreaterThanValidator',
+  exclusiveMaximum: 'Validation:LessThanValidator',
 } as const;
 
 export type ValidationErrorCode =

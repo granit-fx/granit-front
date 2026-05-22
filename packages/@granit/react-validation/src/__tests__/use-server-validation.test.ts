@@ -46,7 +46,7 @@ describe('useServerValidation', () => {
 
   it('returns idle when value is empty and field is not required', () => {
     const constraint: FieldConstraint = {
-      granitValidator: 'Granit:Validation:InvalidIban',
+      granitValidator: 'Validation:InvalidIban',
     };
     const { result } = renderHook(() =>
       useServerValidation({
@@ -62,7 +62,7 @@ describe('useServerValidation', () => {
   it('returns idle when value is empty and field is required (let resolver handle)', () => {
     const constraint: FieldConstraint = {
       required: true,
-      granitValidator: 'Granit:Validation:InvalidIban',
+      granitValidator: 'Validation:InvalidIban',
     };
     const { result } = renderHook(() =>
       useServerValidation({
@@ -79,7 +79,7 @@ describe('useServerValidation', () => {
     const constraint: FieldConstraint = {
       required: true,
       maxLength: 5,
-      granitValidator: 'Granit:Validation:InvalidIban',
+      granitValidator: 'Validation:InvalidIban',
     };
     const { result } = renderHook(() =>
       useServerValidation({
@@ -94,7 +94,7 @@ describe('useServerValidation', () => {
 
   it('returns idle when enabled is false', () => {
     const constraint: FieldConstraint = {
-      granitValidator: 'Granit:Validation:InvalidIban',
+      granitValidator: 'Validation:InvalidIban',
     };
     const { result } = renderHook(() =>
       useServerValidation({
@@ -110,7 +110,7 @@ describe('useServerValidation', () => {
 
   it('transitions to validating after debounce', async () => {
     const constraint: FieldConstraint = {
-      granitValidator: 'Granit:Validation:InvalidIban',
+      granitValidator: 'Validation:InvalidIban',
     };
     mockValidateFieldServer.mockReturnValue(new Promise(() => {})); // never resolves
 
@@ -135,7 +135,7 @@ describe('useServerValidation', () => {
 
   it('transitions to valid when server returns Valid', async () => {
     const constraint: FieldConstraint = {
-      granitValidator: 'Granit:Validation:InvalidIban',
+      granitValidator: 'Validation:InvalidIban',
     };
     mockValidateFieldServer.mockResolvedValue('Valid');
 
@@ -158,7 +158,7 @@ describe('useServerValidation', () => {
 
   it('transitions to invalid with translated message when server returns Invalid', async () => {
     const constraint: FieldConstraint = {
-      granitValidator: 'Granit:Validation:InvalidIban',
+      granitValidator: 'Validation:InvalidIban',
     };
     mockValidateFieldServer.mockResolvedValue('Invalid');
 
@@ -177,12 +177,12 @@ describe('useServerValidation', () => {
     });
 
     expect(result.current.status).toBe('invalid');
-    expect(result.current.message).toBe('translated:Granit:Validation:InvalidIban');
+    expect(result.current.message).toBe('translated:Validation:InvalidIban');
   });
 
   it('transitions to idle when server returns ValidatorNotFound', async () => {
     const constraint: FieldConstraint = {
-      granitValidator: 'Granit:Validation:Unknown',
+      granitValidator: 'Validation:Unknown',
     };
     mockValidateFieldServer.mockResolvedValue('ValidatorNotFound');
 
@@ -205,7 +205,7 @@ describe('useServerValidation', () => {
 
   it('transitions to error on network failure', async () => {
     const constraint: FieldConstraint = {
-      granitValidator: 'Granit:Validation:InvalidIban',
+      granitValidator: 'Validation:InvalidIban',
     };
     mockValidateFieldServer.mockRejectedValue(new Error('Network error'));
 
@@ -229,7 +229,7 @@ describe('useServerValidation', () => {
 
   it('debounces — does not call server before debounce time', () => {
     const constraint: FieldConstraint = {
-      granitValidator: 'Granit:Validation:InvalidIban',
+      granitValidator: 'Validation:InvalidIban',
     };
 
     renderHook(() =>
@@ -248,7 +248,7 @@ describe('useServerValidation', () => {
 
   it('resets to idle and restarts debounce when value changes', async () => {
     const constraint: FieldConstraint = {
-      granitValidator: 'Granit:Validation:InvalidIban',
+      granitValidator: 'Validation:InvalidIban',
     };
     mockValidateFieldServer.mockResolvedValue('Valid');
 

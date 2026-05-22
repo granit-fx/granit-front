@@ -16,7 +16,7 @@ function createMockClient() {
 describe('listValidators', () => {
   it('calls GET /validators and returns the list', async () => {
     const client = createMockClient();
-    const validators = ['Granit:Validation:InvalidIban', 'Granit:Validation:InvalidBce'];
+    const validators = ['Validation:InvalidIban', 'Validation:InvalidBce'];
     client.get.mockResolvedValue({ data: validators });
 
     const result = await listValidators(client as never);
@@ -39,18 +39,18 @@ describe('validateFieldServer', () => {
   it('calls POST /validate and returns the status', async () => {
     const client = createMockClient();
     client.post.mockResolvedValue({
-      data: { errorCode: 'Granit:Validation:InvalidIban', status: 'Valid' },
+      data: { errorCode: 'Validation:InvalidIban', status: 'Valid' },
     });
 
     const result = await validateFieldServer(
       client as never,
-      'Granit:Validation:InvalidIban',
+      'Validation:InvalidIban',
       'BE68539007547034'
     );
 
     expect(client.post).toHaveBeenCalledWith(
       '/api/v1/validation/validate',
-      { errorCode: 'Granit:Validation:InvalidIban', value: 'BE68539007547034' },
+      { errorCode: 'Validation:InvalidIban', value: 'BE68539007547034' },
       { signal: undefined }
     );
     expect(result).toBe('Valid');
@@ -59,14 +59,10 @@ describe('validateFieldServer', () => {
   it('returns Invalid for invalid values', async () => {
     const client = createMockClient();
     client.post.mockResolvedValue({
-      data: { errorCode: 'Granit:Validation:InvalidIban', status: 'Invalid' },
+      data: { errorCode: 'Validation:InvalidIban', status: 'Invalid' },
     });
 
-    const result = await validateFieldServer(
-      client as never,
-      'Granit:Validation:InvalidIban',
-      'INVALID'
-    );
+    const result = await validateFieldServer(client as never, 'Validation:InvalidIban', 'INVALID');
 
     expect(result).toBe('Invalid');
   });
@@ -111,14 +107,14 @@ describe('validateFieldsBatch', () => {
   it('calls POST /validate-batch and returns results', async () => {
     const client = createMockClient();
     const results = [
-      { errorCode: 'Granit:Validation:InvalidIban', status: 'Valid' as const },
-      { errorCode: 'Granit:Validation:InvalidBce', status: 'Invalid' as const },
+      { errorCode: 'Validation:InvalidIban', status: 'Valid' as const },
+      { errorCode: 'Validation:InvalidBce', status: 'Invalid' as const },
     ];
     client.post.mockResolvedValue({ data: { results } });
 
     const fields = [
-      { errorCode: 'Granit:Validation:InvalidIban', value: 'BE68539007547034' },
-      { errorCode: 'Granit:Validation:InvalidBce', value: '0000000000' },
+      { errorCode: 'Validation:InvalidIban', value: 'BE68539007547034' },
+      { errorCode: 'Validation:InvalidBce', value: '0000000000' },
     ];
     const result = await validateFieldsBatch(client as never, fields);
 
