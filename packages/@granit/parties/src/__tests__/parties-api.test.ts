@@ -95,7 +95,18 @@ describe('parties-api', () => {
 
       const result = await listParties(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith(basePath, { params: undefined });
+      expect(client.get).toHaveBeenCalledWith(basePath, { params: { pageSize: 100 } });
+      expect(result).toEqual([sampleListItem]);
+    });
+
+    it('unwraps the paged envelope returned by MapGranitQuery', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValue({
+        data: { items: [sampleListItem], totalCount: 1, hasMore: false },
+      });
+
+      const result = await listParties(client, basePath);
+
       expect(result).toEqual([sampleListItem]);
     });
 
@@ -105,7 +116,9 @@ describe('parties-api', () => {
 
       await listParties(client, basePath, { role: 'Customer' });
 
-      expect(client.get).toHaveBeenCalledWith(basePath, { params: { role: 'Customer' } });
+      expect(client.get).toHaveBeenCalledWith(basePath, {
+        params: { pageSize: 100, role: 'Customer' },
+      });
     });
   });
 

@@ -3946,6 +3946,12 @@
           "kind": "interface",
           "signature": "interface InvoicingProviderProps",
           "members": []
+        },
+        {
+          "name": "InvoiceTransitionVariables",
+          "kind": "interface",
+          "signature": "interface InvoiceTransitionVariables<TRequest>",
+          "members": []
         }
       ]
     },

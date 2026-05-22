@@ -116,7 +116,9 @@ describe('use-parties', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/v1/parties', { params: undefined });
+      expect(client.get).toHaveBeenCalledWith('/api/v1/parties', {
+        params: { pageSize: 100 },
+      });
       expect(result.current.data).toEqual([sampleListItem]);
     });
 
@@ -130,7 +132,7 @@ describe('use-parties', () => {
 
       await waitFor(() => expect(result.current.isFetched).toBe(true));
       expect(client.get).toHaveBeenCalledWith('/api/v1/parties', {
-        params: { role: 'Customer' },
+        params: { pageSize: 100, role: 'Customer' },
       });
     });
 
@@ -143,7 +145,9 @@ describe('use-parties', () => {
       });
 
       await waitFor(() => expect(result.current.isFetched).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/custom/parties', { params: undefined });
+      expect(client.get).toHaveBeenCalledWith('/custom/parties', {
+        params: { pageSize: 100 },
+      });
     });
   });
 

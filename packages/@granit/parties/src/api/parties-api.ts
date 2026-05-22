@@ -26,16 +26,23 @@ import type { AxiosInstance } from '@granit/api-client';
  * List parties in the active scope, optionally filtered by role flag.
  *
  * `GET {basePath}`
+ *
+ * The .NET endpoint was migrated to `MapGranitQuery<Party>()`, which returns a
+ * paged envelope (`{ items, totalCount, hasMore }`). Older mocks still return
+ * a flat array — unwrap either shape so consumers keep getting a plain list.
  */
 export async function listParties(
   client: AxiosInstance,
   basePath: string,
   options?: { readonly role?: string }
 ): Promise<readonly PartyListItemResponse[]> {
-  const response = await client.get<readonly PartyListItemResponse[]>(basePath, {
-    params: options?.role ? { role: options.role } : undefined,
-  });
-  return response.data;
+  const params: Record<string, string | number> = { pageSize: 100 };
+  if (options?.role) params.role = options.role;
+  const response = await client.get<
+    readonly PartyListItemResponse[] | { readonly items: readonly PartyListItemResponse[] }
+  >(basePath, { params });
+  const { data } = response;
+  return 'items' in data ? data.items : data;
 }
 
 /**
