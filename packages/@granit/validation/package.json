@@ -1,6 +1,6 @@
 {
   "name": "@granit/validation",
-  "description": "OpenAPI constraint extraction, field validation, and input prop generation — mirrors Granit.Validation .NET contract",
+  "description": "OpenAPI constraint extraction, field validation, and input prop generation — mirrors the .NET Validation: error-code convention",
   "version": "0.3.0",
   "license": "Apache-2.0",
   "type": "module",

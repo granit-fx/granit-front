@@ -1,6 +1,6 @@
 # @granit/validation
 
-OpenAPI constraint extraction, field validation, input prop generation, and server-side validation API. Mirrors `Granit.Validation` .NET contract.
+OpenAPI constraint extraction, field validation, input prop generation, and server-side validation API. Mirrors the .NET `Validation:` error-code convention.
 
 ## Installation
 

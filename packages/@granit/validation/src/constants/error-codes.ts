@@ -1,6 +1,6 @@
 /**
  * Maps constraint types to i18next-compatible localization keys.
- * These keys mirror the .NET Granit.Validation error code convention.
+ * These keys mirror the .NET Validation: error-code convention.
  */
 export const VALIDATION_ERROR_CODES = {
   required: 'Validation:NotEmptyValidator',
