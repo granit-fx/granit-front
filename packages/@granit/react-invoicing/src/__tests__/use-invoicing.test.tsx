@@ -6,15 +6,22 @@ import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  useCancelInvoice,
   useCreateInvoice,
   useDownloadInvoicePdf,
+  useFinalizeInvoice,
   useInvoice,
   useInvoices,
+  useMarkInvoiceUncollectible,
 } from '../hooks/use-invoicing.js';
 import { InvoicingProvider } from '../providers/invoicing-provider.js';
 
 import type { InvoicingConfig } from '../providers/invoicing-provider.js';
-import type { InvoiceCreateRequest, InvoiceResponse } from '@granit/invoicing';
+import type {
+  FinalizeInvoiceRequest,
+  InvoiceCreateRequest,
+  InvoiceResponse,
+} from '@granit/invoicing';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -226,5 +233,89 @@ describe('useCreateInvoice', () => {
 
     await waitFor(() => expect(result.current.isError).toBe(true));
     expect(result.current.error?.message).toBe('Validation failed');
+  });
+});
+
+describe('useFinalizeInvoice', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('finalizes an invoice via POST', async () => {
+    const client = createMockClient();
+    vi.mocked(client.post).mockResolvedValue({ data: sampleInvoice });
+
+    const { result } = renderHook(() => useFinalizeInvoice(), {
+      wrapper: createWrapper(client),
+    });
+
+    const request: FinalizeInvoiceRequest = {
+      issuedAt: '2026-03-01T00:00:00Z',
+      dueAt: '2026-03-15T00:00:00Z',
+    };
+
+    result.current.mutate({ id: 'inv-1', request });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.post).toHaveBeenCalledWith('/api/v1/invoicing/invoices/inv-1/finalize', request);
+  });
+});
+
+describe('useCancelInvoice', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('cancels an invoice via POST with a reason', async () => {
+    const client = createMockClient();
+    vi.mocked(client.post).mockResolvedValue({ data: sampleInvoice });
+
+    const { result } = renderHook(() => useCancelInvoice(), {
+      wrapper: createWrapper(client),
+    });
+
+    result.current.mutate({ id: 'inv-1', request: { reason: 'Duplicate' } });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.post).toHaveBeenCalledWith('/api/v1/invoicing/invoices/inv-1/cancel', {
+      reason: 'Duplicate',
+    });
+  });
+
+  it('cancels an invoice via POST without a body', async () => {
+    const client = createMockClient();
+    vi.mocked(client.post).mockResolvedValue({ data: sampleInvoice });
+
+    const { result } = renderHook(() => useCancelInvoice(), {
+      wrapper: createWrapper(client),
+    });
+
+    result.current.mutate({ id: 'inv-1' });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.post).toHaveBeenCalledWith('/api/v1/invoicing/invoices/inv-1/cancel', {});
+  });
+});
+
+describe('useMarkInvoiceUncollectible', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('marks an invoice as uncollectible via POST', async () => {
+    const client = createMockClient();
+    vi.mocked(client.post).mockResolvedValue({ data: sampleInvoice });
+
+    const { result } = renderHook(() => useMarkInvoiceUncollectible(), {
+      wrapper: createWrapper(client),
+    });
+
+    result.current.mutate({ id: 'inv-1', request: { reason: 'Bankruptcy' } });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.post).toHaveBeenCalledWith(
+      '/api/v1/invoicing/invoices/inv-1/mark-uncollectible',
+      { reason: 'Bankruptcy' }
+    );
   });
 });

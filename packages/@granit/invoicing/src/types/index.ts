@@ -18,6 +18,28 @@ export type BillingReason =
   | 'Manual'
   | 'Upcoming';
 
+/** Payload for finalizing a Draft invoice (Draft → Open). */
+export interface FinalizeInvoiceRequest {
+  /** Timestamp at which the document is issued (ISO 8601). */
+  readonly issuedAt: string;
+  /** Payment deadline — ignored for credit notes (ISO 8601). */
+  readonly dueAt: string | null;
+  /** Optional comment persisted on the workflow transition record (ISO 27001). */
+  readonly comment?: string | null;
+}
+
+/** Payload for cancelling an invoice (Open / Uncollectible → Cancelled). */
+export interface CancelInvoiceRequest {
+  /** Optional motive persisted on the workflow transition record (ISO 27001 audit trail). */
+  readonly reason?: string | null;
+}
+
+/** Payload for marking an Open invoice as Uncollectible (bad debt). */
+export interface MarkInvoiceUncollectibleRequest {
+  /** Optional motive persisted on the workflow transition record (ISO 27001 audit trail). */
+  readonly reason?: string | null;
+}
+
 /** Payload for creating a new invoice. */
 export interface InvoiceCreateRequest {
   readonly documentType: InvoiceDocumentType;

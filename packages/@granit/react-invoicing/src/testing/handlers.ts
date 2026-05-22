@@ -13,11 +13,17 @@ import { DEFAULT_BASE_PATH } from '../constants.js';
 
 import { sampleInvoices } from './data.js';
 
-import type { InvoiceCreateRequest } from '@granit/invoicing';
+import type {
+  CancelInvoiceRequest,
+  FinalizeInvoiceRequest,
+  InvoiceCreateRequest,
+  InvoiceResponse,
+  MarkInvoiceUncollectibleRequest,
+} from '@granit/invoicing';
 import type { QueryMetadata } from '@granit/query-engine';
 
 const INVOICE_DOCUMENT_TYPES = ['Invoice', 'CreditNote'];
-const INVOICE_STATUSES = ['Draft', 'Open', 'Paid', 'Void', 'Uncollectible'];
+const INVOICE_STATUSES = ['Draft', 'Open', 'Paid', 'Cancelled', 'Uncollectible'];
 const COLLECTION_METHODS = ['ChargeAutomatically', 'SendInvoice'];
 const BILLING_REASONS = [
   'Subscription',
@@ -277,5 +283,77 @@ export function createInvoicingHandlers(baseUrl = DEFAULT_BASE_PATH) {
         },
       });
     }),
+
+    // POST finalize invoice (Draft → Open)
+    http.post(`${baseUrl}/invoices/:id/finalize`, async ({ params, request }) => {
+      const invoice = sampleInvoices.find((inv) => inv.id === params.id);
+      if (!invoice) return notFound();
+      if (invoice.status !== 'Draft') {
+        return HttpResponse.json(
+          { detail: `Cannot finalize invoice in status '${invoice.status}'.` },
+          { status: 409 }
+        );
+      }
+
+      const body = (await request.json()) as FinalizeInvoiceRequest;
+      const updated: InvoiceResponse = {
+        ...invoice,
+        status: 'Open',
+        issuedAt: body.issuedAt,
+        dueAt: body.dueAt,
+      };
+      replaceInvoice(updated);
+      return HttpResponse.json(updated);
+    }),
+
+    // POST cancel invoice
+    http.post(`${baseUrl}/invoices/:id/cancel`, async ({ params, request }) => {
+      const invoice = sampleInvoices.find((inv) => inv.id === params.id);
+      if (!invoice) return notFound();
+      if (invoice.status !== 'Open' && invoice.status !== 'Uncollectible') {
+        return HttpResponse.json(
+          { detail: `Cannot cancel invoice in status '${invoice.status}'.` },
+          { status: 409 }
+        );
+      }
+
+      // Body is optional; consume if present so the mock surface matches the real endpoint.
+      await readOptionalJson<CancelInvoiceRequest>(request);
+
+      const updated: InvoiceResponse = { ...invoice, status: 'Cancelled' };
+      replaceInvoice(updated);
+      return HttpResponse.json(updated);
+    }),
+
+    // POST mark invoice uncollectible
+    http.post(`${baseUrl}/invoices/:id/mark-uncollectible`, async ({ params, request }) => {
+      const invoice = sampleInvoices.find((inv) => inv.id === params.id);
+      if (!invoice) return notFound();
+      if (invoice.status !== 'Open') {
+        return HttpResponse.json(
+          { detail: `Cannot mark invoice in status '${invoice.status}' as uncollectible.` },
+          { status: 409 }
+        );
+      }
+
+      await readOptionalJson<MarkInvoiceUncollectibleRequest>(request);
+
+      const updated: InvoiceResponse = { ...invoice, status: 'Uncollectible' };
+      replaceInvoice(updated);
+      return HttpResponse.json(updated);
+    }),
   ];
+}
+
+function replaceInvoice(updated: InvoiceResponse): void {
+  const idx = sampleInvoices.findIndex((inv) => inv.id === updated.id);
+  if (idx >= 0) sampleInvoices[idx] = updated;
+}
+
+async function readOptionalJson<T>(request: Request): Promise<T | null> {
+  try {
+    return (await request.json()) as T;
+  } catch {
+    return null;
+  }
 }

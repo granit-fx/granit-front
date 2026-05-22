@@ -106,7 +106,7 @@ export const sampleInvoices: Mutable<InvoiceResponse>[] = [
   {
     id: toEntityId<'Invoice'>('inv_004'),
     invoiceNumber: 'CN-2026-0001',
-    status: 'Void',
+    status: 'Cancelled',
     documentType: 'CreditNote',
     currency: 'EUR',
     subtotal: -2000,

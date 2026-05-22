@@ -1,4 +1,10 @@
-import type { InvoiceCreateRequest, InvoiceResponse } from '../types/index.js';
+import type {
+  CancelInvoiceRequest,
+  FinalizeInvoiceRequest,
+  InvoiceCreateRequest,
+  InvoiceResponse,
+  MarkInvoiceUncollectibleRequest,
+} from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**
@@ -59,5 +65,62 @@ export async function createInvoice(
   request: InvoiceCreateRequest
 ): Promise<InvoiceResponse> {
   const response = await client.post<InvoiceResponse>(`${basePath}/invoices`, request);
+  return response.data;
+}
+
+/**
+ * Finalize a Draft invoice (Draft → Open).
+ *
+ * Delegates the transition to the backend `IWorkflowManager<InvoiceStatus>`;
+ * the next document number is generated server-side.
+ *
+ * `POST {basePath}/invoices/{id}/finalize`
+ */
+export async function finalizeInvoice(
+  client: AxiosInstance,
+  basePath: string,
+  id: string,
+  request: FinalizeInvoiceRequest
+): Promise<InvoiceResponse> {
+  const response = await client.post<InvoiceResponse>(
+    `${basePath}/invoices/${encodeURIComponent(id)}/finalize`,
+    request
+  );
+  return response.data;
+}
+
+/**
+ * Cancel an invoice (Open / Uncollectible → Cancelled).
+ *
+ * `POST {basePath}/invoices/{id}/cancel`
+ */
+export async function cancelInvoice(
+  client: AxiosInstance,
+  basePath: string,
+  id: string,
+  request: CancelInvoiceRequest = {}
+): Promise<InvoiceResponse> {
+  const response = await client.post<InvoiceResponse>(
+    `${basePath}/invoices/${encodeURIComponent(id)}/cancel`,
+    request
+  );
+  return response.data;
+}
+
+/**
+ * Mark an Open invoice as Uncollectible (bad debt).
+ *
+ * `POST {basePath}/invoices/{id}/mark-uncollectible`
+ */
+export async function markInvoiceUncollectible(
+  client: AxiosInstance,
+  basePath: string,
+  id: string,
+  request: MarkInvoiceUncollectibleRequest = {}
+): Promise<InvoiceResponse> {
+  const response = await client.post<InvoiceResponse>(
+    `${basePath}/invoices/${encodeURIComponent(id)}/mark-uncollectible`,
+    request
+  );
   return response.data;
 }

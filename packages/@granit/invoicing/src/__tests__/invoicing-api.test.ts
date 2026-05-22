@@ -2,13 +2,20 @@ import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  cancelInvoice,
   createInvoice,
   downloadInvoicePdf,
+  finalizeInvoice,
   getInvoiceById,
   listInvoices,
+  markInvoiceUncollectible,
 } from '../api/invoicing-api.js';
 
-import type { InvoiceCreateRequest, InvoiceResponse } from '../types/index.js';
+import type {
+  FinalizeInvoiceRequest,
+  InvoiceCreateRequest,
+  InvoiceResponse,
+} from '../types/index.js';
 
 const sampleLineItem = {
   id: 'li-1',
@@ -170,6 +177,87 @@ describe('invoicing-api', () => {
 
       expect(result.documentType).toBe('CreditNote');
       expect(result.parentInvoiceId).toBe('inv-1');
+    });
+  });
+
+  describe('finalizeInvoice', () => {
+    it('should POST {basePath}/invoices/{id}/finalize with body', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleInvoice });
+
+      const request: FinalizeInvoiceRequest = {
+        issuedAt: '2026-03-01T00:00:00Z',
+        dueAt: '2026-03-15T00:00:00Z',
+        comment: 'Issued by ops',
+      };
+
+      const result = await finalizeInvoice(client, '/invoicing', 'inv-1', request);
+
+      expect(client.post).toHaveBeenCalledWith('/invoicing/invoices/inv-1/finalize', request);
+      expect(result).toEqual(sampleInvoice);
+    });
+
+    it('should encode special characters in id', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleInvoice });
+
+      await finalizeInvoice(client, '/invoicing', 'inv/special&id', {
+        issuedAt: '2026-03-01T00:00:00Z',
+        dueAt: null,
+      });
+
+      expect(client.post).toHaveBeenCalledWith(
+        `/invoicing/invoices/${encodeURIComponent('inv/special&id')}/finalize`,
+        expect.objectContaining({ issuedAt: '2026-03-01T00:00:00Z', dueAt: null })
+      );
+    });
+  });
+
+  describe('cancelInvoice', () => {
+    it('should POST {basePath}/invoices/{id}/cancel with reason', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleInvoice });
+
+      const result = await cancelInvoice(client, '/invoicing', 'inv-1', { reason: 'Duplicate' });
+
+      expect(client.post).toHaveBeenCalledWith('/invoicing/invoices/inv-1/cancel', {
+        reason: 'Duplicate',
+      });
+      expect(result).toEqual(sampleInvoice);
+    });
+
+    it('should POST with an empty body when no request is provided', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleInvoice });
+
+      await cancelInvoice(client, '/invoicing', 'inv-1');
+
+      expect(client.post).toHaveBeenCalledWith('/invoicing/invoices/inv-1/cancel', {});
+    });
+  });
+
+  describe('markInvoiceUncollectible', () => {
+    it('should POST {basePath}/invoices/{id}/mark-uncollectible with reason', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleInvoice });
+
+      const result = await markInvoiceUncollectible(client, '/invoicing', 'inv-1', {
+        reason: 'Bankruptcy',
+      });
+
+      expect(client.post).toHaveBeenCalledWith('/invoicing/invoices/inv-1/mark-uncollectible', {
+        reason: 'Bankruptcy',
+      });
+      expect(result).toEqual(sampleInvoice);
+    });
+
+    it('should POST with an empty body when no request is provided', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleInvoice });
+
+      await markInvoiceUncollectible(client, '/invoicing', 'inv-1');
+
+      expect(client.post).toHaveBeenCalledWith('/invoicing/invoices/inv-1/mark-uncollectible', {});
     });
   });
 });
