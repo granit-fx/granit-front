@@ -1503,6 +1503,22 @@
       ]
     },
     {
+      "name": "@granit/presence",
+      "description": "User presence types and API — mirrors Granit.Presence .NET contract",
+      "exports": [
+        {
+          "name": "PresencePermissions",
+          "kind": "const",
+          "signature": "const PresencePermissions"
+        },
+        {
+          "name": "PRESENCE_DEFAULTS",
+          "kind": "const",
+          "signature": "const PRESENCE_DEFAULTS"
+        }
+      ]
+    },
+    {
       "name": "@granit/privacy",
       "description": "GDPR privacy types and API — data export, deletion, legal agreements — mirrors Granit.Privacy .NET contract",
       "exports": [
@@ -4572,6 +4588,131 @@
           "kind": "interface",
           "signature": "interface PaymentsProviderProps",
           "members": []
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-presence",
+      "description": "React hooks and components for @granit/presence — useMyPresence, useHeartbeat, PresenceDot, PresencePicker",
+      "exports": [
+        {
+          "name": "useMyPresence",
+          "kind": "function",
+          "signature": "function useMyPresence(): UseQueryResult<PresenceResponse>"
+        },
+        {
+          "name": "useSetMyPresence",
+          "kind": "function",
+          "signature": "function useSetMyPresence(): UseMutationResult< PresenceResponse, Error, SetPresenceRequest,"
+        },
+        {
+          "name": "useClearMyPresenceOverride",
+          "kind": "function",
+          "signature": "function useClearMyPresenceOverride(): UseMutationResult<PresenceResponse, Error, void>"
+        },
+        {
+          "name": "useHeartbeat",
+          "kind": "function",
+          "signature": "function useHeartbeat(options: UseHeartbeatOptions ="
+        },
+        {
+          "name": "UseHeartbeatOptions",
+          "kind": "interface",
+          "signature": "interface UseHeartbeatOptions",
+          "members": []
+        },
+        {
+          "name": "useUserPresence",
+          "kind": "function",
+          "signature": "function useUserPresence( userId: string, options: UseUserPresenceOptions ="
+        },
+        {
+          "name": "UseUserPresenceOptions",
+          "kind": "interface",
+          "signature": "interface UseUserPresenceOptions",
+          "members": []
+        },
+        {
+          "name": "useBatchPresence",
+          "kind": "function",
+          "signature": "function useBatchPresence( userIds: readonly string[], options: UseBatchPresenceOptions ="
+        },
+        {
+          "name": "UseBatchPresenceOptions",
+          "kind": "interface",
+          "signature": "interface UseBatchPresenceOptions",
+          "members": []
+        },
+        {
+          "name": "presenceKeys",
+          "kind": "const",
+          "signature": "const presenceKeys"
+        },
+        {
+          "name": "PresenceDot",
+          "kind": "function",
+          "signature": "function PresenceDot("
+        },
+        {
+          "name": "DEFAULT_PRESENCE_COLORS",
+          "kind": "const",
+          "signature": "const DEFAULT_PRESENCE_COLORS: Readonly<Record<PresenceStatus, string>>"
+        },
+        {
+          "name": "PresenceDotLabels",
+          "kind": "interface",
+          "signature": "interface PresenceDotLabels",
+          "members": []
+        },
+        {
+          "name": "PresenceDotProps",
+          "kind": "interface",
+          "signature": "interface PresenceDotProps",
+          "members": []
+        },
+        {
+          "name": "PresencePicker",
+          "kind": "function",
+          "signature": "function PresencePicker("
+        },
+        {
+          "name": "PresencePickerLabels",
+          "kind": "interface",
+          "signature": "interface PresencePickerLabels",
+          "members": []
+        },
+        {
+          "name": "PresencePickerProps",
+          "kind": "interface",
+          "signature": "interface PresencePickerProps",
+          "members": []
+        },
+        {
+          "name": "DndBanner",
+          "kind": "function",
+          "signature": "function DndBanner("
+        },
+        {
+          "name": "DndBannerLabels",
+          "kind": "interface",
+          "signature": "interface DndBannerLabels",
+          "members": []
+        },
+        {
+          "name": "DndBannerProps",
+          "kind": "interface",
+          "signature": "interface DndBannerProps",
+          "members": []
+        },
+        {
+          "name": "PresenceHeartbeat",
+          "kind": "function",
+          "signature": "function PresenceHeartbeat(props: Readonly<PresenceHeartbeatProps>)"
+        },
+        {
+          "name": "PresenceHeartbeatProps",
+          "kind": "type",
+          "signature": "type PresenceHeartbeatProps = UseHeartbeatOptions"
         }
       ]
     },

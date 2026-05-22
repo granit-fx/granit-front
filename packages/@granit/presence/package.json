@@ -1,0 +1,33 @@
+{
+  "name": "@granit/presence",
+  "description": "User presence types and API — mirrors Granit.Presence .NET contract",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/types": "workspace:*"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  }
+}

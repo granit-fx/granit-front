@@ -195,6 +195,15 @@ export default defineConfig({
         __dirname,
         'packages/@granit/notifications/src/index.ts'
       ),
+      '@granit/presence': path.resolve(__dirname, 'packages/@granit/presence/src/index.ts'),
+      '@granit/react-presence/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-presence/src/testing/index.ts'
+      ),
+      '@granit/react-presence': path.resolve(
+        __dirname,
+        'packages/@granit/react-presence/src/index.ts'
+      ),
       '@granit/privacy': path.resolve(__dirname, 'packages/@granit/privacy/src/index.ts'),
       '@granit/query-engine': path.resolve(__dirname, 'packages/@granit/query-engine/src/index.ts'),
       '@granit/validation': path.resolve(__dirname, 'packages/@granit/validation/src/index.ts'),
