@@ -25,10 +25,16 @@ export async function listCategories(
   if (filter.parentId !== undefined && filter.parentId !== null) {
     params.parentId = filter.parentId;
   }
-  const response = await client.get<readonly CategoryResponse[]>(`${basePath}/categories`, {
-    params,
-  });
-  return response.data;
+  // Backend wraps the listing in `ListCategoriesResponse { items }`. Older
+  // mocks returned a bare array; tolerate both shapes so a stale fixture
+  // doesn't crash the tree.
+  const response = await client.get<
+    { readonly items: readonly CategoryResponse[] } | readonly CategoryResponse[]
+  >(`${basePath}/categories`, { params });
+  const data: { readonly items: readonly CategoryResponse[] } | readonly CategoryResponse[] =
+    response.data;
+  if (Array.isArray(data)) return data;
+  return (data as { readonly items: readonly CategoryResponse[] }).items;
 }
 
 /**

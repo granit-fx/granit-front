@@ -56,9 +56,9 @@ const sampleAssignment: CategoryAssignmentResponse = {
 };
 
 describe('listCategories', () => {
-  it('GETs /categories with only scope when parentId is omitted', async () => {
+  it('GETs /categories with only scope when parentId is omitted and unwraps the envelope', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleRoot]));
+    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [sampleRoot] }));
 
     const result = await listCategories(client, basePath, { scope: 'documents' });
 
@@ -70,7 +70,7 @@ describe('listCategories', () => {
 
   it('omits parentId from params when explicitly null (root list)', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleRoot]));
+    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [sampleRoot] }));
 
     await listCategories(client, basePath, { scope: 'documents', parentId: null });
 
@@ -81,13 +81,22 @@ describe('listCategories', () => {
 
   it('appends parentId when a non-null id is supplied', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleChild]));
+    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [sampleChild] }));
 
     await listCategories(client, basePath, { scope: 'documents', parentId: 'cat-1' });
 
     expect(client.get).toHaveBeenCalledWith(`${basePath}/categories`, {
       params: { scope: 'documents', parentId: 'cat-1' },
     });
+  });
+
+  it('tolerates a bare-array response (legacy mocks)', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleRoot]));
+
+    const result = await listCategories(client, basePath, { scope: 'documents' });
+
+    expect(result).toEqual([sampleRoot]);
   });
 });
 
