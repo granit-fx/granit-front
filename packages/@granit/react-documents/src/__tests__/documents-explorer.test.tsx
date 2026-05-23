@@ -85,7 +85,7 @@ describe('DocumentsExplorer', () => {
           data: { folders: folderStatus === 'Active' ? [activeFolder] : [] },
         });
       }
-      // QueryEngine /documents/query
+      // QueryEngine /documents
       return Promise.resolve({ data: { items: [], totalCount: 0, page: 1, pageSize: 50 } });
     }) as AxiosInstance['get']);
     vi.mocked(client.delete).mockImplementation(((url: string) => {

@@ -21,9 +21,9 @@ describe('createDocumentsHandlers', () => {
     expect(handlers.length).toBeGreaterThanOrEqual(25);
   });
 
-  it('responds with the documentQueryMetadata at /documents/query/meta', async () => {
+  it('responds with the documentQueryMetadata at /documents/meta', async () => {
     server.use(...createDocumentsHandlers({ basePath: BASE }));
-    const response = await fetch(`${BASE}/documents/query/meta`);
+    const response = await fetch(`${BASE}/documents/meta`);
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual(documentQueryMetadata);
   });
@@ -35,10 +35,10 @@ describe('createDocumentsHandlers', () => {
     expect(await response.json()).toEqual(mockQuotaData);
   });
 
-  it('filters /documents/query by folderId Eq', async () => {
+  it('filters /documents by folderId Eq', async () => {
     server.use(...createDocumentsHandlers({ basePath: BASE }));
     const response = await fetch(
-      `${BASE}/documents/query?filter[folderId.Eq]=${FOLDER_CONTRACTS_ID}&filter[status.Eq]=Active&page=1&pageSize=50`
+      `${BASE}/documents?filter[folderId.Eq]=${FOLDER_CONTRACTS_ID}&filter[status.Eq]=Active&page=1&pageSize=50`
     );
     expect(response.status).toBe(200);
     const body = (await response.json()) as { items: { folderId: string }[] };

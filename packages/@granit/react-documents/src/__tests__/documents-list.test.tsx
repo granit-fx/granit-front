@@ -109,7 +109,7 @@ describe('DocumentsList', () => {
     expect(screen.queryByRole('button', { name: 'readonly.pdf' })).not.toBeInTheDocument();
   });
 
-  it('hits the QueryEngine endpoint /documents/query with the folderId + status Active filters', async () => {
+  it('hits the QueryEngine endpoint /documents with the folderId + status Active filters', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({
       data: { items: [], totalCount: 0, page: 1, pageSize: 50 },
@@ -124,7 +124,7 @@ describe('DocumentsList', () => {
     await waitFor(() => expect(client.get).toHaveBeenCalled());
     const url = vi.mocked(client.get).mock.calls[0]?.[0] ?? '';
     // QueryEngine serializes filters/sort/pagination directly onto the URL.
-    expect(url).toContain('/api/v1/documents/documents/query');
+    expect(url).toContain('/api/v1/documents/documents');
     expect(url).toContain('fld-42');
     expect(url).toContain('Active');
     expect(url).toContain('name');

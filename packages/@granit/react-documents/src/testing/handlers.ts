@@ -111,9 +111,9 @@ export function createDocumentsHandlers(
 
   return [
     // ── QueryEngine /meta + list ─────────────────────────────────────────────
-    createQueryMetaHandler(`${basePath}/documents/query`, documentQueryMetadata),
+    createQueryMetaHandler(`${basePath}/documents`, documentQueryMetadata),
 
-    http.get(`${basePath}/documents/query`, ({ request }) => {
+    http.get(`${basePath}/documents`, ({ request }) => {
       const url = new URL(request.url);
       const filters = parseFilters(url);
       const sort = parseSort(url);

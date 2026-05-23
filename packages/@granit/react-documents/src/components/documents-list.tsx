@@ -41,7 +41,8 @@ const DEFAULT_LABELS: Required<DocumentsListLabels> = {
 
 /**
  * Lists active documents inside a folder. Backed by the QueryEngine
- * endpoint `GET {basePath}/documents/query` (granit-fx/granit-dotnet#1993).
+ * endpoint `GET {basePath}/documents` (mounts `GET /documents` and
+ * `GET /documents/meta` per Granit convention — mirrors parties).
  *
  * Pre-applies two filters: `folderId Equals <id>` and `status Equals Active`
  * (trashed documents are surfaced in {@link TrashBin} instead). Sorted by
@@ -58,7 +59,7 @@ export function DocumentsList(props: Readonly<DocumentsListProps>): ReactNode {
     <QueryProvider
       config={{
         client: config.client,
-        basePath: `${config.basePath}/documents/query`,
+        basePath: `${config.basePath}/documents`,
         queryKeyPrefix: [...LIST_QUERY_KEY_PREFIX, props.folderId],
       }}
     >
