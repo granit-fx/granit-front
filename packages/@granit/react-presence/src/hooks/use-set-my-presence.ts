@@ -31,16 +31,16 @@ export function useSetMyPresence(): UseMutationResult<
       await queryClient.cancelQueries({ queryKey });
       const previous = queryClient.getQueryData<PresenceResponse>(queryKey);
       if (previous) {
+        const isAvailable = request.manualStatus === 'Available';
         const optimistic: PresenceResponse = {
           ...previous,
-          manualOverride: request.manualStatus === 'Available' ? null : request.manualStatus,
-          overrideUntilUtc: request.untilUtc,
-          effectiveStatus:
-            request.manualStatus === 'Available'
-              ? previous.effectiveStatus
-              : request.manualStatus === 'AppearOffline'
-                ? 'Offline'
-                : request.manualStatus,
+          manualOverride: isAvailable ? null : request.manualStatus,
+          overrideUntilUtc: isAvailable ? null : request.untilUtc,
+          effectiveStatus: isAvailable
+            ? previous.effectiveStatus
+            : request.manualStatus === 'AppearOffline'
+              ? 'Offline'
+              : request.manualStatus,
         };
         queryClient.setQueryData(queryKey, optimistic);
       }

@@ -7,6 +7,7 @@ import { buildPresenceQueryKey, usePresenceConfig } from '../providers/presence-
 import { presenceKeys } from './query-keys.js';
 
 import type { PresenceResponse } from '@granit/presence';
+import type { UserId } from '@granit/types';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 export interface UseUserPresenceOptions {
@@ -22,7 +23,7 @@ export interface UseUserPresenceOptions {
  * instead of letting the request 403.
  */
 export function useUserPresence(
-  userId: string,
+  userId: UserId,
   options: UseUserPresenceOptions = {}
 ): UseQueryResult<PresenceResponse> {
   const { enabled = true } = options;

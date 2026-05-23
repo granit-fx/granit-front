@@ -15,7 +15,7 @@ export {
   getBatchPresence,
   getMyPresence,
   getUserPresence,
-  sendHeartbeat,
+  pollMyPresence,
   setMyPresence,
 } from './api/presence-api.js';
 

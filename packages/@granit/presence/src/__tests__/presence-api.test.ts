@@ -7,7 +7,7 @@ import {
   getBatchPresence,
   getMyPresence,
   getUserPresence,
-  sendHeartbeat,
+  pollMyPresence,
   setMyPresence,
 } from '../api/presence-api.js';
 
@@ -75,29 +75,14 @@ describe('presence-api', () => {
     });
   });
 
-  describe('sendHeartbeat', () => {
-    it('POSTs /presence/my/poll with clamped idleSeconds', async () => {
+  describe('pollMyPresence', () => {
+    it('POSTs /presence/my/poll with the heartbeat body', async () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue(axiosResponse(onlineSnapshot));
 
-      await sendHeartbeat(client, '/api/v1', { idleSeconds: 1_000 });
+      await pollMyPresence(client, '/api/v1', { idleSeconds: 42 });
 
-      expect(client.post).toHaveBeenCalledWith('/api/v1/presence/my/poll', { idleSeconds: 180 });
-    });
-
-    it('floors fractional idleSeconds and rejects negatives', async () => {
-      const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValue(axiosResponse(onlineSnapshot));
-
-      await sendHeartbeat(client, '/api/v1', { idleSeconds: 5.9 });
-      expect(client.post).toHaveBeenNthCalledWith(1, '/api/v1/presence/my/poll', {
-        idleSeconds: 5,
-      });
-
-      await sendHeartbeat(client, '/api/v1', { idleSeconds: -42 });
-      expect(client.post).toHaveBeenNthCalledWith(2, '/api/v1/presence/my/poll', {
-        idleSeconds: 0,
-      });
+      expect(client.post).toHaveBeenCalledWith('/api/v1/presence/my/poll', { idleSeconds: 42 });
     });
   });
 
@@ -106,7 +91,7 @@ describe('presence-api', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse(onlineSnapshot));
 
-      await getUserPresence(client, '/api/v1', 'user/with/slashes');
+      await getUserPresence(client, '/api/v1', toEntityId<'User'>('user/with/slashes') as UserId);
 
       expect(client.get).toHaveBeenCalledWith('/api/v1/presence/users/user%2Fwith%2Fslashes');
     });

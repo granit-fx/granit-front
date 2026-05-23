@@ -4624,7 +4624,7 @@
         {
           "name": "useUserPresence",
           "kind": "function",
-          "signature": "function useUserPresence( userId: string, options: UseUserPresenceOptions ="
+          "signature": "function useUserPresence( userId: UserId, options: UseUserPresenceOptions ="
         },
         {
           "name": "UseUserPresenceOptions",
@@ -4635,7 +4635,7 @@
         {
           "name": "useBatchPresence",
           "kind": "function",
-          "signature": "function useBatchPresence( userIds: readonly string[], options: UseBatchPresenceOptions ="
+          "signature": "function useBatchPresence( userIds: readonly UserId[], options: UseBatchPresenceOptions ="
         },
         {
           "name": "UseBatchPresenceOptions",

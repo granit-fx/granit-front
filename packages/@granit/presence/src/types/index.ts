@@ -67,7 +67,7 @@ export interface HeartbeatRequest {
  * and have no duplicates.
  */
 export interface BatchPresenceRequest {
-  readonly userIds: readonly string[];
+  readonly userIds: readonly UserId[];
 }
 
 /**
@@ -76,5 +76,5 @@ export interface BatchPresenceRequest {
  * with `lastSeenUtc = null` — they are present in the dictionary.
  */
 export interface BatchPresenceResponse {
-  readonly presences: Readonly<Record<string, PresenceResponse>>;
+  readonly presences: Readonly<Record<UserId, PresenceResponse>>;
 }

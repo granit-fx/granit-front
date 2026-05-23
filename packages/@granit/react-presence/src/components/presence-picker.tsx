@@ -1,5 +1,5 @@
 import { PRESENCE_DEFAULTS } from '@granit/presence';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useClearMyPresenceOverride } from '../hooks/use-clear-my-presence-override.js';
 import { useMyPresence } from '../hooks/use-my-presence.js';
@@ -23,6 +23,7 @@ export interface PresencePickerLabels {
   readonly clear?: string;
   readonly save?: string;
   readonly noOverride?: string;
+  readonly invalidUntil?: string;
   readonly overrideUntil?: (untilLocal: string) => string;
   readonly presets?: {
     readonly thirtyMinutes: string;
@@ -47,6 +48,7 @@ const DEFAULT_LABELS: Required<PresencePickerLabels> = {
   clear: 'Clear status',
   save: 'Set status',
   noOverride: 'No active override',
+  invalidUntil: 'The expiry must be in the future and at most 7 days away.',
   overrideUntil: (untilLocal) => `Until ${untilLocal}`,
   presets: {
     thirtyMinutes: '30 minutes',
@@ -185,7 +187,15 @@ export function PresencePicker({
   const [preset, setPreset] = useState<Preset>('1h');
   const [customLocal, setCustomLocal] = useState<string>('');
 
-  const now = useMemo(() => new Date(), [setMutation.isPending, clearMutation.isPending]);
+  // Refresh the reference instant once a minute so preset windows (30 m, 1 h, …)
+  // stay anchored to "now" while the picker is open without re-rendering on
+  // every keystroke.
+  const [nowTick, setNowTick] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNowTick(Date.now()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+  const now = useMemo(() => new Date(nowTick), [nowTick]);
 
   const customDate = useMemo(() => {
     if (preset !== 'custom') return null;
@@ -347,8 +357,7 @@ export function PresencePicker({
 
       {!untilValid && (
         <div data-granit-presence-picker-error="" role="alert" style={{ color: '#b91c1c' }}>
-          {/* Plain message — apps that want a localized error can wrap this picker. */}
-          The expiry must be in the future and at most 7 days away.
+          {merged.invalidUntil}
         </div>
       )}
 

@@ -9,7 +9,7 @@ Exposes:
   `SetPresenceRequest`, `HeartbeatRequest`, `BatchPresenceRequest`,
   `BatchPresenceResponse`.
 - API functions — `getMyPresence`, `setMyPresence`,
-  `clearMyPresenceOverride`, `sendHeartbeat`, `getUserPresence`,
+  `clearMyPresenceOverride`, `pollMyPresence`, `getUserPresence`,
   `getBatchPresence`.
 - Permission constants — `PresencePermissions.Self.Manage`,
   `PresencePermissions.Users.Read`.

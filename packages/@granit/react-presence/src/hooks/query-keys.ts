@@ -1,8 +1,14 @@
-/** Query key factory for presence queries. Concatenated after the provider prefix. */
+import type { UserId } from '@granit/types';
+
+/**
+ * Query key factory for presence queries. Returns module-relative segments
+ * — the `PresenceProvider`'s `queryKeyPrefix` (default `['presence']`) is
+ * the single owner of the module namespace and is prepended via
+ * `buildPresenceQueryKey`.
+ */
 export const presenceKeys = {
-  all: ['presence'] as const,
-  my: () => [...presenceKeys.all, 'my'] as const,
-  user: (userId: string) => [...presenceKeys.all, 'user', userId] as const,
-  batch: (userIds: readonly string[]) =>
-    [...presenceKeys.all, 'batch', [...userIds].sort()] as const,
+  all: [] as const,
+  my: () => ['my'] as const,
+  user: (userId: UserId) => ['user', userId] as const,
+  batch: (userIds: readonly UserId[]) => ['batch', [...userIds].sort()] as const,
 };

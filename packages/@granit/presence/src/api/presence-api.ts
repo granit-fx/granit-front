@@ -1,7 +1,5 @@
 import { buildApiUrl } from '@granit/api-client';
 
-import { PRESENCE_DEFAULTS } from '../constants.js';
-
 import type {
   BatchPresenceRequest,
   BatchPresenceResponse,
@@ -10,6 +8,7 @@ import type {
   SetPresenceRequest,
 } from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
+import type { UserId } from '@granit/types';
 
 // ---------------------------------------------------------------------------
 // Self endpoints
@@ -68,28 +67,22 @@ export async function clearMyPresenceOverride(
 }
 
 /**
- * Sends a heartbeat for the current user. Should be called periodically
+ * Records a heartbeat for the current user. Should be called periodically
  * while the tab is visible (recommended cadence: 30–45 s).
  *
  * `POST {basePath}/presence/my/poll`
  *
- * Requires `Presence.Self.Manage`.
- *
- * `idleSeconds` is clamped client-side to `[0, MaxIdleSeconds]` (the server
- * applies the same clamp, but we save the validation roundtrip).
+ * Requires `Presence.Self.Manage`. The server clamps `idleSeconds` to
+ * `[0, 2 × OfflineThreshold]`; clients can send any non-negative value.
  */
-export async function sendHeartbeat(
+export async function pollMyPresence(
   client: AxiosInstance,
   basePath: string,
   request: HeartbeatRequest
 ): Promise<PresenceResponse> {
-  const idleSeconds = Math.min(
-    Math.max(0, Math.floor(request.idleSeconds)),
-    PRESENCE_DEFAULTS.MaxIdleSeconds
-  );
   const { data } = await client.post<PresenceResponse>(
     buildApiUrl(basePath, 'presence', 'my', 'poll'),
-    { idleSeconds } satisfies HeartbeatRequest
+    request
   );
   return data;
 }
@@ -109,7 +102,7 @@ export async function sendHeartbeat(
 export async function getUserPresence(
   client: AxiosInstance,
   basePath: string,
-  userId: string
+  userId: UserId
 ): Promise<PresenceResponse> {
   const { data } = await client.get<PresenceResponse>(
     buildApiUrl(basePath, 'presence', 'users', encodeURIComponent(userId))

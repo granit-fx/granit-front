@@ -12,10 +12,10 @@ import type { UserId } from '@granit/types';
 
 vi.mock('@granit/presence', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
-  return { ...actual, sendHeartbeat: vi.fn() };
+  return { ...actual, pollMyPresence: vi.fn() };
 });
 
-const { sendHeartbeat } = await import('@granit/presence');
+const { pollMyPresence } = await import('@granit/presence');
 
 const snapshot: PresenceResponse = {
   userId: toEntityId<'User'>('user-1') as UserId,
@@ -36,7 +36,7 @@ function setVisibility(state: DocumentVisibilityState) {
 beforeEach(() => {
   vi.useFakeTimers();
   setVisibility('visible');
-  vi.mocked(sendHeartbeat).mockResolvedValue(snapshot);
+  vi.mocked(pollMyPresence).mockResolvedValue(snapshot);
 });
 
 afterEach(() => {
@@ -54,12 +54,12 @@ describe('useHeartbeat', () => {
     await act(async () => {
       await vi.advanceTimersByTimeAsync(0);
     });
-    expect(sendHeartbeat).toHaveBeenCalledTimes(1);
+    expect(pollMyPresence).toHaveBeenCalledTimes(1);
 
     await act(async () => {
       await vi.advanceTimersByTimeAsync(1_000);
     });
-    expect(sendHeartbeat).toHaveBeenCalledTimes(2);
+    expect(pollMyPresence).toHaveBeenCalledTimes(2);
   });
 
   it('suspends when hidden and resumes when visible', async () => {
@@ -70,19 +70,19 @@ describe('useHeartbeat', () => {
     await act(async () => {
       await vi.advanceTimersByTimeAsync(0);
     });
-    expect(sendHeartbeat).toHaveBeenCalledTimes(1);
+    expect(pollMyPresence).toHaveBeenCalledTimes(1);
 
     act(() => setVisibility('hidden'));
     await act(async () => {
       await vi.advanceTimersByTimeAsync(5_000);
     });
-    expect(sendHeartbeat).toHaveBeenCalledTimes(1);
+    expect(pollMyPresence).toHaveBeenCalledTimes(1);
 
     act(() => setVisibility('visible'));
     await act(async () => {
       await vi.advanceTimersByTimeAsync(0);
     });
-    expect(sendHeartbeat).toHaveBeenCalledTimes(2);
+    expect(pollMyPresence).toHaveBeenCalledTimes(2);
   });
 
   it('does nothing when disabled', async () => {
@@ -93,6 +93,6 @@ describe('useHeartbeat', () => {
     await act(async () => {
       await vi.advanceTimersByTimeAsync(5_000);
     });
-    expect(sendHeartbeat).not.toHaveBeenCalled();
+    expect(pollMyPresence).not.toHaveBeenCalled();
   });
 });

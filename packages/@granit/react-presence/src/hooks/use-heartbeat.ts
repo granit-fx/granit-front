@@ -1,4 +1,4 @@
-import { sendHeartbeat } from '@granit/presence';
+import { pollMyPresence } from '@granit/presence';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 
@@ -70,7 +70,7 @@ export function useHeartbeat(options: UseHeartbeatOptions = {}): void {
       inFlightRef.current = true;
       try {
         const idleSeconds = Math.max(0, Math.floor((Date.now() - lastActivityRef.current) / 1000));
-        const data = await sendHeartbeat(config.client, config.basePath, { idleSeconds });
+        const data = await pollMyPresence(config.client, config.basePath, { idleSeconds });
         if (!cancelled) {
           queryClient.setQueryData<PresenceResponse>(queryKey, data);
         }
