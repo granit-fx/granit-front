@@ -39,9 +39,9 @@ const sampleAssignment: TagAssignmentResponse = {
 };
 
 describe('listTags', () => {
-  it('GETs /tags with the scope query param', async () => {
+  it('GETs /tags with the scope query param and unwraps the ListTagsResponse envelope', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleTag]));
+    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [sampleTag] }));
 
     const result = await listTags(client, basePath, { scope: 'documents' });
 
@@ -53,7 +53,7 @@ describe('listTags', () => {
 
   it('appends q when supplied', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleTag]));
+    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [sampleTag] }));
 
     await listTags(client, basePath, { scope: 'documents', q: 'urg' });
 
@@ -64,13 +64,22 @@ describe('listTags', () => {
 
   it('omits q when undefined', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleTag]));
+    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [sampleTag] }));
 
     await listTags(client, basePath, { scope: 'documents', q: undefined });
 
     expect(client.get).toHaveBeenCalledWith(`${basePath}/tags`, {
       params: { scope: 'documents' },
     });
+  });
+
+  it('tolerates a bare-array response (legacy mocks)', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleTag]));
+
+    const result = await listTags(client, basePath, { scope: 'documents' });
+
+    expect(result).toEqual([sampleTag]);
   });
 });
 

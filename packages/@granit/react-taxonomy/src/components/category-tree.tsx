@@ -78,18 +78,36 @@ function CategoryNode({
   const deleteCategory = useDeleteCategory(scope);
   const [error, setError] = useState<string | null>(null);
 
+  function extractProblemDetail(err: unknown): string {
+    const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+    if (detail) return detail;
+    return err instanceof Error ? err.message : 'Request failed.';
+  }
+
   function handleAdd(): void {
     if (globalThis.window === undefined) return;
     const name = globalThis.prompt('Category name?');
     if (!name?.trim()) return;
-    createCategory.mutate({ scope, parentId: category.id, name: name.trim() });
+    createCategory.mutate(
+      { scope, parentId: category.id, name: name.trim() },
+      {
+        // Auto-expand the parent so the freshly invalidated children query
+        // actually fires (`enabled: expanded`) and the new node becomes
+        // visible without a second click.
+        onSuccess: () => setExpanded(true),
+        onError: (err) => setError(extractProblemDetail(err)),
+      }
+    );
   }
 
   function handleRename(): void {
     if (globalThis.window === undefined) return;
     const next = globalThis.prompt('Rename category', category.name);
     if (!next?.trim() || next.trim() === category.name) return;
-    updateCategory.mutate({ id: category.id, request: { name: next.trim() } });
+    updateCategory.mutate(
+      { id: category.id, request: { name: next.trim() } },
+      { onError: (err) => setError(extractProblemDetail(err)) }
+    );
   }
 
   function handleMove(): void {
@@ -146,7 +164,13 @@ function CategoryNode({
       data-granit-category-depth={category.depth}
     >
       <div data-granit-category-tree-row="">
-        {category.hasChildren ? (
+        {/* Show the toggle whenever the backend doesn't explicitly say the node
+            is a leaf. The real `CategoryResponse` from the .NET backend has no
+            `hasChildren` field; without this fallback, every row renders as a
+            leaf and the lazy children query (`enabled: expanded`) never fires,
+            so newly created sub-categories are invisible. Only treat the row
+            as a definitive leaf when `hasChildren === false`. */}
+        {category.hasChildren !== false ? (
           <button
             type="button"
             data-granit-category-tree-toggle=""
@@ -234,12 +258,22 @@ export function CategoryTree({
   const labelStrings = { ...DEFAULT_LABELS, ...labels };
   const rootsQuery = useCategories({ scope });
   const createCategory = useCreateCategory(scope);
+  const [rootError, setRootError] = useState<string | null>(null);
 
   function handleAddRoot(): void {
     if (globalThis.window === undefined) return;
     const name = globalThis.prompt('Root category name?');
     if (!name?.trim()) return;
-    createCategory.mutate({ scope, parentId: null, name: name.trim() });
+    createCategory.mutate(
+      { scope, parentId: null, name: name.trim() },
+      {
+        onError: (err) => {
+          const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data
+            ?.detail;
+          setRootError(detail ?? (err instanceof Error ? err.message : 'Request failed.'));
+        },
+      }
+    );
   }
 
   if (rootsQuery.isLoading) {
@@ -270,6 +304,11 @@ export function CategoryTree({
         <button type="button" data-granit-category-tree-add-root="" onClick={handleAddRoot}>
           {labelStrings.add}
         </button>
+      )}
+      {rootError && (
+        <div data-granit-category-tree-error="" role="alert">
+          {rootError}
+        </div>
       )}
       {roots.length === 0 ? (
         <div data-granit-category-tree-empty="">{labelStrings.empty}</div>

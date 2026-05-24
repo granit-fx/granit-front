@@ -22,7 +22,7 @@ const sampleGroup: TaxonomySearchResultGroup = {
 };
 
 describe('searchTaxonomy', () => {
-  it('GETs /search with the q query param', async () => {
+  it('GETs /search with the q query param and passes through a bare-array response', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleGroup]));
 
@@ -41,5 +41,49 @@ describe('searchTaxonomy', () => {
     await searchTaxonomy(client, basePath, { q: '' });
 
     expect(client.get).toHaveBeenCalledWith(`${basePath}/search`, { params: { q: '' } });
+  });
+
+  it('adapts the backend SearchResponse envelope into TaxonomySearchResultGroup[]', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse({
+        tags: [{ id: 'tag-1', name: 'Urgent' }],
+        hits: {
+          'Granit.Documents.Domain.Document': [{ targetId: 'doc-1', tagIds: ['tag-1'] }],
+        },
+        totalCount: 1,
+        skip: 0,
+        take: 50,
+      })
+    );
+
+    const result = await searchTaxonomy(client, basePath, { q: 'urgent' });
+
+    expect(result).toEqual([
+      {
+        targetType: 'Granit.Documents.Domain.Document',
+        items: [
+          {
+            targetType: 'Granit.Documents.Domain.Document',
+            targetId: 'doc-1',
+            label: '',
+            snippet: null,
+            matchedTagIds: ['tag-1'],
+            matchedCategoryId: null,
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('returns [] when the backend envelope has no hits', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse({ tags: [], hits: {}, totalCount: 0, skip: 0, take: 50 })
+    );
+
+    const result = await searchTaxonomy(client, basePath, { q: 'nothing' });
+
+    expect(result).toEqual([]);
   });
 });

@@ -5,12 +5,30 @@ import type { UserId } from '@granit/types';
 
 const baseLastSeen = toISODateString('2026-05-22T10:00:00Z');
 
+// Stable GUIDs — the backend deserializes UserId as System.Guid, so the
+// mocks must use Guid-formatted strings to round-trip through both MSW
+// and the real .NET stack.
+//
+// `self` aligns with the first user in @granit/react-identity/testing
+// (marie.dupont) so demos that mount both providers stay coherent.
 export const mockUsers = [
-  { id: toEntityId<'User'>('user-self') as UserId, name: 'Your Account' },
-  { id: toEntityId<'User'>('user-alice') as UserId, name: 'Alice Martin' },
-  { id: toEntityId<'User'>('user-bob') as UserId, name: 'Bob Lefebvre' },
-  { id: toEntityId<'User'>('user-charlie') as UserId, name: 'Charlie Wood' },
-  { id: toEntityId<'User'>('user-diana') as UserId, name: 'Diana Brown' },
+  {
+    id: toEntityId<'User'>('d2c47314-4d08-4952-98b1-a1b8a6e22ef1') as UserId,
+    name: 'Your Account',
+  },
+  {
+    id: toEntityId<'User'>('0a1b2c3d-1111-4111-8111-aaaaaaaaaaaa') as UserId,
+    name: 'Alice Martin',
+  },
+  {
+    id: toEntityId<'User'>('0a1b2c3d-2222-4222-8222-bbbbbbbbbbbb') as UserId,
+    name: 'Bob Lefebvre',
+  },
+  {
+    id: toEntityId<'User'>('0a1b2c3d-3333-4333-8333-cccccccccccc') as UserId,
+    name: 'Charlie Wood',
+  },
+  { id: toEntityId<'User'>('0a1b2c3d-4444-4444-8444-dddddddddddd') as UserId, name: 'Diana Brown' },
 ];
 
 export const mockMyPresence: PresenceResponse = {

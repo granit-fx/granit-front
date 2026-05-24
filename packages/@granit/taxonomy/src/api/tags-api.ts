@@ -21,8 +21,14 @@ export async function listTags(
 ): Promise<readonly TagResponse[]> {
   const params: Record<string, string> = { scope: filter.scope };
   if (filter.q !== undefined) params.q = filter.q;
-  const response = await client.get<readonly TagResponse[]>(`${basePath}/tags`, { params });
-  return response.data;
+  // Backend wraps the listing in `ListTagsResponse { items }`; tolerate the
+  // bare-array shape so older mocks and Storybook fixtures keep working.
+  const response = await client.get<
+    { readonly items: readonly TagResponse[] } | readonly TagResponse[]
+  >(`${basePath}/tags`, { params });
+  const data = response.data;
+  if (Array.isArray(data)) return data;
+  return (data as { readonly items: readonly TagResponse[] } | null | undefined)?.items ?? [];
 }
 
 /**
