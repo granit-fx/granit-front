@@ -1,3 +1,4 @@
+import { TimelineEntryType } from '@granit/timeline';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -10,7 +11,7 @@ describe('useTimelineActions', () => {
     const client = createMockClient();
     const createdEntry = {
       id: 'e-1',
-      entryType: 0,
+      entryType: TimelineEntryType.Comment,
       body: 'Hello',
       authorId: 'u-1',
       authorName: 'User',
@@ -37,7 +38,7 @@ describe('useTimelineActions', () => {
     let returnedEntry;
     await act(async () => {
       returnedEntry = await result.current.postEntry({
-        entryType: 0,
+        entryType: TimelineEntryType.Comment,
         body: 'Hello',
       });
     });
@@ -45,7 +46,7 @@ describe('useTimelineActions', () => {
     expect(returnedEntry).toEqual(createdEntry);
     expect(onEntryCreated).toHaveBeenCalledWith(createdEntry);
     expect(client.post).toHaveBeenCalledWith('/api/v1/timeline/Patient/p-1/entries', {
-      entryType: 0,
+      entryType: TimelineEntryType.Comment,
       body: 'Hello',
     });
   });
@@ -87,9 +88,9 @@ describe('useTimelineActions', () => {
       { wrapper: createWrapper(client) }
     );
 
-    await expect(result.current.postEntry({ entryType: 0, body: 'Hello' })).rejects.toThrow(
-      'Server error'
-    );
+    await expect(
+      result.current.postEntry({ entryType: TimelineEntryType.Comment, body: 'Hello' })
+    ).rejects.toThrow('Server error');
 
     await waitFor(() => expect(result.current.error?.message).toBe('Server error'));
   });
@@ -125,9 +126,9 @@ describe('useTimelineActions', () => {
       { wrapper: createWrapper(client) }
     );
 
-    await expect(result.current.postEntry({ entryType: 0, body: 'Hello' })).rejects.toThrow(
-      'string error'
-    );
+    await expect(
+      result.current.postEntry({ entryType: TimelineEntryType.Comment, body: 'Hello' })
+    ).rejects.toThrow('string error');
 
     await waitFor(() => expect(result.current.error?.message).toBe('string error'));
   });

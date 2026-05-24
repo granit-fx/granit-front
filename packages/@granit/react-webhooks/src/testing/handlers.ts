@@ -22,11 +22,14 @@ import {
 } from './data.js';
 
 import type { QueryMetadata } from '@granit/query-engine';
-import type { WebhookSubscriptionResponse } from '@granit/webhooks';
+import type {
+  WebhookSubscriptionResponse,
+  WebhookSubscriptionStatus as WebhookSubscriptionStatusType,
+} from '@granit/webhooks';
 
 /**
  * Mock /meta payload for the webhook subscriptions resource.
- * NOTE: `status` is a numeric enum on the wire (Int32) — see WebhookSubscriptionStatus.
+ * NOTE: `status` is serialized as a PascalCase string on the wire — see WebhookSubscriptionStatus.
  */
 export const webhookSubscriptionQueryMetadata: QueryMetadata = {
   columns: [
@@ -60,7 +63,7 @@ export const webhookSubscriptionQueryMetadata: QueryMetadata = {
     {
       name: 'status',
       label: 'Status',
-      type: 'Int32',
+      type: 'String',
       order: 3,
       isSortable: true,
       isFilterable: true,
@@ -106,7 +109,7 @@ export const webhookSubscriptionQueryMetadata: QueryMetadata = {
   filterableFields: [
     { name: 'targetUrl', type: 'String', operators: STRING_OPERATORS },
     { name: 'eventType', type: 'String', operators: STRING_OPERATORS },
-    { name: 'status', type: 'Int32', operators: NUMBER_OPERATORS },
+    { name: 'status', type: 'String', operators: STRING_OPERATORS },
     { name: 'consecutiveFailureCount', type: 'Int32', operators: NUMBER_OPERATORS },
     { name: 'lastSuccessAt', type: 'DateTime', operators: DATE_OPERATORS },
     { name: 'createdAt', type: 'DateTime', operators: DATE_OPERATORS },
@@ -141,7 +144,7 @@ export const webhookSubscriptionQueryMetadata: QueryMetadata = {
     },
   ],
   groupByFields: [
-    { name: 'status', type: 'Int32' },
+    { name: 'status', type: 'String' },
     { name: 'eventType', type: 'String' },
   ],
   pagination: {
@@ -164,7 +167,7 @@ function applyPresets(
   const statusPresets = url.searchParams.get('presets[status]');
   if (statusPresets) {
     const statuses = statusPresets.split(',').map((s) => s.toLowerCase());
-    const statusMap: Record<string, number> = {
+    const statusMap: Record<string, WebhookSubscriptionStatusType> = {
       active: WebhookSubscriptionStatus.Active,
       suspended: WebhookSubscriptionStatus.Suspended,
       deactivated: WebhookSubscriptionStatus.Deactivated,

@@ -9,7 +9,6 @@ export type {
   BlobDescriptorResponse,
   BlobDownloadUrlRequest,
   BlobDownloadUrlResponse,
-  BlobStatusValue,
   BlobUploadInitiateRequest,
   BlobUploadInitiateResponse,
 } from './types/index.js';

@@ -1,5 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
-import { toReactionEmoji } from '@granit/timeline';
+import { TimelineEntryType, toReactionEmoji } from '@granit/timeline';
 import { toEntityId } from '@granit/types';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
@@ -31,7 +31,7 @@ const EYES = toReactionEmoji('👀');
 function makeEntry(id: TimelineEntryId, reactions?: ReactionMap): TimelineEntry {
   return {
     id,
-    entryType: 0,
+    entryType: TimelineEntryType.Comment,
     body: `entry ${id}`,
     authorId: null,
     authorName: null,

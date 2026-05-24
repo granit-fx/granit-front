@@ -1,16 +1,18 @@
 import type { CorrelationId, EntityId, ISODateString } from '@granit/types';
 
-/** Status of a scheduled action. Mirrors Granit.Scheduling.ScheduledActionStatus .NET enum. */
-export const ScheduledActionStatus = {
-  Pending: 0,
-  Executed: 1,
-  Cancelled: 2,
-  Failed: 3,
-  Processing: 4,
-} as const;
+/**
+ * Status of a scheduled action. Mirrors Granit.Scheduling.ScheduledActionStatus .NET enum.
+ * Serialized as PascalCase strings via the framework's global `JsonStringEnumConverter`.
+ */
+export type ScheduledActionStatus = 'Pending' | 'Executed' | 'Cancelled' | 'Failed' | 'Processing';
 
-export type ScheduledActionStatus =
-  (typeof ScheduledActionStatus)[keyof typeof ScheduledActionStatus];
+export const ScheduledActionStatus = {
+  Pending: 'Pending',
+  Executed: 'Executed',
+  Cancelled: 'Cancelled',
+  Failed: 'Failed',
+  Processing: 'Processing',
+} as const satisfies Record<string, ScheduledActionStatus>;
 
 /** Branded scheduled action identifier. */
 export type ScheduledActionId = EntityId<'ScheduledAction'>;

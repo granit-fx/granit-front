@@ -1,12 +1,9 @@
-import type { BlobDescriptorResponse, BlobStatusValue } from '@granit/blob-storage';
+import { BlobStatus } from '@granit/blob-storage';
 
-export const S = {
-  Pending: 0,
-  Uploading: 1,
-  Valid: 2,
-  Rejected: 3,
-  Deleted: 4,
-} as const satisfies Record<string, BlobStatusValue>;
+import type { BlobDescriptorResponse } from '@granit/blob-storage';
+
+/** Short alias for use inside the mock fixtures. */
+export const S = BlobStatus;
 
 export const mockBlobs: BlobDescriptorResponse[] = [
   {

@@ -75,9 +75,9 @@ describe('createBlobStorageHandlers — upload flow', () => {
     // Subsequent GET resolves the freshly-uploaded record.
     const getResponse = await fetch(`${BASE}/blobs/${encodeURIComponent(ticket.blobId)}`);
     expect(getResponse.status).toBe(200);
-    const descriptor = (await getResponse.json()) as { id: string; status: number };
+    const descriptor = (await getResponse.json()) as { id: string; status: string };
     expect(descriptor.id).toBe(ticket.blobId);
-    expect(descriptor.status).toBe(2); // Valid
+    expect(descriptor.status).toBe('Valid');
   });
 
   it('confirm fails when the blobId is unknown', async () => {

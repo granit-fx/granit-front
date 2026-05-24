@@ -9,6 +9,7 @@ import {
   followEntity,
   unfollowEntity,
 } from '../api/timeline-api.js';
+import { TimelineEntryType } from '../types/index.js';
 
 import type { CreateTimelineEntryRequest, TimelineEntryPage } from '../types/index.js';
 import type { AxiosInstance } from 'axios';
@@ -42,12 +43,12 @@ describe('timeline API', () => {
   describe('createEntry', () => {
     it('should call POST /{entityType}/{entityId}/entries', async () => {
       const request: CreateTimelineEntryRequest = {
-        entryType: 0,
+        entryType: TimelineEntryType.Comment,
         body: 'Hello',
       };
       const entry = {
         id: 'e-1',
-        entryType: 0,
+        entryType: TimelineEntryType.Comment,
         body: 'Hello',
         authorId: 'u-1',
         authorName: 'User',

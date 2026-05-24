@@ -1,4 +1,4 @@
-export { TimelineEntryType, type TimelineEntryTypeValue } from './entry-type.js';
+export { TimelineEntryType } from './entry-type.js';
 export type {
   BlobId,
   TimelineAttachmentId,

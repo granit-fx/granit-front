@@ -1,4 +1,4 @@
-import type { TimelineEntryTypeValue } from './entry-type.js';
+import type { TimelineEntryType } from './entry-type.js';
 import type { ReactionMap } from './reaction.js';
 import type { TimelineEntryOriginValue } from './source.js';
 import type { PagedResult } from '@granit/query-engine';
@@ -27,7 +27,7 @@ export interface TimelineAttachmentInfo {
 
 export interface TimelineEntry {
   readonly id: TimelineEntryId;
-  readonly entryType: TimelineEntryTypeValue;
+  readonly entryType: TimelineEntryType;
   readonly body: string;
   readonly authorId: UserId | null;
   readonly authorName: string | null;

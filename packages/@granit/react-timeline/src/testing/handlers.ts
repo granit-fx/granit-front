@@ -36,14 +36,14 @@ export function createTimelineHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // POST /:entityType/:entityId/entries — add a new entry
     http.post(`${baseUrl}/:entityType/:entityId/entries`, async ({ request }) => {
       const body = (await request.json()) as {
-        entryType: number;
+        entryType: TimelineEntry['entryType'];
         body: string;
         parentEntryId?: string;
       };
 
       const entry: TimelineEntry = {
         id: toEntityId<'TimelineEntry'>(`tl-${Date.now()}`),
-        entryType: body.entryType as TimelineEntry['entryType'],
+        entryType: body.entryType,
         body: body.body,
         authorId: toEntityId<'User'>('admin-001'),
         authorName: 'System Admin',

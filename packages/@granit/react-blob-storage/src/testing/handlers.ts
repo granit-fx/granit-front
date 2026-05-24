@@ -17,7 +17,7 @@ import type {
   BlobConfirmUploadRequest,
   BlobConfirmUploadResponse,
   BlobDescriptorResponse,
-  BlobStatusValue,
+  BlobStatus,
   BlobUploadInitiateRequest,
   BlobUploadInitiateResponse,
 } from '@granit/blob-storage';
@@ -65,7 +65,7 @@ export const blobQueryMetadata: QueryMetadata = {
     {
       name: 'status',
       label: 'Status',
-      type: 'Int32',
+      type: 'String',
       order: 5,
       isSortable: true,
       isFilterable: false,
@@ -109,7 +109,7 @@ export const blobQueryMetadata: QueryMetadata = {
   dateFilters: [],
   groupByFields: [
     { name: 'containerName', type: 'String' },
-    { name: 'status', type: 'Int32' },
+    { name: 'status', type: 'String' },
   ],
   pagination: {
     defaultPageSize: 20,
@@ -119,12 +119,12 @@ export const blobQueryMetadata: QueryMetadata = {
   },
 };
 
-const STATUS_LABELS: Record<BlobStatusValue, string> = {
-  0: 'Pending',
-  1: 'Uploading',
-  2: 'Valid',
-  3: 'Rejected',
-  4: 'Deleted',
+const STATUS_LABELS: Record<BlobStatus, string> = {
+  Pending: 'Pending',
+  Uploading: 'Uploading',
+  Valid: 'Valid',
+  Rejected: 'Rejected',
+  Deleted: 'Deleted',
 };
 
 /**
@@ -188,7 +188,7 @@ export function createBlobStorageHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const groupByParam = url.searchParams.get('groupBy');
       if (groupByParam) {
         const labelFn = (key: string): string =>
-          groupByParam === 'status' ? (STATUS_LABELS[Number(key) as BlobStatusValue] ?? key) : key;
+          groupByParam === 'status' ? (STATUS_LABELS[key as BlobStatus] ?? key) : key;
         return HttpResponse.json(
           groupByField(filtered as unknown as Record<string, unknown>[], groupByParam, labelFn)
         );

@@ -742,8 +742,8 @@
       "exports": [
         {
           "name": "BlobStatus",
-          "kind": "const",
-          "signature": "const BlobStatus"
+          "kind": "type",
+          "signature": "type BlobStatus = 'Pending' | 'Uploading' | 'Valid' | 'Rejected' | 'Deleted'"
         },
         {
           "name": "BlobStoragePermissions",
@@ -6034,8 +6034,8 @@
       "exports": [
         {
           "name": "WebhookSubscriptionStatus",
-          "kind": "const",
-          "signature": "const WebhookSubscriptionStatus"
+          "kind": "type",
+          "signature": "type WebhookSubscriptionStatus = 'Active' | 'Suspended' | 'Deactivated'"
         },
         {
           "name": "WebhooksPermissions",

@@ -13,7 +13,6 @@ export type {
   WebhookSubscriptionResponse,
   WebhookSubscriptionRotateSecretResponse,
   WebhookSubscriptionStatsResponse,
-  WebhookSubscriptionStatusValue,
   WebhookSubscriptionTestPingResponse,
   WebhookSubscriptionUpdateRequest,
 } from './types/index.js';

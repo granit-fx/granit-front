@@ -1,3 +1,5 @@
+import type { ScheduledActionStatus } from './types/index.js';
+
 /** Permission strings for the Scheduling module. */
 export const SCHEDULING_PERMISSIONS = {
   ACTIONS_READ: 'Scheduling.Actions.Read',
@@ -6,18 +8,18 @@ export const SCHEDULING_PERMISSIONS = {
 
 /** Status → badge color mapping for UI rendering. */
 export const SCHEDULING_STATUS_COLORS = {
-  0: 'blue',
-  1: 'green',
-  2: 'gray',
-  3: 'red',
-  4: 'amber',
-} as const;
+  Pending: 'blue',
+  Executed: 'green',
+  Cancelled: 'gray',
+  Failed: 'red',
+  Processing: 'amber',
+} as const satisfies Record<ScheduledActionStatus, string>;
 
 /** Status → human-readable label mapping. */
 export const SCHEDULING_STATUS_LABELS = {
-  0: 'Pending',
-  1: 'Executed',
-  2: 'Cancelled',
-  3: 'Failed',
-  4: 'Processing',
-} as const;
+  Pending: 'Pending',
+  Executed: 'Executed',
+  Cancelled: 'Cancelled',
+  Failed: 'Failed',
+  Processing: 'Processing',
+} as const satisfies Record<ScheduledActionStatus, string>;

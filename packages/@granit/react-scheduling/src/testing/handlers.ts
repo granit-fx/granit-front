@@ -1,9 +1,8 @@
-import { DATE_OPERATORS, NUMBER_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
+import { DATE_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { ScheduledActionStatus } from '@granit/scheduling';
 import {
   applyDateFilter,
-  applyNumberFilter,
   applyStringFilter,
   paginate,
   parseFilters,
@@ -44,7 +43,7 @@ export const scheduledActionQueryMetadata: QueryMetadata = {
     {
       name: 'status',
       label: 'Status',
-      type: 'Int32',
+      type: 'String',
       order: 2,
       isSortable: true,
       isFilterable: true,
@@ -107,7 +106,7 @@ export const scheduledActionQueryMetadata: QueryMetadata = {
   ],
   filterableFields: [
     { name: 'payloadType', type: 'String', operators: STRING_OPERATORS },
-    { name: 'status', type: 'Int32', operators: NUMBER_OPERATORS },
+    { name: 'status', type: 'String', operators: STRING_OPERATORS },
     { name: 'executeAt', type: 'DateTime', operators: DATE_OPERATORS },
     { name: 'executedAt', type: 'DateTime', operators: DATE_OPERATORS },
     { name: 'correlationId', type: 'String', operators: STRING_OPERATORS },
@@ -155,7 +154,7 @@ export const scheduledActionQueryMetadata: QueryMetadata = {
     },
   ],
   groupByFields: [
-    { name: 'status', type: 'Int32' },
+    { name: 'status', type: 'String' },
     { name: 'payloadType', type: 'String' },
   ],
   pagination: {
@@ -212,9 +211,6 @@ export function createSchedulingHandlers(baseUrl = DEFAULT_BASE_PATH) {
       for (const f of filters) {
         filtered = filtered.filter((action) => {
           const fieldValue = action[f.field as keyof ScheduledActionResponse];
-          if (f.field === 'status') {
-            return applyNumberFilter(fieldValue as number, f.operator, f.value);
-          }
           if (f.field === 'executeAt') {
             return applyDateFilter(fieldValue as string, f.operator, f.value);
           }

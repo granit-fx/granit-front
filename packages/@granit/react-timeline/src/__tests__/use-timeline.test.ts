@@ -1,3 +1,4 @@
+import { TimelineEntryType } from '@granit/timeline';
 import { toEntityId, toISODateString } from '@granit/types';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
@@ -11,7 +12,7 @@ import type { TimelineEntry, TimelineEntryPage } from '@granit/timeline';
 function makeEntry(overrides: Partial<TimelineEntry> = {}): TimelineEntry {
   return {
     id: toEntityId<'TimelineEntry'>('e-1'),
-    entryType: 0,
+    entryType: TimelineEntryType.Comment,
     body: 'Test comment',
     authorId: toEntityId<'User'>('u-1'),
     authorName: 'Dr. Martin',

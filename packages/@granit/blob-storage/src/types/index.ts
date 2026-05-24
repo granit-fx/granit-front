@@ -6,16 +6,17 @@
  * Blob lifecycle status.
  *
  * Mirrors `Granit.BlobStorage.Domain.BlobStatus` (.NET).
+ * Serialized as PascalCase strings via the framework's global `JsonStringEnumConverter`.
  */
-export const BlobStatus = {
-  Pending: 0,
-  Uploading: 1,
-  Valid: 2,
-  Rejected: 3,
-  Deleted: 4,
-} as const;
+export type BlobStatus = 'Pending' | 'Uploading' | 'Valid' | 'Rejected' | 'Deleted';
 
-export type BlobStatusValue = (typeof BlobStatus)[keyof typeof BlobStatus];
+export const BlobStatus = {
+  Pending: 'Pending',
+  Uploading: 'Uploading',
+  Valid: 'Valid',
+  Rejected: 'Rejected',
+  Deleted: 'Deleted',
+} as const satisfies Record<string, BlobStatus>;
 
 // ── Upload initiation ───────────────────────────────────────────────────────
 
@@ -47,7 +48,7 @@ export interface BlobConfirmUploadRequest {
 export interface BlobConfirmUploadResponse {
   readonly blobId: string;
   readonly isValid: boolean;
-  readonly status: BlobStatusValue;
+  readonly status: BlobStatus;
   readonly verifiedContentType: string | null;
   readonly sizeBytes: number | null;
   readonly rejectionReason: string | null;
@@ -86,7 +87,7 @@ export interface BlobDescriptorResponse {
   readonly verifiedContentType: string | null;
   readonly declaredSizeBytes: number;
   readonly actualSizeBytes: number | null;
-  readonly status: BlobStatusValue;
+  readonly status: BlobStatus;
   readonly rejectionReason: string | null;
   readonly deletionReason: string | null;
   readonly createdAt: string;

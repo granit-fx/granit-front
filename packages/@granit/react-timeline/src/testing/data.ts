@@ -1,3 +1,4 @@
+import { TimelineEntryType } from '@granit/timeline';
 import { toEntityId, toISODateString } from '@granit/types';
 
 import type { TimelineEntry } from '@granit/timeline';
@@ -7,7 +8,7 @@ type Mutable<T> = { -readonly [K in keyof T]: T[K] };
 export const mockTimelineEntries: Mutable<TimelineEntry>[] = [
   {
     id: toEntityId<'TimelineEntry'>('tl-1'),
-    entryType: 0,
+    entryType: TimelineEntryType.Comment,
     body: 'Account created and initial roles assigned.',
     authorId: toEntityId<'User'>('admin-001'),
     authorName: 'System Admin',
@@ -17,7 +18,7 @@ export const mockTimelineEntries: Mutable<TimelineEntry>[] = [
   },
   {
     id: toEntityId<'TimelineEntry'>('tl-2'),
-    entryType: 2,
+    entryType: TimelineEntryType.InternalNote,
     body: 'Reviewed user access — confirmed granit-showcase-admin role required for project onboarding.',
     authorId: toEntityId<'User'>('admin-002'),
     authorName: 'Security Officer',
@@ -27,7 +28,7 @@ export const mockTimelineEntries: Mutable<TimelineEntry>[] = [
   },
   {
     id: toEntityId<'TimelineEntry'>('tl-3'),
-    entryType: 1,
+    entryType: TimelineEntryType.SystemLog,
     body: 'Role granit-showcase-readonly removed by admin.',
     authorId: toEntityId<'User'>('system'),
     authorName: 'System',

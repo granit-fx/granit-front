@@ -14,15 +14,16 @@ export type WebhookDeliveryId = EntityId<'WebhookDelivery'>;
  * Webhook subscription lifecycle status.
  *
  * Mirrors `Granit.Webhooks.Domain.WebhookSubscriptionStatus` (.NET).
+ * Serialized as PascalCase strings via the framework's global
+ * `JsonStringEnumConverter`.
  */
-export const WebhookSubscriptionStatus = {
-  Active: 0,
-  Suspended: 1,
-  Deactivated: 2,
-} as const;
+export type WebhookSubscriptionStatus = 'Active' | 'Suspended' | 'Deactivated';
 
-export type WebhookSubscriptionStatusValue =
-  (typeof WebhookSubscriptionStatus)[keyof typeof WebhookSubscriptionStatus];
+export const WebhookSubscriptionStatus = {
+  Active: 'Active',
+  Suspended: 'Suspended',
+  Deactivated: 'Deactivated',
+} as const satisfies Record<string, WebhookSubscriptionStatus>;
 
 // ── Subscription requests ───────────────────────────────────────────────────
 
@@ -49,7 +50,7 @@ export interface WebhookSubscriptionResponse {
   readonly id: WebhookSubscriptionId;
   readonly targetUrl: string;
   readonly eventType: string;
-  readonly status: WebhookSubscriptionStatusValue;
+  readonly status: WebhookSubscriptionStatus;
   readonly consecutiveFailureCount: number;
   readonly lastSuccessAt: string | null;
   readonly createdAt: string;
@@ -61,7 +62,7 @@ export interface WebhookSubscriptionCreatedResponse {
   readonly id: WebhookSubscriptionId;
   readonly targetUrl: string;
   readonly eventType: string;
-  readonly status: WebhookSubscriptionStatusValue;
+  readonly status: WebhookSubscriptionStatus;
   readonly signingSecret: string;
 }
 
