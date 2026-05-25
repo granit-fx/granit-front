@@ -22,6 +22,8 @@ export interface DocumentDetailLabels {
   readonly versions?: string;
   readonly shares?: string;
   readonly tags?: string;
+  readonly addFavorite?: string;
+  readonly removeFavorite?: string;
 }
 
 export interface DocumentDetailProps {
@@ -29,6 +31,14 @@ export interface DocumentDetailProps {
   readonly canManage?: boolean;
   readonly onOpenVersions?: (id: string) => void;
   readonly onOpenShares?: (id: string) => void;
+  /**
+   * When `true`, shows a filled star action. Toggling the star fires
+   * `onToggleFavorite` with the current document. Omit the prop to hide
+   * the favorite action entirely (e.g. when the host doesn't wire
+   * `useDocumentBookmarks`).
+   */
+  readonly isFavorite?: boolean;
+  readonly onToggleFavorite?: () => void;
   readonly labels?: DocumentDetailLabels;
   readonly className?: string;
 }
@@ -45,6 +55,8 @@ const DEFAULT_LABELS: Required<DocumentDetailLabels> = {
   versions: 'Versions',
   shares: 'Shares',
   tags: 'Tags',
+  addFavorite: 'Add to favorites',
+  removeFavorite: 'Remove from favorites',
 };
 
 /**
@@ -58,6 +70,8 @@ export function DocumentDetail({
   canManage = false,
   onOpenVersions,
   onOpenShares,
+  isFavorite,
+  onToggleFavorite,
   labels,
   className,
 }: DocumentDetailProps): ReactNode {
@@ -141,6 +155,18 @@ export function DocumentDetail({
         ) : (
           <h2 data-granit-document-detail-name="">
             {document.name}
+            {onToggleFavorite && (
+              <button
+                type="button"
+                data-granit-document-detail-favorite=""
+                data-granit-document-detail-favorite-on={isFavorite ? '' : undefined}
+                aria-pressed={isFavorite ?? false}
+                aria-label={isFavorite ? labelStrings.removeFavorite : labelStrings.addFavorite}
+                onClick={onToggleFavorite}
+              >
+                {isFavorite ? '★' : '☆'}
+              </button>
+            )}
             {canManage && (
               <button type="button" onClick={startEdit} aria-label={labelStrings.rename}>
                 {labelStrings.rename}

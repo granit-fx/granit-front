@@ -3355,6 +3355,21 @@
           "signature": "function DocumentQuickLook("
         },
         {
+          "name": "DocumentSearchPalette",
+          "kind": "function",
+          "signature": "function DocumentSearchPalette(props: Readonly<DocumentSearchPaletteProps>): ReactNode"
+        },
+        {
+          "name": "DocumentsSidebar",
+          "kind": "function",
+          "signature": "function DocumentsSidebar("
+        },
+        {
+          "name": "useDocumentBookmarks",
+          "kind": "function",
+          "signature": "function useDocumentBookmarks( storageKey: string | null, options: UseDocumentBookmarksOptions ="
+        },
+        {
           "name": "DocumentsExplorer",
           "kind": "function",
           "signature": "function DocumentsExplorer("

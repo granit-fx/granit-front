@@ -34,6 +34,8 @@ export const documentsTranslationsFr: DocumentsTranslations = {
       Versions: 'Versions',
       Shares: 'Partages',
       Tags: 'Étiquettes',
+      AddFavorite: 'Ajouter aux favoris',
+      RemoveFavorite: 'Retirer des favoris',
     },
     List: {
       Empty: 'Ce dossier est vide.',
@@ -153,5 +155,24 @@ export const documentsTranslationsFr: DocumentsTranslations = {
     DownloadToView: 'Télécharger pour ouvrir',
     PreviewError: 'Échec du chargement de l’aperçu.',
     Position: '{{current}} / {{total}}',
+  },
+  SearchPalette: {
+    Title: 'Rechercher des documents',
+    Placeholder: 'Tapez un nom…',
+    Searching: 'Recherche…',
+    NoResults: 'Aucun résultat.',
+    Recents: 'Récents',
+    Favorites: 'Favoris',
+    Results: 'Résultats',
+    Close: 'Fermer',
+    Hint: '↑↓ pour naviguer, ↵ pour ouvrir, Esc pour fermer',
+  },
+  Sidebar: {
+    FoldersTab: 'Dossiers',
+    FavoritesTab: 'Favoris',
+    RecentsTab: 'Récents',
+    FavoritesEmpty: 'Aucun favori. Étoilez un document dans l’inspecteur pour l’épingler ici.',
+    RecentsEmpty: 'Aucun document récent. Ouvrez-en un pour le voir ici.',
+    RemoveFavorite: 'Retirer des favoris',
   },
 };

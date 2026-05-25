@@ -42,6 +42,8 @@ export interface DocumentsTranslations {
       readonly Versions: string;
       readonly Shares: string;
       readonly Tags: string;
+      readonly AddFavorite: string;
+      readonly RemoveFavorite: string;
     };
     readonly List: {
       readonly Empty: string;
@@ -161,6 +163,25 @@ export interface DocumentsTranslations {
     readonly PreviewError: string;
     readonly Position: string;
   };
+  readonly SearchPalette: {
+    readonly Title: string;
+    readonly Placeholder: string;
+    readonly Searching: string;
+    readonly NoResults: string;
+    readonly Recents: string;
+    readonly Favorites: string;
+    readonly Results: string;
+    readonly Close: string;
+    readonly Hint: string;
+  };
+  readonly Sidebar: {
+    readonly FoldersTab: string;
+    readonly FavoritesTab: string;
+    readonly RecentsTab: string;
+    readonly FavoritesEmpty: string;
+    readonly RecentsEmpty: string;
+    readonly RemoveFavorite: string;
+  };
 }
 
 export const documentsTranslationsEn: DocumentsTranslations = {
@@ -196,6 +217,8 @@ export const documentsTranslationsEn: DocumentsTranslations = {
       Versions: 'Versions',
       Shares: 'Shares',
       Tags: 'Tags',
+      AddFavorite: 'Add to favorites',
+      RemoveFavorite: 'Remove from favorites',
     },
     List: {
       Empty: 'This folder is empty.',
@@ -314,5 +337,24 @@ export const documentsTranslationsEn: DocumentsTranslations = {
     DownloadToView: 'Download to view',
     PreviewError: 'Failed to load preview.',
     Position: '{{current}} / {{total}}',
+  },
+  SearchPalette: {
+    Title: 'Search documents',
+    Placeholder: 'Type a name…',
+    Searching: 'Searching…',
+    NoResults: 'No results.',
+    Recents: 'Recent',
+    Favorites: 'Favorites',
+    Results: 'Results',
+    Close: 'Close',
+    Hint: '↑↓ to navigate, ↵ to open, Esc to close',
+  },
+  Sidebar: {
+    FoldersTab: 'Folders',
+    FavoritesTab: 'Favorites',
+    RecentsTab: 'Recent',
+    FavoritesEmpty: 'No favorites yet. Star a document in the inspector to pin it here.',
+    RecentsEmpty: 'No recent documents. Open one to see it here.',
+    RemoveFavorite: 'Remove favorite',
   },
 };

@@ -81,6 +81,26 @@ export type {
   DocumentQuickLookProps,
 } from './components/document-quick-look.js';
 
+export { DocumentSearchPalette } from './components/document-search-palette.js';
+export type {
+  DocumentSearchPaletteLabels,
+  DocumentSearchPaletteProps,
+} from './components/document-search-palette.js';
+
+export { DocumentsSidebar } from './components/documents-sidebar.js';
+export type {
+  DocumentsSidebarLabels,
+  DocumentsSidebarProps,
+  DocumentsSidebarTab,
+} from './components/documents-sidebar.js';
+
+export { useDocumentBookmarks } from './hooks/use-document-bookmarks.js';
+export type {
+  DocumentBookmark,
+  DocumentBookmarksApi,
+  UseDocumentBookmarksOptions,
+} from './hooks/use-document-bookmarks.js';
+
 export { DocumentsExplorer } from './components/documents-explorer.js';
 export type {
   DocumentsExplorerLabels,
