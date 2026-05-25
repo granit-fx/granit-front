@@ -3350,6 +3350,11 @@
           "members": []
         },
         {
+          "name": "DocumentQuickLook",
+          "kind": "function",
+          "signature": "function DocumentQuickLook("
+        },
+        {
           "name": "DocumentsExplorer",
           "kind": "function",
           "signature": "function DocumentsExplorer("

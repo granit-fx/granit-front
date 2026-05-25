@@ -4,6 +4,7 @@ import { useFolder } from '../hooks/use-folders.js';
 import { useViewPreferences } from '../hooks/use-view-preferences.js';
 
 import { DocumentDetail } from './document-detail.js';
+import { DocumentQuickLook } from './document-quick-look.js';
 import { DocumentsList } from './documents-list.js';
 import { DocumentsToolbar } from './documents-toolbar.js';
 import { FolderBreadcrumb } from './folder-breadcrumb.js';
@@ -13,6 +14,7 @@ import { UploadButton } from './upload-button.js';
 import { UploadDropZone } from './upload-drop-zone.js';
 
 import type { DocumentDetailLabels } from './document-detail.js';
+import type { DocumentQuickLookLabels } from './document-quick-look.js';
 import type { DocumentsListLabels } from './documents-list.js';
 import type { DocumentsToolbarLabels } from './documents-toolbar.js';
 import type { FolderBreadcrumbLabels } from './folder-breadcrumb.js';
@@ -33,6 +35,7 @@ export interface DocumentsExplorerLabels {
   readonly upload?: UploadButtonLabels;
   readonly dropZone?: UploadDropZoneLabels;
   readonly detail?: DocumentDetailLabels;
+  readonly quickLook?: DocumentQuickLookLabels;
 }
 
 export interface DocumentsExplorerProps {
@@ -99,6 +102,8 @@ export function DocumentsExplorer({
   const [selectedIds, setSelectedIds] = useState<ReadonlySet<string>>(() => new Set());
   const [selectedDocs, setSelectedDocs] = useState<readonly DocumentResponse[]>([]);
   const [focusedDoc, setFocusedDoc] = useState<DocumentResponse | null>(null);
+  const [items, setItems] = useState<readonly DocumentResponse[]>([]);
+  const [previewId, setPreviewId] = useState<string | null>(null);
   const [inspectorVisible, setInspectorVisible] = useState(showInspector);
   const [clearSignal, setClearSignal] = useState(0);
   const { viewMode, tileSize, setViewMode, setTileSize } =
@@ -220,12 +225,21 @@ export function DocumentsExplorer({
               tileSize={tileSize}
               clearSignal={clearSignal}
               onOpenDocument={onOpenDocument}
+              onPreviewDocument={(doc) => setPreviewId(doc.id)}
               onSelectionChange={handleSelectionChange}
               onFocusChange={setFocusedDoc}
+              onItemsChange={setItems}
               labels={labels?.list}
             />
           </section>
         </UploadDropZone>
+        <DocumentQuickLook
+          documentId={previewId}
+          siblings={items}
+          onNavigate={setPreviewId}
+          onClose={() => setPreviewId(null)}
+          labels={labels?.quickLook}
+        />
         {showInspector && inspectorVisible && (
           <aside data-granit-documents-explorer-inspector="">
             {focusedDoc ? (

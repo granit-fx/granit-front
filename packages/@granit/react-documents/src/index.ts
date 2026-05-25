@@ -75,6 +75,12 @@ export { useTenantStorageQuota } from './hooks/use-quota.js';
 export { DocumentDetail } from './components/document-detail.js';
 export type { DocumentDetailLabels, DocumentDetailProps } from './components/document-detail.js';
 
+export { DocumentQuickLook } from './components/document-quick-look.js';
+export type {
+  DocumentQuickLookLabels,
+  DocumentQuickLookProps,
+} from './components/document-quick-look.js';
+
 export { DocumentsExplorer } from './components/documents-explorer.js';
 export type {
   DocumentsExplorerLabels,

@@ -141,4 +141,17 @@ export const documentsTranslationsFr: DocumentsTranslations = {
     InspectorEmpty: 'Sélectionnez un document pour voir ses détails.',
     InspectorMultiple: '{{count}} documents sélectionnés.',
   },
+  QuickLook: {
+    Title: 'Aperçu',
+    Close: 'Fermer',
+    Download: 'Télécharger',
+    Previous: 'Précédent',
+    Next: 'Suivant',
+    Loading: 'Chargement…',
+    LoadingPreview: 'Chargement de l’aperçu…',
+    Unsupported: 'Aucun aperçu disponible pour les fichiers {{kind}}.',
+    DownloadToView: 'Télécharger pour ouvrir',
+    PreviewError: 'Échec du chargement de l’aperçu.',
+    Position: '{{current}} / {{total}}',
+  },
 };

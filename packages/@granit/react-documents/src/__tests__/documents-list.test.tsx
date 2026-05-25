@@ -327,6 +327,62 @@ describe('DocumentsList', () => {
     expect(tiles[1]!.getAttribute('data-granit-document-kind')).toBe('pdf');
   });
 
+  it('invokes onPreviewDocument when Space is pressed on the focused row', async () => {
+    const client = createMockClient();
+    mockTwoDocs(client);
+    const onPreviewDocument = vi.fn();
+
+    render(
+      <DocumentsList
+        folderId="fld-1"
+        onOpenDocument={vi.fn()}
+        onPreviewDocument={onPreviewDocument}
+      />,
+      { wrapper: createWrapper(client) }
+    );
+
+    await waitFor(() => expect(screen.getByText('contract.pdf')).toBeInTheDocument());
+
+    // Click the name to focus the row, then press Space.
+    await userEvent.click(screen.getByRole('button', { name: 'contract.pdf' }));
+    const table = document.querySelector<HTMLTableElement>('[data-granit-documents-list-table]');
+    table!.focus();
+    await userEvent.keyboard(' ');
+
+    expect(onPreviewDocument).toHaveBeenCalled();
+    const [doc] = onPreviewDocument.mock.calls[0]!;
+    expect((doc as { id: string }).id).toBe('doc-1');
+  });
+
+  it('falls back to toggling selection on Space when no onPreviewDocument is set', async () => {
+    const client = createMockClient();
+    mockTwoDocs(client);
+    const onSelectionChange = vi.fn();
+
+    render(
+      <DocumentsList
+        folderId="fld-1"
+        onOpenDocument={vi.fn()}
+        onSelectionChange={onSelectionChange}
+      />,
+      { wrapper: createWrapper(client) }
+    );
+
+    await waitFor(() => expect(screen.getByText('contract.pdf')).toBeInTheDocument());
+
+    await userEvent.click(screen.getByRole('button', { name: 'contract.pdf' }));
+    // After click → selection has doc-1. Space should toggle it off.
+    const table = document.querySelector<HTMLTableElement>('[data-granit-documents-list-table]');
+    table!.focus();
+    await userEvent.keyboard(' ');
+
+    await waitFor(() => {
+      const lastCall = onSelectionChange.mock.calls.at(-1);
+      const set = lastCall?.[0] as ReadonlySet<string>;
+      expect(set.has('doc-1')).toBe(false);
+    });
+  });
+
   it('opens a document on tile double-click', async () => {
     const client = createMockClient();
     mockTwoDocs(client);

@@ -45,6 +45,12 @@ export interface DocumentsListProps {
   readonly tileSize?: TileSizeStep;
   /** Open / preview a single document (Enter key or single click on name). */
   readonly onOpenDocument?: (id: string) => void;
+  /**
+   * Quick Look — invoked when the user presses `Space` on the focused row,
+   * matching macOS Finder. When omitted, `Space` falls back to its previous
+   * behavior of toggling the focused row's selection.
+   */
+  readonly onPreviewDocument?: (doc: DocumentResponse) => void;
   /** Bubbles the current selection (ids) to a parent toolbar or inspector. */
   readonly onSelectionChange?: (
     ids: ReadonlySet<string>,
@@ -52,6 +58,12 @@ export interface DocumentsListProps {
   ) => void;
   /** Bubbles the focused row (last single-clicked) for inspector binding. */
   readonly onFocusChange?: (doc: DocumentResponse | null) => void;
+  /**
+   * Bubbles the current page of items so a parent can use them for sibling
+   * navigation (e.g. ← / → in `<DocumentQuickLook>`). Fires whenever the
+   * underlying query returns a new page.
+   */
+  readonly onItemsChange?: (items: readonly DocumentResponse[]) => void;
   /**
    * Monotonic signal: bumping the value tells the list to clear its inner
    * selection + focus state. Useful when a parent toolbar exposes a
@@ -118,8 +130,10 @@ function DocumentsListBody({
   viewMode = 'list',
   tileSize = DEFAULT_TILE_SIZE,
   onOpenDocument,
+  onPreviewDocument,
   onSelectionChange,
   onFocusChange,
+  onItemsChange,
   clearSignal,
   labels,
   className,
@@ -184,6 +198,11 @@ function DocumentsListBody({
     const doc = focusedId ? (items.find((d) => d.id === focusedId) ?? null) : null;
     onFocusChange(doc);
   }, [focusedId, items, onFocusChange]);
+
+  useEffect(() => {
+    if (!onItemsChange) return;
+    onItemsChange(items);
+  }, [items, onItemsChange]);
 
   function setRowMode(id: string, mode: RowMode): void {
     setRowModes((prev) => ({ ...prev, [id]: mode }));
@@ -270,7 +289,14 @@ function DocumentsListBody({
       onOpenDocument?.(focusedId);
     } else if (event.key === ' ' && focusedId) {
       event.preventDefault();
-      selection.toggle(focusedId);
+      if (onPreviewDocument) {
+        const doc = items.find((d) => d.id === focusedId);
+        if (doc) onPreviewDocument(doc);
+      } else {
+        // No preview handler wired → fall back to the legacy
+        // "Space toggles selection" behavior to stay accessible.
+        selection.toggle(focusedId);
+      }
     } else if (event.key === 'F2' && focusedId && canManage) {
       event.preventDefault();
       setRowMode(focusedId, 'renaming');

@@ -148,6 +148,19 @@ export interface DocumentsTranslations {
     readonly InspectorEmpty: string;
     readonly InspectorMultiple: string;
   };
+  readonly QuickLook: {
+    readonly Title: string;
+    readonly Close: string;
+    readonly Download: string;
+    readonly Previous: string;
+    readonly Next: string;
+    readonly Loading: string;
+    readonly LoadingPreview: string;
+    readonly Unsupported: string;
+    readonly DownloadToView: string;
+    readonly PreviewError: string;
+    readonly Position: string;
+  };
 }
 
 export const documentsTranslationsEn: DocumentsTranslations = {
@@ -288,5 +301,18 @@ export const documentsTranslationsEn: DocumentsTranslations = {
     Title: 'Documents',
     InspectorEmpty: 'Select a document to see its details.',
     InspectorMultiple: '{{count}} documents selected.',
+  },
+  QuickLook: {
+    Title: 'Preview',
+    Close: 'Close',
+    Download: 'Download',
+    Previous: 'Previous',
+    Next: 'Next',
+    Loading: 'Loading…',
+    LoadingPreview: 'Loading preview…',
+    Unsupported: 'No preview available for {{kind}} files.',
+    DownloadToView: 'Download to view',
+    PreviewError: 'Failed to load preview.',
+    Position: '{{current}} / {{total}}',
   },
 };
