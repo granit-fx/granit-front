@@ -68,6 +68,9 @@ export interface DocumentsTranslations {
       readonly BulkTrashConfirmOk: string;
       readonly BulkTrashCancel: string;
       readonly InspectorToggle: string;
+      readonly ViewList: string;
+      readonly ViewGrid: string;
+      readonly Zoom: string;
     };
     readonly Upload: {
       readonly Button: string;
@@ -206,6 +209,9 @@ export const documentsTranslationsEn: DocumentsTranslations = {
       BulkTrashConfirmOk: 'Confirm',
       BulkTrashCancel: 'Cancel',
       InspectorToggle: 'Toggle inspector',
+      ViewList: 'List view',
+      ViewGrid: 'Grid view',
+      Zoom: 'Tile size',
     },
     Upload: {
       Button: 'Upload',

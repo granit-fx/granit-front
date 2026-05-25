@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { useFolder } from '../hooks/use-folders.js';
+import { useViewPreferences } from '../hooks/use-view-preferences.js';
 
 import { DocumentDetail } from './document-detail.js';
 import { DocumentsList } from './documents-list.js';
@@ -41,6 +42,13 @@ export interface DocumentsExplorerProps {
   readonly showQuotaBadge?: boolean;
   /** Hide / show the right inspector pane. Defaults to `true`. */
   readonly showInspector?: boolean;
+  /**
+   * `localStorage` key used to persist list/grid view mode + tile size. Pass
+   * `null` to disable persistence (state still works in-memory). Defaults to
+   * `granit-documents-view`. Tenants that want per-tenant preferences should
+   * pass a tenant-scoped key.
+   */
+  readonly viewPreferencesStorageKey?: string | null;
   readonly onOpenDocument?: (id: string) => void;
   readonly labels?: DocumentsExplorerLabels;
   readonly className?: string;
@@ -81,6 +89,7 @@ export function DocumentsExplorer({
   canManage = false,
   showQuotaBadge = false,
   showInspector = true,
+  viewPreferencesStorageKey = 'granit-documents-view',
   onOpenDocument,
   labels,
   className,
@@ -92,6 +101,8 @@ export function DocumentsExplorer({
   const [focusedDoc, setFocusedDoc] = useState<DocumentResponse | null>(null);
   const [inspectorVisible, setInspectorVisible] = useState(showInspector);
   const [clearSignal, setClearSignal] = useState(0);
+  const { viewMode, tileSize, setViewMode, setTileSize } =
+    useViewPreferences(viewPreferencesStorageKey);
 
   // Watch the live status of the current selection. After a trash mutation
   // (direct or cascading from an ancestor), the cache is invalidated and
@@ -187,6 +198,10 @@ export function DocumentsExplorer({
               onClearSelection={handleClearSelection}
               inspectorVisible={showInspector && inspectorVisible}
               onToggleInspector={showInspector ? () => setInspectorVisible((v) => !v) : undefined}
+              viewMode={viewMode}
+              onViewModeChange={setViewMode}
+              tileSize={tileSize}
+              onTileSizeChange={setTileSize}
               labels={labels?.toolbar}
               trailing={
                 canManage && (
@@ -201,6 +216,8 @@ export function DocumentsExplorer({
             <DocumentsList
               folderId={folderId}
               canManage={canManage}
+              viewMode={viewMode}
+              tileSize={tileSize}
               clearSignal={clearSignal}
               onOpenDocument={onOpenDocument}
               onSelectionChange={handleSelectionChange}

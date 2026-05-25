@@ -1,7 +1,9 @@
 import { useState } from 'react';
 
 import { useTrashDocument } from '../hooks/use-document-mutations.js';
+import { TILE_SIZE_STEPS } from '../hooks/use-view-preferences.js';
 
+import type { DocumentsViewMode, TileSizeStep } from '../hooks/use-view-preferences.js';
 import type { DocumentResponse } from '@granit/documents';
 import type { ReactNode } from 'react';
 
@@ -15,6 +17,9 @@ export interface DocumentsToolbarLabels {
   readonly bulkTrashConfirmOk?: string;
   readonly bulkTrashCancel?: string;
   readonly inspectorToggle?: string;
+  readonly viewList?: string;
+  readonly viewGrid?: string;
+  readonly zoom?: string;
 }
 
 export interface DocumentsToolbarProps {
@@ -25,6 +30,12 @@ export interface DocumentsToolbarProps {
   /** Optional inspector visibility binding for the explorer header. */
   readonly inspectorVisible?: boolean;
   readonly onToggleInspector?: () => void;
+  /** Current list/grid view mode. When unset the switcher is hidden. */
+  readonly viewMode?: DocumentsViewMode;
+  readonly onViewModeChange?: (mode: DocumentsViewMode) => void;
+  /** Current tile size (grid mode). When unset the zoom slider is hidden. */
+  readonly tileSize?: TileSizeStep;
+  readonly onTileSizeChange?: (size: TileSizeStep) => void;
   readonly labels?: DocumentsToolbarLabels;
   readonly className?: string;
   /** Extra trailing actions (e.g. an `<UploadButton />` in the no-selection state). */
@@ -41,6 +52,9 @@ const DEFAULT_LABELS: Required<DocumentsToolbarLabels> = {
   bulkTrashConfirmOk: 'Confirm',
   bulkTrashCancel: 'Cancel',
   inspectorToggle: 'Toggle inspector',
+  viewList: 'List view',
+  viewGrid: 'Grid view',
+  zoom: 'Tile size',
 };
 
 /**
@@ -59,6 +73,10 @@ export function DocumentsToolbar({
   onClearSelection,
   inspectorVisible,
   onToggleInspector,
+  viewMode,
+  onViewModeChange,
+  tileSize,
+  onTileSizeChange,
   labels,
   className,
   trailing,
@@ -146,6 +164,51 @@ export function DocumentsToolbar({
       )}
 
       <span data-granit-documents-toolbar-trailing="">
+        {viewMode && onViewModeChange && (
+          <span
+            data-granit-documents-toolbar-view=""
+            role="group"
+            aria-label={labelStrings.viewList}
+          >
+            <button
+              type="button"
+              data-granit-documents-toolbar-view-list=""
+              aria-pressed={viewMode === 'list'}
+              aria-label={labelStrings.viewList}
+              onClick={() => onViewModeChange('list')}
+            >
+              ≡
+            </button>
+            <button
+              type="button"
+              data-granit-documents-toolbar-view-grid=""
+              aria-pressed={viewMode === 'grid'}
+              aria-label={labelStrings.viewGrid}
+              onClick={() => onViewModeChange('grid')}
+            >
+              ▦
+            </button>
+          </span>
+        )}
+        {viewMode === 'grid' && tileSize !== undefined && onTileSizeChange && (
+          <label data-granit-documents-toolbar-zoom="">
+            <span data-granit-documents-toolbar-zoom-label="">{labelStrings.zoom}</span>
+            <input
+              type="range"
+              min={0}
+              max={TILE_SIZE_STEPS.length - 1}
+              step={1}
+              value={Math.max(0, TILE_SIZE_STEPS.indexOf(tileSize))}
+              aria-label={labelStrings.zoom}
+              aria-valuetext={`${String(tileSize)}px`}
+              onChange={(event) => {
+                const idx = Number(event.target.value);
+                const next = TILE_SIZE_STEPS[idx];
+                if (next !== undefined) onTileSizeChange(next);
+              }}
+            />
+          </label>
+        )}
         {onToggleInspector && (
           <button
             type="button"

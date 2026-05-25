@@ -293,4 +293,53 @@ describe('DocumentsList', () => {
     const row = document.querySelector<HTMLElement>('[data-granit-document-id="doc-1"]');
     expect(row!.getAttribute('draggable')).toBe('false');
   });
+
+  it('renders the table in list mode (default)', async () => {
+    const client = createMockClient();
+    mockTwoDocs(client);
+    render(<DocumentsList folderId="fld-1" onOpenDocument={vi.fn()} />, {
+      wrapper: createWrapper(client),
+    });
+    await waitFor(() => expect(screen.getByText('contract.pdf')).toBeInTheDocument());
+    expect(document.querySelector('[data-granit-documents-list-table]')).not.toBeNull();
+    expect(document.querySelector('[data-granit-documents-list-grid]')).toBeNull();
+  });
+
+  it('renders tiles + kind data attributes in grid mode', async () => {
+    const client = createMockClient();
+    mockTwoDocs(client);
+    render(
+      <DocumentsList folderId="fld-1" viewMode="grid" tileSize={200} onOpenDocument={vi.fn()} />,
+      { wrapper: createWrapper(client) }
+    );
+    await waitFor(() => expect(screen.getByText('contract.pdf')).toBeInTheDocument());
+
+    const grid = document.querySelector<HTMLElement>('[data-granit-documents-list-grid]');
+    expect(grid).not.toBeNull();
+    expect(document.querySelector('[data-granit-documents-list-table]')).toBeNull();
+    // CSS var carries the tile size to the host stylesheet.
+    expect(grid!.style.getPropertyValue('--granit-documents-tile-size')).toBe('200px');
+
+    const tiles = document.querySelectorAll('[data-granit-documents-list-tile]');
+    expect(tiles.length).toBe(2);
+    // contract.pdf → 'pdf'; invoice.pdf → 'pdf'
+    expect(tiles[0]!.getAttribute('data-granit-document-kind')).toBe('pdf');
+    expect(tiles[1]!.getAttribute('data-granit-document-kind')).toBe('pdf');
+  });
+
+  it('opens a document on tile double-click', async () => {
+    const client = createMockClient();
+    mockTwoDocs(client);
+    const onOpenDocument = vi.fn();
+    render(<DocumentsList folderId="fld-1" viewMode="grid" onOpenDocument={onOpenDocument} />, {
+      wrapper: createWrapper(client),
+    });
+    await waitFor(() => expect(screen.getByText('contract.pdf')).toBeInTheDocument());
+
+    const tile = document.querySelector<HTMLElement>(
+      '[data-granit-document-id="doc-1"][data-granit-documents-list-tile]'
+    );
+    await userEvent.dblClick(tile!);
+    expect(onOpenDocument).toHaveBeenCalledWith('doc-1');
+  });
 });

@@ -96,6 +96,21 @@ export type { InlineEditProps } from './components/inline-edit.js';
 export { useMultiSelect } from './hooks/use-multi-select.js';
 export type { MultiSelectApi } from './hooks/use-multi-select.js';
 
+export {
+  DEFAULT_TILE_SIZE,
+  DEFAULT_VIEW_MODE,
+  TILE_SIZE_STEPS,
+  useViewPreferences,
+} from './hooks/use-view-preferences.js';
+export type {
+  DocumentsViewMode,
+  TileSizeStep,
+  ViewPreferences,
+} from './hooks/use-view-preferences.js';
+
+export { classifyDocumentName, documentBadge } from './components/document-kind.js';
+export type { DocumentKind } from './components/document-kind.js';
+
 // Components — Folders
 export { FolderBreadcrumb } from './components/folder-breadcrumb.js';
 export type {

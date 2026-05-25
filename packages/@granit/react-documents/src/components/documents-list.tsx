@@ -6,14 +6,17 @@ import { useRenameDocument, useTrashDocument } from '../hooks/use-document-mutat
 import { useMultiSelect } from '../hooks/use-multi-select.js';
 import { useDocumentsConfig } from '../providers/documents-provider.js';
 
+import { classifyDocumentName, documentBadge } from './document-kind.js';
 import { InlineEdit } from './inline-edit.js';
 
+import type { DocumentsViewMode, TileSizeStep } from '../hooks/use-view-preferences.js';
 import type { DocumentResponse } from '@granit/documents';
 import type { FilterEntry, SortEntry } from '@granit/query-engine';
 import type { DragEvent, KeyboardEvent, MouseEvent, ReactNode } from 'react';
 
 const LIST_QUERY_KEY_PREFIX = ['documents', 'documents', 'list'] as const;
 const DEFAULT_PAGE_SIZE = 50;
+const DEFAULT_TILE_SIZE: TileSizeStep = 160;
 
 export interface DocumentsListLabels {
   readonly empty?: string;
@@ -36,6 +39,10 @@ export interface DocumentsListProps {
   readonly folderId: string;
   readonly pageSize?: number;
   readonly canManage?: boolean;
+  /** `'list'` (default) renders a table, `'grid'` renders a tile grid. */
+  readonly viewMode?: DocumentsViewMode;
+  /** Side of each tile in pixels (grid mode only). Defaults to 160. */
+  readonly tileSize?: TileSizeStep;
   /** Open / preview a single document (Enter key or single click on name). */
   readonly onOpenDocument?: (id: string) => void;
   /** Bubbles the current selection (ids) to a parent toolbar or inspector. */
@@ -77,13 +84,14 @@ const DEFAULT_LABELS: Required<DocumentsListLabels> = {
  * endpoint `GET {basePath}/documents` — pre-applies `folderId Equals <id>`
  * and `status Equals Active`. Trashed documents are surfaced in TrashBin.
  *
- * Beyond display, the list exposes:
- *  - Multi-selection (click / ctrl-click / shift-click / select-all checkbox).
- *  - Keyboard navigation: ↑↓ focus, Enter opens, F2 renames, Space toggles
- *    selection, Delete trashes the focused row (with inline confirm).
- *  - Inline rename via {@link InlineEdit} (replaces `window.prompt`).
- *  - Inline trash confirmation (replaces `window.confirm`).
- *  - Selection / focus callbacks for an external toolbar + inspector.
+ * Two view modes:
+ *  - `'list'` (default): a table with name / status / actions columns.
+ *  - `'grid'`: a tile grid sized by `tileSize`, with a kind badge per
+ *    extension (image / pdf / code / …) emitted as `data-granit-document-kind`
+ *    so hosts can color-code without a thumbnail backend.
+ *
+ * Both modes share the same selection / focus / drag / rename / trash
+ * machinery — switching the view does not lose state.
  */
 export function DocumentsList(props: Readonly<DocumentsListProps>): ReactNode {
   const config = useDocumentsConfig();
@@ -107,6 +115,8 @@ function DocumentsListBody({
   folderId,
   pageSize,
   canManage = false,
+  viewMode = 'list',
+  tileSize = DEFAULT_TILE_SIZE,
   onOpenDocument,
   onSelectionChange,
   onFocusChange,
@@ -135,7 +145,6 @@ function DocumentsListBody({
   const selection = useMultiSelect(orderedIds);
   const [focusedId, setFocusedId] = useState<string | null>(null);
   const [rowModes, setRowModes] = useState<Readonly<Record<string, RowMode>>>({});
-  const tableRef = useRef<HTMLTableElement | null>(null);
 
   const renameDocument = useRenameDocument();
   const trashDocument = useTrashDocument();
@@ -189,7 +198,7 @@ function DocumentsListBody({
     });
   }
 
-  function handleRowClick(event: MouseEvent<HTMLTableRowElement>, doc: DocumentResponse): void {
+  function handleItemClick(event: MouseEvent, doc: DocumentResponse): void {
     if (event.shiftKey) {
       event.preventDefault();
       selection.selectRange(doc.id);
@@ -207,13 +216,13 @@ function DocumentsListBody({
     onOpenDocument?.(doc.id);
   }
 
-  function handleRowDragStart(event: DragEvent<HTMLTableRowElement>, doc: DocumentResponse): void {
+  function handleItemDragStart(event: DragEvent, doc: DocumentResponse): void {
     if (!canManage) {
       event.preventDefault();
       return;
     }
-    // If the dragged row is part of the current selection, move the whole
-    // selection. Otherwise, drag this row only (and adopt it as the new
+    // If the dragged item is part of the current selection, move the whole
+    // selection. Otherwise, drag this item only (and adopt it as the new
     // single selection, matching Finder / OneDrive behavior).
     let ids: string[];
     if (selection.selected.has(doc.id)) {
@@ -231,11 +240,16 @@ function DocumentsListBody({
     event.dataTransfer.effectAllowed = 'move';
   }
 
-  function handleKeyDown(event: KeyboardEvent<HTMLTableElement>): void {
+  function handleKeyDown(event: KeyboardEvent<HTMLElement>): void {
     if (items.length === 0) return;
     const index = focusedId ? items.findIndex((d) => d.id === focusedId) : -1;
 
-    if (event.key === 'ArrowDown') {
+    // Both list and grid use the same linear nav model. In grid mode the
+    // visual rows are CSS-driven (auto-fill); without a JS-tracked column
+    // count we can't do Finder-style up/down between rows, so left/right
+    // (and up/down) all walk the flat ordering. Good enough for v1, and
+    // matches what shadcn / radix do for command palettes.
+    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
       event.preventDefault();
       const next = items[Math.min(items.length - 1, index + 1)];
       if (next) {
@@ -243,7 +257,7 @@ function DocumentsListBody({
         if (event.shiftKey) selection.selectRange(next.id);
         else if (!event.ctrlKey && !event.metaKey) selection.selectOnly(next.id);
       }
-    } else if (event.key === 'ArrowUp') {
+    } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
       event.preventDefault();
       const next = items[Math.max(0, index - 1)];
       if (next) {
@@ -299,6 +313,7 @@ function DocumentsListBody({
       <div
         data-granit-documents-list=""
         data-granit-documents-list-loading=""
+        data-granit-documents-list-view={viewMode}
         className={className}
       >
         {labelStrings.loading}
@@ -308,7 +323,12 @@ function DocumentsListBody({
 
   if (query.isError) {
     return (
-      <div data-granit-documents-list="" data-granit-documents-list-error="" className={className}>
+      <div
+        data-granit-documents-list=""
+        data-granit-documents-list-error=""
+        data-granit-documents-list-view={viewMode}
+        className={className}
+      >
         {labelStrings.error}
       </div>
     );
@@ -322,54 +342,64 @@ function DocumentsListBody({
 
   if (items.length === 0) {
     return (
-      <div data-granit-documents-list="" className={className}>
+      <div
+        data-granit-documents-list=""
+        data-granit-documents-list-view={viewMode}
+        className={className}
+      >
         <div data-granit-documents-list-empty="">{labelStrings.empty}</div>
       </div>
     );
   }
 
+  const itemRenderState = items.map((document) => ({
+    document,
+    isSelected: selection.isSelected(document.id),
+    isFocused: focusedId === document.id,
+    mode: rowModes[document.id] ?? 'idle',
+    kind: classifyDocumentName(document.name),
+    badge: documentBadge(document.name),
+  }));
+
   return (
-    <div data-granit-documents-list="" className={className}>
-      <table
-        ref={tableRef}
-        data-granit-documents-list-table=""
-        tabIndex={0}
-        onKeyDown={handleKeyDown}
-      >
-        <thead>
-          <tr>
-            <th data-granit-documents-list-select-col="">
-              <input
-                type="checkbox"
-                aria-label={labelStrings.selectHeader}
-                checked={allSelected}
-                onChange={(event) =>
-                  event.target.checked ? selection.selectAll(orderedIds) : selection.clear()
-                }
-              />
-            </th>
-            <th>{labelStrings.nameHeader}</th>
-            <th>{labelStrings.statusHeader}</th>
-            {canManage && <th data-granit-documents-list-actions-col="" />}
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((document) => {
-            const isSelected = selection.isSelected(document.id);
-            const isFocused = focusedId === document.id;
-            const mode = rowModes[document.id] ?? 'idle';
-            return (
+    <div
+      data-granit-documents-list=""
+      data-granit-documents-list-view={viewMode}
+      className={className}
+    >
+      {viewMode === 'list' ? (
+        <table data-granit-documents-list-table="" tabIndex={0} onKeyDown={handleKeyDown}>
+          <thead>
+            <tr>
+              <th data-granit-documents-list-select-col="">
+                <input
+                  type="checkbox"
+                  aria-label={labelStrings.selectHeader}
+                  checked={allSelected}
+                  onChange={(event) =>
+                    event.target.checked ? selection.selectAll(orderedIds) : selection.clear()
+                  }
+                />
+              </th>
+              <th>{labelStrings.nameHeader}</th>
+              <th>{labelStrings.statusHeader}</th>
+              {canManage && <th data-granit-documents-list-actions-col="" />}
+            </tr>
+          </thead>
+          <tbody>
+            {itemRenderState.map(({ document, isSelected, isFocused, mode, kind }) => (
               <tr
                 key={document.id}
                 data-granit-documents-list-row=""
                 data-granit-document-id={document.id}
+                data-granit-document-kind={kind}
                 data-granit-documents-list-selected={isSelected ? '' : undefined}
                 data-granit-documents-list-focused={isFocused ? '' : undefined}
                 data-granit-documents-list-draggable={canManage ? '' : undefined}
                 aria-selected={isSelected}
                 draggable={canManage}
-                onClick={(event) => handleRowClick(event, document)}
-                onDragStart={(event) => handleRowDragStart(event, document)}
+                onClick={(event) => handleItemClick(event, document)}
+                onDragStart={(event) => handleItemDragStart(event, document)}
               >
                 <td data-granit-documents-list-select-cell="">
                   <input
@@ -453,10 +483,114 @@ function DocumentsListBody({
                   </td>
                 )}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <ul
+          data-granit-documents-list-grid=""
+          // tile size becomes a CSS custom property the host stylesheet picks
+          // up to drive the grid column track + tile dimensions.
+          style={{ ['--granit-documents-tile-size' as string]: `${String(tileSize)}px` }}
+          tabIndex={0}
+          aria-multiselectable
+          onKeyDown={handleKeyDown}
+        >
+          {itemRenderState.map(({ document, isSelected, isFocused, mode, kind, badge }) => (
+            <li
+              key={document.id}
+              data-granit-documents-list-tile=""
+              data-granit-document-id={document.id}
+              data-granit-document-kind={kind}
+              data-granit-documents-list-selected={isSelected ? '' : undefined}
+              data-granit-documents-list-focused={isFocused ? '' : undefined}
+              data-granit-documents-list-draggable={canManage ? '' : undefined}
+              aria-selected={isSelected}
+              draggable={canManage}
+              onClick={(event) => handleItemClick(event, document)}
+              onDoubleClick={() => onOpenDocument?.(document.id)}
+              onDragStart={(event) => handleItemDragStart(event, document)}
+            >
+              <input
+                type="checkbox"
+                data-granit-documents-list-tile-checkbox=""
+                aria-label={`${labelStrings.selectRow} ${document.name}`}
+                checked={isSelected}
+                onClick={(event) => event.stopPropagation()}
+                onChange={() => selection.toggle(document.id)}
+              />
+              <div data-granit-documents-list-tile-thumb="" aria-hidden>
+                <span data-granit-documents-list-tile-badge="">{badge}</span>
+              </div>
+              <div data-granit-documents-list-tile-name="">
+                {mode === 'renaming' && canManage ? (
+                  <InlineEdit
+                    initialValue={document.name}
+                    ariaLabel={labelStrings.rename}
+                    onCommit={(name) => commitRename(document, name)}
+                    onCancel={() => clearRowMode(document.id)}
+                  />
+                ) : onOpenDocument ? (
+                  <button
+                    type="button"
+                    data-granit-documents-list-name=""
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handleNameClick(document);
+                    }}
+                  >
+                    {document.name}
+                  </button>
+                ) : (
+                  <span data-granit-documents-list-name="">{document.name}</span>
+                )}
+              </div>
+              {canManage && (
+                <div data-granit-documents-list-tile-actions="">
+                  {mode === 'confirming-trash' ? (
+                    <span data-granit-documents-list-confirm="" role="alertdialog">
+                      <button type="button" onClick={() => clearRowMode(document.id)}>
+                        {labelStrings.trashCancel}
+                      </button>
+                      <button
+                        type="button"
+                        data-granit-documents-list-confirm-ok=""
+                        onClick={() => confirmTrash(document)}
+                        disabled={trashDocument.isPending}
+                      >
+                        {labelStrings.trashConfirm}
+                      </button>
+                    </span>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        aria-label={labelStrings.rename}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setRowMode(document.id, 'renaming');
+                        }}
+                      >
+                        {labelStrings.rename}
+                      </button>
+                      <button
+                        type="button"
+                        aria-label={labelStrings.trash}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setRowMode(document.id, 'confirming-trash');
+                        }}
+                      >
+                        {labelStrings.trash}
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
       <nav data-granit-documents-list-pagination="" aria-label="Pagination">
         <button type="button" onClick={() => setPage(currentPage - 1)} disabled={currentPage <= 1}>
           {labelStrings.previous}

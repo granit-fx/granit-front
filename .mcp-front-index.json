@@ -3410,6 +3410,21 @@
           "members": []
         },
         {
+          "name": "classifyDocumentName",
+          "kind": "function",
+          "signature": "function classifyDocumentName(name: string): DocumentKind"
+        },
+        {
+          "name": "documentBadge",
+          "kind": "function",
+          "signature": "function documentBadge(name: string): string"
+        },
+        {
+          "name": "DocumentKind",
+          "kind": "type",
+          "signature": "type DocumentKind ="
+        },
+        {
           "name": "FolderBreadcrumb",
           "kind": "function",
           "signature": "function FolderBreadcrumb("

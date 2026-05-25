@@ -60,6 +60,9 @@ export const documentsTranslationsFr: DocumentsTranslations = {
       BulkTrashConfirmOk: 'Confirmer',
       BulkTrashCancel: 'Annuler',
       InspectorToggle: 'Afficher/masquer l’inspecteur',
+      ViewList: 'Vue liste',
+      ViewGrid: 'Vue grille',
+      Zoom: 'Taille des tuiles',
     },
     Upload: {
       Button: 'Téléverser',
