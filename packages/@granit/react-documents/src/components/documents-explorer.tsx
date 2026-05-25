@@ -9,6 +9,7 @@ import { FolderBreadcrumb } from './folder-breadcrumb.js';
 import { FolderTree } from './folder-tree.js';
 import { QuotaBadge } from './quota-badge.js';
 import { UploadButton } from './upload-button.js';
+import { UploadDropZone } from './upload-drop-zone.js';
 
 import type { DocumentDetailLabels } from './document-detail.js';
 import type { DocumentsListLabels } from './documents-list.js';
@@ -16,6 +17,7 @@ import type { DocumentsToolbarLabels } from './documents-toolbar.js';
 import type { FolderBreadcrumbLabels } from './folder-breadcrumb.js';
 import type { FolderTreeLabels } from './folder-tree.js';
 import type { UploadButtonLabels } from './upload-button.js';
+import type { UploadDropZoneLabels } from './upload-drop-zone.js';
 import type { DocumentResponse, FolderResponse } from '@granit/documents';
 import type { ReactNode } from 'react';
 
@@ -28,6 +30,7 @@ export interface DocumentsExplorerLabels {
   readonly list?: DocumentsListLabels;
   readonly toolbar?: DocumentsToolbarLabels;
   readonly upload?: UploadButtonLabels;
+  readonly dropZone?: UploadDropZoneLabels;
   readonly detail?: DocumentDetailLabels;
 }
 
@@ -163,42 +166,49 @@ export function DocumentsExplorer({
             labels={labels?.tree}
           />
         </aside>
-        <section data-granit-documents-explorer-main="">
-          {folderId.length > 0 && (
-            <FolderBreadcrumb
-              folderId={folderId}
-              onSelect={setCurrentFolder}
-              labels={labels?.breadcrumb}
+        <UploadDropZone
+          folderId={currentFolder?.id ?? null}
+          disabled={!canManage}
+          onComplete={noopUploadComplete}
+          labels={labels?.dropZone}
+        >
+          <section data-granit-documents-explorer-main="">
+            {folderId.length > 0 && (
+              <FolderBreadcrumb
+                folderId={folderId}
+                onSelect={setCurrentFolder}
+                labels={labels?.breadcrumb}
+              />
+            )}
+            <DocumentsToolbar
+              canManage={canManage}
+              selected={selectedIds}
+              selectedDocs={selectedDocs}
+              onClearSelection={handleClearSelection}
+              inspectorVisible={showInspector && inspectorVisible}
+              onToggleInspector={showInspector ? () => setInspectorVisible((v) => !v) : undefined}
+              labels={labels?.toolbar}
+              trailing={
+                canManage && (
+                  <UploadButton
+                    folderId={currentFolder?.id ?? null}
+                    onComplete={noopUploadComplete}
+                    labels={labels?.upload}
+                  />
+                )
+              }
             />
-          )}
-          <DocumentsToolbar
-            canManage={canManage}
-            selected={selectedIds}
-            selectedDocs={selectedDocs}
-            onClearSelection={handleClearSelection}
-            inspectorVisible={showInspector && inspectorVisible}
-            onToggleInspector={showInspector ? () => setInspectorVisible((v) => !v) : undefined}
-            labels={labels?.toolbar}
-            trailing={
-              canManage && (
-                <UploadButton
-                  folderId={currentFolder?.id ?? null}
-                  onComplete={noopUploadComplete}
-                  labels={labels?.upload}
-                />
-              )
-            }
-          />
-          <DocumentsList
-            folderId={folderId}
-            canManage={canManage}
-            clearSignal={clearSignal}
-            onOpenDocument={onOpenDocument}
-            onSelectionChange={handleSelectionChange}
-            onFocusChange={setFocusedDoc}
-            labels={labels?.list}
-          />
-        </section>
+            <DocumentsList
+              folderId={folderId}
+              canManage={canManage}
+              clearSignal={clearSignal}
+              onOpenDocument={onOpenDocument}
+              onSelectionChange={handleSelectionChange}
+              onFocusChange={setFocusedDoc}
+              labels={labels?.list}
+            />
+          </section>
+        </UploadDropZone>
         {showInspector && inspectorVisible && (
           <aside data-granit-documents-explorer-inspector="">
             {focusedDoc ? (

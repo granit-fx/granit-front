@@ -1,8 +1,9 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
-import { useFinalizeUpload, useRequestUploadTicket } from '../hooks/use-document-mutations.js';
+import { useFileUpload } from '../hooks/use-file-upload.js';
 
-import type { DocumentResponse, UploadTicketResponse } from '@granit/documents';
+import type { FileUploadError } from '../hooks/use-file-upload.js';
+import type { DocumentResponse } from '@granit/documents';
 import type { ChangeEvent, ReactNode } from 'react';
 
 export interface UploadButtonLabels {
@@ -31,99 +32,50 @@ const DEFAULT_LABELS: Required<UploadButtonLabels> = {
   failed: 'Upload failed.',
 };
 
-const DEFAULT_MAX_ALLOWED_BYTES = 1024 * 1024 * 1024;
+function pickErrorLabel(err: FileUploadError, labels: Required<UploadButtonLabels>): string {
+  if (err.code === 'too-large') return labels.tooLarge;
+  if (err.code === 'quota-exceeded') return labels.quotaExceeded;
+  // Surface the raw message when present (matches the pre-refactor contract
+  // — HTTP statuses, axios validation messages, etc. are usually useful).
+  // Network failures from XHR have a fixed "Network error" placeholder; the
+  // label is preferable there.
+  if (err.code === 'network') return labels.failed;
+  return err.message || labels.failed;
+}
 
 /**
- * Two-phase upload button:
- * 1. {@link useRequestUploadTicket} → presigned PUT URL + required headers.
- * 2. Direct PUT to blob storage via `XMLHttpRequest` to observe upload
- *    progress (the Fetch API has no upload-progress event).
- * 3. {@link useFinalizeUpload} to create the Document row.
- *
- * On HTTP 413 from the finalize step the {@link UploadButtonLabels.quotaExceeded}
- * label is surfaced. Errors set local state and clear the file input.
+ * Single-file upload button. Thin shell over {@link useFileUpload}: the
+ * native `<input type="file">` triggers `uploadFile` with the picked file,
+ * and the hook surfaces progress + a normalized error code. The component
+ * only owns DOM concerns (the hidden input, the visible label, the
+ * progress + error markers).
  */
 export function UploadButton({
   folderId,
   onComplete,
-  maxAllowedBytes = DEFAULT_MAX_ALLOWED_BYTES,
+  maxAllowedBytes,
   labels,
   className,
 }: UploadButtonProps): ReactNode {
   const labelStrings = { ...DEFAULT_LABELS, ...labels };
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [progress, setProgress] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const requestTicket = useRequestUploadTicket();
-  const finalize = useFinalizeUpload();
-
-  function uploadToBlobStore(ticket: UploadTicketResponse, file: File): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open(ticket.httpMethod, ticket.uploadUrl);
-      for (const [key, value] of Object.entries(ticket.requiredHeaders)) {
-        xhr.setRequestHeader(key, value);
-      }
-      xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable && event.total > 0) {
-          setProgress(Math.round((event.loaded / event.total) * 100));
-        }
-      };
-      xhr.onload = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          resolve();
-          return;
-        }
-        reject(new Error(`Upload failed with HTTP ${xhr.status.toString()}`));
-      };
-      xhr.onerror = () => reject(new Error(labelStrings.failed));
-      xhr.send(file);
-    });
-  }
+  const { uploadFile, progress, lastError } = useFileUpload({ maxAllowedBytes });
 
   async function handleChange(event: ChangeEvent<HTMLInputElement>): Promise<void> {
     const file = event.target.files?.[0];
     if (!file) return;
-    setError(null);
-
-    if (file.size > maxAllowedBytes) {
-      setError(labelStrings.tooLarge);
-      if (inputRef.current) inputRef.current.value = '';
-      return;
-    }
-
     try {
-      setProgress(0);
-      const ticket = await requestTicket.mutateAsync({
-        fileName: file.name,
-        contentType: file.type || 'application/octet-stream',
-        maxAllowedBytes,
-      });
-      await uploadToBlobStore(ticket, file);
-      const document = await finalize.mutateAsync({
-        blobId: ticket.blobId,
-        folderId,
-        name: file.name,
-      });
-      setProgress(null);
-      if (inputRef.current) inputRef.current.value = '';
+      const document = await uploadFile(file, folderId);
       onComplete?.(document);
-    } catch (err) {
-      const status = (err as { response?: { status?: number } } | undefined)?.response?.status;
-      if (status === 413) {
-        setError(labelStrings.quotaExceeded);
-      } else if (err instanceof Error) {
-        setError(err.message || labelStrings.failed);
-      } else {
-        setError(labelStrings.failed);
-      }
-      setProgress(null);
+    } catch {
+      /* normalized into lastError by the hook */
+    } finally {
       if (inputRef.current) inputRef.current.value = '';
     }
   }
 
   const isBusy = progress !== null;
+  const errorMessage = lastError ? pickErrorLabel(lastError, labelStrings) : null;
 
   return (
     <div data-granit-upload-button="" className={className}>
@@ -133,7 +85,9 @@ export function UploadButton({
           type="file"
           data-granit-upload-button-input=""
           disabled={isBusy}
-          onChange={handleChange}
+          onChange={(event) => {
+            void handleChange(event);
+          }}
         />
         <span>{isBusy ? labelStrings.uploading : labelStrings.button}</span>
       </label>
@@ -143,14 +97,14 @@ export function UploadButton({
           role="progressbar"
           aria-valuemin={0}
           aria-valuemax={100}
-          aria-valuenow={progress}
+          aria-valuenow={progress.percent}
         >
-          {progress}%
+          {progress.percent}%
         </div>
       )}
-      {error && (
+      {errorMessage && (
         <div data-granit-upload-button-error="" role="alert">
-          {error}
+          {errorMessage}
         </div>
       )}
     </div>

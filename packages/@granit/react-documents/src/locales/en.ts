@@ -76,6 +76,13 @@ export interface DocumentsTranslations {
       readonly TooLarge: string;
       readonly Failed: string;
     };
+    readonly DropZone: {
+      readonly Overlay: string;
+      readonly UploadingCount: string;
+      readonly TooLarge: string;
+      readonly QuotaExceeded: string;
+      readonly Failed: string;
+    };
   };
   readonly Versions: {
     readonly Title: string;
@@ -205,6 +212,13 @@ export const documentsTranslationsEn: DocumentsTranslations = {
       Uploading: 'Uploading…',
       QuotaExceeded: 'Tenant storage quota exceeded.',
       TooLarge: 'File is too large.',
+      Failed: 'Upload failed.',
+    },
+    DropZone: {
+      Overlay: 'Drop files to upload',
+      UploadingCount: 'Uploading {{done}} / {{total}}…',
+      TooLarge: 'File is too large.',
+      QuotaExceeded: 'Tenant storage quota exceeded.',
       Failed: 'Upload failed.',
     },
   },

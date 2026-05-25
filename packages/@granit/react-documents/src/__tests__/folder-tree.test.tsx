@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { FolderTree } from '../components/folder-tree.tsx';
+import { DOCUMENT_DRAG_MIME } from '../constants.js';
 import { DocumentsProvider } from '../providers/documents-provider.js';
 
 import type { AxiosInstance } from '@granit/api-client';
@@ -286,5 +287,75 @@ describe('FolderTree', () => {
     await waitFor(() => expect(screen.getByText('Contracts')).toBeInTheDocument());
     const node = document.querySelector(`[data-granit-folder-id="${root.id}"]`);
     expect(node?.hasAttribute('data-granit-folder-tree-current')).toBe(true);
+  });
+
+  it('moves dropped documents into the target folder via useMoveDocument', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ data: { folders: [root] } });
+    vi.mocked(client.post).mockResolvedValue({
+      data: {
+        id: 'doc-1',
+        folderId: root.id,
+        name: 'a.pdf',
+        status: 'Active',
+        ownerUserId: 'u',
+        currentVersionId: 'v',
+        description: null,
+        trashedAt: null,
+        permission: null,
+      },
+    });
+
+    render(<FolderTree canManage />, { wrapper: createWrapper(client) });
+    await waitFor(() => expect(screen.getByText('Contracts')).toBeInTheDocument());
+
+    const row = document.querySelector<HTMLElement>('[data-granit-folder-tree-row]');
+    expect(row).not.toBeNull();
+
+    // Simulate dragenter / dragover / drop with the granit MIME payload.
+    const ids = ['doc-1', 'doc-2'];
+    const types = [DOCUMENT_DRAG_MIME];
+    const store = new Map<string, string>([[DOCUMENT_DRAG_MIME, JSON.stringify({ ids })]]);
+    const dataTransfer = {
+      types,
+      effectAllowed: 'move',
+      dropEffect: 'none',
+      getData: (type: string) => store.get(type) ?? '',
+      setData: vi.fn(),
+    };
+
+    const enter = new Event('dragenter', { bubbles: true });
+    Object.defineProperty(enter, 'dataTransfer', { value: dataTransfer });
+    row!.dispatchEvent(enter);
+    await waitFor(() => expect(row!.hasAttribute('data-granit-folder-tree-drop-over')).toBe(true));
+
+    const drop = new Event('drop', { bubbles: true, cancelable: true });
+    Object.defineProperty(drop, 'dataTransfer', { value: dataTransfer });
+    row!.dispatchEvent(drop);
+
+    await waitFor(() => {
+      const moveCalls = vi.mocked(client.post).mock.calls.filter(([url]) => url.includes('/move'));
+      expect(moveCalls.length).toBe(2);
+    });
+  });
+
+  it('ignores drops that do not carry the granit MIME payload', () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ data: { folders: [root] } });
+
+    render(<FolderTree canManage />, { wrapper: createWrapper(client) });
+    return waitFor(() => expect(screen.getByText('Contracts')).toBeInTheDocument()).then(() => {
+      const row = document.querySelector<HTMLElement>('[data-granit-folder-tree-row]');
+      const dataTransfer = {
+        types: ['Files'], // a file drag, not an internal document drag
+        getData: () => '',
+      };
+      const drop = new Event('drop', { bubbles: true, cancelable: true });
+      Object.defineProperty(drop, 'dataTransfer', { value: dataTransfer });
+      row!.dispatchEvent(drop);
+
+      const moveCalls = vi.mocked(client.post).mock.calls.filter(([url]) => url.includes('/move'));
+      expect(moveCalls.length).toBe(0);
+    });
   });
 });

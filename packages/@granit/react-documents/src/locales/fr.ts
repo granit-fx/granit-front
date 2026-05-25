@@ -68,6 +68,13 @@ export const documentsTranslationsFr: DocumentsTranslations = {
       TooLarge: 'Le fichier est trop volumineux.',
       Failed: 'Échec du téléversement.',
     },
+    DropZone: {
+      Overlay: 'Déposez les fichiers pour téléverser',
+      UploadingCount: 'Téléversement {{done}} / {{total}}…',
+      TooLarge: 'Le fichier est trop volumineux.',
+      QuotaExceeded: 'Quota de stockage du locataire dépassé.',
+      Failed: 'Échec du téléversement.',
+    },
   },
   Versions: {
     Title: 'Historique des versions',

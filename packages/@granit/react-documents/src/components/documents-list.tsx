@@ -1,6 +1,7 @@
 import { QueryProvider, useQueryEndpoint } from '@granit/react-query-engine';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { DOCUMENT_DRAG_MIME } from '../constants.js';
 import { useRenameDocument, useTrashDocument } from '../hooks/use-document-mutations.js';
 import { useMultiSelect } from '../hooks/use-multi-select.js';
 import { useDocumentsConfig } from '../providers/documents-provider.js';
@@ -9,7 +10,7 @@ import { InlineEdit } from './inline-edit.js';
 
 import type { DocumentResponse } from '@granit/documents';
 import type { FilterEntry, SortEntry } from '@granit/query-engine';
-import type { KeyboardEvent, MouseEvent, ReactNode } from 'react';
+import type { DragEvent, KeyboardEvent, MouseEvent, ReactNode } from 'react';
 
 const LIST_QUERY_KEY_PREFIX = ['documents', 'documents', 'list'] as const;
 const DEFAULT_PAGE_SIZE = 50;
@@ -206,6 +207,30 @@ function DocumentsListBody({
     onOpenDocument?.(doc.id);
   }
 
+  function handleRowDragStart(event: DragEvent<HTMLTableRowElement>, doc: DocumentResponse): void {
+    if (!canManage) {
+      event.preventDefault();
+      return;
+    }
+    // If the dragged row is part of the current selection, move the whole
+    // selection. Otherwise, drag this row only (and adopt it as the new
+    // single selection, matching Finder / OneDrive behavior).
+    let ids: string[];
+    if (selection.selected.has(doc.id)) {
+      ids = Array.from(selection.selected);
+    } else {
+      selection.selectOnly(doc.id);
+      ids = [doc.id];
+    }
+    setFocusedId(doc.id);
+    event.dataTransfer.setData(DOCUMENT_DRAG_MIME, JSON.stringify({ ids }));
+    // Plain-text fallback so external apps (e.g. terminal, editor) see at
+    // least the names. Comma-joined keeps it grep-friendly.
+    const names = items.filter((d) => ids.includes(d.id)).map((d) => d.name);
+    event.dataTransfer.setData('text/plain', names.join(', '));
+    event.dataTransfer.effectAllowed = 'move';
+  }
+
   function handleKeyDown(event: KeyboardEvent<HTMLTableElement>): void {
     if (items.length === 0) return;
     const index = focusedId ? items.findIndex((d) => d.id === focusedId) : -1;
@@ -340,8 +365,11 @@ function DocumentsListBody({
                 data-granit-document-id={document.id}
                 data-granit-documents-list-selected={isSelected ? '' : undefined}
                 data-granit-documents-list-focused={isFocused ? '' : undefined}
+                data-granit-documents-list-draggable={canManage ? '' : undefined}
                 aria-selected={isSelected}
+                draggable={canManage}
                 onClick={(event) => handleRowClick(event, document)}
+                onDragStart={(event) => handleRowDragStart(event, document)}
               >
                 <td data-granit-documents-list-select-cell="">
                   <input

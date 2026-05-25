@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
 import { DocumentsList } from '../components/documents-list.tsx';
+import { DOCUMENT_DRAG_MIME } from '../constants.js';
 import { DocumentsProvider } from '../providers/documents-provider.js';
 
 import type { AxiosInstance } from '@granit/api-client';
@@ -224,5 +225,72 @@ describe('DocumentsList', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Confirm' }));
 
     await waitFor(() => expect(client.delete).toHaveBeenCalled());
+  });
+
+  it('sets the granit-documents DataTransfer payload on row drag start (single row)', async () => {
+    const client = createMockClient();
+    mockTwoDocs(client);
+
+    render(<DocumentsList folderId="fld-1" canManage onOpenDocument={vi.fn()} />, {
+      wrapper: createWrapper(client),
+    });
+
+    await waitFor(() => expect(screen.getByText('contract.pdf')).toBeInTheDocument());
+
+    const row = document.querySelector<HTMLElement>('[data-granit-document-id="doc-1"]');
+    expect(row).not.toBeNull();
+    expect(row!.getAttribute('draggable')).toBe('true');
+
+    const setData = vi.fn();
+    const dragStart = new Event('dragstart', { bubbles: true, cancelable: true });
+    Object.defineProperty(dragStart, 'dataTransfer', {
+      value: { setData, types: [], effectAllowed: 'none' },
+    });
+    row!.dispatchEvent(dragStart);
+
+    const granitCall = setData.mock.calls.find(([type]) => type === DOCUMENT_DRAG_MIME);
+    expect(granitCall).toBeDefined();
+    const payload = JSON.parse(granitCall![1] as string) as { ids: string[] };
+    expect(payload.ids).toEqual(['doc-1']);
+  });
+
+  it('drags the whole selection when the dragged row is part of it', async () => {
+    const client = createMockClient();
+    mockTwoDocs(client);
+
+    render(<DocumentsList folderId="fld-1" canManage onOpenDocument={vi.fn()} />, {
+      wrapper: createWrapper(client),
+    });
+
+    await waitFor(() => expect(screen.getByText('contract.pdf')).toBeInTheDocument());
+
+    // Select both rows via the select-all checkbox.
+    await userEvent.click(screen.getByRole('checkbox', { name: 'Select all' }));
+
+    const row = document.querySelector<HTMLElement>('[data-granit-document-id="doc-1"]');
+    const setData = vi.fn();
+    const dragStart = new Event('dragstart', { bubbles: true, cancelable: true });
+    Object.defineProperty(dragStart, 'dataTransfer', {
+      value: { setData, types: [], effectAllowed: 'none' },
+    });
+    row!.dispatchEvent(dragStart);
+
+    const granitCall = setData.mock.calls.find(([type]) => type === DOCUMENT_DRAG_MIME);
+    expect(granitCall).toBeDefined();
+    const payload = JSON.parse(granitCall![1] as string) as { ids: string[] };
+    expect(payload.ids.toSorted()).toEqual(['doc-1', 'doc-2']);
+  });
+
+  it('does not start a drag when canManage is false', async () => {
+    const client = createMockClient();
+    mockTwoDocs(client);
+
+    render(<DocumentsList folderId="fld-1" onOpenDocument={vi.fn()} />, {
+      wrapper: createWrapper(client),
+    });
+
+    await waitFor(() => expect(screen.getByText('contract.pdf')).toBeInTheDocument());
+    const row = document.querySelector<HTMLElement>('[data-granit-document-id="doc-1"]');
+    expect(row!.getAttribute('draggable')).toBe('false');
   });
 });

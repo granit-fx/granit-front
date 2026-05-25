@@ -3303,26 +3303,6 @@
       "description": "React bindings for @granit/documents — DocumentsProvider, hooks, components",
       "exports": [
         {
-          "name": "API_VERSION",
-          "kind": "const",
-          "signature": "const API_VERSION"
-        },
-        {
-          "name": "DEFAULT_BASE_PATH",
-          "kind": "const",
-          "signature": "const DEFAULT_BASE_PATH"
-        },
-        {
-          "name": "DEFAULT_QUERY_KEY_PREFIX",
-          "kind": "const",
-          "signature": "const DEFAULT_QUERY_KEY_PREFIX"
-        },
-        {
-          "name": "MODULE",
-          "kind": "const",
-          "signature": "const MODULE"
-        },
-        {
           "name": "useFolder",
           "kind": "function",
           "signature": "function useFolder( id: string, options?:"
@@ -3523,6 +3503,28 @@
           "kind": "interface",
           "signature": "interface UploadButtonProps",
           "members": []
+        },
+        {
+          "name": "UploadDropZone",
+          "kind": "function",
+          "signature": "function UploadDropZone("
+        },
+        {
+          "name": "UploadDropZoneLabels",
+          "kind": "interface",
+          "signature": "interface UploadDropZoneLabels",
+          "members": []
+        },
+        {
+          "name": "UploadDropZoneProps",
+          "kind": "interface",
+          "signature": "interface UploadDropZoneProps",
+          "members": []
+        },
+        {
+          "name": "useFileUpload",
+          "kind": "function",
+          "signature": "function useFileUpload(options: UseFileUploadOptions ="
         },
         {
           "name": "VersionsTimeline",

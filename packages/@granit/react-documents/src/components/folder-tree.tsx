@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
+import { DOCUMENT_DRAG_MIME } from '../constants.js';
+import { useMoveDocument } from '../hooks/use-document-mutations.js';
 import { useCreateFolder, useRenameFolder, useTrashFolder } from '../hooks/use-folder-mutations.js';
 import { useFolders } from '../hooks/use-folders.js';
 
 import { InlineEdit } from './inline-edit.js';
 
 import type { FolderResponse, FolderStatus } from '@granit/documents';
-import type { ReactNode } from 'react';
+import type { DragEvent, ReactNode } from 'react';
 
 export interface FolderTreeLabels {
   readonly add?: string;
@@ -79,10 +81,13 @@ function FolderNode({
   const [expanded, setExpanded] = useState(false);
   const [mode, setMode] = useState<RowMode>('idle');
   const [error, setError] = useState<string | null>(null);
+  const [dropOver, setDropOver] = useState(false);
+  const dropDepthRef = useRef(0);
   const childrenQuery = useFolders({ parentId: folder.id, status }, { enabled: expanded });
   const createFolder = useCreateFolder();
   const renameFolder = useRenameFolder();
   const trashFolder = useTrashFolder();
+  const moveDocument = useMoveDocument();
 
   function startAdd(): void {
     setExpanded(true);
@@ -134,6 +139,64 @@ function FolderNode({
     });
   }
 
+  function carriesDocumentDrag(event: DragEvent<HTMLDivElement>): boolean {
+    if (!canManage) return false;
+    for (const type of event.dataTransfer.types) {
+      if (type === DOCUMENT_DRAG_MIME) return true;
+    }
+    return false;
+  }
+
+  function handleDragEnter(event: DragEvent<HTMLDivElement>): void {
+    if (!carriesDocumentDrag(event)) return;
+    dropDepthRef.current += 1;
+    if (dropDepthRef.current === 1) setDropOver(true);
+  }
+
+  function handleDragLeave(event: DragEvent<HTMLDivElement>): void {
+    if (!carriesDocumentDrag(event)) return;
+    dropDepthRef.current = Math.max(0, dropDepthRef.current - 1);
+    if (dropDepthRef.current === 0) setDropOver(false);
+  }
+
+  function handleDragOver(event: DragEvent<HTMLDivElement>): void {
+    if (!carriesDocumentDrag(event)) return;
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }
+
+  async function handleDrop(event: DragEvent<HTMLDivElement>): Promise<void> {
+    if (!carriesDocumentDrag(event)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    dropDepthRef.current = 0;
+    setDropOver(false);
+    const raw = event.dataTransfer.getData(DOCUMENT_DRAG_MIME);
+    if (!raw) return;
+    let payload: { ids?: unknown };
+    try {
+      payload = JSON.parse(raw) as { ids?: unknown };
+    } catch {
+      return;
+    }
+    const ids = Array.isArray(payload.ids)
+      ? payload.ids.filter((x): x is string => typeof x === 'string')
+      : [];
+    if (ids.length === 0) return;
+    setError(null);
+    for (const id of ids) {
+      try {
+        await moveDocument.mutateAsync({
+          id,
+          request: { newFolderId: folder.id },
+        });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Move failed.');
+        break;
+      }
+    }
+  }
+
   const children = childrenQuery.data?.folders ?? [];
   const isCurrent = currentFolderId === folder.id;
 
@@ -147,6 +210,13 @@ function FolderNode({
       <div
         data-granit-folder-tree-row=""
         data-granit-folder-tree-current={isCurrent ? '' : undefined}
+        data-granit-folder-tree-drop-over={dropOver ? '' : undefined}
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        onDragOver={handleDragOver}
+        onDrop={(event) => {
+          void handleDrop(event);
+        }}
       >
         <button
           type="button"

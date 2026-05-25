@@ -11,7 +11,13 @@ export type {
 } from './providers/documents-provider.js';
 
 // Constants
-export { API_VERSION, DEFAULT_BASE_PATH, DEFAULT_QUERY_KEY_PREFIX, MODULE } from './constants.js';
+export {
+  API_VERSION,
+  DEFAULT_BASE_PATH,
+  DEFAULT_QUERY_KEY_PREFIX,
+  DOCUMENT_DRAG_MIME,
+  MODULE,
+} from './constants.js';
 
 // Read hooks — Folders
 export { useFolder, useFolderBreadcrumb, useFolders } from './hooks/use-folders.js';
@@ -122,6 +128,17 @@ export type { TrashBinLabels, TrashBinProps } from './components/trash-bin.js';
 // Components — Upload
 export { UploadButton } from './components/upload-button.js';
 export type { UploadButtonLabels, UploadButtonProps } from './components/upload-button.js';
+
+export { UploadDropZone } from './components/upload-drop-zone.js';
+export type { UploadDropZoneLabels, UploadDropZoneProps } from './components/upload-drop-zone.js';
+
+export { useFileUpload } from './hooks/use-file-upload.js';
+export type {
+  FileUploadError,
+  FileUploadProgress,
+  UseFileUploadOptions,
+  UseFileUploadResult,
+} from './hooks/use-file-upload.js';
 
 // Components — Versions
 export { VersionsTimeline } from './components/versions-timeline.js';
