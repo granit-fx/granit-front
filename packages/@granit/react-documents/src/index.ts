@@ -78,6 +78,18 @@ export type {
 export { DocumentsList } from './components/documents-list.js';
 export type { DocumentsListLabels, DocumentsListProps } from './components/documents-list.js';
 
+export { DocumentsToolbar } from './components/documents-toolbar.js';
+export type {
+  DocumentsToolbarLabels,
+  DocumentsToolbarProps,
+} from './components/documents-toolbar.js';
+
+export { InlineEdit } from './components/inline-edit.js';
+export type { InlineEditProps } from './components/inline-edit.js';
+
+export { useMultiSelect } from './hooks/use-multi-select.js';
+export type { MultiSelectApi } from './hooks/use-multi-select.js';
+
 // Components — Folders
 export { FolderBreadcrumb } from './components/folder-breadcrumb.js';
 export type {

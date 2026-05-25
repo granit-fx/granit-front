@@ -3,15 +3,18 @@ import type { DocumentsTranslations } from './en.js';
 export const documentsTranslationsFr: DocumentsTranslations = {
   Folder: {
     Tree: {
-      Add: '+',
+      Add: 'Nouveau dossier',
+      AddRoot: 'Nouveau dossier racine',
       Rename: 'Renommer',
       Delete: 'Supprimer',
-      DeleteConfirm:
+      DeleteConfirmQuestion:
         'Mettre ce dossier à la corbeille ? Son contenu sera également mis à la corbeille.',
+      DeleteConfirm: 'Confirmer',
+      DeleteCancel: 'Annuler',
       Empty: 'Aucun dossier.',
       Loading: 'Chargement…',
       Error: 'Échec du chargement des dossiers.',
-      NewFolderName: 'Nom du dossier ?',
+      NewFolderName: 'Nom du dossier',
     },
     Breadcrumb: {
       Loading: 'Chargement…',
@@ -36,10 +39,27 @@ export const documentsTranslationsFr: DocumentsTranslations = {
       Empty: 'Ce dossier est vide.',
       NameHeader: 'Nom',
       StatusHeader: 'Statut',
+      SelectHeader: 'Tout sélectionner',
+      SelectRow: 'Sélectionner',
+      Rename: 'Renommer',
+      Trash: 'Mettre à la corbeille',
+      TrashConfirm: 'Confirmer',
+      TrashCancel: 'Annuler',
       Loading: 'Chargement des documents…',
       Error: 'Échec du chargement des documents.',
       Previous: 'Précédent',
       Next: 'Suivant',
+    },
+    Toolbar: {
+      NoSelection: 'Aucune sélection',
+      OneSelected: 'Sélectionné : {{name}}',
+      ManySelected: '{{count}} sélectionnés',
+      ClearSelection: 'Effacer la sélection',
+      BulkTrash: 'Mettre à la corbeille',
+      BulkTrashConfirm: 'Mettre {{count}} élément(s) à la corbeille ?',
+      BulkTrashConfirmOk: 'Confirmer',
+      BulkTrashCancel: 'Annuler',
+      InspectorToggle: 'Afficher/masquer l’inspecteur',
     },
     Upload: {
       Button: 'Téléverser',
@@ -108,5 +128,7 @@ export const documentsTranslationsFr: DocumentsTranslations = {
   },
   Explorer: {
     Title: 'Documents',
+    InspectorEmpty: 'Sélectionnez un document pour voir ses détails.',
+    InspectorMultiple: '{{count}} documents sélectionnés.',
   },
 };

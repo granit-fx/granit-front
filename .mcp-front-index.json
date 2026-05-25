@@ -3389,6 +3389,44 @@
           "name": "DocumentsListProps",
           "kind": "interface",
           "signature": "interface DocumentsListProps",
+          "members": [
+            {
+              "name": "ids",
+              "kind": "property",
+              "signature": "ids: ReadonlySet<string>,"
+            },
+            {
+              "name": "docs",
+              "kind": "property",
+              "signature": "docs: readonly DocumentResponse[]"
+            }
+          ]
+        },
+        {
+          "name": "DocumentsToolbar",
+          "kind": "function",
+          "signature": "function DocumentsToolbar("
+        },
+        {
+          "name": "InlineEdit",
+          "kind": "function",
+          "signature": "function InlineEdit("
+        },
+        {
+          "name": "InlineEditProps",
+          "kind": "interface",
+          "signature": "interface InlineEditProps",
+          "members": []
+        },
+        {
+          "name": "useMultiSelect",
+          "kind": "function",
+          "signature": "function useMultiSelect(orderedIds: readonly string[]): MultiSelectApi"
+        },
+        {
+          "name": "MultiSelectApi",
+          "kind": "interface",
+          "signature": "interface MultiSelectApi",
           "members": []
         },
         {

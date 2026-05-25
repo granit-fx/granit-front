@@ -13,9 +13,12 @@ export interface DocumentsTranslations {
   readonly Folder: {
     readonly Tree: {
       readonly Add: string;
+      readonly AddRoot: string;
       readonly Rename: string;
       readonly Delete: string;
+      readonly DeleteConfirmQuestion: string;
       readonly DeleteConfirm: string;
+      readonly DeleteCancel: string;
       readonly Empty: string;
       readonly Loading: string;
       readonly Error: string;
@@ -44,10 +47,27 @@ export interface DocumentsTranslations {
       readonly Empty: string;
       readonly NameHeader: string;
       readonly StatusHeader: string;
+      readonly SelectHeader: string;
+      readonly SelectRow: string;
+      readonly Rename: string;
+      readonly Trash: string;
+      readonly TrashConfirm: string;
+      readonly TrashCancel: string;
       readonly Loading: string;
       readonly Error: string;
       readonly Previous: string;
       readonly Next: string;
+    };
+    readonly Toolbar: {
+      readonly NoSelection: string;
+      readonly OneSelected: string;
+      readonly ManySelected: string;
+      readonly ClearSelection: string;
+      readonly BulkTrash: string;
+      readonly BulkTrashConfirm: string;
+      readonly BulkTrashConfirmOk: string;
+      readonly BulkTrashCancel: string;
+      readonly InspectorToggle: string;
     };
     readonly Upload: {
       readonly Button: string;
@@ -115,20 +135,25 @@ export interface DocumentsTranslations {
   };
   readonly Explorer: {
     readonly Title: string;
+    readonly InspectorEmpty: string;
+    readonly InspectorMultiple: string;
   };
 }
 
 export const documentsTranslationsEn: DocumentsTranslations = {
   Folder: {
     Tree: {
-      Add: '+',
+      Add: 'New folder',
+      AddRoot: 'New root folder',
       Rename: 'Rename',
       Delete: 'Delete',
-      DeleteConfirm: 'Move this folder to the trash? Its contents will be trashed too.',
+      DeleteConfirmQuestion: 'Move this folder to the trash? Its contents will be trashed too.',
+      DeleteConfirm: 'Confirm',
+      DeleteCancel: 'Cancel',
       Empty: 'No folders.',
       Loading: 'Loading…',
       Error: 'Failed to load folders.',
-      NewFolderName: 'Folder name?',
+      NewFolderName: 'Folder name',
     },
     Breadcrumb: {
       Loading: 'Loading…',
@@ -153,10 +178,27 @@ export const documentsTranslationsEn: DocumentsTranslations = {
       Empty: 'This folder is empty.',
       NameHeader: 'Name',
       StatusHeader: 'Status',
+      SelectHeader: 'Select all',
+      SelectRow: 'Select',
+      Rename: 'Rename',
+      Trash: 'Move to trash',
+      TrashConfirm: 'Confirm',
+      TrashCancel: 'Cancel',
       Loading: 'Loading documents…',
       Error: 'Failed to load documents.',
       Previous: 'Previous',
       Next: 'Next',
+    },
+    Toolbar: {
+      NoSelection: 'No selection',
+      OneSelected: 'Selected: {{name}}',
+      ManySelected: '{{count}} selected',
+      ClearSelection: 'Clear selection',
+      BulkTrash: 'Move to trash',
+      BulkTrashConfirm: 'Move {{count}} item(s) to trash?',
+      BulkTrashConfirmOk: 'Confirm',
+      BulkTrashCancel: 'Cancel',
+      InspectorToggle: 'Toggle inspector',
     },
     Upload: {
       Button: 'Upload',
@@ -224,5 +266,7 @@ export const documentsTranslationsEn: DocumentsTranslations = {
   },
   Explorer: {
     Title: 'Documents',
+    InspectorEmpty: 'Select a document to see its details.',
+    InspectorMultiple: '{{count}} documents selected.',
   },
 };

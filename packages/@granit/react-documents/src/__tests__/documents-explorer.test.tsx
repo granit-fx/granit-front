@@ -95,8 +95,6 @@ describe('DocumentsExplorer', () => {
       }
       return Promise.resolve({ data: undefined });
     }) as AxiosInstance['delete']);
-    vi.spyOn(window, 'confirm').mockReturnValue(true);
-
     render(<DocumentsExplorer canManage />, { wrapper: createWrapper(client) });
 
     await waitFor(() => expect(screen.getByText('Contracts')).toBeInTheDocument());
@@ -107,8 +105,9 @@ describe('DocumentsExplorer', () => {
       expect(document.querySelector('[data-granit-folder-breadcrumb]')).not.toBeNull()
     );
 
-    // Trash from the tree
+    // Trash from the tree (inline confirm flow — no window.confirm)
     await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Confirm' }));
     await waitFor(() => expect(client.delete).toHaveBeenCalled());
 
     // The eager onDeleted path nulls currentFolder synchronously — breadcrumb

@@ -122,13 +122,11 @@ describe('FolderTree', () => {
     render(<FolderTree labels={{ error: 'oops' }} />, { wrapper: createWrapper(client) });
 
     await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());
-    // Error message from the thrown Error wins over the fallback label
     expect(screen.getByRole('alert').textContent).toMatch(/boom/);
   });
 
   it('falls back to the error label when the thrown error has no message', async () => {
     const client = createMockClient();
-    // Custom error without a message string
     const err = new Error();
     vi.mocked(client.get).mockRejectedValue(err);
 
@@ -139,81 +137,93 @@ describe('FolderTree', () => {
     await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());
   });
 
-  it('triggers the create-root prompt and aborts when the prompt is empty', async () => {
+  it('opens an inline editor when clicking add-root and aborts on Escape', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: { folders: [] } });
-    const promptSpy = vi.spyOn(window, 'prompt').mockReturnValue('   ');
 
     render(<FolderTree canManage />, { wrapper: createWrapper(client) });
 
     await waitFor(() => expect(screen.getByText('No folders.')).toBeInTheDocument());
-    const addRoot = screen.getByRole('button', { name: '+' });
-    await userEvent.click(addRoot);
+    await userEvent.click(screen.getByRole('button', { name: /New root folder/ }));
 
-    expect(promptSpy).toHaveBeenCalled();
+    const input = screen.getByRole('textbox', { name: /Folder name/ });
+    expect(input).toBeInTheDocument();
+    await userEvent.keyboard('{Escape}');
     expect(client.post).not.toHaveBeenCalled();
+    expect(screen.queryByRole('textbox', { name: /Folder name/ })).toBeNull();
   });
 
-  it('creates a root folder when the prompt returns a name', async () => {
+  it('creates a root folder when the inline editor commits a name', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: { folders: [] } });
     vi.mocked(client.post).mockResolvedValue({ data: { ...root, name: 'New' } });
-    vi.spyOn(window, 'prompt').mockReturnValue('New');
 
     render(<FolderTree canManage />, { wrapper: createWrapper(client) });
     await waitFor(() => expect(screen.getByText('No folders.')).toBeInTheDocument());
-    await userEvent.click(screen.getByRole('button', { name: '+' }));
+    await userEvent.click(screen.getByRole('button', { name: /New root folder/ }));
+
+    const input = screen.getByRole('textbox', { name: /Folder name/ });
+    await userEvent.type(input, 'New{Enter}');
 
     await waitFor(() => expect(client.post).toHaveBeenCalled());
   });
 
-  it('cancels rename when the prompt returns the same name', async () => {
+  it('opens an inline rename editor and cancels when the name is unchanged', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: { folders: [root] } });
-    vi.spyOn(window, 'prompt').mockReturnValue(root.name);
 
     render(<FolderTree canManage />, { wrapper: createWrapper(client) });
     await waitFor(() => expect(screen.getByText('Contracts')).toBeInTheDocument());
 
+    // Click the inline Rename button, then submit unchanged name → no PATCH
     await userEvent.click(screen.getByRole('button', { name: 'Rename' }));
+    const input = screen.getByRole('textbox', { name: 'Rename' });
+    await userEvent.keyboard('{Enter}');
+
+    expect(input).not.toBeInTheDocument();
     expect(client.patch).not.toHaveBeenCalled();
   });
 
-  it('renames a folder when the prompt returns a new name', async () => {
+  it('renames a folder when the inline editor commits a new name', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: { folders: [root] } });
     vi.mocked(client.patch).mockResolvedValue({ data: { ...root, name: 'Renamed' } });
-    vi.spyOn(window, 'prompt').mockReturnValue('Renamed');
 
     render(<FolderTree canManage />, { wrapper: createWrapper(client) });
     await waitFor(() => expect(screen.getByText('Contracts')).toBeInTheDocument());
 
     await userEvent.click(screen.getByRole('button', { name: 'Rename' }));
+    const input = screen.getByRole('textbox', { name: 'Rename' });
+    await userEvent.clear(input);
+    await userEvent.type(input, 'Renamed{Enter}');
+
     await waitFor(() => expect(client.patch).toHaveBeenCalled());
   });
 
-  it('aborts delete when the user cancels the confirm dialog', async () => {
+  it('aborts trash when the user clicks Cancel in the inline confirm', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: { folders: [root] } });
-    vi.spyOn(window, 'confirm').mockReturnValue(false);
 
     render(<FolderTree canManage />, { wrapper: createWrapper(client) });
     await waitFor(() => expect(screen.getByText('Contracts')).toBeInTheDocument());
 
     await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    expect(screen.getByRole('alertdialog')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
     expect(client.delete).not.toHaveBeenCalled();
   });
 
-  it('trashes a folder when the user confirms', async () => {
+  it('trashes a folder when the user confirms inline', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: { folders: [root] } });
     vi.mocked(client.delete).mockResolvedValue({ data: undefined });
-    vi.spyOn(window, 'confirm').mockReturnValue(true);
 
     render(<FolderTree canManage />, { wrapper: createWrapper(client) });
     await waitFor(() => expect(screen.getByText('Contracts')).toBeInTheDocument());
 
     await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Confirm' }));
+
     await waitFor(() => expect(client.delete).toHaveBeenCalled());
   });
 
@@ -221,13 +231,13 @@ describe('FolderTree', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: { folders: [root] } });
     vi.mocked(client.delete).mockResolvedValue({ data: undefined });
-    vi.spyOn(window, 'confirm').mockReturnValue(true);
     const onDeleted = vi.fn();
 
     render(<FolderTree canManage onDeleted={onDeleted} />, { wrapper: createWrapper(client) });
     await waitFor(() => expect(screen.getByText('Contracts')).toBeInTheDocument());
 
     await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Confirm' }));
 
     await waitFor(() => expect(onDeleted).toHaveBeenCalledWith(root.id));
     expect(onDeleted).toHaveBeenCalledTimes(1);
@@ -237,34 +247,44 @@ describe('FolderTree', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: { folders: [root] } });
     vi.mocked(client.delete).mockRejectedValue(new Error('forbidden'));
-    vi.spyOn(window, 'confirm').mockReturnValue(true);
     const onDeleted = vi.fn();
 
     render(<FolderTree canManage onDeleted={onDeleted} />, { wrapper: createWrapper(client) });
     await waitFor(() => expect(screen.getByText('Contracts')).toBeInTheDocument());
 
     await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Confirm' }));
 
     await waitFor(() => expect(screen.getByRole('alert').textContent).toMatch(/forbidden/));
     expect(onDeleted).not.toHaveBeenCalled();
   });
 
-  it('creates a sub-folder via the node-level add button', async () => {
+  it('creates a sub-folder via the node-level add button (inline editor)', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: { folders: [root] } });
     vi.mocked(client.post).mockResolvedValue({ data: { ...root, name: 'child' } });
-    vi.spyOn(window, 'prompt').mockReturnValue('child');
 
     render(<FolderTree canManage />, { wrapper: createWrapper(client) });
     await waitFor(() => expect(screen.getByText('Contracts')).toBeInTheDocument());
 
-    // The node-level + button is among the row buttons (not the top-level one)
-    const addButtons = screen.getAllByRole('button', { name: '+' });
-    // First add is the root-level. Click the per-node one.
-    const nodeAdd = addButtons[addButtons.length - 1];
-    if (!nodeAdd) throw new Error('expected node-level add button');
+    // The per-node + button (aria-label 'New folder')
+    const nodeAdd = screen.getByRole('button', { name: 'New folder' });
     await userEvent.click(nodeAdd);
 
+    const input = await screen.findByRole('textbox', { name: /Folder name/ });
+    await userEvent.type(input, 'child{Enter}');
+
     await waitFor(() => expect(client.post).toHaveBeenCalled());
+  });
+
+  it('marks the currentFolderId node with a data attribute', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ data: { folders: [root] } });
+
+    render(<FolderTree currentFolderId={root.id} />, { wrapper: createWrapper(client) });
+
+    await waitFor(() => expect(screen.getByText('Contracts')).toBeInTheDocument());
+    const node = document.querySelector(`[data-granit-folder-id="${root.id}"]`);
+    expect(node?.hasAttribute('data-granit-folder-tree-current')).toBe(true);
   });
 });
