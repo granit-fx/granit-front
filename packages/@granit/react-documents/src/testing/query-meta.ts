@@ -44,7 +44,7 @@ export const documentQueryMetadata: QueryMetadata = {
       isVisible: false,
     },
     {
-      name: 'ownerUserId',
+      name: 'ownerId',
       label: 'Owner',
       type: 'Guid',
       order: 3,
@@ -66,7 +66,7 @@ export const documentQueryMetadata: QueryMetadata = {
     { name: 'name', type: 'String', operators: STRING_OPERATORS },
     { name: 'status', type: 'String', operators: ENUM_OPERATORS },
     { name: 'folderId', type: 'Guid', operators: GUID_OPERATORS },
-    { name: 'ownerUserId', type: 'Guid', operators: GUID_OPERATORS },
+    { name: 'ownerId', type: 'Guid', operators: GUID_OPERATORS },
   ],
   sortableFields: [{ name: 'name' }, { name: 'createdAt' }],
   presetFilterGroups: [],

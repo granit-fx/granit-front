@@ -175,4 +175,20 @@ export const documentsTranslationsFr: DocumentsTranslations = {
     RecentsEmpty: 'Aucun document récent. Ouvrez-en un pour le voir ici.',
     RemoveFavorite: 'Retirer des favoris',
   },
+  TransferOwnership: {
+    DocumentTrigger: 'Transférer la propriété',
+    FolderTrigger: 'Transférer la propriété',
+    Title: 'Transférer la propriété',
+    Description:
+      'Choisissez l’utilisateur qui deviendra le nouveau propriétaire. L’ancien propriétaire conserve ses partages explicites.',
+    CurrentOwner: 'Propriétaire actuel',
+    NewOwnerLabel: 'Nouveau propriétaire (id utilisateur)',
+    NewOwnerPlaceholder: '00000000-0000-0000-0000-000000000000',
+    Submit: 'Transférer',
+    Submitting: 'Transfert en cours…',
+    Cancel: 'Annuler',
+    Close: 'Fermer',
+    SuccessFlash: 'Propriété transférée.',
+    InvalidGuid: 'Saisissez un Guid valide.',
+  },
 };

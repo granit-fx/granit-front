@@ -44,7 +44,7 @@ export interface FolderResponse {
   readonly path: string;
   /** Depth in the tenant tree. `1` for direct children of the tenant root. */
   readonly depth: number;
-  readonly ownerUserId: string;
+  readonly ownerId: string;
   readonly status: FolderStatus;
   /** UTC instant the folder was trashed; `null` while active. */
   readonly trashedAt: string | null;
@@ -95,7 +95,7 @@ export interface DocumentResponse {
   readonly folderId: string;
   readonly name: string;
   readonly description: string | null;
-  readonly ownerUserId: string;
+  readonly ownerId: string;
   /** Identifier of the active version; `null` until the first version is uploaded. */
   readonly currentVersionId: string | null;
   readonly status: DocumentStatus;
@@ -160,6 +160,15 @@ export interface MoveDocumentRequest {
   readonly newFolderId: string | null;
 }
 
+/**
+ * Payload for `PUT /documents/{id}/owner` and `PUT /folders/{id}/owner`.
+ * Backend rejects empty / nil GUIDs, the tenant root, and trashed targets
+ * with 422; missing target with 404; insufficient permission with 403.
+ */
+export interface TransferOwnerRequest {
+  readonly newOwnerId: string;
+}
+
 /** Response payload for `GET /documents/{id}/download`. */
 export interface DownloadUrlResponse {
   readonly url: string;
@@ -197,7 +206,7 @@ export interface TrashedDocumentResponse {
   readonly id: string;
   readonly folderId: string;
   readonly name: string;
-  readonly ownerUserId: string;
+  readonly ownerId: string;
   readonly trashedAt: string;
   /**
    * Days remaining before the empty-trash background job permanently deletes

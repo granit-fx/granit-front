@@ -12,6 +12,7 @@ import {
   useRenameDocument,
   useRequestUploadTicket,
   useRestoreDocument,
+  useTransferDocumentOwner,
   useTrashDocument,
 } from '../hooks/use-document-mutations.js';
 import { DocumentsProvider } from '../providers/documents-provider.js';
@@ -30,7 +31,7 @@ const sampleDoc: DocumentResponse = {
   folderId: 'fld-1',
   name: 'contract.pdf',
   description: null,
-  ownerUserId: 'user-1',
+  ownerId: 'user-1',
   currentVersionId: 'ver-1',
   status: 'Active',
   trashedAt: null,
@@ -158,6 +159,26 @@ describe('useMoveDocument', () => {
 
     expect(client.post).toHaveBeenCalledWith('/api/v1/documents/documents/doc-1/move', {
       newFolderId: 'fld-9',
+    });
+    const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
+    expect(keys).toEqual([['documents', 'documents']]);
+  });
+});
+
+describe('useTransferDocumentOwner', () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it('PUTs /documents/{id}/owner and invalidates the documents namespace', async () => {
+    const { client, queryClient, wrapper } = createHarness();
+    const newOwner = '00000000-0000-4000-8000-0000000000a9';
+    vi.mocked(client.put).mockResolvedValue({ data: { ...sampleDoc, ownerId: newOwner } });
+    const invalidate = vi.spyOn(queryClient, 'invalidateQueries');
+
+    const { result } = renderHook(() => useTransferDocumentOwner(), { wrapper });
+    await result.current.mutateAsync({ id: 'doc-1', request: { newOwnerId: newOwner } });
+
+    expect(client.put).toHaveBeenCalledWith('/api/v1/documents/documents/doc-1/owner', {
+      newOwnerId: newOwner,
     });
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
     expect(keys).toEqual([['documents', 'documents']]);

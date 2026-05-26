@@ -27,7 +27,7 @@ function makeDocument(id: string, name: string): DocumentResponse {
     folderId: 'fld-1',
     name,
     status: 'Active',
-    ownerUserId: 'u',
+    ownerId: 'u',
     currentVersionId: 'v',
     description: null,
     trashedAt: null,

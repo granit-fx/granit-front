@@ -15,7 +15,7 @@ const trashed: TrashedDocumentResponse = {
   id: 'doc-1',
   folderId: 'fld-1',
   name: 'Old.pdf',
-  ownerUserId: 'user-1',
+  ownerId: 'user-1',
   trashedAt: '2026-05-01T08:00:00Z',
   daysUntilPermanentDeletion: 5,
 };

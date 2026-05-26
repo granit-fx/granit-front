@@ -9,6 +9,7 @@ import type {
   MoveDocumentRequest,
   PageFilter,
   RenameDocumentRequest,
+  TransferOwnerRequest,
   UploadTicketRequest,
   UploadTicketResponse,
 } from '../types/index.js';
@@ -101,6 +102,28 @@ export async function moveDocument(
 ): Promise<DocumentResponse> {
   const response = await client.post<DocumentResponse>(
     `${basePath}/documents/${encodeURIComponent(id)}/move`,
+    request
+  );
+  return response.data;
+}
+
+/**
+ * Transfer ownership of a document to another user. Requires the
+ * `Documents.Documents.TransferOwnership` permission. Returns 422 when
+ * {@link TransferOwnerRequest.newOwnerId} is `Guid.Empty` or the document is
+ * trashed, 404 when the document does not exist, 403 when the caller lacks
+ * the permission.
+ *
+ * `PUT {basePath}/documents/{id}/owner`
+ */
+export async function transferDocumentOwner(
+  client: AxiosInstance,
+  basePath: string,
+  id: string,
+  request: TransferOwnerRequest
+): Promise<DocumentResponse> {
+  const response = await client.put<DocumentResponse>(
+    `${basePath}/documents/${encodeURIComponent(id)}/owner`,
     request
   );
   return response.data;

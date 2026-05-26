@@ -182,6 +182,21 @@ export interface DocumentsTranslations {
     readonly RecentsEmpty: string;
     readonly RemoveFavorite: string;
   };
+  readonly TransferOwnership: {
+    readonly DocumentTrigger: string;
+    readonly FolderTrigger: string;
+    readonly Title: string;
+    readonly Description: string;
+    readonly CurrentOwner: string;
+    readonly NewOwnerLabel: string;
+    readonly NewOwnerPlaceholder: string;
+    readonly Submit: string;
+    readonly Submitting: string;
+    readonly Cancel: string;
+    readonly Close: string;
+    readonly SuccessFlash: string;
+    readonly InvalidGuid: string;
+  };
 }
 
 export const documentsTranslationsEn: DocumentsTranslations = {
@@ -356,5 +371,21 @@ export const documentsTranslationsEn: DocumentsTranslations = {
     FavoritesEmpty: 'No favorites yet. Star a document in the inspector to pin it here.',
     RecentsEmpty: 'No recent documents. Open one to see it here.',
     RemoveFavorite: 'Remove favorite',
+  },
+  TransferOwnership: {
+    DocumentTrigger: 'Transfer ownership',
+    FolderTrigger: 'Transfer ownership',
+    Title: 'Transfer ownership',
+    Description:
+      'Pick the user who should become the new owner. The previous owner keeps any explicit shares.',
+    CurrentOwner: 'Current owner',
+    NewOwnerLabel: 'New owner (user id)',
+    NewOwnerPlaceholder: '00000000-0000-0000-0000-000000000000',
+    Submit: 'Transfer',
+    Submitting: 'Transferring…',
+    Cancel: 'Cancel',
+    Close: 'Close',
+    SuccessFlash: 'Ownership transferred.',
+    InvalidGuid: 'Enter a valid Guid.',
   },
 };

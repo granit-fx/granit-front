@@ -9,6 +9,7 @@ import {
   moveFolder,
   renameFolder,
   restoreFolder,
+  transferFolderOwner,
   trashFolder,
 } from '../api/folders-api.js';
 
@@ -28,7 +29,7 @@ const sampleFolder: FolderResponse = {
   name: 'Contracts',
   path: '/Contracts',
   depth: 1,
-  ownerUserId: 'user-1',
+  ownerId: 'user-1',
   status: 'Active',
   trashedAt: null,
   permission: null,
@@ -152,6 +153,23 @@ describe('moveFolder', () => {
     expect(client.post).toHaveBeenCalledWith(`${basePath}/folders/folder-2/move`, {
       newParentFolderId: null,
     });
+  });
+});
+
+describe('transferFolderOwner', () => {
+  it('PUTs newOwnerId to /folders/{id}/owner', async () => {
+    const client = createMockClient();
+    const newOwner = '00000000-0000-4000-8000-0000000000a9';
+    vi.mocked(client.put).mockResolvedValue(axiosResponse({ ...sampleFolder, ownerId: newOwner }));
+
+    const result = await transferFolderOwner(client, basePath, 'folder-1', {
+      newOwnerId: newOwner,
+    });
+
+    expect(client.put).toHaveBeenCalledWith(`${basePath}/folders/folder-1/owner`, {
+      newOwnerId: newOwner,
+    });
+    expect(result.ownerId).toBe(newOwner);
   });
 });
 

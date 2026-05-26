@@ -27,7 +27,7 @@ const sampleDoc: DocumentResponse = {
   folderId: 'fld-1',
   name: 'contract.pdf',
   description: null,
-  ownerUserId: 'user-1',
+  ownerId: 'user-1',
   currentVersionId: 'ver-1',
   status: 'Active',
   trashedAt: null,
@@ -59,7 +59,7 @@ const sampleTrashed: TrashedDocumentResponse = {
   id: 'doc-1',
   folderId: 'fld-1',
   name: 'contract.pdf',
-  ownerUserId: 'user-1',
+  ownerId: 'user-1',
   trashedAt: '2026-05-01T00:00:00Z',
   daysUntilPermanentDeletion: 29,
 };

@@ -54,7 +54,7 @@ describe('createDocumentsHandlers', () => {
       'name',
       'status',
       'folderId',
-      'ownerUserId',
+      'ownerId',
       'createdAt',
     ]);
   });

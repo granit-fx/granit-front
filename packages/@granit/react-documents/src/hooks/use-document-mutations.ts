@@ -6,6 +6,7 @@ import {
   renameDocument,
   requestUploadTicket,
   restoreDocument,
+  transferDocumentOwner,
   trashDocument,
 } from '@granit/documents';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -20,6 +21,7 @@ import type {
   FinalizeUploadRequest,
   MoveDocumentRequest,
   RenameDocumentRequest,
+  TransferOwnerRequest,
   UploadTicketRequest,
   UploadTicketResponse,
 } from '@granit/documents';
@@ -145,6 +147,28 @@ export function useMoveDocument(): UseMutationResult<
   return useMutation({
     mutationFn: ({ id, request }: DocumentIdMutationArgs<MoveDocumentRequest>) =>
       moveDocument(config.client, config.basePath, id, request),
+    onSuccess: () => {
+      invalidateAllDocuments(queryClient, config);
+    },
+  });
+}
+
+/**
+ * Transfer ownership of a document. The wire response carries the new
+ * `ownerId`, so we invalidate the documents namespace to refresh any list /
+ * detail bound to the old value.
+ */
+export function useTransferDocumentOwner(): UseMutationResult<
+  DocumentResponse,
+  Error,
+  DocumentIdMutationArgs<TransferOwnerRequest>
+> {
+  const config = useDocumentsConfig();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, request }: DocumentIdMutationArgs<TransferOwnerRequest>) =>
+      transferDocumentOwner(config.client, config.basePath, id, request),
     onSuccess: () => {
       invalidateAllDocuments(queryClient, config);
     },

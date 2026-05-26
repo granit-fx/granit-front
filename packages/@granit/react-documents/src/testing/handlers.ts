@@ -48,6 +48,7 @@ import type {
   RenameFolderRequest,
   ShareResponse,
   TenantStorageQuotaResponse,
+  TransferOwnerRequest,
   TrashedDocumentResponse,
   UploadTicketRequest,
   UploadTicketResponse,
@@ -63,9 +64,27 @@ export interface CreateDocumentsHandlersOptions {
 let blobCounter = 1000;
 let shareCounter = 1;
 
+const NIL_GUID = '00000000-0000-0000-0000-000000000000';
+
 function newId(prefix: string, counter: number): string {
   const hex = counter.toString(16).padStart(12, '0');
   return `00000000-0000-4000-8000-${prefix.padEnd(4, '0').slice(0, 4)}${hex}`;
+}
+
+function invalidNewOwner(value: unknown): boolean {
+  return typeof value !== 'string' || value.length === 0 || value.toLowerCase() === NIL_GUID;
+}
+
+function unprocessableEntity(detail: string) {
+  return HttpResponse.json(
+    {
+      type: 'about:blank',
+      title: 'Unprocessable Entity',
+      status: 422,
+      detail,
+    },
+    { status: 422 }
+  );
 }
 
 /**
@@ -127,8 +146,8 @@ export function createDocumentsHandlers(
           filtered = filtered.filter((d) => d.folderId === f.value);
         } else if (f.field === 'status') {
           filtered = filtered.filter((d) => d.status === f.value);
-        } else if (f.field === 'ownerUserId') {
-          filtered = filtered.filter((d) => d.ownerUserId === f.value);
+        } else if (f.field === 'ownerId') {
+          filtered = filtered.filter((d) => d.ownerId === f.value);
         } else if (f.field === 'name') {
           filtered = filtered.filter((d) => d.name === f.value);
         }
@@ -171,7 +190,7 @@ export function createDocumentsHandlers(
         name: body.name,
         path: parent ? `${parent.path}/${body.name}` : `/${body.name}`,
         depth: (parent?.depth ?? 0) + 1,
-        ownerUserId: MOCK_OWNER_USER_ID,
+        ownerId: MOCK_OWNER_USER_ID,
         status: 'Active',
         trashedAt: null,
         permission: 'Manage',
@@ -205,6 +224,21 @@ export function createDocumentsHandlers(
       };
       const withPath = { ...updated, path: recomputePath(updated) };
       Object.assign(folder, withPath);
+      return HttpResponse.json(folder);
+    }),
+
+    http.put(`${basePath}/folders/:id/owner`, async ({ params, request }) => {
+      const id = params.id as string;
+      const folder = findFolder(id);
+      if (!folder) return notFound();
+      const body = (await request.json()) as TransferOwnerRequest;
+      if (invalidNewOwner(body.newOwnerId)) {
+        return unprocessableEntity('newOwnerId must be a non-empty Guid.');
+      }
+      if (folder.status === 'Trashed') {
+        return unprocessableEntity('Cannot transfer ownership of a trashed folder.');
+      }
+      Object.assign(folder, { ...folder, ownerId: body.newOwnerId });
       return HttpResponse.json(folder);
     }),
 
@@ -312,7 +346,7 @@ export function createDocumentsHandlers(
         folderId: body.folderId ?? '',
         name: body.name,
         description: body.description ?? null,
-        ownerUserId: MOCK_OWNER_USER_ID,
+        ownerId: MOCK_OWNER_USER_ID,
         currentVersionId: initialVersion.id,
         status: 'Active',
         trashedAt: null,
@@ -455,6 +489,21 @@ export function createDocumentsHandlers(
       return HttpResponse.json(share, { status: 201 });
     }),
 
+    http.put(`${basePath}/documents/:id/owner`, async ({ params, request }) => {
+      const id = params.id as string;
+      const doc = findDocument(id);
+      if (!doc) return notFound();
+      const body = (await request.json()) as TransferOwnerRequest;
+      if (invalidNewOwner(body.newOwnerId)) {
+        return unprocessableEntity('newOwnerId must be a non-empty Guid.');
+      }
+      if (doc.status !== 'Active') {
+        return unprocessableEntity('Cannot transfer ownership of a trashed document.');
+      }
+      Object.assign(doc, { ...doc, ownerId: body.newOwnerId });
+      return HttpResponse.json(doc);
+    }),
+
     // Document move / restore / permanent delete
     http.post(`${basePath}/documents/:id/move`, async ({ params, request }) => {
       const id = params.id as string;
@@ -527,7 +576,7 @@ export function createDocumentsHandlers(
         id: doc.id,
         folderId: doc.folderId,
         name: doc.name,
-        ownerUserId: doc.ownerUserId,
+        ownerId: doc.ownerId,
         trashedAt,
         daysUntilPermanentDeletion: 30,
       });

@@ -8,6 +8,9 @@ import {
   useDocumentVersions,
 } from '../hooks/use-documents.js';
 
+import { TransferOwnershipDialog } from './transfer-ownership-dialog.js';
+
+import type { TransferOwnershipDialogLabels } from './transfer-ownership-dialog.js';
 import type { ReactNode } from 'react';
 
 export interface DocumentDetailLabels {
@@ -24,11 +27,19 @@ export interface DocumentDetailLabels {
   readonly tags?: string;
   readonly addFavorite?: string;
   readonly removeFavorite?: string;
+  readonly transferOwnership?: string;
+  readonly transferOwnershipDialog?: TransferOwnershipDialogLabels;
 }
 
 export interface DocumentDetailProps {
   readonly documentId: string;
   readonly canManage?: boolean;
+  /**
+   * When `true`, exposes the "Transfer ownership" action. Host must gate this
+   * with the `Documents.Documents.TransferOwnership` permission — the
+   * component does not check permissions itself.
+   */
+  readonly canTransferOwnership?: boolean;
   readonly onOpenVersions?: (id: string) => void;
   readonly onOpenShares?: (id: string) => void;
   /**
@@ -43,7 +54,9 @@ export interface DocumentDetailProps {
   readonly className?: string;
 }
 
-const DEFAULT_LABELS: Required<DocumentDetailLabels> = {
+const DEFAULT_LABELS: Required<Omit<DocumentDetailLabels, 'transferOwnershipDialog'>> & {
+  readonly transferOwnershipDialog: TransferOwnershipDialogLabels | undefined;
+} = {
   loading: 'Loading document…',
   notFound: 'Document not found.',
   owner: 'Owner',
@@ -57,6 +70,8 @@ const DEFAULT_LABELS: Required<DocumentDetailLabels> = {
   tags: 'Tags',
   addFavorite: 'Add to favorites',
   removeFavorite: 'Remove from favorites',
+  transferOwnership: 'Transfer ownership',
+  transferOwnershipDialog: undefined,
 };
 
 /**
@@ -68,6 +83,7 @@ const DEFAULT_LABELS: Required<DocumentDetailLabels> = {
 export function DocumentDetail({
   documentId,
   canManage = false,
+  canTransferOwnership = false,
   onOpenVersions,
   onOpenShares,
   isFavorite,
@@ -83,6 +99,7 @@ export function DocumentDetail({
   const renameDocument = useRenameDocument();
   const [editing, setEditing] = useState(false);
   const [draftName, setDraftName] = useState('');
+  const [transferOpen, setTransferOpen] = useState(false);
 
   if (documentQuery.isLoading) {
     return (
@@ -178,7 +195,7 @@ export function DocumentDetail({
 
       <dl data-granit-document-detail-meta="">
         <dt>{labelStrings.owner}</dt>
-        <dd>{document.ownerUserId}</dd>
+        <dd>{document.ownerId}</dd>
         <dt>{labelStrings.status}</dt>
         <dd>{document.status}</dd>
         <dt>{labelStrings.description}</dt>
@@ -217,7 +234,26 @@ export function DocumentDetail({
             {labelStrings.shares}
           </button>
         )}
+        {canTransferOwnership && (
+          <button
+            type="button"
+            data-granit-document-detail-transfer-ownership=""
+            onClick={() => setTransferOpen(true)}
+          >
+            {labelStrings.transferOwnership}
+          </button>
+        )}
       </div>
+
+      {canTransferOwnership && (
+        <TransferOwnershipDialog
+          open={transferOpen}
+          onClose={() => setTransferOpen(false)}
+          target={{ type: 'Document', id: document.id }}
+          currentOwnerId={document.ownerId}
+          labels={labelStrings.transferOwnershipDialog}
+        />
+      )}
     </div>
   );
 }

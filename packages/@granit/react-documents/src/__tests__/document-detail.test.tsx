@@ -16,7 +16,7 @@ const sampleDocument: DocumentResponse = {
   folderId: 'fld-1',
   name: 'Contract.pdf',
   description: 'Master agreement',
-  ownerUserId: 'user-1',
+  ownerId: 'user-1',
   currentVersionId: 'ver-1',
   status: 'Active',
   trashedAt: null,

@@ -6,7 +6,9 @@ import { useCreateFolder, useRenameFolder, useTrashFolder } from '../hooks/use-f
 import { useFolders } from '../hooks/use-folders.js';
 
 import { InlineEdit } from './inline-edit.js';
+import { TransferOwnershipDialog } from './transfer-ownership-dialog.js';
 
+import type { TransferOwnershipDialogLabels } from './transfer-ownership-dialog.js';
 import type { FolderResponse, FolderStatus } from '@granit/documents';
 import type { DragEvent, ReactNode } from 'react';
 
@@ -22,12 +24,21 @@ export interface FolderTreeLabels {
   readonly loading?: string;
   readonly error?: string;
   readonly newFolderName?: string;
+  readonly transferOwnership?: string;
+  readonly transferOwnershipDialog?: TransferOwnershipDialogLabels;
 }
 
 export interface FolderTreeProps {
   /** Root folder id. `null` (default) lists tenant-root folders. */
   readonly rootFolderId?: string | null;
   readonly canManage?: boolean;
+  /**
+   * When `true`, exposes the "Transfer ownership" action on each folder
+   * node. Host must gate this with the `Documents.Folders.TransferOwnership`
+   * permission. The tenant root is never visible in the tree, so no extra
+   * client-side guard is needed.
+   */
+  readonly canTransferOwnership?: boolean;
   /** Filter shown folders by lifecycle status. Defaults to `Active`. */
   readonly status?: FolderStatus;
   /** Highlight a single node as "current" (e.g. the explorer's active folder). */
@@ -43,7 +54,9 @@ export interface FolderTreeProps {
   readonly className?: string;
 }
 
-const DEFAULT_LABELS: Required<FolderTreeLabels> = {
+const DEFAULT_LABELS: Required<Omit<FolderTreeLabels, 'transferOwnershipDialog'>> & {
+  readonly transferOwnershipDialog: TransferOwnershipDialogLabels | undefined;
+} = {
   add: 'New folder',
   addRoot: 'New root folder',
   rename: 'Rename',
@@ -55,6 +68,8 @@ const DEFAULT_LABELS: Required<FolderTreeLabels> = {
   loading: 'Loading…',
   error: 'Failed to load folders.',
   newFolderName: 'Folder name',
+  transferOwnership: 'Transfer ownership',
+  transferOwnershipDialog: undefined,
 };
 
 type RowMode = 'idle' | 'renaming' | 'adding-child' | 'confirming-trash';
@@ -62,9 +77,10 @@ type RowMode = 'idle' | 'renaming' | 'adding-child' | 'confirming-trash';
 interface FolderNodeProps {
   readonly folder: FolderResponse;
   readonly canManage: boolean;
+  readonly canTransferOwnership: boolean;
   readonly status: FolderStatus;
   readonly currentFolderId: string | null;
-  readonly labels: Required<FolderTreeLabels>;
+  readonly labels: typeof DEFAULT_LABELS;
   readonly onSelect?: (folder: FolderResponse) => void;
   readonly onDeleted?: (folderId: string) => void;
 }
@@ -72,6 +88,7 @@ interface FolderNodeProps {
 function FolderNode({
   folder,
   canManage,
+  canTransferOwnership,
   status,
   currentFolderId,
   labels,
@@ -82,6 +99,7 @@ function FolderNode({
   const [mode, setMode] = useState<RowMode>('idle');
   const [error, setError] = useState<string | null>(null);
   const [dropOver, setDropOver] = useState(false);
+  const [transferOpen, setTransferOpen] = useState(false);
   const dropDepthRef = useRef(0);
   const childrenQuery = useFolders({ parentId: folder.id, status }, { enabled: expanded });
   const createFolder = useCreateFolder();
@@ -257,9 +275,28 @@ function FolderNode({
             <button type="button" onClick={startTrash} aria-label={labels.delete}>
               {labels.delete}
             </button>
+            {canTransferOwnership && (
+              <button
+                type="button"
+                data-granit-folder-tree-transfer-ownership=""
+                onClick={() => setTransferOpen(true)}
+                aria-label={labels.transferOwnership}
+              >
+                {labels.transferOwnership}
+              </button>
+            )}
           </span>
         )}
       </div>
+      {canTransferOwnership && (
+        <TransferOwnershipDialog
+          open={transferOpen}
+          onClose={() => setTransferOpen(false)}
+          target={{ type: 'Folder', id: folder.id }}
+          currentOwnerId={folder.ownerId}
+          labels={labels.transferOwnershipDialog}
+        />
+      )}
       {mode === 'confirming-trash' && (
         <div data-granit-folder-tree-confirm="" role="alertdialog">
           <span data-granit-folder-tree-confirm-text="">{labels.deleteConfirmQuestion}</span>
@@ -307,6 +344,7 @@ function FolderNode({
                 key={child.id}
                 folder={child}
                 canManage={canManage}
+                canTransferOwnership={canTransferOwnership}
                 status={status}
                 currentFolderId={currentFolderId}
                 labels={labels}
@@ -330,6 +368,7 @@ function FolderNode({
 export function FolderTree({
   rootFolderId = null,
   canManage = false,
+  canTransferOwnership = false,
   status = 'Active',
   currentFolderId = null,
   onSelect,
@@ -414,6 +453,7 @@ export function FolderTree({
               key={root.id}
               folder={root}
               canManage={canManage}
+              canTransferOwnership={canTransferOwnership}
               status={status}
               currentFolderId={currentFolderId}
               labels={labelStrings}

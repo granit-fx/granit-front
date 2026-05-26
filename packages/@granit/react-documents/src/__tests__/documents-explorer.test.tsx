@@ -17,7 +17,7 @@ const activeFolder: FolderResponse = {
   name: 'Contracts',
   path: '/Contracts',
   depth: 1,
-  ownerUserId: 'user-1',
+  ownerId: 'user-1',
   status: 'Active',
   trashedAt: null,
   permission: null,

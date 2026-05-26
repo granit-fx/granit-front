@@ -6,6 +6,7 @@ import type {
   ListFoldersResponse,
   MoveFolderRequest,
   RenameFolderRequest,
+  TransferOwnerRequest,
 } from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
 
@@ -113,6 +114,28 @@ export async function moveFolder(
 ): Promise<FolderResponse> {
   const response = await client.post<FolderResponse>(
     `${basePath}/folders/${encodeURIComponent(id)}/move`,
+    request
+  );
+  return response.data;
+}
+
+/**
+ * Transfer ownership of a folder to another user. Requires the
+ * `Documents.Folders.TransferOwnership` permission. Returns 422 when
+ * {@link TransferOwnerRequest.newOwnerId} is `Guid.Empty`, the target is the
+ * tenant root, or the folder is trashed; 404 when the folder does not
+ * exist; 403 when the caller lacks the permission.
+ *
+ * `PUT {basePath}/folders/{id}/owner`
+ */
+export async function transferFolderOwner(
+  client: AxiosInstance,
+  basePath: string,
+  id: string,
+  request: TransferOwnerRequest
+): Promise<FolderResponse> {
+  const response = await client.put<FolderResponse>(
+    `${basePath}/folders/${encodeURIComponent(id)}/owner`,
     request
   );
   return response.data;

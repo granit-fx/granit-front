@@ -13,6 +13,7 @@ import {
   requestDocumentDownloadUrl,
   requestUploadTicket,
   restoreDocument,
+  transferDocumentOwner,
   trashDocument,
 } from '../api/documents-api.js';
 
@@ -35,7 +36,7 @@ const sampleDocument: DocumentResponse = {
   folderId: 'folder-1',
   name: 'Contract.pdf',
   description: null,
-  ownerUserId: 'user-1',
+  ownerId: 'user-1',
   currentVersionId: 'ver-1',
   status: 'Active',
   trashedAt: null,
@@ -147,6 +148,23 @@ describe('moveDocument', () => {
     expect(client.post).toHaveBeenCalledWith(`${basePath}/documents/doc-1/move`, {
       newFolderId: 'folder-2',
     });
+  });
+});
+
+describe('transferDocumentOwner', () => {
+  it('PUTs newOwnerId to /documents/{id}/owner', async () => {
+    const client = createMockClient();
+    const newOwner = '00000000-0000-4000-8000-0000000000a9';
+    vi.mocked(client.put).mockResolvedValue(
+      axiosResponse({ ...sampleDocument, ownerId: newOwner })
+    );
+
+    const result = await transferDocumentOwner(client, basePath, 'doc-1', { newOwnerId: newOwner });
+
+    expect(client.put).toHaveBeenCalledWith(`${basePath}/documents/doc-1/owner`, {
+      newOwnerId: newOwner,
+    });
+    expect(result.ownerId).toBe(newOwner);
   });
 });
 

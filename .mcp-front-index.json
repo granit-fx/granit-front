@@ -3506,6 +3506,11 @@
           "signature": "function ShareDialog("
         },
         {
+          "name": "TransferOwnershipDialog",
+          "kind": "function",
+          "signature": "function TransferOwnershipDialog("
+        },
+        {
           "name": "TrashBin",
           "kind": "function",
           "signature": "function TrashBin("

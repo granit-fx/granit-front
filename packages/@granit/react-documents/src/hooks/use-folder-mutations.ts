@@ -3,6 +3,7 @@ import {
   moveFolder,
   renameFolder,
   restoreFolder,
+  transferFolderOwner,
   trashFolder,
 } from '@granit/documents';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -15,6 +16,7 @@ import type {
   FolderResponse,
   MoveFolderRequest,
   RenameFolderRequest,
+  TransferOwnerRequest,
 } from '@granit/documents';
 import type { QueryClient, UseMutationResult } from '@tanstack/react-query';
 
@@ -94,6 +96,28 @@ export function useMoveFolder(): UseMutationResult<
   return useMutation({
     mutationFn: ({ id, request }: FolderIdMutationArgs<MoveFolderRequest>) =>
       moveFolder(config.client, config.basePath, id, request),
+    onSuccess: () => {
+      invalidateAllFolders(queryClient, config);
+    },
+  });
+}
+
+/**
+ * Transfer ownership of a folder. The folder's `ownerId` field changes;
+ * descendants are not cascaded server-side. Invalidate the folder namespace
+ * so list / breadcrumb / detail refetch with the new owner.
+ */
+export function useTransferFolderOwner(): UseMutationResult<
+  FolderResponse,
+  Error,
+  FolderIdMutationArgs<TransferOwnerRequest>
+> {
+  const config = useDocumentsConfig();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, request }: FolderIdMutationArgs<TransferOwnerRequest>) =>
+      transferFolderOwner(config.client, config.basePath, id, request),
     onSuccess: () => {
       invalidateAllFolders(queryClient, config);
     },

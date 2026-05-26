@@ -9,6 +9,7 @@ import {
   useMoveFolder,
   useRenameFolder,
   useRestoreFolder,
+  useTransferFolderOwner,
   useTrashFolder,
 } from '../hooks/use-folder-mutations.js';
 import { DocumentsProvider } from '../providers/documents-provider.js';
@@ -24,7 +25,7 @@ const sampleFolder: FolderResponse = {
   name: 'Contracts',
   path: '/Contracts',
   depth: 1,
-  ownerUserId: 'user-1',
+  ownerId: 'user-1',
   status: 'Active',
   trashedAt: null,
   permission: null,
@@ -141,6 +142,28 @@ describe('useTrashFolder', () => {
       ['documents', 'folders'],
       ['documents', 'documents', 'trash'],
     ]);
+  });
+});
+
+describe('useTransferFolderOwner', () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it('PUTs /folders/{id}/owner and invalidates the folder namespace', async () => {
+    const { client, queryClient, wrapper } = createHarness();
+    const newOwner = '00000000-0000-4000-8000-0000000000a9';
+    vi.mocked(client.put).mockResolvedValue({
+      data: { ...sampleFolder, ownerId: newOwner },
+    });
+    const invalidate = vi.spyOn(queryClient, 'invalidateQueries');
+
+    const { result } = renderHook(() => useTransferFolderOwner(), { wrapper });
+    await result.current.mutateAsync({ id: 'fld-1', request: { newOwnerId: newOwner } });
+
+    expect(client.put).toHaveBeenCalledWith('/api/v1/documents/folders/fld-1/owner', {
+      newOwnerId: newOwner,
+    });
+    const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
+    expect(keys).toEqual([['documents', 'folders']]);
   });
 });
 

@@ -30,6 +30,7 @@ export type {
   ShareResponse,
   ShareTargetType,
   TenantStorageQuotaResponse,
+  TransferOwnerRequest,
   TrashedDocumentResponse,
   UploadTicketRequest,
   UploadTicketResponse,
@@ -47,6 +48,7 @@ export {
   moveFolder,
   renameFolder,
   restoreFolder,
+  transferFolderOwner,
   trashFolder,
 } from './api/folders-api.js';
 
@@ -63,6 +65,7 @@ export {
   requestDocumentDownloadUrl,
   requestUploadTicket,
   restoreDocument,
+  transferDocumentOwner,
   trashDocument,
 } from './api/documents-api.js';
 

@@ -165,7 +165,7 @@ describe('UploadDropZone', () => {
       folderId: 'fld-1',
       name: 'a.pdf',
       status: 'Active',
-      ownerUserId: 'u',
+      ownerId: 'u',
       currentVersionId: 'v',
       description: null,
       trashedAt: null,

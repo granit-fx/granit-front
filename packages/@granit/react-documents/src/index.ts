@@ -28,6 +28,7 @@ export {
   useMoveFolder,
   useRenameFolder,
   useRestoreFolder,
+  useTransferFolderOwner,
   useTrashFolder,
 } from './hooks/use-folder-mutations.js';
 
@@ -48,6 +49,7 @@ export {
   useRenameDocument,
   useRequestUploadTicket,
   useRestoreDocument,
+  useTransferDocumentOwner,
   useTrashDocument,
 } from './hooks/use-document-mutations.js';
 
@@ -161,6 +163,14 @@ export type {
   ShareDialogProps,
   ShareDialogTarget,
 } from './components/share-dialog.js';
+
+// Components — Ownership
+export { TransferOwnershipDialog } from './components/transfer-ownership-dialog.js';
+export type {
+  TransferOwnershipDialogLabels,
+  TransferOwnershipDialogProps,
+  TransferOwnershipTarget,
+} from './components/transfer-ownership-dialog.js';
 
 // Components — Trash
 export { TrashBin } from './components/trash-bin.js';
