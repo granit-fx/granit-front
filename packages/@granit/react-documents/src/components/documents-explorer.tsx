@@ -48,6 +48,15 @@ export interface DocumentsExplorerProps {
   /** Optional root scope for the folder tree. `null` (default) lists the tenant root. */
   readonly rootFolderId?: string | null;
   readonly canManage?: boolean;
+  /**
+   * When `true`, exposes the "Transfer ownership" action on every folder node
+   * in the tree and on the focused-document inspector. Host must gate this
+   * with the matching `Documents.{Documents|Folders}.TransferOwnership`
+   * permission — the explorer does not check permissions itself, and uses
+   * the same flag for both since the two backend permissions are typically
+   * granted together.
+   */
+  readonly canTransferOwnership?: boolean;
   readonly showQuotaBadge?: boolean;
   /** Hide / show the right inspector pane. Defaults to `true`. */
   readonly showInspector?: boolean;
@@ -108,6 +117,7 @@ function noopUploadComplete(_document: DocumentResponse): void {
 export function DocumentsExplorer({
   rootFolderId = null,
   canManage = false,
+  canTransferOwnership = false,
   showQuotaBadge = false,
   showInspector = true,
   viewPreferencesStorageKey = 'granit-documents-view',
@@ -243,6 +253,7 @@ export function DocumentsExplorer({
             folderTree={{
               rootFolderId,
               canManage,
+              canTransferOwnership,
               currentFolderId: currentFolder?.id ?? null,
               onSelect: setCurrentFolder,
               onDeleted: handleFolderDeleted,
@@ -335,6 +346,7 @@ export function DocumentsExplorer({
               <DocumentDetail
                 documentId={focusedDoc.id}
                 canManage={canManage}
+                canTransferOwnership={canTransferOwnership}
                 isFavorite={focusedIsFavorite}
                 onToggleFavorite={handleToggleFavorite}
                 labels={labels?.detail}
