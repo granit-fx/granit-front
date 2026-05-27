@@ -49,7 +49,11 @@ const SAMPLE_DOCUMENT: DocumentResponse = {
   description: null,
   ownerId: '00000000-0000-4000-8000-000000000001',
   currentVersionId: 'ver-1',
+  sizeBytes: 1024,
+  contentType: 'application/pdf',
   status: 'Active',
+  createdAt: '2026-05-01T10:00:00Z',
+  modifiedAt: null,
   trashedAt: null,
   permission: 'Manage',
 };

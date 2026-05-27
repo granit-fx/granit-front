@@ -2,7 +2,12 @@
 // @granit/react-documents/testing — QueryEngine /meta payload for /documents
 // ---------------------------------------------------------------------------
 
-import { ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
+import {
+  DATE_OPERATORS,
+  ENUM_OPERATORS,
+  NUMBER_OPERATORS,
+  STRING_OPERATORS,
+} from '@granit/query-engine';
 
 import type { FilterOperator, QueryMetadata } from '@granit/query-engine';
 
@@ -12,7 +17,11 @@ const GUID_OPERATORS: readonly FilterOperator[] = ['Eq'];
 /**
  * Mock /meta payload for the documents resource. Mirrors the columns the
  * `DocumentsList` component depends on (`folderId Eq`, `status Eq Active`)
- * plus a few extras useful for exploratory filtering in Storybook.
+ * plus the admin-grid audit / size / content-type columns exposed by the
+ * backend (granit-business !72). Column names are camelCase, matching the
+ * QueryEngine projection: audit timestamps are `createdAt` / `modifiedAt`,
+ * while size + content type are derived from the current version and exposed
+ * as `currentVersionSizeBytes` / `currentVersionContentType`.
  */
 export const documentQueryMetadata: QueryMetadata = {
   columns: [
@@ -54,12 +63,39 @@ export const documentQueryMetadata: QueryMetadata = {
     },
     {
       name: 'createdAt',
-      label: 'Created at',
+      label: 'Created At',
       type: 'DateTime',
       order: 4,
       isSortable: true,
-      isFilterable: false,
+      isFilterable: true,
       isVisible: true,
+    },
+    {
+      name: 'modifiedAt',
+      label: 'Modified At',
+      type: 'DateTime',
+      order: 5,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'currentVersionSizeBytes',
+      label: 'Size',
+      type: 'Int64',
+      order: 6,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'currentVersionContentType',
+      label: 'Content Type',
+      type: 'String',
+      order: 7,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: false,
     },
   ],
   filterableFields: [
@@ -67,13 +103,28 @@ export const documentQueryMetadata: QueryMetadata = {
     { name: 'status', type: 'String', operators: ENUM_OPERATORS },
     { name: 'folderId', type: 'Guid', operators: GUID_OPERATORS },
     { name: 'ownerId', type: 'Guid', operators: GUID_OPERATORS },
+    { name: 'createdAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'modifiedAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'currentVersionSizeBytes', type: 'Int64', operators: NUMBER_OPERATORS },
+    { name: 'currentVersionContentType', type: 'String', operators: STRING_OPERATORS },
   ],
-  sortableFields: [{ name: 'name' }, { name: 'createdAt' }],
+  sortableFields: [
+    { name: 'name' },
+    { name: 'createdAt' },
+    { name: 'modifiedAt' },
+    { name: 'currentVersionSizeBytes' },
+    { name: 'currentVersionContentType' },
+  ],
   presetFilterGroups: [],
   quickFilters: [],
   dateFilters: [
     {
       name: 'createdAt',
+      defaultPeriod: 'ThisMonth',
+      availablePeriods: ['Today', 'ThisWeek', 'ThisMonth', 'ThisYear', 'Custom'],
+    },
+    {
+      name: 'modifiedAt',
       defaultPeriod: 'ThisMonth',
       availablePeriods: ['Today', 'ThisWeek', 'ThisMonth', 'ThisYear', 'Custom'],
     },

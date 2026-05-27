@@ -18,7 +18,11 @@ const sampleDocument: DocumentResponse = {
   description: 'Master agreement',
   ownerId: 'user-1',
   currentVersionId: 'ver-1',
+  sizeBytes: 1024,
+  contentType: 'application/pdf',
   status: 'Active',
+  createdAt: '2026-05-01T10:00:00Z',
+  modifiedAt: null,
   trashedAt: null,
   permission: null,
 };

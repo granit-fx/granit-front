@@ -98,7 +98,19 @@ export interface DocumentResponse {
   readonly ownerId: string;
   /** Identifier of the active version; `null` until the first version is uploaded. */
   readonly currentVersionId: string | null;
+  /**
+   * Size in bytes of the current version (.NET `long`; see
+   * {@link DocumentVersionResponse.sizeBytes}). `null` until the first version
+   * is uploaded.
+   */
+  readonly sizeBytes: number | null;
+  /** Content type of the current version; `null` until the first version is uploaded. */
+  readonly contentType: string | null;
   readonly status: DocumentStatus;
+  /** UTC instant the document was created (ISO 8601). Always present. */
+  readonly createdAt: string;
+  /** UTC instant of the last content/metadata change; `null` if never modified since creation. */
+  readonly modifiedAt: string | null;
   readonly trashedAt: string | null;
   /** Effective permission resolved via F6.5; `null` when not requested. */
   readonly permission: EffectivePermissionLevel | null;

@@ -341,6 +341,7 @@ export function createDocumentsHandlers(
         isCurrent: true,
       };
       versions.push(initialVersion);
+      const now = new Date().toISOString();
       const created: DocumentResponse = {
         id: docId,
         folderId: body.folderId ?? '',
@@ -348,7 +349,11 @@ export function createDocumentsHandlers(
         description: body.description ?? null,
         ownerId: MOCK_OWNER_USER_ID,
         currentVersionId: initialVersion.id,
+        sizeBytes: initialVersion.sizeBytes,
+        contentType: initialVersion.contentType,
         status: 'Active',
+        createdAt: now,
+        modifiedAt: null,
         trashedAt: null,
         permission: 'Manage',
       };
@@ -415,7 +420,13 @@ export function createDocumentsHandlers(
         isCurrent: true,
       };
       versions.push(newVersion);
-      Object.assign(doc, { ...doc, currentVersionId: newVersion.id });
+      Object.assign(doc, {
+        ...doc,
+        currentVersionId: newVersion.id,
+        sizeBytes: newVersion.sizeBytes,
+        contentType: newVersion.contentType,
+        modifiedAt: newVersion.uploadedAt,
+      });
       return HttpResponse.json(newVersion, { status: 201 });
     }),
 

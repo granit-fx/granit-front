@@ -48,14 +48,32 @@ describe('createDocumentsHandlers', () => {
     }
   });
 
-  it('exposes the 5 expected query metadata columns', () => {
-    expect(documentQueryMetadata.columns).toHaveLength(5);
+  it('exposes the expected query metadata columns (incl. the !72 audit/size/type grid columns)', () => {
+    expect(documentQueryMetadata.columns).toHaveLength(8);
     expect(documentQueryMetadata.columns.map((c) => c.name)).toEqual([
       'name',
       'status',
       'folderId',
       'ownerId',
       'createdAt',
+      'modifiedAt',
+      'currentVersionSizeBytes',
+      'currentVersionContentType',
     ]);
+  });
+
+  it('marks createdAt + modifiedAt as filterable and sortable (F11.1 advanced filters)', () => {
+    for (const name of ['createdAt', 'modifiedAt']) {
+      const column = documentQueryMetadata.columns.find((c) => c.name === name);
+      expect(column?.isFilterable, name).toBe(true);
+      expect(column?.isSortable, name).toBe(true);
+    }
+  });
+
+  it('exposes the current-version size as a sortable/filterable Int64 column', () => {
+    const size = documentQueryMetadata.columns.find((c) => c.name === 'currentVersionSizeBytes');
+    expect(size?.type).toBe('Int64');
+    expect(size?.isFilterable).toBe(true);
+    expect(size?.isSortable).toBe(true);
   });
 });
