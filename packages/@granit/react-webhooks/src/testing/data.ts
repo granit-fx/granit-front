@@ -18,6 +18,7 @@ export const mockWebhookSubscriptions: WebhookSubscriptionResponse[] = [
     lastSuccessAt: toISODateString('2026-03-09T08:15:00Z'),
     createdAt: toISODateString('2025-11-10T09:00:00Z'),
     modifiedAt: toISODateString('2025-11-10T09:00:00Z'),
+    signingSecretHint: 'whsec_b46a****************5182',
   },
   {
     id: toEntityId<'WebhookSubscription'>('ws-2'),
@@ -28,6 +29,7 @@ export const mockWebhookSubscriptions: WebhookSubscriptionResponse[] = [
     lastSuccessAt: toISODateString('2026-03-09T07:45:00Z'),
     createdAt: toISODateString('2025-12-01T14:30:00Z'),
     modifiedAt: toISODateString('2025-12-01T14:30:00Z'),
+    signingSecretHint: 'whsec_3f2c****************9d11',
   },
   {
     id: toEntityId<'WebhookSubscription'>('ws-3'),
@@ -38,6 +40,7 @@ export const mockWebhookSubscriptions: WebhookSubscriptionResponse[] = [
     lastSuccessAt: toISODateString('2026-02-20T16:00:00Z'),
     createdAt: toISODateString('2025-10-05T11:00:00Z'),
     modifiedAt: toISODateString('2026-02-25T10:30:00Z'),
+    signingSecretHint: 'whsec_7e88****************a4f0',
   },
   {
     id: toEntityId<'WebhookSubscription'>('ws-4'),
@@ -48,8 +51,10 @@ export const mockWebhookSubscriptions: WebhookSubscriptionResponse[] = [
     lastSuccessAt: toISODateString('2026-03-08T22:10:00Z'),
     createdAt: toISODateString('2026-01-15T08:00:00Z'),
     modifiedAt: toISODateString('2026-01-15T08:00:00Z'),
+    signingSecretHint: 'whsec_19ce****************6b73',
   },
   {
+    // Legacy: created before the hint was introduced — UI falls back to placeholder.
     id: toEntityId<'WebhookSubscription'>('ws-5'),
     targetUrl: 'https://legacy.partner.com/v1/events',
     eventType: 'user.created',
@@ -58,6 +63,7 @@ export const mockWebhookSubscriptions: WebhookSubscriptionResponse[] = [
     lastSuccessAt: toISODateString('2025-09-01T12:00:00Z'),
     createdAt: toISODateString('2025-06-01T10:00:00Z'),
     modifiedAt: toISODateString('2025-12-15T09:00:00Z'),
+    signingSecretHint: null,
   },
   {
     id: toEntityId<'WebhookSubscription'>('ws-6'),
@@ -68,6 +74,7 @@ export const mockWebhookSubscriptions: WebhookSubscriptionResponse[] = [
     lastSuccessAt: toISODateString('2026-03-09T09:00:00Z'),
     createdAt: toISODateString('2026-02-01T16:00:00Z'),
     modifiedAt: toISODateString('2026-02-01T16:00:00Z'),
+    signingSecretHint: 'whsec_5a4d****************0e2f',
   },
   {
     id: toEntityId<'WebhookSubscription'>('ws-7'),
@@ -78,6 +85,7 @@ export const mockWebhookSubscriptions: WebhookSubscriptionResponse[] = [
     lastSuccessAt: toISODateString('2026-03-01T14:00:00Z'),
     createdAt: toISODateString('2026-01-20T10:00:00Z'),
     modifiedAt: toISODateString('2026-03-05T08:00:00Z'),
+    signingSecretHint: 'whsec_c2b1****************8a90',
   },
 ];
 

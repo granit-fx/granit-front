@@ -37,8 +37,10 @@ const mockSubscription: WebhookSubscriptionResponse = {
   status: WebhookSubscriptionStatus.Active,
   consecutiveFailureCount: 0,
   lastSuccessAt: null,
+  // Legacy subscription created before the hint was introduced — exercises the null path.
   createdAt: toISODateString('2026-03-01T08:00:00Z'),
   modifiedAt: null,
+  signingSecretHint: null,
 };
 
 describe('useActivateSubscription', () => {

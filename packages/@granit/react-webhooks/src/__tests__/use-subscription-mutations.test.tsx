@@ -42,6 +42,7 @@ const mockSubscription: WebhookSubscriptionResponse = {
   lastSuccessAt: null,
   createdAt: toISODateString('2026-03-01T08:00:00Z'),
   modifiedAt: null,
+  signingSecretHint: 'whsec_3f2c****************9d11',
 };
 
 describe('useCreateSubscription', () => {

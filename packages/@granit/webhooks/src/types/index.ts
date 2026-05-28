@@ -55,6 +55,16 @@ export interface WebhookSubscriptionResponse {
   readonly lastSuccessAt: string | null;
   readonly createdAt: string;
   readonly modifiedAt: string | null;
+  /**
+   * Stripe-style masked preview of the active signing secret
+   * (e.g. `whsec_b46a****************5182`) — a fixed 30-char hint
+   * for admin UIs to display on the detail/edit view without ever
+   * re-exposing the plaintext. Refreshed on every signing-key rotation.
+   *
+   * `null` for legacy subscriptions created before the hint was introduced —
+   * UIs should fall back to a static placeholder in that case.
+   */
+  readonly signingSecretHint: string | null;
 }
 
 /** Response from `POST /subscriptions` (201 Created). Contains the signing secret (shown once). */

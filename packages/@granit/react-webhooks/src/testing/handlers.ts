@@ -192,12 +192,24 @@ function applyQuickFilters(
 }
 
 function generateSecret(): string {
-  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  // Hex alphabet mirrors the backend's wire format so that hint derivation
+  // (`hintFromSecret`) yields the same `[0-9a-f]{4}***…***[0-9a-f]{4}` shape
+  // as production.
+  const chars = '0123456789abcdef';
   let result = 'whsec_';
   for (let i = 0; i < 32; i++) {
     result += chars[Math.floor(Math.random() * chars.length)];
   }
   return result;
+}
+
+/**
+ * Derive a Stripe-style masked hint from a plaintext signing secret.
+ * Mirrors the backend format: `whsec_` + 4 hex + 16 × `*` + 4 hex (30 chars).
+ */
+function hintFromSecret(secret: string): string {
+  const body = secret.slice('whsec_'.length);
+  return `whsec_${body.slice(0, 4)}${'*'.repeat(16)}${body.slice(-4)}`;
 }
 
 /**
@@ -330,6 +342,7 @@ export function createWebhooksHandlers(baseUrl = DEFAULT_WEBHOOKS_BASE_PATH) {
         eventType: string;
       };
       const now = toISODateString(new Date().toISOString());
+      const initialSecret = generateSecret();
       const newSub: WebhookSubscriptionResponse = {
         id: toEntityId<'WebhookSubscription'>(`ws-${Date.now()}`),
         targetUrl: body.targetUrl,
@@ -339,6 +352,7 @@ export function createWebhooksHandlers(baseUrl = DEFAULT_WEBHOOKS_BASE_PATH) {
         lastSuccessAt: null,
         createdAt: now,
         modifiedAt: now,
+        signingSecretHint: hintFromSecret(initialSecret),
       };
       subscriptions.push(newSub);
       return HttpResponse.json(newSub, { status: 201 });
@@ -536,6 +550,7 @@ export function createWebhooksHandlers(baseUrl = DEFAULT_WEBHOOKS_BASE_PATH) {
       subscriptions[idx] = {
         ...existing,
         modifiedAt: toISODateString(new Date().toISOString()),
+        signingSecretHint: hintFromSecret(newSecret),
       };
       return HttpResponse.json({ signingSecret: newSecret });
     }),
