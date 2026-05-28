@@ -11,3 +11,12 @@ export const DEFAULT_HEARTBEAT_INTERVAL_MS = 30_000;
 
 /** Stale time (ms) applied to `useMyPresence` / `useUserPresence` / `useBatchPresence`. */
 export const DEFAULT_STALE_TIME_MS = 30_000;
+
+/** Default heartbeat cadence (ms) for `useResourcePresence`. */
+export const DEFAULT_RESOURCE_HEARTBEAT_INTERVAL_MS = 15_000;
+
+/**
+ * Default age (ms) beyond which a room participant is considered stale and
+ * excluded from the returned list in `useResourcePresence`.
+ */
+export const DEFAULT_RESOURCE_STALE_THRESHOLD_MS = 45_000;

@@ -1,6 +1,42 @@
 import type { ISODateString, UserId } from '@granit/types';
 
 // ---------------------------------------------------------------------------
+// Resource Rooms — aligned with Granit.Presence.Rooms .NET backend
+// ---------------------------------------------------------------------------
+
+/**
+ * A single participant in a resource-scoped presence room.
+ * Mirrors `Granit.Presence.Rooms.ResourcePresenceParticipantResponse`.
+ */
+export interface ResourcePresenceParticipantResponse {
+  readonly userId: string;
+  /** ISO 8601 UTC timestamp of the participant's last heartbeat. */
+  readonly lastSeenUtc: string;
+  /**
+   * Opaque JSON metadata sent by the participant (≤ 512 bytes UTF-8).
+   * `null` when no metadata was included in the last heartbeat.
+   */
+  readonly metadata: string | null;
+}
+
+/**
+ * Response body for `POST /presence/rooms/{kind}/{id}/heartbeat` and
+ * `GET /presence/rooms/{kind}/{id}`.
+ *
+ * A 404 on the GET endpoint means the visibility policy blocked the response
+ * or the room was dissolved — callers must handle it explicitly.
+ *
+ * Mirrors `Granit.Presence.Rooms.ResourceRoomResponse`.
+ */
+export interface ResourceRoomResponse {
+  /** Resource kind (e.g. `"cms.page"`, `"document"`). */
+  readonly kind: string;
+  /** Opaque resource identifier. */
+  readonly id: string;
+  readonly participants: ResourcePresenceParticipantResponse[];
+}
+
+// ---------------------------------------------------------------------------
 // Presence enums — aligned with Granit.Presence .NET backend
 // ---------------------------------------------------------------------------
 

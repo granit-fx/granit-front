@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants.js';
 
-import { mockMyPresence, mockOtherPresences } from './data.js';
+import { mockMyPresence, mockOtherPresences, mockUsers } from './data.js';
 
 import type {
   BatchPresenceRequest,
@@ -12,6 +12,8 @@ import type {
   ManualPresenceStatus,
   PresenceResponse,
   PresenceStatus,
+  ResourcePresenceParticipantResponse,
+  ResourceRoomResponse,
   SetPresenceRequest,
 } from '@granit/presence';
 import type { UserId } from '@granit/types';
@@ -144,6 +146,78 @@ export function createPresenceHandlers(baseUrl = DEFAULT_BASE_PATH) {
         }
         const response: BatchPresenceResponse = { presences };
         return HttpResponse.json(response);
+      }
+    ),
+  ];
+}
+
+// ---------------------------------------------------------------------------
+// Resource Rooms handlers
+// ---------------------------------------------------------------------------
+
+type RoomState = Map<string, ResourcePresenceParticipantResponse>;
+
+/**
+ * Stateful MSW handlers for resource-scoped presence rooms.
+ *
+ * @param selfUserId - The userId to use as the "current user" for heartbeats.
+ *   Defaults to the first mock user (`mockUsers[0].id`).
+ * @param baseUrl - Base API path. Defaults to `/api/v1`.
+ */
+export function createResourceRoomsHandlers(
+  selfUserId: string = mockUsers[0]!.id,
+  baseUrl = DEFAULT_BASE_PATH
+) {
+  const rooms = new Map<string, RoomState>();
+
+  function getRoomState(kind: string, id: string): RoomState {
+    const key = `${kind}:${id}`;
+    if (!rooms.has(key)) rooms.set(key, new Map());
+    return rooms.get(key)!;
+  }
+
+  function roomResponse(kind: string, id: string): ResourceRoomResponse {
+    return {
+      kind,
+      id,
+      participants: Array.from(getRoomState(kind, id).values()),
+    };
+  }
+
+  return [
+    http.post<{ kind: string; id: string }>(
+      `${baseUrl}/presence/rooms/:kind/:id/heartbeat`,
+      async ({ request, params }) => {
+        const kind = decodeURIComponent(params.kind);
+        const id = decodeURIComponent(params.id);
+        const body = (await request.json()) as { metadata?: string | null };
+        const state = getRoomState(kind, id);
+        state.set(selfUserId, {
+          userId: selfUserId,
+          lastSeenUtc: new Date().toISOString(),
+          metadata: body.metadata ?? null,
+        });
+        return HttpResponse.json<ResourceRoomResponse>(roomResponse(kind, id));
+      }
+    ),
+
+    http.get<{ kind: string; id: string }>(`${baseUrl}/presence/rooms/:kind/:id`, ({ params }) => {
+      const kind = decodeURIComponent(params.kind);
+      const id = decodeURIComponent(params.id);
+      const key = `${kind}:${id}`;
+      if (!rooms.has(key)) {
+        return HttpResponse.json({ title: 'Not Found', status: 404 }, { status: 404 });
+      }
+      return HttpResponse.json<ResourceRoomResponse>(roomResponse(kind, id));
+    }),
+
+    http.delete<{ kind: string; id: string }>(
+      `${baseUrl}/presence/rooms/:kind/:id`,
+      ({ params }) => {
+        const kind = decodeURIComponent(params.kind);
+        const id = decodeURIComponent(params.id);
+        getRoomState(kind, id).delete(selfUserId);
+        return new HttpResponse(null, { status: 204 });
       }
     ),
   ];

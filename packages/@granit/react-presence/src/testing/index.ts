@@ -3,4 +3,4 @@
 // ---------------------------------------------------------------------------
 
 export { mockMyPresence, mockOtherPresences, mockUsers } from './data.js';
-export { createPresenceHandlers } from './handlers.js';
+export { createPresenceHandlers, createResourceRoomsHandlers } from './handlers.js';

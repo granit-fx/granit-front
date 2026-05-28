@@ -6,10 +6,12 @@ export type {
   ManualPresenceStatus,
   PresenceResponse,
   PresenceStatus,
+  ResourcePresenceParticipantResponse,
+  ResourceRoomResponse,
   SetPresenceRequest,
 } from './types/index.js';
 
-// API
+// API — user presence
 export {
   clearMyPresenceOverride,
   getBatchPresence,
@@ -18,6 +20,9 @@ export {
   pollMyPresence,
   setMyPresence,
 } from './api/presence-api.js';
+
+// API — resource rooms
+export { getResourceRoom, joinResourceRoom, leaveResourceRoom } from './api/presence-rooms-api.js';
 
 // Permissions
 export { PresencePermissions } from './permissions.js';

@@ -21,6 +21,11 @@ export type { UseUserPresenceOptions } from './hooks/use-user-presence.js';
 export { useBatchPresence } from './hooks/use-batch-presence.js';
 export type { UseBatchPresenceOptions } from './hooks/use-batch-presence.js';
 export { presenceKeys } from './hooks/query-keys.js';
+export { useResourcePresence } from './hooks/use-resource-presence.js';
+export type {
+  UseResourcePresenceOptions,
+  UseResourcePresenceResult,
+} from './hooks/use-resource-presence.js';
 
 // Components
 export { PresenceDot, DEFAULT_PRESENCE_COLORS } from './components/presence-dot.js';

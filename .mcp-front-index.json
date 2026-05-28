@@ -1507,6 +1507,21 @@
       "description": "User presence types and API — mirrors Granit.Presence .NET contract",
       "exports": [
         {
+          "name": "getResourceRoom",
+          "kind": "function",
+          "signature": "async function getResourceRoom( client: AxiosInstance, basePath: string, kind: string, id: string, signal?: AbortSignal ): Promise<ResourceRoomResponse>"
+        },
+        {
+          "name": "joinResourceRoom",
+          "kind": "function",
+          "signature": "async function joinResourceRoom( client: AxiosInstance, basePath: string, kind: string, id: string, body:"
+        },
+        {
+          "name": "leaveResourceRoom",
+          "kind": "function",
+          "signature": "async function leaveResourceRoom( client: AxiosInstance, basePath: string, kind: string, id: string, signal?: AbortSignal ): Promise<void>"
+        },
+        {
           "name": "PresencePermissions",
           "kind": "const",
           "signature": "const PresencePermissions"
@@ -4727,6 +4742,11 @@
           "name": "presenceKeys",
           "kind": "const",
           "signature": "const presenceKeys"
+        },
+        {
+          "name": "useResourcePresence",
+          "kind": "function",
+          "signature": "function useResourcePresence( kind: string, id: string, options: UseResourcePresenceOptions ="
         },
         {
           "name": "PresenceDot",
