@@ -1016,6 +1016,33 @@
       "exports": []
     },
     {
+      "name": "@granit/entity-merge",
+      "description": "Aggregate-agnostic entity-merge types, API and helpers — mirrors Granit.EntityMerge (.NET)",
+      "exports": [
+        {
+          "name": "previewMerge",
+          "kind": "function",
+          "signature": "async function previewMerge<TId extends string = string>( client: AxiosInstance, basePath: string, survivorId: TId, loserId: TId ): Promise<MergeResult<TId>>"
+        },
+        {
+          "name": "executeMerge",
+          "kind": "function",
+          "signature": "async function executeMerge<TId extends string = string>( client: AxiosInstance, basePath: string, survivorId: TId, request: MergeRequest<TId>, idempotencyKey?: string ): Promise<MergeResult<TId>>"
+        },
+        {
+          "name": "MergeErrorKind",
+          "kind": "type",
+          "signature": "type MergeErrorKind = 'conflict' | 'domain' | 'notFound' | 'validation' | 'unknown'"
+        },
+        {
+          "name": "ClassifiedMergeError",
+          "kind": "interface",
+          "signature": "interface ClassifiedMergeError",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/error-boundary",
       "description": "Structured error capture with React error boundary and global listeners",
       "exports": [
@@ -3907,6 +3934,92 @@
           "name": "useEntityViews",
           "kind": "function",
           "signature": "function useEntityViews( entityName: string, options:"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-entity-merge",
+      "description": "React bindings for @granit/entity-merge — hooks, FieldConflictTable, ReferenceRewriterSummary and a headless MergeWizard",
+      "exports": [
+        {
+          "name": "API_VERSION",
+          "kind": "const",
+          "signature": "const API_VERSION"
+        },
+        {
+          "name": "DEFAULT_QUERY_KEY_PREFIX",
+          "kind": "const",
+          "signature": "const DEFAULT_QUERY_KEY_PREFIX"
+        },
+        {
+          "name": "entityMergeKeys",
+          "kind": "const",
+          "signature": "const entityMergeKeys"
+        },
+        {
+          "name": "useMergePreview",
+          "kind": "function",
+          "signature": "function useMergePreview<TId extends string = string>( survivorId: TId | null | undefined, loserId: TId | null | undefined, options?: UseMergePreviewOptions ): UseQueryResult<MergeResult<TId>>"
+        },
+        {
+          "name": "UseMergePreviewOptions",
+          "kind": "interface",
+          "signature": "interface UseMergePreviewOptions",
+          "members": []
+        },
+        {
+          "name": "useMergeMutation",
+          "kind": "function",
+          "signature": "function useMergeMutation<TId extends string = string>( survivorId: TId, options?:"
+        },
+        {
+          "name": "MergeMutationVariables",
+          "kind": "interface",
+          "signature": "interface MergeMutationVariables<TId extends string = string>",
+          "members": []
+        },
+        {
+          "name": "useFieldChoices",
+          "kind": "function",
+          "signature": "function useFieldChoices(conflicts: readonly FieldConflict[]): UseFieldChoicesResult"
+        },
+        {
+          "name": "UseFieldChoicesResult",
+          "kind": "interface",
+          "signature": "interface UseFieldChoicesResult",
+          "members": []
+        },
+        {
+          "name": "FieldConflictTable",
+          "kind": "function",
+          "signature": "function FieldConflictTable("
+        },
+        {
+          "name": "ReferenceRewriterSummary",
+          "kind": "function",
+          "signature": "function ReferenceRewriterSummary("
+        },
+        {
+          "name": "MergeConfirmDialog",
+          "kind": "function",
+          "signature": "function MergeConfirmDialog("
+        },
+        {
+          "name": "MergeWizard",
+          "kind": "function",
+          "signature": "function MergeWizard<TId extends string = string>("
+        },
+        {
+          "name": "MergeWizardProps",
+          "kind": "interface",
+          "signature": "interface MergeWizardProps<TId extends string = string>",
+          "members": []
+        },
+        {
+          "name": "MergeWizardLabels",
+          "kind": "interface",
+          "signature": "interface MergeWizardLabels",
+          "members": []
         }
       ]
     },
