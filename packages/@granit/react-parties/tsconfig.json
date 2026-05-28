@@ -3,6 +3,8 @@
   "compilerOptions": {
     "paths": {
       "@granit/parties": ["../parties/src/index.ts"],
+      "@granit/entity-merge": ["../entity-merge/src/index.ts"],
+      "@granit/react-entity-merge": ["../react-entity-merge/src/index.ts"],
       "@granit/react-query-engine": ["../react-query-engine/src/index.ts"],
       "@granit/query-engine": ["../query-engine/src/index.ts"],
       "@granit/react-query-engine/testing": ["../react-query-engine/src/testing/index.ts"],

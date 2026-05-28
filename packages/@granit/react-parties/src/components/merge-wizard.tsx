@@ -1,11 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
+import {
+  FieldConflictTable,
+  ReferenceRewriterSummary,
+  useFieldChoices,
+} from '@granit/react-entity-merge';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { usePartyQuery } from '../hooks/use-parties.js';
 import { useMergePartyMutation, useMergePartyPreviewQuery } from '../hooks/use-party-merge.js';
 
 import type { AxiosError } from '@granit/api-client';
-import type { FieldConflictResponse, MergeWinner, PartyId, PartyResponse } from '@granit/parties';
+import type { PartyId, PartyResponse } from '@granit/parties';
 
 const REASON_MAX_LENGTH = 1000;
 const PARTIES_NAMESPACE = 'parties';
@@ -25,12 +30,15 @@ export interface MergeWizardProps {
 }
 
 /**
- * Side-by-side merge wizard for two parties. The component is unstyled beyond
- * minimal Tailwind utility classes so consumers can wrap it in their own modal
- * / dialog / drawer and theme it with the rest of the admin UI.
+ * Side-by-side merge wizard for two parties. Composes the aggregate-agnostic
+ * building blocks from `@granit/react-entity-merge` (`FieldConflictTable`,
+ * `ReferenceRewriterSummary`, `useFieldChoices`) and adds the party-specific
+ * summary cards, i18n and error copy.
  *
- * Permission gating is delegated to the consumer — wrap the wizard with your
- * own permission guard checking `PartiesPermissions.Parties.Merge`.
+ * The component is unstyled beyond minimal Tailwind utility classes so
+ * consumers can wrap it in their own modal / dialog / drawer. Permission gating
+ * is delegated to the consumer — wrap the wizard with your own guard checking
+ * `PartiesPermissions.Parties.Merge`.
  *
  * @example
  * ```tsx
@@ -60,29 +68,8 @@ export function MergeWizard({
   const conflicts = previewQuery.data?.conflicts ?? [];
   const rewriteCounts = previewQuery.data?.rewriteCounts ?? {};
 
-  const [choices, setChoices] = useState<Record<string, MergeWinner>>({});
+  const { choices, setChoice } = useFieldChoices(conflicts);
   const [reason, setReason] = useState('');
-
-  // Seed `choices` with the recommended defaults the first time the preview lands
-  // (or whenever survivor/loser change). Manual edits made afterwards are kept.
-  useEffect(() => {
-    if (conflicts.length === 0) return;
-    setChoices((prev) => {
-      const next = { ...prev };
-      let changed = false;
-      for (const c of conflicts) {
-        if (!(c.fieldPath in next)) {
-          next[c.fieldPath] = c.default;
-          changed = true;
-        }
-      }
-      return changed ? next : prev;
-    });
-  }, [conflicts]);
-
-  const handleChoiceChange = (fieldPath: string, winner: MergeWinner) => {
-    setChoices((prev) => ({ ...prev, [fieldPath]: winner }));
-  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -136,21 +123,24 @@ export function MergeWizard({
       {/* Conflicts */}
       <section data-slot="merge-conflicts" className="space-y-3">
         <h3 className="text-base font-semibold">{t('MergeWizard.Conflicts')}</h3>
-        <ConflictsBody
-          isLoading={previewLoading}
-          isError={previewQuery.isError}
+        <FieldConflictTable
           conflicts={conflicts}
           choices={choices}
-          onChange={handleChoiceChange}
-          loadingLabel={t('MergeWizard.Loading')}
-          errorLabel={t('MergeWizard.Errors.PreviewFailed')}
-          emptyLabel={t('MergeWizard.ConflictsEmpty')}
-          survivorLabel={t('MergeWizard.Survivor')}
-          loserLabel={t('MergeWizard.Loser')}
-          valueEmptyLabel={t('MergeWizard.ValueEmpty')}
-          translateField={(fieldPath) =>
+          onChoiceChange={setChoice}
+          isLoading={previewLoading}
+          isError={previewQuery.isError}
+          disabled={mergeMutation.isPending}
+          translateFieldPath={(fieldPath) =>
             t(`MergeWizard.Fields.${fieldPath}`, { defaultValue: fieldPath })
           }
+          labels={{
+            survivor: t('MergeWizard.Survivor'),
+            loser: t('MergeWizard.Loser'),
+            empty: t('MergeWizard.ConflictsEmpty'),
+            loading: t('MergeWizard.Loading'),
+            error: t('MergeWizard.Errors.PreviewFailed'),
+            valueEmpty: t('MergeWizard.ValueEmpty'),
+          }}
         />
       </section>
 
@@ -158,11 +148,11 @@ export function MergeWizard({
       <section data-slot="merge-rewrites" className="space-y-2">
         <h3 className="text-base font-semibold">{t('MergeWizard.Rewrites')}</h3>
         {previewLoading ? null : (
-          <RewriteCountsList
-            counts={rewriteCounts}
+          <ReferenceRewriterSummary
+            rewriteCounts={rewriteCounts}
+            labels={{ empty: t('MergeWizard.RewritesEmpty') }}
             translateLabel={(key) => t(`MergeWizard.Rewriters.${key}`, { defaultValue: key })}
             translateRows={(count) => t('MergeWizard.RewritesRowCount', { count })}
-            emptyLabel={t('MergeWizard.RewritesEmpty')}
           />
         )}
       </section>
@@ -214,67 +204,7 @@ export function MergeWizard({
   );
 }
 
-// ── Sub-components ─────────────────────────────────────────────────────────
-
-interface ConflictsBodyProps {
-  readonly isLoading: boolean;
-  readonly isError: boolean;
-  readonly conflicts: readonly FieldConflictResponse[];
-  readonly choices: Readonly<Record<string, MergeWinner>>;
-  readonly onChange: (fieldPath: string, winner: MergeWinner) => void;
-  readonly loadingLabel: string;
-  readonly errorLabel: string;
-  readonly emptyLabel: string;
-  readonly survivorLabel: string;
-  readonly loserLabel: string;
-  readonly valueEmptyLabel: string;
-  readonly translateField: (fieldPath: string) => string;
-}
-
-function ConflictsBody({
-  isLoading,
-  isError,
-  conflicts,
-  choices,
-  onChange,
-  loadingLabel,
-  errorLabel,
-  emptyLabel,
-  survivorLabel,
-  loserLabel,
-  valueEmptyLabel,
-  translateField,
-}: Readonly<ConflictsBodyProps>) {
-  if (isLoading) {
-    return <p className="text-sm text-muted-foreground">{loadingLabel}</p>;
-  }
-  if (isError) {
-    return (
-      <p role="alert" className="text-sm text-destructive">
-        {errorLabel}
-      </p>
-    );
-  }
-  if (conflicts.length === 0) {
-    return <p className="text-sm text-muted-foreground">{emptyLabel}</p>;
-  }
-  return (
-    <ul className="space-y-2">
-      {conflicts.map((conflict) => (
-        <ConflictRow
-          key={conflict.fieldPath}
-          conflict={conflict}
-          selected={choices[conflict.fieldPath] ?? conflict.default}
-          onChange={onChange}
-          survivorLabel={survivorLabel}
-          loserLabel={loserLabel}
-          emptyLabel={valueEmptyLabel}
-          fieldLabel={translateField(conflict.fieldPath)}
-        />
-      ))}
-    </ul>
-  );
-}
+// ── Party-specific sub-components ────────────────────────────────────────────
 
 interface PartyCardProps {
   readonly variant: 'survivor' | 'loser';
@@ -337,124 +267,6 @@ function KeyValue({ label, value }: Readonly<{ label: string; value: string | nu
       <dt className="text-muted-foreground">{label}:</dt>
       <dd className="truncate">{value}</dd>
     </div>
-  );
-}
-
-interface ConflictRowProps {
-  readonly conflict: FieldConflictResponse;
-  readonly selected: MergeWinner;
-  readonly onChange: (fieldPath: string, winner: MergeWinner) => void;
-  readonly survivorLabel: string;
-  readonly loserLabel: string;
-  readonly emptyLabel: string;
-  readonly fieldLabel: string;
-}
-
-function ConflictRow({
-  conflict,
-  selected,
-  onChange,
-  survivorLabel,
-  loserLabel,
-  emptyLabel,
-  fieldLabel,
-}: Readonly<ConflictRowProps>) {
-  const groupName = `merge-choice-${conflict.fieldPath}`;
-  return (
-    <li
-      data-slot="conflict-row"
-      data-field-path={conflict.fieldPath}
-      className="rounded-md border p-3"
-    >
-      <div className="mb-2 text-sm font-medium">{fieldLabel}</div>
-      <div role="radiogroup" aria-label={fieldLabel} className="grid gap-2 md:grid-cols-2">
-        <ChoiceRadio
-          name={groupName}
-          value="Survivor"
-          checked={selected === 'Survivor'}
-          onChange={() => onChange(conflict.fieldPath, 'Survivor')}
-          label={survivorLabel}
-          displayValue={conflict.survivorValue ?? emptyLabel}
-        />
-        <ChoiceRadio
-          name={groupName}
-          value="Loser"
-          checked={selected === 'Loser'}
-          onChange={() => onChange(conflict.fieldPath, 'Loser')}
-          label={loserLabel}
-          displayValue={conflict.loserValue ?? emptyLabel}
-        />
-      </div>
-    </li>
-  );
-}
-
-interface ChoiceRadioProps {
-  readonly name: string;
-  readonly value: MergeWinner;
-  readonly checked: boolean;
-  readonly onChange: () => void;
-  readonly label: string;
-  readonly displayValue: string;
-}
-
-function ChoiceRadio({
-  name,
-  value,
-  checked,
-  onChange,
-  label,
-  displayValue,
-}: Readonly<ChoiceRadioProps>) {
-  return (
-    <label
-      data-slot="choice-radio"
-      data-checked={checked || undefined}
-      aria-label={`${label}: ${displayValue}`}
-      className="flex cursor-pointer items-start gap-2 rounded-md border bg-background p-2 text-sm has-checked:border-primary"
-    >
-      <input
-        type="radio"
-        name={name}
-        value={value}
-        checked={checked}
-        onChange={onChange}
-        className="mt-1"
-      />
-      <span className="flex flex-col">
-        <span className="text-xs uppercase tracking-wide text-muted-foreground">{label}</span>
-        <span className="break-all">{displayValue}</span>
-      </span>
-    </label>
-  );
-}
-
-interface RewriteCountsListProps {
-  readonly counts: Readonly<Record<string, number>>;
-  readonly translateLabel: (key: string) => string;
-  readonly translateRows: (count: number) => string;
-  readonly emptyLabel: string;
-}
-
-function RewriteCountsList({
-  counts,
-  translateLabel,
-  translateRows,
-  emptyLabel,
-}: Readonly<RewriteCountsListProps>) {
-  const visible = Object.entries(counts).filter(([, n]) => n > 0);
-  if (visible.length === 0) {
-    return <p className="text-sm text-muted-foreground">{emptyLabel}</p>;
-  }
-  return (
-    <ul data-slot="rewrite-counts" className="space-y-1 text-sm">
-      {visible.map(([key, n]) => (
-        <li key={key} className="flex justify-between gap-2">
-          <span>{translateLabel(key)}</span>
-          <span className="font-mono">{translateRows(n)}</span>
-        </li>
-      ))}
-    </ul>
   );
 }
 

@@ -1,3 +1,4 @@
+import { generateMergeIdempotencyKey } from '@granit/entity-merge';
 import { mergeParty, previewPartyMerge } from '@granit/parties';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -5,26 +6,6 @@ import { buildPartiesQueryKey, usePartiesConfig } from '../providers/parties-pro
 
 import type { PartyId, PartyMergeRequest, PartyMergeResponse } from '@granit/parties';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
-
-/**
- * Generate a fresh idempotency key for a merge submission. Prefers
- * `crypto.randomUUID()` when available; falls back to a Math.random-based UUID
- * v4 string for older runtimes.
- */
-function newIdempotencyKey(): string {
-  if (typeof globalThis.crypto?.randomUUID === 'function') {
-    return globalThis.crypto.randomUUID();
-  }
-  // Fallback for older runtimes — relies on Web Crypto's getRandomValues
-  // (always available wherever `crypto` is) to avoid the Math.random
-  // safety warning. Builds a v4 UUID byte-by-byte per RFC 4122.
-  const bytes = new Uint8Array(16);
-  globalThis.crypto.getRandomValues(bytes);
-  bytes[6] = ((bytes[6] ?? 0) & 0x0f) | 0x40;
-  bytes[8] = ((bytes[8] ?? 0) & 0x3f) | 0x80;
-  const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
-}
 
 /**
  * Dry-run merge preview for a (survivor, loser) pair. Cached per pair under
@@ -92,7 +73,7 @@ export function useMergePartyMutation(
         basePath,
         survivorId,
         request,
-        idempotencyKey ?? newIdempotencyKey()
+        idempotencyKey ?? generateMergeIdempotencyKey()
       ),
     onSuccess: async (_data, { request }) => {
       // Live merges only — dry-runs never commit so don't invalidate caches.
