@@ -1,3 +1,5 @@
+import { executeMerge, previewMerge } from '@granit/entity-merge';
+
 import type {
   CreatePartyOptions,
   PartyAddressId,
@@ -395,6 +397,8 @@ export async function downloadPartyVCard(
 }
 
 // ── Merge ────────────────────────────────────────────────────────────────
+// Delegates to the aggregate-agnostic client in `@granit/entity-merge`; the
+// party-typed signatures are preserved for consumers.
 
 /**
  * Compute a dry-run preview of merging `loserId` into `survivorId`. Returns
@@ -404,17 +408,13 @@ export async function downloadPartyVCard(
  *
  * `GET {basePath}/{survivorId}/merge/preview?loserId={loserId}`
  */
-export async function previewPartyMerge(
+export function previewPartyMerge(
   client: AxiosInstance,
   basePath: string,
   survivorId: PartyId,
   loserId: PartyId
 ): Promise<PartyMergeResponse> {
-  const response = await client.get<PartyMergeResponse>(
-    `${basePath}/${encodeURIComponent(survivorId)}/merge/preview`,
-    { params: { loserId } }
-  );
-  return response.data;
+  return previewMerge<PartyId>(client, basePath, survivorId, loserId);
 }
 
 /**
@@ -422,23 +422,18 @@ export async function previewPartyMerge(
  * tombstoned and foreign-key references in Invoicing / Subscriptions /
  * Payments / CustomerBalance are rewritten inside a single transaction.
  *
- * Pass an `idempotencyKey` (UUID v4 recommended) to make retries safe — the
+ * Pass an `idempotencyKey` (UUID recommended) to make retries safe — the
  * orchestrator caches the first result and returns 409 on a key reuse with a
  * different payload.
  *
  * `POST {basePath}/{survivorId}/merge` (with optional `Idempotency-Key` header)
  */
-export async function mergeParty(
+export function mergeParty(
   client: AxiosInstance,
   basePath: string,
   survivorId: PartyId,
   request: PartyMergeRequest,
   idempotencyKey?: string
 ): Promise<PartyMergeResponse> {
-  const response = await client.post<PartyMergeResponse>(
-    `${basePath}/${encodeURIComponent(survivorId)}/merge`,
-    request,
-    idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : undefined
-  );
-  return response.data;
+  return executeMerge<PartyId>(client, basePath, survivorId, request, idempotencyKey);
 }

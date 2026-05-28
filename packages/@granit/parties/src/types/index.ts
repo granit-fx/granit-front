@@ -1,3 +1,4 @@
+import type { FieldConflict, MergeRequest, MergeResult, WinnerSide } from '@granit/entity-merge';
 import type { EntityId, TenantId, UserId } from '@granit/types';
 
 /** Branded identifier for a Party (Tier / Business Partner). */
@@ -269,72 +270,37 @@ export interface PartyTaxStatusRequest {
 }
 
 // ── Merge ────────────────────────────────────────────────────────────────
+// The merge contracts are aggregate-agnostic and live in `@granit/entity-merge`
+// (mirror of the .NET `Granit.EntityMerge` module). Parties re-exports them with
+// the branded `PartyId`, preserving the historical names consumers import.
 
 /**
- * Side that wins a merge conflict. Mirrors the .NET `WinnerSide` enum used
- * by `Granit.Mergeable` and the merge orchestrator.
+ * Side that wins a merge conflict. Alias of {@link WinnerSide} from
+ * `@granit/entity-merge`.
  */
-export type MergeWinner = 'Survivor' | 'Loser';
+export type MergeWinner = WinnerSide;
 
 /**
- * Wire shape of a single field-level conflict. Both values are pre-stringified
- * server-side so the JSON payload stays predictable regardless of the
- * underlying type (`Survivor.ToString()` / `Loser.ToString()`).
+ * Wire shape of a single field-level conflict. Alias of {@link FieldConflict}
+ * from `@granit/entity-merge` — both values are pre-stringified server-side.
  */
-export interface FieldConflictResponse {
-  /** Dot-separated path; e.g. `"Name"`, `"Metadata.segment"`, `"TaxStatus"`. */
-  readonly fieldPath: string;
-  /** Survivor's current value, stringified — `null` if unset or empty. */
-  readonly survivorValue: string | null;
-  /** Loser's current value, stringified — `null` if unset or empty. */
-  readonly loserValue: string | null;
-  /** Recommended winner pre-populated by the orchestrator. */
-  readonly default: MergeWinner;
-}
+export type FieldConflictResponse = FieldConflict;
 
 /**
- * Body of `POST /parties/{survivorId}/merge`. Identifies the loser, carries
- * per-field admin overrides keyed by {@link FieldConflictResponse.fieldPath},
- * and an optional reason captured in the audit log.
+ * Body of `POST /parties/{survivorId}/merge`. {@link MergeRequest} specialised
+ * with the branded {@link PartyId}.
  */
-export interface PartyMergeRequest {
-  /** Id of the party to merge into the survivor (will be tombstoned). */
-  readonly loserId: PartyId;
-  /**
-   * Per-field admin overrides. Missing keys fall back to the recommended
-   * `default` returned by the preview. Empty / omitted = use defaults.
-   */
-  readonly choices?: Readonly<Record<string, MergeWinner>>;
-  /** Free-form admin justification — captured in the audit log. Max 1 000 chars. */
-  readonly reason?: string | null;
-  /**
-   * When `true`, the orchestrator computes conflicts and rewrite counts without
-   * committing — same shape as the preview endpoint. Useful for re-validating
-   * just before committing the live merge.
-   */
-  readonly dryRun?: boolean;
-}
+export type PartyMergeRequest = MergeRequest<PartyId>;
 
 /**
- * Response body for both `GET .../merge/preview` and `POST .../merge`. The
- * survivor aggregate itself is NOT included — fetch it via
- * `GET /parties/{survivorId}` after a successful live merge.
+ * Response body for both `GET .../merge/preview` and `POST .../merge`.
+ * {@link MergeResult} specialised with the branded {@link PartyId}. The survivor
+ * aggregate itself is NOT included — fetch it via `GET /parties/{survivorId}`
+ * after a successful live merge. The `rewriteCounts` keys are the cross-module
+ * rewriter descriptions (`"Invoice.PartyId"`, `"Subscription.PartyId"`,
+ * `"BalanceAccount.PartyId"`, `"Party.ParentContactId"`, `"Party.Children"`, …).
  */
-export interface PartyMergeResponse {
-  readonly survivorId: PartyId;
-  readonly loserId: PartyId;
-  /** Per-field conflicts with the recommended winner pre-populated. */
-  readonly conflicts: readonly FieldConflictResponse[];
-  /**
-   * For each cross-module rewriter (`"Invoice.PartyId"`, `"Subscription.PartyId"`,
-   * `"BalanceAccount.PartyId"`, `"Party.ParentContactId"`, `"Party.Children"`, …),
-   * the number of rows that were (or would be) rewritten. Powers the
-   * "what will change" preview.
-   */
-  readonly rewriteCounts: Readonly<Record<string, number>>;
-  /** `true` for previews and explicit dry-runs; `false` for committed merges. */
-  readonly dryRun: boolean;
-}
+export type PartyMergeResponse = MergeResult<PartyId>;
 
 // ── Duplicate detection (3-tier pipeline) ────────────────────────────────
 
