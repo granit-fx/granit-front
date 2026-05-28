@@ -1,6 +1,8 @@
+import { GranitClientProvider } from '@granit/react-api-client';
+import { createMockClient } from '@granit/testing';
 import { renderHook } from '@testing-library/react';
 import * as React from 'react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
   SettingsProvider,
@@ -36,6 +38,33 @@ describe('SettingsProvider', () => {
     expect(() => {
       renderHook(() => useSettingsConfig());
     }).toThrow('useSettingsConfig must be used within a SettingsProvider');
+  });
+
+  it('falls back to the GranitClientProvider context client when config.client is omitted', () => {
+    const contextClient = createMockClient();
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <GranitClientProvider client={contextClient as unknown as AxiosInstance}>
+        <SettingsProvider config={{}}>{children}</SettingsProvider>
+      </GranitClientProvider>
+    );
+
+    const { result } = renderHook(() => useSettingsConfig(), { wrapper });
+
+    expect(result.current.client).toBe(contextClient);
+  });
+
+  it('throws when no client is available (neither config nor context)', () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <SettingsProvider config={{}}>{children}</SettingsProvider>
+      );
+      expect(() => renderHook(() => useSettingsConfig(), { wrapper })).toThrow(
+        /SettingsProvider requires an Axios client/
+      );
+    } finally {
+      consoleError.mockRestore();
+    }
   });
 });
 

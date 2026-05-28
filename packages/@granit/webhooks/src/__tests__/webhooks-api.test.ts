@@ -7,7 +7,9 @@ import {
   createSubscription,
   deactivateSubscription,
   deleteSubscription,
+  getConfig,
   getDeliveries,
+  getEventTypes,
   getStats,
   getSubscription,
   retryDelivery,
@@ -20,6 +22,8 @@ import { WebhookSubscriptionStatus } from '../types/index.js';
 
 import type {
   WebhookDeliveryAttemptResponse,
+  WebhookEventTypeResponse,
+  WebhookModuleConfig,
   WebhookSubscriptionCreatedResponse,
   WebhookSubscriptionResponse,
   WebhookSubscriptionRotateSecretResponse,
@@ -210,6 +214,41 @@ describe('webhooks-api', () => {
       const result = await getStats(client, BASE);
 
       expect(client.get).toHaveBeenCalledWith(`${BASE}/stats`);
+      expect(result).toEqual(response);
+    });
+  });
+
+  // ── Discovery ─────────────────────────────────────────────────────────────
+
+  describe('getEventTypes', () => {
+    it('sends GET to /event-types on the webhooks root path', async () => {
+      const client = createMockClient();
+      const response: WebhookEventTypeResponse[] = [
+        {
+          eventType: 'document.uploaded',
+          displayName: 'Document uploaded',
+          description: null,
+          category: 'Documents',
+        },
+      ];
+      vi.mocked(client.get).mockResolvedValueOnce({ data: response });
+
+      const result = await getEventTypes(client, '/api/v1/webhooks');
+
+      expect(client.get).toHaveBeenCalledWith('/api/v1/webhooks/event-types');
+      expect(result).toEqual(response);
+    });
+  });
+
+  describe('getConfig', () => {
+    it('sends GET to /config on the webhooks root path', async () => {
+      const client = createMockClient();
+      const response: WebhookModuleConfig = { storePayload: false };
+      vi.mocked(client.get).mockResolvedValueOnce({ data: response });
+
+      const result = await getConfig(client, '/api/v1/webhooks');
+
+      expect(client.get).toHaveBeenCalledWith('/api/v1/webhooks/config');
       expect(result).toEqual(response);
     });
   });
