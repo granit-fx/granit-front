@@ -55,6 +55,15 @@ export default defineConfig({
         __dirname,
         'packages/@granit/react-diagnostics/src/testing/index.ts'
       ),
+      '@granit/react-entity-merge/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-entity-merge/src/testing/index.ts'
+      ),
+      '@granit/react-entity-merge': path.resolve(
+        __dirname,
+        'packages/@granit/react-entity-merge/src/index.ts'
+      ),
+      '@granit/entity-merge': path.resolve(__dirname, 'packages/@granit/entity-merge/src/index.ts'),
       '@granit/react-features/testing': path.resolve(
         __dirname,
         'packages/@granit/react-features/src/testing/index.ts'
