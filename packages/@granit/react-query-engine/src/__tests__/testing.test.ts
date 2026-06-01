@@ -7,7 +7,9 @@ import type { QueryMetadata } from '@granit/query-engine';
 
 const server = setupServer();
 
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+// 'bypass' lets unhandled requests reach Node's real network stack (→ ENOTFOUND),
+// avoiding MSW stderr noise in tests that deliberately probe non-matching paths.
+beforeAll(() => server.listen({ onUnhandledRequest: 'bypass' }));
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
