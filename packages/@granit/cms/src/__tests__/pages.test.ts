@@ -1,7 +1,7 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { fetchPageByPath, mintPreviewToken, resolvePreview } from '../api/pages.js';
+import { getPageByPath, mintPreviewToken, resolvePreview } from '../api/pages.js';
 
 import type {
   DraftPagePreviewResponse,
@@ -31,12 +31,12 @@ const sampleDraft: DraftPagePreviewResponse = {
   contentJson: '{"content":[]}',
 };
 
-describe('fetchPageByPath', () => {
+describe('getPageByPath', () => {
   it('returns the page on 200', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse(samplePage));
 
-    const result = await fetchPageByPath(client, basePath, {
+    const result = await getPageByPath(client, basePath, {
       siteId: 'site-1',
       culture: 'fr',
       path: '/a-propos',
@@ -56,7 +56,7 @@ describe('fetchPageByPath', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockRejectedValue({ response: { status: 404 } });
 
-    const result = await fetchPageByPath(client, basePath, {
+    const result = await getPageByPath(client, basePath, {
       siteId: 'site-1',
       culture: 'fr',
       path: '/missing',
@@ -70,7 +70,7 @@ describe('fetchPageByPath', () => {
     vi.mocked(client.get).mockRejectedValue({ response: { status: 500 } });
 
     await expect(
-      fetchPageByPath(client, basePath, { siteId: 'site-1', culture: 'fr', path: '/' })
+      getPageByPath(client, basePath, { siteId: 'site-1', culture: 'fr', path: '/' })
     ).rejects.toMatchObject({ response: { status: 500 } });
   });
 });

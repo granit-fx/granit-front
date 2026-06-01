@@ -8,7 +8,7 @@ import type { AxiosInstance } from '@granit/api-client';
  * `contentTitle` and `contentDescription` seed the cascade when no explicit
  * title/description row exists for the content item.
  */
-export async function fetchEffectiveSeo(
+export async function getEffectiveSeo(
   client: AxiosInstance,
   basePath: string,
   params: {

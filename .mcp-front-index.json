@@ -970,9 +970,9 @@
       "description": "Granit CMS — types and API client (pages, blocks, menus, redirects, SEO, preview, document resolution)",
       "exports": [
         {
-          "name": "fetchPageByPath",
+          "name": "getPageByPath",
           "kind": "function",
-          "signature": "async function fetchPageByPath( client: AxiosInstance, basePath: string, params:"
+          "signature": "async function getPageByPath( client: AxiosInstance, basePath: string, params:"
         },
         {
           "name": "mintPreviewToken",
@@ -985,9 +985,9 @@
           "signature": "async function resolvePreview( client: AxiosInstance, basePath: string, token: string ): Promise<DraftPagePreviewResponse | null>"
         },
         {
-          "name": "fetchBlockCatalog",
+          "name": "getBlockCatalog",
           "kind": "function",
-          "signature": "async function fetchBlockCatalog( client: AxiosInstance, basePath: string ): Promise<BlockCatalogResponse>"
+          "signature": "async function getBlockCatalog( client: AxiosInstance, basePath: string ): Promise<BlockCatalogResponse>"
         },
         {
           "name": "resolveBlockData",
@@ -1005,9 +1005,9 @@
           "signature": "async function resolveRedirect( client: AxiosInstance, basePath: string, params:"
         },
         {
-          "name": "fetchEffectiveSeo",
+          "name": "getEffectiveSeo",
           "kind": "function",
-          "signature": "async function fetchEffectiveSeo( client: AxiosInstance, basePath: string, params:"
+          "signature": "async function getEffectiveSeo( client: AxiosInstance, basePath: string, params:"
         },
         {
           "name": "batchResolveDocuments",

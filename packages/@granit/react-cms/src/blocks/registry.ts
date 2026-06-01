@@ -1,16 +1,16 @@
-import { CtaBlock } from './CtaBlock';
-import { FeaturesBlock } from './FeaturesBlock';
-import { HeroBlock } from './HeroBlock';
-import { ImageTextBlock } from './ImageTextBlock';
-import { LogosBlock } from './LogosBlock';
-import { MapBlock } from './MapBlock';
-import { PricingBlock } from './PricingBlock';
-import { StatsBlock } from './StatsBlock';
-import { StepsBlock } from './StepsBlock';
-import { TestimonialsBlock } from './TestimonialsBlock';
-import { TimelineBlock } from './TimelineBlock';
-import { TrustBannerBlock } from './TrustBannerBlock';
-import { VideoBlock } from './VideoBlock';
+import { CtaBlock } from './cta-block';
+import { FeaturesBlock } from './features-block';
+import { HeroBlock } from './hero-block';
+import { ImageTextBlock } from './image-text-block';
+import { LogosBlock } from './logos-block';
+import { MapBlock } from './map-block';
+import { PricingBlock } from './pricing-block';
+import { StatsBlock } from './stats-block';
+import { StepsBlock } from './steps-block';
+import { TestimonialsBlock } from './testimonials-block';
+import { TimelineBlock } from './timeline-block';
+import { TrustBannerBlock } from './trust-banner-block';
+import { VideoBlock } from './video-block';
 
 import type { ComponentType } from 'react';
 

@@ -1,7 +1,7 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { fetchEffectiveSeo } from '../api/seo.js';
+import { getEffectiveSeo } from '../api/seo.js';
 
 import type { EffectiveSeoResponse } from '../types/index.js';
 
@@ -26,12 +26,12 @@ const sampleSeo: EffectiveSeoResponse = {
   ],
 };
 
-describe('fetchEffectiveSeo', () => {
+describe('getEffectiveSeo', () => {
   it('calls the effective endpoint with the correct path and query params', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse(sampleSeo));
 
-    const result = await fetchEffectiveSeo(client, basePath, {
+    const result = await getEffectiveSeo(client, basePath, {
       siteId: 'site-1',
       contentType: 'CmsPage',
       contentId: 'page-1',

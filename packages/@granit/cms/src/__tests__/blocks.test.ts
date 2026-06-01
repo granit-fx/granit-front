@@ -1,7 +1,7 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { fetchBlockCatalog, resolveBlockData } from '../api/blocks.js';
+import { getBlockCatalog, resolveBlockData } from '../api/blocks.js';
 
 import type {
   BlockCatalogResponse,
@@ -32,12 +32,12 @@ const catalog: BlockCatalogResponse = {
   ],
 };
 
-describe('fetchBlockCatalog', () => {
+describe('getBlockCatalog', () => {
   it('returns the catalog', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse(catalog));
 
-    const result = await fetchBlockCatalog(client, basePath);
+    const result = await getBlockCatalog(client, basePath);
 
     expect(client.get).toHaveBeenCalledWith(`${basePath}/api/cms/blocks`);
     expect(result).toEqual(catalog);

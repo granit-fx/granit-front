@@ -13,7 +13,7 @@ import type { AxiosInstance } from '@granit/api-client';
  *
  * Returns `null` on 404 (draft, archived, or unknown path).
  */
-export async function fetchPageByPath(
+export async function getPageByPath(
   client: AxiosInstance,
   basePath: string,
   params: { siteId: string; culture: string; path: string }

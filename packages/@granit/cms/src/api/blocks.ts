@@ -9,7 +9,7 @@ import type { AxiosInstance } from '@granit/api-client';
  * Fetches the editor-agnostic block catalog.
  * `GET {basePath}/api/cms/blocks`
  */
-export async function fetchBlockCatalog(
+export async function getBlockCatalog(
   client: AxiosInstance,
   basePath: string
 ): Promise<BlockCatalogResponse> {

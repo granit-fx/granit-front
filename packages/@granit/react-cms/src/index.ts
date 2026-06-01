@@ -1,17 +1,17 @@
 // Block components
-export { CtaBlock } from './blocks/CtaBlock';
-export { FeaturesBlock } from './blocks/FeaturesBlock';
-export { HeroBlock } from './blocks/HeroBlock';
-export { ImageTextBlock } from './blocks/ImageTextBlock';
-export { LogosBlock } from './blocks/LogosBlock';
-export { MapBlock } from './blocks/MapBlock';
-export { PricingBlock } from './blocks/PricingBlock';
-export { StatsBlock } from './blocks/StatsBlock';
-export { StepsBlock } from './blocks/StepsBlock';
-export { TestimonialsBlock } from './blocks/TestimonialsBlock';
-export { TimelineBlock } from './blocks/TimelineBlock';
-export { TrustBannerBlock } from './blocks/TrustBannerBlock';
-export { VideoBlock } from './blocks/VideoBlock';
+export { CtaBlock } from './blocks/cta-block';
+export { FeaturesBlock } from './blocks/features-block';
+export { HeroBlock } from './blocks/hero-block';
+export { ImageTextBlock } from './blocks/image-text-block';
+export { LogosBlock } from './blocks/logos-block';
+export { MapBlock } from './blocks/map-block';
+export { PricingBlock } from './blocks/pricing-block';
+export { StatsBlock } from './blocks/stats-block';
+export { StepsBlock } from './blocks/steps-block';
+export { TestimonialsBlock } from './blocks/testimonials-block';
+export { TimelineBlock } from './blocks/timeline-block';
+export { TrustBannerBlock } from './blocks/trust-banner-block';
+export { VideoBlock } from './blocks/video-block';
 
 // Block prop types
 export type {

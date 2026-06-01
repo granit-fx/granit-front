@@ -30,10 +30,10 @@ export type {
 } from './types/index.js';
 
 // API — Pages
-export { fetchPageByPath, mintPreviewToken, resolvePreview } from './api/pages.js';
+export { getPageByPath, mintPreviewToken, resolvePreview } from './api/pages.js';
 
 // API — Blocks
-export { fetchBlockCatalog, resolveBlockData } from './api/blocks.js';
+export { getBlockCatalog, resolveBlockData } from './api/blocks.js';
 
 // API — Menus
 export { resolveMenu } from './api/menus.js';
@@ -42,7 +42,7 @@ export { resolveMenu } from './api/menus.js';
 export { resolveRedirect } from './api/redirects.js';
 
 // API — SEO
-export { fetchEffectiveSeo } from './api/seo.js';
+export { getEffectiveSeo } from './api/seo.js';
 
 // API — Document Resolution
 export { batchResolveDocuments } from './api/documents.js';
