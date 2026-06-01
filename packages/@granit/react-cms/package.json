@@ -10,11 +10,11 @@
   "devDependencies": {
     "@granit/cms": "workspace:*",
     "@granit/testing": "workspace:*",
-    "@measured/puck": "^0.20.0"
+    "@puckeditor/core": "^0.21.0"
   },
   "peerDependencies": {
     "@granit/cms": "workspace:*",
-    "@measured/puck": "^0.20.0",
+    "@puckeditor/core": "^0.21.0",
     "react": "^19.0.0"
   }
 }

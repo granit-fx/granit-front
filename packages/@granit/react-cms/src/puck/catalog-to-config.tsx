@@ -3,7 +3,7 @@
 import { BLOCK_COMPONENTS } from '../blocks/registry.js';
 
 import type { BlockCatalogResponse, BlockFieldDescriptor, BlockFieldKind } from '@granit/cms';
-import type { Config, ExternalField, Fields } from '@measured/puck';
+import type { Config, ExternalField, Fields } from '@puckeditor/core';
 
 /**
  * Generates a Puck `Config` from the backend block catalog.

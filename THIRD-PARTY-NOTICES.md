@@ -34,7 +34,7 @@ Last updated: 2026-05-22
 | @commitlint/config-conventional | 21.0.1   | commitlint Contributors                    |
 | @date-fns/tz                    | 1.5.0    | Copyright (c) Sasha Koss                   |
 | @eslint/js                      | 10.0.1   | OpenJS Foundation                          |
-| @measured/puck                  | 0.20.2   | Copyright (c) Measured Corp                |
+| @puckeditor/core                | 0.21.2   | Copyright (c) Measured Corp                |
 | @microsoft/fetch-event-source   | 2.0.1    | Copyright (c) Microsoft Corporation        |
 | @microsoft/signalr              | 10.0.0   | Copyright (c) .NET Foundation              |
 | @tanstack/react-query           | 5.100.11 | Copyright (c) Tanner Linsley               |
