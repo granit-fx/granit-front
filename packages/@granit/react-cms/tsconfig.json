@@ -1,4 +1,10 @@
 {
   "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["@testing-library/jest-dom"],
+    "paths": {
+      "@granit/cms": ["../cms/src/index.ts"]
+    }
+  },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { catalogToConfig } from '../puck/catalog-to-config';
 
@@ -137,5 +137,136 @@ describe('catalogToConfig', () => {
     expect(defaults['highlighted']).toBe(false);
     expect(defaults['items']).toEqual([]);
     expect(defaults['meta']).toEqual({});
+  });
+
+  it('maps Number → number field and default 0', () => {
+    const numericCatalog: BlockCatalogResponse = {
+      categories: [
+        {
+          category: 'pricing',
+          blocks: [
+            {
+              name: 'Pricing',
+              version: '1.0.0',
+              sourceModule: 'Granit.Cms.Blocks',
+              renderSide: 'Server',
+              dataSourceKey: null,
+              subscribedContentTypes: [],
+              fields: { price: { kind: 'Number' } },
+            },
+          ],
+        },
+      ],
+    };
+
+    const config = catalogToConfig(numericCatalog);
+    const pricing = config.components['Pricing'];
+    expect(pricing?.fields?.['price']).toEqual({ type: 'number' });
+    expect(pricing?.defaultProps?.['price']).toBe(0);
+  });
+});
+
+describe('catalogToConfig with resolveBlockData', () => {
+  const dataBoundCatalog: BlockCatalogResponse = {
+    categories: [
+      {
+        category: 'pricing',
+        blocks: [
+          {
+            name: 'Pricing',
+            version: '1.0.0',
+            sourceModule: 'Granit.Cms.Blocks',
+            renderSide: 'Client',
+            dataSourceKey: 'pricing-source',
+            subscribedContentTypes: ['product.plan'],
+            fields: { price: { kind: 'Number' } },
+          },
+        ],
+      },
+    ],
+  };
+
+  it('sets resolveData on data-bound blocks when resolveBlockData is provided', () => {
+    const resolveFn = vi.fn();
+    const config = catalogToConfig(dataBoundCatalog, {
+      resolveBlockData: resolveFn,
+      siteId: 'site-1',
+      culture: 'fr',
+    });
+    expect(config.components['Pricing']?.resolveData).toBeDefined();
+  });
+
+  it('does not set resolveData when resolveBlockData is omitted', () => {
+    const config = catalogToConfig(dataBoundCatalog);
+    expect(config.components['Pricing']?.resolveData).toBeUndefined();
+  });
+
+  it('resolveData calls resolveFn with query string from props', async () => {
+    const resolveFn = vi.fn().mockResolvedValue({ data: { items: [] }, consumedContentKeys: [] });
+    const config = catalogToConfig(dataBoundCatalog, {
+      resolveBlockData: resolveFn,
+      siteId: 'site-1',
+      culture: 'fr',
+    });
+
+    const resolveData = config.components['Pricing']?.resolveData as any;
+
+    await resolveData({ props: { query: 'premium' } });
+
+    expect(resolveFn).toHaveBeenCalledWith({
+      dataSourceKey: 'pricing-source',
+      query: 'premium',
+      siteId: 'site-1',
+      culture: 'fr',
+    });
+  });
+
+  it('resolveData passes null query when props.query is not a string', async () => {
+    const resolveFn = vi.fn().mockResolvedValue({ data: {}, consumedContentKeys: [] });
+    const config = catalogToConfig(dataBoundCatalog, {
+      resolveBlockData: resolveFn,
+      siteId: 'site-1',
+      culture: 'fr',
+    });
+
+    const resolveData = config.components['Pricing']?.resolveData as any;
+
+    await resolveData({ props: { price: 99 } });
+
+    expect(resolveFn).toHaveBeenCalledWith(expect.objectContaining({ query: null }));
+  });
+
+  it('resolveData returns original props when resolveFn throws', async () => {
+    const resolveFn = vi.fn().mockRejectedValue(new Error('network error'));
+    const config = catalogToConfig(dataBoundCatalog, {
+      resolveBlockData: resolveFn,
+      siteId: 'site-1',
+      culture: 'fr',
+    });
+
+    const resolveData = config.components['Pricing']?.resolveData as any;
+
+    const result = await resolveData({ props: { price: 99 } });
+
+    expect(result.props).toEqual({ price: 99 });
+  });
+
+  it('resolveData returns resolved data with readOnly flags', async () => {
+    const resolveFn = vi.fn().mockResolvedValue({
+      data: { items: ['a', 'b'], count: 2 },
+      consumedContentKeys: [],
+    });
+    const config = catalogToConfig(dataBoundCatalog, {
+      resolveBlockData: resolveFn,
+      siteId: 'site-1',
+      culture: 'fr',
+    });
+
+    const resolveData = config.components['Pricing']?.resolveData as any;
+
+    const result = await resolveData({ props: {} });
+
+    expect(result.props).toEqual({ items: ['a', 'b'], count: 2 });
+    expect(result.readOnly).toEqual({ items: true, count: true });
   });
 });
