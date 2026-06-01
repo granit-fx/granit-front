@@ -43,4 +43,4 @@ export { catalogToConfig } from './puck/catalog-to-config';
 export type { CatalogConfigOptions, ResolveBlockDataFn } from './puck/catalog-to-config';
 
 // Components
-export { CmsMenuNav } from './components/CmsMenuNav';
+export { CmsMenuNav } from './components/cms-menu-nav';
