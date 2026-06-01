@@ -3093,34 +3093,7 @@
         {
           "name": "catalogToConfig",
           "kind": "function",
-          "signature": "function catalogToConfig( catalog: BlockCatalogResponse, options?: CatalogConfigOptions ): Config"
-        },
-        {
-          "name": "CatalogConfigOptions",
-          "kind": "interface",
-          "signature": "interface CatalogConfigOptions",
-          "members": [
-            {
-              "name": "resolveBlockData",
-              "kind": "property",
-              "signature": "resolveBlockData?: ResolveBlockDataFn"
-            },
-            {
-              "name": "siteId",
-              "kind": "property",
-              "signature": "siteId?: string"
-            },
-            {
-              "name": "culture",
-              "kind": "property",
-              "signature": "culture?: string"
-            }
-          ]
-        },
-        {
-          "name": "ResolveBlockDataFn",
-          "kind": "type",
-          "signature": "type ResolveBlockDataFn = (params: { dataSourceKey: string; query: string | null; siteId: string; culture: string; }) => Promise<{ data: unknown; consumedContentKeys: string[] }>"
+          "signature": "function catalogToConfig( catalog: BlockCatalogResponse, options: CatalogConfigOptions ="
         },
         {
           "name": "CmsMenuNav",

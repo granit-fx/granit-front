@@ -197,4 +197,48 @@ describe('resolveDocumentReferencesInData', () => {
 
     expect(result.content[0].props.items).toBeNull();
   });
+
+  it('resolves a DocumentPickerItem object ({id, title}) the same as a plain GUID string', async () => {
+    const resolveFn: ResolveDocumentsFn = vi
+      .fn()
+      .mockResolvedValue(new Map([['guid-picker', asset1]]));
+    const pickerItem = { id: 'guid-picker', title: 'My Document', mimeType: 'image/png' };
+    const data = {
+      content: [{ type: 'Hero', props: { imageId: pickerItem } }],
+    };
+
+    const result = await resolveDocumentReferencesInData(data, catalog, resolveFn);
+
+    expect(result.content[0].props._resolved_imageId).toEqual(asset1);
+    expect(resolveFn).toHaveBeenCalledWith(['guid-picker']);
+  });
+
+  it('deduplicates picker-object GUIDs against plain-string GUIDs in the same batch', async () => {
+    const resolveFn: ResolveDocumentsFn = vi
+      .fn()
+      .mockResolvedValue(new Map([['shared-guid', asset1]]));
+    const data = {
+      content: [
+        { type: 'Hero', props: { imageId: 'shared-guid' } },
+        { type: 'Hero', props: { imageId: { id: 'shared-guid', title: 'Doc' } } },
+      ],
+    };
+
+    await resolveDocumentReferencesInData(data, catalog, resolveFn);
+
+    expect(resolveFn).toHaveBeenCalledTimes(1);
+    expect(resolveFn).toHaveBeenCalledWith(['shared-guid']);
+  });
+
+  it('ignores a DocumentPickerItem with an empty id', async () => {
+    const resolveFn: ResolveDocumentsFn = vi.fn().mockResolvedValue(new Map());
+    const data = {
+      content: [{ type: 'Hero', props: { imageId: { id: '', title: 'Empty' } } }],
+    };
+
+    const result = await resolveDocumentReferencesInData(data, catalog, resolveFn);
+
+    expect(result).toBe(data);
+    expect(resolveFn).not.toHaveBeenCalled();
+  });
 });

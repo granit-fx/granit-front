@@ -16,6 +16,26 @@ export type ResolveBlockDataFn = (params: {
   culture: string;
 }) => Promise<{ data: unknown; consumedContentKeys: string[] }>;
 
+/**
+ * A document item returned by the editor-side document picker.
+ * Stored as the prop value for `DocumentReference` fields when the editor
+ * uses the picker. `resolve-documents.ts` accepts this shape alongside plain
+ * GUID strings so both paths resolve transparently.
+ */
+export interface DocumentPickerItem {
+  readonly id: string;
+  readonly title: string;
+  readonly mimeType?: string | null;
+}
+
+/**
+ * Callback supplied by the renderer so the Puck editor can search for
+ * documents to assign to `DocumentReference` fields. Receives the user's
+ * search query and returns matching items. The editor runs this client-side
+ * via a server-proxied route — the Bearer token never leaves the server.
+ */
+export type FetchDocumentsFn = (query: string) => Promise<DocumentPickerItem[]>;
+
 export interface CatalogConfigOptions {
   /**
    * When provided, data-bound blocks (`dataSourceKey != null`) get a `resolveData`
@@ -27,6 +47,12 @@ export interface CatalogConfigOptions {
   siteId?: string;
   /** BCP-47 locale forwarded to the data resolver. Required when `resolveBlockData` is set. */
   culture?: string;
+  /**
+   * When provided, `DocumentReference` fields show a search-driven document
+   * picker in the Puck editor sidebar. Without this, the field is rendered as
+   * a no-op external field (empty list).
+   */
+  fetchDocuments?: FetchDocumentsFn;
 }
 
 /**
@@ -45,7 +71,7 @@ export interface CatalogConfigOptions {
  */
 export function catalogToConfig(
   catalog: BlockCatalogResponse,
-  options?: CatalogConfigOptions
+  options: CatalogConfigOptions = {}
 ): Config {
   const components: Config['components'] = {};
   const categories: Config['categories'] = {};
@@ -62,14 +88,14 @@ export function catalogToConfig(
       const CapturedComponent = BlockComponent;
       const componentConfig: Config['components'][string] = {
         label: entry.name,
-        fields: buildFields(entry.fields),
+        fields: buildFields(entry.fields, options.fetchDocuments),
         defaultProps: buildDefaultProps(entry.fields),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         render: (props: any) => <CapturedComponent {...props} />,
       };
 
       // Data-bound blocks: add resolveData to fetch live content at SSR time.
-      if (entry.dataSourceKey && options?.resolveBlockData) {
+      if (entry.dataSourceKey && options.resolveBlockData) {
         const capturedKey = entry.dataSourceKey;
         const resolveFn = options.resolveBlockData;
         const siteId = options.siteId ?? '';
@@ -118,17 +144,19 @@ export function catalogToConfig(
 }
 
 function buildFields(
-  fieldMap: Readonly<Record<string, BlockFieldDescriptor>>
+  fieldMap: Readonly<Record<string, BlockFieldDescriptor>>,
+  fetchDocuments?: FetchDocumentsFn
 ): Fields<Record<string, unknown>> {
   const result: Fields<Record<string, unknown>> = {};
   for (const [key, descriptor] of Object.entries(fieldMap)) {
-    result[key] = descriptorToField(descriptor);
+    result[key] = descriptorToField(descriptor, fetchDocuments);
   }
   return result;
 }
 
 function descriptorToField(
-  descriptor: BlockFieldDescriptor
+  descriptor: BlockFieldDescriptor,
+  fetchDocuments?: FetchDocumentsFn
 ): Fields<Record<string, unknown>>[string] {
   const kind: BlockFieldKind = descriptor.kind;
 
@@ -149,19 +177,20 @@ function descriptorToField(
       };
 
     case 'Choice': {
-      const options = (descriptor.options ?? []).map((o) => ({
+      const opts = (descriptor.options ?? []).map((o) => ({
         label: o.label,
         value: o.value,
       }));
-      return { type: 'select', options };
+      return { type: 'select', options: opts };
     }
 
     case 'DocumentReference':
-      return buildDocumentReferenceField();
+      return buildDocumentReferenceField(fetchDocuments);
 
     case 'List': {
       const itemFields = buildFields(
-        (descriptor.itemFields ?? {}) as Record<string, BlockFieldDescriptor>
+        (descriptor.itemFields ?? {}) as Record<string, BlockFieldDescriptor>,
+        fetchDocuments
       );
       return {
         type: 'array',
@@ -172,7 +201,8 @@ function descriptorToField(
 
     case 'Nested': {
       const objectFields = buildFields(
-        (descriptor.fields ?? {}) as Record<string, BlockFieldDescriptor>
+        (descriptor.fields ?? {}) as Record<string, BlockFieldDescriptor>,
+        fetchDocuments
       );
       return { type: 'object', objectFields };
     }
@@ -184,13 +214,23 @@ function descriptorToField(
   }
 }
 
-function buildDocumentReferenceField(): ExternalField<unknown> {
+function buildDocumentReferenceField(fetchDocuments?: FetchDocumentsFn): ExternalField<unknown> {
   return {
     type: 'external',
     placeholder: 'Select a document…',
-    fetchList: async (): Promise<{ title: string; id: string }[]> => [],
-    mapRow: (item: unknown) => ({ title: (item as { title: string }).title }),
-    getItemSummary: (value: unknown) => (value as string | null) ?? '—',
+    showSearch: true,
+    fetchList: async ({ query }: { query: string }): Promise<DocumentPickerItem[]> => {
+      if (!fetchDocuments) return [];
+      return fetchDocuments(query);
+    },
+    mapRow: (item: unknown) => {
+      const doc = item as DocumentPickerItem;
+      return {
+        title: doc.title,
+        ...(doc.mimeType ? { type: doc.mimeType } : {}),
+      };
+    },
+    getItemSummary: (item: unknown) => (item as DocumentPickerItem | null)?.title ?? '—',
   };
 }
 

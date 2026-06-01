@@ -40,7 +40,12 @@ export type { ResolvedDocumentAsset, ResolveDocumentsFn } from './blocks/resolve
 
 // Puck config generator
 export { catalogToConfig } from './puck/catalog-to-config';
-export type { CatalogConfigOptions, ResolveBlockDataFn } from './puck/catalog-to-config';
+export type {
+  CatalogConfigOptions,
+  DocumentPickerItem,
+  FetchDocumentsFn,
+  ResolveBlockDataFn,
+} from './puck/catalog-to-config';
 
 // Components
 export { CmsMenuNav } from './components/cms-menu-nav';

@@ -83,6 +83,24 @@ function buildSchema(
   return result;
 }
 
+/**
+ * Extracts a document GUID from either a plain string or a `DocumentPickerItem`
+ * object `{ id: string }`. Returns `null` when the value carries no usable GUID.
+ */
+function extractGuid(value: unknown): string | null {
+  if (typeof value === 'string' && value.length > 0) return value;
+  if (
+    value != null &&
+    typeof value === 'object' &&
+    'id' in value &&
+    typeof (value as { id: unknown }).id === 'string' &&
+    (value as { id: string }).id.length > 0
+  ) {
+    return (value as { id: string }).id;
+  }
+  return null;
+}
+
 function collectGuids(
   props: Record<string, unknown>,
   fieldSchema: Map<string, BlockFieldDescriptor>,
@@ -91,7 +109,8 @@ function collectGuids(
   for (const [key, descriptor] of fieldSchema) {
     const value = props[key];
     if (descriptor.kind === 'DocumentReference') {
-      if (typeof value === 'string' && value.length > 0) out.add(value);
+      const guid = extractGuid(value);
+      if (guid) out.add(guid);
     } else if (descriptor.kind === 'List' && Array.isArray(value) && descriptor.itemFields) {
       const itemSchema = new Map(Object.entries(descriptor.itemFields));
       for (const item of value as Record<string, unknown>[]) {
@@ -119,8 +138,9 @@ function injectResolved(
   for (const [key, descriptor] of fieldSchema) {
     const value = props[key];
     if (descriptor.kind === 'DocumentReference') {
-      if (typeof value === 'string' && value.length > 0) {
-        const asset = resolved.get(value);
+      const guid = extractGuid(value);
+      if (guid) {
+        const asset = resolved.get(guid);
         if (asset) next[`_resolved_${key}`] = asset;
       }
     } else if (descriptor.kind === 'List' && Array.isArray(value) && descriptor.itemFields) {
