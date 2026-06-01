@@ -5,13 +5,13 @@ import {
   addAdminCredit,
   getCustomerBalance,
   listBalanceTransactions,
-} from '../api/customer-balance-api.js';
+} from '../api/customer-balance-api';
 
 import type {
   AdminCreditRequest,
   BalanceTransactionResponse,
   CustomerBalanceResponse,
-} from '../types/index.js';
+} from '../types/index';
 
 const sampleBalance: CustomerBalanceResponse = {
   balanceAccountId: 'ba-001',

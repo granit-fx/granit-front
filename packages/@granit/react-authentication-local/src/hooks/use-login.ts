@@ -1,7 +1,7 @@
 import { loginAccount } from '@granit/authentication-local';
 import { useMutation } from '@tanstack/react-query';
 
-import { useLocalAuthConfig } from '../providers/local-auth-provider.js';
+import { useLocalAuthConfig } from '../providers/local-auth-provider';
 
 import type { AccountLoginRequest, AccountLoginResponse } from '@granit/authentication-local';
 import type { UseMutationResult } from '@tanstack/react-query';

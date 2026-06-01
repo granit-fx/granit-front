@@ -6,7 +6,7 @@ import type {
   DashboardLayout,
   DashboardView,
   EntityAlias,
-} from '../index.js';
+} from '../index';
 
 // Compile-time + runtime fixture proving the extended `DashboardDefinition`
 // carries every backend field. Mirrors the corresponding

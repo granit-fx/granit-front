@@ -1,8 +1,8 @@
 import { createContext, useContext, type ReactNode } from 'react';
 
-import { osmProvider } from '../providers/osm-provider.js';
+import { osmProvider } from '../providers/osm-provider';
 
-import type { MapTileProvider } from '../types/index.js';
+import type { MapTileProvider } from '../types/index';
 
 const MapTileProviderContext = createContext<MapTileProvider>(osmProvider);
 

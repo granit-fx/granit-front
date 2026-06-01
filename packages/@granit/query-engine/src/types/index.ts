@@ -9,7 +9,7 @@ export type {
   QueryRequest,
   SortDirection,
   SortEntry,
-} from './query-params.js';
+} from './query-params';
 
 export type {
   ColumnDefinition,
@@ -23,15 +23,15 @@ export type {
   QueryMetadata,
   QuickFilterMeta,
   SortableField,
-} from './query-metadata.js';
+} from './query-metadata';
 
-export type { GroupEntry, GroupedResult, PagedResult } from './query-results.js';
+export type { GroupEntry, GroupedResult, PagedResult } from './query-results';
 
 export type {
   CreateSavedViewRequest,
   SavedViewSummary,
   UpdateSavedViewRequest,
-} from './saved-views.js';
+} from './saved-views';
 
 export type {
   FilterSuggestion,
@@ -39,4 +39,4 @@ export type {
   FilterToken,
   FilterTokenType,
   SmartFilterPhase,
-} from './smart-filter.js';
+} from './smart-filter';

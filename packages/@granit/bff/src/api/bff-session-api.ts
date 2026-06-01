@@ -5,8 +5,8 @@
 // Mutation endpoints (DELETE) require a CSRF token via CsrfManager.
 // ---------------------------------------------------------------------------
 
-import type { CsrfManager } from '../csrf/index.js';
-import type { BffSessionInfo, BffSessionListResponse } from '../types/index.js';
+import type { CsrfManager } from '../csrf/index';
+import type { BffSessionInfo, BffSessionListResponse } from '../types/index';
 
 /**
  * Lists the current user's active BFF sessions.

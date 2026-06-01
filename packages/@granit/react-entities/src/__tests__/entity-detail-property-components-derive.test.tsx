@@ -4,9 +4,9 @@ import { render } from '@testing-library/react';
 import axios from 'axios';
 import { describe, expect, it } from 'vitest';
 
-import { EntityDetail } from '../components/entity-detail.js';
-import { STANDARD_DETAIL_COMPONENTS } from '../field-components/standard-detail-components.js';
-import { EntityRendererProvider } from '../providers/index.js';
+import { EntityDetail } from '../components/entity-detail';
+import { STANDARD_DETAIL_COMPONENTS } from '../field-components/standard-detail-components';
+import { EntityRendererProvider } from '../providers/index';
 
 import type {
   EntityDetailManifest,

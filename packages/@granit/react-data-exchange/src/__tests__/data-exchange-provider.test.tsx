@@ -2,17 +2,11 @@ import { renderHook } from '@testing-library/react';
 import axios from 'axios';
 import { describe, expect, it } from 'vitest';
 
-import {
-  buildExportQueryKey,
-  useExportConfig,
-} from '../export/providers/export-provider.js';
-import {
-  buildImportQueryKey,
-  useImportConfig,
-} from '../import/providers/import-provider.js';
-import { DataExchangeProvider } from '../providers/data-exchange-provider.js';
+import { buildExportQueryKey, useExportConfig } from '../export/providers/export-provider';
+import { buildImportQueryKey, useImportConfig } from '../import/providers/import-provider';
+import { DataExchangeProvider } from '../providers/data-exchange-provider';
 
-import type { DataExchangeConfig } from '../providers/data-exchange-provider.js';
+import type { DataExchangeConfig } from '../providers/data-exchange-provider';
 import type { ReactNode } from 'react';
 
 function createConfig(overrides?: Partial<DataExchangeConfig>): DataExchangeConfig {
@@ -24,9 +18,7 @@ function createConfig(overrides?: Partial<DataExchangeConfig>): DataExchangeConf
 
 function wrapper(config: DataExchangeConfig) {
   return function Wrapper({ children }: { children: ReactNode }) {
-    return (
-      <DataExchangeProvider config={config}>{children}</DataExchangeProvider>
-    );
+    return <DataExchangeProvider config={config}>{children}</DataExchangeProvider>;
   };
 }
 

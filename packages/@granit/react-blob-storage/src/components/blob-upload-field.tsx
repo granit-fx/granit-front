@@ -1,8 +1,8 @@
 import { useCallback, useRef, useState, type ChangeEvent, type ReactNode } from 'react';
 
-import { useBlobUpload, type BlobUploadState } from '../hooks/use-blob-upload.js';
+import { useBlobUpload, type BlobUploadState } from '../hooks/use-blob-upload';
 
-import { BlobImage } from './blob-image.js';
+import { BlobImage } from './blob-image';
 
 export interface BlobUploadFieldProps {
   /** Current blob id (or `null` for empty). Stored verbatim as the field value. */

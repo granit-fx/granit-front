@@ -1,13 +1,13 @@
 import { act, fireEvent, render, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { EntityForm } from '../components/entity-form.js';
-import { useEntityForm } from '../hooks/use-entity-form.js';
+import { EntityForm } from '../components/entity-form';
+import { useEntityForm } from '../hooks/use-entity-form';
 import {
   EntityRendererProvider,
   type EntityFormComponent,
   type EntityComponentCatalog,
-} from '../providers/index.js';
+} from '../providers/index';
 
 import type {
   EntityFormFieldManifest,

@@ -1,6 +1,6 @@
 import { describe, expectTypeOf, it } from 'vitest';
 
-import type { GoogleCloudAuthContextType, GoogleCloudCoreConfig } from '../index.js';
+import type { GoogleCloudAuthContextType, GoogleCloudCoreConfig } from '../index';
 
 describe('@granit/authentication-google-cloud types', () => {
   describe('GoogleCloudAuthContextType', () => {

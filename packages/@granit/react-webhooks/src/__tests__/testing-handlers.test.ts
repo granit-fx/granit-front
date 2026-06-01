@@ -1,7 +1,7 @@
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { createWebhooksHandlers, webhookSubscriptionQueryMetadata } from '../testing/index.js';
+import { createWebhooksHandlers, webhookSubscriptionQueryMetadata } from '../testing/index';
 
 import type { WebhookSubscriptionResponse } from '@granit/webhooks';
 

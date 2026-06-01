@@ -1,4 +1,4 @@
-import type { FieldConstraint, InputConstraintProps } from './types/index.js';
+import type { FieldConstraint, InputConstraintProps } from './types/index';
 
 const FORMAT_TO_TYPE: Readonly<Record<string, string>> = {
   email: 'email',

@@ -2,14 +2,14 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 import {
   InvoicingProvider,
   buildInvoicingQueryKey,
   useInvoicingConfig,
-} from '../providers/invoicing-provider.js';
+} from '../providers/invoicing-provider';
 
-import type { InvoicingConfig } from '../providers/invoicing-provider.js';
+import type { InvoicingConfig } from '../providers/invoicing-provider';
 import type { AxiosInstance } from 'axios';
 
 const mockConfig: InvoicingConfig = {

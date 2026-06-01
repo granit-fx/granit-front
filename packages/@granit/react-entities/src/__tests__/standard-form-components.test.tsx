@@ -1,9 +1,9 @@
 import { fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { EntityForm } from '../components/entity-form.js';
-import { STANDARD_FORM_COMPONENTS } from '../field-components/index.js';
-import { EntityRendererProvider } from '../providers/index.js';
+import { EntityForm } from '../components/entity-form';
+import { STANDARD_FORM_COMPONENTS } from '../field-components/index';
+import { EntityRendererProvider } from '../providers/index';
 
 import type { EntityFormFieldManifest, EntityFormManifest } from '@granit/entities';
 

@@ -1,4 +1,4 @@
-import type { TransitionOutcomeValue } from './transition-outcome.js';
+import type { TransitionOutcomeValue } from './transition-outcome';
 import type { ISODateString } from '@granit/types';
 
 /** Single available workflow transition. */

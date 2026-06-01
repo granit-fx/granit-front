@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useGoogleCloudInit } from '../hooks/use-google-cloud-init.js';
+import { useGoogleCloudInit } from '../hooks/use-google-cloud-init';
 
 import type { GoogleCloudCoreConfig } from '@granit/authentication-google-cloud';
 

@@ -4,7 +4,7 @@ import {
   expandActionParams,
   expandActionPlaceholders,
   expandActionTargetAndParams,
-} from '../lib/expand-action-params.js';
+} from '../lib/expand-action-params';
 
 describe('expandActionPlaceholders', () => {
   it('substitutes ${row.field} placeholders from the dispatch row', () => {

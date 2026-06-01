@@ -1,9 +1,9 @@
 import { createMockClient } from '@granit/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { chatStream } from '../api/ai-chat-api.js';
+import { chatStream } from '../api/ai-chat-api';
 
-import type { ChatStreamEvent } from '../api/ai-chat-api.js';
+import type { ChatStreamEvent } from '../api/ai-chat-api';
 
 function createSSEStream(chunks: string[]): ReadableStream<Uint8Array> {
   const encoder = new TextEncoder();

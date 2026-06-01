@@ -109,4 +109,4 @@ export type {
   ServerValidationRequest,
   ServerValidationResult,
   ValidationStatus,
-} from './server-validation.js';
+} from './server-validation';

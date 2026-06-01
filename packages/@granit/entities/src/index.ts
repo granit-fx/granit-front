@@ -13,9 +13,9 @@
 // `readonly T[]`, `IReadOnlyDictionary<string, T>` →
 // `Readonly<Record<string, T>>`.
 
-export { evaluateVisibility } from './helpers/index.js';
-export { executeBulkAction } from './api/bulk-action-api.js';
-export { ALL_ENTITY_FACETS, MANIFEST_SCHEMA_VERSION } from './types/index.js';
+export { evaluateVisibility } from './helpers/index';
+export { executeBulkAction } from './api/bulk-action-api';
+export { ALL_ENTITY_FACETS, MANIFEST_SCHEMA_VERSION } from './types/index';
 export type {
   BulkActionFailure,
   BulkActionRequest,
@@ -67,4 +67,4 @@ export type {
   RelationDisplay,
   SidePanelKind,
   VisibilityCondition,
-} from './types/index.js';
+} from './types/index';

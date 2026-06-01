@@ -4,7 +4,7 @@ import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { describe, expect, it, vi } from 'vitest';
 
-import { EditableDashboard } from '../components/editable-dashboard.js';
+import { EditableDashboard } from '../components/editable-dashboard';
 
 import type { DashboardDefinition } from '@granit/dashboards';
 import type { ReactNode } from 'react';

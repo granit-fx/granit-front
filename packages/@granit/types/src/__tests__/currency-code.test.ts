@@ -1,6 +1,6 @@
 import { describe, expectTypeOf, it } from 'vitest';
 
-import type { CurrencyCode } from '../currency-code.js';
+import type { CurrencyCode } from '../currency-code';
 
 describe('CurrencyCode', () => {
   it('accepts valid currency codes', () => {

@@ -8,9 +8,9 @@ import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { sampleBalance, sampleTransactions } from './data.js';
+import { sampleBalance, sampleTransactions } from './data';
 
 import type { AdminCreditRequest } from '@granit/customer-balance';
 import type { QueryMetadata } from '@granit/query-engine';

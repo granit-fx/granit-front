@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { extractReturnUrl } from '../utils/extract-return-url.js';
+import { extractReturnUrl } from '../utils/extract-return-url';
 
 describe('extractReturnUrl', () => {
   afterEach(() => {

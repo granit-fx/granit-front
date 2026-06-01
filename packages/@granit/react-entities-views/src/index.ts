@@ -7,22 +7,22 @@
 // framework / app split). Implementation lands across the stories in
 // granit-fx/granit-front#301.
 
-export { defaultEntityViewQueryKey, useDefaultEntityView } from './hooks/use-default-entity-view.js';
+export { defaultEntityViewQueryKey, useDefaultEntityView } from './hooks/use-default-entity-view';
 export {
   useCreateEntityView,
   useDeleteEntityView,
   useUpdateEntityView,
-} from './hooks/use-entity-view-crud.js';
-export type { UpdateEntityViewVariables } from './hooks/use-entity-view-crud.js';
+} from './hooks/use-entity-view-crud';
+export type { UpdateEntityViewVariables } from './hooks/use-entity-view-crud';
 export {
   useSetEntityViewPersonalDefault,
   useSetEntityViewPinned,
   useSetEntityViewTenantDefault,
   useShareEntityView,
-} from './hooks/use-entity-view-flags.js';
+} from './hooks/use-entity-view-flags';
 export type {
   ShareEntityViewVariables,
   ToggleEntityViewFlagVariables,
-} from './hooks/use-entity-view-flags.js';
-export { entityViewQueryKey, useEntityView } from './hooks/use-entity-view.js';
-export { entityViewsQueryKey, useEntityViews } from './hooks/use-entity-views.js';
+} from './hooks/use-entity-view-flags';
+export { entityViewQueryKey, useEntityView } from './hooks/use-entity-view';
+export { entityViewsQueryKey, useEntityViews } from './hooks/use-entity-views';

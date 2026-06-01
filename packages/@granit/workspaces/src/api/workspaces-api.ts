@@ -2,7 +2,7 @@ import type {
   LandingRouteResponse,
   SetPinnedLandingRouteRequest,
   WorkspaceTreeResponse,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance, AxiosRequestConfig } from '@granit/api-client';
 
 /**

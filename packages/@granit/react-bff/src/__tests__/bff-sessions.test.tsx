@@ -6,8 +6,8 @@ import {
   useBffSessions,
   useRevokeBffSession,
   useRevokeAllOtherBffSessions,
-} from '../hooks/use-bff-sessions.js';
-import { BffProvider } from '../providers/bff-provider.js';
+} from '../hooks/use-bff-sessions';
+import { BffProvider } from '../providers/bff-provider';
 
 import type { BffConfig } from '@granit/bff';
 

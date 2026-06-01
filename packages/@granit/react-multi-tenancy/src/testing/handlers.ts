@@ -8,9 +8,9 @@ import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { noContent, notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { mockTenants } from './data.js';
+import { mockTenants } from './data';
 
 import type { AdminTenant } from '@granit/multi-tenancy';
 import type { QueryMetadata } from '@granit/query-engine';

@@ -1,14 +1,14 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 import {
   BackgroundJobsProvider,
   buildBackgroundJobsQueryKey,
   useBackgroundJobsConfig,
-} from '../providers/background-jobs-provider.js';
+} from '../providers/background-jobs-provider';
 
-import type { BackgroundJobsConfig } from '../providers/background-jobs-provider.js';
+import type { BackgroundJobsConfig } from '../providers/background-jobs-provider';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 

@@ -12,14 +12,14 @@ import { toEntityId, toISODateString } from '@granit/types';
 import { WebhookSubscriptionStatus } from '@granit/webhooks';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_WEBHOOKS_BASE_PATH } from '../constants.js';
+import { DEFAULT_WEBHOOKS_BASE_PATH } from '../constants';
 
 import {
   mockWebhookConfig,
   mockWebhookDeliveryAttempts,
   mockWebhookStats,
   mockWebhookSubscriptions,
-} from './data.js';
+} from './data';
 
 import type { QueryMetadata } from '@granit/query-engine';
 import type {

@@ -1,22 +1,18 @@
 // Types
-export type { CurrentTenant, MultiTenancyOptions, TenantInfo } from './types/index.js';
-export type {
-  AdminTenant,
-  CreateTenantRequest,
-  UpdateTenantRequest,
-} from './types/admin-tenant.js';
+export type { CurrentTenant, MultiTenancyOptions, TenantInfo } from './types/index';
+export type { AdminTenant, CreateTenantRequest, UpdateTenantRequest } from './types/admin-tenant';
 
 // Constants
-export { DEFAULT_MULTI_TENANCY_OPTIONS } from './types/index.js';
+export { DEFAULT_MULTI_TENANCY_OPTIONS } from './types/index';
 
 // Permissions
-export { MultiTenancyPermissions } from './permissions.js';
+export { MultiTenancyPermissions } from './permissions';
 
 // Resolvers
-export type { TenantResolver } from './resolvers/tenant-resolver.js';
-export { resolveTenant } from './resolvers/tenant-resolver.js';
-export type { JwtClaimTenantResolverOptions } from './resolvers/jwt-claim-tenant-resolver.js';
-export { createJwtClaimTenantResolver } from './resolvers/jwt-claim-tenant-resolver.js';
+export type { TenantResolver } from './resolvers/tenant-resolver';
+export { resolveTenant } from './resolvers/tenant-resolver';
+export type { JwtClaimTenantResolverOptions } from './resolvers/jwt-claim-tenant-resolver';
+export { createJwtClaimTenantResolver } from './resolvers/jwt-claim-tenant-resolver';
 
 // API — Tenant admin
 export {
@@ -26,4 +22,4 @@ export {
   getTenant,
   listTenants,
   updateTenant,
-} from './api/tenant-admin-api.js';
+} from './api/tenant-admin-api';

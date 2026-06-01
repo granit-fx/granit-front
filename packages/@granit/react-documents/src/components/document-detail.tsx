@@ -1,16 +1,12 @@
 import { useState } from 'react';
 
-import { useRenameDocument } from '../hooks/use-document-mutations.js';
-import { useDocumentTagsList } from '../hooks/use-document-tags.js';
-import {
-  useDocument,
-  useDocumentDownloadUrl,
-  useDocumentVersions,
-} from '../hooks/use-documents.js';
+import { useRenameDocument } from '../hooks/use-document-mutations';
+import { useDocumentTagsList } from '../hooks/use-document-tags';
+import { useDocument, useDocumentDownloadUrl, useDocumentVersions } from '../hooks/use-documents';
 
-import { TransferOwnershipDialog } from './transfer-ownership-dialog.js';
+import { TransferOwnershipDialog } from './transfer-ownership-dialog';
 
-import type { TransferOwnershipDialogLabels } from './transfer-ownership-dialog.js';
+import type { TransferOwnershipDialogLabels } from './transfer-ownership-dialog';
 import type { ReactNode } from 'react';
 
 export interface DocumentDetailLabels {

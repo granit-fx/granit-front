@@ -1,4 +1,4 @@
-import type { ActivitiesTranslations } from './en.js';
+import type { ActivitiesTranslations } from './en';
 
 /**
  * French translation bundle for `@granit/react-activities`. Consumers

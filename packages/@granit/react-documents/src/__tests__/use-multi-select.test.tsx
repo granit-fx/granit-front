@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { useMultiSelect } from '../hooks/use-multi-select.js';
+import { useMultiSelect } from '../hooks/use-multi-select';
 
 const IDS = ['a', 'b', 'c', 'd', 'e'] as const;
 

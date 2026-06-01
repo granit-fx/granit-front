@@ -3,8 +3,8 @@ export {
   InvoicingProvider,
   buildInvoicingQueryKey,
   useInvoicingConfig,
-} from './providers/invoicing-provider.js';
-export type { InvoicingConfig, InvoicingProviderProps } from './providers/invoicing-provider.js';
+} from './providers/invoicing-provider';
+export type { InvoicingConfig, InvoicingProviderProps } from './providers/invoicing-provider';
 
 // Hooks
 export {
@@ -15,5 +15,5 @@ export {
   useInvoice,
   useInvoices,
   useMarkInvoiceUncollectible,
-} from './hooks/use-invoicing.js';
-export type { InvoiceTransitionVariables } from './hooks/use-invoicing.js';
+} from './hooks/use-invoicing';
+export type { InvoiceTransitionVariables } from './hooks/use-invoicing';

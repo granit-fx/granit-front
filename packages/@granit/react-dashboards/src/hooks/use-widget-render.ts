@@ -3,9 +3,9 @@ import { renderWidget } from '@granit/dashboards';
 import { useQuery, type Query, type UseQueryResult } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
-import { useDashboardFilters } from '../components/dashboard-filter-context.js';
-import { mergeFilterValuesIntoRequest } from '../lib/merge-filter-values.js';
-import { useDashboardsConfig } from '../providers/dashboards-provider.js';
+import { useDashboardFilters } from '../components/dashboard-filter-context';
+import { mergeFilterValuesIntoRequest } from '../lib/merge-filter-values';
+import { useDashboardsConfig } from '../providers/dashboards-provider';
 
 import type {
   DashboardRenderedWidget,

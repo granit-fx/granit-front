@@ -4,7 +4,7 @@ import {
   EntityActionDrawerContext,
   type EntityActionOverlayContextValue,
   type EntityActionOverlayState,
-} from '../actions/entity-action-overlay-context.js';
+} from '../actions/entity-action-overlay-context';
 
 export interface EntityActionDrawerHostProps {
   readonly children: ReactNode;

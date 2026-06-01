@@ -1,4 +1,4 @@
-import type { CustomizationTranslations } from './en.js';
+import type { CustomizationTranslations } from './en';
 
 /**
  * French translation bundle for `@granit/react-entities-customization`.

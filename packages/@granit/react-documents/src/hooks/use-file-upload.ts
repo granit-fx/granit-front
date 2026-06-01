@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { useFinalizeUpload, useRequestUploadTicket } from './use-document-mutations.js';
+import { useFinalizeUpload, useRequestUploadTicket } from './use-document-mutations';
 
 import type { DocumentResponse, UploadTicketResponse } from '@granit/documents';
 

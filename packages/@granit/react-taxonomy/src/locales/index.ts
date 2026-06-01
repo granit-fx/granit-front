@@ -20,6 +20,6 @@
 // its existing localization pipeline regardless of front bundles.
 // ---------------------------------------------------------------------------
 
-export { taxonomyTranslationsEn } from './en.js';
-export type { TaxonomyTranslations } from './en.js';
-export { taxonomyTranslationsFr } from './fr.js';
+export { taxonomyTranslationsEn } from './en';
+export type { TaxonomyTranslations } from './en';
+export { taxonomyTranslationsFr } from './fr';

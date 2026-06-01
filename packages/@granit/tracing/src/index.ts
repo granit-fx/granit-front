@@ -1,3 +1,3 @@
-export { getTraceContext } from './trace-context.js';
+export { getTraceContext } from './trace-context';
 
-export type { TraceContext, TracingConfig, TracingExporterConfig } from './types/index.js';
+export type { TraceContext, TracingConfig, TracingExporterConfig } from './types/index';

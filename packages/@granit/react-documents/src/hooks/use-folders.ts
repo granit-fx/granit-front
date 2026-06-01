@@ -1,7 +1,7 @@
 import { getFolder, getFolderBreadcrumb, listFolders } from '@granit/documents';
 import { useQuery } from '@tanstack/react-query';
 
-import { buildDocumentsQueryKey, useDocumentsConfig } from '../providers/documents-provider.js';
+import { buildDocumentsQueryKey, useDocumentsConfig } from '../providers/documents-provider';
 
 import type {
   FolderBreadcrumbResponse,

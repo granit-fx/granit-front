@@ -3,9 +3,9 @@ import * as React from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { describe, expect, it } from 'vitest';
 
-import { createReactLocalization } from '../create-react-localization.js';
-import { useDateFormatter } from '../use-date-formatter.js';
-import { TimezoneProvider } from '../use-timezone.js';
+import { createReactLocalization } from '../create-react-localization';
+import { useDateFormatter } from '../use-date-formatter';
+import { TimezoneProvider } from '../use-timezone';
 
 function createWrapper(i18n: ReturnType<typeof createReactLocalization>, timezone?: string | null) {
   return function Wrapper({ children }: { children: React.ReactNode }) {

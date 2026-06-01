@@ -5,10 +5,10 @@ export type {
   MergeFieldChoices,
   MergeRequest,
   MergeResult,
-} from './types/index.js';
+} from './types/index';
 
 // API
-export { previewMerge, executeMerge } from './api/entity-merge-api.js';
+export { previewMerge, executeMerge } from './api/entity-merge-api';
 
 // Helpers
 export {
@@ -16,5 +16,5 @@ export {
   seedFieldChoices,
   resolveWinner,
   classifyMergeError,
-} from './helpers.js';
-export type { MergeErrorKind, ClassifiedMergeError } from './helpers.js';
+} from './helpers';
+export type { MergeErrorKind, ClassifiedMergeError } from './helpers';

@@ -1,4 +1,4 @@
-import type { LayoutDelta } from './delta.js';
+import type { LayoutDelta } from './delta';
 
 /**
  * Form variant — closed catalog mirroring `Granit.EntitiesCustomization.FormVariant`.

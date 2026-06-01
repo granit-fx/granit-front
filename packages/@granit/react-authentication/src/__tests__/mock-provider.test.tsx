@@ -2,8 +2,8 @@ import { render, renderHook, screen } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { createMockProvider } from '../providers/mock-provider.js';
-import { createAuthContext } from '../providers/use-auth-context.js';
+import { createMockProvider } from '../providers/mock-provider';
+import { createAuthContext } from '../providers/use-auth-context';
 
 import type { BaseAuthContextType } from '@granit/authentication';
 

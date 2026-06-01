@@ -1,10 +1,10 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { useAuditLogConfig } from '../providers/audit-log-provider.js';
-import { AuditLogProvider } from '../providers/audit-log-provider.js';
+import { useAuditLogConfig } from '../providers/audit-log-provider';
+import { AuditLogProvider } from '../providers/audit-log-provider';
 
-import type { AuditLogProviderProps } from '../providers/audit-log-provider.js';
+import type { AuditLogProviderProps } from '../providers/audit-log-provider';
 import type { AxiosInstance } from 'axios';
 
 const mockConfig: AuditLogProviderProps['config'] = {

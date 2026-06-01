@@ -13,7 +13,7 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tansta
 import {
   buildSubscriptionsQueryKey,
   useSubscriptionsConfig,
-} from '../providers/subscriptions-provider.js';
+} from '../providers/subscriptions-provider';
 
 import type { PagedResult, QueryRequest } from '@granit/query-engine';
 import type {

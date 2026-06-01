@@ -22,7 +22,7 @@ import {
 } from '@granit/parties';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildPartiesQueryKey, usePartiesConfig } from '../providers/parties-provider.js';
+import { buildPartiesQueryKey, usePartiesConfig } from '../providers/parties-provider';
 
 import type {
   CreatePartyOptions,

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
-import { useAssignTag, useUnassignTag } from '../hooks/use-tag-mutations.js';
-import { useTags, useTagAssignments } from '../hooks/use-tags.js';
+import { useAssignTag, useUnassignTag } from '../hooks/use-tag-mutations';
+import { useTags, useTagAssignments } from '../hooks/use-tags';
 
 import { TagAutocomplete } from './tag-autocomplete.tsx';
 import { TagChip } from './tag-chip.tsx';

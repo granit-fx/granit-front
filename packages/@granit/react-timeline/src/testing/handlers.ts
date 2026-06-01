@@ -2,9 +2,9 @@ import { noContent } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { mockTimelineEntries } from './data.js';
+import { mockTimelineEntries } from './data';
 
 import type { TimelineEntry, TimelineEntryPage } from '@granit/timeline';
 

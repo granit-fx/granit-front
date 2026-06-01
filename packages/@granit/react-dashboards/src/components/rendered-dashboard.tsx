@@ -1,12 +1,12 @@
 import { useCallback, useMemo, useState, type CSSProperties } from 'react';
 
-import { type UseDashboardRenderOptions } from '../hooks/use-dashboard-render.js';
-import { usePushedDashboard } from '../hooks/use-pushed-dashboard.js';
-import { mergeFilterValuesIntoRequest } from '../lib/merge-filter-values.js';
+import { type UseDashboardRenderOptions } from '../hooks/use-dashboard-render';
+import { usePushedDashboard } from '../hooks/use-pushed-dashboard';
+import { mergeFilterValuesIntoRequest } from '../lib/merge-filter-values';
 
-import { useDashboardFilters } from './dashboard-filter-context.js';
-import { DashboardViewProvider } from './dashboard-view-context.js';
-import { RenderedWidget } from './rendered-widget.js';
+import { useDashboardFilters } from './dashboard-filter-context';
+import { DashboardViewProvider } from './dashboard-view-context';
+import { RenderedWidget } from './rendered-widget';
 
 import type { DashboardRenderRequest, DashboardRenderedWidget } from '@granit/dashboards';
 

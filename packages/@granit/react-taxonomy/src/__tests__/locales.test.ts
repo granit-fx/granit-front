@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { taxonomyTranslationsEn } from '../locales/en.js';
-import { taxonomyTranslationsFr } from '../locales/fr.js';
+import { taxonomyTranslationsEn } from '../locales/en';
+import { taxonomyTranslationsFr } from '../locales/fr';
 
-import type { TaxonomyTranslations } from '../locales/en.js';
+import type { TaxonomyTranslations } from '../locales/en';
 
 function flatten(obj: unknown, prefix = ''): readonly string[] {
   if (typeof obj !== 'object' || obj === null) {

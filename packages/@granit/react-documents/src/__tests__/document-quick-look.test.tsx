@@ -4,7 +4,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DocumentQuickLook } from '../components/document-quick-look.tsx';
-import { DocumentsProvider } from '../providers/documents-provider.js';
+import { DocumentsProvider } from '../providers/documents-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { DocumentResponse } from '@granit/documents';

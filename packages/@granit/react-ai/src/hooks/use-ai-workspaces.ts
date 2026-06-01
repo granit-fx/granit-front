@@ -1,7 +1,7 @@
 import { listAIWorkspaces } from '@granit/ai';
 import { useQuery } from '@tanstack/react-query';
 
-import { buildAIQueryKey, useAIConfig } from '../providers/ai-provider.js';
+import { buildAIQueryKey, useAIConfig } from '../providers/ai-provider';
 
 import type { AIWorkspaceListResponse } from '@granit/ai';
 import type { UseQueryResult } from '@tanstack/react-query';

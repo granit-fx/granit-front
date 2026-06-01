@@ -3,7 +3,7 @@
 // Mirrors Granit.AI.Endpoints provider listing endpoints.
 // ---------------------------------------------------------------------------
 
-import type { AIProviderModelResponse, AIProviderResponse } from '../types/index.js';
+import type { AIProviderModelResponse, AIProviderResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

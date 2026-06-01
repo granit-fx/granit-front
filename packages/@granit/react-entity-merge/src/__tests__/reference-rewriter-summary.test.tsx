@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { ReferenceRewriterSummary } from '../components/reference-rewriter-summary.js';
+import { ReferenceRewriterSummary } from '../components/reference-rewriter-summary';
 
 describe('ReferenceRewriterSummary', () => {
   it('renders the empty state when every count is zero', () => {

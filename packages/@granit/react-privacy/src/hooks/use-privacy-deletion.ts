@@ -1,7 +1,7 @@
 import { cancelDeletion, getDeletionStatus, listDeletions, requestDeletion } from '@granit/privacy';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildPrivacyQueryKey, usePrivacyConfig } from '../providers/privacy-provider.js';
+import { buildPrivacyQueryKey, usePrivacyConfig } from '../providers/privacy-provider';
 
 import type { PrivacyDeletionRequest, PrivacyDeletionResponse } from '@granit/privacy';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';

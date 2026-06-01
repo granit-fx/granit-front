@@ -1,6 +1,6 @@
 import { stringifyLookupValue } from '@granit/data-lookup';
 
-import { useLookupResolve } from '../hooks/use-lookup-resolve.js';
+import { useLookupResolve } from '../hooks/use-lookup-resolve';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { LookupDescriptor } from '@granit/data-lookup';

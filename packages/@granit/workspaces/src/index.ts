@@ -13,17 +13,12 @@
 // `IReadOnlyList<T>` → `readonly T[]`, `IReadOnlyDictionary<string, T>` →
 // `Readonly<Record<string, T>>`.
 
-export {
-  buildEntityUrl,
-  buildWorkspaceUrl,
-  parseEntityUrl,
-  parseWorkspaceUrl,
-} from './url/index.js';
-export type { ParsedEntityUrl, ParsedWorkspaceUrl } from './url/index.js';
-export { InvalidFeatureNameError, resolveFeatureRoute } from './routes/index.js';
-export type { FeatureRouteSpec, FeatureRouteTable } from './routes/index.js';
-export { WORKSPACE_TREE_SCHEMA_VERSION } from './types/index.js';
-export { getLandingRoute, getWorkspaceTree, setPinnedLandingRoute } from './api/workspaces-api.js';
+export { buildEntityUrl, buildWorkspaceUrl, parseEntityUrl, parseWorkspaceUrl } from './url/index';
+export type { ParsedEntityUrl, ParsedWorkspaceUrl } from './url/index';
+export { InvalidFeatureNameError, resolveFeatureRoute } from './routes/index';
+export type { FeatureRouteSpec, FeatureRouteTable } from './routes/index';
+export { WORKSPACE_TREE_SCHEMA_VERSION } from './types/index';
+export { getLandingRoute, getWorkspaceTree, setPinnedLandingRoute } from './api/workspaces-api';
 export type {
   LandingRouteResponse,
   LandingRouteSource,
@@ -33,4 +28,4 @@ export type {
   WorkspaceResponse,
   WorkspaceSectionResponse,
   WorkspaceTreeResponse,
-} from './types/index.js';
+} from './types/index';

@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_PRESENCE_COLORS, PresenceDot } from '../components/presence-dot.js';
+import { DEFAULT_PRESENCE_COLORS, PresenceDot } from '../components/presence-dot';
 
 import type { PresenceStatus } from '@granit/presence';
 

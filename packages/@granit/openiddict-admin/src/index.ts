@@ -11,12 +11,12 @@ export type {
   AdminUser,
   AdminUserListParams,
   AdminUserPage,
-} from './types/index.js';
+} from './types/index';
 
 // Query keys
 
 // API — Users (list + impersonate only; CRUD lives in @granit/identity)
-export { impersonateUser, listUsers } from './api/admin-user-api.js';
+export { impersonateUser, listUsers } from './api/admin-user-api';
 
 // API — OIDC Applications
 export {
@@ -24,15 +24,15 @@ export {
   deleteApplication,
   listApplications,
   rotateApplicationSecret,
-} from './api/admin-oidc-application-api.js';
+} from './api/admin-oidc-application-api';
 
 // API — OIDC Scopes
-export { createScope, deleteScope, listScopes } from './api/admin-oidc-scope-api.js';
+export { createScope, deleteScope, listScopes } from './api/admin-oidc-scope-api';
 
 // API — OIDC Authorizations
 export {
   listAuthorizations,
   revokeAuthorization,
   revokeUserAuthorizations,
-} from './api/admin-oidc-authorization-api.js';
-export { OpenIddictPermissions } from './permissions.js';
+} from './api/admin-oidc-authorization-api';
+export { OpenIddictPermissions } from './permissions';

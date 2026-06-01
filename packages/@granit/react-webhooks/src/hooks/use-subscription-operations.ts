@@ -1,9 +1,9 @@
 import { rotateSecret, testPing } from '@granit/webhooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useWebhooksConfig } from '../providers/webhooks-provider.js';
+import { useWebhooksConfig } from '../providers/webhooks-provider';
 
-import { webhooksKeys } from './query-keys.js';
+import { webhooksKeys } from './query-keys';
 
 import type {
   WebhookSubscriptionRotateSecretResponse,

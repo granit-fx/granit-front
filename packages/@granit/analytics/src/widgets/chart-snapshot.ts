@@ -1,5 +1,5 @@
-import type { AggregateFunction } from './aggregation.js';
-import type { ChartType } from './chart-widget.js';
+import type { AggregateFunction } from './aggregation';
+import type { ChartType } from './chart-widget';
 import type { WidgetSnapshotEnvelope, WidgetSnapshotEnvelopeOf } from '@granit/dashboards';
 
 /**

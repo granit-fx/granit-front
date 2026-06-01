@@ -1,9 +1,9 @@
 import { confirmUpload, deleteBlob, initiateUpload } from '@granit/blob-storage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useBlobStorageConfig } from '../providers/blob-storage-provider.js';
+import { useBlobStorageConfig } from '../providers/blob-storage-provider';
 
-import { blobStorageKeys } from './query-keys.js';
+import { blobStorageKeys } from './query-keys';
 
 import type {
   BlobConfirmUploadRequest,

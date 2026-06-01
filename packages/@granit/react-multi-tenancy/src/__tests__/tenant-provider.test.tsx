@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { TenantProvider, useTenant } from '../providers/tenant-provider.js';
+import { TenantProvider, useTenant } from '../providers/tenant-provider';
 
 import type { TenantResolver } from '@granit/multi-tenancy';
 import type { ReactNode } from 'react';

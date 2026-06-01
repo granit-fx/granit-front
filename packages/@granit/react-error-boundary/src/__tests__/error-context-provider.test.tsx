@@ -2,12 +2,12 @@ import { act, renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { useBreadcrumb } from '../hooks/use-breadcrumb.js';
+import { useBreadcrumb } from '../hooks/use-breadcrumb';
 import {
   ErrorContextProvider,
   useErrorBoundaryConfig,
   useErrorContext,
-} from '../providers/error-context-provider.js';
+} from '../providers/error-context-provider';
 
 // ---------------------------------------------------------------------------
 // Helpers

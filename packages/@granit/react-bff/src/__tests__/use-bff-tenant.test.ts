@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { resolveBffTenantId } from '../hooks/use-bff-tenant.js';
+import { resolveBffTenantId } from '../hooks/use-bff-tenant';
 
 import type { BffHostUser, BffTenantUser } from '@granit/bff';
 

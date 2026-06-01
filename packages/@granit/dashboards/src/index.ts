@@ -17,7 +17,7 @@ export {
   isViewEntityResolver,
   parseDurationToMs,
   WIDGET_SIZE,
-} from './types/index.js';
+} from './types/index';
 export type {
   AggregateFunction,
   DashboardBreakpoint,
@@ -61,7 +61,7 @@ export type {
   WidgetDefinition,
   WidgetDefinitionBase,
   WidgetSize,
-} from './types/index.js';
+} from './types/index';
 
 // Lifecycle / persistence DTOs (B4-write — Granit.Dashboards.Endpoints)
 export type {
@@ -76,7 +76,7 @@ export type {
   PagedResponse,
   UpdateWidgetRequest,
   WidgetInstanceResponse,
-} from './types/index.js';
+} from './types/index';
 
 // Bridge between persistence (`WidgetInstanceResponse`) and declarative
 // (`WidgetDefinition`) views — used by editor surfaces saving back through
@@ -89,13 +89,13 @@ export {
   widgetDefinitionToAddRequest,
   widgetDefinitionToUpdateRequest,
   widgetInstanceToDefinition,
-} from './types/index.js';
-export type { DashboardWidgetDiff } from './types/index.js';
+} from './types/index';
+export type { DashboardWidgetDiff } from './types/index';
 
 // Drift detection (ADR-038) — semver comparison between persisted
 // instances and their source-definition catalog entry.
-export { detectVersionDrift } from './types/index.js';
-export type { DashboardVersionDrift } from './types/index.js';
+export { detectVersionDrift } from './types/index';
+export type { DashboardVersionDrift } from './types/index';
 
 // Rendering — wire contracts for the dashboard render pipeline plus per-kind
 // snapshots (B3-1 / B3-2 / B3-3, ADR-039).
@@ -103,7 +103,7 @@ export {
   isImageSnapshotEnvelope,
   isMarkdownSnapshotEnvelope,
   isTextSnapshotEnvelope,
-} from './rendering/index.js';
+} from './rendering/index';
 // HTTP API — Axios-based, framework-agnostic. React Query hooks live in
 // @granit/react-dashboards and delegate to these functions.
 export {
@@ -121,14 +121,14 @@ export {
   resyncDashboard,
   updateDashboardMetadata,
   updateWidget,
-} from './api/index.js';
+} from './api/index';
 export type {
   DashboardListParams,
   DashboardsRequestOptions,
   WidgetRenderBody,
   WidgetRenderContextPayload,
   WidgetRenderKind,
-} from './api/index.js';
+} from './api/index';
 
 export type {
   DashboardDriftStatus,
@@ -146,4 +146,4 @@ export type {
   WidgetSnapshotEnvelopeOf,
   WidgetSnapshotStatus,
   WidgetTransport,
-} from './rendering/index.js';
+} from './rendering/index';

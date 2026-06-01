@@ -11,10 +11,10 @@ import {
   useFeatureValue,
   useFeatureValues,
   useSetFeatureOverride,
-} from '../hooks/use-features.js';
-import { FeaturesProvider } from '../providers/features-provider.js';
+} from '../hooks/use-features';
+import { FeaturesProvider } from '../providers/features-provider';
 
-import type { FeaturesConfig } from '../providers/features-provider.js';
+import type { FeaturesConfig } from '../providers/features-provider';
 import type { FeatureGroupResponse, FeatureValueResponse } from '@granit/features';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

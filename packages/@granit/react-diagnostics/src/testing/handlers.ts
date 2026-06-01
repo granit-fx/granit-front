@@ -1,8 +1,8 @@
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { mockDiagnosticsHealth } from './data.js';
+import { mockDiagnosticsHealth } from './data';
 
 /**
  * Create MSW handlers for diagnostics health endpoints.

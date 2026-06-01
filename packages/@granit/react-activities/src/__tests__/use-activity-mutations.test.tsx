@@ -11,8 +11,8 @@ import {
   useCreateActivity,
   useReassignActivity,
   useRescheduleActivity,
-} from '../hooks/use-activity-mutations.js';
-import { ActivitiesProvider } from '../providers/activities-provider.js';
+} from '../hooks/use-activity-mutations';
+import { ActivitiesProvider } from '../providers/activities-provider';
 
 import type { ActivityResponse } from '@granit/activities';
 import type { AxiosInstance } from '@granit/api-client';

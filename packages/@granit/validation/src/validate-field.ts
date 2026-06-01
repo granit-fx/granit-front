@@ -1,6 +1,6 @@
-import { VALIDATION_ERROR_CODES } from './constants/error-codes.js';
+import { VALIDATION_ERROR_CODES } from './constants/error-codes';
 
-import type { FieldConstraint, FieldValidationError } from './types/index.js';
+import type { FieldConstraint, FieldValidationError } from './types/index';
 
 // Each segment between @ and dots uses [^\s@.]+ to prevent backtracking overlap
 const EMAIL_REGEX = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;

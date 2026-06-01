@@ -5,8 +5,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useDownloadUrl } from '../hooks/use-blob-download.js';
-import { BlobStorageProvider } from '../providers/blob-storage-provider.js';
+import { useDownloadUrl } from '../hooks/use-blob-download';
+import { BlobStorageProvider } from '../providers/blob-storage-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { BlobDownloadUrlResponse } from '@granit/blob-storage';

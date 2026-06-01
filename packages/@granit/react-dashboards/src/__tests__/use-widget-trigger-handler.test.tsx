@@ -3,14 +3,14 @@ import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { describe, expect, it } from 'vitest';
 
-import { WidgetActionProvider } from '../components/widget-action-context.js';
-import { MarkdownWidget } from '../components/widgets/markdown-widget.js';
-import { useWidgetTriggerHandler } from '../hooks/use-widget-trigger-handler.js';
-import { defaultWidgetActionHandlers } from '../lib/default-widget-action-handlers.js';
+import { WidgetActionProvider } from '../components/widget-action-context';
+import { MarkdownWidget } from '../components/widgets/markdown-widget';
+import { useWidgetTriggerHandler } from '../hooks/use-widget-trigger-handler';
+import { defaultWidgetActionHandlers } from '../lib/default-widget-action-handlers';
 import {
   composeWidgetActionHandlers,
   type WidgetActionHandler,
-} from '../lib/widget-action-handler.js';
+} from '../lib/widget-action-handler';
 
 import type { MarkdownWidgetDefinition, WidgetAction } from '@granit/dashboards';
 import type { ReactNode } from 'react';

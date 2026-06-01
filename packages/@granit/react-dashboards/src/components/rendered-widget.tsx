@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
 
-import { useWidgetTriggerHandler } from '../hooks/use-widget-trigger-handler.js';
-import { useSnapshotWidgetRegistry } from '../registry/snapshot-widget-registry-context.js';
+import { useWidgetTriggerHandler } from '../hooks/use-widget-trigger-handler';
+import { useSnapshotWidgetRegistry } from '../registry/snapshot-widget-registry-context';
 
-import { WidgetCard } from './widget-card.js';
+import { WidgetCard } from './widget-card';
 
 import type { DashboardRenderedWidget } from '@granit/dashboards';
 import type { ReactElement } from 'react';

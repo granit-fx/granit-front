@@ -2,7 +2,7 @@ import type {
   TaxonomySearchFilter,
   TaxonomySearchResultGroup,
   TaxonomySearchResultItem,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

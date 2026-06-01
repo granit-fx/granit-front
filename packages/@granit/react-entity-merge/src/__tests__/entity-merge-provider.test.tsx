@@ -6,9 +6,9 @@ import {
   buildEntityMergeQueryKey,
   EntityMergeProvider,
   useEntityMergeConfig,
-} from '../providers/entity-merge-provider.js';
+} from '../providers/entity-merge-provider';
 
-import type { EntityMergeConfig } from '../providers/entity-merge-provider.js';
+import type { EntityMergeConfig } from '../providers/entity-merge-provider';
 import type { ReactNode } from 'react';
 
 describe('EntityMergeProvider', () => {

@@ -9,7 +9,7 @@ import {
 } from '@granit/invoicing';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildInvoicingQueryKey, useInvoicingConfig } from '../providers/invoicing-provider.js';
+import { buildInvoicingQueryKey, useInvoicingConfig } from '../providers/invoicing-provider';
 
 import type {
   CancelInvoiceRequest,

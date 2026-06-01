@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 import { enUS, fr } from 'date-fns/locale';
 import { describe, expect, it } from 'vitest';
 
-import { useDateLocale } from '../date-locale.js';
+import { useDateLocale } from '../date-locale';
 
 describe('useDateLocale', () => {
   it('should return en-US immediately for "en" (pre-cached)', () => {

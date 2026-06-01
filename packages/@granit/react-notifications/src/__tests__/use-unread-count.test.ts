@@ -1,14 +1,14 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useUnreadCount } from '../hooks/use-unread-count.js';
+import { useUnreadCount } from '../hooks/use-unread-count';
 
 import {
   axiosResponse,
   createMockClient,
   createWrapper,
   createWrapperWithoutBasePath,
-} from './test-utils.js';
+} from './test-utils';
 
 describe('useUnreadCount', () => {
   it('should fetch unread count on mount', async () => {

@@ -24,7 +24,7 @@ export {
   mockSharesData,
   mockTrashedDocumentsData,
   mockVersionsData,
-} from './data.js';
-export { createDocumentsHandlers } from './handlers.js';
-export type { CreateDocumentsHandlersOptions } from './handlers.js';
-export { documentQueryMetadata } from './query-meta.js';
+} from './data';
+export { createDocumentsHandlers } from './handlers';
+export type { CreateDocumentsHandlersOptions } from './handlers';
+export { documentQueryMetadata } from './query-meta';

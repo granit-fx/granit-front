@@ -10,13 +10,13 @@ import {
   markAllAsRead,
   markAsRead,
   updatePreference,
-} from '../api/notification-api.js';
+} from '../api/notification-api';
 
 import type {
   ActivityFeedPage,
   UserNotificationPage,
   NotificationPreference,
-} from '../types/index.js';
+} from '../types/index';
 
 describe('notification-api', () => {
   // -----------------------------------------------------------------------

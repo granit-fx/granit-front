@@ -1,4 +1,4 @@
-import type { IdentityDeviceActivity, IdentitySession, IdentitySessionId } from '../types/index.js';
+import type { IdentityDeviceActivity, IdentitySession, IdentitySessionId } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { UserId } from '@granit/types';
 

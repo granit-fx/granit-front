@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { createStorage } from '../create-storage.js';
+import { createStorage } from '../create-storage';
 
 afterEach(() => {
   localStorage.clear();

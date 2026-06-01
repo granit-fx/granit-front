@@ -7,9 +7,9 @@ import {
   getLookupManifest,
   resolveLookup,
   searchLookup,
-} from '../api/lookup-client.js';
+} from '../api/lookup-client';
 
-import type { LookupDescriptor, LookupItem, LookupManifest, LookupResult } from '../types/index.js';
+import type { LookupDescriptor, LookupItem, LookupManifest, LookupResult } from '../types/index';
 
 describe('buildSearchQuery', () => {
   it('uses the default "search" param name', () => {

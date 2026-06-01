@@ -1,9 +1,9 @@
 import { getTemplates } from '@granit/templating';
 import { useQuery } from '@tanstack/react-query';
 
-import { useTemplatingConfig } from '../providers/templating-provider.js';
+import { useTemplatingConfig } from '../providers/templating-provider';
 
-import { templateKeys } from './query-keys.js';
+import { templateKeys } from './query-keys';
 
 import type { TemplateListParams } from '@granit/templating';
 

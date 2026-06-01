@@ -1,7 +1,7 @@
 import { syncAllUsers, syncStaleUsers, syncUsers } from '@granit/identity';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider.js';
+import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider';
 
 import type {
   IdentityUserCacheSyncAllResult,

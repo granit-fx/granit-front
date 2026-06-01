@@ -12,7 +12,7 @@ import {
   getImportReport,
   previewImport,
   uploadImportFile,
-} from '../../import/api/import-api.js';
+} from '../../import/api/import-api';
 
 const BASE = '/api/v1/data-exchange';
 

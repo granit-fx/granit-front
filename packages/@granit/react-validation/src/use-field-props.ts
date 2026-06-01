@@ -1,7 +1,7 @@
 import { getInputProps } from '@granit/validation';
 import { useMemo } from 'react';
 
-import type { TranslateFunction } from './create-constraints-resolver.js';
+import type { TranslateFunction } from './create-constraints-resolver';
 import type { InputConstraintProps, SchemaConstraints } from '@granit/validation';
 
 export interface FieldPropsResult {

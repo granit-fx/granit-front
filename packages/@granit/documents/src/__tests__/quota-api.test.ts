@@ -1,9 +1,9 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getTenantStorageQuota } from '../api/quota-api.js';
+import { getTenantStorageQuota } from '../api/quota-api';
 
-import type { TenantStorageQuotaResponse } from '../types/index.js';
+import type { TenantStorageQuotaResponse } from '../types/index';
 
 const basePath = '/api/v1/documents';
 

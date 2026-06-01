@@ -4,7 +4,7 @@ import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { describe, expect, it, vi } from 'vitest';
 
-import { KpiConfigForm } from '../editor/kpi-config-form.js';
+import { KpiConfigForm } from '../editor/kpi-config-form';
 
 import type { KpiWidgetDefinition } from '@granit/analytics';
 import type { ReactNode } from 'react';

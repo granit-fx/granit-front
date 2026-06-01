@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
-import { useCategories } from '../hooks/use-categories.js';
+import { useCategories } from '../hooks/use-categories';
 import {
   useCreateCategory,
   useDeleteCategory,
   useMoveCategory,
   useUpdateCategory,
-} from '../hooks/use-category-mutations.js';
+} from '../hooks/use-category-mutations';
 
 import type { CategoryResponse } from '@granit/taxonomy';
 import type { ReactNode } from 'react';

@@ -1,9 +1,9 @@
 import { getEventTypes } from '@granit/webhooks';
 import { useQuery } from '@tanstack/react-query';
 
-import { useWebhooksConfig } from '../providers/webhooks-provider.js';
+import { useWebhooksConfig } from '../providers/webhooks-provider';
 
-import { webhooksKeys } from './query-keys.js';
+import { webhooksKeys } from './query-keys';
 
 import type { WebhookEventTypeResponse } from '@granit/webhooks';
 import type { UseQueryResult } from '@tanstack/react-query';

@@ -1,11 +1,11 @@
 import { QueryProvider, useQueryEndpoint } from '@granit/react-query-engine';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { useDocumentsConfig } from '../providers/documents-provider.js';
+import { useDocumentsConfig } from '../providers/documents-provider';
 
-import { classifyDocumentName, documentBadge } from './document-kind.js';
+import { classifyDocumentName, documentBadge } from './document-kind';
 
-import type { DocumentBookmark } from '../hooks/use-document-bookmarks.js';
+import type { DocumentBookmark } from '../hooks/use-document-bookmarks';
 import type { DocumentResponse } from '@granit/documents';
 import type { FilterEntry, SortEntry } from '@granit/query-engine';
 import type { ChangeEvent, KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react';

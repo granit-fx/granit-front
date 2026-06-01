@@ -6,7 +6,7 @@ import {
   resolveWorkspaceItem,
   useFeatureRouteTable,
   useResolvedWorkspaceItem,
-} from '../routes/feature-route-context.js';
+} from '../routes/feature-route-context';
 
 import type { FeatureRouteTable, WorkspaceItemResponse } from '@granit/workspaces';
 import type { ReactNode } from 'react';

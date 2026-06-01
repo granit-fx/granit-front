@@ -4,12 +4,12 @@
 // for read-only consumers.
 // ---------------------------------------------------------------------------
 
-import { MapConfigForm } from './map-config-form.js';
+import { MapConfigForm } from './map-config-form';
 
 import type { WidgetConfigForm, WidgetConfigFormRegistry } from '@granit/react-dashboard-editor';
 
-export { mapWidgetCatalog } from './map-widget-catalog.js';
-export { MapConfigForm } from './map-config-form.js';
+export { mapWidgetCatalog } from './map-widget-catalog';
+export { MapConfigForm } from './map-config-form';
 
 /**
  * Pre-composed config-form registry — the map kind in a single registry

@@ -6,9 +6,9 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { blobStorageKeys } from '../hooks/query-keys.js';
-import { useConfirmUpload, useDeleteBlob, useInitiateUpload } from '../hooks/use-blob-mutations.js';
-import { BlobStorageProvider } from '../providers/blob-storage-provider.js';
+import { blobStorageKeys } from '../hooks/query-keys';
+import { useConfirmUpload, useDeleteBlob, useInitiateUpload } from '../hooks/use-blob-mutations';
+import { BlobStorageProvider } from '../providers/blob-storage-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { BlobConfirmUploadResponse, BlobUploadInitiateResponse } from '@granit/blob-storage';
@@ -74,7 +74,10 @@ describe('useInitiateUpload', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/v2/blob-storage/blobs/upload', expect.any(Object));
+    expect(client.post).toHaveBeenCalledWith(
+      '/api/v2/blob-storage/blobs/upload',
+      expect.any(Object)
+    );
   });
 
   it('should handle error', async () => {

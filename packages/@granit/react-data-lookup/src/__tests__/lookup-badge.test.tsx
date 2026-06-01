@@ -3,7 +3,7 @@ import { axiosResponse, createMockClient } from '@granit/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { LookupBadge } from '../components/lookup-badge.js';
+import { LookupBadge } from '../components/lookup-badge';
 
 import type { LookupItem } from '@granit/data-lookup';
 

@@ -5,10 +5,10 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useAIChatStream } from '../hooks/use-ai-chat-stream.js';
-import { AIProvider } from '../providers/ai-provider.js';
+import { useAIChatStream } from '../hooks/use-ai-chat-stream';
+import { AIProvider } from '../providers/ai-provider';
 
-import type { AIConfig } from '../providers/ai-provider.js';
+import type { AIConfig } from '../providers/ai-provider';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 

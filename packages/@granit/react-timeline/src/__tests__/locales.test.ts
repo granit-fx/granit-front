@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { timelineTranslationsEn } from '../locales/en.js';
-import { timelineTranslationsFr } from '../locales/fr.js';
+import { timelineTranslationsEn } from '../locales/en';
+import { timelineTranslationsFr } from '../locales/fr';
 
 /** Walk an object tree and collect all leaf paths (`'A.B.C'`). */
 function leafPaths(obj: unknown, prefix = ''): readonly string[] {

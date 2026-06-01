@@ -1,4 +1,4 @@
-import type { ImportJobStatus } from './import-job.js';
+import type { ImportJobStatus } from './import-job';
 
 /**
  * Kind of error that can occur on an individual row.

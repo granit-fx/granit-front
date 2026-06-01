@@ -3,12 +3,12 @@ export {
   buildDocumentsQueryKey,
   DocumentsProvider,
   useDocumentsConfig,
-} from './providers/documents-provider.js';
+} from './providers/documents-provider';
 export type {
   DocumentsConfig,
   DocumentsProviderProps,
   ResolvedDocumentsConfig,
-} from './providers/documents-provider.js';
+} from './providers/documents-provider';
 
 // Constants
 export {
@@ -17,10 +17,10 @@ export {
   DEFAULT_QUERY_KEY_PREFIX,
   DOCUMENT_DRAG_MIME,
   MODULE,
-} from './constants.js';
+} from './constants';
 
 // Read hooks — Folders
-export { useFolder, useFolderBreadcrumb, useFolders } from './hooks/use-folders.js';
+export { useFolder, useFolderBreadcrumb, useFolders } from './hooks/use-folders';
 
 // Mutation hooks — Folders
 export {
@@ -30,7 +30,7 @@ export {
   useRestoreFolder,
   useTransferFolderOwner,
   useTrashFolder,
-} from './hooks/use-folder-mutations.js';
+} from './hooks/use-folder-mutations';
 
 // Read hooks — Documents
 export {
@@ -38,7 +38,7 @@ export {
   useDocumentDownloadUrl,
   useDocumentVersions,
   useTrashedDocuments,
-} from './hooks/use-documents.js';
+} from './hooks/use-documents';
 
 // Mutation hooks — Documents
 export {
@@ -51,156 +51,147 @@ export {
   useRestoreDocument,
   useTransferDocumentOwner,
   useTrashDocument,
-} from './hooks/use-document-mutations.js';
+} from './hooks/use-document-mutations';
 
 // Read hooks — Shares
-export { useDocumentShares, useFolderShares } from './hooks/use-shares.js';
+export { useDocumentShares, useFolderShares } from './hooks/use-shares';
 
 // Mutation hooks — Shares
 export {
   useGrantDocumentShare,
   useGrantFolderShare,
   useRevokeShare,
-} from './hooks/use-share-mutations.js';
+} from './hooks/use-share-mutations';
 
 // Document tags (Documents-proxy over Granit.Taxonomy)
 export {
   useAssignDocumentTag,
   useDocumentTagsList,
   useUnassignDocumentTag,
-} from './hooks/use-document-tags.js';
+} from './hooks/use-document-tags';
 
 // Quota
-export { useTenantStorageQuota } from './hooks/use-quota.js';
+export { useTenantStorageQuota } from './hooks/use-quota';
 
 // Components — Documents
-export { DocumentDetail } from './components/document-detail.js';
-export type { DocumentDetailLabels, DocumentDetailProps } from './components/document-detail.js';
+export { DocumentDetail } from './components/document-detail';
+export type { DocumentDetailLabels, DocumentDetailProps } from './components/document-detail';
 
-export { DocumentQuickLook } from './components/document-quick-look.js';
+export { DocumentQuickLook } from './components/document-quick-look';
 export type {
   DocumentQuickLookLabels,
   DocumentQuickLookProps,
-} from './components/document-quick-look.js';
+} from './components/document-quick-look';
 
-export { DocumentSearchPalette } from './components/document-search-palette.js';
+export { DocumentSearchPalette } from './components/document-search-palette';
 export type {
   DocumentSearchPaletteLabels,
   DocumentSearchPaletteProps,
-} from './components/document-search-palette.js';
+} from './components/document-search-palette';
 
-export { DocumentsSidebar } from './components/documents-sidebar.js';
+export { DocumentsSidebar } from './components/documents-sidebar';
 export type {
   DocumentsSidebarLabels,
   DocumentsSidebarProps,
   DocumentsSidebarTab,
-} from './components/documents-sidebar.js';
+} from './components/documents-sidebar';
 
-export { useDocumentBookmarks } from './hooks/use-document-bookmarks.js';
+export { useDocumentBookmarks } from './hooks/use-document-bookmarks';
 export type {
   DocumentBookmark,
   DocumentBookmarksApi,
   UseDocumentBookmarksOptions,
-} from './hooks/use-document-bookmarks.js';
+} from './hooks/use-document-bookmarks';
 
-export { DocumentsExplorer } from './components/documents-explorer.js';
+export { DocumentsExplorer } from './components/documents-explorer';
 export type {
   DocumentsExplorerLabels,
   DocumentsExplorerProps,
-} from './components/documents-explorer.js';
+} from './components/documents-explorer';
 
-export { DocumentsList } from './components/documents-list.js';
-export type { DocumentsListLabels, DocumentsListProps } from './components/documents-list.js';
+export { DocumentsList } from './components/documents-list';
+export type { DocumentsListLabels, DocumentsListProps } from './components/documents-list';
 
-export { DocumentsToolbar } from './components/documents-toolbar.js';
-export type {
-  DocumentsToolbarLabels,
-  DocumentsToolbarProps,
-} from './components/documents-toolbar.js';
+export { DocumentsToolbar } from './components/documents-toolbar';
+export type { DocumentsToolbarLabels, DocumentsToolbarProps } from './components/documents-toolbar';
 
-export { InlineEdit } from './components/inline-edit.js';
-export type { InlineEditProps } from './components/inline-edit.js';
+export { InlineEdit } from './components/inline-edit';
+export type { InlineEditProps } from './components/inline-edit';
 
-export { useMultiSelect } from './hooks/use-multi-select.js';
-export type { MultiSelectApi } from './hooks/use-multi-select.js';
+export { useMultiSelect } from './hooks/use-multi-select';
+export type { MultiSelectApi } from './hooks/use-multi-select';
 
 export {
   DEFAULT_TILE_SIZE,
   DEFAULT_VIEW_MODE,
   TILE_SIZE_STEPS,
   useViewPreferences,
-} from './hooks/use-view-preferences.js';
+} from './hooks/use-view-preferences';
 export type {
   DocumentsViewMode,
   TileSizeStep,
   ViewPreferences,
-} from './hooks/use-view-preferences.js';
+} from './hooks/use-view-preferences';
 
-export { classifyDocumentName, documentBadge } from './components/document-kind.js';
-export type { DocumentKind } from './components/document-kind.js';
+export { classifyDocumentName, documentBadge } from './components/document-kind';
+export type { DocumentKind } from './components/document-kind';
 
 // Components — Folders
-export { FolderBreadcrumb } from './components/folder-breadcrumb.js';
-export type {
-  FolderBreadcrumbLabels,
-  FolderBreadcrumbProps,
-} from './components/folder-breadcrumb.js';
+export { FolderBreadcrumb } from './components/folder-breadcrumb';
+export type { FolderBreadcrumbLabels, FolderBreadcrumbProps } from './components/folder-breadcrumb';
 
-export { FolderTree } from './components/folder-tree.js';
-export type { FolderTreeLabels, FolderTreeProps } from './components/folder-tree.js';
+export { FolderTree } from './components/folder-tree';
+export type { FolderTreeLabels, FolderTreeProps } from './components/folder-tree';
 
 // Components — Quota
-export { QuotaBadge } from './components/quota-badge.js';
-export type { QuotaBadgeLabels, QuotaBadgeProps } from './components/quota-badge.js';
+export { QuotaBadge } from './components/quota-badge';
+export type { QuotaBadgeLabels, QuotaBadgeProps } from './components/quota-badge';
 
-export { QuotaPanel } from './components/quota-panel.js';
-export type { QuotaPanelLabels, QuotaPanelProps } from './components/quota-panel.js';
+export { QuotaPanel } from './components/quota-panel';
+export type { QuotaPanelLabels, QuotaPanelProps } from './components/quota-panel';
 
 // Components — Shares
-export { ShareDialog } from './components/share-dialog.js';
+export { ShareDialog } from './components/share-dialog';
 export type {
   ShareDialogLabels,
   ShareDialogProps,
   ShareDialogTarget,
-} from './components/share-dialog.js';
+} from './components/share-dialog';
 
 // Components — Ownership
-export { TransferOwnershipDialog } from './components/transfer-ownership-dialog.js';
+export { TransferOwnershipDialog } from './components/transfer-ownership-dialog';
 export type {
   TransferOwnershipDialogLabels,
   TransferOwnershipDialogProps,
   TransferOwnershipTarget,
-} from './components/transfer-ownership-dialog.js';
+} from './components/transfer-ownership-dialog';
 
 // Components — Trash
-export { TrashBin } from './components/trash-bin.js';
-export type { TrashBinLabels, TrashBinProps } from './components/trash-bin.js';
+export { TrashBin } from './components/trash-bin';
+export type { TrashBinLabels, TrashBinProps } from './components/trash-bin';
 
 // Components — Upload
-export { UploadButton } from './components/upload-button.js';
-export type { UploadButtonLabels, UploadButtonProps } from './components/upload-button.js';
+export { UploadButton } from './components/upload-button';
+export type { UploadButtonLabels, UploadButtonProps } from './components/upload-button';
 
-export { UploadDropZone } from './components/upload-drop-zone.js';
-export type { UploadDropZoneLabels, UploadDropZoneProps } from './components/upload-drop-zone.js';
+export { UploadDropZone } from './components/upload-drop-zone';
+export type { UploadDropZoneLabels, UploadDropZoneProps } from './components/upload-drop-zone';
 
-export { useFileUpload } from './hooks/use-file-upload.js';
+export { useFileUpload } from './hooks/use-file-upload';
 export type {
   FileUploadError,
   FileUploadProgress,
   UseFileUploadOptions,
   UseFileUploadResult,
-} from './hooks/use-file-upload.js';
+} from './hooks/use-file-upload';
 
 // Components — Versions
-export { VersionsTimeline } from './components/versions-timeline.js';
-export type {
-  VersionsTimelineLabels,
-  VersionsTimelineProps,
-} from './components/versions-timeline.js';
+export { VersionsTimeline } from './components/versions-timeline';
+export type { VersionsTimelineLabels, VersionsTimelineProps } from './components/versions-timeline';
 
 // Helpers
-export { formatBytes } from './components/format-bytes.js';
+export { formatBytes } from './components/format-bytes';
 
 // i18n
-export { documentsTranslationsEn, documentsTranslationsFr } from './locales/index.js';
-export type { DocumentsTranslations } from './locales/index.js';
+export { documentsTranslationsEn, documentsTranslationsFr } from './locales/index';
+export type { DocumentsTranslations } from './locales/index';

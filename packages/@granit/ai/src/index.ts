@@ -21,7 +21,7 @@ export type {
   AIWorkspaceListResponse,
   AIWorkspaceResponse,
   AIWorkspaceUpdateRequest,
-} from './types/index.js';
+} from './types/index';
 
 // Constants
 export {
@@ -29,10 +29,10 @@ export {
   AI_PERMISSIONS,
   AI_STREAM_DONE_MARKER,
   AI_WORKSPACE_KINDS,
-} from './constants.js';
+} from './constants';
 
 // API — Providers
-export { listAIProviderModels, listAIProviders } from './api/ai-providers-api.js';
+export { listAIProviderModels, listAIProviders } from './api/ai-providers-api';
 
 // API — Workspaces
 export {
@@ -41,12 +41,12 @@ export {
   getAIWorkspace,
   listAIWorkspaces,
   updateAIWorkspace,
-} from './api/ai-workspaces-api.js';
+} from './api/ai-workspaces-api';
 
 // API — Chat
-export { chatComplete, chatStream } from './api/ai-chat-api.js';
-export type { ChatStreamEvent } from './api/ai-chat-api.js';
+export { chatComplete, chatStream } from './api/ai-chat-api';
+export type { ChatStreamEvent } from './api/ai-chat-api';
 
 // API — Embeddings
-export { generateEmbeddings } from './api/ai-embeddings-api.js';
-export { AIPermissions } from './permissions.js';
+export { generateEmbeddings } from './api/ai-embeddings-api';
+export { AIPermissions } from './permissions';

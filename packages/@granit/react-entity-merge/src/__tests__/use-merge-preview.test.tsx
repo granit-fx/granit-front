@@ -2,10 +2,10 @@ import { axiosResponse, createMockClient } from '@granit/testing';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useMergePreview } from '../hooks/use-merge-preview.js';
-import { mockMergeResult } from '../testing/data.js';
+import { useMergePreview } from '../hooks/use-merge-preview';
+import { mockMergeResult } from '../testing/data';
 
-import { createEntityMergeHarness } from './test-utils.js';
+import { createEntityMergeHarness } from './test-utils';
 
 afterEach(() => vi.restoreAllMocks());
 

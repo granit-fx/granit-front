@@ -6,8 +6,8 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   DashboardFilterProvider,
   useDashboardFilters,
-} from '../components/dashboard-filter-context.js';
-import { DashboardFilterToolbar } from '../components/dashboard-filter-toolbar.js';
+} from '../components/dashboard-filter-context';
+import { DashboardFilterToolbar } from '../components/dashboard-filter-toolbar';
 
 import type { DashboardFilter } from '@granit/dashboards';
 import type { ReactNode } from 'react';

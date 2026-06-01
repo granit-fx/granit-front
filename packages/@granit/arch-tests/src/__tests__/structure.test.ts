@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { listPackages } from './helpers.js';
+import { listPackages } from './helpers';
 
 const packages = listPackages();
 

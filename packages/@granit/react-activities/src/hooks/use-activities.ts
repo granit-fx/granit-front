@@ -1,7 +1,7 @@
 import { getActivitiesCalendar, getActivity, listActivities } from '@granit/activities';
 import { useQuery } from '@tanstack/react-query';
 
-import { buildActivitiesQueryKey, useActivitiesConfig } from '../providers/activities-provider.js';
+import { buildActivitiesQueryKey, useActivitiesConfig } from '../providers/activities-provider';
 
 import type {
   ActivityCalendarFilter,

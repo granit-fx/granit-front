@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { BarChart } from '../components/bar-chart.js';
-import { LineChart } from '../components/line-chart.js';
-import { PieChart } from '../components/pie-chart.js';
-import { SparklineChart } from '../components/sparkline-chart.js';
+import { BarChart } from '../components/bar-chart';
+import { LineChart } from '../components/line-chart';
+import { PieChart } from '../components/pie-chart';
+import { SparklineChart } from '../components/sparkline-chart';
 
 import type { ChartSeries } from '@granit/charts';
 

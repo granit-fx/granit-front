@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getInputProps } from '../get-input-props.js';
+import { getInputProps } from '../get-input-props';
 
 describe('getInputProps', () => {
   it('returns empty object for empty constraint', () => {

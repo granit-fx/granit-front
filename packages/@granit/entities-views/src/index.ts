@@ -18,7 +18,7 @@ export type {
   EntityViewToggleFlagRequest,
   EntityViewUpdateBodyRequest,
   EntityViewVisibility,
-} from './types/index.js';
+} from './types/index';
 
 export {
   createEntityView,
@@ -31,4 +31,4 @@ export {
   setEntityViewTenantDefault,
   shareEntityView,
   updateEntityView,
-} from './api/entity-views-api.js';
+} from './api/entity-views-api';

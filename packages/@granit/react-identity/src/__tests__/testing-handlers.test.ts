@@ -1,7 +1,7 @@
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { createIdentityHandlers, identityUserQueryMetadata } from '../testing/index.js';
+import { createIdentityHandlers, identityUserQueryMetadata } from '../testing/index';
 
 const PROVIDER_BASE = 'http://api.test/api/v1/identity/provider';
 const CACHE_BASE = 'http://api.test/api/v1/identity/users';

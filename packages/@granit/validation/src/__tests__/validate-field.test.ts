@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { VALIDATION_ERROR_CODES } from '../constants/error-codes.js';
-import { validateField } from '../validate-field.js';
+import { VALIDATION_ERROR_CODES } from '../constants/error-codes';
+import { validateField } from '../validate-field';
 
 describe('validateField', () => {
   it('returns no errors for a valid non-empty string with no constraints', () => {

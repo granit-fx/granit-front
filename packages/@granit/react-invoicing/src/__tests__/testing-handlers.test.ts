@@ -1,7 +1,7 @@
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { createInvoicingHandlers, invoiceQueryMetadata } from '../testing/index.js';
+import { createInvoicingHandlers, invoiceQueryMetadata } from '../testing/index';
 
 const BASE = 'http://api.test/api/v1/invoicing';
 const server = setupServer();

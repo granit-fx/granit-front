@@ -1,13 +1,13 @@
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
 import {
   MOCK_CREDENTIALS,
   MOCK_TOTP_CODE,
   mockLoginRequiresTwoFactor,
   mockLoginSuccess,
-} from './data.js';
+} from './data';
 
 /**
  * Create MSW handlers for local authentication endpoints (login, 2FA,

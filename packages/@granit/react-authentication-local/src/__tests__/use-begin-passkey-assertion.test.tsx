@@ -5,10 +5,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useBeginPasskeyAssertion } from '../hooks/use-begin-passkey-assertion.js';
-import { LocalAuthProvider } from '../providers/local-auth-provider.js';
+import { useBeginPasskeyAssertion } from '../hooks/use-begin-passkey-assertion';
+import { LocalAuthProvider } from '../providers/local-auth-provider';
 
-import type { LocalAuthConfig } from '../providers/local-auth-provider.js';
+import type { LocalAuthConfig } from '../providers/local-auth-provider';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 

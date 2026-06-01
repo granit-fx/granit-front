@@ -11,8 +11,8 @@ import {
   useRestoreFolder,
   useTransferFolderOwner,
   useTrashFolder,
-} from '../hooks/use-folder-mutations.js';
-import { DocumentsProvider } from '../providers/documents-provider.js';
+} from '../hooks/use-folder-mutations';
+import { DocumentsProvider } from '../providers/documents-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { FolderResponse } from '@granit/documents';

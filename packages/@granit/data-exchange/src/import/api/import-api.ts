@@ -1,6 +1,6 @@
-import type { ImportJobResponse } from '../types/import-job.js';
-import type { ConfirmMappingsRequest, ImportPreviewResponse } from '../types/import-preview.js';
-import type { ImportReportResponse } from '../types/import-report.js';
+import type { ImportJobResponse } from '../types/import-job';
+import type { ConfirmMappingsRequest, ImportPreviewResponse } from '../types/import-preview';
+import type { ImportReportResponse } from '../types/import-report';
 import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult, PaginationParams } from '@granit/query-engine';
 

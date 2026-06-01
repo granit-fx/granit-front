@@ -1,4 +1,4 @@
-import type { ExportPresetResponse, SaveExportPresetRequest } from '../types/export-preset.js';
+import type { ExportPresetResponse, SaveExportPresetRequest } from '../types/export-preset';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

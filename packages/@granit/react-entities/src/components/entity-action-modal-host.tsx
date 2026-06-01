@@ -4,7 +4,7 @@ import {
   EntityActionModalContext,
   type EntityActionOverlayContextValue,
   type EntityActionOverlayState,
-} from '../actions/entity-action-overlay-context.js';
+} from '../actions/entity-action-overlay-context';
 
 export interface EntityActionModalHostProps {
   readonly children: ReactNode;
@@ -40,8 +40,6 @@ export function EntityActionModalHost({ children }: EntityActionModalHostProps):
     [current, open, close]
   );
   return (
-    <EntityActionModalContext.Provider value={value}>
-      {children}
-    </EntityActionModalContext.Provider>
+    <EntityActionModalContext.Provider value={value}>{children}</EntityActionModalContext.Provider>
   );
 }

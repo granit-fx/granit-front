@@ -2,7 +2,7 @@ import { createLogger } from '@granit/logger';
 import { createEntry, deleteEntry } from '@granit/timeline';
 import { useCallback, useState } from 'react';
 
-import { useTimelineConfig } from '../providers/timeline-provider.js';
+import { useTimelineConfig } from '../providers/timeline-provider';
 
 import type { CreateTimelineEntryRequest, TimelineEntry } from '@granit/timeline';
 

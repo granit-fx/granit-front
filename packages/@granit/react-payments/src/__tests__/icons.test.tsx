@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { resolveMethodIconStyle } from '../icons/method-icon-registry.js';
-import { PaymentMethodIcon } from '../icons/payment-method-icon.js';
-import { ProviderIcon } from '../icons/provider-icon.js';
+import { resolveMethodIconStyle } from '../icons/method-icon-registry';
+import { PaymentMethodIcon } from '../icons/payment-method-icon';
+import { ProviderIcon } from '../icons/provider-icon';
 
 describe('resolveMethodIconStyle', () => {
   it('returns the category style when no method override exists', () => {

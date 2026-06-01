@@ -3,8 +3,8 @@ import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { describe, expect, it, vi } from 'vitest';
 
-import { WidgetPalette } from '../components/widget-palette.js';
-import { defaultWidgetCatalog } from '../lib/widget-catalog.js';
+import { WidgetPalette } from '../components/widget-palette';
+import { defaultWidgetCatalog } from '../lib/widget-catalog';
 
 import type { ReactNode } from 'react';
 

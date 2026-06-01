@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import type { WidgetCatalogEntry } from '../lib/widget-catalog.js';
+import type { WidgetCatalogEntry } from '../lib/widget-catalog';
 
 /**
  * Editor-side palette listing the widget kinds an app exposes. Each entry

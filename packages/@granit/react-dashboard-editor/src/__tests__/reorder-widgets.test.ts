@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { reorderWidgets } from '../lib/reorder-widgets.js';
+import { reorderWidgets } from '../lib/reorder-widgets';
 
 import type { DashboardDefinition } from '@granit/dashboards';
 

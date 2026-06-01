@@ -4,9 +4,9 @@ import { noContent, notFound } from '@granit/testing/msw';
 import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
-import { API_BASE_PATH } from '../constants.js';
+import { API_BASE_PATH } from '../constants';
 
-import { mockNotificationPreferences, mockNotifications } from './data.js';
+import { mockNotificationPreferences, mockNotifications } from './data';
 
 import type {
   NotificationPreference,

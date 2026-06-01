@@ -1,4 +1,4 @@
-import type { TagResponse } from '../types/index.js';
+import type { TagResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

@@ -3,8 +3,8 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useDocumentShares, useFolderShares } from '../hooks/use-shares.js';
-import { DocumentsProvider } from '../providers/documents-provider.js';
+import { useDocumentShares, useFolderShares } from '../hooks/use-shares';
+import { DocumentsProvider } from '../providers/documents-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { ListSharesResponse, ShareResponse } from '@granit/documents';

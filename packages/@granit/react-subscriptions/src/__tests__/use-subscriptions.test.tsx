@@ -14,10 +14,10 @@ import {
   useMigrateSubscriptionPrice,
   useSubscription,
   useSubscriptions,
-} from '../hooks/use-subscriptions.js';
-import { SubscriptionsProvider } from '../providers/subscriptions-provider.js';
+} from '../hooks/use-subscriptions';
+import { SubscriptionsProvider } from '../providers/subscriptions-provider';
 
-import type { SubscriptionsConfig } from '../providers/subscriptions-provider.js';
+import type { SubscriptionsConfig } from '../providers/subscriptions-provider';
 import type { PagedResult } from '@granit/query-engine';
 import type { BulkMigratePriceResponse, SubscriptionResponse } from '@granit/subscriptions';
 import type { AxiosInstance } from 'axios';

@@ -1,51 +1,47 @@
-export type { AggregateFunction } from './aggregate-function.js';
-export type { RefreshHint } from './refresh-hint.js';
-export type { ResolvedPeriod } from './resolved-period.js';
-export type { DataKeyFormat } from './data-key-format.js';
-export type { DashboardCategory } from './dashboard-category.js';
-export { DASHBOARD_TIME_WINDOW } from './dashboard-time-window.js';
+export type { AggregateFunction } from './aggregate-function';
+export type { RefreshHint } from './refresh-hint';
+export type { ResolvedPeriod } from './resolved-period';
+export type { DataKeyFormat } from './data-key-format';
+export type { DashboardCategory } from './dashboard-category';
+export { DASHBOARD_TIME_WINDOW } from './dashboard-time-window';
 export {
   Datasource,
   isMetricDatasource,
   isQueryAggregateDatasource,
   isTelemetryDatasource,
-} from './datasource.js';
+} from './datasource';
 export type {
   MetricDatasource,
   QueryAggregateDatasource,
   TelemetryAggregation,
   TelemetryDatasource,
-} from './datasource.js';
-export type {
-  DashboardPeriod,
-  DashboardTimeWindow,
-  TimeWindowKind,
-} from './dashboard-time-window.js';
+} from './datasource';
+export type { DashboardPeriod, DashboardTimeWindow, TimeWindowKind } from './dashboard-time-window';
 export type {
   DashboardDefinitionDescriptor,
   DashboardDefinitionRegistry,
-} from './dashboard-definition-descriptor.js';
-export type { DashboardDefinition } from './dashboard-definition.js';
-export { DEFAULT_DASHBOARD_LAYOUT } from './dashboard-layout.js';
+} from './dashboard-definition-descriptor';
+export type { DashboardDefinition } from './dashboard-definition';
+export { DEFAULT_DASHBOARD_LAYOUT } from './dashboard-layout';
 export type {
   DashboardBreakpoint,
   DashboardLayout,
   DashboardLayoutOverride,
-} from './dashboard-layout.js';
+} from './dashboard-layout';
 export type {
   DashboardFilter,
   DashboardFilterClause,
   DashboardFilterOperation,
   DashboardFilterOperator,
-} from './dashboard-filter.js';
-export type { DashboardView } from './dashboard-view.js';
+} from './dashboard-filter';
+export type { DashboardView } from './dashboard-view';
 export {
   isRouteParamResolver,
   isStaticEntityResolver,
   isTenantContextResolver,
   isUserSelectionResolver,
   isViewEntityResolver,
-} from './entity-alias.js';
+} from './entity-alias';
 export type {
   EntityAlias,
   EntityAliasResolver,
@@ -54,9 +50,9 @@ export type {
   TenantContextResolver,
   UserSelectionResolver,
   ViewEntityResolver,
-} from './entity-alias.js';
-export { formatDurationFromMs, parseDurationToMs } from './parse-duration.js';
-export type { WidgetAction, WidgetActionKind, WidgetActionTrigger } from './widget-action.js';
+} from './entity-alias';
+export { formatDurationFromMs, parseDurationToMs } from './parse-duration';
+export type { WidgetAction, WidgetActionKind, WidgetActionTrigger } from './widget-action';
 export type {
   FrameworkWidgetDefinition,
   ImageFit,
@@ -66,25 +62,25 @@ export type {
   TextWidgetStyle,
   WidgetDefinition,
   WidgetDefinitionBase,
-} from './widget-definition.js';
-export { WIDGET_SIZE } from './widget-size.js';
-export type { WidgetSize } from './widget-size.js';
+} from './widget-definition';
+export { WIDGET_SIZE } from './widget-size';
+export type { WidgetSize } from './widget-size';
 
 // ---------------------------------------------------------------------------
 // Lifecycle / persistence DTOs (B4-write — Granit.Dashboards.Endpoints).
 // Distinct from `./rendering/` shapes for the render pipeline.
 // ---------------------------------------------------------------------------
 
-export type { DashboardCatalogEntryResponse } from './dashboard-catalog-entry-response.js';
-export type { DashboardDetailResponse } from './dashboard-detail-response.js';
-export type { DashboardImportResponse } from './dashboard-import-response.js';
-export type { DashboardMetadataUpdateRequest } from './dashboard-metadata-update-request.js';
-export type { DashboardResyncResponse } from './dashboard-resync-response.js';
-export type { DashboardStatus } from './dashboard-status.js';
-export type { DashboardSummaryResponse } from './dashboard-summary-response.js';
-export type { PagedResponse } from './paged-response.js';
-export type { WidgetInstanceResponse } from './widget-instance-response.js';
-export type { AddWidgetRequest, UpdateWidgetRequest } from './widget-requests.js';
+export type { DashboardCatalogEntryResponse } from './dashboard-catalog-entry-response';
+export type { DashboardDetailResponse } from './dashboard-detail-response';
+export type { DashboardImportResponse } from './dashboard-import-response';
+export type { DashboardMetadataUpdateRequest } from './dashboard-metadata-update-request';
+export type { DashboardResyncResponse } from './dashboard-resync-response';
+export type { DashboardStatus } from './dashboard-status';
+export type { DashboardSummaryResponse } from './dashboard-summary-response';
+export type { PagedResponse } from './paged-response';
+export type { WidgetInstanceResponse } from './widget-instance-response';
+export type { AddWidgetRequest, UpdateWidgetRequest } from './widget-requests';
 
 // Bridge: persistence ↔ definition
 export {
@@ -95,9 +91,9 @@ export {
   widgetDefinitionToAddRequest,
   widgetDefinitionToUpdateRequest,
   widgetInstanceToDefinition,
-} from './widget-bridge.js';
-export type { DashboardWidgetDiff } from './widget-bridge.js';
+} from './widget-bridge';
+export type { DashboardWidgetDiff } from './widget-bridge';
 
 // Drift detection (ADR-038)
-export { detectVersionDrift } from './detect-version-drift.js';
-export type { DashboardVersionDrift } from './detect-version-drift.js';
+export { detectVersionDrift } from './detect-version-drift';
+export type { DashboardVersionDrift } from './detect-version-drift';

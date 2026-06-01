@@ -3,4 +3,4 @@ export {
   GranitClientProvider,
   useGranitClient,
   useOptionalGranitClient,
-} from './providers/granit-client-provider.js';
+} from './providers/granit-client-provider';

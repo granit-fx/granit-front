@@ -1,12 +1,12 @@
 import { createContext, useCallback, useContext, useMemo } from 'react';
 
-import { defaultWidgetActionHandlers } from '../lib/default-widget-action-handlers.js';
-import { expandActionParams } from '../lib/expand-action-params.js';
+import { defaultWidgetActionHandlers } from '../lib/default-widget-action-handlers';
+import { expandActionParams } from '../lib/expand-action-params';
 
-import { useDashboardAliases } from './dashboard-alias-context.js';
-import { useDashboardView } from './dashboard-view-context.js';
+import { useDashboardAliases } from './dashboard-alias-context';
+import { useDashboardView } from './dashboard-view-context';
 
-import type { WidgetActionHandlerRegistry } from '../lib/widget-action-handler.js';
+import type { WidgetActionHandlerRegistry } from '../lib/widget-action-handler';
 import type { WidgetAction } from '@granit/dashboards';
 
 /**

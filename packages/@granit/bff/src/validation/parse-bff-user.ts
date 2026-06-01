@@ -13,7 +13,7 @@ import type {
   BffTenantUser,
   BffUnauthenticated,
   BffUserResponse,
-} from '../types/index.js';
+} from '../types/index';
 import type { ISODateString, TenantId } from '@granit/types';
 
 /** Discriminated result mirroring zod's safeParse. */

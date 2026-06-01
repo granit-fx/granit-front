@@ -5,10 +5,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useTaxRateByCountry, useTaxRates, useValidateTaxId } from '../hooks/use-tax.js';
-import { TaxProvider } from '../providers/tax-provider.js';
+import { useTaxRateByCountry, useTaxRates, useValidateTaxId } from '../hooks/use-tax';
+import { TaxProvider } from '../providers/tax-provider';
 
-import type { TaxConfig } from '../providers/tax-provider.js';
+import type { TaxConfig } from '../providers/tax-provider';
 import type { TaxRateResponse, TaxValidateResponse } from '@granit/tax';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

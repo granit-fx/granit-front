@@ -8,10 +8,7 @@ import {
 } from '@granit/multi-tenancy';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import {
-  buildTenantAdminQueryKey,
-  useTenantAdminConfig,
-} from '../providers/tenant-admin-provider.js';
+import { buildTenantAdminQueryKey, useTenantAdminConfig } from '../providers/tenant-admin-provider';
 
 import type { AdminTenant, CreateTenantRequest, UpdateTenantRequest } from '@granit/multi-tenancy';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';

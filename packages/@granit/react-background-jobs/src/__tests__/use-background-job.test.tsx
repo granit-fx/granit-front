@@ -6,10 +6,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useBackgroundJob } from '../hooks/use-background-jobs.js';
-import { BackgroundJobsProvider } from '../providers/background-jobs-provider.js';
+import { useBackgroundJob } from '../hooks/use-background-jobs';
+import { BackgroundJobsProvider } from '../providers/background-jobs-provider';
 
-import type { BackgroundJobsConfig } from '../providers/background-jobs-provider.js';
+import type { BackgroundJobsConfig } from '../providers/background-jobs-provider';
 import type { BackgroundJobStatus } from '@granit/background-jobs';
 import type { AxiosInstance } from 'axios';
 
@@ -56,10 +56,7 @@ describe('useBackgroundJob', () => {
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockJob });
 
     const { wrapper } = createWrapper(client, '/api/v2/bg');
-    const { result } = renderHook(
-      () => useBackgroundJob('InvoiceSync'),
-      { wrapper }
-    );
+    const { result } = renderHook(() => useBackgroundJob('InvoiceSync'), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 

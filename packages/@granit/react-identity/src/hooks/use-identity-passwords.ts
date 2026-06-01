@@ -5,7 +5,7 @@ import {
 } from '@granit/identity';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider.js';
+import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider';
 
 import type { IdentityPasswordChangedAtResponse } from '@granit/identity';
 import type { UserId } from '@granit/types';

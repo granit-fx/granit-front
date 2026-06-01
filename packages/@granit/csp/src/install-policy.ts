@@ -1,10 +1,10 @@
-import { markInstalled } from './registry.js';
+import { markInstalled } from './registry';
 import {
   getTrustedTypesFactory,
   type GranitPolicyName,
   type InstallResult,
   type TrustedTypePolicyOptions,
-} from './types/index.js';
+} from './types/index';
 
 const installed = new Set<GranitPolicyName>();
 

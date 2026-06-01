@@ -5,8 +5,8 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { EntitySelectionBar } from '../components/entity-selection-bar.js';
-import { SelectionProvider } from '../selection/selection-provider.js';
+import { EntitySelectionBar } from '../components/entity-selection-bar';
+import { SelectionProvider } from '../selection/selection-provider';
 
 import type {
   BulkActionResponse,

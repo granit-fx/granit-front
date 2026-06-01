@@ -6,7 +6,7 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { useLandingRedirect } from '../hooks/use-landing-redirect.js';
+import { useLandingRedirect } from '../hooks/use-landing-redirect';
 
 import type { LandingRouteResponse } from '@granit/workspaces';
 import type { ReactNode } from 'react';

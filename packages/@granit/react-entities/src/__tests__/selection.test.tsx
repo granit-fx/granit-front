@@ -7,9 +7,9 @@ import {
   EntitySelectionBar,
   fanOutWithCap,
   SELECTION_FANOUT_CONCURRENCY_CAP,
-} from '../components/entity-selection-bar.js';
-import { SelectionContext, useSelection } from '../selection/selection-context.js';
-import { SelectionProvider } from '../selection/selection-provider.js';
+} from '../components/entity-selection-bar';
+import { SelectionContext, useSelection } from '../selection/selection-context';
+import { SelectionProvider } from '../selection/selection-provider';
 
 import type {
   EntityActionManifest,

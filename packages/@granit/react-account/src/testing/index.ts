@@ -8,5 +8,5 @@ export {
   mockPasskeys,
   mockProfile,
   mockTwoFactorStatus,
-} from './data.js';
-export { createAccountHandlers } from './handlers.js';
+} from './data';
+export { createAccountHandlers } from './handlers';

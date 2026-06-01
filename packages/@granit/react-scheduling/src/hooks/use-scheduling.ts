@@ -6,7 +6,7 @@ import {
 } from '@granit/scheduling';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { useSchedulingConfig } from '../providers/scheduling-provider.js';
+import { useSchedulingConfig } from '../providers/scheduling-provider';
 
 import type { PagedResult, QueryRequest } from '@granit/query-engine';
 import type { RescheduleActionRequest, ScheduledActionResponse } from '@granit/scheduling';
@@ -145,7 +145,11 @@ export function useCancelScheduledAction(): UseMutationResult<void, Error, strin
  * reschedule({ id: '550e8400-...', request: { newExecuteAt: '2026-04-10T09:00:00Z' } });
  * ```
  */
-export function useRescheduleScheduledAction(): UseMutationResult<ScheduledActionResponse, Error, RescheduleVariables> {
+export function useRescheduleScheduledAction(): UseMutationResult<
+  ScheduledActionResponse,
+  Error,
+  RescheduleVariables
+> {
   const config = useSchedulingConfig();
   const actionsPath = `${config.basePath}/scheduled-actions`;
   const queryClient = useQueryClient();
@@ -155,7 +159,9 @@ export function useRescheduleScheduledAction(): UseMutationResult<ScheduledActio
       rescheduleScheduledAction(config.client, actionsPath, id, request),
     onSuccess: async (_data, { id }) => {
       await queryClient.invalidateQueries({ queryKey: buildSchedulingQueryKey(config) });
-      await queryClient.invalidateQueries({ queryKey: buildSchedulingQueryKey(config, 'detail', id) });
+      await queryClient.invalidateQueries({
+        queryKey: buildSchedulingQueryKey(config, 'detail', id),
+      });
     },
   });
 }

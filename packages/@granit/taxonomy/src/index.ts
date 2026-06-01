@@ -19,13 +19,13 @@ export type {
   TaxonomyTargetRef,
   UpdateCategoryRequest,
   UpdateTagRequest,
-} from './types/index.js';
+} from './types/index';
 
 // Type guards
-export { isHexColor } from './types/index.js';
+export { isHexColor } from './types/index';
 
 // Permissions
-export { TaxonomyPermissions } from './permissions.js';
+export { TaxonomyPermissions } from './permissions';
 
 // API — Tags
 export {
@@ -36,7 +36,7 @@ export {
   listTags,
   unassignTag,
   updateTag,
-} from './api/tags-api.js';
+} from './api/tags-api';
 
 // API — Categories
 export {
@@ -48,14 +48,14 @@ export {
   moveCategory,
   unassignCategory,
   updateCategory,
-} from './api/categories-api.js';
+} from './api/categories-api';
 
 // API — Search
-export { searchTaxonomy } from './api/search-api.js';
+export { searchTaxonomy } from './api/search-api';
 
 // API — Documents proxy (use only on the Documents surface)
 export {
   attachTagToDocument,
   detachTagFromDocument,
   listDocumentTags,
-} from './api/documents-proxy-api.js';
+} from './api/documents-proxy-api';

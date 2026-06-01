@@ -1,6 +1,6 @@
 import { assertSafeUrl } from '@granit/utils';
 
-import type { WidgetActionHandler, WidgetActionHandlerRegistry } from './widget-action-handler.js';
+import type { WidgetActionHandler, WidgetActionHandlerRegistry } from './widget-action-handler';
 
 /**
  * Builds a query string from the resolved params. Skips empty values

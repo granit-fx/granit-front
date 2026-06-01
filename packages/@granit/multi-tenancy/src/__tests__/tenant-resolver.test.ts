@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { resolveTenant } from '../resolvers/tenant-resolver.js';
+import { resolveTenant } from '../resolvers/tenant-resolver';
 
-import type { TenantResolver } from '../resolvers/tenant-resolver.js';
+import type { TenantResolver } from '../resolvers/tenant-resolver';
 
 describe('resolveTenant', () => {
   it('returns the result of the first resolver that matches', () => {

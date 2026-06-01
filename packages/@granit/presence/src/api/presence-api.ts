@@ -6,7 +6,7 @@ import type {
   HeartbeatRequest,
   PresenceResponse,
   SetPresenceRequest,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { UserId } from '@granit/types';
 

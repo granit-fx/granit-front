@@ -1,4 +1,4 @@
-import type { EntitiesTranslations } from './en.js';
+import type { EntitiesTranslations } from './en';
 
 /**
  * French translation bundle for `@granit/react-entities`. Consumers

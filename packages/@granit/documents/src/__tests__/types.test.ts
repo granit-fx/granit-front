@@ -13,7 +13,7 @@ import type {
   TenantStorageQuotaResponse,
   TrashedDocumentResponse,
   UploadTicketResponse,
-} from '../types/index.js';
+} from '../types/index';
 
 describe('Folder types', () => {
   it('FolderResponse.parentFolderId is nullable for tenant-root children', () => {

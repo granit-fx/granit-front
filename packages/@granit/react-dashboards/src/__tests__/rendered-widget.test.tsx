@@ -3,9 +3,9 @@ import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { describe, expect, it } from 'vitest';
 
-import { RenderedWidget } from '../components/rendered-widget.js';
-import { defaultSnapshotWidgetRegistry } from '../registry/default-snapshot-widget-registry.js';
-import { SnapshotWidgetRegistryProvider } from '../registry/snapshot-widget-registry-context.js';
+import { RenderedWidget } from '../components/rendered-widget';
+import { defaultSnapshotWidgetRegistry } from '../registry/default-snapshot-widget-registry';
+import { SnapshotWidgetRegistryProvider } from '../registry/snapshot-widget-registry-context';
 
 import type { DashboardRenderedWidget } from '@granit/dashboards';
 import type { ReactNode } from 'react';

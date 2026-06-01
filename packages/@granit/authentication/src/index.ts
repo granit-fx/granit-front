@@ -1,6 +1,1 @@
-export type {
-  BaseAuthContextType,
-  LoginOptions,
-  LogoutOptions,
-  OidcUserInfo,
-} from './types/index.js';
+export type { BaseAuthContextType, LoginOptions, LogoutOptions, OidcUserInfo } from './types/index';

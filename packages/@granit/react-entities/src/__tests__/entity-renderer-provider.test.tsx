@@ -7,7 +7,7 @@ import {
   useEntityRenderer,
   type EntityFormComponent,
   type EntityComponentCatalog,
-} from '../providers/index.js';
+} from '../providers/index';
 
 import type { EntityFormFieldManifest } from '@granit/entities';
 import type { ReactNode } from 'react';

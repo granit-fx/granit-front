@@ -1,15 +1,9 @@
-import {
-  createCategory,
-  deleteCategory,
-  getCategories,
-  updateCategory,
-} from '@granit/templating';
+import { createCategory, deleteCategory, getCategories, updateCategory } from '@granit/templating';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { useTemplatingConfig } from '../providers/templating-provider.js';
+import { useTemplatingConfig } from '../providers/templating-provider';
 
-import { templateKeys } from './query-keys.js';
-
+import { templateKeys } from './query-keys';
 
 import type { SaveTemplateCategoryRequest } from '@granit/templating';
 

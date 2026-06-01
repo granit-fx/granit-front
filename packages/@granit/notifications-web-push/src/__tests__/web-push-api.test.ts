@@ -1,7 +1,7 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it } from 'vitest';
 
-import { registerPushSubscription, unregisterPushSubscription } from '../api/web-push-api.js';
+import { registerPushSubscription, unregisterPushSubscription } from '../api/web-push-api';
 
 describe('web-push-api', () => {
   it('should register a push subscription', async () => {

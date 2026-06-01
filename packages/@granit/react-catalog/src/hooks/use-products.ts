@@ -12,7 +12,7 @@ import {
 } from '@granit/catalog';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildCatalogQueryKey, useCatalogConfig } from '../providers/catalog-provider.js';
+import { buildCatalogQueryKey, useCatalogConfig } from '../providers/catalog-provider';
 
 import type {
   AddProductExternalMappingRequest,

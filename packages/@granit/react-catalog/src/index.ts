@@ -7,12 +7,12 @@ export {
   CatalogProvider,
   buildCatalogQueryKey,
   useCatalogConfig,
-} from './providers/catalog-provider.js';
+} from './providers/catalog-provider';
 export type {
   CatalogConfig,
   CatalogProviderProps,
   ResolvedCatalogConfig,
-} from './providers/catalog-provider.js';
+} from './providers/catalog-provider';
 
 // Hooks
 export {
@@ -26,10 +26,10 @@ export {
   useRemoveProductExternalMapping,
   useUpdateProduct,
   useUpdateProductMetadata,
-} from './hooks/use-products.js';
+} from './hooks/use-products';
 export type {
   AddProductExternalMappingVariables,
   RemoveProductExternalMappingVariables,
   UpdateProductMetadataVariables,
   UpdateProductVariables,
-} from './hooks/use-products.js';
+} from './hooks/use-products';

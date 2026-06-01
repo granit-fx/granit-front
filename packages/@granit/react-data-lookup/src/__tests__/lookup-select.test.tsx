@@ -3,9 +3,9 @@ import { axiosResponse, createMockClient } from '@granit/testing';
 import { render, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { LookupSelect } from '../components/lookup-select.js';
+import { LookupSelect } from '../components/lookup-select';
 
-import type { LookupSelectRenderArgs } from '../components/lookup-select.js';
+import type { LookupSelectRenderArgs } from '../components/lookup-select';
 import type { LookupDescriptor, LookupItem, LookupResult } from '@granit/data-lookup';
 
 describe('<LookupSelect>', () => {

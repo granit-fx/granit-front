@@ -1,6 +1,6 @@
-import { useTenantStorageQuota } from '../hooks/use-quota.js';
+import { useTenantStorageQuota } from '../hooks/use-quota';
 
-import { formatBytes } from './format-bytes.js';
+import { formatBytes } from './format-bytes';
 
 import type { ReactNode } from 'react';
 

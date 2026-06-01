@@ -1,7 +1,7 @@
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { aiWorkspaceQueryMetadata, createAIHandlers } from '../testing/index.js';
+import { aiWorkspaceQueryMetadata, createAIHandlers } from '../testing/index';
 
 const BASE = 'http://api.test/api/v1/ai';
 const server = setupServer();

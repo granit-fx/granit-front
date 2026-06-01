@@ -3,8 +3,8 @@
 // ---------------------------------------------------------------------------
 
 // Hook
-export { normalizeMetricRequest, useMetric } from './hooks/use-metric.js';
-export type { UseMetricOptions } from './hooks/use-metric.js';
+export { normalizeMetricRequest, useMetric } from './hooks/use-metric';
+export type { UseMetricOptions } from './hooks/use-metric';
 
 // Widget renderers — definition-driven. `KpiTile` predates the
 // per-widget render endpoint (P3) and uses the `useMetric` path which
@@ -12,26 +12,26 @@ export type { UseMetricOptions } from './hooks/use-metric.js';
 // outside dashboards. Chart / Table / Pivot use the new
 // `POST /widgets/{kind}/render` endpoints via `useWidgetRender` (P3),
 // which keeps SSOT with the bundle path's snapshot widgets.
-export { KpiTile } from './components/kpi-tile.js';
-export type { KpiTileProps } from './components/kpi-tile.js';
-export { KpiTileView } from './components/kpi-tile-view.js';
-export type { KpiTileViewProps } from './components/kpi-tile-view.js';
-export { ChartTile } from './components/chart-tile.js';
-export type { ChartTileProps } from './components/chart-tile.js';
-export { TableTile } from './components/table-tile.js';
-export type { TableTileProps } from './components/table-tile.js';
-export { PivotTile } from './components/pivot-tile.js';
-export type { PivotTileProps } from './components/pivot-tile.js';
+export { KpiTile } from './components/kpi-tile';
+export type { KpiTileProps } from './components/kpi-tile';
+export { KpiTileView } from './components/kpi-tile-view';
+export type { KpiTileViewProps } from './components/kpi-tile-view';
+export { ChartTile } from './components/chart-tile';
+export type { ChartTileProps } from './components/chart-tile';
+export { TableTile } from './components/table-tile';
+export type { TableTileProps } from './components/table-tile';
+export { PivotTile } from './components/pivot-tile';
+export type { PivotTileProps } from './components/pivot-tile';
 
 // Snapshot renderers (B5 — bundle-driven, consume the pre-rendered envelope)
-export { KpiSnapshotTile } from './components/kpi-snapshot-tile.js';
-export { PivotSnapshotWidget } from './components/pivot-snapshot-widget.js';
-export { TableSnapshotWidget } from './components/table-snapshot-widget.js';
+export { KpiSnapshotTile } from './components/kpi-snapshot-tile';
+export { PivotSnapshotWidget } from './components/pivot-snapshot-widget';
+export { TableSnapshotWidget } from './components/table-snapshot-widget';
 
 // Registries
-export { defaultAnalyticsWidgetRegistry } from './registry/default-analytics-widget-registry.js';
-export { defaultAnalyticsSnapshotWidgetRegistry } from './registry/default-analytics-snapshot-widget-registry.js';
+export { defaultAnalyticsWidgetRegistry } from './registry/default-analytics-widget-registry';
+export { defaultAnalyticsSnapshotWidgetRegistry } from './registry/default-analytics-snapshot-widget-registry';
 
 // Formatters (re-exported for convenience — also available standalone)
-export { formatDeltaRatio, formatMetricValue } from './lib/format-metric-value.js';
-export type { FormatMetricValueArgs } from './lib/format-metric-value.js';
+export { formatDeltaRatio, formatMetricValue } from './lib/format-metric-value';
+export type { FormatMetricValueArgs } from './lib/format-metric-value';

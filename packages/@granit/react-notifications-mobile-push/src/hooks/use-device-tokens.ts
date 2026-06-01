@@ -1,7 +1,7 @@
 import { listDeviceTokens } from '@granit/notifications-mobile-push';
 import { useQuery } from '@tanstack/react-query';
 
-import { useMobilePushConfig } from '../providers/mobile-push-provider.js';
+import { useMobilePushConfig } from '../providers/mobile-push-provider';
 
 import type { MobilePushTokenResponse } from '@granit/notifications-mobile-push';
 import type { UseQueryResult } from '@tanstack/react-query';

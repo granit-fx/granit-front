@@ -1,7 +1,7 @@
 import { changePassword, forgotPassword, resetPassword } from '@granit/account';
 import { useMutation } from '@tanstack/react-query';
 
-import { useAccountConfig } from '../providers/account-provider.js';
+import { useAccountConfig } from '../providers/account-provider';
 
 import type {
   AccountForgotPasswordRequest,
@@ -11,11 +11,7 @@ import type {
 import type { UseMutationResult } from '@tanstack/react-query';
 
 /** Changes the current user's password. */
-export function useChangePassword(): UseMutationResult<
-  void,
-  Error,
-  AccountPasswordChangeRequest
-> {
+export function useChangePassword(): UseMutationResult<void, Error, AccountPasswordChangeRequest> {
   const config = useAccountConfig();
 
   return useMutation({
@@ -25,11 +21,7 @@ export function useChangePassword(): UseMutationResult<
 }
 
 /** Requests a password reset email. */
-export function useForgotPassword(): UseMutationResult<
-  void,
-  Error,
-  AccountForgotPasswordRequest
-> {
+export function useForgotPassword(): UseMutationResult<void, Error, AccountForgotPasswordRequest> {
   const config = useAccountConfig();
 
   return useMutation({
@@ -39,11 +31,7 @@ export function useForgotPassword(): UseMutationResult<
 }
 
 /** Resets a password using the token from the reset email. */
-export function useResetPassword(): UseMutationResult<
-  void,
-  Error,
-  AccountPasswordResetRequest
-> {
+export function useResetPassword(): UseMutationResult<void, Error, AccountPasswordResetRequest> {
   const config = useAccountConfig();
 
   return useMutation({

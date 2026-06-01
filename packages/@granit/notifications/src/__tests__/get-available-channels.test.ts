@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { NotificationChannels } from '../types/index.js';
+import { NotificationChannels } from '../types/index';
 
 describe('NotificationChannels', () => {
   it('should use PascalCase values matching .NET backend', () => {

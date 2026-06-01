@@ -12,6 +12,6 @@
 // components phase will populate the `DocumentsTranslations` shape.
 // ---------------------------------------------------------------------------
 
-export { documentsTranslationsEn } from './en.js';
-export type { DocumentsTranslations } from './en.js';
-export { documentsTranslationsFr } from './fr.js';
+export { documentsTranslationsEn } from './en';
+export type { DocumentsTranslations } from './en';
+export { documentsTranslationsFr } from './fr';

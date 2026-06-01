@@ -3,11 +3,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
-import { useAnchorEntry, useUpdateEntryBody } from '../hooks/use-entry-mutations.js';
-import { TimelineProvider } from '../providers/timeline-provider.js';
+import { DEFAULT_BASE_PATH } from '../constants';
+import { useAnchorEntry, useUpdateEntryBody } from '../hooks/use-entry-mutations';
+import { TimelineProvider } from '../providers/timeline-provider';
 
-import { axiosResponse, createMockClient } from './test-utils.js';
+import { axiosResponse, createMockClient } from './test-utils';
 
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

@@ -5,7 +5,7 @@ import {
   createDataExchangeHandlers,
   exportJobQueryMetadata,
   importJobQueryMetadata,
-} from '../testing/index.js';
+} from '../testing/index';
 
 const METADATA_BASE = 'http://api.test/api/v1/data-exchange/metadata';
 const IMPORT_BASE = 'http://api.test/api/v1/data-exchange/import';

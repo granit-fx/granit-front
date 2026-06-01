@@ -1,8 +1,8 @@
 import { isChartSnapshotEnvelope } from '@granit/analytics';
 
-import { BarChart } from '../components/bar-chart.js';
-import { LineChart } from '../components/line-chart.js';
-import { PieChart } from '../components/pie-chart.js';
+import { BarChart } from '../components/bar-chart';
+import { LineChart } from '../components/line-chart';
+import { PieChart } from '../components/pie-chart';
 
 import type { ChartWidgetSnapshot } from '@granit/analytics';
 import type { ChartSeries } from '@granit/charts';

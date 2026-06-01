@@ -2,5 +2,5 @@
 // @granit/react-diagnostics/testing — Mock data & MSW handlers
 // ---------------------------------------------------------------------------
 
-export { mockDiagnosticsHealth } from './data.js';
-export { createDiagnosticsHandlers } from './handlers.js';
+export { mockDiagnosticsHealth } from './data';
+export { createDiagnosticsHandlers } from './handlers';

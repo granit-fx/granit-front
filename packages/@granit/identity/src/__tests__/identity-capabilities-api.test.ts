@@ -1,9 +1,9 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getIdentityCapabilities } from '../api/identity-capabilities-api.js';
+import { getIdentityCapabilities } from '../api/identity-capabilities-api';
 
-import type { IdentityProviderCapabilities } from '../types/index.js';
+import type { IdentityProviderCapabilities } from '../types/index';
 
 const keycloakCapabilities: IdentityProviderCapabilities = {
   providerName: 'Keycloak',

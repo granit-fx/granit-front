@@ -4,7 +4,7 @@ import {
   InvalidFeatureNameError,
   resolveFeatureRoute,
   type FeatureRouteTable,
-} from '../routes/feature-route-table.js';
+} from '../routes/feature-route-table';
 
 const table: FeatureRouteTable = {
   'identity.users.list': { path: '/users' },

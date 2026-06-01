@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { accountKeys } from '../hooks/query-keys.js';
+import { accountKeys } from '../hooks/query-keys';
 
 describe('accountKeys', () => {
   it('should return base key for all', () => {
@@ -16,11 +16,7 @@ describe('accountKeys', () => {
   });
 
   it('should return authenticator-key nested under two-factor', () => {
-    expect(accountKeys.authenticatorKey()).toEqual([
-      'account',
-      'two-factor',
-      'authenticator-key',
-    ]);
+    expect(accountKeys.authenticatorKey()).toEqual(['account', 'two-factor', 'authenticator-key']);
   });
 
   it('should return external-logins key', () => {

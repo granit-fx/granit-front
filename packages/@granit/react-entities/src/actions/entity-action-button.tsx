@@ -1,8 +1,8 @@
 import { useCallback, type KeyboardEvent, type ReactNode } from 'react';
 
-import { useEntityRendererLogger } from '../providers/entity-renderer-provider.js';
+import { useEntityRendererLogger } from '../providers/entity-renderer-provider';
 
-import type { EntityActionDispatch } from './use-entity-action-dispatcher.js';
+import type { EntityActionDispatch } from './use-entity-action-dispatcher';
 import type { EntityActionManifest } from '@granit/entities';
 
 export interface EntityActionButtonProps {

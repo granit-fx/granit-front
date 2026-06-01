@@ -8,9 +8,9 @@ import {
   deletePasskey,
   getPasskeys,
   renamePasskey,
-} from '../api/account-passkey-api.js';
+} from '../api/account-passkey-api';
 
-import type { AccountPasskeyCreatedResponse, AccountPasskeyInfo } from '../types/index.js';
+import type { AccountPasskeyCreatedResponse, AccountPasskeyInfo } from '../types/index';
 
 const BASE = '/api/account';
 

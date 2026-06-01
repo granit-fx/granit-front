@@ -1,7 +1,7 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { QueryClientProvider } from '@tanstack/react-query';
 
-import { PresenceProvider } from '../providers/presence-provider.js';
+import { PresenceProvider } from '../providers/presence-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { QueryClient } from '@tanstack/react-query';

@@ -1,7 +1,7 @@
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { blobQueryMetadata, createBlobStorageHandlers } from '../testing/index.js';
+import { blobQueryMetadata, createBlobStorageHandlers } from '../testing/index';
 
 const BASE = 'http://api.test/api/v1/blob-storage';
 const server = setupServer();

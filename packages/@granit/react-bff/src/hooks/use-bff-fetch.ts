@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useBffConfig } from '../providers/bff-provider.js';
+import { useBffConfig } from '../providers/bff-provider';
 
 /**
  * Hook that returns a `fetch` wrapper with automatic CSRF token injection

@@ -10,10 +10,10 @@ export type {
   InvoiceLineItemResponse,
   InvoiceResponse,
   MarkInvoiceUncollectibleRequest,
-} from './types/index.js';
+} from './types/index';
 
 // Permissions
-export { InvoicingPermissions } from './permissions.js';
+export { InvoicingPermissions } from './permissions';
 
 // API
 export {
@@ -24,4 +24,4 @@ export {
   getInvoiceById,
   listInvoices,
   markInvoiceUncollectible,
-} from './api/invoicing-api.js';
+} from './api/invoicing-api';

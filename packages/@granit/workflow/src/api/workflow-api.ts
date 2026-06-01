@@ -5,7 +5,7 @@ import type {
   WorkflowTransitionRequest,
   WorkflowTransitionResult,
   WorkflowStatus,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult, PaginationParams } from '@granit/query-engine';
 

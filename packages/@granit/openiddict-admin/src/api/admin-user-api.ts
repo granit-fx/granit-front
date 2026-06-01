@@ -1,8 +1,4 @@
-import type {
-  AdminImpersonationResult,
-  AdminUserListParams,
-  AdminUserPage,
-} from '../types/index.js';
+import type { AdminImpersonationResult, AdminUserListParams, AdminUserPage } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

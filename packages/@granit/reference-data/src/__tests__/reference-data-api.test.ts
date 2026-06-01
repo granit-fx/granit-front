@@ -9,9 +9,9 @@ import {
   listReferenceData,
   listReferenceDataChildren,
   updateReferenceDataEntry,
-} from '../api/reference-data-api.js';
+} from '../api/reference-data-api';
 
-import type { ReferenceDataEntry } from '../types/index.js';
+import type { ReferenceDataEntry } from '../types/index';
 
 const BASE_PATH = '/api/v1/reference-data/countries';
 

@@ -1,9 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { isTestFile, readFile, rel, walkSourceFiles } from '../fs.js';
+import { isTestFile, readFile, rel, walkSourceFiles } from '../fs';
 
-import type { AllowlistedScanContext, ScanContext, Violation } from '../types.js';
+import type { AllowlistedScanContext, ScanContext, Violation } from '../types';
 
 // Kebab-case base name, plus any number of `.qualifier` segments
 // (e.g. `foo-bar.stories.tsx`, `leaflet-css.d.ts`). Each segment must itself

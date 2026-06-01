@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatDeltaRatio, formatMetricValue } from '../lib/format-metric-value.js';
+import { formatDeltaRatio, formatMetricValue } from '../lib/format-metric-value';
 
 import type { ValueKind } from '@granit/analytics';
 

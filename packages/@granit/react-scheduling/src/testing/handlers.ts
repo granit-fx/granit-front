@@ -12,9 +12,9 @@ import {
 import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { mockScheduledActions } from './data.js';
+import { mockScheduledActions } from './data';
 
 import type { PagedResult, QueryMetadata } from '@granit/query-engine';
 import type { ScheduledActionResponse } from '@granit/scheduling';

@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react';
 import axios from 'axios';
 import { describe, expect, it } from 'vitest';
 
-import { EntitySelectionBar } from '../components/entity-selection-bar.js';
-import { SelectionProvider } from '../selection/selection-provider.js';
+import { EntitySelectionBar } from '../components/entity-selection-bar';
+import { SelectionProvider } from '../selection/selection-provider';
 
 import type {
   EntityActionManifest,

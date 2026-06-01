@@ -7,7 +7,7 @@ import type {
   ProductResponse,
   ProductUpdateRequest,
   UpdateProductMetadataRequest,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

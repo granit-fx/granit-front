@@ -1,7 +1,4 @@
-import type {
-  AccountLoginResponse,
-  AccountPasskeyAssertionCompleteRequest,
-} from '../types/index.js';
+import type { AccountLoginResponse, AccountPasskeyAssertionCompleteRequest } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

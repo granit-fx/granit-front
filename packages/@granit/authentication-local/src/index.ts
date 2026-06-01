@@ -4,22 +4,22 @@ export type {
   AccountLoginResponse,
   AccountPasskeyAssertionCompleteRequest,
   AccountTwoFactorLoginRequest,
-} from './types/index.js';
+} from './types/index';
 
 // Query keys
 
 // API — Login
-export { loginAccount } from './api/account-login-api.js';
+export { loginAccount } from './api/account-login-api';
 
 // API — Two-factor login verification
-export { verifyTwoFactorLogin } from './api/account-two-factor-login-api.js';
+export { verifyTwoFactorLogin } from './api/account-two-factor-login-api';
 
 // API — Passkey assertion (for login)
 export {
   beginPasskeyAssertion,
   completePasskeyAssertion,
-} from './api/account-passkey-assertion-api.js';
+} from './api/account-passkey-assertion-api';
 
 // Utilities
-export { extractReturnUrl } from './utils/extract-return-url.js';
-export { IdentityLocalPermissions } from './permissions.js';
+export { extractReturnUrl } from './utils/extract-return-url';
+export { IdentityLocalPermissions } from './permissions';

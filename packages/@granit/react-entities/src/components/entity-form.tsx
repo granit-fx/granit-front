@@ -1,9 +1,9 @@
 import { evaluateVisibility } from '@granit/entities';
 import { useCallback, useMemo, type ReactNode } from 'react';
 
-import { useEntityRenderer } from '../providers/entity-renderer-provider.js';
+import { useEntityRenderer } from '../providers/entity-renderer-provider';
 
-import { MissingComponent } from './missing-component.js';
+import { MissingComponent } from './missing-component';
 
 import type {
   EntityFormFieldManifest,

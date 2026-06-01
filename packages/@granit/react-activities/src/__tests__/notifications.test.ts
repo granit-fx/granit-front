@@ -6,13 +6,13 @@ import {
   isOverdueActivityNotification,
   isReminderActivityNotification,
   resolveActivityNotificationAction,
-} from '../notifications/register.js';
+} from '../notifications/register';
 import {
   ACTIVITY_NOTIFICATION_RELATED_ENTITY_TYPE,
   ActivityNotificationTypes,
-} from '../notifications/types.js';
+} from '../notifications/types';
 
-import type { ActivityNotificationLike } from '../notifications/register.js';
+import type { ActivityNotificationLike } from '../notifications/register';
 
 const assigned: ActivityNotificationLike = {
   notificationTypeName: ActivityNotificationTypes.Assigned,

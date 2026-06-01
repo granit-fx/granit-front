@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { useSmartFilter } from '../hooks/use-smart-filter.js';
+import { useSmartFilter } from '../hooks/use-smart-filter';
 
 import type { QueryMetadata } from '@granit/query-engine';
 

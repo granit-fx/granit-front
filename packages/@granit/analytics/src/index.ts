@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------
 
 // API — runtime metric evaluation
-export { evaluateMetric } from './api/metrics-api.js';
+export { evaluateMetric } from './api/metrics-api';
 
 // Metrics — runtime evaluation envelopes
 export type {
@@ -18,7 +18,7 @@ export type {
   RefreshHint,
   Trend,
   ValueKind,
-} from './metrics/index.js';
+} from './metrics/index';
 
 // Widgets — catalog declarations + snapshot envelopes consumed by @granit/dashboards
 export {
@@ -29,7 +29,7 @@ export {
   isMapSnapshotEnvelope,
   isPivotSnapshotEnvelope,
   isTableSnapshotEnvelope,
-} from './widgets/index.js';
+} from './widgets/index';
 export type {
   AggregateFunction,
   AnalyticsWidgetDefinition,
@@ -59,4 +59,4 @@ export type {
   TableWidgetColumn,
   TableWidgetDefinition,
   TableWidgetSnapshot,
-} from './widgets/index.js';
+} from './widgets/index';

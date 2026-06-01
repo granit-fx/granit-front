@@ -3,14 +3,14 @@ export {
   OpenIddictAdminProvider,
   buildAdminQueryKey,
   useAdminConfig,
-} from './providers/openiddict-admin-provider.js';
+} from './providers/openiddict-admin-provider';
 export type {
   OpenIddictAdminConfig,
   OpenIddictAdminProviderProps,
-} from './providers/openiddict-admin-provider.js';
+} from './providers/openiddict-admin-provider';
 
 // Hooks — Users (list + impersonate only; CRUD lives in @granit/react-identity)
-export { useAdminUsers, useImpersonateUser } from './hooks/use-admin-users.js';
+export { useAdminUsers, useImpersonateUser } from './hooks/use-admin-users';
 
 // Hooks — OIDC Applications
 export {
@@ -18,17 +18,17 @@ export {
   useDeleteOidcApplication,
   useOidcApplications,
   useRotateApplicationSecret,
-} from './hooks/use-oidc-applications.js';
+} from './hooks/use-oidc-applications';
 
 // Hooks — OIDC Scopes
-export { useCreateOidcScope, useDeleteOidcScope, useOidcScopes } from './hooks/use-oidc-scopes.js';
+export { useCreateOidcScope, useDeleteOidcScope, useOidcScopes } from './hooks/use-oidc-scopes';
 
 // Hooks — OIDC Authorizations
 export {
   useOidcAuthorizations,
   useRevokeAuthorization,
   useRevokeUserAuthorizations,
-} from './hooks/use-oidc-authorizations.js';
+} from './hooks/use-oidc-authorizations';
 
 // Query keys
-export { openIddictAdminKeys } from './hooks/query-keys.js';
+export { openIddictAdminKeys } from './hooks/query-keys';

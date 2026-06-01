@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { axiosResponse, createMockClient } from '../mock-client.js';
+import { axiosResponse, createMockClient } from '../mock-client';
 
 describe('createMockClient', () => {
   it('returns an object with all HTTP method stubs', () => {

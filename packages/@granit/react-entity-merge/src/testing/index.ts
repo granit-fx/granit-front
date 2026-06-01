@@ -1,3 +1,3 @@
-export { mockMergeResult, mockEmptyMergeResult, MOCK_BASE_PATH } from './data.js';
-export { createEntityMergeHandlers } from './handlers.js';
-export type { CreateEntityMergeHandlersOptions } from './handlers.js';
+export { mockMergeResult, mockEmptyMergeResult, MOCK_BASE_PATH } from './data';
+export { createEntityMergeHandlers } from './handlers';
+export type { CreateEntityMergeHandlersOptions } from './handlers';

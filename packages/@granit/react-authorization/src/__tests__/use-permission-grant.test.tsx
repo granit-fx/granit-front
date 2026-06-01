@@ -5,7 +5,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { usePermissionGrant } from '../hooks/use-permission-grant.js';
+import { usePermissionGrant } from '../hooks/use-permission-grant';
 
 function createWrapper() {
   const queryClient = createTestQueryClient();

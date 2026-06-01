@@ -3,15 +3,12 @@
 // ---------------------------------------------------------------------------
 
 // Provider
-export {
-  DashboardsProvider,
-  useDashboardsConfig,
-} from './providers/dashboards-provider.js';
+export { DashboardsProvider, useDashboardsConfig } from './providers/dashboards-provider';
 export type {
   DashboardsConfig,
   DashboardsProviderProps,
   ResolvedDashboardsConfig,
-} from './providers/dashboards-provider.js';
+} from './providers/dashboards-provider';
 
 // Render hook (B4-render — POST /dashboards/{id}/render bundle + per-widget cache split)
 export {
@@ -20,25 +17,25 @@ export {
   normalizeDashboardRenderRequest,
   strongestRefreshHint,
   useDashboardRender,
-} from './hooks/use-dashboard-render.js';
-export type { UseDashboardRenderOptions } from './hooks/use-dashboard-render.js';
-export { useDashboardWidget } from './hooks/use-dashboard-widget.js';
-export { useWidgetRender, widgetRenderQueryKey } from './hooks/use-widget-render.js';
+} from './hooks/use-dashboard-render';
+export type { UseDashboardRenderOptions } from './hooks/use-dashboard-render';
+export { useDashboardWidget } from './hooks/use-dashboard-widget';
+export { useWidgetRender, widgetRenderQueryKey } from './hooks/use-widget-render';
 export type {
   UseWidgetRenderOptions,
   WidgetRenderContext,
   WidgetRenderKind,
-} from './hooks/use-widget-render.js';
+} from './hooks/use-widget-render';
 
 // Push transport (P2.4 — ADR-043). SSE-driven live updates that
 // surgically merge into the per-widget cache entries; pull-only
 // dashboards bypass the stream entirely.
-export { applyStreamSnapshot, useDashboardStream } from './hooks/use-dashboard-stream.js';
+export { applyStreamSnapshot, useDashboardStream } from './hooks/use-dashboard-stream';
 export type {
   DashboardStreamSnapshot,
   UseDashboardStreamOptions,
-} from './hooks/use-dashboard-stream.js';
-export { usePushedDashboard } from './hooks/use-pushed-dashboard.js';
+} from './hooks/use-dashboard-stream';
+export { usePushedDashboard } from './hooks/use-pushed-dashboard';
 
 // Lifecycle / CRUD hooks (B4-write — Granit.Dashboards.Endpoints).
 // Surface mirrors the persisted-Dashboard aggregate model: the catalog
@@ -46,154 +43,151 @@ export { usePushedDashboard } from './hooks/use-pushed-dashboard.js';
 // dashboards are addressed by Guid. Lifecycle is publish/archive/restore
 // (no DELETE), metadata edits are name+layout only, widget pool is
 // managed via dedicated endpoints.
-export { dashboardCatalogQueryKey, useDashboardCatalog } from './hooks/use-dashboard-catalog.js';
-export { dashboardListQueryKey, useDashboardList } from './hooks/use-dashboard-list.js';
-export type { UseDashboardListParams } from './hooks/use-dashboard-list.js';
-export { dashboardDetailQueryKey, useDashboardDetail } from './hooks/use-dashboard-detail.js';
-export { useImportDashboard } from './hooks/use-import-dashboard.js';
-export { useUpdateDashboardMetadata } from './hooks/use-update-dashboard-metadata.js';
-export type { UpdateDashboardMetadataVariables } from './hooks/use-update-dashboard-metadata.js';
+export { dashboardCatalogQueryKey, useDashboardCatalog } from './hooks/use-dashboard-catalog';
+export { dashboardListQueryKey, useDashboardList } from './hooks/use-dashboard-list';
+export type { UseDashboardListParams } from './hooks/use-dashboard-list';
+export { dashboardDetailQueryKey, useDashboardDetail } from './hooks/use-dashboard-detail';
+export { useImportDashboard } from './hooks/use-import-dashboard';
+export { useUpdateDashboardMetadata } from './hooks/use-update-dashboard-metadata';
+export type { UpdateDashboardMetadataVariables } from './hooks/use-update-dashboard-metadata';
 export {
   useArchiveDashboard,
   usePublishDashboard,
   useRestoreDashboard,
-} from './hooks/use-dashboard-state-transitions.js';
-export { useResyncDashboard } from './hooks/use-resync-dashboard.js';
-export { useAddWidget, useRemoveWidget, useUpdateWidget } from './hooks/use-widget-crud.js';
+} from './hooks/use-dashboard-state-transitions';
+export { useResyncDashboard } from './hooks/use-resync-dashboard';
+export { useAddWidget, useRemoveWidget, useUpdateWidget } from './hooks/use-widget-crud';
 export type {
   AddWidgetVariables,
   RemoveWidgetVariables,
   UpdateWidgetVariables,
-} from './hooks/use-widget-crud.js';
+} from './hooks/use-widget-crud';
 
 // Layout + dispatcher
-export { Dashboard } from './components/dashboard.js';
-export type { DashboardProps } from './components/dashboard.js';
+export { Dashboard } from './components/dashboard';
+export type { DashboardProps } from './components/dashboard';
 export {
   DashboardContextProvider,
   useDashboardContext,
   useDashboardTimeWindowState,
-} from './components/dashboard-context.js';
+} from './components/dashboard-context';
 export type {
   DashboardContextProviderProps,
   DashboardContextValue,
-} from './components/dashboard-context.js';
-export { DashboardViewProvider, useDashboardView } from './components/dashboard-view-context.js';
+} from './components/dashboard-context';
+export { DashboardViewProvider, useDashboardView } from './components/dashboard-view-context';
 export type {
   DashboardViewContextValue,
   DashboardViewProviderProps,
-} from './components/dashboard-view-context.js';
-export { DashboardViewSwitcher } from './components/dashboard-view-switcher.js';
-export type { DashboardViewSwitcherProps } from './components/dashboard-view-switcher.js';
-export { resolveActiveView } from './lib/resolve-active-view.js';
-export type { ActiveDashboardView } from './lib/resolve-active-view.js';
+} from './components/dashboard-view-context';
+export { DashboardViewSwitcher } from './components/dashboard-view-switcher';
+export type { DashboardViewSwitcherProps } from './components/dashboard-view-switcher';
+export { resolveActiveView } from './lib/resolve-active-view';
+export type { ActiveDashboardView } from './lib/resolve-active-view';
 export {
   DashboardFilterProvider,
   useDashboardFilters,
-} from './components/dashboard-filter-context.js';
+} from './components/dashboard-filter-context';
 export type {
   DashboardFilterContextValue,
   DashboardFilterProviderProps,
   DashboardFilterValues,
-} from './components/dashboard-filter-context.js';
-export { DashboardFilterToolbar } from './components/dashboard-filter-toolbar.js';
-export type { DashboardFilterToolbarProps } from './components/dashboard-filter-toolbar.js';
-export { mergeFilterValuesIntoRequest } from './lib/merge-filter-values.js';
+} from './components/dashboard-filter-context';
+export { DashboardFilterToolbar } from './components/dashboard-filter-toolbar';
+export type { DashboardFilterToolbarProps } from './components/dashboard-filter-toolbar';
+export { mergeFilterValuesIntoRequest } from './lib/merge-filter-values';
 
 // Entity alias runtime (P2.3) — resolution context, provider, helpers
-export {
-  DashboardAliasProvider,
-  useDashboardAliases,
-} from './components/dashboard-alias-context.js';
+export { DashboardAliasProvider, useDashboardAliases } from './components/dashboard-alias-context';
 export type {
   DashboardAliasProviderProps,
   DashboardAliasValues,
-} from './components/dashboard-alias-context.js';
+} from './components/dashboard-alias-context';
 export {
   resolveDashboardAliases,
   resolveEntityAlias,
   resolveEntityAliasResolver,
-} from './lib/resolve-entity-alias.js';
-export type { AliasResolutionContext } from './lib/resolve-entity-alias.js';
-export { substituteAliases, substituteAliasesInRecord } from './lib/substitute-aliases.js';
+} from './lib/resolve-entity-alias';
+export type { AliasResolutionContext } from './lib/resolve-entity-alias';
+export { substituteAliases, substituteAliasesInRecord } from './lib/substitute-aliases';
 
 // Widget action dispatcher (P1.5) — declarative click handlers
 export {
   useStableWidgetActionDispatcher,
   useWidgetActionDispatcher,
   WidgetActionProvider,
-} from './components/widget-action-context.js';
+} from './components/widget-action-context';
 export type {
   WidgetActionDispatcher,
   WidgetActionProviderProps,
-} from './components/widget-action-context.js';
-export { defaultWidgetActionHandlers } from './lib/default-widget-action-handlers.js';
+} from './components/widget-action-context';
+export { defaultWidgetActionHandlers } from './lib/default-widget-action-handlers';
 export {
   expandActionParams,
   expandActionPlaceholders,
   expandActionTargetAndParams,
-} from './lib/expand-action-params.js';
-export { composeWidgetActionHandlers } from './lib/widget-action-handler.js';
+} from './lib/expand-action-params';
+export { composeWidgetActionHandlers } from './lib/widget-action-handler';
 export type {
   WidgetActionDispatchContext,
   WidgetActionHandler,
   WidgetActionHandlerRegistry,
-} from './lib/widget-action-handler.js';
-export { useEffectiveTimeWindow } from './hooks/use-effective-time-window.js';
-export { useWidgetTriggerHandler } from './hooks/use-widget-trigger-handler.js';
+} from './lib/widget-action-handler';
+export { useEffectiveTimeWindow } from './hooks/use-effective-time-window';
+export { useWidgetTriggerHandler } from './hooks/use-widget-trigger-handler';
 export {
   DASHBOARD_BREAKPOINT_MIN_WIDTH,
   resolveBreakpoint,
   useDashboardBreakpoint,
-} from './hooks/use-dashboard-breakpoint.js';
-export { applyLayoutOverride, resolveEffectiveLayout } from './lib/resolve-effective-layout.js';
-export type { EffectiveDashboardLayout } from './lib/resolve-effective-layout.js';
-export { WidgetRenderer } from './components/widget-renderer.js';
-export type { WidgetRendererProps } from './components/widget-renderer.js';
-export { WidgetCard } from './components/widget-card.js';
-export type { WidgetCardProps } from './components/widget-card.js';
+} from './hooks/use-dashboard-breakpoint';
+export { applyLayoutOverride, resolveEffectiveLayout } from './lib/resolve-effective-layout';
+export type { EffectiveDashboardLayout } from './lib/resolve-effective-layout';
+export { WidgetRenderer } from './components/widget-renderer';
+export type { WidgetRendererProps } from './components/widget-renderer';
+export { WidgetCard } from './components/widget-card';
+export type { WidgetCardProps } from './components/widget-card';
 
 // Built-in widgets (exported for advanced composition / overriding)
-export { ImageWidget } from './components/widgets/image-widget.js';
-export { MarkdownWidget } from './components/widgets/markdown-widget.js';
-export { TextWidget } from './components/widgets/text-widget.js';
+export { ImageWidget } from './components/widgets/image-widget';
+export { MarkdownWidget } from './components/widgets/markdown-widget';
+export { TextWidget } from './components/widgets/text-widget';
 
 // Registry
-export { defaultWidgetRegistry } from './registry/default-widget-registry.js';
-export { WidgetRegistryProvider, useWidgetRegistry } from './registry/widget-registry-context.js';
-export type { WidgetRegistryProviderProps } from './registry/widget-registry-context.js';
-export { composeRegistries } from './registry/widget-registry.js';
+export { defaultWidgetRegistry } from './registry/default-widget-registry';
+export { WidgetRegistryProvider, useWidgetRegistry } from './registry/widget-registry-context';
+export type { WidgetRegistryProviderProps } from './registry/widget-registry-context';
+export { composeRegistries } from './registry/widget-registry';
 // Renamed `WidgetRenderer` (type) → `WidgetRendererFn` to avoid collision with
 // the dispatcher component of the same name; consumers register components
 // matching this signature.
 export type {
   WidgetRegistry,
   WidgetRenderer as WidgetRendererFn,
-} from './registry/widget-registry.js';
+} from './registry/widget-registry';
 
 // ---------------------------------------------------------------------------
 // Read-mode rendering (B5 — bundle-driven, snapshot-aware)
 // ---------------------------------------------------------------------------
 
-export { RenderedDashboard } from './components/rendered-dashboard.js';
-export type { RenderedDashboardProps } from './components/rendered-dashboard.js';
-export { RenderedWidget } from './components/rendered-widget.js';
-export type { RenderedWidgetProps } from './components/rendered-widget.js';
+export { RenderedDashboard } from './components/rendered-dashboard';
+export type { RenderedDashboardProps } from './components/rendered-dashboard';
+export { RenderedWidget } from './components/rendered-widget';
+export type { RenderedWidgetProps } from './components/rendered-widget';
 
 // Built-in snapshot renderers (mirror of the definition-side widgets)
-export { ImageSnapshotWidget } from './components/widgets/image-snapshot-widget.js';
-export { MarkdownSnapshotWidget } from './components/widgets/markdown-snapshot-widget.js';
-export { TextSnapshotWidget } from './components/widgets/text-snapshot-widget.js';
+export { ImageSnapshotWidget } from './components/widgets/image-snapshot-widget';
+export { MarkdownSnapshotWidget } from './components/widgets/markdown-snapshot-widget';
+export { TextSnapshotWidget } from './components/widgets/text-snapshot-widget';
 
 // Snapshot widget registry (PascalCase widgetType discriminator — B5)
-export { defaultSnapshotWidgetRegistry } from './registry/default-snapshot-widget-registry.js';
+export { defaultSnapshotWidgetRegistry } from './registry/default-snapshot-widget-registry';
 export {
   SnapshotWidgetRegistryProvider,
   useSnapshotWidgetRegistry,
-} from './registry/snapshot-widget-registry-context.js';
-export type { SnapshotWidgetRegistryProviderProps } from './registry/snapshot-widget-registry-context.js';
-export { composeSnapshotRegistries } from './registry/snapshot-widget-registry.js';
+} from './registry/snapshot-widget-registry-context';
+export type { SnapshotWidgetRegistryProviderProps } from './registry/snapshot-widget-registry-context';
+export { composeSnapshotRegistries } from './registry/snapshot-widget-registry';
 export type {
   SnapshotWidgetRegistry,
   SnapshotWidgetRenderer,
-} from './registry/snapshot-widget-registry.js';
+} from './registry/snapshot-widget-registry';

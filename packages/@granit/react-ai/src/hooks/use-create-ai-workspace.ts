@@ -2,7 +2,7 @@ import { createAIWorkspace } from '@granit/ai';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import { buildAIQueryKey, useAIConfig } from '../providers/ai-provider.js';
+import { buildAIQueryKey, useAIConfig } from '../providers/ai-provider';
 
 import type { AIWorkspaceCreateRequest, AIWorkspaceResponse } from '@granit/ai';
 

@@ -3,8 +3,8 @@ import * as React from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { describe, expect, it } from 'vitest';
 
-import { createReactLocalization } from '../create-react-localization.js';
-import { useTranslation } from '../use-translation.js';
+import { createReactLocalization } from '../create-react-localization';
+import { useTranslation } from '../use-translation';
 
 import type { i18n } from 'i18next';
 

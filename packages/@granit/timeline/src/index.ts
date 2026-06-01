@@ -24,10 +24,10 @@ export {
   isValidSourceKey,
   type TimelineEntryNotEditableReasonValue,
   type TimelineEntryOriginValue,
-} from './types/index.js';
+} from './types/index';
 
 // Permissions
-export { TimelinePermissions } from './permissions.js';
+export { TimelinePermissions } from './permissions';
 
 // API
 export {
@@ -39,5 +39,5 @@ export {
   followEntity,
   unfollowEntity,
   updateTimelineEntryBody,
-} from './api/timeline-api.js';
-export { toggleReaction } from './api/reaction-api.js';
+} from './api/timeline-api';
+export { toggleReaction } from './api/reaction-api';

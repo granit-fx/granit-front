@@ -3,9 +3,9 @@ import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { toEntityId } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { sampleDuplicates, sampleParties, toListItem } from './data.js';
+import { sampleDuplicates, sampleParties, toListItem } from './data';
 
 import type {
   FieldConflictResponse,

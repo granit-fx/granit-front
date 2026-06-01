@@ -11,5 +11,5 @@
 // to read keys from this namespace.
 // ---------------------------------------------------------------------------
 
-export { partiesTranslationsEn } from './en.js';
-export { partiesTranslationsFr } from './fr.js';
+export { partiesTranslationsEn } from './en';
+export { partiesTranslationsFr } from './fr';

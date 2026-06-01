@@ -6,9 +6,9 @@ import {
   ImportProvider,
   buildImportQueryKey,
   useImportConfig,
-} from '../../import/providers/import-provider.js';
+} from '../../import/providers/import-provider';
 
-import type { ImportConfig } from '../../import/providers/import-provider.js';
+import type { ImportConfig } from '../../import/providers/import-provider';
 import type { ReactNode } from 'react';
 
 function createConfig(overrides?: Partial<ImportConfig>): ImportConfig {

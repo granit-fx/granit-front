@@ -12,7 +12,7 @@ export type {
   ExportJobStatus,
   ExportPresetResponse,
   SaveExportPresetRequest,
-} from './export/index.js';
+} from './export/index';
 
 // Export API
 export {
@@ -25,7 +25,7 @@ export {
   listExportJobs,
   listExportPresets,
   saveExportPreset,
-} from './export/index.js';
+} from './export/index';
 
 // Import types
 export type {
@@ -40,7 +40,7 @@ export type {
   ImportRowError,
   ImportRowErrorKind,
   MappingConfidence,
-} from './import/index.js';
+} from './import/index';
 
 // Import API
 export {
@@ -54,5 +54,5 @@ export {
   listImportJobs,
   previewImport,
   uploadImportFile,
-} from './import/index.js';
-export { DataExchangePermissions } from './permissions.js';
+} from './import/index';
+export { DataExchangePermissions } from './permissions';

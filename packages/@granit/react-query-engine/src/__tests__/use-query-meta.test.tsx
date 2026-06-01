@@ -4,8 +4,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useQueryMeta } from '../hooks/use-query-meta.js';
-import { QueryProvider } from '../providers/query-provider.js';
+import { useQueryMeta } from '../hooks/use-query-meta';
+import { QueryProvider } from '../providers/query-provider';
 
 import type { QueryConfig } from '@granit/query-engine';
 import type { ReactNode } from 'react';

@@ -4,8 +4,8 @@ import {
   useGrantDocumentShare,
   useGrantFolderShare,
   useRevokeShare,
-} from '../hooks/use-share-mutations.js';
-import { useDocumentShares, useFolderShares } from '../hooks/use-shares.js';
+} from '../hooks/use-share-mutations';
+import { useDocumentShares, useFolderShares } from '../hooks/use-shares';
 
 import type {
   GrantShareRequest,

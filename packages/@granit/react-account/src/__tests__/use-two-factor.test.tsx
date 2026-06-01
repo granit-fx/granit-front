@@ -11,10 +11,10 @@ import {
   useEnableTwoFactor,
   useGenerateRecoveryCodes,
   useTwoFactorStatus,
-} from '../hooks/use-two-factor.js';
-import { AccountProvider } from '../providers/account-provider.js';
+} from '../hooks/use-two-factor';
+import { AccountProvider } from '../providers/account-provider';
 
-import type { AccountConfig } from '../providers/account-provider.js';
+import type { AccountConfig } from '../providers/account-provider';
 import type {
   AccountAuthenticatorKeyResponse,
   AccountRecoveryCodesResponse,

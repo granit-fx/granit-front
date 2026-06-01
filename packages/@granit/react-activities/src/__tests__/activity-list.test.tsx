@@ -5,8 +5,8 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { ActivityList } from '../components/activity-list.js';
-import { ActivitiesProvider } from '../providers/activities-provider.js';
+import { ActivityList } from '../components/activity-list';
+import { ActivitiesProvider } from '../providers/activities-provider';
 
 import type { ActivityListResponse, ActivityResponse } from '@granit/activities';
 import type { AxiosInstance } from '@granit/api-client';

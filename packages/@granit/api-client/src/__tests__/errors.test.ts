@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { HttpError, TimeoutError, ValidationError } from '../errors.js';
+import { HttpError, TimeoutError, ValidationError } from '../errors';
 
 describe('HttpError', () => {
   it('should set name, message, and status', () => {

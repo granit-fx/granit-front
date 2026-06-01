@@ -9,9 +9,9 @@ import { noContent, notFound } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { mockPlans, mockPriceHistory, mockSeats, mockSubscriptions } from './data.js';
+import { mockPlans, mockPriceHistory, mockSeats, mockSubscriptions } from './data';
 
 import type { QueryMetadata } from '@granit/query-engine';
 import type {

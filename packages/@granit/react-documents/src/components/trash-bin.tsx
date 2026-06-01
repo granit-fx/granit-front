@@ -1,10 +1,7 @@
 import { useState } from 'react';
 
-import {
-  usePermanentlyDeleteDocument,
-  useRestoreDocument,
-} from '../hooks/use-document-mutations.js';
-import { useTrashedDocuments } from '../hooks/use-documents.js';
+import { usePermanentlyDeleteDocument, useRestoreDocument } from '../hooks/use-document-mutations';
+import { useTrashedDocuments } from '../hooks/use-documents';
 
 import type { ReactNode } from 'react';
 

@@ -4,9 +4,9 @@ import { notFound, pagedResponse } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { mockApiKeys } from './data.js';
+import { mockApiKeys } from './data';
 
 import type {
   ApiKeyCreateRequest,

@@ -1,7 +1,7 @@
 import { anchorTimelineEntry, updateTimelineEntryBody } from '@granit/timeline';
 import { useMutation, type UseMutationResult } from '@tanstack/react-query';
 
-import { useTimelineConfig } from '../providers/timeline-provider.js';
+import { useTimelineConfig } from '../providers/timeline-provider';
 
 import type { TimelineEntryId } from '@granit/timeline';
 
@@ -30,11 +30,7 @@ export interface AnchorEntryVariables {
  * Wire: `POST {basePath}/{entityType}/{entityId}/anchor`. See
  * granit-fx/granit-dotnet — `AnchorExternalAsync` endpoint.
  */
-export function useAnchorEntry(): UseMutationResult<
-  TimelineEntryId,
-  Error,
-  AnchorEntryVariables
-> {
+export function useAnchorEntry(): UseMutationResult<TimelineEntryId, Error, AnchorEntryVariables> {
   const { client, basePath } = useTimelineConfig();
 
   return useMutation<TimelineEntryId, Error, AnchorEntryVariables>({
@@ -62,11 +58,7 @@ export interface UpdateEntryBodyVariables {
  *
  * Wire: `PATCH {basePath}/{entityType}/{entityId}/entries/{entryId}`.
  */
-export function useUpdateEntryBody(): UseMutationResult<
-  void,
-  Error,
-  UpdateEntryBodyVariables
-> {
+export function useUpdateEntryBody(): UseMutationResult<void, Error, UpdateEntryBodyVariables> {
   const { client, basePath } = useTimelineConfig();
 
   return useMutation<void, Error, UpdateEntryBodyVariables>({

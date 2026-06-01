@@ -1,8 +1,4 @@
-import type {
-  AdminTenant,
-  CreateTenantRequest,
-  UpdateTenantRequest,
-} from '../types/admin-tenant.js';
+import type { AdminTenant, CreateTenantRequest, UpdateTenantRequest } from '../types/admin-tenant';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

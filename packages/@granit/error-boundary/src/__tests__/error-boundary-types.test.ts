@@ -1,6 +1,6 @@
 import { describe, expectTypeOf, it } from 'vitest';
 
-import type { Breadcrumb, ErrorContextConfig, ErrorContextValue } from '../index.js';
+import type { Breadcrumb, ErrorContextConfig, ErrorContextValue } from '../index';
 
 describe('@granit/error-boundary types', () => {
   describe('Breadcrumb', () => {

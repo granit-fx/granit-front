@@ -2,9 +2,9 @@
 // Query param serializer — QueryRequest → URL search string
 // ---------------------------------------------------------------------------
 
-import { validateQueryRequest } from '../validation/validate-query-request.js';
+import { validateQueryRequest } from '../validation/validate-query-request';
 
-import type { QueryRequest } from '../types/query-params.js';
+import type { QueryRequest } from '../types/query-params';
 
 /**
  * Serialize QueryRequest to a URL search string (without leading '?').

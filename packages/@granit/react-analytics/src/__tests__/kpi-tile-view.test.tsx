@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { KpiTileView } from '../components/kpi-tile-view.js';
+import { KpiTileView } from '../components/kpi-tile-view';
 
 import type { MetricResponse } from '@granit/analytics';
 

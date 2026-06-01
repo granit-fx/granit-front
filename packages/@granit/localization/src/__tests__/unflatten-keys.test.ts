@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { unflattenKeys } from '../unflatten-keys.js';
+import { unflattenKeys } from '../unflatten-keys';
 
 describe('unflattenKeys', () => {
   it('should unflatten dot-separated keys into a nested object', () => {

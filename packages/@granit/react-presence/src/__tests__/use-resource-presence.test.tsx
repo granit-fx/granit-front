@@ -4,8 +4,8 @@ import { cleanup, act, renderHook } from '@testing-library/react';
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useResourcePresence } from '../hooks/use-resource-presence.js';
-import { PresenceProvider } from '../providers/presence-provider.js';
+import { useResourcePresence } from '../hooks/use-resource-presence';
+import { PresenceProvider } from '../providers/presence-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { ResourceRoomResponse } from '@granit/presence';

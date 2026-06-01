@@ -9,7 +9,7 @@ import {
 } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 
-import { useDashboardsConfig } from '../providers/dashboards-provider.js';
+import { useDashboardsConfig } from '../providers/dashboards-provider';
 
 import type {
   DashboardRenderedWidget,

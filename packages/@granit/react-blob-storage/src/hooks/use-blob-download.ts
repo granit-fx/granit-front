@@ -1,7 +1,7 @@
 import { getDownloadUrl } from '@granit/blob-storage';
 import { useMutation } from '@tanstack/react-query';
 
-import { useBlobStorageConfig } from '../providers/blob-storage-provider.js';
+import { useBlobStorageConfig } from '../providers/blob-storage-provider';
 
 import type { BlobDownloadUrlRequest, BlobDownloadUrlResponse } from '@granit/blob-storage';
 import type { UseMutationResult } from '@tanstack/react-query';

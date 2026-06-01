@@ -7,9 +7,9 @@ import {
   listDocumentShares,
   listFolderShares,
   revokeShare,
-} from '../api/shares-api.js';
+} from '../api/shares-api';
 
-import type { GrantShareRequest, ListSharesResponse, ShareResponse } from '../types/index.js';
+import type { GrantShareRequest, ListSharesResponse, ShareResponse } from '../types/index';
 
 const basePath = '/api/v1/documents';
 

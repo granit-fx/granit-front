@@ -7,7 +7,7 @@ import {
 } from '@granit/background-jobs';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { useBackgroundJobsConfig } from '../providers/background-jobs-provider.js';
+import { useBackgroundJobsConfig } from '../providers/background-jobs-provider';
 
 import type { BackgroundJobListParams, BackgroundJobStatus } from '@granit/background-jobs';
 import type { PagedResult } from '@granit/query-engine';
@@ -56,9 +56,7 @@ export function useBackgroundJobs(
  * const { data: job } = useBackgroundJob('InvoiceSync');
  * ```
  */
-export function useBackgroundJob(
-  name: string
-): UseQueryResult<BackgroundJobStatus> {
+export function useBackgroundJob(name: string): UseQueryResult<BackgroundJobStatus> {
   const { client, basePath } = useBackgroundJobsConfig();
   const jobsPath = `${basePath}/jobs`;
 

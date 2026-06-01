@@ -1,8 +1,8 @@
-import { ImageConfigForm } from '../components/forms/image-config-form.js';
-import { MarkdownConfigForm } from '../components/forms/markdown-config-form.js';
-import { TextConfigForm } from '../components/forms/text-config-form.js';
+import { ImageConfigForm } from '../components/forms/image-config-form';
+import { MarkdownConfigForm } from '../components/forms/markdown-config-form';
+import { TextConfigForm } from '../components/forms/text-config-form';
 
-import type { WidgetConfigForm, WidgetConfigFormRegistry } from './widget-config-form-registry.js';
+import type { WidgetConfigForm, WidgetConfigFormRegistry } from './widget-config-form-registry';
 
 /**
  * Framework-default config-form registry — covers every

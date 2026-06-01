@@ -4,7 +4,7 @@ import {
   useAttachTagToDocument,
   useDetachTagFromDocument,
   useDocumentTags,
-} from '../hooks/use-document-tags.js';
+} from '../hooks/use-document-tags';
 
 import { TagAutocomplete } from './tag-autocomplete.tsx';
 import { TagChip } from './tag-chip.tsx';

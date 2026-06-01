@@ -6,7 +6,7 @@ import {
 } from '@granit/identity';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider.js';
+import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider';
 
 import type { IdentityDeviceActivity, IdentitySession, IdentitySessionId } from '@granit/identity';
 import type { UserId } from '@granit/types';

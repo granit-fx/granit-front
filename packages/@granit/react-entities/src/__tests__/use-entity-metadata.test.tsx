@@ -6,7 +6,7 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { entityManifestQueryKey, useEntityMetadata } from '../hooks/use-entity-metadata.js';
+import { entityManifestQueryKey, useEntityMetadata } from '../hooks/use-entity-metadata';
 
 import type { EntityManifestResponse } from '@granit/entities';
 import type { ReactNode } from 'react';

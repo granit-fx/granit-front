@@ -1,2 +1,2 @@
-export { createSignalRTransport } from './transports/create-signalr-transport.js';
-export type { SignalRTransportConfig } from './transports/create-signalr-transport.js';
+export { createSignalRTransport } from './transports/create-signalr-transport';
+export type { SignalRTransportConfig } from './transports/create-signalr-transport';

@@ -1,6 +1,6 @@
 import { Minus, TrendingDown, TrendingUp } from 'lucide-react';
 
-import { formatDeltaRatio, formatMetricValue } from '../lib/format-metric-value.js';
+import { formatDeltaRatio, formatMetricValue } from '../lib/format-metric-value';
 
 import type { MetricResponse } from '@granit/analytics';
 import type { ComponentType, ReactNode } from 'react';

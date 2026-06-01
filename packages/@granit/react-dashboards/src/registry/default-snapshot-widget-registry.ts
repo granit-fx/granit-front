@@ -1,8 +1,8 @@
-import { ImageSnapshotWidget } from '../components/widgets/image-snapshot-widget.js';
-import { MarkdownSnapshotWidget } from '../components/widgets/markdown-snapshot-widget.js';
-import { TextSnapshotWidget } from '../components/widgets/text-snapshot-widget.js';
+import { ImageSnapshotWidget } from '../components/widgets/image-snapshot-widget';
+import { MarkdownSnapshotWidget } from '../components/widgets/markdown-snapshot-widget';
+import { TextSnapshotWidget } from '../components/widgets/text-snapshot-widget';
 
-import type { SnapshotWidgetRegistry } from './snapshot-widget-registry.js';
+import type { SnapshotWidgetRegistry } from './snapshot-widget-registry';
 
 /**
  * Snapshot renderers shipped by `@granit/react-dashboards` for the framework's

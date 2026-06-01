@@ -1,5 +1,5 @@
-import type { AggregateFunction } from './aggregate-function.js';
-import type { DataKeyFormat } from './data-key-format.js';
+import type { AggregateFunction } from './aggregate-function';
+import type { DataKeyFormat } from './data-key-format';
 
 /**
  * Aggregation kinds for live telemetry streams. Mirrors

@@ -2,12 +2,12 @@ import { fireEvent, render } from '@testing-library/react';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { EntityForm } from '../components/entity-form.js';
+import { EntityForm } from '../components/entity-form';
 import {
   EntityRendererProvider,
   type EntityFormComponent,
   type EntityComponentCatalog,
-} from '../providers/index.js';
+} from '../providers/index';
 
 import type {
   EntityFormFieldManifest,

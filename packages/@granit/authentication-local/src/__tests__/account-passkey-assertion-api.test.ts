@@ -4,9 +4,9 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   beginPasskeyAssertion,
   completePasskeyAssertion,
-} from '../api/account-passkey-assertion-api.js';
+} from '../api/account-passkey-assertion-api';
 
-import type { AccountLoginResponse } from '../types/index.js';
+import type { AccountLoginResponse } from '../types/index';
 
 const BASE = '/api/account';
 

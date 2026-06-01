@@ -6,9 +6,9 @@ import {
   ActivitiesProvider,
   buildActivitiesQueryKey,
   useActivitiesConfig,
-} from '../providers/activities-provider.js';
+} from '../providers/activities-provider';
 
-import type { ActivitiesConfig } from '../providers/activities-provider.js';
+import type { ActivitiesConfig } from '../providers/activities-provider';
 import type { ReactNode } from 'react';
 
 describe('ActivitiesProvider', () => {

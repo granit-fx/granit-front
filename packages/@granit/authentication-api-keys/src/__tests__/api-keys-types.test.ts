@@ -8,7 +8,7 @@ import type {
   ApiKeyType,
   ApiKeyUpdateScopesRequest,
   CacheBehavior,
-} from '../index.js';
+} from '../index';
 
 describe('@granit/authentication-api-keys types', () => {
   describe('ApiKeyType', () => {

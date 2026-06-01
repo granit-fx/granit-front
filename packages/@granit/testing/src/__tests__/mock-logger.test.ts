@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { createMockLogger } from '../mock-logger.js';
+import { createMockLogger } from '../mock-logger';
 
 describe('createMockLogger', () => {
   it('returns an object with debug, info, warn, error, child as mock functions', () => {

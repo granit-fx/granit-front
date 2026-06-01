@@ -1,4 +1,4 @@
-import type { MapTileProvider } from '../types/index.js';
+import type { MapTileProvider } from '../types/index';
 
 /**
  * Esri ArcGIS Online World basemaps. Free for non-commercial use; commercial

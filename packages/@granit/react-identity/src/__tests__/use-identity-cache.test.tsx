@@ -6,10 +6,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useBatchResolveUsers, useIdentityCacheStats } from '../hooks/use-identity-cache.js';
-import { IdentityProvider } from '../providers/identity-provider.js';
+import { useBatchResolveUsers, useIdentityCacheStats } from '../hooks/use-identity-cache';
+import { IdentityProvider } from '../providers/identity-provider';
 
-import type { IdentityProviderProps } from '../providers/identity-provider.js';
+import type { IdentityProviderProps } from '../providers/identity-provider';
 import type { IdentityUser, IdentityUserCacheStats } from '@granit/identity';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

@@ -1,7 +1,7 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { deleteSetting, getSetting, getSettings, updateSetting } from '../api/settings-api.js';
+import { deleteSetting, getSetting, getSettings, updateSetting } from '../api/settings-api';
 
 describe('settings-api', () => {
   describe('getSettings', () => {

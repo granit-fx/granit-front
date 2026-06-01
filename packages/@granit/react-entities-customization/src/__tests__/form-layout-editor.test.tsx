@@ -2,9 +2,9 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { FormLayoutEditor } from '../components/form-layout-editor.js';
+import { FormLayoutEditor } from '../components/form-layout-editor';
 
-import type { SchemaField } from '../layout/apply-deltas.js';
+import type { SchemaField } from '../layout/apply-deltas';
 import type { LayoutDelta } from '@granit/entities-customization';
 
 const fields: readonly SchemaField[] = [

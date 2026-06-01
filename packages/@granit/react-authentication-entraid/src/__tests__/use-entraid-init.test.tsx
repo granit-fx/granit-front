@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useEntraIdInit } from '../hooks/use-entraid-init.js';
+import { useEntraIdInit } from '../hooks/use-entraid-init';
 
 import type { EntraIdCoreConfig } from '@granit/authentication-entraid';
 

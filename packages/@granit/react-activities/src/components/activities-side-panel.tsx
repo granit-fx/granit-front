@@ -1,8 +1,8 @@
 import { type ReactNode } from 'react';
 
-import { ActivityList } from './activity-list.js';
+import { ActivityList } from './activity-list';
 
-import type { ActivityActionLabels, ActivityListProps } from './activity-list.js';
+import type { ActivityActionLabels, ActivityListProps } from './activity-list';
 import type { ActivityResponse } from '@granit/activities';
 
 export interface ActivitiesSidePanelProps {

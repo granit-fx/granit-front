@@ -9,13 +9,9 @@ import {
   getInvoiceById,
   listInvoices,
   markInvoiceUncollectible,
-} from '../api/invoicing-api.js';
+} from '../api/invoicing-api';
 
-import type {
-  FinalizeInvoiceRequest,
-  InvoiceCreateRequest,
-  InvoiceResponse,
-} from '../types/index.js';
+import type { FinalizeInvoiceRequest, InvoiceCreateRequest, InvoiceResponse } from '../types/index';
 
 const sampleLineItem = {
   id: 'li-1',

@@ -2,7 +2,7 @@ import { getMyPermissions } from '@granit/authorization';
 import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
 import type {
   PermissionsResponse,

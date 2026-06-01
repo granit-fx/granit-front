@@ -1,11 +1,11 @@
 import { PRESENCE_DEFAULTS } from '@granit/presence';
 import { useEffect, useMemo, useState } from 'react';
 
-import { useClearMyPresenceOverride } from '../hooks/use-clear-my-presence-override.js';
-import { useMyPresence } from '../hooks/use-my-presence.js';
-import { useSetMyPresence } from '../hooks/use-set-my-presence.js';
+import { useClearMyPresenceOverride } from '../hooks/use-clear-my-presence-override';
+import { useMyPresence } from '../hooks/use-my-presence';
+import { useSetMyPresence } from '../hooks/use-set-my-presence';
 
-import { PresenceDot } from './presence-dot.js';
+import { PresenceDot } from './presence-dot';
 
 import type { ManualPresenceStatus, PresenceResponse, SetPresenceRequest } from '@granit/presence';
 import type { ISODateString } from '@granit/types';

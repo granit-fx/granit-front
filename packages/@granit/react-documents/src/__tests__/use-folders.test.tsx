@@ -3,8 +3,8 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useFolder, useFolderBreadcrumb, useFolders } from '../hooks/use-folders.js';
-import { DocumentsProvider } from '../providers/documents-provider.js';
+import { useFolder, useFolderBreadcrumb, useFolders } from '../hooks/use-folders';
+import { DocumentsProvider } from '../providers/documents-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type {

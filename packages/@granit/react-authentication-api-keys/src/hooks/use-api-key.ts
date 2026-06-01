@@ -1,11 +1,11 @@
 import { getApiKey } from '@granit/authentication-api-keys';
 import { useQuery } from '@tanstack/react-query';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { buildApiKeyQueryKey } from './use-api-keys.js';
+import { buildApiKeyQueryKey } from './use-api-keys';
 
-import type { ApiKeyHookOptions } from './use-api-keys.js';
+import type { ApiKeyHookOptions } from './use-api-keys';
 import type { ApiKeyResponse } from '@granit/authentication-api-keys';
 import type { UseQueryResult } from '@tanstack/react-query';
 

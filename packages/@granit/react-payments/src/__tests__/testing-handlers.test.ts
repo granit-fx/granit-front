@@ -1,7 +1,7 @@
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { createPaymentsHandlers, paymentTransactionQueryMetadata } from '../testing/index.js';
+import { createPaymentsHandlers, paymentTransactionQueryMetadata } from '../testing/index';
 
 const BASE = 'http://api.test/api/v1/payments';
 const server = setupServer();

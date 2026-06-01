@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
 
-import { EMPTY_COMPONENT_CATALOG, type EntityComponentCatalog } from './component-catalog.js';
+import { EMPTY_COMPONENT_CATALOG, type EntityComponentCatalog } from './component-catalog';
 
 import type { Logger } from '@granit/logger';
 

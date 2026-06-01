@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { evaluateVisibility } from '../helpers/evaluate-visibility.js';
+import { evaluateVisibility } from '../helpers/evaluate-visibility';
 
-import type { VisibilityCondition } from '../types/visibility.js';
+import type { VisibilityCondition } from '../types/visibility';
 
 const cond = (
   field: string,

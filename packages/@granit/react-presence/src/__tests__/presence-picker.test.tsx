@@ -4,9 +4,9 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { PresencePicker } from '../components/presence-picker.js';
+import { PresencePicker } from '../components/presence-picker';
 
-import { createPresenceTestHarness } from './test-utils.js';
+import { createPresenceTestHarness } from './test-utils';
 
 import type { PresenceResponse, SetPresenceRequest } from '@granit/presence';
 import type { UserId } from '@granit/types';

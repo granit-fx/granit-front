@@ -1,7 +1,7 @@
 import { buildEChartsTheme } from '@granit/charts';
 import { useEffect, useMemo, useState } from 'react';
 
-import { echarts } from '../echarts-instance.js';
+import { echarts } from '../echarts-instance';
 
 import type { ChartThemeTokens } from '@granit/charts';
 

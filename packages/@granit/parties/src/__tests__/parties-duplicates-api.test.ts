@@ -6,7 +6,7 @@ import {
   dismissPartyDuplicate,
   listDuplicatesForParty,
   mergePartyFromDuplicate,
-} from '../api/parties-duplicates-api.js';
+} from '../api/parties-duplicates-api';
 
 import type {
   PartyDuplicateCandidateId,
@@ -14,7 +14,7 @@ import type {
   PartyDuplicateMergeRequest,
   PartyId,
   PartyMergeResponse,
-} from '../types/index.js';
+} from '../types/index';
 
 const basePath = '/api/v1/parties';
 const partyId: PartyId = toEntityId<'Party'>('00000000-0000-0000-0000-000000000001');

@@ -5,8 +5,8 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { BlobUploadField } from '../components/blob-upload-field.js';
-import { BlobStorageProvider } from '../providers/blob-storage-provider.js';
+import { BlobUploadField } from '../components/blob-upload-field';
+import { BlobStorageProvider } from '../providers/blob-storage-provider';
 
 import type { ReactNode } from 'react';
 

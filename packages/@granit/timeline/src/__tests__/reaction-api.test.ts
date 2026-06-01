@@ -2,11 +2,11 @@ import { axiosResponse, createMockClient } from '@granit/testing';
 import { toEntityId } from '@granit/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { toggleReaction } from '../api/reaction-api.js';
-import { TimelinePermissions } from '../permissions.js';
-import { toReactionEmoji, type ReactionToggleResult } from '../types/reaction.js';
+import { toggleReaction } from '../api/reaction-api';
+import { TimelinePermissions } from '../permissions';
+import { toReactionEmoji, type ReactionToggleResult } from '../types/reaction';
 
-import type { TimelineEntryId } from '../types/stream.js';
+import type { TimelineEntryId } from '../types/stream';
 import type { AxiosInstance } from 'axios';
 
 const BASE_PATH = '/api/v1/timeline';

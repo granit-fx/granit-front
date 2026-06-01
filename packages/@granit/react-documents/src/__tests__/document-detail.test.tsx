@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { DocumentDetail } from '../components/document-detail.tsx';
-import { DocumentsProvider } from '../providers/documents-provider.js';
+import { DocumentsProvider } from '../providers/documents-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { DocumentResponse, ListDocumentTagsResponse } from '@granit/documents';

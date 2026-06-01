@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { useFieldChoices } from '../hooks/use-field-choices.js';
+import { useFieldChoices } from '../hooks/use-field-choices';
 
 import type { FieldConflict } from '@granit/entity-merge';
 

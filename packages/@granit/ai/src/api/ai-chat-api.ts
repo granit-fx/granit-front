@@ -3,14 +3,14 @@
 // Mirrors Granit.AI.Endpoints chat endpoints (sync + SSE stream).
 // ---------------------------------------------------------------------------
 
-import { AI_STREAM_DONE_MARKER } from '../constants.js';
+import { AI_STREAM_DONE_MARKER } from '../constants';
 
 import type {
   AIChatRequest,
   AIChatResponse,
   AIChatStreamChunk,
   AIChatStreamUsage,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

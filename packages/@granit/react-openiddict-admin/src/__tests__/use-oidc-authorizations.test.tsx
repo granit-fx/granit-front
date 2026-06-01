@@ -14,8 +14,8 @@ import {
   useOidcAuthorizations,
   useRevokeAuthorization,
   useRevokeUserAuthorizations,
-} from '../hooks/use-oidc-authorizations.js';
-import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider.js';
+} from '../hooks/use-oidc-authorizations';
+import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider';
 
 import type { AdminOidcAuthorization } from '@granit/openiddict-admin';
 
@@ -100,7 +100,11 @@ describe('useRevokeAuthorization', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(revokeAuthorization).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', 'auth-001');
+    expect(revokeAuthorization).toHaveBeenCalledWith(
+      expect.anything(),
+      '/api/v1/admin',
+      'auth-001'
+    );
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'oidc', 'authorizations'],
     });
@@ -133,7 +137,11 @@ describe('useRevokeUserAuthorizations', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(revokeUserAuthorizations).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', 'usr-001');
+    expect(revokeUserAuthorizations).toHaveBeenCalledWith(
+      expect.anything(),
+      '/api/v1/admin',
+      'usr-001'
+    );
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'oidc', 'authorizations'],
     });

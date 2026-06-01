@@ -14,6 +14,6 @@
 // the framework headless: apps own when and how to mount i18n.
 // ---------------------------------------------------------------------------
 
-export { activitiesTranslationsEn } from './en.js';
-export type { ActivitiesTranslations } from './en.js';
-export { activitiesTranslationsFr } from './fr.js';
+export { activitiesTranslationsEn } from './en';
+export type { ActivitiesTranslations } from './en';
+export { activitiesTranslationsFr } from './fr';

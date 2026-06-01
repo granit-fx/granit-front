@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { documentsTranslationsEn, documentsTranslationsFr } from '../locales/index.js';
+import { documentsTranslationsEn, documentsTranslationsFr } from '../locales/index';
 
 describe('locales', () => {
   it('exposes an English bundle', () => {

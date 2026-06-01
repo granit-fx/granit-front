@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { DocumentsPermissions } from '../permissions.js';
+import { DocumentsPermissions } from '../permissions';
 
 describe('DocumentsPermissions', () => {
   it('exposes the Folders Read/Manage keys matching the backend', () => {

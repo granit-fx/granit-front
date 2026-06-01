@@ -9,9 +9,9 @@ import { accepted, noContent, notFound, pagedResponse } from '@granit/testing/ms
 import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { mockBackgroundJobs } from './data.js';
+import { mockBackgroundJobs } from './data';
 
 import type { BackgroundJobStatus } from '@granit/background-jobs';
 import type { QueryMetadata } from '@granit/query-engine';

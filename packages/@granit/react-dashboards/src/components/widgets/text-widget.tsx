@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { useWidgetTriggerHandler } from '../../hooks/use-widget-trigger-handler.js';
+import { useWidgetTriggerHandler } from '../../hooks/use-widget-trigger-handler';
 
 import type { TextWidgetDefinition, TextWidgetStyle } from '@granit/dashboards';
 

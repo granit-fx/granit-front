@@ -1,1 +1,1 @@
-export type { CognitoAuthContextType, CognitoCoreConfig } from './types/index.js';
+export type { CognitoAuthContextType, CognitoCoreConfig } from './types/index';

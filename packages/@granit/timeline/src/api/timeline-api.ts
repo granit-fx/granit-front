@@ -7,7 +7,7 @@ import type {
   TimelineEntryId,
   TimelineEntryPage,
   TimelineStreamPage,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**
@@ -125,10 +125,7 @@ export async function updateTimelineEntryBody(
   entryId: string,
   request: { readonly body: string }
 ): Promise<void> {
-  await client.patch(
-    buildEntityUrl(basePath, entityType, entityId, 'entries', entryId),
-    request
-  );
+  await client.patch(buildEntityUrl(basePath, entityType, entityId, 'entries', entryId), request);
 }
 
 export async function followEntity(

@@ -2,7 +2,7 @@ import { useInfiniteScroll } from '@granit/react-query-engine';
 import { getStream } from '@granit/timeline';
 import { useCallback, useState } from 'react';
 
-import { useTimelineConfig } from '../providers/timeline-provider.js';
+import { useTimelineConfig } from '../providers/timeline-provider';
 
 import type { TimelineEntry, TimelineEntryPage, TimelineStreamPage } from '@granit/timeline';
 

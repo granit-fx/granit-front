@@ -3,7 +3,7 @@ import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
 import {
   mockAgreementHistory,
@@ -12,7 +12,7 @@ import {
   mockExports,
   mockLegalDocumentDetails,
   mockLegalDocuments,
-} from './data.js';
+} from './data';
 
 import type {
   AgreementHistoryEntry,

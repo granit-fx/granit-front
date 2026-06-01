@@ -1,10 +1,10 @@
-export { createReactLocalization } from './create-react-localization.js';
-export { useLocale } from './use-locale.js';
-export type { UseLocaleOptions } from './use-locale.js';
+export { createReactLocalization } from './create-react-localization';
+export { useLocale } from './use-locale';
+export type { UseLocaleOptions } from './use-locale';
 
 // Hooks — Consumer
-export { useApplicationLocalization } from './hooks/use-application-localization.js';
-export type { UseApplicationLocalizationOptions } from './hooks/use-application-localization.js';
+export { useApplicationLocalization } from './hooks/use-application-localization';
+export type { UseApplicationLocalizationOptions } from './hooks/use-application-localization';
 
 // Hooks — Admin
 export {
@@ -12,24 +12,24 @@ export {
   useLanguages,
   useSetLocalizationOverride,
   useToggleLanguage,
-} from './hooks/use-admin-localization.js';
+} from './hooks/use-admin-localization';
 export type {
   DeleteOverrideVariables,
   LocalizationAdminOptions,
   SetOverrideVariables,
   ToggleLanguageVariables,
-} from './hooks/use-admin-localization.js';
+} from './hooks/use-admin-localization';
 
 // Hooks — Date formatting
-export { useDateLocale } from './date-locale.js';
-export { useDateFormatter } from './use-date-formatter.js';
+export { useDateLocale } from './date-locale';
+export { useDateFormatter } from './use-date-formatter';
 
 // Hooks — Timezone
-export { TimezoneProvider, useTimezone } from './use-timezone.js';
+export { TimezoneProvider, useTimezone } from './use-timezone';
 
 // Re-export from react-i18next so apps import everything from @granit/react-localization.
 export { I18nextProvider, Trans } from 'react-i18next';
 
 // Custom useTranslation wrapper that auto-applies standard separators for
 // custom namespaces when the app disables them globally. See use-translation.ts.
-export { useTranslation } from './use-translation.js';
+export { useTranslation } from './use-translation';

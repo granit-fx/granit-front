@@ -4,10 +4,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useImportJobs } from '../../import/hooks/use-import-jobs.js';
-import { ImportProvider } from '../../import/providers/import-provider.js';
+import { useImportJobs } from '../../import/hooks/use-import-jobs';
+import { ImportProvider } from '../../import/providers/import-provider';
 
-import type { ImportConfig } from '../../import/providers/import-provider.js';
+import type { ImportConfig } from '../../import/providers/import-provider';
 import type { ReactNode } from 'react';
 
 const mockClient = axios.create();

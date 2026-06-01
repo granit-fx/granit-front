@@ -1,7 +1,7 @@
 import { SpanStatusCode, context, trace } from '@opentelemetry/api';
 import * as React from 'react';
 
-import { useTracingConfig } from '../providers/tracing-provider.js';
+import { useTracingConfig } from '../providers/tracing-provider';
 
 import type { Span, SpanOptions } from '@opentelemetry/api';
 

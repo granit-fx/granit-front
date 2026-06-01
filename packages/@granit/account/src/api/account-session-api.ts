@@ -1,4 +1,4 @@
-import type { AccountImpersonationResult } from '../types/index.js';
+import type { AccountImpersonationResult } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

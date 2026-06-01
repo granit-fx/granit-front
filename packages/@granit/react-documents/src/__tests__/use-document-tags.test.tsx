@@ -8,8 +8,8 @@ import {
   useAssignDocumentTag,
   useDocumentTagsList,
   useUnassignDocumentTag,
-} from '../hooks/use-document-tags.js';
-import { DocumentsProvider } from '../providers/documents-provider.js';
+} from '../hooks/use-document-tags';
+import { DocumentsProvider } from '../providers/documents-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type {

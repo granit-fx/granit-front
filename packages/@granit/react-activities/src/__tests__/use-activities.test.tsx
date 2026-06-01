@@ -5,8 +5,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useActivities, useActivitiesCalendar, useActivity } from '../hooks/use-activities.js';
-import { ActivitiesProvider } from '../providers/activities-provider.js';
+import { useActivities, useActivitiesCalendar, useActivity } from '../hooks/use-activities';
+import { ActivitiesProvider } from '../providers/activities-provider';
 
 import type {
   ActivityCalendarItemResponse,

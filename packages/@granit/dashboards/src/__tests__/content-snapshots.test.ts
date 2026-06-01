@@ -4,15 +4,15 @@ import {
   isImageSnapshotEnvelope,
   isMarkdownSnapshotEnvelope,
   isTextSnapshotEnvelope,
-} from '../rendering/index.js';
+} from '../rendering/index';
 
 import type {
   ImageSnapshotEnvelope,
   MarkdownSnapshotEnvelope,
   TextSnapshotEnvelope,
   WidgetSnapshotEnvelope,
-} from '../rendering/index.js';
-import type { ImageFit } from '../types/widget-definition.js';
+} from '../rendering/index';
+import type { ImageFit } from '../types/widget-definition';
 
 // Pinned wire-format fixtures mirroring B3-3 backend output:
 //   - Granit.Dashboards.Endpoints.Rendering.MarkdownWidgetInstanceRenderer

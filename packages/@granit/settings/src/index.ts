@@ -11,10 +11,10 @@ export type {
   SettingValueResponse,
   SettingsMap,
   UpdateSettingValueRequest,
-} from './types/index.js';
+} from './types/index';
 
 // Constants
-export { SETTING_NAMES } from './constants.js';
+export { SETTING_NAMES } from './constants';
 
 // API
 export {
@@ -24,6 +24,6 @@ export {
   getSettings,
   saveAdminAppSettings,
   updateSetting,
-} from './api/settings-api.js';
-export type { AdminSettingsScope } from './api/settings-api.js';
-export { SettingsPermissions } from './permissions.js';
+} from './api/settings-api';
+export type { AdminSettingsScope } from './api/settings-api';
+export { SettingsPermissions } from './permissions';

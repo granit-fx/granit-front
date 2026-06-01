@@ -10,7 +10,7 @@ import {
 } from '@granit/metering';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildMeteringQueryKey, useMeteringConfig } from '../providers/metering-provider.js';
+import { buildMeteringQueryKey, useMeteringConfig } from '../providers/metering-provider';
 
 import type {
   MeterDefinitionCreateRequest,

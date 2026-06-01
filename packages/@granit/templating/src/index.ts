@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------
 
 // Types
-export { DocumentFormat, TemplateLifecycleStatus } from './types/index.js';
+export { DocumentFormat, TemplateLifecycleStatus } from './types/index';
 
 export type {
   DocumentFormatValue,
@@ -27,7 +27,7 @@ export type {
   TemplateVariable,
   TemplateVariables,
   TemplatingConfig,
-} from './types/index.js';
+} from './types/index';
 
 // Query keys (for advanced usage / custom queries)
 
@@ -51,5 +51,5 @@ export {
   unpublishTemplate,
   updateCategory,
   updateDraft,
-} from './api/templates-api.js';
-export { TemplatingPermissions } from './permissions.js';
+} from './api/templates-api';
+export { TemplatingPermissions } from './permissions';

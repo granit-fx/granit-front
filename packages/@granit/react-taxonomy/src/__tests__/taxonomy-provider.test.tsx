@@ -6,9 +6,9 @@ import {
   buildTaxonomyQueryKey,
   TaxonomyProvider,
   useTaxonomyConfig,
-} from '../providers/taxonomy-provider.js';
+} from '../providers/taxonomy-provider';
 
-import type { TaxonomyConfig } from '../providers/taxonomy-provider.js';
+import type { TaxonomyConfig } from '../providers/taxonomy-provider';
 import type { ReactNode } from 'react';
 
 describe('TaxonomyProvider', () => {

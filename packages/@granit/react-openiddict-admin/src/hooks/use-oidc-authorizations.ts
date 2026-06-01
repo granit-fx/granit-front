@@ -5,7 +5,7 @@ import {
 } from '@granit/openiddict-admin';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildAdminQueryKey, useAdminConfig } from '../providers/openiddict-admin-provider.js';
+import { buildAdminQueryKey, useAdminConfig } from '../providers/openiddict-admin-provider';
 
 import type {
   AdminOidcAuthorization,

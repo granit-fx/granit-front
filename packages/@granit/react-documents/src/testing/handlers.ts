@@ -11,7 +11,7 @@ import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { noContent, notFound, parseFilters, parseSort } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
 import {
   DOC_TRASH_OK_ID,
@@ -23,8 +23,8 @@ import {
   mockSharesData,
   mockTrashedDocumentsData,
   mockVersionsData,
-} from './data.js';
-import { documentQueryMetadata } from './query-meta.js';
+} from './data';
+import { documentQueryMetadata } from './query-meta';
 
 import type {
   AppendVersionRequest,

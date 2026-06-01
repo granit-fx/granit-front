@@ -1,4 +1,4 @@
-import type { WorkflowTransition } from './transition.js';
+import type { WorkflowTransition } from './transition';
 
 /** Current workflow status of an entity. */
 export interface WorkflowStatus {

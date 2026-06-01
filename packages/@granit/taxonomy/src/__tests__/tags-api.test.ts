@@ -9,7 +9,7 @@ import {
   listTags,
   unassignTag,
   updateTag,
-} from '../api/tags-api.js';
+} from '../api/tags-api';
 
 import type {
   CreateTagRequest,
@@ -17,7 +17,7 @@ import type {
   TagAssignmentResponse,
   TagResponse,
   UpdateTagRequest,
-} from '../types/index.js';
+} from '../types/index';
 
 const basePath = '/api/v1/taxonomy';
 

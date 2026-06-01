@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
-import { useDashboardContext } from './dashboard-context.js';
-import { useDashboardView } from './dashboard-view-context.js';
+import { useDashboardContext } from './dashboard-context';
+import { useDashboardView } from './dashboard-view-context';
 
 import type { DashboardView } from '@granit/dashboards';
 

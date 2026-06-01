@@ -1,9 +1,9 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { DEFAULT_DIAGNOSTICS_BASE_PATH, getMonitoringHealth } from '../api/diagnostics-api.js';
+import { DEFAULT_DIAGNOSTICS_BASE_PATH, getMonitoringHealth } from '../api/diagnostics-api';
 
-import type { MonitoringHealthResponse } from '../types/index.js';
+import type { MonitoringHealthResponse } from '../types/index';
 
 const BASE = DEFAULT_DIAGNOSTICS_BASE_PATH;
 

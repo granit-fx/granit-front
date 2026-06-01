@@ -13,11 +13,11 @@ export {
   resyncDashboard,
   updateDashboardMetadata,
   updateWidget,
-} from './dashboards-api.js';
+} from './dashboards-api';
 export type {
   DashboardListParams,
   DashboardsRequestOptions,
   WidgetRenderBody,
   WidgetRenderContextPayload,
   WidgetRenderKind,
-} from './dashboards-api.js';
+} from './dashboards-api';

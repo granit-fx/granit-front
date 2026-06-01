@@ -8,11 +8,11 @@ import * as React from 'react';
 import { initReactI18next, I18nextProvider } from 'react-i18next';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { MergeWizard } from '../components/merge-wizard.js';
-import { partiesTranslationsEn } from '../locales/en.js';
-import { PartiesProvider } from '../providers/parties-provider.js';
+import { MergeWizard } from '../components/merge-wizard';
+import { partiesTranslationsEn } from '../locales/en';
+import { PartiesProvider } from '../providers/parties-provider';
 
-import type { PartiesConfig } from '../providers/parties-provider.js';
+import type { PartiesConfig } from '../providers/parties-provider';
 import type { PartyEmailId, PartyId, PartyMergeResponse, PartyResponse } from '@granit/parties';
 import type { AxiosError, AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

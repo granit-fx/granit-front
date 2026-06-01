@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
 import { TaxonomySearchBar } from '../components/taxonomy-search-bar.tsx';
-import { TaxonomyProvider } from '../providers/taxonomy-provider.js';
+import { TaxonomyProvider } from '../providers/taxonomy-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { TaxonomySearchResultGroup } from '@granit/taxonomy';

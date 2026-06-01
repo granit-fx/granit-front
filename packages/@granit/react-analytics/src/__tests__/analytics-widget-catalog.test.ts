@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { analyticsWidgetCatalog } from '../editor/analytics-widget-catalog.js';
+import { analyticsWidgetCatalog } from '../editor/analytics-widget-catalog';
 
 describe('analyticsWidgetCatalog', () => {
   it('ships entries for the four analytics widget kinds (kpi / chart / table / pivot)', () => {

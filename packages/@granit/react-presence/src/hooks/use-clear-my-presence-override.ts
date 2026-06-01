@@ -1,9 +1,9 @@
 import { clearMyPresenceOverride } from '@granit/presence';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { buildPresenceQueryKey, usePresenceConfig } from '../providers/presence-provider.js';
+import { buildPresenceQueryKey, usePresenceConfig } from '../providers/presence-provider';
 
-import { presenceKeys } from './query-keys.js';
+import { presenceKeys } from './query-keys';
 
 import type { PresenceResponse } from '@granit/presence';
 import type { UseMutationResult } from '@tanstack/react-query';

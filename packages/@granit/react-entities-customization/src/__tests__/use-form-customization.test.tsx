@@ -5,8 +5,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useFormCustomization, usePutFormCustomization } from '../hooks/use-form-customization.js';
-import { CustomizationProvider } from '../providers/customization-provider.js';
+import { useFormCustomization, usePutFormCustomization } from '../hooks/use-form-customization';
+import { CustomizationProvider } from '../providers/customization-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { FormCustomizationResponse } from '@granit/entities-customization';

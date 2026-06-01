@@ -8,7 +8,7 @@ import {
   getExportFields,
   listExportJobs,
   getExportJobStatus,
-} from '../../export/api/export-api.js';
+} from '../../export/api/export-api';
 
 const BASE = '/api/v1/data-exchange';
 

@@ -7,11 +7,11 @@ import i18next from 'i18next';
 import { initReactI18next, I18nextProvider } from 'react-i18next';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { DuplicatesInbox } from '../components/duplicates-inbox.js';
-import { partiesTranslationsEn } from '../locales/en.js';
-import { PartiesProvider } from '../providers/parties-provider.js';
+import { DuplicatesInbox } from '../components/duplicates-inbox';
+import { partiesTranslationsEn } from '../locales/en';
+import { PartiesProvider } from '../providers/parties-provider';
 
-import type { PartiesConfig } from '../providers/parties-provider.js';
+import type { PartiesConfig } from '../providers/parties-provider';
 import type {
   PartyDuplicateCandidateId,
   PartyDuplicateCandidateResponse,

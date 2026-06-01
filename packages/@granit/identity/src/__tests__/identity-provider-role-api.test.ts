@@ -8,9 +8,9 @@ import {
   listRoles,
   listUserRoles,
   removeRole,
-} from '../api/identity-provider-role-api.js';
+} from '../api/identity-provider-role-api';
 
-import type { IdentityRole, IdentityUser } from '../types/index.js';
+import type { IdentityRole, IdentityUser } from '../types/index';
 
 const sampleRole: IdentityRole = {
   id: toEntityId<'IdentityRole'>('role-1'),

@@ -1,7 +1,7 @@
 import { getApplicationLocalization } from '@granit/localization';
 import { useQuery } from '@tanstack/react-query';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { ApplicationLocalizationDto } from '@granit/localization';

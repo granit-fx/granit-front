@@ -2,7 +2,7 @@ import { TimelineEntryType } from '@granit/timeline';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useTimelineActions } from '../hooks/use-timeline-actions.js';
+import { useTimelineActions } from '../hooks/use-timeline-actions';
 
 import { axiosResponse, createMockClient, createWrapper } from './test-utils.tsx';
 

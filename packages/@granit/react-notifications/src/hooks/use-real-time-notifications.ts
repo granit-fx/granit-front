@@ -1,4 +1,4 @@
-import { useNotificationConfig } from '../providers/notification-provider.js';
+import { useNotificationConfig } from '../providers/notification-provider';
 
 import type { ConnectionState, NotificationTransportMessage } from '@granit/notifications';
 

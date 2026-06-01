@@ -1,4 +1,4 @@
-import type { EntityListLayoutManifest } from './layouts.js';
+import type { EntityListLayoutManifest } from './layouts';
 
 /**
  * Reference to one external declarative primitive (Query / Export / Metric /

@@ -15,10 +15,10 @@ export type {
   PrivacyExportRequestResponse,
   PrivacyExportStatus,
   PrivacyExportStatusResponse,
-} from './types/index.js';
+} from './types/index';
 
 // API — Data export
-export { getExportStatus, listExports, requestExport } from './api/privacy-api.js';
+export { getExportStatus, listExports, requestExport } from './api/privacy-api';
 
 // API — Data deletion
 export {
@@ -26,7 +26,7 @@ export {
   getDeletionStatus,
   listDeletions,
   requestDeletion,
-} from './api/privacy-api.js';
+} from './api/privacy-api';
 
 // API — Legal agreements
 export {
@@ -34,7 +34,7 @@ export {
   getAgreementDocuments,
   getAgreementHistory,
   getAgreementStatuses,
-} from './api/privacy-api.js';
+} from './api/privacy-api';
 
 // API — Legal document admin
 export {
@@ -43,5 +43,5 @@ export {
   listLegalDocuments,
   publishLegalDocument,
   updateLegalDocument,
-} from './api/privacy-api.js';
-export { PrivacyPermissions } from './permissions.js';
+} from './api/privacy-api';
+export { PrivacyPermissions } from './permissions';

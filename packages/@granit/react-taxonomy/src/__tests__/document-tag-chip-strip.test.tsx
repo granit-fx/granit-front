@@ -4,7 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { DocumentTagChipStrip } from '../components/document-tag-chip-strip.tsx';
-import { TaxonomyProvider } from '../providers/taxonomy-provider.js';
+import { TaxonomyProvider } from '../providers/taxonomy-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { TagResponse } from '@granit/taxonomy';

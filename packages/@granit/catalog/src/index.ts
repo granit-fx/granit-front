@@ -13,7 +13,7 @@ export type {
   ProductResponse,
   ProductUpdateRequest,
   UpdateProductMetadataRequest,
-} from './types/index.js';
+} from './types/index';
 
 export {
   addProductExternalMapping,
@@ -26,6 +26,6 @@ export {
   removeProductExternalMapping,
   updateProduct,
   updateProductMetadata,
-} from './api/products-api.js';
+} from './api/products-api';
 
-export { CatalogPermissions } from './permissions.js';
+export { CatalogPermissions } from './permissions';

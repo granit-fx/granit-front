@@ -8,9 +8,9 @@ import {
   listProviderUsers,
   setUserEnabled,
   updateUser,
-} from '../api/identity-provider-user-api.js';
+} from '../api/identity-provider-user-api';
 
-import type { IdentityUser } from '../types/index.js';
+import type { IdentityUser } from '../types/index';
 
 const sampleUser: IdentityUser = {
   userId: toEntityId<'User'>('user-1'),

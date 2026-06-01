@@ -1,4 +1,4 @@
-import type { TenantInfo } from '../types/index.js';
+import type { TenantInfo } from '../types/index';
 
 /**
  * Synchronous tenant resolver.

@@ -8,8 +8,8 @@ import {
   useDocumentDownloadUrl,
   useDocumentVersions,
   useTrashedDocuments,
-} from '../hooks/use-documents.js';
-import { DocumentsProvider } from '../providers/documents-provider.js';
+} from '../hooks/use-documents';
+import { DocumentsProvider } from '../providers/documents-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type {

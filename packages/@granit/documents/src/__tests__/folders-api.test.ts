@@ -11,7 +11,7 @@ import {
   restoreFolder,
   transferFolderOwner,
   trashFolder,
-} from '../api/folders-api.js';
+} from '../api/folders-api';
 
 import type {
   CreateFolderRequest,
@@ -19,7 +19,7 @@ import type {
   FolderResponse,
   ListFoldersResponse,
   MoveFolderRequest,
-} from '../types/index.js';
+} from '../types/index';
 
 const basePath = '/api/v1/documents';
 

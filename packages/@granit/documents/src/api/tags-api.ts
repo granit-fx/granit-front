@@ -1,4 +1,4 @@
-import type { DocumentTagAssignmentResponse, ListDocumentTagsResponse } from '../types/index.js';
+import type { DocumentTagAssignmentResponse, ListDocumentTagsResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

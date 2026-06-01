@@ -1,7 +1,7 @@
 import { deleteExportPreset, listExportPresets, saveExportPreset } from '@granit/data-exchange';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildExportQueryKey, useExportConfig } from '../providers/export-provider.js';
+import { buildExportQueryKey, useExportConfig } from '../providers/export-provider';
 
 import type { ExportPresetResponse, SaveExportPresetRequest } from '@granit/data-exchange';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';

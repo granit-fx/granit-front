@@ -420,6 +420,40 @@
           "name": "scanSharedDepVersions",
           "kind": "function",
           "signature": "function scanSharedDepVersions(opts: SharedDepVersionsOptions): Violation[]"
+        },
+        {
+          "name": "ReadmePresenceOptions",
+          "kind": "interface",
+          "signature": "interface ReadmePresenceOptions extends AllowlistedScanContext",
+          "members": [
+            {
+              "name": "expectedHeading",
+              "kind": "method",
+              "signature": "expectedHeading?: (moduleName: string) => string"
+            }
+          ]
+        },
+        {
+          "name": "SharedDepVersionsOptions",
+          "kind": "interface",
+          "signature": "interface SharedDepVersionsOptions extends ScanContext",
+          "members": [
+            {
+              "name": "deps",
+              "kind": "property",
+              "signature": "deps: ReadonlyArray<string>"
+            },
+            {
+              "name": "packageJsonPath",
+              "kind": "method",
+              "signature": "packageJsonPath?: (m: { dir: string }) => string"
+            },
+            {
+              "name": "sections",
+              "kind": "property",
+              "signature": "sections?: ReadonlyArray<'dependencies' | 'peerDependencies' | 'devDependencies'>"
+            }
+          ]
         }
       ]
     },
@@ -447,7 +481,146 @@
     {
       "name": "@granit/authentication",
       "description": "Provider-agnostic OIDC authentication types — base context, user info, login/logout options",
-      "exports": []
+      "exports": [
+        {
+          "name": "BaseAuthContextType",
+          "kind": "interface",
+          "signature": "interface BaseAuthContextType",
+          "members": [
+            {
+              "name": "authenticated",
+              "kind": "property",
+              "signature": "authenticated: boolean"
+            },
+            {
+              "name": "loading",
+              "kind": "property",
+              "signature": "loading: boolean"
+            },
+            {
+              "name": "user",
+              "kind": "property",
+              "signature": "user: OidcUserInfo | null"
+            },
+            {
+              "name": "login",
+              "kind": "method",
+              "signature": "login: (options?: LoginOptions) => void"
+            },
+            {
+              "name": "logout",
+              "kind": "method",
+              "signature": "logout: (options?: LogoutOptions) => void"
+            }
+          ]
+        },
+        {
+          "name": "LoginOptions",
+          "kind": "interface",
+          "signature": "interface LoginOptions",
+          "members": [
+            {
+              "name": "redirectUri",
+              "kind": "property",
+              "signature": "redirectUri?: string"
+            },
+            {
+              "name": "idpHint",
+              "kind": "property",
+              "signature": "idpHint?: string"
+            },
+            {
+              "name": "loginHint",
+              "kind": "property",
+              "signature": "loginHint?: string"
+            },
+            {
+              "name": "locale",
+              "kind": "property",
+              "signature": "locale?: string"
+            },
+            {
+              "name": "action",
+              "kind": "property",
+              "signature": "action?: string"
+            },
+            {
+              "name": "prompt",
+              "kind": "property",
+              "signature": "prompt?: 'login' | 'consent' | 'none'"
+            },
+            {
+              "name": "scope",
+              "kind": "property",
+              "signature": "scope?: string"
+            },
+            {
+              "name": "maxAge",
+              "kind": "property",
+              "signature": "maxAge?: number"
+            }
+          ]
+        },
+        {
+          "name": "LogoutOptions",
+          "kind": "interface",
+          "signature": "interface LogoutOptions",
+          "members": [
+            {
+              "name": "redirectUri",
+              "kind": "property",
+              "signature": "redirectUri?: string"
+            }
+          ]
+        },
+        {
+          "name": "OidcUserInfo",
+          "kind": "interface",
+          "signature": "interface OidcUserInfo",
+          "members": [
+            {
+              "name": "sub",
+              "kind": "property",
+              "signature": "sub: string"
+            },
+            {
+              "name": "email",
+              "kind": "property",
+              "signature": "email?: string"
+            },
+            {
+              "name": "email_verified",
+              "kind": "property",
+              "signature": "email_verified?: boolean"
+            },
+            {
+              "name": "name",
+              "kind": "property",
+              "signature": "name?: string"
+            },
+            {
+              "name": "preferred_username",
+              "kind": "property",
+              "signature": "preferred_username?: string"
+            },
+            {
+              "name": "given_name",
+              "kind": "property",
+              "signature": "given_name?: string"
+            },
+            {
+              "name": "family_name",
+              "kind": "property",
+              "signature": "family_name?: string"
+            },
+            {
+              "name": "picture",
+              "kind": "property",
+              "signature": "picture?: string"
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "@granit/authentication-api-keys",
@@ -1387,6 +1560,24 @@
           "members": []
         },
         {
+          "name": "AdminTenant",
+          "kind": "interface",
+          "signature": "interface AdminTenant",
+          "members": []
+        },
+        {
+          "name": "CreateTenantRequest",
+          "kind": "interface",
+          "signature": "interface CreateTenantRequest",
+          "members": []
+        },
+        {
+          "name": "UpdateTenantRequest",
+          "kind": "interface",
+          "signature": "interface UpdateTenantRequest",
+          "members": []
+        },
+        {
           "name": "DEFAULT_MULTI_TENANCY_OPTIONS",
           "kind": "const",
           "signature": "const DEFAULT_MULTI_TENANCY_OPTIONS: Required<MultiTenancyOptions>"
@@ -1553,26 +1744,6 @@
       "name": "@granit/payments",
       "description": "Payment processing — charges, refunds, checkout, and payment methods types and API functions",
       "exports": [
-        {
-          "name": "DisputeStatus",
-          "kind": "type",
-          "signature": "type DisputeStatus = 'Open' | 'UnderReview' | 'Won' | 'Lost'"
-        },
-        {
-          "name": "PaymentMethodCategory",
-          "kind": "type",
-          "signature": "type PaymentMethodCategory = 'Card' | 'BankTransfer' | 'Wallet' | 'DirectDebit'"
-        },
-        {
-          "name": "PaymentStatus",
-          "kind": "type",
-          "signature": "type PaymentStatus ="
-        },
-        {
-          "name": "RefundStatus",
-          "kind": "type",
-          "signature": "type RefundStatus = 'Pending' | 'Succeeded' | 'Failed'"
-        },
         {
           "name": "PaymentsPermissions",
           "kind": "const",
@@ -1749,17 +1920,17 @@
         {
           "name": "useChangePassword",
           "kind": "function",
-          "signature": "function useChangePassword(): UseMutationResult< void, Error, AccountPasswordChangeRequest >"
+          "signature": "function useChangePassword(): UseMutationResult<void, Error, AccountPasswordChangeRequest>"
         },
         {
           "name": "useForgotPassword",
           "kind": "function",
-          "signature": "function useForgotPassword(): UseMutationResult< void, Error, AccountForgotPasswordRequest >"
+          "signature": "function useForgotPassword(): UseMutationResult<void, Error, AccountForgotPasswordRequest>"
         },
         {
           "name": "useResetPassword",
           "kind": "function",
-          "signature": "function useResetPassword(): UseMutationResult< void, Error, AccountPasswordResetRequest >"
+          "signature": "function useResetPassword(): UseMutationResult<void, Error, AccountPasswordResetRequest>"
         },
         {
           "name": "RenamePasskeyVariables",
@@ -1892,6 +2063,16 @@
           "kind": "interface",
           "signature": "interface ActivitiesSidePanelContributionOptions",
           "members": []
+        },
+        {
+          "name": "ActivityNotificationAction",
+          "kind": "type",
+          "signature": "type ActivityNotificationAction ="
+        },
+        {
+          "name": "ActivityNotificationType",
+          "kind": "type",
+          "signature": "type ActivityNotificationType ="
         },
         {
           "name": "ActivityNotificationLike",
@@ -2636,6 +2817,16 @@
       "description": "React hooks for blob storage — useBlob, useInitiateUpload, useConfirmUpload, useBlobUpload, useDownloadUrl, useDeleteBlob",
       "exports": [
         {
+          "name": "BlobStorageProvider",
+          "kind": "function",
+          "signature": "function BlobStorageProvider("
+        },
+        {
+          "name": "useBlobStorageConfig",
+          "kind": "function",
+          "signature": "function useBlobStorageConfig(): ResolvedBlobStorageConfig"
+        },
+        {
           "name": "BlobImage",
           "kind": "function",
           "signature": "function BlobImage("
@@ -2660,7 +2851,7 @@
         {
           "name": "useBlob",
           "kind": "function",
-          "signature": "function useBlob( id: string, containerName: string ): UseQueryResult<BlobDescriptorResponse>"
+          "signature": "function useBlob(id: string, containerName: string): UseQueryResult<BlobDescriptorResponse>"
         },
         {
           "name": "useConfirmUpload",
@@ -2691,6 +2882,23 @@
           "name": "useBlobUpload",
           "kind": "function",
           "signature": "function useBlobUpload(): UseBlobUploadReturn"
+        },
+        {
+          "name": "BlobUploadParams",
+          "kind": "interface",
+          "signature": "interface BlobUploadParams",
+          "members": []
+        },
+        {
+          "name": "BlobUploadPhase",
+          "kind": "type",
+          "signature": "type BlobUploadPhase ="
+        },
+        {
+          "name": "BlobUploadState",
+          "kind": "interface",
+          "signature": "interface BlobUploadState",
+          "members": []
         },
         {
           "name": "blobStorageKeys",
@@ -3063,6 +3271,16 @@
       "description": "React renderer for @granit/dashboards — Dashboard layout component, WidgetRegistry provider, and built-in renderers for Markdown / Image / Text widgets",
       "exports": [
         {
+          "name": "DashboardsProvider",
+          "kind": "function",
+          "signature": "function DashboardsProvider("
+        },
+        {
+          "name": "useDashboardsConfig",
+          "kind": "function",
+          "signature": "function useDashboardsConfig(): ResolvedDashboardsConfig"
+        },
+        {
           "name": "UseDashboardRenderOptions",
           "kind": "interface",
           "signature": "interface UseDashboardRenderOptions",
@@ -3228,6 +3446,16 @@
           "name": "mergeFilterValuesIntoRequest",
           "kind": "function",
           "signature": "function mergeFilterValuesIntoRequest( request: DashboardRenderRequest, values: DashboardFilterValues | null | undefined ): DashboardRenderRequest"
+        },
+        {
+          "name": "DashboardAliasProvider",
+          "kind": "function",
+          "signature": "function DashboardAliasProvider("
+        },
+        {
+          "name": "useDashboardAliases",
+          "kind": "function",
+          "signature": "function useDashboardAliases(): DashboardAliasValues | null"
         },
         {
           "name": "AliasResolutionContext",
@@ -3498,21 +3726,6 @@
       "description": "React hooks for monitoring health — useMonitoringHealth",
       "exports": [
         {
-          "name": "buildDiagnosticsQueryKey",
-          "kind": "function",
-          "signature": "function buildDiagnosticsQueryKey( config: Pick<MonitoringHealthOptions, 'queryKeyPrefix'>, ...segments: readonly unknown[] ): readonly unknown[]"
-        },
-        {
-          "name": "diagnosticsKeys",
-          "kind": "const",
-          "signature": "const diagnosticsKeys"
-        },
-        {
-          "name": "useMonitoringHealth",
-          "kind": "function",
-          "signature": "function useMonitoringHealth( options: MonitoringHealthOptions ): UseQueryResult<MonitoringHealthResponse>"
-        },
-        {
           "name": "MonitoringHealthOptions",
           "kind": "interface",
           "signature": "interface MonitoringHealthOptions",
@@ -3630,6 +3843,18 @@
           "signature": "function DocumentsToolbar("
         },
         {
+          "name": "DocumentsToolbarLabels",
+          "kind": "interface",
+          "signature": "interface DocumentsToolbarLabels",
+          "members": []
+        },
+        {
+          "name": "DocumentsToolbarProps",
+          "kind": "interface",
+          "signature": "interface DocumentsToolbarProps",
+          "members": []
+        },
+        {
           "name": "InlineEdit",
           "kind": "function",
           "signature": "function InlineEdit("
@@ -3670,6 +3895,18 @@
           "name": "FolderBreadcrumb",
           "kind": "function",
           "signature": "function FolderBreadcrumb("
+        },
+        {
+          "name": "FolderBreadcrumbLabels",
+          "kind": "interface",
+          "signature": "interface FolderBreadcrumbLabels",
+          "members": []
+        },
+        {
+          "name": "FolderBreadcrumbProps",
+          "kind": "interface",
+          "signature": "interface FolderBreadcrumbProps",
+          "members": []
         },
         {
           "name": "FolderTree",
@@ -3792,6 +4029,18 @@
           "name": "VersionsTimeline",
           "kind": "function",
           "signature": "function VersionsTimeline("
+        },
+        {
+          "name": "VersionsTimelineLabels",
+          "kind": "interface",
+          "signature": "interface VersionsTimelineLabels",
+          "members": []
+        },
+        {
+          "name": "VersionsTimelineProps",
+          "kind": "interface",
+          "signature": "interface VersionsTimelineProps",
+          "members": []
         },
         {
           "name": "formatBytes",
@@ -4843,6 +5092,18 @@
           "name": "useWebPushConfig",
           "kind": "function",
           "signature": "function useWebPushConfig(): WebPushProviderConfig"
+        },
+        {
+          "name": "WebPushProviderConfig",
+          "kind": "interface",
+          "signature": "interface WebPushProviderConfig",
+          "members": []
+        },
+        {
+          "name": "WebPushProviderProps",
+          "kind": "interface",
+          "signature": "interface WebPushProviderProps",
+          "members": []
         }
       ]
     },
@@ -5175,6 +5436,28 @@
           "signature": "function useQueryEndpoint<T>(options?: UseQueryEndpointOptions): UseQueryEndpointReturn<T>"
         },
         {
+          "name": "UseQueryEndpointOptions",
+          "kind": "interface",
+          "signature": "interface UseQueryEndpointOptions",
+          "members": []
+        },
+        {
+          "name": "UseQueryEndpointReturn",
+          "kind": "interface",
+          "signature": "interface UseQueryEndpointReturn<T> extends QueryEndpointDispatchers",
+          "members": []
+        },
+        {
+          "name": "DEFAULT_QUERY_PARAMS",
+          "kind": "const",
+          "signature": "const DEFAULT_QUERY_PARAMS: QueryRequest"
+        },
+        {
+          "name": "useQueryEndpointReducer",
+          "kind": "function",
+          "signature": "function useQueryEndpointReducer(initialParams?: QueryRequest): QueryEndpointState"
+        },
+        {
           "name": "useQueryMeta",
           "kind": "function",
           "signature": "function useQueryMeta(): UseQueryResult<QueryMetadata>"
@@ -5235,6 +5518,16 @@
       "description": "React hooks for scheduled action management — useScheduledActions, useCancelScheduledAction, useRescheduleScheduledAction",
       "exports": [
         {
+          "name": "SchedulingProvider",
+          "kind": "function",
+          "signature": "function SchedulingProvider("
+        },
+        {
+          "name": "useSchedulingConfig",
+          "kind": "function",
+          "signature": "function useSchedulingConfig(): ResolvedSchedulingConfig"
+        },
+        {
           "name": "SchedulingConfig",
           "kind": "interface",
           "signature": "interface SchedulingConfig",
@@ -5244,6 +5537,18 @@
           "name": "SchedulingProviderProps",
           "kind": "interface",
           "signature": "interface SchedulingProviderProps",
+          "members": []
+        },
+        {
+          "name": "RescheduleVariables",
+          "kind": "interface",
+          "signature": "interface RescheduleVariables",
+          "members": []
+        },
+        {
+          "name": "SchedulingListOptions",
+          "kind": "interface",
+          "signature": "interface SchedulingListOptions",
           "members": []
         }
       ]
@@ -5669,6 +5974,18 @@
       "description": "React bindings for @granit/timeline — TimelineProvider, useTimeline, useTimelineActions, useTimelineFollowers",
       "exports": [
         {
+          "name": "TimelineProviderConfig",
+          "kind": "interface",
+          "signature": "interface TimelineProviderConfig",
+          "members": []
+        },
+        {
+          "name": "TimelineProviderProps",
+          "kind": "interface",
+          "signature": "interface TimelineProviderProps",
+          "members": []
+        },
+        {
           "name": "useTimeline",
           "kind": "function",
           "signature": "function useTimeline("
@@ -5775,12 +6092,24 @@
         {
           "name": "useAnchorEntry",
           "kind": "function",
-          "signature": "function useAnchorEntry(): UseMutationResult< TimelineEntryId, Error, AnchorEntryVariables >"
+          "signature": "function useAnchorEntry(): UseMutationResult<TimelineEntryId, Error, AnchorEntryVariables>"
         },
         {
           "name": "useUpdateEntryBody",
           "kind": "function",
-          "signature": "function useUpdateEntryBody(): UseMutationResult< void, Error, UpdateEntryBodyVariables >"
+          "signature": "function useUpdateEntryBody(): UseMutationResult<void, Error, UpdateEntryBodyVariables>"
+        },
+        {
+          "name": "AnchorEntryVariables",
+          "kind": "interface",
+          "signature": "interface AnchorEntryVariables",
+          "members": []
+        },
+        {
+          "name": "UpdateEntryBodyVariables",
+          "kind": "interface",
+          "signature": "interface UpdateEntryBodyVariables",
+          "members": []
         },
         {
           "name": "ToggleReactionVariables",
@@ -6012,6 +6341,21 @@
       "name": "@granit/react-workspaces",
       "description": "React renderer for @granit/workspaces — WorkspaceNav sidebar, /w/{workspace}/... routing, Notion-style SidePeek with ⌘+⇧+. expand, and the landing-route resolver hook",
       "exports": [
+        {
+          "name": "landingRouteQueryKey",
+          "kind": "const",
+          "signature": "const landingRouteQueryKey"
+        },
+        {
+          "name": "useLandingRoute",
+          "kind": "function",
+          "signature": "function useLandingRoute( options:"
+        },
+        {
+          "name": "useSetLandingPin",
+          "kind": "function",
+          "signature": "function useSetLandingPin(): UseMutationResult<void, Error, SetPinnedLandingRouteRequest>"
+        },
         {
           "name": "useWorkspaces",
           "kind": "function",
@@ -6441,6 +6785,21 @@
       "name": "@granit/workflow",
       "description": "Workflow lifecycle hooks (status, transitions, history)",
       "exports": [
+        {
+          "name": "executeStateMachineTransition",
+          "kind": "function",
+          "signature": "async function executeStateMachineTransition( client: AxiosInstance, basePath: string, currentState: string, request: WorkflowTransitionRequest ): Promise<WorkflowTransitionResult>"
+        },
+        {
+          "name": "getHistory",
+          "kind": "function",
+          "signature": "async function getHistory( client: AxiosInstance, basePath: string, entityType: string, entityId: string, params: PaginationParams ="
+        },
+        {
+          "name": "listTransitions",
+          "kind": "function",
+          "signature": "async function listTransitions( client: AxiosInstance, basePath: string, currentState: string ): Promise<WorkflowStatus>"
+        },
         {
           "name": "WorkflowHistoryPage",
           "kind": "type",

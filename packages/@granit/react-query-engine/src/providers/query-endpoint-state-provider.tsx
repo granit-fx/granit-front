@@ -17,7 +17,7 @@ import {
   DEFAULT_QUERY_PARAMS,
   useQueryEndpointReducer,
   type QueryEndpointState,
-} from '../hooks/use-query-endpoint-reducer.js';
+} from '../hooks/use-query-endpoint-reducer';
 
 import type { QueryRequest } from '@granit/query-engine';
 

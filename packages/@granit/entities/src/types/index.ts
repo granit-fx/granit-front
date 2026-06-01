@@ -1,29 +1,29 @@
-export type { EntityActionKind, EntityActionManifest } from './actions.js';
-export type { BulkActionFailure, BulkActionRequest, BulkActionResponse } from './bulk.js';
+export type { EntityActionKind, EntityActionManifest } from './actions';
+export type { BulkActionFailure, BulkActionRequest, BulkActionResponse } from './bulk';
 export type {
   EntityCollectionReference,
   EntityCollectionsSection,
   EntityHeaderActionManifest,
   EntitySelectionActionManifest,
-} from './collections.js';
+} from './collections';
 export type {
   EntityDetailManifest,
   EntityDetailSectionManifest,
   EntityDetailSidePanelManifest,
   SidePanelKind,
-} from './detail.js';
+} from './detail';
 export type {
   EntityDiscoveryItem,
   EntityDiscoveryLinks,
   EntityDiscoveryResponse,
   EntityModuleGroup,
-} from './discovery.js';
+} from './discovery';
 export type {
   EntityFormFieldManifest,
   EntityFormManifest,
   EntityFormSectionManifest,
-} from './form.js';
-export type { EntityIdentitySection } from './identity.js';
+} from './form';
+export type { EntityIdentitySection } from './identity';
 export type {
   CalendarItemResponse,
   CalendarRangeRequest,
@@ -41,10 +41,10 @@ export type {
   GalleryCardSize,
   KanbanColor,
   KanbanColumnState,
-} from './layouts.js';
-export { ALL_ENTITY_FACETS, MANIFEST_SCHEMA_VERSION } from './manifest.js';
-export type { EntityFacet, EntityManifestResponse } from './manifest.js';
-export type { EntityPermissionsSection } from './permissions.js';
+} from './layouts';
+export { ALL_ENTITY_FACETS, MANIFEST_SCHEMA_VERSION } from './manifest';
+export type { EntityFacet, EntityManifestResponse } from './manifest';
+export type { EntityPermissionsSection } from './permissions';
 export type {
   EntityRelationAggregateManifest,
   EntityRelationManifest,
@@ -54,5 +54,5 @@ export type {
   RelationAggregatesResponse,
   RelationCardinality,
   RelationDisplay,
-} from './relations.js';
-export type { FieldOp, VisibilityCondition } from './visibility.js';
+} from './relations';
+export type { FieldOp, VisibilityCondition } from './visibility';

@@ -11,7 +11,7 @@ import type {
   UsePermissionsOptions,
   UsePermissionsReturn,
   UseRolePermissionsOptions,
-} from '../index.js';
+} from '../index';
 
 describe('@granit/authorization types', () => {
   describe('PermissionsResponse', () => {

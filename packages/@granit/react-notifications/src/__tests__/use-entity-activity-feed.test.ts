@@ -2,14 +2,14 @@ import { toEntityId, toISODateString } from '@granit/types';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useEntityActivityFeed } from '../hooks/use-entity-activity-feed.js';
+import { useEntityActivityFeed } from '../hooks/use-entity-activity-feed';
 
 import {
   axiosResponse,
   createMockClient,
   createWrapper,
   createWrapperWithoutBasePath,
-} from './test-utils.js';
+} from './test-utils';
 
 import type { ActivityFeedPage } from '@granit/notifications';
 

@@ -5,9 +5,9 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { ActivitiesSidePanel } from '../components/activities-side-panel.js';
-import { activitiesSidePanel } from '../contributions/entity-side-panel.js';
-import { ActivitiesProvider } from '../providers/activities-provider.js';
+import { ActivitiesSidePanel } from '../components/activities-side-panel';
+import { activitiesSidePanel } from '../contributions/entity-side-panel';
+import { ActivitiesProvider } from '../providers/activities-provider';
 
 import type { ActivityListResponse } from '@granit/activities';
 import type { AxiosInstance } from '@granit/api-client';

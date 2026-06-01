@@ -5,18 +5,18 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { useTemplate } from '../hooks/use-template';
 import {
   useTemplateCategories,
   useTemplateCategoryMutations,
-} from '../hooks/use-template-categories.js';
-import { useTemplateHistory, useTemplateRevision } from '../hooks/use-template-history.js';
-import { useTemplateLayouts } from '../hooks/use-template-layouts.js';
-import { useTemplateMutations } from '../hooks/use-template-mutations.js';
-import { useTemplateBinaryPreview, useTemplatePreview } from '../hooks/use-template-preview.js';
-import { useTemplateVariables } from '../hooks/use-template-variables.js';
-import { useTemplate } from '../hooks/use-template.js';
-import { useTemplates } from '../hooks/use-templates.js';
-import { TemplatingProvider } from '../providers/templating-provider.js';
+} from '../hooks/use-template-categories';
+import { useTemplateHistory, useTemplateRevision } from '../hooks/use-template-history';
+import { useTemplateLayouts } from '../hooks/use-template-layouts';
+import { useTemplateMutations } from '../hooks/use-template-mutations';
+import { useTemplateBinaryPreview, useTemplatePreview } from '../hooks/use-template-preview';
+import { useTemplateVariables } from '../hooks/use-template-variables';
+import { useTemplates } from '../hooks/use-templates';
+import { TemplatingProvider } from '../providers/templating-provider';
 
 import { axiosResponse, createMockClient, createWrapper } from './test-utils.tsx';
 

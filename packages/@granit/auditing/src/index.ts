@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------
 
 // Types
-export { AuditCategory, AuditChangeType } from './types/index.js';
+export { AuditCategory, AuditChangeType } from './types/index';
 
 export type {
   AuditCategoryValue,
@@ -15,7 +15,7 @@ export type {
   AuditListParams,
   AuditPage,
   AuditPropertyChange,
-} from './types/index.js';
+} from './types/index';
 
 // API
 export {
@@ -23,5 +23,5 @@ export {
   getAuditLogEntry,
   listEntityAuditTrail,
   pseudonymizeUserAuditLogs,
-} from './api/audit-log-api.js';
-export { AuditingPermissions } from './permissions.js';
+} from './api/audit-log-api';
+export { AuditingPermissions } from './permissions';

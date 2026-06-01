@@ -2,7 +2,7 @@
 // Smart filter — types for the SmartFilterBar (cmdk omnibox)
 // ---------------------------------------------------------------------------
 
-import type { FilterOperator } from './query-params.js';
+import type { FilterOperator } from './query-params';
 
 /** Token type within the smart filter bar. */
 export type FilterTokenType = 'filter' | 'preset' | 'quickFilter' | 'search';

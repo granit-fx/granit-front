@@ -1,10 +1,10 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useWebPush } from '../hooks/use-web-push.js';
-import { WebPushProvider } from '../providers/web-push-provider.js';
+import { useWebPush } from '../hooks/use-web-push';
+import { WebPushProvider } from '../providers/web-push-provider';
 
-import type { WebPushProviderProps } from '../providers/web-push-provider.js';
+import type { WebPushProviderProps } from '../providers/web-push-provider';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -194,7 +194,7 @@ describe('useWebPush', () => {
     expect(mockRegisterPushSubscription).toHaveBeenCalledWith(
       apiClient,
       '/api/v1/notifications',
-      mockSubscription.toJSON(),
+      mockSubscription.toJSON()
     );
   });
 
@@ -250,7 +250,7 @@ describe('useWebPush', () => {
     expect(mockUnregisterPushSubscription).toHaveBeenCalledWith(
       apiClient,
       '/api/v1/notifications',
-      mockSubscription.endpoint,
+      mockSubscription.endpoint
     );
     expect(mockSubscription.unsubscribe).toHaveBeenCalled();
   });
@@ -291,7 +291,7 @@ describe('useWebPush', () => {
     expect(mockRegisterPushSubscription).toHaveBeenCalledWith(
       apiClient,
       '/custom/api',
-      expect.any(Object),
+      expect.any(Object)
     );
   });
 
@@ -349,7 +349,7 @@ describe('useWebPush', () => {
   it('should handle getRegistration failure on mount gracefully', async () => {
     installWebPushGlobals();
     vi.mocked(navigator.serviceWorker.getRegistration).mockRejectedValueOnce(
-      new Error('SW not available'),
+      new Error('SW not available')
     );
 
     const { wrapper } = createWrapper();

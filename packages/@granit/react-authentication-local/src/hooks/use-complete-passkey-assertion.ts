@@ -1,7 +1,7 @@
 import { completePasskeyAssertion } from '@granit/authentication-local';
 import { useMutation } from '@tanstack/react-query';
 
-import { useLocalAuthConfig } from '../providers/local-auth-provider.js';
+import { useLocalAuthConfig } from '../providers/local-auth-provider';
 
 import type {
   AccountLoginResponse,

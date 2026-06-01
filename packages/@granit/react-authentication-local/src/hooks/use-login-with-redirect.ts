@@ -2,7 +2,7 @@ import { extractReturnUrl, loginAccount } from '@granit/authentication-local';
 import { useMutation } from '@tanstack/react-query';
 import { useCallback, useRef } from 'react';
 
-import { useLocalAuthConfig } from '../providers/local-auth-provider.js';
+import { useLocalAuthConfig } from '../providers/local-auth-provider';
 
 import type { AccountLoginRequest, AccountLoginResponse } from '@granit/authentication-local';
 import type { UseMutationResult } from '@tanstack/react-query';

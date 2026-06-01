@@ -1,7 +1,7 @@
 import { useId, useMemo, useState } from 'react';
 
-import { useCreateTag } from '../hooks/use-tag-mutations.js';
-import { useTags } from '../hooks/use-tags.js';
+import { useCreateTag } from '../hooks/use-tag-mutations';
+import { useTags } from '../hooks/use-tags';
 
 import { TagChip } from './tag-chip.tsx';
 

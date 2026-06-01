@@ -1,7 +1,7 @@
 import { useOptionalGranitClient } from '@granit/react-api-client';
 import { createContext, useContext, useMemo } from 'react';
 
-import { DEFAULT_BASE_PATH, DEFAULT_QUERY_KEY_PREFIX } from '../constants.js';
+import { DEFAULT_BASE_PATH, DEFAULT_QUERY_KEY_PREFIX } from '../constants';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';

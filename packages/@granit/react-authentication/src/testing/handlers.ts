@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
-import { mockBffSessions } from './data.js';
+import { mockBffSessions } from './data';
 
 /**
  * Create stateful MSW handlers for authentication endpoints.

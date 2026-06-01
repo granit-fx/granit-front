@@ -2,14 +2,14 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 import {
   PartiesProvider,
   buildPartiesQueryKey,
   usePartiesConfig,
-} from '../providers/parties-provider.js';
+} from '../providers/parties-provider';
 
-import type { PartiesConfig } from '../providers/parties-provider.js';
+import type { PartiesConfig } from '../providers/parties-provider';
 import type { AxiosInstance } from 'axios';
 
 const mockConfig: PartiesConfig = {

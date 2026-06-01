@@ -2,8 +2,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useClearQueriesOnTenantChange } from '../hooks/use-clear-queries-on-tenant-change.js';
-import { TenantProvider } from '../providers/tenant-provider.js';
+import { useClearQueriesOnTenantChange } from '../hooks/use-clear-queries-on-tenant-change';
+import { TenantProvider } from '../providers/tenant-provider';
 
 import type { TenantResolver } from '@granit/multi-tenancy';
 

@@ -5,10 +5,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useAccountSettings } from '../hooks/use-account-settings.js';
-import { AccountProvider } from '../providers/account-provider.js';
+import { useAccountSettings } from '../hooks/use-account-settings';
+import { AccountProvider } from '../providers/account-provider';
 
-import type { AccountConfig } from '../providers/account-provider.js';
+import type { AccountConfig } from '../providers/account-provider';
 import type { AccountSettingsResponse } from '@granit/account';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

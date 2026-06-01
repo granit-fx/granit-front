@@ -6,8 +6,8 @@ import {
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { usePartyQuery } from '../hooks/use-parties.js';
-import { useMergePartyMutation, useMergePartyPreviewQuery } from '../hooks/use-party-merge.js';
+import { usePartyQuery } from '../hooks/use-parties';
+import { useMergePartyMutation, useMergePartyPreviewQuery } from '../hooks/use-party-merge';
 
 import type { AxiosError } from '@granit/api-client';
 import type { PartyId, PartyResponse } from '@granit/parties';

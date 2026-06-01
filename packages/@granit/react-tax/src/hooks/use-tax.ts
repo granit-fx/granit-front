@@ -1,7 +1,7 @@
 import { getTaxRateByCountry, getTaxRates, validateTaxId } from '@granit/tax';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import { buildTaxQueryKey, useTaxConfig } from '../providers/tax-provider.js';
+import { buildTaxQueryKey, useTaxConfig } from '../providers/tax-provider';
 
 import type { TaxRateResponse, TaxValidateRequest, TaxValidateResponse } from '@granit/tax';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';

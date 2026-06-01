@@ -1,7 +1,7 @@
 import { getAdminAppSettings, saveAdminAppSettings } from '@granit/settings';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildSettingsQueryKey, useSettingsConfig } from '../providers/settings-provider.js';
+import { buildSettingsQueryKey, useSettingsConfig } from '../providers/settings-provider';
 
 import type {
   AdminAppSetting,

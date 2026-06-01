@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { API_VERSION, DEFAULT_BASE_PATH, MODULE } from '../constants.js';
+import { API_VERSION, DEFAULT_BASE_PATH, MODULE } from '../constants';
 
 describe('react-diagnostics constants', () => {
   it('exposes the v1 API path under /api/v1/diagnostics', () => {

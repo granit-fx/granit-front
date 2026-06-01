@@ -2,7 +2,7 @@ import { PushNotifications } from '@capacitor/push-notifications';
 import { registerDeviceToken, unregisterDeviceToken } from '@granit/notifications-mobile-push';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useMobilePushConfig } from '../providers/mobile-push-provider.js';
+import { useMobilePushConfig } from '../providers/mobile-push-provider';
 
 import type { MobilePlatform } from '@granit/notifications-mobile-push';
 

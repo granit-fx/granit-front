@@ -6,10 +6,10 @@ import { describe, expect, it } from 'vitest';
 import {
   useEntityActionDrawer,
   useEntityActionModal,
-} from '../actions/entity-action-overlay-context.js';
-import { useEntityActionDispatcher } from '../actions/use-entity-action-dispatcher.js';
-import { EntityActionDrawerHost } from '../components/entity-action-drawer-host.js';
-import { EntityActionModalHost } from '../components/entity-action-modal-host.js';
+} from '../actions/entity-action-overlay-context';
+import { useEntityActionDispatcher } from '../actions/use-entity-action-dispatcher';
+import { EntityActionDrawerHost } from '../components/entity-action-drawer-host';
+import { EntityActionModalHost } from '../components/entity-action-modal-host';
 
 import type { EntityActionManifest } from '@granit/entities';
 import type { ReactNode } from 'react';
@@ -47,7 +47,9 @@ describe('EntityActionDrawerHost / useEntityActionDrawer', () => {
     );
     const { result } = renderHook(() => useEntityActionDrawer(), { wrapper });
     expect(result.current.current).toBeNull();
-    act(() => result.current.open({ action: makeAction({ kind: 'OpenDrawer' }), rowId: 'r1', row: null }));
+    act(() =>
+      result.current.open({ action: makeAction({ kind: 'OpenDrawer' }), rowId: 'r1', row: null })
+    );
     expect(result.current.current?.rowId).toBe('r1');
     act(() => result.current.close());
     expect(result.current.current).toBeNull();
@@ -71,11 +73,9 @@ describe('EntityActionDrawerHost / useEntityActionDrawer', () => {
           type="button"
           data-testid="trigger"
           onClick={() => {
-            dispatch(
-              makeAction({ kind: 'OpenDrawer', urlTemplate: null }),
-              'row-42',
-              { id: 'row-42' }
-            ).catch(() => undefined);
+            dispatch(makeAction({ kind: 'OpenDrawer', urlTemplate: null }), 'row-42', {
+              id: 'row-42',
+            }).catch(() => undefined);
           }}
         />
       );

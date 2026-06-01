@@ -5,7 +5,7 @@ import {
   deleteExportPreset,
   listExportPresets,
   saveExportPreset,
-} from '../../export/api/preset-api.js';
+} from '../../export/api/preset-api';
 
 const BASE = '/api/v1/data-exchange';
 
@@ -49,6 +49,8 @@ describe('preset-api', () => {
   it('deleteExportPreset encodes names', async () => {
     const client = createMockClient();
     await deleteExportPreset(client, BASE, 'My Export', 'Monthly Report');
-    expect(client.delete).toHaveBeenCalledWith(`${BASE}/metadata/presets/My%20Export/Monthly%20Report`);
+    expect(client.delete).toHaveBeenCalledWith(
+      `${BASE}/metadata/presets/My%20Export/Monthly%20Report`
+    );
   });
 });

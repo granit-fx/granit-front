@@ -1,7 +1,7 @@
 import { getProfile, updateProfile } from '@granit/account';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildAccountQueryKey, useAccountConfig } from '../providers/account-provider.js';
+import { buildAccountQueryKey, useAccountConfig } from '../providers/account-provider';
 
 import type { AccountProfileResponse, AccountProfileUpdateRequest } from '@granit/account';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';

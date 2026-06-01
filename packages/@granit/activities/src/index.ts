@@ -13,10 +13,10 @@ export type {
   CreateActivityRequest,
   ReassignActivityRequest,
   RescheduleActivityRequest,
-} from './types/index.js';
+} from './types/index';
 
 // Permissions
-export { ActivitiesPermissions } from './permissions.js';
+export { ActivitiesPermissions } from './permissions';
 
 // API
 export {
@@ -28,4 +28,4 @@ export {
   listActivities,
   reassignActivity,
   rescheduleActivity,
-} from './api/activities-api.js';
+} from './api/activities-api';

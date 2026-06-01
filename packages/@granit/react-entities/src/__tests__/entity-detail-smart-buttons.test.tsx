@@ -6,8 +6,8 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { EntityDetail } from '../components/entity-detail.js';
-import { EntityRendererProvider } from '../providers/index.js';
+import { EntityDetail } from '../components/entity-detail';
+import { EntityRendererProvider } from '../providers/index';
 
 import type {
   EntityDetailManifest,

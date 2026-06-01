@@ -1,11 +1,7 @@
-import {
-  challengeExternalLogin,
-  getExternalLogins,
-  unlinkExternalLogin,
-} from '@granit/account';
+import { challengeExternalLogin, getExternalLogins, unlinkExternalLogin } from '@granit/account';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildAccountQueryKey, useAccountConfig } from '../providers/account-provider.js';
+import { buildAccountQueryKey, useAccountConfig } from '../providers/account-provider';
 
 import type { AccountExternalLoginInfo } from '@granit/account';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';

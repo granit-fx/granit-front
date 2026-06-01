@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useTransitions } from '../hooks/use-transitions.js';
+import { useTransitions } from '../hooks/use-transitions';
 
 import { axiosResponse, createMockClient, createWrapper } from './test-utils.tsx';
 

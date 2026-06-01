@@ -2,8 +2,8 @@ import { DASHBOARD_TIME_WINDOW, type DashboardTimeWindow } from '@granit/dashboa
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { DashboardContextProvider } from '../components/dashboard-context.js';
-import { useEffectiveTimeWindow } from '../hooks/use-effective-time-window.js';
+import { DashboardContextProvider } from '../components/dashboard-context';
+import { useEffectiveTimeWindow } from '../hooks/use-effective-time-window';
 
 import type { ReactNode } from 'react';
 

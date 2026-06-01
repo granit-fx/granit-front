@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { axiosResponse, createMockClient, createMockLogger } from '../index.js';
+import { axiosResponse, createMockClient, createMockLogger } from '../index';
 
 describe('@granit/react-testing re-exports', () => {
   it('re-exports createMockClient from @granit/testing', () => {

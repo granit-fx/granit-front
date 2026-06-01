@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { urlBase64ToUint8Array } from '../utils/vapid.js';
+import { urlBase64ToUint8Array } from '../utils/vapid';
 
 describe('urlBase64ToUint8Array', () => {
   it('should convert a URL-safe base64 string to Uint8Array', () => {

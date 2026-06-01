@@ -6,7 +6,7 @@ import {
 } from '@granit/openiddict-admin';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildAdminQueryKey, useAdminConfig } from '../providers/openiddict-admin-provider.js';
+import { buildAdminQueryKey, useAdminConfig } from '../providers/openiddict-admin-provider';
 
 import type {
   AdminOidcApplication,
@@ -51,8 +51,7 @@ export function useDeleteOidcApplication(): UseMutationResult<void, Error, strin
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (clientId: string) =>
-      deleteApplication(config.client, config.basePath!, clientId),
+    mutationFn: (clientId: string) => deleteApplication(config.client, config.basePath!, clientId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: buildAdminQueryKey(config, 'oidc', 'applications'),

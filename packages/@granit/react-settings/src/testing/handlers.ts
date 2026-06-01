@@ -1,7 +1,7 @@
 import { noContent } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
-import { mockAppSettings, mockSettingsStore } from './data.js';
+import { mockAppSettings, mockSettingsStore } from './data';
 
 import type {
   BulkSettingOutcome,

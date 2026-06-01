@@ -1,7 +1,7 @@
 import { toEntityId, toISODateString } from '@granit/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createSignalRTransport } from '../transports/create-signalr-transport.js';
+import { createSignalRTransport } from '../transports/create-signalr-transport';
 
 import type { NotificationTransportMessage } from '@granit/notifications';
 

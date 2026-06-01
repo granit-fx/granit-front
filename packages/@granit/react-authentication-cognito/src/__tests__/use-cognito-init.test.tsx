@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useCognitoInit } from '../hooks/use-cognito-init.js';
+import { useCognitoInit } from '../hooks/use-cognito-init';
 
 import type { CognitoCoreConfig } from '@granit/authentication-cognito';
 

@@ -2,7 +2,7 @@ import type {
   AdminOidcApplication,
   AdminOidcApplicationCreateRequest,
   AdminOidcApplicationSecretResponse,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 // ── OIDC Application CRUD ────────────────────────────────────────────────────

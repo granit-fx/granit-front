@@ -6,7 +6,7 @@ export type {
   ReferenceDataLabels,
   ReferenceDataQuery,
   ReferenceDataUpdateRequest,
-} from './types/index.js';
+} from './types/index';
 
 // API
 export {
@@ -16,4 +16,4 @@ export {
   listReferenceData,
   listReferenceDataChildren,
   updateReferenceDataEntry,
-} from './api/reference-data-api.js';
+} from './api/reference-data-api';

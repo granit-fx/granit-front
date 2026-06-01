@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { createJwtClaimTenantResolver } from '../resolvers/jwt-claim-tenant-resolver.js';
+import { createJwtClaimTenantResolver } from '../resolvers/jwt-claim-tenant-resolver';
 
 describe('createJwtClaimTenantResolver', () => {
   it('resolves tenant from default tenant_id claim', () => {

@@ -1,7 +1,7 @@
 import { cleanupOrphans } from '@granit/blob-storage';
 import { useMutation } from '@tanstack/react-query';
 
-import { useBlobStorageConfig } from '../providers/blob-storage-provider.js';
+import { useBlobStorageConfig } from '../providers/blob-storage-provider';
 
 import type { BlobCleanupOrphansResponse } from '@granit/blob-storage';
 import type { UseMutationResult } from '@tanstack/react-query';

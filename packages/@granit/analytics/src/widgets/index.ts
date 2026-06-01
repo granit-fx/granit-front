@@ -1,18 +1,18 @@
-export type { AggregateFunction } from './aggregation.js';
-export { isChartSnapshotEnvelope } from './chart-snapshot.js';
-export type { ChartBucket, ChartSnapshotEnvelope, ChartWidgetSnapshot } from './chart-snapshot.js';
-export type { ChartType, ChartWidgetDefinition } from './chart-widget.js';
-export { isKpiSnapshotEnvelope } from './kpi-snapshot.js';
-export type { KpiSnapshot, KpiSnapshotEnvelope } from './kpi-snapshot.js';
-export type { KpiWidgetDefinition } from './kpi-widget.js';
-export { isMapSnapshotEnvelope } from './map-snapshot.js';
+export type { AggregateFunction } from './aggregation';
+export { isChartSnapshotEnvelope } from './chart-snapshot';
+export type { ChartBucket, ChartSnapshotEnvelope, ChartWidgetSnapshot } from './chart-snapshot';
+export type { ChartType, ChartWidgetDefinition } from './chart-widget';
+export { isKpiSnapshotEnvelope } from './kpi-snapshot';
+export type { KpiSnapshot, KpiSnapshotEnvelope } from './kpi-snapshot';
+export type { KpiWidgetDefinition } from './kpi-widget';
+export { isMapSnapshotEnvelope } from './map-snapshot';
 export type {
   MapCenterPayload,
   MapPoint,
   MapSnapshotEnvelope,
   MapWidgetSnapshot,
-} from './map-snapshot.js';
-export { isGeographyMapPointSource, isLatLngMapPointSource } from './map-widget.js';
+} from './map-snapshot';
+export { isGeographyMapPointSource, isLatLngMapPointSource } from './map-widget';
 export type {
   GeographyMapPointSource,
   LatLngMapPointSource,
@@ -20,23 +20,23 @@ export type {
   MapPointSource,
   MapTileLayerKind,
   MapWidgetDefinition,
-} from './map-widget.js';
-export { isPivotSnapshotEnvelope } from './pivot-snapshot.js';
-export type { PivotCell, PivotSnapshotEnvelope, PivotWidgetSnapshot } from './pivot-snapshot.js';
-export type { PivotWidgetDefinition } from './pivot-widget.js';
-export { isTableSnapshotEnvelope } from './table-snapshot.js';
+} from './map-widget';
+export { isPivotSnapshotEnvelope } from './pivot-snapshot';
+export type { PivotCell, PivotSnapshotEnvelope, PivotWidgetSnapshot } from './pivot-snapshot';
+export type { PivotWidgetDefinition } from './pivot-widget';
+export { isTableSnapshotEnvelope } from './table-snapshot';
 export type {
   TableSnapshotEnvelope,
   TableWidgetColumn,
   TableWidgetSnapshot,
-} from './table-snapshot.js';
-export type { TableWidgetDefinition } from './table-widget.js';
+} from './table-snapshot';
+export type { TableWidgetDefinition } from './table-widget';
 
-import type { ChartWidgetDefinition } from './chart-widget.js';
-import type { KpiWidgetDefinition } from './kpi-widget.js';
-import type { MapWidgetDefinition } from './map-widget.js';
-import type { PivotWidgetDefinition } from './pivot-widget.js';
-import type { TableWidgetDefinition } from './table-widget.js';
+import type { ChartWidgetDefinition } from './chart-widget';
+import type { KpiWidgetDefinition } from './kpi-widget';
+import type { MapWidgetDefinition } from './map-widget';
+import type { PivotWidgetDefinition } from './pivot-widget';
+import type { TableWidgetDefinition } from './table-widget';
 
 /**
  * Closed union of every analytics widget shipped by `Granit.Analytics`. Used

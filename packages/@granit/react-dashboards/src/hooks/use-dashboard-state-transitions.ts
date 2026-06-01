@@ -1,9 +1,9 @@
 import { archiveDashboard, publishDashboard, restoreDashboard } from '@granit/dashboards';
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 
-import { useDashboardsConfig } from '../providers/dashboards-provider.js';
+import { useDashboardsConfig } from '../providers/dashboards-provider';
 
-import { dashboardDetailQueryKey } from './use-dashboard-detail.js';
+import { dashboardDetailQueryKey } from './use-dashboard-detail';
 
 /**
  * Shared invalidation routine — all three transitions affect the list

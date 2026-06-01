@@ -1,10 +1,10 @@
-import type { EntityActionManifest } from './actions.js';
-import type { EntityCollectionsSection } from './collections.js';
-import type { EntityDetailManifest } from './detail.js';
-import type { EntityFormManifest } from './form.js';
-import type { EntityIdentitySection } from './identity.js';
-import type { EntityPermissionsSection } from './permissions.js';
-import type { EntityRelationManifest } from './relations.js';
+import type { EntityActionManifest } from './actions';
+import type { EntityCollectionsSection } from './collections';
+import type { EntityDetailManifest } from './detail';
+import type { EntityFormManifest } from './form';
+import type { EntityIdentitySection } from './identity';
+import type { EntityPermissionsSection } from './permissions';
+import type { EntityRelationManifest } from './relations';
 
 /**
  * Selectable facets of the per-entity manifest. Wire form: comma-separated

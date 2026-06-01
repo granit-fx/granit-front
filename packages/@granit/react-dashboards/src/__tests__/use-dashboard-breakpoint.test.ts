@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   DASHBOARD_BREAKPOINT_MIN_WIDTH,
   resolveBreakpoint,
-} from '../hooks/use-dashboard-breakpoint.js';
+} from '../hooks/use-dashboard-breakpoint';
 
 describe('DASHBOARD_BREAKPOINT_MIN_WIDTH', () => {
   it('matches the conventional Tailwind / Bootstrap thresholds', () => {

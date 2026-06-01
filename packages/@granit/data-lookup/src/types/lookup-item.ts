@@ -1,4 +1,4 @@
-import type { LookupKind } from './lookup-descriptor.js';
+import type { LookupKind } from './lookup-descriptor';
 
 /**
  * Canonical item returned by every lookup source. `label` is already localized

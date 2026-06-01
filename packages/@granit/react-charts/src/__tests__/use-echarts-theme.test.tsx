@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useEChartsTheme } from '../hooks/use-echarts-theme.js';
+import { useEChartsTheme } from '../hooks/use-echarts-theme';
 
 import type { ChartThemeTokens } from '@granit/charts';
 

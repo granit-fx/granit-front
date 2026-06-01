@@ -1,8 +1,8 @@
 import { useCallback, useRef, useState } from 'react';
 
-import { useFileUpload } from '../hooks/use-file-upload.js';
+import { useFileUpload } from '../hooks/use-file-upload';
 
-import type { FileUploadError } from '../hooks/use-file-upload.js';
+import type { FileUploadError } from '../hooks/use-file-upload';
 import type { DocumentResponse } from '@granit/documents';
 import type { DragEvent, ReactNode } from 'react';
 

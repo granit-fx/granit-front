@@ -3,9 +3,9 @@ import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { describe, expect, it, vi } from 'vitest';
 
-import { WidgetConfigDrawer } from '../components/widget-config-drawer.js';
-import { defaultWidgetConfigFormRegistry } from '../lib/default-widget-config-form-registry.js';
-import { composeWidgetConfigFormRegistries } from '../lib/widget-config-form-registry.js';
+import { WidgetConfigDrawer } from '../components/widget-config-drawer';
+import { defaultWidgetConfigFormRegistry } from '../lib/default-widget-config-form-registry';
+import { composeWidgetConfigFormRegistries } from '../lib/widget-config-form-registry';
 
 import type {
   ImageWidgetDefinition,

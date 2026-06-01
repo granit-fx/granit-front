@@ -15,7 +15,7 @@ import {
   restoreDocument,
   transferDocumentOwner,
   trashDocument,
-} from '../api/documents-api.js';
+} from '../api/documents-api';
 
 import type {
   AppendVersionRequest,
@@ -27,7 +27,7 @@ import type {
   ListTrashedDocumentsResponse,
   UploadTicketRequest,
   UploadTicketResponse,
-} from '../types/index.js';
+} from '../types/index';
 
 const basePath = '/api/v1/documents';
 

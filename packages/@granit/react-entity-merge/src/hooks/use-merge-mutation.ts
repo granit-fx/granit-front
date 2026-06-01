@@ -1,12 +1,9 @@
 import { executeMerge, generateMergeIdempotencyKey } from '@granit/entity-merge';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import {
-  buildEntityMergeQueryKey,
-  useEntityMergeConfig,
-} from '../providers/entity-merge-provider.js';
+import { buildEntityMergeQueryKey, useEntityMergeConfig } from '../providers/entity-merge-provider';
 
-import { entityMergeKeys } from './query-keys.js';
+import { entityMergeKeys } from './query-keys';
 
 import type { MergeRequest, MergeResult } from '@granit/entity-merge';
 import type { UseMutationResult } from '@tanstack/react-query';

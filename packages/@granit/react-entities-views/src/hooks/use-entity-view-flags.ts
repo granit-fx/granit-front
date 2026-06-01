@@ -7,9 +7,9 @@ import {
 import { useGranitClient } from '@granit/react-api-client';
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 
-import { defaultEntityViewQueryKey } from './use-default-entity-view.js';
-import { entityViewQueryKey } from './use-entity-view.js';
-import { entityViewsQueryKey } from './use-entity-views.js';
+import { defaultEntityViewQueryKey } from './use-default-entity-view';
+import { entityViewQueryKey } from './use-entity-view';
+import { entityViewsQueryKey } from './use-entity-views';
 
 import type { EntityViewResponse, EntityViewShareBodyRequest } from '@granit/entities-views';
 

@@ -17,8 +17,8 @@ import {
   suspendSubscription,
   testPing,
   updateSubscription,
-} from '../api/webhooks-api.js';
-import { WebhookSubscriptionStatus } from '../types/index.js';
+} from '../api/webhooks-api';
+import { WebhookSubscriptionStatus } from '../types/index';
 
 import type {
   WebhookDeliveryAttemptResponse,
@@ -29,7 +29,7 @@ import type {
   WebhookSubscriptionRotateSecretResponse,
   WebhookSubscriptionStatsResponse,
   WebhookSubscriptionTestPingResponse,
-} from '../types/index.js';
+} from '../types/index';
 
 const BASE = '/api/v1/webhooks/subscriptions';
 

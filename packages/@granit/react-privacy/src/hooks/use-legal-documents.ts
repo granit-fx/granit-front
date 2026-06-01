@@ -7,7 +7,7 @@ import {
 } from '@granit/privacy';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildPrivacyQueryKey, usePrivacyConfig } from '../providers/privacy-provider.js';
+import { buildPrivacyQueryKey, usePrivacyConfig } from '../providers/privacy-provider';
 
 import type {
   LegalDocumentCreateRequest,

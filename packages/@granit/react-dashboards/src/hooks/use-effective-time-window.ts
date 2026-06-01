@@ -1,6 +1,6 @@
 import { DASHBOARD_TIME_WINDOW } from '@granit/dashboards';
 
-import { useDashboardContext } from '../components/dashboard-context.js';
+import { useDashboardContext } from '../components/dashboard-context';
 
 import type { DashboardTimeWindow } from '@granit/dashboards';
 

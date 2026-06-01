@@ -2,7 +2,7 @@
 // Filter operator utilities
 // ---------------------------------------------------------------------------
 
-import type { FilterOperator } from '../types/query-params.js';
+import type { FilterOperator } from '../types/query-params';
 
 /** Operators available for string fields. */
 export const STRING_OPERATORS: readonly FilterOperator[] = [

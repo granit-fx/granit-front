@@ -2,10 +2,10 @@ import { pollMyPresence } from '@granit/presence';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 
-import { DEFAULT_HEARTBEAT_INTERVAL_MS } from '../constants.js';
-import { buildPresenceQueryKey, usePresenceConfig } from '../providers/presence-provider.js';
+import { DEFAULT_HEARTBEAT_INTERVAL_MS } from '../constants';
+import { buildPresenceQueryKey, usePresenceConfig } from '../providers/presence-provider';
 
-import { presenceKeys } from './query-keys.js';
+import { presenceKeys } from './query-keys';
 
 import type { PresenceResponse } from '@granit/presence';
 

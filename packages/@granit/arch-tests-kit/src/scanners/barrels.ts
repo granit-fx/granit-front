@@ -1,9 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { readFile, rel } from '../fs.js';
+import { readFile, rel } from '../fs';
 
-import type { ScanContext, Violation } from '../types.js';
+import type { ScanContext, Violation } from '../types';
 
 export interface BarrelScanOptions extends ScanContext {
   /** Path to the barrel, relative to each module's `srcDir`. Defaults to `index.ts`. */

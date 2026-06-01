@@ -1,4 +1,4 @@
-import type { TaxonomyTranslations } from './en.js';
+import type { TaxonomyTranslations } from './en';
 
 export const taxonomyTranslationsFr: TaxonomyTranslations = {
   Tag: {

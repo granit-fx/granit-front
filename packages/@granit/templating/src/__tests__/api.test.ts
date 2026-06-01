@@ -20,8 +20,8 @@ import {
   unpublishTemplate,
   updateCategory,
   updateDraft,
-} from '../api/templates-api.js';
-import { TemplateLifecycleStatus } from '../types/index.js';
+} from '../api/templates-api';
+import { TemplateLifecycleStatus } from '../types/index';
 
 import type {
   TemplateCategory,
@@ -32,7 +32,7 @@ import type {
   TemplatePreviewResponse,
   TemplateRevision,
   TemplateVariables,
-} from '../types/index.js';
+} from '../types/index';
 import type { PagedResult } from '@granit/query-engine';
 
 const basePath = '/api/v1/templating';

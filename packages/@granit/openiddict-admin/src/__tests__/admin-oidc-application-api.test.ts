@@ -6,9 +6,9 @@ import {
   deleteApplication,
   listApplications,
   rotateApplicationSecret,
-} from '../api/admin-oidc-application-api.js';
+} from '../api/admin-oidc-application-api';
 
-import type { AdminOidcApplication, AdminOidcApplicationSecretResponse } from '../types/index.js';
+import type { AdminOidcApplication, AdminOidcApplicationSecretResponse } from '../types/index';
 
 const BASE = '/admin';
 

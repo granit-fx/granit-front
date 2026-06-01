@@ -5,7 +5,7 @@ import {
   createSubscriptionsHandlers,
   planQueryMetadata,
   subscriptionQueryMetadata,
-} from '../testing/index.js';
+} from '../testing/index';
 
 const BASE = 'http://api.test/api/v1/subscriptions';
 const server = setupServer();

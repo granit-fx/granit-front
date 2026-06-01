@@ -4,7 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { QuotaPanel } from '../components/quota-panel.tsx';
-import { DocumentsProvider } from '../providers/documents-provider.js';
+import { DocumentsProvider } from '../providers/documents-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { TenantStorageQuotaResponse } from '@granit/documents';

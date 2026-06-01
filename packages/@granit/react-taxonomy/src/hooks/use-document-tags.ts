@@ -1,7 +1,7 @@
 import { attachTagToDocument, detachTagFromDocument, listDocumentTags } from '@granit/taxonomy';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildTaxonomyQueryKey, useTaxonomyConfig } from '../providers/taxonomy-provider.js';
+import { buildTaxonomyQueryKey, useTaxonomyConfig } from '../providers/taxonomy-provider';
 
 import type { TagResponse } from '@granit/taxonomy';
 import type { QueryClient, UseMutationResult, UseQueryResult } from '@tanstack/react-query';

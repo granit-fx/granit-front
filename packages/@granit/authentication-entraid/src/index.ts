@@ -1,1 +1,1 @@
-export type { EntraIdAuthContextType, EntraIdCoreConfig } from './types/index.js';
+export type { EntraIdAuthContextType, EntraIdCoreConfig } from './types/index';

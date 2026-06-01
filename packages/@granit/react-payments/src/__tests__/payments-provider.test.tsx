@@ -2,14 +2,14 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 import {
   PaymentsProvider,
   buildPaymentsQueryKey,
   usePaymentsConfig,
-} from '../providers/payments-provider.js';
+} from '../providers/payments-provider';
 
-import type { PaymentsConfig } from '../providers/payments-provider.js';
+import type { PaymentsConfig } from '../providers/payments-provider';
 import type { AxiosInstance } from 'axios';
 
 const mockConfig: PaymentsConfig = {

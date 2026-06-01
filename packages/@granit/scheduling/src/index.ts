@@ -4,14 +4,14 @@ export {
   type RescheduleActionRequest,
   type ScheduledActionId,
   type ScheduledActionResponse,
-} from './types/index.js';
+} from './types/index';
 
 // Constants
 export {
   SCHEDULING_PERMISSIONS,
   SCHEDULING_STATUS_COLORS,
   SCHEDULING_STATUS_LABELS,
-} from './constants.js';
+} from './constants';
 
 // API
 export {
@@ -19,5 +19,5 @@ export {
   getScheduledActionById,
   listScheduledActions,
   rescheduleScheduledAction,
-} from './api/scheduling-api.js';
-export { SchedulingPermissions } from './permissions.js';
+} from './api/scheduling-api';
+export { SchedulingPermissions } from './permissions';

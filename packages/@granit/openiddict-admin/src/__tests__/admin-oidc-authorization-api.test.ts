@@ -5,9 +5,9 @@ import {
   listAuthorizations,
   revokeAuthorization,
   revokeUserAuthorizations,
-} from '../api/admin-oidc-authorization-api.js';
+} from '../api/admin-oidc-authorization-api';
 
-import type { AdminOidcAuthorization } from '../types/index.js';
+import type { AdminOidcAuthorization } from '../types/index';
 
 const BASE = '/admin';
 

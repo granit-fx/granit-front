@@ -1,7 +1,7 @@
 import { listExportDefinitions, getExportFields } from '@granit/data-exchange';
 import { useQuery } from '@tanstack/react-query';
 
-import { buildExportQueryKey, useExportConfig } from '../providers/export-provider.js';
+import { buildExportQueryKey, useExportConfig } from '../providers/export-provider';
 
 import type { ExportDefinitionResponse, ExportField } from '@granit/data-exchange';
 import type { UseQueryResult } from '@tanstack/react-query';

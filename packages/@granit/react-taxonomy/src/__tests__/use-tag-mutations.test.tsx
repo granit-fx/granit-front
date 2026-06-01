@@ -10,8 +10,8 @@ import {
   useDeleteTag,
   useUnassignTag,
   useUpdateTag,
-} from '../hooks/use-tag-mutations.js';
-import { TaxonomyProvider } from '../providers/taxonomy-provider.js';
+} from '../hooks/use-tag-mutations';
+import { TaxonomyProvider } from '../providers/taxonomy-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { TagAssignmentResponse, TagResponse } from '@granit/taxonomy';

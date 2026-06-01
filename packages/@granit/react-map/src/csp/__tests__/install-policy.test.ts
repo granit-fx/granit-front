@@ -1,8 +1,7 @@
 import { resetGranitPoliciesForTests, resetInstalledPoliciesForTests } from '@granit/csp/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-
-import { GRANIT_MAP_POLICY_NAME, __setSanitizerForTests, installPolicy } from '../index.js';
+import { GRANIT_MAP_POLICY_NAME, __setSanitizerForTests, installPolicy } from '../index';
 
 import type { TrustedTypePolicyOptions } from '@granit/csp';
 

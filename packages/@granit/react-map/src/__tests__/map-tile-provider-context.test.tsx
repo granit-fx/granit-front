@@ -4,9 +4,9 @@ import { describe, expect, it } from 'vitest';
 import {
   MapTileProviderProvider,
   useMapTileProvider,
-} from '../components/map-tile-provider-context.js';
-import { osmProvider } from '../providers/osm-provider.js';
-import { spwProvider } from '../providers/spw-provider.js';
+} from '../components/map-tile-provider-context';
+import { osmProvider } from '../providers/osm-provider';
+import { spwProvider } from '../providers/spw-provider';
 
 import type { ReactNode } from 'react';
 

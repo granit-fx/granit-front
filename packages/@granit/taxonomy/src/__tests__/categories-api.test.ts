@@ -10,7 +10,7 @@ import {
   moveCategory,
   unassignCategory,
   updateCategory,
-} from '../api/categories-api.js';
+} from '../api/categories-api';
 
 import type {
   CategoryAssignmentRequest,
@@ -19,7 +19,7 @@ import type {
   CategoryResponse,
   CreateCategoryRequest,
   MoveCategoryRequest,
-} from '../types/index.js';
+} from '../types/index';
 
 const basePath = '/api/v1/taxonomy';
 

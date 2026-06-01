@@ -1,9 +1,9 @@
 import { assignDocumentTag, listDocumentTags, unassignDocumentTag } from '@granit/documents';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildDocumentsQueryKey, useDocumentsConfig } from '../providers/documents-provider.js';
+import { buildDocumentsQueryKey, useDocumentsConfig } from '../providers/documents-provider';
 
-import type { ResolvedDocumentsConfig } from '../providers/documents-provider.js';
+import type { ResolvedDocumentsConfig } from '../providers/documents-provider';
 import type { DocumentTagAssignmentResponse, ListDocumentTagsResponse } from '@granit/documents';
 import type { QueryClient, UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 

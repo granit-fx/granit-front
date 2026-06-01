@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { MapTileProviderProvider } from '../components/map-tile-provider-context.js';
-import { spwProvider } from '../providers/spw-provider.js';
-import { MapSnapshotWidget } from '../snapshot/map-snapshot-widget.js';
+import { MapTileProviderProvider } from '../components/map-tile-provider-context';
+import { spwProvider } from '../providers/spw-provider';
+import { MapSnapshotWidget } from '../snapshot/map-snapshot-widget';
 
 import type { MapWidgetSnapshot } from '@granit/analytics';
 import type { DashboardRenderedWidget } from '@granit/dashboards';

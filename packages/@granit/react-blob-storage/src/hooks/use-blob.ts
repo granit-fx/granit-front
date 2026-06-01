@@ -1,9 +1,9 @@
 import { getBlob } from '@granit/blob-storage';
 import { useQuery } from '@tanstack/react-query';
 
-import { useBlobStorageConfig } from '../providers/blob-storage-provider.js';
+import { useBlobStorageConfig } from '../providers/blob-storage-provider';
 
-import { blobStorageKeys } from './query-keys.js';
+import { blobStorageKeys } from './query-keys';
 
 import type { BlobDescriptorResponse } from '@granit/blob-storage';
 import type { UseQueryResult } from '@tanstack/react-query';
@@ -18,10 +18,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
  * const { data: blob } = useBlob('abc-123', 'medical-images');
  * ```
  */
-export function useBlob(
-  id: string,
-  containerName: string
-): UseQueryResult<BlobDescriptorResponse> {
+export function useBlob(id: string, containerName: string): UseQueryResult<BlobDescriptorResponse> {
   const { client, basePath } = useBlobStorageConfig();
 
   return useQuery({

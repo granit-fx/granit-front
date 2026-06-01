@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { applyLayoutOverride, resolveEffectiveLayout } from '../lib/resolve-effective-layout.js';
+import { applyLayoutOverride, resolveEffectiveLayout } from '../lib/resolve-effective-layout';
 
 import type { DashboardLayout, WidgetDefinition } from '@granit/dashboards';
 

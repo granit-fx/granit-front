@@ -5,7 +5,7 @@ import {
   buildWorkspaceUrl,
   parseEntityUrl,
   parseWorkspaceUrl,
-} from '../url/url-helpers.js';
+} from '../url/url-helpers';
 
 describe('buildWorkspaceUrl', () => {
   it('returns /w/{name} for a workspace root', () => {

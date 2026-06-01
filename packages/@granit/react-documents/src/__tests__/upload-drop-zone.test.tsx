@@ -4,7 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { UploadDropZone } from '../components/upload-drop-zone.tsx';
-import { DocumentsProvider } from '../providers/documents-provider.js';
+import { DocumentsProvider } from '../providers/documents-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';

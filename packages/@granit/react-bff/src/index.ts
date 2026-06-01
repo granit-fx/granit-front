@@ -1,16 +1,16 @@
-export { BffProvider, useBffConfig, useBffContext } from './providers/bff-provider.js';
-export type { BffContextType, BffProviderProps } from './providers/bff-provider.js';
+export { BffProvider, useBffConfig, useBffContext } from './providers/bff-provider';
+export type { BffContextType, BffProviderProps } from './providers/bff-provider';
 
-export { useBffAuth } from './hooks/use-bff-auth.js';
-export { useBffCsrf } from './hooks/use-bff-csrf.js';
-export { useBffFetch } from './hooks/use-bff-fetch.js';
-export { resolveBffTenantId, useBffTenantGetter } from './hooks/use-bff-tenant.js';
+export { useBffAuth } from './hooks/use-bff-auth';
+export { useBffCsrf } from './hooks/use-bff-csrf';
+export { useBffFetch } from './hooks/use-bff-fetch';
+export { resolveBffTenantId, useBffTenantGetter } from './hooks/use-bff-tenant';
 
 export {
   useBffSessions,
   useRevokeBffSession,
   useRevokeAllOtherBffSessions,
-} from './hooks/use-bff-sessions.js';
+} from './hooks/use-bff-sessions';
 
-export { BffGuard } from './components/bff-guard.js';
-export type { BffGuardProps } from './components/bff-guard.js';
+export { BffGuard } from './components/bff-guard';
+export type { BffGuardProps } from './components/bff-guard';

@@ -4,8 +4,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   DEFAULT_RESOURCE_HEARTBEAT_INTERVAL_MS,
   DEFAULT_RESOURCE_STALE_THRESHOLD_MS,
-} from '../constants.js';
-import { usePresenceConfig } from '../providers/presence-provider.js';
+} from '../constants';
+import { usePresenceConfig } from '../providers/presence-provider';
 
 import type { ResourcePresenceParticipantResponse, ResourceRoomResponse } from '@granit/presence';
 

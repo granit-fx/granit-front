@@ -6,8 +6,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useApiKey } from '../hooks/use-api-key.js';
-import { buildApiKeyQueryKey, useApiKeys } from '../hooks/use-api-keys.js';
+import { useApiKey } from '../hooks/use-api-key';
+import { buildApiKeyQueryKey, useApiKeys } from '../hooks/use-api-keys';
 
 import type { ApiKeyResponse } from '@granit/authentication-api-keys';
 
@@ -239,7 +239,9 @@ describe('useApiKey', () => {
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockApiKey });
 
     const { wrapper } = createWrapper();
-    renderHook(() => useApiKey('key-1', { client, basePath: '/api/v2/authentication' }), { wrapper });
+    renderHook(() => useApiKey('key-1', { client, basePath: '/api/v2/authentication' }), {
+      wrapper,
+    });
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 

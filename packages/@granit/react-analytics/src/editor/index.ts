@@ -4,18 +4,18 @@
 // for read-only consumers.
 // ---------------------------------------------------------------------------
 
-import { ChartConfigForm } from './chart-config-form.js';
-import { KpiConfigForm } from './kpi-config-form.js';
-import { PivotConfigForm } from './pivot-config-form.js';
-import { TableConfigForm } from './table-config-form.js';
+import { ChartConfigForm } from './chart-config-form';
+import { KpiConfigForm } from './kpi-config-form';
+import { PivotConfigForm } from './pivot-config-form';
+import { TableConfigForm } from './table-config-form';
 
 import type { WidgetConfigForm, WidgetConfigFormRegistry } from '@granit/react-dashboard-editor';
 
-export { analyticsWidgetCatalog } from './analytics-widget-catalog.js';
-export { ChartConfigForm } from './chart-config-form.js';
-export { KpiConfigForm } from './kpi-config-form.js';
-export { PivotConfigForm } from './pivot-config-form.js';
-export { TableConfigForm } from './table-config-form.js';
+export { analyticsWidgetCatalog } from './analytics-widget-catalog';
+export { ChartConfigForm } from './chart-config-form';
+export { KpiConfigForm } from './kpi-config-form';
+export { PivotConfigForm } from './pivot-config-form';
+export { TableConfigForm } from './table-config-form';
 
 /**
  * Pre-composed config-form registry — the four analytics kinds in a

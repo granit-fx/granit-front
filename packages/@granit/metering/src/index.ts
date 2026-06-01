@@ -15,10 +15,10 @@ export type {
   UsageAggregateListParams,
   UsageAggregatePage,
   UsageAggregateResponse,
-} from './types/index.js';
+} from './types/index';
 
 // Permissions
-export { MeteringPermissions } from './permissions.js';
+export { MeteringPermissions } from './permissions';
 
 // API
 export {
@@ -44,4 +44,4 @@ export {
   updateMeterDefinition,
   updateMeterDefinitionsSavedView,
   updateUsageAggregatesSavedView,
-} from './api/metering-api.js';
+} from './api/metering-api';

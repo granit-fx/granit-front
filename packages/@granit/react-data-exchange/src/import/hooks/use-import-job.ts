@@ -8,7 +8,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 
-import { buildImportQueryKey, useImportConfig } from '../providers/import-provider.js';
+import { buildImportQueryKey, useImportConfig } from '../providers/import-provider';
 
 import type {
   ConfirmMappingsRequest,

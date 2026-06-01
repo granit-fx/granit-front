@@ -3,14 +3,14 @@ import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { noContent, notFound, pagedResponse } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
 import {
   mockAdminUsers,
   mockOidcApplications,
   mockOidcAuthorizations,
   mockOidcScopes,
-} from './data.js';
+} from './data';
 
 import type { AdminOidcApplication, AdminOidcScope } from '@granit/openiddict-admin';
 import type { QueryMetadata } from '@granit/query-engine';

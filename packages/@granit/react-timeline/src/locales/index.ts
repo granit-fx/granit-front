@@ -14,6 +14,6 @@
 // with the headless conventions across the framework.
 // ---------------------------------------------------------------------------
 
-export { timelineTranslationsEn } from './en.js';
-export type { TimelineTranslations } from './en.js';
-export { timelineTranslationsFr } from './fr.js';
+export { timelineTranslationsEn } from './en';
+export type { TimelineTranslations } from './en';
+export { timelineTranslationsFr } from './fr';

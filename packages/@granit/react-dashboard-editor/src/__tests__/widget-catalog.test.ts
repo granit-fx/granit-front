@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { addWidget, composeCatalogs, defaultWidgetCatalog } from '../lib/widget-catalog.js';
+import { addWidget, composeCatalogs, defaultWidgetCatalog } from '../lib/widget-catalog';
 
-import type { WidgetCatalogEntry } from '../lib/widget-catalog.js';
+import type { WidgetCatalogEntry } from '../lib/widget-catalog';
 import type { DashboardDefinition } from '@granit/dashboards';
 
 const baseDefinition: DashboardDefinition = {

@@ -3,7 +3,7 @@ import { createMockClient } from '@granit/testing';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useRolePermissions } from '../hooks/use-role-permissions.js';
+import { useRolePermissions } from '../hooks/use-role-permissions';
 
 import type { PermissionGrantDto } from '@granit/authorization';
 

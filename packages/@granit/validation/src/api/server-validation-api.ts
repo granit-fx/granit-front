@@ -3,7 +3,7 @@ import type {
   ServerValidationBatchResponse,
   ServerValidationResult,
   ValidationStatus,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 const DEFAULT_BASE_PATH = '/api/v1/validation';

@@ -1,2 +1,2 @@
-export { entityMergeTranslationsEn } from './en.js';
-export { entityMergeTranslationsFr } from './fr.js';
+export { entityMergeTranslationsEn } from './en';
+export { entityMergeTranslationsFr } from './fr';

@@ -1,9 +1,9 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { AIProvider, useAIConfig } from '../providers/ai-provider.js';
+import { AIProvider, useAIConfig } from '../providers/ai-provider';
 
-import type { AIConfig } from '../providers/ai-provider.js';
+import type { AIConfig } from '../providers/ai-provider';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 

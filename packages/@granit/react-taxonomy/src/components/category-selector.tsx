@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import { useCategory } from '../hooks/use-categories.js';
-import { useAssignCategory, useUnassignCategory } from '../hooks/use-category-mutations.js';
+import { useCategory } from '../hooks/use-categories';
+import { useAssignCategory, useUnassignCategory } from '../hooks/use-category-mutations';
 
 import { CategoryBreadcrumb } from './category-breadcrumb.tsx';
 import { CategoryTree } from './category-tree.tsx';

@@ -5,22 +5,22 @@ export type {
   IdentityUserCacheSyncStaleResult,
   IdentityUserListParams,
   IdentityUserPage,
-} from './identity-user.js';
+} from './identity-user';
 
-export type { IdentityRole, IdentityRoleId } from './identity-role.js';
-export type { IdentityGroup, IdentityGroupId } from './identity-group.js';
+export type { IdentityRole, IdentityRoleId } from './identity-role';
+export type { IdentityGroup, IdentityGroupId } from './identity-group';
 export type {
   IdentityDeviceActivity,
   IdentitySession,
   IdentitySessionId,
-} from './identity-session.js';
-export type { IdentityPasswordChangedAtResponse } from './identity-password.js';
+} from './identity-session';
+export type { IdentityPasswordChangedAtResponse } from './identity-password';
 export type {
   IdentitySetTemporaryPasswordRequest,
   IdentityUserCreateRequest,
   IdentityUserSetEnabledRequest,
   IdentityUserUpdateRequest,
-} from './identity-provider-requests.js';
+} from './identity-provider-requests';
 
 /** Response from `GET /identity/users/capabilities`. */
 export interface IdentityProviderCapabilities {

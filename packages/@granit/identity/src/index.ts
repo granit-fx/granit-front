@@ -1,5 +1,5 @@
 // Types
-export type { IdentityProviderCapabilities } from './types/index.js';
+export type { IdentityProviderCapabilities } from './types/index';
 export type {
   IdentityUser,
   IdentityUserCacheStats,
@@ -7,20 +7,20 @@ export type {
   IdentityUserCacheSyncStaleResult,
   IdentityUserListParams,
   IdentityUserPage,
-} from './types/index.js';
-export type { IdentityRole, IdentityRoleId } from './types/index.js';
-export type { IdentityGroup, IdentityGroupId } from './types/index.js';
-export type { IdentityDeviceActivity, IdentitySession, IdentitySessionId } from './types/index.js';
-export type { IdentityPasswordChangedAtResponse } from './types/index.js';
+} from './types/index';
+export type { IdentityRole, IdentityRoleId } from './types/index';
+export type { IdentityGroup, IdentityGroupId } from './types/index';
+export type { IdentityDeviceActivity, IdentitySession, IdentitySessionId } from './types/index';
+export type { IdentityPasswordChangedAtResponse } from './types/index';
 export type {
   IdentitySetTemporaryPasswordRequest,
   IdentityUserCreateRequest,
   IdentityUserSetEnabledRequest,
   IdentityUserUpdateRequest,
-} from './types/index.js';
+} from './types/index';
 
 // API — User cache
-export { getIdentityCapabilities } from './api/identity-capabilities-api.js';
+export { getIdentityCapabilities } from './api/identity-capabilities-api';
 export {
   batchResolveUsers,
   eraseUserCache,
@@ -30,39 +30,39 @@ export {
   syncAllUsers,
   syncStaleUsers,
   syncUsers,
-} from './api/identity-user-cache-api.js';
+} from './api/identity-user-cache-api';
 
 // API — Identity provider
-export type { IdentityProviderUserListParams } from './api/identity-provider-user-api.js';
+export type { IdentityProviderUserListParams } from './api/identity-provider-user-api';
 export {
   createUser,
   getProviderUser,
   listProviderUsers,
   setUserEnabled,
   updateUser,
-} from './api/identity-provider-user-api.js';
+} from './api/identity-provider-user-api';
 export {
   assignRole,
   listRoleMembers,
   listRoles,
   listUserRoles,
   removeRole,
-} from './api/identity-provider-role-api.js';
+} from './api/identity-provider-role-api';
 export {
   addUserToGroup,
   listGroups,
   listUserGroups,
   removeUserFromGroup,
-} from './api/identity-provider-group-api.js';
+} from './api/identity-provider-group-api';
 export {
   getUserDeviceActivity,
   listUserSessions,
   terminateAllSessions,
   terminateSession,
-} from './api/identity-provider-session-api.js';
+} from './api/identity-provider-session-api';
 export {
   getPasswordChangedAt,
   sendPasswordResetEmail,
   setTemporaryPassword,
-} from './api/identity-provider-password-api.js';
-export { IdentityPermissions } from './permissions.js';
+} from './api/identity-provider-password-api';
+export { IdentityPermissions } from './permissions';

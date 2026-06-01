@@ -3,27 +3,27 @@ export {
   buildTaxonomyQueryKey,
   TaxonomyProvider,
   useTaxonomyConfig,
-} from './providers/taxonomy-provider.js';
+} from './providers/taxonomy-provider';
 export type {
   ResolvedTaxonomyConfig,
   TaxonomyConfig,
   TaxonomyProviderProps,
-} from './providers/taxonomy-provider.js';
+} from './providers/taxonomy-provider';
 
 // Constants
-export { API_VERSION, DEFAULT_BASE_PATH, DEFAULT_QUERY_KEY_PREFIX, MODULE } from './constants.js';
+export { API_VERSION, DEFAULT_BASE_PATH, DEFAULT_QUERY_KEY_PREFIX, MODULE } from './constants';
 
 // Read hooks
-export { useTagAssignments, useTags } from './hooks/use-tags.js';
-export { useCategories, useCategory } from './hooks/use-categories.js';
-export { useTaxonomySearch } from './hooks/use-taxonomy-search.js';
-export type { UseTaxonomySearchOptions } from './hooks/use-taxonomy-search.js';
+export { useTagAssignments, useTags } from './hooks/use-tags';
+export { useCategories, useCategory } from './hooks/use-categories';
+export { useTaxonomySearch } from './hooks/use-taxonomy-search';
+export type { UseTaxonomySearchOptions } from './hooks/use-taxonomy-search';
 export {
   useAttachTagToDocument,
   useDetachTagFromDocument,
   useDocumentTags,
-} from './hooks/use-document-tags.js';
-export type { DocumentTagsBindings } from './hooks/use-document-tags.js';
+} from './hooks/use-document-tags';
+export type { DocumentTagsBindings } from './hooks/use-document-tags';
 
 // Mutation hooks — Tags
 export {
@@ -32,7 +32,7 @@ export {
   useDeleteTag,
   useUnassignTag,
   useUpdateTag,
-} from './hooks/use-tag-mutations.js';
+} from './hooks/use-tag-mutations';
 
 // Mutation hooks — Categories
 export {
@@ -42,7 +42,7 @@ export {
   useMoveCategory,
   useUnassignCategory,
   useUpdateCategory,
-} from './hooks/use-category-mutations.js';
+} from './hooks/use-category-mutations';
 
 // Components
 export { TagChip } from './components/tag-chip.tsx';
@@ -81,5 +81,5 @@ export type {
 } from './contributions/entity-taxonomy.tsx';
 
 // i18n
-export { taxonomyTranslationsEn, taxonomyTranslationsFr } from './locales/index.js';
-export type { TaxonomyTranslations } from './locales/index.js';
+export { taxonomyTranslationsEn, taxonomyTranslationsFr } from './locales/index';
+export type { TaxonomyTranslations } from './locales/index';

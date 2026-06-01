@@ -6,9 +6,9 @@ import {
   getPasswordChangedAt,
   sendPasswordResetEmail,
   setTemporaryPassword,
-} from '../api/identity-provider-password-api.js';
+} from '../api/identity-provider-password-api';
 
-import type { IdentityPasswordChangedAtResponse } from '../types/index.js';
+import type { IdentityPasswordChangedAtResponse } from '../types/index';
 
 const basePath = '/identity/provider';
 

@@ -1,8 +1,8 @@
-export { createLocalization } from './create-localization.js';
-export { resolveInitialLocale } from './resolve-initial-locale.js';
-export { applyTranslations } from './apply-translations.js';
-export { unflattenKeys } from './unflatten-keys.js';
-export { LOCALE_STORAGE_KEY } from './constants.js';
+export { createLocalization } from './create-localization';
+export { resolveInitialLocale } from './resolve-initial-locale';
+export { applyTranslations } from './apply-translations';
+export { unflattenKeys } from './unflatten-keys';
+export { LOCALE_STORAGE_KEY } from './constants';
 
 export type {
   AdminLanguage,
@@ -11,10 +11,10 @@ export type {
   LocalizationConfig,
   LocalizationOverride,
   LocalizationOverrideId,
-} from './types/index.js';
+} from './types/index';
 
 // API — Consumer
-export { getApplicationLocalization } from './api/localization-api.js';
+export { getApplicationLocalization } from './api/localization-api';
 
 // API — Admin
 export {
@@ -22,5 +22,5 @@ export {
   listLanguages,
   setLocalizationOverride,
   updateLanguageStatus,
-} from './api/localization-admin-api.js';
-export { LocalizationOverridesPermissions } from './permissions.js';
+} from './api/localization-admin-api';
+export { LocalizationOverridesPermissions } from './permissions';

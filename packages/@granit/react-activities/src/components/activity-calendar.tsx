@@ -1,6 +1,6 @@
 import { useMemo, useState, type ReactNode } from 'react';
 
-import { useActivitiesCalendar } from '../hooks/use-activities.js';
+import { useActivitiesCalendar } from '../hooks/use-activities';
 
 import type { ActivityCalendarFilter, ActivityCalendarItemResponse } from '@granit/activities';
 

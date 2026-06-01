@@ -1,8 +1,8 @@
-import type { DashboardDriftStatus } from './dashboard-drift-status.js';
-import type { WidgetSnapshotStatus } from './widget-snapshot-status.js';
-import type { WidgetTransport } from './widget-transport.js';
-import type { RefreshHint } from '../types/refresh-hint.js';
-import type { WidgetAction } from '../types/widget-action.js';
+import type { DashboardDriftStatus } from './dashboard-drift-status';
+import type { WidgetSnapshotStatus } from './widget-snapshot-status';
+import type { WidgetTransport } from './widget-transport';
+import type { RefreshHint } from '../types/refresh-hint';
+import type { WidgetAction } from '../types/widget-action';
 
 /**
  * Wire shape for `POST /dashboards/{id}/render`. Mirrors

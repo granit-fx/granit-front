@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { useKeycloakTenantResolvers } from '../hooks/use-keycloak-tenant-resolvers.js';
+import { useKeycloakTenantResolvers } from '../hooks/use-keycloak-tenant-resolvers';
 
 describe('useKeycloakTenantResolvers', () => {
   it('creates a resolver that extracts tenant from tokenParsed', () => {

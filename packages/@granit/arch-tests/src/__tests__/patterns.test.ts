@@ -5,7 +5,7 @@ import {
 } from '@granit/arch-tests-kit';
 import { describe, expect, it } from 'vitest';
 
-import { REPO_ROOT, listPackages, toModules } from './helpers.js';
+import { REPO_ROOT, listPackages, toModules } from './helpers';
 
 const ctx = { modules: toModules(listPackages()), repoRoot: REPO_ROOT };
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import type { GlobalErrorCaptureProps } from '../types/index.js';
+import type { GlobalErrorCaptureProps } from '../types/index';
 
 /**
  * Invisible component that listens to `window.error` and

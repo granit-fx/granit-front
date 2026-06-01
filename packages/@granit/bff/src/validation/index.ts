@@ -1,2 +1,2 @@
-export { parseBffSessionResponse } from './parse-bff-user.js';
-export type { ParseResult } from './parse-bff-user.js';
+export { parseBffSessionResponse } from './parse-bff-user';
+export type { ParseResult } from './parse-bff-user';

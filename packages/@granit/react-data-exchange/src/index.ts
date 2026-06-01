@@ -16,7 +16,7 @@ export {
   useExportJob,
   useExportJobs,
   useExportPresets,
-} from './export/index.js';
+} from './export/index';
 
 // Import
 export {
@@ -32,11 +32,11 @@ export {
   useImportJobs,
   useImportPreview,
   useImportReport,
-} from './import/index.js';
+} from './import/index';
 
 // Data Exchange (combined)
 export {
   type DataExchangeConfig,
   type DataExchangeProviderProps,
   DataExchangeProvider,
-} from './providers/data-exchange-provider.js';
+} from './providers/data-exchange-provider';

@@ -1,5 +1,5 @@
 // Factory
-export { createReferenceDataHooks } from './hooks/create-reference-data-hooks.js';
+export { createReferenceDataHooks } from './hooks/create-reference-data-hooks';
 
 // Option types
 export type {
@@ -10,4 +10,4 @@ export type {
   ReferenceDataListHookOptions,
   ReferenceDataMutationHookOptions,
   ReferenceDataUpdateVariables,
-} from './hooks/create-reference-data-hooks.js';
+} from './hooks/create-reference-data-hooks';

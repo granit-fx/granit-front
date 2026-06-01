@@ -1,9 +1,9 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { searchTaxonomy } from '../api/search-api.js';
+import { searchTaxonomy } from '../api/search-api';
 
-import type { TaxonomySearchResultGroup } from '../types/index.js';
+import type { TaxonomySearchResultGroup } from '../types/index';
 
 const basePath = '/api/v1/taxonomy';
 

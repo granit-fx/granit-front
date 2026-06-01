@@ -8,9 +8,9 @@ import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { notFound, pagedResponse } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { mockAuditEntries } from './data.js';
+import { mockAuditEntries } from './data';
 
 import type { AuditEntry, AuditEntryDetail } from '@granit/auditing';
 import type { QueryMetadata } from '@granit/query-engine';

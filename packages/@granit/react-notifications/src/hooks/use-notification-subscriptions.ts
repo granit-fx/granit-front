@@ -9,8 +9,8 @@ import {
 } from '@granit/notifications';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { API_BASE_PATH } from '../constants.js';
-import { useNotificationConfig } from '../providers/notification-provider.js';
+import { API_BASE_PATH } from '../constants';
+import { useNotificationConfig } from '../providers/notification-provider';
 
 import type {
   NotificationDefinition,

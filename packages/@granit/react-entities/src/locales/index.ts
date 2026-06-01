@@ -15,6 +15,6 @@
 // framework.
 // ---------------------------------------------------------------------------
 
-export { entitiesTranslationsEn } from './en.js';
-export type { EntitiesTranslations } from './en.js';
-export { entitiesTranslationsFr } from './fr.js';
+export { entitiesTranslationsEn } from './en';
+export type { EntitiesTranslations } from './en';
+export { entitiesTranslationsFr } from './fr';

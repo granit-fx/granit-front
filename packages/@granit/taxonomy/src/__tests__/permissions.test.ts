@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { TaxonomyPermissions } from '../permissions.js';
+import { TaxonomyPermissions } from '../permissions';
 
 describe('TaxonomyPermissions', () => {
   it('exposes the Tags Read/Manage keys matching the backend', () => {

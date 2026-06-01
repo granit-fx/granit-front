@@ -1,4 +1,4 @@
-import type { VisibilityCondition } from '../types/visibility.js';
+import type { VisibilityCondition } from '../types/visibility';
 
 /**
  * Evaluate one {@link VisibilityCondition} against the current form values.

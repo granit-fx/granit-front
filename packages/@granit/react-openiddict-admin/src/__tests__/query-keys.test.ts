@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { openIddictAdminKeys } from '../hooks/query-keys.js';
+import { openIddictAdminKeys } from '../hooks/query-keys';
 
 describe('openIddictAdminKeys', () => {
   it('should return base key for all', () => {

@@ -1,9 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { rel } from '../fs.js';
+import { rel } from '../fs';
 
-import type { AllowlistedScanContext, ScanContext, Violation } from '../types.js';
+import type { AllowlistedScanContext, ScanContext, Violation } from '../types';
 
 const H1_RE = /^#\s+(.+?)\s*$/m;
 
@@ -141,7 +141,9 @@ export function scanSharedDepVersions(opts: SharedDepVersionsOptions): Violation
     if (!slot || slot.size <= 1) continue;
     // More than one distinct version across the workspace.
     const summary = [...slot.entries()]
-      .map(([ver, modules]) => `${ver} (${modules.length}× — e.g. ${modules.slice(0, 3).join(', ')})`)
+      .map(
+        ([ver, modules]) => `${ver} (${modules.length}× — e.g. ${modules.slice(0, 3).join(', ')})`
+      )
       .join(' vs ');
     // Attribute the violation to the minority versions so the report
     // points at the packages to align.

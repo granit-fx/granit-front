@@ -4,7 +4,7 @@ import {
   resolveDashboardAliases,
   resolveEntityAlias,
   resolveEntityAliasResolver,
-} from '../lib/resolve-entity-alias.js';
+} from '../lib/resolve-entity-alias';
 
 import type { EntityAlias } from '@granit/dashboards';
 

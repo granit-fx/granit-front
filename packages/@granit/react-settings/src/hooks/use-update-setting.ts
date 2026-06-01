@@ -2,7 +2,7 @@ import { updateSetting } from '@granit/settings';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import { buildSettingsQueryKey, useSettingsConfig } from '../providers/settings-provider.js';
+import { buildSettingsQueryKey, useSettingsConfig } from '../providers/settings-provider';
 
 import type { SettingScope } from '@granit/settings';
 

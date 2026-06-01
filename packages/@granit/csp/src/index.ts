@@ -10,10 +10,10 @@
 // (kebab-cased, prefixed `granit-`) plus an idempotent `installPolicy()`.
 // ---------------------------------------------------------------------------
 
-export { installPolicy, GRANIT_CORE_POLICY_NAME } from './core-policy.js';
+export { installPolicy, GRANIT_CORE_POLICY_NAME } from './core-policy';
 
-export { getCspTrustedTypesDirective, listInstalledGranitPolicies } from './registry.js';
+export { getCspTrustedTypesDirective, listInstalledGranitPolicies } from './registry';
 
-export { installNamedPolicy } from './install-policy.js';
+export { installNamedPolicy } from './install-policy';
 
-export type { GranitPolicyName, InstallResult, TrustedTypePolicyOptions } from './types/index.js';
+export type { GranitPolicyName, InstallResult, TrustedTypePolicyOptions } from './types/index';

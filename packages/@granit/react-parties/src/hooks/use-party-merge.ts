@@ -2,7 +2,7 @@ import { generateMergeIdempotencyKey } from '@granit/entity-merge';
 import { mergeParty, previewPartyMerge } from '@granit/parties';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildPartiesQueryKey, usePartiesConfig } from '../providers/parties-provider.js';
+import { buildPartiesQueryKey, usePartiesConfig } from '../providers/parties-provider';
 
 import type { PartyId, PartyMergeRequest, PartyMergeResponse } from '@granit/parties';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';

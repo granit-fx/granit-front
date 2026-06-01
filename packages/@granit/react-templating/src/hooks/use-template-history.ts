@@ -1,9 +1,9 @@
 import { getHistory, getRevision } from '@granit/templating';
 import { useQuery } from '@tanstack/react-query';
 
-import { useTemplatingConfig } from '../providers/templating-provider.js';
+import { useTemplatingConfig } from '../providers/templating-provider';
 
-import { templateKeys } from './query-keys.js';
+import { templateKeys } from './query-keys';
 
 export function useTemplateHistory(
   name: string,

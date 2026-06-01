@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import type { WidgetConfigFormRegistry } from '../lib/widget-config-form-registry.js';
+import type { WidgetConfigFormRegistry } from '../lib/widget-config-form-registry';
 import type { WidgetDefinition } from '@granit/dashboards';
 import type { ReactNode } from 'react';
 

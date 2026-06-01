@@ -1,4 +1,4 @@
-import type { DashboardStatus } from './dashboard-status.js';
+import type { DashboardStatus } from './dashboard-status';
 
 /**
  * Wire shape for `POST /dashboards/{id}/resync` (ADR-038 §3). Mirrors

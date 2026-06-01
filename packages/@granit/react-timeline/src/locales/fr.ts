@@ -1,4 +1,4 @@
-import type { TimelineTranslations } from './en.js';
+import type { TimelineTranslations } from './en';
 
 /**
  * French translation bundle for `@granit/react-timeline`. Consumers

@@ -5,8 +5,8 @@ import {
   listBffSessions,
   revokeAllOtherBffSessions,
   revokeBffSession,
-} from '../api/bff-session-api.js';
-import { CsrfManager } from '../csrf/csrf-manager.js';
+} from '../api/bff-session-api';
+import { CsrfManager } from '../csrf/csrf-manager';
 
 describe('BFF session API', () => {
   const originalFetch = globalThis.fetch;

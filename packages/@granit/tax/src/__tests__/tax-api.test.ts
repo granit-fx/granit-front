@@ -1,9 +1,9 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getTaxRateByCountry, getTaxRates, validateTaxId } from '../api/tax-api.js';
+import { getTaxRateByCountry, getTaxRates, validateTaxId } from '../api/tax-api';
 
-import type { TaxRateResponse, TaxValidateRequest, TaxValidateResponse } from '../types/index.js';
+import type { TaxRateResponse, TaxValidateRequest, TaxValidateResponse } from '../types/index';
 
 // ---------------------------------------------------------------------------
 // Fixtures

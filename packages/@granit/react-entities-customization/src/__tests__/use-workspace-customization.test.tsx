@@ -8,8 +8,8 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   usePutWorkspaceCustomization,
   useWorkspaceCustomization,
-} from '../hooks/use-workspace-customization.js';
-import { CustomizationProvider } from '../providers/customization-provider.js';
+} from '../hooks/use-workspace-customization';
+import { CustomizationProvider } from '../providers/customization-provider';
 
 import type { WorkspaceCustomizationResponse } from '@granit/entities-customization';
 import type { ReactNode } from 'react';

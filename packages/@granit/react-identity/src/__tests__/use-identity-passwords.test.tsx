@@ -10,10 +10,10 @@ import {
   usePasswordChangedAt,
   useSendPasswordResetEmail,
   useSetTemporaryPassword,
-} from '../hooks/use-identity-passwords.js';
-import { IdentityProvider } from '../providers/identity-provider.js';
+} from '../hooks/use-identity-passwords';
+import { IdentityProvider } from '../providers/identity-provider';
 
-import type { IdentityProviderProps } from '../providers/identity-provider.js';
+import type { IdentityProviderProps } from '../providers/identity-provider';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 

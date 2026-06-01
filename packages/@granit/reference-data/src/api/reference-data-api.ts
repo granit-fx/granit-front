@@ -3,7 +3,7 @@ import type {
   ReferenceDataEntry,
   ReferenceDataQuery,
   ReferenceDataUpdateRequest,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult } from '@granit/query-engine';
 

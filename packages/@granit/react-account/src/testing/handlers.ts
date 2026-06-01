@@ -2,7 +2,7 @@ import { noContent, notFound } from '@granit/testing/msw';
 import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
 import {
   mockAccountSettings,
@@ -10,7 +10,7 @@ import {
   mockPasskeys,
   mockProfile,
   mockTwoFactorStatus,
-} from './data.js';
+} from './data';
 
 /**
  * Create stateful MSW handlers for account self-service endpoints.

@@ -3,7 +3,7 @@
 // Mirrors Granit.AI.Endpoints embedding endpoint.
 // ---------------------------------------------------------------------------
 
-import type { AIEmbeddingRequest, AIEmbeddingResponse } from '../types/index.js';
+import type { AIEmbeddingRequest, AIEmbeddingResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

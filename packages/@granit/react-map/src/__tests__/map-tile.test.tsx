@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { MapTile } from '../components/map-tile.js';
+import { MapTile } from '../components/map-tile';
 
 import type { MapWidgetDefinition } from '@granit/analytics';
 

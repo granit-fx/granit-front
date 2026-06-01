@@ -5,10 +5,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useCompletePasskeyAssertion } from '../hooks/use-complete-passkey-assertion.js';
-import { LocalAuthProvider } from '../providers/local-auth-provider.js';
+import { useCompletePasskeyAssertion } from '../hooks/use-complete-passkey-assertion';
+import { LocalAuthProvider } from '../providers/local-auth-provider';
 
-import type { LocalAuthConfig } from '../providers/local-auth-provider.js';
+import type { LocalAuthConfig } from '../providers/local-auth-provider';
 import type { AccountLoginResponse } from '@granit/authentication-local';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

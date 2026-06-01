@@ -4,12 +4,12 @@ import { render } from '@testing-library/react';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 
-import { EntityDetail } from '../components/entity-detail.js';
+import { EntityDetail } from '../components/entity-detail';
 import {
   EntityRendererProvider,
   type EntitySidePanel,
   type EntityComponentCatalog,
-} from '../providers/index.js';
+} from '../providers/index';
 
 import type {
   EntityDetailManifest,

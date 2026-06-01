@@ -2,9 +2,9 @@ import { TZDate } from '@date-fns/tz';
 import { format, formatDistanceToNow } from 'date-fns';
 import { useCallback } from 'react';
 
-import { useDateLocale } from './date-locale.js';
-import { useLocale } from './use-locale.js';
-import { useTimezone } from './use-timezone.js';
+import { useDateLocale } from './date-locale';
+import { useLocale } from './use-locale';
+import { useTimezone } from './use-timezone';
 
 /** Convert a date input to a TZDate in the given timezone. */
 function toZoned(date: string | Date, timezone: string): TZDate {

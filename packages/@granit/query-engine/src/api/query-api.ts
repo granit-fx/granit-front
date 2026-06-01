@@ -2,11 +2,11 @@
 // Query API — data retrieval functions
 // ---------------------------------------------------------------------------
 
-import { serializeQueryRequest } from './query-param-serializer.js';
+import { serializeQueryRequest } from './query-param-serializer';
 
-import type { QueryMetadata } from '../types/query-metadata.js';
-import type { QueryRequest } from '../types/query-params.js';
-import type { GroupedResult, PagedResult } from '../types/query-results.js';
+import type { QueryMetadata } from '../types/query-metadata';
+import type { QueryRequest } from '../types/query-params';
+import type { GroupedResult, PagedResult } from '../types/query-results';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

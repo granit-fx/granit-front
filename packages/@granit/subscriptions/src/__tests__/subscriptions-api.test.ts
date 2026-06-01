@@ -21,7 +21,7 @@ import {
   publishPlan,
   revokeSeat,
   updatePlan,
-} from '../api/subscriptions-api.js';
+} from '../api/subscriptions-api';
 
 import type {
   BulkMigratePriceResponse,
@@ -29,7 +29,7 @@ import type {
   PlanResponse,
   SeatResponse,
   SubscriptionResponse,
-} from '../types/index.js';
+} from '../types/index';
 import type { PagedResult } from '@granit/query-engine';
 
 const basePath = '/subscriptions';

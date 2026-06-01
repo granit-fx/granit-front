@@ -13,10 +13,10 @@ import {
   useInvoice,
   useInvoices,
   useMarkInvoiceUncollectible,
-} from '../hooks/use-invoicing.js';
-import { InvoicingProvider } from '../providers/invoicing-provider.js';
+} from '../hooks/use-invoicing';
+import { InvoicingProvider } from '../providers/invoicing-provider';
 
-import type { InvoicingConfig } from '../providers/invoicing-provider.js';
+import type { InvoicingConfig } from '../providers/invoicing-provider';
 import type {
   FinalizeInvoiceRequest,
   InvoiceCreateRequest,

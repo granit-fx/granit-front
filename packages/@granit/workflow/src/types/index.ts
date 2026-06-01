@@ -1,16 +1,16 @@
-export { TransitionOutcome } from './transition-outcome.js';
-export type { TransitionOutcomeValue } from './transition-outcome.js';
+export { TransitionOutcome } from './transition-outcome';
+export type { TransitionOutcomeValue } from './transition-outcome';
 
-export { WorkflowLifecycleStatus } from './lifecycle-status.js';
-export type { WorkflowLifecycleStatusValue } from './lifecycle-status.js';
+export { WorkflowLifecycleStatus } from './lifecycle-status';
+export type { WorkflowLifecycleStatusValue } from './lifecycle-status';
 
 export type {
   WorkflowTransition,
   TransitionHistory,
   WorkflowTransitionRequest,
   WorkflowTransitionResult,
-} from './transition.js';
+} from './transition';
 
-export type { WorkflowStatus } from './workflow-status.js';
+export type { WorkflowStatus } from './workflow-status';
 
-export type { WorkflowConfig } from './config.js';
+export type { WorkflowConfig } from './config';

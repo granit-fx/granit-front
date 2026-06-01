@@ -1,6 +1,6 @@
 import { buildApiUrl } from '@granit/api-client';
 
-import type { ResourceRoomResponse } from '../types/index.js';
+import type { ResourceRoomResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 // ---------------------------------------------------------------------------

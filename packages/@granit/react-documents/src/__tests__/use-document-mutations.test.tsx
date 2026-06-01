@@ -14,8 +14,8 @@ import {
   useRestoreDocument,
   useTransferDocumentOwner,
   useTrashDocument,
-} from '../hooks/use-document-mutations.js';
-import { DocumentsProvider } from '../providers/documents-provider.js';
+} from '../hooks/use-document-mutations';
+import { DocumentsProvider } from '../providers/documents-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type {

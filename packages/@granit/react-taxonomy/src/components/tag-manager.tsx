@@ -1,8 +1,8 @@
 import { isHexColor } from '@granit/taxonomy';
 import { useState } from 'react';
 
-import { useCreateTag, useDeleteTag, useUpdateTag } from '../hooks/use-tag-mutations.js';
-import { useTags } from '../hooks/use-tags.js';
+import { useCreateTag, useDeleteTag, useUpdateTag } from '../hooks/use-tag-mutations';
+import { useTags } from '../hooks/use-tags';
 
 import { TagChip } from './tag-chip.tsx';
 

@@ -10,7 +10,7 @@ import {
   listActivities,
   reassignActivity,
   rescheduleActivity,
-} from '../api/activities-api.js';
+} from '../api/activities-api';
 
 import type {
   ActivityCalendarFilter,
@@ -22,7 +22,7 @@ import type {
   CreateActivityRequest,
   ReassignActivityRequest,
   RescheduleActivityRequest,
-} from '../types/index.js';
+} from '../types/index';
 
 const basePath = '/activities';
 

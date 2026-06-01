@@ -3,10 +3,10 @@ import { toEntityId, toISODateString } from '@granit/types';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useMyPresence } from '../hooks/use-my-presence.js';
-import { useSetMyPresence } from '../hooks/use-set-my-presence.js';
+import { useMyPresence } from '../hooks/use-my-presence';
+import { useSetMyPresence } from '../hooks/use-set-my-presence';
 
-import { createPresenceTestHarness } from './test-utils.js';
+import { createPresenceTestHarness } from './test-utils';
 
 import type { PresenceResponse } from '@granit/presence';
 import type { UserId } from '@granit/types';

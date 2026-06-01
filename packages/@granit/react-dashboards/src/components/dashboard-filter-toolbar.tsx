@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { useDashboardFilters } from './dashboard-filter-context.js';
+import { useDashboardFilters } from './dashboard-filter-context';
 
 import type { DashboardFilter } from '@granit/dashboards';
 

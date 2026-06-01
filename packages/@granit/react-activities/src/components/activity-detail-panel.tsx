@@ -1,8 +1,8 @@
 import { type ReactNode } from 'react';
 
-import { useActivity } from '../hooks/use-activities.js';
+import { useActivity } from '../hooks/use-activities';
 
-import type { ActivityActionLabels } from './activity-list.js';
+import type { ActivityActionLabels } from './activity-list';
 import type { ActivityResponse } from '@granit/activities';
 
 export interface ActivityDetailPanelProps {

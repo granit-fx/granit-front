@@ -1,9 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { isTestFile, isTestingDir, readFile, rel, stripComments, walkSourceFiles } from '../fs.js';
+import { isTestFile, isTestingDir, readFile, rel, stripComments, walkSourceFiles } from '../fs';
 
-import type { AllowlistedScanContext, ScanContext, Violation } from '../types.js';
+import type { AllowlistedScanContext, ScanContext, Violation } from '../types';
 
 function findSubdirs(root: string, name: string): string[] {
   if (!fs.existsSync(root)) return [];

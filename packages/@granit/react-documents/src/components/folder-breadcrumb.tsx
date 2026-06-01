@@ -1,4 +1,4 @@
-import { useFolderBreadcrumb } from '../hooks/use-folders.js';
+import { useFolderBreadcrumb } from '../hooks/use-folders';
 
 import type { FolderResponse } from '@granit/documents';
 import type { ReactNode } from 'react';

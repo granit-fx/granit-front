@@ -8,4 +8,4 @@ export { axiosResponse, createMockClient, createMockLogger } from '@granit/testi
 export type { MockLogger } from '@granit/testing';
 
 // React-specific utilities
-export { createQueryWrapper, createTestQueryClient } from './query-helpers.js';
+export { createQueryWrapper, createTestQueryClient } from './query-helpers';

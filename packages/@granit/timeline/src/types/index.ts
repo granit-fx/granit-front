@@ -1,4 +1,4 @@
-export { TimelineEntryType } from './entry-type.js';
+export { TimelineEntryType } from './entry-type';
 export type {
   BlobId,
   TimelineAttachmentId,
@@ -7,21 +7,21 @@ export type {
   TimelineEntryId,
   TimelineEntryPage,
   TimelineStreamPage,
-} from './stream.js';
-export type { CreateTimelineEntryRequest, TimelineQueryParams } from './request.js';
-export type { TimelineConfig } from './config.js';
-export type { MentionSuggestion } from './mention.js';
-export { parseReactionEmoji, toReactionEmoji } from './reaction.js';
+} from './stream';
+export type { CreateTimelineEntryRequest, TimelineQueryParams } from './request';
+export type { TimelineConfig } from './config';
+export type { MentionSuggestion } from './mention';
+export { parseReactionEmoji, toReactionEmoji } from './reaction';
 export type {
   ReactionAggregate,
   ReactionEmoji,
   ReactionMap,
   ReactionToggleResult,
-} from './reaction.js';
+} from './reaction';
 export {
   TimelineEntryNotEditableReason,
   TimelineEntryOrigin,
   TimelineSourceKeys,
   isValidSourceKey,
-} from './source.js';
-export type { TimelineEntryNotEditableReasonValue, TimelineEntryOriginValue } from './source.js';
+} from './source';
+export type { TimelineEntryNotEditableReasonValue, TimelineEntryOriginValue } from './source';

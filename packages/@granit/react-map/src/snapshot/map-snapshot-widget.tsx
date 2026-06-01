@@ -3,11 +3,11 @@ import { assertSafeUrl } from '@granit/utils';
 import L from 'leaflet';
 import { useEffect, useMemo, useRef } from 'react';
 
-import { useMapTileProvider } from '../components/map-tile-provider-context.js';
+import { useMapTileProvider } from '../components/map-tile-provider-context';
 
 import 'leaflet/dist/leaflet.css';
 
-import type { MapTileLayer } from '../types/index.js';
+import type { MapTileLayer } from '../types/index';
 import type { MapWidgetSnapshot } from '@granit/analytics';
 import type { DashboardRenderedWidget } from '@granit/dashboards';
 

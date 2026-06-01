@@ -9,7 +9,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import {
   entityRelationAggregatesQueryKey,
   useEntityRelationAggregates,
-} from '../hooks/use-entity-relation-aggregates.js';
+} from '../hooks/use-entity-relation-aggregates';
 
 import type { RelationAggregatesResponse } from '@granit/entities';
 import type { ReactNode } from 'react';

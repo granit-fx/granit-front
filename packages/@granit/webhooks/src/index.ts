@@ -1,5 +1,5 @@
 // Types
-export { WebhookSubscriptionStatus } from './types/index.js';
+export { WebhookSubscriptionStatus } from './types/index';
 
 export type {
   WebhookDeliveryAttemptResponse,
@@ -15,7 +15,7 @@ export type {
   WebhookSubscriptionStatsResponse,
   WebhookSubscriptionTestPingResponse,
   WebhookSubscriptionUpdateRequest,
-} from './types/index.js';
+} from './types/index';
 
 // Query keys
 
@@ -35,5 +35,5 @@ export {
   suspendSubscription,
   testPing,
   updateSubscription,
-} from './api/webhooks-api.js';
-export { WebhooksPermissions } from './permissions.js';
+} from './api/webhooks-api';
+export { WebhooksPermissions } from './permissions';

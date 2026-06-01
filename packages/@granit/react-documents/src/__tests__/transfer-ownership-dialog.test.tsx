@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { TransferOwnershipDialog } from '../components/transfer-ownership-dialog.tsx';
-import { DocumentsProvider } from '../providers/documents-provider.js';
+import { DocumentsProvider } from '../providers/documents-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { DocumentResponse, FolderResponse } from '@granit/documents';

@@ -1,14 +1,14 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getGrouped, getPage, getQueryMeta } from '../api/query-api.js';
+import { getGrouped, getPage, getQueryMeta } from '../api/query-api';
 import {
   createSavedView,
   deleteSavedView,
   listSavedViews,
   setDefaultSavedView,
   updateSavedView,
-} from '../api/saved-views-api.js';
+} from '../api/saved-views-api';
 
 describe('query-api', () => {
   it('getPage calls GET with serialized params', async () => {

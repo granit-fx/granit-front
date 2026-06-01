@@ -1,4 +1,4 @@
-import type { GrantShareRequest, ListSharesResponse, ShareResponse } from '../types/index.js';
+import type { GrantShareRequest, ListSharesResponse, ShareResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

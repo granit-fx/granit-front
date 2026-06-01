@@ -5,8 +5,8 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { deviceTokenKeys, useDeviceTokens } from '../hooks/use-device-tokens.js';
-import { MobilePushProvider } from '../providers/mobile-push-provider.js';
+import { deviceTokenKeys, useDeviceTokens } from '../hooks/use-device-tokens';
+import { MobilePushProvider } from '../providers/mobile-push-provider';
 
 import type { MobilePushTokenResponse } from '@granit/notifications-mobile-push';
 import type { AxiosInstance } from 'axios';

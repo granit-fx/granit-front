@@ -8,15 +8,15 @@ export type {
   BffUnauthenticated,
   BffUser,
   BffUserResponse,
-} from './types/index.js';
+} from './types/index';
 
-export { CsrfManager } from './csrf/index.js';
+export { CsrfManager } from './csrf/index';
 
 export {
   listBffSessions,
   revokeAllOtherBffSessions,
   revokeBffSession,
-} from './api/bff-session-api.js';
+} from './api/bff-session-api';
 
-export { parseBffSessionResponse } from './validation/index.js';
-export type { ParseResult } from './validation/index.js';
+export { parseBffSessionResponse } from './validation/index';
+export type { ParseResult } from './validation/index';

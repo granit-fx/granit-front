@@ -6,7 +6,7 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { entityDiscoveryQueryKey, useEntityDiscovery } from '../hooks/use-entity-discovery.js';
+import { entityDiscoveryQueryKey, useEntityDiscovery } from '../hooks/use-entity-discovery';
 
 import type { EntityDiscoveryResponse } from '@granit/entities';
 import type { ReactNode } from 'react';

@@ -3,11 +3,11 @@ import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { describe, expect, it } from 'vitest';
 
-import { WidgetActionProvider } from '../components/widget-action-context.js';
-import { ImageWidget } from '../components/widgets/image-widget.js';
-import { TextWidget } from '../components/widgets/text-widget.js';
-import { defaultWidgetActionHandlers } from '../lib/default-widget-action-handlers.js';
-import { composeWidgetActionHandlers } from '../lib/widget-action-handler.js';
+import { WidgetActionProvider } from '../components/widget-action-context';
+import { ImageWidget } from '../components/widgets/image-widget';
+import { TextWidget } from '../components/widgets/text-widget';
+import { defaultWidgetActionHandlers } from '../lib/default-widget-action-handlers';
+import { composeWidgetActionHandlers } from '../lib/widget-action-handler';
 
 import type { ImageWidgetDefinition, TextWidgetDefinition } from '@granit/dashboards';
 import type { ReactNode } from 'react';

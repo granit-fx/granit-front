@@ -11,9 +11,9 @@ import {
 } from '@granit/documents';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { buildDocumentsQueryKey, useDocumentsConfig } from '../providers/documents-provider.js';
+import { buildDocumentsQueryKey, useDocumentsConfig } from '../providers/documents-provider';
 
-import type { ResolvedDocumentsConfig } from '../providers/documents-provider.js';
+import type { ResolvedDocumentsConfig } from '../providers/documents-provider';
 import type {
   AppendVersionRequest,
   DocumentResponse,

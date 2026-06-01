@@ -1,30 +1,30 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { useDocumentBookmarks } from '../hooks/use-document-bookmarks.js';
-import { useFolder } from '../hooks/use-folders.js';
-import { useViewPreferences } from '../hooks/use-view-preferences.js';
+import { useDocumentBookmarks } from '../hooks/use-document-bookmarks';
+import { useFolder } from '../hooks/use-folders';
+import { useViewPreferences } from '../hooks/use-view-preferences';
 
-import { DocumentDetail } from './document-detail.js';
-import { DocumentQuickLook } from './document-quick-look.js';
-import { DocumentSearchPalette } from './document-search-palette.js';
-import { DocumentsList } from './documents-list.js';
-import { DocumentsSidebar } from './documents-sidebar.js';
-import { DocumentsToolbar } from './documents-toolbar.js';
-import { FolderBreadcrumb } from './folder-breadcrumb.js';
-import { QuotaBadge } from './quota-badge.js';
-import { UploadButton } from './upload-button.js';
-import { UploadDropZone } from './upload-drop-zone.js';
+import { DocumentDetail } from './document-detail';
+import { DocumentQuickLook } from './document-quick-look';
+import { DocumentSearchPalette } from './document-search-palette';
+import { DocumentsList } from './documents-list';
+import { DocumentsSidebar } from './documents-sidebar';
+import { DocumentsToolbar } from './documents-toolbar';
+import { FolderBreadcrumb } from './folder-breadcrumb';
+import { QuotaBadge } from './quota-badge';
+import { UploadButton } from './upload-button';
+import { UploadDropZone } from './upload-drop-zone';
 
-import type { DocumentDetailLabels } from './document-detail.js';
-import type { DocumentQuickLookLabels } from './document-quick-look.js';
-import type { DocumentSearchPaletteLabels } from './document-search-palette.js';
-import type { DocumentsListLabels } from './documents-list.js';
-import type { DocumentsSidebarLabels } from './documents-sidebar.js';
-import type { DocumentsToolbarLabels } from './documents-toolbar.js';
-import type { FolderBreadcrumbLabels } from './folder-breadcrumb.js';
-import type { FolderTreeLabels } from './folder-tree.js';
-import type { UploadButtonLabels } from './upload-button.js';
-import type { UploadDropZoneLabels } from './upload-drop-zone.js';
+import type { DocumentDetailLabels } from './document-detail';
+import type { DocumentQuickLookLabels } from './document-quick-look';
+import type { DocumentSearchPaletteLabels } from './document-search-palette';
+import type { DocumentsListLabels } from './documents-list';
+import type { DocumentsSidebarLabels } from './documents-sidebar';
+import type { DocumentsToolbarLabels } from './documents-toolbar';
+import type { FolderBreadcrumbLabels } from './folder-breadcrumb';
+import type { FolderTreeLabels } from './folder-tree';
+import type { UploadButtonLabels } from './upload-button';
+import type { UploadDropZoneLabels } from './upload-drop-zone';
 import type { DocumentResponse, FolderResponse } from '@granit/documents';
 import type { ReactNode } from 'react';
 

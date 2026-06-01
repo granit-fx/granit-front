@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import type { DashboardCategory } from '../types/dashboard-category.js';
-import type { TimeWindowKind } from '../types/dashboard-time-window.js';
-import type { TextWidgetStyle } from '../types/widget-definition.js';
+import type { DashboardCategory } from '../types/dashboard-category';
+import type { TimeWindowKind } from '../types/dashboard-time-window';
+import type { TextWidgetStyle } from '../types/widget-definition';
 
 // Pinned wire-format fixtures for the framework's PascalCase enum surface.
 // All three enums ship via Granit's host JsonStringEnumConverter() with no

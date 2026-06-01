@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 
-import { useTenant } from '../providers/tenant-provider.js';
+import { useTenant } from '../providers/tenant-provider';
 
 /**
  * Clears the React Query cache whenever the active tenant id changes.

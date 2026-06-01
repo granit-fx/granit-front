@@ -9,7 +9,7 @@ import {
   redactPhone,
   redactToken,
   redactUsername,
-} from '../redaction.js';
+} from '../redaction';
 
 describe('redactEmail', () => {
   it('preserves 3-char prefix and domain', () => {

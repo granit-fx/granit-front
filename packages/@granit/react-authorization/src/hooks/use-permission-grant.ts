@@ -1,9 +1,9 @@
 import { grantPermission, revokePermission } from '@granit/authorization';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { buildPermissionQueryKey } from './use-permissions.js';
+import { buildPermissionQueryKey } from './use-permissions';
 
 import type { PermissionGrantParams, UsePermissionGrantOptions } from '@granit/authorization';
 import type { UseMutationResult } from '@tanstack/react-query';

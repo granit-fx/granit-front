@@ -5,7 +5,7 @@ import type {
   ReferenceDataEntry,
   ReferenceDataQuery,
   ReferenceDataUpdateRequest,
-} from '../index.js';
+} from '../index';
 import type { ISODateString } from '@granit/types';
 
 describe('@granit/reference-data types', () => {

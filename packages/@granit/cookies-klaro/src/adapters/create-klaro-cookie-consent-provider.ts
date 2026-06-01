@@ -4,7 +4,7 @@ import type {
   KlaroConsentManager,
   KlaroServiceMapping,
   KlaroWatcher,
-} from '../types/index.js';
+} from '../types/index';
 import type {
   CookieCategory,
   CookieConsentConfig,

@@ -1,4 +1,4 @@
-import type { ScheduledActionStatus } from './types/index.js';
+import type { ScheduledActionStatus } from './types/index';
 
 /** Permission strings for the Scheduling module. */
 export const SCHEDULING_PERMISSIONS = {

@@ -6,10 +6,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useMergePartyMutation, useMergePartyPreviewQuery } from '../hooks/use-party-merge.js';
-import { PartiesProvider } from '../providers/parties-provider.js';
+import { useMergePartyMutation, useMergePartyPreviewQuery } from '../hooks/use-party-merge';
+import { PartiesProvider } from '../providers/parties-provider';
 
-import type { PartiesConfig } from '../providers/parties-provider.js';
+import type { PartiesConfig } from '../providers/parties-provider';
 import type { PartyId, PartyMergeRequest, PartyMergeResponse } from '@granit/parties';
 import type { QueryClient } from '@tanstack/react-query';
 import type { AxiosInstance } from 'axios';

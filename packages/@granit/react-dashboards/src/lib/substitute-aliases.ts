@@ -1,4 +1,4 @@
-import type { DashboardAliasValues } from '../components/dashboard-alias-context.js';
+import type { DashboardAliasValues } from '../components/dashboard-alias-context';
 
 /**
  * Regex matching `${aliasName}` placeholders. The alias name must

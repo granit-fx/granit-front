@@ -1,6 +1,6 @@
 import { describe, expectTypeOf, it } from 'vitest';
 
-import type { CognitoAuthContextType, CognitoCoreConfig } from '../index.js';
+import type { CognitoAuthContextType, CognitoCoreConfig } from '../index';
 
 describe('@granit/authentication-cognito types', () => {
   describe('CognitoAuthContextType', () => {

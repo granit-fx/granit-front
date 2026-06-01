@@ -1,6 +1,6 @@
-import type { DashboardTimeWindow } from './dashboard-time-window.js';
-import type { WidgetAction } from './widget-action.js';
-import type { WidgetSize } from './widget-size.js';
+import type { DashboardTimeWindow } from './dashboard-time-window';
+import type { WidgetAction } from './widget-action';
+import type { WidgetSize } from './widget-size';
 
 /**
  * Common shape every widget definition shares. Mirrors

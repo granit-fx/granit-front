@@ -2,9 +2,9 @@
 // QueryRequest validation — clamp/truncate to server-enforced limits
 // ---------------------------------------------------------------------------
 
-import { QUERY_LIMITS } from './query-limits.js';
+import { QUERY_LIMITS } from './query-limits';
 
-import type { QueryRequest, SortEntry } from '../types/query-params.js';
+import type { QueryRequest, SortEntry } from '../types/query-params';
 
 /**
  * Serialize sort entries to the comma-separated format used by the backend.

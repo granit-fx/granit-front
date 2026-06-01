@@ -4,7 +4,7 @@ import type {
   ApiKeyResponse,
   ApiKeyRotateResponse,
   ApiKeyUpdateScopesRequest,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /** Query parameters accepted by {@link listApiKeys}. */

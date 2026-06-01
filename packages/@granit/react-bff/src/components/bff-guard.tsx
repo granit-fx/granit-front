@@ -1,4 +1,4 @@
-import { useBffAuth } from '../hooks/use-bff-auth.js';
+import { useBffAuth } from '../hooks/use-bff-auth';
 
 import type { ReactNode } from 'react';
 

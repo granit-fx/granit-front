@@ -6,9 +6,9 @@ import {
   isTenantContextResolver,
   isUserSelectionResolver,
   isViewEntityResolver,
-} from '../entity-alias.js';
+} from '../entity-alias';
 
-import type { EntityAlias, EntityAliasResolver } from '../entity-alias.js';
+import type { EntityAlias, EntityAliasResolver } from '../entity-alias';
 
 describe('EntityAliasResolver discriminator narrowing', () => {
   const route: EntityAliasResolver = { kind: 'route-param', paramName: 'customerId' };

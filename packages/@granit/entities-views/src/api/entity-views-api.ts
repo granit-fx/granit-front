@@ -3,7 +3,7 @@ import type {
   EntityViewResponse,
   EntityViewShareBodyRequest,
   EntityViewUpdateBodyRequest,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance, AxiosRequestConfig } from '@granit/api-client';
 
 const viewsRoot = (basePath: string, entityName: string) =>

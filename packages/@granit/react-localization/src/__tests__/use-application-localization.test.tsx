@@ -6,7 +6,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useApplicationLocalization } from '../hooks/use-application-localization.js';
+import { useApplicationLocalization } from '../hooks/use-application-localization';
 
 import type { ApplicationLocalizationDto } from '@granit/localization';
 import type { ReactNode } from 'react';

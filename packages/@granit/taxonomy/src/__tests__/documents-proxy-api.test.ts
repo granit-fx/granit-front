@@ -5,9 +5,9 @@ import {
   attachTagToDocument,
   detachTagFromDocument,
   listDocumentTags,
-} from '../api/documents-proxy-api.js';
+} from '../api/documents-proxy-api';
 
-import type { TagResponse } from '../types/index.js';
+import type { TagResponse } from '../types/index';
 
 const basePath = '/api/v1';
 

@@ -1,7 +1,7 @@
 import { deleteAccount } from '@granit/account';
 import { useMutation } from '@tanstack/react-query';
 
-import { useAccountConfig } from '../providers/account-provider.js';
+import { useAccountConfig } from '../providers/account-provider';
 
 import type { AccountDeleteRequest } from '@granit/account';
 import type { UseMutationResult } from '@tanstack/react-query';

@@ -1,7 +1,7 @@
 import { getSetting } from '@granit/settings';
 import { useQuery } from '@tanstack/react-query';
 
-import { buildSettingsQueryKey, useSettingsConfig } from '../providers/settings-provider.js';
+import { buildSettingsQueryKey, useSettingsConfig } from '../providers/settings-provider';
 
 import type { SettingScope, SettingValueResponse } from '@granit/settings';
 import type { UseQueryResult } from '@tanstack/react-query';

@@ -1,4 +1,4 @@
-import type { MonitoringHealthResponse } from '../types/index.js';
+import type { MonitoringHealthResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /** Default base path for the diagnostics API. */

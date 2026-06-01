@@ -7,8 +7,8 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { EntityList } from '../components/entity-list.js';
-import { EntityRendererProvider } from '../providers/index.js';
+import { EntityList } from '../components/entity-list';
+import { EntityRendererProvider } from '../providers/index';
 
 import type { EntityManifestResponse } from '@granit/entities';
 import type { QueryMetadata } from '@granit/query-engine';

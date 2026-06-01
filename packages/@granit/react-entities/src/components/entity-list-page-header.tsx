@@ -1,10 +1,10 @@
 import { type ReactNode } from 'react';
 
-import { EntityActionButton, resolveAction } from '../actions/entity-action-button.js';
+import { EntityActionButton, resolveAction } from '../actions/entity-action-button';
 import {
   useEntityActionDispatcher,
   type EntityActionHandlers,
-} from '../actions/use-entity-action-dispatcher.js';
+} from '../actions/use-entity-action-dispatcher';
 
 import type { EntityManifestResponse } from '@granit/entities';
 

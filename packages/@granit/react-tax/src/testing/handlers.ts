@@ -1,9 +1,9 @@
 import { notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { sampleTaxRates, sampleValidation } from './data.js';
+import { sampleTaxRates, sampleValidation } from './data';
 
 /**
  * Create MSW handlers for tax rate and VAT validation endpoints.

@@ -1,7 +1,7 @@
 import { downloadCorrectionFile, getImportReport } from '@granit/data-exchange';
 import { useQuery } from '@tanstack/react-query';
 
-import { buildImportQueryKey, useImportConfig } from '../providers/import-provider.js';
+import { buildImportQueryKey, useImportConfig } from '../providers/import-provider';
 
 import type { ImportReportResponse } from '@granit/data-exchange';
 import type { UseQueryResult } from '@tanstack/react-query';

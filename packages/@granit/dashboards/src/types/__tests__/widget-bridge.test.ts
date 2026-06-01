@@ -7,16 +7,16 @@ import {
   widgetDefinitionToAddRequest,
   widgetDefinitionToUpdateRequest,
   widgetInstanceToDefinition,
-} from '../widget-bridge.js';
+} from '../widget-bridge';
 
 import type {
   MarkdownWidgetDefinition,
   TextWidgetDefinition,
   WidgetDefinition,
   WidgetDefinitionBase,
-} from '../../types/index.js';
-import type { DashboardDetailResponse } from '../dashboard-detail-response.js';
-import type { WidgetInstanceResponse } from '../widget-instance-response.js';
+} from '../../types/index';
+import type { DashboardDetailResponse } from '../dashboard-detail-response';
+import type { WidgetInstanceResponse } from '../widget-instance-response';
 
 // Minimal stand-ins for the analytics widget shapes — replicated locally
 // to keep `@granit/dashboards` dep-free (the bridge works on the open

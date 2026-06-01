@@ -6,9 +6,9 @@ import {
   AccountProvider,
   buildAccountQueryKey,
   useAccountConfig,
-} from '../providers/account-provider.js';
+} from '../providers/account-provider';
 
-import type { AccountConfig } from '../providers/account-provider.js';
+import type { AccountConfig } from '../providers/account-provider';
 import type { AxiosInstance } from 'axios';
 
 const mockConfig: AccountConfig = {

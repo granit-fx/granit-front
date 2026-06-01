@@ -1,1 +1,1 @@
-export type { Breadcrumb, ErrorContextConfig, ErrorContextValue } from './types/index.js';
+export type { Breadcrumb, ErrorContextConfig, ErrorContextValue } from './types/index';

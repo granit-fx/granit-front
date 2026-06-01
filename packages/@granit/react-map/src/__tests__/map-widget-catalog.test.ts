@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { mapWidgetCatalog } from '../editor/map-widget-catalog.js';
+import { mapWidgetCatalog } from '../editor/map-widget-catalog';
 
 describe('mapWidgetCatalog', () => {
   it('ships a single entry for the `map` kind', () => {

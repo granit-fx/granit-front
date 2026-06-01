@@ -1,7 +1,7 @@
 import { isKpiSnapshotEnvelope } from '@granit/analytics';
 import { useTranslation } from 'react-i18next';
 
-import { KpiTileView } from './kpi-tile-view.js';
+import { KpiTileView } from './kpi-tile-view';
 
 import type { DashboardRenderedWidget } from '@granit/dashboards';
 

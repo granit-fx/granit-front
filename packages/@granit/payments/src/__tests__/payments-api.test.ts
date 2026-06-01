@@ -16,7 +16,7 @@ import {
   listPaymentTransactions,
   requestPaymentRefund,
   resyncPaymentMethodConfiguration,
-} from '../api/payments-api.js';
+} from '../api/payments-api';
 
 import type {
   PaymentAttachMethodRequest,
@@ -32,7 +32,7 @@ import type {
   PaymentRefundRequest,
   PaymentRefundResponse,
   PaymentTransactionResponse,
-} from '../types/index.js';
+} from '../types/index';
 
 const basePath = '/payments';
 

@@ -1,6 +1,6 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
-import { dashboardWidgetQueryKey } from './use-dashboard-render.js';
+import { dashboardWidgetQueryKey } from './use-dashboard-render';
 
 import type { DashboardRenderedWidget } from '@granit/dashboards';
 

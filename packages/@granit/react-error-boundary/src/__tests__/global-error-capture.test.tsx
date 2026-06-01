@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { GlobalErrorCapture } from '../components/global-error-capture.js';
+import { GlobalErrorCapture } from '../components/global-error-capture';
 
 import type { Logger } from '@granit/logger';
 

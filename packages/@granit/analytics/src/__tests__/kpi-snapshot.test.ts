@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { isKpiSnapshotEnvelope } from '../widgets/kpi-snapshot.js';
+import { isKpiSnapshotEnvelope } from '../widgets/kpi-snapshot';
 
-import type { KpiSnapshotEnvelope } from '../widgets/kpi-snapshot.js';
+import type { KpiSnapshotEnvelope } from '../widgets/kpi-snapshot';
 import type { WidgetSnapshotEnvelope } from '@granit/dashboards';
 
 // Pinned wire-format fixture mirroring what `KpiWidgetInstanceRenderer`

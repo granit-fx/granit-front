@@ -1,4 +1,4 @@
-import type { PresenceTranslations } from './en.js';
+import type { PresenceTranslations } from './en';
 
 export const presenceTranslationsFr: PresenceTranslations = {
   Status: {

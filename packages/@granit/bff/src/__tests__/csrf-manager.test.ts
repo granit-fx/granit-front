@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { CsrfManager } from '../csrf/csrf-manager.js';
+import { CsrfManager } from '../csrf/csrf-manager';
 
 describe('CsrfManager', () => {
   const originalFetch = globalThis.fetch;

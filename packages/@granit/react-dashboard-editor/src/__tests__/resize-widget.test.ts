@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { resizeWidget } from '../lib/resize-widget.js';
+import { resizeWidget } from '../lib/resize-widget';
 
 import type { DashboardDefinition } from '@granit/dashboards';
 

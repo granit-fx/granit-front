@@ -2,5 +2,5 @@
 // @granit/react-invoicing/testing — Mock data & MSW handlers
 // ---------------------------------------------------------------------------
 
-export { sampleInvoiceLineItems, sampleInvoices } from './data.js';
-export { createInvoicingHandlers, invoiceQueryMetadata } from './handlers.js';
+export { sampleInvoiceLineItems, sampleInvoices } from './data';
+export { createInvoicingHandlers, invoiceQueryMetadata } from './handlers';

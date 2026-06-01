@@ -1,4 +1,4 @@
-import type { LookupDescriptor } from '../types/index.js';
+import type { LookupDescriptor } from '../types/index';
 
 /**
  * Checks that every key declared in `descriptor.scopeKeys` is present and non-empty

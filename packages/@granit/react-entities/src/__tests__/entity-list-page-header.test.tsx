@@ -3,7 +3,7 @@ import { fireEvent, render } from '@testing-library/react';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 
-import { EntityListPageHeader } from '../components/entity-list-page-header.js';
+import { EntityListPageHeader } from '../components/entity-list-page-header';
 
 import type {
   EntityActionManifest,

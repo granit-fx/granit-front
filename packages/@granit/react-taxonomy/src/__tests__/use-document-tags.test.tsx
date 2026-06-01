@@ -7,8 +7,8 @@ import {
   useAttachTagToDocument,
   useDetachTagFromDocument,
   useDocumentTags,
-} from '../hooks/use-document-tags.js';
-import { TaxonomyProvider } from '../providers/taxonomy-provider.js';
+} from '../hooks/use-document-tags';
+import { TaxonomyProvider } from '../providers/taxonomy-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { TagResponse } from '@granit/taxonomy';

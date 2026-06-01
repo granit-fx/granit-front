@@ -1,6 +1,6 @@
 import { describe, expectTypeOf, it } from 'vitest';
 
-import type { EntraIdAuthContextType, EntraIdCoreConfig } from '../index.js';
+import type { EntraIdAuthContextType, EntraIdCoreConfig } from '../index';
 
 describe('@granit/authentication-entraid types', () => {
   describe('EntraIdAuthContextType', () => {

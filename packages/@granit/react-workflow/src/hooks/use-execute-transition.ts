@@ -2,7 +2,7 @@ import { createLogger } from '@granit/logger';
 import { executeStateMachineTransition } from '@granit/workflow';
 import { useCallback, useState } from 'react';
 
-import { useWorkflowConfig } from '../providers/workflow-provider.js';
+import { useWorkflowConfig } from '../providers/workflow-provider';
 
 import type { WorkflowTransitionResult } from '@granit/workflow';
 

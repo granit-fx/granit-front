@@ -1,5 +1,5 @@
 // Types
-export { BlobStatus } from './types/index.js';
+export { BlobStatus } from './types/index';
 
 export type {
   BlobCleanupOrphansResponse,
@@ -11,7 +11,7 @@ export type {
   BlobDownloadUrlResponse,
   BlobUploadInitiateRequest,
   BlobUploadInitiateResponse,
-} from './types/index.js';
+} from './types/index';
 
 // Query keys
 
@@ -23,5 +23,5 @@ export {
   getBlob,
   getDownloadUrl,
   initiateUpload,
-} from './api/blob-storage-api.js';
-export { BlobStoragePermissions } from './permissions.js';
+} from './api/blob-storage-api';
+export { BlobStoragePermissions } from './permissions';

@@ -6,10 +6,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useIdentityUser, useIdentityUsers } from '../hooks/use-identity-users.js';
-import { IdentityProvider } from '../providers/identity-provider.js';
+import { useIdentityUser, useIdentityUsers } from '../hooks/use-identity-users';
+import { IdentityProvider } from '../providers/identity-provider';
 
-import type { IdentityProviderProps } from '../providers/identity-provider.js';
+import type { IdentityProviderProps } from '../providers/identity-provider';
 import type { IdentityUser, IdentityUserPage } from '@granit/identity';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

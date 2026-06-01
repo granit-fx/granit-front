@@ -3,5 +3,5 @@ export type {
   EntityViewShareBodyRequest,
   EntityViewToggleFlagRequest,
   EntityViewUpdateBodyRequest,
-} from './requests.js';
-export type { EntityViewResponse, EntityViewSharedWith, EntityViewVisibility } from './view.js';
+} from './requests';
+export type { EntityViewResponse, EntityViewSharedWith, EntityViewVisibility } from './view';

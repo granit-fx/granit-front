@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type {
-  WidgetAction,
-  WidgetActionKind,
-  WidgetActionTrigger,
-} from '../types/widget-action.js';
+import type { WidgetAction, WidgetActionKind, WidgetActionTrigger } from '../types/widget-action';
 
 // Pinned wire-format fixtures. Mirror what the backend
 // `Granit.Dashboards.Abstractions.WidgetAction` serialises through

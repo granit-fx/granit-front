@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { QUERY_LIMITS } from '../validation/query-limits.js';
-import { validateQueryRequest } from '../validation/validate-query-request.js';
+import { QUERY_LIMITS } from '../validation/query-limits';
+import { validateQueryRequest } from '../validation/validate-query-request';
 
-import type { FilterEntry, QueryRequest } from '../types/query-params.js';
+import type { FilterEntry, QueryRequest } from '../types/query-params';
 
 describe('validateQueryRequest', () => {
   it('returns params unchanged when all within limits', () => {

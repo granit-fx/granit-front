@@ -1,8 +1,5 @@
-import type {
-  WidgetSnapshotEnvelope,
-  WidgetSnapshotEnvelopeOf,
-} from './widget-snapshot-envelope.js';
-import type { TextWidgetStyle } from '../types/widget-definition.js';
+import type { WidgetSnapshotEnvelope, WidgetSnapshotEnvelopeOf } from './widget-snapshot-envelope';
+import type { TextWidgetStyle } from '../types/widget-definition';
 
 /**
  * Wire-shape snapshot for the `'Text'` widget kind — a plain-text tile

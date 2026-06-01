@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { isIdempotencyTombstoned, readIdempotencyTombstone } from '../idempotency.js';
+import { isIdempotencyTombstoned, readIdempotencyTombstone } from '../idempotency';
 
 // Builds an AxiosError-shaped object with the given response headers.
 // We intentionally do NOT use the real `AxiosError` constructor — the

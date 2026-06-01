@@ -6,9 +6,9 @@ import {
   buildDocumentsQueryKey,
   DocumentsProvider,
   useDocumentsConfig,
-} from '../providers/documents-provider.js';
+} from '../providers/documents-provider';
 
-import type { DocumentsConfig } from '../providers/documents-provider.js';
+import type { DocumentsConfig } from '../providers/documents-provider';
 import type { ReactNode } from 'react';
 
 describe('DocumentsProvider', () => {

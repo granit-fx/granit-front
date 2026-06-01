@@ -12,10 +12,10 @@ import {
   useProviderUsers,
   useSetUserEnabled,
   useUpdateUser,
-} from '../hooks/use-identity-provider-users.js';
-import { IdentityProvider } from '../providers/identity-provider.js';
+} from '../hooks/use-identity-provider-users';
+import { IdentityProvider } from '../providers/identity-provider';
 
-import type { IdentityProviderProps } from '../providers/identity-provider.js';
+import type { IdentityProviderProps } from '../providers/identity-provider';
 import type { IdentityUser } from '@granit/identity';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

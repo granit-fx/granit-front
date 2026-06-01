@@ -2,7 +2,7 @@ import { deleteAIWorkspace } from '@granit/ai';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import { buildAIQueryKey, useAIConfig } from '../providers/ai-provider.js';
+import { buildAIQueryKey, useAIConfig } from '../providers/ai-provider';
 
 export interface UseDeleteAIWorkspaceReturn {
   readonly remove: (name: string) => void;

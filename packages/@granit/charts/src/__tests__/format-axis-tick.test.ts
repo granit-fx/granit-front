@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatAxisTick } from '../format/format-axis-tick.js';
+import { formatAxisTick } from '../format/format-axis-tick';
 
 const normalize = (s: string) => s.replace(/[\u0020\u00A0\u202F]+/g, ' ');
 

@@ -1,9 +1,13 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { confirmEmail, registerAccount, resendConfirmationEmail } from '../api/account-registration-api.js';
+import {
+  confirmEmail,
+  registerAccount,
+  resendConfirmationEmail,
+} from '../api/account-registration-api';
 
-import type { AccountRegisterResponse } from '../types/index.js';
+import type { AccountRegisterResponse } from '../types/index';
 
 const BASE = '/api/account';
 

@@ -6,15 +6,13 @@ import {
   GranitClientProvider,
   useGranitClient,
   useOptionalGranitClient,
-} from '../providers/granit-client-provider.js';
+} from '../providers/granit-client-provider';
 
 import type { ReactNode } from 'react';
 
 function wrapper(client: ReturnType<typeof axios.create>) {
   return function Wrapper({ children }: { children: ReactNode }) {
-    return (
-      <GranitClientProvider client={client}>{children}</GranitClientProvider>
-    );
+    return <GranitClientProvider client={client}>{children}</GranitClientProvider>;
   };
 }
 

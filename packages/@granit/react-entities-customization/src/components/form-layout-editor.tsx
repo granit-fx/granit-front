@@ -5,7 +5,7 @@ import {
   setFieldGroup,
   toggleFieldHidden,
   type SchemaField,
-} from '../layout/apply-deltas.js';
+} from '../layout/apply-deltas';
 
 import type { LayoutDelta } from '@granit/entities-customization';
 import type { ReactNode } from 'react';

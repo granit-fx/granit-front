@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { Chart } from './chart.js';
+import { Chart } from './chart';
 
 import type { ChartAxis, ChartDimensions, ChartSeries } from '@granit/charts';
 import type { EChartsOption } from 'echarts';

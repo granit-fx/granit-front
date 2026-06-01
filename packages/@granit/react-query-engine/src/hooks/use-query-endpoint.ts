@@ -13,13 +13,13 @@ import { buildQueryKey, getGrouped, getPage } from '@granit/query-engine';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
-import { useQueryEndpointStateContext } from '../providers/query-endpoint-state-provider.js';
-import { useQueryConfig } from '../providers/query-provider.js';
+import { useQueryEndpointStateContext } from '../providers/query-endpoint-state-provider';
+import { useQueryConfig } from '../providers/query-provider';
 
 import {
   useQueryEndpointReducer,
   type QueryEndpointDispatchers,
-} from './use-query-endpoint-reducer.js';
+} from './use-query-endpoint-reducer';
 
 import type { GroupedResult, PagedResult, QueryRequest } from '@granit/query-engine';
 import type { UseQueryResult } from '@tanstack/react-query';

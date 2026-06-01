@@ -1,8 +1,8 @@
 import { getPreferences, updatePreference } from '@granit/notifications';
 import { useCallback, useEffect, useOptimistic, useRef, useState, useTransition } from 'react';
 
-import { API_BASE_PATH } from '../constants.js';
-import { useNotificationConfig } from '../providers/notification-provider.js';
+import { API_BASE_PATH } from '../constants';
+import { useNotificationConfig } from '../providers/notification-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { NotificationPreference } from '@granit/notifications';

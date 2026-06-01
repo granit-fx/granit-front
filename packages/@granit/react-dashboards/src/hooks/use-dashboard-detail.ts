@@ -1,7 +1,7 @@
 import { getDashboard } from '@granit/dashboards';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
-import { useDashboardsConfig } from '../providers/dashboards-provider.js';
+import { useDashboardsConfig } from '../providers/dashboards-provider';
 
 import type { DashboardDetailResponse } from '@granit/dashboards';
 

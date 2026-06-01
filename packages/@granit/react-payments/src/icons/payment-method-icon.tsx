@@ -1,4 +1,4 @@
-import { resolveMethodIconStyle } from './method-icon-registry.js';
+import { resolveMethodIconStyle } from './method-icon-registry';
 
 import type { CSSProperties, ReactNode } from 'react';
 

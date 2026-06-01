@@ -5,16 +5,16 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useAIChat } from '../hooks/use-ai-chat.js';
-import { useAIEmbeddings } from '../hooks/use-ai-embeddings.js';
-import { useAIWorkspace } from '../hooks/use-ai-workspace.js';
-import { useAIWorkspaces } from '../hooks/use-ai-workspaces.js';
-import { useCreateAIWorkspace } from '../hooks/use-create-ai-workspace.js';
-import { useDeleteAIWorkspace } from '../hooks/use-delete-ai-workspace.js';
-import { useUpdateAIWorkspace } from '../hooks/use-update-ai-workspace.js';
-import { AIProvider } from '../providers/ai-provider.js';
+import { useAIChat } from '../hooks/use-ai-chat';
+import { useAIEmbeddings } from '../hooks/use-ai-embeddings';
+import { useAIWorkspace } from '../hooks/use-ai-workspace';
+import { useAIWorkspaces } from '../hooks/use-ai-workspaces';
+import { useCreateAIWorkspace } from '../hooks/use-create-ai-workspace';
+import { useDeleteAIWorkspace } from '../hooks/use-delete-ai-workspace';
+import { useUpdateAIWorkspace } from '../hooks/use-update-ai-workspace';
+import { AIProvider } from '../providers/ai-provider';
 
-import type { AIConfig } from '../providers/ai-provider.js';
+import type { AIConfig } from '../providers/ai-provider';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 

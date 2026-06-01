@@ -1,9 +1,9 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useInfiniteScroll } from '../hooks/use-infinite-scroll.js';
+import { useInfiniteScroll } from '../hooks/use-infinite-scroll';
 
-import type { InfiniteScrollPage } from '../hooks/use-infinite-scroll.js';
+import type { InfiniteScrollPage } from '../hooks/use-infinite-scroll';
 
 // ---------------------------------------------------------------------------
 // Helpers

@@ -1,7 +1,7 @@
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { buildEmptyQueryMeta, createQueryMetaHandler } from '../testing/index.js';
+import { buildEmptyQueryMeta, createQueryMetaHandler } from '../testing/index';
 
 import type { QueryMetadata } from '@granit/query-engine';
 

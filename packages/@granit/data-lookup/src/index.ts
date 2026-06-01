@@ -11,7 +11,7 @@ export type {
   LookupManifestEntry,
   LookupQueryParams,
   LookupResult,
-} from './types/index.js';
+} from './types/index';
 
 // HTTP client
 export {
@@ -23,6 +23,6 @@ export {
   resolveLookup,
   searchLookup,
   stringifyLookupValue,
-} from './api/index.js';
-export type { LookupClientOptions } from './api/index.js';
-export { DataLookupPermissions } from './permissions.js';
+} from './api/index';
+export type { LookupClientOptions } from './api/index';
+export { DataLookupPermissions } from './permissions';

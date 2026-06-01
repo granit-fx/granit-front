@@ -2,7 +2,7 @@ import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { createQueryWrapper, createTestQueryClient } from '../query-helpers.js';
+import { createQueryWrapper, createTestQueryClient } from '../query-helpers';
 
 describe('createTestQueryClient', () => {
   it('returns a QueryClient instance', () => {

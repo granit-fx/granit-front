@@ -1,7 +1,7 @@
 import { useOptionalGranitClient } from '@granit/react-api-client';
 import { createContext, useContext, useMemo } from 'react';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { TemplatingConfig as ResolvedTemplatingConfig } from '@granit/templating';

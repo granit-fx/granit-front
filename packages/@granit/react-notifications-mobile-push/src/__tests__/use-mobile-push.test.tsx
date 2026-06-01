@@ -1,10 +1,10 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useMobilePush } from '../hooks/use-mobile-push.js';
-import { MobilePushProvider } from '../providers/mobile-push-provider.js';
+import { useMobilePush } from '../hooks/use-mobile-push';
+import { MobilePushProvider } from '../providers/mobile-push-provider';
 
-import type { MobilePushProviderProps } from '../providers/mobile-push-provider.js';
+import type { MobilePushProviderProps } from '../providers/mobile-push-provider';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 

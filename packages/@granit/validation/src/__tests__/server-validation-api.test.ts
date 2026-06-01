@@ -4,7 +4,7 @@ import {
   listValidators,
   validateFieldServer,
   validateFieldsBatch,
-} from '../api/server-validation-api.js';
+} from '../api/server-validation-api';
 
 function createMockClient() {
   return {

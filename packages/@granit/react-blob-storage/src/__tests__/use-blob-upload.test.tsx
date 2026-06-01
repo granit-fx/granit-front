@@ -6,8 +6,8 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useBlobUpload } from '../hooks/use-blob-upload.js';
-import { BlobStorageProvider } from '../providers/blob-storage-provider.js';
+import { useBlobUpload } from '../hooks/use-blob-upload';
+import { BlobStorageProvider } from '../providers/blob-storage-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { BlobConfirmUploadResponse, BlobUploadInitiateResponse } from '@granit/blob-storage';

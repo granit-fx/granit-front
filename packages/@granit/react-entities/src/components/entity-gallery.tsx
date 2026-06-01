@@ -3,11 +3,11 @@ import { useQueryConfig, useQueryEndpointState } from '@granit/react-query-engin
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, type ReactNode } from 'react';
 
-import { EntityActionButton, resolveAction } from '../actions/entity-action-button.js';
+import { EntityActionButton, resolveAction } from '../actions/entity-action-button';
 import {
   useEntityActionDispatcher,
   type EntityActionHandlers,
-} from '../actions/use-entity-action-dispatcher.js';
+} from '../actions/use-entity-action-dispatcher';
 
 import type {
   EntityActionManifest,

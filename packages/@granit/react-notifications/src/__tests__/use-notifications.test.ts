@@ -2,14 +2,14 @@ import { toEntityId, toISODateString } from '@granit/types';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useNotifications } from '../hooks/use-notifications.js';
+import { useNotifications } from '../hooks/use-notifications';
 
 import {
   axiosResponse,
   createMockClient,
   createWrapper,
   createWrapperWithoutBasePath,
-} from './test-utils.js';
+} from './test-utils';
 
 import type { UserNotification, UserNotificationPage } from '@granit/notifications';
 

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { findMissingScopeKey, isScopeSatisfied } from '../api/scope-validation.js';
+import { findMissingScopeKey, isScopeSatisfied } from '../api/scope-validation';
 
-import type { LookupDescriptor } from '../types/index.js';
+import type { LookupDescriptor } from '../types/index';
 
 describe('findMissingScopeKey', () => {
   it('returns null when descriptor has no scopeKeys', () => {

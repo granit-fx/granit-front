@@ -12,10 +12,10 @@ import {
   useRoleMembers,
   useRoles,
   useUserRoles,
-} from '../hooks/use-identity-roles.js';
-import { IdentityProvider } from '../providers/identity-provider.js';
+} from '../hooks/use-identity-roles';
+import { IdentityProvider } from '../providers/identity-provider';
 
-import type { IdentityProviderProps } from '../providers/identity-provider.js';
+import type { IdentityProviderProps } from '../providers/identity-provider';
 import type { IdentityRole } from '@granit/identity';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

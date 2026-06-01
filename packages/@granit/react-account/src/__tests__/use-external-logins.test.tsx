@@ -9,10 +9,10 @@ import {
   useChallengeExternalLogin,
   useExternalLogins,
   useUnlinkExternalLogin,
-} from '../hooks/use-external-logins.js';
-import { AccountProvider } from '../providers/account-provider.js';
+} from '../hooks/use-external-logins';
+import { AccountProvider } from '../providers/account-provider';
 
-import type { AccountConfig } from '../providers/account-provider.js';
+import type { AccountConfig } from '../providers/account-provider';
 import type { AccountExternalLoginInfo } from '@granit/account';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

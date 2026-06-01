@@ -1,9 +1,9 @@
 import { fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { FieldInspectorOverlay, RESOLUTION_LAYERS } from '../components/field-inspector-overlay.js';
+import { FieldInspectorOverlay, RESOLUTION_LAYERS } from '../components/field-inspector-overlay';
 
-import type { FieldResolutionEntry } from '../components/field-inspector-overlay.js';
+import type { FieldResolutionEntry } from '../components/field-inspector-overlay';
 
 describe('FieldInspectorOverlay', () => {
   it('always renders the full 5-layer chain even when entries are sparse', () => {

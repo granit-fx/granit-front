@@ -1,4 +1,4 @@
-import type { AggregateFunction } from './aggregation.js';
+import type { AggregateFunction } from './aggregation';
 import type { WidgetSnapshotEnvelope, WidgetSnapshotEnvelopeOf } from '@granit/dashboards';
 
 /**

@@ -10,10 +10,10 @@ import {
   useDismissPartyDuplicateMutation,
   useMergePartyFromDuplicateMutation,
   usePartyDuplicateCandidatesForPartyQuery,
-} from '../hooks/use-party-duplicates.js';
-import { PartiesProvider } from '../providers/parties-provider.js';
+} from '../hooks/use-party-duplicates';
+import { PartiesProvider } from '../providers/parties-provider';
 
-import type { PartiesConfig } from '../providers/parties-provider.js';
+import type { PartiesConfig } from '../providers/parties-provider';
 import type {
   PartyDuplicateCandidateId,
   PartyDuplicateCandidateResponse,

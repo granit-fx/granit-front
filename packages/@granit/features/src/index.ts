@@ -5,10 +5,10 @@ export type {
   FeatureNumericConstraintResponse,
   FeatureValueResponse,
   SetFeatureOverrideRequest,
-} from './types/index.js';
+} from './types/index';
 
 // Permissions
-export { FeaturesPermissions } from './permissions.js';
+export { FeaturesPermissions } from './permissions';
 
 // API
 export {
@@ -17,4 +17,4 @@ export {
   getFeatureDefinitions,
   getFeatureValue,
   setFeatureOverride,
-} from './api/features-api.js';
+} from './api/features-api';

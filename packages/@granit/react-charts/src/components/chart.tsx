@@ -7,7 +7,7 @@
 // real `export default EChartsReactCore` that Vite consumes verbatim.
 import EChartsReactCore from 'echarts-for-react/esm/core';
 
-import { echarts } from '../echarts-instance.js';
+import { echarts } from '../echarts-instance';
 
 import type { EChartsOption } from 'echarts';
 

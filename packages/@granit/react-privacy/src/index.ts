@@ -3,15 +3,15 @@ export {
   PrivacyProvider,
   buildPrivacyQueryKey,
   usePrivacyConfig,
-} from './providers/privacy-provider.js';
-export type { PrivacyConfig, PrivacyProviderProps } from './providers/privacy-provider.js';
+} from './providers/privacy-provider';
+export type { PrivacyConfig, PrivacyProviderProps } from './providers/privacy-provider';
 
 // Hooks — Data export
 export {
   usePrivacyExportStatus,
   usePrivacyExports,
   useRequestExport,
-} from './hooks/use-privacy-export.js';
+} from './hooks/use-privacy-export';
 
 // Hooks — Data deletion
 export {
@@ -19,7 +19,7 @@ export {
   useDeletionRequests,
   useDeletionStatus,
   useRequestDeletion,
-} from './hooks/use-privacy-deletion.js';
+} from './hooks/use-privacy-deletion';
 
 // Hooks — Legal agreements
 export {
@@ -27,7 +27,7 @@ export {
   useAgreementDocuments,
   useAgreementHistory,
   useAgreementStatuses,
-} from './hooks/use-privacy-agreements.js';
+} from './hooks/use-privacy-agreements';
 
 // Hooks — Legal document admin
 export {
@@ -36,5 +36,5 @@ export {
   useLegalDocuments,
   usePublishLegalDocument,
   useUpdateLegalDocument,
-} from './hooks/use-legal-documents.js';
-export type { UpdateLegalDocumentVariables } from './hooks/use-legal-documents.js';
+} from './hooks/use-legal-documents';
+export type { UpdateLegalDocumentVariables } from './hooks/use-legal-documents';

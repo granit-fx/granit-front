@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState, type ReactNode } from 'react';
 
-import { SelectionContext, type SelectionContextValue } from './selection-context.js';
+import { SelectionContext, type SelectionContextValue } from './selection-context';
 
 export interface SelectionProviderProps {
   readonly children: ReactNode;

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { createConstraintsResolver } from '../create-constraints-resolver.js';
+import { createConstraintsResolver } from '../create-constraints-resolver';
 
 import type { SchemaConstraints } from '@granit/validation';
 

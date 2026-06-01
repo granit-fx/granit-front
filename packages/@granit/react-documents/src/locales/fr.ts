@@ -1,4 +1,4 @@
-import type { DocumentsTranslations } from './en.js';
+import type { DocumentsTranslations } from './en';
 
 export const documentsTranslationsFr: DocumentsTranslations = {
   Folder: {

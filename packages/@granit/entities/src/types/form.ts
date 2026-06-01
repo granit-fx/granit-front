@@ -1,4 +1,4 @@
-import type { VisibilityCondition } from './visibility.js';
+import type { VisibilityCondition } from './visibility';
 
 /**
  * One form field. Mirrors

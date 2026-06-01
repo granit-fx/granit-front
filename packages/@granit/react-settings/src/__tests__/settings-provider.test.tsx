@@ -8,9 +8,9 @@ import {
   SettingsProvider,
   buildSettingsQueryKey,
   useSettingsConfig,
-} from '../providers/settings-provider.js';
+} from '../providers/settings-provider';
 
-import type { SettingsConfig } from '../providers/settings-provider.js';
+import type { SettingsConfig } from '../providers/settings-provider';
 import type { AxiosInstance } from 'axios';
 
 const mockConfig: SettingsConfig = {

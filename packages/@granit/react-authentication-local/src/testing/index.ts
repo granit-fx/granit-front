@@ -9,5 +9,5 @@ export {
   mockLoginNotAllowed,
   mockLoginRequiresTwoFactor,
   mockLoginSuccess,
-} from './data.js';
-export { createLocalAuthHandlers } from './handlers.js';
+} from './data';
+export { createLocalAuthHandlers } from './handlers';

@@ -2,13 +2,10 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
-import {
-  SchedulingProvider,
-  useSchedulingConfig,
-} from '../providers/scheduling-provider.js';
+import { DEFAULT_BASE_PATH } from '../constants';
+import { SchedulingProvider, useSchedulingConfig } from '../providers/scheduling-provider';
 
-import type { SchedulingConfig } from '../providers/scheduling-provider.js';
+import type { SchedulingConfig } from '../providers/scheduling-provider';
 import type { AxiosInstance } from 'axios';
 
 const mockConfig: SchedulingConfig = {

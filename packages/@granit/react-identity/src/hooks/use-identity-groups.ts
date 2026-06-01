@@ -1,12 +1,7 @@
-import {
-  addUserToGroup,
-  listGroups,
-  listUserGroups,
-  removeUserFromGroup,
-} from '@granit/identity';
+import { addUserToGroup, listGroups, listUserGroups, removeUserFromGroup } from '@granit/identity';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider.js';
+import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider';
 
 import type { IdentityGroup } from '@granit/identity';
 import type { UserId } from '@granit/types';

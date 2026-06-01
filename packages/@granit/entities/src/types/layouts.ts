@@ -1,4 +1,4 @@
-import type { EntityFormFieldManifest } from './form.js';
+import type { EntityFormFieldManifest } from './form';
 
 /**
  * Closed enumeration of list-view layouts an entity may declare via the

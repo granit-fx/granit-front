@@ -7,9 +7,9 @@ export type {
   ApiKeyCreateResponse,
   ApiKeyRotateResponse,
   ApiKeyUpdateScopesRequest,
-} from './types/index.js';
-export { ApiKeyPermissions } from './permissions.js';
-export type { ListApiKeysParams } from './api/api-keys-api.js';
+} from './types/index';
+export { ApiKeyPermissions } from './permissions';
+export type { ListApiKeysParams } from './api/api-keys-api';
 export {
   createApiKey,
   getApiKey,
@@ -17,4 +17,4 @@ export {
   revokeApiKey,
   rotateApiKey,
   updateApiKeyScopes,
-} from './api/api-keys-api.js';
+} from './api/api-keys-api';

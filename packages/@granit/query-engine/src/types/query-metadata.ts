@@ -3,7 +3,7 @@
 // Returned by GET {basePath}/meta
 // ---------------------------------------------------------------------------
 
-import type { FilterOperator } from './query-params.js';
+import type { FilterOperator } from './query-params';
 import type { LookupDescriptor } from '@granit/data-lookup';
 
 /** Column definition for display in data tables. */

@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { useDocument, useDocumentDownloadUrl } from '../hooks/use-documents.js';
-import { useDocumentsConfig } from '../providers/documents-provider.js';
+import { useDocument, useDocumentDownloadUrl } from '../hooks/use-documents';
+import { useDocumentsConfig } from '../providers/documents-provider';
 
-import { classifyDocumentName } from './document-kind.js';
+import { classifyDocumentName } from './document-kind';
 
-import type { DocumentKind } from './document-kind.js';
+import type { DocumentKind } from './document-kind';
 import type { DocumentResponse } from '@granit/documents';
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react';
 

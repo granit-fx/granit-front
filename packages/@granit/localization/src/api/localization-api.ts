@@ -1,4 +1,4 @@
-import type { ApplicationLocalizationDto } from '../types/index.js';
+import type { ApplicationLocalizationDto } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

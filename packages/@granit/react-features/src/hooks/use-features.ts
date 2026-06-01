@@ -7,7 +7,7 @@ import {
 } from '@granit/features';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildFeaturesQueryKey, useFeaturesConfig } from '../providers/features-provider.js';
+import { buildFeaturesQueryKey, useFeaturesConfig } from '../providers/features-provider';
 
 import type {
   FeatureGroupResponse,

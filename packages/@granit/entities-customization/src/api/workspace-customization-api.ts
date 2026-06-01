@@ -1,7 +1,7 @@
 import type {
   WorkspaceCustomizationRequest,
   WorkspaceCustomizationResponse,
-} from '../types/customization.js';
+} from '../types/customization';
 import type { AxiosInstance } from '@granit/api-client';
 
 function workspacePath(apiBase: string, workspaceName: string): string {

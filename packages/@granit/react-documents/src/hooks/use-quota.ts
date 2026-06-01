@@ -1,7 +1,7 @@
 import { getTenantStorageQuota } from '@granit/documents';
 import { useQuery } from '@tanstack/react-query';
 
-import { buildDocumentsQueryKey, useDocumentsConfig } from '../providers/documents-provider.js';
+import { buildDocumentsQueryKey, useDocumentsConfig } from '../providers/documents-provider';
 
 import type { TenantStorageQuotaResponse } from '@granit/documents';
 import type { UseQueryResult } from '@tanstack/react-query';

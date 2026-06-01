@@ -1,6 +1,6 @@
 export { axiosResponse, createMockClient } from '@granit/testing';
 
-import { NotificationProvider } from '../providers/notification-provider.js';
+import { NotificationProvider } from '../providers/notification-provider';
 
 import type { NotificationConfig } from '@granit/notifications';
 import type { AxiosInstance } from 'axios';

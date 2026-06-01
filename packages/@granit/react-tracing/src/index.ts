@@ -1,5 +1,5 @@
-export { TracingProvider, useTracingConfig, useTracer } from './providers/tracing-provider.js';
-export { useSpan } from './hooks/use-span.js';
+export { TracingProvider, useTracingConfig, useTracer } from './providers/tracing-provider';
+export { useSpan } from './hooks/use-span';
 
-export type { TracingProviderProps } from './types/index.js';
-export type { UseSpanReturn } from './hooks/use-span.js';
+export type { TracingProviderProps } from './types/index';
+export type { UseSpanReturn } from './hooks/use-span';

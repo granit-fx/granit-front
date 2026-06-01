@@ -6,7 +6,7 @@ import {
   createDocumentsHandlers,
   documentQueryMetadata,
   mockQuotaData,
-} from '../testing/index.js';
+} from '../testing/index';
 
 const BASE = 'http://api.test/api/v1/documents';
 const server = setupServer();

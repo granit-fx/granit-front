@@ -27,10 +27,10 @@ import {
   useSetPartyTaxStatusMutation,
   useSuspendPartyMutation,
   useUpdatePartyMutation,
-} from '../hooks/use-parties.js';
-import { PartiesProvider } from '../providers/parties-provider.js';
+} from '../hooks/use-parties';
+import { PartiesProvider } from '../providers/parties-provider';
 
-import type { PartiesConfig } from '../providers/parties-provider.js';
+import type { PartiesConfig } from '../providers/parties-provider';
 import type {
   PartyAddressId,
   PartyAddressRequest,

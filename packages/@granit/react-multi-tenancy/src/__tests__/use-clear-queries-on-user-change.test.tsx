@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useClearQueriesOnUserChange } from '../hooks/use-clear-queries-on-user-change.js';
+import { useClearQueriesOnUserChange } from '../hooks/use-clear-queries-on-user-change';
 
 import type { ReactNode } from 'react';
 

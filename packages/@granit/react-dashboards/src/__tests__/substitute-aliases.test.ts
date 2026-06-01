@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { substituteAliases, substituteAliasesInRecord } from '../lib/substitute-aliases.js';
+import { substituteAliases, substituteAliasesInRecord } from '../lib/substitute-aliases';
 
 describe('substituteAliases', () => {
   it('substitutes a single placeholder', () => {

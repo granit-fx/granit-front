@@ -24,7 +24,7 @@ import {
   updateMeterDefinition,
   updateMeterDefinitionsSavedView,
   updateUsageAggregatesSavedView,
-} from '../api/metering-api.js';
+} from '../api/metering-api';
 
 import type {
   MeterDefinition,
@@ -35,7 +35,7 @@ import type {
   RecordUsageRequest,
   UsageAggregate,
   UsageAggregateResponse,
-} from '../types/index.js';
+} from '../types/index';
 import type {
   CreateSavedViewRequest,
   QueryMetadata,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildEChartsTheme } from '../theme/build-echarts-theme.js';
+import { buildEChartsTheme } from '../theme/build-echarts-theme';
 
 interface ExpectedShape {
   readonly color: readonly string[];

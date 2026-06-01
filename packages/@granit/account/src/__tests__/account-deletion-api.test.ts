@@ -1,7 +1,7 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { deleteAccount } from '../api/account-deletion-api.js';
+import { deleteAccount } from '../api/account-deletion-api';
 
 const BASE = '/api/account';
 

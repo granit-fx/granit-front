@@ -1,17 +1,17 @@
 // Types
-export type { ImportJobResponse, ImportJobStatus } from './types/import-job.js';
+export type { ImportJobResponse, ImportJobStatus } from './types/import-job';
 export type {
   ImportColumnMapping,
   ConfirmMappingsRequest,
   ImportFieldMetadata,
   ImportPreviewResponse,
   MappingConfidence,
-} from './types/import-preview.js';
+} from './types/import-preview';
 export type {
   ImportReportResponse,
   ImportRowError,
   ImportRowErrorKind,
-} from './types/import-report.js';
+} from './types/import-report';
 
 // API
 export {
@@ -25,5 +25,5 @@ export {
   listImportJobs,
   previewImport,
   uploadImportFile,
-} from './api/import-api.js';
-export type { ImportJobListParams } from './api/import-api.js';
+} from './api/import-api';
+export type { ImportJobListParams } from './api/import-api';

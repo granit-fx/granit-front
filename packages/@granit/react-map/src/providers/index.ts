@@ -1,3 +1,3 @@
-export { arcGisProvider } from './arcgis-provider.js';
-export { osmProvider } from './osm-provider.js';
-export { spwProvider } from './spw-provider.js';
+export { arcGisProvider } from './arcgis-provider';
+export { osmProvider } from './osm-provider';
+export { spwProvider } from './spw-provider';

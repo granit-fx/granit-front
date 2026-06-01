@@ -6,8 +6,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useCreateOidcScope, useDeleteOidcScope, useOidcScopes } from '../hooks/use-oidc-scopes.js';
-import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider.js';
+import { useCreateOidcScope, useDeleteOidcScope, useOidcScopes } from '../hooks/use-oidc-scopes';
+import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider';
 
 import type { AdminOidcScope } from '@granit/openiddict-admin';
 

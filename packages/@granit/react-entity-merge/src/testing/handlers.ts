@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
-import { mockMergeResult, MOCK_BASE_PATH } from './data.js';
+import { mockMergeResult, MOCK_BASE_PATH } from './data';
 
 import type { MergeResult } from '@granit/entity-merge';
 import type { RequestHandler } from 'msw';

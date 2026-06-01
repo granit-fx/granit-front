@@ -1,5 +1,5 @@
-import type { DashboardStatus } from './dashboard-status.js';
-import type { DashboardCategory } from '../types/dashboard-category.js';
+import type { DashboardStatus } from './dashboard-status';
+import type { DashboardCategory } from '../types/dashboard-category';
 
 /**
  * Response for `POST /dashboards/from-definition/{name}`. Mirrors

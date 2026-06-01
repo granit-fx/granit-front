@@ -16,6 +16,6 @@ export {
   parseFilters,
   parseSort,
   sortItems,
-} from './msw-helpers.js';
+} from './msw-helpers';
 
-export type { FilterEntry, SortEntry } from './msw-helpers.js';
+export type { FilterEntry, SortEntry } from './msw-helpers';

@@ -7,8 +7,8 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { EntityKanban } from '../components/entity-kanban.js';
-import { EntityRendererProvider } from '../providers/index.js';
+import { EntityKanban } from '../components/entity-kanban';
+import { EntityRendererProvider } from '../providers/index';
 
 import type { EntityManifestResponse } from '@granit/entities';
 import type { ReactNode } from 'react';

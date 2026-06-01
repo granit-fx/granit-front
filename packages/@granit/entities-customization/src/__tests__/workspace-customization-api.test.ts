@@ -4,12 +4,12 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   getWorkspaceCustomization,
   putWorkspaceCustomization,
-} from '../api/workspace-customization-api.js';
+} from '../api/workspace-customization-api';
 
 import type {
   WorkspaceCustomizationRequest,
   WorkspaceCustomizationResponse,
-} from '../types/customization.js';
+} from '../types/customization';
 
 const apiBase = '/api/v1';
 

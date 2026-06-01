@@ -1,8 +1,8 @@
 import { getUnreadCount } from '@granit/notifications';
 import { useCallback, useEffect, useRef } from 'react';
 
-import { API_BASE_PATH } from '../constants.js';
-import { useNotificationConfig } from '../providers/notification-provider.js';
+import { API_BASE_PATH } from '../constants';
+import { useNotificationConfig } from '../providers/notification-provider';
 
 export interface UseUnreadCountOptions {
   /** Polling interval in ms. Set to 0 to disable polling. Default: 60 000 */

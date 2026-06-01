@@ -2,7 +2,7 @@ import { validateFieldServer } from '@granit/validation';
 import { renderHook, act } from '@testing-library/react';
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 
-import { useServerValidation } from '../use-server-validation.js';
+import { useServerValidation } from '../use-server-validation';
 
 import type { FieldConstraint } from '@granit/validation';
 

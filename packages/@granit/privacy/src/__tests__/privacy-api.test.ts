@@ -18,7 +18,7 @@ import {
   requestDeletion,
   requestExport,
   updateLegalDocument,
-} from '../api/privacy-api.js';
+} from '../api/privacy-api';
 
 import type {
   AgreementHistoryEntry,
@@ -27,7 +27,7 @@ import type {
   LegalDocumentDetail,
   PrivacyDeletionResponse,
   PrivacyExportStatusResponse,
-} from '../types/index.js';
+} from '../types/index';
 
 const BASE = '/api/v1/privacy';
 

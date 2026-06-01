@@ -1,14 +1,14 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 import {
   TenantAdminProvider,
   buildTenantAdminQueryKey,
   useTenantAdminConfig,
-} from '../providers/tenant-admin-provider.js';
+} from '../providers/tenant-admin-provider';
 
-import type { TenantAdminConfig } from '../providers/tenant-admin-provider.js';
+import type { TenantAdminConfig } from '../providers/tenant-admin-provider';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 

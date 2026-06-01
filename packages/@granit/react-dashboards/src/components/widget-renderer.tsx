@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
 
-import { useWidgetRegistry } from '../registry/widget-registry-context.js';
+import { useWidgetRegistry } from '../registry/widget-registry-context';
 
-import { useDashboardContext } from './dashboard-context.js';
-import { WidgetCard } from './widget-card.js';
+import { useDashboardContext } from './dashboard-context';
+import { WidgetCard } from './widget-card';
 
 import type { WidgetDefinition } from '@granit/dashboards';
 

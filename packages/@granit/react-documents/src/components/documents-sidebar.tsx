@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
-import { classifyDocumentName, documentBadge } from './document-kind.js';
-import { FolderTree } from './folder-tree.js';
+import { classifyDocumentName, documentBadge } from './document-kind';
+import { FolderTree } from './folder-tree';
 
-import type { FolderTreeLabels, FolderTreeProps } from './folder-tree.js';
-import type { DocumentBookmark } from '../hooks/use-document-bookmarks.js';
+import type { FolderTreeLabels, FolderTreeProps } from './folder-tree';
+import type { DocumentBookmark } from '../hooks/use-document-bookmarks';
 import type { FolderResponse } from '@granit/documents';
 import type { ReactNode } from 'react';
 

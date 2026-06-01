@@ -1,7 +1,7 @@
 import { getAccountSettings } from '@granit/account';
 import { useQuery } from '@tanstack/react-query';
 
-import { buildAccountQueryKey, useAccountConfig } from '../providers/account-provider.js';
+import { buildAccountQueryKey, useAccountConfig } from '../providers/account-provider';
 
 import type { AccountSettingsResponse } from '@granit/account';
 import type { UseQueryResult } from '@tanstack/react-query';

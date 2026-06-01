@@ -3,7 +3,7 @@ import { toEntityId, toISODateString } from '@granit/types';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useTimeline } from '../hooks/use-timeline.js';
+import { useTimeline } from '../hooks/use-timeline';
 
 import { axiosResponse, createMockClient, createWrapper } from './test-utils.tsx';
 

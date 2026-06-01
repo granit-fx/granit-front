@@ -1,4 +1,4 @@
-import { useHeartbeat, type UseHeartbeatOptions } from '../hooks/use-heartbeat.js';
+import { useHeartbeat, type UseHeartbeatOptions } from '../hooks/use-heartbeat';
 
 export type PresenceHeartbeatProps = UseHeartbeatOptions;
 

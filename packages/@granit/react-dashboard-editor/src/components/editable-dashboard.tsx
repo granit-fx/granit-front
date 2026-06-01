@@ -20,10 +20,10 @@ import {
 } from '@granit/react-dashboards';
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 
-import { reorderWidgets } from '../lib/reorder-widgets.js';
-import { resizeWidget } from '../lib/resize-widget.js';
+import { reorderWidgets } from '../lib/reorder-widgets';
+import { resizeWidget } from '../lib/resize-widget';
 
-import { SortableWidgetCell } from './sortable-widget-cell.js';
+import { SortableWidgetCell } from './sortable-widget-cell';
 
 import type { DashboardDefinition, WidgetDefinition, WidgetSize } from '@granit/dashboards';
 

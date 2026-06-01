@@ -5,10 +5,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useIdentityCapabilities } from '../hooks/use-identity-capabilities.js';
-import { IdentityProvider } from '../providers/identity-provider.js';
+import { useIdentityCapabilities } from '../hooks/use-identity-capabilities';
+import { IdentityProvider } from '../providers/identity-provider';
 
-import type { IdentityProviderProps } from '../providers/identity-provider.js';
+import type { IdentityProviderProps } from '../providers/identity-provider';
 import type { IdentityProviderCapabilities } from '@granit/identity';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

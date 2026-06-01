@@ -1,8 +1,8 @@
 import { evaluateVisibility } from '@granit/entities';
 import { useMemo, type ReactNode } from 'react';
 
-import { useEntityRelationAggregates } from '../hooks/use-entity-relation-aggregates.js';
-import { useEntityRenderer } from '../providers/entity-renderer-provider.js';
+import { useEntityRelationAggregates } from '../hooks/use-entity-relation-aggregates';
+import { useEntityRenderer } from '../providers/entity-renderer-provider';
 
 import type {
   EntityDetailManifest,

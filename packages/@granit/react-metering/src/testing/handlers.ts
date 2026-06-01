@@ -9,9 +9,9 @@ import { noContent, notFound } from '@granit/testing/msw';
 import { toEntityId } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { sampleMeters, sampleQuota, sampleUsage } from './data.js';
+import { sampleMeters, sampleQuota, sampleUsage } from './data';
 
 import type { MeterDefinitionResponse } from '@granit/metering';
 import type { QueryMetadata } from '@granit/query-engine';

@@ -2,7 +2,7 @@ import type {
   FormCustomizationRequest,
   FormCustomizationResponse,
   FormVariant,
-} from '../types/customization.js';
+} from '../types/customization';
 import type { AxiosInstance } from '@granit/api-client';
 
 /** Builds the form-customization endpoint for a given entity + variant. */

@@ -11,7 +11,7 @@ import type {
   PrivacyDeletionResponse,
   PrivacyExportRequestResponse,
   PrivacyExportStatusResponse,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 // ── Data Export (GDPR Art. 15/20) ────────────────────────────────────────────

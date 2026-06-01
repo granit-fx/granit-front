@@ -1,7 +1,7 @@
 import { listExportJobs } from '@granit/data-exchange';
 import { useQuery } from '@tanstack/react-query';
 
-import { buildExportQueryKey, useExportConfig } from '../providers/export-provider.js';
+import { buildExportQueryKey, useExportConfig } from '../providers/export-provider';
 
 import type { ExportJobListParams, ExportJobResponse } from '@granit/data-exchange';
 import type { PagedResult } from '@granit/query-engine';

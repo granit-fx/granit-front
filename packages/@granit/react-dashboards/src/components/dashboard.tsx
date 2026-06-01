@@ -1,12 +1,12 @@
 import { useCallback, useMemo, useState, type CSSProperties } from 'react';
 
-import { useDashboardBreakpoint } from '../hooks/use-dashboard-breakpoint.js';
-import { resolveActiveView } from '../lib/resolve-active-view.js';
-import { resolveEffectiveLayout } from '../lib/resolve-effective-layout.js';
+import { useDashboardBreakpoint } from '../hooks/use-dashboard-breakpoint';
+import { resolveActiveView } from '../lib/resolve-active-view';
+import { resolveEffectiveLayout } from '../lib/resolve-effective-layout';
 
-import { DashboardContextProvider } from './dashboard-context.js';
-import { DashboardViewProvider } from './dashboard-view-context.js';
-import { WidgetRenderer } from './widget-renderer.js';
+import { DashboardContextProvider } from './dashboard-context';
+import { DashboardViewProvider } from './dashboard-view-context';
+import { WidgetRenderer } from './widget-renderer';
 
 import type { DashboardDefinition, WidgetDefinition } from '@granit/dashboards';
 

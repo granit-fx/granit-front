@@ -1,7 +1,7 @@
 import { getIdentityCapabilities } from '@granit/identity';
 import { useQuery } from '@tanstack/react-query';
 
-import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider.js';
+import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider';
 
 import type { IdentityProviderCapabilities } from '@granit/identity';
 import type { UseQueryResult } from '@tanstack/react-query';
@@ -27,8 +27,7 @@ export function useIdentityCapabilities(options?: {
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'capabilities'),
-    queryFn: () =>
-      getIdentityCapabilities(config.client, config.basePath),
+    queryFn: () => getIdentityCapabilities(config.client, config.basePath),
     staleTime: Infinity,
     enabled: options?.enabled ?? true,
   });

@@ -1,7 +1,7 @@
 import { useGranitClient } from '@granit/react-api-client';
 import { useEffect, useState, type ImgHTMLAttributes, type ReactNode } from 'react';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
 export interface BlobImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
   /**

@@ -1,4 +1,4 @@
-import type { IdentityProviderCapabilities } from '../types/index.js';
+import type { IdentityProviderCapabilities } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

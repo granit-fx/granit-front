@@ -3,7 +3,7 @@ import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { describe, expect, it } from 'vitest';
 
-import { PivotSnapshotWidget } from '../components/pivot-snapshot-widget.js';
+import { PivotSnapshotWidget } from '../components/pivot-snapshot-widget';
 
 import type { PivotWidgetSnapshot } from '@granit/analytics';
 import type { DashboardRenderedWidget } from '@granit/dashboards';

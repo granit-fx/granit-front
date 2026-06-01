@@ -1,9 +1,9 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { backToImpersonator, sessionHeartbeat } from '../api/account-session-api.js';
+import { backToImpersonator, sessionHeartbeat } from '../api/account-session-api';
 
-import type { AccountImpersonationResult } from '../types/index.js';
+import type { AccountImpersonationResult } from '../types/index';
 
 const BASE = '/api/account';
 

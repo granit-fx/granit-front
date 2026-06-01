@@ -1,7 +1,7 @@
 import { toggleReaction } from '@granit/timeline';
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 
-import { buildTimelineQueryKey, useTimelineConfig } from '../providers/timeline-provider.js';
+import { buildTimelineQueryKey, useTimelineConfig } from '../providers/timeline-provider';
 
 import type {
   ReactionEmoji,

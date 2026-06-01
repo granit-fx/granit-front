@@ -9,7 +9,7 @@ export type {
   ResourcePresenceParticipantResponse,
   ResourceRoomResponse,
   SetPresenceRequest,
-} from './types/index.js';
+} from './types/index';
 
 // API — user presence
 export {
@@ -19,13 +19,13 @@ export {
   getUserPresence,
   pollMyPresence,
   setMyPresence,
-} from './api/presence-api.js';
+} from './api/presence-api';
 
 // API — resource rooms
-export { getResourceRoom, joinResourceRoom, leaveResourceRoom } from './api/presence-rooms-api.js';
+export { getResourceRoom, joinResourceRoom, leaveResourceRoom } from './api/presence-rooms-api';
 
 // Permissions
-export { PresencePermissions } from './permissions.js';
+export { PresencePermissions } from './permissions';
 
 // Defaults
-export { PRESENCE_DEFAULTS } from './constants.js';
+export { PRESENCE_DEFAULTS } from './constants';

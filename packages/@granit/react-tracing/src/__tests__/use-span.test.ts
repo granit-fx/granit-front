@@ -2,7 +2,7 @@ import { SpanStatusCode, context, trace } from '@opentelemetry/api';
 import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useSpan } from '../hooks/use-span.js';
+import { useSpan } from '../hooks/use-span';
 
 import type { Span } from '@opentelemetry/api';
 

@@ -5,7 +5,7 @@ import {
 } from '@granit/notifications-web-push';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useWebPushConfig } from '../providers/web-push-provider.js';
+import { useWebPushConfig } from '../providers/web-push-provider';
 
 export interface UseWebPushReturn {
   /** Whether the browser supports Web Push. */

@@ -2,14 +2,14 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 import {
   FeaturesProvider,
   buildFeaturesQueryKey,
   useFeaturesConfig,
-} from '../providers/features-provider.js';
+} from '../providers/features-provider';
 
-import type { FeaturesConfig } from '../providers/features-provider.js';
+import type { FeaturesConfig } from '../providers/features-provider';
 import type { AxiosInstance } from 'axios';
 
 const mockConfig: FeaturesConfig = {

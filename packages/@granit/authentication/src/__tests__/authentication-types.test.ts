@@ -1,6 +1,6 @@
 import { describe, expectTypeOf, it } from 'vitest';
 
-import type { BaseAuthContextType, LoginOptions, LogoutOptions, OidcUserInfo } from '../index.js';
+import type { BaseAuthContextType, LoginOptions, LogoutOptions, OidcUserInfo } from '../index';
 
 describe('@granit/authentication types', () => {
   describe('OidcUserInfo', () => {

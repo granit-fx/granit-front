@@ -1,8 +1,8 @@
 import { QueryProvider, useQueryEndpoint } from '@granit/react-query-engine';
 import { useTranslation } from 'react-i18next';
 
-import { useDismissPartyDuplicateMutation } from '../hooks/use-party-duplicates.js';
-import { usePartiesConfig } from '../providers/parties-provider.js';
+import { useDismissPartyDuplicateMutation } from '../hooks/use-party-duplicates';
+import { usePartiesConfig } from '../providers/parties-provider';
 
 import type { DuplicateMatchTier, PartyDuplicateCandidateResponse } from '@granit/parties';
 import type { ReactNode } from 'react';

@@ -2,7 +2,7 @@ import { generateEmbeddings } from '@granit/ai';
 import { useMutation } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import { useAIConfig } from '../providers/ai-provider.js';
+import { useAIConfig } from '../providers/ai-provider';
 
 import type { AIEmbeddingRequest, AIEmbeddingResponse } from '@granit/ai';
 

@@ -5,10 +5,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useVerifyTwoFactorLogin } from '../hooks/use-verify-two-factor-login.js';
-import { LocalAuthProvider } from '../providers/local-auth-provider.js';
+import { useVerifyTwoFactorLogin } from '../hooks/use-verify-two-factor-login';
+import { LocalAuthProvider } from '../providers/local-auth-provider';
 
-import type { LocalAuthConfig } from '../providers/local-auth-provider.js';
+import type { LocalAuthConfig } from '../providers/local-auth-provider';
 import type { AccountLoginResponse } from '@granit/authentication-local';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

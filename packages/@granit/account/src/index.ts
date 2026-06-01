@@ -1,5 +1,5 @@
 // Types
-export type * from './types/index.js';
+export type * from './types/index';
 
 // Query keys
 
@@ -8,13 +8,13 @@ export {
   confirmEmail,
   registerAccount,
   resendConfirmationEmail,
-} from './api/account-registration-api.js';
+} from './api/account-registration-api';
 
 // API — Profile
-export { getProfile, updateProfile } from './api/account-profile-api.js';
+export { getProfile, updateProfile } from './api/account-profile-api';
 
 // API — Password
-export { changePassword, forgotPassword, resetPassword } from './api/account-password-api.js';
+export { changePassword, forgotPassword, resetPassword } from './api/account-password-api';
 
 // API — Two-Factor
 export {
@@ -23,7 +23,7 @@ export {
   generateRecoveryCodes,
   getAuthenticatorKey,
   getTwoFactorStatus,
-} from './api/account-two-factor-api.js';
+} from './api/account-two-factor-api';
 
 // API — External Logins
 export {
@@ -31,7 +31,7 @@ export {
   externalLoginCallback,
   getExternalLogins,
   unlinkExternalLogin,
-} from './api/account-external-login-api.js';
+} from './api/account-external-login-api';
 
 // API — Passkeys (beginPasskeyAssertion moved to @granit/authentication-local)
 export {
@@ -40,16 +40,16 @@ export {
   deletePasskey,
   getPasskeys,
   renamePasskey,
-} from './api/account-passkey-api.js';
+} from './api/account-passkey-api';
 
 // API — Session
-export { backToImpersonator, sessionHeartbeat } from './api/account-session-api.js';
+export { backToImpersonator, sessionHeartbeat } from './api/account-session-api';
 
 // API — Settings
-export { getAccountSettings } from './api/account-settings-api.js';
+export { getAccountSettings } from './api/account-settings-api';
 
 // API — Email change
-export { changeEmail, confirmEmailChange } from './api/account-email-api.js';
+export { changeEmail, confirmEmailChange } from './api/account-email-api';
 
 // API — Deletion
-export { deleteAccount } from './api/account-deletion-api.js';
+export { deleteAccount } from './api/account-deletion-api';

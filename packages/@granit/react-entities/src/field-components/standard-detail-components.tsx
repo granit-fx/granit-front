@@ -1,9 +1,6 @@
 import { LINK_URL_SCHEMES, isSafeUrl } from '@granit/utils';
 
-import type {
-  EntityComponentCatalog,
-  EntityDetailComponent,
-} from '../providers/component-catalog.js';
+import type { EntityComponentCatalog, EntityDetailComponent } from '../providers/component-catalog';
 import type { ReactNode } from 'react';
 
 // ---------------------------------------------------------------------------

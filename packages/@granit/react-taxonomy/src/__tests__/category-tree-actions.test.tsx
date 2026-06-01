@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { CategoryTree } from '../components/category-tree.tsx';
-import { TaxonomyProvider } from '../providers/taxonomy-provider.js';
+import { TaxonomyProvider } from '../providers/taxonomy-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { CategoryResponse } from '@granit/taxonomy';

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { resolveActiveView } from '../lib/resolve-active-view.js';
+import { resolveActiveView } from '../lib/resolve-active-view';
 
 import type { DashboardDefinition, DashboardView, WidgetDefinition } from '@granit/dashboards';
 

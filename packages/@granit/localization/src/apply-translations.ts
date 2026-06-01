@@ -1,4 +1,4 @@
-import type { ApplicationLocalizationDto } from './types/index.js';
+import type { ApplicationLocalizationDto } from './types/index';
 import type { i18n } from 'i18next';
 
 /**

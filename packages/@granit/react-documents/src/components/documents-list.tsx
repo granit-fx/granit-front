@@ -1,15 +1,15 @@
 import { QueryProvider, useQueryEndpoint } from '@granit/react-query-engine';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { DOCUMENT_DRAG_MIME } from '../constants.js';
-import { useRenameDocument, useTrashDocument } from '../hooks/use-document-mutations.js';
-import { useMultiSelect } from '../hooks/use-multi-select.js';
-import { useDocumentsConfig } from '../providers/documents-provider.js';
+import { DOCUMENT_DRAG_MIME } from '../constants';
+import { useRenameDocument, useTrashDocument } from '../hooks/use-document-mutations';
+import { useMultiSelect } from '../hooks/use-multi-select';
+import { useDocumentsConfig } from '../providers/documents-provider';
 
-import { classifyDocumentName, documentBadge } from './document-kind.js';
-import { InlineEdit } from './inline-edit.js';
+import { classifyDocumentName, documentBadge } from './document-kind';
+import { InlineEdit } from './inline-edit';
 
-import type { DocumentsViewMode, TileSizeStep } from '../hooks/use-view-preferences.js';
+import type { DocumentsViewMode, TileSizeStep } from '../hooks/use-view-preferences';
 import type { DocumentResponse } from '@granit/documents';
 import type { FilterEntry, SortEntry } from '@granit/query-engine';
 import type { DragEvent, KeyboardEvent, MouseEvent, ReactNode } from 'react';

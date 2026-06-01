@@ -1,14 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { GRANIT_CORE_POLICY_NAME, installPolicy } from '../core-policy.js';
-import { installNamedPolicy, resetInstalledPoliciesForTests } from '../install-policy.js';
+import { GRANIT_CORE_POLICY_NAME, installPolicy } from '../core-policy';
+import { installNamedPolicy, resetInstalledPoliciesForTests } from '../install-policy';
 import {
   getCspTrustedTypesDirective,
   listInstalledGranitPolicies,
   resetGranitPoliciesForTests,
-} from '../registry.js';
+} from '../registry';
 
-import type { TrustedTypePolicyOptions } from '../types/index.js';
+import type { TrustedTypePolicyOptions } from '../types/index';
 
 interface FakeFactory {
   createPolicy: ReturnType<typeof vi.fn>;

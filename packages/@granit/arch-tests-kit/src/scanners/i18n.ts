@@ -1,9 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { readFile, rel } from '../fs.js';
+import { readFile, rel } from '../fs';
 
-import type { ScanContext, Violation } from '../types.js';
+import type { ScanContext, Violation } from '../types';
 
 /**
  * If a module ships a `locales/` directory, it must contain at minimum

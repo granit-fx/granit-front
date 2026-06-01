@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
 
-import { useActivities } from '../hooks/use-activities.js';
+import { useActivities } from '../hooks/use-activities';
 
 import type { ActivityListFilter, ActivityResponse } from '@granit/activities';
 

@@ -1,9 +1,9 @@
 import { noContent, notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { mockPermissionGroups, mockRoleGrants } from './data.js';
+import { mockPermissionGroups, mockRoleGrants } from './data';
 
 /**
  * Create stateful MSW handlers for authorization endpoints (permission

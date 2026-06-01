@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { createAuthContext } from '../providers/use-auth-context.js';
+import { createAuthContext } from '../providers/use-auth-context';
 
 import type { BaseAuthContextType } from '@granit/authentication';
 

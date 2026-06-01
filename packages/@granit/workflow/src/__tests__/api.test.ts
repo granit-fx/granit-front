@@ -2,17 +2,9 @@ import { axiosResponse, createMockClient } from '@granit/api-client/test-utils';
 import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  executeStateMachineTransition,
-  getHistory,
-  listTransitions,
-} from '../api/workflow-api.js';
+import { executeStateMachineTransition, getHistory, listTransitions } from '../api/workflow-api';
 
-import type {
-  TransitionHistory,
-  WorkflowTransitionResult,
-  WorkflowStatus,
-} from '../types/index.js';
+import type { TransitionHistory, WorkflowTransitionResult, WorkflowStatus } from '../types/index';
 
 describe('workflow api', () => {
   const basePath = '/api/v1/workflow';

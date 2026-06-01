@@ -1,13 +1,13 @@
 // Types
-export type { ExportDefinitionResponse, ExportField } from './types/export-definition.js';
+export type { ExportDefinitionResponse, ExportField } from './types/export-definition';
 
 export type {
   CreateExportJobRequest,
   ExportJobResponse,
   ExportJobStatus,
-} from './types/export-job.js';
+} from './types/export-job';
 
-export type { ExportPresetResponse, SaveExportPresetRequest } from './types/export-preset.js';
+export type { ExportPresetResponse, SaveExportPresetRequest } from './types/export-preset';
 
 // API
 export {
@@ -17,6 +17,6 @@ export {
   getExportJobStatus,
   listExportDefinitions,
   listExportJobs,
-} from './api/export-api.js';
-export type { ExportJobListParams } from './api/export-api.js';
-export { deleteExportPreset, listExportPresets, saveExportPreset } from './api/preset-api.js';
+} from './api/export-api';
+export type { ExportJobListParams } from './api/export-api';
+export { deleteExportPreset, listExportPresets, saveExportPreset } from './api/preset-api';

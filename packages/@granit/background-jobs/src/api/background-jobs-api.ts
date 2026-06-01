@@ -1,4 +1,4 @@
-import type { BackgroundJobListParams, BackgroundJobStatus } from '../types/index.js';
+import type { BackgroundJobListParams, BackgroundJobStatus } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult } from '@granit/query-engine';
 

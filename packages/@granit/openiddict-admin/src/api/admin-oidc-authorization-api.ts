@@ -1,4 +1,4 @@
-import type { AdminOidcAuthorization, AdminOidcAuthorizationListParams } from '../types/index.js';
+import type { AdminOidcAuthorization, AdminOidcAuthorizationListParams } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 // ── OIDC Authorization management ────────────────────────────────────────────

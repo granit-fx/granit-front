@@ -3,9 +3,9 @@ import { noContent, notFound, pagedResponse } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { buildMockLocalization, mockLanguages, mockLocalizationOverrides } from './data.js';
+import { buildMockLocalization, mockLanguages, mockLocalizationOverrides } from './data';
 
 import type { LocalizationOverride } from '@granit/localization';
 import type { QueryMetadata } from '@granit/query-engine';

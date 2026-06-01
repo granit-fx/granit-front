@@ -1,4 +1,4 @@
-import type { DashboardCategory } from '../types/dashboard-category.js';
+import type { DashboardCategory } from '../types/dashboard-category';
 
 /**
  * Wire shape of a single entry in `GET /dashboards/catalog`. Mirrors

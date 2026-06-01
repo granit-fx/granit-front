@@ -2,7 +2,7 @@ import { dryRunImport, previewImport } from '@granit/data-exchange';
 import { useMutation } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 
-import { useImportConfig } from '../providers/import-provider.js';
+import { useImportConfig } from '../providers/import-provider';
 
 import type {
   ImportColumnMapping,

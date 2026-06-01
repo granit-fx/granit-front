@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { usePartyDuplicateCandidatesForPartyQuery } from '../hooks/use-party-duplicates.js';
+import { usePartyDuplicateCandidatesForPartyQuery } from '../hooks/use-party-duplicates';
 
 import type { PartyId } from '@granit/parties';
 import type { ReactNode } from 'react';

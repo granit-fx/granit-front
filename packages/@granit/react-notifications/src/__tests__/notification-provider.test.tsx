@@ -6,9 +6,9 @@ import {
   NotificationProvider,
   useNotificationConfig,
   useNotificationContext,
-} from '../providers/notification-provider.js';
+} from '../providers/notification-provider';
 
-import { createMockClient } from './test-utils.js';
+import { createMockClient } from './test-utils';
 
 import type {
   NotificationConfig,

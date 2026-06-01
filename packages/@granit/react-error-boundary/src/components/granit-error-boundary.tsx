@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import type { ErrorBoundaryProps } from '../types/index.js';
+import type { ErrorBoundaryProps } from '../types/index';
 import type { Logger } from '@granit/logger';
 
 // ---------------------------------------------------------------------------

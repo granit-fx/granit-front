@@ -7,7 +7,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   buildCustomizationQueryKey,
   useCustomizationConfig,
-} from '../providers/customization-provider.js';
+} from '../providers/customization-provider';
 
 import type {
   WorkspaceCustomizationRequest,

@@ -1,7 +1,7 @@
 import { chatStream } from '@granit/ai';
 import { useCallback, useRef, useState } from 'react';
 
-import { useAIConfig } from '../providers/ai-provider.js';
+import { useAIConfig } from '../providers/ai-provider';
 
 import type { AIChatRequest, AIChatStreamUsage } from '@granit/ai';
 

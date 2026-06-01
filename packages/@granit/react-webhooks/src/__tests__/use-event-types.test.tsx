@@ -5,8 +5,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useEventTypes } from '../hooks/use-event-types.js';
-import { WebhooksProvider } from '../providers/webhooks-provider.js';
+import { useEventTypes } from '../hooks/use-event-types';
+import { WebhooksProvider } from '../providers/webhooks-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { WebhookEventTypeResponse } from '@granit/webhooks';

@@ -1,7 +1,7 @@
-import { ChartTile } from '../components/chart-tile.js';
-import { KpiTile } from '../components/kpi-tile.js';
-import { PivotTile } from '../components/pivot-tile.js';
-import { TableTile } from '../components/table-tile.js';
+import { ChartTile } from '../components/chart-tile';
+import { KpiTile } from '../components/kpi-tile';
+import { PivotTile } from '../components/pivot-tile';
+import { TableTile } from '../components/table-tile';
 
 import type { WidgetRegistry, WidgetRendererFn } from '@granit/react-dashboards';
 

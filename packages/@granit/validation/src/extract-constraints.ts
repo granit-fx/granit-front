@@ -6,7 +6,7 @@ import type {
   OpenApiSpec,
   SchemaConstraints,
   SpecConstraints,
-} from './types/index.js';
+} from './types/index';
 
 const MAX_REF_DEPTH = 10;
 

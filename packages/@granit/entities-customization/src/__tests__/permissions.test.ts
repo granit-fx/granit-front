@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { CustomizationPermissions } from '../permissions.js';
+import { CustomizationPermissions } from '../permissions';
 
 describe('CustomizationPermissions', () => {
   it('exposes the four canonical keys in the EntitiesCustomization namespace', () => {

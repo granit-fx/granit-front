@@ -1,9 +1,9 @@
 import { listPermissionDefinitions } from '@granit/authorization';
 import { useQuery } from '@tanstack/react-query';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { buildPermissionQueryKey } from './use-permissions.js';
+import { buildPermissionQueryKey } from './use-permissions';
 
 import type { PermissionGroupDto, UsePermissionDefinitionsOptions } from '@granit/authorization';
 import type { UseQueryResult } from '@tanstack/react-query';

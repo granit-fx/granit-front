@@ -3,7 +3,7 @@ export {
   BackgroundJobsProvider,
   buildBackgroundJobsQueryKey,
   useBackgroundJobsConfig,
-} from './providers/background-jobs-provider.js';
+} from './providers/background-jobs-provider';
 
 // Hooks
 export {
@@ -13,10 +13,10 @@ export {
   usePauseJob,
   useResumeJob,
   useTriggerJob,
-} from './hooks/use-background-jobs.js';
+} from './hooks/use-background-jobs';
 
 // Types
 export type {
   BackgroundJobsConfig,
   BackgroundJobsProviderProps,
-} from './providers/background-jobs-provider.js';
+} from './providers/background-jobs-provider';

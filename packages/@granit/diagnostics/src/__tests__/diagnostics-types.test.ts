@@ -1,6 +1,6 @@
 import { describe, expectTypeOf, it } from 'vitest';
 
-import type { MonitoringHealthResponse, ServiceHealth, ServiceStatus } from '../index.js';
+import type { MonitoringHealthResponse, ServiceHealth, ServiceStatus } from '../index';
 
 describe('@granit/diagnostics types', () => {
   describe('ServiceStatus', () => {

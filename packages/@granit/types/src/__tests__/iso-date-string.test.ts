@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { toISODateString } from '../iso-date-string.js';
+import { toISODateString } from '../iso-date-string';
 
-import type { ISODateString } from '../iso-date-string.js';
+import type { ISODateString } from '../iso-date-string';
 
 describe('ISODateString', () => {
   it('toISODateString returns the same string value', () => {

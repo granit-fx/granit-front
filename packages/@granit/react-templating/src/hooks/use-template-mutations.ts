@@ -7,10 +7,9 @@ import {
 } from '@granit/templating';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useTemplatingConfig } from '../providers/templating-provider.js';
+import { useTemplatingConfig } from '../providers/templating-provider';
 
-import { templateKeys } from './query-keys.js';
-
+import { templateKeys } from './query-keys';
 
 import type { SaveTemplateRequest } from '@granit/templating';
 

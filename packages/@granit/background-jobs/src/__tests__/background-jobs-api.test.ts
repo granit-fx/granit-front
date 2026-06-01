@@ -2,9 +2,9 @@ import { createMockClient } from '@granit/testing';
 import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getBackgroundJob, listBackgroundJobs } from '../api/background-jobs-api.js';
+import { getBackgroundJob, listBackgroundJobs } from '../api/background-jobs-api';
 
-import type { BackgroundJobStatus } from '../types/index.js';
+import type { BackgroundJobStatus } from '../types/index';
 import type { PagedResult } from '@granit/query-engine';
 
 const BASE = '/api/v1/background-jobs/jobs';

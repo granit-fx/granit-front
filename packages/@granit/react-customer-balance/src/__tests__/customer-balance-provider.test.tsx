@@ -2,14 +2,14 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 import {
   CustomerBalanceProvider,
   buildCustomerBalanceQueryKey,
   useCustomerBalanceConfig,
-} from '../providers/customer-balance-provider.js';
+} from '../providers/customer-balance-provider';
 
-import type { CustomerBalanceConfig } from '../providers/customer-balance-provider.js';
+import type { CustomerBalanceConfig } from '../providers/customer-balance-provider';
 import type { AxiosInstance } from 'axios';
 
 const mockConfig: CustomerBalanceConfig = {

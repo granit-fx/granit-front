@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { detectVersionDrift } from '../detect-version-drift.js';
+import { detectVersionDrift } from '../detect-version-drift';
 
 describe('detectVersionDrift', () => {
   it('returns ad-hoc when the persisted instance has no source version', () => {

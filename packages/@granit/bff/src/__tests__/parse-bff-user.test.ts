@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseBffSessionResponse } from '../validation/parse-bff-user.js';
+import { parseBffSessionResponse } from '../validation/parse-bff-user';
 
 const validIsoDate = '2026-12-31T23:59:59Z';
 

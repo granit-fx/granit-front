@@ -1,8 +1,8 @@
 import { afterEach, describe, it, expect, vi, beforeEach } from 'vitest';
 
-import { createKlaroCookieConsentProvider } from '../adapters/create-klaro-cookie-consent-provider.js';
+import { createKlaroCookieConsentProvider } from '../adapters/create-klaro-cookie-consent-provider';
 
-import type { KlaroConsentManager, KlaroConfig, KlaroWatcher } from '../types/index.js';
+import type { KlaroConsentManager, KlaroConfig, KlaroWatcher } from '../types/index';
 
 const mockManager: KlaroConsentManager = {
   getConsent: vi.fn(),

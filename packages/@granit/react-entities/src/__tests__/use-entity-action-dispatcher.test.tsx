@@ -8,12 +8,12 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import {
   EntityActionDrawerContext,
   EntityActionModalContext,
-} from '../actions/entity-action-overlay-context.js';
+} from '../actions/entity-action-overlay-context';
 import {
   resolveActionUrl,
   useEntityActionDispatcher,
   type EntityActionHandlers,
-} from '../actions/use-entity-action-dispatcher.js';
+} from '../actions/use-entity-action-dispatcher';
 
 import type { EntityActionManifest } from '@granit/entities';
 import type { ReactNode } from 'react';

@@ -2,10 +2,10 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
-import { TaxProvider, buildTaxQueryKey, useTaxConfig } from '../providers/tax-provider.js';
+import { DEFAULT_BASE_PATH } from '../constants';
+import { TaxProvider, buildTaxQueryKey, useTaxConfig } from '../providers/tax-provider';
 
-import type { TaxConfig } from '../providers/tax-provider.js';
+import type { TaxConfig } from '../providers/tax-provider';
 import type { AxiosInstance } from 'axios';
 
 const mockConfig: TaxConfig = {

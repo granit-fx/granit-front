@@ -6,9 +6,9 @@ import {
   OpenIddictAdminProvider,
   buildAdminQueryKey,
   useAdminConfig,
-} from '../providers/openiddict-admin-provider.js';
+} from '../providers/openiddict-admin-provider';
 
-import type { OpenIddictAdminConfig } from '../providers/openiddict-admin-provider.js';
+import type { OpenIddictAdminConfig } from '../providers/openiddict-admin-provider';
 import type { AxiosInstance } from 'axios';
 
 const mockConfig: OpenIddictAdminConfig = {

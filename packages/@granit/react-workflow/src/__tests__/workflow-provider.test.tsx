@@ -5,7 +5,7 @@ import {
   buildWorkflowQueryKey,
   useWorkflowConfig,
   WorkflowProvider,
-} from '../providers/workflow-provider.js';
+} from '../providers/workflow-provider';
 
 import { createMockClient } from './test-utils.tsx';
 
@@ -15,9 +15,7 @@ describe('WorkflowProvider', () => {
 
     const { result } = renderHook(() => useWorkflowConfig(), {
       wrapper: ({ children }) => (
-        <WorkflowProvider config={{ client, basePath: '/api/wf' }}>
-          {children}
-        </WorkflowProvider>
+        <WorkflowProvider config={{ client, basePath: '/api/wf' }}>{children}</WorkflowProvider>
       ),
     });
 
@@ -49,7 +47,7 @@ describe('WorkflowProvider', () => {
     render(
       <WorkflowProvider config={{ client }}>
         <div data-testid="child">Hello</div>
-      </WorkflowProvider>,
+      </WorkflowProvider>
     );
 
     expect(screen.getByTestId('child')).toBeTruthy();
@@ -65,10 +63,7 @@ describe('buildWorkflowQueryKey', () => {
 
   it('should use custom prefix', () => {
     const client = createMockClient();
-    const key = buildWorkflowQueryKey(
-      { client, queryKeyPrefix: ['custom', 'wf'] },
-      'history',
-    );
+    const key = buildWorkflowQueryKey({ client, queryKeyPrefix: ['custom', 'wf'] }, 'history');
     expect(key).toEqual(['custom', 'wf', 'history']);
   });
 });

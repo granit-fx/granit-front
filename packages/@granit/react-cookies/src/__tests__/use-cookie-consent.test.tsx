@@ -1,8 +1,8 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useCookieConsent } from '../hooks/use-cookie-consent.js';
-import { CookieConsentProvider } from '../providers/cookie-consent-provider.js';
+import { useCookieConsent } from '../hooks/use-cookie-consent';
+import { CookieConsentProvider } from '../providers/cookie-consent-provider';
 
 import type {
   CookieCategory,

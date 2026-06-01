@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { TimezoneProvider, useTimezone } from '../use-timezone.js';
+import { TimezoneProvider, useTimezone } from '../use-timezone';
 
 describe('useTimezone', () => {
   it('should fall back to the browser timezone when no provider is present', () => {

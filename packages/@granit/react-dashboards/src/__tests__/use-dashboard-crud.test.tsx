@@ -6,19 +6,19 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { dashboardCatalogQueryKey, useDashboardCatalog } from '../hooks/use-dashboard-catalog.js';
-import { dashboardDetailQueryKey, useDashboardDetail } from '../hooks/use-dashboard-detail.js';
-import { useDashboardList } from '../hooks/use-dashboard-list.js';
+import { dashboardCatalogQueryKey, useDashboardCatalog } from '../hooks/use-dashboard-catalog';
+import { dashboardDetailQueryKey, useDashboardDetail } from '../hooks/use-dashboard-detail';
+import { useDashboardList } from '../hooks/use-dashboard-list';
 import {
   useArchiveDashboard,
   usePublishDashboard,
   useRestoreDashboard,
-} from '../hooks/use-dashboard-state-transitions.js';
-import { useImportDashboard } from '../hooks/use-import-dashboard.js';
-import { useResyncDashboard } from '../hooks/use-resync-dashboard.js';
-import { useUpdateDashboardMetadata } from '../hooks/use-update-dashboard-metadata.js';
-import { useAddWidget, useRemoveWidget, useUpdateWidget } from '../hooks/use-widget-crud.js';
-import { DashboardsProvider } from '../providers/dashboards-provider.js';
+} from '../hooks/use-dashboard-state-transitions';
+import { useImportDashboard } from '../hooks/use-import-dashboard';
+import { useResyncDashboard } from '../hooks/use-resync-dashboard';
+import { useUpdateDashboardMetadata } from '../hooks/use-update-dashboard-metadata';
+import { useAddWidget, useRemoveWidget, useUpdateWidget } from '../hooks/use-widget-crud';
+import { DashboardsProvider } from '../providers/dashboards-provider';
 
 import type {
   DashboardCatalogEntryResponse,

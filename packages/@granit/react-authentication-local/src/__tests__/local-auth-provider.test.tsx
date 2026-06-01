@@ -2,9 +2,9 @@ import { createMockClient } from '@granit/testing';
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { LocalAuthProvider, useLocalAuthConfig } from '../providers/local-auth-provider.js';
+import { LocalAuthProvider, useLocalAuthConfig } from '../providers/local-auth-provider';
 
-import type { LocalAuthConfig } from '../providers/local-auth-provider.js';
+import type { LocalAuthConfig } from '../providers/local-auth-provider';
 import type { ReactNode } from 'react';
 
 describe('LocalAuthProvider', () => {

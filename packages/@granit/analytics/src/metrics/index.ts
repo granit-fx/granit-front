@@ -10,4 +10,4 @@ export type {
   RefreshHint,
   Trend,
   ValueKind,
-} from './metric-response.js';
+} from './metric-response';

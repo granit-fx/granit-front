@@ -6,25 +6,19 @@
 // (B3-1 / B3-3 / B4-render, ADR-039).
 // ---------------------------------------------------------------------------
 
-export type { DashboardDriftStatus } from './dashboard-drift-status.js';
-export type { DashboardRenderRequest } from './dashboard-render-request.js';
+export type { DashboardDriftStatus } from './dashboard-drift-status';
+export type { DashboardRenderRequest } from './dashboard-render-request';
 export type {
   DashboardRenderedWidget,
   DashboardRenderPeriod,
   DashboardRenderResponse,
-} from './dashboard-render-response.js';
-export { isImageSnapshotEnvelope } from './image-widget-snapshot.js';
-export type { ImageSnapshotEnvelope, ImageWidgetSnapshot } from './image-widget-snapshot.js';
-export { isMarkdownSnapshotEnvelope } from './markdown-widget-snapshot.js';
-export type {
-  MarkdownSnapshotEnvelope,
-  MarkdownWidgetSnapshot,
-} from './markdown-widget-snapshot.js';
-export { isTextSnapshotEnvelope } from './text-widget-snapshot.js';
-export type { TextSnapshotEnvelope, TextWidgetSnapshot } from './text-widget-snapshot.js';
-export type {
-  WidgetSnapshotEnvelope,
-  WidgetSnapshotEnvelopeOf,
-} from './widget-snapshot-envelope.js';
-export type { WidgetSnapshotStatus } from './widget-snapshot-status.js';
-export type { WidgetTransport } from './widget-transport.js';
+} from './dashboard-render-response';
+export { isImageSnapshotEnvelope } from './image-widget-snapshot';
+export type { ImageSnapshotEnvelope, ImageWidgetSnapshot } from './image-widget-snapshot';
+export { isMarkdownSnapshotEnvelope } from './markdown-widget-snapshot';
+export type { MarkdownSnapshotEnvelope, MarkdownWidgetSnapshot } from './markdown-widget-snapshot';
+export { isTextSnapshotEnvelope } from './text-widget-snapshot';
+export type { TextSnapshotEnvelope, TextWidgetSnapshot } from './text-widget-snapshot';
+export type { WidgetSnapshotEnvelope, WidgetSnapshotEnvelopeOf } from './widget-snapshot-envelope';
+export type { WidgetSnapshotStatus } from './widget-snapshot-status';
+export type { WidgetTransport } from './widget-transport';

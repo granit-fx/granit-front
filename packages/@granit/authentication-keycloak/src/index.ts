@@ -3,4 +3,4 @@ export type {
   KeycloakCoreConfig,
   KeycloakEvent,
   KeycloakUserInfo,
-} from './types/index.js';
+} from './types/index';

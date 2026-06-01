@@ -1,9 +1,9 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { assignDocumentTag, listDocumentTags, unassignDocumentTag } from '../api/tags-api.js';
+import { assignDocumentTag, listDocumentTags, unassignDocumentTag } from '../api/tags-api';
 
-import type { DocumentTagAssignmentResponse, ListDocumentTagsResponse } from '../types/index.js';
+import type { DocumentTagAssignmentResponse, ListDocumentTagsResponse } from '../types/index';
 
 const basePath = '/api/v1/documents';
 

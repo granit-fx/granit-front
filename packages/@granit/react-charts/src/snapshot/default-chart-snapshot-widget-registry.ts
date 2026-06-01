@@ -1,4 +1,4 @@
-import { ChartSnapshotWidget } from './chart-snapshot-widget.js';
+import { ChartSnapshotWidget } from './chart-snapshot-widget';
 
 import type { SnapshotWidgetRegistry } from '@granit/react-dashboards';
 

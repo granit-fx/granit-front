@@ -7,14 +7,14 @@ import {
   generateRecoveryCodes,
   getAuthenticatorKey,
   getTwoFactorStatus,
-} from '../api/account-two-factor-api.js';
+} from '../api/account-two-factor-api';
 
 import type {
   AccountAuthenticatorKeyResponse,
   AccountRecoveryCodesResponse,
   AccountTwoFactorEnableResponse,
   AccountTwoFactorStatusResponse,
-} from '../types/index.js';
+} from '../types/index';
 
 const BASE = '/api/account';
 

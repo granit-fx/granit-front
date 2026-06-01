@@ -1,12 +1,12 @@
 import { useQueryEndpointState } from '@granit/react-query-engine';
 import { useMemo, type ReactNode } from 'react';
 
-import { EntityActionButton, resolveAction } from '../actions/entity-action-button.js';
+import { EntityActionButton, resolveAction } from '../actions/entity-action-button';
 import {
   useEntityActionDispatcher,
   type EntityActionHandlers,
-} from '../actions/use-entity-action-dispatcher.js';
-import { useEntityCalendar } from '../hooks/use-entity-calendar.js';
+} from '../actions/use-entity-action-dispatcher';
+import { useEntityCalendar } from '../hooks/use-entity-calendar';
 
 import type {
   CalendarItemResponse,

@@ -1,7 +1,7 @@
 import { WorkflowLifecycleStatus } from '@granit/workflow';
 import { describe, expect, it } from 'vitest';
 
-import { buildLifecycleTransitionPrompt } from '../lifecycle-transition-prompt.js';
+import { buildLifecycleTransitionPrompt } from '../lifecycle-transition-prompt';
 
 describe('buildLifecycleTransitionPrompt', () => {
   it('marks Published → Archived as destructive and requiring strong confirm', () => {

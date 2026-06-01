@@ -1,9 +1,6 @@
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
 
-import {
-  composeSnapshotRegistries,
-  type SnapshotWidgetRegistry,
-} from './snapshot-widget-registry.js';
+import { composeSnapshotRegistries, type SnapshotWidgetRegistry } from './snapshot-widget-registry';
 
 const SnapshotWidgetRegistryContext = createContext<SnapshotWidgetRegistry | null>(null);
 

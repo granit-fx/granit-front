@@ -5,9 +5,9 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { webhooksKeys } from '../hooks/query-keys.js';
-import { useRotateSecret, useTestPing } from '../hooks/use-subscription-operations.js';
-import { WebhooksProvider } from '../providers/webhooks-provider.js';
+import { webhooksKeys } from '../hooks/query-keys';
+import { useRotateSecret, useTestPing } from '../hooks/use-subscription-operations';
+import { WebhooksProvider } from '../providers/webhooks-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type {

@@ -4,7 +4,7 @@ import { groupBy as groupByField, paginate } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
-import { mockProviderModels, mockProviders, mockUsageRecords, mockWorkspaces } from './data.js';
+import { mockProviderModels, mockProviders, mockUsageRecords, mockWorkspaces } from './data';
 
 import type {
   AIUsageRecord,

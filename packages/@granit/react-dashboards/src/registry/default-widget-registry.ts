@@ -1,8 +1,8 @@
-import { ImageWidget } from '../components/widgets/image-widget.js';
-import { MarkdownWidget } from '../components/widgets/markdown-widget.js';
-import { TextWidget } from '../components/widgets/text-widget.js';
+import { ImageWidget } from '../components/widgets/image-widget';
+import { MarkdownWidget } from '../components/widgets/markdown-widget';
+import { TextWidget } from '../components/widgets/text-widget';
 
-import type { WidgetRegistry, WidgetRenderer } from './widget-registry.js';
+import type { WidgetRegistry, WidgetRenderer } from './widget-registry';
 
 /**
  * Framework-default registry — covers every `FrameworkWidgetDefinition` type

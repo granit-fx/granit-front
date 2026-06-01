@@ -1,4 +1,4 @@
-import type { WidgetActionDispatchContext } from './widget-action-handler.js';
+import type { WidgetActionDispatchContext } from './widget-action-handler';
 
 /**
  * Regex matching `${expression}` placeholders. Expressions may contain

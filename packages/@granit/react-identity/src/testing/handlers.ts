@@ -2,9 +2,9 @@ import { BOOLEAN_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH, DEFAULT_PROVIDER_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH, DEFAULT_PROVIDER_BASE_PATH } from '../constants';
 
-import { mockDevices, mockPasswordChangedAt, mockSessions, mockUsers } from './data.js';
+import { mockDevices, mockPasswordChangedAt, mockSessions, mockUsers } from './data';
 
 import type { IdentityProviderCapabilities, IdentityUser } from '@granit/identity';
 import type { QueryMetadata } from '@granit/query-engine';

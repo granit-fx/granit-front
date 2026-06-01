@@ -4,8 +4,8 @@ import { act, renderHook } from '@testing-library/react';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useQueryEndpoint } from '../hooks/use-query-endpoint.js';
-import { QueryProvider } from '../providers/query-provider.js';
+import { useQueryEndpoint } from '../hooks/use-query-endpoint';
+import { QueryProvider } from '../providers/query-provider';
 
 import type { QueryConfig } from '@granit/query-engine';
 import type { ReactNode } from 'react';

@@ -7,7 +7,7 @@ import {
   getAIWorkspace,
   listAIWorkspaces,
   updateAIWorkspace,
-} from '../api/ai-workspaces-api.js';
+} from '../api/ai-workspaces-api';
 
 describe('ai-workspaces-api', () => {
   describe('listAIWorkspaces', () => {

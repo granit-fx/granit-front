@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
-import { useLookupResolve } from '../hooks/use-lookup-resolve.js';
-import { useLookup } from '../hooks/use-lookup.js';
+import { useLookup } from '../hooks/use-lookup';
+import { useLookupResolve } from '../hooks/use-lookup-resolve';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { LookupDescriptor, LookupItem } from '@granit/data-lookup';

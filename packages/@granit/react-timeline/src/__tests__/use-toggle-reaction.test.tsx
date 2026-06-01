@@ -6,8 +6,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { toggleReactionMap, useToggleReaction } from '../hooks/use-toggle-reaction.js';
-import { TimelineProvider } from '../providers/timeline-provider.js';
+import { toggleReactionMap, useToggleReaction } from '../hooks/use-toggle-reaction';
+import { TimelineProvider } from '../providers/timeline-provider';
 
 import type {
   ReactionMap,

@@ -4,7 +4,7 @@ import type {
   DashboardRenderedWidget,
   DashboardRenderRequest,
   DashboardRenderResponse,
-} from '../rendering/index.js';
+} from '../rendering/index';
 
 // Pinned wire-format fixtures mirroring B4-render
 // (Granit.Dashboards.Endpoints.Dtos.DashboardRenderResponse). Each widget

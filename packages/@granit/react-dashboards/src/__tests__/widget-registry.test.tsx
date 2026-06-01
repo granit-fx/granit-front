@@ -1,9 +1,9 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { defaultWidgetRegistry } from '../registry/default-widget-registry.js';
-import { WidgetRegistryProvider, useWidgetRegistry } from '../registry/widget-registry-context.js';
-import { composeRegistries, type WidgetRegistry } from '../registry/widget-registry.js';
+import { defaultWidgetRegistry } from '../registry/default-widget-registry';
+import { composeRegistries, type WidgetRegistry } from '../registry/widget-registry';
+import { WidgetRegistryProvider, useWidgetRegistry } from '../registry/widget-registry-context';
 
 describe('composeRegistries', () => {
   it('merges entries from later registries over earlier ones', () => {

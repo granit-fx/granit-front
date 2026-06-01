@@ -5,25 +5,25 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useAcceptAgreement } from '../hooks/use-privacy-agreements.js';
-import { useAgreementDocuments } from '../hooks/use-privacy-agreements.js';
-import { useAgreementHistory } from '../hooks/use-privacy-agreements.js';
-import { useAgreementStatuses } from '../hooks/use-privacy-agreements.js';
+import { useAcceptAgreement } from '../hooks/use-privacy-agreements';
+import { useAgreementDocuments } from '../hooks/use-privacy-agreements';
+import { useAgreementHistory } from '../hooks/use-privacy-agreements';
+import { useAgreementStatuses } from '../hooks/use-privacy-agreements';
 import {
   useCancelDeletion,
   useDeletionRequests,
   useDeletionStatus,
   useRequestDeletion,
-} from '../hooks/use-privacy-deletion.js';
-import { usePrivacyExportStatus, usePrivacyExports } from '../hooks/use-privacy-export.js';
-import { useRequestExport } from '../hooks/use-privacy-export.js';
+} from '../hooks/use-privacy-deletion';
+import { usePrivacyExportStatus, usePrivacyExports } from '../hooks/use-privacy-export';
+import { useRequestExport } from '../hooks/use-privacy-export';
 import {
   buildPrivacyQueryKey,
   PrivacyProvider,
   usePrivacyConfig,
-} from '../providers/privacy-provider.js';
+} from '../providers/privacy-provider';
 
-import type { PrivacyConfig } from '../providers/privacy-provider.js';
+import type { PrivacyConfig } from '../providers/privacy-provider';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 

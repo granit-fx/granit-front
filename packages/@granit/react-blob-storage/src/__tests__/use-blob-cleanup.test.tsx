@@ -5,8 +5,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useCleanupOrphans } from '../hooks/use-blob-cleanup.js';
-import { BlobStorageProvider } from '../providers/blob-storage-provider.js';
+import { useCleanupOrphans } from '../hooks/use-blob-cleanup';
+import { BlobStorageProvider } from '../providers/blob-storage-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { BlobCleanupOrphansResponse } from '@granit/blob-storage';

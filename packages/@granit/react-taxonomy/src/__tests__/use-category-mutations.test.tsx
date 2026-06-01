@@ -11,8 +11,8 @@ import {
   useMoveCategory,
   useUnassignCategory,
   useUpdateCategory,
-} from '../hooks/use-category-mutations.js';
-import { TaxonomyProvider } from '../providers/taxonomy-provider.js';
+} from '../hooks/use-category-mutations';
+import { TaxonomyProvider } from '../providers/taxonomy-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { CategoryAssignmentResponse, CategoryResponse } from '@granit/taxonomy';

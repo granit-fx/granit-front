@@ -1,6 +1,6 @@
-import type { DashboardStatus } from './dashboard-status.js';
-import type { WidgetInstanceResponse } from './widget-instance-response.js';
-import type { DashboardCategory } from '../types/dashboard-category.js';
+import type { DashboardStatus } from './dashboard-status';
+import type { WidgetInstanceResponse } from './widget-instance-response';
+import type { DashboardCategory } from '../types/dashboard-category';
 
 /**
  * Full payload for `GET /dashboards/{id}`. Mirrors

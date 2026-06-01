@@ -1,5 +1,5 @@
-import type { WidgetSnapshotStatus } from './widget-snapshot-status.js';
-import type { RefreshHint } from '../types/refresh-hint.js';
+import type { WidgetSnapshotStatus } from './widget-snapshot-status';
+import type { RefreshHint } from '../types/refresh-hint';
 
 /**
  * Non-generic envelope returned by every widget renderer (one per

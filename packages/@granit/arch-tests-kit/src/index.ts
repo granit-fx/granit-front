@@ -1,15 +1,15 @@
 // Public API. Consumers wire their own Vitest (or Jest) `describe/it` blocks
 // around these scanners — the kit only does the analysis, not the assertion.
 
-export { walkSourceFiles, isTestFile, isTestingDir, rel, readFile, stripComments } from './fs.js';
-export type { Module, ScanContext, AllowlistedScanContext, Violation } from './types.js';
+export { walkSourceFiles, isTestFile, isTestingDir, rel, readFile, stripComments } from './fs';
+export type { Module, ScanContext, AllowlistedScanContext, Violation } from './types';
 
 export {
   scanKebabCase,
   scanHookNaming,
   scanComponentNaming,
   scanFetchVerbInApi,
-} from './scanners/naming.js';
+} from './scanners/naming';
 
 export {
   collectImports,
@@ -17,21 +17,18 @@ export {
   scanFetch,
   scanAxiosImports,
   scanOnlySkip,
-} from './scanners/imports.js';
+} from './scanners/imports';
 
-export { scanBarrelDefaultExports, scanLeakedInternals } from './scanners/barrels.js';
-export type { BarrelScanOptions } from './scanners/barrels.js';
+export { scanBarrelDefaultExports, scanLeakedInternals } from './scanners/barrels';
+export type { BarrelScanOptions } from './scanners/barrels';
 
-export { scanLocaleParity } from './scanners/i18n.js';
+export { scanLocaleParity } from './scanners/i18n';
 
 export {
   scanAnonymousDefaultExports,
   scanWallClockInApi,
   scanUseFormResolver,
-} from './scanners/patterns.js';
+} from './scanners/patterns';
 
-export { scanReadmePresence, scanSharedDepVersions } from './scanners/uniformity.js';
-export type {
-  ReadmePresenceOptions,
-  SharedDepVersionsOptions,
-} from './scanners/uniformity.js';
+export { scanReadmePresence, scanSharedDepVersions } from './scanners/uniformity';
+export type { ReadmePresenceOptions, SharedDepVersionsOptions } from './scanners/uniformity';

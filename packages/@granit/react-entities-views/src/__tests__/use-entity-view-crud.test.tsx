@@ -6,14 +6,14 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { defaultEntityViewQueryKey } from '../hooks/use-default-entity-view.js';
+import { defaultEntityViewQueryKey } from '../hooks/use-default-entity-view';
+import { entityViewQueryKey } from '../hooks/use-entity-view';
 import {
   useCreateEntityView,
   useDeleteEntityView,
   useUpdateEntityView,
-} from '../hooks/use-entity-view-crud.js';
-import { entityViewQueryKey } from '../hooks/use-entity-view.js';
-import { entityViewsQueryKey, useEntityViews } from '../hooks/use-entity-views.js';
+} from '../hooks/use-entity-view-crud';
+import { entityViewsQueryKey, useEntityViews } from '../hooks/use-entity-views';
 
 import type { EntityViewResponse } from '@granit/entities-views';
 import type { ReactNode } from 'react';

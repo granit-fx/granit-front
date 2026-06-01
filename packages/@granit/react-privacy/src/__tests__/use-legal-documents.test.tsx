@@ -18,8 +18,8 @@ import {
   useLegalDocuments,
   usePublishLegalDocument,
   useUpdateLegalDocument,
-} from '../hooks/use-legal-documents.js';
-import { PrivacyProvider } from '../providers/privacy-provider.js';
+} from '../hooks/use-legal-documents';
+import { PrivacyProvider } from '../providers/privacy-provider';
 
 import type { LegalDocumentDetail } from '@granit/privacy';
 

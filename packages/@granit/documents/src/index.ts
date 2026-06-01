@@ -34,10 +34,10 @@ export type {
   TrashedDocumentResponse,
   UploadTicketRequest,
   UploadTicketResponse,
-} from './types/index.js';
+} from './types/index';
 
 // Permissions
-export { DocumentsPermissions } from './permissions.js';
+export { DocumentsPermissions } from './permissions';
 
 // API — Folders
 export {
@@ -50,7 +50,7 @@ export {
   restoreFolder,
   transferFolderOwner,
   trashFolder,
-} from './api/folders-api.js';
+} from './api/folders-api';
 
 // API — Documents
 export {
@@ -67,7 +67,7 @@ export {
   restoreDocument,
   transferDocumentOwner,
   trashDocument,
-} from './api/documents-api.js';
+} from './api/documents-api';
 
 // API — Shares
 export {
@@ -76,10 +76,10 @@ export {
   listDocumentShares,
   listFolderShares,
   revokeShare,
-} from './api/shares-api.js';
+} from './api/shares-api';
 
 // API — Document tags (Taxonomy proxy)
-export { assignDocumentTag, listDocumentTags, unassignDocumentTag } from './api/tags-api.js';
+export { assignDocumentTag, listDocumentTags, unassignDocumentTag } from './api/tags-api';
 
 // API — Quota
-export { getTenantStorageQuota } from './api/quota-api.js';
+export { getTenantStorageQuota } from './api/quota-api';

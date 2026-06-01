@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { arcGisProvider } from '../providers/arcgis-provider.js';
-import { osmProvider } from '../providers/osm-provider.js';
-import { spwProvider } from '../providers/spw-provider.js';
+import { arcGisProvider } from '../providers/arcgis-provider';
+import { osmProvider } from '../providers/osm-provider';
+import { spwProvider } from '../providers/spw-provider';
 
 describe('built-in tile providers', () => {
   it('osmProvider exposes a single plan layer with mandatory CC-BY-SA attribution', () => {

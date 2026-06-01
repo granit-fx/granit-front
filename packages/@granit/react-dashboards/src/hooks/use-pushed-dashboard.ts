@@ -6,12 +6,12 @@ import {
   dashboardWidgetQueryKey,
   useDashboardRender,
   type UseDashboardRenderOptions,
-} from './use-dashboard-render.js';
+} from './use-dashboard-render';
 import {
   applyStreamSnapshot,
   useDashboardStream,
   type DashboardStreamSnapshot,
-} from './use-dashboard-stream.js';
+} from './use-dashboard-stream';
 
 import type {
   DashboardRenderedWidget,

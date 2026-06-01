@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { ChartSnapshotWidget } from '../snapshot/chart-snapshot-widget.js';
+import { ChartSnapshotWidget } from '../snapshot/chart-snapshot-widget';
 
 import type { DashboardRenderedWidget } from '@granit/dashboards';
 

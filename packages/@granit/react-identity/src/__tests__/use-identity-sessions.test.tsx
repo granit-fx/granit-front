@@ -11,10 +11,10 @@ import {
   useTerminateSession,
   useUserDeviceActivity,
   useUserSessions,
-} from '../hooks/use-identity-sessions.js';
-import { IdentityProvider } from '../providers/identity-provider.js';
+} from '../hooks/use-identity-sessions';
+import { IdentityProvider } from '../providers/identity-provider';
 
-import type { IdentityProviderProps } from '../providers/identity-provider.js';
+import type { IdentityProviderProps } from '../providers/identity-provider';
 import type { IdentityDeviceActivity, IdentitySession } from '@granit/identity';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

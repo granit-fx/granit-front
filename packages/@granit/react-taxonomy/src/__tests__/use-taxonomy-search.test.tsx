@@ -3,8 +3,8 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useTaxonomySearch } from '../hooks/use-taxonomy-search.js';
-import { TaxonomyProvider } from '../providers/taxonomy-provider.js';
+import { useTaxonomySearch } from '../hooks/use-taxonomy-search';
+import { TaxonomyProvider } from '../providers/taxonomy-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { TaxonomySearchResultGroup } from '@granit/taxonomy';

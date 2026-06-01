@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { TracingProvider, useTracingConfig, useTracer } from '../providers/tracing-provider.js';
+import { TracingProvider, useTracingConfig, useTracer } from '../providers/tracing-provider';
 
 import type { TracingConfig } from '@granit/tracing';
 

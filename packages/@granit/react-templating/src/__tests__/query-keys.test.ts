@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { templateKeys } from '../hooks/query-keys.js';
+import { templateKeys } from '../hooks/query-keys';
 
 const prefix = ['admin', 'templates'] as const;
 

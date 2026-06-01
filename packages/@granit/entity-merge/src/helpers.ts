@@ -1,4 +1,4 @@
-import type { FieldConflict, MergeFieldChoices, WinnerSide } from './types/index.js';
+import type { FieldConflict, MergeFieldChoices, WinnerSide } from './types/index';
 
 /**
  * Generate a fresh idempotency key for a merge submission. Prefers

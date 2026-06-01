@@ -1,4 +1,4 @@
-import { MapTile } from '../components/map-tile.js';
+import { MapTile } from '../components/map-tile';
 
 import type { WidgetRegistry, WidgetRendererFn } from '@granit/react-dashboards';
 

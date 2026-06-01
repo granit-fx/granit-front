@@ -1,29 +1,29 @@
 // Provider
-export { WebhooksProvider, useWebhooksConfig } from './providers/webhooks-provider.js';
+export { WebhooksProvider, useWebhooksConfig } from './providers/webhooks-provider';
 export type {
   ResolvedWebhooksConfig,
   WebhooksConfig,
   WebhooksProviderProps,
-} from './providers/webhooks-provider.js';
+} from './providers/webhooks-provider';
 
 // Hooks
-export { useSubscription } from './hooks/use-subscription.js';
+export { useSubscription } from './hooks/use-subscription';
 export {
   useCreateSubscription,
   useDeleteSubscription,
   useUpdateSubscription,
-} from './hooks/use-subscription-mutations.js';
+} from './hooks/use-subscription-mutations';
 export {
   useActivateSubscription,
   useDeactivateSubscription,
   useSuspendSubscription,
-} from './hooks/use-subscription-lifecycle.js';
-export { useRotateSecret, useTestPing } from './hooks/use-subscription-operations.js';
-export { useDeliveries } from './hooks/use-deliveries.js';
-export { useRetryDelivery } from './hooks/use-retry-delivery.js';
-export { useEventTypes } from './hooks/use-event-types.js';
-export { useWebhookConfig } from './hooks/use-webhook-config.js';
-export { useWebhookStats } from './hooks/use-webhook-stats.js';
+} from './hooks/use-subscription-lifecycle';
+export { useRotateSecret, useTestPing } from './hooks/use-subscription-operations';
+export { useDeliveries } from './hooks/use-deliveries';
+export { useRetryDelivery } from './hooks/use-retry-delivery';
+export { useEventTypes } from './hooks/use-event-types';
+export { useWebhookConfig } from './hooks/use-webhook-config';
+export { useWebhookStats } from './hooks/use-webhook-stats';
 
 // Query keys
-export { webhooksKeys } from './hooks/query-keys.js';
+export { webhooksKeys } from './hooks/query-keys';

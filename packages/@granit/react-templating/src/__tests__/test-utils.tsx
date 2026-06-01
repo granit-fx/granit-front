@@ -1,7 +1,7 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { QueryClientProvider } from '@tanstack/react-query';
 
-import { TemplatingProvider } from '../providers/templating-provider.js';
+import { TemplatingProvider } from '../providers/templating-provider';
 
 import type { AxiosInstance } from 'axios';
 

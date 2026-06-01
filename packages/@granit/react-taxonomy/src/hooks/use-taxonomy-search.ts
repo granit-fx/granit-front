@@ -1,7 +1,7 @@
 import { searchTaxonomy } from '@granit/taxonomy';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { buildTaxonomyQueryKey, useTaxonomyConfig } from '../providers/taxonomy-provider.js';
+import { buildTaxonomyQueryKey, useTaxonomyConfig } from '../providers/taxonomy-provider';
 
 import type { TaxonomySearchFilter, TaxonomySearchResultGroup } from '@granit/taxonomy';
 import type { UseQueryResult } from '@tanstack/react-query';

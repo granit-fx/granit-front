@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { removeWidget, updateWidget } from '../lib/update-widget.js';
+import { removeWidget, updateWidget } from '../lib/update-widget';
 
 import type { DashboardDefinition, MarkdownWidgetDefinition } from '@granit/dashboards';
 

@@ -1,1 +1,1 @@
-export type { GoogleCloudAuthContextType, GoogleCloudCoreConfig } from './types/index.js';
+export type { GoogleCloudAuthContextType, GoogleCloudCoreConfig } from './types/index';

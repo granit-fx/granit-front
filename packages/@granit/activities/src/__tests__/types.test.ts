@@ -7,7 +7,7 @@ import type {
   ActivityResponse,
   ActivityStatus,
   ActivityStatusFilter,
-} from '../types/index.js';
+} from '../types/index';
 
 describe('Activity types', () => {
   it('ActivityStatus is the closed PascalCase union shipped by the backend', () => {

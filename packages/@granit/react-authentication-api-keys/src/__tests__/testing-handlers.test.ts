@@ -1,7 +1,7 @@
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { apiKeyQueryMetadata, createApiKeyHandlers } from '../testing/index.js';
+import { apiKeyQueryMetadata, createApiKeyHandlers } from '../testing/index';
 
 const BASE = 'http://api.test/api/v1/authentication/api-keys';
 const server = setupServer();

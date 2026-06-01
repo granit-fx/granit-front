@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
 
-import { composeRegistries, type WidgetRegistry } from './widget-registry.js';
+import { composeRegistries, type WidgetRegistry } from './widget-registry';
 
 const WidgetRegistryContext = createContext<WidgetRegistry | null>(null);
 

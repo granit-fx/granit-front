@@ -1,9 +1,9 @@
 import { updateDashboardMetadata } from '@granit/dashboards';
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 
-import { useDashboardsConfig } from '../providers/dashboards-provider.js';
+import { useDashboardsConfig } from '../providers/dashboards-provider';
 
-import { dashboardDetailQueryKey } from './use-dashboard-detail.js';
+import { dashboardDetailQueryKey } from './use-dashboard-detail';
 
 import type { DashboardMetadataUpdateRequest, DashboardSummaryResponse } from '@granit/dashboards';
 

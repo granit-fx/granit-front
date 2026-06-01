@@ -1,9 +1,9 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { verifyTwoFactorLogin } from '../api/account-two-factor-login-api.js';
+import { verifyTwoFactorLogin } from '../api/account-two-factor-login-api';
 
-import type { AccountLoginResponse } from '../types/index.js';
+import type { AccountLoginResponse } from '../types/index';
 
 const BASE = '/api/account';
 

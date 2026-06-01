@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 
-import { ExportProvider } from '../export/providers/export-provider.js';
-import { ImportProvider } from '../import/providers/import-provider.js';
+import { ExportProvider } from '../export/providers/export-provider';
+import { ImportProvider } from '../import/providers/import-provider';
 
-import type { ExportConfig } from '../export/providers/export-provider.js';
-import type { ImportConfig } from '../import/providers/import-provider.js';
+import type { ExportConfig } from '../export/providers/export-provider';
+import type { ImportConfig } from '../import/providers/import-provider';
 import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
 

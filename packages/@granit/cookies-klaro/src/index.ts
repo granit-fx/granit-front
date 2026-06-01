@@ -1,6 +1,6 @@
-export { createKlaroCookieConsentProvider } from './adapters/create-klaro-cookie-consent-provider.js';
+export { createKlaroCookieConsentProvider } from './adapters/create-klaro-cookie-consent-provider';
 export type {
   KlaroConfig,
   KlaroServiceMapping,
   CreateKlaroCookieConsentProviderOptions,
-} from './types/index.js';
+} from './types/index';

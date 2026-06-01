@@ -1,4 +1,4 @@
-import type { TaxRateResponse, TaxValidateRequest, TaxValidateResponse } from '../types/index.js';
+import type { TaxRateResponse, TaxValidateRequest, TaxValidateResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

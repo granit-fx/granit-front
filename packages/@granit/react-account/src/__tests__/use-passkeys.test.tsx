@@ -12,10 +12,10 @@ import {
   useDeletePasskey,
   usePasskeys,
   useRenamePasskey,
-} from '../hooks/use-passkeys.js';
-import { AccountProvider } from '../providers/account-provider.js';
+} from '../hooks/use-passkeys';
+import { AccountProvider } from '../providers/account-provider';
 
-import type { AccountConfig } from '../providers/account-provider.js';
+import type { AccountConfig } from '../providers/account-provider';
 import type { AccountPasskeyCreatedResponse, AccountPasskeyInfo } from '@granit/account';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
@@ -207,7 +207,11 @@ describe('useDeletePasskey', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(deletePasskey).toHaveBeenCalledWith(client, '/api/v1/account', toEntityId<'Passkey'>('pk-001'));
+    expect(deletePasskey).toHaveBeenCalledWith(
+      client,
+      '/api/v1/account',
+      toEntityId<'Passkey'>('pk-001')
+    );
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['account', 'passkeys'],
     });

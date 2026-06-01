@@ -8,10 +8,10 @@ import {
   getStream,
   followEntity,
   unfollowEntity,
-} from '../api/timeline-api.js';
-import { TimelineEntryType } from '../types/index.js';
+} from '../api/timeline-api';
+import { TimelineEntryType } from '../types/index';
 
-import type { CreateTimelineEntryRequest, TimelineEntryPage } from '../types/index.js';
+import type { CreateTimelineEntryRequest, TimelineEntryPage } from '../types/index';
 import type { AxiosInstance } from 'axios';
 
 const BASE_PATH = '/api/v1/timeline';

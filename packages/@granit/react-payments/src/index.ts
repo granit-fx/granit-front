@@ -3,8 +3,8 @@ export {
   PaymentsProvider,
   buildPaymentsQueryKey,
   usePaymentsConfig,
-} from './providers/payments-provider.js';
-export type { PaymentsConfig, PaymentsProviderProps } from './providers/payments-provider.js';
+} from './providers/payments-provider';
+export type { PaymentsConfig, PaymentsProviderProps } from './providers/payments-provider';
 
 // Hooks
 export {
@@ -22,8 +22,8 @@ export {
   useProviderCatalog,
   useRequestPaymentRefund,
   useResyncPaymentMethod,
-} from './hooks/use-payments.js';
+} from './hooks/use-payments';
 
 // Icons
-export { PaymentMethodIcon, ProviderIcon, resolveMethodIconStyle } from './icons/index.js';
-export type { MethodIconStyle, PaymentMethodIconProps, ProviderIconProps } from './icons/index.js';
+export { PaymentMethodIcon, ProviderIcon, resolveMethodIconStyle } from './icons/index';
+export type { MethodIconStyle, PaymentMethodIconProps, ProviderIconProps } from './icons/index';

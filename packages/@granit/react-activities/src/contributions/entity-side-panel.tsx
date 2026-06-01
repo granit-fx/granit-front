@@ -1,4 +1,4 @@
-import { ActivitiesSidePanel } from '../components/activities-side-panel.js';
+import { ActivitiesSidePanel } from '../components/activities-side-panel';
 
 import type { EntitySidePanel, EntitySidePanelProps } from '@granit/react-entities';
 

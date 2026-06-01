@@ -9,7 +9,7 @@ import {
   buildDiagnosticsQueryKey,
   diagnosticsKeys,
   useMonitoringHealth,
-} from '../hooks/use-monitoring-health.js';
+} from '../hooks/use-monitoring-health';
 
 import type { MonitoringHealthResponse } from '@granit/diagnostics';
 

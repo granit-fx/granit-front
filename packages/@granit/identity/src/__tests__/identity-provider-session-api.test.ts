@@ -7,9 +7,9 @@ import {
   listUserSessions,
   terminateAllSessions,
   terminateSession,
-} from '../api/identity-provider-session-api.js';
+} from '../api/identity-provider-session-api';
 
-import type { IdentityDeviceActivity, IdentitySession } from '../types/index.js';
+import type { IdentityDeviceActivity, IdentitySession } from '../types/index';
 
 const sampleSession: IdentitySession = {
   sessionId: toEntityId<'IdentitySession'>('session-1'),

@@ -1,7 +1,7 @@
 import { previewTemplate, previewTemplateBinary } from '@granit/templating';
 import { useMutation } from '@tanstack/react-query';
 
-import { useTemplatingConfig } from '../providers/templating-provider.js';
+import { useTemplatingConfig } from '../providers/templating-provider';
 
 import type { TemplatePreviewRequest } from '@granit/templating';
 

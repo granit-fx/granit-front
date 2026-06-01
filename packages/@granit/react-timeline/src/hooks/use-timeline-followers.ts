@@ -2,7 +2,7 @@ import { createLogger } from '@granit/logger';
 import { getFollowers, followEntity, unfollowEntity } from '@granit/timeline';
 import { useCallback, useEffect, useState } from 'react';
 
-import { useTimelineConfig } from '../providers/timeline-provider.js';
+import { useTimelineConfig } from '../providers/timeline-provider';
 
 const logger = createLogger('timeline:followers');
 

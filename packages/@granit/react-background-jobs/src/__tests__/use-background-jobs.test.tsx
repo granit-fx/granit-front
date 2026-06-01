@@ -12,10 +12,10 @@ import {
   usePauseJob,
   useResumeJob,
   useTriggerJob,
-} from '../hooks/use-background-jobs.js';
-import { BackgroundJobsProvider } from '../providers/background-jobs-provider.js';
+} from '../hooks/use-background-jobs';
+import { BackgroundJobsProvider } from '../providers/background-jobs-provider';
 
-import type { BackgroundJobsConfig } from '../providers/background-jobs-provider.js';
+import type { BackgroundJobsConfig } from '../providers/background-jobs-provider';
 import type { BackgroundJobStatus } from '@granit/background-jobs';
 import type { PagedResult } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
@@ -99,10 +99,7 @@ describe('useBackgroundJobs', () => {
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockPage });
 
     const { wrapper } = createWrapper(client);
-    const { result } = renderHook(
-      () => useBackgroundJobs({ page: 2, pageSize: 10 }),
-      { wrapper }
-    );
+    const { result } = renderHook(() => useBackgroundJobs({ page: 2, pageSize: 10 }), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 

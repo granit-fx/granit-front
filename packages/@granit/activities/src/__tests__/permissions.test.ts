@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { ActivitiesPermissions } from '../permissions.js';
+import { ActivitiesPermissions } from '../permissions';
 
 describe('ActivitiesPermissions', () => {
   it('exposes the three Activities permissions matching the backend keys', () => {

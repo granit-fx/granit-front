@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useBffConfig } from '../providers/bff-provider.js';
+import { useBffConfig } from '../providers/bff-provider';
 
 /**
  * Hook to access the current CSRF token and refresh it.

@@ -1,9 +1,9 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { FieldConflictTable } from '../components/field-conflict-table.js';
+import { FieldConflictTable } from '../components/field-conflict-table';
 
-import type { FieldConflictTableLabels } from '../components/field-conflict-table.js';
+import type { FieldConflictTableLabels } from '../components/field-conflict-table';
 import type { FieldConflict } from '@granit/entity-merge';
 
 const labels: FieldConflictTableLabels = {

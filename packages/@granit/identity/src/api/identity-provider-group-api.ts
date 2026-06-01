@@ -1,4 +1,4 @@
-import type { IdentityGroup } from '../types/index.js';
+import type { IdentityGroup } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { UserId } from '@granit/types';
 

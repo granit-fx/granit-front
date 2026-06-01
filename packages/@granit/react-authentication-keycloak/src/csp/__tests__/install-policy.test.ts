@@ -1,11 +1,7 @@
 import { resetGranitPoliciesForTests, resetInstalledPoliciesForTests } from '@granit/csp/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import {
-  GRANIT_KEYCLOAK_POLICY_NAME,
-  installPolicy,
-  setKeycloakAuthorities,
-} from '../index.js';
+import { GRANIT_KEYCLOAK_POLICY_NAME, installPolicy, setKeycloakAuthorities } from '../index';
 
 import type { TrustedTypePolicyOptions } from '@granit/csp';
 
@@ -66,13 +62,17 @@ describe('granit-keycloak createScriptURL', () => {
 
   it('accepts a URL whose origin matches the registered authority', () => {
     setKeycloakAuthorities(['https://idp.example.com/realms/my']);
-    const out = getCreateScriptURL()('https://idp.example.com/realms/my/protocol/openid-connect/auth');
+    const out = getCreateScriptURL()(
+      'https://idp.example.com/realms/my/protocol/openid-connect/auth'
+    );
     expect(out).toContain('idp.example.com');
   });
 
   it('rejects a URL whose origin is not in the allow-list', () => {
     setKeycloakAuthorities(['https://idp.example.com/realms/my']);
-    expect(() => getCreateScriptURL()('https://evil.example.org/login')).toThrow(/not in the registered/);
+    expect(() => getCreateScriptURL()('https://evil.example.org/login')).toThrow(
+      /not in the registered/
+    );
   });
 
   it('rejects javascript: scheme', () => {

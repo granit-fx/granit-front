@@ -6,9 +6,9 @@ import {
   ExportProvider,
   buildExportQueryKey,
   useExportConfig,
-} from '../../export/providers/export-provider.js';
+} from '../../export/providers/export-provider';
 
-import type { ExportConfig } from '../../export/providers/export-provider.js';
+import type { ExportConfig } from '../../export/providers/export-provider';
 import type { ReactNode } from 'react';
 
 function createConfig(overrides?: Partial<ExportConfig>): ExportConfig {

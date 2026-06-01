@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { BlobStatus } from '../types/index.js';
+import { BlobStatus } from '../types/index';
 
 describe('BlobStatus', () => {
   it('matches the wire format (PascalCase strings from JsonStringEnumConverter)', () => {

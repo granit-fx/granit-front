@@ -3,21 +3,21 @@
 // ---------------------------------------------------------------------------
 
 // Provider
-export { TemplatingProvider, useTemplatingConfig } from './providers/templating-provider.js';
-export type { TemplatingConfig, TemplatingProviderProps } from './providers/templating-provider.js';
+export { TemplatingProvider, useTemplatingConfig } from './providers/templating-provider';
+export type { TemplatingConfig, TemplatingProviderProps } from './providers/templating-provider';
 
 // Hooks
-export { useTemplate } from './hooks/use-template.js';
-export { useTemplateLayouts } from './hooks/use-template-layouts.js';
+export { useTemplate } from './hooks/use-template';
+export { useTemplateLayouts } from './hooks/use-template-layouts';
 export {
   useTemplateCategories,
   useTemplateCategoryMutations,
-} from './hooks/use-template-categories.js';
-export { useTemplateHistory, useTemplateRevision } from './hooks/use-template-history.js';
-export { useTemplateMutations } from './hooks/use-template-mutations.js';
-export { useTemplateBinaryPreview, useTemplatePreview } from './hooks/use-template-preview.js';
-export { useTemplateVariables } from './hooks/use-template-variables.js';
-export { useTemplates } from './hooks/use-templates.js';
+} from './hooks/use-template-categories';
+export { useTemplateHistory, useTemplateRevision } from './hooks/use-template-history';
+export { useTemplateMutations } from './hooks/use-template-mutations';
+export { useTemplateBinaryPreview, useTemplatePreview } from './hooks/use-template-preview';
+export { useTemplateVariables } from './hooks/use-template-variables';
+export { useTemplates } from './hooks/use-templates';
 
 // Query keys
-export { templateKeys } from './hooks/query-keys.js';
+export { templateKeys } from './hooks/query-keys';

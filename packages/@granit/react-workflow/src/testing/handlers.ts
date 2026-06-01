@@ -1,9 +1,9 @@
 import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { mockWorkflowHistory, mockWorkflowStatus } from './data.js';
+import { mockWorkflowHistory, mockWorkflowStatus } from './data';
 
 import type {
   TransitionHistory,

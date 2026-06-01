@@ -3,8 +3,8 @@ export {
   PartiesProvider,
   buildPartiesQueryKey,
   usePartiesConfig,
-} from './providers/parties-provider.js';
-export type { PartiesConfig, PartiesProviderProps } from './providers/parties-provider.js';
+} from './providers/parties-provider';
+export type { PartiesConfig, PartiesProviderProps } from './providers/parties-provider';
 
 // Hooks — CRUD + lifecycle + sub-collections + tax status + metadata
 export {
@@ -28,28 +28,28 @@ export {
   useSetPartyTaxStatusMutation,
   useSuspendPartyMutation,
   useUpdatePartyMutation,
-} from './hooks/use-parties.js';
+} from './hooks/use-parties';
 
 // Hooks — merge
-export { useMergePartyMutation, useMergePartyPreviewQuery } from './hooks/use-party-merge.js';
-export type { MergePartyMutationVariables } from './hooks/use-party-merge.js';
-export type { CreatePartyMutationVariables } from './hooks/use-parties.js';
+export { useMergePartyMutation, useMergePartyPreviewQuery } from './hooks/use-party-merge';
+export type { MergePartyMutationVariables } from './hooks/use-party-merge';
+export type { CreatePartyMutationVariables } from './hooks/use-parties';
 
 // Hooks — duplicate detection
 export {
   useDismissPartyDuplicateMutation,
   useMergePartyFromDuplicateMutation,
   usePartyDuplicateCandidatesForPartyQuery,
-} from './hooks/use-party-duplicates.js';
-export type { MergePartyFromDuplicateMutationVariables } from './hooks/use-party-duplicates.js';
+} from './hooks/use-party-duplicates';
+export type { MergePartyFromDuplicateMutationVariables } from './hooks/use-party-duplicates';
 
 // Components
-export { MergeWizard } from './components/merge-wizard.js';
-export type { MergeWizardProps } from './components/merge-wizard.js';
-export { DuplicatesInbox } from './components/duplicates-inbox.js';
-export type { DuplicatesInboxProps } from './components/duplicates-inbox.js';
-export { PartyDuplicatesBadge } from './components/party-duplicates-badge.js';
-export type { PartyDuplicatesBadgeProps } from './components/party-duplicates-badge.js';
+export { MergeWizard } from './components/merge-wizard';
+export type { MergeWizardProps } from './components/merge-wizard';
+export { DuplicatesInbox } from './components/duplicates-inbox';
+export type { DuplicatesInboxProps } from './components/duplicates-inbox';
+export { PartyDuplicatesBadge } from './components/party-duplicates-badge';
+export type { PartyDuplicatesBadgeProps } from './components/party-duplicates-badge';
 
 // i18n bundles
-export { partiesTranslationsEn, partiesTranslationsFr } from './locales/index.js';
+export { partiesTranslationsEn, partiesTranslationsFr } from './locales/index';

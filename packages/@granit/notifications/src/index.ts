@@ -19,9 +19,9 @@ export type {
   UserNotificationId,
   UserNotificationPage,
   UserNotificationState,
-} from './types/index.js';
+} from './types/index';
 
-export { NotificationChannels } from './types/index.js';
+export { NotificationChannels } from './types/index';
 
 // API (pure TypeScript functions)
 export {
@@ -39,5 +39,5 @@ export {
   unfollowEntity,
   unsubscribeFromNotificationType,
   updatePreference,
-} from './api/notification-api.js';
-export { NotificationPermissions } from './permissions.js';
+} from './api/notification-api';
+export { NotificationPermissions } from './permissions';

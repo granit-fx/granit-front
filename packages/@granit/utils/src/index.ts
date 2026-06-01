@@ -5,6 +5,6 @@ export {
   formatDateTime,
   formatNumber,
   formatTimeAgo,
-} from './utils.js';
+} from './utils';
 
-export { LINK_URL_SCHEMES, NAV_URL_SCHEMES, assertSafeUrl, isSafeUrl } from './safe-url.js';
+export { LINK_URL_SCHEMES, NAV_URL_SCHEMES, assertSafeUrl, isSafeUrl } from './safe-url';

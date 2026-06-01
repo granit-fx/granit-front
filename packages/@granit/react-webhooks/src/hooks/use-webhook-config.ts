@@ -1,7 +1,7 @@
 import { getConfig } from '@granit/webhooks';
 import { useQuery } from '@tanstack/react-query';
 
-import { useWebhooksConfig } from '../providers/webhooks-provider.js';
+import { useWebhooksConfig } from '../providers/webhooks-provider';
 
 import type { WebhookModuleConfig } from '@granit/webhooks';
 import type { UseQueryResult } from '@tanstack/react-query';

@@ -5,9 +5,9 @@ import {
   generateMergeIdempotencyKey,
   resolveWinner,
   seedFieldChoices,
-} from '../helpers.js';
+} from '../helpers';
 
-import type { FieldConflict } from '../types/index.js';
+import type { FieldConflict } from '../types/index';
 
 const conflicts: readonly FieldConflict[] = [
   { fieldPath: 'Name', survivorValue: 'A', loserValue: 'B', default: 'Survivor' },

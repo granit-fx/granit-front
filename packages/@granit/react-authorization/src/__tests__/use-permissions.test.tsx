@@ -3,7 +3,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { buildPermissionQueryKey, usePermissions } from '../hooks/use-permissions.js';
+import { buildPermissionQueryKey, usePermissions } from '../hooks/use-permissions';
 
 import type { PermissionsResponse } from '@granit/authorization';
 import type { AxiosInstance, AxiosResponse } from 'axios';

@@ -6,8 +6,8 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { useWidgetRender, widgetRenderQueryKey } from '../hooks/use-widget-render.js';
-import { DashboardsProvider } from '../providers/dashboards-provider.js';
+import { useWidgetRender, widgetRenderQueryKey } from '../hooks/use-widget-render';
+import { DashboardsProvider } from '../providers/dashboards-provider';
 
 import type { DashboardRenderedWidget, WidgetDefinitionBase } from '@granit/dashboards';
 import type { ReactNode } from 'react';

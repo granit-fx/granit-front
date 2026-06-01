@@ -21,10 +21,10 @@ export type {
   SubscriptionId,
   SubscriptionResponse,
   SubscriptionStatus,
-} from './types/index.js';
+} from './types/index';
 
 // Permissions
-export { SubscriptionsPermissions } from './permissions.js';
+export { SubscriptionsPermissions } from './permissions';
 
 // API — Plans
 export {
@@ -36,7 +36,7 @@ export {
   listPlans,
   publishPlan,
   updatePlan,
-} from './api/subscriptions-api.js';
+} from './api/subscriptions-api';
 
 // API — Subscriptions
 export {
@@ -48,7 +48,7 @@ export {
   getSubscriptionById,
   listSubscriptions,
   migrateSubscriptionPrice,
-} from './api/subscriptions-api.js';
+} from './api/subscriptions-api';
 
 // API — Seats
-export { assignSeat, listSeats, revokeSeat } from './api/subscriptions-api.js';
+export { assignSeat, listSeats, revokeSeat } from './api/subscriptions-api';

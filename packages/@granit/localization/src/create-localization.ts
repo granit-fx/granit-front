@@ -1,6 +1,6 @@
 import { createInstance } from 'i18next';
 
-import type { LocalizationConfig } from './types/index.js';
+import type { LocalizationConfig } from './types/index';
 import type { i18n } from 'i18next';
 
 /**

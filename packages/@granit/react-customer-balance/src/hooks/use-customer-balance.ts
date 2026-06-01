@@ -8,7 +8,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   buildCustomerBalanceQueryKey,
   useCustomerBalanceConfig,
-} from '../providers/customer-balance-provider.js';
+} from '../providers/customer-balance-provider';
 
 import type {
   AdminCreditRequest,

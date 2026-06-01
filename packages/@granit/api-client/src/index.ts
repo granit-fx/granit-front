@@ -59,7 +59,7 @@ export interface ApiClientConfig {
 // Re-exported from errors.ts as ProblemDetailsPayload (readonly variant for
 // error classes). This mutable variant is kept for backward compatibility
 // with consumers that import `ProblemDetails` from `@granit/api-client`.
-export type { ProblemDetailsPayload as ProblemDetails } from './errors.js';
+export type { ProblemDetailsPayload as ProblemDetails } from './errors';
 
 // Global async token getter — shared across all createApiClient instances.
 // Call setTokenGetter() from the auth provider after Keycloak initializes.
@@ -267,12 +267,12 @@ export function buildApiUrl(basePath: string, ...segments: string[]): string {
 // Domain error classes
 // ---------------------------------------------------------------------------
 
-export { HttpError, TimeoutError, ValidationError } from './errors.js';
-export type { ProblemDetailsPayload, ValidationDetails } from './errors.js';
+export { HttpError, TimeoutError, ValidationError } from './errors';
+export type { ProblemDetailsPayload, ValidationDetails } from './errors';
 
 // Idempotency tombstone helpers — see ./idempotency.ts.
-export { isIdempotencyTombstoned, readIdempotencyTombstone } from './idempotency.js';
-export type { IdempotencyTombstoneInfo } from './idempotency.js';
+export { isIdempotencyTombstoned, readIdempotencyTombstone } from './idempotency';
+export type { IdempotencyTombstoneInfo } from './idempotency';
 
 // ---------------------------------------------------------------------------
 // Axios type façade — single entry point for the framework

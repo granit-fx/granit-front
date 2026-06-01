@@ -6,7 +6,7 @@ import {
   listLanguages,
   setLocalizationOverride,
   updateLanguageStatus,
-} from '../api/localization-admin-api.js';
+} from '../api/localization-admin-api';
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -82,10 +82,9 @@ describe('setLocalizationOverride', () => {
 
     await setLocalizationOverride(client, '/api', 'Granit', 'fr', 'Common.Save', 'Sauvegarder');
 
-    expect(client.put).toHaveBeenCalledWith(
-      '/api/localization/overrides/Granit/fr/Common.Save',
-      { value: 'Sauvegarder' }
-    );
+    expect(client.put).toHaveBeenCalledWith('/api/localization/overrides/Granit/fr/Common.Save', {
+      value: 'Sauvegarder',
+    });
   });
 
   it('should encode special characters in path segments', async () => {
@@ -112,9 +111,7 @@ describe('deleteLocalizationOverride', () => {
 
     await deleteLocalizationOverride(client, '/api', 'Granit', 'fr', 'Common.Save');
 
-    expect(client.delete).toHaveBeenCalledWith(
-      '/api/localization/overrides/Granit/fr/Common.Save'
-    );
+    expect(client.delete).toHaveBeenCalledWith('/api/localization/overrides/Granit/fr/Common.Save');
   });
 
   it('should encode special characters in path segments', async () => {

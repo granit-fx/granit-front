@@ -1,9 +1,9 @@
 import { getLayouts } from '@granit/templating';
 import { useQuery } from '@tanstack/react-query';
 
-import { useTemplatingConfig } from '../providers/templating-provider.js';
+import { useTemplatingConfig } from '../providers/templating-provider';
 
-import { templateKeys } from './query-keys.js';
+import { templateKeys } from './query-keys';
 
 export function useTemplateLayouts() {
   const { client, basePath, queryKeyPrefix } = useTemplatingConfig();

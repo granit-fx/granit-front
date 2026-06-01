@@ -11,7 +11,7 @@ import {
   QueryProvider,
   useQueryEndpoint,
   useQueryEndpointState,
-} from '../index.js';
+} from '../index';
 
 import type { ReactNode } from 'react';
 

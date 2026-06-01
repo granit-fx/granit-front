@@ -5,7 +5,7 @@
 import { buildQueryKey, getQueryMeta } from '@granit/query-engine';
 import { useQuery } from '@tanstack/react-query';
 
-import { useQueryConfig } from '../providers/query-provider.js';
+import { useQueryConfig } from '../providers/query-provider';
 
 import type { QueryMetadata } from '@granit/query-engine';
 import type { UseQueryResult } from '@tanstack/react-query';

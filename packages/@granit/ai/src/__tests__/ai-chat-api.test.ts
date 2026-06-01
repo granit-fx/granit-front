@@ -1,7 +1,7 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { chatComplete } from '../api/ai-chat-api.js';
+import { chatComplete } from '../api/ai-chat-api';
 
 describe('ai-chat-api', () => {
   describe('chatComplete', () => {

@@ -18,11 +18,16 @@ export type {
   PaymentRefundRequest,
   PaymentRefundResponse,
   PaymentTransactionResponse,
-} from './types/index.js';
-export type { DisputeStatus, PaymentMethodCategory, PaymentStatus, RefundStatus } from './types/index.js';
+} from './types/index';
+export type {
+  DisputeStatus,
+  PaymentMethodCategory,
+  PaymentStatus,
+  RefundStatus,
+} from './types/index';
 
 // Permissions
-export { PaymentsPermissions } from './permissions.js';
+export { PaymentsPermissions } from './permissions';
 
 // API
 export {
@@ -40,4 +45,4 @@ export {
   listPaymentTransactions,
   requestPaymentRefund,
   resyncPaymentMethodConfiguration,
-} from './api/payments-api.js';
+} from './api/payments-api';

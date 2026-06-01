@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { useTransferDocumentOwner } from '../hooks/use-document-mutations.js';
-import { useTransferFolderOwner } from '../hooks/use-folder-mutations.js';
+import { useTransferDocumentOwner } from '../hooks/use-document-mutations';
+import { useTransferFolderOwner } from '../hooks/use-folder-mutations';
 
 import type { ChangeEvent, ReactNode } from 'react';
 

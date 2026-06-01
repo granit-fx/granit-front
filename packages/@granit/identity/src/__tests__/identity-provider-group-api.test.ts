@@ -7,9 +7,9 @@ import {
   listGroups,
   listUserGroups,
   removeUserFromGroup,
-} from '../api/identity-provider-group-api.js';
+} from '../api/identity-provider-group-api';
 
-import type { IdentityGroup } from '../types/index.js';
+import type { IdentityGroup } from '../types/index';
 
 const sampleGroup: IdentityGroup = {
   id: toEntityId<'IdentityGroup'>('group-1'),

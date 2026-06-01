@@ -4,7 +4,7 @@ import type {
   LookupManifest,
   LookupQueryParams,
   LookupResult,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /** Default route prefix used by the backend `MapGranitDataLookups()` extension. */

@@ -3,26 +3,26 @@ export {
   NotificationProvider,
   useNotificationConfig,
   useNotificationContext,
-} from './providers/notification-provider.js';
+} from './providers/notification-provider';
 
 // Hooks
-export { useRealTimeNotifications } from './hooks/use-real-time-notifications.js';
-export type { UseRealTimeNotificationsReturn } from './hooks/use-real-time-notifications.js';
+export { useRealTimeNotifications } from './hooks/use-real-time-notifications';
+export type { UseRealTimeNotificationsReturn } from './hooks/use-real-time-notifications';
 
-export { useUnreadCount } from './hooks/use-unread-count.js';
-export type { UseUnreadCountOptions, UseUnreadCountReturn } from './hooks/use-unread-count.js';
+export { useUnreadCount } from './hooks/use-unread-count';
+export type { UseUnreadCountOptions, UseUnreadCountReturn } from './hooks/use-unread-count';
 
-export { useNotifications } from './hooks/use-notifications.js';
-export type { UseNotificationsOptions, UseNotificationsReturn } from './hooks/use-notifications.js';
+export { useNotifications } from './hooks/use-notifications';
+export type { UseNotificationsOptions, UseNotificationsReturn } from './hooks/use-notifications';
 
-export { useEntityActivityFeed } from './hooks/use-entity-activity-feed.js';
+export { useEntityActivityFeed } from './hooks/use-entity-activity-feed';
 export type {
   UseEntityActivityFeedOptions,
   UseEntityActivityFeedReturn,
-} from './hooks/use-entity-activity-feed.js';
+} from './hooks/use-entity-activity-feed';
 
-export { useNotificationPreferences } from './hooks/use-notification-preferences.js';
-export type { UseNotificationPreferencesReturn } from './hooks/use-notification-preferences.js';
+export { useNotificationPreferences } from './hooks/use-notification-preferences';
+export type { UseNotificationPreferencesReturn } from './hooks/use-notification-preferences';
 
 export {
   useEntityFollowers,
@@ -32,5 +32,5 @@ export {
   useSubscribeToNotificationType,
   useUnfollowEntity,
   useUnsubscribeFromNotificationType,
-} from './hooks/use-notification-subscriptions.js';
-export type { EntityFollowVariables } from './hooks/use-notification-subscriptions.js';
+} from './hooks/use-notification-subscriptions';
+export type { EntityFollowVariables } from './hooks/use-notification-subscriptions';

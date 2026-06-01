@@ -1,9 +1,9 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { executeMerge, previewMerge } from '../api/entity-merge-api.js';
+import { executeMerge, previewMerge } from '../api/entity-merge-api';
 
-import type { MergeResult } from '../types/index.js';
+import type { MergeResult } from '../types/index';
 
 const result: MergeResult = {
   survivorId: 's1',

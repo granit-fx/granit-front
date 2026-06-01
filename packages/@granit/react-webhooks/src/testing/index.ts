@@ -7,5 +7,5 @@ export {
   mockWebhookDeliveryAttempts,
   mockWebhookStats,
   mockWebhookSubscriptions,
-} from './data.js';
-export { createWebhooksHandlers, webhookSubscriptionQueryMetadata } from './handlers.js';
+} from './data';
+export { createWebhooksHandlers, webhookSubscriptionQueryMetadata } from './handlers';

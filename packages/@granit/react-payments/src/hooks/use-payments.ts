@@ -16,7 +16,7 @@ import {
 } from '@granit/payments';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildPaymentsQueryKey, usePaymentsConfig } from '../providers/payments-provider.js';
+import { buildPaymentsQueryKey, usePaymentsConfig } from '../providers/payments-provider';
 
 import type {
   PaymentAttachMethodRequest,

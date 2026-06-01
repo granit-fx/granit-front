@@ -3,7 +3,7 @@ import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { describe, expect, it, vi } from 'vitest';
 
-import { MapConfigForm } from '../editor/map-config-form.js';
+import { MapConfigForm } from '../editor/map-config-form';
 
 import type { MapWidgetDefinition } from '@granit/analytics';
 import type { ReactNode } from 'react';

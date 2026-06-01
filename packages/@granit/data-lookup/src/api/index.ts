@@ -5,6 +5,6 @@ export {
   resolveLookup,
   searchLookup,
   stringifyLookupValue,
-} from './lookup-client.js';
-export type { LookupClientOptions } from './lookup-client.js';
-export { findMissingScopeKey, isScopeSatisfied } from './scope-validation.js';
+} from './lookup-client';
+export type { LookupClientOptions } from './lookup-client';
+export { findMissingScopeKey, isScopeSatisfied } from './scope-validation';

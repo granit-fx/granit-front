@@ -3,12 +3,12 @@ import { toEntityId } from '@granit/types';
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { presenceKeys } from '../hooks/query-keys.js';
+import { presenceKeys } from '../hooks/query-keys';
 import {
   PresenceProvider,
   buildPresenceQueryKey,
   usePresenceConfig,
-} from '../providers/presence-provider.js';
+} from '../providers/presence-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { UserId } from '@granit/types';

@@ -1,7 +1,7 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { changePassword, forgotPassword, resetPassword } from '../api/account-password-api.js';
+import { changePassword, forgotPassword, resetPassword } from '../api/account-password-api';
 
 const BASE = '/api/account';
 

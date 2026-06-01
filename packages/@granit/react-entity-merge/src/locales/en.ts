@@ -1,4 +1,4 @@
-import type { MergeWizardLabels } from '../components/merge-wizard.js';
+import type { MergeWizardLabels } from '../components/merge-wizard';
 
 /**
  * Default English label bag for the generic {@link MergeWizard}. Convenience

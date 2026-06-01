@@ -11,7 +11,7 @@ import {
   syncAllUsers,
   syncStaleUsers,
   syncUsers,
-} from '../api/identity-user-cache-api.js';
+} from '../api/identity-user-cache-api';
 
 import type {
   IdentityUser,
@@ -19,7 +19,7 @@ import type {
   IdentityUserCacheSyncAllResult,
   IdentityUserCacheSyncStaleResult,
   IdentityUserPage,
-} from '../types/index.js';
+} from '../types/index';
 
 const sampleUser: IdentityUser = {
   userId: toEntityId<'User'>('user-1'),

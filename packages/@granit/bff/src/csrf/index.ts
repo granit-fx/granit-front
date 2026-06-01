@@ -1,1 +1,1 @@
-export { CsrfManager } from './csrf-manager.js';
+export { CsrfManager } from './csrf-manager';

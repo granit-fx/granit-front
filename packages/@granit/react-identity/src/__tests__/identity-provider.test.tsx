@@ -6,9 +6,9 @@ import {
   IdentityProvider,
   buildIdentityQueryKey,
   useIdentityConfig,
-} from '../providers/identity-provider.js';
+} from '../providers/identity-provider';
 
-import type { IdentityConfig } from '../providers/identity-provider.js';
+import type { IdentityConfig } from '../providers/identity-provider';
 import type { AxiosInstance } from 'axios';
 
 const mockConfig: IdentityConfig = {

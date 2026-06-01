@@ -1,5 +1,5 @@
-import type { TenantResolver } from './tenant-resolver.js';
-import type { TenantInfo } from '../types/index.js';
+import type { TenantResolver } from './tenant-resolver';
+import type { TenantInfo } from '../types/index';
 
 export interface JwtClaimTenantResolverOptions {
   /** Function returning the decoded JWT payload (e.g. keycloak.tokenParsed). */

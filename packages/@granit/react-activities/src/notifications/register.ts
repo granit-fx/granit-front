@@ -1,6 +1,6 @@
-import { ACTIVITY_NOTIFICATION_RELATED_ENTITY_TYPE, ActivityNotificationTypes } from './types.js';
+import { ACTIVITY_NOTIFICATION_RELATED_ENTITY_TYPE, ActivityNotificationTypes } from './types';
 
-import type { ActivityNotificationAction, ActivityNotificationType } from './types.js';
+import type { ActivityNotificationAction, ActivityNotificationType } from './types';
 
 /**
  * Minimal notification shape this module needs from

@@ -7,9 +7,9 @@ import {
 } from '@granit/activities';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { buildActivitiesQueryKey, useActivitiesConfig } from '../providers/activities-provider.js';
+import { buildActivitiesQueryKey, useActivitiesConfig } from '../providers/activities-provider';
 
-import type { ResolvedActivitiesConfig } from '../providers/activities-provider.js';
+import type { ResolvedActivitiesConfig } from '../providers/activities-provider';
 import type {
   ActivityResponse,
   CancelActivityRequest,

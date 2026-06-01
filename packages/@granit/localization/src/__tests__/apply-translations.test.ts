@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { applyTranslations } from '../apply-translations.js';
+import { applyTranslations } from '../apply-translations';
 
-import type { ApplicationLocalizationDto } from '../types/index.js';
+import type { ApplicationLocalizationDto } from '../types/index';
 
 function createMockI18n(language = 'fr') {
   return {

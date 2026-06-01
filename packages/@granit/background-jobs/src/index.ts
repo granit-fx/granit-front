@@ -1,5 +1,5 @@
 // Types
-export type { BackgroundJobListParams, BackgroundJobStatus } from './types/index.js';
+export type { BackgroundJobListParams, BackgroundJobStatus } from './types/index';
 
 // API
 export {
@@ -8,5 +8,5 @@ export {
   pauseJob,
   resumeJob,
   triggerJob,
-} from './api/background-jobs-api.js';
-export { BackgroundJobsPermissions } from './permissions.js';
+} from './api/background-jobs-api';
+export { BackgroundJobsPermissions } from './permissions';

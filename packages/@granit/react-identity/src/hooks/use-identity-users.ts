@@ -1,7 +1,7 @@
 import { getUserById, searchUsers } from '@granit/identity';
 import { useQuery } from '@tanstack/react-query';
 
-import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider.js';
+import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider';
 
 import type { IdentityUser, IdentityUserListParams, IdentityUserPage } from '@granit/identity';
 import type { UserId } from '@granit/types';

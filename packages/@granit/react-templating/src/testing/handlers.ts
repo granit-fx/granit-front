@@ -9,16 +9,16 @@ import { TemplateLifecycleStatus } from '@granit/templating';
 import { noContent, notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
 import {
   mockTemplateCategories,
   mockTemplatesData,
   toTemplateDetail,
   toTemplateListItem,
-} from './data.js';
+} from './data';
 
-import type { MockTemplate } from './data.js';
+import type { MockTemplate } from './data';
 import type { QueryMetadata } from '@granit/query-engine';
 import type { SaveTemplateCategoryRequest, TemplateCategory } from '@granit/templating';
 

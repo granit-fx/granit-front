@@ -1,6 +1,6 @@
 import { describe, expectTypeOf, it } from 'vitest';
 
-import type { BackgroundJobListParams, BackgroundJobStatus } from '../index.js';
+import type { BackgroundJobListParams, BackgroundJobStatus } from '../index';
 
 describe('@granit/background-jobs types', () => {
   describe('BackgroundJobListParams', () => {

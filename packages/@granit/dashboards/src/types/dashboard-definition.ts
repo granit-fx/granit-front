@@ -1,10 +1,10 @@
-import type { DashboardCategory } from './dashboard-category.js';
-import type { DashboardFilter } from './dashboard-filter.js';
-import type { DashboardLayout } from './dashboard-layout.js';
-import type { DashboardTimeWindow } from './dashboard-time-window.js';
-import type { DashboardView } from './dashboard-view.js';
-import type { EntityAlias } from './entity-alias.js';
-import type { WidgetDefinition } from './widget-definition.js';
+import type { DashboardCategory } from './dashboard-category';
+import type { DashboardFilter } from './dashboard-filter';
+import type { DashboardLayout } from './dashboard-layout';
+import type { DashboardTimeWindow } from './dashboard-time-window';
+import type { DashboardView } from './dashboard-view';
+import type { EntityAlias } from './entity-alias';
+import type { WidgetDefinition } from './widget-definition';
 
 /**
  * Top-level descriptor of a dashboard — a declarative catalogue entry

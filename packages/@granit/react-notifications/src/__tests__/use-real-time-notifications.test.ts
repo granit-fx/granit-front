@@ -1,9 +1,9 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useRealTimeNotifications } from '../hooks/use-real-time-notifications.js';
+import { useRealTimeNotifications } from '../hooks/use-real-time-notifications';
 
-import { createMockClient, createWrapper } from './test-utils.js';
+import { createMockClient, createWrapper } from './test-utils';
 
 describe('useRealTimeNotifications', () => {
   it('should return initial state with null lastMessage', () => {

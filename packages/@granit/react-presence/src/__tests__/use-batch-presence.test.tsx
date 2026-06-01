@@ -3,9 +3,9 @@ import { toEntityId, toISODateString } from '@granit/types';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useBatchPresence } from '../hooks/use-batch-presence.js';
+import { useBatchPresence } from '../hooks/use-batch-presence';
 
-import { createPresenceTestHarness } from './test-utils.js';
+import { createPresenceTestHarness } from './test-utils';
 
 import type { BatchPresenceResponse, PresenceResponse } from '@granit/presence';
 import type { UserId } from '@granit/types';

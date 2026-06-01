@@ -3,14 +3,14 @@ export type {
   AdminCreditRequest,
   BalanceTransactionResponse,
   CustomerBalanceResponse,
-} from './types/index.js';
+} from './types/index';
 
 // Permissions
-export { CustomerBalancePermissions } from './permissions.js';
+export { CustomerBalancePermissions } from './permissions';
 
 // API
 export {
   addAdminCredit,
   getCustomerBalance,
   listBalanceTransactions,
-} from './api/customer-balance-api.js';
+} from './api/customer-balance-api';

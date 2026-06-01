@@ -1,6 +1,6 @@
 import { context, trace } from '@opentelemetry/api';
 
-import type { TraceContext } from './types/index.js';
+import type { TraceContext } from './types/index';
 
 /**
  * Reads the active span from the OpenTelemetry global context and returns

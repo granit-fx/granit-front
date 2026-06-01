@@ -32,11 +32,11 @@ export type {
   SortEntry,
   SortableField,
   UpdateSavedViewRequest,
-} from './types/index.js';
+} from './types/index';
 
 // Config
-export { buildQueryKey } from './config.js';
-export type { QueryConfig, ResolvedQueryConfig } from './config.js';
+export { buildQueryKey } from './config';
+export type { QueryConfig, ResolvedQueryConfig } from './config';
 
 // Utils
 export {
@@ -47,19 +47,19 @@ export {
   OPERATOR_LABELS,
   STRING_OPERATORS,
   inferOperators,
-} from './utils/filter-operators.js';
+} from './utils/filter-operators';
 
 // Validation
-export { QUERY_LIMITS } from './validation/query-limits.js';
-export { validateQueryRequest } from './validation/validate-query-request.js';
+export { QUERY_LIMITS } from './validation/query-limits';
+export { validateQueryRequest } from './validation/validate-query-request';
 
 // API
-export { getGrouped, getPage, getQueryMeta } from './api/query-api.js';
-export { parseQueryRequest, serializeQueryRequest } from './api/query-param-serializer.js';
+export { getGrouped, getPage, getQueryMeta } from './api/query-api';
+export { parseQueryRequest, serializeQueryRequest } from './api/query-param-serializer';
 export {
   createSavedView,
   deleteSavedView,
   listSavedViews,
   setDefaultSavedView,
   updateSavedView,
-} from './api/saved-views-api.js';
+} from './api/saved-views-api';

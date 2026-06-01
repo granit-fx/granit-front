@@ -1,4 +1,4 @@
-import type { TenantStorageQuotaResponse } from '../types/index.js';
+import type { TenantStorageQuotaResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

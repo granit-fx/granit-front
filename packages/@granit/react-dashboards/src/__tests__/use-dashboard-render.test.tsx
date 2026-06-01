@@ -16,9 +16,9 @@ import {
   normalizeDashboardRenderRequest,
   strongestRefreshHint,
   useDashboardRender,
-} from '../hooks/use-dashboard-render.js';
-import { useDashboardWidget } from '../hooks/use-dashboard-widget.js';
-import { DashboardsProvider } from '../providers/dashboards-provider.js';
+} from '../hooks/use-dashboard-render';
+import { useDashboardWidget } from '../hooks/use-dashboard-widget';
+import { DashboardsProvider } from '../providers/dashboards-provider';
 
 import type {
   DashboardRenderedWidget,

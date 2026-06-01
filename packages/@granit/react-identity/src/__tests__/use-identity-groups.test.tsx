@@ -11,10 +11,10 @@ import {
   useGroups,
   useRemoveUserFromGroup,
   useUserGroups,
-} from '../hooks/use-identity-groups.js';
-import { IdentityProvider } from '../providers/identity-provider.js';
+} from '../hooks/use-identity-groups';
+import { IdentityProvider } from '../providers/identity-provider';
 
-import type { IdentityProviderProps } from '../providers/identity-provider.js';
+import type { IdentityProviderProps } from '../providers/identity-provider';
 import type { IdentityGroup } from '@granit/identity';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

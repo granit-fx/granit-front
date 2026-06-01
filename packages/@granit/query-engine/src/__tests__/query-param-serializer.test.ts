@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseQueryRequest, serializeQueryRequest } from '../api/query-param-serializer.js';
+import { parseQueryRequest, serializeQueryRequest } from '../api/query-param-serializer';
 
-import type { QueryRequest } from '../types/query-params.js';
+import type { QueryRequest } from '../types/query-params';
 
 describe('serializeQueryRequest', () => {
   it('serializes empty params to empty string', () => {

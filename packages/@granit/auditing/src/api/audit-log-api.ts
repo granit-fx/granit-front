@@ -1,4 +1,4 @@
-import type { AuditEntryDetail, AuditListParams, AuditPage } from '../types/index.js';
+import type { AuditEntryDetail, AuditListParams, AuditPage } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { PaginationParams } from '@granit/query-engine';
 

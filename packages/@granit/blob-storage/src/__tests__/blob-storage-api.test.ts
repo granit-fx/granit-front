@@ -8,8 +8,8 @@ import {
   getBlob,
   getDownloadUrl,
   initiateUpload,
-} from '../api/blob-storage-api.js';
-import { BlobStatus } from '../types/index.js';
+} from '../api/blob-storage-api';
+import { BlobStatus } from '../types/index';
 
 import type {
   BlobCleanupOrphansResponse,
@@ -17,7 +17,7 @@ import type {
   BlobDescriptorResponse,
   BlobDownloadUrlResponse,
   BlobUploadInitiateResponse,
-} from '../types/index.js';
+} from '../types/index';
 
 const BASE = '/api/v1/blobs';
 

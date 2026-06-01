@@ -8,7 +8,7 @@ import type {
   AIWorkspaceListResponse,
   AIWorkspaceResponse,
   AIWorkspaceUpdateRequest,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

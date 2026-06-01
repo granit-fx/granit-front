@@ -2,8 +2,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
-import { DndBanner } from '../components/dnd-banner.js';
-import { mockMyPresence } from '../testing/data.js';
+import { DndBanner } from '../components/dnd-banner';
+import { mockMyPresence } from '../testing/data';
 
 describe('DndBanner', () => {
   it('renders nothing when there is no override', () => {

@@ -1,7 +1,7 @@
 import { impersonateUser, listUsers } from '@granit/openiddict-admin';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import { buildAdminQueryKey, useAdminConfig } from '../providers/openiddict-admin-provider.js';
+import { buildAdminQueryKey, useAdminConfig } from '../providers/openiddict-admin-provider';
 
 import type {
   AdminImpersonationResult,

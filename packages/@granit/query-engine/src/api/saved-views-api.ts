@@ -6,7 +6,7 @@ import type {
   CreateSavedViewRequest,
   SavedViewSummary,
   UpdateSavedViewRequest,
-} from '../types/saved-views.js';
+} from '../types/saved-views';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

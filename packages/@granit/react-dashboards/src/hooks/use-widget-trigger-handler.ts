@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useWidgetActionDispatcher } from '../components/widget-action-context.js';
+import { useWidgetActionDispatcher } from '../components/widget-action-context';
 
 import type { WidgetAction, WidgetActionTrigger } from '@granit/dashboards';
 

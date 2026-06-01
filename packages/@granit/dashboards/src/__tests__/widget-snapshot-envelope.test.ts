@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { WidgetSnapshotEnvelope, WidgetSnapshotStatus } from '../rendering/index.js';
+import type { WidgetSnapshotEnvelope, WidgetSnapshotStatus } from '../rendering/index';
 
 // Pinned wire-format fixtures for the B3-1 envelope (ADR-039 §6).
 // Mirrors what `Granit.Dashboards.Rendering.WidgetSnapshotEnvelope`

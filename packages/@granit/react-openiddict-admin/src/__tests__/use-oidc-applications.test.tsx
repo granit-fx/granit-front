@@ -16,8 +16,8 @@ import {
   useDeleteOidcApplication,
   useOidcApplications,
   useRotateApplicationSecret,
-} from '../hooks/use-oidc-applications.js';
-import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider.js';
+} from '../hooks/use-oidc-applications';
+import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider';
 
 import type {
   AdminOidcApplication,
@@ -132,7 +132,11 @@ describe('useDeleteOidcApplication', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(deleteApplication).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', 'guava-front');
+    expect(deleteApplication).toHaveBeenCalledWith(
+      expect.anything(),
+      '/api/v1/admin',
+      'guava-front'
+    );
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'oidc', 'applications'],
     });

@@ -1,7 +1,7 @@
 import { buildApiUrl } from '@granit/api-client';
 
-import type { ReactionEmoji, ReactionToggleResult } from '../types/reaction.js';
-import type { TimelineEntryId } from '../types/stream.js';
+import type { ReactionEmoji, ReactionToggleResult } from '../types/reaction';
+import type { TimelineEntryId } from '../types/stream';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

@@ -3,7 +3,7 @@ import { render, renderHook, screen } from '@testing-library/react';
 import axios from 'axios';
 import { describe, expect, it } from 'vitest';
 
-import { QueryProvider, useQueryConfig } from '../providers/query-provider.js';
+import { QueryProvider, useQueryConfig } from '../providers/query-provider';
 
 import type { QueryConfig } from '@granit/query-engine';
 import type { ReactNode } from 'react';

@@ -1,16 +1,16 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { DashboardAliasProvider } from '../components/dashboard-alias-context.js';
+import { DashboardAliasProvider } from '../components/dashboard-alias-context';
 import {
   useWidgetActionDispatcher,
   WidgetActionProvider,
-} from '../components/widget-action-context.js';
-import { defaultWidgetActionHandlers } from '../lib/default-widget-action-handlers.js';
+} from '../components/widget-action-context';
+import { defaultWidgetActionHandlers } from '../lib/default-widget-action-handlers';
 import {
   composeWidgetActionHandlers,
   type WidgetActionHandler,
-} from '../lib/widget-action-handler.js';
+} from '../lib/widget-action-handler';
 
 import type { WidgetAction } from '@granit/dashboards';
 import type { ReactNode } from 'react';

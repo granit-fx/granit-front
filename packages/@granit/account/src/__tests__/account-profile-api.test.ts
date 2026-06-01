@@ -2,9 +2,9 @@ import { createMockClient } from '@granit/testing';
 import { toEntityId } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getProfile, updateProfile } from '../api/account-profile-api.js';
+import { getProfile, updateProfile } from '../api/account-profile-api';
 
-import type { AccountProfileResponse } from '../types/index.js';
+import type { AccountProfileResponse } from '../types/index';
 
 const BASE = '/api/account';
 

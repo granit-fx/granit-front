@@ -1,6 +1,6 @@
 // Types
-export type { MonitoringHealthResponse, ServiceHealth, ServiceStatus } from './types/index.js';
+export type { MonitoringHealthResponse, ServiceHealth, ServiceStatus } from './types/index';
 
 // API
-export { DEFAULT_DIAGNOSTICS_BASE_PATH, getMonitoringHealth } from './api/diagnostics-api.js';
-export { DiagnosticsPermissions } from './permissions.js';
+export { DEFAULT_DIAGNOSTICS_BASE_PATH, getMonitoringHealth } from './api/diagnostics-api';
+export { DiagnosticsPermissions } from './permissions';

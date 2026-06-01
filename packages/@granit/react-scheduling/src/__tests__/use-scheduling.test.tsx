@@ -11,10 +11,10 @@ import {
   useRescheduleScheduledAction,
   useScheduledAction,
   useScheduledActions,
-} from '../hooks/use-scheduling.js';
-import { SchedulingProvider } from '../providers/scheduling-provider.js';
+} from '../hooks/use-scheduling';
+import { SchedulingProvider } from '../providers/scheduling-provider';
 
-import type { SchedulingConfig } from '../providers/scheduling-provider.js';
+import type { SchedulingConfig } from '../providers/scheduling-provider';
 import type { PagedResult } from '@granit/query-engine';
 import type { ScheduledActionResponse } from '@granit/scheduling';
 import type { AxiosInstance } from 'axios';

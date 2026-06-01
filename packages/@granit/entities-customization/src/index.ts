@@ -10,14 +10,14 @@ export type {
   ReorderDelta,
   WorkspaceCustomizationRequest,
   WorkspaceCustomizationResponse,
-} from './types/index.js';
+} from './types/index';
 
 // Permissions
-export { CustomizationPermissions } from './permissions.js';
+export { CustomizationPermissions } from './permissions';
 
 // API
-export { getFormCustomization, putFormCustomization } from './api/form-customization-api.js';
+export { getFormCustomization, putFormCustomization } from './api/form-customization-api';
 export {
   getWorkspaceCustomization,
   putWorkspaceCustomization,
-} from './api/workspace-customization-api.js';
+} from './api/workspace-customization-api';

@@ -1,11 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  useSidePeek,
-  type SidePeekEntry,
-  type UseSidePeekOptions,
-} from '../hooks/use-side-peek.js';
+import { useSidePeek, type SidePeekEntry, type UseSidePeekOptions } from '../hooks/use-side-peek';
 
 function harness(initial: Partial<UseSidePeekOptions> = {}) {
   let search = initial.search ?? '';

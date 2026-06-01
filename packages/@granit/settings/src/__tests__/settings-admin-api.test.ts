@@ -1,9 +1,9 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getAdminAppSettings, saveAdminAppSettings } from '../api/settings-api.js';
+import { getAdminAppSettings, saveAdminAppSettings } from '../api/settings-api';
 
-import type { AdminAppSetting, BulkUpdateSettingsResponse } from '../types/index.js';
+import type { AdminAppSetting, BulkUpdateSettingsResponse } from '../types/index';
 
 describe('settings-admin-api', () => {
   describe('getAdminAppSettings', () => {

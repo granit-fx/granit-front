@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CategoryTree } from '../components/category-tree.tsx';
 import { TagChipStrip } from '../components/tag-chip-strip.tsx';
 import { TagManager } from '../components/tag-manager.tsx';
-import { TaxonomyProvider } from '../providers/taxonomy-provider.js';
+import { TaxonomyProvider } from '../providers/taxonomy-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { CategoryResponse, TagAssignmentResponse, TagResponse } from '@granit/taxonomy';

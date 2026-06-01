@@ -8,7 +8,7 @@ import {
   OPERATOR_LABELS,
   STRING_OPERATORS,
   inferOperators,
-} from '../utils/filter-operators.js';
+} from '../utils/filter-operators';
 
 describe('inferOperators', () => {
   it('returns string operators for String', () => {

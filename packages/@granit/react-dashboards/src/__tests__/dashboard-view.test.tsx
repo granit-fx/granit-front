@@ -3,10 +3,10 @@ import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { describe, expect, it, vi } from 'vitest';
 
-import { DashboardViewSwitcher } from '../components/dashboard-view-switcher.js';
-import { Dashboard } from '../components/dashboard.js';
-import { defaultWidgetRegistry } from '../registry/default-widget-registry.js';
-import { WidgetRegistryProvider } from '../registry/widget-registry-context.js';
+import { Dashboard } from '../components/dashboard';
+import { DashboardViewSwitcher } from '../components/dashboard-view-switcher';
+import { defaultWidgetRegistry } from '../registry/default-widget-registry';
+import { WidgetRegistryProvider } from '../registry/widget-registry-context';
 
 import type { DashboardDefinition, WidgetDefinition } from '@granit/dashboards';
 import type { ReactNode } from 'react';

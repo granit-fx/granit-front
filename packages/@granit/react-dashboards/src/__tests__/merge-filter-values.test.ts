@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { mergeFilterValuesIntoRequest } from '../lib/merge-filter-values.js';
+import { mergeFilterValuesIntoRequest } from '../lib/merge-filter-values';
 
 import type { DashboardRenderRequest } from '@granit/dashboards';
 

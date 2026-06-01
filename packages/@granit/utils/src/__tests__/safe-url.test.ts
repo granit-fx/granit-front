@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { LINK_URL_SCHEMES, NAV_URL_SCHEMES, assertSafeUrl, isSafeUrl } from '../safe-url.js';
+import { LINK_URL_SCHEMES, NAV_URL_SCHEMES, assertSafeUrl, isSafeUrl } from '../safe-url';
 
 describe('isSafeUrl', () => {
   it('accepts same-origin relative paths', () => {

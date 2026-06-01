@@ -1,4 +1,4 @@
-import type { AdminOidcScope, AdminOidcScopeCreateRequest } from '../types/index.js';
+import type { AdminOidcScope, AdminOidcScopeCreateRequest } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 // ── OIDC Scope CRUD ──────────────────────────────────────────────────────────

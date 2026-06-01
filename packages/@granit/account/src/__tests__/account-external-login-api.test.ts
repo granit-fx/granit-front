@@ -6,12 +6,12 @@ import {
   externalLoginCallback,
   getExternalLogins,
   unlinkExternalLogin,
-} from '../api/account-external-login-api.js';
+} from '../api/account-external-login-api';
 
 import type {
   AccountExternalLoginCallbackResponse,
   AccountExternalLoginInfo,
-} from '../types/index.js';
+} from '../types/index';
 
 const BASE = '/api/account';
 
@@ -49,9 +49,7 @@ describe('account-external-login-api', () => {
 
       await challengeExternalLogin(client, BASE, 'provider/name');
 
-      expect(client.post).toHaveBeenCalledWith(
-        `${BASE}/external-logins/challenge/provider%2Fname`
-      );
+      expect(client.post).toHaveBeenCalledWith(`${BASE}/external-logins/challenge/provider%2Fname`);
     });
   });
 

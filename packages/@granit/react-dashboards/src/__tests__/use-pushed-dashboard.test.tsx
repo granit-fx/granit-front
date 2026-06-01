@@ -6,10 +6,10 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { dashboardRenderQueryKey, dashboardWidgetQueryKey } from '../hooks/use-dashboard-render.js';
-import { applyStreamSnapshot, type DashboardStreamSnapshot } from '../hooks/use-dashboard-stream.js';
-import { usePushedDashboard } from '../hooks/use-pushed-dashboard.js';
-import { DashboardsProvider } from '../providers/dashboards-provider.js';
+import { dashboardRenderQueryKey, dashboardWidgetQueryKey } from '../hooks/use-dashboard-render';
+import { applyStreamSnapshot, type DashboardStreamSnapshot } from '../hooks/use-dashboard-stream';
+import { usePushedDashboard } from '../hooks/use-pushed-dashboard';
+import { DashboardsProvider } from '../providers/dashboards-provider';
 
 import type { DashboardRenderedWidget, DashboardRenderResponse } from '@granit/dashboards';
 import type { ReactNode } from 'react';

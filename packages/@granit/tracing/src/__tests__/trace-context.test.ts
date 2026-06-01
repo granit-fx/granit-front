@@ -1,7 +1,7 @@
 import { context, trace } from '@opentelemetry/api';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getTraceContext } from '../trace-context.js';
+import { getTraceContext } from '../trace-context';
 
 vi.mock('@opentelemetry/api', () => {
   const mockContext = { active: vi.fn() };

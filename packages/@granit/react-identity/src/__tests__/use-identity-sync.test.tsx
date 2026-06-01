@@ -6,10 +6,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useIdentitySync } from '../hooks/use-identity-sync.js';
-import { IdentityProvider } from '../providers/identity-provider.js';
+import { useIdentitySync } from '../hooks/use-identity-sync';
+import { IdentityProvider } from '../providers/identity-provider';
 
-import type { IdentityProviderProps } from '../providers/identity-provider.js';
+import type { IdentityProviderProps } from '../providers/identity-provider';
 import type {
   IdentityUserCacheSyncAllResult,
   IdentityUserCacheSyncStaleResult,

@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { buildTimelineQueryKey, useTimelineConfig } from '../providers/timeline-provider.js';
+import { buildTimelineQueryKey, useTimelineConfig } from '../providers/timeline-provider';
 
 import { createMockClient, createWrapper } from './test-utils.tsx';
 

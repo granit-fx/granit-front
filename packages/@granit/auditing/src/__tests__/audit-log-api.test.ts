@@ -2,14 +2,10 @@ import { axiosResponse, createMockClient } from '@granit/testing';
 import { toEntityId, toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  listAuditLogEntries,
-  getAuditLogEntry,
-  listEntityAuditTrail,
-} from '../api/audit-log-api.js';
-import { AuditCategory } from '../types/index.js';
+import { listAuditLogEntries, getAuditLogEntry, listEntityAuditTrail } from '../api/audit-log-api';
+import { AuditCategory } from '../types/index';
 
-import type { AuditEntryDetail, AuditPage } from '../types/index.js';
+import type { AuditEntryDetail, AuditPage } from '../types/index';
 
 const basePath = '/audit-log';
 

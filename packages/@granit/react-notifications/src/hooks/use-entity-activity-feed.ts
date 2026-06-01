@@ -1,10 +1,10 @@
 import { getEntityActivityFeed } from '@granit/notifications';
 import { useCallback } from 'react';
 
-import { API_BASE_PATH } from '../constants.js';
-import { useNotificationConfig } from '../providers/notification-provider.js';
+import { API_BASE_PATH } from '../constants';
+import { useNotificationConfig } from '../providers/notification-provider';
 
-import { usePaginatedFetch } from './use-paginated-fetch.js';
+import { usePaginatedFetch } from './use-paginated-fetch';
 
 import type { ActivityFeedEntry, ActivityFeedPage } from '@granit/notifications';
 

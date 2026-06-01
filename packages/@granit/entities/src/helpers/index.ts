@@ -1,1 +1,1 @@
-export { evaluateVisibility } from './evaluate-visibility.js';
+export { evaluateVisibility } from './evaluate-visibility';

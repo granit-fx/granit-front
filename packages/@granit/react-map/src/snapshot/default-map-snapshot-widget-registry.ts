@@ -1,4 +1,4 @@
-import { MapSnapshotWidget } from './map-snapshot-widget.js';
+import { MapSnapshotWidget } from './map-snapshot-widget';
 
 import type { SnapshotWidgetRegistry } from '@granit/react-dashboards';
 

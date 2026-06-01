@@ -1,6 +1,6 @@
 import { useEffect, useId, useState } from 'react';
 
-import { useTaxonomySearch } from '../hooks/use-taxonomy-search.js';
+import { useTaxonomySearch } from '../hooks/use-taxonomy-search';
 
 import type { TaxonomySearchResultItem } from '@granit/taxonomy';
 import type { ReactNode } from 'react';

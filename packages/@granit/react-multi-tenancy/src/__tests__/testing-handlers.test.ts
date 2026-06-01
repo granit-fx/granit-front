@@ -1,7 +1,7 @@
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { createTenantHandlers, tenantQueryMetadata } from '../testing/index.js';
+import { createTenantHandlers, tenantQueryMetadata } from '../testing/index';
 
 const BASE = 'http://api.test/api/v1/multi-tenancy';
 const server = setupServer();

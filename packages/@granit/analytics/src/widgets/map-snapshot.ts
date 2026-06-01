@@ -1,4 +1,4 @@
-import type { MapTileLayerKind } from './map-widget.js';
+import type { MapTileLayerKind } from './map-widget';
 import type { WidgetSnapshotEnvelope, WidgetSnapshotEnvelopeOf } from '@granit/dashboards';
 
 /**

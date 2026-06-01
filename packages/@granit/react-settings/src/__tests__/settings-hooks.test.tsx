@@ -5,13 +5,13 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useDeleteSetting } from '../hooks/use-delete-setting.js';
-import { useSetting } from '../hooks/use-setting.js';
-import { useSettings } from '../hooks/use-settings.js';
-import { useUpdateSetting } from '../hooks/use-update-setting.js';
-import { SettingsProvider } from '../providers/settings-provider.js';
+import { useDeleteSetting } from '../hooks/use-delete-setting';
+import { useSetting } from '../hooks/use-setting';
+import { useSettings } from '../hooks/use-settings';
+import { useUpdateSetting } from '../hooks/use-update-setting';
+import { SettingsProvider } from '../providers/settings-provider';
 
-import type { SettingsConfig } from '../providers/settings-provider.js';
+import type { SettingsConfig } from '../providers/settings-provider';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 

@@ -6,7 +6,7 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { EntityCalendar } from '../components/entity-calendar.js';
+import { EntityCalendar } from '../components/entity-calendar';
 
 import type { CalendarItemResponse, EntityCalendarLayoutManifest } from '@granit/entities';
 import type { ReactNode } from 'react';

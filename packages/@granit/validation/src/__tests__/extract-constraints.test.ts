@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { extractConstraints } from '../extract-constraints.js';
+import { extractConstraints } from '../extract-constraints';
 
-import type { OpenApiSpec } from '../types/index.js';
+import type { OpenApiSpec } from '../types/index';
 
 describe('extractConstraints', () => {
   it('returns empty SpecConstraints for a spec with no schemas', () => {

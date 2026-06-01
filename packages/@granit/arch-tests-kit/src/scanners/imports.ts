@@ -1,6 +1,6 @@
-import { isTestFile, isTestingDir, readFile, rel, stripComments, walkSourceFiles } from '../fs.js';
+import { isTestFile, isTestingDir, readFile, rel, stripComments, walkSourceFiles } from '../fs';
 
-import type { AllowlistedScanContext, ScanContext, Violation } from '../types.js';
+import type { AllowlistedScanContext, ScanContext, Violation } from '../types';
 
 const IMPORT_RE = /from\s+['"]([^'"\n]+)['"]/g;
 

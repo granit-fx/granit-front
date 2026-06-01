@@ -3,9 +3,9 @@ import { toEntityId, toISODateString } from '@granit/types';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useHeartbeat } from '../hooks/use-heartbeat.js';
+import { useHeartbeat } from '../hooks/use-heartbeat';
 
-import { createPresenceTestHarness } from './test-utils.js';
+import { createPresenceTestHarness } from './test-utils';
 
 import type { PresenceResponse } from '@granit/presence';
 import type { UserId } from '@granit/types';

@@ -8,9 +8,9 @@ import {
 } from '@granit/taxonomy';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { buildTaxonomyQueryKey, useTaxonomyConfig } from '../providers/taxonomy-provider.js';
+import { buildTaxonomyQueryKey, useTaxonomyConfig } from '../providers/taxonomy-provider';
 
-import type { ResolvedTaxonomyConfig } from '../providers/taxonomy-provider.js';
+import type { ResolvedTaxonomyConfig } from '../providers/taxonomy-provider';
 import type {
   CategoryAssignmentRequest,
   CategoryAssignmentResponse,

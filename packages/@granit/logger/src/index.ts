@@ -1,4 +1,4 @@
-export { LogLevel, createConsoleTransport, createLogger } from './logger.js';
+export { LogLevel, createConsoleTransport, createLogger } from './logger';
 
 export type {
   LogContext,
@@ -8,7 +8,7 @@ export type {
   Logger,
   LoggerOptions,
   LogTransport,
-} from './logger.js';
+} from './logger';
 
 export {
   emailDomain,
@@ -19,4 +19,4 @@ export {
   redactPhone,
   redactToken,
   redactUsername,
-} from './redaction.js';
+} from './redaction';

@@ -5,13 +5,13 @@ import {
   isMetricDatasource,
   isQueryAggregateDatasource,
   isTelemetryDatasource,
-} from '../types/datasource.js';
+} from '../types/datasource';
 
 import type {
   MetricDatasource,
   QueryAggregateDatasource,
   TelemetryDatasource,
-} from '../types/datasource.js';
+} from '../types/datasource';
 
 // Pinned wire-format fixtures. Each fixture is the literal JSON shape the
 // backend (`Granit.Dashboards.Abstractions.Tests/DatasourceTests`) round-trips

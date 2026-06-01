@@ -8,7 +8,7 @@ import type {
   CookieConsentProvider,
   CookieDefinitionDto,
   ThirdPartyServiceDto,
-} from '../index.js';
+} from '../index';
 
 describe('@granit/cookies types', () => {
   describe('CookieCategory', () => {

@@ -1,7 +1,7 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { generateEmbeddings } from '../api/ai-embeddings-api.js';
+import { generateEmbeddings } from '../api/ai-embeddings-api';
 
 describe('ai-embeddings-api', () => {
   describe('generateEmbeddings', () => {

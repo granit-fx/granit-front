@@ -1,9 +1,9 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { impersonateUser, listUsers } from '../api/admin-user-api.js';
+import { impersonateUser, listUsers } from '../api/admin-user-api';
 
-import type { AdminImpersonationResult, AdminUser, AdminUserPage } from '../types/index.js';
+import type { AdminImpersonationResult, AdminUser, AdminUserPage } from '../types/index';
 
 const BASE = '/admin';
 

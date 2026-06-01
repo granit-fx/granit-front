@@ -9,9 +9,9 @@ import { notFound } from '@granit/testing/msw';
 import { toEntityId } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH } from '../constants.js';
+import { DEFAULT_BASE_PATH } from '../constants';
 
-import { sampleInvoices } from './data.js';
+import { sampleInvoices } from './data';
 
 import type {
   CancelInvoiceRequest,

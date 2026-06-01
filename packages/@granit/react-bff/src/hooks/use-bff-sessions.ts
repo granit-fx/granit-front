@@ -1,7 +1,7 @@
 import { listBffSessions, revokeAllOtherBffSessions, revokeBffSession } from '@granit/bff';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useBffConfig } from '../providers/bff-provider.js';
+import { useBffConfig } from '../providers/bff-provider';
 
 import type { BffSessionInfo } from '@granit/bff';
 

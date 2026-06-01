@@ -4,9 +4,9 @@ import {
   isGeographyMapPointSource,
   isLatLngMapPointSource,
   isMapSnapshotEnvelope,
-} from '../widgets/index.js';
+} from '../widgets/index';
 
-import type { MapPointSource, MapSnapshotEnvelope, MapTileLayerKind } from '../widgets/index.js';
+import type { MapPointSource, MapSnapshotEnvelope, MapTileLayerKind } from '../widgets/index';
 import type { WidgetSnapshotEnvelope } from '@granit/dashboards';
 
 // Pinned wire-format fixtures mirroring B7-2 backend output:

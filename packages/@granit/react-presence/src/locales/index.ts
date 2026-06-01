@@ -9,6 +9,6 @@
 // Components expose `labels` props that apps populate from `t()` results.
 // ---------------------------------------------------------------------------
 
-export { presenceTranslationsEn } from './en.js';
-export type { PresenceTranslations } from './en.js';
-export { presenceTranslationsFr } from './fr.js';
+export { presenceTranslationsEn } from './en';
+export type { PresenceTranslations } from './en';
+export { presenceTranslationsFr } from './fr';

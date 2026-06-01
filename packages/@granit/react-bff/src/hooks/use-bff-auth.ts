@@ -1,4 +1,4 @@
-import { useBffConfig } from '../providers/bff-provider.js';
+import { useBffConfig } from '../providers/bff-provider';
 
 /**
  * Hook to access BFF authentication state and actions.

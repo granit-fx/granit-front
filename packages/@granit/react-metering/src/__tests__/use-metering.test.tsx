@@ -14,10 +14,10 @@ import {
   useRecordUsageEvents,
   useUpdateMeterDefinition,
   useUsageForPeriod,
-} from '../hooks/use-metering.js';
-import { MeteringProvider } from '../providers/metering-provider.js';
+} from '../hooks/use-metering';
+import { MeteringProvider } from '../providers/metering-provider';
 
-import type { MeteringConfig } from '../providers/metering-provider.js';
+import type { MeteringConfig } from '../providers/metering-provider';
 import type {
   MeterDefinitionResponse,
   MeteringQuotaStatusResponse,

@@ -1,7 +1,7 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { changeEmail, confirmEmailChange } from '../api/account-email-api.js';
+import { changeEmail, confirmEmailChange } from '../api/account-email-api';
 
 const BASE = '/api/account';
 

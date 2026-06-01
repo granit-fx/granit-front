@@ -5,10 +5,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useChangeEmail, useConfirmEmailChange } from '../hooks/use-email.js';
-import { AccountProvider } from '../providers/account-provider.js';
+import { useChangeEmail, useConfirmEmailChange } from '../hooks/use-email';
+import { AccountProvider } from '../providers/account-provider';
 
-import type { AccountConfig } from '../providers/account-provider.js';
+import type { AccountConfig } from '../providers/account-provider';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 

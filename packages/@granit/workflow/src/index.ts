@@ -3,8 +3,8 @@
 // ---------------------------------------------------------------------------
 
 // Types
-export { TransitionOutcome } from './types/index.js';
-export { WorkflowLifecycleStatus } from './types/index.js';
+export { TransitionOutcome } from './types/index';
+export { WorkflowLifecycleStatus } from './types/index';
 
 export type {
   WorkflowTransition,
@@ -15,13 +15,9 @@ export type {
   WorkflowConfig,
   WorkflowLifecycleStatusValue,
   WorkflowStatus,
-} from './types/index.js';
+} from './types/index';
 
 // API
-export {
-  executeStateMachineTransition,
-  getHistory,
-  listTransitions,
-} from './api/workflow-api.js';
-export type { WorkflowHistoryPage } from './api/workflow-api.js';
-export { WorkflowPermissions } from './permissions.js';
+export { executeStateMachineTransition, getHistory, listTransitions } from './api/workflow-api';
+export type { WorkflowHistoryPage } from './api/workflow-api';
+export { WorkflowPermissions } from './permissions';

@@ -1,5 +1,5 @@
-import type { DashboardLayout } from './dashboard-layout.js';
-import type { WidgetDefinition } from './widget-definition.js';
+import type { DashboardLayout } from './dashboard-layout';
+import type { WidgetDefinition } from './widget-definition';
 
 /**
  * Named view of a dashboard — a separate widget arrangement within the

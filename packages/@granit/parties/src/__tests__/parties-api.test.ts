@@ -26,7 +26,7 @@ import {
   setPartyTaxStatus,
   suspendParty,
   updateParty,
-} from '../api/parties-api.js';
+} from '../api/parties-api';
 
 import type {
   PartyAddressId,
@@ -45,7 +45,7 @@ import type {
   PartyResponse,
   PartyTaxStatusRequest,
   PartyUpdateRequest,
-} from '../types/index.js';
+} from '../types/index';
 
 const basePath = '/api/v1/parties';
 const partyId: PartyId = toEntityId<'Party'>('00000000-0000-0000-0000-000000000001');

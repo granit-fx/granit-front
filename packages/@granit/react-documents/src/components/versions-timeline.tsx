@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-import { useDocumentDownloadUrl, useDocumentVersions } from '../hooks/use-documents.js';
+import { useDocumentDownloadUrl, useDocumentVersions } from '../hooks/use-documents';
 
-import { formatBytes } from './format-bytes.js';
+import { formatBytes } from './format-bytes';
 
 import type { DocumentVersionResponse } from '@granit/documents';
 import type { ReactNode } from 'react';

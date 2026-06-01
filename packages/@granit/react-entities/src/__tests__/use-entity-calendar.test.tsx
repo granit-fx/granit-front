@@ -6,7 +6,7 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { entityCalendarQueryKey, useEntityCalendar } from '../hooks/use-entity-calendar.js';
+import { entityCalendarQueryKey, useEntityCalendar } from '../hooks/use-entity-calendar';
 
 import type { CalendarItemResponse } from '@granit/entities';
 import type { ReactNode } from 'react';

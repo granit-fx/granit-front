@@ -9,13 +9,9 @@ import {
   getUserPresence,
   pollMyPresence,
   setMyPresence,
-} from '../api/presence-api.js';
+} from '../api/presence-api';
 
-import type {
-  BatchPresenceResponse,
-  PresenceResponse,
-  SetPresenceRequest,
-} from '../types/index.js';
+import type { BatchPresenceResponse, PresenceResponse, SetPresenceRequest } from '../types/index';
 import type { UserId } from '@granit/types';
 
 const userId = toEntityId<'User'>('user-1') as UserId;

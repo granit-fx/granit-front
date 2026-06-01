@@ -20,10 +20,10 @@ import {
   useProviderCatalog,
   useRequestPaymentRefund,
   useResyncPaymentMethod,
-} from '../hooks/use-payments.js';
-import { PaymentsProvider } from '../providers/payments-provider.js';
+} from '../hooks/use-payments';
+import { PaymentsProvider } from '../providers/payments-provider';
 
-import type { PaymentsConfig } from '../providers/payments-provider.js';
+import type { PaymentsConfig } from '../providers/payments-provider';
 import type {
   PaymentAvailableMethodResponse,
   PaymentCheckoutSessionResponse,

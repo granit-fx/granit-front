@@ -1,9 +1,9 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { MergeConfirmDialog } from '../components/merge-confirm-dialog.js';
+import { MergeConfirmDialog } from '../components/merge-confirm-dialog';
 
-import type { MergeConfirmDialogLabels } from '../components/merge-confirm-dialog.js';
+import type { MergeConfirmDialogLabels } from '../components/merge-confirm-dialog';
 
 const labels: MergeConfirmDialogLabels = {
   title: 'Confirm merge',

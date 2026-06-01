@@ -1,4 +1,4 @@
-import type { MergeRequest, MergeResult } from '../types/index.js';
+import type { MergeRequest, MergeResult } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

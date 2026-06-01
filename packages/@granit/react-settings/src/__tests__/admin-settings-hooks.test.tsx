@@ -4,8 +4,8 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useAdminAppSettings, useSaveAdminAppSettings } from '../hooks/use-admin-app-settings.js';
-import { SettingsProvider } from '../providers/settings-provider.js';
+import { useAdminAppSettings, useSaveAdminAppSettings } from '../hooks/use-admin-app-settings';
+import { SettingsProvider } from '../providers/settings-provider';
 
 import type { AdminAppSetting, BulkUpdateSettingsResponse } from '@granit/settings';
 import type { AxiosInstance } from 'axios';

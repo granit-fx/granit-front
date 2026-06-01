@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { customizationTranslationsEn } from '../locales/en.js';
-import { customizationTranslationsFr } from '../locales/fr.js';
+import { customizationTranslationsEn } from '../locales/en';
+import { customizationTranslationsFr } from '../locales/fr';
 
 function leafPaths(obj: unknown, prefix = ''): readonly string[] {
   if (typeof obj !== 'object' || obj === null) {

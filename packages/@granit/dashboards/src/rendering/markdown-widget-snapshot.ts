@@ -1,7 +1,4 @@
-import type {
-  WidgetSnapshotEnvelope,
-  WidgetSnapshotEnvelopeOf,
-} from './widget-snapshot-envelope.js';
+import type { WidgetSnapshotEnvelope, WidgetSnapshotEnvelopeOf } from './widget-snapshot-envelope';
 
 /**
  * Wire-shape snapshot for the `'Markdown'` widget kind. Carries the

@@ -2,13 +2,13 @@ import { executeBulkAction } from '@granit/entities';
 import { useGranitClient } from '@granit/react-api-client';
 import { useCallback, useState, type KeyboardEvent, type ReactNode } from 'react';
 
-import { resolveAction } from '../actions/entity-action-button.js';
+import { resolveAction } from '../actions/entity-action-button';
 import {
   useEntityActionDispatcher,
   type EntityActionHandlers,
-} from '../actions/use-entity-action-dispatcher.js';
-import { useEntityRendererLogger } from '../providers/entity-renderer-provider.js';
-import { useSelection } from '../selection/selection-context.js';
+} from '../actions/use-entity-action-dispatcher';
+import { useEntityRendererLogger } from '../providers/entity-renderer-provider';
+import { useSelection } from '../selection/selection-context';
 
 import type {
   BulkActionResponse,

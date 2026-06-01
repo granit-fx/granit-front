@@ -1,6 +1,6 @@
 import { getPage } from '@granit/query-engine';
 
-import type { RescheduleActionRequest, ScheduledActionResponse } from '../types/index.js';
+import type { RescheduleActionRequest, ScheduledActionResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult, QueryRequest } from '@granit/query-engine';
 

@@ -1,4 +1,4 @@
-import { useBffConfig } from '../providers/bff-provider.js';
+import { useBffConfig } from '../providers/bff-provider';
 
 import type { BffUser } from '@granit/bff';
 

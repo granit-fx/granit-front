@@ -10,7 +10,7 @@ import {
   landingRouteQueryKey,
   useLandingRoute,
   useSetLandingPin,
-} from '../hooks/use-landing-route.js';
+} from '../hooks/use-landing-route';
 
 import type { LandingRouteResponse } from '@granit/workspaces';
 import type { ReactNode } from 'react';

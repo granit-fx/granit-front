@@ -1,4 +1,4 @@
-import type { DashboardFilterValues } from '../components/dashboard-filter-context.js';
+import type { DashboardFilterValues } from '../components/dashboard-filter-context';
 import type { DashboardRenderRequest } from '@granit/dashboards';
 
 /**

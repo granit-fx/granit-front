@@ -1,9 +1,9 @@
 import { axiosResponse, createMockClient } from '@granit/api-client/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getResourceRoom, joinResourceRoom, leaveResourceRoom } from '../api/presence-rooms-api.js';
+import { getResourceRoom, joinResourceRoom, leaveResourceRoom } from '../api/presence-rooms-api';
 
-import type { ResourceRoomResponse } from '../types/index.js';
+import type { ResourceRoomResponse } from '../types/index';
 
 const mockRoom: ResourceRoomResponse = {
   kind: 'cms.page',

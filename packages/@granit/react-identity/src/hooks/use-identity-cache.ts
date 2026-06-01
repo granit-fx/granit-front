@@ -1,7 +1,7 @@
 import { batchResolveUsers, getCacheStats } from '@granit/identity';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider.js';
+import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider';
 
 import type { IdentityUser, IdentityUserCacheStats } from '@granit/identity';
 import type { UserId } from '@granit/types';
@@ -44,7 +44,6 @@ export function useBatchResolveUsers(): UseMutationResult<
   const config = useIdentityConfig();
 
   return useMutation({
-    mutationFn: (userIds: UserId[]) =>
-      batchResolveUsers(config.client, config.basePath, userIds),
+    mutationFn: (userIds: UserId[]) => batchResolveUsers(config.client, config.basePath, userIds),
   });
 }

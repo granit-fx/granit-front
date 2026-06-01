@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import type { WidgetConfigFormProps } from '../../lib/widget-config-form-registry.js';
+import type { WidgetConfigFormProps } from '../../lib/widget-config-form-registry';
 import type { TextWidgetDefinition, TextWidgetStyle } from '@granit/dashboards';
 
 const TEXT_STYLES: readonly TextWidgetStyle[] = ['Body', 'Heading', 'Subheading', 'Caption'];

@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { MapTile } from '../components/map-tile.js';
-import { mapWidgetConfigFormRegistry } from '../editor/index.js';
-import { defaultMapWidgetRegistry } from '../registry/default-map-widget-registry.js';
-import { defaultMapSnapshotWidgetRegistry } from '../snapshot/default-map-snapshot-widget-registry.js';
-import { MapSnapshotWidget } from '../snapshot/map-snapshot-widget.js';
+import { MapTile } from '../components/map-tile';
+import { mapWidgetConfigFormRegistry } from '../editor/index';
+import { defaultMapWidgetRegistry } from '../registry/default-map-widget-registry';
+import { defaultMapSnapshotWidgetRegistry } from '../snapshot/default-map-snapshot-widget-registry';
+import { MapSnapshotWidget } from '../snapshot/map-snapshot-widget';
 
 describe('defaultMapWidgetRegistry', () => {
   it('registers MapTile under the "map" key', () => {

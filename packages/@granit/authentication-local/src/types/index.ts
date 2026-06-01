@@ -3,4 +3,4 @@ export type {
   AccountLoginResponse,
   AccountPasskeyAssertionCompleteRequest,
   AccountTwoFactorLoginRequest,
-} from './account-login.js';
+} from './account-login';

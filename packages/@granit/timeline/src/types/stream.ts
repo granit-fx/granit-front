@@ -1,6 +1,6 @@
-import type { TimelineEntryType } from './entry-type.js';
-import type { ReactionMap } from './reaction.js';
-import type { TimelineEntryOriginValue } from './source.js';
+import type { TimelineEntryType } from './entry-type';
+import type { ReactionMap } from './reaction';
+import type { TimelineEntryOriginValue } from './source';
 import type { PagedResult } from '@granit/query-engine';
 import type { EntityId, ISODateString, UserId } from '@granit/types';
 

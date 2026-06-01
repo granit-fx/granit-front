@@ -5,10 +5,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useAssignSeat, useRevokeSeat, useSeats } from '../hooks/use-seats.js';
-import { SubscriptionsProvider } from '../providers/subscriptions-provider.js';
+import { useAssignSeat, useRevokeSeat, useSeats } from '../hooks/use-seats';
+import { SubscriptionsProvider } from '../providers/subscriptions-provider';
 
-import type { SubscriptionsConfig } from '../providers/subscriptions-provider.js';
+import type { SubscriptionsConfig } from '../providers/subscriptions-provider';
 import type { SeatResponse } from '@granit/subscriptions';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

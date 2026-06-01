@@ -1,4 +1,4 @@
-import type { BulkActionRequest, BulkActionResponse } from '../types/index.js';
+import type { BulkActionRequest, BulkActionResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

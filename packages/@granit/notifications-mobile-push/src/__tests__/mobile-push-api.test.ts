@@ -5,7 +5,7 @@ import {
   listDeviceTokens,
   registerDeviceToken,
   unregisterDeviceToken,
-} from '../api/mobile-push-api.js';
+} from '../api/mobile-push-api';
 
 describe('mobile-push-api', () => {
   it('should register a device token', async () => {

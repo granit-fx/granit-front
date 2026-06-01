@@ -1,7 +1,7 @@
 import { createScope, deleteScope, listScopes } from '@granit/openiddict-admin';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildAdminQueryKey, useAdminConfig } from '../providers/openiddict-admin-provider.js';
+import { buildAdminQueryKey, useAdminConfig } from '../providers/openiddict-admin-provider';
 
 import type { AdminOidcScope, AdminOidcScopeCreateRequest } from '@granit/openiddict-admin';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
@@ -42,8 +42,7 @@ export function useDeleteOidcScope(): UseMutationResult<void, Error, string> {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (scopeName: string) =>
-      deleteScope(config.client, config.basePath!, scopeName),
+    mutationFn: (scopeName: string) => deleteScope(config.client, config.basePath!, scopeName),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: buildAdminQueryKey(config, 'oidc', 'scopes'),

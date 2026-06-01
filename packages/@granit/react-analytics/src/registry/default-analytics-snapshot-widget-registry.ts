@@ -1,6 +1,6 @@
-import { KpiSnapshotTile } from '../components/kpi-snapshot-tile.js';
-import { PivotSnapshotWidget } from '../components/pivot-snapshot-widget.js';
-import { TableSnapshotWidget } from '../components/table-snapshot-widget.js';
+import { KpiSnapshotTile } from '../components/kpi-snapshot-tile';
+import { PivotSnapshotWidget } from '../components/pivot-snapshot-widget';
+import { TableSnapshotWidget } from '../components/table-snapshot-widget';
 
 import type { SnapshotWidgetRegistry } from '@granit/react-dashboards';
 

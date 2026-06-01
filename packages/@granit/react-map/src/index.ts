@@ -3,25 +3,25 @@
 // ---------------------------------------------------------------------------
 
 // Snapshot renderer (B5-B PR 4 — Map kind for <RenderedDashboard>)
-export { MapSnapshotWidget } from './snapshot/map-snapshot-widget.js';
-export { defaultMapSnapshotWidgetRegistry } from './snapshot/default-map-snapshot-widget-registry.js';
+export { MapSnapshotWidget } from './snapshot/map-snapshot-widget';
+export { defaultMapSnapshotWidgetRegistry } from './snapshot/default-map-snapshot-widget-registry';
 
 // Definition-path renderer (P3) — fetches via POST /widgets/map/render
-export { MapTile } from './components/map-tile.js';
-export type { MapTileProps } from './components/map-tile.js';
-export { defaultMapWidgetRegistry } from './registry/default-map-widget-registry.js';
+export { MapTile } from './components/map-tile';
+export type { MapTileProps } from './components/map-tile';
+export { defaultMapWidgetRegistry } from './registry/default-map-widget-registry';
 
 // Tile provider context — apps select the active provider once at the root
 export {
   MapTileProviderProvider,
   useMapTileProvider,
-} from './components/map-tile-provider-context.js';
-export type { MapTileProviderProviderProps } from './components/map-tile-provider-context.js';
+} from './components/map-tile-provider-context';
+export type { MapTileProviderProviderProps } from './components/map-tile-provider-context';
 
 // Built-in providers
-export { osmProvider } from './providers/osm-provider.js';
-export { spwProvider } from './providers/spw-provider.js';
-export { arcGisProvider } from './providers/arcgis-provider.js';
+export { osmProvider } from './providers/osm-provider';
+export { spwProvider } from './providers/spw-provider';
+export { arcGisProvider } from './providers/arcgis-provider';
 
 // Provider / layer types — apps compose custom providers with this shape
-export type { MapTileLayer, MapTileLayerKind, MapTileProvider } from './types/index.js';
+export type { MapTileLayer, MapTileLayerKind, MapTileProvider } from './types/index';

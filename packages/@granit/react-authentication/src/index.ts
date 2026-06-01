@@ -1,2 +1,2 @@
-export { createAuthContext } from './providers/use-auth-context.js';
-export { createMockProvider } from './providers/mock-provider.js';
+export { createAuthContext } from './providers/use-auth-context';
+export { createMockProvider } from './providers/mock-provider';

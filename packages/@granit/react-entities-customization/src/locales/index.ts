@@ -17,6 +17,6 @@
 // package headless and consistent with the rest of the framework.
 // ---------------------------------------------------------------------------
 
-export { customizationTranslationsEn } from './en.js';
-export type { CustomizationTranslations } from './en.js';
-export { customizationTranslationsFr } from './fr.js';
+export { customizationTranslationsEn } from './en';
+export type { CustomizationTranslations } from './en';
+export { customizationTranslationsFr } from './fr';

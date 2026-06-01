@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { createLocalization } from '../create-localization.js';
+import { createLocalization } from '../create-localization';
 
 describe('createLocalization', () => {
   it('should return an i18next instance', () => {

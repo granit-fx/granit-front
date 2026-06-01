@@ -1,12 +1,9 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getFormCustomization, putFormCustomization } from '../api/form-customization-api.js';
+import { getFormCustomization, putFormCustomization } from '../api/form-customization-api';
 
-import type {
-  FormCustomizationRequest,
-  FormCustomizationResponse,
-} from '../types/customization.js';
+import type { FormCustomizationRequest, FormCustomizationResponse } from '../types/customization';
 
 const apiBase = '/api/v1';
 

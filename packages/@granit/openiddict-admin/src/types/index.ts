@@ -2,18 +2,18 @@ export type {
   AdminOidcApplication,
   AdminOidcApplicationCreateRequest,
   AdminOidcApplicationSecretResponse,
-} from './admin-oidc-application.js';
+} from './admin-oidc-application';
 
 export type {
   AdminOidcAuthorization,
   AdminOidcAuthorizationListParams,
-} from './admin-oidc-authorization.js';
+} from './admin-oidc-authorization';
 
-export type { AdminOidcScope, AdminOidcScopeCreateRequest } from './admin-oidc-scope.js';
+export type { AdminOidcScope, AdminOidcScopeCreateRequest } from './admin-oidc-scope';
 
 export type {
   AdminImpersonationResult,
   AdminUser,
   AdminUserListParams,
   AdminUserPage,
-} from './admin-user.js';
+} from './admin-user';

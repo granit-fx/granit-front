@@ -21,13 +21,9 @@
 // shaped against the persistence view. This module is the round-trip
 // bridge between the two — pure data transformation, no React deps.
 
-import type { DashboardDetailResponse } from './dashboard-detail-response.js';
-import type { AddWidgetRequest, UpdateWidgetRequest, WidgetInstanceResponse } from './index.js';
-import type {
-  DashboardDefinition,
-  WidgetDefinition,
-  WidgetDefinitionBase,
-} from '../types/index.js';
+import type { DashboardDetailResponse } from './dashboard-detail-response';
+import type { AddWidgetRequest, UpdateWidgetRequest, WidgetInstanceResponse } from './index';
+import type { DashboardDefinition, WidgetDefinition, WidgetDefinitionBase } from '../types/index';
 
 /**
  * The five structural fields that live outside `configJson` because the

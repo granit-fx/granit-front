@@ -3,7 +3,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 
-import { BlobImage } from '../components/blob-image.js';
+import { BlobImage } from '../components/blob-image';
 
 import type { ReactNode } from 'react';
 

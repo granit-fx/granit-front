@@ -6,14 +6,10 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  useAuditLogEntries,
-  useAuditLogEntry,
-  useEntityAuditTrail,
-} from '../hooks/use-audit-log.js';
-import { AuditLogProvider } from '../providers/audit-log-provider.js';
+import { useAuditLogEntries, useAuditLogEntry, useEntityAuditTrail } from '../hooks/use-audit-log';
+import { AuditLogProvider } from '../providers/audit-log-provider';
 
-import type { AuditLogProviderProps } from '../providers/audit-log-provider.js';
+import type { AuditLogProviderProps } from '../providers/audit-log-provider';
 import type { AuditEntryDetail, AuditPage } from '@granit/auditing';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

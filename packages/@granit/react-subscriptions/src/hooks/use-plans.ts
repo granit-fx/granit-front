@@ -13,7 +13,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   buildSubscriptionsQueryKey,
   useSubscriptionsConfig,
-} from '../providers/subscriptions-provider.js';
+} from '../providers/subscriptions-provider';
 
 import type {
   CreatePriceVersionRequest,

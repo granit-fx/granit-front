@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import type { WidgetConfigFormProps } from '../../lib/widget-config-form-registry.js';
+import type { WidgetConfigFormProps } from '../../lib/widget-config-form-registry';
 import type { ImageFit, ImageWidgetDefinition } from '@granit/dashboards';
 
 const IMAGE_FITS: readonly ImageFit[] = ['Contain', 'Cover', 'Fill'];

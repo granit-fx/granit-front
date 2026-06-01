@@ -1,4 +1,4 @@
-export { DocumentFormat, TemplateLifecycleStatus } from './template-types.js';
+export { DocumentFormat, TemplateLifecycleStatus } from './template-types';
 
 export type {
   DocumentFormatValue,
@@ -22,4 +22,4 @@ export type {
   TemplateVariable,
   TemplateVariables,
   TemplatingConfig,
-} from './template-types.js';
+} from './template-types';

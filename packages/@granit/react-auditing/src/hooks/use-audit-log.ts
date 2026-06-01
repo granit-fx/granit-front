@@ -6,7 +6,7 @@ import {
 } from '@granit/auditing';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildAuditLogQueryKey, useAuditLogConfig } from '../providers/audit-log-provider.js';
+import { buildAuditLogQueryKey, useAuditLogConfig } from '../providers/audit-log-provider';
 
 import type { AuditEntryDetail, AuditListParams, AuditPage } from '@granit/auditing';
 import type { PaginationParams } from '@granit/query-engine';

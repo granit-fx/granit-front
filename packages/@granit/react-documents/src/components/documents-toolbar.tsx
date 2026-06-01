@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-import { useTrashDocument } from '../hooks/use-document-mutations.js';
-import { TILE_SIZE_STEPS } from '../hooks/use-view-preferences.js';
+import { useTrashDocument } from '../hooks/use-document-mutations';
+import { TILE_SIZE_STEPS } from '../hooks/use-view-preferences';
 
-import type { DocumentsViewMode, TileSizeStep } from '../hooks/use-view-preferences.js';
+import type { DocumentsViewMode, TileSizeStep } from '../hooks/use-view-preferences';
 import type { DocumentResponse } from '@granit/documents';
 import type { ReactNode } from 'react';
 

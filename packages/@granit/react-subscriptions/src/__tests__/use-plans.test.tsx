@@ -14,10 +14,10 @@ import {
   usePlans,
   usePublishPlan,
   useUpdatePlan,
-} from '../hooks/use-plans.js';
-import { SubscriptionsProvider } from '../providers/subscriptions-provider.js';
+} from '../hooks/use-plans';
+import { SubscriptionsProvider } from '../providers/subscriptions-provider';
 
-import type { SubscriptionsConfig } from '../providers/subscriptions-provider.js';
+import type { SubscriptionsConfig } from '../providers/subscriptions-provider';
 import type { PlanPriceResponse, PlanResponse } from '@granit/subscriptions';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';

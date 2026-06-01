@@ -5,8 +5,8 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { FolderTree } from '../components/folder-tree.tsx';
-import { DOCUMENT_DRAG_MIME } from '../constants.js';
-import { DocumentsProvider } from '../providers/documents-provider.js';
+import { DOCUMENT_DRAG_MIME } from '../constants';
+import { DocumentsProvider } from '../providers/documents-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { FolderResponse, ListFoldersResponse } from '@granit/documents';

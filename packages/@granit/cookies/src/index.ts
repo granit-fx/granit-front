@@ -6,4 +6,4 @@ export type {
   CookieConsentConfig,
   CookieDefinitionDto,
   ThirdPartyServiceDto,
-} from './types/index.js';
+} from './types/index';

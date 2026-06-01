@@ -17,8 +17,8 @@ import {
   useTenantDetail,
   useTenants,
   useUpdateTenant,
-} from '../hooks/use-tenant-admin.js';
-import { TenantAdminProvider } from '../providers/tenant-admin-provider.js';
+} from '../hooks/use-tenant-admin';
+import { TenantAdminProvider } from '../providers/tenant-admin-provider';
 
 import type { AdminTenant, CreateTenantRequest, UpdateTenantRequest } from '@granit/multi-tenancy';
 import type { AxiosInstance } from 'axios';

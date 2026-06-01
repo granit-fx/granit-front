@@ -6,8 +6,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useAdminUsers, useImpersonateUser } from '../hooks/use-admin-users.js';
-import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider.js';
+import { useAdminUsers, useImpersonateUser } from '../hooks/use-admin-users';
+import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider';
 
 import type { AdminImpersonationResult, AdminUser, AdminUserPage } from '@granit/openiddict-admin';
 

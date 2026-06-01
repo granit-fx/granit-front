@@ -2,11 +2,11 @@ import { render, renderHook, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { BffGuard } from '../components/bff-guard.js';
-import { useBffAuth } from '../hooks/use-bff-auth.js';
-import { useBffCsrf } from '../hooks/use-bff-csrf.js';
-import { useBffFetch } from '../hooks/use-bff-fetch.js';
-import { BffProvider, useBffConfig, useBffContext } from '../providers/bff-provider.js';
+import { BffGuard } from '../components/bff-guard';
+import { useBffAuth } from '../hooks/use-bff-auth';
+import { useBffCsrf } from '../hooks/use-bff-csrf';
+import { useBffFetch } from '../hooks/use-bff-fetch';
+import { BffProvider, useBffConfig, useBffContext } from '../providers/bff-provider';
 
 import type { BffConfig } from '@granit/bff';
 

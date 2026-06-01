@@ -1,8 +1,8 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { toEntityId } from '../entity-id.js';
+import { toEntityId } from '../entity-id';
 
-import type { EntityId, TenantId, UserId } from '../entity-id.js';
+import type { EntityId, TenantId, UserId } from '../entity-id';
 
 describe('EntityId', () => {
   it('toEntityId returns the same string value', () => {

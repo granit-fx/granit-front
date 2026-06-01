@@ -1,18 +1,18 @@
 import { classifyMergeError } from '@granit/entity-merge';
 import { useState } from 'react';
 
-import { useFieldChoices } from '../hooks/use-field-choices.js';
-import { useMergeMutation } from '../hooks/use-merge-mutation.js';
-import { useMergePreview } from '../hooks/use-merge-preview.js';
+import { useFieldChoices } from '../hooks/use-field-choices';
+import { useMergeMutation } from '../hooks/use-merge-mutation';
+import { useMergePreview } from '../hooks/use-merge-preview';
 
-import { FieldConflictTable } from './field-conflict-table.js';
-import { MergeConfirmDialog } from './merge-confirm-dialog.js';
-import { ReferenceRewriterSummary } from './reference-rewriter-summary.js';
+import { FieldConflictTable } from './field-conflict-table';
+import { MergeConfirmDialog } from './merge-confirm-dialog';
+import { ReferenceRewriterSummary } from './reference-rewriter-summary';
 
-import type { FieldConflictTableLabels } from './field-conflict-table.js';
-import type { MergeConfirmDialogLabels } from './merge-confirm-dialog.js';
-import type { ReferenceRewriterSummaryLabels } from './reference-rewriter-summary.js';
-import type { MergeMutationVariables } from '../hooks/use-merge-mutation.js';
+import type { FieldConflictTableLabels } from './field-conflict-table';
+import type { MergeConfirmDialogLabels } from './merge-confirm-dialog';
+import type { ReferenceRewriterSummaryLabels } from './reference-rewriter-summary';
+import type { MergeMutationVariables } from '../hooks/use-merge-mutation';
 import type { MergeErrorKind, MergeResult } from '@granit/entity-merge';
 import type { ReactNode } from 'react';
 

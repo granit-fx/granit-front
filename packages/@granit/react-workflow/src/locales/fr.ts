@@ -1,4 +1,4 @@
-import type { WorkflowTranslations } from './en.js';
+import type { WorkflowTranslations } from './en';
 
 /**
  * French translation bundle for `@granit/react-workflow`. Register via:

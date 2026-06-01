@@ -2,12 +2,12 @@ import { useGranitClient } from '@granit/react-api-client';
 import { assertSafeUrl } from '@granit/utils';
 import { useCallback, useContext, useMemo } from 'react';
 
-import { useEntityRendererLogger } from '../providers/entity-renderer-provider.js';
+import { useEntityRendererLogger } from '../providers/entity-renderer-provider';
 
 import {
   EntityActionDrawerContext,
   EntityActionModalContext,
-} from './entity-action-overlay-context.js';
+} from './entity-action-overlay-context';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { EntityActionManifest } from '@granit/entities';

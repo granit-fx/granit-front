@@ -1,4 +1,4 @@
-import { FormLayoutEditor, type FormLayoutEditorProps } from './form-layout-editor.js';
+import { FormLayoutEditor, type FormLayoutEditorProps } from './form-layout-editor';
 
 import type { ReactNode } from 'react';
 

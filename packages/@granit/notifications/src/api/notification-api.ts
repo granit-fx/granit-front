@@ -6,7 +6,7 @@ import type {
   NotificationPreference,
   NotificationSubscriptionResponse,
   UserNotificationPage,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { PaginationParams } from '@granit/query-engine';
 

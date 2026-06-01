@@ -1,6 +1,6 @@
 import type { ISODateString } from '@granit/types';
 
-export type { BackgroundJobListParams } from './background-job-list-params.js';
+export type { BackgroundJobListParams } from './background-job-list-params';
 
 /** Status of a background job. Mirrors Granit.BackgroundJobs.BackgroundJobStatus .NET. */
 export interface BackgroundJobStatus {

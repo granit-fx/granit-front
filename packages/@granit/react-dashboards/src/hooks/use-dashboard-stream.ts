@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { useDashboardsConfig } from '../providers/dashboards-provider.js';
+import { useDashboardsConfig } from '../providers/dashboards-provider';
 
 import type {
   DashboardRenderedWidget,

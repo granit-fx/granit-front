@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useFieldProps } from '../use-field-props.js';
+import { useFieldProps } from '../use-field-props';
 
 import type { SchemaConstraints } from '@granit/validation';
 

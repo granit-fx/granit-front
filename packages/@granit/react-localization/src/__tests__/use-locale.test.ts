@@ -3,8 +3,8 @@ import * as React from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { createReactLocalization } from '../create-react-localization.js';
-import { useLocale } from '../use-locale.js';
+import { createReactLocalization } from '../create-react-localization';
+import { useLocale } from '../use-locale';
 
 afterEach(() => {
   localStorage.clear();

@@ -3,8 +3,8 @@ export {
   MeteringProvider,
   buildMeteringQueryKey,
   useMeteringConfig,
-} from './providers/metering-provider.js';
-export type { MeteringConfig, MeteringProviderProps } from './providers/metering-provider.js';
+} from './providers/metering-provider';
+export type { MeteringConfig, MeteringProviderProps } from './providers/metering-provider';
 
 // Hooks
 export {
@@ -16,5 +16,5 @@ export {
   useRecordUsageEvents,
   useUpdateMeterDefinition,
   useUsageForPeriod,
-} from './hooks/use-metering.js';
-export type { UpdateMeterDefinitionVariables } from './hooks/use-metering.js';
+} from './hooks/use-metering';
+export type { UpdateMeterDefinitionVariables } from './hooks/use-metering';

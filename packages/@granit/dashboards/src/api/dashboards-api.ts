@@ -2,7 +2,7 @@ import type {
   DashboardRenderedWidget,
   DashboardRenderRequest,
   DashboardRenderResponse,
-} from '../rendering/index.js';
+} from '../rendering/index';
 import type {
   AddWidgetRequest,
   DashboardCatalogEntryResponse,
@@ -16,7 +16,7 @@ import type {
   UpdateWidgetRequest,
   WidgetDefinitionBase,
   WidgetInstanceResponse,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance, AxiosRequestConfig } from '@granit/api-client';
 
 /**

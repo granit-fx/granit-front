@@ -2,11 +2,11 @@ import { axiosResponse, createMockClient } from '@granit/testing';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { MergeWizard } from '../components/merge-wizard.js';
-import { entityMergeTranslationsEn } from '../locales/en.js';
-import { mockMergeResult } from '../testing/data.js';
+import { MergeWizard } from '../components/merge-wizard';
+import { entityMergeTranslationsEn } from '../locales/en';
+import { mockMergeResult } from '../testing/data';
 
-import { createEntityMergeHarness } from './test-utils.js';
+import { createEntityMergeHarness } from './test-utils';
 
 import type { AxiosInstance } from '@granit/api-client';
 

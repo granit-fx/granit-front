@@ -11,7 +11,7 @@ import {
   useRevokeApiKey,
   useRotateApiKey,
   useUpdateApiKeyScopes,
-} from '../hooks/use-api-key-mutations.js';
+} from '../hooks/use-api-key-mutations';
 
 import type {
   ApiKeyCreateRequest,
@@ -88,9 +88,12 @@ describe('useCreateApiKey', () => {
     vi.mocked(client.post).mockResolvedValueOnce({ data: createResponse });
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useCreateApiKey({ client, basePath: '/api/v2/authentication' }), {
-      wrapper,
-    });
+    const { result } = renderHook(
+      () => useCreateApiKey({ client, basePath: '/api/v2/authentication' }),
+      {
+        wrapper,
+      }
+    );
 
     result.current.mutate({ name: 'V2 Key', type: 'Publishable', environment: 'staging' });
 
@@ -205,9 +208,12 @@ describe('useRevokeApiKey', () => {
     vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useRevokeApiKey({ client, basePath: '/api/v2/authentication' }), {
-      wrapper,
-    });
+    const { result } = renderHook(
+      () => useRevokeApiKey({ client, basePath: '/api/v2/authentication' }),
+      {
+        wrapper,
+      }
+    );
 
     result.current.mutate('key-1');
 
@@ -294,9 +300,12 @@ describe('useRotateApiKey', () => {
     });
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useRotateApiKey({ client, basePath: '/api/v2/authentication' }), {
-      wrapper,
-    });
+    const { result } = renderHook(
+      () => useRotateApiKey({ client, basePath: '/api/v2/authentication' }),
+      {
+        wrapper,
+      }
+    );
 
     result.current.mutate('k1');
 
@@ -394,7 +403,10 @@ describe('useUpdateApiKeyScopes', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.put).toHaveBeenCalledWith('/api/v2/authentication/api-keys/key-1/scopes', expect.any(Object));
+    expect(client.put).toHaveBeenCalledWith(
+      '/api/v2/authentication/api-keys/key-1/scopes',
+      expect.any(Object)
+    );
   });
 
   it('should invalidate both list and detail caches on success', async () => {

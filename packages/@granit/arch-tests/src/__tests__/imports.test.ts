@@ -17,7 +17,7 @@ import {
   REPO_ROOT,
   listPackages,
   toModules,
-} from './helpers.js';
+} from './helpers';
 
 const packages = listPackages();
 const modules = toModules(packages);

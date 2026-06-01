@@ -8,5 +8,5 @@ export {
   samplePaymentMethods,
   sampleRefunds,
   sampleTransactions,
-} from './data.js';
-export { createPaymentsHandlers, paymentTransactionQueryMetadata } from './handlers.js';
+} from './data';
+export { createPaymentsHandlers, paymentTransactionQueryMetadata } from './handlers';

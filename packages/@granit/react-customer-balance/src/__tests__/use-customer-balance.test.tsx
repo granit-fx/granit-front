@@ -9,10 +9,10 @@ import {
   useAddAdminCredit,
   useBalanceTransactions,
   useCustomerBalance,
-} from '../hooks/use-customer-balance.js';
-import { CustomerBalanceProvider } from '../providers/customer-balance-provider.js';
+} from '../hooks/use-customer-balance';
+import { CustomerBalanceProvider } from '../providers/customer-balance-provider';
 
-import type { CustomerBalanceConfig } from '../providers/customer-balance-provider.js';
+import type { CustomerBalanceConfig } from '../providers/customer-balance-provider';
 import type {
   AdminCreditRequest,
   BalanceTransactionResponse,

@@ -39,10 +39,10 @@ export type {
   PartyTaxStatusResponse,
   PartyUpdateRequest,
   PhoneKind,
-} from './types/index.js';
+} from './types/index';
 
 // Permissions
-export { PartiesPermissions } from './permissions.js';
+export { PartiesPermissions } from './permissions';
 
 // API — core
 export {
@@ -69,11 +69,11 @@ export {
   setPartyTaxStatus,
   suspendParty,
   updateParty,
-} from './api/parties-api.js';
+} from './api/parties-api';
 
 // API — duplicate detection
 export {
   dismissPartyDuplicate,
   listDuplicatesForParty,
   mergePartyFromDuplicate,
-} from './api/parties-duplicates-api.js';
+} from './api/parties-duplicates-api';

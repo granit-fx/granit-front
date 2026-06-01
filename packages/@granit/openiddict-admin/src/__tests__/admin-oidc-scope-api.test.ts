@@ -1,9 +1,9 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { createScope, deleteScope, listScopes } from '../api/admin-oidc-scope-api.js';
+import { createScope, deleteScope, listScopes } from '../api/admin-oidc-scope-api';
 
-import type { AdminOidcScope } from '../types/index.js';
+import type { AdminOidcScope } from '../types/index';
 
 const BASE = '/admin';
 

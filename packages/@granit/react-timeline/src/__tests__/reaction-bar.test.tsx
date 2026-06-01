@@ -3,7 +3,7 @@ import { toEntityId } from '@granit/types';
 import { fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { ReactionBar } from '../components/reaction-bar.js';
+import { ReactionBar } from '../components/reaction-bar';
 
 import type { ReactionMap, TimelineEntryId } from '@granit/timeline';
 

@@ -1,10 +1,10 @@
 import { PRESENCE_DEFAULTS, getBatchPresence } from '@granit/presence';
 import { useQuery } from '@tanstack/react-query';
 
-import { DEFAULT_STALE_TIME_MS } from '../constants.js';
-import { buildPresenceQueryKey, usePresenceConfig } from '../providers/presence-provider.js';
+import { DEFAULT_STALE_TIME_MS } from '../constants';
+import { buildPresenceQueryKey, usePresenceConfig } from '../providers/presence-provider';
 
-import { presenceKeys } from './query-keys.js';
+import { presenceKeys } from './query-keys';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { BatchPresenceResponse, PresenceResponse } from '@granit/presence';

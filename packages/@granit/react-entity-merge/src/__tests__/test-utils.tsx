@@ -1,7 +1,7 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { QueryClientProvider } from '@tanstack/react-query';
 
-import { EntityMergeProvider } from '../providers/entity-merge-provider.js';
+import { EntityMergeProvider } from '../providers/entity-merge-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';

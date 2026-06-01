@@ -1,14 +1,14 @@
 import { useRef, useState } from 'react';
 
-import { DOCUMENT_DRAG_MIME } from '../constants.js';
-import { useMoveDocument } from '../hooks/use-document-mutations.js';
-import { useCreateFolder, useRenameFolder, useTrashFolder } from '../hooks/use-folder-mutations.js';
-import { useFolders } from '../hooks/use-folders.js';
+import { DOCUMENT_DRAG_MIME } from '../constants';
+import { useMoveDocument } from '../hooks/use-document-mutations';
+import { useCreateFolder, useRenameFolder, useTrashFolder } from '../hooks/use-folder-mutations';
+import { useFolders } from '../hooks/use-folders';
 
-import { InlineEdit } from './inline-edit.js';
-import { TransferOwnershipDialog } from './transfer-ownership-dialog.js';
+import { InlineEdit } from './inline-edit';
+import { TransferOwnershipDialog } from './transfer-ownership-dialog';
 
-import type { TransferOwnershipDialogLabels } from './transfer-ownership-dialog.js';
+import type { TransferOwnershipDialogLabels } from './transfer-ownership-dialog';
 import type { FolderResponse, FolderStatus } from '@granit/documents';
 import type { DragEvent, ReactNode } from 'react';
 

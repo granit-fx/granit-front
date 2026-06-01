@@ -1,4 +1,4 @@
-import type { MetricSnapshotPayload } from '../metrics/metric-response.js';
+import type { MetricSnapshotPayload } from '../metrics/metric-response';
 import type { WidgetSnapshotEnvelope, WidgetSnapshotEnvelopeOf } from '@granit/dashboards';
 
 /**

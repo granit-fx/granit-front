@@ -1,4 +1,4 @@
-import type { AccountRegisterRequest, AccountRegisterResponse } from '../types/index.js';
+import type { AccountRegisterRequest, AccountRegisterResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

@@ -5,7 +5,7 @@ import type {
   KeycloakCoreConfig,
   KeycloakEvent,
   KeycloakUserInfo,
-} from '../index.js';
+} from '../index';
 
 describe('@granit/authentication-keycloak types', () => {
   describe('KeycloakUserInfo', () => {

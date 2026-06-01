@@ -1,7 +1,7 @@
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { createPartiesHandlers, partyQueryMetadata } from '../testing/index.js';
+import { createPartiesHandlers, partyQueryMetadata } from '../testing/index';
 
 const BASE = 'http://api.test/api/v1/parties';
 const server = setupServer();

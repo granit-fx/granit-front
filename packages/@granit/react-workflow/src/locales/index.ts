@@ -12,6 +12,6 @@
 // under `workflow:Transition.{From}To{To}.*` that resolve once the
 // bundle is registered.
 
-export { workflowTranslationsEn } from './en.js';
-export type { WorkflowTransitionStrings, WorkflowTranslations } from './en.js';
-export { workflowTranslationsFr } from './fr.js';
+export { workflowTranslationsEn } from './en';
+export type { WorkflowTransitionStrings, WorkflowTranslations } from './en';
+export { workflowTranslationsFr } from './fr';

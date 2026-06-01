@@ -5,9 +5,9 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
 import { DocumentsSidebar } from '../components/documents-sidebar.tsx';
-import { DocumentsProvider } from '../providers/documents-provider.js';
+import { DocumentsProvider } from '../providers/documents-provider';
 
-import type { DocumentBookmark } from '../hooks/use-document-bookmarks.js';
+import type { DocumentBookmark } from '../hooks/use-document-bookmarks';
 import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
 

@@ -10,10 +10,10 @@ import {
   useSubscribeToNotificationType,
   useUnfollowEntity,
   useUnsubscribeFromNotificationType,
-} from '../hooks/use-notification-subscriptions.js';
-import { NotificationProvider } from '../providers/notification-provider.js';
+} from '../hooks/use-notification-subscriptions';
+import { NotificationProvider } from '../providers/notification-provider';
 
-import { axiosResponse, createMockClient } from './test-utils.js';
+import { axiosResponse, createMockClient } from './test-utils';
 
 import type {
   NotificationConfig,

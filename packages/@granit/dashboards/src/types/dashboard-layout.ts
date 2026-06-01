@@ -1,4 +1,4 @@
-import type { WidgetSize } from './widget-size.js';
+import type { WidgetSize } from './widget-size';
 
 /**
  * Tailwind / Bootstrap-style viewport breakpoints. Mirrors

@@ -16,7 +16,7 @@ import {
   useLanguages,
   useSetLocalizationOverride,
   useToggleLanguage,
-} from '../hooks/use-admin-localization.js';
+} from '../hooks/use-admin-localization';
 
 import type { ReactNode } from 'react';
 
