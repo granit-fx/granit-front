@@ -1,6 +1,6 @@
 'use client';
 
-import type { TimelineBlockProps } from './types.js';
+import type { TimelineBlockProps } from './types';
 
 export function TimelineBlock({ title, items }: TimelineBlockProps) {
   return (

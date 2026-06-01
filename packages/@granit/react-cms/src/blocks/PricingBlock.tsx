@@ -1,6 +1,6 @@
 'use client';
 
-import type { PricingBlockProps } from './types.js';
+import type { PricingBlockProps } from './types';
 
 export function PricingBlock({ title, plans }: PricingBlockProps) {
   return (

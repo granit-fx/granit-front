@@ -1,6 +1,6 @@
 'use client';
 
-import type { StatsBlockProps } from './types.js';
+import type { StatsBlockProps } from './types';
 
 export function StatsBlock({ title, stats }: StatsBlockProps) {
   return (

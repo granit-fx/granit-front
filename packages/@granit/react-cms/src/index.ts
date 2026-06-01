@@ -1,21 +1,22 @@
 // Block components
-export { CtaBlock } from './blocks/CtaBlock.js';
-export { FeaturesBlock } from './blocks/FeaturesBlock.js';
-export { HeroBlock } from './blocks/HeroBlock.js';
-export { ImageTextBlock } from './blocks/ImageTextBlock.js';
-export { LogosBlock } from './blocks/LogosBlock.js';
-export { MapBlock } from './blocks/MapBlock.js';
-export { PricingBlock } from './blocks/PricingBlock.js';
-export { StatsBlock } from './blocks/StatsBlock.js';
-export { StepsBlock } from './blocks/StepsBlock.js';
-export { TestimonialsBlock } from './blocks/TestimonialsBlock.js';
-export { TimelineBlock } from './blocks/TimelineBlock.js';
-export { TrustBannerBlock } from './blocks/TrustBannerBlock.js';
-export { VideoBlock } from './blocks/VideoBlock.js';
+export { CtaBlock } from './blocks/CtaBlock';
+export { FeaturesBlock } from './blocks/FeaturesBlock';
+export { HeroBlock } from './blocks/HeroBlock';
+export { ImageTextBlock } from './blocks/ImageTextBlock';
+export { LogosBlock } from './blocks/LogosBlock';
+export { MapBlock } from './blocks/MapBlock';
+export { PricingBlock } from './blocks/PricingBlock';
+export { StatsBlock } from './blocks/StatsBlock';
+export { StepsBlock } from './blocks/StepsBlock';
+export { TestimonialsBlock } from './blocks/TestimonialsBlock';
+export { TimelineBlock } from './blocks/TimelineBlock';
+export { TrustBannerBlock } from './blocks/TrustBannerBlock';
+export { VideoBlock } from './blocks/VideoBlock';
 
 // Block prop types
 export type {
   CtaBlockProps,
+  ResolvedAsset,
   FeaturesBlockProps,
   HeroBlockProps,
   ImageTextBlockProps,
@@ -28,13 +29,18 @@ export type {
   TimelineBlockProps,
   TrustBannerBlockProps,
   VideoBlockProps,
-} from './blocks/types.js';
+} from './blocks/types';
 
 // Block registry
-export { BLOCK_COMPONENTS } from './blocks/registry.js';
+export { BLOCK_COMPONENTS } from './blocks/registry';
+
+// Document resolution
+export { resolveDocumentReferencesInData } from './blocks/resolve-documents';
+export type { ResolvedDocumentAsset, ResolveDocumentsFn } from './blocks/resolve-documents';
 
 // Puck config generator
-export { catalogToConfig } from './puck/catalog-to-config.js';
+export { catalogToConfig } from './puck/catalog-to-config';
+export type { CatalogConfigOptions, ResolveBlockDataFn } from './puck/catalog-to-config';
 
 // Components
-export { CmsMenuNav } from './components/CmsMenuNav.js';
+export { CmsMenuNav } from './components/CmsMenuNav';

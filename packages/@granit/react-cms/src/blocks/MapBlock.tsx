@@ -1,6 +1,6 @@
 'use client';
 
-import type { MapBlockProps } from './types.js';
+import type { MapBlockProps } from './types';
 
 export function MapBlock({ title, address, lat, lng }: MapBlockProps) {
   return (

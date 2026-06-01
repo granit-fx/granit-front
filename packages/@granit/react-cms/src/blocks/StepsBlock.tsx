@@ -1,6 +1,6 @@
 'use client';
 
-import type { StepsBlockProps } from './types.js';
+import type { StepsBlockProps } from './types';
 
 export function StepsBlock({ title, steps }: StepsBlockProps) {
   return (

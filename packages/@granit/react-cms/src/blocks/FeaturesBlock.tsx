@@ -1,6 +1,6 @@
 'use client';
 
-import type { FeaturesBlockProps } from './types.js';
+import type { FeaturesBlockProps } from './types';
 
 export function FeaturesBlock({ title, features }: FeaturesBlockProps) {
   return (

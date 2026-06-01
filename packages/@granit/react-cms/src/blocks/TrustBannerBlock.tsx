@@ -1,6 +1,6 @@
 'use client';
 
-import type { TrustBannerBlockProps } from './types.js';
+import type { TrustBannerBlockProps } from './types';
 
 export function TrustBannerBlock({ title, logos }: TrustBannerBlockProps) {
   return (
@@ -8,7 +8,18 @@ export function TrustBannerBlock({ title, logos }: TrustBannerBlockProps) {
       {title && <p>{title}</p>}
       <ul>
         {logos.map((logo, idx) => (
-          <li key={idx} aria-label={logo.alt} />
+          <li key={idx}>
+            {logo._resolved_imageId ? (
+              <img
+                src={logo._resolved_imageId.url}
+                width={logo._resolved_imageId.width ?? undefined}
+                height={logo._resolved_imageId.height ?? undefined}
+                alt={logo.alt ?? ''}
+              />
+            ) : (
+              <span aria-label={logo.alt} />
+            )}
+          </li>
         ))}
       </ul>
     </section>

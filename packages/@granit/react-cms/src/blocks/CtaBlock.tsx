@@ -1,6 +1,6 @@
 'use client';
 
-import type { CtaBlockProps } from './types.js';
+import type { CtaBlockProps } from './types';
 
 export function CtaBlock({ title, description, buttonLabel, buttonHref }: CtaBlockProps) {
   return (

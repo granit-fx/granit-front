@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { catalogToConfig } from '../puck/catalog-to-config.js';
+import { catalogToConfig } from '../puck/catalog-to-config';
 
 import type { BlockCatalogResponse } from '@granit/cms';
 

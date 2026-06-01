@@ -1,6 +1,6 @@
 'use client';
 
-import type { TestimonialsBlockProps } from './types.js';
+import type { TestimonialsBlockProps } from './types';
 
 export function TestimonialsBlock({ title, testimonials }: TestimonialsBlockProps) {
   return (
