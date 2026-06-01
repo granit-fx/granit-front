@@ -22,6 +22,7 @@ const catalog: BlockCatalogResponse = {
           sourceModule: 'Granit.Cms.Blocks.Hero',
           renderSide: 'Server',
           dataSourceKey: null,
+          subscribedContentTypes: [],
           fields: {
             headline: { kind: 'Text' },
             imageId: { kind: 'DocumentReference' },

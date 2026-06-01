@@ -56,6 +56,7 @@ export interface BlockCatalogEntry {
   readonly sourceModule: string;
   readonly renderSide: BlockRenderSide;
   readonly dataSourceKey: string | null;
+  readonly subscribedContentTypes: readonly string[];
   readonly fields: Readonly<Record<string, BlockFieldDescriptor>>;
 }
 

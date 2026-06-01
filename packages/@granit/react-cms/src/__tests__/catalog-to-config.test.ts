@@ -15,6 +15,7 @@ const catalog: BlockCatalogResponse = {
           sourceModule: 'Granit.Cms.Blocks',
           renderSide: 'Server',
           dataSourceKey: null,
+          subscribedContentTypes: [],
           fields: {
             headline: { kind: 'Text' },
             imageId: { kind: 'DocumentReference' },
@@ -47,6 +48,7 @@ const catalog: BlockCatalogResponse = {
           sourceModule: 'Granit.Cms.Blocks',
           renderSide: 'Server',
           dataSourceKey: null,
+          subscribedContentTypes: [],
           fields: {},
         },
       ],
