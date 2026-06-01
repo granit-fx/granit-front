@@ -793,6 +793,57 @@
       ]
     },
     {
+      "name": "@granit/cms",
+      "description": "Granit CMS — types and API client (pages, blocks, menus, redirects, SEO, preview, document resolution)",
+      "exports": [
+        {
+          "name": "fetchPageByPath",
+          "kind": "function",
+          "signature": "async function fetchPageByPath( client: AxiosInstance, basePath: string, params:"
+        },
+        {
+          "name": "mintPreviewToken",
+          "kind": "function",
+          "signature": "async function mintPreviewToken( client: AxiosInstance, basePath: string, pageId: string, request: MintPreviewTokenRequest ): Promise<MintPreviewTokenResponse>"
+        },
+        {
+          "name": "resolvePreview",
+          "kind": "function",
+          "signature": "async function resolvePreview( client: AxiosInstance, basePath: string, token: string ): Promise<DraftPagePreviewResponse | null>"
+        },
+        {
+          "name": "fetchBlockCatalog",
+          "kind": "function",
+          "signature": "async function fetchBlockCatalog( client: AxiosInstance, basePath: string ): Promise<BlockCatalogResponse>"
+        },
+        {
+          "name": "resolveBlockData",
+          "kind": "function",
+          "signature": "async function resolveBlockData( client: AxiosInstance, basePath: string, request: BlockDataResolveRequest ): Promise<BlockDataResponse>"
+        },
+        {
+          "name": "resolveMenu",
+          "kind": "function",
+          "signature": "async function resolveMenu( client: AxiosInstance, basePath: string, params:"
+        },
+        {
+          "name": "resolveRedirect",
+          "kind": "function",
+          "signature": "async function resolveRedirect( client: AxiosInstance, basePath: string, params:"
+        },
+        {
+          "name": "fetchEffectiveSeo",
+          "kind": "function",
+          "signature": "async function fetchEffectiveSeo( client: AxiosInstance, basePath: string, params:"
+        },
+        {
+          "name": "batchResolveDocuments",
+          "kind": "function",
+          "signature": "async function batchResolveDocuments( client: AxiosInstance, basePath: string, request: BatchResolveDocumentsRequest ): Promise<readonly (ResolvedDocumentResponse | null)[]>"
+        }
+      ]
+    },
+    {
       "name": "@granit/cookies",
       "description": "Cookie consent abstraction with React context and hooks",
       "exports": []
@@ -2738,6 +2789,92 @@
           "name": "defaultChartSnapshotWidgetRegistry",
           "kind": "const",
           "signature": "const defaultChartSnapshotWidgetRegistry: SnapshotWidgetRegistry"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-cms",
+      "description": "React block components, Puck config generator and menu renderer for the Granit CMS",
+      "exports": [
+        {
+          "name": "CtaBlock",
+          "kind": "function",
+          "signature": "function CtaBlock("
+        },
+        {
+          "name": "FeaturesBlock",
+          "kind": "function",
+          "signature": "function FeaturesBlock("
+        },
+        {
+          "name": "HeroBlock",
+          "kind": "function",
+          "signature": "function HeroBlock("
+        },
+        {
+          "name": "ImageTextBlock",
+          "kind": "function",
+          "signature": "function ImageTextBlock("
+        },
+        {
+          "name": "LogosBlock",
+          "kind": "function",
+          "signature": "function LogosBlock("
+        },
+        {
+          "name": "MapBlock",
+          "kind": "function",
+          "signature": "function MapBlock("
+        },
+        {
+          "name": "PricingBlock",
+          "kind": "function",
+          "signature": "function PricingBlock("
+        },
+        {
+          "name": "StatsBlock",
+          "kind": "function",
+          "signature": "function StatsBlock("
+        },
+        {
+          "name": "StepsBlock",
+          "kind": "function",
+          "signature": "function StepsBlock("
+        },
+        {
+          "name": "TestimonialsBlock",
+          "kind": "function",
+          "signature": "function TestimonialsBlock("
+        },
+        {
+          "name": "TimelineBlock",
+          "kind": "function",
+          "signature": "function TimelineBlock("
+        },
+        {
+          "name": "TrustBannerBlock",
+          "kind": "function",
+          "signature": "function TrustBannerBlock("
+        },
+        {
+          "name": "VideoBlock",
+          "kind": "function",
+          "signature": "function VideoBlock("
+        },
+        {
+          "name": "BLOCK_COMPONENTS",
+          "kind": "const",
+          "signature": "const BLOCK_COMPONENTS: Record<string, ComponentType<any>>"
+        },
+        {
+          "name": "catalogToConfig",
+          "kind": "function",
+          "signature": "function catalogToConfig(catalog: BlockCatalogResponse): Config"
+        },
+        {
+          "name": "CmsMenuNav",
+          "kind": "function",
+          "signature": "function CmsMenuNav("
         }
       ]
     },

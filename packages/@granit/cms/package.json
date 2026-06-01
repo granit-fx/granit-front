@@ -1,0 +1,17 @@
+{
+  "name": "@granit/cms",
+  "description": "Granit CMS — types and API client (pages, blocks, menus, redirects, SEO, preview, document resolution)",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/testing": "workspace:*"
+  },
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@granit/react-cms",
+  "description": "React block components, Puck config generator and menu renderer for the Granit CMS",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@granit/cms": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@measured/puck": "^0.20.0"
+  },
+  "peerDependencies": {
+    "@granit/cms": "workspace:*",
+    "@measured/puck": "^0.20.0",
+    "react": "^19.0.0"
+  }
+}
