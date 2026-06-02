@@ -1,0 +1,19 @@
+{
+  "name": "@granit/cms-hostnames",
+  "description": "Granit CMS — site-scoped hostname management (wraps @granit/hostnames for /api/cms/sites/{siteId}/hostnames)",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/hostnames": "workspace:*"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/hostnames": "workspace:*",
+    "@granit/testing": "workspace:*"
+  }
+}

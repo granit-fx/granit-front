@@ -369,6 +369,36 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/cms-hostnames:
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/hostnames':
+        specifier: workspace:*
+        version: link:../hostnames
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
+  packages/@granit/cms-redirects:
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
+  packages/@granit/cms-seo:
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/cookies: {}
 
   packages/@granit/cookies-cookieconsent:

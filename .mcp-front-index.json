@@ -1000,16 +1000,6 @@
           "signature": "async function resolveMenu( client: AxiosInstance, basePath: string, params:"
         },
         {
-          "name": "resolveRedirect",
-          "kind": "function",
-          "signature": "async function resolveRedirect( client: AxiosInstance, basePath: string, params:"
-        },
-        {
-          "name": "getEffectiveSeo",
-          "kind": "function",
-          "signature": "async function getEffectiveSeo( client: AxiosInstance, basePath: string, params:"
-        },
-        {
           "name": "batchResolveDocuments",
           "kind": "function",
           "signature": "async function batchResolveDocuments( client: AxiosInstance, basePath: string, request: BatchResolveDocumentsRequest ): Promise<readonly (ResolvedDocumentResponse | null)[]>"
@@ -1067,6 +1057,39 @@
           "kind": "interface",
           "signature": "interface ListReleasesParams",
           "members": []
+        }
+      ]
+    },
+    {
+      "name": "@granit/cms-hostnames",
+      "description": "Granit CMS — site-scoped hostname management (wraps @granit/hostnames for /api/cms/sites/{siteId}/hostnames)",
+      "exports": []
+    },
+    {
+      "name": "@granit/cms-redirects",
+      "description": "Granit CMS — redirect types, public resolve and admin CRUD API",
+      "exports": [
+        {
+          "name": "resolveRedirect",
+          "kind": "function",
+          "signature": "async function resolveRedirect( client: AxiosInstance, basePath: string, params:"
+        },
+        {
+          "name": "ListRedirectsParams",
+          "kind": "interface",
+          "signature": "interface ListRedirectsParams",
+          "members": []
+        }
+      ]
+    },
+    {
+      "name": "@granit/cms-seo",
+      "description": "Granit CMS — SEO types, public effective-SEO client, SEO admin and SEO-AI API",
+      "exports": [
+        {
+          "name": "getEffectiveSeo",
+          "kind": "function",
+          "signature": "async function getEffectiveSeo( client: AxiosInstance, basePath: string, params:"
         },
         {
           "name": "ListSeoMetadataParams",
@@ -1078,12 +1101,6 @@
           "name": "ListSeoSuggestionsParams",
           "kind": "interface",
           "signature": "interface ListSeoSuggestionsParams",
-          "members": []
-        },
-        {
-          "name": "ListRedirectsParams",
-          "kind": "interface",
-          "signature": "interface ListRedirectsParams",
           "members": []
         }
       ]

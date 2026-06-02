@@ -1,0 +1,17 @@
+{
+  "name": "@granit/cms-redirects",
+  "description": "Granit CMS — redirect types, public resolve and admin CRUD API",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/testing": "workspace:*"
+  }
+}

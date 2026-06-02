@@ -1,5 +1,8 @@
-// ─── Types — Public renderer ─────────────────────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────────────────────
 export type {
+  // Shared
+  PagedResponse,
+  // Blocks
   BatchResolveDocumentsRequest,
   BlockCatalogEntry,
   BlockCatalogResponse,
@@ -10,33 +13,13 @@ export type {
   BlockFieldKind,
   BlockFieldOption,
   BlockRenderSide,
-  DraftPagePreviewResponse,
-  EffectiveSeoResponse,
-  Hreflang,
-  MintPreviewTokenRequest,
-  MintPreviewTokenResponse,
-  MenuTargetKind,
-  OgImage,
-  OpenGraph,
-  OpenGraphArticle,
-  PublishedPageResponse,
-  RedirectResolveResponse,
   ResolveDocumentItem,
   ResolvedDocumentResponse,
-  ResolvedMenu,
-  ResolvedMenuItem,
-  RobotsDirective,
-  TwitterCard,
-} from './types/index.js';
-
-// ─── Types — Admin ────────────────────────────────────────────────────────────
-export type {
-  // Shared
-  PagedResponse,
-  // Sites
-  CreateSiteRequest,
-  SiteResponse,
-  UpdateSiteRequest,
+  // Pages — public
+  DraftPagePreviewResponse,
+  MintPreviewTokenRequest,
+  MintPreviewTokenResponse,
+  PublishedPageResponse,
   // Pages admin
   CreatePageRequest,
   MovePageRequest,
@@ -48,12 +31,20 @@ export type {
   SaveDraftRequest,
   UpdatePageRequest,
   UpdatePageTranslationRequest,
+  // Menus — public
+  MenuTargetKind,
+  ResolvedMenu,
+  ResolvedMenuItem,
   // Menus admin
   CreateMenuRequest,
   MenuItemRequest,
   MenuItemResponse,
   MenuResponse,
   UpdateMenuRequest,
+  // Sites
+  CreateSiteRequest,
+  SiteResponse,
+  UpdateSiteRequest,
   // Releases
   AddReleaseActionRequest,
   CreateReleaseRequest,
@@ -65,29 +56,6 @@ export type {
   ReleaseStatus,
   ScheduleReleaseRequest,
   UpdateReleaseRequest,
-  // SEO admin
-  OgCardPreviewResponse,
-  SeoAuditIssueResponse,
-  SeoAuditIssueType,
-  SeoHreflangRequest,
-  SeoMetadataRequest,
-  SeoMetadataResponse,
-  SeoRobotsRequest,
-  SerpPreviewResponse,
-  SiteSeoDefaultsRequest,
-  SiteSeoDefaultsResponse,
-  // SEO-AI
-  ApplySeoAiRequest,
-  RejectSeoAiRequest,
-  SeoAiSuggestOutcome,
-  SeoAiSuggestRequest,
-  SeoAiSuggestResponse,
-  SeoAiSuggestionResponse,
-  SeoAiSuggestionStatus,
-  // Redirects admin
-  CreateRedirectRequest,
-  RedirectResponse,
-  UpdateRedirectRequest,
 } from './types/index.js';
 
 // ─── API — Public renderer ────────────────────────────────────────────────────
@@ -100,12 +68,6 @@ export { getBlockCatalog, resolveBlockData } from './api/blocks.js';
 
 // Menus
 export { resolveMenu } from './api/menus.js';
-
-// Redirects
-export { resolveRedirect } from './api/redirects.js';
-
-// SEO
-export { getEffectiveSeo } from './api/seo.js';
 
 // Document Resolution
 export { batchResolveDocuments } from './api/documents.js';
@@ -159,37 +121,3 @@ export {
 } from './api/releases.js';
 export type { ListReleasesParams } from './api/releases.js';
 
-// SEO admin
-export {
-  deleteSeoMetadata,
-  getSeoDefaults,
-  getSeoMetadata,
-  getSerpPreview,
-  getJsonLdPreview,
-  getOgCardPreview,
-  invalidateSitemap,
-  listSeoAuditIssues,
-  updateSeoDefaults,
-  upsertSeoMetadata,
-} from './api/seo-admin.js';
-export type { ListSeoMetadataParams } from './api/seo-admin.js';
-
-// SEO-AI
-export {
-  applySeoSuggestion,
-  getSeoSuggestionDiff,
-  listSeoSuggestions,
-  rejectSeoSuggestion,
-  suggestSeo,
-  triggerBulkSeoAudit,
-} from './api/seo-ai.js';
-export type { ListSeoSuggestionsParams } from './api/seo-ai.js';
-
-// Redirects admin
-export {
-  createRedirect,
-  deleteRedirect,
-  listRedirects,
-  updateRedirect,
-} from './api/redirects-admin.js';
-export type { ListRedirectsParams } from './api/redirects-admin.js';
