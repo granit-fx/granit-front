@@ -1013,6 +1013,78 @@
           "name": "batchResolveDocuments",
           "kind": "function",
           "signature": "async function batchResolveDocuments( client: AxiosInstance, basePath: string, request: BatchResolveDocumentsRequest ): Promise<readonly (ResolvedDocumentResponse | null)[]>"
+        },
+        {
+          "name": "createSite",
+          "kind": "function",
+          "signature": "async function createSite( client: AxiosInstance, basePath: string, request: CreateSiteRequest ): Promise<SiteResponse>"
+        },
+        {
+          "name": "deleteSite",
+          "kind": "function",
+          "signature": "async function deleteSite( client: AxiosInstance, basePath: string, id: string ): Promise<void>"
+        },
+        {
+          "name": "getSite",
+          "kind": "function",
+          "signature": "async function getSite( client: AxiosInstance, basePath: string, id: string ): Promise<SiteResponse>"
+        },
+        {
+          "name": "listSites",
+          "kind": "function",
+          "signature": "async function listSites( client: AxiosInstance, basePath: string, params?: ListSitesParams ): Promise<PagedResponse<SiteResponse>>"
+        },
+        {
+          "name": "updateSite",
+          "kind": "function",
+          "signature": "async function updateSite( client: AxiosInstance, basePath: string, id: string, request: UpdateSiteRequest ): Promise<SiteResponse>"
+        },
+        {
+          "name": "ListSitesParams",
+          "kind": "interface",
+          "signature": "interface ListSitesParams",
+          "members": []
+        },
+        {
+          "name": "ListPagesParams",
+          "kind": "interface",
+          "signature": "interface ListPagesParams",
+          "members": []
+        },
+        {
+          "name": "SaveDraftResult",
+          "kind": "type",
+          "signature": "type SaveDraftResult ="
+        },
+        {
+          "name": "ListMenusParams",
+          "kind": "interface",
+          "signature": "interface ListMenusParams",
+          "members": []
+        },
+        {
+          "name": "ListReleasesParams",
+          "kind": "interface",
+          "signature": "interface ListReleasesParams",
+          "members": []
+        },
+        {
+          "name": "ListSeoMetadataParams",
+          "kind": "interface",
+          "signature": "interface ListSeoMetadataParams",
+          "members": []
+        },
+        {
+          "name": "ListSeoSuggestionsParams",
+          "kind": "interface",
+          "signature": "interface ListSeoSuggestionsParams",
+          "members": []
+        },
+        {
+          "name": "ListRedirectsParams",
+          "kind": "interface",
+          "signature": "interface ListRedirectsParams",
+          "members": []
         }
       ]
     },
