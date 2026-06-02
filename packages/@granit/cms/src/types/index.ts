@@ -399,6 +399,414 @@ export interface ScheduleReleaseRequest {
   readonly timeZoneId: string;
 }
 
+// ─── Shared ──────────────────────────────────────────────────────────────────
+
+/** Generic paged list returned by admin list endpoints. */
+export interface PagedResponse<T> {
+  readonly items: readonly T[];
+  readonly totalCount: number;
+  readonly page: number;
+  readonly pageSize: number;
+}
+
+// ─── Sites admin (§10) ───────────────────────────────────────────────────────
+
+/** One CMS site. Returned by `GET /api/cms/sites` and `GET /api/cms/sites/{id}`. */
+export interface SiteResponse {
+  readonly id: string;
+  readonly slug: string;
+  readonly defaultCulture: string;
+  readonly allowedCultures: readonly string[];
+  /** Legacy field — manage custom domains via Hostnames. */
+  readonly domains: readonly string[];
+  readonly defaultTheme: string;
+  readonly activated: boolean;
+  readonly tenantId: string | null;
+  readonly displayNames: Readonly<Record<string, string>>;
+}
+
+/** Request body for `POST /api/cms/sites`. */
+export interface CreateSiteRequest {
+  readonly slug: string;
+  readonly defaultCulture: string;
+  readonly allowedCultures: readonly string[];
+  readonly domains?: readonly string[];
+  readonly defaultTheme?: string;
+}
+
+/** Request body for `PUT /api/cms/sites/{id}`. */
+export interface UpdateSiteRequest {
+  readonly defaultCulture: string;
+  readonly allowedCultures: readonly string[];
+  readonly domains: readonly string[];
+  readonly defaultTheme: string;
+  readonly activated: boolean;
+}
+
+// ─── Pages admin (§11) ───────────────────────────────────────────────────────
+
+/** One node in the page tree. Returned by `GET /api/cms/pages/tree`. */
+export interface PageTreeNodeResponse {
+  readonly id: string;
+  readonly parentId: string | null;
+  readonly slugSegment: string;
+  readonly structurePath: string;
+  readonly depth: number;
+  readonly isSiteRoot: boolean;
+}
+
+/** Per-culture translation of a page. */
+export interface PageTranslation {
+  readonly culture: string;
+  readonly urlSlug: string;
+  readonly title: string;
+  readonly path: string;
+}
+
+/** Full page record. Returned by `GET /api/cms/pages/{id}`. */
+export interface PageResponse {
+  readonly id: string;
+  readonly siteId: string;
+  readonly parentId: string | null;
+  readonly slugSegment: string;
+  readonly structurePath: string;
+  readonly depth: number;
+  readonly kind: string;
+  readonly isSiteRoot: boolean;
+  readonly layoutKey: string | null;
+  readonly translations: readonly PageTranslation[];
+}
+
+/** Summary of one page version. Returned by `GET /api/cms/pages/{id}/versions`. */
+export interface PageVersionSummaryResponse {
+  readonly versionId: string;
+  readonly version: number;
+  readonly lifecycleStatus: string;
+  readonly isPublished: boolean;
+  readonly publishedAt: string | null;
+}
+
+/** Request body for `POST /api/cms/pages`. */
+export interface CreatePageRequest {
+  readonly siteId: string;
+  readonly parentId?: string | null;
+  readonly slugSegment: string;
+  readonly layoutKey?: string | null;
+}
+
+/** Request body for `PUT /api/cms/pages/{id}`. */
+export interface UpdatePageRequest {
+  readonly slugSegment: string;
+}
+
+/** Request body for `PUT /api/cms/pages/{id}/translations/{culture}`. */
+export interface UpdatePageTranslationRequest {
+  readonly urlSlug: string;
+  readonly title: string;
+}
+
+/** Request body for `POST /api/cms/pages/{id}/move`. */
+export interface MovePageRequest {
+  readonly parentId: string | null;
+  readonly targetIndex?: number;
+}
+
+/** Request body for `PUT /api/cms/pages/{id}/draft/{culture}`. */
+export interface SaveDraftRequest {
+  readonly contentJson: string;
+  readonly title?: string | null;
+}
+
+/** Problem detail returned in a 409 on concurrent draft edit. */
+export interface PageDraftConflictResponse {
+  readonly pageId: string;
+  readonly culture: string;
+}
+
+// ─── Menus admin (§13) ───────────────────────────────────────────────────────
+
+/** Editable menu item returned by `GET /api/cms/menus/{id}`. */
+export interface MenuItemResponse {
+  readonly id: string;
+  readonly label: string;
+  readonly kind: MenuTargetKind;
+  readonly pageId?: string | null;
+  readonly url?: string | null;
+  readonly anchor?: string | null;
+  readonly isVisible: boolean;
+  readonly icon?: string | null;
+  readonly cssClass?: string | null;
+  readonly children: readonly MenuItemResponse[];
+}
+
+/** Full admin menu. Returned by `GET /api/cms/menus/{id}`. */
+export interface MenuResponse {
+  readonly id: string;
+  readonly siteId: string;
+  readonly key: string;
+  readonly title: string;
+  readonly items: readonly MenuItemResponse[];
+}
+
+/** Writable menu item for create / update requests. */
+export interface MenuItemRequest {
+  readonly label: string;
+  readonly kind: MenuTargetKind;
+  readonly pageId?: string | null;
+  readonly url?: string | null;
+  readonly anchor?: string | null;
+  readonly isVisible?: boolean;
+  readonly icon?: string | null;
+  readonly cssClass?: string | null;
+  readonly children?: readonly MenuItemRequest[];
+}
+
+/** Request body for `POST /api/cms/menus`. */
+export interface CreateMenuRequest {
+  readonly siteId: string;
+  readonly key: string;
+  readonly title: string;
+  readonly items?: readonly MenuItemRequest[];
+}
+
+/** Request body for `PUT /api/cms/menus/{id}`. */
+export interface UpdateMenuRequest {
+  readonly title: string;
+  readonly items: readonly MenuItemRequest[];
+}
+
+// ─── Releases (§14) ──────────────────────────────────────────────────────────
+
+/** Lifecycle state of a release. Maps `Granit.Cms.Releases.Domain.ReleaseStatus`. */
+export type ReleaseStatus = 'Draft' | 'Ready' | 'Executed';
+
+/** Type of a release action. Maps `Granit.Cms.Releases.Domain.ReleaseActionType`. */
+export type ReleaseActionType = 'Publish' | 'Unpublish';
+
+/** Execution status of a release action. Maps `Granit.Cms.Releases.Domain.ReleaseActionStatus`. */
+export type ReleaseActionStatus = 'Pending' | 'Succeeded' | 'Failed';
+
+/** Schedule specification for a release. */
+export interface ReleaseSchedule {
+  readonly localDateTime: string;
+  readonly timeZoneId: string;
+  readonly scheduledAtUtc: string;
+}
+
+/** One content action inside a release. */
+export interface ReleaseActionResponse {
+  readonly id: string;
+  readonly contentType: string;
+  readonly contentId: string;
+  readonly culture: string | null;
+  readonly type: ReleaseActionType;
+  readonly status: ReleaseActionStatus;
+  readonly error: string | null;
+}
+
+/** Full release record. Returned by `GET /api/cms/releases/{id}`. */
+export interface ReleaseResponse {
+  readonly id: string;
+  readonly siteId: string;
+  readonly name: string;
+  readonly status: ReleaseStatus;
+  readonly schedule: ReleaseSchedule | null;
+  readonly tenantId: string | null;
+  readonly actions: readonly ReleaseActionResponse[];
+  readonly concurrencyStamp: string;
+}
+
+/** Request body for `POST /api/cms/releases`. */
+export interface CreateReleaseRequest {
+  readonly siteId: string;
+  readonly name: string;
+}
+
+/** Request body for `PUT /api/cms/releases/{id}`. */
+export interface UpdateReleaseRequest {
+  readonly name: string;
+}
+
+/** Request body for `DELETE /api/cms/releases/{id}/actions/{actionId}` (add action). */
+export interface AddReleaseActionRequest {
+  readonly contentType: string;
+  readonly contentId: string;
+  readonly culture: string | null;
+  readonly type: ReleaseActionType;
+}
+
+/** Request body for `POST /api/cms/releases/{id}/schedule`. */
+export interface ScheduleReleaseRequest {
+  readonly localDateTime: string;
+  /** IANA time-zone identifier (e.g. `"Europe/Brussels"`). */
+  readonly timeZoneId: string;
+}
+
+// ─── SEO admin (§15) ─────────────────────────────────────────────────────────
+
+/** Writable robots directive for a metadata upsert. */
+export interface SeoRobotsRequest {
+  readonly index: boolean;
+  readonly follow: boolean;
+  readonly noArchive?: boolean;
+  readonly noSnippet?: boolean;
+  readonly maxSnippet?: number;
+  readonly maxImagePreview?: 'none' | 'standard' | 'large';
+}
+
+/** One `hreflang` alternate in a metadata upsert request. */
+export interface SeoHreflangRequest {
+  readonly culture: string;
+  readonly href: string;
+}
+
+/**
+ * Raw (per-level) SEO metadata request body for
+ * `PUT /api/cms/seo/sites/{siteId}/metadata/{contentType}/{contentId}/{culture}`.
+ * All fields are optional — omit a field to leave it unchanged.
+ */
+export interface SeoMetadataRequest {
+  readonly title?: string | null;
+  readonly titleTemplate?: string | null;
+  readonly description?: string | null;
+  readonly keywords?: readonly string[];
+  readonly canonicalUrl?: string | null;
+  readonly robots?: SeoRobotsRequest;
+  readonly openGraph?: Readonly<Record<string, unknown>>;
+  readonly twitterCard?: Readonly<Record<string, unknown>>;
+  readonly hreflang?: readonly SeoHreflangRequest[];
+  readonly structuredData?: string | null;
+}
+
+/** Raw (per-level) SEO metadata returned by `GET .../metadata/{contentType}/{contentId}/{culture}`. */
+export type SeoMetadataResponse = SeoMetadataRequest & {
+  readonly contentType: string;
+  readonly contentId: string;
+  readonly culture: string;
+};
+
+/** Site-level SEO defaults for `GET/PUT /api/cms/seo/sites/{siteId}/defaults`. */
+export interface SiteSeoDefaultsRequest {
+  readonly titleTemplate?: string | null;
+  readonly siteName?: string | null;
+  readonly robots?: SeoRobotsRequest;
+  readonly canonicalHost?: string | null;
+  readonly enableAutomaticSeoGeneration?: boolean;
+  readonly sitemapMaxItems?: number;
+  readonly robotsTxtRules?: string | null;
+}
+
+/** Site SEO defaults with siteId context. */
+export type SiteSeoDefaultsResponse = SiteSeoDefaultsRequest & {
+  readonly siteId: string;
+};
+
+/** Quick-filter type for the SEO audit grid. */
+export type SeoAuditIssueType =
+  | 'MissingDescription'
+  | 'NoCanonical'
+  | 'TitleTooLong'
+  | 'MissingOgImage';
+
+/** One SEO audit issue. Returned by `GET /api/cms/seo/metadata` (paged). */
+export interface SeoAuditIssueResponse {
+  readonly contentType: string;
+  readonly contentId: string;
+  readonly culture: string;
+  readonly issueType: SeoAuditIssueType;
+  readonly detail?: string | null;
+}
+
+/** SERP preview. Returned by `GET .../metadata/{...}/preview/serp`. */
+export interface SerpPreviewResponse {
+  readonly title: string;
+  readonly url: string;
+  readonly description: string;
+}
+
+/** OG-card preview. Returned by `GET .../metadata/{...}/preview/og`. */
+export interface OgCardPreviewResponse {
+  readonly title: string;
+  readonly description: string;
+  readonly image?: string | null;
+  readonly siteName: string;
+}
+
+// ─── SEO-AI inbox (§16) ──────────────────────────────────────────────────────
+
+/** Lifecycle status of a SEO-AI suggestion. */
+export type SeoAiSuggestionStatus = 'Pending' | 'Ready' | 'Applied' | 'Rejected';
+
+/** Outcome of a `POST /api/cms/seo/ai/suggest` call. */
+export type SeoAiSuggestOutcome = 'Success' | 'Reused' | 'Failed';
+
+/** One AI-generated SEO suggestion. */
+export interface SeoAiSuggestionResponse {
+  readonly id: string;
+  readonly contentType: string;
+  readonly contentId: string;
+  readonly culture: string;
+  readonly status: SeoAiSuggestionStatus;
+  readonly suggestion?: SeoMetadataRequest | null;
+  readonly diff?: Readonly<Record<string, { readonly current: unknown; readonly proposed: unknown }>> | null;
+}
+
+/** Response from `POST /api/cms/seo/ai/suggest`. */
+export interface SeoAiSuggestResponse {
+  readonly outcome: SeoAiSuggestOutcome;
+  readonly suggestion?: SeoAiSuggestionResponse | null;
+}
+
+/** Request body for `POST /api/cms/seo/ai/suggest`. */
+export interface SeoAiSuggestRequest {
+  readonly contentType: string;
+  readonly contentId: string;
+  readonly culture: string;
+  readonly contentTitle: string;
+  readonly contentDescription?: string | null;
+}
+
+/** Request body for `POST /api/cms/seo/ai/suggestions/{id}/apply`. */
+export interface ApplySeoAiRequest {
+  readonly fields: readonly string[];
+}
+
+/** Request body for `POST /api/cms/seo/ai/suggestions/{id}/reject`. */
+export interface RejectSeoAiRequest {
+  readonly reason?: string | null;
+}
+
+// ─── Redirects admin ─────────────────────────────────────────────────────────
+
+/** One CMS redirect rule. Returned by `GET /api/cms/redirects`. */
+export interface RedirectResponse {
+  readonly id: string;
+  readonly siteId: string;
+  readonly fromPath: string;
+  readonly toPath: string;
+  readonly culture: string | null;
+  readonly statusCode: number;
+  readonly isEnabled: boolean;
+}
+
+/** Request body for `POST /api/cms/redirects`. */
+export interface CreateRedirectRequest {
+  readonly siteId: string;
+  readonly fromPath: string;
+  readonly toPath: string;
+  readonly culture?: string | null;
+  readonly statusCode?: number;
+}
+
+/** Request body for `PUT /api/cms/redirects/{id}`. */
+export interface UpdateRedirectRequest {
+  readonly fromPath: string;
+  readonly toPath: string;
+  readonly culture?: string | null;
+  readonly statusCode?: number;
+  readonly isEnabled?: boolean;
+}
+
 // ─── Document Resolution ─────────────────────────────────────────────────────
 
 /** Single item in a {@link BatchResolveDocumentsRequest}. */
