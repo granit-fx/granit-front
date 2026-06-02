@@ -1,11 +1,10 @@
-import type { AxiosInstance } from 'axios';
-
 import type {
   CreateRedirectRequest,
   PagedResponse,
   RedirectResponse,
   UpdateRedirectRequest,
-} from '../types/index';
+} from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 
 export interface ListRedirectsParams {
   readonly siteId?: string;
@@ -20,10 +19,9 @@ export async function listRedirects(
   basePath: string,
   params?: ListRedirectsParams
 ): Promise<PagedResponse<RedirectResponse>> {
-  const res = await client.get<PagedResponse<RedirectResponse>>(
-    `${basePath}/api/cms/redirects`,
-    { params }
-  );
+  const res = await client.get<PagedResponse<RedirectResponse>>(`${basePath}/api/cms/redirects`, {
+    params,
+  });
   return res.data;
 }
 
