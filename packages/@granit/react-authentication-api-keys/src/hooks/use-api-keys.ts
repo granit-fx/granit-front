@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
+export { apiKeyKeys, buildApiKeyQueryKey } from './query-keys';
 import { buildApiKeyQueryKey } from './query-keys';
 
 import type { AxiosInstance } from '@granit/api-client';
