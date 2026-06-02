@@ -1,11 +1,10 @@
-import type { AxiosInstance } from 'axios';
-
 import type {
   CreateMenuRequest,
   MenuResponse,
   PagedResponse,
   UpdateMenuRequest,
-} from '../types/index';
+} from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 
 export interface ListMenusParams {
   readonly siteId?: string;

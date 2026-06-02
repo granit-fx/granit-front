@@ -1,5 +1,3 @@
-import type { AxiosInstance } from 'axios';
-
 import type {
   AddReleaseActionRequest,
   CreateReleaseRequest,
@@ -7,7 +5,8 @@ import type {
   ReleaseResponse,
   ScheduleReleaseRequest,
   UpdateReleaseRequest,
-} from '../types/index';
+} from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 
 export interface ListReleasesParams {
   readonly siteId?: string;

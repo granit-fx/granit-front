@@ -1,5 +1,3 @@
-import type { AxiosInstance } from 'axios';
-
 import type {
   ApplySeoAiRequest,
   PagedResponse,
@@ -8,7 +6,8 @@ import type {
   SeoAiSuggestResponse,
   SeoAiSuggestionResponse,
   SeoAiSuggestionStatus,
-} from '../types/index';
+} from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 
 export interface ListSeoSuggestionsParams {
   readonly siteId?: string;
@@ -100,9 +99,7 @@ export async function triggerBulkSeoAudit(
   basePath: string,
   siteId: string
 ): Promise<void> {
-  await client.post(
-    `${basePath}/api/cms/seo/ai/sites/${encodeURIComponent(siteId)}/audit`,
-    null,
-    { validateStatus: (s) => s === 202 }
-  );
+  await client.post(`${basePath}/api/cms/seo/ai/sites/${encodeURIComponent(siteId)}/audit`, null, {
+    validateStatus: (s) => s === 202,
+  });
 }

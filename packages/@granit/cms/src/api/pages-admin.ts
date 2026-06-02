@@ -1,5 +1,3 @@
-import type { AxiosInstance } from 'axios';
-
 import type {
   CreatePageRequest,
   MovePageRequest,
@@ -11,7 +9,8 @@ import type {
   SaveDraftRequest,
   UpdatePageRequest,
   UpdatePageTranslationRequest,
-} from '../types/index';
+} from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 
 export interface ListPagesParams {
   readonly siteId?: string;

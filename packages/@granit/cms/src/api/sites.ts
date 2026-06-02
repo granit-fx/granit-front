@@ -1,11 +1,10 @@
-import type { AxiosInstance } from 'axios';
-
 import type {
   CreateSiteRequest,
   PagedResponse,
   SiteResponse,
   UpdateSiteRequest,
-} from '../types/index';
+} from '../types/index.js';
+import type { AxiosInstance } from '@granit/api-client';
 
 export interface ListSitesParams {
   readonly page?: number;
