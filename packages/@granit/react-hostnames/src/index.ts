@@ -1,8 +1,5 @@
 // Provider
-export {
-  HostnamesProvider,
-  useHostnamesConfig,
-} from './providers/hostnames-provider';
+export { HostnamesProvider, useHostnamesConfig } from './providers/hostnames-provider';
 export type {
   HostnamesConfig,
   HostnamesProviderProps,
@@ -15,9 +12,11 @@ export { useCheckAvailability, useHostname } from './hooks/use-hostname';
 
 // Hooks — mutations
 export {
+  useClearPrimary,
   useCreateHostname,
   useDeleteHostname,
-  useUpdateHostname,
+  useReportCertificateStatus,
+  useSetPrimary,
   useVerifyNow,
 } from './hooks/use-hostname-mutations';
 

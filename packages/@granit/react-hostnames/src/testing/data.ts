@@ -24,7 +24,9 @@ export const mockHostnames: ManagedHostnameResponse[] = [
     certificateStatus: C.Secured,
     certExpiresAt: '2027-06-01T08:00:00Z',
     createdAt: '2026-01-01T00:00:00Z',
-    updatedAt: '2026-06-01T08:00:00Z',
+    createdBy: 'admin@acme.com',
+    modifiedAt: '2026-06-01T08:00:00Z',
+    modifiedBy: 'admin@acme.com',
     concurrencyStamp: 'stamp-0001',
   },
   {
@@ -44,7 +46,9 @@ export const mockHostnames: ManagedHostnameResponse[] = [
     certificateStatus: C.Secured,
     certExpiresAt: '2027-06-01T08:00:00Z',
     createdAt: '2026-01-05T00:00:00Z',
-    updatedAt: '2026-06-01T08:05:00Z',
+    createdBy: 'admin@acme.com',
+    modifiedAt: '2026-06-01T08:05:00Z',
+    modifiedBy: 'admin@acme.com',
     concurrencyStamp: 'stamp-0002',
   },
   {
@@ -58,11 +62,11 @@ export const mockHostnames: ManagedHostnameResponse[] = [
     verificationToken: 'mock-verify-pending-001',
     expectedDnsRecords: [
       {
-        type: 'Txt',
+        recordType: 'Txt',
         name: '_granit-verify.pending.beta.com',
         value: 'granit-verify=mock-verify-pending-001',
       },
-      { type: 'Cname', name: 'pending.beta.com', value: 'proxy.granit.io' },
+      { recordType: 'Cname', name: 'pending.beta.com', value: 'proxy.granit.io' },
     ],
     lastCheckedAt: null,
     conflicts: [],
@@ -71,7 +75,9 @@ export const mockHostnames: ManagedHostnameResponse[] = [
     certificateStatus: C.Unprovisioned,
     certExpiresAt: null,
     createdAt: '2026-06-01T12:00:00Z',
-    updatedAt: '2026-06-01T12:00:00Z',
+    createdBy: 'admin@beta.com',
+    modifiedAt: null,
+    modifiedBy: null,
     concurrencyStamp: 'stamp-0003',
   },
   {
@@ -85,19 +91,23 @@ export const mockHostnames: ManagedHostnameResponse[] = [
     verificationToken: 'mock-verify-error-002',
     expectedDnsRecords: [
       {
-        type: 'Txt',
+        recordType: 'Txt',
         name: '_granit-verify.error.example.org',
         value: 'granit-verify=mock-verify-error-002',
       },
     ],
     lastCheckedAt: '2026-06-01T06:00:00Z',
-    conflicts: [{ type: 'DnsNotPropagated', details: 'TXT record not found after 3 checks' }],
+    conflicts: [
+      { conflictType: 'DnsNotPropagated', details: 'TXT record not found after 3 checks' },
+    ],
     failedCheckCount: 5,
     nextCheckAt: '2026-06-03T06:00:00Z',
     certificateStatus: C.Error,
     certExpiresAt: null,
     createdAt: '2026-05-01T00:00:00Z',
-    updatedAt: '2026-06-01T06:00:00Z',
+    createdBy: 'admin@example.org',
+    modifiedAt: '2026-06-01T06:00:00Z',
+    modifiedBy: 'system',
     concurrencyStamp: 'stamp-0004',
   },
 ];

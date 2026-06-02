@@ -39,7 +39,7 @@ export type DnsRecordType = 'Cname' | 'Txt' | 'A';
 
 /** A DNS record that must be present for the hostname to pass verification. */
 export interface ExpectedDnsRecord {
-  readonly type: DnsRecordType;
+  readonly recordType: DnsRecordType;
   readonly name: string;
   readonly value: string;
 }
@@ -48,23 +48,8 @@ export interface ExpectedDnsRecord {
 
 /** A conflict preventing a hostname from becoming active. */
 export interface HostnameConflict {
-  readonly type: string;
+  readonly conflictType: string;
   readonly details: string;
-}
-
-// ── Paginated list ───────────────────────────────────────────────────────────
-
-/**
- * Generic pagination envelope used by the hostnames list endpoint.
- * Mirrors the Granit framework's standard `PagedResponse<T>`.
- *
- * `page` is **0-based**, matching the backend convention.
- */
-export interface PagedResponse<T> {
-  readonly items: readonly T[];
-  readonly totalCount: number;
-  readonly page: number;
-  readonly pageSize: number;
 }
 
 // ── Main DTO ─────────────────────────────────────────────────────────────────
@@ -87,46 +72,42 @@ export interface ManagedHostnameResponse {
   readonly certificateStatus: CertificateStatus;
   readonly certExpiresAt: string | null;
   readonly createdAt: string;
-  readonly updatedAt: string;
+  readonly createdBy: string;
+  readonly modifiedAt: string | null;
+  readonly modifiedBy: string | null;
   readonly concurrencyStamp: string;
 }
 
 // ── Requests ─────────────────────────────────────────────────────────────────
 
-/** Request body for `POST /`. */
+/** Request body for `POST /`. Mirrors `CreateManagedHostnameRequest` (.NET). */
 export interface CreateManagedHostnameRequest {
   readonly host: string;
   readonly ownerType: string;
   readonly ownerId: string;
+  readonly tenantId?: string | null;
   readonly isPrimary?: boolean;
 }
 
-/** Request body for `PATCH /{id}`. */
-export interface UpdateManagedHostnameRequest {
-  readonly isPrimary: boolean;
-}
-
-/** Query params for `GET /`. */
+/** Query params for `GET /`. `ownerType` and `ownerId` are required by the backend. */
 export interface ListHostnamesParams {
-  readonly page?: number;
-  readonly pageSize?: number;
-  readonly ownerType?: string;
-  readonly ownerId?: string;
-  readonly status?: ManagedHostnameStatus;
+  readonly ownerType: string;
+  readonly ownerId: string;
+  readonly maxResults?: number;
 }
 
 // ── Availability ─────────────────────────────────────────────────────────────
 
-/** Response from `GET /check-availability?host=`. */
+/** Response from `GET /availability?host=`. Mirrors `HostnameAvailabilityResponse` (.NET). */
 export interface CheckAvailabilityResponse {
+  readonly host: string;
   readonly isAvailable: boolean;
 }
 
 // ── Certificate status webhook ────────────────────────────────────────────────
 
-/** Request body for `POST /{id}/certificate-status` (host-level webhook from certificate provider). */
+/** Request body for `POST /{id}/certificate-status`. Mirrors `ReportCertificateStatusRequest` (.NET). */
 export interface CertificateStatusReportRequest {
   readonly status: CertificateStatus;
-  readonly certExpiresAt?: string | null;
-  readonly errorDetails?: string | null;
+  readonly expiresAt?: string | null;
 }

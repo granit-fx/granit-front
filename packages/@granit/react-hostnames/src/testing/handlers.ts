@@ -1,4 +1,3 @@
-import { paginate } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -17,24 +16,23 @@ export function createHostnamesHandlers(baseUrl = DEFAULT_BASE_PATH) {
   const store: ManagedHostnameResponse[] = [...mockHostnames];
 
   return [
-    http.get(`${baseUrl}/check-availability`, ({ request }) => {
+    http.get(`${baseUrl}/availability`, ({ request }) => {
       const host = new URL(request.url).searchParams.get('host') ?? '';
-      const isAvailable = !store.some((h) => h.host === host);
-      return HttpResponse.json({ isAvailable });
+      const existing = store.find((h) => h.host === host);
+      return HttpResponse.json({ host, isAvailable: existing === undefined });
     }),
 
     http.get(`${baseUrl}`, ({ request }) => {
       const url = new URL(request.url);
       const ownerType = url.searchParams.get('ownerType');
       const ownerId = url.searchParams.get('ownerId');
-      const status = url.searchParams.get('status');
+      const maxResults = Number(url.searchParams.get('maxResults') ?? 100);
 
       let filtered = [...store];
       if (ownerType) filtered = filtered.filter((h) => h.ownerType === ownerType);
       if (ownerId) filtered = filtered.filter((h) => h.ownerId === ownerId);
-      if (status) filtered = filtered.filter((h) => h.status === status);
 
-      return HttpResponse.json(paginate(filtered, url));
+      return HttpResponse.json(filtered.slice(0, maxResults));
     }),
 
     http.post<never, CreateManagedHostnameRequest>(`${baseUrl}`, async ({ request }) => {
@@ -45,13 +43,13 @@ export function createHostnamesHandlers(baseUrl = DEFAULT_BASE_PATH) {
         host: body.host,
         ownerType: body.ownerType,
         ownerId: body.ownerId,
-        tenantId: null,
+        tenantId: body.tenantId ?? null,
         isPrimary: body.isPrimary ?? false,
         status: 'Pending',
         verificationToken: `tok_${randomId().slice(0, 12)}`,
         expectedDnsRecords: [
           {
-            type: 'Txt',
+            recordType: 'Txt',
             name: `_granit-verify.${body.host}`,
             value: `granit-verify=tok_${randomId().slice(0, 12)}`,
           },
@@ -63,7 +61,9 @@ export function createHostnamesHandlers(baseUrl = DEFAULT_BASE_PATH) {
         certificateStatus: 'Unprovisioned',
         certExpiresAt: null,
         createdAt: now,
-        updatedAt: now,
+        createdBy: 'mock-user',
+        modifiedAt: null,
+        modifiedBy: null,
         concurrencyStamp: randomId(),
       };
       store.push(created);
@@ -76,17 +76,18 @@ export function createHostnamesHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return HttpResponse.json(hostname);
     }),
 
-    http.patch<{ id: string }>(`${baseUrl}/:id`, async ({ params, request }) => {
+    http.post(`${baseUrl}/:id/primary`, ({ params }) => {
       const idx = store.findIndex((h) => h.id === params.id);
       if (idx === -1) return new HttpResponse(null, { status: 404 });
-      const body = (await request.json()) as { isPrimary: boolean };
-      const updated: ManagedHostnameResponse = {
-        ...store[idx]!,
-        isPrimary: body.isPrimary,
-        updatedAt: new Date().toISOString(),
-      };
-      store[idx] = updated;
-      return HttpResponse.json(updated);
+      store[idx] = { ...store[idx]!, isPrimary: true, modifiedAt: new Date().toISOString() };
+      return new HttpResponse(null, { status: 204 });
+    }),
+
+    http.delete(`${baseUrl}/:id/primary`, ({ params }) => {
+      const idx = store.findIndex((h) => h.id === params.id);
+      if (idx === -1) return new HttpResponse(null, { status: 404 });
+      store[idx] = { ...store[idx]!, isPrimary: false, modifiedAt: new Date().toISOString() };
+      return new HttpResponse(null, { status: 204 });
     }),
 
     http.delete(`${baseUrl}/:id`, ({ params }) => {
@@ -99,7 +100,12 @@ export function createHostnamesHandlers(baseUrl = DEFAULT_BASE_PATH) {
     http.post(`${baseUrl}/:id/verify-now`, ({ params }) => {
       const hostname = store.find((h) => h.id === params.id);
       if (!hostname) return new HttpResponse(null, { status: 404 });
-      return new HttpResponse(null, { status: 204 });
+      const updated: ManagedHostnameResponse = {
+        ...hostname,
+        status: 'Verifying',
+        modifiedAt: new Date().toISOString(),
+      };
+      return HttpResponse.json(updated, { status: 202 });
     }),
 
     http.post(`${baseUrl}/:id/certificate-status`, () => {

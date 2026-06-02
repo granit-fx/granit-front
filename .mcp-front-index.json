@@ -1326,6 +1326,16 @@
       "description": "Managed hostname types and API functions — mirrors Granit.Hostnames .NET contract",
       "exports": [
         {
+          "name": "CertificateStatus",
+          "kind": "type",
+          "signature": "type CertificateStatus = 'Unprovisioned' | 'Provisioning' | 'Secured' | 'Error'"
+        },
+        {
+          "name": "ManagedHostnameStatus",
+          "kind": "type",
+          "signature": "type ManagedHostnameStatus = 'Pending' | 'Verifying' | 'Active' | 'Error'"
+        },
+        {
           "name": "HostnamesPermissions",
           "kind": "const",
           "signature": "const HostnamesPermissions"
@@ -4523,9 +4533,19 @@
       "description": "React hooks for managed hostname management — useHostnames, useHostname, useCreateHostname, useUpdateHostname, useDeleteHostname, useVerifyNow, useCheckAvailability",
       "exports": [
         {
+          "name": "HostnamesProvider",
+          "kind": "function",
+          "signature": "function HostnamesProvider("
+        },
+        {
+          "name": "useHostnamesConfig",
+          "kind": "function",
+          "signature": "function useHostnamesConfig(): ResolvedHostnamesConfig"
+        },
+        {
           "name": "useHostnames",
           "kind": "function",
-          "signature": "function useHostnames( params?: ListHostnamesParams ): UseQueryResult<PagedResponse<ManagedHostnameResponse>>"
+          "signature": "function useHostnames( params: ListHostnamesParams ): UseQueryResult<readonly ManagedHostnameResponse[]>"
         },
         {
           "name": "useCheckAvailability",

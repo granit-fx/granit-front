@@ -4,22 +4,22 @@ import type {
   CreateManagedHostnameRequest,
   ListHostnamesParams,
   ManagedHostnameResponse,
-  PagedResponse,
-  UpdateManagedHostnameRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**
- * List managed hostnames (paginated).
+ * List managed hostnames for an owner.
  *
- * `GET {basePath}`
+ * `GET {basePath}?ownerType=&ownerId=&maxResults=`
+ *
+ * Returns at most `maxResults` entries (default 100, capped at 500 server-side).
  */
 export async function listHostnames(
   client: AxiosInstance,
   basePath: string,
-  params?: ListHostnamesParams
-): Promise<PagedResponse<ManagedHostnameResponse>> {
-  const { data } = await client.get<PagedResponse<ManagedHostnameResponse>>(basePath, { params });
+  params: ListHostnamesParams
+): Promise<readonly ManagedHostnameResponse[]> {
+  const { data } = await client.get<readonly ManagedHostnameResponse[]>(basePath, { params });
   return data;
 }
 
@@ -54,21 +54,29 @@ export async function createHostname(
 }
 
 /**
- * Update a managed hostname (currently only `isPrimary` is patchable).
+ * Mark a hostname as the owner's canonical (primary) hostname.
  *
- * `PATCH {basePath}/{id}`
+ * `POST {basePath}/{id}/primary` — responds 204 No Content.
  */
-export async function updateHostname(
+export async function setPrimary(
   client: AxiosInstance,
   basePath: string,
-  id: string,
-  request: UpdateManagedHostnameRequest
-): Promise<ManagedHostnameResponse> {
-  const { data } = await client.patch<ManagedHostnameResponse>(
-    `${basePath}/${encodeURIComponent(id)}`,
-    request
-  );
-  return data;
+  id: string
+): Promise<void> {
+  await client.post(`${basePath}/${encodeURIComponent(id)}/primary`);
+}
+
+/**
+ * Clear the canonical (primary) flag from a hostname.
+ *
+ * `DELETE {basePath}/{id}/primary` — responds 204 No Content.
+ */
+export async function clearPrimary(
+  client: AxiosInstance,
+  basePath: string,
+  id: string
+): Promise<void> {
+  await client.delete(`${basePath}/${encodeURIComponent(id)}/primary`);
 }
 
 /**
@@ -87,31 +95,33 @@ export async function deleteHostname(
 /**
  * Check whether a hostname is available (not already claimed by another owner).
  *
- * `GET {basePath}/check-availability?host=`
+ * `GET {basePath}/availability?host=`
  */
 export async function checkAvailability(
   client: AxiosInstance,
   basePath: string,
   host: string
 ): Promise<CheckAvailabilityResponse> {
-  const { data } = await client.get<CheckAvailabilityResponse>(
-    `${basePath}/check-availability`,
-    { params: { host } }
-  );
+  const { data } = await client.get<CheckAvailabilityResponse>(`${basePath}/availability`, {
+    params: { host },
+  });
   return data;
 }
 
 /**
  * Trigger an immediate re-verification of the hostname's DNS records.
  *
- * `POST {basePath}/{id}/verify-now` — responds 204 No Content.
+ * `POST {basePath}/{id}/verify-now` — responds 202 Accepted with the updated hostname record.
  */
 export async function verifyNow(
   client: AxiosInstance,
   basePath: string,
   id: string
-): Promise<void> {
-  await client.post(`${basePath}/${encodeURIComponent(id)}/verify-now`);
+): Promise<ManagedHostnameResponse> {
+  const { data } = await client.post<ManagedHostnameResponse>(
+    `${basePath}/${encodeURIComponent(id)}/verify-now`
+  );
+  return data;
 }
 
 /**

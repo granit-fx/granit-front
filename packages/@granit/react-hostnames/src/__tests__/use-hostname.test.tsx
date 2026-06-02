@@ -39,7 +39,9 @@ const mockHostname: ManagedHostnameResponse = {
   certificateStatus: 'Secured',
   certExpiresAt: '2027-06-01T08:00:00Z',
   createdAt: '2026-01-01T00:00:00Z',
-  updatedAt: '2026-06-01T08:00:00Z',
+  createdBy: 'admin@acme.com',
+  modifiedAt: '2026-06-01T08:00:00Z',
+  modifiedBy: 'admin@acme.com',
   concurrencyStamp: 'stamp-0001',
 };
 
@@ -55,9 +57,7 @@ describe('useHostname', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith(
-      '/api/hostnames/11111111-0001-4000-a000-000000000001'
-    );
+    expect(client.get).toHaveBeenCalledWith('/api/hostnames/11111111-0001-4000-a000-000000000001');
     expect(result.current.data).toEqual(mockHostname);
   });
 
@@ -74,14 +74,16 @@ describe('useHostname', () => {
 describe('useCheckAvailability', () => {
   it('checks hostname availability', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValueOnce({ data: { isAvailable: true } });
+    vi.mocked(client.get).mockResolvedValueOnce({
+      data: { host: 'new.example.com', isAvailable: true },
+    });
 
     const { wrapper } = createWrapper(client);
     const { result } = renderHook(() => useCheckAvailability('new.example.com'), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/hostnames/check-availability', {
+    expect(client.get).toHaveBeenCalledWith('/api/hostnames/availability', {
       params: { host: 'new.example.com' },
     });
     expect(result.current.data?.isAvailable).toBe(true);
@@ -89,7 +91,9 @@ describe('useCheckAvailability', () => {
 
   it('returns false for taken hostnames', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValueOnce({ data: { isAvailable: false } });
+    vi.mocked(client.get).mockResolvedValueOnce({
+      data: { host: 'taken.example.com', isAvailable: false },
+    });
 
     const { wrapper } = createWrapper(client);
     const { result } = renderHook(() => useCheckAvailability('taken.example.com'), { wrapper });

@@ -5,24 +5,28 @@ import { useHostnamesConfig } from '../providers/hostnames-provider';
 
 import { hostnamesKeys } from './query-keys';
 
-import type { ListHostnamesParams, ManagedHostnameResponse, PagedResponse } from '@granit/hostnames';
+import type { ListHostnamesParams, ManagedHostnameResponse } from '@granit/hostnames';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /**
- * Query hook that fetches a paginated list of managed hostnames.
+ * Query hook that fetches the list of managed hostnames for an owner.
+ *
+ * `ownerType` and `ownerId` are required by the backend. The query is disabled
+ * when either is empty.
  *
  * @example
  * ```tsx
- * const { data } = useHostnames({ page: 0, pageSize: 20, ownerType: 'cms.site' });
+ * const { data: hostnames } = useHostnames({ ownerType: 'cms.site', ownerId: 'owner-id' });
  * ```
  */
 export function useHostnames(
-  params?: ListHostnamesParams
-): UseQueryResult<PagedResponse<ManagedHostnameResponse>> {
+  params: ListHostnamesParams
+): UseQueryResult<readonly ManagedHostnameResponse[]> {
   const { client, basePath } = useHostnamesConfig();
 
   return useQuery({
     queryKey: hostnamesKeys.list(params),
     queryFn: () => listHostnames(client, basePath, params),
+    enabled: params.ownerType.length > 0 && params.ownerId.length > 0,
   });
 }

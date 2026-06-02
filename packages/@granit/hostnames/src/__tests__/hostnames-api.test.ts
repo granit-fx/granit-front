@@ -3,21 +3,18 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   checkAvailability,
+  clearPrimary,
   createHostname,
   deleteHostname,
   getHostname,
   listHostnames,
   reportCertificateStatus,
-  updateHostname,
+  setPrimary,
   verifyNow,
 } from '../api/hostnames-api';
 import { CertificateStatus, ManagedHostnameStatus } from '../types/index';
 
-import type {
-  CheckAvailabilityResponse,
-  ManagedHostnameResponse,
-  PagedResponse,
-} from '../types/index';
+import type { CheckAvailabilityResponse, ManagedHostnameResponse } from '../types/index';
 
 const BASE = '/api/hostnames';
 
@@ -38,39 +35,34 @@ const mockHostname: ManagedHostnameResponse = {
   certificateStatus: CertificateStatus.Secured,
   certExpiresAt: '2027-06-01T10:00:00Z',
   createdAt: '2026-01-01T00:00:00Z',
-  updatedAt: '2026-06-01T10:00:00Z',
+  createdBy: 'user@example.com',
+  modifiedAt: '2026-06-01T10:00:00Z',
+  modifiedBy: 'user@example.com',
   concurrencyStamp: 'stamp-abc',
 };
 
 describe('hostnames-api', () => {
   describe('listHostnames', () => {
-    it('sends GET to basePath without params', async () => {
+    it('sends GET to basePath with required owner params', async () => {
       const client = createMockClient();
-      const response: PagedResponse<ManagedHostnameResponse> = {
-        items: [mockHostname],
-        totalCount: 1,
-        page: 0,
-        pageSize: 20,
-      };
+      const response: readonly ManagedHostnameResponse[] = [mockHostname];
       vi.mocked(client.get).mockResolvedValueOnce({ data: response });
 
-      const result = await listHostnames(client, BASE);
+      const params = { ownerType: 'cms.site', ownerId: 'owner-1' };
+      const result = await listHostnames(client, BASE, params);
 
-      expect(client.get).toHaveBeenCalledWith(BASE, { params: undefined });
+      expect(client.get).toHaveBeenCalledWith(BASE, { params });
       expect(result).toEqual(response);
     });
 
-    it('passes pagination and filter params', async () => {
+    it('passes maxResults param', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValueOnce({
-        data: { items: [], totalCount: 0, page: 1, pageSize: 10 },
-      });
+      vi.mocked(client.get).mockResolvedValueOnce({ data: [] });
 
-      await listHostnames(client, BASE, { page: 1, pageSize: 10, ownerType: 'cms.site' });
+      const params = { ownerType: 'cms.site', ownerId: 'owner-1', maxResults: 50 };
+      await listHostnames(client, BASE, params);
 
-      expect(client.get).toHaveBeenCalledWith(BASE, {
-        params: { page: 1, pageSize: 10, ownerType: 'cms.site' },
-      });
+      expect(client.get).toHaveBeenCalledWith(BASE, { params });
     });
   });
 
@@ -100,7 +92,12 @@ describe('hostnames-api', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValueOnce({ data: mockHostname });
 
-      const request = { host: 'app.example.com', ownerType: 'cms.site', ownerId: 'owner-1', isPrimary: true };
+      const request = {
+        host: 'app.example.com',
+        ownerType: 'cms.site',
+        ownerId: 'owner-1',
+        isPrimary: true,
+      };
       const result = await createHostname(client, BASE, request);
 
       expect(client.post).toHaveBeenCalledWith(BASE, request);
@@ -108,16 +105,25 @@ describe('hostnames-api', () => {
     });
   });
 
-  describe('updateHostname', () => {
-    it('sends PATCH to /{id} with isPrimary', async () => {
+  describe('setPrimary', () => {
+    it('sends POST to /{id}/primary', async () => {
       const client = createMockClient();
-      const updated = { ...mockHostname, isPrimary: false };
-      vi.mocked(client.patch).mockResolvedValueOnce({ data: updated });
+      vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
 
-      const result = await updateHostname(client, BASE, mockHostname.id, { isPrimary: false });
+      await setPrimary(client, BASE, mockHostname.id);
 
-      expect(client.patch).toHaveBeenCalledWith(`${BASE}/${mockHostname.id}`, { isPrimary: false });
-      expect(result).toEqual(updated);
+      expect(client.post).toHaveBeenCalledWith(`${BASE}/${mockHostname.id}/primary`);
+    });
+  });
+
+  describe('clearPrimary', () => {
+    it('sends DELETE to /{id}/primary', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValueOnce({ data: undefined });
+
+      await clearPrimary(client, BASE, mockHostname.id);
+
+      expect(client.delete).toHaveBeenCalledWith(`${BASE}/${mockHostname.id}/primary`);
     });
   });
 
@@ -133,14 +139,14 @@ describe('hostnames-api', () => {
   });
 
   describe('checkAvailability', () => {
-    it('sends GET to /check-availability with host param', async () => {
+    it('sends GET to /availability with host param', async () => {
       const client = createMockClient();
-      const response: CheckAvailabilityResponse = { isAvailable: true };
+      const response: CheckAvailabilityResponse = { host: 'new.example.com', isAvailable: true };
       vi.mocked(client.get).mockResolvedValueOnce({ data: response });
 
       const result = await checkAvailability(client, BASE, 'new.example.com');
 
-      expect(client.get).toHaveBeenCalledWith(`${BASE}/check-availability`, {
+      expect(client.get).toHaveBeenCalledWith(`${BASE}/availability`, {
         params: { host: 'new.example.com' },
       });
       expect(result).toEqual(response);
@@ -148,7 +154,9 @@ describe('hostnames-api', () => {
 
     it('returns isAvailable false for taken hostnames', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValueOnce({ data: { isAvailable: false } });
+      vi.mocked(client.get).mockResolvedValueOnce({
+        data: { host: 'taken.example.com', isAvailable: false },
+      });
 
       const result = await checkAvailability(client, BASE, 'taken.example.com');
 
@@ -157,13 +165,14 @@ describe('hostnames-api', () => {
   });
 
   describe('verifyNow', () => {
-    it('sends POST to /{id}/verify-now', async () => {
+    it('sends POST to /{id}/verify-now and returns the updated hostname', async () => {
       const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
+      vi.mocked(client.post).mockResolvedValueOnce({ data: mockHostname });
 
-      await verifyNow(client, BASE, mockHostname.id);
+      const result = await verifyNow(client, BASE, mockHostname.id);
 
       expect(client.post).toHaveBeenCalledWith(`${BASE}/${mockHostname.id}/verify-now`);
+      expect(result).toEqual(mockHostname);
     });
   });
 
@@ -174,14 +183,12 @@ describe('hostnames-api', () => {
 
       await reportCertificateStatus(client, BASE, mockHostname.id, {
         status: CertificateStatus.Secured,
-        certExpiresAt: '2027-06-01T10:00:00Z',
-        errorDetails: null,
+        expiresAt: '2027-06-01T10:00:00Z',
       });
 
       expect(client.post).toHaveBeenCalledWith(`${BASE}/${mockHostname.id}/certificate-status`, {
         status: CertificateStatus.Secured,
-        certExpiresAt: '2027-06-01T10:00:00Z',
-        errorDetails: null,
+        expiresAt: '2027-06-01T10:00:00Z',
       });
     });
   });

@@ -1,7 +1,9 @@
 import {
+  clearPrimary,
   createHostname,
   deleteHostname,
-  updateHostname,
+  reportCertificateStatus,
+  setPrimary,
   verifyNow,
 } from '@granit/hostnames';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -11,9 +13,9 @@ import { useHostnamesConfig } from '../providers/hostnames-provider';
 import { hostnamesKeys } from './query-keys';
 
 import type {
+  CertificateStatusReportRequest,
   CreateManagedHostnameRequest,
   ManagedHostnameResponse,
-  UpdateManagedHostnameRequest,
 } from '@granit/hostnames';
 import type { UseMutationResult } from '@tanstack/react-query';
 
@@ -46,27 +48,49 @@ export function useCreateHostname(): UseMutationResult<
 }
 
 /**
- * Mutation hook to update a managed hostname's `isPrimary` flag.
+ * Mutation hook to mark a hostname as the owner's canonical (primary) hostname.
  *
  * Invalidates the affected hostname and list queries on success.
  *
  * @example
  * ```tsx
- * const { mutate: update } = useUpdateHostname();
- * update({ id: 'hostname-id', request: { isPrimary: true } });
+ * const { mutate: set } = useSetPrimary();
+ * set('hostname-id');
  * ```
  */
-export function useUpdateHostname(): UseMutationResult<
-  ManagedHostnameResponse,
-  Error,
-  { id: string; request: UpdateManagedHostnameRequest }
-> {
+export function useSetPrimary(): UseMutationResult<void, Error, string> {
   const { client, basePath } = useHostnamesConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, request }) => updateHostname(client, basePath, id, request),
-    onSuccess: async (_, { id }) => {
+    mutationFn: (id: string) => setPrimary(client, basePath, id),
+    onSuccess: async (_, id) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: hostnamesKeys.hostname(id) }),
+        queryClient.invalidateQueries({ queryKey: hostnamesKeys.lists() }),
+      ]);
+    },
+  });
+}
+
+/**
+ * Mutation hook to clear the canonical (primary) flag from a hostname.
+ *
+ * Invalidates the affected hostname and list queries on success.
+ *
+ * @example
+ * ```tsx
+ * const { mutate: clear } = useClearPrimary();
+ * clear('hostname-id');
+ * ```
+ */
+export function useClearPrimary(): UseMutationResult<void, Error, string> {
+  const { client, basePath } = useHostnamesConfig();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => clearPrimary(client, basePath, id),
+    onSuccess: async (_, id) => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: hostnamesKeys.hostname(id) }),
         queryClient.invalidateQueries({ queryKey: hostnamesKeys.lists() }),
@@ -109,13 +133,40 @@ export function useDeleteHostname(): UseMutationResult<void, Error, string> {
  * trigger('hostname-id');
  * ```
  */
-export function useVerifyNow(): UseMutationResult<void, Error, string> {
+export function useVerifyNow(): UseMutationResult<ManagedHostnameResponse, Error, string> {
   const { client, basePath } = useHostnamesConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (id: string) => verifyNow(client, basePath, id),
     onSuccess: async (_, id) => {
+      await queryClient.invalidateQueries({ queryKey: hostnamesKeys.hostname(id) });
+    },
+  });
+}
+
+/**
+ * Mutation hook to report a certificate status update from an external provider.
+ *
+ * Invalidates the affected hostname query on success.
+ *
+ * @example
+ * ```tsx
+ * const { mutate: report } = useReportCertificateStatus();
+ * report({ id: 'hostname-id', request: { status: 'Secured', expiresAt: '2027-01-01T00:00:00Z' } });
+ * ```
+ */
+export function useReportCertificateStatus(): UseMutationResult<
+  void,
+  Error,
+  { id: string; request: CertificateStatusReportRequest }
+> {
+  const { client, basePath } = useHostnamesConfig();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, request }) => reportCertificateStatus(client, basePath, id, request),
+    onSuccess: async (_, { id }) => {
       await queryClient.invalidateQueries({ queryKey: hostnamesKeys.hostname(id) });
     },
   });

@@ -1,8 +1,5 @@
 // Types
-export {
-  CertificateStatus,
-  ManagedHostnameStatus,
-} from './types/index';
+export { CertificateStatus, ManagedHostnameStatus } from './types/index';
 
 export type {
   CertificateStatusReportRequest,
@@ -13,19 +10,18 @@ export type {
   HostnameConflict,
   ListHostnamesParams,
   ManagedHostnameResponse,
-  PagedResponse,
-  UpdateManagedHostnameRequest,
 } from './types/index';
 
 // API
 export {
   checkAvailability,
+  clearPrimary,
   createHostname,
   deleteHostname,
   getHostname,
   listHostnames,
   reportCertificateStatus,
-  updateHostname,
+  setPrimary,
   verifyNow,
 } from './api/hostnames-api';
 
