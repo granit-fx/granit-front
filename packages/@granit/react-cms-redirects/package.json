@@ -1,0 +1,24 @@
+{
+  "name": "@granit/react-cms-redirects",
+  "description": "React hooks and provider for Granit CMS redirect rule management",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/cms-redirects": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@tanstack/react-query": "^5.0.0"
+  },
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/cms-redirects": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@tanstack/react-query": "^5.0.0",
+    "react": "^19.0.0"
+  }
+}

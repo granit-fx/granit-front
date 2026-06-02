@@ -3135,7 +3135,7 @@
     },
     {
       "name": "@granit/react-cms",
-      "description": "React block components, Puck config generator and menu renderer for the Granit CMS",
+      "description": "React block components, Puck config generator, menu renderer, and admin hooks for the Granit CMS",
       "exports": [
         {
           "name": "CtaBlock",
@@ -3232,6 +3232,202 @@
           "name": "CmsMenuNav",
           "kind": "function",
           "signature": "function CmsMenuNav("
+        },
+        {
+          "name": "CmsProvider",
+          "kind": "function",
+          "signature": "function CmsProvider("
+        },
+        {
+          "name": "useCmsConfig",
+          "kind": "function",
+          "signature": "function useCmsConfig(): ResolvedCmsConfig"
+        },
+        {
+          "name": "buildCmsQueryKey",
+          "kind": "function",
+          "signature": "function buildCmsQueryKey( config: ResolvedCmsConfig, ...segments: readonly unknown[] ): readonly unknown[]"
+        },
+        {
+          "name": "CmsConfig",
+          "kind": "interface",
+          "signature": "interface CmsConfig",
+          "members": []
+        },
+        {
+          "name": "ResolvedCmsConfig",
+          "kind": "interface",
+          "signature": "interface ResolvedCmsConfig extends CmsConfig",
+          "members": []
+        },
+        {
+          "name": "CmsProviderProps",
+          "kind": "interface",
+          "signature": "interface CmsProviderProps",
+          "members": []
+        },
+        {
+          "name": "cmsKeys",
+          "kind": "const",
+          "signature": "const cmsKeys"
+        },
+        {
+          "name": "useSite",
+          "kind": "function",
+          "signature": "function useSite( id: string, options?:"
+        },
+        {
+          "name": "useSites",
+          "kind": "function",
+          "signature": "function useSites( params?: ListSitesParams, options?:"
+        },
+        {
+          "name": "useCreateSite",
+          "kind": "function",
+          "signature": "function useCreateSite(): UseMutationResult<SiteResponse, Error, CreateSiteRequest>"
+        },
+        {
+          "name": "useDeleteSite",
+          "kind": "function",
+          "signature": "function useDeleteSite(): UseMutationResult<void, Error, string>"
+        },
+        {
+          "name": "useUpdateSite",
+          "kind": "function",
+          "signature": "function useUpdateSite(): UseMutationResult< SiteResponse, Error,"
+        },
+        {
+          "name": "usePage",
+          "kind": "function",
+          "signature": "function usePage( id: string, options?:"
+        },
+        {
+          "name": "usePageTree",
+          "kind": "function",
+          "signature": "function usePageTree( siteId: string, options?:"
+        },
+        {
+          "name": "usePageVersions",
+          "kind": "function",
+          "signature": "function usePageVersions( id: string, options?:"
+        },
+        {
+          "name": "usePages",
+          "kind": "function",
+          "signature": "function usePages( params?: ListPagesParams, options?:"
+        },
+        {
+          "name": "useMenu",
+          "kind": "function",
+          "signature": "function useMenu( id: string, options?:"
+        },
+        {
+          "name": "useMenus",
+          "kind": "function",
+          "signature": "function useMenus( params?: ListMenusParams, options?:"
+        },
+        {
+          "name": "useCreateMenu",
+          "kind": "function",
+          "signature": "function useCreateMenu(): UseMutationResult<MenuResponse, Error, CreateMenuRequest>"
+        },
+        {
+          "name": "useDeleteMenu",
+          "kind": "function",
+          "signature": "function useDeleteMenu(): UseMutationResult<void, Error,"
+        },
+        {
+          "name": "useUpdateMenu",
+          "kind": "function",
+          "signature": "function useUpdateMenu(): UseMutationResult< MenuResponse, Error,"
+        },
+        {
+          "name": "useRelease",
+          "kind": "function",
+          "signature": "function useRelease( id: string, options?:"
+        },
+        {
+          "name": "useReleases",
+          "kind": "function",
+          "signature": "function useReleases( params?: ListReleasesParams, options?:"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-cms-hostnames",
+      "description": "React hooks and provider for Granit CMS site-scoped hostname management",
+      "exports": [
+        {
+          "name": "CmsHostnamesProvider",
+          "kind": "function",
+          "signature": "function CmsHostnamesProvider("
+        },
+        {
+          "name": "useCmsHostnamesConfig",
+          "kind": "function",
+          "signature": "function useCmsHostnamesConfig(): ResolvedCmsHostnamesConfig"
+        },
+        {
+          "name": "cmsHostnamesKeys",
+          "kind": "const",
+          "signature": "const cmsHostnamesKeys"
+        },
+        {
+          "name": "useSiteHostnameAvailability",
+          "kind": "function",
+          "signature": "function useSiteHostnameAvailability( siteId: string, host: string, options?:"
+        },
+        {
+          "name": "useSiteHostnames",
+          "kind": "function",
+          "signature": "function useSiteHostnames( siteId: string, options?:"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-cms-redirects",
+      "description": "React hooks and provider for Granit CMS redirect rule management",
+      "exports": [
+        {
+          "name": "CmsRedirectsProvider",
+          "kind": "function",
+          "signature": "function CmsRedirectsProvider("
+        },
+        {
+          "name": "useCmsRedirectsConfig",
+          "kind": "function",
+          "signature": "function useCmsRedirectsConfig(): ResolvedCmsRedirectsConfig"
+        },
+        {
+          "name": "cmsRedirectsKeys",
+          "kind": "const",
+          "signature": "const cmsRedirectsKeys"
+        },
+        {
+          "name": "useRedirects",
+          "kind": "function",
+          "signature": "function useRedirects( params?: ListRedirectsParams, options?:"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-cms-seo",
+      "description": "React hooks and provider for Granit CMS SEO management (admin metadata, SEO-AI inbox, SERP/OG previews)",
+      "exports": [
+        {
+          "name": "CmsSeoProvider",
+          "kind": "function",
+          "signature": "function CmsSeoProvider("
+        },
+        {
+          "name": "useCmsSeoConfig",
+          "kind": "function",
+          "signature": "function useCmsSeoConfig(): ResolvedCmsSeoConfig"
+        },
+        {
+          "name": "cmsSeoKeys",
+          "kind": "const",
+          "signature": "const cmsSeoKeys"
         }
       ]
     },

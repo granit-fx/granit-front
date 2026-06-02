@@ -1279,15 +1279,93 @@ importers:
         specifier: 19.2.6
         version: 19.2.6
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/cms':
         specifier: workspace:*
         version: link:../cms
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
       '@puckeditor/core':
         specifier: ^0.21.2
         version: 0.21.2(@floating-ui/dom@1.7.6)(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(use-sync-external-store@1.6.0(react@19.2.6))
+      '@tanstack/react-query':
+        specifier: 5.100.14
+        version: 5.100.14(react@19.2.6)
+
+  packages/@granit/react-cms-hostnames:
+    dependencies:
+      react:
+        specifier: 19.2.6
+        version: 19.2.6
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/cms-hostnames':
+        specifier: workspace:*
+        version: link:../cms-hostnames
+      '@granit/hostnames':
+        specifier: workspace:*
+        version: link:../hostnames
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@tanstack/react-query':
+        specifier: 5.100.14
+        version: 5.100.14(react@19.2.6)
+
+  packages/@granit/react-cms-redirects:
+    dependencies:
+      react:
+        specifier: 19.2.6
+        version: 19.2.6
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/cms-redirects':
+        specifier: workspace:*
+        version: link:../cms-redirects
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@tanstack/react-query':
+        specifier: 5.100.14
+        version: 5.100.14(react@19.2.6)
+
+  packages/@granit/react-cms-seo:
+    dependencies:
+      react:
+        specifier: 19.2.6
+        version: 19.2.6
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/cms-seo':
+        specifier: workspace:*
+        version: link:../cms-seo
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@tanstack/react-query':
+        specifier: 5.100.14
+        version: 5.100.14(react@19.2.6)
 
   packages/@granit/react-cookies:
     dependencies:
