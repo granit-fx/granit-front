@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useDocument, useDocumentDownloadUrl } from '../hooks/use-documents';
 import { useDocumentsConfig } from '../providers/documents-provider';
@@ -7,7 +7,7 @@ import { classifyDocumentName } from './document-kind';
 
 import type { DocumentKind } from './document-kind';
 import type { DocumentResponse } from '@granit/documents';
-import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 // Keys that count as a "text-like" preview (fetch URL → render as <pre>).
 const TEXT_KINDS: ReadonlySet<DocumentKind> = new Set<DocumentKind>(['text', 'code']);
@@ -299,27 +299,65 @@ export function DocumentQuickLook({
     return siblings.findIndex((s) => s.id === documentId);
   }, [siblings, documentId]);
 
-  function navigate(direction: -1 | 1): void {
-    if (!siblings || !onNavigate || currentIndex === -1) return;
-    const next = currentIndex + direction;
-    if (next < 0 || next >= siblings.length) return;
-    const sibling = siblings[next];
-    if (sibling) onNavigate(sibling.id);
-  }
+  const navigate = useCallback(
+    (direction: -1 | 1): void => {
+      if (!siblings || !onNavigate || currentIndex === -1) return;
+      const next = currentIndex + direction;
+      if (next < 0 || next >= siblings.length) return;
+      const sibling = siblings[next];
+      if (sibling) onNavigate(sibling.id);
+    },
+    [siblings, onNavigate, currentIndex]
+  );
 
-  function handleKeyDown(event: ReactKeyboardEvent<HTMLDialogElement>): void {
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault();
-      navigate(-1);
-    } else if (event.key === 'ArrowRight') {
-      event.preventDefault();
-      navigate(1);
-    }
-  }
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent): void => {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        navigate(-1);
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        navigate(1);
+      }
+    },
+    [navigate]
+  );
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    dialog.addEventListener('keydown', handleKeyDown);
+    return () => dialog.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   function handleDownload(): void {
     if (!downloadUrl || globalThis.window === undefined) return;
     globalThis.window.open(downloadUrl, '_blank', 'noopener,noreferrer');
+  }
+
+  let previewBody: ReactNode;
+  if (!documentId || !document) {
+    previewBody = <div data-granit-document-quick-look-loading="">{labelStrings.loading}</div>;
+  } else if (urlQuery.isError) {
+    previewBody = (
+      <div data-granit-document-quick-look-error="" role="alert">
+        {labelStrings.previewError}
+      </div>
+    );
+  } else if (downloadUrl === null) {
+    previewBody = (
+      <div data-granit-document-quick-look-loading="">{labelStrings.loadingPreview}</div>
+    );
+  } else {
+    previewBody = (
+      <QuickLookPreview
+        kind={kind}
+        downloadUrl={downloadUrl}
+        documentName={document.name}
+        previewContent={previewContent}
+        labelStrings={labelStrings}
+      />
+    );
   }
 
   // Rendered even when documentId is null so the <dialog> ref stays mounted
@@ -335,7 +373,6 @@ export function DocumentQuickLook({
       className={className}
       onClose={onClose}
       onCancel={onClose}
-      onKeyDown={handleKeyDown}
     >
       <QuickLookHeader
         documentName={document?.name}
@@ -348,25 +385,7 @@ export function DocumentQuickLook({
         navigate={navigate}
         labelStrings={labelStrings}
       />
-      <div data-granit-document-quick-look-body="">
-        {!documentId || !document ? (
-          <div data-granit-document-quick-look-loading="">{labelStrings.loading}</div>
-        ) : urlQuery.isError ? (
-          <div data-granit-document-quick-look-error="" role="alert">
-            {labelStrings.previewError}
-          </div>
-        ) : !downloadUrl ? (
-          <div data-granit-document-quick-look-loading="">{labelStrings.loadingPreview}</div>
-        ) : (
-          <QuickLookPreview
-            kind={kind}
-            downloadUrl={downloadUrl}
-            documentName={document.name}
-            previewContent={previewContent}
-            labelStrings={labelStrings}
-          />
-        )}
-      </div>
+      <div data-granit-document-quick-look-body="">{previewBody}</div>
     </dialog>
   );
 }

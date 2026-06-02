@@ -123,6 +123,60 @@ export function DocumentsList(props: Readonly<DocumentsListProps>): ReactNode {
 
 type RowMode = 'idle' | 'renaming' | 'confirming-trash';
 
+interface DocumentNameCellProps {
+  readonly mode: RowMode;
+  readonly canManage: boolean;
+  readonly document: DocumentResponse;
+  readonly onNameClick: ((doc: DocumentResponse) => void) | undefined;
+  readonly renameLabel: string;
+  readonly commitRename: (doc: DocumentResponse, name: string) => void;
+  readonly clearRowMode: (id: string) => void;
+  readonly setRowMode: (id: string, mode: RowMode) => void;
+}
+
+function DocumentNameCell({
+  mode,
+  canManage,
+  document,
+  onNameClick,
+  renameLabel,
+  commitRename,
+  clearRowMode,
+  setRowMode,
+}: DocumentNameCellProps): ReactNode {
+  if (mode === 'renaming' && canManage) {
+    return (
+      <InlineEdit
+        initialValue={document.name}
+        ariaLabel={renameLabel}
+        onCommit={(name) => commitRename(document, name)}
+        onCancel={() => clearRowMode(document.id)}
+      />
+    );
+  }
+  if (onNameClick) {
+    return (
+      <button
+        type="button"
+        data-granit-documents-list-name=""
+        onClick={(event) => {
+          event.stopPropagation();
+          onNameClick(document);
+        }}
+        onDoubleClick={(event) => {
+          if (canManage) {
+            event.stopPropagation();
+            setRowMode(document.id, 'renaming');
+          }
+        }}
+      >
+        {document.name}
+      </button>
+    );
+  }
+  return <span data-granit-documents-list-name="">{document.name}</span>;
+}
+
 function DocumentsListBody({
   folderId,
   pageSize,
@@ -394,85 +448,156 @@ function DocumentsListBody({
       className={className}
     >
       {viewMode === 'list' ? (
-        <table
-          data-granit-documents-list-table=""
-          role="grid"
-          tabIndex={0}
-          onKeyDown={handleKeyDown}
-        >
-          <thead>
-            <tr>
-              <th data-granit-documents-list-select-col="">
-                <input
-                  type="checkbox"
-                  aria-label={labelStrings.selectHeader}
-                  checked={allSelected}
-                  onChange={(event) =>
-                    event.target.checked ? selection.selectAll(orderedIds) : selection.clear()
-                  }
-                />
-              </th>
-              <th>{labelStrings.nameHeader}</th>
-              <th>{labelStrings.statusHeader}</th>
-              {canManage && <th data-granit-documents-list-actions-col="" />}
-            </tr>
-          </thead>
-          <tbody>
-            {itemRenderState.map(({ document, isSelected, isFocused, mode, kind }) => (
-              <tr
+        <div tabIndex={0} onKeyDown={handleKeyDown}>
+          <table data-granit-documents-list-table="">
+            <thead>
+              <tr>
+                <th data-granit-documents-list-select-col="">
+                  <input
+                    type="checkbox"
+                    aria-label={labelStrings.selectHeader}
+                    checked={allSelected}
+                    onChange={(event) =>
+                      event.target.checked ? selection.selectAll(orderedIds) : selection.clear()
+                    }
+                  />
+                </th>
+                <th>{labelStrings.nameHeader}</th>
+                <th>{labelStrings.statusHeader}</th>
+                {canManage && <th data-granit-documents-list-actions-col="" />}
+              </tr>
+            </thead>
+            <tbody>
+              {itemRenderState.map(({ document, isSelected, isFocused, mode, kind }) => (
+                <tr
+                  key={document.id}
+                  data-granit-documents-list-row=""
+                  data-granit-document-id={document.id}
+                  data-granit-document-kind={kind}
+                  data-granit-documents-list-selected={isSelected ? '' : undefined}
+                  data-granit-documents-list-focused={isFocused ? '' : undefined}
+                  data-granit-documents-list-draggable={canManage ? '' : undefined}
+                  aria-selected={isSelected}
+                  draggable={canManage}
+                  onClick={(event) => handleItemClick(event, document)}
+                  onDragStart={(event) => handleItemDragStart(event, document)}
+                >
+                  <td data-granit-documents-list-select-cell="">
+                    <input
+                      type="checkbox"
+                      aria-label={`${labelStrings.selectRow} ${document.name}`}
+                      checked={isSelected}
+                      onClick={(event) => event.stopPropagation()}
+                      onChange={() => selection.toggle(document.id)}
+                    />
+                  </td>
+                  <td>
+                    <DocumentNameCell
+                      mode={mode}
+                      canManage={canManage}
+                      document={document}
+                      onNameClick={onOpenDocument ? handleNameClick : undefined}
+                      renameLabel={labelStrings.rename}
+                      commitRename={commitRename}
+                      clearRowMode={clearRowMode}
+                      setRowMode={setRowMode}
+                    />
+                  </td>
+                  <td>{document.status}</td>
+                  {canManage && (
+                    <td data-granit-documents-list-actions="">
+                      {mode === 'confirming-trash' ? (
+                        <span data-granit-documents-list-confirm="" role="alertdialog">
+                          <button type="button" onClick={() => clearRowMode(document.id)}>
+                            {labelStrings.trashCancel}
+                          </button>
+                          <button
+                            type="button"
+                            data-granit-documents-list-confirm-ok=""
+                            onClick={() => confirmTrash(document)}
+                            disabled={trashDocument.isPending}
+                          >
+                            {labelStrings.trashConfirm}
+                          </button>
+                        </span>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            aria-label={labelStrings.rename}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              setRowMode(document.id, 'renaming');
+                            }}
+                          >
+                            {labelStrings.rename}
+                          </button>
+                          <button
+                            type="button"
+                            aria-label={labelStrings.trash}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              setRowMode(document.id, 'confirming-trash');
+                            }}
+                          >
+                            {labelStrings.trash}
+                          </button>
+                        </>
+                      )}
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div tabIndex={0} onKeyDown={handleKeyDown}>
+          <ul
+            data-granit-documents-list-grid=""
+            // tile size becomes a CSS custom property the host stylesheet picks
+            // up to drive the grid column track + tile dimensions.
+            style={{ ['--granit-documents-tile-size' as string]: `${String(tileSize)}px` }}
+          >
+            {itemRenderState.map(({ document, isSelected, isFocused, mode, kind, badge }) => (
+              <li
                 key={document.id}
-                data-granit-documents-list-row=""
+                data-granit-documents-list-tile=""
                 data-granit-document-id={document.id}
                 data-granit-document-kind={kind}
                 data-granit-documents-list-selected={isSelected ? '' : undefined}
                 data-granit-documents-list-focused={isFocused ? '' : undefined}
                 data-granit-documents-list-draggable={canManage ? '' : undefined}
-                aria-selected={isSelected}
                 draggable={canManage}
                 onClick={(event) => handleItemClick(event, document)}
+                onDoubleClick={() => onOpenDocument?.(document.id)}
                 onDragStart={(event) => handleItemDragStart(event, document)}
               >
-                <td data-granit-documents-list-select-cell="">
-                  <input
-                    type="checkbox"
-                    aria-label={`${labelStrings.selectRow} ${document.name}`}
-                    checked={isSelected}
-                    onClick={(event) => event.stopPropagation()}
-                    onChange={() => selection.toggle(document.id)}
+                <input
+                  type="checkbox"
+                  data-granit-documents-list-tile-checkbox=""
+                  aria-label={`${labelStrings.selectRow} ${document.name}`}
+                  checked={isSelected}
+                  onClick={(event) => event.stopPropagation()}
+                  onChange={() => selection.toggle(document.id)}
+                />
+                <div data-granit-documents-list-tile-thumb="" aria-hidden>
+                  <span data-granit-documents-list-tile-badge="">{badge}</span>
+                </div>
+                <div data-granit-documents-list-tile-name="">
+                  <DocumentNameCell
+                    mode={mode}
+                    canManage={canManage}
+                    document={document}
+                    onNameClick={onOpenDocument ? handleNameClick : undefined}
+                    renameLabel={labelStrings.rename}
+                    commitRename={commitRename}
+                    clearRowMode={clearRowMode}
+                    setRowMode={setRowMode}
                   />
-                </td>
-                <td>
-                  {mode === 'renaming' && canManage ? (
-                    <InlineEdit
-                      initialValue={document.name}
-                      ariaLabel={labelStrings.rename}
-                      onCommit={(name) => commitRename(document, name)}
-                      onCancel={() => clearRowMode(document.id)}
-                    />
-                  ) : onOpenDocument ? (
-                    <button
-                      type="button"
-                      data-granit-documents-list-name=""
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        handleNameClick(document);
-                      }}
-                      onDoubleClick={(event) => {
-                        if (canManage) {
-                          event.stopPropagation();
-                          setRowMode(document.id, 'renaming');
-                        }
-                      }}
-                    >
-                      {document.name}
-                    </button>
-                  ) : (
-                    <span data-granit-documents-list-name="">{document.name}</span>
-                  )}
-                </td>
-                <td>{document.status}</td>
+                </div>
                 {canManage && (
-                  <td data-granit-documents-list-actions="">
+                  <div data-granit-documents-list-tile-actions="">
                     {mode === 'confirming-trash' ? (
                       <span data-granit-documents-list-confirm="" role="alertdialog">
                         <button type="button" onClick={() => clearRowMode(document.id)}>
@@ -511,125 +636,12 @@ function DocumentsListBody({
                         </button>
                       </>
                     )}
-                  </td>
+                  </div>
                 )}
-              </tr>
+              </li>
             ))}
-          </tbody>
-        </table>
-      ) : (
-        <ul
-          data-granit-documents-list-grid=""
-          role="listbox"
-          // tile size becomes a CSS custom property the host stylesheet picks
-          // up to drive the grid column track + tile dimensions.
-          style={{ ['--granit-documents-tile-size' as string]: `${String(tileSize)}px` }}
-          tabIndex={0}
-          aria-multiselectable
-          onKeyDown={handleKeyDown}
-        >
-          {itemRenderState.map(({ document, isSelected, isFocused, mode, kind, badge }) => (
-            <li
-              key={document.id}
-              role="option"
-              data-granit-documents-list-tile=""
-              data-granit-document-id={document.id}
-              data-granit-document-kind={kind}
-              data-granit-documents-list-selected={isSelected ? '' : undefined}
-              data-granit-documents-list-focused={isFocused ? '' : undefined}
-              data-granit-documents-list-draggable={canManage ? '' : undefined}
-              aria-selected={isSelected}
-              draggable={canManage}
-              onClick={(event) => handleItemClick(event, document)}
-              onDoubleClick={() => onOpenDocument?.(document.id)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  selection.selectOnly(document.id);
-                  setFocusedId(document.id);
-                  onOpenDocument?.(document.id);
-                }
-              }}
-              onDragStart={(event) => handleItemDragStart(event, document)}
-            >
-              <input
-                type="checkbox"
-                data-granit-documents-list-tile-checkbox=""
-                aria-label={`${labelStrings.selectRow} ${document.name}`}
-                checked={isSelected}
-                onClick={(event) => event.stopPropagation()}
-                onChange={() => selection.toggle(document.id)}
-              />
-              <div data-granit-documents-list-tile-thumb="" aria-hidden>
-                <span data-granit-documents-list-tile-badge="">{badge}</span>
-              </div>
-              <div data-granit-documents-list-tile-name="">
-                {mode === 'renaming' && canManage ? (
-                  <InlineEdit
-                    initialValue={document.name}
-                    ariaLabel={labelStrings.rename}
-                    onCommit={(name) => commitRename(document, name)}
-                    onCancel={() => clearRowMode(document.id)}
-                  />
-                ) : onOpenDocument ? (
-                  <button
-                    type="button"
-                    data-granit-documents-list-name=""
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      handleNameClick(document);
-                    }}
-                  >
-                    {document.name}
-                  </button>
-                ) : (
-                  <span data-granit-documents-list-name="">{document.name}</span>
-                )}
-              </div>
-              {canManage && (
-                <div data-granit-documents-list-tile-actions="">
-                  {mode === 'confirming-trash' ? (
-                    <span data-granit-documents-list-confirm="" role="alertdialog">
-                      <button type="button" onClick={() => clearRowMode(document.id)}>
-                        {labelStrings.trashCancel}
-                      </button>
-                      <button
-                        type="button"
-                        data-granit-documents-list-confirm-ok=""
-                        onClick={() => confirmTrash(document)}
-                        disabled={trashDocument.isPending}
-                      >
-                        {labelStrings.trashConfirm}
-                      </button>
-                    </span>
-                  ) : (
-                    <>
-                      <button
-                        type="button"
-                        aria-label={labelStrings.rename}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          setRowMode(document.id, 'renaming');
-                        }}
-                      >
-                        {labelStrings.rename}
-                      </button>
-                      <button
-                        type="button"
-                        aria-label={labelStrings.trash}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          setRowMode(document.id, 'confirming-trash');
-                        }}
-                      >
-                        {labelStrings.trash}
-                      </button>
-                    </>
-                  )}
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
+          </ul>
+        </div>
       )}
       <nav data-granit-documents-list-pagination="" aria-label="Pagination">
         <button type="button" onClick={() => setPage(currentPage - 1)} disabled={currentPage <= 1}>

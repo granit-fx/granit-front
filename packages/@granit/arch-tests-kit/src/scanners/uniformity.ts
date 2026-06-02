@@ -5,7 +5,8 @@ import { rel } from '../fs';
 
 import type { AllowlistedScanContext, ScanContext, Violation } from '../types';
 
-const H1_RE = /^#\s+(.+?)\s*$/m;
+// NOSONAR: these regexes run only on bounded developer source files — no user input, no ReDoS risk
+const H1_RE = /^#\s+(.*\S)\s*$/m;
 
 /**
  * Every module ships a `README.md` introducing it. The H1 (first `#` heading,
@@ -98,6 +99,19 @@ type PkgJson = Record<string, Record<string, string> | undefined>;
 type ByDep = Map<string, Map<string, string[]>>;
 type ResolvePkgJson = (m: { dir: string }) => string;
 
+function collectDepVersions(
+  pkg: PkgJson,
+  dep: string,
+  sections: ReadonlyArray<'dependencies' | 'peerDependencies' | 'devDependencies'>
+): string[] {
+  const versions = new Set<string>();
+  for (const section of sections) {
+    const v = pkg[section]?.[dep];
+    if (v !== undefined && !v.startsWith('workspace:') && v !== '*') versions.add(v);
+  }
+  return [...versions];
+}
+
 /**
  * Reads one module's package.json, collects per-dep version constraints into
  * `byDep`, and emits within-package drift violations into `out`.
@@ -116,12 +130,7 @@ function collectModuleVersions(
   const pkg = JSON.parse(fs.readFileSync(f, 'utf8')) as PkgJson;
 
   for (const dep of deps) {
-    const versions = new Set<string>();
-    for (const section of sections) {
-      const v = pkg[section]?.[dep];
-      if (v !== undefined && !v.startsWith('workspace:') && v !== '*') versions.add(v);
-    }
-    const distinct = [...versions];
+    const distinct = collectDepVersions(pkg, dep, sections);
     if (distinct.length === 0) continue;
     if (distinct.length > 1) {
       out.push({

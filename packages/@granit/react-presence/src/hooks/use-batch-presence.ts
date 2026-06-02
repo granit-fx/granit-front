@@ -44,7 +44,7 @@ export async function fetchBatchPresence(
   const responses = await Promise.all(
     chunks.map((chunk) => getBatchPresence(client, basePath, { userIds: chunk }))
   );
-  const merged: Record<UserId, PresenceResponse> = {} as Record<UserId, PresenceResponse>;
+  const merged: Record<UserId, PresenceResponse> = {};
   for (const { presences } of responses) {
     Object.assign(merged, presences);
   }

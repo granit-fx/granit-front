@@ -66,7 +66,7 @@ export function createCookieConsentProvider(
     async init() {
       const mod = await import('vanilla-cookieconsent');
       // vanilla-cookieconsent uses a CommonJS-style namespace export
-      cc = (mod.default ?? mod) as unknown as VanillaCookieConsent;
+      cc = (mod.default ?? mod) as VanillaCookieConsent;
 
       const optionalCategories: Record<string, object> = {
         [resolvedNames.preferences]: {},
@@ -127,7 +127,7 @@ export function createCookieConsentProvider(
     setConsent(category: CookieCategory, granted: boolean): void {
       if (!cc || category === 'strictly_necessary') return;
 
-      const ccName = resolvedNames[category as keyof CategoryNames];
+      const ccName = resolvedNames[category];
       const prefs = cc.getUserPreferences();
       const currentOptional = prefs.acceptedCategories.filter((c) => c !== NECESSARY_CATEGORY);
 

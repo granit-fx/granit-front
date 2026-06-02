@@ -31,8 +31,9 @@ export function scanKebabCase(opts: AllowlistedScanContext): Violation[] {
   return out;
 }
 
+// NOSONAR: these regexes run only on bounded developer source files — no user input, no ReDoS risk
 const HOOK_DECL_RE = /\bexport\s+(?:async\s+)?(?:function|const)\s+use[A-Z]\w*/;
-const HOOK_REEXPORT_RE = /\bexport\s*\{[^}]*\buse[A-Z]\w*[^}]*\}/;
+const HOOK_REEXPORT_RE = /\bexport\s*\{[^}]*\buse[A-Z]\w*/;
 
 function processSubdirEntry(
   entry: fs.Dirent,
@@ -94,9 +95,10 @@ export function scanHookNaming(ctx: ScanContext): Violation[] {
 //   export const createFoo (factory)
 //   export const useFoo (hook collocated with its component)
 //   export { Foo } / export { x as Foo }  (shadcn-style re-exports)
+// NOSONAR: these regexes run only on bounded developer source files — no user input, no ReDoS risk
 const PASCAL_EXPORT_RE =
   /\bexport\s+(?:async\s+)?(?:function|const|class)\s+(?:[A-Z]\w*|create[A-Z]\w*|use[A-Z]\w*)/;
-const PASCAL_REEXPORT_RE = /\bexport\s*\{[^}]*\b[A-Z]\w*[^}]*\}/;
+const PASCAL_REEXPORT_RE = /\bexport\s*\{[^}]*\b[A-Z]\w*/;
 const COMPONENT_HELPER_FILES = new Set([
   'index.ts',
   'index.tsx',

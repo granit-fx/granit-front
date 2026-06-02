@@ -1,5 +1,5 @@
 import { QueryProvider, useQueryEndpoint } from '@granit/react-query-engine';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useDocumentsConfig } from '../providers/documents-provider';
 
@@ -8,7 +8,7 @@ import { classifyDocumentName, documentBadge } from './document-kind';
 import type { DocumentBookmark } from '../hooks/use-document-bookmarks';
 import type { DocumentResponse } from '@granit/documents';
 import type { FilterEntry, SortEntry } from '@granit/query-engine';
-import type { ChangeEvent, KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react';
+import type { ChangeEvent, ReactNode } from 'react';
 
 const SEARCH_QUERY_KEY_PREFIX = ['documents', 'documents', 'search'] as const;
 const DEFAULT_LIMIT = 20;
@@ -215,25 +215,35 @@ function DocumentSearchPaletteBody({
     if (highlight >= entries.length) setHighlight(Math.max(0, entries.length - 1));
   }, [entries.length, highlight]);
 
-  function handleKeyDown(event: ReactKeyboardEvent<HTMLDialogElement>): void {
-    if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      setHighlight((h) => Math.min(entries.length - 1, h + 1));
-    } else if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      setHighlight((h) => Math.max(0, h - 1));
-    } else if (event.key === 'Enter') {
-      event.preventDefault();
-      const picked = entries[highlight];
-      if (!picked) return;
-      onPickDocument(picked.id, {
-        id: picked.id,
-        name: picked.name,
-        folderId: picked.folderId,
-        recordedAt: Date.now(),
-      });
-    }
-  }
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent): void => {
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        setHighlight((h) => Math.min(entries.length - 1, h + 1));
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        setHighlight((h) => Math.max(0, h - 1));
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
+        const picked = entries[highlight];
+        if (!picked) return;
+        onPickDocument(picked.id, {
+          id: picked.id,
+          name: picked.name,
+          folderId: picked.folderId,
+          recordedAt: Date.now(),
+        });
+      }
+    },
+    [entries, highlight, onPickDocument]
+  );
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    dialog.addEventListener('keydown', handleKeyDown);
+    return () => dialog.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>): void {
     setDraftQuery(event.target.value);
@@ -252,7 +262,6 @@ function DocumentSearchPaletteBody({
       className={className}
       onClose={onClose}
       onCancel={onClose}
-      onKeyDown={handleKeyDown}
     >
       <div data-granit-document-search-palette-input-row="">
         <input

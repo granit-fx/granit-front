@@ -62,8 +62,11 @@ export function readFile(file: string): string {
  * runtime call doesn't false-positive on documented examples.
  */
 export function stripComments(src: string): string {
-  return src
-    .replace(/\/\*[\s\S]*?\*\//g, '')
-    .replace(/(^|\n)\s*\*[^\n]*/g, '$1')
-    .replace(/\/\/[^\n]*/g, '');
+  return (
+    src
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      // NOSONAR: these regexes run only on bounded developer source files — no user input, no ReDoS risk
+      .replace(/(^|\n)[ \t]*\*[^\n]*/g, '$1')
+      .replace(/\/\/[^\n]*/g, '')
+  );
 }

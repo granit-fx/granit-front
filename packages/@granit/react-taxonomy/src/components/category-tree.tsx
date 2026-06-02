@@ -55,6 +55,12 @@ const DEFAULT_LABELS: Required<CategoryTreeLabels> = {
   error422Cycle: 'Cannot move a category under one of its descendants.',
 };
 
+function extractProblemDetail(err: unknown): string {
+  const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+  if (detail) return detail;
+  return err instanceof Error ? err.message : 'Request failed.';
+}
+
 interface CategoryNodeProps {
   readonly scope: string;
   readonly category: CategoryResponse;
@@ -77,12 +83,6 @@ function CategoryNode({
   const moveCategory = useMoveCategory(scope);
   const deleteCategory = useDeleteCategory(scope);
   const [error, setError] = useState<string | null>(null);
-
-  function extractProblemDetail(err: unknown): string {
-    const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
-    if (detail) return detail;
-    return err instanceof Error ? err.message : 'Request failed.';
-  }
 
   function handleAdd(): void {
     if (globalThis.window === undefined) return;

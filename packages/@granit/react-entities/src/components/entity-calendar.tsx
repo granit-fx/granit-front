@@ -212,7 +212,7 @@ export function EntityCalendar({
                             key={action.name}
                             action={action}
                             rowId={event.id}
-                            row={event as unknown as Readonly<Record<string, unknown>>}
+                            row={{ ...event }}
                             dispatch={dispatch}
                           />
                         ))}

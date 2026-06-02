@@ -34,7 +34,7 @@ function readStorage(key: string): StorageShape | null {
 }
 
 function writeStorage(key: string, value: StorageShape): void {
-  if (typeof globalThis.localStorage === 'undefined') return;
+  if (globalThis.localStorage === undefined) return;
   try {
     globalThis.localStorage.setItem(key, JSON.stringify(value));
   } catch {

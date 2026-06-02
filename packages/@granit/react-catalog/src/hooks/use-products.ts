@@ -54,7 +54,7 @@ export function useProductBySku(sku: string | null | undefined): UseQueryResult<
   const config = useCatalogConfig();
   return useQuery({
     queryKey: buildCatalogQueryKey(config, 'products', 'by-sku', sku),
-    queryFn: () => getProductBySku(config.client, config.basePath, sku as string),
+    queryFn: () => getProductBySku(config.client, config.basePath, sku!),
     enabled: Boolean(sku),
   });
 }

@@ -49,7 +49,7 @@ function readStorage(key: string): StoredBookmarks | null {
 }
 
 function writeStorage(key: string, value: StoredBookmarks): void {
-  if (typeof globalThis.localStorage === 'undefined') return;
+  if (globalThis.localStorage === undefined) return;
   try {
     globalThis.localStorage.setItem(key, JSON.stringify(value));
   } catch {
