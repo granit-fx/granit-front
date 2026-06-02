@@ -382,6 +382,15 @@ export default defineConfig({
         'packages/@granit/react-authentication-keycloak/src/csp/index.ts'
       ),
       '@granit/utils': path.resolve(__dirname, 'packages/@granit/utils/src/index.ts'),
+      '@granit/hostnames': path.resolve(__dirname, 'packages/@granit/hostnames/src/index.ts'),
+      '@granit/react-hostnames/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-hostnames/src/testing/index.ts'
+      ),
+      '@granit/react-hostnames': path.resolve(
+        __dirname,
+        'packages/@granit/react-hostnames/src/index.ts'
+      ),
       '@granit/webhooks': path.resolve(__dirname, 'packages/@granit/webhooks/src/index.ts'),
       '@granit/react-webhooks': path.resolve(
         __dirname,

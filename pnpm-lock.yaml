@@ -478,6 +478,15 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/hostnames:
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/idempotency:
     devDependencies:
       '@granit/api-client':
@@ -1625,6 +1634,34 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
+  packages/@granit/react-hostnames:
+    dependencies:
+      '@tanstack/react-query':
+        specifier: 5.100.14
+        version: 5.100.14(react@19.2.6)
+      msw:
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.9.1)(typescript@6.0.3)
+      react:
+        specifier: 19.2.6
+        version: 19.2.6
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/hostnames':
+        specifier: workspace:*
+        version: link:../hostnames
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client

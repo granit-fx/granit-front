@@ -1299,6 +1299,17 @@
       ]
     },
     {
+      "name": "@granit/hostnames",
+      "description": "Managed hostname types and API functions — mirrors Granit.Hostnames .NET contract",
+      "exports": [
+        {
+          "name": "HostnamesPermissions",
+          "kind": "const",
+          "signature": "const HostnamesPermissions"
+        }
+      ]
+    },
+    {
       "name": "@granit/idempotency",
       "description": "Automatic Idempotency-Key header injection for mutation requests",
       "exports": [
@@ -4481,6 +4492,32 @@
           "name": "SetFeatureOverrideVariables",
           "kind": "type",
           "signature": "type SetFeatureOverrideVariables = { readonly name: string; readonly request: SetFeatureOverrideRequest; }"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-hostnames",
+      "description": "React hooks for managed hostname management — useHostnames, useHostname, useCreateHostname, useUpdateHostname, useDeleteHostname, useVerifyNow, useCheckAvailability",
+      "exports": [
+        {
+          "name": "useHostnames",
+          "kind": "function",
+          "signature": "function useHostnames( params?: ListHostnamesParams ): UseQueryResult<PagedResponse<ManagedHostnameResponse>>"
+        },
+        {
+          "name": "useCheckAvailability",
+          "kind": "function",
+          "signature": "function useCheckAvailability(host: string): UseQueryResult<CheckAvailabilityResponse>"
+        },
+        {
+          "name": "useHostname",
+          "kind": "function",
+          "signature": "function useHostname(id: string): UseQueryResult<ManagedHostnameResponse>"
+        },
+        {
+          "name": "hostnamesKeys",
+          "kind": "const",
+          "signature": "const hostnamesKeys"
         }
       ]
     },
