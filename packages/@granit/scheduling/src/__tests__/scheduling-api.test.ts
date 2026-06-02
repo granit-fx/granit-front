@@ -1,6 +1,9 @@
+import { getPage } from '@granit/query-engine';
 import { createMockClient } from '@granit/testing';
-import { toEntityId } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
+
+vi.mock('@granit/query-engine', () => ({ getPage: vi.fn() }));
 
 import {
   cancelScheduledAction,
@@ -14,12 +17,12 @@ import {
   SCHEDULING_STATUS_LABELS,
 } from '../constants';
 
-import type { RescheduleActionRequest, ScheduledActionId, ScheduledActionResponse } from '../types/index';
+import type {
+  RescheduleActionRequest,
+  ScheduledActionId,
+  ScheduledActionResponse,
+} from '../types/index';
 import type { PagedResult } from '@granit/query-engine';
-
-vi.mock('@granit/query-engine', () => ({ getPage: vi.fn() }));
-
-import { getPage } from '@granit/query-engine';
 
 // ---------------------------------------------------------------------------
 // Fixtures
@@ -34,13 +37,13 @@ const actionId: ScheduledActionId = toEntityId<'ScheduledAction'>(
 const sampleAction: ScheduledActionResponse = {
   id: actionId,
   payloadType: 'Granit.Invoicing.SendReminderPayload',
-  executeAt: '2026-07-01T08:00:00Z',
+  executeAt: toISODateString('2026-07-01T08:00:00Z'),
   correlationId: null,
   status: 'Pending',
   executedAt: null,
   cancelledBy: null,
   failureReason: null,
-  createdAt: '2026-06-01T10:00:00Z',
+  createdAt: toISODateString('2026-06-01T10:00:00Z'),
 };
 
 const pagedResult: PagedResult<ScheduledActionResponse> = {
@@ -157,11 +160,13 @@ describe('cancelScheduledAction', () => {
 // ---------------------------------------------------------------------------
 
 describe('rescheduleScheduledAction', () => {
-  const request: RescheduleActionRequest = { newExecuteAt: '2026-08-01T09:00:00Z' };
+  const request: RescheduleActionRequest = {
+    newExecuteAt: toISODateString('2026-08-01T09:00:00Z'),
+  };
 
   const rescheduledAction: ScheduledActionResponse = {
     ...sampleAction,
-    executeAt: '2026-08-01T09:00:00Z',
+    executeAt: toISODateString('2026-08-01T09:00:00Z'),
   };
 
   it('PUTs to {basePath}/{id}/reschedule with the request body', async () => {

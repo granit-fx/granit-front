@@ -4,22 +4,23 @@ import { toEntityId } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_BASE_PATH } from '../constants';
-import {
-  CatalogProvider,
-  buildCatalogQueryKey,
-  useCatalogConfig,
-} from '../providers/catalog-provider';
 import {
   useCreateProduct,
   useProduct,
   useProductBySku,
   usePublishedProducts,
 } from '../hooks/use-products';
+import {
+  CatalogProvider,
+  buildCatalogQueryKey,
+  useCatalogConfig,
+} from '../providers/catalog-provider';
 
 import type { CatalogConfig } from '../providers/catalog-provider';
+import type { AxiosInstance } from '@granit/api-client';
 import type {
   ProductCreateRequest,
   ProductExternalMappingId,
@@ -27,7 +28,6 @@ import type {
   ProductId,
   ProductResponse,
 } from '@granit/catalog';
-import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
 
 // ---------------------------------------------------------------------------
