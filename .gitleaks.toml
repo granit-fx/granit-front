@@ -7,4 +7,6 @@ useDefault = true
   paths = [
     '''.*\.test\.tsx?$''',
     '''.*__tests__/.*''',
+    # Fixture data in testing/ dirs is always mock — never real secrets.
+    '''.*\/testing\/.*''',
   ]

@@ -55,9 +55,13 @@ export const mockHostnames: ManagedHostnameResponse[] = [
     tenantId: 'tttttttt-0002-4000-a000-000000000002',
     isPrimary: true,
     status: S.Pending,
-    verificationToken: 'tok_abc123xyz',
+    verificationToken: 'mock-verify-pending-001',
     expectedDnsRecords: [
-      { type: 'Txt', name: '_granit-verify.pending.beta.com', value: 'granit-verify=tok_abc123xyz' },
+      {
+        type: 'Txt',
+        name: '_granit-verify.pending.beta.com',
+        value: 'granit-verify=mock-verify-pending-001',
+      },
       { type: 'Cname', name: 'pending.beta.com', value: 'proxy.granit.io' },
     ],
     lastCheckedAt: null,
@@ -78,9 +82,13 @@ export const mockHostnames: ManagedHostnameResponse[] = [
     tenantId: null,
     isPrimary: true,
     status: S.Error,
-    verificationToken: 'tok_def456uvw',
+    verificationToken: 'mock-verify-error-002',
     expectedDnsRecords: [
-      { type: 'Txt', name: '_granit-verify.error.example.org', value: 'granit-verify=tok_def456uvw' },
+      {
+        type: 'Txt',
+        name: '_granit-verify.error.example.org',
+        value: 'granit-verify=mock-verify-error-002',
+      },
     ],
     lastCheckedAt: '2026-06-01T06:00:00Z',
     conflicts: [{ type: 'DnsNotPropagated', details: 'TXT record not found after 3 checks' }],
