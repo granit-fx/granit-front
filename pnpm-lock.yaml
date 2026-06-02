@@ -371,6 +371,15 @@ importers:
 
   packages/@granit/cookies: {}
 
+  packages/@granit/cookies-cookieconsent:
+    dependencies:
+      '@granit/cookies':
+        specifier: workspace:*
+        version: link:../cookies
+      vanilla-cookieconsent:
+        specifier: ^3.0.0
+        version: 3.1.0
+
   packages/@granit/cookies-klaro:
     dependencies:
       '@granit/cookies':
