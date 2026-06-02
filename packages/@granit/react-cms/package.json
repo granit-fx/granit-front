@@ -11,6 +11,7 @@
     "@granit/api-client": "workspace:*",
     "@granit/cms": "workspace:*",
     "@granit/react-api-client": "workspace:*",
+    "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
     "@puckeditor/core": "^0.21.2",
     "@tanstack/react-query": "^5.0.0"
@@ -28,9 +29,6 @@
       "optional": true
     },
     "@granit/react-api-client": {
-      "optional": true
-    },
-    "@tanstack/react-query": {
       "optional": true
     }
   }

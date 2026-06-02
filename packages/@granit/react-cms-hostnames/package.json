@@ -12,6 +12,7 @@
     "@granit/cms-hostnames": "workspace:*",
     "@granit/hostnames": "workspace:*",
     "@granit/react-api-client": "workspace:*",
+    "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
     "@tanstack/react-query": "^5.0.0"
   },

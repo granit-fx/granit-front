@@ -12,6 +12,7 @@ import { useCmsSeoConfig } from '../providers/cms-seo-provider';
 
 import { cmsSeoKeys } from './query-keys';
 
+import type { SeoContentKey } from './query-keys';
 import type {
   ListSeoMetadataParams,
   OgCardPreviewResponse,
@@ -22,13 +23,6 @@ import type {
   SiteSeoDefaultsResponse,
 } from '@granit/cms-seo';
 import type { UseQueryResult } from '@tanstack/react-query';
-
-interface SeoContentKey {
-  readonly siteId: string;
-  readonly contentType: string;
-  readonly contentId: string;
-  readonly culture: string;
-}
 
 export function useSeoMetadata(
   key: SeoContentKey,

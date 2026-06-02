@@ -10,6 +10,7 @@ import { useCmsSeoConfig } from '../providers/cms-seo-provider';
 
 import { cmsSeoKeys } from './query-keys';
 
+import type { SeoContentKey } from './query-keys';
 import type {
   SeoMetadataRequest,
   SeoMetadataResponse,
@@ -17,13 +18,6 @@ import type {
   SiteSeoDefaultsResponse,
 } from '@granit/cms-seo';
 import type { UseMutationResult } from '@tanstack/react-query';
-
-interface SeoContentKey {
-  readonly siteId: string;
-  readonly contentType: string;
-  readonly contentId: string;
-  readonly culture: string;
-}
 
 export function useUpsertSeoMetadata(): UseMutationResult<
   SeoMetadataResponse,
@@ -71,8 +65,12 @@ export function useUpdateSeoDefaults(): UseMutationResult<
 }
 
 export function useInvalidateSitemap(): UseMutationResult<void, Error, string> {
-  const { client, basePath } = useCmsSeoConfig();
+  const { client, basePath, queryKeyPrefix } = useCmsSeoConfig();
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: (siteId) => invalidateSitemap(client, basePath, siteId),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: cmsSeoKeys.audit.list(queryKeyPrefix) });
+    },
   });
 }

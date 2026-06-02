@@ -3244,11 +3244,6 @@
           "signature": "function useCmsConfig(): ResolvedCmsConfig"
         },
         {
-          "name": "buildCmsQueryKey",
-          "kind": "function",
-          "signature": "function buildCmsQueryKey( config: ResolvedCmsConfig, ...segments: readonly unknown[] ): readonly unknown[]"
-        },
-        {
           "name": "CmsConfig",
           "kind": "interface",
           "signature": "interface CmsConfig",

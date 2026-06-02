@@ -384,7 +384,7 @@ export interface UpdateReleaseRequest {
   readonly name: string;
 }
 
-/** Request body for `DELETE /api/cms/releases/{id}/actions/{actionId}` (add action). */
+/** Request body for `POST /api/cms/releases/{id}/actions`. */
 export interface AddReleaseActionRequest {
   readonly contentType: string;
   readonly contentId: string;

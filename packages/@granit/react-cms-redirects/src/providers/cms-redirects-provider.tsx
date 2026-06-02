@@ -1,11 +1,10 @@
 import { useOptionalGranitClient } from '@granit/react-api-client';
 import { createContext, useContext, useMemo } from 'react';
 
+import { DEFAULT_BASE_PATH, DEFAULT_QUERY_KEY_PREFIX } from '../constants';
+
 import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
-
-const DEFAULT_BASE_PATH = '';
-const DEFAULT_QUERY_KEY_PREFIX = ['cms-redirects'] as const;
 
 export interface CmsRedirectsConfig {
   readonly client?: AxiosInstance;

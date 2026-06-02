@@ -5,13 +5,7 @@
 
 // ─── Shared ──────────────────────────────────────────────────────────────────
 
-/** Generic paged list returned by admin list endpoints. */
-export interface PagedResponse<T> {
-  readonly items: readonly T[];
-  readonly totalCount: number;
-  readonly page: number;
-  readonly pageSize: number;
-}
+export type { PagedResponse } from '@granit/cms';
 
 // ─── Public / renderer ───────────────────────────────────────────────────────
 

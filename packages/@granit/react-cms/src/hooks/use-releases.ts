@@ -17,6 +17,7 @@ export function useReleases(
     queryKey: cmsKeys.releases.list(queryKeyPrefix, params?.siteId),
     queryFn: () => listReleases(client, basePath, params),
     enabled: options?.enabled ?? true,
+    staleTime: 30_000,
   });
 }
 

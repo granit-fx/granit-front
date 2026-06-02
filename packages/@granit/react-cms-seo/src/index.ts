@@ -39,6 +39,7 @@ export {
 
 // Re-export types from core package
 export type {
+  ApplySeoAiRequest,
   EffectiveSeoResponse,
   Hreflang,
   OgCardPreviewResponse,
@@ -46,6 +47,7 @@ export type {
   OpenGraph,
   OpenGraphArticle,
   PagedResponse,
+  RejectSeoAiRequest,
   RobotsDirective,
   SeoAiSuggestRequest,
   SeoAiSuggestResponse,

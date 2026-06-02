@@ -51,7 +51,7 @@ export type {
 export { CmsMenuNav } from './components/cms-menu-nav';
 
 // Admin provider
-export { CmsProvider, useCmsConfig, buildCmsQueryKey } from './providers/cms-provider';
+export { CmsProvider, useCmsConfig } from './providers/cms-provider';
 export type { CmsConfig, ResolvedCmsConfig, CmsProviderProps } from './providers/cms-provider';
 
 // Admin query keys

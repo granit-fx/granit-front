@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/cms": "workspace:*",
     "@granit/testing": "workspace:*"
   }
 }

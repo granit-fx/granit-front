@@ -17,6 +17,7 @@ export function useMenus(
     queryKey: cmsKeys.menus.list(queryKeyPrefix, params?.siteId),
     queryFn: () => listMenus(client, basePath, params),
     enabled: options?.enabled ?? true,
+    staleTime: 30_000,
   });
 }
 

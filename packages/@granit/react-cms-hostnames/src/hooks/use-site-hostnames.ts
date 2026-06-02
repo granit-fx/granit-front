@@ -31,5 +31,6 @@ export function useSiteHostnameAvailability(
     queryFn: () => checkSiteHostnameAvailability(client, basePath, siteId, host),
     enabled: (options?.enabled ?? true) && siteId.length > 0 && host.length > 0,
     staleTime: 10_000,
+    gcTime: 30_000,
   });
 }

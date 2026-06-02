@@ -1,11 +1,13 @@
 import type { ListSeoMetadataParams, ListSeoSuggestionsParams } from '@granit/cms-seo';
 
-interface SeoMetadataKey {
+export interface SeoContentKey {
   readonly siteId: string;
   readonly contentType: string;
   readonly contentId: string;
   readonly culture: string;
 }
+
+type SeoMetadataKey = SeoContentKey;
 
 export const cmsSeoKeys = {
   metadata: {

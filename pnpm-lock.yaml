@@ -386,6 +386,9 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/cms':
+        specifier: workspace:*
+        version: link:../cms
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -395,6 +398,9 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/cms':
+        specifier: workspace:*
+        version: link:../cms
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1288,6 +1294,9 @@ importers:
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1316,6 +1325,9 @@ importers:
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1338,6 +1350,9 @@ importers:
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1360,6 +1375,9 @@ importers:
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing

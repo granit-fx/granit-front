@@ -17,6 +17,7 @@ export function useSites(
     queryKey: cmsKeys.sites.list(queryKeyPrefix, params),
     queryFn: () => listSites(client, basePath, params),
     enabled: options?.enabled ?? true,
+    staleTime: 30_000,
   });
 }
 
