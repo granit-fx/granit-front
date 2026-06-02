@@ -1,18 +1,13 @@
 import type {
   AddReleaseActionRequest,
   CreateReleaseRequest,
+  ListReleasesParams,
   PagedResponse,
   ReleaseResponse,
   ScheduleReleaseRequest,
   UpdateReleaseRequest,
 } from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
-
-export interface ListReleasesParams {
-  readonly siteId?: string;
-  readonly page?: number;
-  readonly pageSize?: number;
-}
 
 /** `GET /api/cms/releases` — paged list. Requires `Cms.Releases.Read`. */
 export async function listReleases(

@@ -1,17 +1,11 @@
 import type {
   CreateRedirectRequest,
+  ListRedirectsParams,
   PagedResponse,
   RedirectResponse,
   UpdateRedirectRequest,
 } from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
-
-export interface ListRedirectsParams {
-  readonly siteId?: string;
-  readonly page?: number;
-  readonly pageSize?: number;
-  readonly search?: string;
-}
 
 /** `GET /api/cms/redirects` — paged list. Requires `Cms.Redirects.Read`. */
 export async function listRedirects(

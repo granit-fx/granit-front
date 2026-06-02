@@ -15,6 +15,7 @@
     "build": "tsup"
   },
   "peerDependencies": {
+    "@granit/api-client": "workspace:*",
     "@granit/authorization": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "axios": "*",
@@ -40,6 +41,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
+    "@granit/api-client": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/react-testing": "workspace:*"
   }

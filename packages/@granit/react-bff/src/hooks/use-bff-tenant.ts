@@ -17,7 +17,7 @@ import type { BffUser } from '@granit/bff';
  * @returns `tenantId` for an authenticated tenant user, `undefined` for
  *   Host users, anonymous sessions, or while bootstrapping.
  */
-export function resolveBffTenantId(user: BffUser | null): string | undefined {
+function resolveBffTenantId(user: BffUser | null): string | undefined {
   if (!user) return undefined;
   if (user.isHost) return undefined;
   return user.tenantId;

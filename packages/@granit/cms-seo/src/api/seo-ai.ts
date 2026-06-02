@@ -1,21 +1,13 @@
 import type {
   ApplySeoAiRequest,
+  ListSeoSuggestionsParams,
   PagedResponse,
   RejectSeoAiRequest,
   SeoAiSuggestRequest,
   SeoAiSuggestResponse,
   SeoAiSuggestionResponse,
-  SeoAiSuggestionStatus,
 } from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
-
-export interface ListSeoSuggestionsParams {
-  readonly siteId?: string;
-  readonly contentType?: string;
-  readonly status?: SeoAiSuggestionStatus;
-  readonly page?: number;
-  readonly pageSize?: number;
-}
 
 /**
  * `POST /api/cms/seo/ai/suggest` — request a suggestion for a content item.

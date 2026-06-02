@@ -1,18 +1,11 @@
 import { useGranitClient } from '@granit/react-api-client';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
+import { entityDiscoveryQueryKey } from './query-keys';
+
 import type { EntityDiscoveryResponse } from '@granit/entities';
 
 const DISCOVERY_PATH = '/api/v1/entities';
-
-/**
- * Cache key for the entity discovery tree. Distinct from the per-entity
- * manifest keys (see {@link entityManifestQueryKey}) — the discovery
- * payload is shaped only by `(user-perms-hash, culture)` and only changes
- * on deployments or permission grants, while the per-entity manifest
- * additionally varies with the requested facets.
- */
-export const entityDiscoveryQueryKey = () => ['entities', 'discovery'] as const;
 
 /**
  * `GET /entities` — returns the discovery tree of every `EntityDefinition`

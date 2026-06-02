@@ -1,53 +1,10 @@
 import { useGranitClient } from '@granit/react-api-client';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
+import { entityCalendarQueryKey } from './query-keys';
+
 import type { CalendarItemResponse } from '@granit/entities';
 import type { FilterEntry } from '@granit/query-engine';
-
-/**
- * Cache key for one calendar range query. Keyed by
- * `(entityName, from, to, calendar, filtersKey, search)` so distinct
- * windows, named-calendar selections, or filter / search criteria
- * don't collide. Calling
- * `queryClient.invalidateQueries({ queryKey: ['entities', 'calendar', entityName] })`
- * blasts every cached window for one entity, which is what apps
- * typically want after a relevant mutation.
- */
-export function entityCalendarQueryKey(
-  entityName: string,
-  from: string,
-  to: string,
-  calendar?: string | null,
-  filters?: readonly FilterEntry[],
-  search?: string
-): readonly [
-  'entities',
-  'calendar',
-  string,
-  string,
-  string,
-  string | null,
-  string | null,
-  string | null,
-] {
-  const filtersKey =
-    filters && filters.length > 0
-      ? [...filters]
-          .map((f) => `${f.field}.${f.operator}=${f.value}`)
-          .sort((a, b) => a.localeCompare(b))
-          .join('&')
-      : null;
-  return [
-    'entities',
-    'calendar',
-    entityName,
-    from,
-    to,
-    calendar ?? null,
-    filtersKey,
-    search ?? null,
-  ] as const;
-}
 
 export interface UseEntityCalendarOptions {
   /**

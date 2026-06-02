@@ -19,6 +19,9 @@
     "date-fns": "*",
     "tailwind-merge": "*"
   },
+  "devDependencies": {
+    "@granit/testing": "workspace:*"
+  },
   "publishConfig": {
     "exports": {
       ".": {

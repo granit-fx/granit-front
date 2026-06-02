@@ -48,7 +48,7 @@ export function useMetric(
   options: UseMetricOptions = {}
 ): UseQueryResult<MetricResponse> {
   const api = useGranitClient();
-  const normalizedRequest = useMemo(() => normalizeRequest(request), [request]);
+  const normalizedRequest = useMemo(() => normalizeMetricRequest(request), [request]);
 
   const queryKey = useMemo(
     () => ['analytics', 'metric', metricName, normalizedRequest] as const,
@@ -88,18 +88,12 @@ function refetchIntervalFromResponse(
  * Produces a canonical request shape so semantically-equivalent inputs collapse
  * to the same query key (and therefore the same cache entry, in-flight
  * request, and — once streaming lands — subscription identity).
- *
- * Exported for testing. Consumers go through {@link useMetric}.
  */
-export function normalizeMetricRequest(request: MetricRequest): MetricRequest {
+function normalizeMetricRequest(request: MetricRequest): MetricRequest {
   const period =
     'token' in request.period
       ? { token: request.period.token }
       : { from: request.period.from, to: request.period.to };
 
   return request.compareTo ? { period, compareTo: { token: request.compareTo.token } } : { period };
-}
-
-function normalizeRequest(request: MetricRequest): MetricRequest {
-  return normalizeMetricRequest(request);
 }

@@ -1,13 +1,13 @@
 import { buildApiUrl } from '@granit/api-client';
 
 import type {
-  TransitionHistory,
+  WorkflowHistoryPage,
   WorkflowTransitionRequest,
   WorkflowTransitionResult,
   WorkflowStatus,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
-import type { PagedResult, PaginationParams } from '@granit/query-engine';
+import type { PaginationParams } from '@granit/query-engine';
 
 function buildEntityUrl(
   basePath: string,
@@ -47,9 +47,6 @@ export async function executeStateMachineTransition(
   });
   return data;
 }
-
-/** Response shape for the paginated workflow history endpoint. */
-export type WorkflowHistoryPage = PagedResult<TransitionHistory>;
 
 /** Get the transition history (HDS audit trail) for an entity. */
 export async function getHistory(

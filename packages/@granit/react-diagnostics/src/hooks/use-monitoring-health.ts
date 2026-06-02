@@ -1,6 +1,8 @@
 import { DEFAULT_DIAGNOSTICS_BASE_PATH, getMonitoringHealth } from '@granit/diagnostics';
 import { useQuery } from '@tanstack/react-query';
 
+import { buildDiagnosticsQueryKey } from './query-keys';
+
 import type { AxiosInstance } from '@granit/api-client';
 import type { MonitoringHealthResponse } from '@granit/diagnostics';
 import type { UseQueryResult } from '@tanstack/react-query';
@@ -16,35 +18,6 @@ export interface MonitoringHealthOptions {
   /** Custom prefix for all query keys produced by this module. */
   readonly queryKeyPrefix?: readonly string[];
 }
-
-// ---------------------------------------------------------------------------
-// Query key builder
-// ---------------------------------------------------------------------------
-
-const DEFAULT_QUERY_KEY_PREFIX = ['diagnostics'] as const;
-
-/**
- * Builds a query key for diagnostics queries.
- *
- * @param config - Options containing an optional `queryKeyPrefix`.
- * @param segments - Additional segments appended after the prefix.
- */
-export function buildDiagnosticsQueryKey(
-  config: Pick<MonitoringHealthOptions, 'queryKeyPrefix'>,
-  ...segments: readonly unknown[]
-): readonly unknown[] {
-  return [...(config.queryKeyPrefix ?? DEFAULT_QUERY_KEY_PREFIX), ...segments];
-}
-
-// ---------------------------------------------------------------------------
-// Legacy query key factory (delegates to default prefix)
-// ---------------------------------------------------------------------------
-
-/** @deprecated Use {@link buildDiagnosticsQueryKey} instead. */
-export const diagnosticsKeys = {
-  all: DEFAULT_QUERY_KEY_PREFIX as readonly string[],
-  health: () => [...DEFAULT_QUERY_KEY_PREFIX, 'health'] as const,
-};
 
 /**
  * Query hook that fetches the monitoring health status of all registered services.

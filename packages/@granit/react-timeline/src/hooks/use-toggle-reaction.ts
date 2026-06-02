@@ -139,11 +139,12 @@ function patchEntries(
 }
 
 /**
- * Pure optimistic toggle of one emoji on a {@link ReactionMap} —
- * exported so apps doing optimistic UI outside the React Query cache
- * (e.g. against `useTimeline`'s internal state) can reuse the same
- * logic. The server's authoritative count is applied later via
+ * Pure optimistic toggle of one emoji on a {@link ReactionMap}.
+ * Internal utility — used by {@link useToggleReaction}'s `onMutate`.
+ * The server's authoritative count is applied later via
  * {@link applyToggleResult}.
+ *
+ * @internal Not part of the public API; exported only for unit tests.
  */
 export function toggleReactionMap(
   reactions: ReactionMap | undefined,
@@ -171,11 +172,12 @@ export function toggleReactionMap(
 
 /**
  * Apply the backend's authoritative `(emoji, count, byCurrentUser)` to a
- * {@link ReactionMap}. Exported so apps using `useTimeline` (or any other
- * non-React-Query stream state) can merge the {@link ReactionToggleResult}
- * straight into their entry without a full refetch.
+ * {@link ReactionMap}. Internal utility — used by {@link useToggleReaction}'s
+ * `onSuccess` to write server truth into the React Query cache.
+ *
+ * @internal Not part of the public API.
  */
-export function applyToggleResult(
+function applyToggleResult(
   reactions: ReactionMap | undefined,
   result: ReactionToggleResult
 ): ReactionMap | undefined {

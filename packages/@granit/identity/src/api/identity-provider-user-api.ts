@@ -1,16 +1,11 @@
 import type {
+  IdentityProviderUserListParams,
   IdentityUser,
   IdentityUserCreateRequest,
   IdentityUserUpdateRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { UserId } from '@granit/types';
-
-export type IdentityProviderUserListParams = {
-  readonly search?: string;
-  readonly first?: number;
-  readonly max?: number;
-};
 
 /**
  * List/search users from the identity provider.

@@ -1,5 +1,6 @@
 import type {
   CreatePageRequest,
+  ListPagesParams,
   MovePageRequest,
   PageDraftConflictResponse,
   PageResponse,
@@ -7,16 +8,11 @@ import type {
   PageVersionSummaryResponse,
   PagedResponse,
   SaveDraftRequest,
+  SaveDraftResult,
   UpdatePageRequest,
   UpdatePageTranslationRequest,
 } from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
-
-export interface ListPagesParams {
-  readonly siteId?: string;
-  readonly page?: number;
-  readonly pageSize?: number;
-}
 
 /** `GET /api/cms/pages/tree` — flat list ordered as tree. Requires `Cms.Pages.Read`. */
 export async function getPageTree(
@@ -109,10 +105,6 @@ export async function deletePage(
 ): Promise<void> {
   await client.delete(`${basePath}/api/cms/pages/${encodeURIComponent(id)}`);
 }
-
-export type SaveDraftResult =
-  | { readonly ok: true; readonly version: PageVersionSummaryResponse }
-  | { readonly ok: false; readonly conflict: PageDraftConflictResponse };
 
 /**
  * `PUT /api/cms/pages/{id}/draft/{culture}` — save working copy.

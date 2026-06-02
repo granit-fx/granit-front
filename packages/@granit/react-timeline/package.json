@@ -19,7 +19,8 @@
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
-    "@granit/types": "workspace:*"
+    "@granit/types": "workspace:*",
+    "@tanstack/react-query": "^5.0.0"
   },
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
@@ -28,6 +29,7 @@
     "@granit/react-api-client": "workspace:*",
     "@granit/react-query-engine": "workspace:*",
     "@granit/timeline": "workspace:*",
+    "@tanstack/react-query": "^5.0.0",
     "msw": "^2.12.0",
     "react": "^19.0.0"
   },

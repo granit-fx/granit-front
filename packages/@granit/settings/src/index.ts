@@ -1,6 +1,7 @@
 // Types
 export type {
   AdminAppSetting,
+  AdminSettingsScope,
   BulkSettingEntry,
   BulkSettingOutcome,
   BulkSettingResult,
@@ -25,5 +26,4 @@ export {
   saveAdminAppSettings,
   updateSetting,
 } from './api/settings-api';
-export type { AdminSettingsScope } from './api/settings-api';
 export { SettingsPermissions } from './permissions';

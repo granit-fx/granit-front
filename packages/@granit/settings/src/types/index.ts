@@ -75,6 +75,9 @@ export interface BulkUpdateSettingsRequest {
   readonly settings: readonly BulkSettingEntry[];
 }
 
+/** Scopes that expose admin bulk endpoints. `user` is per-user and has no bulk form. */
+export type AdminSettingsScope = 'global' | 'tenant';
+
 /**
  * Response body for `PUT /settings/{scope}/bulk`.
  *

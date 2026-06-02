@@ -22,6 +22,13 @@ export type {
   IdentityUserUpdateRequest,
 } from './identity-provider-requests';
 
+/** Query parameters for `GET {basePath}/users`. */
+export type IdentityProviderUserListParams = {
+  readonly search?: string;
+  readonly first?: number;
+  readonly max?: number;
+};
+
 /** Response from `GET /identity/users/capabilities`. */
 export interface IdentityProviderCapabilities {
   /** Display name of the active identity provider (e.g. "Keycloak", "Entra ID"). */

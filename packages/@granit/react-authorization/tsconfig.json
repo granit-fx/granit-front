@@ -2,6 +2,7 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "paths": {
+      "@granit/api-client": ["../api-client/src/index.ts"],
       "@granit/authorization": ["../authorization/src/index.ts"]
     }
   },

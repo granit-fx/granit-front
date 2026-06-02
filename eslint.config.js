@@ -148,6 +148,9 @@ export default tseslint.config(
       'packages/@granit/react-entities/src/providers/entity-renderer-provider.tsx',
       // Tactical migration pending (VULN-302):
       'packages/@granit/react-authentication-entraid/src/hooks/use-entraid-init.ts',
+      // OTLP transport runs before any Logger is wired — fallback warn when the
+      // collector is unreachable. Cannot inject a Logger here (circular dep).
+      'packages/@granit/logger-otlp/src/otlp-transport.ts',
     ],
     rules: {
       'no-restricted-syntax': ['error', ...XSS_SINK_BANS],

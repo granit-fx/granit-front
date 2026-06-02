@@ -44,3 +44,11 @@ export interface UpdateRedirectRequest {
   readonly statusCode?: number;
   readonly isEnabled?: boolean;
 }
+
+/** Query parameters for `GET /api/cms/redirects`. */
+export interface ListRedirectsParams {
+  readonly siteId?: string;
+  readonly page?: number;
+  readonly pageSize?: number;
+  readonly search?: string;
+}

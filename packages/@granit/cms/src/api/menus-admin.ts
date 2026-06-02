@@ -1,16 +1,11 @@
 import type {
   CreateMenuRequest,
+  ListMenusParams,
   MenuResponse,
   PagedResponse,
   UpdateMenuRequest,
 } from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
-
-export interface ListMenusParams {
-  readonly siteId?: string;
-  readonly page?: number;
-  readonly pageSize?: number;
-}
 
 /** `GET /api/cms/menus` — paged list. Requires `Cms.Menus.Read`. */
 export async function listMenus(

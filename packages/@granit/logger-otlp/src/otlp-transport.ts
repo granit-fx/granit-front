@@ -184,15 +184,13 @@ export function createOtlpTransport(options: OtlpTransportOptions): LogTransport
       });
       if (!response.ok) {
         disabled = true;
-        // eslint-disable-next-line no-console
-        console.warn(
+        globalThis.console.warn(
           `[@granit/logger-otlp] OTLP collector unavailable at ${options.endpoint} (HTTP ${String(response.status)}). Log export disabled for this session.`
         );
       }
     } catch {
       disabled = true;
-      // eslint-disable-next-line no-console
-      console.warn(
+      globalThis.console.warn(
         `[@granit/logger-otlp] OTLP collector unreachable at ${options.endpoint}. Log export disabled for this session.`
       );
     }

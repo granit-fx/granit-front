@@ -3,7 +3,8 @@ import { axiosResponse, createMockClient } from '@granit/testing';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { buildLookupQueryKey, useLookup } from '../hooks/use-lookup';
+import { buildLookupQueryKey } from '../hooks/query-keys';
+import { useLookup } from '../hooks/use-lookup';
 
 import type { LookupDescriptor, LookupResult } from '@granit/data-lookup';
 

@@ -1,16 +1,11 @@
 import type {
   CreateSiteRequest,
+  ListSitesParams,
   PagedResponse,
   SiteResponse,
   UpdateSiteRequest,
 } from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
-
-export interface ListSitesParams {
-  readonly page?: number;
-  readonly pageSize?: number;
-  readonly search?: string;
-}
 
 /** `GET /api/cms/sites` — list sites (paged). Requires `Cms.Sites.Read`. */
 export async function listSites(

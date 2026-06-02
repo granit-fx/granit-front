@@ -1,9 +1,8 @@
+// Query keys
+export { buildDiagnosticsQueryKey, diagnosticsKeys } from './hooks/query-keys';
+
 // Hooks
-export {
-  buildDiagnosticsQueryKey,
-  diagnosticsKeys,
-  useMonitoringHealth,
-} from './hooks/use-monitoring-health';
+export { useMonitoringHealth } from './hooks/use-monitoring-health';
 
 // Types
 export type { MonitoringHealthOptions } from './hooks/use-monitoring-health';

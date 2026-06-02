@@ -128,7 +128,7 @@ export type {
   WidgetRenderBody,
   WidgetRenderContextPayload,
   WidgetRenderKind,
-} from './api/index';
+} from './types/index';
 
 export type {
   DashboardDriftStatus,

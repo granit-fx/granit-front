@@ -82,6 +82,14 @@ export type { PagedResponse } from './paged-response';
 export type { WidgetInstanceResponse } from './widget-instance-response';
 export type { AddWidgetRequest, UpdateWidgetRequest } from './widget-requests';
 
+// API request params / options (framework-agnostic, used by api/ layer)
+export type { DashboardListParams, DashboardsRequestOptions } from './dashboard-api-params';
+export type {
+  WidgetRenderBody,
+  WidgetRenderContextPayload,
+  WidgetRenderKind,
+} from './dashboard-api-params';
+
 // Bridge: persistence ↔ definition
 export {
   STRUCTURAL_WIDGET_FIELDS,

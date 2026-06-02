@@ -13,6 +13,10 @@
   "scripts": {
     "build": "tsup"
   },
+  "devDependencies": {
+    "@granit/logger": "workspace:*",
+    "@granit/testing": "workspace:*"
+  },
   "peerDependencies": {
     "@granit/logger": "workspace:*"
   },

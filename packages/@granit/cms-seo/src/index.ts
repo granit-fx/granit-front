@@ -11,6 +11,7 @@ export type {
   RobotsDirective,
   TwitterCard,
   // SEO admin
+  ListSeoMetadataParams,
   OgCardPreviewResponse,
   SeoAuditIssueResponse,
   SeoAuditIssueType,
@@ -23,6 +24,7 @@ export type {
   SiteSeoDefaultsResponse,
   // SEO-AI
   ApplySeoAiRequest,
+  ListSeoSuggestionsParams,
   RejectSeoAiRequest,
   SeoAiSuggestOutcome,
   SeoAiSuggestRequest,
@@ -47,7 +49,6 @@ export {
   updateSeoDefaults,
   upsertSeoMetadata,
 } from './api/seo-admin.js';
-export type { ListSeoMetadataParams } from './api/seo-admin.js';
 
 // ─── API — SEO-AI ─────────────────────────────────────────────────────────────
 export {
@@ -58,4 +59,3 @@ export {
   suggestSeo,
   triggerBulkSeoAudit,
 } from './api/seo-ai.js';
-export type { ListSeoSuggestionsParams } from './api/seo-ai.js';

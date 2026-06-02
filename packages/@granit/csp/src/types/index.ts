@@ -16,19 +16,8 @@ export interface TrustedTypePolicyOptions {
   createScriptURL?: (input: string) => string;
 }
 
-interface TrustedTypePolicyFactory {
-  createPolicy(name: string, options: TrustedTypePolicyOptions): unknown;
-}
-
 /** Result of an `installPolicy()` call. */
 export type InstallResult =
   | { readonly status: 'installed'; readonly name: string }
   | { readonly status: 'already-installed'; readonly name: string }
   | { readonly status: 'unsupported'; readonly reason: 'no-window' | 'no-trusted-types' };
-
-/** Internal — read the Trusted Types factory in a SSR-safe way. */
-export function getTrustedTypesFactory(): TrustedTypePolicyFactory | null {
-  if (typeof globalThis === 'undefined') return null;
-  const w = globalThis as { trustedTypes?: TrustedTypePolicyFactory };
-  return w.trustedTypes ?? null;
-}

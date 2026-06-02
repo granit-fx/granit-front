@@ -1,4 +1,4 @@
-// Types
+// Types & Constants
 export type {
   AIChatMessageRequest,
   AIChatMessageRole,
@@ -21,15 +21,14 @@ export type {
   AIWorkspaceListResponse,
   AIWorkspaceResponse,
   AIWorkspaceUpdateRequest,
+  ChatStreamEvent,
 } from './types/index';
-
-// Constants
 export {
   AI_CAPABILITY_EXTENSIONS,
   AI_PERMISSIONS,
   AI_STREAM_DONE_MARKER,
   AI_WORKSPACE_KINDS,
-} from './constants';
+} from './types/index';
 
 // API — Providers
 export { listAIProviderModels, listAIProviders } from './api/ai-providers-api';
@@ -45,7 +44,6 @@ export {
 
 // API — Chat
 export { chatComplete, chatStream } from './api/ai-chat-api';
-export type { ChatStreamEvent } from './api/ai-chat-api';
 
 // API — Embeddings
 export { generateEmbeddings } from './api/ai-embeddings-api';

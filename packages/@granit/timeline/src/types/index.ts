@@ -11,7 +11,7 @@ export type {
 export type { CreateTimelineEntryRequest, TimelineQueryParams } from './request';
 export type { TimelineConfig } from './config';
 export type { MentionSuggestion } from './mention';
-export { parseReactionEmoji, toReactionEmoji } from './reaction';
+export { parseReactionEmoji, toReactionEmoji } from '../utils/reaction-utils';
 export type {
   ReactionAggregate,
   ReactionEmoji,

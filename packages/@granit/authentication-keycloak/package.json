@@ -17,6 +17,10 @@
     "@granit/authentication": "workspace:*",
     "keycloak-js": "*"
   },
+  "devDependencies": {
+    "@granit/authentication": "workspace:*",
+    "@granit/testing": "workspace:*"
+  },
   "publishConfig": {
     "exports": {
       ".": {

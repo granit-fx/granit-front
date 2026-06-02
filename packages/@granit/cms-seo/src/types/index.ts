@@ -219,3 +219,23 @@ export interface ApplySeoAiRequest {
 export interface RejectSeoAiRequest {
   readonly reason?: string | null;
 }
+
+// ─── Query params ─────────────────────────────────────────────────────────────
+
+/** Query params for the SEO audit grid (`GET /api/cms/seo/metadata`). */
+export interface ListSeoMetadataParams {
+  readonly siteId?: string;
+  readonly contentType?: string;
+  readonly issueType?: SeoAuditIssueType;
+  readonly page?: number;
+  readonly pageSize?: number;
+}
+
+/** Query params for the SEO-AI suggestions inbox (`GET /api/cms/seo/ai/suggestions`). */
+export interface ListSeoSuggestionsParams {
+  readonly siteId?: string;
+  readonly contentType?: string;
+  readonly status?: SeoAiSuggestionStatus;
+  readonly page?: number;
+  readonly pageSize?: number;
+}

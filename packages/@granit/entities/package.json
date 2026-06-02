@@ -16,6 +16,9 @@
   "peerDependencies": {
     "@granit/api-client": "workspace:*"
   },
+  "devDependencies": {
+    "@granit/testing": "workspace:*"
+  },
   "publishConfig": {
     "exports": {
       ".": {

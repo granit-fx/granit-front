@@ -1,6 +1,7 @@
 // ─── Types ───────────────────────────────────────────────────────────────────
 export type {
   CreateRedirectRequest,
+  ListRedirectsParams,
   PagedResponse,
   RedirectResolveResponse,
   RedirectResponse,
@@ -17,4 +18,3 @@ export {
   listRedirects,
   updateRedirect,
 } from './api/redirects-admin.js';
-export type { ListRedirectsParams } from './api/redirects-admin.js';

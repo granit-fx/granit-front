@@ -63,3 +63,13 @@ export interface ApiKeyUpdateScopesRequest {
   readonly permissions: readonly string[];
   readonly allowedCidrs: readonly string[];
 }
+
+/** Query parameters accepted by {@link listApiKeys}. */
+export interface ListApiKeysParams {
+  search?: string;
+  type?: readonly string[];
+  environment?: string;
+  includeRevoked?: boolean;
+  page?: number;
+  pageSize?: number;
+}

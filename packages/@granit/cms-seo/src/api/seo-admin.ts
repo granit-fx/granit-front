@@ -1,8 +1,8 @@
 import type {
+  ListSeoMetadataParams,
   OgCardPreviewResponse,
   PagedResponse,
   SeoAuditIssueResponse,
-  SeoAuditIssueType,
   SeoMetadataRequest,
   SeoMetadataResponse,
   SerpPreviewResponse,
@@ -10,14 +10,6 @@ import type {
   SiteSeoDefaultsResponse,
 } from '../types/index.js';
 import type { AxiosInstance } from '@granit/api-client';
-
-export interface ListSeoMetadataParams {
-  readonly siteId?: string;
-  readonly contentType?: string;
-  readonly issueType?: SeoAuditIssueType;
-  readonly page?: number;
-  readonly pageSize?: number;
-}
 
 /**
  * `GET /api/cms/seo/sites/{siteId}/metadata/{contentType}/{contentId}/{culture}` — raw metadata.

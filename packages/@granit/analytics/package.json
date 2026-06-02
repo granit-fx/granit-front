@@ -27,6 +27,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
-    "@granit/dashboards": "workspace:*"
+    "@granit/dashboards": "workspace:*",
+    "@granit/testing": "workspace:*"
   }
 }

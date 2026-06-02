@@ -56,6 +56,13 @@ export type {
   ReleaseStatus,
   ScheduleReleaseRequest,
   UpdateReleaseRequest,
+  // Admin list params
+  ListMenusParams,
+  ListPagesParams,
+  ListReleasesParams,
+  ListSitesParams,
+  // Admin result types
+  SaveDraftResult,
 } from './types/index.js';
 
 // ─── API — Public renderer ────────────────────────────────────────────────────
@@ -76,7 +83,6 @@ export { batchResolveDocuments } from './api/documents.js';
 
 // Sites
 export { createSite, deleteSite, getSite, listSites, updateSite } from './api/sites.js';
-export type { ListSitesParams } from './api/sites.js';
 
 // Pages admin
 export {
@@ -94,17 +100,9 @@ export {
   updatePage,
   updatePageTranslation,
 } from './api/pages-admin.js';
-export type { ListPagesParams, SaveDraftResult } from './api/pages-admin.js';
 
 // Menus admin
-export {
-  createMenu,
-  deleteMenu,
-  getMenu,
-  listMenus,
-  updateMenu,
-} from './api/menus-admin.js';
-export type { ListMenusParams } from './api/menus-admin.js';
+export { createMenu, deleteMenu, getMenu, listMenus, updateMenu } from './api/menus-admin.js';
 
 // Releases
 export {
@@ -119,5 +117,3 @@ export {
   scheduleRelease,
   updateRelease,
 } from './api/releases.js';
-export type { ListReleasesParams } from './api/releases.js';
-

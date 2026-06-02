@@ -13,11 +13,11 @@ export type {
   WorkflowTransitionRequest,
   WorkflowTransitionResult,
   WorkflowConfig,
+  WorkflowHistoryPage,
   WorkflowLifecycleStatusValue,
   WorkflowStatus,
 } from './types/index';
 
 // API
 export { executeStateMachineTransition, getHistory, listTransitions } from './api/workflow-api';
-export type { WorkflowHistoryPage } from './api/workflow-api';
 export { WorkflowPermissions } from './permissions';

@@ -399,6 +399,44 @@ export interface ScheduleReleaseRequest {
   readonly timeZoneId: string;
 }
 
+// ─── List params (admin) ─────────────────────────────────────────────────────
+
+/** Query parameters for `GET /api/cms/sites` (paged). */
+export interface ListSitesParams {
+  readonly page?: number;
+  readonly pageSize?: number;
+  readonly search?: string;
+}
+
+/** Query parameters for `GET /api/cms/pages` (paged). */
+export interface ListPagesParams {
+  readonly siteId?: string;
+  readonly page?: number;
+  readonly pageSize?: number;
+}
+
+/** Query parameters for `GET /api/cms/menus` (paged). */
+export interface ListMenusParams {
+  readonly siteId?: string;
+  readonly page?: number;
+  readonly pageSize?: number;
+}
+
+/** Query parameters for `GET /api/cms/releases` (paged). */
+export interface ListReleasesParams {
+  readonly siteId?: string;
+  readonly page?: number;
+  readonly pageSize?: number;
+}
+
+/**
+ * Result of {@link saveDraft}.
+ * Returns `{ ok: false, conflict }` on `409` (concurrent edit).
+ */
+export type SaveDraftResult =
+  | { readonly ok: true; readonly version: PageVersionSummaryResponse }
+  | { readonly ok: false; readonly conflict: PageDraftConflictResponse };
+
 // ─── Document Resolution ─────────────────────────────────────────────────────
 
 /** Single item in a {@link BatchResolveDocumentsRequest}. */

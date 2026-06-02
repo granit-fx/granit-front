@@ -15,7 +15,9 @@
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
-    "@granit/testing": "workspace:*"
+    "@granit/query-engine": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*"
   },
   "peerDependencies": {
     "@granit/api-client": "workspace:*",

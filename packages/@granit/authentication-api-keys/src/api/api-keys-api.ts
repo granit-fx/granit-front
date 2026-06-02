@@ -4,18 +4,9 @@ import type {
   ApiKeyResponse,
   ApiKeyRotateResponse,
   ApiKeyUpdateScopesRequest,
+  ListApiKeysParams,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
-
-/** Query parameters accepted by {@link listApiKeys}. */
-export interface ListApiKeysParams {
-  search?: string;
-  type?: readonly string[];
-  environment?: string;
-  includeRevoked?: boolean;
-  page?: number;
-  pageSize?: number;
-}
 
 /**
  * Lists API keys filtered by the given parameters.
