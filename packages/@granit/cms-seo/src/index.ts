@@ -1,5 +1,7 @@
 // ─── Types ───────────────────────────────────────────────────────────────────
 export type {
+  // Shared
+  PagedResponse,
   // Public / renderer
   EffectiveSeoResponse,
   Hreflang,

@@ -1,10 +1,3 @@
-import type { AxiosInstance } from '@granit/api-client';
-import type {
-  CheckAvailabilityResponse,
-  CreateManagedHostnameRequest,
-  ListHostnamesParams,
-  ManagedHostnameResponse,
-} from '@granit/hostnames';
 import {
   checkAvailability,
   createHostname,
@@ -13,6 +6,14 @@ import {
   setPrimary,
   clearPrimary,
   verifyNow,
+} from '@granit/hostnames';
+
+import type { AxiosInstance } from '@granit/api-client';
+import type {
+  CheckAvailabilityResponse,
+  CreateManagedHostnameRequest,
+  ListHostnamesParams,
+  ManagedHostnameResponse,
 } from '@granit/hostnames';
 
 /** Builds the base URL for a site's hostname collection. */

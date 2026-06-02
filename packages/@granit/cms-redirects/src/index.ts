@@ -1,6 +1,7 @@
 // ─── Types ───────────────────────────────────────────────────────────────────
 export type {
   CreateRedirectRequest,
+  PagedResponse,
   RedirectResolveResponse,
   RedirectResponse,
   UpdateRedirectRequest,

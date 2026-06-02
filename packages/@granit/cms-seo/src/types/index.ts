@@ -3,6 +3,16 @@
  * Mirrors `Granit.Cms.Seo.*` .NET types.
  */
 
+// ─── Shared ──────────────────────────────────────────────────────────────────
+
+/** Generic paged list returned by admin list endpoints. */
+export interface PagedResponse<T> {
+  readonly items: readonly T[];
+  readonly totalCount: number;
+  readonly page: number;
+  readonly pageSize: number;
+}
+
 // ─── Public / renderer ───────────────────────────────────────────────────────
 
 /** Crawler policy for a content item. Maps `Granit.Cms.Seo.Domain.RobotsDirective`. */
@@ -186,7 +196,9 @@ export interface SeoAiSuggestionResponse {
   readonly culture: string;
   readonly status: SeoAiSuggestionStatus;
   readonly suggestion?: SeoMetadataRequest | null;
-  readonly diff?: Readonly<Record<string, { readonly current: unknown; readonly proposed: unknown }>> | null;
+  readonly diff?: Readonly<
+    Record<string, { readonly current: unknown; readonly proposed: unknown }>
+  > | null;
 }
 
 /** Response from `POST /api/cms/seo/ai/suggest`. */

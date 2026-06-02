@@ -3,6 +3,16 @@
  * Mirrors `Granit.Cms.Redirects.*` .NET types.
  */
 
+// ─── Shared ──────────────────────────────────────────────────────────────────
+
+/** Generic paged list returned by admin list endpoints. */
+export interface PagedResponse<T> {
+  readonly items: readonly T[];
+  readonly totalCount: number;
+  readonly page: number;
+  readonly pageSize: number;
+}
+
 /**
  * Redirect result returned by `GET /api/cms/redirects/resolve` (HTTP 200).
  * When no redirect matches the endpoint returns 204 — callers receive `null`.

@@ -23,10 +23,15 @@ const hostname: ManagedHostnameResponse = {
   host: 'www.acme.com',
   ownerType: 'cms.site',
   ownerId: SITE_ID,
+  tenantId: null,
   status: ManagedHostnameStatus.Active,
   isPrimary: true,
+  verificationToken: null,
   expectedDnsRecords: [],
   lastCheckedAt: '2026-06-01T10:00:00Z',
+  conflicts: [],
+  failedCheckCount: 0,
+  nextCheckAt: null,
   certificateStatus: CertificateStatus.Secured,
   certExpiresAt: '2027-06-01T10:00:00Z',
   createdAt: '2026-01-01T00:00:00Z',
@@ -66,7 +71,10 @@ describe('addSiteHostname', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValue(axiosResponse(hostname));
 
-    const result = await addSiteHostname(client, BASE, SITE_ID, { host: 'www.acme.com', isPrimary: true });
+    const result = await addSiteHostname(client, BASE, SITE_ID, {
+      host: 'www.acme.com',
+      isPrimary: true,
+    });
 
     expect(client.post).toHaveBeenCalledWith(HOSTNAMES_BASE, {
       host: 'www.acme.com',
@@ -114,7 +122,9 @@ describe('clearSiteHostnamePrimary', () => {
 describe('checkSiteHostnameAvailability', () => {
   it('GET /availability?host=', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse({ host: 'www.acme.com', isAvailable: true }));
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse({ host: 'www.acme.com', isAvailable: true })
+    );
 
     const result = await checkSiteHostnameAvailability(client, BASE, SITE_ID, 'www.acme.com');
 
