@@ -1,8 +1,7 @@
 {
-  "name": "@granit/cookies-klaro",
-  "description": "Klaro CMP adapter for @granit/cookies — DEPRECATED: migrate to @granit/cookies-cookieconsent",
-  "deprecated": "Migrate to @granit/cookies-cookieconsent. See https://github.com/granit-fx/granit-front/issues/230",
-  "version": "0.2.0",
+  "name": "@granit/cookies-cookieconsent",
+  "description": "vanilla-cookieconsent (cc_cookie) CMP adapter for @granit/cookies",
+  "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
@@ -16,7 +15,7 @@
   },
   "peerDependencies": {
     "@granit/cookies": "workspace:*",
-    "klaro": "^0.7.0"
+    "vanilla-cookieconsent": "^3.0.0"
   },
   "publishConfig": {
     "exports": {

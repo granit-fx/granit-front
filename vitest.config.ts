@@ -157,6 +157,10 @@ export default defineConfig({
         __dirname,
         'packages/@granit/cookies-klaro/src/index.ts'
       ),
+      '@granit/cookies-cookieconsent': path.resolve(
+        __dirname,
+        'packages/@granit/cookies-cookieconsent/src/index.ts'
+      ),
       '@granit/data-exchange': path.resolve(
         __dirname,
         'packages/@granit/data-exchange/src/index.ts'

@@ -1022,8 +1022,31 @@
       "exports": []
     },
     {
+      "name": "@granit/cookies-cookieconsent",
+      "description": "vanilla-cookieconsent (cc_cookie) CMP adapter for @granit/cookies",
+      "exports": [
+        {
+          "name": "createCookieConsentProvider",
+          "kind": "function",
+          "signature": "function createCookieConsentProvider( options: CreateCookieConsentProviderOptions ="
+        },
+        {
+          "name": "CategoryNames",
+          "kind": "interface",
+          "signature": "interface CategoryNames",
+          "members": []
+        },
+        {
+          "name": "CreateCookieConsentProviderOptions",
+          "kind": "interface",
+          "signature": "interface CreateCookieConsentProviderOptions",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/cookies-klaro",
-      "description": "Klaro CMP adapter for @granit/cookies",
+      "description": "Klaro CMP adapter for @granit/cookies — DEPRECATED: migrate to @granit/cookies-cookieconsent",
       "exports": [
         {
           "name": "createKlaroCookieConsentProvider",

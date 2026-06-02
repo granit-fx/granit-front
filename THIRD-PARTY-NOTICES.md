@@ -4,7 +4,7 @@ This file lists the third-party libraries used by the **granit-front** project
 along with their respective licenses. It is updated whenever an external
 dependency is added or modified.
 
-Last updated: 2026-06-01
+Last updated: 2026-06-02
 
 ---
 
@@ -12,7 +12,7 @@ Last updated: 2026-06-01
 
 | License      | Package count |
 | ------------ | ------------- |
-| MIT          | 42            |
+| MIT          | 43            |
 | Apache-2.0   | 14            |
 | BSD-3-Clause | 1             |
 
@@ -67,6 +67,7 @@ Last updated: 2026-06-01
 | tailwind-merge                  | 3.6.0    | Copyright (c) Dany Castillo                |
 | tsup                            | 8.5.1    | Copyright (c) EGOIST                       |
 | typescript-eslint               | 8.60.0   | typescript-eslint Contributors             |
+| vanilla-cookieconsent           | 3.1.0    | Copyright (c) Orest Bida                   |
 | vite                            | 8.0.16   | Copyright (c) Evan You                     |
 | amazon-cognito-identity-js      | 6.3.16   | Copyright (c) Amazon.com, Inc.             |
 | vitest                          | 4.1.8    | Vitest Contributors                        |
@@ -96,8 +97,9 @@ Last updated: 2026-06-01
 | ------- | ------- | ------------------------------------ |
 | klaro   | 0.7.21  | Copyright (c) KIProtect GmbH, Berlin |
 
-> `klaro` is a peerDependency of `@granit/cookies-klaro`, installed in
-> consumer applications.
+> `klaro` is a peerDependency of the deprecated `@granit/cookies-klaro`, installed in
+> consumer applications. `vanilla-cookieconsent` is a peerDependency of
+> `@granit/cookies-cookieconsent`, its replacement.
 >
 > `@azure/msal-browser` is a peerDependency of `@granit/authentication-entraid`,
 > `amazon-cognito-identity-js` is a peerDependency of `@granit/authentication-cognito`,
