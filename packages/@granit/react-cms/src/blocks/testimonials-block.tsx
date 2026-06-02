@@ -7,8 +7,8 @@ export function TestimonialsBlock({ title, testimonials }: TestimonialsBlockProp
     <section data-block="testimonials">
       {title && <h2>{title}</h2>}
       <ul>
-        {testimonials.map((t, idx) => (
-          <li key={idx}>
+        {testimonials.map((t) => (
+          <li key={t.quote}>
             <blockquote>{t.quote}</blockquote>
             {t.author && (
               <cite>

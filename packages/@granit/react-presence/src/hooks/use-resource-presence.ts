@@ -147,11 +147,11 @@ export function useResourcePresence(
 
     // Validate deterministic inputs before any network activity.
     // metadata is validated per-tick inside joinResourceRoom.
-    const kindError = !/^[a-z][a-z0-9_.-]{0,63}$/.test(kind)
-      ? new TypeError(
+    const kindError = /^[a-z][a-z0-9_.-]{0,63}$/.test(kind)
+      ? null
+      : new TypeError(
           `Invalid resource presence kind "${kind}". Must match /^[a-z][a-z0-9_.-]{0,63}$/`
-        )
-      : null;
+        );
     const idError =
       id.length > 256 ? new TypeError(`Resource presence id must be ≤ 256 characters`) : null;
     const validationError = kindError ?? idError;
@@ -173,7 +173,7 @@ export function useResourcePresence(
       if (cancelled || document.visibilityState !== 'visible' || inFlight) return;
       inFlight = true;
       try {
-        const body = metadataRef.current != null ? { metadata: metadataRef.current } : {};
+        const body = metadataRef.current == null ? {} : { metadata: metadataRef.current };
         const data = await retryWithBackoff(
           () => joinResourceRoom(config.client, config.basePath, kind, id, body, ac.signal),
           MAX_RETRIES,

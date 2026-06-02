@@ -17,6 +17,36 @@ export interface EffectiveField {
   readonly hidden: boolean;
 }
 
+function applyHideDelta(meta: Map<string, EffectiveField>, fieldName: string): void {
+  const current = meta.get(fieldName)!;
+  meta.set(fieldName, { ...current, hidden: true });
+}
+
+function applyRegroupDelta(
+  meta: Map<string, EffectiveField>,
+  fieldName: string,
+  groupKey: string
+): void {
+  const current = meta.get(fieldName)!;
+  meta.set(fieldName, { ...current, group: groupKey });
+}
+
+function applyReorderDelta(
+  order: string[],
+  delta: Extract<LayoutDelta, { kind: 'Reorder' }>
+): void {
+  const fromIdx = order.indexOf(delta.fieldName);
+  if (fromIdx === -1) return;
+  const anchor = delta.beforeFieldName ?? delta.afterFieldName;
+  if (anchor === undefined) return;
+  const anchorIdx = order.indexOf(anchor);
+  if (anchorIdx === -1 || anchor === delta.fieldName) return;
+  order.splice(fromIdx, 1);
+  const reAnchor = order.indexOf(anchor);
+  const targetIdx = delta.beforeFieldName === undefined ? reAnchor + 1 : reAnchor;
+  order.splice(targetIdx, 0, delta.fieldName);
+}
+
 /**
  * Apply a list of deltas to the schema fields and return the effective
  * layout. Pure function — same inputs always yield the same output, which
@@ -47,22 +77,11 @@ export function applyDeltas(
   for (const delta of deltas) {
     if (!meta.has(delta.fieldName)) continue;
     if (delta.kind === 'Hide') {
-      const current = meta.get(delta.fieldName)!;
-      meta.set(delta.fieldName, { ...current, hidden: true });
+      applyHideDelta(meta, delta.fieldName);
     } else if (delta.kind === 'Regroup') {
-      const current = meta.get(delta.fieldName)!;
-      meta.set(delta.fieldName, { ...current, group: delta.groupKey });
+      applyRegroupDelta(meta, delta.fieldName, delta.groupKey);
     } else if (delta.kind === 'Reorder') {
-      const fromIdx = order.indexOf(delta.fieldName);
-      if (fromIdx === -1) continue;
-      const anchor = delta.beforeFieldName ?? delta.afterFieldName;
-      if (anchor === undefined) continue;
-      const anchorIdx = order.indexOf(anchor);
-      if (anchorIdx === -1 || anchor === delta.fieldName) continue;
-      order.splice(fromIdx, 1);
-      const reAnchor = order.indexOf(anchor);
-      const targetIdx = delta.beforeFieldName === undefined ? reAnchor + 1 : reAnchor;
-      order.splice(targetIdx, 0, delta.fieldName);
+      applyReorderDelta(order, delta);
     }
   }
 

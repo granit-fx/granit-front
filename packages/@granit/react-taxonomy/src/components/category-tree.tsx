@@ -170,7 +170,11 @@ function CategoryNode({
             leaf and the lazy children query (`enabled: expanded`) never fires,
             so newly created sub-categories are invisible. Only treat the row
             as a definitive leaf when `hasChildren === false`. */}
-        {category.hasChildren !== false ? (
+        {category.hasChildren === false ? (
+          <span data-granit-category-tree-leaf-spacer="" aria-hidden="true">
+            •
+          </span>
+        ) : (
           <button
             type="button"
             data-granit-category-tree-toggle=""
@@ -179,10 +183,6 @@ function CategoryNode({
           >
             {expanded ? '▾' : '▸'}
           </button>
-        ) : (
-          <span data-granit-category-tree-leaf-spacer="" aria-hidden="true">
-            •
-          </span>
         )}
         {onSelect ? (
           <button

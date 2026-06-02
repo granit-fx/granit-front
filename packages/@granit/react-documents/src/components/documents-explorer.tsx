@@ -209,7 +209,7 @@ export function DocumentsExplorer({
   // / contenteditable is focused so we don't hijack typing in those fields.
   useEffect(() => {
     if (!enableSearchShortcut) return;
-    if (typeof globalThis.window === 'undefined') return;
+    if (globalThis.window === undefined) return;
     const win = globalThis.window;
     function handler(event: KeyboardEvent): void {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
@@ -235,6 +235,13 @@ export function DocumentsExplorer({
   }, [focusedDoc, bookmarks]);
 
   const folderId = currentFolder?.id ?? '';
+
+  let sidebarLabels: DocumentsSidebarLabels | undefined;
+  if (labels?.sidebar) {
+    sidebarLabels = { ...labels.sidebar, tree: labels.tree };
+  } else if (labels?.tree) {
+    sidebarLabels = { tree: labels.tree };
+  }
 
   return (
     <div data-granit-documents-explorer="" className={className}>
@@ -262,13 +269,7 @@ export function DocumentsExplorer({
             recents={bookmarks.recents}
             onPickBookmark={(bookmark) => handleOpenDocument(bookmark.id)}
             onRemoveFavorite={bookmarks.removeFavorite}
-            labels={
-              labels?.sidebar
-                ? { ...labels.sidebar, tree: labels.tree }
-                : labels?.tree
-                  ? { tree: labels.tree }
-                  : undefined
-            }
+            labels={sidebarLabels}
           />
         </aside>
         <UploadDropZone
@@ -342,7 +343,7 @@ export function DocumentsExplorer({
         />
         {showInspector && inspectorVisible && (
           <aside data-granit-documents-explorer-inspector="">
-            {focusedDoc ? (
+            {focusedDoc && (
               <DocumentDetail
                 documentId={focusedDoc.id}
                 canManage={canManage}
@@ -351,11 +352,13 @@ export function DocumentsExplorer({
                 onToggleFavorite={handleToggleFavorite}
                 labels={labels?.detail}
               />
-            ) : selectedIds.size > 1 ? (
+            )}
+            {!focusedDoc && selectedIds.size > 1 && (
               <div data-granit-documents-explorer-inspector-multi="">
                 {labelStrings.inspectorMultiple(selectedIds.size)}
               </div>
-            ) : (
+            )}
+            {!focusedDoc && selectedIds.size <= 1 && (
               <div data-granit-documents-explorer-inspector-empty="">
                 {labelStrings.inspectorEmpty}
               </div>

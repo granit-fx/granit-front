@@ -25,7 +25,7 @@ const MAX_BATCH = PRESENCE_DEFAULTS.MaxBatchSize;
 export function normalizeUserIds(userIds: readonly UserId[]): UserId[] {
   return Array.from(new Set(userIds))
     .filter((id) => id.length > 0)
-    .sort();
+    .sort((a, b) => a.localeCompare(b));
 }
 
 export async function fetchBatchPresence(

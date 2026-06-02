@@ -37,7 +37,7 @@ function isBookmark(value: unknown): value is DocumentBookmark {
 }
 
 function readStorage(key: string): StoredBookmarks | null {
-  if (typeof globalThis.localStorage === 'undefined') return null;
+  if (globalThis.localStorage === undefined) return null;
   try {
     const raw = globalThis.localStorage.getItem(key);
     if (!raw) return null;

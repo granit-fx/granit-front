@@ -23,7 +23,7 @@ export function ReferenceRewriterSummary({
   rewriteCounts,
   labels,
   translateLabel = (key) => key,
-  translateRows = (count) => String(count),
+  translateRows = String,
 }: Readonly<ReferenceRewriterSummaryProps>) {
   const visible = Object.entries(rewriteCounts).filter(([, count]) => count > 0);
   if (visible.length === 0) {

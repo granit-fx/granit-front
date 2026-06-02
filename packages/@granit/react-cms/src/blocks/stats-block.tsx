@@ -7,8 +7,8 @@ export function StatsBlock({ title, stats }: StatsBlockProps) {
     <section data-block="stats">
       {title && <h2>{title}</h2>}
       <ul>
-        {stats.map((stat, idx) => (
-          <li key={idx}>
+        {stats.map((stat) => (
+          <li key={stat.label}>
             <strong>{stat.value}</strong>
             <span>{stat.label}</span>
           </li>

@@ -101,12 +101,14 @@ export function DocumentsToolbar({
     }
   }
 
-  const summary =
-    count === 0
-      ? labelStrings.noSelection
-      : count === 1
-        ? labelStrings.oneSelected(selectedDocs[0]?.name ?? '')
-        : labelStrings.manySelected(count);
+  let summary: string;
+  if (count === 0) {
+    summary = labelStrings.noSelection;
+  } else if (count === 1) {
+    summary = labelStrings.oneSelected(selectedDocs[0]?.name ?? '');
+  } else {
+    summary = labelStrings.manySelected(count);
+  }
 
   return (
     <div
@@ -165,11 +167,7 @@ export function DocumentsToolbar({
 
       <span data-granit-documents-toolbar-trailing="">
         {viewMode && onViewModeChange && (
-          <span
-            data-granit-documents-toolbar-view=""
-            role="group"
-            aria-label={labelStrings.viewList}
-          >
+          <fieldset data-granit-documents-toolbar-view="" aria-label={labelStrings.viewList}>
             <button
               type="button"
               data-granit-documents-toolbar-view-list=""
@@ -188,7 +186,7 @@ export function DocumentsToolbar({
             >
               ▦
             </button>
-          </span>
+          </fieldset>
         )}
         {viewMode === 'grid' && tileSize !== undefined && onTileSizeChange && (
           <label data-granit-documents-toolbar-zoom="">

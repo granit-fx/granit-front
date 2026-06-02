@@ -39,15 +39,15 @@ const EMOJI_SEQUENCE = new RegExp(
   '^' +
     '(?:' +
     // Keycap
-    '[0-9#*]\\uFE0F?\\u20E3' +
+    String.raw`[0-9#*]️?⃣` +
     '|' +
     // Regional Indicator pair (flag)
-    '\\p{Regional_Indicator}\\p{Regional_Indicator}' +
+    String.raw`\p{Regional_Indicator}\p{Regional_Indicator}` +
     '|' +
     // Pictographic + optional tag sequence
-    '\\p{Extended_Pictographic}\\uFE0F?[\\u{1F3FB}-\\u{1F3FF}]?' +
-    '(?:\\u200D\\p{Extended_Pictographic}\\uFE0F?[\\u{1F3FB}-\\u{1F3FF}]?)*' +
-    '(?:[\\u{E0020}-\\u{E007E}]+\\u{E007F})?' +
+    String.raw`\p{Extended_Pictographic}️?[\u{1F3FB}-\u{1F3FF}]?` +
+    String.raw`(?:‍\p{Extended_Pictographic}️?[\u{1F3FB}-\u{1F3FF}]?)*` +
+    String.raw`(?:[\u{E0020}-\u{E007E}]+\u{E007F})?` +
     ')' +
     '$',
   'u'

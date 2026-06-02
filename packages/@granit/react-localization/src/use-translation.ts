@@ -1,11 +1,11 @@
 import {
+  type FallbackNs,
   type UseTranslationOptions,
   type UseTranslationResponse,
   useTranslation as useReactI18NextTranslation,
 } from 'react-i18next';
 
 import type { FlatNamespace, KeyPrefix, Namespace } from 'i18next';
-import type { FallbackNs } from 'react-i18next';
 
 /**
  * Re-exports `react-i18next`'s `useTranslation` with one bridge:

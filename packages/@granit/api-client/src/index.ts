@@ -134,6 +134,40 @@ export function setIdempotencyKeyGenerator(
 const MUTATION_METHODS = new Set(['post', 'put', 'delete', 'patch']);
 
 /**
+ * Inject the CSRF token into a BFF mutation request.
+ *
+ * Falls back to `refreshCsrfToken` when the cached token is not yet available
+ * (bootstrap race). Emits a warning when neither getter produces a token but
+ * at least one was configured — the request would be rejected by the BFF.
+ */
+async function injectBffHeaders(
+  req: InternalAxiosRequestConfig,
+  config: ApiClientConfig
+): Promise<void> {
+  if (!MUTATION_METHODS.has(req.method ?? '')) return;
+
+  let csrfToken = config.csrfTokenGetter?.() ?? null;
+  if (!csrfToken && config.refreshCsrfToken) {
+    csrfToken = await config.refreshCsrfToken();
+  }
+
+  if (csrfToken) {
+    req.headers['X-CSRF-Token'] = csrfToken;
+    return;
+  }
+
+  if (config.csrfTokenGetter || config.refreshCsrfToken) {
+    const message =
+      '[@granit/api-client] BFF mutation sent without X-CSRF-Token — token unavailable. Request will likely be rejected by the BFF.';
+    if (config.logger) {
+      config.logger.warn(message, { method: req.method, url: req.url });
+    } else {
+      globalThis.console.warn(message);
+    }
+  }
+}
+
+/**
  * Create a pre-configured Axios instance.
  *
  * - **Bearer mode** (default): injects `Authorization: Bearer <token>` via the global token getter.
@@ -157,26 +191,8 @@ export function createApiClient(config: ApiClientConfig): AxiosInstance {
   instance.interceptors.request.use(
     async (req: InternalAxiosRequestConfig) => {
       if (isBff) {
-        // BFF mode: inject CSRF token on mutation methods. If the cached token
-        // is not yet available (bootstrap race), await the refresh callback
-        // instead of silently sending the request without X-CSRF-Token.
-        if (MUTATION_METHODS.has(req.method ?? '')) {
-          let csrfToken = config.csrfTokenGetter?.() ?? null;
-          if (!csrfToken && config.refreshCsrfToken) {
-            csrfToken = await config.refreshCsrfToken();
-          }
-          if (csrfToken) {
-            req.headers['X-CSRF-Token'] = csrfToken;
-          } else if (config.csrfTokenGetter || config.refreshCsrfToken) {
-            const message =
-              '[@granit/api-client] BFF mutation sent without X-CSRF-Token — token unavailable. Request will likely be rejected by the BFF.';
-            if (config.logger) {
-              config.logger.warn(message, { method: req.method, url: req.url });
-            } else {
-              globalThis.console.warn(message);
-            }
-          }
-        }
+        // BFF mode: inject CSRF token on mutation methods.
+        await injectBffHeaders(req, config);
       } else if (_tokenGetter) {
         // Bearer mode: inject Authorization header
         const token = await _tokenGetter();

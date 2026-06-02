@@ -34,6 +34,20 @@ export function scanKebabCase(opts: AllowlistedScanContext): Violation[] {
 const HOOK_DECL_RE = /\bexport\s+(?:async\s+)?(?:function|const)\s+use[A-Z]\w*/;
 const HOOK_REEXPORT_RE = /\bexport\s*\{[^}]*\buse[A-Z]\w*[^}]*\}/;
 
+function processSubdirEntry(
+  entry: fs.Dirent,
+  cur: string,
+  name: string,
+  stack: string[],
+  out: string[]
+): void {
+  if (!entry.isDirectory()) return;
+  if (entry.name === 'node_modules' || entry.name === 'dist') return;
+  const full = path.join(cur, entry.name);
+  if (entry.name === name) out.push(full);
+  else stack.push(full);
+}
+
 function findSubdirs(root: string, name: string): string[] {
   if (!fs.existsSync(root)) return [];
   const out: string[] = [];
@@ -42,14 +56,25 @@ function findSubdirs(root: string, name: string): string[] {
     const cur = stack.pop();
     if (cur === undefined) break;
     for (const entry of fs.readdirSync(cur, { withFileTypes: true })) {
-      if (!entry.isDirectory()) continue;
-      if (entry.name === 'node_modules' || entry.name === 'dist') continue;
-      const full = path.join(cur, entry.name);
-      if (entry.name === name) out.push(full);
-      else stack.push(full);
+      processSubdirEntry(entry, cur, name, stack, out);
     }
   }
   return out;
+}
+
+function checkHookFile(f: string, moduleName: string, repoRoot: string, out: Violation[]): void {
+  const base = path.basename(f);
+  // Factories (create-*.ts) and conventional non-hook files are allowed.
+  if (!base.startsWith('use-')) return;
+  const src = readFile(f);
+  if (!HOOK_DECL_RE.test(src) && !HOOK_REEXPORT_RE.test(src)) {
+    out.push({
+      rule: 'hook-naming',
+      module: moduleName,
+      file: rel(f, repoRoot),
+      message: 'hooks/use-*.ts must export a useXxx symbol',
+    });
+  }
 }
 
 export function scanHookNaming(ctx: ScanContext): Violation[] {
@@ -57,18 +82,7 @@ export function scanHookNaming(ctx: ScanContext): Violation[] {
   for (const m of ctx.modules) {
     for (const hooksDir of findSubdirs(m.srcDir, 'hooks')) {
       for (const f of walkSourceFiles(hooksDir, (file) => !isTestFile(file))) {
-        const base = path.basename(f);
-        // Factories (create-*.ts) and conventional non-hook files are allowed.
-        if (!base.startsWith('use-')) continue;
-        const src = readFile(f);
-        if (!HOOK_DECL_RE.test(src) && !HOOK_REEXPORT_RE.test(src)) {
-          out.push({
-            rule: 'hook-naming',
-            module: m.name,
-            file: rel(f, ctx.repoRoot),
-            message: 'hooks/use-*.ts must export a useXxx symbol',
-          });
-        }
+        checkHookFile(f, m.name, ctx.repoRoot, out);
       }
     }
   }
@@ -92,23 +106,32 @@ const COMPONENT_HELPER_FILES = new Set([
   'utils.ts',
 ]);
 
+function checkComponentFile(
+  f: string,
+  moduleName: string,
+  repoRoot: string,
+  out: Violation[]
+): void {
+  const base = path.basename(f);
+  if (COMPONENT_HELPER_FILES.has(base)) return;
+  if (!f.endsWith('.tsx')) return;
+  const src = readFile(f);
+  if (!PASCAL_EXPORT_RE.test(src) && !PASCAL_REEXPORT_RE.test(src)) {
+    out.push({
+      rule: 'component-naming',
+      module: moduleName,
+      file: rel(f, repoRoot),
+      message: 'components/<file>.tsx must export a PascalCase function/const/class',
+    });
+  }
+}
+
 export function scanComponentNaming(ctx: ScanContext): Violation[] {
   const out: Violation[] = [];
   for (const m of ctx.modules) {
     for (const compDir of findSubdirs(m.srcDir, 'components')) {
       for (const f of walkSourceFiles(compDir, (file) => !isTestFile(file))) {
-        const base = path.basename(f);
-        if (COMPONENT_HELPER_FILES.has(base)) continue;
-        if (!f.endsWith('.tsx')) continue;
-        const src = readFile(f);
-        if (!PASCAL_EXPORT_RE.test(src) && !PASCAL_REEXPORT_RE.test(src)) {
-          out.push({
-            rule: 'component-naming',
-            module: m.name,
-            file: rel(f, ctx.repoRoot),
-            message: 'components/<file>.tsx must export a PascalCase function/const/class',
-          });
-        }
+        checkComponentFile(f, m.name, ctx.repoRoot, out);
       }
     }
   }

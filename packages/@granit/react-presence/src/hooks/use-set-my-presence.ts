@@ -36,11 +36,11 @@ export function useSetMyPresence(): UseMutationResult<
           ...previous,
           manualOverride: isAvailable ? null : request.manualStatus,
           overrideUntilUtc: isAvailable ? null : request.untilUtc,
-          effectiveStatus: isAvailable
-            ? previous.effectiveStatus
-            : request.manualStatus === 'AppearOffline'
-              ? 'Offline'
-              : request.manualStatus,
+          effectiveStatus: (() => {
+            if (isAvailable) return previous.effectiveStatus;
+            if (request.manualStatus === 'AppearOffline') return 'Offline';
+            return request.manualStatus;
+          })(),
         };
         queryClient.setQueryData(queryKey, optimistic);
       }

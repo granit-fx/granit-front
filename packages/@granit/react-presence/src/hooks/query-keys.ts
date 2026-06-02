@@ -10,5 +10,6 @@ export const presenceKeys = {
   all: [] as const,
   my: () => ['my'] as const,
   user: (userId: UserId) => ['user', userId] as const,
-  batch: (userIds: readonly UserId[]) => ['batch', [...userIds].sort()] as const,
+  batch: (userIds: readonly UserId[]) =>
+    ['batch', [...userIds].sort((a, b) => a.localeCompare(b))] as const,
 };

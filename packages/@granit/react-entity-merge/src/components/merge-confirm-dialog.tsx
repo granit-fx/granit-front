@@ -31,9 +31,8 @@ export function MergeConfirmDialog({
 }: Readonly<MergeConfirmDialogProps>) {
   if (!open) return null;
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
+    <dialog
+      open
       aria-label={labels.title}
       data-slot="merge-confirm-dialog"
       className="space-y-4 rounded-md border bg-card p-4 text-card-foreground"
@@ -58,6 +57,6 @@ export function MergeConfirmDialog({
           {labels.confirm}
         </button>
       </div>
-    </div>
+    </dialog>
   );
 }

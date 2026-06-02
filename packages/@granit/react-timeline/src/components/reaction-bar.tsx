@@ -1,7 +1,6 @@
-import { type ReactionEmoji, type ReactionMap } from '@granit/timeline';
 import { type ReactNode } from 'react';
 
-import type { TimelineEntryId } from '@granit/timeline';
+import type { ReactionEmoji, ReactionMap, TimelineEntryId } from '@granit/timeline';
 
 export interface ReactionBarLabels {
   /**

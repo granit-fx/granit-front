@@ -7,14 +7,14 @@ export function PricingBlock({ title, plans }: PricingBlockProps) {
     <section data-block="pricing">
       <h2>{title}</h2>
       <ul>
-        {plans.map((plan, idx) => (
-          <li key={idx} data-highlighted={plan.highlighted ? 'true' : undefined}>
+        {plans.map((plan) => (
+          <li key={plan.name} data-highlighted={plan.highlighted ? 'true' : undefined}>
             <strong>{plan.name}</strong>
             <span>{plan.price}</span>
             {plan.description && <p>{plan.description}</p>}
             <ul>
-              {plan.features.map((f, fi) => (
-                <li key={fi}>{f}</li>
+              {plan.features.map((f) => (
+                <li key={f}>{f}</li>
               ))}
             </ul>
             {plan.ctaLabel && plan.ctaHref && <a href={plan.ctaHref}>{plan.ctaLabel}</a>}

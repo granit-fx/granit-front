@@ -245,14 +245,15 @@ function FolderNode({
         >
           {expanded ? '▾' : '▸'}
         </button>
-        {mode === 'renaming' ? (
+        {mode === 'renaming' && (
           <InlineEdit
             initialValue={folder.name}
             ariaLabel={labels.rename}
             onCommit={commitRename}
             onCancel={() => setMode('idle')}
           />
-        ) : onSelect ? (
+        )}
+        {mode !== 'renaming' && onSelect && (
           <button
             type="button"
             data-granit-folder-tree-name=""
@@ -261,7 +262,8 @@ function FolderNode({
           >
             {folder.name}
           </button>
-        ) : (
+        )}
+        {mode !== 'renaming' && !onSelect && (
           <span data-granit-folder-tree-name="">{folder.name}</span>
         )}
         {canManage && mode === 'idle' && (

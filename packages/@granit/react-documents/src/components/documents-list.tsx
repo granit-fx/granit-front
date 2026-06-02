@@ -394,7 +394,12 @@ function DocumentsListBody({
       className={className}
     >
       {viewMode === 'list' ? (
-        <table data-granit-documents-list-table="" tabIndex={0} onKeyDown={handleKeyDown}>
+        <table
+          data-granit-documents-list-table=""
+          role="grid"
+          tabIndex={0}
+          onKeyDown={handleKeyDown}
+        >
           <thead>
             <tr>
               <th data-granit-documents-list-select-col="">
@@ -515,6 +520,7 @@ function DocumentsListBody({
       ) : (
         <ul
           data-granit-documents-list-grid=""
+          role="listbox"
           // tile size becomes a CSS custom property the host stylesheet picks
           // up to drive the grid column track + tile dimensions.
           style={{ ['--granit-documents-tile-size' as string]: `${String(tileSize)}px` }}
@@ -525,6 +531,7 @@ function DocumentsListBody({
           {itemRenderState.map(({ document, isSelected, isFocused, mode, kind, badge }) => (
             <li
               key={document.id}
+              role="option"
               data-granit-documents-list-tile=""
               data-granit-document-id={document.id}
               data-granit-document-kind={kind}
@@ -535,6 +542,13 @@ function DocumentsListBody({
               draggable={canManage}
               onClick={(event) => handleItemClick(event, document)}
               onDoubleClick={() => onOpenDocument?.(document.id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  selection.selectOnly(document.id);
+                  setFocusedId(document.id);
+                  onOpenDocument?.(document.id);
+                }
+              }}
               onDragStart={(event) => handleItemDragStart(event, document)}
             >
               <input

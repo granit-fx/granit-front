@@ -13,7 +13,7 @@ export interface BarrelScanOptions extends ScanContext {
 const DEFAULT_BARREL = 'index.ts';
 const DEFAULT_EXPORT_RE = /^export\s+default\b/m;
 const LEAK_RE =
-  /^export\s+(?:\{[^}]*\b_[A-Za-z0-9_]+\b)|^export\s+(?:const|function|class|interface|type|enum)\s+_/m;
+  /^export\s+(?:\{[^}]*\b_\w+\b)|^export\s+(?:const|function|class|interface|type|enum)\s+_/m;
 
 /** Forbids `export default` in the module barrel — keeps tree-shaking happy. */
 export function scanBarrelDefaultExports(opts: BarrelScanOptions): Violation[] {

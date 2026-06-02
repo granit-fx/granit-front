@@ -94,81 +94,109 @@ export interface SharedDepVersionsOptions extends ScanContext {
 
 const DEFAULT_SECTIONS = ['dependencies', 'peerDependencies', 'devDependencies'] as const;
 
+type PkgJson = Record<string, Record<string, string> | undefined>;
+type ByDep = Map<string, Map<string, string[]>>;
+type ResolvePkgJson = (m: { dir: string }) => string;
+
+/**
+ * Reads one module's package.json, collects per-dep version constraints into
+ * `byDep`, and emits within-package drift violations into `out`.
+ */
+function collectModuleVersions(
+  m: { name: string; dir: string },
+  sections: ReadonlyArray<'dependencies' | 'peerDependencies' | 'devDependencies'>,
+  deps: ReadonlyArray<string>,
+  resolvePkgJson: ResolvePkgJson,
+  repoRoot: string,
+  byDep: ByDep,
+  out: Violation[]
+): void {
+  const f = resolvePkgJson(m);
+  if (!fs.existsSync(f)) return;
+  const pkg = JSON.parse(fs.readFileSync(f, 'utf8')) as PkgJson;
+
+  for (const dep of deps) {
+    const versions = new Set<string>();
+    for (const section of sections) {
+      const v = pkg[section]?.[dep];
+      if (v !== undefined && !v.startsWith('workspace:') && v !== '*') versions.add(v);
+    }
+    const distinct = [...versions];
+    if (distinct.length === 0) continue;
+    if (distinct.length > 1) {
+      out.push({
+        rule: 'shared-dep-version-drift-within-package',
+        module: m.name,
+        file: rel(f, repoRoot),
+        message: `${dep} is declared with multiple versions in this package: ${distinct.join(', ')}`,
+      });
+    }
+    const v = distinct[0];
+    if (v === undefined) continue;
+    const slot = byDep.get(dep);
+    if (!slot) continue;
+    const existing = slot.get(v) ?? [];
+    existing.push(m.name);
+    slot.set(v, existing);
+  }
+}
+
+/**
+ * Generates cross-workspace drift violations for each dep that has more than
+ * one distinct version. Attributes violations to minority-version modules so
+ * the report points at the packages to align.
+ */
+function buildDriftViolations(
+  modules: ReadonlyArray<{ name: string; dir: string }>,
+  byDep: ByDep,
+  deps: ReadonlyArray<string>,
+  resolvePkgJson: ResolvePkgJson,
+  repoRoot: string
+): Violation[] {
+  const out: Violation[] = [];
+
+  for (const dep of deps) {
+    const slot = byDep.get(dep);
+    if (!slot || slot.size <= 1) continue;
+
+    // More than one distinct version across the workspace.
+    const summary = [...slot.entries()]
+      .map(([ver, mods]) => `${ver} (${mods.length}× — e.g. ${mods.slice(0, 3).join(', ')})`)
+      .join(' vs ');
+
+    // Sort by usage count descending — first entry is the majority version.
+    const sorted = [...slot.entries()].sort((a, b) => b[1].length - a[1].length);
+    const majority = new Set(sorted[0]?.[1] ?? []);
+    const minorityModules = new Set(sorted.slice(1).flatMap(([, mods]) => mods));
+
+    for (const m of modules) {
+      if (majority.has(m.name) || !minorityModules.has(m.name)) continue;
+      out.push({
+        rule: 'shared-dep-version-drift',
+        module: m.name,
+        file: rel(resolvePkgJson(m), repoRoot),
+        message: `${dep} version differs from the majority — align with the dominant constraint. Workspace state: ${summary}`,
+      });
+    }
+  }
+
+  return out;
+}
+
 export function scanSharedDepVersions(opts: SharedDepVersionsOptions): Violation[] {
   const sections = opts.sections ?? DEFAULT_SECTIONS;
   const resolvePkgJson = opts.packageJsonPath ?? ((m) => path.join(m.dir, 'package.json'));
   const out: Violation[] = [];
 
   // dep -> Map<version, modules using it>
-  const byDep = new Map<string, Map<string, string[]>>();
+  const byDep: ByDep = new Map();
   for (const dep of opts.deps) byDep.set(dep, new Map());
 
   for (const m of opts.modules) {
-    const f = resolvePkgJson(m);
-    if (!fs.existsSync(f)) continue;
-    const pkg = JSON.parse(fs.readFileSync(f, 'utf8')) as Record<
-      string,
-      Record<string, string> | undefined
-    >;
-    for (const dep of opts.deps) {
-      const versions = new Set<string>();
-      for (const section of sections) {
-        const v = pkg[section]?.[dep];
-        if (v !== undefined && !v.startsWith('workspace:') && v !== '*') versions.add(v);
-      }
-      const distinct = [...versions];
-      if (distinct.length === 0) continue;
-      if (distinct.length > 1) {
-        out.push({
-          rule: 'shared-dep-version-drift-within-package',
-          module: m.name,
-          file: rel(f, opts.repoRoot),
-          message: `${dep} is declared with multiple versions in this package: ${distinct.join(', ')}`,
-        });
-      }
-      const v = distinct[0];
-      if (v === undefined) continue;
-      const slot = byDep.get(dep);
-      if (!slot) continue;
-      const existing = slot.get(v) ?? [];
-      existing.push(m.name);
-      slot.set(v, existing);
-    }
+    collectModuleVersions(m, sections, opts.deps, resolvePkgJson, opts.repoRoot, byDep, out);
   }
 
-  for (const dep of opts.deps) {
-    const slot = byDep.get(dep);
-    if (!slot || slot.size <= 1) continue;
-    // More than one distinct version across the workspace.
-    const summary = [...slot.entries()]
-      .map(
-        ([ver, modules]) => `${ver} (${modules.length}× — e.g. ${modules.slice(0, 3).join(', ')})`
-      )
-      .join(' vs ');
-    // Attribute the violation to the minority versions so the report
-    // points at the packages to align.
-    const sorted = [...slot.entries()].sort((a, b) => b[1].length - a[1].length);
-    const majorityModules = sorted[0]?.[1] ?? [];
-    const majority = new Set(majorityModules);
-    for (const m of opts.modules) {
-      if (majority.has(m.name)) continue;
-      // Only flag modules that declared the dep with a non-majority version.
-      let declares = false;
-      for (const [, modules] of sorted.slice(1)) {
-        if (modules.includes(m.name)) {
-          declares = true;
-          break;
-        }
-      }
-      if (!declares) continue;
-      out.push({
-        rule: 'shared-dep-version-drift',
-        module: m.name,
-        file: rel(resolvePkgJson(m), opts.repoRoot),
-        message: `${dep} version differs from the majority — align with the dominant constraint. Workspace state: ${summary}`,
-      });
-    }
-  }
+  out.push(...buildDriftViolations(opts.modules, byDep, opts.deps, resolvePkgJson, opts.repoRoot));
 
   return out;
 }

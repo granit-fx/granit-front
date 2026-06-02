@@ -22,7 +22,7 @@ interface StorageShape {
 }
 
 function readStorage(key: string): StorageShape | null {
-  if (typeof globalThis.localStorage === 'undefined') return null;
+  if (globalThis.localStorage === undefined) return null;
   try {
     const raw = globalThis.localStorage.getItem(key);
     if (!raw) return null;
@@ -54,39 +54,39 @@ function writeStorage(key: string, value: StorageShape): void {
  * the client. Avoids the classic hydration-mismatch hazard.
  */
 export function useViewPreferences(storageKey: string | null): ViewPreferences {
-  const [viewMode, setViewModeState] = useState<DocumentsViewMode>(DEFAULT_VIEW_MODE);
-  const [tileSize, setTileSizeState] = useState<TileSizeStep>(DEFAULT_TILE_SIZE);
+  const [viewMode, setViewMode] = useState<DocumentsViewMode>(DEFAULT_VIEW_MODE);
+  const [tileSize, setTileSize] = useState<TileSizeStep>(DEFAULT_TILE_SIZE);
 
   useEffect(() => {
     if (!storageKey) return;
     const stored = readStorage(storageKey);
     if (!stored) return;
     if (stored.viewMode === 'list' || stored.viewMode === 'grid') {
-      setViewModeState(stored.viewMode);
+      setViewMode(stored.viewMode);
     }
     if (
       typeof stored.tileSize === 'number' &&
       (TILE_SIZE_STEPS as readonly number[]).includes(stored.tileSize)
     ) {
-      setTileSizeState(stored.tileSize);
+      setTileSize(stored.tileSize);
     }
   }, [storageKey]);
 
-  const setViewMode = useCallback(
+  const handleSetViewMode = useCallback(
     (mode: DocumentsViewMode) => {
-      setViewModeState(mode);
+      setViewMode(mode);
       if (storageKey) writeStorage(storageKey, { viewMode: mode, tileSize });
     },
     [storageKey, tileSize]
   );
 
-  const setTileSize = useCallback(
+  const handleSetTileSize = useCallback(
     (size: TileSizeStep) => {
-      setTileSizeState(size);
+      setTileSize(size);
       if (storageKey) writeStorage(storageKey, { viewMode, tileSize: size });
     },
     [storageKey, viewMode]
   );
 
-  return { viewMode, tileSize, setViewMode, setTileSize };
+  return { viewMode, tileSize, setViewMode: handleSetViewMode, setTileSize: handleSetTileSize };
 }

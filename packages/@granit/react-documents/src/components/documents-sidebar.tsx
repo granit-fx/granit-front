@@ -71,7 +71,7 @@ export function DocumentsSidebar({
 
   return (
     <div data-granit-documents-sidebar="" className={className}>
-      <nav
+      <div
         data-granit-documents-sidebar-tabs=""
         role="tablist"
         aria-label={labelStrings.foldersTab}
@@ -81,7 +81,6 @@ export function DocumentsSidebar({
           role="tab"
           data-granit-documents-sidebar-tab="folders"
           aria-selected={activeTab === 'folders'}
-          aria-pressed={activeTab === 'folders'}
           onClick={() => setActiveTab('folders')}
         >
           {labelStrings.foldersTab}
@@ -91,7 +90,6 @@ export function DocumentsSidebar({
           role="tab"
           data-granit-documents-sidebar-tab="favorites"
           aria-selected={activeTab === 'favorites'}
-          aria-pressed={activeTab === 'favorites'}
           onClick={() => setActiveTab('favorites')}
         >
           {labelStrings.favoritesTab}
@@ -104,7 +102,6 @@ export function DocumentsSidebar({
           role="tab"
           data-granit-documents-sidebar-tab="recents"
           aria-selected={activeTab === 'recents'}
-          aria-pressed={activeTab === 'recents'}
           onClick={() => setActiveTab('recents')}
         >
           {labelStrings.recentsTab}
@@ -112,7 +109,7 @@ export function DocumentsSidebar({
             <span data-granit-documents-sidebar-count="">{recents.length}</span>
           )}
         </button>
-      </nav>
+      </div>
       <div
         data-granit-documents-sidebar-panel=""
         data-granit-documents-sidebar-active-tab={activeTab}

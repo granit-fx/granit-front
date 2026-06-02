@@ -7,7 +7,12 @@ import { useSetMyPresence } from '../hooks/use-set-my-presence';
 
 import { PresenceDot } from './presence-dot';
 
-import type { ManualPresenceStatus, PresenceResponse, SetPresenceRequest } from '@granit/presence';
+import type {
+  ManualPresenceStatus,
+  PresenceResponse,
+  PresenceStatus,
+  SetPresenceRequest,
+} from '@granit/presence';
 import type { ISODateString } from '@granit/types';
 import type { CSSProperties, ReactNode } from 'react';
 
@@ -138,6 +143,12 @@ export interface PresencePickerProps {
   readonly children?: ReactNode;
 }
 
+function optionToDotStatus(option: ManualPresenceStatus): PresenceStatus {
+  if (option === 'Available') return 'Online';
+  if (option === 'AppearOffline') return 'Offline';
+  return option;
+}
+
 const MANUAL_OPTIONS: readonly ManualPresenceStatus[] = [
   'Available',
   'Busy',
@@ -263,9 +274,7 @@ export function PresencePicker({
               onChange={() => setStatus(option)}
             />
             <PresenceDot
-              status={
-                option === 'Available' ? 'Online' : option === 'AppearOffline' ? 'Offline' : option
-              }
+              status={optionToDotStatus(option)}
               size={8}
               bordered={false}
               presentational

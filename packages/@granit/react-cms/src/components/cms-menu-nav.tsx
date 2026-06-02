@@ -17,8 +17,8 @@ export function CmsMenuNav({ menu, className }: CmsMenuNavProps) {
   return (
     <nav aria-label={menu.title} className={className}>
       <ul>
-        {menu.items.map((item, idx) => (
-          <MenuItemNode key={idx} item={item} />
+        {menu.items.map((item) => (
+          <MenuItemNode key={item.label} item={item} />
         ))}
       </ul>
     </nav>
@@ -45,8 +45,8 @@ function MenuItemNode({ item }: { readonly item: ResolvedMenuItem }) {
       {label}
       {item.children.length > 0 && (
         <ul>
-          {item.children.map((child, idx) => (
-            <MenuItemNode key={idx} item={child} />
+          {item.children.map((child) => (
+            <MenuItemNode key={child.label} item={child} />
           ))}
         </ul>
       )}

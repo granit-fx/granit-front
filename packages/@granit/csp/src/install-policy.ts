@@ -29,7 +29,7 @@ export function installNamedPolicy(
   }
   if (
     typeof globalThis === 'undefined' ||
-    typeof (globalThis as { window?: unknown }).window === 'undefined'
+    (globalThis as { window?: unknown }).window === undefined
   ) {
     return { status: 'unsupported', reason: 'no-window' };
   }

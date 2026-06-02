@@ -67,11 +67,14 @@ export function buildLifecycleTransitionPrompt(
   const namespaced = (suffix: string) => `workflow:Transition.${transitionKey}.${suffix}`;
 
   const destructive = toStatus === WorkflowLifecycleStatus.Archived;
-  const severity: LifecycleTransitionSeverity = destructive
-    ? 'destructive'
-    : toStatus === WorkflowLifecycleStatus.PendingReview
-      ? 'warning'
-      : 'info';
+  let severity: LifecycleTransitionSeverity;
+  if (destructive) {
+    severity = 'destructive';
+  } else if (toStatus === WorkflowLifecycleStatus.PendingReview) {
+    severity = 'warning';
+  } else {
+    severity = 'info';
+  }
 
   return {
     titleKey: namespaced('Title'),

@@ -5,6 +5,20 @@ import { isTestFile, isTestingDir, readFile, rel, stripComments, walkSourceFiles
 
 import type { AllowlistedScanContext, ScanContext, Violation } from '../types';
 
+function processSubdirEntry(
+  entry: fs.Dirent,
+  cur: string,
+  name: string,
+  stack: string[],
+  out: string[]
+): void {
+  if (!entry.isDirectory()) return;
+  if (entry.name === 'node_modules' || entry.name === 'dist') return;
+  const full = path.join(cur, entry.name);
+  if (entry.name === name) out.push(full);
+  else stack.push(full);
+}
+
 function findSubdirs(root: string, name: string): string[] {
   if (!fs.existsSync(root)) return [];
   const out: string[] = [];
@@ -13,11 +27,7 @@ function findSubdirs(root: string, name: string): string[] {
     const cur = stack.pop();
     if (cur === undefined) break;
     for (const entry of fs.readdirSync(cur, { withFileTypes: true })) {
-      if (!entry.isDirectory()) continue;
-      if (entry.name === 'node_modules' || entry.name === 'dist') continue;
-      const full = path.join(cur, entry.name);
-      if (entry.name === name) out.push(full);
-      else stack.push(full);
+      processSubdirEntry(entry, cur, name, stack, out);
     }
   }
   return out;
@@ -27,9 +37,19 @@ function findSubdirs(root: string, name: string): string[] {
 // identifier reference — both give React DevTools / stack traces a useful
 // label. Anonymous values (`() => ...`, `function () {}`, `{}`, `[]`, literals)
 // fail the rule.
-const NAMED_DEFAULT_RE =
-  /\bexport\s+default\s+(?:(?:async\s+)?function\s+\w+|class\s+\w+|[A-Za-z_$][\w$]*\s*(?:;|$|\n))/m;
+//
+// Split into three simpler regexes to stay within Sonar's regex-complexity threshold:
+//   NAMED_FUNC_RE  — named function declaration (sync or async)
+//   NAMED_CLASS_RE — named class declaration
+//   NAMED_IDENT_RE — bare identifier reference (followed by end of statement)
+const NAMED_FUNC_RE = /\bexport\s+default\s+(?:async\s+)?function\s+\w+/m;
+const NAMED_CLASS_RE = /\bexport\s+default\s+class\s+\w+/m;
+const NAMED_IDENT_RE = /\bexport\s+default\s+[A-Za-z_$][\w$]*\s*(?:;|$|\n)/m;
 const ANY_DEFAULT_RE = /\bexport\s+default\b/;
+
+function isNamedDefaultExport(src: string): boolean {
+  return NAMED_FUNC_RE.test(src) || NAMED_CLASS_RE.test(src) || NAMED_IDENT_RE.test(src);
+}
 
 export function scanAnonymousDefaultExports(ctx: ScanContext): Violation[] {
   const out: Violation[] = [];
@@ -37,7 +57,7 @@ export function scanAnonymousDefaultExports(ctx: ScanContext): Violation[] {
     for (const f of walkSourceFiles(m.srcDir, (file) => !isTestFile(file) && !isTestingDir(file))) {
       const src = stripComments(readFile(f));
       if (!ANY_DEFAULT_RE.test(src)) continue;
-      if (NAMED_DEFAULT_RE.test(src)) continue;
+      if (isNamedDefaultExport(src)) continue;
       out.push({
         rule: 'no-anonymous-default-export',
         module: m.name,

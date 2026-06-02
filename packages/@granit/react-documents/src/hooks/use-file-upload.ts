@@ -116,12 +116,14 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
         return document;
       } catch (err) {
         const status = (err as { response?: { status?: number } } | undefined)?.response?.status;
-        const code: FileUploadError['code'] =
-          status === 413
-            ? 'quota-exceeded'
-            : err instanceof FileUploadFailure
-              ? err.code
-              : 'unknown';
+        let code: FileUploadError['code'];
+        if (status === 413) {
+          code = 'quota-exceeded';
+        } else if (err instanceof FileUploadFailure) {
+          code = err.code;
+        } else {
+          code = 'unknown';
+        }
         // Keep the raw message verbatim (empty when none) — callers decide
         // whether to surface it directly or fall back to a localized label.
         const message = err instanceof Error ? err.message : '';

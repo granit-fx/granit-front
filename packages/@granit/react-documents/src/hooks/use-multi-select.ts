@@ -82,7 +82,7 @@ export function useMultiSelect(orderedIds: readonly string[]): MultiSelectApi {
 
   const selectAll = useCallback((ids: readonly string[]) => {
     setSelected(new Set(ids));
-    anchorRef.current = ids[ids.length - 1] ?? null;
+    anchorRef.current = ids.at(-1) ?? null;
   }, []);
 
   const clear = useCallback(() => {

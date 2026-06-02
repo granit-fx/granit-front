@@ -9,6 +9,9 @@ import type { DocumentKind } from './document-kind';
 import type { DocumentResponse } from '@granit/documents';
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react';
 
+// Keys that count as a "text-like" preview (fetch URL → render as <pre>).
+const TEXT_KINDS: ReadonlySet<DocumentKind> = new Set<DocumentKind>(['text', 'code']);
+
 export interface DocumentQuickLookLabels {
   readonly title?: string;
   readonly close?: string;
@@ -57,13 +60,144 @@ const DEFAULT_LABELS: Required<DocumentQuickLookLabels> = {
 // "Download to view" message to avoid OOM in jsdom / weak clients.
 const MAX_INLINE_TEXT_BYTES = 512 * 1024;
 
-// Keys that count as a "text-like" preview (fetch URL → render as <pre>).
-const TEXT_KINDS: ReadonlySet<DocumentKind> = new Set<DocumentKind>(['text', 'code']);
-
 interface PreviewContent {
   readonly status: 'loading' | 'ready' | 'error' | 'too-large';
   readonly text?: string;
   readonly message?: string;
+}
+
+interface QuickLookPreviewProps {
+  readonly kind: DocumentKind;
+  readonly downloadUrl: string;
+  readonly documentName: string;
+  readonly previewContent: PreviewContent | null;
+  readonly labelStrings: Required<DocumentQuickLookLabels>;
+}
+
+function QuickLookPreview({
+  kind,
+  downloadUrl,
+  documentName,
+  previewContent,
+  labelStrings,
+}: QuickLookPreviewProps): ReactNode {
+  if (kind === 'image') {
+    return <img data-granit-document-quick-look-image="" src={downloadUrl} alt={documentName} />;
+  }
+  if (kind === 'video') {
+    return (
+      <video data-granit-document-quick-look-video="" src={downloadUrl} controls autoPlay>
+        <track kind="captions" />
+      </video>
+    );
+  }
+  if (kind === 'audio') {
+    return (
+      <audio data-granit-document-quick-look-audio="" src={downloadUrl} controls autoPlay>
+        <track kind="captions" />
+      </audio>
+    );
+  }
+  if (kind === 'pdf') {
+    return <iframe data-granit-document-quick-look-pdf="" src={downloadUrl} title={documentName} />;
+  }
+  if (TEXT_KINDS.has(kind)) {
+    if (previewContent?.status === 'loading') {
+      return <div data-granit-document-quick-look-loading="">{labelStrings.loadingPreview}</div>;
+    }
+    if (previewContent?.status === 'ready') {
+      return <pre data-granit-document-quick-look-text="">{previewContent.text}</pre>;
+    }
+    if (previewContent?.status === 'too-large') {
+      return <div data-granit-document-quick-look-fallback="">{labelStrings.downloadToView}</div>;
+    }
+    return (
+      <div data-granit-document-quick-look-error="" role="alert">
+        {previewContent?.message ?? labelStrings.previewError}
+      </div>
+    );
+  }
+  return (
+    <div data-granit-document-quick-look-fallback="">
+      <p>{labelStrings.unsupportedKind(kind)}</p>
+      <p>{labelStrings.downloadToView}</p>
+    </div>
+  );
+}
+
+interface QuickLookHeaderProps {
+  readonly documentName: string | undefined;
+  readonly siblings: readonly DocumentResponse[] | undefined;
+  readonly currentIndex: number;
+  readonly downloadUrl: string | null;
+  readonly onNavigate: ((documentId: string) => void) | undefined;
+  readonly onClose: () => void;
+  readonly onDownload: () => void;
+  readonly navigate: (direction: -1 | 1) => void;
+  readonly labelStrings: Required<DocumentQuickLookLabels>;
+}
+
+function QuickLookHeader({
+  documentName,
+  siblings,
+  currentIndex,
+  downloadUrl,
+  onNavigate,
+  onClose,
+  onDownload,
+  navigate,
+  labelStrings,
+}: QuickLookHeaderProps): ReactNode {
+  return (
+    <header data-granit-document-quick-look-header="">
+      <span data-granit-document-quick-look-name="">{documentName ?? labelStrings.loading}</span>
+      {siblings && currentIndex !== -1 && (
+        <span data-granit-document-quick-look-position="">
+          {labelStrings.position(currentIndex + 1, siblings.length)}
+        </span>
+      )}
+      <div data-granit-document-quick-look-actions="">
+        {siblings && onNavigate && (
+          <>
+            <button
+              type="button"
+              data-granit-document-quick-look-prev=""
+              aria-label={labelStrings.previous}
+              disabled={currentIndex <= 0}
+              onClick={() => navigate(-1)}
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              data-granit-document-quick-look-next=""
+              aria-label={labelStrings.next}
+              disabled={currentIndex === -1 || currentIndex >= siblings.length - 1}
+              onClick={() => navigate(1)}
+            >
+              ›
+            </button>
+          </>
+        )}
+        <button
+          type="button"
+          data-granit-document-quick-look-download=""
+          disabled={!downloadUrl}
+          onClick={onDownload}
+        >
+          {labelStrings.download}
+        </button>
+        <button
+          type="button"
+          data-granit-document-quick-look-close=""
+          aria-label={labelStrings.close}
+          onClick={onClose}
+        >
+          ×
+        </button>
+      </div>
+    </header>
+  );
 }
 
 /**
@@ -184,7 +318,7 @@ export function DocumentQuickLook({
   }
 
   function handleDownload(): void {
-    if (!downloadUrl || typeof globalThis.window === 'undefined') return;
+    if (!downloadUrl || globalThis.window === undefined) return;
     globalThis.window.open(downloadUrl, '_blank', 'noopener,noreferrer');
   }
 
@@ -203,56 +337,17 @@ export function DocumentQuickLook({
       onCancel={onClose}
       onKeyDown={handleKeyDown}
     >
-      <header data-granit-document-quick-look-header="">
-        <span data-granit-document-quick-look-name="">
-          {document?.name ?? labelStrings.loading}
-        </span>
-        {siblings && currentIndex !== -1 && (
-          <span data-granit-document-quick-look-position="">
-            {labelStrings.position(currentIndex + 1, siblings.length)}
-          </span>
-        )}
-        <div data-granit-document-quick-look-actions="">
-          {siblings && onNavigate && (
-            <>
-              <button
-                type="button"
-                data-granit-document-quick-look-prev=""
-                aria-label={labelStrings.previous}
-                disabled={currentIndex <= 0}
-                onClick={() => navigate(-1)}
-              >
-                ‹
-              </button>
-              <button
-                type="button"
-                data-granit-document-quick-look-next=""
-                aria-label={labelStrings.next}
-                disabled={currentIndex === -1 || currentIndex >= siblings.length - 1}
-                onClick={() => navigate(1)}
-              >
-                ›
-              </button>
-            </>
-          )}
-          <button
-            type="button"
-            data-granit-document-quick-look-download=""
-            disabled={!downloadUrl}
-            onClick={handleDownload}
-          >
-            {labelStrings.download}
-          </button>
-          <button
-            type="button"
-            data-granit-document-quick-look-close=""
-            aria-label={labelStrings.close}
-            onClick={onClose}
-          >
-            ×
-          </button>
-        </div>
-      </header>
+      <QuickLookHeader
+        documentName={document?.name}
+        siblings={siblings}
+        currentIndex={currentIndex}
+        downloadUrl={downloadUrl}
+        onNavigate={onNavigate}
+        onClose={onClose}
+        onDownload={handleDownload}
+        navigate={navigate}
+        labelStrings={labelStrings}
+      />
       <div data-granit-document-quick-look-body="">
         {!documentId || !document ? (
           <div data-granit-document-quick-look-loading="">{labelStrings.loading}</div>
@@ -262,31 +357,14 @@ export function DocumentQuickLook({
           </div>
         ) : !downloadUrl ? (
           <div data-granit-document-quick-look-loading="">{labelStrings.loadingPreview}</div>
-        ) : kind === 'image' ? (
-          <img data-granit-document-quick-look-image="" src={downloadUrl} alt={document.name} />
-        ) : kind === 'video' ? (
-          <video data-granit-document-quick-look-video="" src={downloadUrl} controls autoPlay />
-        ) : kind === 'audio' ? (
-          <audio data-granit-document-quick-look-audio="" src={downloadUrl} controls autoPlay />
-        ) : kind === 'pdf' ? (
-          <iframe data-granit-document-quick-look-pdf="" src={downloadUrl} title={document.name} />
-        ) : TEXT_KINDS.has(kind) ? (
-          previewContent?.status === 'loading' ? (
-            <div data-granit-document-quick-look-loading="">{labelStrings.loadingPreview}</div>
-          ) : previewContent?.status === 'ready' ? (
-            <pre data-granit-document-quick-look-text="">{previewContent.text}</pre>
-          ) : previewContent?.status === 'too-large' ? (
-            <div data-granit-document-quick-look-fallback="">{labelStrings.downloadToView}</div>
-          ) : (
-            <div data-granit-document-quick-look-error="" role="alert">
-              {previewContent?.message ?? labelStrings.previewError}
-            </div>
-          )
         ) : (
-          <div data-granit-document-quick-look-fallback="">
-            <p>{labelStrings.unsupportedKind(kind)}</p>
-            <p>{labelStrings.downloadToView}</p>
-          </div>
+          <QuickLookPreview
+            kind={kind}
+            downloadUrl={downloadUrl}
+            documentName={document.name}
+            previewContent={previewContent}
+            labelStrings={labelStrings}
+          />
         )}
       </div>
     </dialog>

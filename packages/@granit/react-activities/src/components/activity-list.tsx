@@ -38,6 +38,73 @@ const DEFAULT_LABELS: Required<ActivityActionLabels> = {
   reschedule: 'Reschedule',
 };
 
+interface ActivityActionsProps {
+  readonly activity: ActivityResponse;
+  readonly labels: Required<ActivityActionLabels>;
+  readonly onComplete?: (activity: ActivityResponse) => void;
+  readonly onCancel?: (activity: ActivityResponse) => void;
+  readonly onReassign?: (activity: ActivityResponse) => void;
+  readonly onReschedule?: (activity: ActivityResponse) => void;
+}
+
+function ActivityActions({
+  activity,
+  labels,
+  onComplete,
+  onCancel,
+  onReassign,
+  onReschedule,
+}: ActivityActionsProps): ReactNode {
+  return (
+    <td data-granit-activity-actions="">
+      {onComplete && activity.status === 'Open' ? (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onComplete(activity);
+          }}
+        >
+          {labels.complete}
+        </button>
+      ) : null}
+      {onCancel && activity.status === 'Open' ? (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onCancel(activity);
+          }}
+        >
+          {labels.cancel}
+        </button>
+      ) : null}
+      {onReassign ? (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onReassign(activity);
+          }}
+        >
+          {labels.reassign}
+        </button>
+      ) : null}
+      {onReschedule ? (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onReschedule(activity);
+          }}
+        >
+          {labels.reschedule}
+        </button>
+      ) : null}
+    </td>
+  );
+}
+
 /**
  * Headless activity list. Consumes {@link useActivities} for paged data and
  * exposes per-row action callbacks. Renders a minimal `<table>` with
@@ -126,52 +193,14 @@ export function ActivityList({
               <td>{a.dueAt}</td>
               <td>{a.status}</td>
               {showActions ? (
-                <td data-granit-activity-actions="">
-                  {onComplete && a.status === 'Open' ? (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onComplete(a);
-                      }}
-                    >
-                      {labels.complete}
-                    </button>
-                  ) : null}
-                  {onCancel && a.status === 'Open' ? (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onCancel(a);
-                      }}
-                    >
-                      {labels.cancel}
-                    </button>
-                  ) : null}
-                  {onReassign ? (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onReassign(a);
-                      }}
-                    >
-                      {labels.reassign}
-                    </button>
-                  ) : null}
-                  {onReschedule ? (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onReschedule(a);
-                      }}
-                    >
-                      {labels.reschedule}
-                    </button>
-                  ) : null}
-                </td>
+                <ActivityActions
+                  activity={a}
+                  labels={labels}
+                  onComplete={onComplete}
+                  onCancel={onCancel}
+                  onReassign={onReassign}
+                  onReschedule={onReschedule}
+                />
               ) : null}
             </tr>
           ))}

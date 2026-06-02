@@ -65,8 +65,7 @@ export function DndBanner({
   const message = override === 'DoNotDisturb' ? merged.doNotDisturb : merged.appearOffline;
 
   return (
-    <div
-      role="status"
+    <output
       data-granit-presence-dnd-banner=""
       data-override={override}
       className={className}
@@ -92,6 +91,6 @@ export function DndBanner({
           {merged.clearAction}
         </button>
       ) : null}
-    </div>
+    </output>
   );
 }

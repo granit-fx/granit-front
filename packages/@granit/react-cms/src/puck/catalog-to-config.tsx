@@ -188,10 +188,7 @@ function descriptorToField(
       return buildDocumentReferenceField(fetchDocuments);
 
     case 'List': {
-      const itemFields = buildFields(
-        (descriptor.itemFields ?? {}) as Record<string, BlockFieldDescriptor>,
-        fetchDocuments
-      );
+      const itemFields = buildFields(descriptor.itemFields ?? {}, fetchDocuments);
       return {
         type: 'array',
         arrayFields: itemFields,
@@ -200,17 +197,12 @@ function descriptorToField(
     }
 
     case 'Nested': {
-      const objectFields = buildFields(
-        (descriptor.fields ?? {}) as Record<string, BlockFieldDescriptor>,
-        fetchDocuments
-      );
+      const objectFields = buildFields(descriptor.fields ?? {}, fetchDocuments);
       return { type: 'object', objectFields };
     }
 
-    default: {
-      void (kind as never);
+    default:
       return { type: 'text' };
-    }
   }
 }
 
@@ -260,9 +252,7 @@ function defaultForKind(kind: BlockFieldKind): unknown {
       return [];
     case 'Nested':
       return {};
-    default: {
-      void (kind as never);
+    default:
       return null;
-    }
   }
 }

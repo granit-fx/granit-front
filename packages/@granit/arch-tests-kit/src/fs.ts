@@ -10,6 +10,23 @@ const SKIP_DIRS = new Set([
   'storybook-static',
 ]);
 
+function processWalkEntry(
+  entry: fs.Dirent,
+  cur: string,
+  stack: string[],
+  out: string[],
+  filter: ((file: string) => boolean) | undefined
+): void {
+  const full = path.join(cur, entry.name);
+  if (entry.isDirectory()) {
+    if (!SKIP_DIRS.has(entry.name)) stack.push(full);
+  } else if (entry.isFile()) {
+    if (!/\.(ts|tsx)$/.test(entry.name)) return;
+    if (filter && !filter(full)) return;
+    out.push(full);
+  }
+}
+
 export function walkSourceFiles(rootDir: string, filter?: (file: string) => boolean): string[] {
   if (!fs.existsSync(rootDir)) return [];
   const out: string[] = [];
@@ -18,15 +35,7 @@ export function walkSourceFiles(rootDir: string, filter?: (file: string) => bool
     const cur = stack.pop();
     if (cur === undefined) break;
     for (const entry of fs.readdirSync(cur, { withFileTypes: true })) {
-      const full = path.join(cur, entry.name);
-      if (entry.isDirectory()) {
-        if (SKIP_DIRS.has(entry.name)) continue;
-        stack.push(full);
-      } else if (entry.isFile()) {
-        if (!/\.(ts|tsx)$/.test(entry.name)) continue;
-        if (filter && !filter(full)) continue;
-        out.push(full);
-      }
+      processWalkEntry(entry, cur, stack, out, filter);
     }
   }
   return out;

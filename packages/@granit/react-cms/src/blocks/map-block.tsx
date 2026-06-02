@@ -8,7 +8,7 @@ export function MapBlock({ title, address, lat, lng }: MapBlockProps) {
       {title && <h2>{title}</h2>}
       {address && <address>{address}</address>}
       {lat !== undefined && lng !== undefined && (
-        <div data-lat={lat} data-lng={lng} aria-label={address ?? 'Map'} role="img" />
+        <figure data-lat={lat} data-lng={lng} aria-label={address ?? 'Map'} />
       )}
     </section>
   );

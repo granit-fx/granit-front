@@ -7,8 +7,8 @@ export function TrustBannerBlock({ title, logos }: TrustBannerBlockProps) {
     <section data-block="trust-banner">
       {title && <p>{title}</p>}
       <ul>
-        {logos.map((logo, idx) => (
-          <li key={idx}>
+        {logos.map((logo) => (
+          <li key={`${String(logo.imageId)}-${logo.alt ?? ''}`}>
             {logo._resolved_imageId ? (
               <img
                 src={logo._resolved_imageId.url}

@@ -236,7 +236,7 @@ describe('MapBlock', () => {
     );
     expect(container.querySelector('h2')).not.toBeNull();
     expect(container.querySelector('address')).not.toBeNull();
-    expect(container.querySelector('[role="img"]')).not.toBeNull();
+    expect(container.querySelector('figure')).not.toBeNull();
   });
 });
 

@@ -93,10 +93,10 @@ function extractGuid(value: unknown): string | null {
     value != null &&
     typeof value === 'object' &&
     'id' in value &&
-    typeof (value as { id: unknown }).id === 'string' &&
-    (value as { id: string }).id.length > 0
+    typeof value.id === 'string' &&
+    value.id.length > 0
   ) {
-    return (value as { id: string }).id;
+    return value.id;
   }
   return null;
 }
