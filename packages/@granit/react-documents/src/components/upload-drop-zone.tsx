@@ -133,6 +133,8 @@ export function UploadDropZone({
 
   return (
     <div
+      role="region"
+      aria-label="File drop zone"
       data-granit-upload-drop-zone=""
       data-granit-upload-drop-zone-over={showOverlay ? '' : undefined}
       data-granit-upload-drop-zone-busy={isBusy ? '' : undefined}

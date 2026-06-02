@@ -451,7 +451,7 @@
             {
               "name": "sections",
               "kind": "property",
-              "signature": "sections?: ReadonlyArray<'dependencies' | 'peerDependencies' | 'devDependencies'>"
+              "signature": "sections?: ReadonlyArray<SectionKey>"
             }
           ]
         }

@@ -9,6 +9,7 @@ import { useDocumentsConfig } from '../providers/documents-provider';
 import { classifyDocumentName, documentBadge } from './document-kind';
 import { InlineEdit } from './inline-edit';
 
+import type { MultiSelectApi } from '../hooks/use-multi-select';
 import type { DocumentsViewMode, TileSizeStep } from '../hooks/use-view-preferences';
 import type { DocumentResponse } from '@granit/documents';
 import type { FilterEntry, SortEntry } from '@granit/query-engine';
@@ -177,6 +178,140 @@ function DocumentNameCell({
   return <span data-granit-documents-list-name="">{document.name}</span>;
 }
 
+// ---------------------------------------------------------------------------
+// Module-level utility functions (extracted to reduce DocumentsListBody
+// cognitive complexity — these contain the branching logic so the component
+// body stays flat).
+// ---------------------------------------------------------------------------
+
+interface KeyDownHandlerParams {
+  readonly items: readonly DocumentResponse[];
+  readonly focusedId: string | null;
+  readonly setFocusedId: (id: string | null) => void;
+  readonly selection: MultiSelectApi;
+  readonly orderedIds: readonly string[];
+  readonly onOpenDocument: ((id: string) => void) | undefined;
+  readonly onPreviewDocument: ((doc: DocumentResponse) => void) | undefined;
+  readonly canManage: boolean;
+  readonly setRowMode: (id: string, mode: RowMode) => void;
+}
+
+function buildKeyDownHandler(p: KeyDownHandlerParams): (event: KeyboardEvent<HTMLElement>) => void {
+  return (event) => {
+    if (p.items.length === 0) return;
+    const index = p.focusedId ? p.items.findIndex((d) => d.id === p.focusedId) : -1;
+
+    // Both list and grid use the same linear nav model. In grid mode the
+    // visual rows are CSS-driven (auto-fill); without a JS-tracked column
+    // count we can't do Finder-style up/down between rows, so left/right
+    // (and up/down) all walk the flat ordering. Good enough for v1, and
+    // matches what shadcn / radix do for command palettes.
+    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+      event.preventDefault();
+      const next = p.items[Math.min(p.items.length - 1, index + 1)];
+      if (next) {
+        p.setFocusedId(next.id);
+        if (event.shiftKey) p.selection.selectRange(next.id);
+        else if (!event.ctrlKey && !event.metaKey) p.selection.selectOnly(next.id);
+      }
+    } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+      event.preventDefault();
+      const next = p.items[Math.max(0, index - 1)];
+      if (next) {
+        p.setFocusedId(next.id);
+        if (event.shiftKey) p.selection.selectRange(next.id);
+        else if (!event.ctrlKey && !event.metaKey) p.selection.selectOnly(next.id);
+      }
+    } else if (event.key === 'Enter' && p.focusedId) {
+      event.preventDefault();
+      p.onOpenDocument?.(p.focusedId);
+    } else if (event.key === ' ' && p.focusedId) {
+      event.preventDefault();
+      if (p.onPreviewDocument) {
+        const doc = p.items.find((d) => d.id === p.focusedId);
+        if (doc) p.onPreviewDocument(doc);
+      } else {
+        // No preview handler wired → fall back to the legacy
+        // "Space toggles selection" behavior to stay accessible.
+        p.selection.toggle(p.focusedId);
+      }
+    } else if (event.key === 'F2' && p.focusedId && p.canManage) {
+      event.preventDefault();
+      p.setRowMode(p.focusedId, 'renaming');
+    } else if (
+      (event.key === 'Delete' || event.key === 'Backspace') &&
+      p.focusedId &&
+      p.canManage
+    ) {
+      event.preventDefault();
+      p.setRowMode(p.focusedId, 'confirming-trash');
+    } else if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'a') {
+      event.preventDefault();
+      p.selection.selectAll(p.orderedIds);
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      p.selection.clear();
+      p.setFocusedId(null);
+    }
+  };
+}
+
+interface ItemClickHandlerParams {
+  readonly selection: MultiSelectApi;
+  readonly setFocusedId: (id: string | null) => void;
+}
+
+function buildItemClickHandler(
+  p: ItemClickHandlerParams
+): (event: MouseEvent, doc: DocumentResponse) => void {
+  return (event, doc) => {
+    if (event.shiftKey) {
+      event.preventDefault();
+      p.selection.selectRange(doc.id);
+    } else if (event.ctrlKey || event.metaKey) {
+      p.selection.toggle(doc.id);
+    } else {
+      p.selection.selectOnly(doc.id);
+    }
+    p.setFocusedId(doc.id);
+  };
+}
+
+interface ItemDragStartHandlerParams {
+  readonly canManage: boolean;
+  readonly selection: MultiSelectApi;
+  readonly setFocusedId: (id: string | null) => void;
+  readonly items: readonly DocumentResponse[];
+}
+
+function buildItemDragStartHandler(
+  p: ItemDragStartHandlerParams
+): (event: DragEvent, doc: DocumentResponse) => void {
+  return (event, doc) => {
+    if (!p.canManage) {
+      event.preventDefault();
+      return;
+    }
+    // If the dragged item is part of the current selection, move the whole
+    // selection. Otherwise, drag this item only (and adopt it as the new
+    // single selection, matching Finder / OneDrive behavior).
+    let ids: string[];
+    if (p.selection.selected.has(doc.id)) {
+      ids = Array.from(p.selection.selected);
+    } else {
+      p.selection.selectOnly(doc.id);
+      ids = [doc.id];
+    }
+    p.setFocusedId(doc.id);
+    event.dataTransfer.setData(DOCUMENT_DRAG_MIME, JSON.stringify({ ids }));
+    // Plain-text fallback so external apps (e.g. terminal, editor) see at
+    // least the names. Comma-joined keeps it grep-friendly.
+    const names = p.items.filter((d) => ids.includes(d.id)).map((d) => d.name);
+    event.dataTransfer.setData('text/plain', names.join(', '));
+    event.dataTransfer.effectAllowed = 'move';
+  };
+}
+
 function DocumentsListBody({
   folderId,
   pageSize,
@@ -258,114 +393,76 @@ function DocumentsListBody({
     onItemsChange(items);
   }, [items, onItemsChange]);
 
-  function setRowMode(id: string, mode: RowMode): void {
-    setRowModes((prev) => ({ ...prev, [id]: mode }));
-  }
+  const setRowMode = useMemo(
+    () =>
+      (id: string, mode: RowMode): void => {
+        setRowModes((prev) => ({ ...prev, [id]: mode }));
+      },
+    []
+  );
 
-  function clearRowMode(id: string): void {
-    setRowModes((prev) => {
-      if (!(id in prev)) return prev;
-      const next = { ...prev };
-      delete next[id];
-      return next;
-    });
-  }
+  const clearRowMode = useMemo(
+    () =>
+      (id: string): void => {
+        setRowModes((prev) => {
+          if (!(id in prev)) return prev;
+          const next = { ...prev };
+          delete next[id];
+          return next;
+        });
+      },
+    []
+  );
 
-  function handleItemClick(event: MouseEvent, doc: DocumentResponse): void {
-    if (event.shiftKey) {
-      event.preventDefault();
-      selection.selectRange(doc.id);
-    } else if (event.ctrlKey || event.metaKey) {
-      selection.toggle(doc.id);
-    } else {
-      selection.selectOnly(doc.id);
-    }
-    setFocusedId(doc.id);
-  }
+  const handleItemClick = useMemo(
+    () => buildItemClickHandler({ selection, setFocusedId }),
+    [selection.toggle, selection.selectRange, selection.selectOnly, setFocusedId]
+  );
 
-  function handleNameClick(doc: DocumentResponse): void {
-    selection.selectOnly(doc.id);
-    setFocusedId(doc.id);
-    onOpenDocument?.(doc.id);
-  }
+  const handleNameClick = useMemo(
+    () =>
+      (doc: DocumentResponse): void => {
+        selection.selectOnly(doc.id);
+        setFocusedId(doc.id);
+        onOpenDocument?.(doc.id);
+      },
+    [selection.selectOnly, setFocusedId, onOpenDocument]
+  );
 
-  function handleItemDragStart(event: DragEvent, doc: DocumentResponse): void {
-    if (!canManage) {
-      event.preventDefault();
-      return;
-    }
-    // If the dragged item is part of the current selection, move the whole
-    // selection. Otherwise, drag this item only (and adopt it as the new
-    // single selection, matching Finder / OneDrive behavior).
-    let ids: string[];
-    if (selection.selected.has(doc.id)) {
-      ids = Array.from(selection.selected);
-    } else {
-      selection.selectOnly(doc.id);
-      ids = [doc.id];
-    }
-    setFocusedId(doc.id);
-    event.dataTransfer.setData(DOCUMENT_DRAG_MIME, JSON.stringify({ ids }));
-    // Plain-text fallback so external apps (e.g. terminal, editor) see at
-    // least the names. Comma-joined keeps it grep-friendly.
-    const names = items.filter((d) => ids.includes(d.id)).map((d) => d.name);
-    event.dataTransfer.setData('text/plain', names.join(', '));
-    event.dataTransfer.effectAllowed = 'move';
-  }
+  const handleItemDragStart = useMemo(
+    () => buildItemDragStartHandler({ canManage, selection, setFocusedId, items }),
+    [canManage, selection.selected, selection.selectOnly, setFocusedId, items]
+  );
 
-  function handleKeyDown(event: KeyboardEvent<HTMLElement>): void {
-    if (items.length === 0) return;
-    const index = focusedId ? items.findIndex((d) => d.id === focusedId) : -1;
-
-    // Both list and grid use the same linear nav model. In grid mode the
-    // visual rows are CSS-driven (auto-fill); without a JS-tracked column
-    // count we can't do Finder-style up/down between rows, so left/right
-    // (and up/down) all walk the flat ordering. Good enough for v1, and
-    // matches what shadcn / radix do for command palettes.
-    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
-      event.preventDefault();
-      const next = items[Math.min(items.length - 1, index + 1)];
-      if (next) {
-        setFocusedId(next.id);
-        if (event.shiftKey) selection.selectRange(next.id);
-        else if (!event.ctrlKey && !event.metaKey) selection.selectOnly(next.id);
-      }
-    } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
-      event.preventDefault();
-      const next = items[Math.max(0, index - 1)];
-      if (next) {
-        setFocusedId(next.id);
-        if (event.shiftKey) selection.selectRange(next.id);
-        else if (!event.ctrlKey && !event.metaKey) selection.selectOnly(next.id);
-      }
-    } else if (event.key === 'Enter' && focusedId) {
-      event.preventDefault();
-      onOpenDocument?.(focusedId);
-    } else if (event.key === ' ' && focusedId) {
-      event.preventDefault();
-      if (onPreviewDocument) {
-        const doc = items.find((d) => d.id === focusedId);
-        if (doc) onPreviewDocument(doc);
-      } else {
-        // No preview handler wired → fall back to the legacy
-        // "Space toggles selection" behavior to stay accessible.
-        selection.toggle(focusedId);
-      }
-    } else if (event.key === 'F2' && focusedId && canManage) {
-      event.preventDefault();
-      setRowMode(focusedId, 'renaming');
-    } else if ((event.key === 'Delete' || event.key === 'Backspace') && focusedId && canManage) {
-      event.preventDefault();
-      setRowMode(focusedId, 'confirming-trash');
-    } else if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'a') {
-      event.preventDefault();
-      selection.selectAll(orderedIds);
-    } else if (event.key === 'Escape') {
-      event.preventDefault();
-      selection.clear();
-      setFocusedId(null);
-    }
-  }
+  const handleKeyDown = useMemo(
+    () =>
+      buildKeyDownHandler({
+        items,
+        focusedId,
+        setFocusedId,
+        selection,
+        orderedIds,
+        onOpenDocument,
+        onPreviewDocument,
+        canManage,
+        setRowMode,
+      }),
+    [
+      items,
+      focusedId,
+      setFocusedId,
+      selection.selectRange,
+      selection.selectOnly,
+      selection.toggle,
+      selection.selectAll,
+      selection.clear,
+      orderedIds,
+      onOpenDocument,
+      onPreviewDocument,
+      canManage,
+      setRowMode,
+    ]
+  );
 
   function commitRename(doc: DocumentResponse, name: string): void {
     if (name === doc.name) {
@@ -448,7 +545,7 @@ function DocumentsListBody({
       className={className}
     >
       {viewMode === 'list' ? (
-        <div tabIndex={0} onKeyDown={handleKeyDown}>
+        <div role="application" tabIndex={0} onKeyDown={handleKeyDown}>
           <table data-granit-documents-list-table="">
             <thead>
               <tr>
@@ -478,8 +575,16 @@ function DocumentsListBody({
                   data-granit-documents-list-focused={isFocused ? '' : undefined}
                   data-granit-documents-list-draggable={canManage ? '' : undefined}
                   aria-selected={isSelected}
+                  tabIndex={-1}
                   draggable={canManage}
                   onClick={(event) => handleItemClick(event, document)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      selection.selectOnly(document.id);
+                      setFocusedId(document.id);
+                      onOpenDocument?.(document.id);
+                    }
+                  }}
                   onDragStart={(event) => handleItemDragStart(event, document)}
                 >
                   <td data-granit-documents-list-select-cell="">
@@ -552,7 +657,7 @@ function DocumentsListBody({
           </table>
         </div>
       ) : (
-        <div tabIndex={0} onKeyDown={handleKeyDown}>
+        <div role="application" tabIndex={0} onKeyDown={handleKeyDown}>
           <ul
             data-granit-documents-list-grid=""
             // tile size becomes a CSS custom property the host stylesheet picks
@@ -568,8 +673,16 @@ function DocumentsListBody({
                 data-granit-documents-list-selected={isSelected ? '' : undefined}
                 data-granit-documents-list-focused={isFocused ? '' : undefined}
                 data-granit-documents-list-draggable={canManage ? '' : undefined}
+                tabIndex={-1}
                 draggable={canManage}
                 onClick={(event) => handleItemClick(event, document)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    selection.selectOnly(document.id);
+                    setFocusedId(document.id);
+                    onOpenDocument?.(document.id);
+                  }
+                }}
                 onDoubleClick={() => onOpenDocument?.(document.id)}
                 onDragStart={(event) => handleItemDragStart(event, document)}
               >

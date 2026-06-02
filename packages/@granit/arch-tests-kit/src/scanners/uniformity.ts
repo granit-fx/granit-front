@@ -90,9 +90,10 @@ export interface SharedDepVersionsOptions extends ScanContext {
    * Sections to inspect. Defaults to dependencies + peerDependencies +
    * devDependencies — versions must agree across all three.
    */
-  sections?: ReadonlyArray<'dependencies' | 'peerDependencies' | 'devDependencies'>;
+  sections?: ReadonlyArray<SectionKey>;
 }
 
+type SectionKey = 'dependencies' | 'peerDependencies' | 'devDependencies';
 const DEFAULT_SECTIONS = ['dependencies', 'peerDependencies', 'devDependencies'] as const;
 
 type PkgJson = Record<string, Record<string, string> | undefined>;
@@ -102,7 +103,7 @@ type ResolvePkgJson = (m: { dir: string }) => string;
 function collectDepVersions(
   pkg: PkgJson,
   dep: string,
-  sections: ReadonlyArray<'dependencies' | 'peerDependencies' | 'devDependencies'>
+  sections: ReadonlyArray<SectionKey>
 ): string[] {
   const versions = new Set<string>();
   for (const section of sections) {
@@ -118,7 +119,7 @@ function collectDepVersions(
  */
 function collectModuleVersions(
   m: { name: string; dir: string },
-  sections: ReadonlyArray<'dependencies' | 'peerDependencies' | 'devDependencies'>,
+  sections: ReadonlyArray<SectionKey>,
   deps: ReadonlyArray<string>,
   resolvePkgJson: ResolvePkgJson,
   repoRoot: string,
