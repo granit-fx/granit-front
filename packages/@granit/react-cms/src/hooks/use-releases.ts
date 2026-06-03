@@ -1,3 +1,5 @@
+'use client';
+
 import { getRelease, listReleases } from '@granit/cms';
 import { useQuery } from '@tanstack/react-query';
 

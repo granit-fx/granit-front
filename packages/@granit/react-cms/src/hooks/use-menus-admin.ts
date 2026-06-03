@@ -1,3 +1,5 @@
+'use client';
+
 import { getMenu, listMenus } from '@granit/cms';
 import { useQuery } from '@tanstack/react-query';
 

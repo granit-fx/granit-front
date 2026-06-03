@@ -1,3 +1,5 @@
+'use client';
+
 import { createMenu, deleteMenu, updateMenu } from '@granit/cms';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 

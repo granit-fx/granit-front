@@ -1,3 +1,5 @@
+'use client';
+
 import { getPage, getPageTree, listPageVersions, listPages } from '@granit/cms';
 import { useQuery } from '@tanstack/react-query';
 

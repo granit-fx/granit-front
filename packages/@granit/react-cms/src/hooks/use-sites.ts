@@ -1,3 +1,5 @@
+'use client';
+
 import { getSite, listSites } from '@granit/cms';
 import { useQuery } from '@tanstack/react-query';
 

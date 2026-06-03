@@ -1,3 +1,5 @@
+'use client';
+
 import { createSite, deleteSite, updateSite } from '@granit/cms';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 

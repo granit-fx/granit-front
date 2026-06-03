@@ -1,3 +1,5 @@
+'use client';
+
 import { useOptionalGranitClient } from '@granit/react-api-client';
 import { createContext, useContext, useMemo } from 'react';
 
