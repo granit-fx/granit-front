@@ -4,7 +4,7 @@ import type {
   PagedResponse,
   SiteResponse,
   UpdateSiteRequest,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /** `GET /api/cms/sites` — list sites (paged). Requires `Cms.Sites.Read`. */

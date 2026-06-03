@@ -31,10 +31,10 @@ export type {
   SeoAiSuggestResponse,
   SeoAiSuggestionResponse,
   SeoAiSuggestionStatus,
-} from './types/index.js';
+} from './types/index';
 
 // ─── API — Public renderer ────────────────────────────────────────────────────
-export { getEffectiveSeo } from './api/seo.js';
+export { getEffectiveSeo } from './api/seo';
 
 // ─── API — SEO admin ─────────────────────────────────────────────────────────
 export {
@@ -48,7 +48,7 @@ export {
   listSeoAuditIssues,
   updateSeoDefaults,
   upsertSeoMetadata,
-} from './api/seo-admin.js';
+} from './api/seo-admin';
 
 // ─── API — SEO-AI ─────────────────────────────────────────────────────────────
 export {
@@ -58,4 +58,4 @@ export {
   rejectSeoSuggestion,
   suggestSeo,
   triggerBulkSeoAudit,
-} from './api/seo-ai.js';
+} from './api/seo-ai';

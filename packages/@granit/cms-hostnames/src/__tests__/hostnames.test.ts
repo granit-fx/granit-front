@@ -10,7 +10,7 @@ import {
   removeSiteHostname,
   setSiteHostnamePrimary,
   verifySiteHostname,
-} from '../api/hostnames.js';
+} from '../api/hostnames';
 
 import type { ManagedHostnameResponse } from '@granit/hostnames';
 

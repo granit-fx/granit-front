@@ -4,7 +4,7 @@ import type {
   MenuResponse,
   PagedResponse,
   UpdateMenuRequest,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /** `GET /api/cms/menus` — paged list. Requires `Cms.Menus.Read`. */

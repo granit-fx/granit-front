@@ -63,26 +63,26 @@ export type {
   ListSitesParams,
   // Admin result types
   SaveDraftResult,
-} from './types/index.js';
+} from './types/index';
 
 // ─── API — Public renderer ────────────────────────────────────────────────────
 
 // Pages
-export { getPageByPath, mintPreviewToken, resolvePreview } from './api/pages.js';
+export { getPageByPath, mintPreviewToken, resolvePreview } from './api/pages';
 
 // Blocks
-export { getBlockCatalog, resolveBlockData } from './api/blocks.js';
+export { getBlockCatalog, resolveBlockData } from './api/blocks';
 
 // Menus
-export { resolveMenu } from './api/menus.js';
+export { resolveMenu } from './api/menus';
 
 // Document Resolution
-export { batchResolveDocuments } from './api/documents.js';
+export { batchResolveDocuments } from './api/documents';
 
 // ─── API — Admin ──────────────────────────────────────────────────────────────
 
 // Sites
-export { createSite, deleteSite, getSite, listSites, updateSite } from './api/sites.js';
+export { createSite, deleteSite, getSite, listSites, updateSite } from './api/sites';
 
 // Pages admin
 export {
@@ -99,10 +99,10 @@ export {
   unpublishPage,
   updatePage,
   updatePageTranslation,
-} from './api/pages-admin.js';
+} from './api/pages-admin';
 
 // Menus admin
-export { createMenu, deleteMenu, getMenu, listMenus, updateMenu } from './api/menus-admin.js';
+export { createMenu, deleteMenu, getMenu, listMenus, updateMenu } from './api/menus-admin';
 
 // Releases
 export {
@@ -116,4 +116,4 @@ export {
   removeReleaseAction,
   scheduleRelease,
   updateRelease,
-} from './api/releases.js';
+} from './api/releases';

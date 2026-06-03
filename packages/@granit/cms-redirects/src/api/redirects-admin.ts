@@ -4,7 +4,7 @@ import type {
   PagedResponse,
   RedirectResponse,
   UpdateRedirectRequest,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /** `GET /api/cms/redirects` — paged list. Requires `Cms.Redirects.Read`. */

@@ -12,9 +12,9 @@ import {
   removeReleaseAction,
   scheduleRelease,
   updateRelease,
-} from '../api/releases.js';
+} from '../api/releases';
 
-import type { PagedResponse, ReleaseResponse } from '../types/index.js';
+import type { PagedResponse, ReleaseResponse } from '../types/index';
 
 const BASE = 'https://cms.example.com';
 
@@ -32,7 +32,12 @@ const release: ReleaseResponse = {
 describe('listReleases', () => {
   it('GET /api/cms/releases', async () => {
     const client = createMockClient();
-    const response: PagedResponse<ReleaseResponse> = { items: [release], totalCount: 1, page: 0, pageSize: 20 };
+    const response: PagedResponse<ReleaseResponse> = {
+      items: [release],
+      totalCount: 1,
+      page: 0,
+      pageSize: 20,
+    };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(response));
 
     const result = await listReleases(client, BASE);
@@ -75,7 +80,9 @@ describe('updateRelease', () => {
 
     await updateRelease(client, BASE, 'rel-1', { name: 'Sprint 42 rev2' });
 
-    expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/releases/rel-1`, { name: 'Sprint 42 rev2' });
+    expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/releases/rel-1`, {
+      name: 'Sprint 42 rev2',
+    });
   });
 });
 
@@ -95,7 +102,12 @@ describe('addReleaseAction', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValue(axiosResponse(release));
 
-    const request = { contentType: 'page', contentId: 'page-1', culture: 'fr', type: 'Publish' as const };
+    const request = {
+      contentType: 'page',
+      contentId: 'page-1',
+      culture: 'fr',
+      type: 'Publish' as const,
+    };
     const result = await addReleaseAction(client, BASE, 'rel-1', request);
 
     expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/releases/rel-1/actions`, request);

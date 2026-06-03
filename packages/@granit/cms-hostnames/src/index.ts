@@ -17,4 +17,4 @@ export {
   removeSiteHostname,
   setSiteHostnamePrimary,
   verifySiteHostname,
-} from './api/hostnames.js';
+} from './api/hostnames';

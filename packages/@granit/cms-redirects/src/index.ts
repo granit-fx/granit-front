@@ -6,10 +6,10 @@ export type {
   RedirectResolveResponse,
   RedirectResponse,
   UpdateRedirectRequest,
-} from './types/index.js';
+} from './types/index';
 
 // ─── API — Public renderer ────────────────────────────────────────────────────
-export { resolveRedirect } from './api/redirects.js';
+export { resolveRedirect } from './api/redirects';
 
 // ─── API — Admin ─────────────────────────────────────────────────────────────
 export {
@@ -17,4 +17,4 @@ export {
   deleteRedirect,
   listRedirects,
   updateRedirect,
-} from './api/redirects-admin.js';
+} from './api/redirects-admin';

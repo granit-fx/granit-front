@@ -12,7 +12,7 @@ import {
   listSeoAuditIssues,
   updateSeoDefaults,
   upsertSeoMetadata,
-} from '../api/seo-admin.js';
+} from '../api/seo-admin';
 
 import type {
   OgCardPreviewResponse,
@@ -21,7 +21,7 @@ import type {
   SeoMetadataResponse,
   SerpPreviewResponse,
   SiteSeoDefaultsResponse,
-} from '../types/index.js';
+} from '../types/index';
 
 const BASE = 'https://cms.example.com';
 const PARAMS = { siteId: 'site-1', contentType: 'page', contentId: 'page-1', culture: 'fr' };
@@ -98,10 +98,9 @@ describe('updateSeoDefaults', () => {
 
     await updateSeoDefaults(client, BASE, 'site-1', { siteName: 'Updated' });
 
-    expect(client.put).toHaveBeenCalledWith(
-      `${BASE}/api/cms/seo/sites/site-1/defaults`,
-      { siteName: 'Updated' }
-    );
+    expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/seo/sites/site-1/defaults`, {
+      siteName: 'Updated',
+    });
   });
 });
 
@@ -109,8 +108,12 @@ describe('listSeoAuditIssues', () => {
   it('GET /api/cms/seo/metadata', async () => {
     const client = createMockClient();
     const response: PagedResponse<SeoAuditIssueResponse> = {
-      items: [{ contentType: 'page', contentId: 'p-1', culture: 'fr', issueType: 'MissingDescription' }],
-      totalCount: 1, page: 0, pageSize: 20,
+      items: [
+        { contentType: 'page', contentId: 'p-1', culture: 'fr', issueType: 'MissingDescription' },
+      ],
+      totalCount: 1,
+      page: 0,
+      pageSize: 20,
     };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(response));
 
@@ -137,12 +140,19 @@ describe('invalidateSitemap', () => {
 describe('getSerpPreview', () => {
   it('returns preview on 200', async () => {
     const client = createMockClient();
-    const preview: SerpPreviewResponse = { title: 'T', url: 'https://example.com', description: 'D' };
+    const preview: SerpPreviewResponse = {
+      title: 'T',
+      url: 'https://example.com',
+      description: 'D',
+    };
     vi.mocked(client.get).mockResolvedValue({ status: 200, data: preview });
 
     const result = await getSerpPreview(client, BASE, PARAMS);
 
-    expect(client.get).toHaveBeenCalledWith(`${META_URL}/preview/serp`, expect.objectContaining({}));
+    expect(client.get).toHaveBeenCalledWith(
+      `${META_URL}/preview/serp`,
+      expect.objectContaining({})
+    );
     expect(result).toEqual(preview);
   });
 

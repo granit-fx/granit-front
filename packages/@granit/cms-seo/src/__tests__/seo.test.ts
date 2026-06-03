@@ -1,9 +1,9 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getEffectiveSeo } from '../api/seo.js';
+import { getEffectiveSeo } from '../api/seo';
 
-import type { EffectiveSeoResponse } from '../types/index.js';
+import type { EffectiveSeoResponse } from '../types/index';
 
 const basePath = 'https://cms.example.com';
 

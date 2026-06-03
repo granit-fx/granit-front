@@ -1,13 +1,13 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getBlockCatalog, resolveBlockData } from '../api/blocks.js';
+import { getBlockCatalog, resolveBlockData } from '../api/blocks';
 
 import type {
   BlockCatalogResponse,
   BlockDataResolveRequest,
   BlockDataResponse,
-} from '../types/index.js';
+} from '../types/index';
 
 const basePath = 'https://cms.example.com';
 

@@ -11,7 +11,7 @@ import type {
   SaveDraftResult,
   UpdatePageRequest,
   UpdatePageTranslationRequest,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /** `GET /api/cms/pages/tree` — flat list ordered as tree. Requires `Cms.Pages.Read`. */

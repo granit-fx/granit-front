@@ -1,9 +1,14 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { createRedirect, deleteRedirect, listRedirects, updateRedirect } from '../api/redirects-admin.js';
+import {
+  createRedirect,
+  deleteRedirect,
+  listRedirects,
+  updateRedirect,
+} from '../api/redirects-admin';
 
-import type { PagedResponse, RedirectResponse } from '../types/index.js';
+import type { PagedResponse, RedirectResponse } from '../types/index';
 
 const BASE = 'https://cms.example.com';
 
@@ -20,7 +25,12 @@ const redirect: RedirectResponse = {
 describe('listRedirects', () => {
   it('GET /api/cms/redirects without params', async () => {
     const client = createMockClient();
-    const response: PagedResponse<RedirectResponse> = { items: [redirect], totalCount: 1, page: 0, pageSize: 20 };
+    const response: PagedResponse<RedirectResponse> = {
+      items: [redirect],
+      totalCount: 1,
+      page: 0,
+      pageSize: 20,
+    };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(response));
 
     const result = await listRedirects(client, BASE);
@@ -31,7 +41,9 @@ describe('listRedirects', () => {
 
   it('passes siteId and search params', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [], totalCount: 0, page: 0, pageSize: 20 }));
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse({ items: [], totalCount: 0, page: 0, pageSize: 20 })
+    );
 
     await listRedirects(client, BASE, { siteId: 'site-1', search: '/old' });
 

@@ -1,9 +1,9 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { createMenu, deleteMenu, getMenu, listMenus, updateMenu } from '../api/menus-admin.js';
+import { createMenu, deleteMenu, getMenu, listMenus, updateMenu } from '../api/menus-admin';
 
-import type { MenuResponse, PagedResponse } from '../types/index.js';
+import type { MenuResponse, PagedResponse } from '../types/index';
 
 const BASE = 'https://cms.example.com';
 
@@ -18,7 +18,12 @@ const menu: MenuResponse = {
 describe('listMenus', () => {
   it('GET /api/cms/menus without params', async () => {
     const client = createMockClient();
-    const response: PagedResponse<MenuResponse> = { items: [menu], totalCount: 1, page: 0, pageSize: 20 };
+    const response: PagedResponse<MenuResponse> = {
+      items: [menu],
+      totalCount: 1,
+      page: 0,
+      pageSize: 20,
+    };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(response));
 
     const result = await listMenus(client, BASE);
@@ -29,11 +34,15 @@ describe('listMenus', () => {
 
   it('passes siteId param', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [], totalCount: 0, page: 0, pageSize: 20 }));
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse({ items: [], totalCount: 0, page: 0, pageSize: 20 })
+    );
 
     await listMenus(client, BASE, { siteId: 'site-1' });
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/menus`, { params: { siteId: 'site-1' } });
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/menus`, {
+      params: { siteId: 'site-1' },
+    });
   });
 });
 

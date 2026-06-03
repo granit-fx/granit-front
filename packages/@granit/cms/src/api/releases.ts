@@ -6,7 +6,7 @@ import type {
   ReleaseResponse,
   ScheduleReleaseRequest,
   UpdateReleaseRequest,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /** `GET /api/cms/releases` — paged list. Requires `Cms.Releases.Read`. */

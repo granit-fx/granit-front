@@ -8,9 +8,9 @@ import {
   rejectSeoSuggestion,
   suggestSeo,
   triggerBulkSeoAudit,
-} from '../api/seo-ai.js';
+} from '../api/seo-ai';
 
-import type { PagedResponse, SeoAiSuggestionResponse, SeoAiSuggestResponse } from '../types/index.js';
+import type { PagedResponse, SeoAiSuggestionResponse, SeoAiSuggestResponse } from '../types/index';
 
 const BASE = 'https://cms.example.com';
 
@@ -28,7 +28,12 @@ describe('suggestSeo', () => {
     const response: SeoAiSuggestResponse = { outcome: 'Success', suggestion };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(response));
 
-    const request = { contentType: 'page', contentId: 'page-1', culture: 'fr', contentTitle: 'Test' };
+    const request = {
+      contentType: 'page',
+      contentId: 'page-1',
+      culture: 'fr',
+      contentTitle: 'Test',
+    };
     const result = await suggestSeo(client, BASE, request);
 
     expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/seo/ai/suggest`, request);
@@ -40,7 +45,10 @@ describe('listSeoSuggestions', () => {
   it('GET /api/cms/seo/ai/suggestions', async () => {
     const client = createMockClient();
     const response: PagedResponse<SeoAiSuggestionResponse> = {
-      items: [suggestion], totalCount: 1, page: 0, pageSize: 20,
+      items: [suggestion],
+      totalCount: 1,
+      page: 0,
+      pageSize: 20,
     };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(response));
 
@@ -73,10 +81,9 @@ describe('applySeoSuggestion', () => {
 
     const result = await applySeoSuggestion(client, BASE, 'sug-1', { fields: ['title'] });
 
-    expect(client.post).toHaveBeenCalledWith(
-      `${BASE}/api/cms/seo/ai/suggestions/sug-1/apply`,
-      { fields: ['title'] }
-    );
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/seo/ai/suggestions/sug-1/apply`, {
+      fields: ['title'],
+    });
     expect(result).toEqual(applied);
   });
 });
@@ -89,10 +96,9 @@ describe('rejectSeoSuggestion', () => {
 
     await rejectSeoSuggestion(client, BASE, 'sug-1', { reason: 'Not relevant' });
 
-    expect(client.post).toHaveBeenCalledWith(
-      `${BASE}/api/cms/seo/ai/suggestions/sug-1/reject`,
-      { reason: 'Not relevant' }
-    );
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/seo/ai/suggestions/sug-1/reject`, {
+      reason: 'Not relevant',
+    });
   });
 
   it('defaults to empty body when no reason given', async () => {
@@ -101,10 +107,7 @@ describe('rejectSeoSuggestion', () => {
 
     await rejectSeoSuggestion(client, BASE, 'sug-1');
 
-    expect(client.post).toHaveBeenCalledWith(
-      `${BASE}/api/cms/seo/ai/suggestions/sug-1/reject`,
-      {}
-    );
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/seo/ai/suggestions/sug-1/reject`, {});
   });
 });
 

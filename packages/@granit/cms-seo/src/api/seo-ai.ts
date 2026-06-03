@@ -6,7 +6,7 @@ import type {
   SeoAiSuggestRequest,
   SeoAiSuggestResponse,
   SeoAiSuggestionResponse,
-} from '../types/index.js';
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

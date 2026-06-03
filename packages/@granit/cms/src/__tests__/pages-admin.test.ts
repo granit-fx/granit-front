@@ -15,14 +15,14 @@ import {
   unpublishPage,
   updatePage,
   updatePageTranslation,
-} from '../api/pages-admin.js';
+} from '../api/pages-admin';
 
 import type {
   PageDraftConflictResponse,
   PageResponse,
   PageTreeNodeResponse,
   PageVersionSummaryResponse,
-} from '../types/index.js';
+} from '../types/index';
 
 const BASE = 'https://cms.example.com';
 
@@ -63,7 +63,9 @@ describe('getPageTree', () => {
 
     const result = await getPageTree(client, BASE, 'site-1');
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/pages/tree`, { params: { siteId: 'site-1' } });
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/pages/tree`, {
+      params: { siteId: 'site-1' },
+    });
     expect(result).toEqual([treeNode]);
   });
 });
@@ -71,11 +73,15 @@ describe('getPageTree', () => {
 describe('listPages', () => {
   it('GET /api/cms/pages with params', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [page], totalCount: 1, page: 0, pageSize: 20 }));
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse({ items: [page], totalCount: 1, page: 0, pageSize: 20 })
+    );
 
     await listPages(client, BASE, { siteId: 'site-1' });
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/pages`, { params: { siteId: 'site-1' } });
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/pages`, {
+      params: { siteId: 'site-1' },
+    });
   });
 });
 
@@ -111,7 +117,9 @@ describe('updatePage', () => {
 
     await updatePage(client, BASE, 'page-1', { slugSegment: 'new-home' });
 
-    expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1`, { slugSegment: 'new-home' });
+    expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1`, {
+      slugSegment: 'new-home',
+    });
   });
 });
 
@@ -120,7 +128,10 @@ describe('updatePageTranslation', () => {
     const client = createMockClient();
     vi.mocked(client.put).mockResolvedValue(axiosResponse(page));
 
-    await updatePageTranslation(client, BASE, 'page-1', 'fr', { urlSlug: 'accueil', title: 'Accueil' });
+    await updatePageTranslation(client, BASE, 'page-1', 'fr', {
+      urlSlug: 'accueil',
+      title: 'Accueil',
+    });
 
     expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1/translations/fr`, {
       urlSlug: 'accueil',
@@ -136,7 +147,9 @@ describe('movePage', () => {
 
     await movePage(client, BASE, 'page-1', { parentId: 'parent-1' });
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1/move`, { parentId: 'parent-1' });
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1/move`, {
+      parentId: 'parent-1',
+    });
   });
 });
 

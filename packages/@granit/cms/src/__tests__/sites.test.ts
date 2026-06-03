@@ -1,9 +1,9 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { createSite, deleteSite, getSite, listSites, updateSite } from '../api/sites.js';
+import { createSite, deleteSite, getSite, listSites, updateSite } from '../api/sites';
 
-import type { PagedResponse, SiteResponse } from '../types/index.js';
+import type { PagedResponse, SiteResponse } from '../types/index';
 
 const BASE = 'https://cms.example.com';
 
@@ -22,7 +22,12 @@ const site: SiteResponse = {
 describe('listSites', () => {
   it('fetches paged list without params', async () => {
     const client = createMockClient();
-    const response: PagedResponse<SiteResponse> = { items: [site], totalCount: 1, page: 0, pageSize: 20 };
+    const response: PagedResponse<SiteResponse> = {
+      items: [site],
+      totalCount: 1,
+      page: 0,
+      pageSize: 20,
+    };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(response));
 
     const result = await listSites(client, BASE);
@@ -33,7 +38,9 @@ describe('listSites', () => {
 
   it('passes page and search params', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [], totalCount: 0, page: 1, pageSize: 10 }));
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse({ items: [], totalCount: 0, page: 1, pageSize: 10 })
+    );
 
     await listSites(client, BASE, { page: 1, pageSize: 10, search: 'acme' });
 

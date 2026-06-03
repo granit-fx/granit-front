@@ -1,9 +1,9 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { batchResolveDocuments } from '../api/documents.js';
+import { batchResolveDocuments } from '../api/documents';
 
-import type { BatchResolveDocumentsRequest, ResolvedDocumentResponse } from '../types/index.js';
+import type { BatchResolveDocumentsRequest, ResolvedDocumentResponse } from '../types/index';
 
 const basePath = 'https://cms.example.com';
 

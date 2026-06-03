@@ -1,9 +1,9 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { resolveMenu } from '../api/menus.js';
+import { resolveMenu } from '../api/menus';
 
-import type { ResolvedMenu } from '../types/index.js';
+import type { ResolvedMenu } from '../types/index';
 
 const basePath = 'https://cms.example.com';
 
