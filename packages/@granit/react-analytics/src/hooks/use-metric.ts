@@ -89,7 +89,7 @@ function refetchIntervalFromResponse(
  * to the same query key (and therefore the same cache entry, in-flight
  * request, and — once streaming lands — subscription identity).
  */
-function normalizeMetricRequest(request: MetricRequest): MetricRequest {
+export function normalizeMetricRequest(request: MetricRequest): MetricRequest {
   const period =
     'token' in request.period
       ? { token: request.period.token }

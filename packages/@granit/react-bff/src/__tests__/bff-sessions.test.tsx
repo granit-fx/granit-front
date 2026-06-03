@@ -22,7 +22,7 @@ const authenticatedResponse = {
   sessionExpiresAt: '2026-03-23T20:00:00Z',
 };
 
-const csrfResponse = { token: 'csrf-test-token' };
+const csrfResponse = { csrfToken: 'csrf-test-token' };
 
 const sessionsResponse = {
   sessions: [
