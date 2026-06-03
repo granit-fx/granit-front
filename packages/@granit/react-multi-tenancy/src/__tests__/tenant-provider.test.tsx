@@ -4,11 +4,17 @@ import { describe, expect, it, vi } from 'vitest';
 import { TenantProvider, useTenant } from '../providers/tenant-provider';
 
 import type { TenantResolver } from '@granit/multi-tenancy';
+import type { QueryClient } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 
 vi.mock('@granit/api-client', () => ({
   setTenantGetter: vi.fn(),
 }));
+
+/** Minimal QueryClient stub — TenantProvider only calls `.clear()`. */
+function fakeQueryClient(): { clear: ReturnType<typeof vi.fn> } & QueryClient {
+  return { clear: vi.fn() } as unknown as { clear: ReturnType<typeof vi.fn> } & QueryClient;
+}
 
 function wrapper(resolvers: readonly TenantResolver[], isEnabled?: boolean) {
   return ({ children }: { children: ReactNode }) => (
@@ -106,6 +112,53 @@ describe('TenantProvider', () => {
     rerender();
 
     expect(onTenantChange).toHaveBeenCalledTimes(1);
+    expect(onTenantChange).toHaveBeenCalledWith('tenant-b', 'tenant-a');
+  });
+
+  it('does not clear the query cache on initial mount (VULN-200)', () => {
+    const queryClient = fakeQueryClient();
+    const resolvers: TenantResolver[] = [
+      { order: 100, name: 'test', resolve: () => ({ id: 'tenant-1' }) },
+    ];
+
+    renderHook(() => useTenant(), {
+      wrapper: ({ children }: { children: ReactNode }) => (
+        <TenantProvider resolvers={resolvers} queryClient={queryClient}>
+          {children}
+        </TenantProvider>
+      ),
+    });
+
+    expect(queryClient.clear).not.toHaveBeenCalled();
+  });
+
+  it('clears the query cache when the tenant id changes, before onTenantChange (VULN-200)', () => {
+    const queryClient = fakeQueryClient();
+    const onTenantChange = vi.fn(() => {
+      // Cache must already be cleared by the time custom side effects run.
+      expect(queryClient.clear).toHaveBeenCalledTimes(1);
+    });
+    let currentTenantId = 'tenant-a';
+    const resolvers: TenantResolver[] = [
+      { order: 100, name: 'dynamic', resolve: () => ({ id: currentTenantId }) },
+    ];
+
+    const { rerender } = renderHook(() => useTenant(), {
+      wrapper: ({ children }: { children: ReactNode }) => (
+        <TenantProvider
+          resolvers={[...resolvers]}
+          queryClient={queryClient}
+          onTenantChange={onTenantChange}
+        >
+          {children}
+        </TenantProvider>
+      ),
+    });
+
+    currentTenantId = 'tenant-b';
+    rerender();
+
+    expect(queryClient.clear).toHaveBeenCalledTimes(1);
     expect(onTenantChange).toHaveBeenCalledWith('tenant-b', 'tenant-a');
   });
 });
