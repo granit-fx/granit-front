@@ -2604,6 +2604,18 @@
               "signature": "logout: (options?: LogoutOptions) => void"
             }
           ]
+        },
+        {
+          "name": "CognitoAuthTransaction",
+          "kind": "interface",
+          "signature": "interface CognitoAuthTransaction",
+          "members": []
+        },
+        {
+          "name": "PkcePair",
+          "kind": "interface",
+          "signature": "interface PkcePair",
+          "members": []
         }
       ]
     },

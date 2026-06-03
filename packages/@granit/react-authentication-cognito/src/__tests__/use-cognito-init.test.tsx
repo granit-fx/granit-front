@@ -214,11 +214,16 @@ describe('useCognitoInit', () => {
       );
       await waitFor(() => expect(result.current.loading).toBe(false));
       result.current.login();
+      await waitFor(() => expect(hrefSetter).toHaveBeenCalled());
 
-      expect(hrefSetter).toHaveBeenCalledWith(
-        expect.stringContaining('https://auth.example.com/login?client_id=test-client-id')
-      );
-      expect(hrefSetter.mock.calls[0]?.[0]).toContain('scope=openid+profile+email');
+      const url = hrefSetter.mock.calls[0]?.[0] as string;
+      expect(url).toContain('https://auth.example.com/login?client_id=test-client-id');
+      expect(url).toContain('scope=openid+profile+email');
+      // PKCE + anti-forgery parameters (VULN-103 / VULN-301)
+      expect(url).toContain('code_challenge_method=S256');
+      expect(url).toMatch(/[?&]code_challenge=[\w-]+/u);
+      expect(url).toMatch(/[?&]state=[\w-]+/u);
+      expect(url).toMatch(/[?&]nonce=[\w-]+/u);
     } finally {
       Object.defineProperty(globalThis, 'location', {
         configurable: true,
@@ -251,9 +256,11 @@ describe('useCognitoInit', () => {
       );
       await waitFor(() => expect(result.current.loading).toBe(false));
       result.current.login({ redirectUri: 'https://app.example/cb' });
+      await waitFor(() => expect(hrefSetter).toHaveBeenCalled());
 
-      expect(hrefSetter.mock.calls[0]?.[0]).toContain('scope=openid+foo');
-      expect(hrefSetter.mock.calls[0]?.[0]).toContain(encodeURIComponent('https://app.example/cb'));
+      const url = hrefSetter.mock.calls[0]?.[0] as string;
+      expect(url).toContain('scope=openid+foo');
+      expect(url).toContain(encodeURIComponent('https://app.example/cb'));
     } finally {
       Object.defineProperty(globalThis, 'location', {
         configurable: true,

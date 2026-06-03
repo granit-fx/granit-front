@@ -2,6 +2,13 @@ import { setTokenGetter, setOnUnauthorized } from '@granit/api-client';
 import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import * as React from 'react';
 
+import {
+  buildCognitoAuthorizeUrl,
+  generatePkce,
+  persistCognitoAuthTransaction,
+  randomToken,
+} from '../pkce';
+
 import type { LoginOptions, LogoutOptions, OidcUserInfo } from '@granit/authentication';
 import type { CognitoAuthContextType, CognitoCoreConfig } from '@granit/authentication-cognito';
 
@@ -118,10 +125,30 @@ export function useCognitoInit(config: CognitoCoreConfig): CognitoCoreResult {
 
   const login = React.useCallback(
     (options?: LoginOptions) => {
-      if (!config.domain) return;
-      const scopes = config.scopes?.join('+') ?? 'openid+profile+email';
+      const domain = config.domain;
+      if (!domain) return;
+      const scopes = config.scopes ?? ['openid', 'profile', 'email'];
       const redirectUri = options?.redirectUri ?? globalThis.location.origin;
-      globalThis.location.href = `https://${config.domain}/login?client_id=${config.clientId}&response_type=code&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}`;
+      // Public SPA client → PKCE (S256) + single-use `state` + `nonce`
+      // (RFC 7636 / RFC 9700). The redirect is deferred by one microtask while
+      // the S256 challenge is derived; `login()` stays fire-and-forget. The
+      // verifier/state/nonce are stashed in sessionStorage for the callback to
+      // validate and exchange. See security audit VULN-103 / VULN-301.
+      void (async () => {
+        const { verifier, challenge } = await generatePkce();
+        const state = randomToken();
+        const nonce = randomToken();
+        persistCognitoAuthTransaction({ verifier, state, nonce });
+        globalThis.location.href = buildCognitoAuthorizeUrl({
+          domain,
+          clientId: config.clientId,
+          redirectUri,
+          scopes,
+          challenge,
+          state,
+          nonce,
+        });
+      })();
     },
     [config.domain, config.clientId, config.scopes]
   );
