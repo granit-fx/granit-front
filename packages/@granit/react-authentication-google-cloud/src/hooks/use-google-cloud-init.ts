@@ -1,7 +1,10 @@
 import { setTokenGetter, setOnUnauthorized } from '@granit/api-client';
 import { initializeApp } from 'firebase/app';
 import {
-  getAuth,
+  initializeAuth,
+  inMemoryPersistence,
+  browserSessionPersistence,
+  indexedDBLocalPersistence,
   onAuthStateChanged,
   signInWithRedirect,
   signOut,
@@ -14,7 +17,14 @@ import type {
   GoogleCloudAuthContextType,
   GoogleCloudCoreConfig,
 } from '@granit/authentication-google-cloud';
-import type { Auth, User } from 'firebase/auth';
+import type { Auth, Persistence, User } from 'firebase/auth';
+
+/** Resolve the Firebase persistence from the configured posture (default: memory). */
+function resolvePersistence(tokenStorage: GoogleCloudCoreConfig['tokenStorage']): Persistence {
+  if (tokenStorage === 'localStorage') return indexedDBLocalPersistence;
+  if (tokenStorage === 'sessionStorage') return browserSessionPersistence;
+  return inMemoryPersistence;
+}
 
 export interface GoogleCloudCoreResult extends GoogleCloudAuthContextType {
   /** Direct ref to the Firebase Auth instance. */
@@ -60,7 +70,10 @@ export function useGoogleCloudInit(config: GoogleCloudCoreConfig): GoogleCloudCo
       projectId: config.projectId,
     });
 
-    const auth = getAuth(app);
+    // `initializeAuth` (not `getAuth`) lets us pin the persistence backend.
+    // Default is in-memory so the refresh token never lands in IndexedDB /
+    // localStorage. See security audit VULN-201.
+    const auth = initializeAuth(app, { persistence: resolvePersistence(config.tokenStorage) });
     authRef.current = auth;
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -93,6 +106,7 @@ export function useGoogleCloudInit(config: GoogleCloudCoreConfig): GoogleCloudCo
     config.apiKey,
     config.authDomain,
     config.projectId,
+    config.tokenStorage,
     config.onTokenRefreshError,
     config.onSessionExpired,
   ]);

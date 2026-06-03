@@ -675,6 +675,11 @@
               "signature": "scopes?: readonly string[]"
             },
             {
+              "name": "tokenStorage",
+              "kind": "property",
+              "signature": "tokenStorage?: 'memory' | 'sessionStorage' | 'localStorage'"
+            },
+            {
               "name": "onTokenRefreshError",
               "kind": "method",
               "signature": "onTokenRefreshError?: () => void"
@@ -788,6 +793,11 @@
               "name": "scopes",
               "kind": "property",
               "signature": "scopes?: readonly string[]"
+            },
+            {
+              "name": "tokenStorage",
+              "kind": "property",
+              "signature": "tokenStorage?: 'memory' | 'sessionStorage' | 'localStorage'"
             },
             {
               "name": "onTokenRefreshError",

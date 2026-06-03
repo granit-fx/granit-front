@@ -4,6 +4,37 @@ import * as React from 'react';
 
 import type { LoginOptions, LogoutOptions, OidcUserInfo } from '@granit/authentication';
 import type { CognitoAuthContextType, CognitoCoreConfig } from '@granit/authentication-cognito';
+import type { ICognitoStorage } from 'amazon-cognito-identity-js';
+
+/**
+ * In-memory implementation of the Cognito SDK storage contract. Tokens live
+ * only for the lifetime of the tab and are never readable by other same-origin
+ * scripts via `localStorage`/`sessionStorage`. This is the default so a
+ * compromised script (XSS, extension) cannot lift the refresh token. See
+ * security audit VULN-102.
+ */
+class InMemoryCognitoStorage implements ICognitoStorage {
+  private readonly store = new Map<string, string>();
+  getItem(key: string): string | null {
+    return this.store.get(key) ?? null;
+  }
+  setItem(key: string, value: string): void {
+    this.store.set(key, value);
+  }
+  removeItem(key: string): void {
+    this.store.delete(key);
+  }
+  clear(): void {
+    this.store.clear();
+  }
+}
+
+/** Resolve the Cognito token store from the configured posture (default: memory). */
+function resolveCognitoStorage(tokenStorage: CognitoCoreConfig['tokenStorage']): ICognitoStorage {
+  if (tokenStorage === 'localStorage') return globalThis.localStorage;
+  if (tokenStorage === 'sessionStorage') return globalThis.sessionStorage;
+  return new InMemoryCognitoStorage();
+}
 
 export interface CognitoCoreResult extends CognitoAuthContextType {
   /** Direct ref to the Cognito UserPool instance. */
@@ -75,6 +106,7 @@ export function useCognitoInit(config: CognitoCoreConfig): CognitoCoreResult {
     const pool = new CognitoUserPool({
       UserPoolId: config.userPoolId,
       ClientId: config.clientId,
+      Storage: resolveCognitoStorage(config.tokenStorage),
     });
     userPoolRef.current = pool;
 
@@ -114,7 +146,13 @@ export function useCognitoInit(config: CognitoCoreConfig): CognitoCoreResult {
         setUser(null);
       });
     });
-  }, [config.userPoolId, config.clientId, config.onSessionExpired, config.onTokenRefreshError]);
+  }, [
+    config.userPoolId,
+    config.clientId,
+    config.tokenStorage,
+    config.onSessionExpired,
+    config.onTokenRefreshError,
+  ]);
 
   const login = React.useCallback(
     (options?: LoginOptions) => {

@@ -27,6 +27,17 @@ export interface CognitoCoreConfig {
   /** OAuth scopes to request. */
   scopes?: readonly string[];
 
+  /**
+   * Where the Cognito SDK stores its tokens (id, access, **and the long-lived
+   * refresh token**). Defaults to `'memory'` so tokens are never readable by
+   * same-origin JavaScript (XSS, malicious browser extensions). Override only
+   * when cross-tab / cross-reload persistence is required AND the app ships an
+   * XSS-hardened CSP. Persisting tokens in `localStorage`/`sessionStorage` is a
+   * known high-severity risk (CWE-922) — prefer the BFF cookie pattern
+   * (`@granit/bff`) for durable sessions. See security audit VULN-102.
+   */
+  tokenStorage?: 'memory' | 'sessionStorage' | 'localStorage';
+
   /** Called when a token refresh fails. */
   onTokenRefreshError?: () => void;
   /** Called when the session expires. */
