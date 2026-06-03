@@ -269,6 +269,37 @@ describe('createOtlpTransport', () => {
     expect(init.keepalive).toBe(true);
   });
 
+  it('redacts PII in the body and attributes by default (VULN-205)', async () => {
+    const transport = createOtlpTransport({
+      endpoint: '/v1/logs',
+      serviceName: 'test',
+      batchSize: 100,
+    });
+    transport.send(
+      makeEntry({ message: 'login john.doe@example.com', context: { email: 'a@b.com' } })
+    );
+    await transport.flush!();
+
+    const body = vi.mocked(fetch).mock.calls[0]![1]!.body as string;
+    // Raw email addresses must not reach the collector when no redactor is set.
+    expect(body).not.toContain('john.doe@example.com');
+    expect(body).not.toContain('a@b.com');
+  });
+
+  it('honors an explicit opt-out via identity redactor', async () => {
+    const transport = createOtlpTransport({
+      endpoint: '/v1/logs',
+      serviceName: 'test',
+      batchSize: 100,
+      redact: (s) => s,
+    });
+    transport.send(makeEntry({ message: 'login john.doe@example.com' }));
+    await transport.flush!();
+
+    const body = vi.mocked(fetch).mock.calls[0]![1]!.body as string;
+    expect(body).toContain('john.doe@example.com');
+  });
+
   it('should not throw when fetch fails', async () => {
     vi.mocked(fetch).mockRejectedValueOnce(new Error('network error'));
     const transport = createOtlpTransport({

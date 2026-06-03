@@ -2,6 +2,8 @@
 // @granit/logger-otlp — OTLP HTTP transport for @granit/logger
 // ---------------------------------------------------------------------------
 
+import { defaultPiiRedactor } from './pii-redactor';
+
 import type { LogContext, LogEntry, LogLevelName, LogTransport } from '@granit/logger';
 
 // ---------------------------------------------------------------------------
@@ -42,9 +44,13 @@ export interface OtlpTransportOptions {
   /** Optional callback to retrieve trace context for log-to-trace correlation */
   getTraceContext?: () => TraceContext | undefined;
   /**
-   * Optional PII scrubber applied to the log body and every attribute
-   * value before serialization. Use `defaultPiiRedactor` for a built-in
-   * baseline (email, JWT, Bearer tokens, IBAN, credit card, E.164 phone).
+   * PII scrubber applied to the log body and every attribute value before
+   * serialization. **Defaults to `defaultPiiRedactor`** (email, JWT, Bearer
+   * tokens, IBAN, credit card, E.164 phone) so PII is redacted by default —
+   * protection by default per GDPR Art. 25. See security audit VULN-205.
+   *
+   * Pass a custom function to extend the baseline, or pass the identity
+   * function `(s) => s` to explicitly opt out of redaction.
    */
   redact?: (text: string) => string;
 }
@@ -144,6 +150,11 @@ function buildPayload(entries: LogEntry[], options: OtlpTransportOptions) {
 export function createOtlpTransport(options: OtlpTransportOptions): LogTransport {
   const batchSize = options.batchSize ?? 10;
   const flushInterval = options.flushInterval ?? 5_000;
+  // Redact by default — opt out explicitly with `redact: (s) => s`. (VULN-205)
+  const resolvedOptions: OtlpTransportOptions = {
+    ...options,
+    redact: options.redact ?? defaultPiiRedactor,
+  };
 
   let buffer: LogEntry[] = [];
   let timer: ReturnType<typeof setTimeout> | null = null;
@@ -170,7 +181,7 @@ export function createOtlpTransport(options: OtlpTransportOptions): LogTransport
     const batch = buffer;
     buffer = [];
 
-    const payload = JSON.stringify(buildPayload(batch, options));
+    const payload = JSON.stringify(buildPayload(batch, resolvedOptions));
 
     try {
       const response = await fetch(options.endpoint, {

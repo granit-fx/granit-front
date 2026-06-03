@@ -6,7 +6,15 @@ import { useAIConfig } from '../providers/ai-provider';
 import type { AIChatRequest, AIChatStreamUsage } from '@granit/ai';
 
 export interface UseAIChatStreamReturn {
-  /** Accumulated content received so far. Reset on each new `send()` call. */
+  /**
+   * Accumulated content received so far. Reset on each new `send()` call.
+   *
+   * ⚠️ **Untrusted.** This is raw model output — steerable by prompt
+   * injection, poisoned RAG, or echoed tool results. Render it as plain text,
+   * or sanitize it (and scheme-allowlist any links via `@granit/utils`
+   * `isSafeUrl`) before rendering as HTML/markdown. Never pass it to
+   * `dangerouslySetInnerHTML` unsanitized. See security audit VULN-303.
+   */
   readonly content: string;
   /** Whether a stream is currently active. */
   readonly isStreaming: boolean;
@@ -25,6 +33,12 @@ export interface UseAIChatStreamReturn {
  *
  * Accumulates content chunks into `content` as they arrive.
  * Each call to `send()` resets the accumulated content.
+ *
+ * @remarks
+ * Security: `content` is untrusted model output — see the field doc before
+ * rendering it. Request size is bounded server-side; keep client `messages`
+ * reasonable to avoid wasted bandwidth (no hard client clamp is imposed —
+ * tracked as VULN-304).
  *
  * @example
  * ```tsx

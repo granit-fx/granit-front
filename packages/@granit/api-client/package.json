@@ -20,7 +20,7 @@
   },
   "peerDependencies": {
     "@granit/logger": "workspace:*",
-    "axios": "*"
+    "axios": "^1.6.0"
   },
   "peerDependenciesMeta": {
     "@granit/logger": {

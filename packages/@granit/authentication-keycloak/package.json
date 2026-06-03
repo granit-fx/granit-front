@@ -15,7 +15,7 @@
   },
   "peerDependencies": {
     "@granit/authentication": "workspace:*",
-    "keycloak-js": "*"
+    "keycloak-js": "^26.0.0"
   },
   "devDependencies": {
     "@granit/authentication": "workspace:*",

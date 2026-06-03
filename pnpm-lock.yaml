@@ -312,7 +312,7 @@ importers:
   packages/@granit/authentication-keycloak:
     dependencies:
       keycloak-js:
-        specifier: '*'
+        specifier: ^26.0.0
         version: 26.2.4
     devDependencies:
       '@granit/authentication':
@@ -1156,7 +1156,7 @@ importers:
         specifier: workspace:*
         version: link:../react-authentication
       keycloak-js:
-        specifier: '*'
+        specifier: ^26.0.0
         version: 26.2.4
       react:
         specifier: 19.2.7
@@ -3019,16 +3019,16 @@ importers:
   packages/@granit/utils:
     dependencies:
       '@date-fns/tz':
-        specifier: '*'
+        specifier: ^1.0.0
         version: 1.5.0
       clsx:
-        specifier: '*'
+        specifier: ^2.0.0
         version: 2.1.1
       date-fns:
-        specifier: '*'
+        specifier: ^4.0.0
         version: 4.4.0
       tailwind-merge:
-        specifier: '*'
+        specifier: ^3.0.0
         version: 3.6.0
     devDependencies:
       '@granit/testing':

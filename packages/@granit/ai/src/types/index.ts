@@ -108,6 +108,11 @@ export interface AIChatUsageResponse {
 export interface AIChatResponse {
   readonly workspaceName: string;
   readonly model: string;
+  /**
+   * Generated text. ⚠️ **Untrusted** model output — sanitize and
+   * scheme-allowlist any links before rendering as HTML/markdown. Never pass
+   * it to a DOM HTML sink unsanitized. See security audit VULN-303.
+   */
   readonly content: string;
   readonly usage: AIChatUsageResponse | null;
   readonly duration: string;
