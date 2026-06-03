@@ -21,6 +21,10 @@ audit without the checklist — it contains the full verification matrix.
 2. All paginated responses must use `PagedResult<T>` from `@granit/query-engine`
 3. All paginated request params must use `PaginationParams` (no inline duplication)
 4. Every backend endpoint must have a corresponding frontend API function
+5. API functions use `get*` / `list*` for reads (NEVER `fetch*`) and
+   `create*` / `update*` / `delete*` for writes
+6. Business/domain HTTP goes through `@granit/api-client` (Axios); native
+   `fetch` is allowed only in BFF / telemetry / SSE infra layers (see CLAUDE.md)
 
 ---
 
@@ -121,10 +125,14 @@ For each target package, collect:
    using the naming convention `@granit/{name}` → `Granit.{PascalName}`
    (e.g., `@granit/query-engine` → `Granit.QueryEngine`,
    `@granit/blob-storage` → `Granit.BlobStorage`,
-   `@granit/audit-log` → `Granit.AuditLog`).
+   `@granit/audit-log` → `Granit.AuditLog`). Mirror sub-module granularity
+   (`@granit/authentication-api-keys` → `Granit.Authentication.ApiKeys`).
+   **Framework** modules live in `~/dev/granit-fx/granit-dotnet`; **business/domain**
+   modules (Parties, Documents, Invoicing, Taxonomy, Workspaces, …) expose their
+   endpoints in `~/dev/granit-fx/granit-business` as `Granit.{Module}.Endpoints`.
 
-   b. **Type discovery**: use `mcp__granit-docs__search_code` and
-   `mcp__granit-docs__get_public_api` to find the corresponding .NET module
+   b. **Type discovery**: use `mcp__granit-tools__code_search` and
+   `mcp__granit-tools__code_get_api` to find the corresponding .NET module
    types. If available, also use `mcp__roslyn-lens__get_public_api` for
    precise signatures.
 
@@ -139,27 +147,31 @@ For each target package, collect:
    [HTTP method] [route template] → [handler method] → [request DTO] → [response DTO]
    ```
 
-   If `roslyn-lens` is unavailable, fall back to `mcp__granit-docs__search_code`
+   If `roslyn-lens` is unavailable, fall back to `mcp__granit-tools__code_search`
    with queries like `Map{Module}Endpoints`, `MapGet`, `MapPost` in the module
    namespace, then read the endpoint registration file via Read tool.
 
    d. **Naming convention map**: record the .NET → TypeScript naming for the
    module to verify consistency in Step 3:
 
-   | .NET                                   | TypeScript                              | Convention                                             |
-   | -------------------------------------- | --------------------------------------- | ------------------------------------------------------ |
-   | Namespace `Granit.{Module}`            | Package `@granit/{kebab-name}`          | PascalCase → kebab-case                                |
-   | DTO `{Name}Request` / `{Name}Response` | Type `{Name}Request` / `{Name}Response` | Identical (minus namespace)                            |
-   | Endpoint method `Get{Resources}`       | API function `fetch{Resources}`         | Get→fetch, Create→create, Update→update, Delete→delete |
-   | Route `/api/{module}/{resource}`       | basePath + `/{resource}`                | Segments match exactly                                 |
+   | .NET                                   | TypeScript                              | Convention                                         |
+   | -------------------------------------- | --------------------------------------- | -------------------------------------------------- |
+   | Namespace `Granit.{Module}`            | Package `@granit/{kebab-name}`          | PascalCase → kebab-case                            |
+   | DTO `{Name}Request` / `{Name}Response` | Type `{Name}Request` / `{Name}Response` | Identical (minus namespace)                        |
+   | Endpoint `Get*` / `List*`              | API fn `get*` / `list*`                 | Get→get, List→list; Create/Update/Delete unchanged |
+   | Route `/api/{module}/{resource}`       | basePath + `/{resource}`                | Segments match exactly                             |
 
 5. **Peer dependencies**: read `package.json`
 6. **Consumer usage**: if the audit may lead to renaming or removing an exported
    symbol, search for references in consumer apps before flagging:
 
    ```bash
+   # Primary consumer (CLAUDE.md): showcase-admin-react
+   grep -r "@granit/{package}" ~/dev/granit-fx/granit-showcase-react/src/
+   # CMS renderer (Next.js) — imports under app/ and src/
+   grep -r "@granit/{package}" ~/dev/granit-fx/granit-cms-renderer/{app,src}/
+   # Downstream app (if present)
    grep -r "@granit/{package}" ~/dev/digital-dynamics/guava-platform/applications/guava-front/src/
-   grep -r "@granit/{package}" ~/dev/digital-dynamics/guava-platform/applications/guava-admin/src/
    ```
 
    Record the blast radius (number of import sites) for each exported symbol.
@@ -172,8 +184,9 @@ For each target package, collect:
 ## Step 3 — Run the checklist
 
 Apply every category from [checklist.md](checklist.md) against the gathered context.
-Work through the checklist **in order** — type conformity first, then API, hooks,
-dependencies, and finally cross-cutting concerns.
+Work through the checklist **in order** — type conformity first, then API (including
+HTTP-client conformity and endpoint drift), hooks, dependencies, cross-cutting
+concerns, and finally module decomposition (backend bounded-context alignment).
 
 For each finding, classify it:
 
@@ -206,12 +219,13 @@ Output findings using this format:
 
 ### Endpoint Alignment — @granit/{package}
 
-| .NET Endpoint      | Route           | Frontend Function  | Match |
-| ------------------ | --------------- | ------------------ | ----- |
-| `Get{Resources}`   | `GET /api/...`  | `fetch{Resources}` | OK    |
-| `Create{Resource}` | `POST /api/...` | `create{Resource}` | OK    |
-| `Update{Resource}` | `PUT /api/...`  | _(none)_           | GAP   |
-| ...                | ...             | ...                | ...   |
+| .NET Endpoint      | Route               | Frontend Function  | Match |
+| ------------------ | ------------------- | ------------------ | ----- |
+| `List{Resources}`  | `GET /api/...`      | `list{Resources}`  | OK    |
+| `Get{Resource}`    | `GET /api/.../{id}` | `get{Resource}`    | OK    |
+| `Create{Resource}` | `POST /api/...`     | `create{Resource}` | OK    |
+| `Update{Resource}` | `PUT /api/...`      | _(none)_           | GAP   |
+| ...                | ...                 | ...                | ...   |
 
 Coverage: {covered}/{total} endpoints ({percentage}%)
 
@@ -303,18 +317,27 @@ When auditing all packages, perform these additional checks:
 3. **Peer dependency matrix**: verify that the peer deps in CLAUDE.md match
    actual `package.json` declarations
 4. **Export surface stability**: flag any exported symbol that is not used by
-   any consumer (guava-front, guava-admin) — candidate for removal
+   any consumer (showcase-admin-react, cms-renderer, guava-front) — candidate
+   for removal
 5. **Pattern uniformity**: verify all domain modules follow the same structure
    (core types package + react hooks package, same file organization)
 6. **Cross-package naming consistency**: verify that all packages follow the
    same naming conventions relative to their .NET counterpart:
-   - All packages use the same verb mapping (`Get*` → `fetch*`, etc.) — flag
-     any package that deviates (e.g., one uses `get*` while others use `fetch*`)
+   - All packages use the same verb mapping (`Get*` → `get*`, `List*` → `list*`,
+     `Create*`/`Update*`/`Delete*` unchanged) — flag any package that deviates
+     (e.g., one uses `fetch*` while the convention is `get*` / `list*`)
    - All packages use the same DTO naming strategy (no mix of `*Response` and
      `*Result` or `*Dto` across packages for the same pattern)
    - Provider names follow `{Module}Provider` uniformly (not `{Module}Context`
      in some and `{Module}Provider` in others)
    - Query key factories follow the same pattern across all `react-*` packages
+7. **Module decomposition** (checklist section 6): verify the frontend package
+   graph mirrors the backend bounded-context slicing — one `.Endpoints` context
+   per `@granit/{module}` pair, sub-modules split at the same granularity as the
+   backend, cross-domain integration in glue packages (never merged upstream)
+8. **HTTP client + CSP conformity**: no domain `fetch()` outside the allowed
+   infra layers (checklist 2d); every package writing to a DOM script sink
+   exposes a `<pkg>/csp` subpath — run `pnpm check:csp` to confirm
 
 ---
 
@@ -396,12 +419,28 @@ For any new or modified function in `src/api/`:
 
 - Fetch the corresponding .NET endpoint via MCP tools (same discovery as
   checklist 2b)
-- Verify **verb mapping**: `Get*` → `fetch*`, `Create*` → `create*`,
-  `Update*` → `update*`, `Delete*` → `delete*`
+- Verify **verb mapping**: `Get*` → `get*`, `List*` → `list*`,
+  `Create*` → `create*`, `Update*` → `update*`, `Delete*` → `delete*`
+  (NEVER `fetch*` — see the CLAUDE.md verb convention)
 - Verify **route alignment**: URL path built in the function matches the
   .NET route template (same segments, same parameter names)
 - Verify **HTTP method** matches the backend endpoint
 - Produce the Endpoint Alignment table for the PR report
+
+#### New HTTP calls & module placement
+
+```bash
+git diff origin/develop...HEAD -- "packages/@granit/{pkg}/src/" | grep -nE "^\+.*\bfetch\("
+```
+
+- Flag any added `fetch(` in a domain package as **BREAKING** — domain calls go
+  through `@granit/api-client` (native `fetch` allowed only in BFF/telemetry/SSE
+  infra; checklist 2d)
+- For a **new** package, verify it maps to a backend `.Endpoints` context at the
+  right granularity (checklist 6a) and that cross-domain glue is not merged into
+  an upstream package (6b)
+- Verify no forbidden structure mix (checklist 5a); if the package writes to a
+  DOM script sink, confirm it exposes `<pkg>/csp` (run `pnpm check:csp`)
 
 #### Test coverage
 
@@ -498,10 +537,10 @@ before producing the final verdict.
 - **No speculative refactoring.** Only propose changes backed by evidence
   (backend contract, pattern in 3+ other packages, or measurable improvement).
   "Could be cleaner" is not a finding.
-- **Respect the monorepo.** Changes to exported types affect guava-front and
-  guava-admin. Before proposing any rename or removal, run the consumer grep
-  from Step 2.6 and report the blast radius. If > 5 import sites, flag it as
-  requiring a coordinated PR.
+- **Respect the monorepo.** Changes to exported types affect showcase-admin-react,
+  the CMS renderer, and downstream apps. Before proposing any rename or removal,
+  run the consumer grep from Step 2.6 and report the blast radius. If > 5 import
+  sites, flag it as requiring a coordinated PR.
 - **One thing at a time.** Fix one category before moving to the next.
   Don't mix type fixes with hook refactoring in the same pass.
 - **Context window discipline.** When auditing `all` packages, process them
