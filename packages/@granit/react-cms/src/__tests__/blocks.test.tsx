@@ -224,6 +224,58 @@ describe('VideoBlock', () => {
   });
 });
 
+describe('block link/media XSS hardening (VULN-100/101/204)', () => {
+  const UNSAFE_HREFS = [
+    'javascript:alert(document.cookie)',
+    'JaVaScRiPt:alert(1)',
+    'data:text/html,<script>alert(1)</script>',
+    'vbscript:msgbox(1)',
+    '/\\evil.com',
+  ];
+
+  it.each(UNSAFE_HREFS)('HeroBlock drops unsafe CTA href %s', (href) => {
+    const { container } = render(<HeroBlock headline="Welcome" ctaLabel="Go" ctaHref={href} />);
+    expect(container.querySelector('a')).toBeNull();
+  });
+
+  it('HeroBlock keeps a safe CTA href', () => {
+    const { container } = render(
+      <HeroBlock headline="Welcome" ctaLabel="Go" ctaHref="https://example.com" />
+    );
+    expect(container.querySelector('a')?.getAttribute('href')).toBe('https://example.com');
+  });
+
+  it.each(UNSAFE_HREFS)('CtaBlock drops unsafe button href %s', (href) => {
+    const { container } = render(<CtaBlock title="T" buttonLabel="Go" buttonHref={href} />);
+    expect(container.querySelector('a')).toBeNull();
+  });
+
+  it.each(UNSAFE_HREFS)('PricingBlock drops unsafe plan CTA href %s', (href) => {
+    const { container } = render(
+      <PricingBlock
+        title="Pricing"
+        plans={[{ name: 'Pro', price: '€9', features: [], ctaLabel: 'Buy', ctaHref: href }]}
+      />
+    );
+    expect(container.querySelector('a')).toBeNull();
+  });
+
+  it.each(['javascript:alert(1)', 'data:text/html,x', '/\\evil.com'])(
+    'VideoBlock drops unsafe video src %s',
+    (src) => {
+      const { container } = render(<VideoBlock videoUrl={src} />);
+      expect(container.querySelector('video')).toBeNull();
+    }
+  );
+
+  it('VideoBlock keeps a safe https video src', () => {
+    const { container } = render(<VideoBlock videoUrl="https://cdn.example.com/v.mp4" />);
+    expect(container.querySelector('video')?.getAttribute('src')).toBe(
+      'https://cdn.example.com/v.mp4'
+    );
+  });
+});
+
 describe('MapBlock', () => {
   it('renders with required props only', () => {
     const { container } = render(<MapBlock />);

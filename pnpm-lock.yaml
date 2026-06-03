@@ -1387,6 +1387,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@puckeditor/core':
         specifier: ^0.21.2
         version: 0.21.2(@floating-ui/dom@1.7.6)(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
@@ -1701,6 +1704,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/utils':
+        specifier: workspace:*
+        version: link:../utils
       msw:
         specifier: ^2.14.6
         version: 2.14.6(@types/node@25.9.1)(typescript@6.0.3)

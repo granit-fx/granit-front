@@ -35,8 +35,13 @@ export function isSafeUrl(
   allowedSchemes: ReadonlySet<string> = NAV_URL_SCHEMES
 ): boolean {
   if (typeof input !== 'string' || input === '') return false;
-  if (input.startsWith('//')) return false;
-  if (input.startsWith('/')) return true;
+  // Browsers normalise backslashes to forward slashes in the authority, so
+  // `/\evil.com`, `\\evil.com` and `/\/evil.com` all resolve off-origin just
+  // like `//evil.com`. Normalise before the relative-path fast paths so the
+  // leading-slash shortcut cannot be tricked into accepting an absolute URL.
+  const normalized = input.replace(/\\/g, '/');
+  if (normalized.startsWith('//')) return false;
+  if (normalized.startsWith('/')) return true;
   const url = parseUrl(input);
   if (url === null) return false;
   return allowedSchemes.has(url.protocol);

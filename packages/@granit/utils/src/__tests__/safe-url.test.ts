@@ -17,6 +17,15 @@ describe('isSafeUrl', () => {
     expect(isSafeUrl('//evil.com/path')).toBe(false);
   });
 
+  it('rejects backslash authority bypasses (open redirect)', () => {
+    // Browsers normalise `\` to `/` in the authority, so these resolve
+    // off-origin despite the leading single slash. See security audit VULN-202.
+    expect(isSafeUrl('/\\evil.com')).toBe(false);
+    expect(isSafeUrl('\\\\evil.com')).toBe(false);
+    expect(isSafeUrl('/\\/evil.com')).toBe(false);
+    expect(isSafeUrl('\\/evil.com')).toBe(false);
+  });
+
   it('rejects javascript: scheme (XSS)', () => {
     expect(isSafeUrl('javascript:alert(1)')).toBe(false);
     expect(isSafeUrl('JaVaScRiPt:alert(1)')).toBe(false);
@@ -61,6 +70,10 @@ describe('assertSafeUrl', () => {
 
   it('throws on protocol-relative URL', () => {
     expect(() => assertSafeUrl('//evil.com')).toThrow(/Unsafe URL/);
+  });
+
+  it('throws on backslash authority bypass', () => {
+    expect(() => assertSafeUrl('/\\evil.com')).toThrow(/Unsafe URL/);
   });
 
   it('truncates very long URLs in the error message', () => {

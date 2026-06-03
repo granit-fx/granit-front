@@ -54,6 +54,22 @@ describe('CmsMenuNav', () => {
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
+  it.each([
+    'javascript:alert(document.cookie)',
+    'data:text/html,<script>alert(1)</script>',
+    '/\\evil.com',
+  ])('drops an unsafe ExternalUrl href %s and renders an inert span (VULN-101)', (href) => {
+    render(
+      <CmsMenuNav
+        menu={menu({
+          items: [{ label: 'Trap', kind: 'ExternalUrl', href, children: [] }],
+        })}
+      />
+    );
+    expect(screen.queryByRole('link')).toBeNull();
+    expect(screen.getByText('Trap')).toBeInTheDocument();
+  });
+
   it('renders a None item as a span (no link)', () => {
     render(
       <CmsMenuNav

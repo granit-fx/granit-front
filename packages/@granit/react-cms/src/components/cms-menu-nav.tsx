@@ -1,5 +1,7 @@
 'use client';
 
+import { safeLinkHref } from '../lib/safe-href';
+
 import type { ResolvedMenu, ResolvedMenuItem } from '@granit/cms';
 
 interface CmsMenuNavProps {
@@ -26,12 +28,15 @@ export function CmsMenuNav({ menu, className }: CmsMenuNavProps) {
 }
 
 function MenuItemNode({ item }: { readonly item: ResolvedMenuItem }) {
+  // Editor-authored `ExternalUrl` items may carry a `javascript:` scheme —
+  // drop the href and render an inert grouping header instead. See VULN-101.
+  const safeHref = safeLinkHref(item.href);
   const label =
-    item.kind === 'None' || !item.href ? (
+    item.kind === 'None' || !safeHref ? (
       <span className={item.cssClass ?? undefined}>{item.label}</span>
     ) : (
       <a
-        href={item.href}
+        href={safeHref}
         className={item.cssClass ?? undefined}
         target={item.kind === 'ExternalUrl' ? '_blank' : undefined}
         rel={item.kind === 'ExternalUrl' ? 'noopener noreferrer' : undefined}

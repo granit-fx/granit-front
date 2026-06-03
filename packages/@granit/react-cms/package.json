@@ -13,6 +13,7 @@
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
+    "@granit/utils": "workspace:*",
     "@puckeditor/core": "^0.21.2",
     "@tanstack/react-query": "^5.0.0"
   },
@@ -20,6 +21,7 @@
     "@granit/api-client": "workspace:*",
     "@granit/cms": "workspace:*",
     "@granit/react-api-client": "workspace:*",
+    "@granit/utils": "workspace:*",
     "@puckeditor/core": "^0.21.0",
     "@tanstack/react-query": "^5.0.0",
     "react": "^19.0.0"
