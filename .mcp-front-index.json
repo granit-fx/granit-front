@@ -1938,17 +1938,17 @@
         {
           "name": "getGrouped",
           "kind": "function",
-          "signature": "async function getGrouped<T>( client: AxiosInstance, basePath: string, request: QueryRequest ): Promise<GroupedResult<T>>"
+          "signature": "async function getGrouped<T>( client: AxiosInstance, basePath: string, request: QueryRequest, options?:"
         },
         {
           "name": "getPage",
           "kind": "function",
-          "signature": "async function getPage<T>( client: AxiosInstance, basePath: string, request: QueryRequest ): Promise<PagedResult<T>>"
+          "signature": "async function getPage<T>( client: AxiosInstance, basePath: string, request: QueryRequest, options?:"
         },
         {
           "name": "getQueryMeta",
           "kind": "function",
-          "signature": "async function getQueryMeta( client: AxiosInstance, basePath: string ): Promise<QueryMetadata>"
+          "signature": "async function getQueryMeta( client: AxiosInstance, basePath: string, options?:"
         },
         {
           "name": "parseQueryRequest",

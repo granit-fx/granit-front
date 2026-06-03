@@ -19,11 +19,12 @@ import type { AxiosInstance } from '@granit/api-client';
 export async function getPage<T>(
   client: AxiosInstance,
   basePath: string,
-  request: QueryRequest
+  request: QueryRequest,
+  options?: { readonly signal?: AbortSignal }
 ): Promise<PagedResult<T>> {
   const qs = serializeQueryRequest(request);
   const url = qs ? `${basePath}?${qs}` : basePath;
-  const response = await client.get<PagedResult<T>>(url);
+  const response = await client.get<PagedResult<T>>(url, options);
   return response.data;
 }
 
@@ -37,11 +38,12 @@ export async function getPage<T>(
 export async function getGrouped<T>(
   client: AxiosInstance,
   basePath: string,
-  request: QueryRequest
+  request: QueryRequest,
+  options?: { readonly signal?: AbortSignal }
 ): Promise<GroupedResult<T>> {
   const qs = serializeQueryRequest(request);
   const url = qs ? `${basePath}?${qs}` : basePath;
-  const response = await client.get<GroupedResult<T>>(url);
+  const response = await client.get<GroupedResult<T>>(url, options);
   return response.data;
 }
 
@@ -53,8 +55,9 @@ export async function getGrouped<T>(
  */
 export async function getQueryMeta(
   client: AxiosInstance,
-  basePath: string
+  basePath: string,
+  options?: { readonly signal?: AbortSignal }
 ): Promise<QueryMetadata> {
-  const response = await client.get<QueryMetadata>(`${basePath}/meta`);
+  const response = await client.get<QueryMetadata>(`${basePath}/meta`, options);
   return response.data;
 }

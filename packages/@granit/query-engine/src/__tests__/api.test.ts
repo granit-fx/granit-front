@@ -17,7 +17,7 @@ describe('query-api', () => {
       data: { items: [{ id: '1' }], totalCount: 1 },
     });
     const result = await getPage(client, '/api/v1/patients', { page: 1, pageSize: 10 });
-    expect(client.get).toHaveBeenCalledWith(expect.stringContaining('/api/v1/patients'));
+    expect(client.get).toHaveBeenCalledWith(expect.stringContaining('/api/v1/patients'), undefined);
     expect(result).toEqual({ items: [{ id: '1' }], totalCount: 1 });
   });
 
@@ -27,7 +27,7 @@ describe('query-api', () => {
       data: { items: [], totalCount: 0 },
     });
     await getPage(client, '/api/v1/patients', {});
-    expect(client.get).toHaveBeenCalledWith('/api/v1/patients');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/patients', undefined);
   });
 
   it('getGrouped calls GET with serialized params', async () => {
@@ -36,7 +36,7 @@ describe('query-api', () => {
       data: { groups: [], totalCount: 0 },
     });
     const result = await getGrouped(client, '/api/v1/patients', { groupBy: 'status' });
-    expect(client.get).toHaveBeenCalledWith(expect.stringContaining('groupBy=status'));
+    expect(client.get).toHaveBeenCalledWith(expect.stringContaining('groupBy=status'), undefined);
     expect(result).toEqual({ groups: [], totalCount: 0 });
   });
 
@@ -46,7 +46,7 @@ describe('query-api', () => {
       data: { groups: [], totalCount: 0 },
     });
     await getGrouped(client, '/api/v1/patients', {});
-    expect(client.get).toHaveBeenCalledWith('/api/v1/patients');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/patients', undefined);
   });
 
   it('getQueryMeta calls GET /meta', async () => {
@@ -55,8 +55,34 @@ describe('query-api', () => {
       data: { columns: [], filterableFields: [] },
     });
     const result = await getQueryMeta(client, '/api/v1/patients');
-    expect(client.get).toHaveBeenCalledWith('/api/v1/patients/meta');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/patients/meta', undefined);
     expect(result).toEqual({ columns: [], filterableFields: [] });
+  });
+
+  it('getPage forwards the abort signal', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValueOnce({ data: { items: [], totalCount: 0 } });
+    const { signal } = new AbortController();
+    await getPage(client, '/api/v1/patients', { page: 1 }, { signal });
+    expect(client.get).toHaveBeenCalledWith(expect.stringContaining('/api/v1/patients'), {
+      signal,
+    });
+  });
+
+  it('getGrouped forwards the abort signal', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValueOnce({ data: { groups: [], totalCount: 0 } });
+    const { signal } = new AbortController();
+    await getGrouped(client, '/api/v1/patients', { groupBy: 'status' }, { signal });
+    expect(client.get).toHaveBeenCalledWith(expect.stringContaining('groupBy=status'), { signal });
+  });
+
+  it('getQueryMeta forwards the abort signal', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValueOnce({ data: { columns: [], filterableFields: [] } });
+    const { signal } = new AbortController();
+    await getQueryMeta(client, '/api/v1/patients', { signal });
+    expect(client.get).toHaveBeenCalledWith('/api/v1/patients/meta', { signal });
   });
 });
 
