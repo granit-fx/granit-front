@@ -1,7 +1,5 @@
 import { buildApiUrl } from '@granit/api-client';
 
-import { PRESENCE_DEFAULTS } from '../constants';
-
 import type {
   BatchPresenceRequest,
   BatchPresenceResponse,
@@ -144,36 +142,4 @@ export function normalizeUserIds(userIds: readonly UserId[]): UserId[] {
   return Array.from(new Set(userIds))
     .filter((id) => id.length > 0)
     .sort((a, b) => a.localeCompare(b));
-}
-
-/**
- * Fetches presence for a list of users in one (or more) batch calls.
- *
- * Lists larger than the server cap (`PRESENCE_DEFAULTS.MaxBatchSize`) are
- * chunked automatically and resolved in parallel.
- *
- * Requires `Presence.Users.Read`.
- */
-export async function fetchBatchPresence(
-  client: AxiosInstance,
-  basePath: string,
-  userIds: readonly UserId[]
-): Promise<BatchPresenceResponse> {
-  const maxBatch = PRESENCE_DEFAULTS.MaxBatchSize;
-  if (userIds.length <= maxBatch) {
-    return getBatchPresence(client, basePath, { userIds });
-  }
-  // Server cap exceeded — chunk and fan out in parallel.
-  const chunks: UserId[][] = [];
-  for (let i = 0; i < userIds.length; i += maxBatch) {
-    chunks.push(userIds.slice(i, i + maxBatch));
-  }
-  const responses = await Promise.all(
-    chunks.map((chunk) => getBatchPresence(client, basePath, { userIds: chunk }))
-  );
-  const merged: Record<UserId, PresenceResponse> = {};
-  for (const { presences } of responses) {
-    Object.assign(merged, presences);
-  }
-  return { presences: merged };
 }

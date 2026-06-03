@@ -8,6 +8,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useSchedulingConfig } from '../providers/scheduling-provider';
 
+export { buildSchedulingQueryKey, schedulingKeys } from './query-keys';
 import { buildSchedulingQueryKey } from './query-keys';
 
 import type { PagedResult, QueryRequest } from '@granit/query-engine';

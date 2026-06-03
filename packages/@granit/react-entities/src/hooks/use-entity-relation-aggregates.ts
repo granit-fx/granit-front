@@ -1,6 +1,7 @@
 import { useGranitClient } from '@granit/react-api-client';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
+export { entityRelationAggregatesQueryKey } from './query-keys';
 import { entityRelationAggregatesQueryKey } from './query-keys';
 
 import type { RelationAggregatesResponse } from '@granit/entities';

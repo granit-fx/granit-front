@@ -1,6 +1,7 @@
 import { useGranitClient } from '@granit/react-api-client';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
+export { entityCalendarQueryKey } from './query-keys';
 import { entityCalendarQueryKey } from './query-keys';
 
 import type { CalendarItemResponse } from '@granit/entities';

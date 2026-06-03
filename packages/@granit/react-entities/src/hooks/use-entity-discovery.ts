@@ -1,6 +1,7 @@
 import { useGranitClient } from '@granit/react-api-client';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
+export { entityDiscoveryQueryKey } from './query-keys';
 import { entityDiscoveryQueryKey } from './query-keys';
 
 import type { EntityDiscoveryResponse } from '@granit/entities';

@@ -14,7 +14,6 @@ export type {
 // API — user presence
 export {
   clearMyPresenceOverride,
-  fetchBatchPresence,
   getBatchPresence,
   getMyPresence,
   getUserPresence,
