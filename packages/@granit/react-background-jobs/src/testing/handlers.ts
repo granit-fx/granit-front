@@ -1,10 +1,3 @@
-import {
-  BOOLEAN_OPERATORS,
-  DATE_OPERATORS,
-  NUMBER_OPERATORS,
-  STRING_OPERATORS,
-} from '@granit/query-engine';
-import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { accepted, noContent, notFound, pagedResponse } from '@granit/testing/msw';
 import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
@@ -14,123 +7,16 @@ import { DEFAULT_BASE_PATH } from '../constants';
 import { mockBackgroundJobs } from './data';
 
 import type { BackgroundJobStatus } from '@granit/background-jobs';
-import type { QueryMetadata } from '@granit/query-engine';
-
-/** Mock /meta payload for the background jobs resource. */
-export const backgroundJobQueryMetadata: QueryMetadata = {
-  columns: [
-    {
-      name: 'jobName',
-      label: 'Job name',
-      type: 'String',
-      order: 0,
-      isSortable: true,
-      isFilterable: true,
-      isVisible: true,
-    },
-    {
-      name: 'cronExpression',
-      label: 'Schedule',
-      type: 'String',
-      order: 1,
-      isSortable: false,
-      isFilterable: true,
-      isVisible: true,
-    },
-    {
-      name: 'isEnabled',
-      label: 'Enabled',
-      type: 'Boolean',
-      order: 2,
-      isSortable: true,
-      isFilterable: true,
-      isVisible: true,
-    },
-    {
-      name: 'lastExecutedAt',
-      label: 'Last executed',
-      type: 'DateTime',
-      order: 3,
-      isSortable: true,
-      isFilterable: true,
-      isVisible: true,
-    },
-    {
-      name: 'nextExecutionAt',
-      label: 'Next execution',
-      type: 'DateTime',
-      order: 4,
-      isSortable: true,
-      isFilterable: true,
-      isVisible: true,
-    },
-    {
-      name: 'consecutiveFailures',
-      label: 'Failures',
-      type: 'Int32',
-      order: 5,
-      isSortable: true,
-      isFilterable: true,
-      isVisible: true,
-    },
-    {
-      name: 'deadLetterCount',
-      label: 'Dead-lettered',
-      type: 'Int32',
-      order: 6,
-      isSortable: true,
-      isFilterable: true,
-      isVisible: true,
-    },
-    {
-      name: 'lastError',
-      label: 'Last error',
-      type: 'String',
-      order: 7,
-      isSortable: false,
-      isFilterable: true,
-      isVisible: true,
-    },
-  ],
-  filterableFields: [
-    { name: 'jobName', type: 'String', operators: STRING_OPERATORS },
-    { name: 'cronExpression', type: 'String', operators: STRING_OPERATORS },
-    { name: 'isEnabled', type: 'Boolean', operators: BOOLEAN_OPERATORS },
-    { name: 'lastExecutedAt', type: 'DateTime', operators: DATE_OPERATORS },
-    { name: 'nextExecutionAt', type: 'DateTime', operators: DATE_OPERATORS },
-    { name: 'consecutiveFailures', type: 'Int32', operators: NUMBER_OPERATORS },
-    { name: 'deadLetterCount', type: 'Int32', operators: NUMBER_OPERATORS },
-    { name: 'lastError', type: 'String', operators: STRING_OPERATORS },
-  ],
-  sortableFields: [
-    { name: 'jobName' },
-    { name: 'isEnabled' },
-    { name: 'lastExecutedAt' },
-    { name: 'nextExecutionAt' },
-    { name: 'consecutiveFailures' },
-    { name: 'deadLetterCount' },
-  ],
-  presetFilterGroups: [],
-  quickFilters: [
-    { name: 'enabled', label: 'Enabled', isDefault: true },
-    { name: 'paused', label: 'Paused', isDefault: false },
-    { name: 'failing', label: 'Failing', isDefault: false },
-  ],
-  dateFilters: [],
-  groupByFields: [],
-  pagination: {
-    defaultPageSize: 20,
-    maxPageSize: 100,
-    maxStreamSize: 10_000,
-    supportsCursor: false,
-  },
-  defaultSort: 'jobName',
-};
 
 /**
  * Create stateful MSW handlers for background job endpoints.
  * Handlers mutate the in-memory `mockBackgroundJobs` array — pause/resume/trigger
  * calls update state that subsequent GET calls reflect.
+ *
+ * Mirrors the five `Granit.BackgroundJobs.Endpoints` routes (paginated list,
+ * detail, pause, resume, trigger). Background jobs are NOT a query-engine
+ * resource: the backend exposes plain `page`/`pageSize` pagination with no
+ * `/meta`, filtering, or sorting endpoint.
  *
  * @param baseUrl - Module base path (default: `/api/v1/background-jobs`)
  */
@@ -138,9 +24,6 @@ export function createBackgroundJobHandlers(baseUrl = DEFAULT_BASE_PATH) {
   const jobsUrl = `${baseUrl}/jobs`;
 
   return [
-    // GET /jobs/meta — query metadata
-    createQueryMetaHandler(jobsUrl, backgroundJobQueryMetadata),
-
     // GET list — sorted, paginated
     http.get(jobsUrl, ({ request }) => {
       const url = new URL(request.url);

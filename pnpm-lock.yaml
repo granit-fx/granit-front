@@ -1239,9 +1239,6 @@ importers:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
-      '@granit/react-query-engine':
-        specifier: workspace:*
-        version: link:../react-query-engine
       '@tanstack/react-query':
         specifier: 5.100.14
         version: 5.100.14(react@19.2.7)

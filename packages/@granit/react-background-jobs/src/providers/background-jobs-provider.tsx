@@ -11,7 +11,6 @@ export interface BackgroundJobsConfig {
   readonly client?: AxiosInstance;
   /** Base path for background-jobs endpoints (default: `/api/v1/background-jobs`). */
   readonly basePath?: string;
-  readonly queryKeyPrefix?: readonly string[];
 }
 
 /**
@@ -58,13 +57,4 @@ export function useBackgroundJobsConfig(): ResolvedBackgroundJobsConfig {
     throw new Error('useBackgroundJobsConfig must be used within a BackgroundJobsProvider');
   }
   return ctx;
-}
-
-/** Builds a consistent React Query key for background jobs operations. */
-export function buildBackgroundJobsQueryKey(
-  config: BackgroundJobsConfig,
-  ...segments: readonly string[]
-): readonly unknown[] {
-  const prefix = config.queryKeyPrefix ?? ['background-jobs'];
-  return [...prefix, ...segments];
 }

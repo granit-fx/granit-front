@@ -4,7 +4,6 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_BASE_PATH } from '../constants';
 import {
   BackgroundJobsProvider,
-  buildBackgroundJobsQueryKey,
   useBackgroundJobsConfig,
 } from '../providers/background-jobs-provider';
 
@@ -42,28 +41,5 @@ describe('BackgroundJobsProvider', () => {
     expect(() => {
       renderHook(() => useBackgroundJobsConfig());
     }).toThrow('useBackgroundJobsConfig must be used within a BackgroundJobsProvider');
-  });
-});
-
-describe('buildBackgroundJobsQueryKey', () => {
-  it('should build key with default prefix', () => {
-    const config: BackgroundJobsConfig = { client: mockClient };
-    const key = buildBackgroundJobsQueryKey(config, 'jobs');
-    expect(key).toEqual(['background-jobs', 'jobs']);
-  });
-
-  it('should build key with custom prefix', () => {
-    const config: BackgroundJobsConfig = {
-      client: mockClient,
-      queryKeyPrefix: ['custom'],
-    };
-    const key = buildBackgroundJobsQueryKey(config, 'jobs');
-    expect(key).toEqual(['custom', 'jobs']);
-  });
-
-  it('should support multiple segments', () => {
-    const config: BackgroundJobsConfig = { client: mockClient };
-    const key = buildBackgroundJobsQueryKey(config, 'jobs', 'active');
-    expect(key).toEqual(['background-jobs', 'jobs', 'active']);
   });
 });

@@ -2,7 +2,13 @@ import { createMockClient } from '@granit/testing';
 import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getBackgroundJob, listBackgroundJobs } from '../api/background-jobs-api';
+import {
+  getBackgroundJob,
+  listBackgroundJobs,
+  pauseJob,
+  resumeJob,
+  triggerJob,
+} from '../api/background-jobs-api';
 
 import type { BackgroundJobStatus } from '../types/index';
 import type { PagedResult } from '@granit/query-engine';
@@ -87,5 +93,43 @@ describe('getBackgroundJob', () => {
     expect(result.isEnabled).toBe(false);
     expect(result.lastError).toBe('Timeout');
     expect(result.consecutiveFailures).toBe(3);
+  });
+});
+
+describe('pauseJob', () => {
+  it('POSTs to /{name}/pause', async () => {
+    const client = createMockClient();
+    vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
+
+    await pauseJob(client, BASE, 'SendEmails');
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/SendEmails/pause`);
+  });
+
+  it('encodes the job name', async () => {
+    const client = createMockClient();
+    vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
+
+    await pauseJob(client, BASE, 'Send Emails');
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/Send%20Emails/pause`);
+  });
+});
+
+describe('resumeJob', () => {
+  it('POSTs to /{name}/resume', async () => {
+    const client = createMockClient();
+    vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
+
+    await resumeJob(client, BASE, 'SendEmails');
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/SendEmails/resume`);
+  });
+});
+
+describe('triggerJob', () => {
+  it('POSTs to /{name}/trigger', async () => {
+    const client = createMockClient();
+    vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
+
+    await triggerJob(client, BASE, 'SendEmails');
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/SendEmails/trigger`);
   });
 });

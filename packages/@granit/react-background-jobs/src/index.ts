@@ -1,7 +1,6 @@
 // Provider
 export {
   BackgroundJobsProvider,
-  buildBackgroundJobsQueryKey,
   useBackgroundJobsConfig,
 } from './providers/background-jobs-provider';
 
@@ -19,4 +18,5 @@ export {
 export type {
   BackgroundJobsConfig,
   BackgroundJobsProviderProps,
+  ResolvedBackgroundJobsConfig,
 } from './providers/background-jobs-provider';

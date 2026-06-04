@@ -3,4 +3,4 @@
 // ---------------------------------------------------------------------------
 
 export { mockBackgroundJobs } from './data';
-export { backgroundJobQueryMetadata, createBackgroundJobHandlers } from './handlers';
+export { createBackgroundJobHandlers } from './handlers';
