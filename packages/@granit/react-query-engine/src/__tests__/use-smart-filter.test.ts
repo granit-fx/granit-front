@@ -267,3 +267,43 @@ describe('useSmartFilter — lookup-backed fields', () => {
     expect(result.current.selectedFieldLookup).toBeUndefined();
   });
 });
+
+// ---------------------------------------------------------------------------
+// Malformed / partial `/meta` payloads — degrade gracefully, never crash
+// ---------------------------------------------------------------------------
+
+describe('useSmartFilter — resilient to non-conforming metadata', () => {
+  it('does not crash when the /meta response is an HTML string (SPA fallthrough)', () => {
+    // An unintercepted /meta request resolves to the SPA `index.html` — a
+    // truthy string. It must not throw `filterableFields is not iterable`.
+    const html = '<!doctype html><html><body>app</body></html>' as unknown as QueryMetadata;
+    const { result } = renderHook(() => useSmartFilter({ metadata: html }));
+
+    expect(result.current.phase).toBe('idle');
+    expect(result.current.suggestions).toEqual([]);
+  });
+
+  it('does not crash when metadata is missing array fields', () => {
+    const partial = { ...MOCK_METADATA, filterableFields: undefined } as unknown as QueryMetadata;
+    const { result } = renderHook(() => useSmartFilter({ metadata: partial }));
+
+    // No field suggestions (filterableFields gone), but the still-present
+    // preset / quick-filter arrays keep producing suggestions.
+    expect(result.current.suggestions.some((s) => s.field === 'LastName')).toBe(false);
+    expect(result.current.suggestions.some((s) => s.type === 'preset')).toBe(true);
+  });
+
+  it('does not crash selecting a field when filterableFields is missing', () => {
+    const partial = { ...MOCK_METADATA, filterableFields: undefined } as unknown as QueryMetadata;
+    const { result } = renderHook(() => useSmartFilter({ metadata: partial }));
+
+    act(() => result.current.selectField('LastName'));
+    expect(result.current.selectedFieldType).toBeUndefined();
+    expect(result.current.selectedFieldLookup).toBeUndefined();
+  });
+
+  it('treats an empty object as empty metadata rather than throwing', () => {
+    const { result } = renderHook(() => useSmartFilter({ metadata: {} as QueryMetadata }));
+    expect(result.current.suggestions).toEqual([]);
+  });
+});

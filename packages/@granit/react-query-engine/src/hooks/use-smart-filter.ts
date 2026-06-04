@@ -428,6 +428,37 @@ function buildSuggestions(
   }
 }
 
+/**
+ * Defensive normalization of the `/meta` payload.
+ *
+ * Suggestion building iterates the array fields of {@link QueryMetadata}
+ * (`filterableFields`, `columns`, `presetFilterGroups`, `quickFilters`). A
+ * `/meta` response that is missing, partial, or not the expected shape — a
+ * backend that omits a field, an API-version skew, or (in dev) an
+ * unintercepted request falling through to the SPA's `index.html` — would
+ * otherwise throw `metadata.filterableFields is not iterable` and take down
+ * the whole route through the router error boundary.
+ *
+ * Returns `undefined` for anything that isn't a metadata-shaped object;
+ * otherwise backfills missing array fields with `[]` so every consumer sees a
+ * guaranteed shape. A malformed `/meta` then degrades to an empty suggestion
+ * list instead of crashing the page.
+ */
+function normalizeMetadata(metadata: QueryMetadata | undefined): QueryMetadata | undefined {
+  if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) return undefined;
+  const asArray = <T>(value: readonly T[]): readonly T[] => (Array.isArray(value) ? value : []);
+  return {
+    ...metadata,
+    columns: asArray(metadata.columns),
+    filterableFields: asArray(metadata.filterableFields),
+    sortableFields: asArray(metadata.sortableFields),
+    presetFilterGroups: asArray(metadata.presetFilterGroups),
+    quickFilters: asArray(metadata.quickFilters),
+    dateFilters: asArray(metadata.dateFilters),
+    groupByFields: asArray(metadata.groupByFields),
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Hook options & return
 // ---------------------------------------------------------------------------
@@ -504,13 +535,18 @@ export function useSmartFilter(options?: UseSmartFilterOptions): UseSmartFilterR
     nextId: 1,
   });
 
+  // Normalize the `/meta` payload once so a missing / partial / non-conforming
+  // response degrades to empty suggestions instead of crashing the route. Every
+  // consumer below reads `metadata` (never `options?.metadata`) for this reason.
+  const metadata = useMemo(() => normalizeMetadata(options?.metadata), [options?.metadata]);
+
   const suggestions = useMemo(
     () =>
-      buildSuggestions(state, options?.metadata, {
+      buildSuggestions(state, metadata, {
         booleanLabels: options?.booleanLabels,
         operatorLabels: options?.operatorLabels,
       }),
-    [state, options?.metadata, options?.booleanLabels, options?.operatorLabels]
+    [state, metadata, options?.booleanLabels, options?.operatorLabels]
   );
 
   // Extract structured data from tokens
@@ -558,11 +594,11 @@ export function useSmartFilter(options?: UseSmartFilterOptions): UseSmartFilterR
     (value: string) => {
       const field = state.selectedField;
       const operator = state.selectedOperator;
-      const col = options?.metadata?.columns.find((c) => c.name === field);
+      const col = metadata?.columns.find((c) => c.name === field);
       const fieldLabel = col?.label ?? field ?? '';
       const opLabel = (operator && options?.operatorLabels?.[operator]) ?? operator ?? '';
       const isBool =
-        options?.metadata?.filterableFields.find((f) => f.name === field)?.type === 'Boolean';
+        metadata?.filterableFields.find((f) => f.name === field)?.type === 'Boolean';
       let valLabel = value;
       if (isBool && options?.booleanLabels) {
         valLabel = value === 'true' ? options.booleanLabels.true : options.booleanLabels.false;
@@ -577,7 +613,7 @@ export function useSmartFilter(options?: UseSmartFilterOptions): UseSmartFilterR
     [
       state.selectedField,
       state.selectedOperator,
-      options?.metadata,
+      metadata,
       options?.operatorLabels,
       options?.booleanLabels,
     ]
@@ -605,14 +641,14 @@ export function useSmartFilter(options?: UseSmartFilterOptions): UseSmartFilterR
   const cancel = useCallback(() => dispatch({ type: 'CANCEL' }), []);
 
   const selectedFieldType = useMemo(() => {
-    if (!state.selectedField || !options?.metadata) return undefined;
-    return options.metadata.filterableFields.find((f) => f.name === state.selectedField)?.type;
-  }, [state.selectedField, options?.metadata]);
+    if (!state.selectedField || !metadata) return undefined;
+    return metadata.filterableFields.find((f) => f.name === state.selectedField)?.type;
+  }, [state.selectedField, metadata]);
 
   const selectedFieldLookup = useMemo(() => {
-    if (!state.selectedField || !options?.metadata) return undefined;
-    return options.metadata.filterableFields.find((f) => f.name === state.selectedField)?.lookup;
-  }, [state.selectedField, options?.metadata]);
+    if (!state.selectedField || !metadata) return undefined;
+    return metadata.filterableFields.find((f) => f.name === state.selectedField)?.lookup;
+  }, [state.selectedField, metadata]);
 
   return {
     phase: state.phase,
