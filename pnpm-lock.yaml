@@ -1388,6 +1388,9 @@ importers:
 
   packages/@granit/react-cms:
     dependencies:
+      msw:
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.9.1)(typescript@6.0.3)
       react:
         specifier: 19.2.7
         version: 19.2.7
@@ -1419,6 +1422,9 @@ importers:
 
   packages/@granit/react-cms-hostnames:
     dependencies:
+      msw:
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.9.1)(typescript@6.0.3)
       react:
         specifier: 19.2.7
         version: 19.2.7
@@ -1447,6 +1453,9 @@ importers:
 
   packages/@granit/react-cms-redirects:
     dependencies:
+      msw:
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.9.1)(typescript@6.0.3)
       react:
         specifier: 19.2.7
         version: 19.2.7
@@ -1472,6 +1481,9 @@ importers:
 
   packages/@granit/react-cms-seo:
     dependencies:
+      msw:
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.9.1)(typescript@6.0.3)
       react:
         specifier: 19.2.7
         version: 19.2.7
