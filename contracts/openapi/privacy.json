@@ -1,0 +1,2281 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "privacy",
+    "version": "1"
+  },
+  "paths": {
+    "/privacy/regulation": {
+      "get": {
+        "tags": ["Privacy"],
+        "summary": "Returns the privacy regulation profile applicable to the current tenant.",
+        "description": "Resolves the privacy regulation for the current tenant context via IPrivacyRegulationResolver. Returns the full regulation profile including consent model, response timelines, breach notification deadlines, age thresholds, cookie consent rules, and cross-border transfer requirements.",
+        "operationId": "GetApplicableRegulation",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivacyRegulationProfileResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/purposes": {
+      "get": {
+        "tags": ["Privacy"],
+        "summary": "Returns all registered processing purposes with their legal bases.",
+        "description": "Lists all processing purposes declared at application startup via RegisterProcessingPurpose(). Each purpose includes its legal basis, whether explicit consent is required, and an optional data category.",
+        "operationId": "ListProcessingPurposes",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PrivacyProcessingPurposeResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/opt-out": {
+      "post": {
+        "tags": ["Privacy"],
+        "summary": "Opts out of data sale/sharing (CCPA).",
+        "description": "Records a 'Do Not Sell or Share My Personal Information' request. Supports both authenticated users and anonymous visitors (CCPA compliance). For anonymous visitors, a _optout_id HTTP-Only cookie is set to track the opt-out. Anonymous opt-outs are stored tenant-less by default (PrivacyEndpointsOptions.BindAnonymousOptOutToCurrentTenant) to prevent tenant injection via a spoofable resolver. Rate-limited via the `privacy-optout-create` policy.",
+        "operationId": "RequestOptOut",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivacyOptOutStatusResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    },
+    "/privacy/opt-out/status": {
+      "get": {
+        "tags": ["Privacy"],
+        "summary": "Returns the current opt-out status.",
+        "description": "Checks whether the requesting user or visitor has an active opt-out. For authenticated users, checks by UserId. For anonymous visitors, checks the _optout_id cookie.",
+        "operationId": "GetOptOutStatus",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivacyOptOutStatusResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    },
+    "/privacy/exports/scopes": {
+      "get": {
+        "tags": ["Privacy"],
+        "summary": "Lists the export scopes visible to the current user.",
+        "description": "Returns one entry per IPrivacyDataProvider the subject can include in an export, after applying the framework visibility gates: module loaded, HasDataAsync probe (Takeout-style \"if you never used it, it doesn't appear\"), and the host IPrivacyScopeVisibilityPolicy. Use the returned ProviderName values to populate the POST /privacy/exports `Scopes` field; unknown / hidden scopes in that POST are silently skipped.",
+        "operationId": "ListPrivacyExportScopes",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PrivacyExportScopeResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/exports/on-behalf-of": {
+      "post": {
+        "tags": ["Privacy"],
+        "summary": "Requests a personal data export on behalf of another data subject (admin DSR).",
+        "description": "Admin-driven counterpart to POST /privacy/exports — gated by the dedicated Privacy.Exports.ExecuteOnBehalfOf permission so RBAC can hand it to a narrow operator role without unlocking it for every authenticated user. The body's SubjectUserId identifies the data subject; the authenticated caller is recorded separately on the audit row so the substitution is fully reconstructable for GDPR Art. 30 ROPA. Uses the dedicated `privacy-export-create-on-behalf-of` rate-limit policy (distinct from the self-service `privacy-export-create`). The subject id is validated against the caller's tenant via IPrivacySubjectValidator — a subject absent from the tenant returns 404 (same status as a non-existent request id, so cross-tenant existence cannot be probed).",
+        "operationId": "RequestPrivacyExportOnBehalfOf",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrivacyExportOnBehalfOfRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivacyExportRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/exports": {
+      "post": {
+        "tags": ["Privacy"],
+        "summary": "Requests a personal data export for the current user.",
+        "description": "Triggers the scatter-gather export saga (GDPR Art. 15/20). Each registered data provider prepares its fragment asynchronously. The saga assembles fragments into a downloadable archive. The optional `Scopes` array narrows the export to a subset of provider scopes (see GET /privacy/exports/scopes); omitting it exports everything visible to the subject. Poll GET /exports/{requestId} for status, or wire a Granit.Notifications handler on ExportCompletedEto to notify the user when the archive is ready. Rate-limited via the `privacy-export-create` policy (hosts configure quotas in `RateLimiting:Policies` — defaults to 1 export per subject per 24 hours). Honours an optional `Idempotency-Key` header (Granit.Http.Idempotency) so accidental double-clicks don't spawn two scatter-gather sagas.",
+        "operationId": "RequestPrivacyExport",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PrivacyExportRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivacyExportRequestResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Privacy"],
+        "summary": "Lists all export requests for the current user.",
+        "description": "Returns all export requests submitted by the current user, ordered by most recent first. Each entry includes the request state, timestamps, and archive reference when available.",
+        "operationId": "ListPrivacyExports",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PrivacyExportStatusResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/exports/{requestId}": {
+      "get": {
+        "tags": ["Privacy"],
+        "summary": "Returns the status of a personal data export request.",
+        "description": "Queries the export request tracker for the specified request ID. Only the user who created the request can view its status. Returns the current state (Pending, Completed, PartiallyCompleted, TimedOut), the archive blob reference when available, and any missing providers. Returns 404 if the request ID is not found or belongs to another user.",
+        "operationId": "GetPrivacyExportStatus",
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "description": "Unique identifier of the request.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivacyExportStatusResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/exports/{requestId}/download": {
+      "get": {
+        "tags": ["Privacy"],
+        "summary": "Downloads the personal data export archive (compat — single-shard or manifest).",
+        "description": "Convenience route that resolves to shard 0 when the export produced a single archive, or to the manifest sidecar when sharded into multiple ZIPs. For deterministic multi-shard downloads, use GET /exports/{requestId}/download/{shardIndex} per shard plus GET /exports/{requestId}/download/manifest to discover the shard count. Step-up authentication required when DownloadStepUpRequired is enabled (default).",
+        "operationId": "DownloadPrivacyExport",
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "description": "Unique identifier of the request.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/exports/{requestId}/download/manifest": {
+      "get": {
+        "tags": ["Privacy"],
+        "summary": "Downloads the manifest sidecar describing the export's shards.",
+        "description": "Returns the signed JSON manifest produced by the assembly job. Clients use it to discover the shard count and per-shard sha256/integrity tag before pulling each ZIP. Step-up authentication required when DownloadStepUpRequired is enabled (default).",
+        "operationId": "DownloadPrivacyExportManifest",
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "description": "Unique identifier of the request.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/exports/{requestId}/download/{shardIndex}": {
+      "get": {
+        "tags": ["Privacy"],
+        "summary": "Downloads a single shard of a sharded personal data export.",
+        "description": "Streams the shard ZIP indexed by 0..(ShardCount-1) from the export's archive set. Shard indices outside the manifest's bounds return 404. Step-up authentication required when DownloadStepUpRequired is enabled (default).",
+        "operationId": "DownloadPrivacyExportShard",
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "description": "Unique identifier of the request.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "shardIndex",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "minimum": 0,
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/deletions": {
+      "post": {
+        "tags": ["Privacy"],
+        "summary": "Requests personal data deletion for the current user.",
+        "description": "Publishes a distributed deletion event (GDPR Art. 17 — right to erasure). When Defer is false, deletion is immediate. When Defer is true, a cooling-off period starts — the user receives a reminder email before the deadline and can cancel via POST /deletion/{requestId}/cancel. A confirmation email is sent in both cases after deletion is executed. Do not include personally identifiable information in the Reason field.",
+        "operationId": "RequestPrivacyDeletion",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrivacyDeletionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivacyDeletionRequestResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Privacy"],
+        "summary": "Lists all deletion requests for the current user.",
+        "description": "Returns all deferred deletion requests submitted by the current user, ordered by most recent first. Immediate deletions are not tracked.",
+        "operationId": "ListPrivacyDeletions",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PrivacyDeletionStatusResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/deletions/{requestId}/cancel": {
+      "post": {
+        "tags": ["Privacy"],
+        "summary": "Cancels a deferred deletion request during the grace period.",
+        "description": "Cancels a deferred deletion request. Only requests in Deferred state can be cancelled. Returns 404 if the request is not found, 409 if already executed or cancelled.",
+        "operationId": "CancelPrivacyDeletion",
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "description": "Unique identifier of the request.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/deletions/{requestId}": {
+      "get": {
+        "tags": ["Privacy"],
+        "summary": "Returns the status of a deferred deletion request.",
+        "description": "Queries the deletion request tracker for the specified request ID. Only the user who created the request can view its status. Returns the current state (Deferred, Executed, Cancelled), scheduled deletion date, and timestamps. Returns 404 if the request is not found or belongs to another user.",
+        "operationId": "GetPrivacyDeletionStatus",
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "description": "Unique identifier of the request.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivacyDeletionStatusResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/agreements/documents": {
+      "get": {
+        "tags": ["Privacy"],
+        "summary": "Returns all registered legal documents.",
+        "description": "Returns all legal documents registered in the consent registry (GDPR Art. 7). Each document includes its identifier, current version, and display name. Use GET /agreements/status to check the user's consent per document.",
+        "operationId": "ListPrivacyLegalDocuments",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PrivacyLegalDocumentResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/agreements/status": {
+      "get": {
+        "tags": ["Privacy"],
+        "summary": "Returns the consent status for all legal documents.",
+        "description": "For each registered legal document, returns whether the current user has accepted the latest version and when the last acceptance occurred. Documents where HasAcceptedLatest is false require re-consent.",
+        "operationId": "GetPrivacyConsentStatus",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PrivacyConsentStatusResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/agreements/history": {
+      "get": {
+        "tags": ["Privacy"],
+        "summary": "Returns the consent history for the current user.",
+        "description": "Returns all consent records for the current user, ordered by most recent first. Each record includes the document ID, accepted version, timestamp, and whether it matches the current document version.",
+        "operationId": "ListPrivacyAgreementHistory",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PrivacyUserAgreementResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/agreements/accept": {
+      "post": {
+        "tags": ["Privacy"],
+        "summary": "Records acceptance of a legal agreement.",
+        "description": "Records the user's consent for a specific legal document version (GDPR Art. 7). The version must match the current version — stale consent is rejected (422). If the user has already accepted the latest version, returns 409. The client IP address is captured and pseudonymized for the audit trail. Ensure ForwardedHeadersMiddleware is enabled when running behind a reverse proxy.",
+        "operationId": "AcceptPrivacyAgreement",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrivacyAcceptAgreementRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/legal-documents": {
+      "post": {
+        "tags": ["Privacy"],
+        "summary": "Creates a new legal document draft.",
+        "description": "Creates a new legal document version in Draft status. The document can be edited and then published to become the active version. Publishing auto-archives the previous active version.",
+        "operationId": "CreateLegalDocument",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LegalDocumentCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalDocumentDetailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Privacy"],
+        "summary": "Lists all versions of a legal document.",
+        "description": "Returns the version history for the specified document ID, ordered by version descending. Includes drafts, published, and archived versions.",
+        "operationId": "ListLegalDocumentVersions",
+        "parameters": [
+          {
+            "name": "documentId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LegalDocumentDetailResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/legal-documents/{id}": {
+      "get": {
+        "tags": ["Privacy"],
+        "summary": "Returns a legal document by ID, including drafts and archived versions.",
+        "description": "Returns the full detail of a legal document version, regardless of its lifecycle status. Requires admin read permission.",
+        "operationId": "GetLegalDocument",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalDocumentDetailResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Privacy"],
+        "summary": "Updates a legal document draft.",
+        "description": "Updates metadata of a legal document in Draft status. Returns 400 if the document is not in Draft status. Returns 409 if the concurrency stamp does not match the stored value.",
+        "operationId": "UpdateLegalDocument",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LegalDocumentUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalDocumentDetailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/legal-documents/{id}/publish": {
+      "post": {
+        "tags": ["Privacy"],
+        "summary": "Publishes a legal document draft, auto-archiving the previous published version.",
+        "description": "Promotes the draft to Published status. If a published version already exists for the same document ID, it is archived in the same transaction and LegalAgreementObsoleteEto is dispatched to trigger re-consent flows.",
+        "operationId": "PublishLegalDocument",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegalDocumentDetailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BlobReference": {
+        "description": "An opaque identifier for a blob produced by a `Granit.BlobStorage`\nprovider (S3 key, Azure Blob name, file-system path, …). Carried across\nmodule boundaries — domain aggregates, distributed events, HTTP DTOs — as\na typed value rather than a bare string so the contract is\nself-documenting and primitive-obsession is avoided."
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "LegalDocumentCreateRequest": {
+        "required": ["documentId", "displayName", "description", "templateName"],
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "templateName": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "LegalDocumentDetailResponse": {
+        "required": [
+          "id",
+          "documentId",
+          "version",
+          "lifecycleStatus",
+          "displayName",
+          "description",
+          "templateName",
+          "documentBlobId",
+          "createdAt",
+          "lastModifiedAt",
+          "concurrencyStamp"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentId": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lifecycleStatus": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "templateName": {
+            "type": ["null", "string"]
+          },
+          "documentBlobId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastModifiedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "concurrencyStamp": {
+            "type": "string"
+          }
+        }
+      },
+      "LegalDocumentUpdateRequest": {
+        "required": [
+          "displayName",
+          "description",
+          "templateName",
+          "documentBlobId",
+          "concurrencyStamp"
+        ],
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string"
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "templateName": {
+            "type": ["null", "string"]
+          },
+          "documentBlobId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "concurrencyStamp": {
+            "type": "string"
+          }
+        }
+      },
+      "PrivacyAcceptAgreementRequest": {
+        "required": ["documentId", "version"],
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          }
+        }
+      },
+      "PrivacyConsentStatusResponse": {
+        "required": ["documentId", "currentVersion", "hasAcceptedLatest", "lastAcceptedAt"],
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string"
+          },
+          "currentVersion": {
+            "type": "string"
+          },
+          "hasAcceptedLatest": {
+            "type": "boolean"
+          },
+          "lastAcceptedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          }
+        }
+      },
+      "PrivacyDeletionRequest": {
+        "required": ["reason"],
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string"
+          },
+          "defer": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "PrivacyDeletionRequestResponse": {
+        "required": ["requestId", "scheduledDeletionAt"],
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scheduledDeletionAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PrivacyDeletionStatusResponse": {
+        "required": [
+          "requestId",
+          "state",
+          "reason",
+          "requestedAt",
+          "scheduledDeletionAt",
+          "cancelledAt",
+          "executedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "requestedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "scheduledDeletionAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "cancelledAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "executedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          }
+        }
+      },
+      "PrivacyExportOnBehalfOfRequest": {
+        "required": ["subjectUserId"],
+        "type": "object",
+        "properties": {
+          "subjectUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scopes": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PrivacyExportRequest": {
+        "type": "object",
+        "properties": {
+          "scopes": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PrivacyExportRequestResponse": {
+        "required": ["requestId", "requestedAt"],
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "requestedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PrivacyExportScopeResponse": {
+        "required": [
+          "providerName",
+          "displayKey",
+          "featureName",
+          "defaultSelected",
+          "estimatedSizeBytes"
+        ],
+        "type": "object",
+        "properties": {
+          "providerName": {
+            "type": "string"
+          },
+          "displayKey": {
+            "type": "string"
+          },
+          "featureName": {
+            "type": ["null", "string"]
+          },
+          "defaultSelected": {
+            "type": "boolean"
+          },
+          "estimatedSizeBytes": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["null", "integer", "string"],
+            "format": "int64"
+          }
+        }
+      },
+      "PrivacyExportStatusResponse": {
+        "required": [
+          "requestId",
+          "state",
+          "requestedAt",
+          "completedAt",
+          "archiveBlobReferenceId",
+          "missingProviders"
+        ],
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string"
+          },
+          "requestedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "archiveBlobReferenceId": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/BlobReference"
+              }
+            ]
+          },
+          "missingProviders": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PrivacyLegalDocumentResponse": {
+        "required": ["documentId", "currentVersion", "displayName"],
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string"
+          },
+          "currentVersion": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          }
+        }
+      },
+      "PrivacyOptOutStatusResponse": {
+        "required": ["isOptedOut", "optedOutAt", "regulation"],
+        "type": "object",
+        "properties": {
+          "isOptedOut": {
+            "type": "boolean"
+          },
+          "optedOutAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "regulation": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "PrivacyProcessingPurposeResponse": {
+        "required": [
+          "purposeId",
+          "displayName",
+          "description",
+          "legalBasis",
+          "requiresExplicitConsent",
+          "dataCategory"
+        ],
+        "type": "object",
+        "properties": {
+          "purposeId": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "legalBasis": {
+            "type": "string"
+          },
+          "requiresExplicitConsent": {
+            "type": "boolean"
+          },
+          "dataCategory": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "PrivacyRegulationProfileResponse": {
+        "required": [
+          "regulation",
+          "displayName",
+          "jurisdictionCode",
+          "consentModel",
+          "availableLegalBases",
+          "subjectAccessRequestDays",
+          "subjectAccessRequestExtensionDays",
+          "deletionRequestDays",
+          "defaultDeletionGracePeriodDays",
+          "maxDeletionGracePeriodDays",
+          "breachNotifyAuthorityHours",
+          "breachNotifyIndividualsHours",
+          "minimumConsentAge",
+          "requiresParentalIdentityVerification",
+          "cookieConsentModel",
+          "honorGlobalPrivacyControl",
+          "requiresCrossBorderAssessment",
+          "transferMechanisms",
+          "dataLocalizationRequired",
+          "requiresDpoOrRepresentative",
+          "requiredExportFormats"
+        ],
+        "type": "object",
+        "properties": {
+          "regulation": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "jurisdictionCode": {
+            "type": "string"
+          },
+          "consentModel": {
+            "type": "string"
+          },
+          "availableLegalBases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "subjectAccessRequestDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "subjectAccessRequestExtensionDays": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "deletionRequestDays": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "defaultDeletionGracePeriodDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxDeletionGracePeriodDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "breachNotifyAuthorityHours": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "breachNotifyIndividualsHours": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "minimumConsentAge": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "requiresParentalIdentityVerification": {
+            "type": "boolean"
+          },
+          "cookieConsentModel": {
+            "type": "string"
+          },
+          "honorGlobalPrivacyControl": {
+            "type": "boolean"
+          },
+          "requiresCrossBorderAssessment": {
+            "type": "boolean"
+          },
+          "transferMechanisms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dataLocalizationRequired": {
+            "type": "boolean"
+          },
+          "requiresDpoOrRepresentative": {
+            "type": "boolean"
+          },
+          "requiredExportFormats": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PrivacyUserAgreementResponse": {
+        "required": ["id", "documentId", "version", "acceptedAt", "isLatest"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentId": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "acceptedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isLatest": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Privacy"
+    }
+  ]
+}

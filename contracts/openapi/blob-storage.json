@@ -1,0 +1,1693 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "blob-storage",
+    "version": "1"
+  },
+  "paths": {
+    "/blob-storage/blobs/{id}": {
+      "get": {
+        "tags": ["Blob Storage"],
+        "summary": "Returns a blob descriptor by its unique identifier.",
+        "description": "Fetches the full metadata of a blob including its status, content type, size, and validation results. The containerName query parameter is required. Returns 404 if the blob does not exist in the specified container.",
+        "operationId": "GetBlobDescriptor",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "containerName",
+            "in": "query",
+            "description": "Blob container name.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlobDescriptorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Blob Storage"],
+        "summary": "Deletes a blob using crypto-shredding.",
+        "description": "Permanently removes the blob content from storage via crypto-shredding. The blob descriptor and audit trail are retained with the provided deletion reason. A containerName and deletionReason must be supplied in the request body.",
+        "operationId": "DeleteBlob",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlobDeleteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/blob-storage/blobs/upload": {
+      "post": {
+        "tags": ["Blob Storage"],
+        "summary": "Initiates a direct-to-cloud upload and returns a pre-signed URL.",
+        "description": "Creates a new blob descriptor and generates a pre-signed URL for direct client-side upload. The response includes the upload URL, required HTTP headers, and expiration time. After uploading, call the confirm endpoint to trigger the validation pipeline.",
+        "operationId": "InitiateBlobUpload",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlobUploadInitiateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlobUploadInitiateResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/blob-storage/blobs/{id}/confirm": {
+      "post": {
+        "tags": ["Blob Storage"],
+        "summary": "Confirms a client-side upload and runs the validation pipeline.",
+        "description": "Triggers content-type verification and size validation on an uploaded blob. The response includes the validation result: verified content type, actual size, and an optional rejection reason if the blob failed validation.",
+        "operationId": "ConfirmBlobUpload",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlobConfirmUploadRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlobConfirmUploadResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/blob-storage/blobs/{id}/download-url": {
+      "post": {
+        "tags": ["Blob Storage"],
+        "summary": "Generates a time-limited pre-signed download URL.",
+        "description": "Creates a pre-signed URL for direct client-side download of the blob content. An optional custom file name can be specified to override the Content-Disposition header. The URL expires after the provider-configured duration.",
+        "operationId": "GenerateBlobDownloadUrl",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlobDownloadUrlRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlobDownloadUrlResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/blob-storage/blobs/{id}/pending": {
+      "delete": {
+        "tags": ["Blob Storage"],
+        "summary": "Cancels a Pending upload whose presigned PUT failed client-side.",
+        "description": "Short-circuits the orphan-cleanup window by transitioning a Pending blob directly to Rejected. Intended to be called by the client when its PUT to the presigned URL returns 4xx/5xx, so the descriptor does not linger visible for up to BlobStorageOptions.OrphanCleanupAge. Returns 409 Conflict if the blob has already left Pending state.",
+        "operationId": "CancelPendingBlobUpload",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlobCancelPendingRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/blob-storage/blobs/cleanup-orphans": {
+      "post": {
+        "tags": ["Blob Storage"],
+        "summary": "Cleans up orphaned blobs stuck in Pending or Uploading state.",
+        "description": "Scans for blobs that never completed the upload/confirm cycle and deletes them. Returns the number of orphaned blobs removed. Typically called on a schedule or via the admin dashboard.",
+        "operationId": "CleanupOrphanedBlobs",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlobCleanupOrphansResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/blob-storage/blobs": {
+      "get": {
+        "tags": ["Blob Storage"],
+        "summary": "Returns a filtered, sorted, and paginated list of BlobDescriptor entries.",
+        "description": "Executes a dynamic query against BlobDescriptor using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
+        "operationId": "QueryBlobDescriptor",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "1-based page index. Ignored when cursor is supplied.",
+            "schema": {
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page (1-500). Server-side cap applies.",
+            "schema": {
+              "maximum": 500,
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Free-text search across searchable columns declared in the query definition.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "groupBy",
+            "in": "query",
+            "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "quickFilters",
+            "in": "query",
+            "description": "Comma-separated quick-filter names (declared in the query definition).",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "skipTotalCount",
+            "in": "query",
+            "description": "Skip the total row count for faster pagination when the client doesn't need it.",
+            "schema": {
+              "type": ["null", "boolean"]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Bracketed filter expressions: 'filter[field.op]=value'. Example: 'filter[name.contains]=alice&filter[age.gt]=18'.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "presets",
+            "in": "query",
+            "description": "Bracketed preset selectors: 'presets[group]=name'. Applies preset filter groups declared in the query definition.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/PagedResultOfBlobDescriptor"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GroupedResultOfBlobDescriptor"
+                    }
+                  ],
+                  "description": "PagedResult when groupBy is absent; GroupedResult otherwise."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/blob-storage/blobs/meta": {
+      "get": {
+        "tags": ["Blob Storage"],
+        "summary": "Returns query metadata for BlobDescriptor (columns, filters, sorts, presets).",
+        "description": "Returns the query definition metadata for BlobDescriptor: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
+        "operationId": "GetBlobDescriptorMeta",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryMetadata"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BlobCancelPendingRequest": {
+        "required": ["containerName", "reason"],
+        "type": "object",
+        "properties": {
+          "containerName": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "containerName": "medical-images",
+          "reason": "PUT to presigned URL returned 400 SignatureDoesNotMatch"
+        }
+      },
+      "BlobCleanupOrphansResponse": {
+        "required": ["cleanedCount"],
+        "type": "object",
+        "properties": {
+          "cleanedCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "BlobConfirmUploadRequest": {
+        "required": ["containerName"],
+        "type": "object",
+        "properties": {
+          "containerName": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "containerName": "medical-images"
+        }
+      },
+      "BlobConfirmUploadResponse": {
+        "required": [
+          "blobId",
+          "isValid",
+          "status",
+          "verifiedContentType",
+          "sizeBytes",
+          "rejectionReason"
+        ],
+        "type": "object",
+        "properties": {
+          "blobId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "isValid": {
+            "type": "boolean"
+          },
+          "status": {
+            "$ref": "#/components/schemas/BlobStatus"
+          },
+          "verifiedContentType": {
+            "type": ["null", "string"]
+          },
+          "sizeBytes": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["null", "integer", "string"],
+            "format": "int64"
+          },
+          "rejectionReason": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "BlobDeleteRequest": {
+        "required": ["containerName"],
+        "type": "object",
+        "properties": {
+          "containerName": {
+            "type": "string"
+          },
+          "deletionReason": {
+            "type": ["null", "string"]
+          }
+        },
+        "example": {
+          "containerName": "medical-images",
+          "deletionReason": "GDPR Art. 17 erasure request"
+        }
+      },
+      "BlobDescriptor": {
+        "type": "object",
+        "properties": {
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "containerName": {
+            "type": "string"
+          },
+          "objectKey": {
+            "type": "string"
+          },
+          "originalFileName": {
+            "type": "string"
+          },
+          "declaredContentType": {
+            "type": "string"
+          },
+          "maxAllowedBytes": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "format": "int64"
+          },
+          "verifiedContentType": {
+            "type": ["null", "string"]
+          },
+          "sizeBytes": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["null", "integer", "string"],
+            "format": "int64"
+          },
+          "status": {
+            "$ref": "#/components/schemas/BlobStatus"
+          },
+          "validatedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "rejectionReason": {
+            "type": ["null", "string"]
+          },
+          "deletionReason": {
+            "type": ["null", "string"]
+          },
+          "domainEvents": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/IDomainEvent"
+            }
+          },
+          "integrationEvents": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/IIntegrationEvent"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp (UTC).",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Identifier of the user who created the entity."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the entity.",
+            "format": "uuid"
+          }
+        }
+      },
+      "BlobDescriptorResponse": {
+        "required": [
+          "id",
+          "containerName",
+          "originalFileName",
+          "declaredContentType",
+          "verifiedContentType",
+          "declaredSizeBytes",
+          "actualSizeBytes",
+          "status",
+          "rejectionReason",
+          "deletionReason",
+          "createdAt",
+          "validatedAt",
+          "deletedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "containerName": {
+            "type": "string"
+          },
+          "originalFileName": {
+            "type": "string"
+          },
+          "declaredContentType": {
+            "type": "string"
+          },
+          "verifiedContentType": {
+            "type": ["null", "string"]
+          },
+          "declaredSizeBytes": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "format": "int64"
+          },
+          "actualSizeBytes": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["null", "integer", "string"],
+            "format": "int64"
+          },
+          "status": {
+            "$ref": "#/components/schemas/BlobStatus"
+          },
+          "rejectionReason": {
+            "type": ["null", "string"]
+          },
+          "deletionReason": {
+            "type": ["null", "string"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "validatedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          }
+        },
+        "example": {
+          "id": "01960f3a-5c9e-7c3b-b4a2-abc123def456",
+          "containerName": "medical-images",
+          "originalFileName": "xray-2026-04-20.png",
+          "declaredContentType": "image/png",
+          "verifiedContentType": "image/png",
+          "declaredSizeBytes": 2458112,
+          "actualSizeBytes": 2458112,
+          "status": "Validated",
+          "rejectionReason": null,
+          "deletionReason": null,
+          "createdAt": "2026-04-20T14:22:30+00:00",
+          "validatedAt": "2026-04-20T14:22:45+00:00",
+          "deletedAt": null
+        }
+      },
+      "BlobDownloadUrlRequest": {
+        "required": ["containerName"],
+        "type": "object",
+        "properties": {
+          "containerName": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": ["null", "string"]
+          }
+        },
+        "example": {
+          "containerName": "medical-images",
+          "fileName": "xray-2026-04-20.png"
+        }
+      },
+      "BlobDownloadUrlResponse": {
+        "required": ["downloadUrl", "expiresAt"],
+        "type": "object",
+        "properties": {
+          "downloadUrl": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "BlobStatus": {
+        "enum": ["Pending", "Uploading", "Valid", "Rejected", "Deleted"]
+      },
+      "BlobUploadInitiateRequest": {
+        "required": ["containerName", "fileName", "contentType", "sizeBytes"],
+        "type": "object",
+        "properties": {
+          "containerName": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "contentType": {
+            "type": "string"
+          },
+          "sizeBytes": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "format": "int64"
+          }
+        },
+        "example": {
+          "containerName": "medical-images",
+          "fileName": "xray-2026-04-20.png",
+          "contentType": "image/png",
+          "sizeBytes": 2458112
+        }
+      },
+      "BlobUploadInitiateResponse": {
+        "required": ["blobId", "uploadUrl", "httpMethod", "expiresAt", "requiredHeaders"],
+        "type": "object",
+        "properties": {
+          "blobId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uploadUrl": {
+            "type": "string"
+          },
+          "httpMethod": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "requiredHeaders": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "example": {
+          "blobId": "01960f3a-5c9e-7c3b-b4a2-abc123def456",
+          "uploadUrl": "https://storage.acme.example/medical-images/01960f3a...?sig=...",
+          "httpMethod": "PUT",
+          "expiresAt": "2026-04-20T15:30:00+00:00",
+          "requiredHeaders": {
+            "x-ms-blob-type": "BlockBlob",
+            "content-type": "image/png"
+          }
+        }
+      },
+      "ColumnDefinition": {
+        "required": [
+          "name",
+          "label",
+          "type",
+          "order",
+          "isSortable",
+          "isFilterable",
+          "isVisible",
+          "format"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isSortable": {
+            "type": "boolean"
+          },
+          "isFilterable": {
+            "type": "boolean"
+          },
+          "isVisible": {
+            "type": "boolean"
+          },
+          "format": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "DateFilterMeta": {
+        "required": ["name", "defaultPeriod", "availablePeriods"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "defaultPeriod": {
+            "$ref": "#/components/schemas/DatePeriod"
+          },
+          "availablePeriods": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatePeriod"
+            }
+          }
+        }
+      },
+      "DatePeriod": {
+        "enum": ["Today", "ThisWeek", "ThisMonth", "LastMonth", "ThisQuarter", "ThisYear", "Custom"]
+      },
+      "FilterableField": {
+        "required": ["name", "type", "operators"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "operators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterOperator"
+            }
+          },
+          "enumValues": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "lookup": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LookupDescriptor"
+              }
+            ]
+          }
+        }
+      },
+      "FilterGroupMeta": {
+        "required": ["name", "label", "presets"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "presets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PresetMeta"
+            }
+          }
+        }
+      },
+      "FilterOperator": {
+        "enum": [
+          "Eq",
+          "Contains",
+          "StartsWith",
+          "EndsWith",
+          "Gt",
+          "Gte",
+          "Lt",
+          "Lte",
+          "In",
+          "Between"
+        ]
+      },
+      "GroupByField": {
+        "required": ["name", "type"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "GroupedResultOfBlobDescriptor": {
+        "required": ["groups", "totalCount"],
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupEntryOfBlobDescriptor"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GroupEntryOfBlobDescriptor": {
+        "required": ["field", "value", "label", "count"],
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "value": {},
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "aggregates": {
+            "type": ["null", "object"]
+          },
+          "items": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/BlobDescriptor"
+            }
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "IDomainEvent": {
+        "type": "object",
+        "description": "Marker interface for domain events."
+      },
+      "IIntegrationEvent": {
+        "type": "object",
+        "description": "Marker interface for integration events (ETO — Event Transfer Object)."
+      },
+      "LookupDescriptor": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": ["null", "string"]
+          },
+          "endpoint": {
+            "type": ["null", "string"]
+          },
+          "kind": {
+            "$ref": "#/components/schemas/LookupKind"
+          },
+          "requiredPermission": {
+            "type": ["null", "string"]
+          },
+          "searchParam": {
+            "type": ["null", "string"],
+            "default": "search"
+          },
+          "scopeKeys": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LookupKind": {
+        "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
+        "default": "QueryEngine"
+      },
+      "PagedResultOfBlobDescriptor": {
+        "required": ["items", "totalCount", "hasMore"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tenantId": {
+                  "type": ["null", "string"],
+                  "format": "uuid"
+                },
+                "containerName": {
+                  "type": "string"
+                },
+                "objectKey": {
+                  "type": "string"
+                },
+                "originalFileName": {
+                  "type": "string"
+                },
+                "declaredContentType": {
+                  "type": "string"
+                },
+                "maxAllowedBytes": {
+                  "pattern": "^-?(?:0|[1-9]\\d*)$",
+                  "type": ["integer", "string"],
+                  "format": "int64"
+                },
+                "verifiedContentType": {
+                  "type": ["null", "string"]
+                },
+                "sizeBytes": {
+                  "pattern": "^-?(?:0|[1-9]\\d*)$",
+                  "type": ["null", "integer", "string"],
+                  "format": "int64"
+                },
+                "status": {
+                  "enum": ["Pending", "Uploading", "Valid", "Rejected", "Deleted"]
+                },
+                "validatedAt": {
+                  "type": ["null", "string"],
+                  "format": "date-time"
+                },
+                "deletedAt": {
+                  "type": ["null", "string"],
+                  "format": "date-time"
+                },
+                "rejectionReason": {
+                  "type": ["null", "string"]
+                },
+                "deletionReason": {
+                  "type": ["null", "string"]
+                },
+                "domainEvents": {
+                  "type": ["null", "array"],
+                  "items": {
+                    "type": "object",
+                    "description": "Marker interface for domain events."
+                  }
+                },
+                "integrationEvents": {
+                  "type": ["null", "array"],
+                  "items": {
+                    "type": "object",
+                    "description": "Marker interface for integration events (ETO — Event Transfer Object)."
+                  }
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "Creation timestamp (UTC).",
+                  "format": "date-time"
+                },
+                "createdBy": {
+                  "type": "string",
+                  "description": "Identifier of the user who created the entity."
+                },
+                "id": {
+                  "type": "string",
+                  "description": "Unique identifier of the entity.",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "totalCount": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "PaginationMeta": {
+        "required": ["defaultPageSize", "maxPageSize", "maxStreamSize", "supportsCursor"],
+        "type": "object",
+        "properties": {
+          "defaultPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxStreamSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "supportsCursor": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PresetMeta": {
+        "required": ["name", "label", "isDefault"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "QueryMetadata": {
+        "required": [
+          "columns",
+          "filterableFields",
+          "sortableFields",
+          "presetFilterGroups",
+          "quickFilters",
+          "dateFilters",
+          "groupByFields",
+          "pagination"
+        ],
+        "type": "object",
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ColumnDefinition"
+            }
+          },
+          "filterableFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterableField"
+            }
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortableField"
+            }
+          },
+          "presetFilterGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterGroupMeta"
+            }
+          },
+          "quickFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuickFilterMeta"
+            }
+          },
+          "dateFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DateFilterMeta"
+            }
+          },
+          "groupByFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupByField"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "defaultSort": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "QuickFilterMeta": {
+        "required": ["name", "label", "isDefault"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SortableField": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Blob Storage"
+    }
+  ]
+}

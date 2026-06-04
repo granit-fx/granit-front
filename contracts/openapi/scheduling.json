@@ -1,0 +1,1102 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "scheduling",
+    "version": "1"
+  },
+  "paths": {
+    "/scheduling/scheduled-actions/{id}": {
+      "get": {
+        "tags": ["Scheduling"],
+        "summary": "Returns a scheduled action by ID.",
+        "description": "Returns the full details of a single scheduled action identified by its GUID. Returns 404 if the action does not exist or belongs to a different tenant.",
+        "operationId": "GetScheduledActionById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduledActionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Scheduling"],
+        "summary": "Cancels a pending scheduled action.",
+        "description": "Cancels a scheduled action that has not yet been executed. Returns 204 on success. Returns 404 if the action does not exist, or 409 if the action is no longer in Pending status.",
+        "operationId": "CancelScheduledAction",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scheduling/scheduled-actions/{id}/reschedule": {
+      "put": {
+        "tags": ["Scheduling"],
+        "summary": "Reschedules a pending action to a new date.",
+        "description": "Changes the execution date of a pending scheduled action. Returns 200 on success. Returns 404 if the action does not exist, or 409 if the action is no longer in Pending status.",
+        "operationId": "RescheduleScheduledAction",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RescheduleActionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scheduling/scheduled-actions": {
+      "get": {
+        "tags": ["Scheduling"],
+        "summary": "Returns a filtered, sorted, and paginated list of ScheduledAction entries.",
+        "description": "Executes a dynamic query against ScheduledAction using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
+        "operationId": "QueryScheduledAction",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "1-based page index. Ignored when cursor is supplied.",
+            "schema": {
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page (1-500). Server-side cap applies.",
+            "schema": {
+              "maximum": 500,
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Free-text search across searchable columns declared in the query definition.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "groupBy",
+            "in": "query",
+            "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "quickFilters",
+            "in": "query",
+            "description": "Comma-separated quick-filter names (declared in the query definition).",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "skipTotalCount",
+            "in": "query",
+            "description": "Skip the total row count for faster pagination when the client doesn't need it.",
+            "schema": {
+              "type": ["null", "boolean"]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Bracketed filter expressions: 'filter[field.op]=value'. Example: 'filter[name.contains]=alice&filter[age.gt]=18'.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "presets",
+            "in": "query",
+            "description": "Bracketed preset selectors: 'presets[group]=name'. Applies preset filter groups declared in the query definition.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/PagedResultOfScheduledAction"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GroupedResultOfScheduledAction"
+                    }
+                  ],
+                  "description": "PagedResult when groupBy is absent; GroupedResult otherwise."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scheduling/scheduled-actions/meta": {
+      "get": {
+        "tags": ["Scheduling"],
+        "summary": "Returns query metadata for ScheduledAction (columns, filters, sorts, presets).",
+        "description": "Returns the query definition metadata for ScheduledAction: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
+        "operationId": "GetScheduledActionMeta",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryMetadata"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ColumnDefinition": {
+        "required": [
+          "name",
+          "label",
+          "type",
+          "order",
+          "isSortable",
+          "isFilterable",
+          "isVisible",
+          "format"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isSortable": {
+            "type": "boolean"
+          },
+          "isFilterable": {
+            "type": "boolean"
+          },
+          "isVisible": {
+            "type": "boolean"
+          },
+          "format": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "DateFilterMeta": {
+        "required": ["name", "defaultPeriod", "availablePeriods"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "defaultPeriod": {
+            "$ref": "#/components/schemas/DatePeriod"
+          },
+          "availablePeriods": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatePeriod"
+            }
+          }
+        }
+      },
+      "DatePeriod": {
+        "enum": ["Today", "ThisWeek", "ThisMonth", "LastMonth", "ThisQuarter", "ThisYear", "Custom"]
+      },
+      "FilterableField": {
+        "required": ["name", "type", "operators"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "operators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterOperator"
+            }
+          },
+          "enumValues": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "lookup": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LookupDescriptor"
+              }
+            ]
+          }
+        }
+      },
+      "FilterGroupMeta": {
+        "required": ["name", "label", "presets"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "presets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PresetMeta"
+            }
+          }
+        }
+      },
+      "FilterOperator": {
+        "enum": [
+          "Eq",
+          "Contains",
+          "StartsWith",
+          "EndsWith",
+          "Gt",
+          "Gte",
+          "Lt",
+          "Lte",
+          "In",
+          "Between"
+        ]
+      },
+      "GroupByField": {
+        "required": ["name", "type"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "GroupedResultOfScheduledAction": {
+        "required": ["groups", "totalCount"],
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupEntryOfScheduledAction"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GroupEntryOfScheduledAction": {
+        "required": ["field", "value", "label", "count"],
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "value": {},
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "aggregates": {
+            "type": ["null", "object"]
+          },
+          "items": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/ScheduledAction"
+            }
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "IDomainEvent": {
+        "type": "object",
+        "description": "Marker interface for domain events."
+      },
+      "IIntegrationEvent": {
+        "type": "object",
+        "description": "Marker interface for integration events (ETO — Event Transfer Object)."
+      },
+      "LookupDescriptor": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": ["null", "string"]
+          },
+          "endpoint": {
+            "type": ["null", "string"]
+          },
+          "kind": {
+            "$ref": "#/components/schemas/LookupKind"
+          },
+          "requiredPermission": {
+            "type": ["null", "string"]
+          },
+          "searchParam": {
+            "type": ["null", "string"],
+            "default": "search"
+          },
+          "scopeKeys": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LookupKind": {
+        "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
+        "default": "QueryEngine"
+      },
+      "PagedResultOfScheduledAction": {
+        "required": ["items", "totalCount", "hasMore"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "payloadType": {
+                  "type": "string"
+                },
+                "payloadJson": {
+                  "type": "string"
+                },
+                "executeAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "correlationId": {
+                  "type": ["null", "string"]
+                },
+                "status": {
+                  "enum": ["Pending", "Executed", "Cancelled", "Failed", "Processing"]
+                },
+                "executedAt": {
+                  "type": ["null", "string"],
+                  "format": "date-time"
+                },
+                "cancelledBy": {
+                  "type": ["null", "string"]
+                },
+                "failureReason": {
+                  "type": ["null", "string"]
+                },
+                "tenantId": {
+                  "type": ["null", "string"],
+                  "format": "uuid"
+                },
+                "modifiedAt": {
+                  "type": ["null", "string"],
+                  "description": "Last modification timestamp (UTC).",
+                  "format": "date-time"
+                },
+                "modifiedBy": {
+                  "type": ["null", "string"],
+                  "description": "Identifier of the user who last modified the entity."
+                },
+                "domainEvents": {
+                  "type": ["null", "array"],
+                  "items": {
+                    "type": "object",
+                    "description": "Marker interface for domain events."
+                  }
+                },
+                "integrationEvents": {
+                  "type": ["null", "array"],
+                  "items": {
+                    "type": "object",
+                    "description": "Marker interface for integration events (ETO — Event Transfer Object)."
+                  }
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "Creation timestamp (UTC).",
+                  "format": "date-time"
+                },
+                "createdBy": {
+                  "type": "string",
+                  "description": "Identifier of the user who created the entity."
+                },
+                "id": {
+                  "type": "string",
+                  "description": "Unique identifier of the entity.",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "totalCount": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "PaginationMeta": {
+        "required": ["defaultPageSize", "maxPageSize", "maxStreamSize", "supportsCursor"],
+        "type": "object",
+        "properties": {
+          "defaultPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxStreamSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "supportsCursor": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PresetMeta": {
+        "required": ["name", "label", "isDefault"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "QueryMetadata": {
+        "required": [
+          "columns",
+          "filterableFields",
+          "sortableFields",
+          "presetFilterGroups",
+          "quickFilters",
+          "dateFilters",
+          "groupByFields",
+          "pagination"
+        ],
+        "type": "object",
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ColumnDefinition"
+            }
+          },
+          "filterableFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterableField"
+            }
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortableField"
+            }
+          },
+          "presetFilterGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterGroupMeta"
+            }
+          },
+          "quickFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuickFilterMeta"
+            }
+          },
+          "dateFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DateFilterMeta"
+            }
+          },
+          "groupByFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupByField"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "defaultSort": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "QuickFilterMeta": {
+        "required": ["name", "label", "isDefault"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RescheduleActionRequest": {
+        "required": ["newExecuteAt"],
+        "type": "object",
+        "properties": {
+          "newExecuteAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ScheduledAction": {
+        "type": "object",
+        "properties": {
+          "payloadType": {
+            "type": "string"
+          },
+          "payloadJson": {
+            "type": "string"
+          },
+          "executeAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "correlationId": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "$ref": "#/components/schemas/ScheduledActionStatus"
+          },
+          "executedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "cancelledBy": {
+            "type": ["null", "string"]
+          },
+          "failureReason": {
+            "type": ["null", "string"]
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "description": "Last modification timestamp (UTC).",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": ["null", "string"],
+            "description": "Identifier of the user who last modified the entity."
+          },
+          "domainEvents": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/IDomainEvent"
+            }
+          },
+          "integrationEvents": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/IIntegrationEvent"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp (UTC).",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Identifier of the user who created the entity."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the entity.",
+            "format": "uuid"
+          }
+        }
+      },
+      "ScheduledActionResponse": {
+        "required": [
+          "id",
+          "payloadType",
+          "executeAt",
+          "correlationId",
+          "status",
+          "executedAt",
+          "cancelledBy",
+          "failureReason",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "payloadType": {
+            "type": "string"
+          },
+          "executeAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "correlationId": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "$ref": "#/components/schemas/ScheduledActionStatus"
+          },
+          "executedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "cancelledBy": {
+            "type": ["null", "string"]
+          },
+          "failureReason": {
+            "type": ["null", "string"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ScheduledActionStatus": {
+        "enum": ["Pending", "Executed", "Cancelled", "Failed", "Processing"]
+      },
+      "SortableField": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Scheduling"
+    }
+  ]
+}

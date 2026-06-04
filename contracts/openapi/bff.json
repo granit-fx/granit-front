@@ -1,0 +1,131 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "bff",
+    "version": "1"
+  },
+  "paths": {
+    "/bff/user": {
+      "get": {
+        "tags": ["BFF - App"],
+        "summary": "Returns the current user's claims for the SPA.",
+        "description": "Reads the session cookie, loads the ID token from the token store, decodes the JWT payload, and returns a filtered set of claims: sub, name, email, roles, tenantId, isHost, and sessionExpiresAt. isHost is server-emitted (true when the id_token carries no tenant_id claim) so the SPA never has to infer Host status from the absence of TenantId. Returns { authenticated: false } if no valid session exists. Tokens are never exposed to the browser.",
+        "operationId": "BffGetUserApp",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BffUnauthenticatedResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bff/csrf-token": {
+      "post": {
+        "tags": ["BFF - App"],
+        "summary": "Generates a CSRF token for the current BFF session.",
+        "description": "Reads the session cookie to identify the session, generates an HMAC-SHA256 based CSRF token, and returns it in the response body. The SPA must include this token in the X-CSRF-Token header on all POST/PUT/DELETE/PATCH requests. Returns 401 if no valid session exists.",
+        "operationId": "BffGenerateCsrfTokenApp",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BffCsrfTokenResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BffCsrfTokenResponse": {
+        "required": ["csrfToken"],
+        "type": "object",
+        "properties": {
+          "csrfToken": {
+            "type": "string"
+          }
+        }
+      },
+      "BffUnauthenticatedResponse": {
+        "type": "object",
+        "properties": {
+          "authenticated": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "BFF - App"
+    }
+  ]
+}

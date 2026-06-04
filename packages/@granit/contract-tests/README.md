@@ -42,8 +42,18 @@ node scripts/sync-openapi-contracts.mjs background-jobs
 Reads the build artifacts of `Granit.OpenApi.Generator` (override the source
 with `GRANIT_DOTNET=/path/to/granit-dotnet`).
 
-## Scope
+## Extending coverage
 
-Pilot covers `@granit/background-jobs`. Coverage grows one module at a time as
-its snapshot is vendored and a conformance test is added. Endpoint (route/verb)
-conformance is a planned follow-up.
+1. Vendor the spec: `node scripts/sync-openapi-contracts.mjs <slug>`.
+2. Add a line to [`src/manifest.ts`](src/manifest.ts) — `{ slug, package, types }`,
+   where `types` lists the per-module DTO interfaces (spec schema name === front
+   interface name). Shared schemas (query-engine metadata, `ProblemDetails`,
+   `*Of*` wrapper generics) belong to their owning package and are not listed.
+
+The suite resolves each interface, brands (`EntityId<…>`, `ISODateString`),
+local string-union aliases and `$ref` enums automatically.
+
+Covered so far: `background-jobs`, `bff`, `blob-storage`, `api-keys`, `ai`. The
+`Granit.OpenApi.Generator` ships the 30 framework modules; granit-business
+modules (dashboards, parties, …) need an equivalent generator. Endpoint
+(route/verb) conformance is a planned follow-up.

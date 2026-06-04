@@ -1,0 +1,2533 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "templating",
+    "version": "1"
+  },
+  "paths": {
+    "/templating/templates": {
+      "get": {
+        "tags": ["Templates"],
+        "summary": "Returns a filtered, sorted, and paginated list of TemplateSummary entries.",
+        "description": "Executes a dynamic query against TemplateSummary using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
+        "operationId": "QueryTemplateSummary",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "1-based page index. Ignored when cursor is supplied.",
+            "schema": {
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page (1-500). Server-side cap applies.",
+            "schema": {
+              "maximum": 500,
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Free-text search across searchable columns declared in the query definition.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "groupBy",
+            "in": "query",
+            "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "quickFilters",
+            "in": "query",
+            "description": "Comma-separated quick-filter names (declared in the query definition).",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "skipTotalCount",
+            "in": "query",
+            "description": "Skip the total row count for faster pagination when the client doesn't need it.",
+            "schema": {
+              "type": ["null", "boolean"]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Bracketed filter expressions: 'filter[field.op]=value'. Example: 'filter[name.contains]=alice&filter[age.gt]=18'.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "presets",
+            "in": "query",
+            "description": "Bracketed preset selectors: 'presets[group]=name'. Applies preset filter groups declared in the query definition.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/PagedResultOfTemplateSummary"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GroupedResultOfTemplateSummary"
+                    }
+                  ],
+                  "description": "PagedResult when groupBy is absent; GroupedResult otherwise."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Templates"],
+        "summary": "Creates a new template draft.",
+        "description": "Creates a new template with an initial draft revision. The template name must be unique. The draft can be previewed and edited before publishing. Returns 201 Created with the template detail.",
+        "operationId": "CreateTemplateDraft",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveTemplateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateDetailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templating/templates/meta": {
+      "get": {
+        "tags": ["Templates"],
+        "summary": "Returns query metadata for TemplateSummary (columns, filters, sorts, presets).",
+        "description": "Returns the query definition metadata for TemplateSummary: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
+        "operationId": "GetTemplateSummaryMeta",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryMetadata"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templating/templates/{name}": {
+      "get": {
+        "tags": ["Templates"],
+        "summary": "Returns detail of a template (current draft and published revision).",
+        "description": "Returns the full detail of a template including both the current draft revision (if any) and the published revision (if any). Includes content, metadata, category, and variable bindings. Returns 404 if the template name does not exist.",
+        "operationId": "GetTemplateDetail",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "culture",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateDetailResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Templates"],
+        "summary": "Updates an existing template draft.",
+        "description": "Replaces the draft revision content and metadata. Only the draft revision is affected — published and archived revisions are immutable. Creates a new draft if none exists. Returns 409 if the concurrency stamp does not match the stored draft. Returns 404 if the template does not exist.",
+        "operationId": "UpdateTemplateDraft",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveTemplateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateDetailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templating/templates/{name}/draft": {
+      "delete": {
+        "tags": ["Templates"],
+        "summary": "Deletes the draft revision of a template (published/archived are preserved).",
+        "description": "Removes only the draft revision. Published and archived revisions remain unaffected. Returns 404 if the template does not exist or has no draft revision.",
+        "operationId": "DeleteTemplateDraft",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "culture",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templating/templates/{name}/lifecycle": {
+      "get": {
+        "tags": ["Templates"],
+        "summary": "Returns lifecycle status, workflow state, and available transitions.",
+        "description": "Returns the current lifecycle state of the template (draft, published, archived), the workflow state if workflow integration is enabled, and the list of available state transitions for the current user.",
+        "operationId": "GetTemplateLifecycle",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "culture",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateLifecycleResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templating/templates/{name}/publish": {
+      "post": {
+        "tags": ["Templates"],
+        "summary": "Publishes the current draft, archiving any previous published revision.",
+        "description": "Promotes the current draft to published status. If a published revision already exists, it is archived first. The draft is consumed — a new draft must be created for further edits. Returns 404 if the template or draft does not exist.",
+        "operationId": "PublishTemplate",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "culture",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateDetailResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templating/templates/{name}/unpublish": {
+      "post": {
+        "tags": ["Templates"],
+        "summary": "Unpublishes the template (archives the published revision).",
+        "description": "Archives the currently published revision. The template will no longer be available for rendering until a new revision is published. Returns 404 if the template has no published revision.",
+        "operationId": "UnpublishTemplate",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "culture",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templating/templates/{name}/preview": {
+      "post": {
+        "tags": ["Templates"],
+        "summary": "Renders the current draft with optional test data and returns the HTML output.",
+        "description": "Renders the template's current draft content using the configured template engine (Liquid, Razor, etc.) with optional test data. Returns the rendered HTML. Useful for live preview in the template editor. Returns 404 if the template or draft does not exist.",
+        "operationId": "PreviewTemplate",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemplatePreviewRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplatePreviewResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templating/templates/{name}/variables": {
+      "get": {
+        "tags": ["Templates"],
+        "summary": "Returns all available template variables (global, model, enriched) for autocompletion.",
+        "description": "Returns all variables available for use in the template: global variables (application-wide), model variables (bound to the template's entity type), and enriched variables (computed at render time). Used to power autocompletion in the template editor.",
+        "operationId": "GetTemplateVariables",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateVariablesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templating/templates/{name}/history": {
+      "get": {
+        "tags": ["Templates"],
+        "summary": "Returns a paginated revision history for the template (without content).",
+        "description": "Returns a paginated list of all revisions for the template, ordered by creation date descending. Each entry includes revision ID, status, author, and timestamp — but not the content. Use the revision detail endpoint to retrieve content.",
+        "operationId": "GetTemplateHistory",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "culture",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "1-based page index.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateHistoryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templating/templates/{name}/history/{revisionId}": {
+      "get": {
+        "tags": ["Templates"],
+        "summary": "Returns the full detail of a specific template revision (including content).",
+        "description": "Returns the complete content and metadata of a specific historical revision, identified by its GUID. Useful for comparing versions or restoring a previous revision. Returns 404 if the revision does not exist.",
+        "operationId": "GetTemplateRevisionDetail",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "revisionId",
+            "in": "path",
+            "description": "Unique identifier of the revision.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "culture",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateRevisionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templating/layouts": {
+      "get": {
+        "tags": ["Templates"],
+        "summary": "Returns all available layout template names.",
+        "description": "Returns a deduplicated list of layout template names from both the code-level ILayoutRegistry and database-assigned LayoutName values. Used by the admin UI to populate layout dropdowns.",
+        "operationId": "ListAvailableLayouts",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templating/categories": {
+      "get": {
+        "tags": ["Templates"],
+        "summary": "Returns all template categories ordered by sort order then name.",
+        "description": "Returns all template categories for organizing templates. Categories are sorted by their sort order, then alphabetically by name. Each category includes its ID, name, and template count.",
+        "operationId": "ListTemplateCategories",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TemplateCategoryResponse"
+                  }
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Templates"],
+        "summary": "Creates a new template category.",
+        "description": "Creates a new template category with the given name and sort order. The name must be unique.",
+        "operationId": "CreateTemplateCategory",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveTemplateCategoryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateCategoryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templating/categories/{id}": {
+      "put": {
+        "tags": ["Templates"],
+        "summary": "Updates an existing template category.",
+        "description": "Updates the name and sort order of an existing category. Returns 404 if the category does not exist.",
+        "operationId": "UpdateTemplateCategory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveTemplateCategoryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateCategoryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Templates"],
+        "summary": "Deletes a template category (409 if templates are still associated).",
+        "description": "Deletes the template category. Returns 409 Conflict if templates are still associated with this category — reassign or delete them first. Returns 404 if the category does not exist.",
+        "operationId": "DeleteTemplateCategory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ColumnDefinition": {
+        "required": [
+          "name",
+          "label",
+          "type",
+          "order",
+          "isSortable",
+          "isFilterable",
+          "isVisible",
+          "format"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isSortable": {
+            "type": "boolean"
+          },
+          "isFilterable": {
+            "type": "boolean"
+          },
+          "isVisible": {
+            "type": "boolean"
+          },
+          "format": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "DateFilterMeta": {
+        "required": ["name", "defaultPeriod", "availablePeriods"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "defaultPeriod": {
+            "$ref": "#/components/schemas/DatePeriod"
+          },
+          "availablePeriods": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatePeriod"
+            }
+          }
+        }
+      },
+      "DatePeriod": {
+        "enum": ["Today", "ThisWeek", "ThisMonth", "LastMonth", "ThisQuarter", "ThisYear", "Custom"]
+      },
+      "FilterableField": {
+        "required": ["name", "type", "operators"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "operators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterOperator"
+            }
+          },
+          "enumValues": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "lookup": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LookupDescriptor"
+              }
+            ]
+          }
+        }
+      },
+      "FilterGroupMeta": {
+        "required": ["name", "label", "presets"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "presets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PresetMeta"
+            }
+          }
+        }
+      },
+      "FilterOperator": {
+        "enum": [
+          "Eq",
+          "Contains",
+          "StartsWith",
+          "EndsWith",
+          "Gt",
+          "Gte",
+          "Lt",
+          "Lte",
+          "In",
+          "Between"
+        ]
+      },
+      "GroupByField": {
+        "required": ["name", "type"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "GroupedResultOfTemplateSummary": {
+        "required": ["groups", "totalCount"],
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupEntryOfTemplateSummary"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GroupEntryOfTemplateSummary": {
+        "required": ["field", "value", "label", "count"],
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "value": {},
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "aggregates": {
+            "type": ["null", "object"]
+          },
+          "items": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/TemplateSummary"
+            }
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "JsonElement": {
+        "type": ["null", "boolean", "number", "string", "object", "array"],
+        "description": "Arbitrary JSON value (object, array, string, number, boolean, or null)."
+      },
+      "LookupDescriptor": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": ["null", "string"]
+          },
+          "endpoint": {
+            "type": ["null", "string"]
+          },
+          "kind": {
+            "$ref": "#/components/schemas/LookupKind"
+          },
+          "requiredPermission": {
+            "type": ["null", "string"]
+          },
+          "searchParam": {
+            "type": ["null", "string"],
+            "default": "search"
+          },
+          "scopeKeys": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LookupKind": {
+        "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
+        "default": "QueryEngine"
+      },
+      "PagedResultOfTemplateSummary": {
+        "required": ["items", "totalCount", "hasMore"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "required": [
+                "name",
+                "culture",
+                "mimeType",
+                "currentStatus",
+                "lastModifiedAt",
+                "lastModifiedBy",
+                "hasPublishedVersion"
+              ],
+              "type": "object",
+              "properties": {
+                "tenantId": {
+                  "type": ["null", "string"],
+                  "format": "uuid"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "culture": {
+                  "type": ["null", "string"]
+                },
+                "mimeType": {
+                  "type": "string"
+                },
+                "currentStatus": {
+                  "enum": ["Draft", "PendingReview", "Published", "Archived"]
+                },
+                "lastModifiedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "lastModifiedBy": {
+                  "type": "string"
+                },
+                "hasPublishedVersion": {
+                  "type": "boolean"
+                },
+                "layoutName": {
+                  "type": ["null", "string"]
+                },
+                "categoryId": {
+                  "type": ["null", "string"],
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "totalCount": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "PaginationMeta": {
+        "required": ["defaultPageSize", "maxPageSize", "maxStreamSize", "supportsCursor"],
+        "type": "object",
+        "properties": {
+          "defaultPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxStreamSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "supportsCursor": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PresetMeta": {
+        "required": ["name", "label", "isDefault"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "QueryMetadata": {
+        "required": [
+          "columns",
+          "filterableFields",
+          "sortableFields",
+          "presetFilterGroups",
+          "quickFilters",
+          "dateFilters",
+          "groupByFields",
+          "pagination"
+        ],
+        "type": "object",
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ColumnDefinition"
+            }
+          },
+          "filterableFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterableField"
+            }
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortableField"
+            }
+          },
+          "presetFilterGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterGroupMeta"
+            }
+          },
+          "quickFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuickFilterMeta"
+            }
+          },
+          "dateFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DateFilterMeta"
+            }
+          },
+          "groupByFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupByField"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "defaultSort": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "QuickFilterMeta": {
+        "required": ["name", "label", "isDefault"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SaveTemplateCategoryRequest": {
+        "required": ["name", "description", "icon"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "icon": {
+            "type": ["null", "string"]
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32",
+            "default": 0
+          }
+        }
+      },
+      "SaveTemplateRequest": {
+        "required": ["name", "culture", "content"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": ["null", "string"]
+          },
+          "culture": {
+            "type": ["null", "string"]
+          },
+          "content": {
+            "type": "string"
+          },
+          "mimeType": {
+            "type": "string",
+            "default": "text/html"
+          },
+          "layoutName": {
+            "type": ["null", "string"]
+          },
+          "concurrencyStamp": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "SortableField": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "TemplateCategoryResponse": {
+        "required": ["id", "name", "description", "icon", "sortOrder", "templateCount"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "icon": {
+            "type": ["null", "string"]
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "templateCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TemplateDetailResponse": {
+        "required": ["name", "culture", "draft", "published", "layoutName"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "culture": {
+            "type": ["null", "string"]
+          },
+          "draft": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/TemplateRevisionResponse"
+              }
+            ]
+          },
+          "published": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/TemplateRevisionResponse"
+              }
+            ]
+          },
+          "layoutName": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "TemplateHistoryResponse": {
+        "required": ["revisions", "totalCount", "page", "pageSize"],
+        "type": "object",
+        "properties": {
+          "revisions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TemplateRevisionSummaryResponse"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TemplateLifecycleResponse": {
+        "required": ["name", "culture", "currentStatus", "workflowEnabled", "availableTransitions"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "culture": {
+            "type": ["null", "string"]
+          },
+          "currentStatus": {
+            "$ref": "#/components/schemas/WorkflowLifecycleStatus"
+          },
+          "workflowEnabled": {
+            "type": "boolean"
+          },
+          "availableTransitions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowLifecycleStatus"
+            }
+          }
+        }
+      },
+      "TemplatePreviewRequest": {
+        "required": ["culture", "data"],
+        "type": "object",
+        "properties": {
+          "culture": {
+            "type": ["null", "string"]
+          },
+          "data": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/JsonElement"
+              }
+            ]
+          }
+        }
+      },
+      "TemplatePreviewResponse": {
+        "required": ["html", "revisionId", "renderTimeMs"],
+        "type": "object",
+        "properties": {
+          "html": {
+            "type": "string"
+          },
+          "revisionId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "renderTimeMs": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "format": "int64"
+          }
+        }
+      },
+      "TemplateRevisionResponse": {
+        "required": [
+          "revisionId",
+          "content",
+          "mimeType",
+          "status",
+          "createdAt",
+          "createdBy",
+          "publishedAt",
+          "publishedBy",
+          "layoutName",
+          "concurrencyStamp"
+        ],
+        "type": "object",
+        "properties": {
+          "revisionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "content": {
+            "type": "string"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/WorkflowLifecycleStatus"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "publishedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "publishedBy": {
+            "type": ["null", "string"]
+          },
+          "layoutName": {
+            "type": ["null", "string"]
+          },
+          "concurrencyStamp": {
+            "type": "string"
+          }
+        }
+      },
+      "TemplateRevisionSummaryResponse": {
+        "required": [
+          "revisionId",
+          "status",
+          "createdAt",
+          "createdBy",
+          "publishedAt",
+          "publishedBy",
+          "contentLength"
+        ],
+        "type": "object",
+        "properties": {
+          "revisionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/WorkflowLifecycleStatus"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "publishedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "publishedBy": {
+            "type": ["null", "string"]
+          },
+          "contentLength": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TemplateSummary": {
+        "required": [
+          "name",
+          "culture",
+          "mimeType",
+          "currentStatus",
+          "lastModifiedAt",
+          "lastModifiedBy",
+          "hasPublishedVersion"
+        ],
+        "type": "object",
+        "properties": {
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "culture": {
+            "type": ["null", "string"]
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "currentStatus": {
+            "$ref": "#/components/schemas/WorkflowLifecycleStatus"
+          },
+          "lastModifiedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastModifiedBy": {
+            "type": "string"
+          },
+          "hasPublishedVersion": {
+            "type": "boolean"
+          },
+          "layoutName": {
+            "type": ["null", "string"]
+          },
+          "categoryId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          }
+        }
+      },
+      "TemplateVariableItemResponse": {
+        "required": ["name", "type", "description"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "description": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "TemplateVariablesResponse": {
+        "required": ["globalVariables", "modelVariables", "enrichedVariables"],
+        "type": "object",
+        "properties": {
+          "globalVariables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TemplateVariableItemResponse"
+            }
+          },
+          "modelVariables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TemplateVariableItemResponse"
+            }
+          },
+          "enrichedVariables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TemplateVariableItemResponse"
+            }
+          }
+        }
+      },
+      "WorkflowLifecycleStatus": {
+        "enum": ["Draft", "PendingReview", "Published", "Archived"]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Templates"
+    }
+  ]
+}

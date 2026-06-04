@@ -1,0 +1,1036 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "localization",
+    "version": "1"
+  },
+  "paths": {
+    "/localization": {
+      "get": {
+        "tags": ["Localization"],
+        "summary": "Returns all localization resources for the requested culture.",
+        "description": "Returns all localization resources (key-value pairs) for the requested culture, grouped by resource name. Accepts an optional cultureName query parameter (BCP 47 format); defaults to the Accept-Language header culture. Also returns the list of supported languages. Response is cached for 1 hour (Cache-Control: public, max-age=3600, Vary: Accept-Language). Anonymous — no authentication required.",
+        "operationId": "GetLocalization",
+        "parameters": [
+          {
+            "name": "cultureName",
+            "in": "query",
+            "description": "BCP 47 culture tag (e.g. 'fr', 'fr-BE', 'zh-Hant-TW').",
+            "schema": {
+              "pattern": "^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$",
+              "type": "string",
+              "example": "fr-BE"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicationLocalizationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    },
+    "/localization/overrides": {
+      "get": {
+        "tags": ["Localization"],
+        "summary": "Returns a filtered, sorted, and paginated list of LocalizationOverride entries.",
+        "description": "Executes a dynamic query against LocalizationOverride using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
+        "operationId": "QueryLocalizationOverride",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "1-based page index. Ignored when cursor is supplied.",
+            "schema": {
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page (1-500). Server-side cap applies.",
+            "schema": {
+              "maximum": 500,
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Free-text search across searchable columns declared in the query definition.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "groupBy",
+            "in": "query",
+            "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "quickFilters",
+            "in": "query",
+            "description": "Comma-separated quick-filter names (declared in the query definition).",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "skipTotalCount",
+            "in": "query",
+            "description": "Skip the total row count for faster pagination when the client doesn't need it.",
+            "schema": {
+              "type": ["null", "boolean"]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Bracketed filter expressions: 'filter[field.op]=value'. Example: 'filter[name.contains]=alice&filter[age.gt]=18'.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "presets",
+            "in": "query",
+            "description": "Bracketed preset selectors: 'presets[group]=name'. Applies preset filter groups declared in the query definition.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/PagedResultOfLocalizationOverride"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GroupedResultOfLocalizationOverride"
+                    }
+                  ],
+                  "description": "PagedResult when groupBy is absent; GroupedResult otherwise."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/localization/overrides/meta": {
+      "get": {
+        "tags": ["Localization"],
+        "summary": "Returns query metadata for LocalizationOverride (columns, filters, sorts, presets).",
+        "description": "Returns the query definition metadata for LocalizationOverride: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
+        "operationId": "GetLocalizationOverrideMeta",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryMetadata"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/localization/overrides/{resourceName}/{cultureName}/{key}": {
+      "put": {
+        "tags": ["Localization"],
+        "summary": "Creates or updates a translation override.",
+        "description": "Sets a translation override for a specific resource, culture, and key. If an override already exists, it is replaced. The culture name must be a valid BCP 47 tag. Returns 501 if no override store is registered.",
+        "operationId": "PutLocalizationOverride",
+        "parameters": [
+          {
+            "name": "resourceName",
+            "in": "path",
+            "description": "Localization resource name (matches a registered LocalizationResource type).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cultureName",
+            "in": "path",
+            "description": "BCP 47 culture tag (e.g. 'fr', 'fr-BE', 'zh-Hant-TW').",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "in": "path",
+            "description": "Translation key within the resource (e.g. 'Permission:Users.Read').",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetLocalizationOverrideRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Localization"],
+        "summary": "Removes a translation override.",
+        "description": "Removes the translation override for the specified resource, culture, and key. The original value from the resource file becomes effective again. No-op if the override does not exist. Returns 501 if no override store is registered.",
+        "operationId": "DeleteLocalizationOverride",
+        "parameters": [
+          {
+            "name": "resourceName",
+            "in": "path",
+            "description": "Localization resource name (matches a registered LocalizationResource type).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cultureName",
+            "in": "path",
+            "description": "BCP 47 culture tag (e.g. 'fr', 'fr-BE', 'zh-Hant-TW').",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "in": "path",
+            "description": "Translation key within the resource (e.g. 'Permission:Users.Read').",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApplicationLocalizationResponse": {
+        "required": ["cultureName", "resources", "languages"],
+        "type": "object",
+        "properties": {
+          "cultureName": {
+            "type": "string"
+          },
+          "resources": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LanguageInfoResponse"
+            }
+          }
+        }
+      },
+      "ColumnDefinition": {
+        "required": [
+          "name",
+          "label",
+          "type",
+          "order",
+          "isSortable",
+          "isFilterable",
+          "isVisible",
+          "format"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isSortable": {
+            "type": "boolean"
+          },
+          "isFilterable": {
+            "type": "boolean"
+          },
+          "isVisible": {
+            "type": "boolean"
+          },
+          "format": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "DateFilterMeta": {
+        "required": ["name", "defaultPeriod", "availablePeriods"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "defaultPeriod": {
+            "$ref": "#/components/schemas/DatePeriod"
+          },
+          "availablePeriods": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatePeriod"
+            }
+          }
+        }
+      },
+      "DatePeriod": {
+        "enum": ["Today", "ThisWeek", "ThisMonth", "LastMonth", "ThisQuarter", "ThisYear", "Custom"]
+      },
+      "FilterableField": {
+        "required": ["name", "type", "operators"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "operators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterOperator"
+            }
+          },
+          "enumValues": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "lookup": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LookupDescriptor"
+              }
+            ]
+          }
+        }
+      },
+      "FilterGroupMeta": {
+        "required": ["name", "label", "presets"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "presets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PresetMeta"
+            }
+          }
+        }
+      },
+      "FilterOperator": {
+        "enum": [
+          "Eq",
+          "Contains",
+          "StartsWith",
+          "EndsWith",
+          "Gt",
+          "Gte",
+          "Lt",
+          "Lte",
+          "In",
+          "Between"
+        ]
+      },
+      "GroupByField": {
+        "required": ["name", "type"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "GroupedResultOfLocalizationOverride": {
+        "required": ["groups", "totalCount"],
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupEntryOfLocalizationOverride"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GroupEntryOfLocalizationOverride": {
+        "required": ["field", "value", "label", "count"],
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "value": {},
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "aggregates": {
+            "type": ["null", "object"]
+          },
+          "items": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/LocalizationOverride"
+            }
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "LanguageInfoResponse": {
+        "required": ["cultureName", "displayName", "flagIcon", "isDefault"],
+        "type": "object",
+        "properties": {
+          "cultureName": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "flagIcon": {
+            "type": ["null", "string"]
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "LocalizationOverride": {
+        "type": "object",
+        "properties": {
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "resourceName": {
+            "type": "string"
+          },
+          "cultureName": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "description": "Last modification timestamp (UTC).",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": ["null", "string"],
+            "description": "Identifier of the user who last modified the entity."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp (UTC).",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Identifier of the user who created the entity."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the entity.",
+            "format": "uuid"
+          }
+        }
+      },
+      "LookupDescriptor": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": ["null", "string"]
+          },
+          "endpoint": {
+            "type": ["null", "string"]
+          },
+          "kind": {
+            "$ref": "#/components/schemas/LookupKind"
+          },
+          "requiredPermission": {
+            "type": ["null", "string"]
+          },
+          "searchParam": {
+            "type": ["null", "string"],
+            "default": "search"
+          },
+          "scopeKeys": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LookupKind": {
+        "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
+        "default": "QueryEngine"
+      },
+      "PagedResultOfLocalizationOverride": {
+        "required": ["items", "totalCount", "hasMore"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tenantId": {
+                  "type": ["null", "string"],
+                  "format": "uuid"
+                },
+                "resourceName": {
+                  "type": "string"
+                },
+                "cultureName": {
+                  "type": "string"
+                },
+                "key": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "modifiedAt": {
+                  "type": ["null", "string"],
+                  "description": "Last modification timestamp (UTC).",
+                  "format": "date-time"
+                },
+                "modifiedBy": {
+                  "type": ["null", "string"],
+                  "description": "Identifier of the user who last modified the entity."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "Creation timestamp (UTC).",
+                  "format": "date-time"
+                },
+                "createdBy": {
+                  "type": "string",
+                  "description": "Identifier of the user who created the entity."
+                },
+                "id": {
+                  "type": "string",
+                  "description": "Unique identifier of the entity.",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "totalCount": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "PaginationMeta": {
+        "required": ["defaultPageSize", "maxPageSize", "maxStreamSize", "supportsCursor"],
+        "type": "object",
+        "properties": {
+          "defaultPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxStreamSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "supportsCursor": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PresetMeta": {
+        "required": ["name", "label", "isDefault"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "QueryMetadata": {
+        "required": [
+          "columns",
+          "filterableFields",
+          "sortableFields",
+          "presetFilterGroups",
+          "quickFilters",
+          "dateFilters",
+          "groupByFields",
+          "pagination"
+        ],
+        "type": "object",
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ColumnDefinition"
+            }
+          },
+          "filterableFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterableField"
+            }
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortableField"
+            }
+          },
+          "presetFilterGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterGroupMeta"
+            }
+          },
+          "quickFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuickFilterMeta"
+            }
+          },
+          "dateFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DateFilterMeta"
+            }
+          },
+          "groupByFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupByField"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "defaultSort": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "QuickFilterMeta": {
+        "required": ["name", "label", "isDefault"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SetLocalizationOverrideRequest": {
+        "required": ["value"],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "SortableField": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Localization"
+    }
+  ]
+}

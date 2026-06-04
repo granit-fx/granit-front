@@ -1,0 +1,724 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "api-keys",
+    "version": "1"
+  },
+  "paths": {
+    "/authentication/api-keys": {
+      "get": {
+        "tags": ["API Keys"],
+        "summary": "Returns a paginated list of API keys.",
+        "description": "Lists all API keys for the current tenant with optional filters on type, environment, search term, and revocation status. The raw secret is never returned — only the prefix and last four characters for identification.",
+        "operationId": "ListApiKeys",
+        "parameters": [
+          {
+            "name": "Search",
+            "in": "query",
+            "description": "Free-text search query.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Type",
+            "in": "query",
+            "description": "Filter by type discriminator value.",
+            "schema": {
+              "$ref": "#/components/schemas/ApiKeyType"
+            }
+          },
+          {
+            "name": "Environment",
+            "in": "query",
+            "description": "Filter by environment (e.g. 'production', 'staging', 'sandbox').",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "IncludeRevoked",
+            "in": "query",
+            "description": "When true, include revoked items in the response.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "description": "1-based page index.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfApiKeyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["API Keys"],
+        "summary": "Creates a new API key. The raw secret is returned once.",
+        "description": "Generates a new API key with the specified type, environment, permissions, and optional CIDR restrictions. The caller must possess every permission being assigned (privilege escalation prevention). The response includes the full raw secret — this is the only time the secret is available. Store it securely; it cannot be retrieved later. The key is immediately active.",
+        "operationId": "CreateApiKey",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiKeyCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiKeyCreateResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authentication/api-keys/{id}": {
+      "get": {
+        "tags": ["API Keys"],
+        "summary": "Returns a single API key by ID.",
+        "description": "Returns the metadata of a single API key. The raw secret is never exposed after creation. Returns 404 if the key does not exist.",
+        "operationId": "GetApiKeyById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiKeyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authentication/api-keys/{id}/revoke": {
+      "post": {
+        "tags": ["API Keys"],
+        "summary": "Revokes an API key. The key will no longer be accepted for authentication.",
+        "description": "Permanently revokes the API key. Any subsequent authentication attempt using this key will be rejected. This operation is irreversible — use rotate instead if you need a replacement key. Returns 404 if the key does not exist.",
+        "operationId": "RevokeApiKey",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authentication/api-keys/{id}/rotate": {
+      "post": {
+        "tags": ["API Keys"],
+        "summary": "Rotates an API key: revokes the current key and creates a replacement with the same settings.",
+        "description": "Atomically revokes the existing key and creates a new one inheriting the same name, type, environment, permissions, CIDR restrictions, and expiration. The response contains the new raw secret (shown once) and both the old and new key IDs. Returns 404 if the key does not exist or is already revoked.",
+        "operationId": "RotateApiKey",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiKeyRotateResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authentication/api-keys/{id}/scopes": {
+      "put": {
+        "tags": ["API Keys"],
+        "summary": "Updates the permissions and allowed CIDR ranges for an API key.",
+        "description": "Replaces the full list of permissions and allowed CIDR ranges for the specified key. The caller must possess every permission being assigned (privilege escalation prevention). Both fields are replaced entirely (not merged). Returns 404 if the key does not exist.",
+        "operationId": "UpdateApiKeyScopes",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiKeyUpdateScopesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiKeyCreateRequest": {
+        "required": ["name", "type", "environment"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ApiKeyType"
+          },
+          "environment": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "allowedCidrs": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "expiresAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "cacheBehavior": {
+            "$ref": "#/components/schemas/CacheBehavior"
+          }
+        }
+      },
+      "ApiKeyCreateResponse": {
+        "required": [
+          "id",
+          "rawSecret",
+          "prefix",
+          "lastFourChars",
+          "name",
+          "type",
+          "environment",
+          "expiresAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "rawSecret": {
+            "type": "string"
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "lastFourChars": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ApiKeyType"
+          },
+          "environment": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          }
+        }
+      },
+      "ApiKeyResponse": {
+        "required": [
+          "id",
+          "name",
+          "type",
+          "environment",
+          "prefix",
+          "lastFourChars",
+          "permissions",
+          "allowedCidrs",
+          "expiresAt",
+          "lastUsedAt",
+          "revokedAt",
+          "cacheBehavior",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ApiKeyType"
+          },
+          "environment": {
+            "type": "string"
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "lastFourChars": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "allowedCidrs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "expiresAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "lastUsedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "revokedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "cacheBehavior": {
+            "$ref": "#/components/schemas/CacheBehavior"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ApiKeyRotateResponse": {
+        "required": ["newKeyId", "rawSecret", "prefix", "lastFourChars", "oldKeyId"],
+        "type": "object",
+        "properties": {
+          "newKeyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "rawSecret": {
+            "type": "string"
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "lastFourChars": {
+            "type": "string"
+          },
+          "oldKeyId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "ApiKeyType": {
+        "enum": ["Secret", "Publishable", "Webhook", "Ephemeral"]
+      },
+      "ApiKeyUpdateScopesRequest": {
+        "required": ["permissions", "allowedCidrs"],
+        "type": "object",
+        "properties": {
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "allowedCidrs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CacheBehavior": {
+        "enum": ["Normal", "NoCache"]
+      },
+      "PagedResultOfApiKeyResponse": {
+        "required": ["items", "totalCount", "hasMore"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiKeyResponse"
+            }
+          },
+          "totalCount": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "API Keys"
+    }
+  ]
+}

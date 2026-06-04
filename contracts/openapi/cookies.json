@@ -1,0 +1,129 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "cookies",
+    "version": "1"
+  },
+  "paths": {
+    "/cookies/config": {
+      "get": {
+        "tags": ["Cookie Consent"],
+        "summary": "Returns the cookie consent configuration for CMP setup.",
+        "description": "Returns the full list of internal cookies and third-party services registered in the application, categorized for GDPR consent management. The front-end CMP (Consent Management Platform) uses this response to render the cookie banner. Response is cached for 1 hour (Cache-Control: public, max-age=3600). Anonymous — no authentication required.",
+        "operationId": "GetCookieConsentConfig",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CookieConsentConfigResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CookieConsentConfigResponse": {
+        "required": ["cookies", "services"],
+        "type": "object",
+        "properties": {
+          "cookies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CookieDefinitionResponse"
+            }
+          },
+          "services": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ThirdPartyServiceResponse"
+            }
+          }
+        }
+      },
+      "CookieDefinitionResponse": {
+        "required": ["name", "category", "retentionDays", "purpose"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "retentionDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "purpose": {
+            "type": "string"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "ThirdPartyServiceResponse": {
+        "required": ["name", "category", "cookiePatterns"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "cookiePatterns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Cookie Consent"
+    }
+  ]
+}

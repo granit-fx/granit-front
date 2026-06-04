@@ -16,12 +16,18 @@ export interface ConformanceViolation {
 type Family = 'string' | 'number' | 'boolean' | 'array' | 'object' | 'unknown';
 
 /**
- * Brands the framework layers over primitives that OpenAPI can't express.
- * The contract is about the *family*, so a branded `ISODateString` satisfies a
- * `string` schema. Extend as new brands appear.
+ * Brands the framework layers over primitives that OpenAPI can't express
+ * (`@granit/types`). The contract is about the *family*, so a branded
+ * `ISODateString` or `EntityId<…>` satisfies a `string` schema. Local type
+ * aliases (e.g. `type FooId = EntityId<'Foo'>`, string-union enums) are
+ * resolved automatically — only cross-package brands need to be listed here.
  */
 const BRAND_FAMILY: Record<string, Family> = {
   ISODateString: 'string',
+  EntityId: 'string',
+  TenantId: 'string',
+  UserId: 'string',
+  CorrelationId: 'string',
 };
 
 interface PropShape {
@@ -54,7 +60,13 @@ export interface OpenApiDocument {
  *   - string `enum` / const                                   → `string`
  *   - `["null", T]` / `nullable: true`                        → nullable
  */
-function specFamily(schema: OpenApiSchema): PropShape {
+type SchemaMap = Record<string, OpenApiSchema>;
+
+function specFamily(
+  schema: OpenApiSchema,
+  schemas: SchemaMap,
+  seen: ReadonlySet<string> = new Set()
+): PropShape {
   let nullable = schema.nullable === true;
   let type = schema.type;
   if (Array.isArray(type)) {
@@ -62,9 +74,18 @@ function specFamily(schema: OpenApiSchema): PropShape {
     type = type.find((t) => t !== 'null');
   }
 
+  // Resolve $ref to the target schema's family (e.g. a ref to a string enum is
+  // `string`, not `object`); guard against cycles.
+  if (schema.$ref) {
+    const name = schema.$ref.split('/').pop() ?? schema.$ref;
+    const target = seen.has(name) ? undefined : schemas[name];
+    if (!target) return { family: 'object', nullable };
+    const resolved = specFamily(target, schemas, new Set([...seen, name]));
+    return { family: resolved.family, nullable: nullable || resolved.nullable };
+  }
+
   let family: Family;
-  if (schema.$ref) family = 'object';
-  else if (schema.enum) family = 'string';
+  if (schema.enum) family = 'string';
   else if (type === 'string') family = 'string';
   else if (type === 'integer' || type === 'number') family = 'number';
   else if (type === 'boolean') family = 'boolean';
@@ -75,20 +96,42 @@ function specFamily(schema: OpenApiSchema): PropShape {
   return { family, nullable };
 }
 
-function specProps(schema: OpenApiSchema): Map<string, PropShape & { required: boolean }> {
+function specProps(
+  schema: OpenApiSchema,
+  schemas: SchemaMap
+): Map<string, PropShape & { required: boolean }> {
   const required = new Set(schema.required ?? []);
   const out = new Map<string, PropShape & { required: boolean }>();
   for (const [name, prop] of Object.entries(schema.properties ?? {})) {
-    out.set(name, { ...specFamily(prop), required: required.has(name) });
+    out.set(name, { ...specFamily(prop, schemas), required: required.has(name) });
   }
   return out;
 }
 
 // --- TypeScript side -------------------------------------------------------
 
-function baseFamily(node: ts.TypeNode): Family {
+type AliasMap = ReadonlyMap<string, ts.TypeNode>;
+
+function isNullish(node: ts.TypeNode): boolean {
+  return (
+    node.kind === ts.SyntaxKind.NullKeyword ||
+    node.kind === ts.SyntaxKind.UndefinedKeyword ||
+    (ts.isLiteralTypeNode(node) && node.literal.kind === ts.SyntaxKind.NullKeyword)
+  );
+}
+
+/**
+ * Coarse family of a type node, resolving framework brands and local type
+ * aliases (`type FooId = EntityId<'Foo'>`, string-union enums) so a branded
+ * string still reads as `string`. `seen` guards against alias cycles.
+ */
+function familyOf(
+  node: ts.TypeNode,
+  aliases: AliasMap,
+  seen: ReadonlySet<string> = new Set()
+): Family {
   if (ts.isTypeOperatorNode(node) && node.operator === ts.SyntaxKind.ReadonlyKeyword) {
-    return baseFamily(node.type);
+    return familyOf(node.type, aliases, seen);
   }
   switch (node.kind) {
     case ts.SyntaxKind.StringKeyword:
@@ -107,52 +150,65 @@ function baseFamily(node: ts.TypeNode): Family {
     if (lit === ts.SyntaxKind.NumericLiteral) return 'number';
     if (lit === ts.SyntaxKind.TrueKeyword || lit === ts.SyntaxKind.FalseKeyword) return 'boolean';
   }
+  if (ts.isUnionTypeNode(node)) {
+    const base = node.types.find((t) => !isNullish(t));
+    return base ? familyOf(base, aliases, seen) : 'unknown';
+  }
+  if (ts.isIntersectionTypeNode(node)) {
+    // Brand pattern `string & { __brand }` — the primitive member wins.
+    for (const member of node.types) {
+      const fam = familyOf(member, aliases, seen);
+      if (fam !== 'object' && fam !== 'unknown') return fam;
+    }
+    return 'object';
+  }
   if (ts.isTypeReferenceNode(node)) {
     const name = node.typeName.getText();
     if (name === 'Array' || name === 'ReadonlyArray') return 'array';
-    return BRAND_FAMILY[name] ?? 'object';
+    const brand = BRAND_FAMILY[name];
+    if (brand) return brand;
+    const alias = aliases.get(name);
+    if (alias && !seen.has(name)) return familyOf(alias, aliases, new Set([...seen, name]));
+    return 'object';
   }
   if (ts.isTypeLiteralNode(node)) return 'object';
   return 'unknown';
 }
 
-function tsFamily(typeNode: ts.TypeNode): PropShape {
-  if (!ts.isUnionTypeNode(typeNode)) return { family: baseFamily(typeNode), nullable: false };
-
+function tsFamily(typeNode: ts.TypeNode, aliases: AliasMap): PropShape {
+  if (!ts.isUnionTypeNode(typeNode))
+    return { family: familyOf(typeNode, aliases), nullable: false };
   let nullable = false;
   const bases: ts.TypeNode[] = [];
   for (const member of typeNode.types) {
-    const isNull =
-      member.kind === ts.SyntaxKind.NullKeyword ||
-      (ts.isLiteralTypeNode(member) && member.literal.kind === ts.SyntaxKind.NullKeyword);
-    if (isNull || member.kind === ts.SyntaxKind.UndefinedKeyword) {
-      nullable = true;
-      continue;
-    }
-    bases.push(member);
+    if (isNullish(member)) nullable = true;
+    else bases.push(member);
   }
   const first = bases[0];
-  return { family: first ? baseFamily(first) : 'unknown', nullable };
+  return { family: first ? familyOf(first, aliases) : 'unknown', nullable };
 }
 
-function findInterface(
-  sourceText: string,
-  fileName: string,
-  typeName: string
-): ts.InterfaceDeclaration | undefined {
+interface ParsedSource {
+  iface?: ts.InterfaceDeclaration;
+  aliases: AliasMap;
+}
+
+function parseSource(sourceText: string, fileName: string, typeName: string): ParsedSource {
   const sf = ts.createSourceFile(fileName, sourceText, ts.ScriptTarget.Latest, true);
-  let found: ts.InterfaceDeclaration | undefined;
+  const aliases = new Map<string, ts.TypeNode>();
+  let iface: ts.InterfaceDeclaration | undefined;
   sf.forEachChild((node) => {
-    if (ts.isInterfaceDeclaration(node) && node.name.text === typeName) found = node;
+    if (ts.isTypeAliasDeclaration(node)) aliases.set(node.name.text, node.type);
+    else if (ts.isInterfaceDeclaration(node) && node.name.text === typeName) iface = node;
   });
-  return found;
+  return { iface, aliases };
 }
 
-function tsProps(iface: ts.InterfaceDeclaration): Map<string, PropShape> {
+function tsProps(iface: ts.InterfaceDeclaration, aliases: AliasMap): Map<string, PropShape> {
   const out = new Map<string, PropShape>();
   for (const member of iface.members) {
     if (!ts.isPropertySignature(member) || !member.type) continue;
-    const shape = tsFamily(member.type);
+    const shape = tsFamily(member.type, aliases);
     out.set(member.name.getText(), {
       family: shape.family,
       nullable: shape.nullable || member.questionToken !== undefined,
@@ -199,7 +255,7 @@ export function checkSchemaConformance(opts: CheckSchemaOptions): ConformanceVio
     ];
   }
 
-  const iface = findInterface(opts.sourceText, opts.fileName, typeName);
+  const { iface, aliases } = parseSource(opts.sourceText, opts.fileName, typeName);
   if (!iface) {
     return [
       {
@@ -211,8 +267,8 @@ export function checkSchemaConformance(opts: CheckSchemaOptions): ConformanceVio
     ];
   }
 
-  const backend = specProps(schema);
-  const front = tsProps(iface);
+  const backend = specProps(schema, opts.spec.components?.schemas ?? {});
+  const front = tsProps(iface, aliases);
 
   for (const [name, sp] of backend) {
     const tp = front.get(name);

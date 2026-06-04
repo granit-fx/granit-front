@@ -1,0 +1,470 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "features",
+    "version": "1"
+  },
+  "paths": {
+    "/features/definitions": {
+      "get": {
+        "tags": ["Features"],
+        "summary": "Returns all feature definitions grouped by name prefix.",
+        "description": "Returns all declared feature definitions, grouped by name prefix (the segment before the first dot in the feature name, e.g. 'Acme' for 'Acme.VideoConference'). Each group contains the features, their value types, defaults, and constraints. Requires the Features.Read permission.",
+        "operationId": "GetFeatureDefinitions",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FeatureGroupResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/features/values": {
+      "get": {
+        "tags": ["Features"],
+        "summary": "Returns all resolved feature values for the current context.",
+        "description": "Returns a dictionary of all feature values resolved through the Tenant → Plan → Default cascade for the current request context. Any authenticated user can read the features that apply to them.",
+        "operationId": "GetAllFeatureValues",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "example": {
+                    "key1": "value",
+                    "key2": "value"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/features/values/{name}": {
+      "get": {
+        "tags": ["Features"],
+        "summary": "Returns the resolved value for a single feature.",
+        "description": "Returns the resolved value for the specified feature in the current context. Returns 404 if the feature is not declared in any definition provider.",
+        "operationId": "GetFeatureValue",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureValueResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/features/overrides/{name}": {
+      "put": {
+        "tags": ["Features"],
+        "summary": "Sets a tenant-level feature override.",
+        "description": "Creates or updates a tenant-level override for the specified feature. The value is validated against the feature's value type (Toggle: true/false, Numeric: min/max bounds, Selection: allowed values). Returns 404 if the feature is not declared. Requires the Features.Manage permission.",
+        "operationId": "SetFeatureOverride",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetFeatureOverrideRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Features"],
+        "summary": "Deletes a tenant-level feature override.",
+        "description": "Removes the tenant-level override for the specified feature, reverting to the Plan → Default cascade. Returns 404 if the feature is not declared. Requires the Features.Manage permission.",
+        "operationId": "DeleteFeatureOverride",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FeatureDefinitionResponse": {
+        "required": [
+          "name",
+          "defaultValue",
+          "valueType",
+          "numericConstraint",
+          "selectionValues",
+          "displayName",
+          "description"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "defaultValue": {
+            "type": "string"
+          },
+          "valueType": {
+            "type": "string"
+          },
+          "numericConstraint": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/FeatureNumericConstraintResponse"
+              }
+            ]
+          },
+          "selectionValues": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "displayName": {
+            "type": ["null", "string"]
+          },
+          "description": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "FeatureGroupResponse": {
+        "required": ["name", "displayName", "features"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": ["null", "string"]
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureDefinitionResponse"
+            }
+          }
+        }
+      },
+      "FeatureNumericConstraintResponse": {
+        "required": ["min", "max"],
+        "type": "object",
+        "properties": {
+          "min": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "format": "int64"
+          },
+          "max": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "format": "int64"
+          }
+        }
+      },
+      "FeatureValueResponse": {
+        "required": ["name", "value"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "SetFeatureOverrideRequest": {
+        "required": ["value"],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Features"
+    }
+  ]
+}

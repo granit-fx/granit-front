@@ -1,0 +1,277 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "validation",
+    "version": "1"
+  },
+  "paths": {
+    "/validation/validate": {
+      "post": {
+        "tags": ["Validation"],
+        "summary": "Validates a single field value against a registered server-side validator.",
+        "description": "Looks up the validator by error code and returns the validation result. Returns 404 if no validator is registered for the specified error code. Use the GET /validators endpoint to discover available validators.",
+        "operationId": "ValidateField",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidationFieldValidateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationFieldValidateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/validation/validate-batch": {
+      "post": {
+        "tags": ["Validation"],
+        "summary": "Validates multiple field values in a single round-trip (max 20).",
+        "description": "For each field, looks up the validator by error code and returns the result. Unknown error codes return ValidatorNotFound status instead of failing the entire batch.",
+        "operationId": "ValidateFieldBatch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidationFieldValidateBatchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationFieldValidateBatchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/validation/validators": {
+      "get": {
+        "tags": ["Validation"],
+        "summary": "Lists all registered server-side validator error codes.",
+        "description": "Returns the list of error codes that can be used with the validate and validate-batch endpoints. Useful for frontend discovery: only error codes listed here can be validated in real-time.",
+        "operationId": "GetRegisteredValidators",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "ValidationFieldStatus": {
+        "enum": ["Valid", "Invalid", "ValidatorNotFound"]
+      },
+      "ValidationFieldValidateBatchRequest": {
+        "required": ["fields"],
+        "type": "object",
+        "properties": {
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationFieldValidateRequest"
+            }
+          }
+        }
+      },
+      "ValidationFieldValidateBatchResponse": {
+        "required": ["results"],
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationFieldValidateResponse"
+            }
+          }
+        }
+      },
+      "ValidationFieldValidateRequest": {
+        "required": ["errorCode", "value"],
+        "type": "object",
+        "properties": {
+          "errorCode": {
+            "type": "string"
+          },
+          "value": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "ValidationFieldValidateResponse": {
+        "required": ["errorCode", "status"],
+        "type": "object",
+        "properties": {
+          "errorCode": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ValidationFieldStatus"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Validation"
+    }
+  ]
+}

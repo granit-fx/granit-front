@@ -1,0 +1,936 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "hostnames",
+    "version": "1"
+  },
+  "paths": {
+    "/hostnames": {
+      "get": {
+        "tags": ["Hostnames"],
+        "summary": "Lists the hostnames registered for an owning resource.",
+        "description": "Returns hostnames registered for the specified owner (ownerType + ownerId pair), ordered by host name. At most maxResults entries are returned (capped at 500). An empty list is returned when the owner has no registered hostnames. Requires the Hostnames.Read permission.",
+        "operationId": "ListManagedHostnames",
+        "parameters": [
+          {
+            "name": "ownerType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ownerId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ManagedHostnameResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Hostnames"],
+        "summary": "Registers a new managed hostname.",
+        "description": "Registers a fully-qualified hostname against an owning resource. The hostname must be globally unique — a second registration for the same host, regardless of owner, is rejected with 409. Returns the created hostname record with a 201 status. Requires the Hostnames.Manage permission.",
+        "operationId": "CreateManagedHostname",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateManagedHostnameRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedHostnameResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hostnames/availability": {
+      "get": {
+        "tags": ["Hostnames"],
+        "summary": "Checks whether a hostname is available for registration.",
+        "description": "Pre-flight check: returns whether the given fully-qualified hostname is free. A hostname is unavailable when it is already registered by any owner (globally unique constraint). Use before CreateManagedHostname to give immediate feedback. Requires the Hostnames.Read permission.",
+        "operationId": "CheckHostnameAvailability",
+        "parameters": [
+          {
+            "name": "host",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostnameAvailabilityResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hostnames/{id}": {
+      "get": {
+        "tags": ["Hostnames"],
+        "summary": "Returns a managed hostname by id.",
+        "description": "Returns the full hostname record for the given id. Returns 404 when no hostname with that id exists. Requires the Hostnames.Read permission.",
+        "operationId": "GetManagedHostname",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedHostnameResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Hostnames"],
+        "summary": "Deletes a managed hostname.",
+        "description": "Removes a hostname registration, freeing the host for re-registration by any owner. Returns 204 on success, 404 when not found. Requires the Hostnames.Manage permission.",
+        "operationId": "DeleteManagedHostname",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hostnames/{id}/primary": {
+      "post": {
+        "tags": ["Hostnames"],
+        "summary": "Marks a hostname as the owner's canonical hostname.",
+        "description": "Sets the IsPrimary flag on the specified hostname. This does not automatically clear the flag on other hostnames owned by the same resource — manage that explicitly. Returns 204 on success, 404 when not found. Requires the Hostnames.Manage permission.",
+        "operationId": "SetPrimaryHostname",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Hostnames"],
+        "summary": "Clears the canonical hostname flag.",
+        "description": "Removes the IsPrimary flag from the specified hostname. Returns 204 on success, 404 when not found. Requires the Hostnames.Manage permission.",
+        "operationId": "ClearPrimaryHostname",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hostnames/{id}/verify-now": {
+      "post": {
+        "tags": ["Hostnames"],
+        "summary": "Manually triggers DNS verification for a hostname.",
+        "description": "For Verifying, Error, or Active hostnames: resets exponential backoff and re-queues the DNS check (transitions to Verifying). For Pending hostnames: initializes verification by minting the challenge token and expected DNS records, then transitions to Verifying. Returns 409 when the hostname is Pending and the platform ingress target is not configured. Returns 202 Accepted with the updated hostname record. Returns 404 when not found. Requires the Hostnames.Manage permission.",
+        "operationId": "VerifyHostnameNow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedHostnameResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hostnames/{id}/certificate-status": {
+      "post": {
+        "tags": ["Hostnames"],
+        "summary": "Reports the SSL/TLS certificate status from the edge provider.",
+        "description": "Webhook endpoint called by the edge provider (e.g. Cloudflare, AWS) when the certificate state changes. The request must carry a valid HMAC-SHA-256 signature in the configured header when Hostnames:CertificateWebhookSecret is set. Stores the new CertificateStatus and expiry date, and dispatches the appropriate integration event (HostnameCertificateSecuredEto or HostnameCertificateFailedEto). Idempotent: repeated delivery of the same status does not re-raise events. Returns 204 on success, 404 when not found. Requires the Hostnames.Certificates.Report permission.",
+        "operationId": "ReportHostnameCertificateStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportCertificateStatusRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CertificateStatus": {
+        "enum": ["Unprovisioned", "Provisioning", "Secured", "Error"]
+      },
+      "CreateManagedHostnameRequest": {
+        "required": ["host", "ownerType", "ownerId"],
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string"
+          },
+          "ownerType": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "isPrimary": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "DnsConflict": {
+        "required": ["conflictType", "details"],
+        "type": "object",
+        "properties": {
+          "conflictType": {
+            "$ref": "#/components/schemas/DnsConflictType"
+          },
+          "details": {
+            "type": "string"
+          }
+        }
+      },
+      "DnsConflictType": {
+        "enum": [
+          "UnexpectedA",
+          "UnexpectedAaaa",
+          "DivergentCname",
+          "MissingCname",
+          "MissingTxt",
+          "ResolutionFailure"
+        ]
+      },
+      "DnsRecordType": {
+        "enum": ["A", "Aaaa", "Cname", "Txt"]
+      },
+      "ExpectedDnsRecord": {
+        "required": ["recordType", "name", "value"],
+        "type": "object",
+        "properties": {
+          "recordType": {
+            "$ref": "#/components/schemas/DnsRecordType"
+          },
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "HostnameAvailabilityResponse": {
+        "required": ["host", "isAvailable"],
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string"
+          },
+          "isAvailable": {
+            "type": "boolean"
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ManagedHostnameResponse": {
+        "required": [
+          "id",
+          "host",
+          "ownerType",
+          "ownerId",
+          "tenantId",
+          "isPrimary",
+          "status",
+          "verificationToken",
+          "expectedDnsRecords",
+          "lastCheckedAt",
+          "conflicts",
+          "failedCheckCount",
+          "nextCheckAt",
+          "certificateStatus",
+          "certExpiresAt",
+          "createdAt",
+          "createdBy",
+          "modifiedAt",
+          "modifiedBy",
+          "concurrencyStamp"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "host": {
+            "type": "string"
+          },
+          "ownerType": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "isPrimary": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string"
+          },
+          "verificationToken": {
+            "type": ["null", "string"]
+          },
+          "expectedDnsRecords": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExpectedDnsRecord"
+            }
+          },
+          "lastCheckedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "conflicts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DnsConflict"
+            }
+          },
+          "failedCheckCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nextCheckAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "certificateStatus": {
+            "type": "string"
+          },
+          "certExpiresAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": ["null", "string"]
+          },
+          "concurrencyStamp": {
+            "type": "string"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "ReportCertificateStatusRequest": {
+        "required": ["status"],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/CertificateStatus"
+          },
+          "expiresAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Hostnames"
+    }
+  ]
+}
