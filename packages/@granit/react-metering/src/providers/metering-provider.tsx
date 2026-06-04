@@ -16,10 +16,13 @@ export interface MeteringConfig {
 
 /**
  * MeteringConfig after the provider has resolved `client` from
- * `config.client` or the nearest `<GranitClientProvider>`.
+ * `config.client` or the nearest `<GranitClientProvider>` and defaulted
+ * `basePath`. Both are guaranteed present, so hooks read them without a
+ * non-null assertion.
  */
 export interface ResolvedMeteringConfig extends MeteringConfig {
   readonly client: AxiosInstance;
+  readonly basePath: string;
 }
 
 export interface MeteringProviderProps {

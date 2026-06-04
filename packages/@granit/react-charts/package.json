@@ -20,8 +20,7 @@
     "@granit/react-dashboards": "workspace:*",
     "echarts": "^6.0.0",
     "echarts-for-react": "^3.0.6",
-    "react": "^19.0.0",
-    "react-i18next": "^17.0.0"
+    "react": "^19.0.0"
   },
   "publishConfig": {
     "exports": {

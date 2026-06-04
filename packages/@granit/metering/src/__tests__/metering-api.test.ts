@@ -2,28 +2,22 @@ import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  archiveMeterDefinition,
+  backfillUsageEvents,
   checkMeteringQuota,
   createMeterDefinition,
-  createMeterDefinitionsSavedView,
-  createUsageAggregatesSavedView,
-  deactivateMeterDefinition,
-  deleteMeterDefinitionsSavedView,
-  deleteUsageAggregatesSavedView,
+  deprecateMeterEvent,
   getMeterDefinition,
   getMeterDefinitionsQueryMeta,
   getUsageAggregatesQueryMeta,
   getUsageForPeriod,
   listActiveMeters,
   listMeterDefinitions,
-  listMeterDefinitionsSavedViews,
   listUsageAggregates,
-  listUsageAggregatesSavedViews,
+  publishMeterDefinition,
+  recomputeMeterUsage,
   recordUsageEvents,
-  setDefaultMeterDefinitionsSavedView,
-  setDefaultUsageAggregatesSavedView,
   updateMeterDefinition,
-  updateMeterDefinitionsSavedView,
-  updateUsageAggregatesSavedView,
 } from '../api/metering-api';
 
 import type {
@@ -36,12 +30,7 @@ import type {
   UsageAggregate,
   UsageAggregateResponse,
 } from '../types/index';
-import type {
-  CreateSavedViewRequest,
-  QueryMetadata,
-  SavedViewSummary,
-  UpdateSavedViewRequest,
-} from '@granit/query-engine';
+import type { QueryMetadata } from '@granit/query-engine';
 import type { ISODateString, TenantId } from '@granit/types';
 
 const basePath = '/metering';
@@ -52,7 +41,9 @@ const sampleMeter: MeterDefinitionResponse = {
   unit: 'calls',
   description: 'Number of API calls',
   aggregationType: 'Sum',
-  activated: true,
+  productId: null,
+  lifecycleStatus: 'Published',
+  distinctProperty: null,
 };
 
 const sampleUsage: UsageAggregateResponse = {
@@ -75,15 +66,13 @@ const sampleQuota: MeteringQuotaStatusResponse = {
 
 describe('metering-api', () => {
   describe('listActiveMeters', () => {
-    it('should GET {basePath}/meters and unwrap the paged envelope', async () => {
+    it('should GET {basePath}/meters/active and return the array', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({
-        data: { items: [sampleMeter], totalCount: 1 },
-      });
+      vi.mocked(client.get).mockResolvedValue({ data: [sampleMeter] });
 
       const result = await listActiveMeters(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/metering/meters');
+      expect(client.get).toHaveBeenCalledWith('/metering/meters/active');
       expect(result).toEqual([sampleMeter]);
     });
   });
@@ -126,6 +115,24 @@ describe('metering-api', () => {
       expect(client.post).toHaveBeenCalledWith('/metering/meters', request);
       expect(result).toEqual(sampleMeter);
     });
+
+    it('should carry productId and distinctProperty for a CountDistinct meter', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleMeter });
+
+      const request: MeterDefinitionCreateRequest = {
+        name: 'Monthly Active Users',
+        unit: 'users',
+        aggregationType: 'CountDistinct',
+        description: null,
+        productId: 'prod-1',
+        distinctProperty: 'user_id',
+      };
+
+      await createMeterDefinition(client, basePath, request);
+
+      expect(client.post).toHaveBeenCalledWith('/metering/meters', request);
+    });
   });
 
   describe('updateMeterDefinition', () => {
@@ -162,35 +169,88 @@ describe('metering-api', () => {
     });
   });
 
-  describe('deactivateMeterDefinition', () => {
-    it('should POST {basePath}/meters/{id}/deactivate', async () => {
+  describe('publishMeterDefinition', () => {
+    it('should POST {basePath}/meters/{id}/publish', async () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue({ data: undefined });
 
-      await deactivateMeterDefinition(client, basePath, 'meter-1');
+      await publishMeterDefinition(client, basePath, 'meter-1');
 
-      expect(client.post).toHaveBeenCalledWith('/metering/meters/meter-1/deactivate');
+      expect(client.post).toHaveBeenCalledWith('/metering/meters/meter-1/publish');
     });
 
     it('should encode the id', async () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue({ data: undefined });
 
-      await deactivateMeterDefinition(client, basePath, 'meter/special');
+      await publishMeterDefinition(client, basePath, 'meter/special');
 
-      expect(client.post).toHaveBeenCalledWith('/metering/meters/meter%2Fspecial/deactivate');
+      expect(client.post).toHaveBeenCalledWith('/metering/meters/meter%2Fspecial/publish');
+    });
+  });
+
+  describe('archiveMeterDefinition', () => {
+    it('should POST {basePath}/meters/{id}/archive', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: undefined });
+
+      await archiveMeterDefinition(client, basePath, 'meter-1');
+
+      expect(client.post).toHaveBeenCalledWith('/metering/meters/meter-1/archive');
+    });
+
+    it('should encode the id', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: undefined });
+
+      await archiveMeterDefinition(client, basePath, 'meter/special');
+
+      expect(client.post).toHaveBeenCalledWith('/metering/meters/meter%2Fspecial/archive');
+    });
+  });
+
+  describe('recomputeMeterUsage', () => {
+    it('should POST {basePath}/meters/{id}/recompute with the window', async () => {
+      const client = createMockClient();
+      const response = {
+        meterDefinitionId: 'meter-1',
+        windowStart: '2026-04-01T00:00:00Z',
+        windowEnd: '2026-04-30T00:00:00Z',
+        eventsScanned: 1200,
+        aggregatesRebuilt: 30,
+        durationMilliseconds: 84,
+      };
+      vi.mocked(client.post).mockResolvedValue({ data: response });
+
+      const request = { from: '2026-04-01T00:00:00Z', to: '2026-04-30T00:00:00Z' };
+      const result = await recomputeMeterUsage(client, basePath, 'meter-1', request);
+
+      expect(client.post).toHaveBeenCalledWith('/metering/meters/meter-1/recompute', request);
+      expect(result).toEqual(response);
     });
   });
 
   describe('getUsageForPeriod', () => {
-    it('should GET {basePath}/usage', async () => {
+    it('should GET {basePath}/usage with the meterId and period bounds', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [sampleUsage] });
+      vi.mocked(client.get).mockResolvedValue({ data: sampleUsage });
 
-      const result = await getUsageForPeriod(client, basePath);
+      const result = await getUsageForPeriod(
+        client,
+        basePath,
+        'meter-1',
+        '2026-04-01T00:00:00Z',
+        '2026-05-01T00:00:00Z'
+      );
 
-      expect(client.get).toHaveBeenCalledWith('/metering/usage');
-      expect(result).toEqual([sampleUsage]);
+      expect(client.get).toHaveBeenCalledWith('/metering/usage', {
+        params: {
+          meterId: 'meter-1',
+          periodStart: '2026-04-01T00:00:00Z',
+          periodEnd: '2026-05-01T00:00:00Z',
+        },
+      });
+      expect(result).toEqual(sampleUsage);
     });
   });
 
@@ -216,37 +276,90 @@ describe('metering-api', () => {
   });
 
   describe('recordUsageEvents', () => {
-    it('should POST {basePath}/events', async () => {
+    const request: RecordUsageRequest = {
+      events: [
+        {
+          meterDefinitionId: 'meter-1',
+          idempotencyKey: 'key-1',
+          quantity: 1,
+          timestamp: '2026-04-04T12:00:00Z',
+          metadata: null,
+        },
+      ],
+    };
+
+    it('should POST {basePath}/events without a header when no key is supplied', async () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue({ data: undefined });
 
-      const request: RecordUsageRequest = {
+      await recordUsageEvents(client, basePath, request);
+
+      expect(client.post).toHaveBeenCalledWith('/metering/events', request, undefined);
+    });
+
+    it('should send the Idempotency-Key header when supplied', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: undefined });
+
+      await recordUsageEvents(client, basePath, request, 'batch-key-1');
+
+      expect(client.post).toHaveBeenCalledWith('/metering/events', request, {
+        headers: { 'Idempotency-Key': 'batch-key-1' },
+      });
+    });
+  });
+
+  describe('backfillUsageEvents', () => {
+    it('should POST {basePath}/events/backfill', async () => {
+      const client = createMockClient();
+      const response = { eventsAccepted: 2, metersAffected: 1, aggregatesRebuilt: 3 };
+      vi.mocked(client.post).mockResolvedValue({ data: response });
+
+      const request = {
         events: [
           {
             meterDefinitionId: 'meter-1',
             idempotencyKey: 'key-1',
-            quantity: 1,
-            timestamp: '2026-04-04T12:00:00Z',
+            quantity: 5,
+            timestamp: '2026-01-04T12:00:00Z',
             metadata: null,
           },
         ],
       };
 
-      await recordUsageEvents(client, basePath, request);
+      const result = await backfillUsageEvents(client, basePath, request);
 
-      expect(client.post).toHaveBeenCalledWith('/metering/events', request);
+      expect(client.post).toHaveBeenCalledWith('/metering/events/backfill', request, undefined);
+      expect(result).toEqual(response);
+    });
+  });
+
+  describe('deprecateMeterEvent', () => {
+    it('should POST {basePath}/events/{id}/deprecate', async () => {
+      const client = createMockClient();
+      const response = {
+        eventId: 'evt-1',
+        meterDefinitionId: 'meter-1',
+        deprecatedAt: '2026-04-04T12:00:00Z',
+        aggregatesRebuilt: 1,
+      };
+      vi.mocked(client.post).mockResolvedValue({ data: response });
+
+      const request = { reason: 'Duplicate ingestion' };
+      const result = await deprecateMeterEvent(client, basePath, 'evt-1', request);
+
+      expect(client.post).toHaveBeenCalledWith('/metering/events/evt-1/deprecate', request);
+      expect(result).toEqual(response);
     });
   });
 
   it('should work with custom basePath', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue({
-      data: { items: [sampleMeter], totalCount: 1 },
-    });
+    vi.mocked(client.get).mockResolvedValue({ data: [sampleMeter] });
 
     await listActiveMeters(client, '/custom/metering');
 
-    expect(client.get).toHaveBeenCalledWith('/custom/metering/meters');
+    expect(client.get).toHaveBeenCalledWith('/custom/metering/meters/active');
   });
 });
 
@@ -259,10 +372,15 @@ const sampleMeterDefinition: MeterDefinition = {
   tenantId: 'tenant-1' as TenantId,
   name: 'API Calls',
   unit: 'calls',
+  description: null,
   aggregationType: 'Sum',
-  activated: true,
+  distinctProperty: null,
+  lifecycleStatus: 'Published',
+  productId: null,
   createdAt: '2026-04-01T00:00:00Z' as ISODateString,
-  modifiedAt: '2026-04-01T00:00:00Z' as ISODateString,
+  createdBy: 'user-1',
+  modifiedAt: null,
+  modifiedBy: null,
 };
 
 const sampleUsageAggregate: UsageAggregate = {
@@ -276,13 +394,6 @@ const sampleUsageAggregate: UsageAggregate = {
   eventCount: 30,
 };
 
-const sampleSavedView: SavedViewSummary = {
-  id: 'sv-1',
-  name: 'My view',
-  isShared: false,
-  isDefault: false,
-};
-
 const sampleMeta: QueryMetadata = {
   columns: [],
   filterableFields: [],
@@ -290,7 +401,7 @@ const sampleMeta: QueryMetadata = {
 
 describe('metering-api / QueryEngine — meter definitions', () => {
   describe('listMeterDefinitions', () => {
-    it('should GET {basePath}/meter-definitions with serialized params', async () => {
+    it('should GET {basePath}/meters with serialized params', async () => {
       const client = createMockClient();
       const page = { items: [sampleMeterDefinition], totalCount: 1 };
       vi.mocked(client.get).mockResolvedValue({ data: page });
@@ -302,102 +413,31 @@ describe('metering-api / QueryEngine — meter definitions', () => {
 
       expect(client.get).toHaveBeenCalledTimes(1);
       const url = vi.mocked(client.get).mock.calls[0]?.[0] as string;
-      expect(url).toContain('/metering/meter-definitions');
+      expect(url).toContain('/metering/meters');
       expect(url).toContain('page=1');
       expect(url).toContain('pageSize=25');
       expect(result).toEqual(page);
     });
 
-    it('should GET {basePath}/meter-definitions with no query string when params omitted', async () => {
+    it('should GET {basePath}/meters with no query string when params omitted', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: { items: [], totalCount: 0 } });
 
       await listMeterDefinitions(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/metering/meter-definitions', undefined);
+      expect(client.get).toHaveBeenCalledWith('/metering/meters', undefined);
     });
   });
 
   describe('getMeterDefinitionsQueryMeta', () => {
-    it('should GET {basePath}/meter-definitions/meta', async () => {
+    it('should GET {basePath}/meters/meta', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: sampleMeta });
 
       const result = await getMeterDefinitionsQueryMeta(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/metering/meter-definitions/meta', undefined);
+      expect(client.get).toHaveBeenCalledWith('/metering/meters/meta', undefined);
       expect(result).toEqual(sampleMeta);
-    });
-  });
-
-  describe('listMeterDefinitionsSavedViews', () => {
-    it('should GET {basePath}/meter-definitions/saved-views', async () => {
-      const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [sampleSavedView] });
-
-      const result = await listMeterDefinitionsSavedViews(client, basePath);
-
-      expect(client.get).toHaveBeenCalledWith('/metering/meter-definitions/saved-views');
-      expect(result).toEqual([sampleSavedView]);
-    });
-  });
-
-  describe('createMeterDefinitionsSavedView', () => {
-    it('should POST {basePath}/meter-definitions/saved-views', async () => {
-      const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValue({ data: sampleSavedView });
-      const request: CreateSavedViewRequest = {
-        name: 'My view',
-        isShared: false,
-        isDefault: false,
-      };
-
-      const result = await createMeterDefinitionsSavedView(client, basePath, request);
-
-      expect(client.post).toHaveBeenCalledWith('/metering/meter-definitions/saved-views', request);
-      expect(result).toEqual(sampleSavedView);
-    });
-  });
-
-  describe('updateMeterDefinitionsSavedView', () => {
-    it('should PUT {basePath}/meter-definitions/saved-views/{id}', async () => {
-      const client = createMockClient();
-      vi.mocked(client.put).mockResolvedValue({ data: undefined });
-      const request: UpdateSavedViewRequest = {
-        name: 'Renamed',
-        isShared: true,
-      };
-
-      await updateMeterDefinitionsSavedView(client, basePath, 'sv-1', request);
-
-      expect(client.put).toHaveBeenCalledWith(
-        '/metering/meter-definitions/saved-views/sv-1',
-        request
-      );
-    });
-  });
-
-  describe('deleteMeterDefinitionsSavedView', () => {
-    it('should DELETE {basePath}/meter-definitions/saved-views/{id}', async () => {
-      const client = createMockClient();
-      vi.mocked(client.delete).mockResolvedValue({ data: undefined });
-
-      await deleteMeterDefinitionsSavedView(client, basePath, 'sv-1');
-
-      expect(client.delete).toHaveBeenCalledWith('/metering/meter-definitions/saved-views/sv-1');
-    });
-  });
-
-  describe('setDefaultMeterDefinitionsSavedView', () => {
-    it('should POST {basePath}/meter-definitions/saved-views/{id}/set-default', async () => {
-      const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValue({ data: undefined });
-
-      await setDefaultMeterDefinitionsSavedView(client, basePath, 'sv-1');
-
-      expect(client.post).toHaveBeenCalledWith(
-        '/metering/meter-definitions/saved-views/sv-1/set-default'
-      );
     });
   });
 });
@@ -441,77 +481,6 @@ describe('metering-api / QueryEngine — usage aggregates', () => {
 
       expect(client.get).toHaveBeenCalledWith('/metering/usage-aggregates/meta', undefined);
       expect(result).toEqual(sampleMeta);
-    });
-  });
-
-  describe('listUsageAggregatesSavedViews', () => {
-    it('should GET {basePath}/usage-aggregates/saved-views', async () => {
-      const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [sampleSavedView] });
-
-      const result = await listUsageAggregatesSavedViews(client, basePath);
-
-      expect(client.get).toHaveBeenCalledWith('/metering/usage-aggregates/saved-views');
-      expect(result).toEqual([sampleSavedView]);
-    });
-  });
-
-  describe('createUsageAggregatesSavedView', () => {
-    it('should POST {basePath}/usage-aggregates/saved-views', async () => {
-      const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValue({ data: sampleSavedView });
-      const request: CreateSavedViewRequest = {
-        name: 'My view',
-        isShared: false,
-        isDefault: false,
-      };
-
-      const result = await createUsageAggregatesSavedView(client, basePath, request);
-
-      expect(client.post).toHaveBeenCalledWith('/metering/usage-aggregates/saved-views', request);
-      expect(result).toEqual(sampleSavedView);
-    });
-  });
-
-  describe('updateUsageAggregatesSavedView', () => {
-    it('should PUT {basePath}/usage-aggregates/saved-views/{id}', async () => {
-      const client = createMockClient();
-      vi.mocked(client.put).mockResolvedValue({ data: undefined });
-      const request: UpdateSavedViewRequest = {
-        name: 'Renamed',
-        isShared: true,
-      };
-
-      await updateUsageAggregatesSavedView(client, basePath, 'sv-1', request);
-
-      expect(client.put).toHaveBeenCalledWith(
-        '/metering/usage-aggregates/saved-views/sv-1',
-        request
-      );
-    });
-  });
-
-  describe('deleteUsageAggregatesSavedView', () => {
-    it('should DELETE {basePath}/usage-aggregates/saved-views/{id}', async () => {
-      const client = createMockClient();
-      vi.mocked(client.delete).mockResolvedValue({ data: undefined });
-
-      await deleteUsageAggregatesSavedView(client, basePath, 'sv-1');
-
-      expect(client.delete).toHaveBeenCalledWith('/metering/usage-aggregates/saved-views/sv-1');
-    });
-  });
-
-  describe('setDefaultUsageAggregatesSavedView', () => {
-    it('should POST {basePath}/usage-aggregates/saved-views/{id}/set-default', async () => {
-      const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValue({ data: undefined });
-
-      await setDefaultUsageAggregatesSavedView(client, basePath, 'sv-1');
-
-      expect(client.post).toHaveBeenCalledWith(
-        '/metering/usage-aggregates/saved-views/sv-1/set-default'
-      );
     });
   });
 

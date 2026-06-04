@@ -1,7 +1,7 @@
 import {
-  BOOLEAN_OPERATORS,
   DATE_OPERATORS,
   ENUM_OPERATORS,
+  NUMBER_OPERATORS,
   STRING_OPERATORS,
 } from '@granit/query-engine';
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
@@ -11,14 +11,22 @@ import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-import { sampleMeters, sampleQuota, sampleUsage } from './data';
+import {
+  sampleMeterDefinitions,
+  sampleMeters,
+  sampleQuota,
+  sampleUsage,
+  sampleUsageAggregates,
+} from './data';
 
 import type { MeterDefinitionResponse } from '@granit/metering';
 import type { QueryMetadata } from '@granit/query-engine';
 
-const AGGREGATION_TYPES = ['Sum', 'Count', 'Max', 'Last'];
+const AGGREGATION_TYPES = ['Sum', 'Max', 'Count', 'Last', 'CountDistinct'];
+const LIFECYCLE_STATES = ['Draft', 'Published', 'Archived'];
+const AGGREGATION_PERIODS = ['Hourly', 'Daily', 'BillingPeriod'];
 
-/** Mock /meta payload for the meters resource. */
+/** Mock /meta payload for the meter admin grid (`GET /meters`). */
 export const meterQueryMetadata: QueryMetadata = {
   columns: [
     {
@@ -58,9 +66,9 @@ export const meterQueryMetadata: QueryMetadata = {
       isVisible: true,
     },
     {
-      name: 'activated',
-      label: 'Active',
-      type: 'Boolean',
+      name: 'lifecycleStatus',
+      label: 'Status',
+      type: 'String',
       order: 4,
       isSortable: true,
       isFilterable: true,
@@ -103,7 +111,12 @@ export const meterQueryMetadata: QueryMetadata = {
       operators: ENUM_OPERATORS,
       enumValues: AGGREGATION_TYPES,
     },
-    { name: 'activated', type: 'Boolean', operators: BOOLEAN_OPERATORS },
+    {
+      name: 'lifecycleStatus',
+      type: 'String',
+      operators: ENUM_OPERATORS,
+      enumValues: LIFECYCLE_STATES,
+    },
     { name: 'tenantId', type: 'Guid', operators: ENUM_OPERATORS },
     { name: 'createdAt', type: 'DateTime', operators: DATE_OPERATORS },
     { name: 'modifiedAt', type: 'DateTime', operators: DATE_OPERATORS },
@@ -112,18 +125,20 @@ export const meterQueryMetadata: QueryMetadata = {
     { name: 'name' },
     { name: 'unit' },
     { name: 'aggregationType' },
-    { name: 'activated' },
+    { name: 'lifecycleStatus' },
     { name: 'createdAt' },
     { name: 'modifiedAt' },
   ],
   presetFilterGroups: [],
   quickFilters: [
-    { name: 'active', label: 'Active', isDefault: true },
-    { name: 'inactive', label: 'Inactive', isDefault: false },
+    { name: 'published', label: 'Published', isDefault: true },
+    { name: 'draft', label: 'Draft', isDefault: false },
+    { name: 'archived', label: 'Archived', isDefault: false },
   ],
   dateFilters: [],
   groupByFields: [
     { name: 'aggregationType', type: 'String' },
+    { name: 'lifecycleStatus', type: 'String' },
     { name: 'unit', type: 'String' },
   ],
   pagination: {
@@ -135,9 +150,115 @@ export const meterQueryMetadata: QueryMetadata = {
   defaultSort: '-createdAt',
 };
 
+/** Mock /meta payload for the usage-aggregate admin grid. */
+export const usageAggregateQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'meterDefinitionId',
+      label: 'Meter',
+      type: 'Guid',
+      order: 0,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'period',
+      label: 'Period',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'periodStart',
+      label: 'Period start',
+      type: 'DateTime',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'periodEnd',
+      label: 'Period end',
+      type: 'DateTime',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'aggregatedValue',
+      label: 'Value',
+      type: 'Decimal',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'eventCount',
+      label: 'Events',
+      type: 'Int64',
+      order: 5,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'tenantId',
+      label: 'Tenant',
+      type: 'Guid',
+      order: 6,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: false,
+    },
+  ],
+  filterableFields: [
+    { name: 'meterDefinitionId', type: 'Guid', operators: ENUM_OPERATORS },
+    {
+      name: 'period',
+      type: 'String',
+      operators: ENUM_OPERATORS,
+      enumValues: AGGREGATION_PERIODS,
+    },
+    { name: 'periodStart', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'periodEnd', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'aggregatedValue', type: 'Decimal', operators: NUMBER_OPERATORS },
+    { name: 'eventCount', type: 'Int64', operators: NUMBER_OPERATORS },
+    { name: 'tenantId', type: 'Guid', operators: ENUM_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'meterDefinitionId' },
+    { name: 'period' },
+    { name: 'periodStart' },
+    { name: 'periodEnd' },
+    { name: 'aggregatedValue' },
+    { name: 'eventCount' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [],
+  dateFilters: [],
+  groupByFields: [
+    { name: 'meterDefinitionId', type: 'Guid' },
+    { name: 'period', type: 'String' },
+  ],
+  pagination: {
+    defaultPageSize: 25,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: '-periodStart',
+};
+
 /**
  * Create stateful MSW handlers for metering endpoints.
- * Meter mutations (create/update/deactivate) persist in the in-memory list.
+ * Meter mutations (create / update / publish / archive) persist in the
+ * in-memory list.
  *
  * @param baseUrl - API base path (default: `/api/v1/metering`)
  */
@@ -145,38 +266,48 @@ export function createMeteringHandlers(baseUrl = DEFAULT_BASE_PATH) {
   let meters = [...sampleMeters];
 
   return [
-    // GET /meters/meta — query metadata
+    // GET /meters/meta — QueryEngine metadata (registered before /meters/:id)
     createQueryMetaHandler(`${baseUrl}/meters`, meterQueryMetadata),
 
-    // GET list active meters — QueryEngine-backed paged envelope
-    http.get(`${baseUrl}/meters`, () => {
-      const items = meters.filter((m) => m.activated);
-      return HttpResponse.json({ items, totalCount: items.length });
+    // GET /meters/active — Published catalog (plain array, no envelope)
+    http.get(`${baseUrl}/meters/active`, () => {
+      const active = meters.filter((m) => m.lifecycleStatus === 'Published');
+      return HttpResponse.json(active);
     }),
 
-    // GET single meter by ID
+    // GET /meters — QueryEngine admin grid (paged)
+    http.get(`${baseUrl}/meters`, () => {
+      return HttpResponse.json({
+        items: sampleMeterDefinitions,
+        totalCount: sampleMeterDefinitions.length,
+      });
+    }),
+
+    // GET /meters/:id — single meter
     http.get(`${baseUrl}/meters/:id`, ({ params }) => {
       const meter = meters.find((m) => m.id === params.id);
       if (!meter) return notFound();
       return HttpResponse.json(meter);
     }),
 
-    // POST create meter
+    // POST /meters — create (starts in Draft)
     http.post(`${baseUrl}/meters`, async ({ request }) => {
       const body = (await request.json()) as Partial<MeterDefinitionResponse>;
       const newMeter: MeterDefinitionResponse = {
         id: toEntityId<'MeterDefinition'>(`mtr_${String(meters.length + 1).padStart(3, '0')}`),
         name: body.name ?? '',
-        description: body.description ?? '',
+        description: body.description ?? null,
         aggregationType: body.aggregationType ?? 'Count',
         unit: body.unit ?? '',
-        activated: true,
+        productId: body.productId ?? null,
+        lifecycleStatus: 'Draft',
+        distinctProperty: body.distinctProperty ?? null,
       };
       meters = [...meters, newMeter];
       return HttpResponse.json(newMeter, { status: 201 });
     }),
 
-    // PUT update meter
+    // PUT /meters/:id — update editable fields
     http.put(`${baseUrl}/meters/:id`, async ({ params, request }) => {
       const id = params.id as string;
       const body = (await request.json()) as Partial<MeterDefinitionResponse>;
@@ -192,34 +323,53 @@ export function createMeteringHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return HttpResponse.json(updated);
     }),
 
-    // DELETE deactivate meter
-    http.delete(`${baseUrl}/meters/:id`, ({ params }) => {
+    // POST /meters/:id/publish — Draft → Published
+    http.post(`${baseUrl}/meters/:id/publish`, ({ params }) => {
       const id = params.id as string;
-      const index = meters.findIndex((m) => m.id === id);
-      if (index === -1) return notFound();
-
-      meters = meters.map((m) => (m.id === id ? { ...m, activated: false } : m));
+      const existing = meters.find((m) => m.id === id);
+      if (!existing) return notFound();
+      meters = meters.map((m) => (m.id === id ? { ...m, lifecycleStatus: 'Published' } : m));
       return noContent();
     }),
 
-    // GET usage aggregate for a meter
-    http.get(`${baseUrl}/usage/:id`, ({ params }) => {
-      const usage = {
-        ...sampleUsage,
-        meterDefinitionId: toEntityId<'MeterDefinition'>(params.id as string),
-      };
-      return HttpResponse.json(usage);
+    // POST /meters/:id/archive — Published → Archived
+    http.post(`${baseUrl}/meters/:id/archive`, ({ params }) => {
+      const id = params.id as string;
+      const existing = meters.find((m) => m.id === id);
+      if (!existing) return notFound();
+      meters = meters.map((m) => (m.id === id ? { ...m, lifecycleStatus: 'Archived' } : m));
+      return noContent();
     }),
 
-    // GET quota status for a meter
-    http.get(`${baseUrl}/quota/:id`, () => {
+    // GET /usage?meterId&periodStart&periodEnd — single aggregate
+    http.get(`${baseUrl}/usage`, ({ request }) => {
+      const meterId = new URL(request.url).searchParams.get('meterId');
+      return HttpResponse.json({
+        ...sampleUsage,
+        meterDefinitionId: toEntityId<'MeterDefinition'>(meterId ?? sampleUsage.meterDefinitionId),
+      });
+    }),
+
+    // GET /quota/:meterId — quota status
+    http.get(`${baseUrl}/quota/:meterId`, () => {
       return HttpResponse.json({ ...sampleQuota });
     }),
 
-    // POST record usage events
+    // POST /events — record usage events
     http.post(`${baseUrl}/events`, async ({ request }) => {
       await request.json();
-      return HttpResponse.json({ recorded: true }, { status: 201 });
+      return noContent();
+    }),
+
+    // GET /usage-aggregates/meta — QueryEngine metadata
+    createQueryMetaHandler(`${baseUrl}/usage-aggregates`, usageAggregateQueryMetadata),
+
+    // GET /usage-aggregates — QueryEngine admin grid (paged)
+    http.get(`${baseUrl}/usage-aggregates`, () => {
+      return HttpResponse.json({
+        items: sampleUsageAggregates,
+        totalCount: sampleUsageAggregates.length,
+      });
     }),
   ];
 }

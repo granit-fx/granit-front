@@ -7,10 +7,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   useActiveMeters,
+  useArchiveMeterDefinition,
   useCreateMeterDefinition,
-  useDeactivateMeterDefinition,
   useMeterDefinition,
   useMeteringQuota,
+  usePublishMeterDefinition,
   useRecordUsageEvents,
   useUpdateMeterDefinition,
   useUsageForPeriod,
@@ -48,7 +49,9 @@ const sampleMeter: MeterDefinitionResponse = {
   unit: 'calls',
   description: 'Number of API calls',
   aggregationType: 'Sum',
-  activated: true,
+  productId: null,
+  lifecycleStatus: 'Published',
+  distinctProperty: null,
 };
 
 const sampleUsage: UsageAggregateResponse = {
@@ -79,33 +82,29 @@ describe('use-metering', () => {
   });
 
   describe('useActiveMeters', () => {
-    it('fetches active meters with default basePath', async () => {
+    it('fetches the active catalog with default basePath', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({
-        data: { items: [sampleMeter], totalCount: 1 },
-      });
+      vi.mocked(client.get).mockResolvedValue({ data: [sampleMeter] });
 
       const { result } = renderHook(() => useActiveMeters(), {
         wrapper: createWrapper(client),
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/v1/metering/meters');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/metering/meters/active');
       expect(result.current.data).toEqual([sampleMeter]);
     });
 
     it('uses custom basePath', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({
-        data: { items: [], totalCount: 0 },
-      });
+      vi.mocked(client.get).mockResolvedValue({ data: [] });
 
       const { result } = renderHook(() => useActiveMeters(), {
         wrapper: createWrapper(client, '/custom/metering'),
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/custom/metering/meters');
+      expect(client.get).toHaveBeenCalledWith('/custom/metering/meters/active');
     });
   });
 
@@ -135,17 +134,40 @@ describe('use-metering', () => {
   });
 
   describe('useUsageForPeriod', () => {
-    it('fetches usage data', async () => {
+    it('fetches usage for the given meter and period', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [sampleUsage] });
+      vi.mocked(client.get).mockResolvedValue({ data: sampleUsage });
 
-      const { result } = renderHook(() => useUsageForPeriod(), {
+      const { result } = renderHook(
+        () =>
+          useUsageForPeriod({
+            meterId: 'meter-1',
+            periodStart: '2026-04-01T00:00:00Z',
+            periodEnd: '2026-05-01T00:00:00Z',
+          }),
+        { wrapper: createWrapper(client) }
+      );
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.get).toHaveBeenCalledWith('/api/v1/metering/usage', {
+        params: {
+          meterId: 'meter-1',
+          periodStart: '2026-04-01T00:00:00Z',
+          periodEnd: '2026-05-01T00:00:00Z',
+        },
+      });
+      expect(result.current.data).toEqual(sampleUsage);
+    });
+
+    it('is disabled when params is null', () => {
+      const client = createMockClient();
+
+      const { result } = renderHook(() => useUsageForPeriod(null), {
         wrapper: createWrapper(client),
       });
 
-      await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/v1/metering/usage');
-      expect(result.current.data).toEqual([sampleUsage]);
+      expect(result.current.fetchStatus).toBe('idle');
+      expect(client.get).not.toHaveBeenCalled();
     });
   });
 
@@ -224,24 +246,40 @@ describe('use-metering', () => {
     });
   });
 
-  describe('useDeactivateMeterDefinition', () => {
-    it('deactivates a meter via POST', async () => {
+  describe('usePublishMeterDefinition', () => {
+    it('publishes a meter via POST', async () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue({ data: undefined });
 
-      const { result } = renderHook(() => useDeactivateMeterDefinition(), {
+      const { result } = renderHook(() => usePublishMeterDefinition(), {
         wrapper: createWrapper(client),
       });
 
       result.current.mutate('meter-1');
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith('/api/v1/metering/meters/meter-1/deactivate');
+      expect(client.post).toHaveBeenCalledWith('/api/v1/metering/meters/meter-1/publish');
+    });
+  });
+
+  describe('useArchiveMeterDefinition', () => {
+    it('archives a meter via POST', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: undefined });
+
+      const { result } = renderHook(() => useArchiveMeterDefinition(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate('meter-1');
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.post).toHaveBeenCalledWith('/api/v1/metering/meters/meter-1/archive');
     });
   });
 
   describe('useRecordUsageEvents', () => {
-    it('records events via POST', async () => {
+    it('records events via POST with an Idempotency-Key header', async () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue({ data: undefined });
 
@@ -264,7 +302,9 @@ describe('use-metering', () => {
       result.current.mutate(request);
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith('/api/v1/metering/events', request);
+      expect(client.post).toHaveBeenCalledWith('/api/v1/metering/events', request, {
+        headers: { 'Idempotency-Key': expect.any(String) },
+      });
     });
   });
 

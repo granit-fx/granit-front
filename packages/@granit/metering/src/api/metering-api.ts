@@ -1,14 +1,10 @@
-import {
-  createSavedView,
-  deleteSavedView,
-  getPage,
-  getQueryMeta,
-  listSavedViews,
-  setDefaultSavedView,
-  updateSavedView,
-} from '@granit/query-engine';
+import { getPage, getQueryMeta } from '@granit/query-engine';
 
 import type {
+  BackfillUsageRequest,
+  BackfillUsageResponse,
+  DeprecateEventRequest,
+  DeprecateEventResponse,
   MeterDefinition,
   MeterDefinitionCreateRequest,
   MeterDefinitionListParams,
@@ -16,6 +12,8 @@ import type {
   MeterDefinitionResponse,
   MeterDefinitionUpdateRequest,
   MeteringQuotaStatusResponse,
+  RecomputeUsageRequest,
+  RecomputeUsageResponse,
   RecordUsageRequest,
   UsageAggregate,
   UsageAggregateListParams,
@@ -23,37 +21,39 @@ import type {
   UsageAggregateResponse,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
-import type {
-  CreateSavedViewRequest,
-  PagedResult,
-  QueryMetadata,
-  SavedViewSummary,
-  UpdateSavedViewRequest,
-} from '@granit/query-engine';
+import type { QueryMetadata } from '@granit/query-engine';
 
-const METER_DEFINITIONS_SUBPATH = 'meter-definitions';
+const METERS_SUBPATH = 'meters';
 const USAGE_AGGREGATES_SUBPATH = 'usage-aggregates';
 
-function meterDefinitionsPath(basePath: string): string {
-  return `${basePath}/${METER_DEFINITIONS_SUBPATH}`;
+function metersQueryPath(basePath: string): string {
+  return `${basePath}/${METERS_SUBPATH}`;
 }
 
 function usageAggregatesPath(basePath: string): string {
   return `${basePath}/${USAGE_AGGREGATES_SUBPATH}`;
 }
 
+function idempotencyConfig(idempotencyKey: string | undefined) {
+  return idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : undefined;
+}
+
+// ---------------------------------------------------------------------------
+// Meter definitions — catalog + CRUD + lifecycle
+// ---------------------------------------------------------------------------
+
 /**
- * List all active meter definitions.
+ * List the active meter catalog (Published meters only).
  *
- * `GET {basePath}/meters` — QueryEngine-backed, returns a paged envelope which
- * is unwrapped to a flat array for callers that just want the active set.
+ * `GET {basePath}/meters/active` — returns a plain array (no paged envelope).
+ * For the admin grid with full lifecycle visibility, use {@link listMeterDefinitions}.
  */
 export async function listActiveMeters(
   client: AxiosInstance,
   basePath: string
 ): Promise<readonly MeterDefinitionResponse[]> {
-  const response = await client.get<PagedResult<MeterDefinitionResponse>>(`${basePath}/meters`);
-  return response.data.items;
+  const response = await client.get<readonly MeterDefinitionResponse[]>(`${basePath}/meters/active`);
+  return response.data;
 }
 
 /**
@@ -73,7 +73,8 @@ export async function getMeterDefinition(
 }
 
 /**
- * Create a new meter definition.
+ * Create a new meter definition. The meter starts in `Draft` status and must
+ * be published before it accepts events.
  *
  * `POST {basePath}/meters`
  */
@@ -87,7 +88,8 @@ export async function createMeterDefinition(
 }
 
 /**
- * Update an existing meter definition.
+ * Update a `Draft` meter definition. The aggregation type cannot be changed
+ * after creation.
  *
  * `PUT {basePath}/meters/{id}`
  */
@@ -105,28 +107,72 @@ export async function updateMeterDefinition(
 }
 
 /**
- * Deactivate a meter definition.
+ * Publish a `Draft` meter definition (`Draft → Published`). Only `Published`
+ * meters accept ingestion.
  *
- * `POST {basePath}/meters/{id}/deactivate`
+ * `POST {basePath}/meters/{id}/publish`
  */
-export async function deactivateMeterDefinition(
+export async function publishMeterDefinition(
   client: AxiosInstance,
   basePath: string,
   id: string
 ): Promise<void> {
-  await client.post(`${basePath}/meters/${encodeURIComponent(id)}/deactivate`);
+  await client.post(`${basePath}/meters/${encodeURIComponent(id)}/publish`);
 }
 
 /**
- * Get aggregated usage for the current period.
+ * Archive a `Published` meter definition (`Published → Archived`). Existing
+ * aggregates are preserved; new ingestion is rejected.
  *
- * `GET {basePath}/usage`
+ * `POST {basePath}/meters/{id}/archive`
+ */
+export async function archiveMeterDefinition(
+  client: AxiosInstance,
+  basePath: string,
+  id: string
+): Promise<void> {
+  await client.post(`${basePath}/meters/${encodeURIComponent(id)}/archive`);
+}
+
+/**
+ * Recompute usage aggregates for a meter over the requested `[from, to)` window.
+ *
+ * `POST {basePath}/meters/{id}/recompute`
+ */
+export async function recomputeMeterUsage(
+  client: AxiosInstance,
+  basePath: string,
+  id: string,
+  request: RecomputeUsageRequest
+): Promise<RecomputeUsageResponse> {
+  const response = await client.post<RecomputeUsageResponse>(
+    `${basePath}/meters/${encodeURIComponent(id)}/recompute`,
+    request
+  );
+  return response.data;
+}
+
+// ---------------------------------------------------------------------------
+// Usage & quota
+// ---------------------------------------------------------------------------
+
+/**
+ * Get the aggregated usage for a meter over a specific period. Returns the
+ * single pre-computed aggregate matching the exact period bounds (the request
+ * fails with 404 when none exists).
+ *
+ * `GET {basePath}/usage?meterId&periodStart&periodEnd`
  */
 export async function getUsageForPeriod(
   client: AxiosInstance,
-  basePath: string
-): Promise<readonly UsageAggregateResponse[]> {
-  const response = await client.get<readonly UsageAggregateResponse[]>(`${basePath}/usage`);
+  basePath: string,
+  meterId: string,
+  periodStart: string,
+  periodEnd: string
+): Promise<UsageAggregateResponse> {
+  const response = await client.get<UsageAggregateResponse>(`${basePath}/usage`, {
+    params: { meterId, periodStart, periodEnd },
+  });
   return response.data;
 }
 
@@ -146,112 +192,92 @@ export async function checkMeteringQuota(
   return response.data;
 }
 
+// ---------------------------------------------------------------------------
+// Events
+// ---------------------------------------------------------------------------
+
 /**
- * Record one or more usage events.
+ * Record one or more usage events. The backend enforces network-level
+ * idempotency via the `Idempotency-Key` header — pass `idempotencyKey` to
+ * protect against batch replay.
  *
  * `POST {basePath}/events`
  */
 export async function recordUsageEvents(
   client: AxiosInstance,
   basePath: string,
-  request: RecordUsageRequest
+  request: RecordUsageRequest,
+  idempotencyKey?: string
 ): Promise<void> {
-  await client.post(`${basePath}/events`, request);
+  await client.post(`${basePath}/events`, request, idempotencyConfig(idempotencyKey));
+}
+
+/**
+ * Backfill historical usage events (timestamps up to 365 days in the past).
+ *
+ * `POST {basePath}/events/backfill`
+ */
+export async function backfillUsageEvents(
+  client: AxiosInstance,
+  basePath: string,
+  request: BackfillUsageRequest,
+  idempotencyKey?: string
+): Promise<BackfillUsageResponse> {
+  const response = await client.post<BackfillUsageResponse>(
+    `${basePath}/events/backfill`,
+    request,
+    idempotencyConfig(idempotencyKey)
+  );
+  return response.data;
+}
+
+/**
+ * Soft-deprecate a single meter event so it stops contributing to aggregates.
+ *
+ * `POST {basePath}/events/{id}/deprecate`
+ */
+export async function deprecateMeterEvent(
+  client: AxiosInstance,
+  basePath: string,
+  id: string,
+  request: DeprecateEventRequest
+): Promise<DeprecateEventResponse> {
+  const response = await client.post<DeprecateEventResponse>(
+    `${basePath}/events/${encodeURIComponent(id)}/deprecate`,
+    request
+  );
+  return response.data;
 }
 
 // ---------------------------------------------------------------------------
-// QueryEngine — meter definitions
+// QueryEngine — meter definitions (admin grid: GET {basePath}/meters)
 // ---------------------------------------------------------------------------
 
 /**
- * List meter definitions via the QueryEngine endpoint (paginated, filterable).
+ * List meter definitions via the QueryEngine admin grid (paginated, filterable,
+ * full lifecycle visibility).
  *
- * `GET {basePath}/meter-definitions`
+ * `GET {basePath}/meters`
  */
 export async function listMeterDefinitions(
   client: AxiosInstance,
   basePath: string,
   params?: MeterDefinitionListParams
 ): Promise<MeterDefinitionPage> {
-  return getPage<MeterDefinition>(client, meterDefinitionsPath(basePath), params ?? {});
+  return getPage<MeterDefinition>(client, metersQueryPath(basePath), params ?? {});
 }
 
 /**
  * Get the QueryEngine metadata (columns, filterable fields, presets) for
  * meter definitions.
  *
- * `GET {basePath}/meter-definitions/meta`
+ * `GET {basePath}/meters/meta`
  */
 export async function getMeterDefinitionsQueryMeta(
   client: AxiosInstance,
   basePath: string
 ): Promise<QueryMetadata> {
-  return getQueryMeta(client, meterDefinitionsPath(basePath));
-}
-
-/**
- * List saved views for the meter definitions query endpoint.
- *
- * `GET {basePath}/meter-definitions/saved-views`
- */
-export async function listMeterDefinitionsSavedViews(
-  client: AxiosInstance,
-  basePath: string
-): Promise<SavedViewSummary[]> {
-  return listSavedViews(client, meterDefinitionsPath(basePath));
-}
-
-/**
- * Create a saved view for the meter definitions query endpoint.
- *
- * `POST {basePath}/meter-definitions/saved-views`
- */
-export async function createMeterDefinitionsSavedView(
-  client: AxiosInstance,
-  basePath: string,
-  request: CreateSavedViewRequest
-): Promise<SavedViewSummary> {
-  return createSavedView(client, meterDefinitionsPath(basePath), request);
-}
-
-/**
- * Update a saved view on the meter definitions query endpoint.
- *
- * `PUT {basePath}/meter-definitions/saved-views/{id}`
- */
-export async function updateMeterDefinitionsSavedView(
-  client: AxiosInstance,
-  basePath: string,
-  id: string,
-  request: UpdateSavedViewRequest
-): Promise<void> {
-  await updateSavedView(client, meterDefinitionsPath(basePath), id, request);
-}
-
-/**
- * Delete a saved view from the meter definitions query endpoint.
- *
- * `DELETE {basePath}/meter-definitions/saved-views/{id}`
- */
-export async function deleteMeterDefinitionsSavedView(
-  client: AxiosInstance,
-  basePath: string,
-  id: string
-): Promise<void> {
-  await deleteSavedView(client, meterDefinitionsPath(basePath), id);
-}
-
-/**
- * Set a saved view as the default for the meter definitions query endpoint.
- *
- * `POST {basePath}/meter-definitions/saved-views/{id}/set-default`
- */
-export async function setDefaultMeterDefinitionsSavedView(
-  client: AxiosInstance,
-  basePath: string,
-  id: string
-): Promise<void> {
-  await setDefaultSavedView(client, meterDefinitionsPath(basePath), id);
+  return getQueryMeta(client, metersQueryPath(basePath));
 }
 
 // ---------------------------------------------------------------------------
@@ -282,69 +308,4 @@ export async function getUsageAggregatesQueryMeta(
   basePath: string
 ): Promise<QueryMetadata> {
   return getQueryMeta(client, usageAggregatesPath(basePath));
-}
-
-/**
- * List saved views for the usage aggregates query endpoint.
- *
- * `GET {basePath}/usage-aggregates/saved-views`
- */
-export async function listUsageAggregatesSavedViews(
-  client: AxiosInstance,
-  basePath: string
-): Promise<SavedViewSummary[]> {
-  return listSavedViews(client, usageAggregatesPath(basePath));
-}
-
-/**
- * Create a saved view for the usage aggregates query endpoint.
- *
- * `POST {basePath}/usage-aggregates/saved-views`
- */
-export async function createUsageAggregatesSavedView(
-  client: AxiosInstance,
-  basePath: string,
-  request: CreateSavedViewRequest
-): Promise<SavedViewSummary> {
-  return createSavedView(client, usageAggregatesPath(basePath), request);
-}
-
-/**
- * Update a saved view on the usage aggregates query endpoint.
- *
- * `PUT {basePath}/usage-aggregates/saved-views/{id}`
- */
-export async function updateUsageAggregatesSavedView(
-  client: AxiosInstance,
-  basePath: string,
-  id: string,
-  request: UpdateSavedViewRequest
-): Promise<void> {
-  await updateSavedView(client, usageAggregatesPath(basePath), id, request);
-}
-
-/**
- * Delete a saved view from the usage aggregates query endpoint.
- *
- * `DELETE {basePath}/usage-aggregates/saved-views/{id}`
- */
-export async function deleteUsageAggregatesSavedView(
-  client: AxiosInstance,
-  basePath: string,
-  id: string
-): Promise<void> {
-  await deleteSavedView(client, usageAggregatesPath(basePath), id);
-}
-
-/**
- * Set a saved view as the default for the usage aggregates query endpoint.
- *
- * `POST {basePath}/usage-aggregates/saved-views/{id}/set-default`
- */
-export async function setDefaultUsageAggregatesSavedView(
-  client: AxiosInstance,
-  basePath: string,
-  id: string
-): Promise<void> {
-  await setDefaultSavedView(client, usageAggregatesPath(basePath), id);
 }

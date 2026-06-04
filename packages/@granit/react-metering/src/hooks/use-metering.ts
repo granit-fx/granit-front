@@ -1,10 +1,11 @@
 import {
+  archiveMeterDefinition,
   checkMeteringQuota,
   createMeterDefinition,
-  deactivateMeterDefinition,
   getMeterDefinition,
   getUsageForPeriod,
   listActiveMeters,
+  publishMeterDefinition,
   recordUsageEvents,
   updateMeterDefinition,
 } from '@granit/metering';
@@ -27,7 +28,7 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 // ---------------------------------------------------------------------------
 
 /**
- * List all active meter definitions.
+ * List the active meter catalog (Published meters only).
  *
  * @example
  * ```tsx
@@ -36,11 +37,10 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
  */
 export function useActiveMeters(): UseQueryResult<readonly MeterDefinitionResponse[]> {
   const config = useMeteringConfig();
-  const basePath = config.basePath!;
 
   return useQuery({
     queryKey: buildMeteringQueryKey(config, 'meters'),
-    queryFn: () => listActiveMeters(config.client, basePath),
+    queryFn: () => listActiveMeters(config.client, config.basePath),
   });
 }
 
@@ -56,30 +56,56 @@ export function useActiveMeters(): UseQueryResult<readonly MeterDefinitionRespon
  */
 export function useMeterDefinition(id: string): UseQueryResult<MeterDefinitionResponse> {
   const config = useMeteringConfig();
-  const basePath = config.basePath!;
 
   return useQuery({
     queryKey: buildMeteringQueryKey(config, 'meters', id),
-    queryFn: () => getMeterDefinition(config.client, basePath, id),
+    queryFn: () => getMeterDefinition(config.client, config.basePath, id),
     enabled: id.length > 0,
   });
 }
 
+/** Identifies the meter + period bounds for {@link useUsageForPeriod}. */
+export interface UsageForPeriodParams {
+  readonly meterId: string;
+  /** ISO 8601 inclusive lower bound of the aggregation period. */
+  readonly periodStart: string;
+  /** ISO 8601 exclusive upper bound of the aggregation period. */
+  readonly periodEnd: string;
+}
+
 /**
- * Get aggregated usage for the current period.
+ * Get the pre-computed usage aggregate for a meter over a specific period.
+ *
+ * The query is disabled until `params` is provided (non-null). The backend
+ * returns the single aggregate matching the exact period bounds.
  *
  * @example
  * ```tsx
- * const { data: usage } = useUsageForPeriod();
+ * const { data: usage } = useUsageForPeriod({ meterId, periodStart, periodEnd });
  * ```
  */
-export function useUsageForPeriod(): UseQueryResult<readonly UsageAggregateResponse[]> {
+export function useUsageForPeriod(
+  params: UsageForPeriodParams | null
+): UseQueryResult<UsageAggregateResponse> {
   const config = useMeteringConfig();
-  const basePath = config.basePath!;
 
   return useQuery({
-    queryKey: buildMeteringQueryKey(config, 'usage'),
-    queryFn: () => getUsageForPeriod(config.client, basePath),
+    queryKey: buildMeteringQueryKey(
+      config,
+      'usage',
+      params?.meterId ?? '',
+      params?.periodStart ?? '',
+      params?.periodEnd ?? ''
+    ),
+    queryFn: () =>
+      getUsageForPeriod(
+        config.client,
+        config.basePath,
+        params!.meterId,
+        params!.periodStart,
+        params!.periodEnd
+      ),
+    enabled: params !== null,
   });
 }
 
@@ -95,11 +121,10 @@ export function useUsageForPeriod(): UseQueryResult<readonly UsageAggregateRespo
  */
 export function useMeteringQuota(meterId: string): UseQueryResult<MeteringQuotaStatusResponse> {
   const config = useMeteringConfig();
-  const basePath = config.basePath!;
 
   return useQuery({
     queryKey: buildMeteringQueryKey(config, 'quota', meterId),
-    queryFn: () => checkMeteringQuota(config.client, basePath, meterId),
+    queryFn: () => checkMeteringQuota(config.client, config.basePath, meterId),
     enabled: meterId.length > 0,
   });
 }
@@ -109,7 +134,7 @@ export function useMeteringQuota(meterId: string): UseQueryResult<MeteringQuotaS
 // ---------------------------------------------------------------------------
 
 /**
- * Create a new meter definition.
+ * Create a new meter definition (starts in `Draft` status).
  * Invalidates meters queries on success.
  *
  * @example
@@ -125,11 +150,10 @@ export function useCreateMeterDefinition(): UseMutationResult<
 > {
   const config = useMeteringConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath!;
 
   return useMutation({
     mutationFn: (request: MeterDefinitionCreateRequest) =>
-      createMeterDefinition(config.client, basePath, request),
+      createMeterDefinition(config.client, config.basePath, request),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildMeteringQueryKey(config, 'meters'),
@@ -145,7 +169,7 @@ export type UpdateMeterDefinitionVariables = {
 };
 
 /**
- * Update an existing meter definition.
+ * Update a `Draft` meter definition.
  * Invalidates meters queries on success.
  *
  * @example
@@ -161,11 +185,10 @@ export function useUpdateMeterDefinition(): UseMutationResult<
 > {
   const config = useMeteringConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath!;
 
   return useMutation({
     mutationFn: ({ id, request }: UpdateMeterDefinitionVariables) =>
-      updateMeterDefinition(config.client, basePath, id, request),
+      updateMeterDefinition(config.client, config.basePath, id, request),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildMeteringQueryKey(config, 'meters'),
@@ -175,22 +198,21 @@ export function useUpdateMeterDefinition(): UseMutationResult<
 }
 
 /**
- * Deactivate a meter definition.
+ * Publish a `Draft` meter definition (`Draft → Published`).
  * Invalidates meters queries on success.
  *
  * @example
  * ```tsx
- * const deactivate = useDeactivateMeterDefinition();
- * await deactivate.mutateAsync('meter-1');
+ * const publish = usePublishMeterDefinition();
+ * await publish.mutateAsync('meter-1');
  * ```
  */
-export function useDeactivateMeterDefinition(): UseMutationResult<void, Error, string> {
+export function usePublishMeterDefinition(): UseMutationResult<void, Error, string> {
   const config = useMeteringConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath!;
 
   return useMutation({
-    mutationFn: (id: string) => deactivateMeterDefinition(config.client, basePath, id),
+    mutationFn: (id: string) => publishMeterDefinition(config.client, config.basePath, id),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildMeteringQueryKey(config, 'meters'),
@@ -200,7 +222,32 @@ export function useDeactivateMeterDefinition(): UseMutationResult<void, Error, s
 }
 
 /**
- * Record one or more usage events.
+ * Archive a `Published` meter definition (`Published → Archived`).
+ * Invalidates meters queries on success.
+ *
+ * @example
+ * ```tsx
+ * const archive = useArchiveMeterDefinition();
+ * await archive.mutateAsync('meter-1');
+ * ```
+ */
+export function useArchiveMeterDefinition(): UseMutationResult<void, Error, string> {
+  const config = useMeteringConfig();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => archiveMeterDefinition(config.client, config.basePath, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: buildMeteringQueryKey(config, 'meters'),
+      });
+    },
+  });
+}
+
+/**
+ * Record one or more usage events. A fresh `Idempotency-Key` is generated per
+ * mutation to protect the batch against network-level replay.
  * Invalidates usage and quota queries on success.
  *
  * @example
@@ -212,11 +259,10 @@ export function useDeactivateMeterDefinition(): UseMutationResult<void, Error, s
 export function useRecordUsageEvents(): UseMutationResult<void, Error, RecordUsageRequest> {
   const config = useMeteringConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath!;
 
   return useMutation({
     mutationFn: (request: RecordUsageRequest) =>
-      recordUsageEvents(config.client, basePath, request),
+      recordUsageEvents(config.client, config.basePath, request, crypto.randomUUID()),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildMeteringQueryKey(config, 'usage'),

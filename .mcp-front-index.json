@@ -5235,11 +5235,6 @@
           "kind": "interface",
           "signature": "interface MeteringProviderProps",
           "members": []
-        },
-        {
-          "name": "UpdateMeterDefinitionVariables",
-          "kind": "type",
-          "signature": "type UpdateMeterDefinitionVariables = { readonly id: string; readonly request: MeterDefinitionUpdateRequest; }"
         }
       ]
     },
