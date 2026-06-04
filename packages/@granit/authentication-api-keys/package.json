@@ -15,10 +15,12 @@
   },
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/query-engine": "workspace:*",
     "@granit/types": "workspace:*"
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/query-engine": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/types": "workspace:*"
   },

@@ -18,6 +18,7 @@
     "@granit/api-client": "workspace:*",
     "@granit/authentication": "workspace:*",
     "@granit/authentication-entraid": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/react-authentication": "workspace:*",
     "react": "^19.0.0"
   },
@@ -31,6 +32,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
-    "@granit/api-client": "workspace:*"
+    "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*"
   }
 }

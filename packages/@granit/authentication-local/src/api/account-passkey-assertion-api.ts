@@ -1,4 +1,4 @@
-import type { AccountLoginResponse, AccountPasskeyAssertionCompleteRequest } from '../types/index';
+import type { AccountLoginResponse, AccountPasskeyLoginRequest } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**
@@ -30,7 +30,7 @@ export async function beginPasskeyAssertion(
 export async function completePasskeyAssertion(
   client: AxiosInstance,
   basePath: string,
-  request: AccountPasskeyAssertionCompleteRequest
+  request: AccountPasskeyLoginRequest
 ): Promise<AccountLoginResponse> {
   const { data } = await client.post<AccountLoginResponse>(
     `${basePath}/passkeys/assertion/complete`,

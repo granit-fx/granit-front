@@ -2,11 +2,9 @@
 export type {
   AccountLoginRequest,
   AccountLoginResponse,
-  AccountPasskeyAssertionCompleteRequest,
+  AccountPasskeyLoginRequest,
   AccountTwoFactorLoginRequest,
 } from './types/index';
-
-// Query keys
 
 // API — Login
 export { loginAccount } from './api/account-login-api';

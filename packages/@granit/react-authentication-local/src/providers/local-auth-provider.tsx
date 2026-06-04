@@ -14,7 +14,6 @@ export interface LocalAuthConfig {
    */
   readonly client?: AxiosInstance;
   readonly basePath?: string;
-  readonly queryKeyPrefix?: readonly string[];
 }
 
 /**
@@ -30,21 +29,12 @@ export interface LocalAuthProviderProps {
   readonly children: ReactNode;
 }
 
-const DEFAULT_KEY_PREFIX = ['authentication-local'] as const;
-
 const LocalAuthContext = createContext<ResolvedLocalAuthConfig | null>(null);
 
 export function useLocalAuthConfig(): ResolvedLocalAuthConfig {
   const config = useContext(LocalAuthContext);
   if (!config) throw new Error('useLocalAuthConfig must be used within a LocalAuthProvider');
   return config;
-}
-
-export function buildLocalAuthQueryKey(
-  config: LocalAuthConfig,
-  ...segments: readonly string[]
-): readonly unknown[] {
-  return [...(config.queryKeyPrefix ?? DEFAULT_KEY_PREFIX), ...segments];
 }
 
 export function LocalAuthProvider({ config, children }: LocalAuthProviderProps) {
@@ -59,7 +49,6 @@ export function LocalAuthProvider({ config, children }: LocalAuthProviderProps) 
     return {
       ...config,
       basePath: config.basePath ?? DEFAULT_BASE_PATH,
-      queryKeyPrefix: config.queryKeyPrefix ?? DEFAULT_KEY_PREFIX,
       client,
     };
   }, [config, contextClient]);

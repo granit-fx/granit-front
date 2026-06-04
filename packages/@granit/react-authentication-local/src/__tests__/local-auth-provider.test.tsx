@@ -20,15 +20,13 @@ describe('LocalAuthProvider', () => {
 
     expect(result.current.client).toBe(client);
     expect(result.current.basePath).toBe('/api/v1/account');
-    expect(result.current.queryKeyPrefix).toEqual(['authentication-local']);
   });
 
-  it('should allow custom basePath and queryKeyPrefix', () => {
+  it('should allow a custom basePath', () => {
     const client = createMockClient();
     const config: LocalAuthConfig = {
       client,
       basePath: '/custom/auth',
-      queryKeyPrefix: ['custom'],
     };
 
     const wrapper = ({ children }: { children: ReactNode }) => (
@@ -38,7 +36,6 @@ describe('LocalAuthProvider', () => {
     const { result } = renderHook(() => useLocalAuthConfig(), { wrapper });
 
     expect(result.current.basePath).toBe('/custom/auth');
-    expect(result.current.queryKeyPrefix).toEqual(['custom']);
   });
 
   it('should throw when used outside provider', () => {

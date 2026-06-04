@@ -7,21 +7,22 @@ import type {
   ListApiKeysParams,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
+import type { PagedResult } from '@granit/query-engine';
 
 /**
  * Lists API keys filtered by the given parameters.
  *
- * `GET {basePath}/api-keys`
+ * `GET {basePath}/api-keys` → `PagedResult<ApiKeyResponse>`
  */
 export async function listApiKeys(
   client: AxiosInstance,
   basePath: string,
   params: ListApiKeysParams = {}
-): Promise<ApiKeyResponse[]> {
-  const response = await client.get<ApiKeyResponse[]>(`${basePath}/api-keys`, {
+): Promise<PagedResult<ApiKeyResponse>> {
+  const response = await client.get<PagedResult<ApiKeyResponse>>(`${basePath}/api-keys`, {
     params: {
       search: params.search,
-      type: params.type?.join(','),
+      type: params.type,
       environment: params.environment,
       includeRevoked: params.includeRevoked,
       page: params.page,

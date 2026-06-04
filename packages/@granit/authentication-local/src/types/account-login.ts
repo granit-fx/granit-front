@@ -37,6 +37,11 @@ export interface AccountLoginResponse {
 export interface AccountTwoFactorLoginRequest {
   readonly code: string;
   readonly useRecoveryCode?: boolean;
+  /**
+   * When `true`, the Identity session cookie is marked as persistent.
+   * Mirrors the backend `AccountTwoFactorLoginRequest.RememberMe`. Default: `false`.
+   */
+  readonly rememberMe?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -46,9 +51,10 @@ export interface AccountTwoFactorLoginRequest {
 /**
  * Request body for `POST {basePath}/passkeys/assertion/complete`.
  *
- * Submitted after `navigator.credentials.get()` completes the WebAuthn
- * assertion ceremony initiated by `POST {basePath}/passkeys/assertion/begin`.
+ * Mirrors the backend `AccountPasskeyLoginRequest`. Submitted after
+ * `navigator.credentials.get()` completes the WebAuthn assertion ceremony
+ * initiated by `POST {basePath}/passkeys/assertion/begin`.
  */
-export interface AccountPasskeyAssertionCompleteRequest {
+export interface AccountPasskeyLoginRequest {
   readonly credentialJson: string;
 }

@@ -1,9 +1,5 @@
 // Provider
-export {
-  LocalAuthProvider,
-  buildLocalAuthQueryKey,
-  useLocalAuthConfig,
-} from './providers/local-auth-provider';
+export { LocalAuthProvider, useLocalAuthConfig } from './providers/local-auth-provider';
 export type { LocalAuthConfig, LocalAuthProviderProps } from './providers/local-auth-provider';
 
 // Hooks
@@ -16,6 +12,3 @@ export type {
 export { useVerifyTwoFactorLogin } from './hooks/use-verify-two-factor-login';
 export { useBeginPasskeyAssertion } from './hooks/use-begin-passkey-assertion';
 export { useCompletePasskeyAssertion } from './hooks/use-complete-passkey-assertion';
-
-// Query keys
-export { localAuthKeys } from './hooks/query-keys';

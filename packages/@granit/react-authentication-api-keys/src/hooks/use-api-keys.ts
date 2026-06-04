@@ -3,11 +3,11 @@ import { useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-export { apiKeyKeys, buildApiKeyQueryKey } from './query-keys';
 import { buildApiKeyQueryKey } from './query-keys';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { ApiKeyResponse } from '@granit/authentication-api-keys';
+import type { ApiKeyResponse, ListApiKeysParams } from '@granit/authentication-api-keys';
+import type { PagedResult } from '@granit/query-engine';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 // ---------------------------------------------------------------------------
@@ -24,15 +24,13 @@ export interface ApiKeyHookOptions {
   queryKeyPrefix?: readonly string[];
 }
 
-/** Query parameters for the paginated API key list. */
-export interface UseApiKeysParams {
-  search?: string;
-  type?: string[];
-  environment?: string;
-  includeRevoked?: boolean;
-  page?: number;
-  pageSize?: number;
-}
+/**
+ * Query parameters for the paginated API key list.
+ *
+ * Alias of the core {@link ListApiKeysParams} — exported under this name for
+ * consumers that import `UseApiKeysParams`.
+ */
+export type UseApiKeysParams = ListApiKeysParams;
 
 // ---------------------------------------------------------------------------
 // Hook
@@ -57,7 +55,7 @@ export interface UseApiKeysParams {
 export function useApiKeys(
   options: ApiKeyHookOptions,
   params: UseApiKeysParams = {}
-): UseQueryResult<ApiKeyResponse[]> {
+): UseQueryResult<PagedResult<ApiKeyResponse>> {
   const { client, basePath = DEFAULT_BASE_PATH } = options;
 
   return useQuery({

@@ -1,9 +1,12 @@
 import { PublicClientApplication, InteractionRequiredAuthError } from '@azure/msal-browser';
 import { setTokenGetter, setOnUnauthorized } from '@granit/api-client';
+import { createLogger } from '@granit/logger';
 import * as React from 'react';
 
 import type { LoginOptions, LogoutOptions, OidcUserInfo } from '@granit/authentication';
 import type { EntraIdAuthContextType, EntraIdCoreConfig } from '@granit/authentication-entraid';
+
+const logger = createLogger('authentication-entraid');
 
 export interface EntraIdCoreResult extends EntraIdAuthContextType {
   /** Direct ref to the MSAL PublicClientApplication instance. */
@@ -102,10 +105,7 @@ export function useEntraIdInit(config: EntraIdCoreConfig): EntraIdCoreResult {
           });
         }
       } catch (error) {
-        globalThis.console.warn(
-          '[@granit/react-authentication-entraid] MSAL initialization failed',
-          error
-        );
+        logger.error('MSAL initialization failed', error);
       } finally {
         setLoading(false);
       }

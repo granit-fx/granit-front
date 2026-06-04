@@ -2563,50 +2563,13 @@
         },
         {
           "name": "UseApiKeysParams",
-          "kind": "interface",
-          "signature": "interface UseApiKeysParams",
-          "members": [
-            {
-              "name": "search",
-              "kind": "property",
-              "signature": "search?: string"
-            },
-            {
-              "name": "type",
-              "kind": "property",
-              "signature": "type?: string[]"
-            },
-            {
-              "name": "environment",
-              "kind": "property",
-              "signature": "environment?: string"
-            },
-            {
-              "name": "includeRevoked",
-              "kind": "property",
-              "signature": "includeRevoked?: boolean"
-            },
-            {
-              "name": "page",
-              "kind": "property",
-              "signature": "page?: number"
-            },
-            {
-              "name": "pageSize",
-              "kind": "property",
-              "signature": "pageSize?: number"
-            }
-          ]
+          "kind": "type",
+          "signature": "type UseApiKeysParams = ListApiKeysParams"
         },
         {
           "name": "buildApiKeyQueryKey",
           "kind": "function",
           "signature": "function buildApiKeyQueryKey( config: Pick<ApiKeyHookOptions, 'queryKeyPrefix'>, ...segments: readonly unknown[] ): readonly unknown[]"
-        },
-        {
-          "name": "apiKeyKeys",
-          "kind": "const",
-          "signature": "const apiKeyKeys"
         },
         {
           "name": "useApiKey",
@@ -2806,6 +2769,16 @@
       "description": "React hooks for local credential authentication — useLogin, useBeginPasskeyAssertion",
       "exports": [
         {
+          "name": "LocalAuthProvider",
+          "kind": "function",
+          "signature": "function LocalAuthProvider("
+        },
+        {
+          "name": "useLocalAuthConfig",
+          "kind": "function",
+          "signature": "function useLocalAuthConfig(): ResolvedLocalAuthConfig"
+        },
+        {
           "name": "LocalAuthConfig",
           "kind": "interface",
           "signature": "interface LocalAuthConfig",
@@ -2840,12 +2813,7 @@
         {
           "name": "useCompletePasskeyAssertion",
           "kind": "function",
-          "signature": "function useCompletePasskeyAssertion(): UseMutationResult< AccountLoginResponse, Error, AccountPasskeyAssertionCompleteRequest >"
-        },
-        {
-          "name": "localAuthKeys",
-          "kind": "const",
-          "signature": "const localAuthKeys"
+          "signature": "function useCompletePasskeyAssertion(): UseMutationResult< AccountLoginResponse, Error, AccountPasskeyLoginRequest >"
         }
       ]
     },

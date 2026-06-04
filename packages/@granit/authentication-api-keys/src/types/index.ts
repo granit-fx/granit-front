@@ -67,7 +67,8 @@ export interface ApiKeyUpdateScopesRequest {
 /** Query parameters accepted by {@link listApiKeys}. */
 export interface ListApiKeysParams {
   search?: string;
-  type?: readonly string[];
+  /** Filter by a single key type — mirrors the backend `ApiKeyType?` query parameter. */
+  type?: ApiKeyType;
   environment?: string;
   includeRevoked?: boolean;
   page?: number;

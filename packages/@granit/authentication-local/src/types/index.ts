@@ -1,6 +1,6 @@
 export type {
   AccountLoginRequest,
   AccountLoginResponse,
-  AccountPasskeyAssertionCompleteRequest,
+  AccountPasskeyLoginRequest,
   AccountTwoFactorLoginRequest,
 } from './account-login';

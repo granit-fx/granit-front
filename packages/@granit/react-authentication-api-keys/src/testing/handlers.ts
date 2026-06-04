@@ -1,5 +1,3 @@
-import { DATE_OPERATORS, ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
-import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { notFound, pagedResponse } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
@@ -13,142 +11,6 @@ import type {
   ApiKeyResponse,
   ApiKeyUpdateScopesRequest,
 } from '@granit/authentication-api-keys';
-import type { QueryMetadata } from '@granit/query-engine';
-
-const API_KEY_TYPES = ['Secret', 'Publishable', 'Webhook', 'Ephemeral'];
-
-/** Mock /meta payload for the API keys resource. */
-export const apiKeyQueryMetadata: QueryMetadata = {
-  columns: [
-    {
-      name: 'id',
-      label: 'ID',
-      type: 'Guid',
-      order: 0,
-      isSortable: false,
-      isFilterable: false,
-      isVisible: false,
-    },
-    {
-      name: 'name',
-      label: 'Name',
-      type: 'String',
-      order: 1,
-      isSortable: true,
-      isFilterable: true,
-      isVisible: true,
-    },
-    {
-      name: 'type',
-      label: 'Type',
-      type: 'String',
-      order: 2,
-      isSortable: true,
-      isFilterable: true,
-      isVisible: true,
-    },
-    {
-      name: 'environment',
-      label: 'Environment',
-      type: 'String',
-      order: 3,
-      isSortable: true,
-      isFilterable: true,
-      isVisible: true,
-    },
-    {
-      name: 'prefix',
-      label: 'Prefix',
-      type: 'String',
-      order: 4,
-      isSortable: false,
-      isFilterable: true,
-      isVisible: true,
-    },
-    {
-      name: 'lastFourChars',
-      label: 'Last 4',
-      type: 'String',
-      order: 5,
-      isSortable: false,
-      isFilterable: false,
-      isVisible: true,
-    },
-    {
-      name: 'expiresAt',
-      label: 'Expires at',
-      type: 'DateTime',
-      order: 6,
-      isSortable: true,
-      isFilterable: true,
-      isVisible: true,
-    },
-    {
-      name: 'lastUsedAt',
-      label: 'Last used',
-      type: 'DateTime',
-      order: 7,
-      isSortable: true,
-      isFilterable: true,
-      isVisible: true,
-    },
-    {
-      name: 'revokedAt',
-      label: 'Revoked at',
-      type: 'DateTime',
-      order: 8,
-      isSortable: true,
-      isFilterable: true,
-      isVisible: true,
-    },
-    {
-      name: 'createdAt',
-      label: 'Created at',
-      type: 'DateTime',
-      order: 9,
-      isSortable: true,
-      isFilterable: true,
-      isVisible: true,
-    },
-  ],
-  filterableFields: [
-    { name: 'name', type: 'String', operators: STRING_OPERATORS },
-    { name: 'type', type: 'String', operators: ENUM_OPERATORS, enumValues: API_KEY_TYPES },
-    { name: 'environment', type: 'String', operators: ENUM_OPERATORS },
-    { name: 'prefix', type: 'String', operators: STRING_OPERATORS },
-    { name: 'expiresAt', type: 'DateTime', operators: DATE_OPERATORS },
-    { name: 'lastUsedAt', type: 'DateTime', operators: DATE_OPERATORS },
-    { name: 'revokedAt', type: 'DateTime', operators: DATE_OPERATORS },
-    { name: 'createdAt', type: 'DateTime', operators: DATE_OPERATORS },
-  ],
-  sortableFields: [
-    { name: 'name' },
-    { name: 'type' },
-    { name: 'environment' },
-    { name: 'expiresAt' },
-    { name: 'lastUsedAt' },
-    { name: 'revokedAt' },
-    { name: 'createdAt' },
-  ],
-  presetFilterGroups: [],
-  quickFilters: [
-    { name: 'active', label: 'Active', isDefault: true },
-    { name: 'revoked', label: 'Revoked', isDefault: false },
-    { name: 'expired', label: 'Expired', isDefault: false },
-  ],
-  dateFilters: [],
-  groupByFields: [
-    { name: 'type', type: 'String' },
-    { name: 'environment', type: 'String' },
-  ],
-  pagination: {
-    defaultPageSize: 20,
-    maxPageSize: 100,
-    maxStreamSize: 10_000,
-    supportsCursor: false,
-  },
-  defaultSort: '-createdAt',
-};
 
 type MutableApiKey = { -readonly [K in keyof ApiKeyResponse]: ApiKeyResponse[K] };
 
@@ -170,15 +32,16 @@ function generateSecret(type: string, environment: string): string {
 /**
  * Create stateful MSW handlers for API key endpoints.
  *
+ * Mirrors `Granit.Authentication.ApiKeys.Endpoints`: the list endpoint returns a
+ * `PagedResult<ApiKeyResponse>` and filters on `search`, a single `type`,
+ * `environment`, and `includeRevoked` — there is no `/meta` endpoint.
+ *
  * @param baseUrl - API base path (default: `/api/v1/authentication/api-keys`)
  */
 export function createApiKeyHandlers(baseUrl = `${DEFAULT_BASE_PATH}/api-keys`) {
   const apiKeys: MutableApiKey[] = mockApiKeys.map((k) => ({ ...k }));
 
   return [
-    // GET /api-keys/meta — query metadata
-    createQueryMetaHandler(baseUrl, apiKeyQueryMetadata),
-
     // GET list — paginated with filters
     http.get(baseUrl, ({ request }) => {
       const url = new URL(request.url);
@@ -199,8 +62,7 @@ export function createApiKeyHandlers(baseUrl = `${DEFAULT_BASE_PATH}/api-keys`) 
       }
 
       if (type) {
-        const types = new Set(type.split(','));
-        filtered = filtered.filter((k) => types.has(k.type));
+        filtered = filtered.filter((k) => k.type === type);
       }
 
       if (environment) {
@@ -271,7 +133,7 @@ export function createApiKeyHandlers(baseUrl = `${DEFAULT_BASE_PATH}/api-keys`) 
       );
     }),
 
-    // POST revoke
+    // POST revoke — backend returns 204 No Content
     http.post(`${baseUrl}/:id/revoke`, ({ params }) => {
       const key = apiKeys.find((k) => k.id === params.id);
       if (!key) return notFound();
@@ -279,7 +141,7 @@ export function createApiKeyHandlers(baseUrl = `${DEFAULT_BASE_PATH}/api-keys`) 
         return HttpResponse.json({ error: 'Key already revoked' }, { status: 409 });
       }
       key.revokedAt = toISODateString(new Date().toISOString());
-      return HttpResponse.json(key);
+      return new HttpResponse(null, { status: 204 });
     }),
 
     // POST rotate
@@ -310,7 +172,7 @@ export function createApiKeyHandlers(baseUrl = `${DEFAULT_BASE_PATH}/api-keys`) 
       });
     }),
 
-    // PUT update scopes
+    // PUT update scopes — backend returns 204 No Content
     http.put(`${baseUrl}/:id/scopes`, async ({ params, request }) => {
       const body = (await request.json()) as ApiKeyUpdateScopesRequest;
       const key = apiKeys.find((k) => k.id === params.id);
@@ -318,7 +180,7 @@ export function createApiKeyHandlers(baseUrl = `${DEFAULT_BASE_PATH}/api-keys`) 
 
       key.permissions = [...body.permissions];
       key.allowedCidrs = [...body.allowedCidrs];
-      return HttpResponse.json(key);
+      return new HttpResponse(null, { status: 204 });
     }),
   ];
 }

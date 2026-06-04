@@ -5,7 +5,7 @@ import { useLocalAuthConfig } from '../providers/local-auth-provider';
 
 import type {
   AccountLoginResponse,
-  AccountPasskeyAssertionCompleteRequest,
+  AccountPasskeyLoginRequest,
 } from '@granit/authentication-local';
 import type { UseMutationResult } from '@tanstack/react-query';
 
@@ -18,12 +18,12 @@ import type { UseMutationResult } from '@tanstack/react-query';
 export function useCompletePasskeyAssertion(): UseMutationResult<
   AccountLoginResponse,
   Error,
-  AccountPasskeyAssertionCompleteRequest
+  AccountPasskeyLoginRequest
 > {
   const config = useLocalAuthConfig();
 
   return useMutation({
-    mutationFn: (request: AccountPasskeyAssertionCompleteRequest) =>
+    mutationFn: (request: AccountPasskeyLoginRequest) =>
       completePasskeyAssertion(config.client, config.basePath!, request),
   });
 }
