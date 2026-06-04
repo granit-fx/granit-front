@@ -2,8 +2,8 @@
 // Permissions (GET /auth/me response DTO)
 // ---------------------------------------------------------------------------
 
-/** Response from the `GET /auth/me` backend endpoint. */
-export type PermissionsResponse = {
+/** Response from the `GET /auth/me` backend endpoint — mirrors `MyPermissionsResponse`. */
+export type MyPermissionsResponse = {
   permissions: readonly string[];
 };
 
@@ -23,23 +23,23 @@ export type PermissionsResponse = {
  */
 export type PermissionMultiTenancySide = 'Host' | 'Tenant' | 'Both';
 
-/** A single permission definition with optional display name. */
-export type PermissionDefinitionDto = {
+/** A single permission definition with optional display name — mirrors `PermissionDefinitionResponse`. */
+export type PermissionDefinitionResponse = {
   name: string;
   displayName: string | null;
   /** Tenancy sides where this permission is valid. */
-  multiTenancySide: PermissionMultiTenancySide;
+  multiTenancySides: PermissionMultiTenancySide;
 };
 
-/** A group of related permission definitions. */
-export type PermissionGroupDto = {
+/** A group of related permission definitions — mirrors `PermissionGroupResponse`. */
+export type PermissionGroupResponse = {
   name: string;
   displayName: string | null;
-  permissions: readonly PermissionDefinitionDto[];
+  permissions: readonly PermissionDefinitionResponse[];
 };
 
-/** Permissions granted to a specific role. */
-export type PermissionGrantDto = {
+/** Permissions granted to a specific role — mirrors `PermissionGrantResponse`. */
+export type PermissionGrantResponse = {
   roleName: string;
   permissions: readonly string[];
 };

@@ -11,14 +11,19 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { buildAuditLogQueryKey, useAuditLogConfig } from '../providers/audit-log-provider';
 
 import type { AxiosError, ProblemDetails } from '@granit/api-client';
-import type { AuditEntry, AuditEntryDetail, AuditListParams, AuditPage } from '@granit/auditing';
+import type {
+  AuditEntryResponse,
+  AuditEntryDetailResponse,
+  AuditListParams,
+  AuditPage,
+} from '@granit/auditing';
 import type { PaginationParams } from '@granit/query-engine';
 import type { UseQueryEndpointOptions, UseQueryEndpointReturn } from '@granit/react-query-engine';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /**
- * QueryEngine endpoint for audit entries ({@link AuditEntry}), backed by the
- * `MapGranitQuery<AuditEntry>()` group of `Granit.Auditing.Endpoints`. Exposes
+ * QueryEngine endpoint for audit entries ({@link AuditEntryResponse}), backed by the
+ * `MapGranitQuery<AuditEntryResponse>()` group of `Granit.Auditing.Endpoints`. Exposes
  * pagination / search / filter / sort / group-by dispatchers and the paged
  * (or grouped) result. Filters are serialized as `filter[field.op]=value`, so
  * they are honored by the backend (unlike the deprecated {@link useAuditLogEntries}).
@@ -34,8 +39,8 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
  */
 export function useAuditEntries(
   options?: UseQueryEndpointOptions
-): UseQueryEndpointReturn<AuditEntry> {
-  return useQueryEndpoint<AuditEntry>(options);
+): UseQueryEndpointReturn<AuditEntryResponse> {
+  return useQueryEndpoint<AuditEntryResponse>(options);
 }
 
 /** Query metadata (columns, filterable/sortable/group-by fields) for the audit-entries surface. */
@@ -72,7 +77,7 @@ export function useAuditLogEntries(params?: AuditListParams): UseQueryResult<Aud
  * const { data: entry } = useAuditLogEntry(entryId);
  * ```
  */
-export function useAuditLogEntry(id: string): UseQueryResult<AuditEntryDetail> {
+export function useAuditLogEntry(id: string): UseQueryResult<AuditEntryDetailResponse> {
   const config = useAuditLogConfig();
   const auditEntriesPath = `${config.basePath}/audit-entries`;
 
@@ -120,7 +125,7 @@ export function useEntityAuditTrail(
  */
 export function useAuditEntriesByCorrelation(
   correlationId: string
-): UseQueryResult<readonly AuditEntryDetail[]> {
+): UseQueryResult<readonly AuditEntryDetailResponse[]> {
   const config = useAuditLogConfig();
   const auditEntriesPath = `${config.basePath}/audit-entries`;
 

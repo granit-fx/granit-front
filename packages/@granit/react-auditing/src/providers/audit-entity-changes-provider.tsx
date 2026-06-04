@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------
 // AuditEntityChangesProvider — wires the QueryEngine endpoint for the
-// `MapGranitQuery<AuditEntityChange>()` group of Granit.Auditing.Endpoints
+// `MapGranitQuery<AuditEntityChangeResponse>()` group of Granit.Auditing.Endpoints
 // (cross-cutting entity-change analysis, mounted at `{basePath}/audit-entity-changes`).
 // ---------------------------------------------------------------------------
 

@@ -10,7 +10,7 @@ import {
 } from '../api/audit-log-api';
 import { AuditCategory } from '../types/index';
 
-import type { AuditEntryDetail, AuditPage } from '../types/index';
+import type { AuditEntryDetailResponse, AuditPage } from '../types/index';
 
 const basePath = '/audit-log';
 
@@ -48,7 +48,7 @@ describe('audit-log-api', () => {
   describe('getAuditLogEntry', () => {
     it('should call GET with encoded id', async () => {
       const client = createMockClient();
-      const entry: AuditEntryDetail = {
+      const entry: AuditEntryDetailResponse = {
         id: toEntityId<'AuditEntry'>('abc-123'),
         timestamp: toISODateString('2026-03-17T10:00:00Z'),
         userId: toEntityId<'User'>('user-1'),
@@ -107,7 +107,7 @@ describe('audit-log-api', () => {
   describe('getAuditEntriesByCorrelationId', () => {
     it('should GET the correlation endpoint with an encoded id and return the array', async () => {
       const client = createMockClient();
-      const details: AuditEntryDetail[] = [];
+      const details: AuditEntryDetailResponse[] = [];
       vi.mocked(client.get).mockResolvedValue(axiosResponse(details));
 
       const result = await getAuditEntriesByCorrelationId(client, basePath, 'corr/42');

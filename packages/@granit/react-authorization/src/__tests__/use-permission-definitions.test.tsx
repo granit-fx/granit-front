@@ -5,22 +5,22 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { usePermissionDefinitions } from '../hooks/use-permission-definitions';
 
-import type { PermissionGroupDto } from '@granit/authorization';
+import type { PermissionGroupResponse } from '@granit/authorization';
 
-const MOCK_GROUPS: PermissionGroupDto[] = [
+const MOCK_GROUPS: PermissionGroupResponse[] = [
   {
     name: 'Invoices',
     displayName: 'Facturation',
     permissions: [
-      { name: 'Invoices.Create', displayName: 'Créer une facture', multiTenancySide: 'Tenant' },
-      { name: 'Invoices.Delete', displayName: null, multiTenancySide: 'Tenant' },
+      { name: 'Invoices.Create', displayName: 'Créer une facture', multiTenancySides: 'Tenant' },
+      { name: 'Invoices.Delete', displayName: null, multiTenancySides: 'Tenant' },
     ],
   },
   {
     name: 'Users',
     displayName: null,
     permissions: [
-      { name: 'Users.View', displayName: 'Voir les utilisateurs', multiTenancySide: 'Both' },
+      { name: 'Users.View', displayName: 'Voir les utilisateurs', multiTenancySides: 'Both' },
     ],
   },
 ];

@@ -6,7 +6,7 @@ import { DEFAULT_BASE_PATH } from '../constants';
 import { buildPermissionQueryKey } from './query-keys';
 
 import type { UsePermissionDefinitionsOptions } from '../types';
-import type { PermissionGroupDto } from '@granit/authorization';
+import type { PermissionGroupResponse } from '@granit/authorization';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -28,7 +28,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
  */
 export function usePermissionDefinitions(
   options: UsePermissionDefinitionsOptions
-): UseQueryResult<PermissionGroupDto[]> {
+): UseQueryResult<PermissionGroupResponse[]> {
   const { client, basePath = DEFAULT_BASE_PATH, enabled } = options;
 
   return useQuery({

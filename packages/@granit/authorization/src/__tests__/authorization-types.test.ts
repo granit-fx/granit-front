@@ -1,46 +1,46 @@
 import { describe, expectTypeOf, it } from 'vitest';
 
 import type {
-  PermissionDefinitionDto,
-  PermissionGrantDto,
+  PermissionDefinitionResponse,
+  PermissionGrantResponse,
   PermissionGrantParams,
-  PermissionGroupDto,
-  PermissionsResponse,
+  PermissionGroupResponse,
+  MyPermissionsResponse,
 } from '../index';
 
 describe('@granit/authorization types', () => {
-  describe('PermissionsResponse', () => {
+  describe('MyPermissionsResponse', () => {
     it('should have a permissions array', () => {
-      expectTypeOf<PermissionsResponse>().toHaveProperty('permissions');
+      expectTypeOf<MyPermissionsResponse>().toHaveProperty('permissions');
     });
   });
 
-  describe('PermissionDefinitionDto', () => {
+  describe('PermissionDefinitionResponse', () => {
     it('should have name and displayName', () => {
-      expectTypeOf<PermissionDefinitionDto>().toHaveProperty('name');
-      expectTypeOf<PermissionDefinitionDto['name']>().toBeString();
-      expectTypeOf<PermissionDefinitionDto>().toHaveProperty('displayName');
+      expectTypeOf<PermissionDefinitionResponse>().toHaveProperty('name');
+      expectTypeOf<PermissionDefinitionResponse['name']>().toBeString();
+      expectTypeOf<PermissionDefinitionResponse>().toHaveProperty('displayName');
     });
 
     it('should carry a multi-tenancy side', () => {
-      expectTypeOf<PermissionDefinitionDto>().toHaveProperty('multiTenancySide');
-      expectTypeOf<PermissionDefinitionDto['multiTenancySide']>().toEqualTypeOf<
+      expectTypeOf<PermissionDefinitionResponse>().toHaveProperty('multiTenancySides');
+      expectTypeOf<PermissionDefinitionResponse['multiTenancySides']>().toEqualTypeOf<
         'Host' | 'Tenant' | 'Both'
       >();
     });
   });
 
-  describe('PermissionGroupDto', () => {
+  describe('PermissionGroupResponse', () => {
     it('should have name and permissions array', () => {
-      expectTypeOf<PermissionGroupDto>().toHaveProperty('name');
-      expectTypeOf<PermissionGroupDto>().toHaveProperty('permissions');
+      expectTypeOf<PermissionGroupResponse>().toHaveProperty('name');
+      expectTypeOf<PermissionGroupResponse>().toHaveProperty('permissions');
     });
   });
 
-  describe('PermissionGrantDto', () => {
+  describe('PermissionGrantResponse', () => {
     it('should have roleName and permissions', () => {
-      expectTypeOf<PermissionGrantDto>().toHaveProperty('roleName');
-      expectTypeOf<PermissionGrantDto>().toHaveProperty('permissions');
+      expectTypeOf<PermissionGrantResponse>().toHaveProperty('roleName');
+      expectTypeOf<PermissionGrantResponse>().toHaveProperty('permissions');
     });
   });
 

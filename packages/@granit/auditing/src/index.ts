@@ -8,15 +8,15 @@ export { AuditCategory, AuditChangeType } from './types/index';
 export type {
   AuditCategoryValue,
   AuditChangeTypeValue,
-  AuditEntry,
-  AuditEntryDetail,
+  AuditEntryResponse,
+  AuditEntryDetailResponse,
   AuditEntryId,
-  AuditEntityChange,
+  AuditEntityChangeResponse,
   AuditEntityChangeId,
-  AuditEntityChangeSummary,
+  AuditEntityChangeSummaryResponse,
   AuditListParams,
   AuditPage,
-  AuditPropertyChange,
+  AuditPropertyChangeResponse,
 } from './types/index';
 
 // API

@@ -1,10 +1,10 @@
 export type {
-  PermissionDefinitionDto,
-  PermissionGrantDto,
+  PermissionDefinitionResponse,
+  PermissionGrantResponse,
   PermissionGrantParams,
-  PermissionGroupDto,
+  PermissionGroupResponse,
   PermissionMultiTenancySide,
-  PermissionsResponse,
+  MyPermissionsResponse,
 } from './types/index';
 export { AuthorizationEndpointsPermissions } from './permissions';
 export {

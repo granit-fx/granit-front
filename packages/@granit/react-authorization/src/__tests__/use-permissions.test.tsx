@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { buildPermissionQueryKey, usePermissions } from '../hooks/use-permissions';
 
-import type { PermissionsResponse } from '@granit/authorization';
+import type { MyPermissionsResponse } from '@granit/authorization';
 import type { AxiosInstance, AxiosResponse } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -13,13 +13,13 @@ import type { ReactNode } from 'react';
 // Helpers
 // ---------------------------------------------------------------------------
 
-const EMPTY_PERMISSIONS_RESPONSE: PermissionsResponse = { permissions: [] };
+const EMPTY_PERMISSIONS_RESPONSE: MyPermissionsResponse = { permissions: [] };
 
 function createMockClient(
-  response: PermissionsResponse = EMPTY_PERMISSIONS_RESPONSE
+  response: MyPermissionsResponse = EMPTY_PERMISSIONS_RESPONSE
 ): AxiosInstance {
   return {
-    get: vi.fn().mockResolvedValue({ data: response } as AxiosResponse<PermissionsResponse>),
+    get: vi.fn().mockResolvedValue({ data: response } as AxiosResponse<MyPermissionsResponse>),
   } as unknown as AxiosInstance;
 }
 

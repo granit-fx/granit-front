@@ -13,7 +13,7 @@ import {
 import { AuditEntityChangesProvider } from '../providers/audit-entity-changes-provider';
 import { AuditLogProvider } from '../providers/audit-log-provider';
 
-import type { AuditEntryDetail, AuditPage } from '@granit/auditing';
+import type { AuditEntryDetailResponse, AuditPage } from '@granit/auditing';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -78,7 +78,7 @@ describe('useAuditEntityChanges (query engine)', () => {
 describe('useAuditEntriesByCorrelation', () => {
   it('fetches correlated detail entries', async () => {
     const client = createMockClient();
-    const details: AuditEntryDetail[] = [];
+    const details: AuditEntryDetailResponse[] = [];
     vi.mocked(client.get).mockResolvedValue(axiosResponse(details));
 
     const { result } = renderHook(() => useAuditEntriesByCorrelation('corr-1'), {

@@ -1,13 +1,13 @@
 import { useQueryEndpoint } from '@granit/react-query-engine';
 
-import type { AuditEntityChangeSummary } from '@granit/auditing';
+import type { AuditEntityChangeSummaryResponse } from '@granit/auditing';
 import type { UseQueryEndpointOptions, UseQueryEndpointReturn } from '@granit/react-query-engine';
 
 /**
- * QueryEngine endpoint for audit entity changes ({@link AuditEntityChangeSummary}),
- * backed by the `MapGranitQuery<AuditEntityChange>()` group of
+ * QueryEngine endpoint for audit entity changes ({@link AuditEntityChangeSummaryResponse}),
+ * backed by the `MapGranitQuery<AuditEntityChangeResponse>()` group of
  * `Granit.Auditing.Endpoints`. Cross-cutting view over every recorded entity
- * change (the per-property diff lives on the parent {@link AuditEntryDetail}).
+ * change (the per-property diff lives on the parent {@link AuditEntryDetailResponse}).
  *
  * Must be used within an {@link AuditEntityChangesProvider}.
  *
@@ -19,8 +19,8 @@ import type { UseQueryEndpointOptions, UseQueryEndpointReturn } from '@granit/re
  */
 export function useAuditEntityChanges(
   options?: UseQueryEndpointOptions
-): UseQueryEndpointReturn<AuditEntityChangeSummary> {
-  return useQueryEndpoint<AuditEntityChangeSummary>(options);
+): UseQueryEndpointReturn<AuditEntityChangeSummaryResponse> {
+  return useQueryEndpoint<AuditEntityChangeSummaryResponse>(options);
 }
 
 /** Query metadata for the audit entity-changes surface. */

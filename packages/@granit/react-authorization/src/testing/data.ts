@@ -1,6 +1,6 @@
-import type { PermissionDefinitionDto, PermissionGroupDto } from '@granit/authorization';
+import type { PermissionDefinitionResponse, PermissionGroupResponse } from '@granit/authorization';
 
-export const mockPermissionGroups: PermissionGroupDto[] = [
+export const mockPermissionGroups: PermissionGroupResponse[] = [
   {
     name: 'Showcase',
     displayName: 'Showcase Application',
@@ -9,7 +9,7 @@ export const mockPermissionGroups: PermissionGroupDto[] = [
       { name: 'Showcase.Users.Manage', displayName: 'Create, edit, disable users' },
       { name: 'Showcase.Countries.Read', displayName: 'View countries' },
       { name: 'Showcase.Countries.Manage', displayName: 'Create, edit, deactivate countries' },
-    ] as PermissionDefinitionDto[],
+    ] as PermissionDefinitionResponse[],
   },
   {
     name: 'AI',
@@ -20,7 +20,7 @@ export const mockPermissionGroups: PermissionGroupDto[] = [
       { name: 'AI.Usage.Read', displayName: 'View AI usage statistics' },
       { name: 'AI.Chat.Execute', displayName: 'Execute AI chat completions' },
       { name: 'AI.Embeddings.Execute', displayName: 'Execute AI embeddings' },
-    ] as PermissionDefinitionDto[],
+    ] as PermissionDefinitionResponse[],
   },
   {
     name: 'AuthenticationApiKeys',
@@ -34,7 +34,7 @@ export const mockPermissionGroups: PermissionGroupDto[] = [
         name: 'AuthenticationApiKeys.Keys.UpdateScopes',
         displayName: 'Update API key scopes and CIDR',
       },
-    ] as PermissionDefinitionDto[],
+    ] as PermissionDefinitionResponse[],
   },
   {
     name: 'Authorization',
@@ -42,7 +42,7 @@ export const mockPermissionGroups: PermissionGroupDto[] = [
     permissions: [
       { name: 'Authorization.Definitions.Read', displayName: 'View permission definitions' },
       { name: 'Authorization.Grants.Manage', displayName: 'Manage permission grants' },
-    ] as PermissionDefinitionDto[],
+    ] as PermissionDefinitionResponse[],
   },
   {
     name: 'BackgroundJobs',
@@ -50,7 +50,7 @@ export const mockPermissionGroups: PermissionGroupDto[] = [
     permissions: [
       { name: 'BackgroundJobs.Jobs.Read', displayName: 'View background jobs' },
       { name: 'BackgroundJobs.Jobs.Manage', displayName: 'Manage jobs (pause, resume, trigger)' },
-    ] as PermissionDefinitionDto[],
+    ] as PermissionDefinitionResponse[],
   },
   {
     name: 'Features',
@@ -58,7 +58,7 @@ export const mockPermissionGroups: PermissionGroupDto[] = [
     permissions: [
       { name: 'Features.Flags.Read', displayName: 'View feature flags' },
       { name: 'Features.Flags.Manage', displayName: 'Manage feature flags' },
-    ] as PermissionDefinitionDto[],
+    ] as PermissionDefinitionResponse[],
   },
   {
     name: 'Identity',
@@ -68,7 +68,7 @@ export const mockPermissionGroups: PermissionGroupDto[] = [
       { name: 'Identity.Users.Manage', displayName: 'Manage identity users' },
       { name: 'Identity.Roles.Read', displayName: 'View identity roles' },
       { name: 'Identity.Roles.Manage', displayName: 'Manage identity roles' },
-    ] as PermissionDefinitionDto[],
+    ] as PermissionDefinitionResponse[],
   },
   {
     name: 'Settings',
@@ -78,7 +78,7 @@ export const mockPermissionGroups: PermissionGroupDto[] = [
       { name: 'Settings.Global.Manage', displayName: 'Modify global settings' },
       { name: 'Settings.Tenant.Read', displayName: 'View tenant settings' },
       { name: 'Settings.Tenant.Manage', displayName: 'Modify tenant settings' },
-    ] as PermissionDefinitionDto[],
+    ] as PermissionDefinitionResponse[],
   },
 ];
 

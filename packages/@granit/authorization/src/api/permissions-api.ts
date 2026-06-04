@@ -1,8 +1,8 @@
 import type {
-  PermissionGrantDto,
+  PermissionGrantResponse,
   PermissionGrantParams,
-  PermissionGroupDto,
-  PermissionsResponse,
+  PermissionGroupResponse,
+  MyPermissionsResponse,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
@@ -14,8 +14,10 @@ import type { AxiosInstance } from '@granit/api-client';
 export async function listPermissionDefinitions(
   client: AxiosInstance,
   basePath: string
-): Promise<PermissionGroupDto[]> {
-  const response = await client.get<PermissionGroupDto[]>(`${basePath}/permissions/definitions`);
+): Promise<PermissionGroupResponse[]> {
+  const response = await client.get<PermissionGroupResponse[]>(
+    `${basePath}/permissions/definitions`
+  );
   return response.data;
 }
 
@@ -27,8 +29,8 @@ export async function listPermissionDefinitions(
 export async function getMyPermissions(
   client: AxiosInstance,
   basePath: string
-): Promise<PermissionsResponse> {
-  const response = await client.get<PermissionsResponse>(`${basePath}/permissions`);
+): Promise<MyPermissionsResponse> {
+  const response = await client.get<MyPermissionsResponse>(`${basePath}/permissions`);
   return response.data;
 }
 
@@ -41,8 +43,8 @@ export async function getRolePermissions(
   client: AxiosInstance,
   basePath: string,
   roleName: string
-): Promise<PermissionGrantDto> {
-  const response = await client.get<PermissionGrantDto>(
+): Promise<PermissionGrantResponse> {
+  const response = await client.get<PermissionGrantResponse>(
     `${basePath}/roles/${encodeURIComponent(roleName)}`
   );
   return response.data;

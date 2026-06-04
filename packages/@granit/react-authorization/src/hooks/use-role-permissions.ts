@@ -6,7 +6,7 @@ import { DEFAULT_BASE_PATH } from '../constants';
 import { buildPermissionQueryKey } from './query-keys';
 
 import type { UseRolePermissionsOptions } from '../types';
-import type { PermissionGrantDto } from '@granit/authorization';
+import type { PermissionGrantResponse } from '@granit/authorization';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -31,7 +31,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
  */
 export function useRolePermissions(
   options: UseRolePermissionsOptions
-): UseQueryResult<PermissionGrantDto> {
+): UseQueryResult<PermissionGrantResponse> {
   const { client, roleName, basePath = DEFAULT_BASE_PATH, enabled } = options;
 
   return useQuery({

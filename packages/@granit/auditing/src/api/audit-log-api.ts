@@ -1,4 +1,4 @@
-import type { AuditEntryDetail, AuditListParams, AuditPage } from '../types/index';
+import type { AuditEntryDetailResponse, AuditListParams, AuditPage } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { PaginationParams } from '@granit/query-engine';
 
@@ -8,9 +8,9 @@ import type { PaginationParams } from '@granit/query-engine';
  * `GET {basePath}`
  *
  * @deprecated `{basePath}` is a Granit QueryEngine endpoint
- * (`MapGranitQuery<AuditEntry>`). The flat filter params in {@link AuditListParams}
+ * (`MapGranitQuery<AuditEntryResponse>`). The flat filter params in {@link AuditListParams}
  * are ignored by the backend binder (only `page`/`pageSize` work). Use
- * `getPage<AuditEntry>(client, basePath, request)` from `@granit/query-engine`,
+ * `getPage<AuditEntryResponse>(client, basePath, request)` from `@granit/query-engine`,
  * or the `useAuditEntries()` hook from `@granit/react-auditing`.
  */
 export async function listAuditLogEntries(
@@ -31,8 +31,10 @@ export async function getAuditLogEntry(
   client: AxiosInstance,
   basePath: string,
   id: string
-): Promise<AuditEntryDetail> {
-  const { data } = await client.get<AuditEntryDetail>(`${basePath}/${encodeURIComponent(id)}`);
+): Promise<AuditEntryDetailResponse> {
+  const { data } = await client.get<AuditEntryDetailResponse>(
+    `${basePath}/${encodeURIComponent(id)}`
+  );
   return data;
 }
 
@@ -48,8 +50,8 @@ export async function getAuditEntriesByCorrelationId(
   client: AxiosInstance,
   basePath: string,
   correlationId: string
-): Promise<readonly AuditEntryDetail[]> {
-  const { data } = await client.get<readonly AuditEntryDetail[]>(
+): Promise<readonly AuditEntryDetailResponse[]> {
+  const { data } = await client.get<readonly AuditEntryDetailResponse[]>(
     `${basePath}/correlation/${encodeURIComponent(correlationId)}`
   );
   return data;

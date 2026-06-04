@@ -10,7 +10,7 @@ import { useAuditLogEntries, useAuditLogEntry, useEntityAuditTrail } from '../ho
 import { AuditLogProvider } from '../providers/audit-log-provider';
 
 import type { AuditLogProviderProps } from '../providers/audit-log-provider';
-import type { AuditEntryDetail, AuditPage } from '@granit/auditing';
+import type { AuditEntryDetailResponse, AuditPage } from '@granit/auditing';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -54,7 +54,7 @@ describe('useAuditLogEntries', () => {
 describe('useAuditLogEntry', () => {
   it('should fetch a single entry', async () => {
     const client = createMockClient();
-    const detail: AuditEntryDetail = {
+    const detail: AuditEntryDetailResponse = {
       id: toEntityId<'AuditEntry'>('abc-123'),
       timestamp: toISODateString('2026-03-17T10:00:00Z'),
       userId: toEntityId<'User'>('user-1'),

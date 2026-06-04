@@ -8,7 +8,7 @@ export { buildPermissionQueryKey, permissionKeys } from './query-keys';
 import { buildPermissionQueryKey } from './query-keys';
 
 import type { UsePermissionsOptions, UsePermissionsReturn } from '../types';
-import type { PermissionsResponse } from '@granit/authorization';
+import type { MyPermissionsResponse } from '@granit/authorization';
 
 const EMPTY_SET: ReadonlySet<string> = new Set<string>();
 
@@ -40,7 +40,7 @@ const EMPTY_SET: ReadonlySet<string> = new Set<string>();
 export function usePermissions(options: UsePermissionsOptions): UsePermissionsReturn {
   const { client, basePath = DEFAULT_BASE_PATH, enabled } = options;
 
-  const query = useQuery<PermissionsResponse>({
+  const query = useQuery<MyPermissionsResponse>({
     queryKey: buildPermissionQueryKey(options, 'me'),
     queryFn: () => getMyPermissions(client, basePath),
     enabled: enabled ?? true,

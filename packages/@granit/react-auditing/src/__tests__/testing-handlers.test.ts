@@ -8,7 +8,7 @@ import {
   createAuditHandlers,
 } from '../testing/index';
 
-import type { AuditEntryDetail, AuditPage } from '@granit/auditing';
+import type { AuditEntryDetailResponse, AuditPage } from '@granit/auditing';
 
 const BASE = 'http://api.test/api/v1/auditing';
 const server = setupServer();
@@ -48,7 +48,9 @@ describe('createAuditHandlers — audit-entries', () => {
     server.use(...createAuditHandlers(BASE));
     const response = await fetch(`${BASE}/audit-entries/audit-001`);
     expect(response.status).toBe(200);
-    const detail = (await response.json()) as AuditEntryDetail & { entityChangeCount?: number };
+    const detail = (await response.json()) as AuditEntryDetailResponse & {
+      entityChangeCount?: number;
+    };
     expect(detail.entityChangeCount).toBeUndefined();
     expect(detail.entityChanges.length).toBeGreaterThan(0);
   });
@@ -62,7 +64,7 @@ describe('createAuditHandlers — audit-entries', () => {
   it('returns correlated detail entries', async () => {
     server.use(...createAuditHandlers(BASE));
     const response = await fetch(`${BASE}/audit-entries/correlation/corr-1`);
-    const details = (await response.json()) as AuditEntryDetail[];
+    const details = (await response.json()) as AuditEntryDetailResponse[];
     expect(Array.isArray(details)).toBe(true);
     expect(details.length).toBe(2);
     expect(details[0]).toHaveProperty('entityChanges');

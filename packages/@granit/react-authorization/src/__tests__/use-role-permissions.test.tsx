@@ -5,9 +5,9 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { useRolePermissions } from '../hooks/use-role-permissions';
 
-import type { PermissionGrantDto } from '@granit/authorization';
+import type { PermissionGrantResponse } from '@granit/authorization';
 
-const MOCK_GRANT: PermissionGrantDto = {
+const MOCK_GRANT: PermissionGrantResponse = {
   roleName: 'admin',
   permissions: ['Invoices.Create', 'Invoices.Delete', 'Users.View'],
 };

@@ -1,11 +1,11 @@
-import type { AuditEntityChangeSummary, AuditEntry } from '@granit/auditing';
+import type { AuditEntityChangeSummaryResponse, AuditEntryResponse } from '@granit/auditing';
 import type { Mutable } from '@granit/testing';
 
-export const mockAuditEntries: Mutable<AuditEntry>[] = [
+export const mockAuditEntries: Mutable<AuditEntryResponse>[] = [
   {
-    id: 'audit-001' as AuditEntry['id'],
-    timestamp: '2026-02-27T08:00:00Z' as AuditEntry['timestamp'],
-    userId: 'user-001' as AuditEntry['userId'],
+    id: 'audit-001' as AuditEntryResponse['id'],
+    timestamp: '2026-02-27T08:00:00Z' as AuditEntryResponse['timestamp'],
+    userId: 'user-001' as AuditEntryResponse['userId'],
     userName: 'Marie Dupont',
     category: 'DataMutation',
     ipAddress: '10.0.1.45',
@@ -14,9 +14,9 @@ export const mockAuditEntries: Mutable<AuditEntry>[] = [
     entityChangeCount: 1,
   },
   {
-    id: 'audit-002' as AuditEntry['id'],
-    timestamp: '2026-02-27T09:00:00Z' as AuditEntry['timestamp'],
-    userId: 'user-001' as AuditEntry['userId'],
+    id: 'audit-002' as AuditEntryResponse['id'],
+    timestamp: '2026-02-27T09:00:00Z' as AuditEntryResponse['timestamp'],
+    userId: 'user-001' as AuditEntryResponse['userId'],
     userName: 'Marie Dupont',
     category: 'DataMutation',
     ipAddress: '10.0.1.45',
@@ -25,9 +25,9 @@ export const mockAuditEntries: Mutable<AuditEntry>[] = [
     entityChangeCount: 2,
   },
   {
-    id: 'audit-003' as AuditEntry['id'],
-    timestamp: '2026-02-27T10:00:00Z' as AuditEntry['timestamp'],
-    userId: 'user-005' as AuditEntry['userId'],
+    id: 'audit-003' as AuditEntryResponse['id'],
+    timestamp: '2026-02-27T10:00:00Z' as AuditEntryResponse['timestamp'],
+    userId: 'user-005' as AuditEntryResponse['userId'],
     userName: 'Claire Moreau',
     category: 'ConfigurationChange',
     ipAddress: '10.0.2.12',
@@ -36,9 +36,9 @@ export const mockAuditEntries: Mutable<AuditEntry>[] = [
     entityChangeCount: 1,
   },
   {
-    id: 'audit-004' as AuditEntry['id'],
-    timestamp: '2026-02-26T14:00:00Z' as AuditEntry['timestamp'],
-    userId: 'user-010' as AuditEntry['userId'],
+    id: 'audit-004' as AuditEntryResponse['id'],
+    timestamp: '2026-02-26T14:00:00Z' as AuditEntryResponse['timestamp'],
+    userId: 'user-010' as AuditEntryResponse['userId'],
     userName: 'François Lambert',
     category: 'ConfigurationChange',
     ipAddress: '10.0.3.88',
@@ -47,9 +47,9 @@ export const mockAuditEntries: Mutable<AuditEntry>[] = [
     entityChangeCount: 1,
   },
   {
-    id: 'audit-005' as AuditEntry['id'],
-    timestamp: '2026-02-26T16:00:00Z' as AuditEntry['timestamp'],
-    userId: 'user-001' as AuditEntry['userId'],
+    id: 'audit-005' as AuditEntryResponse['id'],
+    timestamp: '2026-02-26T16:00:00Z' as AuditEntryResponse['timestamp'],
+    userId: 'user-001' as AuditEntryResponse['userId'],
     userName: 'Marie Dupont',
     category: 'DataMutation',
     ipAddress: '10.0.1.45',
@@ -58,9 +58,9 @@ export const mockAuditEntries: Mutable<AuditEntry>[] = [
     entityChangeCount: 3,
   },
   {
-    id: 'audit-006' as AuditEntry['id'],
-    timestamp: '2026-02-25T09:00:00Z' as AuditEntry['timestamp'],
-    userId: 'user-005' as AuditEntry['userId'],
+    id: 'audit-006' as AuditEntryResponse['id'],
+    timestamp: '2026-02-25T09:00:00Z' as AuditEntryResponse['timestamp'],
+    userId: 'user-005' as AuditEntryResponse['userId'],
     userName: 'Claire Moreau',
     category: 'DataMutation',
     ipAddress: '10.0.2.12',
@@ -69,11 +69,11 @@ export const mockAuditEntries: Mutable<AuditEntry>[] = [
     entityChangeCount: 1,
   },
   {
-    id: 'audit-007' as AuditEntry['id'],
-    timestamp: '2026-02-24T11:00:00Z' as AuditEntry['timestamp'],
+    id: 'audit-007' as AuditEntryResponse['id'],
+    timestamp: '2026-02-24T11:00:00Z' as AuditEntryResponse['timestamp'],
     // System-initiated entry: backend UserId is a non-nullable string (string.Empty
     // for system actors), only UserName is null. Never null on the wire.
-    userId: 'system' as AuditEntry['userId'],
+    userId: 'system' as AuditEntryResponse['userId'],
     userName: null,
     category: 'DataAccess',
     ipAddress: '10.0.4.1',
@@ -82,9 +82,9 @@ export const mockAuditEntries: Mutable<AuditEntry>[] = [
     entityChangeCount: 0,
   },
   {
-    id: 'audit-008' as AuditEntry['id'],
-    timestamp: '2026-02-23T08:00:00Z' as AuditEntry['timestamp'],
-    userId: 'user-010' as AuditEntry['userId'],
+    id: 'audit-008' as AuditEntryResponse['id'],
+    timestamp: '2026-02-23T08:00:00Z' as AuditEntryResponse['timestamp'],
+    userId: 'user-010' as AuditEntryResponse['userId'],
     userName: 'François Lambert',
     category: 'AccessDenied',
     ipAddress: '10.0.3.88',
@@ -93,9 +93,9 @@ export const mockAuditEntries: Mutable<AuditEntry>[] = [
     entityChangeCount: 0,
   },
   {
-    id: 'audit-009' as AuditEntry['id'],
-    timestamp: '2026-02-22T10:00:00Z' as AuditEntry['timestamp'],
-    userId: 'user-001' as AuditEntry['userId'],
+    id: 'audit-009' as AuditEntryResponse['id'],
+    timestamp: '2026-02-22T10:00:00Z' as AuditEntryResponse['timestamp'],
+    userId: 'user-001' as AuditEntryResponse['userId'],
     userName: 'Marie Dupont',
     category: 'DataMutation',
     ipAddress: '10.0.1.45',
@@ -104,9 +104,9 @@ export const mockAuditEntries: Mutable<AuditEntry>[] = [
     entityChangeCount: 2,
   },
   {
-    id: 'audit-010' as AuditEntry['id'],
-    timestamp: '2026-02-20T14:00:00Z' as AuditEntry['timestamp'],
-    userId: 'user-010' as AuditEntry['userId'],
+    id: 'audit-010' as AuditEntryResponse['id'],
+    timestamp: '2026-02-20T14:00:00Z' as AuditEntryResponse['timestamp'],
+    userId: 'user-010' as AuditEntryResponse['userId'],
     userName: 'François Lambert',
     category: 'ConfigurationChange',
     ipAddress: '10.0.3.88',
@@ -117,26 +117,26 @@ export const mockAuditEntries: Mutable<AuditEntry>[] = [
 ];
 
 /** Mock entity-change summaries for the `audit-entity-changes` query resource. */
-export const mockAuditEntityChanges: Mutable<AuditEntityChangeSummary>[] = [
+export const mockAuditEntityChanges: Mutable<AuditEntityChangeSummaryResponse>[] = [
   {
-    id: 'change-001' as AuditEntityChangeSummary['id'],
-    auditEntryId: 'audit-001' as AuditEntityChangeSummary['auditEntryId'],
+    id: 'change-001' as AuditEntityChangeSummaryResponse['id'],
+    auditEntryId: 'audit-001' as AuditEntityChangeSummaryResponse['auditEntryId'],
     entityType: 'User',
     entityId: 'user-001',
     changeType: 'Modified',
     propertyChangeCount: 2,
   },
   {
-    id: 'change-002' as AuditEntityChangeSummary['id'],
-    auditEntryId: 'audit-002' as AuditEntityChangeSummary['auditEntryId'],
+    id: 'change-002' as AuditEntityChangeSummaryResponse['id'],
+    auditEntryId: 'audit-002' as AuditEntityChangeSummaryResponse['auditEntryId'],
     entityType: 'Tenant',
     entityId: 'tenant-007',
     changeType: 'Created',
     propertyChangeCount: 5,
   },
   {
-    id: 'change-003' as AuditEntityChangeSummary['id'],
-    auditEntryId: 'audit-005' as AuditEntityChangeSummary['auditEntryId'],
+    id: 'change-003' as AuditEntityChangeSummaryResponse['id'],
+    auditEntryId: 'audit-005' as AuditEntityChangeSummaryResponse['auditEntryId'],
     entityType: 'User',
     entityId: 'user-001',
     changeType: 'SoftDeleted',

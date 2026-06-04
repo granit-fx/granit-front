@@ -8,7 +8,11 @@ import { DEFAULT_BASE_PATH } from '../constants';
 
 import { mockAuditEntityChanges, mockAuditEntries } from './data';
 
-import type { AuditEntityChangeSummary, AuditEntry, AuditEntryDetail } from '@granit/auditing';
+import type {
+  AuditEntityChangeSummaryResponse,
+  AuditEntryResponse,
+  AuditEntryDetailResponse,
+} from '@granit/auditing';
 import type { QueryMetadata } from '@granit/query-engine';
 
 const AUDIT_CATEGORIES = Object.values(AuditCategory);
@@ -189,8 +193,8 @@ export const auditEntityChangeQueryMetadata: QueryMetadata = {
   defaultSort: '-auditEntryId',
 };
 
-/** Builds an {@link AuditEntryDetail} from a summary entry (drops `entityChangeCount`). */
-function toDetail(entry: AuditEntry): AuditEntryDetail {
+/** Builds an {@link AuditEntryDetailResponse} from a summary entry (drops `entityChangeCount`). */
+function toDetail(entry: AuditEntryResponse): AuditEntryDetailResponse {
   return {
     id: entry.id,
     timestamp: entry.timestamp,
@@ -233,14 +237,17 @@ export function createAuditHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const category =
         url.searchParams.get('filter[category.eq]') ?? url.searchParams.get('category');
 
-      let filtered: AuditEntry[] = [...mockAuditEntries];
+      let filtered: AuditEntryResponse[] = [...mockAuditEntries];
       if (category) {
         filtered = filtered.filter((e) => e.category === category);
       }
       filtered.sort((a, b) => (b.timestamp as string).localeCompare(a.timestamp as string));
 
       const start = (page - 1) * pageSize;
-      return pagedResponse<AuditEntry>(filtered.slice(start, start + pageSize), filtered.length);
+      return pagedResponse<AuditEntryResponse>(
+        filtered.slice(start, start + pageSize),
+        filtered.length
+      );
     }),
 
     // GET /audit-entries/entity/:entityType/:entityId — per-entity audit trail
@@ -249,7 +256,7 @@ export function createAuditHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const page = Number(url.searchParams.get('page') ?? 1);
       const pageSize = Number(url.searchParams.get('pageSize') ?? 25);
       const start = (page - 1) * pageSize;
-      return pagedResponse<AuditEntry>(
+      return pagedResponse<AuditEntryResponse>(
         mockAuditEntries.slice(start, start + pageSize),
         mockAuditEntries.length
       );
@@ -292,13 +299,13 @@ export function createAuditEntityChangesHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const entityType =
         url.searchParams.get('filter[entityType.eq]') ?? url.searchParams.get('entityType');
 
-      let filtered: AuditEntityChangeSummary[] = [...mockAuditEntityChanges];
+      let filtered: AuditEntityChangeSummaryResponse[] = [...mockAuditEntityChanges];
       if (entityType) {
         filtered = filtered.filter((c) => c.entityType === entityType);
       }
 
       const start = (page - 1) * pageSize;
-      return pagedResponse<AuditEntityChangeSummary>(
+      return pagedResponse<AuditEntityChangeSummaryResponse>(
         filtered.slice(start, start + pageSize),
         filtered.length
       );
