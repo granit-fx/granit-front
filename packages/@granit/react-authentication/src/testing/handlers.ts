@@ -1,19 +1,18 @@
 import { http, HttpResponse } from 'msw';
 
-import { mockBffSessions } from './data';
-
 /**
- * Create stateful MSW handlers for authentication endpoints.
+ * Create MSW handlers for the authentication API.
  *
- * Covers:
- * - `GET /me` — returns the full permission set for the current user
- * - BFF session endpoints — list, delete single, delete all
+ * Covers `GET {baseUrl}/me` (the current user's permission set). BFF session
+ * mocks now live in `@granit/react-bff/testing` — compose `createBffHandlers()`
+ * alongside these handlers instead.
  *
- * @param baseUrl       - Auth API base path (default: `/api/v1/auth`)
- * @param bffSessionsUrl - BFF sessions endpoint (default: `/bff/sessions`).
- *                        Pass the full prefix for host/tenant apps, e.g. `/host/bff/sessions`.
+ * @param baseUrl - Auth API base path (default: `/api/v1/auth`).
+ * @param _bffSessionsUrl - Deprecated and ignored; BFF session mocks moved to
+ *   `@granit/react-bff/testing`. Kept only so existing two-argument callers keep
+ *   compiling — pass nothing and compose `createBffHandlers()` instead.
  */
-export function createAuthHandlers(baseUrl = '/api/v1/auth', bffSessionsUrl = '/bff/sessions') {
+export function createAuthHandlers(baseUrl = '/api/v1/auth', _bffSessionsUrl?: string) {
   return [
     http.get(`${baseUrl}/me`, () => {
       return HttpResponse.json({
@@ -111,21 +110,6 @@ export function createAuthHandlers(baseUrl = '/api/v1/auth', bffSessionsUrl = '/
           'Workflow.Transitions.Execute',
         ],
       });
-    }),
-
-    // BFF session endpoints — list is wrapped in `{ sessions }`, mirroring
-    // the Granit.Bff `BffSessionListResponse` contract that `listBffSessions`
-    // reads (`data.sessions`).
-    http.get(bffSessionsUrl, () => {
-      return HttpResponse.json({ sessions: mockBffSessions });
-    }),
-
-    http.delete(`${bffSessionsUrl}/:sessionId`, () => {
-      return new HttpResponse(null, { status: 204 });
-    }),
-
-    http.delete(bffSessionsUrl, () => {
-      return new HttpResponse(null, { status: 204 });
     }),
   ];
 }

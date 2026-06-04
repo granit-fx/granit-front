@@ -1046,10 +1046,6 @@ importers:
       react:
         specifier: 19.2.7
         version: 19.2.7
-    devDependencies:
-      '@granit/react-bff':
-        specifier: workspace:*
-        version: link:../react-bff
 
   packages/@granit/react-authentication-api-keys:
     dependencies:

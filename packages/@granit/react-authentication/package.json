@@ -36,8 +36,5 @@
       }
     },
     "registry": "https://npm.pkg.github.com"
-  },
-  "devDependencies": {
-    "@granit/react-bff": "workspace:*"
   }
 }
