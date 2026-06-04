@@ -4,7 +4,7 @@ import {
   createProduct,
   getProductById,
   getProductBySku,
-  listPublishedProducts,
+  listActiveProducts,
   publishProduct,
   removeProductExternalMapping,
   updateProduct,
@@ -18,7 +18,6 @@ import type {
   AddProductExternalMappingRequest,
   ProductCreateRequest,
   ProductExternalMappingId,
-  ProductExternalMappingResponse,
   ProductId,
   ProductResponse,
   ProductUpdateRequest,
@@ -30,12 +29,12 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 // Reads
 // ---------------------------------------------------------------------------
 
-/** Lists all Published products in the catalog. */
-export function usePublishedProducts(): UseQueryResult<readonly ProductResponse[]> {
+/** Lists the active product catalog (Published status only). */
+export function useActiveProducts(): UseQueryResult<readonly ProductResponse[]> {
   const config = useCatalogConfig();
   return useQuery({
-    queryKey: buildCatalogQueryKey(config, 'products', 'published'),
-    queryFn: () => listPublishedProducts(config.client, config.basePath),
+    queryKey: buildCatalogQueryKey(config, 'products', 'active'),
+    queryFn: () => listActiveProducts(config.client, config.basePath),
   });
 }
 
@@ -139,8 +138,8 @@ export function useUpdateProductMetadata(): UseMutationResult<
 // Mutations — lifecycle
 // ---------------------------------------------------------------------------
 
-/** Transitions a Draft product to Published. */
-export function usePublishProduct(): UseMutationResult<ProductResponse, Error, ProductId> {
+/** Transitions a Draft product to Published. Resolves with no value (backend returns 204). */
+export function usePublishProduct(): UseMutationResult<void, Error, ProductId> {
   const config = useCatalogConfig();
   const invalidate = useInvalidateProducts();
   return useMutation({
@@ -149,8 +148,8 @@ export function usePublishProduct(): UseMutationResult<ProductResponse, Error, P
   });
 }
 
-/** Archives a Published product. */
-export function useArchiveProduct(): UseMutationResult<ProductResponse, Error, ProductId> {
+/** Archives a Published product. Resolves with no value (backend returns 204). */
+export function useArchiveProduct(): UseMutationResult<void, Error, ProductId> {
   const config = useCatalogConfig();
   const invalidate = useInvalidateProducts();
   return useMutation({
@@ -169,9 +168,12 @@ export interface AddProductExternalMappingVariables {
   readonly request: AddProductExternalMappingRequest;
 }
 
-/** Adds an external provider mapping (Stripe, Avalara, Odoo, ...) to a product. */
+/**
+ * Adds an external provider mapping (Stripe, Avalara, Odoo, ...) to a product.
+ * Resolves with the full updated product (backend returns 200 + ProductResponse).
+ */
 export function useAddProductExternalMapping(): UseMutationResult<
-  ProductExternalMappingResponse,
+  ProductResponse,
   Error,
   AddProductExternalMappingVariables
 > {

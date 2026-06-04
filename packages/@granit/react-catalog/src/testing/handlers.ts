@@ -39,8 +39,10 @@ function nextProductId(): string {
  */
 export function createCatalogHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
-    // GET /catalog/products → Published only
-    http.get(`${baseUrl}/products`, () => {
+    // GET /catalog/products/active → active catalog (Published only).
+    // The bare GET /catalog/products route is the query-engine admin grid
+    // (paged, full lifecycle) — not mocked here.
+    http.get(`${baseUrl}/products/active`, () => {
       const published = products.filter((p) => p.lifecycleStatus === 'Published');
       return HttpResponse.json(published);
     }),
@@ -108,25 +110,25 @@ export function createCatalogHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return HttpResponse.json(updated);
     }),
 
-    // POST /catalog/products/{id}/publish
+    // POST /catalog/products/{id}/publish → 204 No Content
     http.post(`${baseUrl}/products/:id/publish`, ({ params }) => {
       const product = findProductOrFail(params.id as string);
       if (!product) return new HttpResponse(null, { status: 404 });
       const updated: ProductResponse = { ...product, lifecycleStatus: 'Published' };
       products = products.map((p) => (p.id === updated.id ? updated : p));
-      return HttpResponse.json(updated);
+      return new HttpResponse(null, { status: 204 });
     }),
 
-    // POST /catalog/products/{id}/archive
+    // POST /catalog/products/{id}/archive → 204 No Content
     http.post(`${baseUrl}/products/:id/archive`, ({ params }) => {
       const product = findProductOrFail(params.id as string);
       if (!product) return new HttpResponse(null, { status: 404 });
       const updated: ProductResponse = { ...product, lifecycleStatus: 'Archived' };
       products = products.map((p) => (p.id === updated.id ? updated : p));
-      return HttpResponse.json(updated);
+      return new HttpResponse(null, { status: 204 });
     }),
 
-    // POST /catalog/products/{id}/external-mappings
+    // POST /catalog/products/{id}/external-mappings → 200 OK with the full product
     http.post(`${baseUrl}/products/:id/external-mappings`, async ({ params, request }) => {
       const body = (await request.json()) as AddProductExternalMappingRequest;
       const product = findProductOrFail(params.id as string);
@@ -141,7 +143,7 @@ export function createCatalogHandlers(baseUrl = DEFAULT_BASE_PATH) {
         externalMappings: [...product.externalMappings, mapping],
       };
       products = products.map((p) => (p.id === updated.id ? updated : p));
-      return HttpResponse.json(mapping, { status: 201 });
+      return HttpResponse.json(updated);
     }),
 
     // DELETE /catalog/products/{id}/external-mappings/{mappingId}

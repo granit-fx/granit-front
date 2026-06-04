@@ -7,7 +7,7 @@ import {
   createProduct,
   getProductById,
   getProductBySku,
-  listPublishedProducts,
+  listActiveProducts,
   publishProduct,
   removeProductExternalMapping,
   updateProduct,
@@ -56,7 +56,7 @@ const sampleDraftProduct: ProductResponse = {
   sku: 'GOOD-WIDGET-A',
   name: 'Widget A',
   description: null,
-  type: 'Good',
+  type: 'Physical',
   unit: 'each',
   lifecycleStatus: 'Draft',
   metadata: {},
@@ -66,25 +66,25 @@ const sampleDraftProduct: ProductResponse = {
 const basePath = '/api/catalog';
 
 // ---------------------------------------------------------------------------
-// listPublishedProducts
+// listActiveProducts
 // ---------------------------------------------------------------------------
 
-describe('listPublishedProducts', () => {
-  it('should GET {basePath}/products', async () => {
+describe('listActiveProducts', () => {
+  it('should GET {basePath}/products/active', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: [sampleProduct] });
 
-    const result = await listPublishedProducts(client, basePath);
+    const result = await listActiveProducts(client, basePath);
 
-    expect(client.get).toHaveBeenCalledWith(`${basePath}/products`);
+    expect(client.get).toHaveBeenCalledWith(`${basePath}/products/active`);
     expect(result).toEqual([sampleProduct]);
   });
 
-  it('should return an empty array when no products are published', async () => {
+  it('should return an empty array when no products are active', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: [] });
 
-    const result = await listPublishedProducts(client, basePath);
+    const result = await listActiveProducts(client, basePath);
 
     expect(result).toEqual([]);
   });
@@ -93,9 +93,9 @@ describe('listPublishedProducts', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: [sampleProduct] });
 
-    await listPublishedProducts(client, '/v2/shop');
+    await listActiveProducts(client, '/v2/shop');
 
-    expect(client.get).toHaveBeenCalledWith('/v2/shop/products');
+    expect(client.get).toHaveBeenCalledWith('/v2/shop/products/active');
   });
 });
 
@@ -181,7 +181,7 @@ describe('createProduct', () => {
     const request: ProductCreateRequest = {
       sku: 'GOOD-WIDGET-A',
       name: 'Widget A',
-      type: 'Good',
+      type: 'Physical',
       unit: 'each',
     };
 
@@ -203,7 +203,7 @@ describe('createProduct', () => {
     const request: ProductCreateRequest = {
       sku: 'GOOD-WIDGET-A',
       name: 'Widget A',
-      type: 'Good',
+      type: 'Physical',
       unit: 'each',
       description: 'A sturdy widget.',
     };
@@ -312,26 +312,22 @@ describe('updateProductMetadata', () => {
 // ---------------------------------------------------------------------------
 
 describe('publishProduct', () => {
-  it('should POST {basePath}/products/{id}/publish', async () => {
+  it('should POST {basePath}/products/{id}/publish and resolve to void (204)', async () => {
     const client = createMockClient();
-    const publishedProduct: ProductResponse = {
-      ...sampleDraftProduct,
-      lifecycleStatus: 'Published',
-    };
-    vi.mocked(client.post).mockResolvedValue({ data: publishedProduct });
+    vi.mocked(client.post).mockResolvedValue({ data: undefined });
 
     const result = await publishProduct(client, basePath, PRODUCT_ID_2);
 
     expect(client.post).toHaveBeenCalledWith(
       `${basePath}/products/${encodeURIComponent(PRODUCT_ID_2)}/publish`
     );
-    expect(result.lifecycleStatus).toBe('Published');
+    expect(result).toBeUndefined();
   });
 
   it('should URI-encode the product ID', async () => {
     const client = createMockClient();
     const specialId = 'prod/special id' as ProductId;
-    vi.mocked(client.post).mockResolvedValue({ data: sampleProduct });
+    vi.mocked(client.post).mockResolvedValue({ data: undefined });
 
     await publishProduct(client, basePath, specialId);
 
@@ -346,26 +342,22 @@ describe('publishProduct', () => {
 // ---------------------------------------------------------------------------
 
 describe('archiveProduct', () => {
-  it('should POST {basePath}/products/{id}/archive', async () => {
+  it('should POST {basePath}/products/{id}/archive and resolve to void (204)', async () => {
     const client = createMockClient();
-    const archivedProduct: ProductResponse = {
-      ...sampleProduct,
-      lifecycleStatus: 'Archived',
-    };
-    vi.mocked(client.post).mockResolvedValue({ data: archivedProduct });
+    vi.mocked(client.post).mockResolvedValue({ data: undefined });
 
     const result = await archiveProduct(client, basePath, PRODUCT_ID);
 
     expect(client.post).toHaveBeenCalledWith(
       `${basePath}/products/${encodeURIComponent(PRODUCT_ID)}/archive`
     );
-    expect(result.lifecycleStatus).toBe('Archived');
+    expect(result).toBeUndefined();
   });
 
   it('should URI-encode the product ID', async () => {
     const client = createMockClient();
     const specialId = 'prod/archive&me' as ProductId;
-    vi.mocked(client.post).mockResolvedValue({ data: sampleProduct });
+    vi.mocked(client.post).mockResolvedValue({ data: undefined });
 
     await archiveProduct(client, basePath, specialId);
 
@@ -380,9 +372,10 @@ describe('archiveProduct', () => {
 // ---------------------------------------------------------------------------
 
 describe('addProductExternalMapping', () => {
-  it('should POST {basePath}/products/{id}/external-mappings with the request body', async () => {
+  it('should POST {basePath}/products/{id}/external-mappings and return the updated product', async () => {
     const client = createMockClient();
-    vi.mocked(client.post).mockResolvedValue({ data: sampleMapping });
+    // Backend responds 200 with the full updated product (mapping appended).
+    vi.mocked(client.post).mockResolvedValue({ data: sampleProduct });
 
     const request: AddProductExternalMappingRequest = {
       providerName: 'Stripe',
@@ -395,7 +388,8 @@ describe('addProductExternalMapping', () => {
       `${basePath}/products/${encodeURIComponent(PRODUCT_ID)}/external-mappings`,
       request
     );
-    expect(result).toEqual(sampleMapping);
+    expect(result).toEqual(sampleProduct);
+    expect(result.externalMappings).toContainEqual(sampleMapping);
   });
 
   it('should support other provider names (Avalara, Odoo)', async () => {
@@ -405,7 +399,11 @@ describe('addProductExternalMapping', () => {
       providerName: 'Avalara',
       externalId: 'AVA-SERVICE-001',
     };
-    vi.mocked(client.post).mockResolvedValue({ data: avalaraMapping });
+    const updatedProduct: ProductResponse = {
+      ...sampleProduct,
+      externalMappings: [...sampleProduct.externalMappings, avalaraMapping],
+    };
+    vi.mocked(client.post).mockResolvedValue({ data: updatedProduct });
 
     const request: AddProductExternalMappingRequest = {
       providerName: 'Avalara',
@@ -418,7 +416,7 @@ describe('addProductExternalMapping', () => {
       `${basePath}/products/${encodeURIComponent(PRODUCT_ID)}/external-mappings`,
       request
     );
-    expect(result.providerName).toBe('Avalara');
+    expect(result.externalMappings.map((m) => m.providerName)).toContain('Avalara');
   });
 });
 

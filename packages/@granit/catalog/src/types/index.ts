@@ -7,10 +7,19 @@ export type ProductId = EntityId<'Product'>;
 export type ProductExternalMappingId = EntityId<'ProductExternalMapping'>;
 
 /**
- * Lifecycle status of a catalog product. Mirrors
- * `Granit.Workflow.Domain.WorkflowLifecycleStatus` string values.
+ * Lifecycle status of a catalog product. Mirrors the reachable subset of
+ * `Granit.Workflow.Domain.WorkflowLifecycleStatus` for `Product`: the entity's
+ * state machine is `Draft → Published → Archived` (it never enters
+ * `PendingReview`).
  */
 export type ProductLifecycleStatus = 'Draft' | 'Published' | 'Archived';
+
+/**
+ * Coarse product classification. Mirrors `Granit.Catalog.Domain.ProductType`
+ * (serialized to its string name). Drives downstream behavior (tax, shipping,
+ * metering).
+ */
+export type ProductType = 'Service' | 'Metered' | 'Physical' | 'Digital';
 
 /** Product external provider mapping (Stripe, Avalara, Odoo, ...). */
 export interface ProductExternalMappingResponse {
@@ -25,8 +34,8 @@ export interface ProductResponse {
   readonly sku: string;
   readonly name: string;
   readonly description: string | null;
-  /** Free-form product type (e.g. `Service`, `Good`). Backend string. */
-  readonly type: string;
+  /** Product classification (`Service`, `Metered`, `Physical`, `Digital`). */
+  readonly type: ProductType;
   /** Unit of measure (e.g. `each`, `hour`). */
   readonly unit: string;
   readonly lifecycleStatus: ProductLifecycleStatus;
@@ -38,7 +47,7 @@ export interface ProductResponse {
 export interface ProductCreateRequest {
   readonly sku: string;
   readonly name: string;
-  readonly type: string;
+  readonly type: ProductType;
   readonly unit: string;
   readonly description?: string | null;
 }

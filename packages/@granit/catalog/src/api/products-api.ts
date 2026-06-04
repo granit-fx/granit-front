@@ -2,7 +2,6 @@ import type {
   AddProductExternalMappingRequest,
   ProductCreateRequest,
   ProductExternalMappingId,
-  ProductExternalMappingResponse,
   ProductId,
   ProductResponse,
   ProductUpdateRequest,
@@ -11,15 +10,19 @@ import type {
 import type { AxiosInstance } from '@granit/api-client';
 
 /**
- * Lists all Published products in the catalog.
+ * Lists the active product catalog (Published status only).
  *
- * `GET {basePath}/products`
+ * `GET {basePath}/products/active`
+ *
+ * The bare `GET {basePath}/products` route is the `Products.Manage`-gated
+ * query-engine admin grid (paginated, full lifecycle) — consume it via
+ * `@granit/react-query-engine`, not this function.
  */
-export async function listPublishedProducts(
+export async function listActiveProducts(
   client: AxiosInstance,
   basePath: string
 ): Promise<readonly ProductResponse[]> {
-  const { data } = await client.get<ProductResponse[]>(`${basePath}/products`);
+  const { data } = await client.get<ProductResponse[]>(`${basePath}/products/active`);
   return data;
 }
 
@@ -109,47 +112,42 @@ export async function updateProductMetadata(
 /**
  * Transitions a Draft product to Published.
  *
- * `POST {basePath}/products/{id}/publish`
+ * `POST {basePath}/products/{id}/publish` — responds `204 No Content`.
  */
 export async function publishProduct(
   client: AxiosInstance,
   basePath: string,
   id: ProductId
-): Promise<ProductResponse> {
-  const { data } = await client.post<ProductResponse>(
-    `${basePath}/products/${encodeURIComponent(id)}/publish`
-  );
-  return data;
+): Promise<void> {
+  await client.post(`${basePath}/products/${encodeURIComponent(id)}/publish`);
 }
 
 /**
  * Archives a Published product.
  *
- * `POST {basePath}/products/{id}/archive`
+ * `POST {basePath}/products/{id}/archive` — responds `204 No Content`.
  */
 export async function archiveProduct(
   client: AxiosInstance,
   basePath: string,
   id: ProductId
-): Promise<ProductResponse> {
-  const { data } = await client.post<ProductResponse>(
-    `${basePath}/products/${encodeURIComponent(id)}/archive`
-  );
-  return data;
+): Promise<void> {
+  await client.post(`${basePath}/products/${encodeURIComponent(id)}/archive`);
 }
 
 /**
  * Adds an external provider mapping (Stripe, Avalara, Odoo, ...) to a product.
  *
- * `POST {basePath}/products/{id}/external-mappings`
+ * `POST {basePath}/products/{id}/external-mappings` — responds `200 OK` with the
+ * full updated product (including the new mapping in `externalMappings`).
  */
 export async function addProductExternalMapping(
   client: AxiosInstance,
   basePath: string,
   id: ProductId,
   request: AddProductExternalMappingRequest
-): Promise<ProductExternalMappingResponse> {
-  const { data } = await client.post<ProductExternalMappingResponse>(
+): Promise<ProductResponse> {
+  const { data } = await client.post<ProductResponse>(
     `${basePath}/products/${encodeURIComponent(id)}/external-mappings`,
     request
   );

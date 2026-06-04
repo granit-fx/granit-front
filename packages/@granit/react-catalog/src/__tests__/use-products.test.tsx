@@ -8,10 +8,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 import {
+  useActiveProducts,
   useCreateProduct,
   useProduct,
   useProductBySku,
-  usePublishedProducts,
 } from '../hooks/use-products';
 import {
   CatalogProvider,
@@ -48,7 +48,7 @@ const sampleProduct: ProductResponse = {
   sku: 'SKU-001',
   name: 'Widget Pro',
   description: 'A professional widget',
-  type: 'Good',
+  type: 'Physical',
   unit: 'each',
   lifecycleStatus: 'Published',
   metadata: { category: 'hardware' },
@@ -60,7 +60,7 @@ const sampleDraftProduct: ProductResponse = {
   sku: 'SKU-002',
   name: 'Widget Lite',
   description: null,
-  type: 'Good',
+  type: 'Physical',
   unit: 'each',
   lifecycleStatus: 'Draft',
   metadata: {},
@@ -170,24 +170,24 @@ describe('buildCatalogQueryKey', () => {
 });
 
 // ---------------------------------------------------------------------------
-// usePublishedProducts
+// useActiveProducts
 // ---------------------------------------------------------------------------
 
-describe('usePublishedProducts', () => {
+describe('useActiveProducts', () => {
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  it('fetches all published products', async () => {
+  it('fetches the active (published) products', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: [sampleProduct] });
 
-    const { result } = renderHook(() => usePublishedProducts(), {
+    const { result } = renderHook(() => useActiveProducts(), {
       wrapper: createWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith(`${DEFAULT_BASE_PATH}/products`);
+    expect(client.get).toHaveBeenCalledWith(`${DEFAULT_BASE_PATH}/products/active`);
     expect(result.current.data).toEqual([sampleProduct]);
   });
 
@@ -195,7 +195,7 @@ describe('usePublishedProducts', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: [] });
 
-    const { result } = renderHook(() => usePublishedProducts(), {
+    const { result } = renderHook(() => useActiveProducts(), {
       wrapper: createWrapper(client),
     });
 
@@ -207,12 +207,12 @@ describe('usePublishedProducts', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: [sampleProduct] });
 
-    const { result } = renderHook(() => usePublishedProducts(), {
+    const { result } = renderHook(() => useActiveProducts(), {
       wrapper: createWrapper(client, '/custom/catalog'),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/custom/catalog/products');
+    expect(client.get).toHaveBeenCalledWith('/custom/catalog/products/active');
   });
 });
 

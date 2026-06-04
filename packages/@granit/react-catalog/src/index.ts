@@ -16,13 +16,13 @@ export type {
 
 // Hooks
 export {
+  useActiveProducts,
   useAddProductExternalMapping,
   useArchiveProduct,
   useCreateProduct,
   useProduct,
   useProductBySku,
   usePublishProduct,
-  usePublishedProducts,
   useRemoveProductExternalMapping,
   useUpdateProduct,
   useUpdateProductMetadata,

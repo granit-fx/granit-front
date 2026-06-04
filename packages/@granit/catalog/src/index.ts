@@ -11,6 +11,7 @@ export type {
   ProductId,
   ProductLifecycleStatus,
   ProductResponse,
+  ProductType,
   ProductUpdateRequest,
   UpdateProductMetadataRequest,
 } from './types/index';
@@ -21,7 +22,7 @@ export {
   createProduct,
   getProductById,
   getProductBySku,
-  listPublishedProducts,
+  listActiveProducts,
   publishProduct,
   removeProductExternalMapping,
   updateProduct,
