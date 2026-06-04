@@ -16,7 +16,9 @@ import type { EntityId, ISODateString, TenantId } from '@granit/types';
 interface BffAuthenticatedUserBase {
   readonly authenticated: true;
   readonly sub: string;
+  /** Display name. `''` when the id_token carries no `name` claim (backend `string?`). */
   readonly name: string;
+  /** Email. `''` when the id_token carries no `email` claim (backend `string?`). */
   readonly email: string;
   readonly roles: readonly string[];
   readonly sessionExpiresAt: ISODateString;
@@ -62,6 +64,11 @@ export interface BffSessionInfo {
 /** Response from GET /{prefix}/bff/sessions. */
 export interface BffSessionListResponse {
   readonly sessions: readonly BffSessionInfo[];
+}
+
+/** Response from POST /{prefix}/bff/csrf-token. Mirrors Granit.Bff `BffCsrfTokenResponse`. */
+export interface BffCsrfTokenResponse {
+  readonly csrfToken: string;
 }
 
 /** Configuration for the BFF authentication provider. */

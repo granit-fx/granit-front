@@ -2954,6 +2954,11 @@
           "signature": "function useBffFetch()"
         },
         {
+          "name": "resolveBffTenantId",
+          "kind": "function",
+          "signature": "function resolveBffTenantId(user: BffUser | null): string | undefined"
+        },
+        {
           "name": "useBffTenantGetter",
           "kind": "function",
           "signature": "function useBffTenantGetter(): () => string | undefined"

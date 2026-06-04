@@ -59,12 +59,19 @@ function readAuthenticatedBase(
     issues.push('field "sub" must be a non-empty string');
     ok = false;
   }
-  if (!isString(obj.name)) {
-    issues.push('field "name" must be a string');
+  // Backend emits `name`/`email` as nullable (`string?`): a session whose
+  // id_token carries no profile/email claim is still authenticated. Map a
+  // null/absent claim to '' instead of rejecting the whole response — the
+  // previous strict check silently forced such a valid user into the
+  // unauthenticated state. A present-but-non-string value is still malformed.
+  const name = obj.name ?? '';
+  if (typeof name !== 'string') {
+    issues.push('field "name" must be a string when present');
     ok = false;
   }
-  if (!isString(obj.email)) {
-    issues.push('field "email" must be a string');
+  const email = obj.email ?? '';
+  if (typeof email !== 'string') {
+    issues.push('field "email" must be a string when present');
     ok = false;
   }
   if (!isStringArray(obj.roles)) {
@@ -78,8 +85,8 @@ function readAuthenticatedBase(
   if (!ok) return null;
   return {
     sub: obj.sub as string,
-    name: obj.name as string,
-    email: obj.email as string,
+    name: name as string,
+    email: email as string,
     roles: obj.roles as readonly string[],
     sessionExpiresAt: obj.sessionExpiresAt as ISODateString,
   };

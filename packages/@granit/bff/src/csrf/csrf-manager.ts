@@ -7,6 +7,8 @@
 // auto-injects it on mutation methods.
 // ---------------------------------------------------------------------------
 
+import type { BffCsrfTokenResponse } from '../types/index';
+
 const MUTATION_METHODS = new Set(['POST', 'PUT', 'DELETE', 'PATCH']);
 
 /** Manages CSRF token lifecycle for BFF-authenticated SPAs. */
@@ -28,7 +30,7 @@ export class CsrfManager {
     if (!response.ok) {
       throw new Error(`CSRF token fetch failed: ${response.status}`);
     }
-    const data = (await response.json()) as { csrfToken: string };
+    const data = (await response.json()) as BffCsrfTokenResponse;
     this.token = data.csrfToken;
     return this.token;
   }
