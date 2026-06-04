@@ -67,4 +67,25 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'AIUsageRecord',
     ],
   },
+  {
+    slug: 'auditing',
+    package: 'auditing',
+    types: [
+      'AuditEntryResponse',
+      'AuditEntryDetailResponse',
+      'AuditEntityChangeResponse',
+      'AuditEntityChangeSummaryResponse',
+      'AuditPropertyChangeResponse',
+    ],
+  },
+  {
+    slug: 'authorization',
+    package: 'authorization',
+    types: [
+      'MyPermissionsResponse',
+      'PermissionDefinitionResponse',
+      'PermissionGroupResponse',
+      'PermissionGrantResponse',
+    ],
+  },
 ];

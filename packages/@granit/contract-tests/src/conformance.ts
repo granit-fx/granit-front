@@ -189,24 +189,30 @@ function tsFamily(typeNode: ts.TypeNode, aliases: AliasMap): PropShape {
 }
 
 interface ParsedSource {
-  iface?: ts.InterfaceDeclaration;
+  /** DTO members — from an `interface X {}` or a `type X = {…}` object-literal alias. */
+  members?: readonly ts.TypeElement[];
   aliases: AliasMap;
 }
 
 function parseSource(sourceText: string, fileName: string, typeName: string): ParsedSource {
   const sf = ts.createSourceFile(fileName, sourceText, ts.ScriptTarget.Latest, true);
   const aliases = new Map<string, ts.TypeNode>();
-  let iface: ts.InterfaceDeclaration | undefined;
+  let members: readonly ts.TypeElement[] | undefined;
   sf.forEachChild((node) => {
-    if (ts.isTypeAliasDeclaration(node)) aliases.set(node.name.text, node.type);
-    else if (ts.isInterfaceDeclaration(node) && node.name.text === typeName) iface = node;
+    if (ts.isTypeAliasDeclaration(node)) {
+      aliases.set(node.name.text, node.type);
+      if (node.name.text === typeName && ts.isTypeLiteralNode(node.type))
+        members = node.type.members;
+    } else if (ts.isInterfaceDeclaration(node) && node.name.text === typeName) {
+      members = node.members;
+    }
   });
-  return { iface, aliases };
+  return { members, aliases };
 }
 
-function tsProps(iface: ts.InterfaceDeclaration, aliases: AliasMap): Map<string, PropShape> {
+function tsProps(members: readonly ts.TypeElement[], aliases: AliasMap): Map<string, PropShape> {
   const out = new Map<string, PropShape>();
-  for (const member of iface.members) {
+  for (const member of members) {
     if (!ts.isPropertySignature(member) || !member.type) continue;
     const shape = tsFamily(member.type, aliases);
     out.set(member.name.getText(), {
@@ -255,8 +261,8 @@ export function checkSchemaConformance(opts: CheckSchemaOptions): ConformanceVio
     ];
   }
 
-  const { iface, aliases } = parseSource(opts.sourceText, opts.fileName, typeName);
-  if (!iface) {
+  const { members, aliases } = parseSource(opts.sourceText, opts.fileName, typeName);
+  if (!members) {
     return [
       {
         rule: 'type-missing',
@@ -268,7 +274,7 @@ export function checkSchemaConformance(opts: CheckSchemaOptions): ConformanceVio
   }
 
   const backend = specProps(schema, opts.spec.components?.schemas ?? {});
-  const front = tsProps(iface, aliases);
+  const front = tsProps(members, aliases);
 
   for (const [name, sp] of backend) {
     const tp = front.get(name);

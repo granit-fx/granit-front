@@ -18,9 +18,9 @@ function loadSpec(slug: string): OpenApiDocument {
   ) as OpenApiDocument;
 }
 
-/** Find the source file that declares `interface <typeName>` under a package's src. */
+/** Find the source file declaring `interface X` or `type X = …` under a package's src. */
 function findInterfaceFile(srcDir: string, typeName: string): string | undefined {
-  const needle = new RegExp(`\\binterface\\s+${typeName}\\b`);
+  const needle = new RegExp(`\\b(?:interface|type)\\s+${typeName}\\b`);
   const stack = [srcDir];
   while (stack.length) {
     const dir = stack.pop();
