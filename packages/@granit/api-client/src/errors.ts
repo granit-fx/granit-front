@@ -38,6 +38,10 @@ export class HttpError extends Error {
  *
  * Used by `@granit/query-engine` (filter syntax) and `@granit/data-exchange` (import mapping).
  *
+ * For server-returned validation failures, prefer reading the `errors` map on
+ * the `ProblemDetailsPayload` of an {@link HttpError} (sourced from
+ * `Granit.Http.ExceptionHandling`).
+ *
  * @example
  * ```ts
  * throw new ValidationError('Invalid filter syntax', {
@@ -86,6 +90,12 @@ export interface ProblemDetailsPayload {
   readonly instance?: string;
   readonly traceId?: string;
   readonly errorCode?: string;
+  /**
+   * Per-field validation errors. Populated by the backend on validation
+   * failures (typically HTTP 422) via `ProblemDetails.Extensions["errors"]`
+   * — see `Granit.Http.ExceptionHandling` (`GranitExceptionHandler`).
+   */
+  readonly errors?: Readonly<Record<string, readonly string[]>>;
 }
 
 /** Structured validation failure details. */

@@ -20,10 +20,14 @@
   },
   "peerDependencies": {
     "@granit/logger": "workspace:*",
+    "@granit/testing": "workspace:*",
     "axios": "^1.6.0"
   },
   "peerDependenciesMeta": {
     "@granit/logger": {
+      "optional": true
+    },
+    "@granit/testing": {
       "optional": true
     }
   },

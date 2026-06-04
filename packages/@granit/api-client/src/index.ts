@@ -53,7 +53,7 @@ export interface ApiClientConfig {
 // ---------------------------------------------------------------------------
 
 // RFC 7807 Problem Details — standard error format from Granit .NET backend.
-// See: Granit.ExceptionHandling (400 BusinessException, 404 NotFoundException,
+// See: Granit.Http.ExceptionHandling (400 BusinessException, 404 NotFoundException,
 // 403 ForbiddenException, 409 ConflictException, 422 ValidationException, 500).
 //
 // Re-exported from errors.ts as ProblemDetailsPayload (readonly variant for
