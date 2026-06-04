@@ -1,11 +1,10 @@
+import { createLogger, type Logger } from '@granit/logger';
 import axios, {
   type AxiosError,
   type AxiosInstance,
   type AxiosRequestConfig,
   type InternalAxiosRequestConfig,
 } from 'axios';
-
-import { createLogger, type Logger } from '@granit/logger';
 
 /** Authentication mode for the API client. */
 export type ApiClientMode = 'bearer' | 'bff';

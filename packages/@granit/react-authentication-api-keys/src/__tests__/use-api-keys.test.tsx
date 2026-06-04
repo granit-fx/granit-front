@@ -6,8 +6,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useApiKey } from '../hooks/use-api-key';
 import { buildApiKeyQueryKey } from '../hooks/query-keys';
+import { useApiKey } from '../hooks/use-api-key';
 import { useApiKeys } from '../hooks/use-api-keys';
 
 import type { ApiKeyResponse } from '@granit/authentication-api-keys';

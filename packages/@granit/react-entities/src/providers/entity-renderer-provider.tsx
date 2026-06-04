@@ -1,8 +1,7 @@
+import { createLogger, type Logger } from '@granit/logger';
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
 
 import { EMPTY_COMPONENT_CATALOG, type EntityComponentCatalog } from './component-catalog';
-
-import { createLogger, type Logger } from '@granit/logger';
 
 /**
  * Resolves an i18n key (as carried by the manifest) into a localised
