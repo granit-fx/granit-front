@@ -1,9 +1,11 @@
 import { useOptionalGranitClient } from '@granit/react-api-client';
+import { QueryProvider } from '@granit/react-query-engine';
 import { createContext, useContext, useMemo } from 'react';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
 import type { AxiosInstance } from '@granit/api-client';
+import type { QueryConfig } from '@granit/query-engine';
 import type { ReactNode } from 'react';
 
 /** Configuration for the audit log provider. */
@@ -32,10 +34,18 @@ const AuditLogConfigContext = createContext<ResolvedAuditLogConfig | null>(null)
 
 const DEFAULT_QUERY_KEY_PREFIX = ['audit-log'] as const;
 
-/** Provides audit log configuration to child components and hooks. */
+/**
+ * Provides audit log configuration to child components and hooks.
+ *
+ * Wires two surfaces under `{basePath}/audit-entries`:
+ * - the QueryEngine list/meta (consumed by {@link useAuditEntries} /
+ *   `useAuditEntriesMeta`) via an inner `<QueryProvider>`;
+ * - the custom lookups (detail, entity trail, correlation) and GDPR
+ *   pseudonymization, consumed via {@link useAuditLogConfig}.
+ */
 export function AuditLogProvider({ config, children }: Readonly<AuditLogProviderProps>) {
   const contextClient = useOptionalGranitClient();
-  const value = useMemo(() => {
+  const value = useMemo<ResolvedAuditLogConfig>(() => {
     const client = config.client ?? contextClient;
     if (!client) {
       throw new Error(
@@ -48,7 +58,17 @@ export function AuditLogProvider({ config, children }: Readonly<AuditLogProvider
       client,
     };
   }, [config, contextClient]);
-  return <AuditLogConfigContext value={value}>{children}</AuditLogConfigContext>;
+
+  const queryConfig = useMemo<QueryConfig>(
+    () => ({ client: value.client, basePath: `${value.basePath}/audit-entries` }),
+    [value]
+  );
+
+  return (
+    <AuditLogConfigContext value={value}>
+      <QueryProvider config={queryConfig}>{children}</QueryProvider>
+    </AuditLogConfigContext>
+  );
 }
 
 /** Returns the audit log configuration from the nearest `AuditLogProvider`. */

@@ -32,12 +32,6 @@
     "react": "^19.0.0"
   },
   "peerDependenciesMeta": {
-    "@granit/query-engine": {
-      "optional": true
-    },
-    "@granit/react-query-engine": {
-      "optional": true
-    },
     "msw": {
       "optional": true
     }

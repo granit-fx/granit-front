@@ -5,7 +5,13 @@ import type { PaginationParams } from '@granit/query-engine';
 /**
  * List audit log entries with optional filters and pagination.
  *
- * `GET {basePath}/`
+ * `GET {basePath}`
+ *
+ * @deprecated `{basePath}` is a Granit QueryEngine endpoint
+ * (`MapGranitQuery<AuditEntry>`). The flat filter params in {@link AuditListParams}
+ * are ignored by the backend binder (only `page`/`pageSize` work). Use
+ * `getPage<AuditEntry>(client, basePath, request)` from `@granit/query-engine`,
+ * or the `useAuditEntries()` hook from `@granit/react-auditing`.
  */
 export async function listAuditLogEntries(
   client: AxiosInstance,
@@ -27,6 +33,25 @@ export async function getAuditLogEntry(
   id: string
 ): Promise<AuditEntryDetail> {
   const { data } = await client.get<AuditEntryDetail>(`${basePath}/${encodeURIComponent(id)}`);
+  return data;
+}
+
+/**
+ * Get all audit log entries sharing a distributed-tracing correlation ID.
+ *
+ * Returns full detail entries (with entity changes), ordered newest-first.
+ * Not paginated — the backend returns the complete correlated set.
+ *
+ * `GET {basePath}/correlation/{correlationId}`
+ */
+export async function getAuditEntriesByCorrelationId(
+  client: AxiosInstance,
+  basePath: string,
+  correlationId: string
+): Promise<readonly AuditEntryDetail[]> {
+  const { data } = await client.get<readonly AuditEntryDetail[]>(
+    `${basePath}/correlation/${encodeURIComponent(correlationId)}`
+  );
   return data;
 }
 

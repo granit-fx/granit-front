@@ -11,6 +11,7 @@ export const AuditCategory = {
   ConfigurationChange: 'ConfigurationChange',
   DataAccess: 'DataAccess',
   AccessDenied: 'AccessDenied',
+  PrivilegedAccess: 'PrivilegedAccess',
 } as const;
 
 export type AuditCategoryValue = (typeof AuditCategory)[keyof typeof AuditCategory];
@@ -27,6 +28,9 @@ export type AuditChangeTypeValue = (typeof AuditChangeType)[keyof typeof AuditCh
 
 /** Branded audit entry identifier. */
 export type AuditEntryId = EntityId<'AuditEntry'>;
+
+/** Branded audit entity-change identifier. */
+export type AuditEntityChangeId = EntityId<'AuditEntityChange'>;
 
 /** Property-level change within an entity. */
 export type AuditPropertyChange = {
@@ -69,7 +73,17 @@ export type AuditEntryDetail = {
   readonly entityChanges: readonly AuditEntityChange[];
 };
 
-/** Query parameters for listing audit log entries — mirrors `AuditingQueryParameters`. */
+/**
+ * Flat query parameters for the legacy audit list call.
+ *
+ * @deprecated The audit list endpoint (`GET /audit-entries`) is a Granit
+ * QueryEngine endpoint (`MapGranitQuery<AuditEntry>`), so flat filter params
+ * (`category`, `userId`, `from`, `to`, …) are ignored by the backend binder —
+ * only `page`/`pageSize` are honored. Use the QueryEngine surface instead:
+ * `useAuditEntries()` (from `@granit/react-auditing`) or `getPage<AuditEntry>()`
+ * (from `@granit/query-engine`), which serialize filters as `filter[field.op]=value`.
+ * There is no `AuditingQueryParameters` DTO on the backend.
+ */
 export type AuditListParams = PaginationParams & {
   readonly userId?: string;
   readonly entityType?: string;
@@ -77,6 +91,16 @@ export type AuditListParams = PaginationParams & {
   readonly category?: AuditCategoryValue;
   readonly from?: ISODateString;
   readonly to?: ISODateString;
+};
+
+/** Summary projection of an entity change — mirrors `AuditEntityChangeSummaryResponse`. */
+export type AuditEntityChangeSummary = {
+  readonly id: AuditEntityChangeId;
+  readonly auditEntryId: AuditEntryId;
+  readonly entityType: string;
+  readonly entityId: string;
+  readonly changeType: AuditChangeTypeValue;
+  readonly propertyChangeCount: number;
 };
 
 /** Paginated response for audit log entries. */

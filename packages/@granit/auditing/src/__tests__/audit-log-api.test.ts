@@ -2,7 +2,12 @@ import { axiosResponse, createMockClient } from '@granit/testing';
 import { toEntityId, toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
-import { listAuditLogEntries, getAuditLogEntry, listEntityAuditTrail } from '../api/audit-log-api';
+import {
+  getAuditEntriesByCorrelationId,
+  getAuditLogEntry,
+  listAuditLogEntries,
+  listEntityAuditTrail,
+} from '../api/audit-log-api';
 import { AuditCategory } from '../types/index';
 
 import type { AuditEntryDetail, AuditPage } from '../types/index';
@@ -96,6 +101,19 @@ describe('audit-log-api', () => {
       expect(client.get).toHaveBeenCalledWith('/audit-log/entity/Type%2FSub/id%20with%20spaces', {
         params: undefined,
       });
+    });
+  });
+
+  describe('getAuditEntriesByCorrelationId', () => {
+    it('should GET the correlation endpoint with an encoded id and return the array', async () => {
+      const client = createMockClient();
+      const details: AuditEntryDetail[] = [];
+      vi.mocked(client.get).mockResolvedValue(axiosResponse(details));
+
+      const result = await getAuditEntriesByCorrelationId(client, basePath, 'corr/42');
+
+      expect(client.get).toHaveBeenCalledWith('/audit-log/correlation/corr%2F42');
+      expect(result).toBe(details);
     });
   });
 });

@@ -1,4 +1,4 @@
-import type { AuditEntry } from '@granit/auditing';
+import type { AuditEntityChangeSummary, AuditEntry } from '@granit/auditing';
 import type { Mutable } from '@granit/testing';
 
 export const mockAuditEntries: Mutable<AuditEntry>[] = [
@@ -71,7 +71,9 @@ export const mockAuditEntries: Mutable<AuditEntry>[] = [
   {
     id: 'audit-007' as AuditEntry['id'],
     timestamp: '2026-02-24T11:00:00Z' as AuditEntry['timestamp'],
-    userId: null as unknown as AuditEntry['userId'],
+    // System-initiated entry: backend UserId is a non-nullable string (string.Empty
+    // for system actors), only UserName is null. Never null on the wire.
+    userId: 'system' as AuditEntry['userId'],
     userName: null,
     category: 'DataAccess',
     ipAddress: '10.0.4.1',
@@ -111,5 +113,33 @@ export const mockAuditEntries: Mutable<AuditEntry>[] = [
     tenantId: null,
     correlationId: null,
     entityChangeCount: 1,
+  },
+];
+
+/** Mock entity-change summaries for the `audit-entity-changes` query resource. */
+export const mockAuditEntityChanges: Mutable<AuditEntityChangeSummary>[] = [
+  {
+    id: 'change-001' as AuditEntityChangeSummary['id'],
+    auditEntryId: 'audit-001' as AuditEntityChangeSummary['auditEntryId'],
+    entityType: 'User',
+    entityId: 'user-001',
+    changeType: 'Modified',
+    propertyChangeCount: 2,
+  },
+  {
+    id: 'change-002' as AuditEntityChangeSummary['id'],
+    auditEntryId: 'audit-002' as AuditEntityChangeSummary['auditEntryId'],
+    entityType: 'Tenant',
+    entityId: 'tenant-007',
+    changeType: 'Created',
+    propertyChangeCount: 5,
+  },
+  {
+    id: 'change-003' as AuditEntityChangeSummary['id'],
+    auditEntryId: 'audit-005' as AuditEntityChangeSummary['auditEntryId'],
+    entityType: 'User',
+    entityId: 'user-001',
+    changeType: 'SoftDeleted',
+    propertyChangeCount: 1,
   },
 ];

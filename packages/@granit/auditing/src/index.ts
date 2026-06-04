@@ -12,6 +12,8 @@ export type {
   AuditEntryDetail,
   AuditEntryId,
   AuditEntityChange,
+  AuditEntityChangeId,
+  AuditEntityChangeSummary,
   AuditListParams,
   AuditPage,
   AuditPropertyChange,
@@ -21,6 +23,7 @@ export type {
 export {
   listAuditLogEntries,
   getAuditLogEntry,
+  getAuditEntriesByCorrelationId,
   listEntityAuditTrail,
   pseudonymizeUserAuditLogs,
 } from './api/audit-log-api';

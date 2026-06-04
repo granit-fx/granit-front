@@ -1,32 +1,32 @@
-import {
-  DATE_OPERATORS,
-  ENUM_OPERATORS,
-  NUMBER_OPERATORS,
-  STRING_OPERATORS,
-} from '@granit/query-engine';
+import { AuditCategory, AuditChangeType } from '@granit/auditing';
+import { ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { notFound, pagedResponse } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-import { mockAuditEntries } from './data';
+import { mockAuditEntityChanges, mockAuditEntries } from './data';
 
-import type { AuditEntry, AuditEntryDetail } from '@granit/auditing';
+import type { AuditEntityChangeSummary, AuditEntry, AuditEntryDetail } from '@granit/auditing';
 import type { QueryMetadata } from '@granit/query-engine';
 
-const AUDIT_CATEGORIES = ['DataMutation', 'ConfigurationChange', 'DataAccess', 'AccessDenied'];
+const AUDIT_CATEGORIES = Object.values(AuditCategory);
+const CHANGE_TYPES = Object.values(AuditChangeType);
 
-/** Mock /meta payload for the audit-entries resource. */
+/**
+ * Mock `/meta` payload for the audit-entries resource.
+ * Mirrors `Granit.Auditing.Queries.AuditEntryQueryDefinition`.
+ */
 export const auditEntryQueryMetadata: QueryMetadata = {
   columns: [
     {
-      name: 'id',
-      label: 'ID',
+      name: 'tenantId',
+      label: 'Tenant',
       type: 'Guid',
       order: 0,
-      isSortable: false,
-      isFilterable: false,
+      isSortable: true,
+      isFilterable: true,
       isVisible: false,
     },
     {
@@ -35,12 +35,12 @@ export const auditEntryQueryMetadata: QueryMetadata = {
       type: 'DateTime',
       order: 1,
       isSortable: true,
-      isFilterable: true,
+      isFilterable: false,
       isVisible: true,
     },
     {
-      name: 'userName',
-      label: 'User',
+      name: 'category',
+      label: 'Category',
       type: 'String',
       order: 2,
       isSortable: true,
@@ -48,31 +48,31 @@ export const auditEntryQueryMetadata: QueryMetadata = {
       isVisible: true,
     },
     {
-      name: 'category',
-      label: 'Category',
+      name: 'userId',
+      label: 'User ID',
       type: 'String',
       order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: false,
+    },
+    {
+      name: 'userName',
+      label: 'User Name',
+      type: 'String',
+      order: 4,
       isSortable: true,
       isFilterable: true,
       isVisible: true,
     },
     {
       name: 'ipAddress',
-      label: 'IP address',
+      label: 'IP Address',
       type: 'String',
-      order: 4,
-      isSortable: false,
-      isFilterable: true,
-      isVisible: true,
-    },
-    {
-      name: 'tenantId',
-      label: 'Tenant',
-      type: 'Guid',
       order: 5,
       isSortable: false,
       isFilterable: true,
-      isVisible: false,
+      isVisible: true,
     },
     {
       name: 'correlationId',
@@ -83,33 +83,21 @@ export const auditEntryQueryMetadata: QueryMetadata = {
       isFilterable: true,
       isVisible: false,
     },
-    {
-      name: 'entityChangeCount',
-      label: 'Changes',
-      type: 'Int32',
-      order: 7,
-      isSortable: true,
-      isFilterable: false,
-      isVisible: true,
-    },
   ],
   filterableFields: [
-    { name: 'timestamp', type: 'DateTime', operators: DATE_OPERATORS },
-    { name: 'userName', type: 'String', operators: STRING_OPERATORS },
-    { name: 'userId', type: 'Guid', operators: ENUM_OPERATORS },
-    { name: 'category', type: 'String', operators: ENUM_OPERATORS, enumValues: AUDIT_CATEGORIES },
-    { name: 'ipAddress', type: 'String', operators: STRING_OPERATORS },
-    { name: 'entityType', type: 'String', operators: STRING_OPERATORS },
-    { name: 'entityId', type: 'String', operators: STRING_OPERATORS },
     { name: 'tenantId', type: 'Guid', operators: ENUM_OPERATORS },
+    { name: 'category', type: 'String', operators: ENUM_OPERATORS, enumValues: AUDIT_CATEGORIES },
+    { name: 'userId', type: 'String', operators: STRING_OPERATORS },
+    { name: 'userName', type: 'String', operators: STRING_OPERATORS },
+    { name: 'ipAddress', type: 'String', operators: STRING_OPERATORS },
     { name: 'correlationId', type: 'String', operators: STRING_OPERATORS },
-    { name: 'entityChangeCount', type: 'Int32', operators: NUMBER_OPERATORS },
   ],
   sortableFields: [
+    { name: 'tenantId' },
     { name: 'timestamp' },
-    { name: 'userName' },
     { name: 'category' },
-    { name: 'entityChangeCount' },
+    { name: 'userId' },
+    { name: 'userName' },
   ],
   presetFilterGroups: [],
   quickFilters: [],
@@ -128,12 +116,9 @@ export const auditEntryQueryMetadata: QueryMetadata = {
       ],
     },
   ],
-  groupByFields: [
-    { name: 'category', type: 'String' },
-    { name: 'userName', type: 'String' },
-  ],
+  groupByFields: [],
   pagination: {
-    defaultPageSize: 20,
+    defaultPageSize: 25,
     maxPageSize: 100,
     maxStreamSize: 50_000,
     supportsCursor: false,
@@ -142,7 +127,94 @@ export const auditEntryQueryMetadata: QueryMetadata = {
 };
 
 /**
- * Create stateful MSW handlers for audit log endpoints.
+ * Mock `/meta` payload for the audit-entity-changes resource.
+ * Mirrors `Granit.Auditing.Queries.AuditEntityChangeQueryDefinition`.
+ */
+export const auditEntityChangeQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'auditEntryId',
+      label: 'Audit Entry ID',
+      type: 'Guid',
+      order: 0,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'entityType',
+      label: 'Entity Type',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'entityId',
+      label: 'Entity ID',
+      type: 'String',
+      order: 2,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'changeType',
+      label: 'Change Type',
+      type: 'String',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'auditEntryId', type: 'Guid', operators: ENUM_OPERATORS },
+    { name: 'entityType', type: 'String', operators: STRING_OPERATORS },
+    { name: 'entityId', type: 'String', operators: STRING_OPERATORS },
+    { name: 'changeType', type: 'String', operators: ENUM_OPERATORS, enumValues: CHANGE_TYPES },
+  ],
+  sortableFields: [{ name: 'auditEntryId' }, { name: 'entityType' }, { name: 'changeType' }],
+  presetFilterGroups: [],
+  quickFilters: [],
+  dateFilters: [],
+  groupByFields: [],
+  pagination: {
+    defaultPageSize: 25,
+    maxPageSize: 100,
+    maxStreamSize: 50_000,
+    supportsCursor: false,
+  },
+  defaultSort: '-auditEntryId',
+};
+
+/** Builds an {@link AuditEntryDetail} from a summary entry (drops `entityChangeCount`). */
+function toDetail(entry: AuditEntry): AuditEntryDetail {
+  return {
+    id: entry.id,
+    timestamp: entry.timestamp,
+    userId: entry.userId,
+    userName: entry.userName,
+    category: entry.category,
+    ipAddress: entry.ipAddress,
+    tenantId: entry.tenantId,
+    correlationId: entry.correlationId,
+    entityChanges: [
+      {
+        entityType: 'User',
+        entityId: 'user-001',
+        changeType: 'Modified',
+        propertyChanges: [
+          { propertyName: 'email', originalValue: 'old@test.com', newValue: 'new@test.com' },
+        ],
+      },
+    ],
+  };
+}
+
+/**
+ * Create stateful MSW handlers for the audit-entries endpoints.
  *
  * @param baseUrl - API base path (default: `/api/v1/auditing`)
  */
@@ -152,45 +224,84 @@ export function createAuditHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // GET /audit-entries/meta — query metadata
     createQueryMetaHandler(auditEntriesUrl, auditEntryQueryMetadata),
 
-    // GET list — filtered, sorted newest-first, paginated
+    // GET /audit-entries — query-engine list (filtered by `filter[category.eq]`, sorted newest-first)
     http.get(auditEntriesUrl, ({ request }) => {
       const url = new URL(request.url);
       const page = Number(url.searchParams.get('page') ?? 1);
-      const pageSize = Number(url.searchParams.get('pageSize') ?? 20);
-      const category = url.searchParams.get('category');
+      const pageSize = Number(url.searchParams.get('pageSize') ?? 25);
+      // QueryEngine serializes filters as `filter[field.op]=value`.
+      const category =
+        url.searchParams.get('filter[category.eq]') ?? url.searchParams.get('category');
 
       let filtered: AuditEntry[] = [...mockAuditEntries];
-
       if (category) {
         filtered = filtered.filter((e) => e.category === category);
       }
-
-      // Default sort: newest first
       filtered.sort((a, b) => (b.timestamp as string).localeCompare(a.timestamp as string));
 
       const start = (page - 1) * pageSize;
       return pagedResponse<AuditEntry>(filtered.slice(start, start + pageSize), filtered.length);
     }),
 
-    // GET single entry detail
+    // GET /audit-entries/entity/:entityType/:entityId — per-entity audit trail
+    http.get(`${auditEntriesUrl}/entity/:entityType/:entityId`, ({ request }) => {
+      const url = new URL(request.url);
+      const page = Number(url.searchParams.get('page') ?? 1);
+      const pageSize = Number(url.searchParams.get('pageSize') ?? 25);
+      const start = (page - 1) * pageSize;
+      return pagedResponse<AuditEntry>(
+        mockAuditEntries.slice(start, start + pageSize),
+        mockAuditEntries.length
+      );
+    }),
+
+    // GET /audit-entries/correlation/:correlationId — correlated detail set
+    http.get(`${auditEntriesUrl}/correlation/:correlationId`, () =>
+      HttpResponse.json(mockAuditEntries.slice(0, 2).map(toDetail))
+    ),
+
+    // POST /audit-entries/pseudonymize/:userId — GDPR pseudonymization (204)
+    http.post(
+      `${auditEntriesUrl}/pseudonymize/:userId`,
+      () => new HttpResponse(null, { status: 204 })
+    ),
+
+    // GET /audit-entries/:id — single entry detail
     http.get(`${auditEntriesUrl}/:id`, ({ params }) => {
       const entry = mockAuditEntries.find((e) => e.id === params.id);
       if (!entry) return notFound();
+      return HttpResponse.json(toDetail(entry));
+    }),
+  ];
+}
 
-      const detail: AuditEntryDetail = {
-        ...entry,
-        entityChanges: [
-          {
-            entityType: 'User',
-            entityId: 'user-001',
-            changeType: 'Modified',
-            propertyChanges: [
-              { propertyName: 'email', originalValue: 'old@test.com', newValue: 'new@test.com' },
-            ],
-          },
-        ],
-      };
-      return HttpResponse.json(detail);
+/**
+ * Create stateful MSW handlers for the audit-entity-changes query endpoints.
+ *
+ * @param baseUrl - API base path (default: `/api/v1/auditing`)
+ */
+export function createAuditEntityChangesHandlers(baseUrl = DEFAULT_BASE_PATH) {
+  const changesUrl = `${baseUrl}/audit-entity-changes`;
+  return [
+    createQueryMetaHandler(changesUrl, auditEntityChangeQueryMetadata),
+
+    http.get(changesUrl, ({ request }) => {
+      const url = new URL(request.url);
+      const page = Number(url.searchParams.get('page') ?? 1);
+      const pageSize = Number(url.searchParams.get('pageSize') ?? 25);
+      const entityType =
+        url.searchParams.get('filter[entityType.eq]') ?? url.searchParams.get('entityType');
+
+      let filtered: AuditEntityChangeSummary[] = [...mockAuditEntityChanges];
+      if (entityType) {
+        filtered = filtered.filter((c) => c.entityType === entityType);
+      }
+
+      const start = (page - 1) * pageSize;
+      return pagedResponse<AuditEntityChangeSummary>(
+        filtered.slice(start, start + pageSize),
+        filtered.length
+      );
     }),
   ];
 }

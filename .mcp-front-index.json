@@ -2490,6 +2490,27 @@
           "kind": "interface",
           "signature": "interface AuditLogProviderProps",
           "members": []
+        },
+        {
+          "name": "AuditEntityChangesProvider",
+          "kind": "function",
+          "signature": "function AuditEntityChangesProvider("
+        },
+        {
+          "name": "AuditEntityChangesProviderProps",
+          "kind": "interface",
+          "signature": "interface AuditEntityChangesProviderProps",
+          "members": []
+        },
+        {
+          "name": "useAuditEntries",
+          "kind": "function",
+          "signature": "function useAuditEntries( options?: UseQueryEndpointOptions ): UseQueryEndpointReturn<AuditEntry>"
+        },
+        {
+          "name": "useAuditEntityChanges",
+          "kind": "function",
+          "signature": "function useAuditEntityChanges( options?: UseQueryEndpointOptions ): UseQueryEndpointReturn<AuditEntityChangeSummary>"
         }
       ]
     },
