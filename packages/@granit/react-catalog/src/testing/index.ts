@@ -3,4 +3,4 @@
 // ---------------------------------------------------------------------------
 
 export { mockProducts } from './data';
-export { createCatalogHandlers, resetCatalogMocks } from './handlers';
+export { createCatalogHandlers, productQueryMetadata, resetCatalogMocks } from './handlers';

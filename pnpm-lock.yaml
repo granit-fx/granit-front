@@ -1325,6 +1325,10 @@ importers:
         version: link:../testing
 
   packages/@granit/react-catalog:
+    dependencies:
+      '@granit/react-query-engine':
+        specifier: workspace:*
+        version: link:../react-query-engine
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -1332,6 +1336,9 @@ importers:
       '@granit/catalog':
         specifier: workspace:*
         version: link:../catalog
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client

@@ -17,6 +17,7 @@
   "devDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/catalog": "workspace:*",
+    "@granit/query-engine": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
@@ -28,12 +29,20 @@
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/catalog": "workspace:*",
+    "@granit/query-engine": "workspace:*",
     "@granit/react-api-client": "workspace:*",
+    "@granit/react-query-engine": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "msw": "^2.12.0",
     "react": "^19.0.0"
   },
   "peerDependenciesMeta": {
+    "@granit/query-engine": {
+      "optional": true
+    },
+    "@granit/react-query-engine": {
+      "optional": true
+    },
     "msw": {
       "optional": true
     }

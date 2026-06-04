@@ -1,3 +1,5 @@
+import { ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
+import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -7,10 +9,12 @@ import { mockProducts } from './data';
 import type {
   AddProductExternalMappingRequest,
   ProductCreateRequest,
+  ProductLifecycleStatus,
   ProductResponse,
   ProductUpdateRequest,
   UpdateProductMetadataRequest,
 } from '@granit/catalog';
+import type { QueryMetadata } from '@granit/query-engine';
 
 let products: ProductResponse[] = [...mockProducts];
 
@@ -30,6 +34,117 @@ function nextProductId(): string {
   return `00000000-0000-0000-0000-${productCounter.toString().padStart(12, '0')}`;
 }
 
+/** Maps a quick-filter name to the lifecycle status it selects. */
+const QUICK_FILTER_TO_STATUS: Record<string, ProductLifecycleStatus> = {
+  draft: 'Draft',
+  published: 'Published',
+  archived: 'Archived',
+};
+
+/** Accessors for the sortable string columns of the admin grid. */
+const SORT_ACCESSORS: Record<string, (p: ProductResponse) => string> = {
+  sku: (p) => p.sku,
+  name: (p) => p.name,
+  type: (p) => p.type,
+  unit: (p) => p.unit,
+  lifecycleStatus: (p) => p.lifecycleStatus,
+};
+
+/**
+ * Mock `/meta` payload for the catalog products admin grid. Mirrors
+ * `Granit.Catalog.Queries.ProductQueryDefinition` (full lifecycle, filterable
+ * + sortable). Enum-backed columns (`type`, `lifecycleStatus`) are exposed as
+ * the string names the `ProductResponse` DTO serializes.
+ */
+export const productQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'sku',
+      label: 'SKU',
+      type: 'String',
+      order: 0,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'name',
+      label: 'Name',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'description',
+      label: 'Description',
+      type: 'String',
+      order: 2,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: false,
+    },
+    {
+      name: 'type',
+      label: 'Type',
+      type: 'String',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'unit',
+      label: 'Unit',
+      type: 'String',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'lifecycleStatus',
+      label: 'Lifecycle Status',
+      type: 'String',
+      order: 5,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'sku', type: 'String', operators: STRING_OPERATORS },
+    { name: 'name', type: 'String', operators: STRING_OPERATORS },
+    { name: 'description', type: 'String', operators: STRING_OPERATORS },
+    { name: 'type', type: 'String', operators: ENUM_OPERATORS },
+    { name: 'unit', type: 'String', operators: STRING_OPERATORS },
+    { name: 'lifecycleStatus', type: 'String', operators: ENUM_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'sku' },
+    { name: 'name' },
+    { name: 'type' },
+    { name: 'unit' },
+    { name: 'lifecycleStatus' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'draft', label: 'Draft', isDefault: false },
+    { name: 'published', label: 'Published', isDefault: false },
+    { name: 'archived', label: 'Archived', isDefault: false },
+  ],
+  dateFilters: [],
+  groupByFields: [],
+  pagination: {
+    defaultPageSize: 25,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: 'sku',
+};
+
 /**
  * Create stateful MSW handlers for catalog product endpoints.
  * Handlers mutate an in-memory store — mutations are reflected by subsequent GETs.
@@ -39,9 +154,54 @@ function nextProductId(): string {
  */
 export function createCatalogHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
+    // GET /catalog/products/meta → query-engine metadata for the admin grid.
+    createQueryMetaHandler(`${baseUrl}/products`, productQueryMetadata),
+
+    // GET /catalog/products → query-engine admin grid (paged, full lifecycle:
+    // Draft / Published / Archived). Honours page / pageSize / search /
+    // quickFilters / sort. Must precede the /products/:id route.
+    http.get(`${baseUrl}/products`, ({ request }) => {
+      const url = new URL(request.url);
+      const page = Number(url.searchParams.get('page') ?? 1);
+      const pageSize = Number(url.searchParams.get('pageSize') ?? 25);
+      const search = url.searchParams.get('search')?.toLowerCase();
+      const quickFilters = url.searchParams.get('quickFilters')?.split(',').filter(Boolean) ?? [];
+      const sort = url.searchParams.get('sort')?.split(',')[0];
+
+      let filtered = [...products];
+
+      if (search) {
+        filtered = filtered.filter(
+          (p) =>
+            p.sku.toLowerCase().includes(search) ||
+            p.name.toLowerCase().includes(search) ||
+            (p.description?.toLowerCase().includes(search) ?? false)
+        );
+      }
+
+      if (quickFilters.length > 0) {
+        const statuses = quickFilters
+          .map((q) => QUICK_FILTER_TO_STATUS[q])
+          .filter((s): s is ProductLifecycleStatus => Boolean(s));
+        if (statuses.length > 0) {
+          filtered = filtered.filter((p) => statuses.includes(p.lifecycleStatus));
+        }
+      }
+
+      const descending = sort?.startsWith('-') ?? false;
+      const sortField = sort ? (descending ? sort.slice(1) : sort) : 'sku';
+      const accessor = SORT_ACCESSORS[sortField] ?? ((p: ProductResponse) => p.sku);
+      filtered.sort((a, b) => {
+        const cmp = accessor(a).localeCompare(accessor(b));
+        return descending ? -cmp : cmp;
+      });
+
+      const start = (page - 1) * pageSize;
+      const items = filtered.slice(start, start + pageSize);
+      return HttpResponse.json({ items, totalCount: filtered.length });
+    }),
+
     // GET /catalog/products/active → active catalog (Published only).
-    // The bare GET /catalog/products route is the query-engine admin grid
-    // (paged, full lifecycle) — not mocked here.
     http.get(`${baseUrl}/products/active`, () => {
       const published = products.filter((p) => p.lifecycleStatus === 'Published');
       return HttpResponse.json(published);
