@@ -38,7 +38,6 @@
     "registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
-    "@granit/bff": "workspace:*",
-    "@granit/types": "workspace:*"
+    "@granit/react-bff": "workspace:*"
   }
 }

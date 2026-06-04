@@ -113,9 +113,11 @@ export function createAuthHandlers(baseUrl = '/api/v1/auth', bffSessionsUrl = '/
       });
     }),
 
-    // BFF session endpoints
+    // BFF session endpoints — list is wrapped in `{ sessions }`, mirroring
+    // the Granit.Bff `BffSessionListResponse` contract that `listBffSessions`
+    // reads (`data.sessions`).
     http.get(bffSessionsUrl, () => {
-      return HttpResponse.json(mockBffSessions);
+      return HttpResponse.json({ sessions: mockBffSessions });
     }),
 
     http.delete(`${bffSessionsUrl}/:sessionId`, () => {
