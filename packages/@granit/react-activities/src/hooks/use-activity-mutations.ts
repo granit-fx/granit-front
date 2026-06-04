@@ -76,7 +76,7 @@ export function useCreateActivity(): UseMutationResult<
  * @example
  * ```tsx
  * const complete = useCompleteActivity();
- * await complete.mutateAsync({ id: 'act-1', request: { completedAt: '...' } });
+ * await complete.mutateAsync({ id: 'act-1', request: {} });
  * ```
  */
 export function useCompleteActivity(): UseMutationResult<
@@ -102,7 +102,7 @@ export function useCompleteActivity(): UseMutationResult<
  * @example
  * ```tsx
  * const cancel = useCancelActivity();
- * await cancel.mutateAsync({ id: 'act-1', request: { cancelledAt: '...' } });
+ * await cancel.mutateAsync({ id: 'act-1', request: {} });
  * ```
  */
 export function useCancelActivity(): UseMutationResult<

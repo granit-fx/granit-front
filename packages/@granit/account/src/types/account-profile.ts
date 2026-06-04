@@ -1,7 +1,7 @@
 import type { UserId } from '@granit/types';
 
 // ---------------------------------------------------------------------------
-// Account profile types — mirrors Granit.OpenIddict.Endpoints .NET contract
+// Account profile types — mirrors Granit.Identity.Local.Endpoints .NET contract
 // ---------------------------------------------------------------------------
 
 /** Response from `GET /profile`. */

@@ -16,7 +16,7 @@ export const activitiesTranslationsFr: ActivitiesTranslations = {
   },
   Status: {
     Open: 'Ouverte',
-    Completed: 'Terminée',
+    Done: 'Terminée',
     Cancelled: 'Annulée',
     Overdue: 'En retard',
   },

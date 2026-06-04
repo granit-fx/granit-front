@@ -3,7 +3,7 @@
   "packages": [
     {
       "name": "@granit/account",
-      "description": "Account self-service types and API functions — mirrors Granit.OpenIddict.Endpoints .NET contract",
+      "description": "Account self-service types and API functions — mirrors Granit.Identity.Local.Endpoints .NET contract",
       "exports": [
         {
           "name": "getProfile",
@@ -80,12 +80,12 @@
         {
           "name": "listAIProviderModels",
           "kind": "function",
-          "signature": "async function listAIProviderModels( client: AxiosInstance, basePath: string, providerName: string ): Promise<AIProviderModelResponse[]>"
+          "signature": "async function listAIProviderModels( client: AxiosInstance, basePath: string, providerName: string ): Promise<readonly AIProviderModelResponse[]>"
         },
         {
           "name": "listAIProviders",
           "kind": "function",
-          "signature": "async function listAIProviders( client: AxiosInstance, basePath: string ): Promise<AIProviderResponse[]>"
+          "signature": "async function listAIProviders( client: AxiosInstance, basePath: string ): Promise<readonly AIProviderResponse[]>"
         },
         {
           "name": "chatComplete",
@@ -1671,6 +1671,38 @@
           "signature": "const NotificationChannels"
         },
         {
+          "name": "createTransportListeners",
+          "kind": "function",
+          "signature": "function createTransportListeners( initialState: ConnectionState = 'disconnected' ): TransportListeners"
+        },
+        {
+          "name": "TransportListeners",
+          "kind": "interface",
+          "signature": "interface TransportListeners",
+          "members": [
+            {
+              "name": "setState",
+              "kind": "method",
+              "signature": "setState(state: ConnectionState): void"
+            },
+            {
+              "name": "emit",
+              "kind": "method",
+              "signature": "emit(message: NotificationTransportMessage): void"
+            },
+            {
+              "name": "onNotification",
+              "kind": "method",
+              "signature": "onNotification(callback: (message: NotificationTransportMessage) => void): () => void"
+            },
+            {
+              "name": "onStateChange",
+              "kind": "method",
+              "signature": "onStateChange(callback: (state: ConnectionState) => void): () => void"
+            }
+          ]
+        },
+        {
           "name": "NotificationPermissions",
           "kind": "const",
           "signature": "const NotificationPermissions"
@@ -1948,7 +1980,7 @@
         {
           "name": "useRegister",
           "kind": "function",
-          "signature": "function useRegister(): UseMutationResult< AccountRegisterResponse, Error, AccountRegisterRequest >"
+          "signature": "function useRegister(): UseMutationResult<void, Error, AccountRegisterRequest>"
         },
         {
           "name": "useResendConfirmation",
@@ -2006,11 +2038,6 @@
           "name": "useDeleteAccount",
           "kind": "function",
           "signature": "function useDeleteAccount(): UseMutationResult<void, Error, AccountDeleteRequest>"
-        },
-        {
-          "name": "accountKeys",
-          "kind": "const",
-          "signature": "const accountKeys"
         }
       ]
     },

@@ -7,20 +7,13 @@ import {
   resendConfirmationEmail,
 } from '../api/account-registration-api';
 
-import type { AccountRegisterResponse } from '../types/index';
-
 const BASE = '/api/account';
-
-const mockRegisterResponse: AccountRegisterResponse = {
-  userId: '550e8400-e29b-41d4-a716-446655440000',
-  requiresEmailConfirmation: true,
-};
 
 describe('account-registration-api', () => {
   describe('registerAccount', () => {
-    it('sends POST /register with request body', async () => {
+    it('sends POST /register with request body and resolves void (202 Accepted, no body)', async () => {
       const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValueOnce({ data: mockRegisterResponse });
+      vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
 
       const result = await registerAccount(client, BASE, {
         email: 'user@example.com',
@@ -35,7 +28,7 @@ describe('account-registration-api', () => {
         firstName: 'John',
         lastName: 'Doe',
       });
-      expect(result).toEqual(mockRegisterResponse);
+      expect(result).toBeUndefined();
     });
   });
 

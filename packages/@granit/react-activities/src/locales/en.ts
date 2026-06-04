@@ -18,7 +18,7 @@ export const activitiesTranslationsEn: ActivitiesTranslations = {
   },
   Status: {
     Open: 'Open',
-    Completed: 'Completed',
+    Done: 'Done',
     Cancelled: 'Cancelled',
     Overdue: 'Overdue',
   },
@@ -96,7 +96,7 @@ export interface ActivitiesTranslations {
   };
   readonly Status: {
     readonly Open: string;
-    readonly Completed: string;
+    readonly Done: string;
     readonly Cancelled: string;
     readonly Overdue: string;
   };

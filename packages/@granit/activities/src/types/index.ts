@@ -1,6 +1,17 @@
-export type ActivityStatus = 'Open' | 'Completed' | 'Cancelled' | 'Overdue';
+/**
+ * Lifecycle status of an activity. Mirrors `Granit.Activities.Domain.ActivityStatus`
+ * (string-serialized verbatim). Three terminal states only — `Overdue` is a
+ * computed view (`Open` + past due), never a persisted status value; see
+ * {@link ActivityCalendarColor} for the derived calendar bucket.
+ */
+export type ActivityStatus = 'Open' | 'Done' | 'Cancelled';
 
-export type ActivityStatusFilter = ActivityStatus | 'All' | 'OpenOrOverdue';
+/**
+ * Status filter accepted by the list / calendar endpoints. Mirrors
+ * `Granit.Activities.Persistence.ActivityStatusFilter`. Omit the filter
+ * entirely to match every status — there is no `All` wire value.
+ */
+export type ActivityStatusFilter = 'OpenOrOverdue' | 'Done' | 'Cancelled';
 
 export type ActivityCalendarColor = 'open' | 'overdue' | 'done' | 'cancelled';
 
@@ -31,7 +42,10 @@ export interface ActivityListFilter {
   readonly assignedToUserId?: string;
   readonly entityType?: string;
   readonly entityId?: string;
-  readonly type?: string;
+  /** Inclusive lower bound on `dueAt` (ISO 8601). */
+  readonly dueAtFrom?: string;
+  /** Exclusive upper bound on `dueAt` (ISO 8601, half-open window). */
+  readonly dueAtTo?: string;
   readonly page?: number;
   readonly pageSize?: number;
 }
@@ -42,16 +56,21 @@ export interface CreateActivityRequest {
   readonly type: string;
   readonly assignedToUserId: string;
   readonly dueAt: string;
-  readonly description: string | null;
+  readonly description?: string | null;
 }
 
-export interface CompleteActivityRequest {
-  readonly completedAt: string;
-}
+/**
+ * Body for `POST /{id}/complete` — empty. The completion timestamp and the
+ * actor are resolved server-side (`IClock` + `ClaimsPrincipal`) for audit
+ * integrity; clients cannot supply them.
+ */
+export type CompleteActivityRequest = Record<string, never>;
 
-export interface CancelActivityRequest {
-  readonly cancelledAt: string;
-}
+/**
+ * Body for `POST /{id}/cancel` — empty. The cancellation timestamp and the
+ * actor are resolved server-side for audit integrity.
+ */
+export type CancelActivityRequest = Record<string, never>;
 
 export interface ReassignActivityRequest {
   readonly newAssigneeUserId: string;

@@ -11,7 +11,9 @@ import { buildAccountQueryKey, useAccountConfig } from '../providers/account-pro
 
 import type {
   AccountAuthenticatorKeyResponse,
+  AccountGenerateRecoveryCodesRequest,
   AccountRecoveryCodesResponse,
+  AccountTwoFactorDisableRequest,
   AccountTwoFactorEnableRequest,
   AccountTwoFactorEnableResponse,
   AccountTwoFactorStatusResponse,
@@ -58,13 +60,18 @@ export function useEnableTwoFactor(): UseMutationResult<
   });
 }
 
-/** Disables 2FA. Invalidates 2FA status on success. */
-export function useDisableTwoFactor(): UseMutationResult<void, Error, void> {
+/** Disables 2FA (requires the current password). Invalidates 2FA status on success. */
+export function useDisableTwoFactor(): UseMutationResult<
+  void,
+  Error,
+  AccountTwoFactorDisableRequest
+> {
   const config = useAccountConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => disableTwoFactor(config.client, config.basePath!),
+    mutationFn: (request: AccountTwoFactorDisableRequest) =>
+      disableTwoFactor(config.client, config.basePath!, request),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: buildAccountQueryKey(config, 'two-factor'),
@@ -73,17 +80,18 @@ export function useDisableTwoFactor(): UseMutationResult<void, Error, void> {
   });
 }
 
-/** Generates new recovery codes. Invalidates 2FA status on success. */
+/** Generates new recovery codes (requires the current password). Invalidates 2FA status on success. */
 export function useGenerateRecoveryCodes(): UseMutationResult<
   AccountRecoveryCodesResponse,
   Error,
-  void
+  AccountGenerateRecoveryCodesRequest
 > {
   const config = useAccountConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => generateRecoveryCodes(config.client, config.basePath!),
+    mutationFn: (request: AccountGenerateRecoveryCodesRequest) =>
+      generateRecoveryCodes(config.client, config.basePath!, request),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: buildAccountQueryKey(config, 'two-factor'),

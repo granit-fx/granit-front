@@ -3,15 +3,11 @@ import { useMutation } from '@tanstack/react-query';
 
 import { useAccountConfig } from '../providers/account-provider';
 
-import type { AccountRegisterRequest, AccountRegisterResponse } from '@granit/account';
+import type { AccountRegisterRequest } from '@granit/account';
 import type { UseMutationResult } from '@tanstack/react-query';
 
-/** Registers a new user account. */
-export function useRegister(): UseMutationResult<
-  AccountRegisterResponse,
-  Error,
-  AccountRegisterRequest
-> {
+/** Registers a new user account. Resolves to `void` — `POST /register` returns 202 with no body. */
+export function useRegister(): UseMutationResult<void, Error, AccountRegisterRequest> {
   const config = useAccountConfig();
 
   return useMutation({

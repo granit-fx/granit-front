@@ -9,7 +9,6 @@ import { useConfirmEmail, useRegister, useResendConfirmation } from '../hooks/us
 import { AccountProvider } from '../providers/account-provider';
 
 import type { AccountConfig } from '../providers/account-provider';
-import type { AccountRegisterResponse } from '@granit/account';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -44,11 +43,7 @@ afterEach(() => {
 describe('useRegister', () => {
   it('should call registerAccount with correct arguments', async () => {
     const client = createMockClient();
-    const response: AccountRegisterResponse = {
-      userId: 'user-1',
-      requiresEmailConfirmation: true,
-    };
-    vi.mocked(registerAccount).mockResolvedValue(response);
+    vi.mocked(registerAccount).mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useRegister(), {
       wrapper: createWrapper(client),
@@ -67,7 +62,7 @@ describe('useRegister', () => {
       password: 'P@ssword1!',
       firstName: 'John',
     });
-    expect(result.current.data).toEqual(response);
+    expect(result.current.data).toBeUndefined();
   });
 
   it('should handle registration error', async () => {

@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Account deletion types — mirrors Granit.OpenIddict.Endpoints .NET contract
+// Account deletion types — mirrors Granit.Identity.Local.Endpoints .NET contract
 // ---------------------------------------------------------------------------
 
 /** Request body for `POST /delete`. */

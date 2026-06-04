@@ -6,7 +6,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./editor": "./src/editor/index.ts"
+    "./editor": "./src/editor/index.ts",
+    "./testing": "./src/testing/index.ts"
   },
   "files": [
     "dist"
@@ -23,11 +24,15 @@
     "@granit/react-dashboards": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "lucide-react": "^1.0.0",
+    "msw": "^2.12.0",
     "react": "^19.0.0",
     "react-i18next": "^17.0.0"
   },
   "peerDependenciesMeta": {
     "@granit/react-dashboard-editor": {
+      "optional": true
+    },
+    "msw": {
       "optional": true
     }
   },
@@ -40,6 +45,10 @@
       "./editor": {
         "types": "./dist/editor/index.d.ts",
         "import": "./dist/editor/index.js"
+      },
+      "./testing": {
+        "types": "./dist/testing/index.d.ts",
+        "import": "./dist/testing/index.js"
       }
     },
     "registry": "https://npm.pkg.github.com"
@@ -52,6 +61,7 @@
     "@granit/react-dashboard-editor": "workspace:*",
     "@granit/react-dashboards": "workspace:*",
     "@granit/react-testing": "workspace:*",
-    "@granit/testing": "workspace:*"
+    "@granit/testing": "workspace:*",
+    "msw": "^2.12.0"
   }
 }

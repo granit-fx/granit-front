@@ -17,7 +17,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
  */
 export function useAIProviders(options?: {
   enabled?: boolean;
-}): UseQueryResult<AIProviderResponse[]> {
+}): UseQueryResult<readonly AIProviderResponse[]> {
   const config = useAIConfig();
 
   return useQuery({

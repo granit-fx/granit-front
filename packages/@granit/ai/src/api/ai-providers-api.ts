@@ -14,8 +14,8 @@ import type { AxiosInstance } from '@granit/api-client';
 export async function listAIProviders(
   client: AxiosInstance,
   basePath: string
-): Promise<AIProviderResponse[]> {
-  const response = await client.get<AIProviderResponse[]>(`${basePath}/providers`);
+): Promise<readonly AIProviderResponse[]> {
+  const response = await client.get<readonly AIProviderResponse[]>(`${basePath}/providers`);
   return response.data;
 }
 
@@ -28,8 +28,8 @@ export async function listAIProviderModels(
   client: AxiosInstance,
   basePath: string,
   providerName: string
-): Promise<AIProviderModelResponse[]> {
-  const response = await client.get<AIProviderModelResponse[]>(
+): Promise<readonly AIProviderModelResponse[]> {
+  const response = await client.get<readonly AIProviderModelResponse[]>(
     `${basePath}/providers/${encodeURIComponent(providerName)}/models`
   );
   return response.data;

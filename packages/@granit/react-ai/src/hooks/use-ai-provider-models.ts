@@ -21,7 +21,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
 export function useAIProviderModels(
   providerName: string | undefined,
   options?: { enabled?: boolean }
-): UseQueryResult<AIProviderModelResponse[]> {
+): UseQueryResult<readonly AIProviderModelResponse[]> {
   const config = useAIConfig();
   const hasProvider = !!providerName;
 

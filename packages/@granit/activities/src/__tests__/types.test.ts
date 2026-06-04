@@ -11,13 +11,11 @@ import type {
 
 describe('Activity types', () => {
   it('ActivityStatus is the closed PascalCase union shipped by the backend', () => {
-    expectTypeOf<ActivityStatus>().toEqualTypeOf<'Open' | 'Completed' | 'Cancelled' | 'Overdue'>();
+    expectTypeOf<ActivityStatus>().toEqualTypeOf<'Open' | 'Done' | 'Cancelled'>();
   });
 
-  it('ActivityStatusFilter widens ActivityStatus with All + OpenOrOverdue', () => {
-    expectTypeOf<ActivityStatusFilter>().toEqualTypeOf<
-      'Open' | 'Completed' | 'Cancelled' | 'Overdue' | 'All' | 'OpenOrOverdue'
-    >();
+  it('ActivityStatusFilter mirrors the backend filter enum (no All; OpenOrOverdue, not Open)', () => {
+    expectTypeOf<ActivityStatusFilter>().toEqualTypeOf<'OpenOrOverdue' | 'Done' | 'Cancelled'>();
   });
 
   it('ActivityCalendarColor mirrors the lowercase server-mapped values', () => {

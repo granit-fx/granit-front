@@ -1,7 +1,7 @@
 import type { EntityId, ISODateString } from '@granit/types';
 
 // ---------------------------------------------------------------------------
-// Account passkey (WebAuthn) types — mirrors Granit.OpenIddict.Endpoints .NET contract
+// Account passkey (WebAuthn) types — mirrors Granit.Identity.Local.Endpoints .NET contract
 // ---------------------------------------------------------------------------
 
 /** Branded passkey identifier. */
@@ -21,12 +21,13 @@ export interface AccountPasskeyRegistrationRequest {
   readonly name?: string;
 }
 
-/** Response from `POST /passkeys/register/complete`. */
-export interface AccountPasskeyCreatedResponse {
-  readonly id: PasskeyId;
-  readonly name: string | null;
-  readonly createdAt: ISODateString;
-}
+/**
+ * Response from `POST /passkeys/register/complete`. The backend returns the
+ * full `PasskeyInfoResponse` (including `lastUsedAt`, `null` at creation time),
+ * so this is a structural alias of {@link AccountPasskeyInfo} rather than a
+ * narrower shape.
+ */
+export type AccountPasskeyCreatedResponse = AccountPasskeyInfo;
 
 /** Request body for `PATCH /passkeys/{id}`. */
 export interface AccountPasskeyRenameRequest {

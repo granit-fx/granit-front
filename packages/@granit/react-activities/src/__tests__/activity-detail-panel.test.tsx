@@ -30,7 +30,7 @@ const open: ActivityResponse = {
 const completed: ActivityResponse = {
   ...open,
   id: 'a2',
-  status: 'Completed',
+  status: 'Done',
   completedAt: '2026-05-09T15:00:00Z',
   completedByUserId: 'u1',
 };

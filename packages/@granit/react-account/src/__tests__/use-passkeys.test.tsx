@@ -139,6 +139,7 @@ describe('useCompletePasskeyRegistration', () => {
       id: toEntityId<'Passkey'>('pk-003'),
       name: 'New Key',
       createdAt: toISODateString('2026-03-21T09:00:00Z'),
+      lastUsedAt: null,
     };
     vi.mocked(completePasskeyRegistration).mockResolvedValue(response);
 

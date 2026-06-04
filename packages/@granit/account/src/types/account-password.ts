@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Account password types — mirrors Granit.OpenIddict.Endpoints .NET contract
+// Account password types — mirrors Granit.Identity.Local.Endpoints .NET contract
 // ---------------------------------------------------------------------------
 
 /** Request body for `POST /change-password`. */

@@ -1,6 +1,8 @@
 import type {
   AccountAuthenticatorKeyResponse,
+  AccountGenerateRecoveryCodesRequest,
   AccountRecoveryCodesResponse,
+  AccountTwoFactorDisableRequest,
   AccountTwoFactorEnableRequest,
   AccountTwoFactorEnableResponse,
   AccountTwoFactorStatusResponse,
@@ -53,25 +55,33 @@ export async function enableTwoFactor(
 }
 
 /**
- * Disable 2FA for the current user.
+ * Disable 2FA for the current user. Requires the current password as step-up
+ * authentication.
  *
  * `POST {basePath}/two-factor/disable`
  */
-export async function disableTwoFactor(client: AxiosInstance, basePath: string): Promise<void> {
-  await client.post(`${basePath}/two-factor/disable`);
+export async function disableTwoFactor(
+  client: AxiosInstance,
+  basePath: string,
+  request: AccountTwoFactorDisableRequest
+): Promise<void> {
+  await client.post(`${basePath}/two-factor/disable`, request);
 }
 
 /**
- * Generate new recovery codes (invalidates previous ones).
+ * Generate new recovery codes (invalidates previous ones). Requires the current
+ * password as step-up authentication.
  *
  * `POST {basePath}/two-factor/recovery-codes`
  */
 export async function generateRecoveryCodes(
   client: AxiosInstance,
-  basePath: string
+  basePath: string,
+  request: AccountGenerateRecoveryCodesRequest
 ): Promise<AccountRecoveryCodesResponse> {
   const { data } = await client.post<AccountRecoveryCodesResponse>(
-    `${basePath}/two-factor/recovery-codes`
+    `${basePath}/two-factor/recovery-codes`,
+    request
   );
   return data;
 }

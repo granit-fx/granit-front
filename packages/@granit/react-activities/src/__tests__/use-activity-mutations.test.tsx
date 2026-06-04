@@ -114,12 +114,10 @@ describe('useCompleteActivity', () => {
     const { result } = renderHook(() => useCompleteActivity(), { wrapper });
     await result.current.mutateAsync({
       id: 'act-1',
-      request: { completedAt: '2026-05-09T15:00:00Z' },
+      request: {},
     });
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/activities/act-1/complete', {
-      completedAt: '2026-05-09T15:00:00Z',
-    });
+    expect(client.post).toHaveBeenCalledWith('/api/v1/activities/act-1/complete', {});
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
     expect(keys).toEqual([
       ['activities', 'list'],
@@ -142,12 +140,10 @@ describe('useCancelActivity', () => {
     const { result } = renderHook(() => useCancelActivity(), { wrapper });
     await result.current.mutateAsync({
       id: 'act-1',
-      request: { cancelledAt: '2026-05-09T15:00:00Z' },
+      request: {},
     });
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/activities/act-1/cancel', {
-      cancelledAt: '2026-05-09T15:00:00Z',
-    });
+    expect(client.post).toHaveBeenCalledWith('/api/v1/activities/act-1/cancel', {});
     expect(invalidate.mock.calls.at(-1)?.[0]?.queryKey).toEqual(['activities', 'detail', 'act-1']);
   });
 });
@@ -235,7 +231,7 @@ describe('cache layers stay isolated', () => {
     const { result } = renderHook(() => useCompleteActivity(), { wrapper });
     await result.current.mutateAsync({
       id: 'act-1',
-      request: { completedAt: '2026-05-09T15:00:00Z' },
+      request: {},
     });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 

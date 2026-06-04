@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Account external login types — mirrors Granit.OpenIddict.Endpoints .NET contract
+// Account external login types — mirrors Granit.Identity.Local.Endpoints .NET contract
 // ---------------------------------------------------------------------------
 
 /** External login info returned by `GET /external-logins`. */

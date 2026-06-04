@@ -1,8 +1,10 @@
-import type { AccountRegisterRequest, AccountRegisterResponse } from '../types/index';
+import type { AccountRegisterRequest } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**
- * Register a new user account.
+ * Register a new user account. Responds `202 Accepted` with no body —
+ * registration is processed asynchronously and any email-confirmation
+ * requirement is surfaced via `GET /config` (see {@link getAccountSettings}).
  *
  * `POST {basePath}/register`
  */
@@ -10,9 +12,8 @@ export async function registerAccount(
   client: AxiosInstance,
   basePath: string,
   request: AccountRegisterRequest
-): Promise<AccountRegisterResponse> {
-  const { data } = await client.post<AccountRegisterResponse>(`${basePath}/register`, request);
-  return data;
+): Promise<void> {
+  await client.post(`${basePath}/register`, request);
 }
 
 /**

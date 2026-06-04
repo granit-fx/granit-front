@@ -74,9 +74,11 @@ describe('account-two-factor-api', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
 
-      await disableTwoFactor(client, BASE);
+      await disableTwoFactor(client, BASE, { password: 'P@ssw0rd!' });
 
-      expect(client.post).toHaveBeenCalledWith(`${BASE}/two-factor/disable`);
+      expect(client.post).toHaveBeenCalledWith(`${BASE}/two-factor/disable`, {
+        password: 'P@ssw0rd!',
+      });
     });
   });
 
@@ -86,9 +88,11 @@ describe('account-two-factor-api', () => {
       const response: AccountRecoveryCodesResponse = { recoveryCodes: mockRecoveryCodes };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
-      const result = await generateRecoveryCodes(client, BASE);
+      const result = await generateRecoveryCodes(client, BASE, { password: 'P@ssw0rd!' });
 
-      expect(client.post).toHaveBeenCalledWith(`${BASE}/two-factor/recovery-codes`);
+      expect(client.post).toHaveBeenCalledWith(`${BASE}/two-factor/recovery-codes`, {
+        password: 'P@ssw0rd!',
+      });
       expect(result.recoveryCodes).toEqual(mockRecoveryCodes);
     });
   });

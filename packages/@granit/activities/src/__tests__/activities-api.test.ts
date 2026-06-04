@@ -142,12 +142,12 @@ describe('completeActivity', () => {
     const client = createMockClient();
     const completed: ActivityResponse = {
       ...sampleActivity,
-      status: 'Completed',
+      status: 'Done',
       completedAt: '2026-05-09T15:00:00Z',
       completedByUserId: 'user-1',
     };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(completed));
-    const request: CompleteActivityRequest = { completedAt: '2026-05-09T15:00:00Z' };
+    const request: CompleteActivityRequest = {};
 
     const result = await completeActivity(client, basePath, 'act-1', request);
 
@@ -158,7 +158,7 @@ describe('completeActivity', () => {
   it('rejects on 422 from the backend', async () => {
     const client = createMockClient();
     vi.mocked(client.post).mockRejectedValue(new Error('Request failed with status code 422'));
-    const request: CompleteActivityRequest = { completedAt: '2026-05-09T15:00:00Z' };
+    const request: CompleteActivityRequest = {};
 
     await expect(completeActivity(client, basePath, 'act-1', request)).rejects.toThrow(/422/);
   });
@@ -168,7 +168,7 @@ describe('cancelActivity', () => {
   it('POSTs to {id}/cancel', async () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValue(axiosResponse(sampleActivity));
-    const request: CancelActivityRequest = { cancelledAt: '2026-05-09T15:00:00Z' };
+    const request: CancelActivityRequest = {};
 
     await cancelActivity(client, basePath, 'act-1', request);
 

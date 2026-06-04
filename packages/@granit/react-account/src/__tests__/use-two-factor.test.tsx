@@ -177,11 +177,13 @@ describe('useDisableTwoFactor', () => {
 
     const { result } = renderHook(() => useDisableTwoFactor(), { wrapper });
 
-    result.current.mutate();
+    result.current.mutate({ password: 'P@ssw0rd!' });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(disableTwoFactor).toHaveBeenCalledWith(client, '/api/v1/account');
+    expect(disableTwoFactor).toHaveBeenCalledWith(client, '/api/v1/account', {
+      password: 'P@ssw0rd!',
+    });
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['account', 'two-factor'],
     });
@@ -201,11 +203,13 @@ describe('useGenerateRecoveryCodes', () => {
 
     const { result } = renderHook(() => useGenerateRecoveryCodes(), { wrapper });
 
-    result.current.mutate();
+    result.current.mutate({ password: 'P@ssw0rd!' });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(generateRecoveryCodes).toHaveBeenCalledWith(client, '/api/v1/account');
+    expect(generateRecoveryCodes).toHaveBeenCalledWith(client, '/api/v1/account', {
+      password: 'P@ssw0rd!',
+    });
     expect(result.current.data).toEqual(response);
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['account', 'two-factor'],

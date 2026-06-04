@@ -1,4 +1,4 @@
-export type { AccountRegisterRequest, AccountRegisterResponse } from './account-registration';
+export type { AccountRegisterRequest } from './account-registration';
 
 export type { AccountProfileResponse, AccountProfileUpdateRequest } from './account-profile';
 
@@ -10,7 +10,9 @@ export type {
 
 export type {
   AccountAuthenticatorKeyResponse,
+  AccountGenerateRecoveryCodesRequest,
   AccountRecoveryCodesResponse,
+  AccountTwoFactorDisableRequest,
   AccountTwoFactorEnableRequest,
   AccountTwoFactorEnableResponse,
   AccountTwoFactorStatusResponse,

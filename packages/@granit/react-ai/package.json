@@ -6,7 +6,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./testing": "./src/testing/index.ts"
+    "./testing": "./src/testing/index.ts",
+    "./usage": "./src/usage/index.ts"
   },
   "files": [
     "dist"
@@ -44,6 +45,10 @@
       "./testing": {
         "types": "./dist/testing/index.d.ts",
         "import": "./dist/testing/index.js"
+      },
+      "./usage": {
+        "types": "./dist/usage/index.d.ts",
+        "import": "./dist/usage/index.js"
       }
     },
     "registry": "https://npm.pkg.github.com"

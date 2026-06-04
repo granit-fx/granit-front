@@ -56,6 +56,7 @@ describe('account-passkey-api', () => {
         id: toEntityId<'Passkey'>('pk-002'),
         name: 'iPhone',
         createdAt: toISODateString('2026-03-21T12:00:00Z'),
+        lastUsedAt: null,
       };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 

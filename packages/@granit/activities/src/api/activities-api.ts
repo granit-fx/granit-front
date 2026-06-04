@@ -162,7 +162,8 @@ function buildListParams(
   if (filter.assignedToUserId !== undefined) params.assignedToUserId = filter.assignedToUserId;
   if (filter.entityType !== undefined) params.entityType = filter.entityType;
   if (filter.entityId !== undefined) params.entityId = filter.entityId;
-  if (filter.type !== undefined) params.type = filter.type;
+  if (filter.dueAtFrom !== undefined) params.dueAtFrom = filter.dueAtFrom;
+  if (filter.dueAtTo !== undefined) params.dueAtTo = filter.dueAtTo;
   if (filter.page !== undefined) params.page = filter.page;
   if (filter.pageSize !== undefined) params.pageSize = filter.pageSize;
   return Object.keys(params).length > 0 ? params : undefined;

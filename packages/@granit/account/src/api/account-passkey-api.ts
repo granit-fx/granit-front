@@ -1,5 +1,4 @@
 import type {
-  AccountPasskeyCreatedResponse,
   AccountPasskeyInfo,
   AccountPasskeyRegistrationRequest,
   AccountPasskeyRenameRequest,
@@ -42,8 +41,8 @@ export async function completePasskeyRegistration(
   client: AxiosInstance,
   basePath: string,
   request: AccountPasskeyRegistrationRequest
-): Promise<AccountPasskeyCreatedResponse> {
-  const { data } = await client.post<AccountPasskeyCreatedResponse>(
+): Promise<AccountPasskeyInfo> {
+  const { data } = await client.post<AccountPasskeyInfo>(
     `${basePath}/passkeys/register/complete`,
     request
   );

@@ -32,7 +32,7 @@ const overdueWed: ActivityCalendarItemResponse = {
   title: 'Overdue Wed',
   color: 'overdue',
   type: 'FollowUp',
-  status: 'Overdue',
+  status: 'Open',
   entityType: 'Quote',
   entityId: 'q2',
   assignedToUserId: 'u1',

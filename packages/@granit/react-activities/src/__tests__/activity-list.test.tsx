@@ -27,7 +27,7 @@ const open: ActivityResponse = {
   createdAt: '2026-05-01T08:00:00Z',
 };
 
-const completed: ActivityResponse = { ...open, id: 'a2', status: 'Completed' };
+const completed: ActivityResponse = { ...open, id: 'a2', status: 'Done' };
 
 const sampleResponse: ActivityListResponse = {
   items: [open, completed],

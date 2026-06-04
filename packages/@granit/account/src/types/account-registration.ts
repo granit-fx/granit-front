@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Account registration types — mirrors Granit.OpenIddict.Endpoints .NET contract
+// Account registration types — mirrors Granit.Identity.Local.Endpoints .NET contract
 // ---------------------------------------------------------------------------
 
 /** Request body for `POST /register`. */
@@ -10,8 +10,6 @@ export interface AccountRegisterRequest {
   readonly lastName?: string;
 }
 
-/** Response from `POST /register`. */
-export interface AccountRegisterResponse {
-  readonly userId: string;
-  readonly requiresEmailConfirmation: boolean;
-}
+// `POST /register` responds `202 Accepted` with no body (registration is
+// processed asynchronously, and email-confirmation requirement is exposed via
+// `GET /config` → AccountSettingsResponse). There is no register response DTO.
