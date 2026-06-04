@@ -13,6 +13,7 @@ export {
 
 export {
   collectImports,
+  hasBannedConsole,
   scanConsole,
   scanFetch,
   scanAxiosImports,

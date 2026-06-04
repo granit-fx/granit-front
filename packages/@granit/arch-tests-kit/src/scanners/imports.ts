@@ -22,11 +22,33 @@ function isAllowedFile(
   return allowedFiles.some((needle) => relativePath.includes(needle));
 }
 
+// Direct `console.method(` — the leading char class excludes letters/`_`/`.`/`$`
+// so `myconsole.log` and property accesses like `foo.console.log` are NOT matched
+// here; the global-object bypass below handles the legitimate global console.
 const CONSOLE_RE = /(^|[^a-zA-Z_.$])console\s*\.\s*(log|warn|error|info|debug|trace)\s*\(/;
+
+// Console reached through a global object, e.g. `globalThis.console.log(…)`,
+// `window.console.error(…)`, `self.console.debug(…)`, or `globalThis['console']`.
+// Flags any access to `<global>.console` (not just method calls) so aliasing
+// such as `const c = globalThis.console` is caught too.
+const GLOBAL_CONSOLE_RE =
+  /\b(?:globalThis|window|self)\s*(?:\.\s*console\b|\[\s*['"]console['"]\s*\])/;
+
+/**
+ * True when `text` contains a banned reference to the global `console`, either
+ * a direct `console.*(…)` call or a global-object access (`globalThis.console`,
+ * `window.console`, `self.console`, `globalThis['console']`). Pure predicate —
+ * pass already comment-stripped source. Exported for regression testing.
+ */
+export function hasBannedConsole(text: string): boolean {
+  return CONSOLE_RE.test(text) || GLOBAL_CONSOLE_RE.test(text);
+}
 
 /**
  * Bans `console.*` runtime calls outside allowlisted modules (typically the
- * logger and its transports). Comments/JSDoc are ignored.
+ * logger and its transports). Catches both the direct `console.log(…)` form and
+ * the global-object bypass (`globalThis.console.*`, `window.console.*`,
+ * `self.console.*`). Comments/JSDoc are ignored.
  */
 export function scanConsole(opts: AllowlistedScanContext): Violation[] {
   const allow = new Set(opts.allowedModules ?? []);
@@ -36,7 +58,7 @@ export function scanConsole(opts: AllowlistedScanContext): Violation[] {
     for (const f of walkSourceFiles(m.srcDir, (file) => !isTestFile(file) && !isTestingDir(file))) {
       const relPath = rel(f, opts.repoRoot);
       if (isAllowedFile(relPath, opts.allowedFiles)) continue;
-      if (CONSOLE_RE.test(stripComments(readFile(f)))) {
+      if (hasBannedConsole(stripComments(readFile(f)))) {
         out.push({
           rule: 'no-console',
           module: m.name,

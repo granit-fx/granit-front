@@ -1,5 +1,6 @@
 import {
   collectImports,
+  hasBannedConsole,
   isTestFile,
   isTestingDir,
   rel,
@@ -26,6 +27,22 @@ const ctx = { modules, repoRoot: REPO_ROOT };
 describe('imports — shared rules (delegated to kit)', () => {
   it('no console.* in runtime code', () => {
     expect(scanConsole({ ...ctx, allowedModules: CONSOLE_ALLOWLIST })).toEqual([]);
+  });
+
+  it('the console ban covers the global-object bypass, not just direct calls', () => {
+    // Direct calls — already enforced historically.
+    expect(hasBannedConsole('console.log(x)')).toBe(true);
+    expect(hasBannedConsole(';console.error(x)')).toBe(true);
+    // Global-object bypass — the regression this rule was hardened against.
+    expect(hasBannedConsole('globalThis.console.log(x)')).toBe(true);
+    expect(hasBannedConsole('window.console.error(x)')).toBe(true);
+    expect(hasBannedConsole('self.console.debug(x)')).toBe(true);
+    expect(hasBannedConsole("globalThis['console'].info(x)")).toBe(true);
+    expect(hasBannedConsole('const c = globalThis.console;')).toBe(true);
+    // Must not flag unrelated identifiers or non-global `.console` properties.
+    expect(hasBannedConsole('myconsole.log(x)')).toBe(false);
+    expect(hasBannedConsole('telemetry.console.send(x)')).toBe(false);
+    expect(hasBannedConsole('createLogger().info(x)')).toBe(false);
   });
 
   it('no native fetch() outside the infra allowlist', () => {

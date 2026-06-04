@@ -5,10 +5,15 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from 'axios';
 
-import type { Logger } from '@granit/logger';
+import { createLogger, type Logger } from '@granit/logger';
 
 /** Authentication mode for the API client. */
 export type ApiClientMode = 'bearer' | 'bff';
+
+// Fallback logger for the rare paths where no app logger is wired. Warnings
+// route through the @granit/logger façade (console transport in dev) rather
+// than the raw global console — keeps the no-console arch rule honest.
+const fallbackLogger = createLogger('api-client');
 
 /** Getter that returns the current CSRF token, or null if unavailable. */
 export type CsrfTokenGetter = () => string | null;
@@ -88,7 +93,7 @@ function warnIfAlreadySet(name: string, previous: unknown): void {
   if (previous === null) return;
   const env = (import.meta as { env?: { DEV?: boolean } }).env;
   if (env?.DEV !== true) return;
-  globalThis.console.warn(
+  fallbackLogger.warn(
     `[@granit/api-client] ${name} called more than once — the previous getter has been replaced. ` +
       `Check for provider double-mount or unintended override.`
   );
@@ -159,11 +164,7 @@ async function injectBffHeaders(
   if (config.csrfTokenGetter || config.refreshCsrfToken) {
     const message =
       '[@granit/api-client] BFF mutation sent without X-CSRF-Token — token unavailable. Request will likely be rejected by the BFF.';
-    if (config.logger) {
-      config.logger.warn(message, { method: req.method, url: req.url });
-    } else {
-      globalThis.console.warn(message);
-    }
+    (config.logger ?? fallbackLogger).warn(message, { method: req.method, url: req.url });
   }
 }
 

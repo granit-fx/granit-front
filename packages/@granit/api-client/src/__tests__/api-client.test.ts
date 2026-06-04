@@ -461,9 +461,14 @@ describe('BFF mode', () => {
 
     const response = await client.post('/test', {});
     expect(response.config.headers['X-CSRF-Token']).toBeUndefined();
-    expect(warnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('BFF mutation sent without X-CSRF-Token')
-    );
+    // The fallback warning is routed through @granit/logger's console transport,
+    // which formats the message into a styled `%c` argument — assert on content.
+    expect(warnSpy).toHaveBeenCalled();
+    expect(
+      warnSpy.mock.calls.some((call) =>
+        String(call[0]).includes('BFF mutation sent without X-CSRF-Token')
+      )
+    ).toBe(true);
     warnSpy.mockRestore();
   });
 

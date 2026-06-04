@@ -1,4 +1,5 @@
 import { CsrfManager, parseBffSessionResponse } from '@granit/bff';
+import { createLogger } from '@granit/logger';
 import {
   createContext,
   useCallback,
@@ -31,6 +32,10 @@ export interface BffContextType {
 }
 
 const BffContext = createContext<BffContextType | null>(null);
+
+// Fallback logger when the app wires no `config.logger`. Routes through the
+// @granit/logger façade (console transport in dev) instead of the raw console.
+const fallbackLogger = createLogger('react-bff');
 
 export interface BffProviderProps {
   readonly config: BffConfig;
@@ -72,7 +77,7 @@ export function BffProvider({ config, children }: BffProviderProps) {
 
         const parsed = parseBffSessionResponse(raw);
         if (!parsed.success) {
-          globalThis.console.warn(
+          (configRef.current.logger ?? fallbackLogger).warn(
             '[@granit/react-bff] Malformed /bff/user response — treating as unauthenticated',
             { issues: parsed.issues }
           );
@@ -90,11 +95,7 @@ export function BffProvider({ config, children }: BffProviderProps) {
       } catch (error) {
         if (cancelled) return;
         const message = '[@granit/react-bff] BFF session check failed';
-        if (configRef.current.logger) {
-          configRef.current.logger.warn(message, { error: String(error) });
-        } else {
-          globalThis.console.warn(message, error);
-        }
+        (configRef.current.logger ?? fallbackLogger).warn(message, { error: String(error) });
         setUser(null);
       } finally {
         if (!cancelled) setIsLoading(false);

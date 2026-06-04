@@ -1273,6 +1273,9 @@ importers:
       '@granit/bff':
         specifier: workspace:*
         version: link:../bff
+      '@granit/logger':
+        specifier: workspace:*
+        version: link:../logger
       react:
         specifier: 19.2.7
         version: 19.2.7
