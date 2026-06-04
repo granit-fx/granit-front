@@ -449,6 +449,50 @@
               "signature": "sections?: ReadonlyArray<SectionKey>"
             }
           ]
+        },
+        {
+          "name": "scanDomScriptSinks",
+          "kind": "function",
+          "signature": "function scanDomScriptSinks(opts: DomScriptSinksOptions): Violation[]"
+        },
+        {
+          "name": "DomScriptSinksOptions",
+          "kind": "interface",
+          "signature": "interface DomScriptSinksOptions extends AllowlistedScanContext",
+          "members": [
+            {
+              "name": "cspSubpath",
+              "kind": "property",
+              "signature": "cspSubpath?: string"
+            }
+          ]
+        },
+        {
+          "name": "scanUndeclaredDeps",
+          "kind": "function",
+          "signature": "function scanUndeclaredDeps(opts: UndeclaredDepsOptions): Violation[]"
+        },
+        {
+          "name": "UndeclaredDepsOptions",
+          "kind": "interface",
+          "signature": "interface UndeclaredDepsOptions extends ScanContext",
+          "members": [
+            {
+              "name": "packageJsonPath",
+              "kind": "method",
+              "signature": "packageJsonPath?: (m: { dir: string }) => string"
+            },
+            {
+              "name": "ignore",
+              "kind": "property",
+              "signature": "ignore?: ReadonlyArray<string>"
+            }
+          ]
+        },
+        {
+          "name": "scanUseClientDirective",
+          "kind": "function",
+          "signature": "function scanUseClientDirective(opts: AllowlistedScanContext): Violation[]"
         }
       ]
     },

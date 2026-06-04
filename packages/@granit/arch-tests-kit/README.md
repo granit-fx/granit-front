@@ -125,6 +125,9 @@ A complete reference setup lives in
 | `scanBarrelDefaultExports` | No `export default` in module barrels                                                    |
 | `scanLeakedInternals`      | No underscore-prefixed exports leaked from barrels                                       |
 | `scanLocaleParity`         | `locales/` ships `en.ts` + `fr.ts` + `index.ts` + matching `TranslationsEn/Fr` constants |
+| `scanDomScriptSinks`       | Any package writing to a DOM-script sink ships a `<pkg>/csp` subpath (Trusted Types)     |
+| `scanUndeclaredDeps`       | Every bare import is declared in the package's own `package.json` (no phantom deps)      |
+| `scanUseClientDirective`   | RSC-consumed modules mark every client-hook file with `'use client'` (opt-in)            |
 
 All scanners return `Violation[]`. Empty array means the rule passes.
 
@@ -159,6 +162,21 @@ Available on `scanKebabCase`, `scanConsole`, `scanFetch`, `scanAxiosImports`.
 **recursively** under each module's `srcDir`, so they find every
 `hooks/` / `components/` / `api/` subdir regardless of depth — the same
 rule works for a flat package and a feature-folder app.
+
+### Opt-in scanners
+
+`scanUseClientDirective` is **opt-in by module**: it flags only the modules
+you pass in `ctx.modules`. Scope it to the packages a React Server Components
+app actually imports — server-only modules never need the directive:
+
+```ts
+const rsc = new Set(['@granit/react-cms']);
+scanUseClientDirective({ ...ctx, modules: ctx.modules.filter((m) => rsc.has(m.name)) });
+```
+
+`scanDomScriptSinks` and `scanUndeclaredDeps` read each module's
+`package.json`/`src/csp/index.ts` from `Module.dir`/`Module.srcDir`. Override
+the lookup with `packageJsonPath` / `cspSubpath` for non-standard layouts.
 
 ## Violation shape
 

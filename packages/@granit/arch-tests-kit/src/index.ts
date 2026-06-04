@@ -32,3 +32,11 @@ export {
 
 export { scanReadmePresence, scanSharedDepVersions } from './scanners/uniformity';
 export type { ReadmePresenceOptions, SharedDepVersionsOptions } from './scanners/uniformity';
+
+export { scanDomScriptSinks } from './scanners/csp';
+export type { DomScriptSinksOptions } from './scanners/csp';
+
+export { scanUndeclaredDeps } from './scanners/deps';
+export type { UndeclaredDepsOptions } from './scanners/deps';
+
+export { scanUseClientDirective } from './scanners/react';

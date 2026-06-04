@@ -68,3 +68,11 @@ export const CONSOLE_ALLOWLIST: ReadonlyArray<string> = [
   '@granit/logger-otlp',
   '@granit/react-tracing',
 ];
+
+/**
+ * Packages imported by a React Server Components app (the Next.js CMS renderer).
+ * Files in these using a client-only React hook must carry `'use client'`.
+ * Discover with:
+ *   grep -rhoE "@granit/react-[a-z0-9-]+" ~/dev/granit-fx/granit-cms-renderer/{app,src}
+ */
+export const RSC_PACKAGES: ReadonlyArray<string> = ['@granit/react-cms'];
