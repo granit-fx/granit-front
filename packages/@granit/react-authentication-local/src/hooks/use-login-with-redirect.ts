@@ -17,9 +17,13 @@ export interface UseLoginWithRedirectOptions {
   readonly fallbackUrl?: string;
   /** Called when the server requires two-factor authentication. */
   readonly onTwoFactorRequired?: () => void;
-  /** Called when login is not allowed (e.g. unconfirmed email). */
-  readonly onNotAllowed?: () => void;
-  /** Called when the login request fails (network error, 401, etc.). */
+  /**
+   * Called when the login request fails. Invalid credentials, locked-out and
+   * not-allowed (e.g. unconfirmed email) all surface here as a 401
+   * `AxiosError<ProblemDetails>` — the backend returns a generic 401 (with a
+   * distinguishing `detail`) for these, never a `200` body, to prevent account
+   * enumeration. Inspect `error` to tailor the message.
+   */
   readonly onError?: (error: Error) => void;
 }
 
@@ -27,8 +31,8 @@ export interface UseLoginWithRedirectResult {
   /**
    * Submit credentials and auto-redirect to `returnUrl` on success.
    *
-   * On non-success responses (`requiresTwoFactor`, `isNotAllowed`),
-   * the corresponding callback from {@link UseLoginWithRedirectOptions} is invoked.
+   * On a `requiresTwoFactor` response `onTwoFactorRequired` is invoked; any
+   * failure (invalid credentials, locked-out, not-allowed) arrives via `onError`.
    */
   readonly loginAndRedirect: (request: AccountLoginRequest) => void;
   /** The underlying React Query mutation for UI state (`isPending`, `error`, etc.). */
@@ -69,10 +73,6 @@ export function useLoginWithRedirect(
           }
           if (data.requiresTwoFactor) {
             optionsRef.current?.onTwoFactorRequired?.();
-            return;
-          }
-          if (data.isNotAllowed) {
-            optionsRef.current?.onNotAllowed?.();
           }
         },
         onError: (error) => {

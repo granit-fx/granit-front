@@ -334,6 +334,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/authorization:
     devDependencies:
@@ -1205,6 +1208,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-authorization:
     dependencies:

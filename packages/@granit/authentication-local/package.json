@@ -1,6 +1,6 @@
 {
   "name": "@granit/authentication-local",
-  "description": "Local credential authentication types and API — headless login, passkey assertion — mirrors Granit.Identity.Local.Endpoints .NET contract",
+  "description": "Local credential authentication types and API — headless login + full account self-service (registration, password, email, profile, 2FA, passkeys) — mirrors Granit.Identity.Local.Endpoints .NET contract",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -14,11 +14,13 @@
     "build": "tsup"
   },
   "peerDependencies": {
-    "@granit/api-client": "workspace:*"
+    "@granit/api-client": "workspace:*",
+    "@granit/types": "workspace:*"
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
-    "@granit/testing": "workspace:*"
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*"
   },
   "publishConfig": {
     "exports": {

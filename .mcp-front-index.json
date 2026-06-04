@@ -864,7 +864,7 @@
     },
     {
       "name": "@granit/authentication-local",
-      "description": "Local credential authentication types and API — headless login, passkey assertion — mirrors Granit.Identity.Local.Endpoints .NET contract",
+      "description": "Local credential authentication types and API — headless login + full account self-service (registration, password, email, profile, 2FA, passkeys) — mirrors Granit.Identity.Local.Endpoints .NET contract",
       "exports": [
         {
           "name": "loginAccount",
@@ -875,6 +875,56 @@
           "name": "verifyTwoFactorLogin",
           "kind": "function",
           "signature": "async function verifyTwoFactorLogin( client: AxiosInstance, basePath: string, request: AccountTwoFactorLoginRequest ): Promise<AccountLoginResponse>"
+        },
+        {
+          "name": "changePassword",
+          "kind": "function",
+          "signature": "async function changePassword( client: AxiosInstance, basePath: string, request: AccountPasswordChangeRequest ): Promise<void>"
+        },
+        {
+          "name": "forgotPassword",
+          "kind": "function",
+          "signature": "async function forgotPassword( client: AxiosInstance, basePath: string, request: AccountForgotPasswordRequest ): Promise<void>"
+        },
+        {
+          "name": "resetPassword",
+          "kind": "function",
+          "signature": "async function resetPassword( client: AxiosInstance, basePath: string, request: AccountPasswordResetRequest ): Promise<void>"
+        },
+        {
+          "name": "changeEmail",
+          "kind": "function",
+          "signature": "async function changeEmail( client: AxiosInstance, basePath: string, request: AccountChangeEmailRequest ): Promise<void>"
+        },
+        {
+          "name": "confirmEmailChange",
+          "kind": "function",
+          "signature": "async function confirmEmailChange( client: AxiosInstance, basePath: string, request: AccountConfirmEmailChangeRequest ): Promise<void>"
+        },
+        {
+          "name": "getProfile",
+          "kind": "function",
+          "signature": "async function getProfile( client: AxiosInstance, basePath: string ): Promise<AccountProfileResponse>"
+        },
+        {
+          "name": "updateProfile",
+          "kind": "function",
+          "signature": "async function updateProfile( client: AxiosInstance, basePath: string, request: AccountProfileUpdateRequest ): Promise<AccountProfileResponse>"
+        },
+        {
+          "name": "deleteAccount",
+          "kind": "function",
+          "signature": "async function deleteAccount( client: AxiosInstance, basePath: string, request: AccountDeleteRequest ): Promise<void>"
+        },
+        {
+          "name": "sendSessionHeartbeat",
+          "kind": "function",
+          "signature": "async function sendSessionHeartbeat(client: AxiosInstance, basePath: string): Promise<void>"
+        },
+        {
+          "name": "getAccountConfig",
+          "kind": "function",
+          "signature": "async function getAccountConfig( client: AxiosInstance, basePath: string ): Promise<IdentityLocalConfigResponse>"
         },
         {
           "name": "extractReturnUrl",
@@ -2892,7 +2942,7 @@
     },
     {
       "name": "@granit/react-authentication-local",
-      "description": "React hooks for local credential authentication — useLogin, useBeginPasskeyAssertion",
+      "description": "React hooks for local credential authentication — login, registration, password, email change, profile, two-factor and passkey management",
       "exports": [
         {
           "name": "LocalAuthProvider",
@@ -2915,6 +2965,11 @@
           "kind": "interface",
           "signature": "interface LocalAuthProviderProps",
           "members": []
+        },
+        {
+          "name": "localAuthKeys",
+          "kind": "const",
+          "signature": "const localAuthKeys"
         },
         {
           "name": "useLogin",
@@ -2940,6 +2995,73 @@
           "name": "useCompletePasskeyAssertion",
           "kind": "function",
           "signature": "function useCompletePasskeyAssertion(): UseMutationResult< AccountLoginResponse, Error, AccountPasskeyLoginRequest >"
+        },
+        {
+          "name": "useChangePassword",
+          "kind": "function",
+          "signature": "function useChangePassword(): UseMutationResult<void, Error, AccountPasswordChangeRequest>"
+        },
+        {
+          "name": "useForgotPassword",
+          "kind": "function",
+          "signature": "function useForgotPassword(): UseMutationResult<void, Error, AccountForgotPasswordRequest>"
+        },
+        {
+          "name": "useResetPassword",
+          "kind": "function",
+          "signature": "function useResetPassword(): UseMutationResult<void, Error, AccountPasswordResetRequest>"
+        },
+        {
+          "name": "useChangeEmail",
+          "kind": "function",
+          "signature": "function useChangeEmail(): UseMutationResult<void, Error, AccountChangeEmailRequest>"
+        },
+        {
+          "name": "useConfirmEmailChange",
+          "kind": "function",
+          "signature": "function useConfirmEmailChange(): UseMutationResult< void, Error, AccountConfirmEmailChangeRequest >"
+        },
+        {
+          "name": "useProfile",
+          "kind": "function",
+          "signature": "function useProfile(): UseQueryResult<AccountProfileResponse>"
+        },
+        {
+          "name": "useUpdateProfile",
+          "kind": "function",
+          "signature": "function useUpdateProfile(): UseMutationResult< AccountProfileResponse, Error, AccountProfileUpdateRequest >"
+        },
+        {
+          "name": "RenamePasskeyVariables",
+          "kind": "interface",
+          "signature": "interface RenamePasskeyVariables",
+          "members": [
+            {
+              "name": "id",
+              "kind": "property",
+              "signature": "id: string"
+            },
+            {
+              "name": "request",
+              "kind": "property",
+              "signature": "request: PasskeyRenameRequest"
+            }
+          ]
+        },
+        {
+          "name": "useDeleteAccount",
+          "kind": "function",
+          "signature": "function useDeleteAccount(): UseMutationResult<void, Error, AccountDeleteRequest>"
+        },
+        {
+          "name": "useSendSessionHeartbeat",
+          "kind": "function",
+          "signature": "function useSendSessionHeartbeat(): UseMutationResult<void, Error, void>"
+        },
+        {
+          "name": "useAccountConfig",
+          "kind": "function",
+          "signature": "function useAccountConfig(): UseQueryResult<IdentityLocalConfigResponse>"
         }
       ]
     },

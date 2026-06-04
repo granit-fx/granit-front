@@ -49,13 +49,6 @@ const twoFactorResponse: AccountLoginResponse = {
   isNotAllowed: false,
 };
 
-const notAllowedResponse: AccountLoginResponse = {
-  succeeded: false,
-  requiresTwoFactor: false,
-  isLockedOut: false,
-  isNotAllowed: true,
-};
-
 let locationMock: { href: string; search: string };
 
 afterEach(() => {
@@ -148,25 +141,6 @@ describe('useLoginWithRedirect', () => {
     await waitFor(() => expect(result.current.mutation.isSuccess).toBe(true));
 
     expect(onTwoFactorRequired).toHaveBeenCalledOnce();
-  });
-
-  it('calls onNotAllowed when login is not allowed', async () => {
-    const client = createMockClient();
-    vi.mocked(loginAccount).mockResolvedValue(notAllowedResponse);
-    const onNotAllowed = vi.fn();
-
-    const { result } = renderHook(() => useLoginWithRedirect({ search: '', onNotAllowed }), {
-      wrapper: createWrapper(client),
-    });
-
-    result.current.loginAndRedirect({
-      login: 'user@example.com',
-      password: 'P@ssw0rd!',
-    });
-
-    await waitFor(() => expect(result.current.mutation.isSuccess).toBe(true));
-
-    expect(onNotAllowed).toHaveBeenCalledOnce();
   });
 
   it('exposes the underlying mutation for UI state', async () => {

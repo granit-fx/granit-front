@@ -60,7 +60,7 @@ pnpm --filter @granit/utils lint   # Per package
 
 **React package** `@granit/react-{module}` (React-specific):
 
-```
+```text
 react-{module}/src/
 ├── __tests__/
 ├── components/      # Optional — React components
@@ -118,6 +118,24 @@ Full frontend conventions: `../granit-dotnet/docs/guide/conventions/frontend/`
   - `commit-msg`: commitlint (Conventional Commits)
   - `pre-commit`: `gitleaks` → `lint-staged` → `tsc -r --noEmit` →
     regenerate `.mcp-front-index.json` when `packages/@granit/*/src/` changed
+
+### Mirroring DTOs from `contracts/openapi/*.json`
+
+The OpenAPI specs are authoritative for **routes, HTTP methods, status codes,
+and field names** (PascalCase .NET → camelCase JSON). For **field optionality**,
+read the schema's `required` array — NOT the nullability:
+
+- A property's TS optionality (`?`) comes from `required`, never from whether
+  it can be `null`. The .NET generator marks **every** positional-record
+  parameter **without a C# default** as `required`, because System.Text.Json
+  needs the key present to construct the record.
+- `string? Foo` (no default) → `required` + `type: ["null","string"]` →
+  mirror as **`foo: T | null`** (key required, value nullable), **not** `foo?: T`.
+- Only params with a C# default (e.g. `bool X = false`) are absent from
+  `required` → **`foo?: T`** (genuinely optional).
+- Cross-check the record + FluentValidation validator in
+  `granit-dotnet/src/Granit.{Module}.Endpoints/` when in doubt — a missing
+  `NotEmpty()`/`NotNull()` rule constrains the _value_, not key presence.
 
 ## Refactoring — framework-specific
 
