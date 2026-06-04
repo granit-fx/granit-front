@@ -1671,38 +1671,6 @@
           "signature": "const NotificationChannels"
         },
         {
-          "name": "createTransportListeners",
-          "kind": "function",
-          "signature": "function createTransportListeners( initialState: ConnectionState = 'disconnected' ): TransportListeners"
-        },
-        {
-          "name": "TransportListeners",
-          "kind": "interface",
-          "signature": "interface TransportListeners",
-          "members": [
-            {
-              "name": "setState",
-              "kind": "method",
-              "signature": "setState(state: ConnectionState): void"
-            },
-            {
-              "name": "emit",
-              "kind": "method",
-              "signature": "emit(message: NotificationTransportMessage): void"
-            },
-            {
-              "name": "onNotification",
-              "kind": "method",
-              "signature": "onNotification(callback: (message: NotificationTransportMessage) => void): () => void"
-            },
-            {
-              "name": "onStateChange",
-              "kind": "method",
-              "signature": "onStateChange(callback: (state: ConnectionState) => void): () => void"
-            }
-          ]
-        },
-        {
           "name": "NotificationPermissions",
           "kind": "const",
           "signature": "const NotificationPermissions"
