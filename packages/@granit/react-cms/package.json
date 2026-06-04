@@ -6,7 +6,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./server": "./src/index.server.ts"
+    "./server": "./src/index.server.ts",
+    "./testing": "./src/testing/index.ts"
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
@@ -25,6 +26,7 @@
     "@granit/utils": "workspace:*",
     "@puckeditor/core": "^0.21.0",
     "@tanstack/react-query": "^5.0.0",
+    "msw": "^2.12.0",
     "react": "^19.0.0"
   },
   "peerDependenciesMeta": {
@@ -32,6 +34,9 @@
       "optional": true
     },
     "@granit/react-api-client": {
+      "optional": true
+    },
+    "msw": {
       "optional": true
     }
   }
