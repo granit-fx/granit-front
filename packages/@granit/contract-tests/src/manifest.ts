@@ -14,10 +14,27 @@ export interface ModuleContract {
   readonly package: string;
   /** DTO interfaces to check (spec schema name === front interface name). */
   readonly types: readonly string[];
+  /**
+   * Also verify route/verb conformance: every spec `path`+`method` has a front
+   * `client.METHOD()` call at the same route. Opt-in — leave off for modules
+   * whose routes are served by native `fetch` (BFF) instead of the Axios client.
+   */
+  readonly checkEndpoints?: boolean;
+  /**
+   * Routes (relative to `basePath`, params as `{}`) to skip in the endpoint
+   * check — served by the query-engine generic surface (`''` list, `'/meta'`)
+   * rather than a module `api/` function.
+   */
+  readonly endpointIgnore?: readonly string[];
 }
 
 export const CONTRACTS: readonly ModuleContract[] = [
-  { slug: 'background-jobs', package: 'background-jobs', types: ['BackgroundJobStatus'] },
+  {
+    slug: 'background-jobs',
+    package: 'background-jobs',
+    types: ['BackgroundJobStatus'],
+    checkEndpoints: true,
+  },
   { slug: 'bff', package: 'bff', types: ['BffCsrfTokenResponse'] },
   {
     slug: 'blob-storage',
@@ -33,6 +50,8 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'BlobDescriptorResponse',
       'BlobCleanupOrphansResponse',
     ],
+    checkEndpoints: true,
+    endpointIgnore: ['', '/meta'],
   },
   {
     slug: 'api-keys',
@@ -44,6 +63,7 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'ApiKeyRotateResponse',
       'ApiKeyUpdateScopesRequest',
     ],
+    checkEndpoints: true,
   },
   {
     slug: 'ai',
@@ -66,6 +86,8 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'AIModelCapabilities',
       'AIUsageRecord',
     ],
+    checkEndpoints: true,
+    endpointIgnore: ['/usage', '/usage/meta'],
   },
   {
     slug: 'auditing',
@@ -87,5 +109,17 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'PermissionGroupResponse',
       'PermissionGrantResponse',
     ],
+  },
+  {
+    slug: 'features',
+    package: 'features',
+    types: [
+      'FeatureDefinitionResponse',
+      'FeatureGroupResponse',
+      'FeatureNumericConstraintResponse',
+      'FeatureValueResponse',
+      'SetFeatureOverrideRequest',
+    ],
+    checkEndpoints: true,
   },
 ];
