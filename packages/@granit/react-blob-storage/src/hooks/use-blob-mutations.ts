@@ -1,11 +1,17 @@
-import { confirmUpload, deleteBlob, initiateUpload } from '@granit/blob-storage';
+import {
+  cancelPendingUpload,
+  confirmUpload,
+  deleteBlob,
+  initiateUpload,
+} from '@granit/blob-storage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useBlobStorageConfig } from '../providers/blob-storage-provider';
 
-import { blobStorageKeys } from './query-keys';
+import { blobListQueryKey, blobStorageKeys } from './query-keys';
 
 import type {
+  BlobCancelPendingRequest,
   BlobConfirmUploadRequest,
   BlobConfirmUploadResponse,
   BlobDeleteRequest,
@@ -55,13 +61,17 @@ export function useConfirmUpload(): UseMutationResult<
   Error,
   { id: string; request: BlobConfirmUploadRequest }
 > {
-  const { client, basePath } = useBlobStorageConfig();
+  const config = useBlobStorageConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, request }) => confirmUpload(client, `${basePath}/blobs`, id, request),
+    mutationFn: ({ id, request }) =>
+      confirmUpload(config.client, `${config.basePath}/blobs`, id, request),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: blobStorageKeys.blobs() });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: blobStorageKeys.blobs() }),
+        queryClient.invalidateQueries({ queryKey: blobListQueryKey(config) }),
+      ]);
     },
   });
 }
@@ -83,13 +93,53 @@ export function useDeleteBlob(): UseMutationResult<
   Error,
   { id: string; request: BlobDeleteRequest }
 > {
-  const { client, basePath } = useBlobStorageConfig();
+  const config = useBlobStorageConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, request }) => deleteBlob(client, `${basePath}/blobs`, id, request),
+    mutationFn: ({ id, request }) =>
+      deleteBlob(config.client, `${config.basePath}/blobs`, id, request),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: blobStorageKeys.blobs() });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: blobStorageKeys.blobs() }),
+        queryClient.invalidateQueries({ queryKey: blobListQueryKey(config) }),
+      ]);
+    },
+  });
+}
+
+/**
+ * Mutation hook to cancel a `Pending` upload whose pre-signed PUT failed
+ * client-side.
+ *
+ * Sends `DELETE {basePath}/{id}/pending`, transitioning the blob straight to
+ * `Rejected` (short-circuiting the orphan-cleanup window). Invalidates blob
+ * queries on success. {@link useBlobUpload} calls this automatically when the
+ * direct-to-cloud PUT fails — use this hook for manual cancellation flows
+ * (e.g. a user aborting a stuck upload).
+ *
+ * @example
+ * ```tsx
+ * const { mutate: cancel } = useCancelPendingUpload();
+ * cancel({ id: 'abc-123', request: { containerName: 'docs', reason: 'User aborted' } });
+ * ```
+ */
+export function useCancelPendingUpload(): UseMutationResult<
+  void,
+  Error,
+  { id: string; request: BlobCancelPendingRequest }
+> {
+  const config = useBlobStorageConfig();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, request }) =>
+      cancelPendingUpload(config.client, `${config.basePath}/blobs`, id, request),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: blobStorageKeys.blobs() }),
+        queryClient.invalidateQueries({ queryKey: blobListQueryKey(config) }),
+      ]);
     },
   });
 }

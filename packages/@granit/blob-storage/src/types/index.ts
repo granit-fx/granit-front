@@ -76,6 +76,21 @@ export interface BlobDeleteRequest {
   readonly deletionReason?: string;
 }
 
+// ── Cancel pending upload ─────────────────────────────────────────────────────
+
+/**
+ * Request body for `DELETE /{id}/pending`.
+ *
+ * Cancels a `Pending` upload whose pre-signed PUT failed client-side,
+ * transitioning the blob straight to `Rejected` instead of waiting for the
+ * orphan-cleanup window. Mirrors `Granit.BlobStorage.Endpoints.Dtos.BlobCancelPendingRequest`.
+ */
+export interface BlobCancelPendingRequest {
+  readonly containerName: string;
+  /** Human-readable cancellation reason for the audit trail (required, max 512). */
+  readonly reason: string;
+}
+
 // ── Descriptor ──────────────────────────────────────────────────────────────
 
 /** Full blob descriptor. Mirrors `BlobDescriptorResponse` (.NET). */
@@ -91,6 +106,37 @@ export interface BlobDescriptorResponse {
   readonly rejectionReason: string | null;
   readonly deletionReason: string | null;
   readonly createdAt: string;
+  readonly validatedAt: string | null;
+  readonly deletedAt: string | null;
+}
+
+// ── Query / list row ──────────────────────────────────────────────────────────
+
+/**
+ * Row shape returned by the blob query/list endpoint
+ * (`GET {basePath}/blobs` → `QueryBlobDescriptor`, paged as `PagedResult<T>`).
+ *
+ * Mirrors the **domain** `Granit.BlobStorage.Domain.BlobDescriptor` projection,
+ * which differs from {@link BlobDescriptorResponse} (the `getBlob` DTO): the
+ * actual validated size is a single `sizeBytes` (null until `Valid`) rather than
+ * the DTO's `declaredSizeBytes` / `actualSizeBytes` split, and it carries the
+ * tenant / storage-key audit fields.
+ */
+export interface BlobDescriptorListItem {
+  readonly id: string;
+  readonly tenantId: string | null;
+  readonly containerName: string;
+  readonly objectKey: string;
+  readonly originalFileName: string;
+  readonly declaredContentType: string;
+  readonly maxAllowedBytes: number;
+  readonly verifiedContentType: string | null;
+  readonly sizeBytes: number | null;
+  readonly status: BlobStatus;
+  readonly rejectionReason: string | null;
+  readonly deletionReason: string | null;
+  readonly createdAt: string;
+  readonly createdBy: string;
   readonly validatedAt: string | null;
   readonly deletedAt: string | null;
 }

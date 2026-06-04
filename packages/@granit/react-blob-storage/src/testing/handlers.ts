@@ -1,7 +1,6 @@
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import {
   applyStringFilter,
-  groupBy as groupByField,
   paginate,
   parseFilters,
   parseSort,
@@ -17,23 +16,31 @@ import type {
   BlobConfirmUploadRequest,
   BlobConfirmUploadResponse,
   BlobDescriptorResponse,
-  BlobStatus,
   BlobUploadInitiateRequest,
   BlobUploadInitiateResponse,
 } from '@granit/blob-storage';
 import type { QueryMetadata } from '@granit/query-engine';
 
-/** Mock /meta payload for the blobs resource. */
+/**
+ * Mock `/meta` payload for the blobs resource — mirrors the backend
+ * `Granit.BlobStorage.Queries.BlobDescriptorQueryDefinition`:
+ *
+ * - rows are the domain `BlobDescriptor` projection (note `sizeBytes`, not the
+ *   DTO's `declaredSizeBytes`/`actualSizeBytes`),
+ * - a single `ValidOnly` **quick filter** is the default (no status preset group),
+ * - a `createdAt` date filter, default sort `-createdAt`, default page size 25,
+ * - no group-by fields.
+ */
 export const blobQueryMetadata: QueryMetadata = {
   columns: [
     {
-      name: 'originalFileName',
-      label: 'File name',
-      type: 'String',
+      name: 'tenantId',
+      label: 'Tenant',
+      type: 'Guid',
       order: 1,
       isSortable: true,
       isFilterable: true,
-      isVisible: true,
+      isVisible: false,
     },
     {
       name: 'containerName',
@@ -45,86 +52,136 @@ export const blobQueryMetadata: QueryMetadata = {
       isVisible: true,
     },
     {
-      name: 'declaredContentType',
-      label: 'Content type',
+      name: 'originalFileName',
+      label: 'File Name',
       type: 'String',
       order: 3,
-      isSortable: false,
+      isSortable: true,
       isFilterable: true,
       isVisible: true,
     },
     {
-      name: 'declaredSizeBytes',
-      label: 'Size',
-      type: 'Int64',
+      name: 'declaredContentType',
+      label: 'Content Type',
+      type: 'String',
       order: 4,
       isSortable: true,
-      isFilterable: false,
+      isFilterable: true,
       isVisible: true,
     },
     {
-      name: 'status',
-      label: 'Status',
+      name: 'verifiedContentType',
+      label: 'Verified Content Type',
       type: 'String',
       order: 5,
-      isSortable: true,
-      isFilterable: false,
-      isVisible: true,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: false,
     },
     {
-      name: 'createdAt',
-      label: 'Created at',
-      type: 'DateTime',
+      name: 'sizeBytes',
+      label: 'Size (bytes)',
+      type: 'Int64',
       order: 6,
       isSortable: true,
       isFilterable: false,
       isVisible: true,
     },
-  ],
-  filterableFields: [
-    { name: 'originalFileName', type: 'String', operators: ['Eq', 'Contains', 'StartsWith'] },
-    { name: 'containerName', type: 'String', operators: ['Eq'] },
-    { name: 'declaredContentType', type: 'String', operators: ['Eq', 'Contains'] },
-  ],
-  sortableFields: [
-    { name: 'originalFileName' },
-    { name: 'containerName' },
-    { name: 'declaredSizeBytes' },
-    { name: 'createdAt' },
-    { name: 'status' },
-  ],
-  presetFilterGroups: [
     {
       name: 'status',
       label: 'Status',
-      presets: [
-        { name: 'valid', label: 'Valid', isDefault: false },
-        { name: 'pending', label: 'Pending', isDefault: false },
-        { name: 'rejected', label: 'Rejected', isDefault: false },
-        { name: 'deleted', label: 'Deleted', isDefault: false },
+      type: 'String',
+      order: 7,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'createdAt',
+      label: 'Created At',
+      type: 'DateTime',
+      order: 8,
+      isSortable: true,
+      isFilterable: false,
+      isVisible: true,
+    },
+    {
+      name: 'validatedAt',
+      label: 'Validated At',
+      type: 'DateTime',
+      order: 9,
+      isSortable: true,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'deletedAt',
+      label: 'Deleted At',
+      type: 'DateTime',
+      order: 10,
+      isSortable: true,
+      isFilterable: false,
+      isVisible: false,
+    },
+    {
+      name: 'rejectionReason',
+      label: 'Rejection Reason',
+      type: 'String',
+      order: 11,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: false,
+    },
+  ],
+  filterableFields: [
+    { name: 'tenantId', type: 'Guid', operators: ['Eq'] },
+    { name: 'containerName', type: 'String', operators: ['Eq', 'Contains', 'StartsWith'] },
+    { name: 'originalFileName', type: 'String', operators: ['Eq', 'Contains', 'StartsWith'] },
+    { name: 'declaredContentType', type: 'String', operators: ['Eq', 'Contains'] },
+    { name: 'verifiedContentType', type: 'String', operators: ['Eq', 'Contains'] },
+    {
+      name: 'status',
+      type: 'String',
+      operators: ['Eq'],
+      enumValues: ['Pending', 'Uploading', 'Valid', 'Rejected', 'Deleted'],
+    },
+  ],
+  sortableFields: [
+    { name: 'tenantId' },
+    { name: 'containerName' },
+    { name: 'originalFileName' },
+    { name: 'declaredContentType' },
+    { name: 'sizeBytes' },
+    { name: 'status' },
+    { name: 'createdAt' },
+    { name: 'validatedAt' },
+    { name: 'deletedAt' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [{ name: 'ValidOnly', label: 'Valid uploads only', isDefault: true }],
+  dateFilters: [
+    {
+      name: 'createdAt',
+      defaultPeriod: 'ThisMonth',
+      availablePeriods: [
+        'Today',
+        'ThisWeek',
+        'ThisMonth',
+        'LastMonth',
+        'ThisQuarter',
+        'ThisYear',
+        'Custom',
       ],
     },
   ],
-  quickFilters: [],
-  dateFilters: [],
-  groupByFields: [
-    { name: 'containerName', type: 'String' },
-    { name: 'status', type: 'String' },
-  ],
+  groupByFields: [],
   pagination: {
-    defaultPageSize: 20,
-    maxPageSize: 50,
+    defaultPageSize: 25,
+    maxPageSize: 100,
     maxStreamSize: 1000,
     supportsCursor: false,
   },
-};
-
-const STATUS_LABELS: Record<BlobStatus, string> = {
-  Pending: 'Pending',
-  Uploading: 'Uploading',
-  Valid: 'Valid',
-  Rejected: 'Rejected',
-  Deleted: 'Deleted',
+  defaultSort: '-createdAt',
 };
 
 /**
@@ -142,32 +199,32 @@ export function createBlobStorageHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const search = url.searchParams.get('search') ?? '';
       const filters = parseFilters(url);
       const sortEntries = parseSort(url);
-      const presetStatus = url.searchParams.get('presets[status]');
 
-      let filtered = [...mockBlobs];
+      // The query endpoint (`MapGranitQuery<BlobDescriptor>`) returns the domain
+      // projection, where the actual size lives in `sizeBytes` (null until
+      // validated) — not the descriptor DTO's `declaredSizeBytes`/`actualSizeBytes`.
+      let filtered = mockBlobs.map((b) => ({ ...b, sizeBytes: b.actualSizeBytes }));
 
-      // Preset filters
-      if (presetStatus) {
-        const presetNames = new Set(presetStatus.split(','));
-        filtered = filtered.filter((b) => {
-          if (presetNames.has('valid') && b.status === S.Valid) return true;
-          if (presetNames.has('pending') && (b.status === S.Pending || b.status === S.Uploading))
-            return true;
-          if (presetNames.has('rejected') && b.status === S.Rejected) return true;
-          if (presetNames.has('deleted') && b.status === S.Deleted) return true;
-          return false;
-        });
+      // Quick filters — `ValidOnly` is the backend default (isDefault: true),
+      // applied server-side when the client sends no `quickFilters` param.
+      const quickFiltersParam = url.searchParams.get('quickFilters');
+      const activeQuickFilters =
+        quickFiltersParam !== null
+          ? new Set(quickFiltersParam.split(',').filter(Boolean))
+          : new Set(['ValidOnly']);
+      if (activeQuickFilters.has('ValidOnly')) {
+        filtered = filtered.filter((b) => b.status === S.Valid);
       }
 
       // Advanced filters
       for (const f of filters) {
         filtered = filtered.filter((b) => {
-          const fieldValue = b[f.field as keyof BlobDescriptorResponse];
+          const fieldValue = b[f.field as keyof typeof b];
           return applyStringFilter(String(fieldValue ?? ''), f.operator, f.value);
         });
       }
 
-      // Full-text search
+      // Full-text search (OriginalFileName, ContainerName)
       if (search) {
         const q = search.toLowerCase();
         filtered = filtered.filter(
@@ -177,21 +234,11 @@ export function createBlobStorageHandlers(baseUrl = DEFAULT_BASE_PATH) {
         );
       }
 
-      // Sort — fall back to createdAt desc when no explicit sort is given
+      // Sort — fall back to createdAt desc (the backend default sort) when none given
       if (sortEntries.length > 0) {
         sortItems(filtered as unknown as Record<string, unknown>[], sortEntries);
       } else {
         filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      }
-
-      // GroupBy
-      const groupByParam = url.searchParams.get('groupBy');
-      if (groupByParam) {
-        const labelFn = (key: string): string =>
-          groupByParam === 'status' ? (STATUS_LABELS[key as BlobStatus] ?? key) : key;
-        return HttpResponse.json(
-          groupByField(filtered as unknown as Record<string, unknown>[], groupByParam, labelFn)
-        );
       }
 
       return HttpResponse.json(paginate(filtered, url));
@@ -269,6 +316,18 @@ export function createBlobStorageHandlers(baseUrl = DEFAULT_BASE_PATH) {
         return HttpResponse.json(response);
       }
     ),
+
+    // Cancel a Pending upload (presigned PUT failed client-side). Drops the
+    // tracked upload so it no longer lingers — mirrors the backend transition
+    // Pending → Rejected. 404 when the blob is unknown / no longer Pending.
+    http.delete(`${baseUrl}/blobs/:id/pending`, ({ params }) => {
+      const blobId = decodeURIComponent(params.id as string);
+      if (!pendingUploads.has(blobId)) {
+        return new HttpResponse(null, { status: 404 });
+      }
+      pendingUploads.delete(blobId);
+      return new HttpResponse(null, { status: 204 });
+    }),
   ];
 }
 

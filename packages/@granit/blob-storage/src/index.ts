@@ -2,10 +2,12 @@
 export { BlobStatus } from './types/index';
 
 export type {
+  BlobCancelPendingRequest,
   BlobCleanupOrphansResponse,
   BlobConfirmUploadRequest,
   BlobConfirmUploadResponse,
   BlobDeleteRequest,
+  BlobDescriptorListItem,
   BlobDescriptorResponse,
   BlobDownloadUrlRequest,
   BlobDownloadUrlResponse,
@@ -13,10 +15,9 @@ export type {
   BlobUploadInitiateResponse,
 } from './types/index';
 
-// Query keys
-
 // API
 export {
+  cancelPendingUpload,
   cleanupOrphans,
   confirmUpload,
   deleteBlob,

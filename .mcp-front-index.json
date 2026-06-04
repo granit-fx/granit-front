@@ -3018,21 +3018,6 @@
           "signature": "function useBlob(id: string, containerName: string): UseQueryResult<BlobDescriptorResponse>"
         },
         {
-          "name": "useConfirmUpload",
-          "kind": "function",
-          "signature": "function useConfirmUpload(): UseMutationResult< BlobConfirmUploadResponse, Error,"
-        },
-        {
-          "name": "useDeleteBlob",
-          "kind": "function",
-          "signature": "function useDeleteBlob(): UseMutationResult< void, Error,"
-        },
-        {
-          "name": "useInitiateUpload",
-          "kind": "function",
-          "signature": "function useInitiateUpload(): UseMutationResult< BlobUploadInitiateResponse, Error, BlobUploadInitiateRequest >"
-        },
-        {
           "name": "useDownloadUrl",
           "kind": "function",
           "signature": "function useDownloadUrl(): UseMutationResult< BlobDownloadUrlResponse, Error,"
@@ -3063,6 +3048,11 @@
           "kind": "interface",
           "signature": "interface BlobUploadState",
           "members": []
+        },
+        {
+          "name": "blobListQueryKey",
+          "kind": "function",
+          "signature": "function blobListQueryKey(config:"
         },
         {
           "name": "blobStorageKeys",

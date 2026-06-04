@@ -180,6 +180,57 @@ describe('useBlobUpload', () => {
     expect(result.current.state.phase).toBe('error');
   });
 
+  it('should cancel the pending blob when the pre-signed PUT fails', async () => {
+    const client = createMockClient();
+    vi.mocked(client.post).mockResolvedValueOnce({ data: mockTicket });
+    vi.mocked(client.delete).mockResolvedValueOnce({ data: undefined });
+
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useBlobUpload(), { wrapper });
+
+    const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+
+    let uploadPromise: Promise<BlobConfirmUploadResponse>;
+
+    await act(async () => {
+      uploadPromise = result.current.upload({ file, containerName: 'docs' });
+      await waitFor(() => expect(xhrInstances).toHaveLength(1));
+    });
+
+    await act(async () => {
+      xhrInstances[0]!.simulateError();
+      await expect(uploadPromise!).rejects.toThrow('network error');
+    });
+
+    // The freshly-initiated (still Pending) blob is cancelled best-effort so it
+    // does not linger until the orphan-cleanup window.
+    expect(client.delete).toHaveBeenCalledWith(
+      '/api/v1/blob-storage/blobs/blob-456/pending',
+      expect.objectContaining({
+        data: expect.objectContaining({ containerName: 'docs' }),
+      })
+    );
+  });
+
+  it('should not cancel anything when initiation itself fails', async () => {
+    const client = createMockClient();
+    vi.mocked(client.post).mockRejectedValueOnce(new Error('Unauthorized'));
+
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useBlobUpload(), { wrapper });
+
+    const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+
+    await act(async () => {
+      await expect(result.current.upload({ file, containerName: 'docs' })).rejects.toThrow(
+        'Unauthorized'
+      );
+    });
+
+    // No blob was created, so there is nothing to cancel.
+    expect(client.delete).not.toHaveBeenCalled();
+  });
+
   it('should reset state', async () => {
     const client = createMockClient();
     vi.mocked(client.post).mockRejectedValueOnce(new Error('fail'));

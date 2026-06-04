@@ -2,6 +2,7 @@ import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  cancelPendingUpload,
   cleanupOrphans,
   confirmUpload,
   deleteBlob,
@@ -192,6 +193,39 @@ describe('blob-storage-api', () => {
 
       expect(client.post).toHaveBeenCalledWith(`${BASE}/cleanup-orphans`);
       expect(result).toEqual(response);
+    });
+  });
+
+  describe('cancelPendingUpload', () => {
+    it('sends DELETE to /{id}/pending with body', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValueOnce({ data: undefined });
+
+      await cancelPendingUpload(client, BASE, 'abc-123', {
+        containerName: 'docs',
+        reason: 'Pre-signed PUT failed: 403 SignatureDoesNotMatch',
+      });
+
+      expect(client.delete).toHaveBeenCalledWith(`${BASE}/abc-123/pending`, {
+        data: {
+          containerName: 'docs',
+          reason: 'Pre-signed PUT failed: 403 SignatureDoesNotMatch',
+        },
+      });
+    });
+
+    it('encodes blob ID with special characters', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValueOnce({ data: undefined });
+
+      await cancelPendingUpload(client, BASE, 'id/slash', {
+        containerName: 'docs',
+        reason: 'aborted',
+      });
+
+      expect(client.delete).toHaveBeenCalledWith(`${BASE}/id%2Fslash/pending`, {
+        data: { containerName: 'docs', reason: 'aborted' },
+      });
     });
   });
 });

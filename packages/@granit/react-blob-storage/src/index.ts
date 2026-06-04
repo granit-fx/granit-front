@@ -14,7 +14,12 @@ export type { BlobUploadFieldProps } from './components/blob-upload-field';
 
 // Hooks
 export { useBlob } from './hooks/use-blob';
-export { useConfirmUpload, useDeleteBlob, useInitiateUpload } from './hooks/use-blob-mutations';
+export {
+  useCancelPendingUpload,
+  useConfirmUpload,
+  useDeleteBlob,
+  useInitiateUpload,
+} from './hooks/use-blob-mutations';
 export { useDownloadUrl } from './hooks/use-blob-download';
 export { useCleanupOrphans } from './hooks/use-blob-cleanup';
 export { useBlobUpload } from './hooks/use-blob-upload';
@@ -23,4 +28,4 @@ export { useBlobUpload } from './hooks/use-blob-upload';
 export type { BlobUploadParams, BlobUploadPhase, BlobUploadState } from './hooks/use-blob-upload';
 
 // Query keys
-export { blobStorageKeys } from './hooks/query-keys';
+export { blobListQueryKey, blobStorageKeys } from './hooks/query-keys';

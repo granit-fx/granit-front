@@ -1,4 +1,5 @@
 import type {
+  BlobCancelPendingRequest,
   BlobCleanupOrphansResponse,
   BlobConfirmUploadRequest,
   BlobConfirmUploadResponse,
@@ -73,6 +74,23 @@ export async function deleteBlob(
   request: BlobDeleteRequest
 ): Promise<void> {
   await client.delete(`${basePath}/${encodeURIComponent(id)}`, { data: request });
+}
+
+/**
+ * Cancel a `Pending` upload whose pre-signed PUT failed client-side.
+ *
+ * Short-circuits the orphan-cleanup window by transitioning the blob straight
+ * to `Rejected`. Returns 409 Conflict if the blob has already left `Pending`.
+ *
+ * `DELETE {basePath}/{id}/pending`
+ */
+export async function cancelPendingUpload(
+  client: AxiosInstance,
+  basePath: string,
+  id: string,
+  request: BlobCancelPendingRequest
+): Promise<void> {
+  await client.delete(`${basePath}/${encodeURIComponent(id)}/pending`, { data: request });
 }
 
 /**

@@ -6,8 +6,13 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { blobStorageKeys } from '../hooks/query-keys';
-import { useConfirmUpload, useDeleteBlob, useInitiateUpload } from '../hooks/use-blob-mutations';
+import { blobListQueryKey, blobStorageKeys } from '../hooks/query-keys';
+import {
+  useCancelPendingUpload,
+  useConfirmUpload,
+  useDeleteBlob,
+  useInitiateUpload,
+} from '../hooks/use-blob-mutations';
 import { BlobStorageProvider } from '../providers/blob-storage-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
@@ -128,6 +133,10 @@ describe('useConfirmUpload', () => {
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: blobStorageKeys.blobs(),
     });
+    // Also refreshes the query-engine list (admin table) — the keys are disjoint.
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: blobListQueryKey({ basePath: '/api/v1/blob-storage' }),
+    });
   });
 
   it('should handle confirmation error', async () => {
@@ -168,6 +177,9 @@ describe('useDeleteBlob', () => {
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: blobStorageKeys.blobs(),
     });
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: blobListQueryKey({ basePath: '/api/v1/blob-storage' }),
+    });
   });
 
   it('should handle delete error', async () => {
@@ -178,6 +190,49 @@ describe('useDeleteBlob', () => {
     const { result } = renderHook(() => useDeleteBlob(), { wrapper });
 
     result.current.mutate({ id: 'abc-123', request: { containerName: 'docs' } });
+
+    await waitFor(() => expect(result.current.isError).toBe(true));
+
+    expect(result.current.error?.message).toBe('Conflict');
+  });
+});
+
+describe('useCancelPendingUpload', () => {
+  it('should send DELETE to /{id}/pending and invalidate on success', async () => {
+    const client = createMockClient();
+    vi.mocked(client.delete).mockResolvedValueOnce({ data: undefined });
+
+    const { wrapper, queryClient } = createWrapper(client);
+    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
+
+    const { result } = renderHook(() => useCancelPendingUpload(), { wrapper });
+
+    result.current.mutate({
+      id: 'abc-123',
+      request: { containerName: 'docs', reason: 'User aborted' },
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(client.delete).toHaveBeenCalledWith('/api/v1/blob-storage/blobs/abc-123/pending', {
+      data: { containerName: 'docs', reason: 'User aborted' },
+    });
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: blobListQueryKey({ basePath: '/api/v1/blob-storage' }),
+    });
+  });
+
+  it('should handle cancel error', async () => {
+    const client = createMockClient();
+    vi.mocked(client.delete).mockRejectedValueOnce(new Error('Conflict'));
+
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useCancelPendingUpload(), { wrapper });
+
+    result.current.mutate({
+      id: 'abc-123',
+      request: { containerName: 'docs', reason: 'User aborted' },
+    });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 

@@ -1,7 +1,9 @@
 import { cleanupOrphans } from '@granit/blob-storage';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useBlobStorageConfig } from '../providers/blob-storage-provider';
+
+import { blobListQueryKey, blobStorageKeys } from './query-keys';
 
 import type { BlobCleanupOrphansResponse } from '@granit/blob-storage';
 import type { UseMutationResult } from '@tanstack/react-query';
@@ -18,9 +20,16 @@ import type { UseMutationResult } from '@tanstack/react-query';
  * ```
  */
 export function useCleanupOrphans(): UseMutationResult<BlobCleanupOrphansResponse, Error, void> {
-  const { client, basePath } = useBlobStorageConfig();
+  const config = useBlobStorageConfig();
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => cleanupOrphans(client, `${basePath}/blobs`),
+    mutationFn: () => cleanupOrphans(config.client, `${config.basePath}/blobs`),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: blobStorageKeys.blobs() }),
+        queryClient.invalidateQueries({ queryKey: blobListQueryKey(config) }),
+      ]);
+    },
   });
 }

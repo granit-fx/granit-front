@@ -1,10 +1,10 @@
-import { confirmUpload, initiateUpload } from '@granit/blob-storage';
+import { cancelPendingUpload, confirmUpload, initiateUpload } from '@granit/blob-storage';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useRef, useState } from 'react';
 
 import { useBlobStorageConfig } from '../providers/blob-storage-provider';
 
-import { blobStorageKeys } from './query-keys';
+import { blobListQueryKey, blobStorageKeys } from './query-keys';
 
 import type { BlobConfirmUploadResponse } from '@granit/blob-storage';
 
@@ -127,7 +127,8 @@ const IDLE_STATE: BlobUploadState = {
  * ```
  */
 export function useBlobUpload(): UseBlobUploadReturn {
-  const { client, basePath } = useBlobStorageConfig();
+  const config = useBlobStorageConfig();
+  const { client, basePath } = config;
   const queryClient = useQueryClient();
   const [state, setState] = useState<BlobUploadState>(IDLE_STATE);
   const abortRef = useRef<XMLHttpRequest | null>(null);
@@ -163,20 +164,35 @@ export function useBlobUpload(): UseBlobUploadReturn {
 
         setState((prev) => ({ ...prev, phase: 'uploading', blobId: ticket.blobId }));
 
-        // Step 2: Upload file to pre-signed URL via XMLHttpRequest (for progress)
-        await uploadViaXhr(
-          {
-            url: ticket.uploadUrl,
-            method: ticket.httpMethod,
-            headers: ticket.requiredHeaders,
-            body: file,
-            onProgress: (percent) => {
-              setState((prev) => ({ ...prev, progress: percent }));
-              onProgress?.(percent);
+        // Step 2: Upload file to pre-signed URL via XMLHttpRequest (for progress).
+        // If the pre-signed PUT fails, the blob is still `Pending` server-side —
+        // cancel it (best-effort) so it transitions straight to `Rejected`
+        // instead of lingering visible until the orphan-cleanup window elapses.
+        try {
+          await uploadViaXhr(
+            {
+              url: ticket.uploadUrl,
+              method: ticket.httpMethod,
+              headers: ticket.requiredHeaders,
+              body: file,
+              onProgress: (percent) => {
+                setState((prev) => ({ ...prev, progress: percent }));
+                onProgress?.(percent);
+              },
             },
-          },
-          abortRef
-        );
+            abortRef
+          );
+        } catch (putError) {
+          const reason = putError instanceof Error ? putError.message : String(putError);
+          await cancelPendingUpload(client, `${basePath}/blobs`, ticket.blobId, {
+            containerName,
+            reason: `Pre-signed PUT failed: ${reason}`.slice(0, 512),
+          }).catch(() => {
+            // Best-effort: orphan cleanup is the backstop if the cancel call
+            // itself fails (offline, already left Pending, …).
+          });
+          throw putError;
+        }
 
         // Step 3: Confirm upload
         setState((prev) => ({ ...prev, phase: 'confirming', progress: 100 }));
@@ -193,7 +209,10 @@ export function useBlobUpload(): UseBlobUploadReturn {
           error: null,
         });
 
-        await queryClient.invalidateQueries({ queryKey: blobStorageKeys.blobs() });
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: blobStorageKeys.blobs() }),
+          queryClient.invalidateQueries({ queryKey: blobListQueryKey(config) }),
+        ]);
 
         return confirmation;
       } catch (err) {
@@ -202,7 +221,7 @@ export function useBlobUpload(): UseBlobUploadReturn {
         throw error;
       }
     },
-    [client, basePath, queryClient]
+    [config, client, basePath, queryClient]
   );
 
   return { upload, state, reset };
