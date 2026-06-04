@@ -1,7 +1,6 @@
-import fs from 'node:fs';
 import path from 'node:path';
 
-import { isTestFile, readFile, rel, walkSourceFiles } from '../fs';
+import { findSubdirs, isTestFile, readFile, rel, walkSourceFiles } from '../fs';
 
 import type { AllowlistedScanContext, ScanContext, Violation } from '../types';
 
@@ -34,34 +33,6 @@ export function scanKebabCase(opts: AllowlistedScanContext): Violation[] {
 // NOSONAR: these regexes run only on bounded developer source files — no user input, no ReDoS risk
 const HOOK_DECL_RE = /\bexport\s+(?:async\s+)?(?:function|const)\s+use[A-Z]\w*/;
 const HOOK_REEXPORT_RE = /\bexport\s*\{[^}]*\buse[A-Z]\w*/;
-
-function processSubdirEntry(
-  entry: fs.Dirent,
-  cur: string,
-  name: string,
-  stack: string[],
-  out: string[]
-): void {
-  if (!entry.isDirectory()) return;
-  if (entry.name === 'node_modules' || entry.name === 'dist') return;
-  const full = path.join(cur, entry.name);
-  if (entry.name === name) out.push(full);
-  else stack.push(full);
-}
-
-function findSubdirs(root: string, name: string): string[] {
-  if (!fs.existsSync(root)) return [];
-  const out: string[] = [];
-  const stack = [root];
-  while (stack.length) {
-    const cur = stack.pop();
-    if (cur === undefined) break;
-    for (const entry of fs.readdirSync(cur, { withFileTypes: true })) {
-      processSubdirEntry(entry, cur, name, stack, out);
-    }
-  }
-  return out;
-}
 
 function checkHookFile(f: string, moduleName: string, repoRoot: string, out: Violation[]): void {
   const base = path.basename(f);

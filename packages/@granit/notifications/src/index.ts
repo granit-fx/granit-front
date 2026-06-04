@@ -23,6 +23,10 @@ export type {
 
 export { NotificationChannels } from './types/index';
 
+// Transport helpers (shared by transport adapters)
+export { createTransportListeners } from './transport-listeners';
+export type { TransportListeners } from './transport-listeners';
+
 // API (pure TypeScript functions)
 export {
   followEntity,

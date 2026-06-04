@@ -1,37 +1,14 @@
-import fs from 'node:fs';
-import path from 'node:path';
-
-import { isTestFile, isTestingDir, readFile, rel, stripComments, walkSourceFiles } from '../fs';
+import {
+  findSubdirs,
+  isTestFile,
+  isTestingDir,
+  readFile,
+  rel,
+  stripComments,
+  walkSourceFiles,
+} from '../fs';
 
 import type { AllowlistedScanContext, ScanContext, Violation } from '../types';
-
-function processSubdirEntry(
-  entry: fs.Dirent,
-  cur: string,
-  name: string,
-  stack: string[],
-  out: string[]
-): void {
-  if (!entry.isDirectory()) return;
-  if (entry.name === 'node_modules' || entry.name === 'dist') return;
-  const full = path.join(cur, entry.name);
-  if (entry.name === name) out.push(full);
-  else stack.push(full);
-}
-
-function findSubdirs(root: string, name: string): string[] {
-  if (!fs.existsSync(root)) return [];
-  const out: string[] = [];
-  const stack = [root];
-  while (stack.length) {
-    const cur = stack.pop();
-    if (cur === undefined) break;
-    for (const entry of fs.readdirSync(cur, { withFileTypes: true })) {
-      processSubdirEntry(entry, cur, name, stack, out);
-    }
-  }
-  return out;
-}
 
 // `export default <X>` is OK only when <X> is a named declaration or a bare
 // identifier reference — both give React DevTools / stack traces a useful

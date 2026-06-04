@@ -41,6 +41,38 @@ export function walkSourceFiles(rootDir: string, filter?: (file: string) => bool
   return out;
 }
 
+function processSubdirEntry(
+  entry: fs.Dirent,
+  cur: string,
+  name: string,
+  stack: string[],
+  out: string[]
+): void {
+  if (!entry.isDirectory()) return;
+  if (entry.name === 'node_modules' || entry.name === 'dist') return;
+  const full = path.join(cur, entry.name);
+  if (entry.name === name) out.push(full);
+  else stack.push(full);
+}
+
+/**
+ * Find every directory named `name` under `root` (e.g. all `hooks/` or `api/`
+ * subdirs of a module's `src/`). Skips `node_modules` and `dist`.
+ */
+export function findSubdirs(root: string, name: string): string[] {
+  if (!fs.existsSync(root)) return [];
+  const out: string[] = [];
+  const stack = [root];
+  while (stack.length) {
+    const cur = stack.pop();
+    if (cur === undefined) break;
+    for (const entry of fs.readdirSync(cur, { withFileTypes: true })) {
+      processSubdirEntry(entry, cur, name, stack, out);
+    }
+  }
+  return out;
+}
+
 export function isTestFile(file: string): boolean {
   return /(^|[\\/])__tests__[\\/]/.test(file) || /\.test\.tsx?$/.test(file);
 }

@@ -1,10 +1,7 @@
+import { createTransportListeners } from '@granit/notifications';
 import { EventStreamContentType, fetchEventSource } from '@microsoft/fetch-event-source';
 
-import type {
-  ConnectionState,
-  NotificationTransportMessage,
-  NotificationTransport,
-} from '@granit/notifications';
+import type { NotificationTransportMessage, NotificationTransport } from '@granit/notifications';
 
 export interface SseTransportConfig {
   /** SSE endpoint URL, e.g. '/api/v1/notifications/stream'. */
@@ -62,20 +59,12 @@ export function createSseTransport(config: SseTransportConfig): NotificationTran
   assertStreamUrlOrigin(config.streamUrl, config.allowCrossOrigin === true);
   const heartbeatType = config.heartbeatTypeName ?? '__heartbeat__';
   let abortController: AbortController | null = null;
-  let currentState: ConnectionState = 'disconnected';
-  const notificationListeners = new Set<(message: NotificationTransportMessage) => void>();
-  const stateListeners = new Set<(state: ConnectionState) => void>();
-
-  function setState(state: ConnectionState) {
-    currentState = state;
-    for (const listener of stateListeners) {
-      listener(state);
-    }
-  }
+  const listeners = createTransportListeners();
+  const setState = listeners.setState;
 
   return {
     get state() {
-      return currentState;
+      return listeners.state;
     },
 
     async connect() {
@@ -101,9 +90,7 @@ export function createSseTransport(config: SseTransportConfig): NotificationTran
 
           try {
             const message = JSON.parse(event.data) as NotificationTransportMessage;
-            for (const listener of notificationListeners) {
-              listener(message);
-            }
+            listeners.emit(message);
           } catch {
             // Malformed events are silently skipped.
           }
@@ -144,18 +131,7 @@ export function createSseTransport(config: SseTransportConfig): NotificationTran
       setState('disconnected');
     },
 
-    onNotification(callback) {
-      notificationListeners.add(callback);
-      return () => {
-        notificationListeners.delete(callback);
-      };
-    },
-
-    onStateChange(callback) {
-      stateListeners.add(callback);
-      return () => {
-        stateListeners.delete(callback);
-      };
-    },
+    onNotification: listeners.onNotification,
+    onStateChange: listeners.onStateChange,
   };
 }

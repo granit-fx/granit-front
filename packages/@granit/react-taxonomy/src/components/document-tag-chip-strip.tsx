@@ -7,6 +7,7 @@ import {
 } from '../hooks/use-document-tags';
 
 import { TagAutocomplete } from './tag-autocomplete.tsx';
+import { DEFAULT_TAG_CHIP_STRIP_LABELS } from './tag-chip-strip.tsx';
 import { TagChip } from './tag-chip.tsx';
 
 import type { TagChipStripLabels } from './tag-chip-strip.tsx';
@@ -22,16 +23,6 @@ export interface DocumentTagChipStripProps {
   readonly labels?: TagChipStripLabels;
   readonly className?: string;
 }
-
-const DEFAULT_LABELS: Required<TagChipStripLabels> = {
-  add: '+ Tag',
-  loading: 'Loading…',
-  error: 'Failed to load tags.',
-  empty: 'No tags.',
-  placeholder: 'Add tag…',
-  create: 'Create',
-  remove: 'Remove',
-};
 
 /**
  * Documents-proxy variant of {@link TagChipStrip}. Same UX, different data
@@ -52,7 +43,7 @@ export function DocumentTagChipStrip({
   labels,
   className,
 }: DocumentTagChipStripProps): ReactNode {
-  const labelStrings = { ...DEFAULT_LABELS, ...labels };
+  const labelStrings = { ...DEFAULT_TAG_CHIP_STRIP_LABELS, ...labels };
   const [editing, setEditing] = useState(false);
 
   const bindings = { basePath, documentId };

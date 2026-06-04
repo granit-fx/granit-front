@@ -1,10 +1,7 @@
+import { createTransportListeners } from '@granit/notifications';
 import { HttpTransportType, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 
-import type {
-  ConnectionState,
-  NotificationTransportMessage,
-  NotificationTransport,
-} from '@granit/notifications';
+import type { NotificationTransportMessage, NotificationTransport } from '@granit/notifications';
 import type { HubConnection } from '@microsoft/signalr';
 
 export interface SignalRTransportConfig {
@@ -29,20 +26,12 @@ export interface SignalRTransportConfig {
  */
 export function createSignalRTransport(config: SignalRTransportConfig): NotificationTransport {
   let connection: HubConnection | null = null;
-  let currentState: ConnectionState = 'disconnected';
-  const notificationListeners = new Set<(message: NotificationTransportMessage) => void>();
-  const stateListeners = new Set<(state: ConnectionState) => void>();
-
-  function setState(state: ConnectionState) {
-    currentState = state;
-    for (const listener of stateListeners) {
-      listener(state);
-    }
-  }
+  const listeners = createTransportListeners();
+  const setState = listeners.setState;
 
   return {
     get state() {
-      return currentState;
+      return listeners.state;
     },
 
     async connect() {
@@ -58,9 +47,7 @@ export function createSignalRTransport(config: SignalRTransportConfig): Notifica
         .build();
 
       connection.on('ReceiveNotification', (message: NotificationTransportMessage) => {
-        for (const listener of notificationListeners) {
-          listener(message);
-        }
+        listeners.emit(message);
       });
 
       connection.onreconnecting(() => setState('reconnecting'));
@@ -78,18 +65,7 @@ export function createSignalRTransport(config: SignalRTransportConfig): Notifica
       setState('disconnected');
     },
 
-    onNotification(callback) {
-      notificationListeners.add(callback);
-      return () => {
-        notificationListeners.delete(callback);
-      };
-    },
-
-    onStateChange(callback) {
-      stateListeners.add(callback);
-      return () => {
-        stateListeners.delete(callback);
-      };
-    },
+    onNotification: listeners.onNotification,
+    onStateChange: listeners.onStateChange,
   };
 }

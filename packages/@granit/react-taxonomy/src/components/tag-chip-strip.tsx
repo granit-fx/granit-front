@@ -29,7 +29,8 @@ export interface TagChipStripProps {
   readonly className?: string;
 }
 
-const DEFAULT_LABELS: Required<TagChipStripLabels> = {
+/** Default labels shared by {@link TagChipStrip} and `DocumentTagChipStrip`. */
+export const DEFAULT_TAG_CHIP_STRIP_LABELS: Required<TagChipStripLabels> = {
   add: '+ Tag',
   loading: 'Loading…',
   error: 'Failed to load tags.',
@@ -54,7 +55,7 @@ export function TagChipStrip({
   labels,
   className,
 }: TagChipStripProps): ReactNode {
-  const labelStrings = { ...DEFAULT_LABELS, ...labels };
+  const labelStrings = { ...DEFAULT_TAG_CHIP_STRIP_LABELS, ...labels };
   const [editing, setEditing] = useState(false);
 
   const target = { targetType, targetId };
