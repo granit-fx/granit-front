@@ -1,5 +1,5 @@
 import { listApiKeys } from '@granit/authentication-api-keys';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
@@ -32,6 +32,20 @@ export interface ApiKeyHookOptions {
  */
 export type UseApiKeysParams = ListApiKeysParams;
 
+/**
+ * TanStack Query options consumers may override on the api-key query hooks
+ * (e.g. `staleTime`, `enabled`, `refetchInterval`). Data-shape options
+ * (`queryKey`, `queryFn`, `placeholderData`) are managed internally.
+ */
+export interface ApiKeyQueryOptions {
+  staleTime?: number;
+  gcTime?: number;
+  enabled?: boolean;
+  refetchInterval?: number | false;
+  refetchOnWindowFocus?: boolean;
+  retry?: boolean | number;
+}
+
 // ---------------------------------------------------------------------------
 // Hook
 // ---------------------------------------------------------------------------
@@ -41,25 +55,34 @@ export type UseApiKeysParams = ListApiKeysParams;
  *
  * Calls `GET {basePath}` with query parameters derived from `params`.
  *
+ * Keeps the previous page visible while the next one loads (no flash on page
+ * change) and stays integrated with the TanStack Query cache, so the api-key
+ * mutations' `invalidateQueries` refresh this list automatically.
+ *
  * @param options - Axios client and optional base path.
  * @param params - Optional search/filter/pagination parameters.
+ * @param queryOptions - Optional TanStack Query overrides (e.g. `staleTime`).
  *
  * @example
  * ```tsx
  * const { data, isLoading } = useApiKeys(
  *   { client: api },
- *   { environment: 'production', type: ['Secret'] }
+ *   { environment: 'production', type: 'Secret' },
+ *   { staleTime: 60_000 }
  * );
  * ```
  */
 export function useApiKeys(
   options: ApiKeyHookOptions,
-  params: UseApiKeysParams = {}
+  params: UseApiKeysParams = {},
+  queryOptions?: ApiKeyQueryOptions
 ): UseQueryResult<PagedResult<ApiKeyResponse>> {
   const { client, basePath = DEFAULT_BASE_PATH } = options;
 
   return useQuery({
     queryKey: buildApiKeyQueryKey(options, 'list', params),
     queryFn: () => listApiKeys(client, basePath, params),
+    placeholderData: keepPreviousData,
+    ...queryOptions,
   });
 }

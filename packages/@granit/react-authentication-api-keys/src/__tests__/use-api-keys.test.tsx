@@ -216,6 +216,21 @@ describe('useApiKeys', () => {
     expect(result.current.data?.items).toEqual([]);
     expect(result.current.data?.totalCount).toBe(0);
   });
+
+  it('accepts TanStack query option overrides (staleTime)', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValueOnce({
+      data: { items: [mockApiKey], totalCount: 1, hasMore: false },
+    });
+
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useApiKeys({ client }, {}, { staleTime: 60_000 }), {
+      wrapper,
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.data?.items).toHaveLength(1);
+  });
 });
 
 // ---------------------------------------------------------------------------

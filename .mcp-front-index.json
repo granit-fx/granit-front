@@ -2688,6 +2688,43 @@
           ]
         },
         {
+          "name": "ApiKeyQueryOptions",
+          "kind": "interface",
+          "signature": "interface ApiKeyQueryOptions",
+          "members": [
+            {
+              "name": "staleTime",
+              "kind": "property",
+              "signature": "staleTime?: number"
+            },
+            {
+              "name": "gcTime",
+              "kind": "property",
+              "signature": "gcTime?: number"
+            },
+            {
+              "name": "enabled",
+              "kind": "property",
+              "signature": "enabled?: boolean"
+            },
+            {
+              "name": "refetchInterval",
+              "kind": "property",
+              "signature": "refetchInterval?: number | false"
+            },
+            {
+              "name": "refetchOnWindowFocus",
+              "kind": "property",
+              "signature": "refetchOnWindowFocus?: boolean"
+            },
+            {
+              "name": "retry",
+              "kind": "property",
+              "signature": "retry?: boolean | number"
+            }
+          ]
+        },
+        {
           "name": "UseApiKeysParams",
           "kind": "type",
           "signature": "type UseApiKeysParams = ListApiKeysParams"
@@ -2700,7 +2737,7 @@
         {
           "name": "useApiKey",
           "kind": "function",
-          "signature": "function useApiKey(id: string, options: ApiKeyHookOptions): UseQueryResult<ApiKeyResponse>"
+          "signature": "function useApiKey( id: string, options: ApiKeyHookOptions, queryOptions?: ApiKeyQueryOptions ): UseQueryResult<ApiKeyResponse>"
         },
         {
           "name": "UpdateApiKeyScopesVariables",
