@@ -1,6 +1,6 @@
 {
   "name": "@granit/react-authentication-local",
-  "description": "React hooks for local credential authentication — login, registration, password, email change, profile, two-factor and passkey management",
+  "description": "React hooks for local credential authentication — useLogin, useBeginPasskeyAssertion",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -31,8 +31,7 @@
     "@granit/api-client": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
-    "@granit/testing": "workspace:*",
-    "@granit/types": "workspace:*"
+    "@granit/testing": "workspace:*"
   },
   "publishConfig": {
     "exports": {
