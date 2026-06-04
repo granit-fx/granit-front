@@ -2754,6 +2754,9 @@ importers:
       '@opentelemetry/exporter-trace-otlp-http':
         specifier: ^0.213.0
         version: 0.213.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/instrumentation':
+        specifier: ^0.213.0
+        version: 0.213.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/instrumentation-document-load':
         specifier: ^0.57.0
         version: 0.57.0(@opentelemetry/api@1.9.1)
