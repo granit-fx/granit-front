@@ -13,6 +13,7 @@ overrides:
   picomatch: '>=4.0.4'
   react: 19.2.7
   react-dom: 19.2.7
+  uuid: ^11.1.1
 
 importers:
 
@@ -7183,9 +7184,8 @@ packages:
     peerDependencies:
       react: 19.2.7
 
-  uuid@9.0.1:
-    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
-    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+  uuid@11.1.1:
+    resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
     hasBin: true
 
   vanilla-cookieconsent@3.1.0:
@@ -8788,7 +8788,7 @@ snapshots:
       react: 19.2.7
       react-hotkeys-hook: 4.6.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       use-debounce: 9.0.4(react@19.2.7)
-      uuid: 9.0.1
+      uuid: 11.1.1
       zustand: 5.0.14(@types/react@19.2.16)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
     transitivePeerDependencies:
       - '@floating-ui/dom'
@@ -11677,7 +11677,7 @@ snapshots:
     dependencies:
       react: 19.2.7
 
-  uuid@9.0.1: {}
+  uuid@11.1.1: {}
 
   vanilla-cookieconsent@3.1.0: {}
 
