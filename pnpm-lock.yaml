@@ -2476,6 +2476,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      msw:
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.9.1)(typescript@6.0.3)
 
   packages/@granit/react-scheduling:
     dependencies:
