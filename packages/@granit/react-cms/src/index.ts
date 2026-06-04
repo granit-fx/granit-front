@@ -49,3 +49,45 @@ export type {
 
 // Components
 export { CmsMenuNav } from './components/cms-menu-nav';
+
+// Admin provider
+export { CmsProvider, useCmsConfig } from './providers/cms-provider';
+export type { CmsConfig, ResolvedCmsConfig, CmsProviderProps } from './providers/cms-provider';
+
+// Admin query keys
+export { cmsKeys } from './hooks/query-keys';
+
+// Admin hooks — sites
+export { useSite, useSites } from './hooks/use-sites';
+export { useCreateSite, useDeleteSite, useUpdateSite } from './hooks/use-site-mutations';
+
+// Admin hooks — pages
+export { usePage, usePageTree, usePageVersions, usePages } from './hooks/use-pages';
+export {
+  useCreatePage,
+  useDeletePage,
+  useMovePage,
+  usePublishPage,
+  useRollbackPage,
+  useSaveDraft,
+  useUnpublishPage,
+  useUpdatePage,
+  useUpdatePageTranslation,
+} from './hooks/use-page-mutations';
+
+// Admin hooks — menus
+export { useMenu, useMenus } from './hooks/use-menus-admin';
+export { useCreateMenu, useDeleteMenu, useUpdateMenu } from './hooks/use-menu-mutations';
+
+// Admin hooks — releases
+export { useRelease, useReleases } from './hooks/use-releases';
+export {
+  useAddReleaseAction,
+  useCancelRelease,
+  useCreateRelease,
+  useDeleteRelease,
+  usePublishRelease,
+  useRemoveReleaseAction,
+  useScheduleRelease,
+  useUpdateRelease,
+} from './hooks/use-release-mutations';

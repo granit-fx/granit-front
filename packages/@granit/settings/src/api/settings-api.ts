@@ -1,5 +1,6 @@
 import type {
   AdminAppSetting,
+  AdminSettingsScope,
   BulkSettingEntry,
   BulkUpdateSettingsResponse,
   SettingValueResponse,
@@ -7,9 +8,6 @@ import type {
   UpdateSettingValueRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
-
-/** Scopes that expose admin bulk endpoints. `user` is per-user and has no bulk form. */
-export type AdminSettingsScope = 'global' | 'tenant';
 
 /**
  * Get all visible settings for a scope.

@@ -263,7 +263,7 @@ describe('subscriptions-api — Subscriptions', () => {
 
       const result = await listSubscriptions(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith(`${basePath}/subscriptions`);
+      expect(client.get).toHaveBeenCalledWith(`${basePath}/subscriptions`, undefined);
       expect(result.items).toEqual([sampleSubscription]);
       expect(result.totalCount).toBe(1);
     });
@@ -279,7 +279,8 @@ describe('subscriptions-api — Subscriptions', () => {
       await listSubscriptions(client, basePath, { page: 2, pageSize: 10 });
 
       expect(client.get).toHaveBeenCalledWith(
-        expect.stringContaining(`${basePath}/subscriptions?`)
+        expect.stringContaining(`${basePath}/subscriptions?`),
+        undefined
       );
     });
   });

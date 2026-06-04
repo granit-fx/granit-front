@@ -14,10 +14,13 @@
     "build": "tsup"
   },
   "peerDependencies": {
-    "clsx": "*",
-    "@date-fns/tz": "*",
-    "date-fns": "*",
-    "tailwind-merge": "*"
+    "clsx": "^2.0.0",
+    "@date-fns/tz": "^1.0.0",
+    "date-fns": "^4.0.0",
+    "tailwind-merge": "^3.0.0"
+  },
+  "devDependencies": {
+    "@granit/testing": "workspace:*"
   },
   "publishConfig": {
     "exports": {

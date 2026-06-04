@@ -18,6 +18,7 @@ export type {
   IdentityUserSetEnabledRequest,
   IdentityUserUpdateRequest,
 } from './types/index';
+export type { IdentityProviderUserListParams } from './types/index';
 
 // API — User cache
 export { getIdentityCapabilities } from './api/identity-capabilities-api';
@@ -33,7 +34,6 @@ export {
 } from './api/identity-user-cache-api';
 
 // API — Identity provider
-export type { IdentityProviderUserListParams } from './api/identity-provider-user-api';
 export {
   createUser,
   getProviderUser,

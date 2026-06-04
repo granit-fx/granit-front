@@ -1,3 +1,4 @@
+import { NAV_URL_SCHEMES, isSafeUrl } from '@granit/utils';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useDocument, useDocumentDownloadUrl } from '../hooks/use-documents';
@@ -253,7 +254,14 @@ export function DocumentQuickLook({
   });
 
   const document = docQuery.data ?? null;
-  const downloadUrl = urlQuery.data?.url ?? null;
+  // The presigned URL is server-issued, but gate it before it can reach
+  // `<iframe src>` / `window.open` / a media `src` so a malformed or
+  // non-http(s) value can never become a navigation/script sink. An unsafe
+  // value collapses to `null`, which the preview already renders as a no-op.
+  // Defence-in-depth — see security audit VULN-302.
+  const rawDownloadUrl = urlQuery.data?.url ?? null;
+  const downloadUrl =
+    rawDownloadUrl !== null && isSafeUrl(rawDownloadUrl, NAV_URL_SCHEMES) ? rawDownloadUrl : null;
   const kind = useMemo<DocumentKind>(
     () => (document ? classifyDocumentName(document.name) : 'other'),
     [document]

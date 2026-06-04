@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-import { buildApiKeyQueryKey } from './use-api-keys';
+import { buildApiKeyQueryKey } from './query-keys';
 
 import type { ApiKeyHookOptions } from './use-api-keys';
 import type { ApiKeyResponse } from '@granit/authentication-api-keys';

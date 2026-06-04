@@ -85,6 +85,17 @@ describe('granit-keycloak createScriptURL', () => {
     expect(() => getCreateScriptURL()('//evil.example.org/login')).toThrow();
   });
 
+  it('rejects backslash-authority bypasses that resolve off-origin (VULN-202)', () => {
+    setKeycloakAuthorities(['https://idp.example.com']);
+    const createScriptURL = getCreateScriptURL();
+    // Browsers normalise `\` → `/` in the authority, so these resolve to
+    // `//evil.example.org` — they must be refused exactly like a
+    // protocol-relative URL, never waved through as a "same-origin relative".
+    expect(() => createScriptURL('/\\evil.example.org/login')).toThrow();
+    expect(() => createScriptURL('\\\\evil.example.org/login')).toThrow();
+    expect(() => createScriptURL('/\\/evil.example.org/login')).toThrow();
+  });
+
   it('throws when no authority is registered', () => {
     setKeycloakAuthorities([]);
     expect(() => getCreateScriptURL()('https://idp.example.com/realms/my')).toThrow(

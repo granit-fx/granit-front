@@ -71,18 +71,21 @@ export { executeBulkAction } from '@granit/entities';
 // i18n resource bundles (namespace: 'entities')
 export { entitiesTranslationsEn, entitiesTranslationsFr } from './locales/index';
 export type { EntitiesTranslations } from './locales/index';
-export { entityCalendarQueryKey, useEntityCalendar } from './hooks/use-entity-calendar';
-export { entityDiscoveryQueryKey, useEntityDiscovery } from './hooks/use-entity-discovery';
 export {
+  entityCalendarQueryKey,
+  entityDiscoveryQueryKey,
+  entityManifestQueryKey,
   entityRelationAggregatesQueryKey,
-  useEntityRelationAggregates,
-} from './hooks/use-entity-relation-aggregates';
+} from './hooks/query-keys';
+export { useEntityCalendar } from './hooks/use-entity-calendar';
+export { useEntityDiscovery } from './hooks/use-entity-discovery';
+export { useEntityRelationAggregates } from './hooks/use-entity-relation-aggregates';
 export {
   parseRelationAggregateParentMarker,
   useInvalidateEntityRelationAggregates,
 } from './hooks/use-invalidate-entity-relation-aggregates';
 export type { RelationAggregateParentRef } from './hooks/use-invalidate-entity-relation-aggregates';
-export { entityManifestQueryKey, useEntityMetadata } from './hooks/use-entity-metadata';
+export { useEntityMetadata } from './hooks/use-entity-metadata';
 export { useEntityForm } from './hooks/index';
 export type { UseEntityFormOptions, UseEntityFormReturn } from './hooks/index';
 export {

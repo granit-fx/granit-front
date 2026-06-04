@@ -153,18 +153,50 @@ describe('CsrfManager', () => {
       expect(init?.credentials).toBe('include');
     });
 
-    it('should NOT inject X-CSRF-Token when no token is available', async () => {
+    it('fetches a CSRF token on demand for a mutation when none is cached (VULN-300)', async () => {
       const manager = new CsrfManager('/app');
-
-      vi.mocked(globalThis.fetch).mockResolvedValue(new Response('ok'));
+      vi.mocked(globalThis.fetch).mockImplementation((input) => {
+        const url = typeof input === 'string' ? input : (input as Request).url;
+        if (url.endsWith('/bff/csrf-token')) {
+          return Promise.resolve(
+            new Response(JSON.stringify({ csrfToken: 'csrf-lazy' }), { status: 200 })
+          );
+        }
+        return Promise.resolve(new Response('ok'));
+      });
 
       const wrappedFetch = manager.createFetchWithCsrf();
       await wrappedFetch('/api/data', { method: 'POST' });
 
-      const [, init] = vi.mocked(globalThis.fetch).mock.calls[0];
-      const headers = new Headers(init?.headers);
+      // The token endpoint was hit, then the mutation carried the fresh token.
+      expect(globalThis.fetch).toHaveBeenCalledWith('/app/bff/csrf-token', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      const dataCall = vi.mocked(globalThis.fetch).mock.calls.find(([u]) => u === '/api/data');
+      const headers = new Headers(dataCall?.[1]?.headers);
+      expect(headers.get('X-CSRF-Token')).toBe('csrf-lazy');
+      expect(dataCall?.[1]?.credentials).toBe('include');
+    });
+
+    it('falls back to a header-less mutation when the on-demand token fetch fails', async () => {
+      const manager = new CsrfManager('/app');
+      vi.mocked(globalThis.fetch).mockImplementation((input) => {
+        const url = typeof input === 'string' ? input : (input as Request).url;
+        if (url.endsWith('/bff/csrf-token')) {
+          return Promise.resolve(new Response('nope', { status: 500 }));
+        }
+        return Promise.resolve(new Response('ok'));
+      });
+
+      const wrappedFetch = manager.createFetchWithCsrf();
+      // Must not throw — the BFF rejects the header-less mutation server-side.
+      await wrappedFetch('/api/data', { method: 'POST' });
+
+      const dataCall = vi.mocked(globalThis.fetch).mock.calls.find(([u]) => u === '/api/data');
+      const headers = new Headers(dataCall?.[1]?.headers);
       expect(headers.get('X-CSRF-Token')).toBeNull();
-      expect(init?.credentials).toBe('include');
+      expect(dataCall?.[1]?.credentials).toBe('include');
     });
 
     it('should always set credentials to include', async () => {

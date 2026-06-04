@@ -1,0 +1,88 @@
+import { getRelease, listReleases } from '@granit/cms';
+import { createTestQueryClient } from '@granit/react-testing';
+import { createMockClient } from '@granit/testing';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { renderHook, waitFor } from '@testing-library/react';
+import * as React from 'react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { useRelease, useReleases } from '../hooks/use-releases';
+import { CmsProvider } from '../providers/cms-provider';
+
+import type { PagedResponse, ReleaseResponse } from '@granit/cms';
+import type { AxiosInstance } from 'axios';
+import type { ReactNode } from 'react';
+
+vi.mock('@granit/cms', () => ({
+  listReleases: vi.fn(),
+  getRelease: vi.fn(),
+}));
+
+const release: ReleaseResponse = {
+  id: 'rel-1',
+  siteId: 'site-1',
+  name: 'Sprint 1',
+  status: 'Draft',
+  schedule: null,
+  tenantId: null,
+  actions: [],
+  concurrencyStamp: 'stamp-1',
+};
+
+function createWrapper(client: AxiosInstance) {
+  return function Wrapper({ children }: { children: ReactNode }) {
+    const queryClient = createTestQueryClient();
+    return React.createElement(
+      QueryClientProvider,
+      { client: queryClient },
+      React.createElement(CmsProvider, { config: { client }, children })
+    );
+  };
+}
+
+describe('useReleases', () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('fetches paged releases', async () => {
+    const client = createMockClient();
+    const paged: PagedResponse<ReleaseResponse> = {
+      items: [release],
+      totalCount: 1,
+      page: 0,
+      pageSize: 20,
+    };
+    vi.mocked(listReleases).mockResolvedValue(paged);
+
+    const { result } = renderHook(() => useReleases({ siteId: 'site-1' }), {
+      wrapper: createWrapper(client),
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(listReleases).toHaveBeenCalledWith(client, '', { siteId: 'site-1' });
+  });
+});
+
+describe('useRelease', () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('fetches a release by id', async () => {
+    const client = createMockClient();
+    vi.mocked(getRelease).mockResolvedValue(release);
+
+    const { result } = renderHook(() => useRelease('rel-1'), { wrapper: createWrapper(client) });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(getRelease).toHaveBeenCalledWith(client, '', 'rel-1');
+  });
+
+  it('is disabled when id is empty', () => {
+    const client = createMockClient();
+    const { result } = renderHook(() => useRelease(''), { wrapper: createWrapper(client) });
+
+    expect(result.current.fetchStatus).toBe('idle');
+  });
+});

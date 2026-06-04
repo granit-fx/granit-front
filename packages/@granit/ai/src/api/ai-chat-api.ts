@@ -3,13 +3,14 @@
 // Mirrors Granit.AI.Endpoints chat endpoints (sync + SSE stream).
 // ---------------------------------------------------------------------------
 
-import { AI_STREAM_DONE_MARKER } from '../constants';
+import { AI_STREAM_DONE_MARKER } from '../types/index';
 
 import type {
   AIChatRequest,
   AIChatResponse,
   AIChatStreamChunk,
   AIChatStreamUsage,
+  ChatStreamEvent,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
@@ -61,11 +62,6 @@ function parseSseLine(line: string, currentEventType: string | null): ParsedLine
     return { kind: 'skip' };
   }
 }
-
-/** Discriminated union yielded by {@link chatStream}. */
-export type ChatStreamEvent =
-  | { readonly type: 'chunk'; readonly content: string }
-  | { readonly type: 'usage'; readonly usage: AIChatStreamUsage };
 
 /**
  * Opens an SSE stream for chat completion via Axios.

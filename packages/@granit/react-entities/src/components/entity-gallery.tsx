@@ -226,11 +226,13 @@ function EntityGalleryBody({
 
   const query = useInfiniteQuery({
     queryKey: ['granit', 'entity-gallery', config.basePath, baseRequest] as const,
-    queryFn: ({ pageParam }) =>
-      getPage<Readonly<Record<string, unknown>>>(config.client, config.basePath, {
-        ...baseRequest,
-        page: pageParam,
-      }),
+    queryFn: ({ pageParam, signal }) =>
+      getPage<Readonly<Record<string, unknown>>>(
+        config.client,
+        config.basePath,
+        { ...baseRequest, page: pageParam },
+        { signal }
+      ),
     initialPageParam: 1,
     getNextPageParam: nextPageParam,
   });

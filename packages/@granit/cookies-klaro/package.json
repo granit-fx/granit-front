@@ -18,6 +18,10 @@
     "@granit/cookies": "workspace:*",
     "klaro": "^0.7.0"
   },
+  "devDependencies": {
+    "@granit/cookies": "workspace:*",
+    "@granit/testing": "workspace:*"
+  },
   "publishConfig": {
     "exports": {
       ".": {

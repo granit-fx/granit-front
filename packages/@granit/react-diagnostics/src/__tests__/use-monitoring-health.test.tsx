@@ -5,11 +5,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  buildDiagnosticsQueryKey,
-  diagnosticsKeys,
-  useMonitoringHealth,
-} from '../hooks/use-monitoring-health';
+import { buildDiagnosticsQueryKey, diagnosticsKeys } from '../hooks/query-keys';
+import { useMonitoringHealth } from '../hooks/use-monitoring-health';
 
 import type { MonitoringHealthResponse } from '@granit/diagnostics';
 

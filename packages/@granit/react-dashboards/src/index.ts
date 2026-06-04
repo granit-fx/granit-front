@@ -14,8 +14,6 @@ export type {
 export {
   dashboardRenderQueryKey,
   dashboardWidgetQueryKey,
-  normalizeDashboardRenderRequest,
-  strongestRefreshHint,
   useDashboardRender,
 } from './hooks/use-dashboard-render';
 export type { UseDashboardRenderOptions } from './hooks/use-dashboard-render';
@@ -30,7 +28,7 @@ export type {
 // Push transport (P2.4 — ADR-043). SSE-driven live updates that
 // surgically merge into the per-widget cache entries; pull-only
 // dashboards bypass the stream entirely.
-export { applyStreamSnapshot, useDashboardStream } from './hooks/use-dashboard-stream';
+export { useDashboardStream } from './hooks/use-dashboard-stream';
 export type {
   DashboardStreamSnapshot,
   UseDashboardStreamOptions,
@@ -137,7 +135,6 @@ export { useEffectiveTimeWindow } from './hooks/use-effective-time-window';
 export { useWidgetTriggerHandler } from './hooks/use-widget-trigger-handler';
 export {
   DASHBOARD_BREAKPOINT_MIN_WIDTH,
-  resolveBreakpoint,
   useDashboardBreakpoint,
 } from './hooks/use-dashboard-breakpoint';
 export { applyLayoutOverride, resolveEffectiveLayout } from './lib/resolve-effective-layout';

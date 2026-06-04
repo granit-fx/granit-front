@@ -1,29 +1,10 @@
 import { useGranitClient } from '@granit/react-api-client';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
-import type { RelationAggregatesResponse } from '@granit/entities';
+export { entityRelationAggregatesQueryKey } from './query-keys';
+import { entityRelationAggregatesQueryKey } from './query-keys';
 
-/**
- * Cache key for one source row's relation aggregates. Keyed by
- * `(entityName, entityId, relations-csv)` so a partial query for a
- * subset of relations doesn't collide with the "every relation" call,
- * and `queryClient.invalidateQueries({ queryKey: ['entities', 'relations', entityName, entityId] })`
- * blasts every variant when the source row mutates.
- *
- * `relations` is normalised to a sorted CSV so `['Invoices', 'Payments']`
- * and `['Payments', 'Invoices']` share one cache slot.
- */
-export function entityRelationAggregatesQueryKey(
-  entityName: string,
-  entityId: string,
-  relations?: readonly string[]
-): readonly ['entities', 'relations', string, string, string | null] {
-  const relationsKey =
-    relations && relations.length > 0
-      ? [...relations].sort((a, b) => a.localeCompare(b)).join(',')
-      : null;
-  return ['entities', 'relations', entityName, entityId, relationsKey] as const;
-}
+import type { RelationAggregatesResponse } from '@granit/entities';
 
 /**
  * `POST /entities/{name}/{id}/relations/aggregates` — returns the

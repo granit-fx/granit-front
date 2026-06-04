@@ -5,11 +5,6 @@ export type {
   PermissionGroupDto,
   PermissionMultiTenancySide,
   PermissionsResponse,
-  UsePermissionDefinitionsOptions,
-  UsePermissionGrantOptions,
-  UsePermissionsOptions,
-  UsePermissionsReturn,
-  UseRolePermissionsOptions,
 } from './types/index';
 export { AuthorizationEndpointsPermissions } from './permissions';
 export {

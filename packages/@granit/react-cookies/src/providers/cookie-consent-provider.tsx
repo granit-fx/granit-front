@@ -1,9 +1,9 @@
 import { createLogger } from '@granit/logger';
 import { createContext, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 
+import type { CookieConsentContextValue } from '../types/index';
 import type {
   CookieCategory,
-  CookieConsentContextValue,
   CookieConsentProvider as ICookieConsentProvider,
   ConsentState,
 } from '@granit/cookies';

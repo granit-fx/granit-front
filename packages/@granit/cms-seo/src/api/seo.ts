@@ -1,4 +1,4 @@
-import type { EffectiveSeoResponse } from '../types/index.js';
+import type { EffectiveSeoResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

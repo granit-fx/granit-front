@@ -4,8 +4,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { toggleReaction } from '../api/reaction-api';
 import { TimelinePermissions } from '../permissions';
-import { toReactionEmoji, type ReactionToggleResult } from '../types/reaction';
+import { toReactionEmoji } from '../utils/reaction-utils';
 
+import type { ReactionToggleResult } from '../types/reaction';
 import type { TimelineEntryId } from '../types/stream';
 import type { AxiosInstance } from 'axios';
 

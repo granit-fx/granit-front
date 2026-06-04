@@ -1,5 +1,7 @@
 'use client';
 
+import { safeLinkHref } from '../lib/safe-href';
+
 import type { HeroBlockProps } from './types';
 
 export function HeroBlock({
@@ -9,6 +11,7 @@ export function HeroBlock({
   ctaHref,
   _resolved_imageId,
 }: HeroBlockProps) {
+  const ctaSafeHref = safeLinkHref(ctaHref);
   return (
     <section data-block="hero">
       {_resolved_imageId && (
@@ -21,7 +24,7 @@ export function HeroBlock({
       )}
       <h1>{headline}</h1>
       {subline && <p>{subline}</p>}
-      {ctaLabel && ctaHref && <a href={ctaHref}>{ctaLabel}</a>}
+      {ctaLabel && ctaSafeHref && <a href={ctaSafeHref}>{ctaLabel}</a>}
     </section>
   );
 }

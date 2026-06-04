@@ -34,7 +34,9 @@ export function setKeycloakAuthorities(authorities: readonly string[]): void {
       try {
         return new URL(a).origin;
       } catch {
-        throw new TypeError(`[@granit/react-authentication-keycloak/csp] Invalid authority URL: ${a}`);
+        throw new TypeError(
+          `[@granit/react-authentication-keycloak/csp] Invalid authority URL: ${a}`
+        );
       }
     })
   );
@@ -46,23 +48,25 @@ export function __getAllowedOriginsForTests(): ReadonlySet<string> {
 }
 
 function assertAllowedScriptUrl(input: string): string {
-  // Same-origin relative URLs (e.g. silent-check-sso.html) are always OK —
-  // they cannot be redirected off-origin without crossing the
-  // protocol-relative or absolute-URL boundary, which we reject.
-  if (input.startsWith('/') && !input.startsWith('//')) return input;
-
+  // Always resolve against the document before deciding — never trust a raw
+  // string prefix. `new URL` normalises backslash-authority tricks
+  // (`/\evil.com`, `\\evil.com`) to their true off-origin form exactly as the
+  // browser would, so a leading slash can no longer smuggle an absolute URL
+  // past this gate (the same open-redirect class as VULN-202).
   let url: URL;
   try {
     url = new URL(input, globalThis.location?.href);
   } catch {
-    throw new TypeError(
-      `[granit-keycloak] Refused script URL "${input.slice(0, 60)}": malformed`
-    );
+    throw new TypeError(`[granit-keycloak] Refused script URL "${input.slice(0, 60)}": malformed`);
   }
   if (url.protocol !== 'https:' && url.protocol !== 'http:') {
     throw new TypeError(
       `[granit-keycloak] Refused script URL scheme "${url.protocol}". Only http(s) allowed.`
     );
+  }
+  // Same-origin URLs (app-hosted, e.g. silent-check-sso.html) are always OK.
+  if (globalThis.location !== undefined && url.origin === globalThis.location.origin) {
+    return input;
   }
   if (allowedOrigins.size === 0) {
     throw new TypeError(

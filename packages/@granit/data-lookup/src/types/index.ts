@@ -6,3 +6,4 @@ export type {
   LookupQueryParams,
   LookupResult,
 } from './lookup-item';
+export type { LookupClientOptions } from './lookup-client-options';

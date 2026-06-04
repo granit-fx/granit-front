@@ -93,11 +93,6 @@
           "signature": "async function chatComplete( client: AxiosInstance, basePath: string, workspaceName: string, request: AIChatRequest ): Promise<AIChatResponse>"
         },
         {
-          "name": "ChatStreamEvent",
-          "kind": "type",
-          "signature": "type ChatStreamEvent ="
-        },
-        {
           "name": "generateEmbeddings",
           "kind": "function",
           "signature": "async function generateEmbeddings( client: AxiosInstance, basePath: string, workspaceName: string, request: AIEmbeddingRequest ): Promise<AIEmbeddingResponse>"
@@ -630,43 +625,6 @@
           "name": "ApiKeyPermissions",
           "kind": "const",
           "signature": "const ApiKeyPermissions"
-        },
-        {
-          "name": "ListApiKeysParams",
-          "kind": "interface",
-          "signature": "interface ListApiKeysParams",
-          "members": [
-            {
-              "name": "search",
-              "kind": "property",
-              "signature": "search?: string"
-            },
-            {
-              "name": "type",
-              "kind": "property",
-              "signature": "type?: readonly string[]"
-            },
-            {
-              "name": "environment",
-              "kind": "property",
-              "signature": "environment?: string"
-            },
-            {
-              "name": "includeRevoked",
-              "kind": "property",
-              "signature": "includeRevoked?: boolean"
-            },
-            {
-              "name": "page",
-              "kind": "property",
-              "signature": "page?: number"
-            },
-            {
-              "name": "pageSize",
-              "kind": "property",
-              "signature": "pageSize?: number"
-            }
-          ]
         }
       ]
     },
@@ -715,6 +673,11 @@
               "name": "scopes",
               "kind": "property",
               "signature": "scopes?: readonly string[]"
+            },
+            {
+              "name": "tokenStorage",
+              "kind": "property",
+              "signature": "tokenStorage?: 'memory' | 'sessionStorage' | 'localStorage'"
             },
             {
               "name": "onTokenRefreshError",
@@ -830,6 +793,11 @@
               "name": "scopes",
               "kind": "property",
               "signature": "scopes?: readonly string[]"
+            },
+            {
+              "name": "tokenStorage",
+              "kind": "property",
+              "signature": "tokenStorage?: 'memory' | 'sessionStorage' | 'localStorage'"
             },
             {
               "name": "onTokenRefreshError",
@@ -1000,19 +968,86 @@
           "signature": "async function resolveMenu( client: AxiosInstance, basePath: string, params:"
         },
         {
+          "name": "batchResolveDocuments",
+          "kind": "function",
+          "signature": "async function batchResolveDocuments( client: AxiosInstance, basePath: string, request: BatchResolveDocumentsRequest ): Promise<readonly (ResolvedDocumentResponse | null)[]>"
+        },
+        {
+          "name": "createSite",
+          "kind": "function",
+          "signature": "async function createSite( client: AxiosInstance, basePath: string, request: CreateSiteRequest ): Promise<SiteResponse>"
+        },
+        {
+          "name": "deleteSite",
+          "kind": "function",
+          "signature": "async function deleteSite( client: AxiosInstance, basePath: string, id: string ): Promise<void>"
+        },
+        {
+          "name": "getSite",
+          "kind": "function",
+          "signature": "async function getSite( client: AxiosInstance, basePath: string, id: string ): Promise<SiteResponse>"
+        },
+        {
+          "name": "listSites",
+          "kind": "function",
+          "signature": "async function listSites( client: AxiosInstance, basePath: string, params?: ListSitesParams ): Promise<PagedResponse<SiteResponse>>"
+        },
+        {
+          "name": "updateSite",
+          "kind": "function",
+          "signature": "async function updateSite( client: AxiosInstance, basePath: string, id: string, request: UpdateSiteRequest ): Promise<SiteResponse>"
+        },
+        {
+          "name": "createMenu",
+          "kind": "function",
+          "signature": "async function createMenu( client: AxiosInstance, basePath: string, request: CreateMenuRequest ): Promise<MenuResponse>"
+        },
+        {
+          "name": "deleteMenu",
+          "kind": "function",
+          "signature": "async function deleteMenu( client: AxiosInstance, basePath: string, id: string ): Promise<void>"
+        },
+        {
+          "name": "getMenu",
+          "kind": "function",
+          "signature": "async function getMenu( client: AxiosInstance, basePath: string, id: string ): Promise<MenuResponse>"
+        },
+        {
+          "name": "listMenus",
+          "kind": "function",
+          "signature": "async function listMenus( client: AxiosInstance, basePath: string, params?: ListMenusParams ): Promise<PagedResponse<MenuResponse>>"
+        },
+        {
+          "name": "updateMenu",
+          "kind": "function",
+          "signature": "async function updateMenu( client: AxiosInstance, basePath: string, id: string, request: UpdateMenuRequest ): Promise<MenuResponse>"
+        }
+      ]
+    },
+    {
+      "name": "@granit/cms-hostnames",
+      "description": "Granit CMS — site-scoped hostname management (wraps @granit/hostnames for /api/cms/sites/{siteId}/hostnames)",
+      "exports": []
+    },
+    {
+      "name": "@granit/cms-redirects",
+      "description": "Granit CMS — redirect types, public resolve and admin CRUD API",
+      "exports": [
+        {
           "name": "resolveRedirect",
           "kind": "function",
           "signature": "async function resolveRedirect( client: AxiosInstance, basePath: string, params:"
-        },
+        }
+      ]
+    },
+    {
+      "name": "@granit/cms-seo",
+      "description": "Granit CMS — SEO types, public effective-SEO client, SEO admin and SEO-AI API",
+      "exports": [
         {
           "name": "getEffectiveSeo",
           "kind": "function",
           "signature": "async function getEffectiveSeo( client: AxiosInstance, basePath: string, params:"
-        },
-        {
-          "name": "batchResolveDocuments",
-          "kind": "function",
-          "signature": "async function batchResolveDocuments( client: AxiosInstance, basePath: string, request: BatchResolveDocumentsRequest ): Promise<readonly (ResolvedDocumentResponse | null)[]>"
         }
       ]
     },
@@ -1396,14 +1431,14 @@
           "members": []
         },
         {
-          "name": "getIdentityCapabilities",
-          "kind": "function",
-          "signature": "async function getIdentityCapabilities( client: AxiosInstance, basePath: string ): Promise<IdentityProviderCapabilities>"
-        },
-        {
           "name": "IdentityProviderUserListParams",
           "kind": "type",
           "signature": "type IdentityProviderUserListParams = { readonly search?: string; readonly first?: number; readonly max?: number; }"
+        },
+        {
+          "name": "getIdentityCapabilities",
+          "kind": "function",
+          "signature": "async function getIdentityCapabilities( client: AxiosInstance, basePath: string ): Promise<IdentityProviderCapabilities>"
         },
         {
           "name": "IdentityPermissions",
@@ -1671,38 +1706,6 @@
           "signature": "const NotificationChannels"
         },
         {
-          "name": "createTransportListeners",
-          "kind": "function",
-          "signature": "function createTransportListeners( initialState: ConnectionState = 'disconnected' ): TransportListeners"
-        },
-        {
-          "name": "TransportListeners",
-          "kind": "interface",
-          "signature": "interface TransportListeners",
-          "members": [
-            {
-              "name": "setState",
-              "kind": "method",
-              "signature": "setState(state: ConnectionState): void"
-            },
-            {
-              "name": "emit",
-              "kind": "method",
-              "signature": "emit(message: NotificationTransportMessage): void"
-            },
-            {
-              "name": "onNotification",
-              "kind": "method",
-              "signature": "onNotification(callback: (message: NotificationTransportMessage) => void): () => void"
-            },
-            {
-              "name": "onStateChange",
-              "kind": "method",
-              "signature": "onStateChange(callback: (state: ConnectionState) => void): () => void"
-            }
-          ]
-        },
-        {
           "name": "NotificationPermissions",
           "kind": "const",
           "signature": "const NotificationPermissions"
@@ -1712,7 +1715,25 @@
     {
       "name": "@granit/notifications-mobile-push",
       "description": "Mobile push (FCM/APNs) device token registration via Capacitor",
-      "exports": []
+      "exports": [
+        {
+          "name": "DeviceTokenDto",
+          "kind": "interface",
+          "signature": "interface DeviceTokenDto",
+          "members": []
+        },
+        {
+          "name": "MobilePlatform",
+          "kind": "type",
+          "signature": "type MobilePlatform = 'android' | 'ios'"
+        },
+        {
+          "name": "MobilePushTokenResponse",
+          "kind": "interface",
+          "signature": "interface MobilePushTokenResponse",
+          "members": []
+        }
+      ]
     },
     {
       "name": "@granit/notifications-signalr",
@@ -1917,17 +1938,17 @@
         {
           "name": "getGrouped",
           "kind": "function",
-          "signature": "async function getGrouped<T>( client: AxiosInstance, basePath: string, request: QueryRequest ): Promise<GroupedResult<T>>"
+          "signature": "async function getGrouped<T>( client: AxiosInstance, basePath: string, request: QueryRequest, options?:"
         },
         {
           "name": "getPage",
           "kind": "function",
-          "signature": "async function getPage<T>( client: AxiosInstance, basePath: string, request: QueryRequest ): Promise<PagedResult<T>>"
+          "signature": "async function getPage<T>( client: AxiosInstance, basePath: string, request: QueryRequest, options?:"
         },
         {
           "name": "getQueryMeta",
           "kind": "function",
-          "signature": "async function getQueryMeta( client: AxiosInstance, basePath: string ): Promise<QueryMetadata>"
+          "signature": "async function getQueryMeta( client: AxiosInstance, basePath: string, options?:"
         },
         {
           "name": "parseQueryRequest",
@@ -2299,11 +2320,6 @@
       "description": "React hooks and renderers for @granit/analytics — useMetric hook plus KpiTile widget renderer registered into the @granit/dashboards widget registry",
       "exports": [
         {
-          "name": "normalizeMetricRequest",
-          "kind": "function",
-          "signature": "function normalizeMetricRequest(request: MetricRequest): MetricRequest"
-        },
-        {
           "name": "useMetric",
           "kind": "function",
           "signature": "function useMetric( metricName: string, request: MetricRequest, options: UseMetricOptions ="
@@ -2471,16 +2487,6 @@
           "signature": "function useApiKeys( options: ApiKeyHookOptions, params: UseApiKeysParams ="
         },
         {
-          "name": "buildApiKeyQueryKey",
-          "kind": "function",
-          "signature": "function buildApiKeyQueryKey( config: Pick<ApiKeyHookOptions, 'queryKeyPrefix'>, ...segments: readonly unknown[] ): readonly unknown[]"
-        },
-        {
-          "name": "apiKeyKeys",
-          "kind": "const",
-          "signature": "const apiKeyKeys"
-        },
-        {
           "name": "ApiKeyHookOptions",
           "kind": "interface",
           "signature": "interface ApiKeyHookOptions",
@@ -2540,6 +2546,16 @@
           ]
         },
         {
+          "name": "buildApiKeyQueryKey",
+          "kind": "function",
+          "signature": "function buildApiKeyQueryKey( config: Pick<ApiKeyHookOptions, 'queryKeyPrefix'>, ...segments: readonly unknown[] ): readonly unknown[]"
+        },
+        {
+          "name": "apiKeyKeys",
+          "kind": "const",
+          "signature": "const apiKeyKeys"
+        },
+        {
           "name": "useApiKey",
           "kind": "function",
           "signature": "function useApiKey(id: string, options: ApiKeyHookOptions): UseQueryResult<ApiKeyResponse>"
@@ -2593,6 +2609,18 @@
               "signature": "logout: (options?: LogoutOptions) => void"
             }
           ]
+        },
+        {
+          "name": "CognitoAuthTransaction",
+          "kind": "interface",
+          "signature": "interface CognitoAuthTransaction",
+          "members": []
+        },
+        {
+          "name": "PkcePair",
+          "kind": "interface",
+          "signature": "interface PkcePair",
+          "members": []
         }
       ]
     },
@@ -2861,11 +2889,6 @@
           "signature": "function useBffFetch()"
         },
         {
-          "name": "resolveBffTenantId",
-          "kind": "function",
-          "signature": "function resolveBffTenantId(user: BffUser | null): string | undefined"
-        },
-        {
           "name": "useBffTenantGetter",
           "kind": "function",
           "signature": "function useBffTenantGetter(): () => string | undefined"
@@ -3073,7 +3096,7 @@
     },
     {
       "name": "@granit/react-cms",
-      "description": "React block components, Puck config generator and menu renderer for the Granit CMS",
+      "description": "React block components, Puck config generator, menu renderer, and admin hooks for the Granit CMS",
       "exports": [
         {
           "name": "CtaBlock",
@@ -3170,6 +3193,197 @@
           "name": "CmsMenuNav",
           "kind": "function",
           "signature": "function CmsMenuNav("
+        },
+        {
+          "name": "CmsProvider",
+          "kind": "function",
+          "signature": "function CmsProvider("
+        },
+        {
+          "name": "useCmsConfig",
+          "kind": "function",
+          "signature": "function useCmsConfig(): ResolvedCmsConfig"
+        },
+        {
+          "name": "CmsConfig",
+          "kind": "interface",
+          "signature": "interface CmsConfig",
+          "members": []
+        },
+        {
+          "name": "ResolvedCmsConfig",
+          "kind": "interface",
+          "signature": "interface ResolvedCmsConfig extends CmsConfig",
+          "members": []
+        },
+        {
+          "name": "CmsProviderProps",
+          "kind": "interface",
+          "signature": "interface CmsProviderProps",
+          "members": []
+        },
+        {
+          "name": "cmsKeys",
+          "kind": "const",
+          "signature": "const cmsKeys"
+        },
+        {
+          "name": "useSite",
+          "kind": "function",
+          "signature": "function useSite( id: string, options?:"
+        },
+        {
+          "name": "useSites",
+          "kind": "function",
+          "signature": "function useSites( params?: ListSitesParams, options?:"
+        },
+        {
+          "name": "useCreateSite",
+          "kind": "function",
+          "signature": "function useCreateSite(): UseMutationResult<SiteResponse, Error, CreateSiteRequest>"
+        },
+        {
+          "name": "useDeleteSite",
+          "kind": "function",
+          "signature": "function useDeleteSite(): UseMutationResult<void, Error, string>"
+        },
+        {
+          "name": "useUpdateSite",
+          "kind": "function",
+          "signature": "function useUpdateSite(): UseMutationResult< SiteResponse, Error,"
+        },
+        {
+          "name": "usePage",
+          "kind": "function",
+          "signature": "function usePage( id: string, options?:"
+        },
+        {
+          "name": "usePageTree",
+          "kind": "function",
+          "signature": "function usePageTree( siteId: string, options?:"
+        },
+        {
+          "name": "usePageVersions",
+          "kind": "function",
+          "signature": "function usePageVersions( id: string, options?:"
+        },
+        {
+          "name": "usePages",
+          "kind": "function",
+          "signature": "function usePages( params?: ListPagesParams, options?:"
+        },
+        {
+          "name": "useMenu",
+          "kind": "function",
+          "signature": "function useMenu( id: string, options?:"
+        },
+        {
+          "name": "useMenus",
+          "kind": "function",
+          "signature": "function useMenus( params?: ListMenusParams, options?:"
+        },
+        {
+          "name": "useCreateMenu",
+          "kind": "function",
+          "signature": "function useCreateMenu(): UseMutationResult<MenuResponse, Error, CreateMenuRequest>"
+        },
+        {
+          "name": "useDeleteMenu",
+          "kind": "function",
+          "signature": "function useDeleteMenu(): UseMutationResult<void, Error,"
+        },
+        {
+          "name": "useUpdateMenu",
+          "kind": "function",
+          "signature": "function useUpdateMenu(): UseMutationResult< MenuResponse, Error,"
+        },
+        {
+          "name": "useRelease",
+          "kind": "function",
+          "signature": "function useRelease( id: string, options?:"
+        },
+        {
+          "name": "useReleases",
+          "kind": "function",
+          "signature": "function useReleases( params?: ListReleasesParams, options?:"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-cms-hostnames",
+      "description": "React hooks and provider for Granit CMS site-scoped hostname management",
+      "exports": [
+        {
+          "name": "CmsHostnamesProvider",
+          "kind": "function",
+          "signature": "function CmsHostnamesProvider("
+        },
+        {
+          "name": "useCmsHostnamesConfig",
+          "kind": "function",
+          "signature": "function useCmsHostnamesConfig(): ResolvedCmsHostnamesConfig"
+        },
+        {
+          "name": "cmsHostnamesKeys",
+          "kind": "const",
+          "signature": "const cmsHostnamesKeys"
+        },
+        {
+          "name": "useSiteHostnameAvailability",
+          "kind": "function",
+          "signature": "function useSiteHostnameAvailability( siteId: string, host: string, options?:"
+        },
+        {
+          "name": "useSiteHostnames",
+          "kind": "function",
+          "signature": "function useSiteHostnames( siteId: string, options?:"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-cms-redirects",
+      "description": "React hooks and provider for Granit CMS redirect rule management",
+      "exports": [
+        {
+          "name": "CmsRedirectsProvider",
+          "kind": "function",
+          "signature": "function CmsRedirectsProvider("
+        },
+        {
+          "name": "useCmsRedirectsConfig",
+          "kind": "function",
+          "signature": "function useCmsRedirectsConfig(): ResolvedCmsRedirectsConfig"
+        },
+        {
+          "name": "cmsRedirectsKeys",
+          "kind": "const",
+          "signature": "const cmsRedirectsKeys"
+        },
+        {
+          "name": "useRedirects",
+          "kind": "function",
+          "signature": "function useRedirects( params?: ListRedirectsParams, options?:"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-cms-seo",
+      "description": "React hooks and provider for Granit CMS SEO management (admin metadata, SEO-AI inbox, SERP/OG previews)",
+      "exports": [
+        {
+          "name": "CmsSeoProvider",
+          "kind": "function",
+          "signature": "function CmsSeoProvider("
+        },
+        {
+          "name": "useCmsSeoConfig",
+          "kind": "function",
+          "signature": "function useCmsSeoConfig(): ResolvedCmsSeoConfig"
+        },
+        {
+          "name": "cmsSeoKeys",
+          "kind": "const",
+          "signature": "const cmsSeoKeys"
         }
       ]
     },
@@ -3186,6 +3400,48 @@
           "name": "useCookieConsent",
           "kind": "function",
           "signature": "function useCookieConsent(): CookieConsentContextValue"
+        },
+        {
+          "name": "CookieConsentContextValue",
+          "kind": "interface",
+          "signature": "interface CookieConsentContextValue",
+          "members": [
+            {
+              "name": "consents",
+              "kind": "property",
+              "signature": "consents: ConsentState"
+            },
+            {
+              "name": "isLoaded",
+              "kind": "property",
+              "signature": "isLoaded: boolean"
+            },
+            {
+              "name": "hasConsented",
+              "kind": "property",
+              "signature": "hasConsented: boolean"
+            },
+            {
+              "name": "acceptCategory",
+              "kind": "method",
+              "signature": "acceptCategory: (category: CookieCategory) => void"
+            },
+            {
+              "name": "revokeCategory",
+              "kind": "method",
+              "signature": "revokeCategory: (category: CookieCategory) => void"
+            },
+            {
+              "name": "acceptAll",
+              "kind": "method",
+              "signature": "acceptAll: () => void"
+            },
+            {
+              "name": "revokeAll",
+              "kind": "method",
+              "signature": "revokeAll: () => void"
+            }
+          ]
         }
       ]
     },
@@ -3344,11 +3600,6 @@
           "name": "widgetRenderQueryKey",
           "kind": "const",
           "signature": "const widgetRenderQueryKey"
-        },
-        {
-          "name": "applyStreamSnapshot",
-          "kind": "function",
-          "signature": "function applyStreamSnapshot( current: DashboardRenderedWidget | undefined, event: DashboardStreamSnapshot ): DashboardRenderedWidget | undefined"
         },
         {
           "name": "useDashboardStream",
@@ -3686,6 +3937,11 @@
           "signature": "function buildLookupQueryKey( descriptor: LookupDescriptor, params: LookupQueryParams, culture?: string ): readonly unknown[]"
         },
         {
+          "name": "buildLookupResolveQueryKey",
+          "kind": "function",
+          "signature": "function buildLookupResolveQueryKey( descriptor: LookupDescriptor, value: unknown, culture?: string ): readonly unknown[]"
+        },
+        {
           "name": "useLookup",
           "kind": "function",
           "signature": "function useLookup( descriptor: LookupDescriptor, params: LookupQueryParams, options: UseLookupOptions ): UseLookupResult"
@@ -3769,6 +4025,21 @@
       "name": "@granit/react-diagnostics",
       "description": "React hooks for monitoring health — useMonitoringHealth",
       "exports": [
+        {
+          "name": "buildDiagnosticsQueryKey",
+          "kind": "function",
+          "signature": "function buildDiagnosticsQueryKey( config: Pick<MonitoringHealthOptions, 'queryKeyPrefix'>, ...segments: readonly unknown[] ): readonly unknown[]"
+        },
+        {
+          "name": "diagnosticsKeys",
+          "kind": "const",
+          "signature": "const diagnosticsKeys"
+        },
+        {
+          "name": "useMonitoringHealth",
+          "kind": "function",
+          "signature": "function useMonitoringHealth( options: MonitoringHealthOptions ): UseQueryResult<MonitoringHealthResponse>"
+        },
         {
           "name": "MonitoringHealthOptions",
           "kind": "interface",
@@ -4251,19 +4522,9 @@
           "members": []
         },
         {
-          "name": "entityCalendarQueryKey",
-          "kind": "function",
-          "signature": "function entityCalendarQueryKey( entityName: string, from: string, to: string, calendar?: string | null, filters?: readonly FilterEntry[], search?: string ): readonly ["
-        },
-        {
           "name": "useEntityCalendar",
           "kind": "function",
           "signature": "function useEntityCalendar( entityName: string, from: string, to: string, options: UseEntityCalendarOptions ="
-        },
-        {
-          "name": "entityDiscoveryQueryKey",
-          "kind": "const",
-          "signature": "const entityDiscoveryQueryKey"
         },
         {
           "name": "useEntityDiscovery",
@@ -4271,15 +4532,15 @@
           "signature": "function useEntityDiscovery( options:"
         },
         {
+          "name": "useEntityRelationAggregates",
+          "kind": "function",
+          "signature": "function useEntityRelationAggregates( entityName: string, entityId: string, options:"
+        },
+        {
           "name": "RelationAggregateParentRef",
           "kind": "interface",
           "signature": "interface RelationAggregateParentRef",
           "members": []
-        },
-        {
-          "name": "entityManifestQueryKey",
-          "kind": "function",
-          "signature": "function entityManifestQueryKey( name: string, facets?: readonly EntityFacet[] ): readonly ['entities', 'manifest', string, string | null]"
         },
         {
           "name": "useEntityMetadata",
@@ -5620,6 +5881,16 @@
           "members": []
         },
         {
+          "name": "buildSchedulingQueryKey",
+          "kind": "function",
+          "signature": "function buildSchedulingQueryKey( config:"
+        },
+        {
+          "name": "schedulingKeys",
+          "kind": "const",
+          "signature": "const schedulingKeys"
+        },
+        {
           "name": "RescheduleVariables",
           "kind": "interface",
           "signature": "interface RescheduleVariables",
@@ -6170,6 +6441,11 @@
           "signature": "function useTimelineFollowers("
         },
         {
+          "name": "useToggleReaction",
+          "kind": "function",
+          "signature": "function useToggleReaction(): UseMutationResult< ReactionToggleResult, Error, ToggleReactionVariables, ToggleReactionContext >"
+        },
+        {
           "name": "useAnchorEntry",
           "kind": "function",
           "signature": "function useAnchorEntry(): UseMutationResult<TimelineEntryId, Error, AnchorEntryVariables>"
@@ -6472,11 +6748,6 @@
           "name": "SETTING_NAMES",
           "kind": "const",
           "signature": "const SETTING_NAMES"
-        },
-        {
-          "name": "AdminSettingsScope",
-          "kind": "type",
-          "signature": "type AdminSettingsScope = 'global' | 'tenant'"
         },
         {
           "name": "SettingsPermissions",
@@ -6879,11 +7150,6 @@
           "name": "listTransitions",
           "kind": "function",
           "signature": "async function listTransitions( client: AxiosInstance, basePath: string, currentState: string ): Promise<WorkflowStatus>"
-        },
-        {
-          "name": "WorkflowHistoryPage",
-          "kind": "type",
-          "signature": "type WorkflowHistoryPage = PagedResult<TransitionHistory>"
         },
         {
           "name": "WorkflowPermissions",

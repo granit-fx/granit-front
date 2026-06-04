@@ -17,6 +17,10 @@
     "@granit/authentication": "workspace:*",
     "amazon-cognito-identity-js": ">=6.0.0"
   },
+  "devDependencies": {
+    "@granit/authentication": "workspace:*",
+    "@granit/testing": "workspace:*"
+  },
   "publishConfig": {
     "exports": {
       ".": {

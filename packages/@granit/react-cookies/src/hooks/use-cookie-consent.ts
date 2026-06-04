@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import { CookieConsentContext } from '../providers/cookie-consent-provider';
 
-import type { CookieConsentContextValue } from '@granit/cookies';
+import type { CookieConsentContextValue } from '../types/index';
 
 /**
  * Hook to access the cookie consent state and actions.

@@ -1,5 +1,3 @@
-'use client';
-
 import { BLOCK_COMPONENTS } from '../blocks/registry';
 
 import type { BlockCatalogResponse, BlockFieldDescriptor, BlockFieldKind } from '@granit/cms';

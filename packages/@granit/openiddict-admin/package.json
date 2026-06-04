@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/query-engine": "workspace:*",
     "@granit/testing": "workspace:*"
   },
   "publishConfig": {

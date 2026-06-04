@@ -129,3 +129,17 @@ export async function getBatchPresence(
   );
   return data;
 }
+
+// ---------------------------------------------------------------------------
+// Higher-level batch helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns the deduplicated, sorted list of user IDs — callers do not need to
+ * worry about ordering or duplicates when picking IDs from multiple sources.
+ */
+export function normalizeUserIds(userIds: readonly UserId[]): UserId[] {
+  return Array.from(new Set(userIds))
+    .filter((id) => id.length > 0)
+    .sort((a, b) => a.localeCompare(b));
+}

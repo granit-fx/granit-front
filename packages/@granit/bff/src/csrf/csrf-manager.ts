@@ -12,6 +12,7 @@ const MUTATION_METHODS = new Set(['POST', 'PUT', 'DELETE', 'PATCH']);
 /** Manages CSRF token lifecycle for BFF-authenticated SPAs. */
 export class CsrfManager {
   private token: string | null = null;
+  private pendingFetch: Promise<string | null> | null = null;
   private readonly pathPrefix: string;
 
   constructor(pathPrefix: string) {
@@ -57,13 +58,37 @@ export class CsrfManager {
     return async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
       assertSameOrigin(input);
       const method = (init?.method ?? 'GET').toUpperCase();
-      if (MUTATION_METHODS.has(method) && this.token) {
-        const headers = new Headers(init?.headers);
-        headers.set('X-CSRF-Token', this.token);
-        return fetch(input, { ...init, headers, credentials: 'include' });
+      if (MUTATION_METHODS.has(method)) {
+        // Ensure a token is present before sending a mutation. During the
+        // bootstrap window (or after a reset) `this.token` may still be null;
+        // fetch it on demand rather than sending a header-less mutation that
+        // depends entirely on the BFF rejecting it. Mirrors the async-refresh
+        // fallback in the @granit/api-client interceptor. See VULN-300.
+        const token = this.token ?? (await this.ensureToken());
+        if (token) {
+          const headers = new Headers(init?.headers);
+          headers.set('X-CSRF-Token', token);
+          return fetch(input, { ...init, headers, credentials: 'include' });
+        }
       }
       return fetch(input, { ...init, credentials: 'include' });
     };
+  }
+
+  /**
+   * Resolve a CSRF token, fetching one if the cache is empty. Concurrent
+   * callers share a single in-flight request. Returns `null` if the fetch
+   * fails — the caller then falls back to a header-less request that the BFF
+   * will reject, which is no worse than the previous behaviour.
+   */
+  private async ensureToken(): Promise<string | null> {
+    if (this.token) return this.token;
+    this.pendingFetch ??= this.fetchToken().catch(() => null);
+    try {
+      return await this.pendingFetch;
+    } finally {
+      this.pendingFetch = null;
+    }
   }
 }
 

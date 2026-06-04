@@ -1,14 +1,14 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getPageByPath, mintPreviewToken, resolvePreview } from '../api/pages.js';
+import { getPageByPath, mintPreviewToken, resolvePreview } from '../api/pages';
 
 import type {
   DraftPagePreviewResponse,
   MintPreviewTokenRequest,
   MintPreviewTokenResponse,
   PublishedPageResponse,
-} from '../types/index.js';
+} from '../types/index';
 
 const basePath = 'https://cms.example.com';
 

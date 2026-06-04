@@ -2,8 +2,46 @@ import { setTokenGetter, setOnUnauthorized } from '@granit/api-client';
 import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import * as React from 'react';
 
+import {
+  buildCognitoAuthorizeUrl,
+  generatePkce,
+  persistCognitoAuthTransaction,
+  randomToken,
+} from '../pkce';
+
 import type { LoginOptions, LogoutOptions, OidcUserInfo } from '@granit/authentication';
 import type { CognitoAuthContextType, CognitoCoreConfig } from '@granit/authentication-cognito';
+import type { ICognitoStorage } from 'amazon-cognito-identity-js';
+
+/**
+ * In-memory implementation of the Cognito SDK storage contract. Tokens live
+ * only for the lifetime of the tab and are never readable by other same-origin
+ * scripts via `localStorage`/`sessionStorage`. This is the default so a
+ * compromised script (XSS, extension) cannot lift the refresh token. See
+ * security audit VULN-102.
+ */
+class InMemoryCognitoStorage implements ICognitoStorage {
+  private readonly store = new Map<string, string>();
+  getItem(key: string): string | null {
+    return this.store.get(key) ?? null;
+  }
+  setItem(key: string, value: string): void {
+    this.store.set(key, value);
+  }
+  removeItem(key: string): void {
+    this.store.delete(key);
+  }
+  clear(): void {
+    this.store.clear();
+  }
+}
+
+/** Resolve the Cognito token store from the configured posture (default: memory). */
+function resolveCognitoStorage(tokenStorage: CognitoCoreConfig['tokenStorage']): ICognitoStorage {
+  if (tokenStorage === 'localStorage') return globalThis.localStorage;
+  if (tokenStorage === 'sessionStorage') return globalThis.sessionStorage;
+  return new InMemoryCognitoStorage();
+}
 
 export interface CognitoCoreResult extends CognitoAuthContextType {
   /** Direct ref to the Cognito UserPool instance. */
@@ -75,6 +113,7 @@ export function useCognitoInit(config: CognitoCoreConfig): CognitoCoreResult {
     const pool = new CognitoUserPool({
       UserPoolId: config.userPoolId,
       ClientId: config.clientId,
+      Storage: resolveCognitoStorage(config.tokenStorage),
     });
     userPoolRef.current = pool;
 
@@ -114,14 +153,40 @@ export function useCognitoInit(config: CognitoCoreConfig): CognitoCoreResult {
         setUser(null);
       });
     });
-  }, [config.userPoolId, config.clientId, config.onSessionExpired, config.onTokenRefreshError]);
+  }, [
+    config.userPoolId,
+    config.clientId,
+    config.tokenStorage,
+    config.onSessionExpired,
+    config.onTokenRefreshError,
+  ]);
 
   const login = React.useCallback(
     (options?: LoginOptions) => {
-      if (!config.domain) return;
-      const scopes = config.scopes?.join('+') ?? 'openid+profile+email';
+      const domain = config.domain;
+      if (!domain) return;
+      const scopes = config.scopes ?? ['openid', 'profile', 'email'];
       const redirectUri = options?.redirectUri ?? globalThis.location.origin;
-      globalThis.location.href = `https://${config.domain}/login?client_id=${config.clientId}&response_type=code&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}`;
+      // Public SPA client → PKCE (S256) + single-use `state` + `nonce`
+      // (RFC 7636 / RFC 9700). The redirect is deferred by one microtask while
+      // the S256 challenge is derived; `login()` stays fire-and-forget. The
+      // verifier/state/nonce are stashed in sessionStorage for the callback to
+      // validate and exchange. See security audit VULN-103 / VULN-301.
+      void (async () => {
+        const { verifier, challenge } = await generatePkce();
+        const state = randomToken();
+        const nonce = randomToken();
+        persistCognitoAuthTransaction({ verifier, state, nonce });
+        globalThis.location.href = buildCognitoAuthorizeUrl({
+          domain,
+          clientId: config.clientId,
+          redirectUri,
+          scopes,
+          challenge,
+          state,
+          nonce,
+        });
+      })();
     },
     [config.domain, config.clientId, config.scopes]
   );

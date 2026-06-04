@@ -1,4 +1,4 @@
-import type { RedirectResolveResponse } from '../types/index.js';
+import type { RedirectResolveResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

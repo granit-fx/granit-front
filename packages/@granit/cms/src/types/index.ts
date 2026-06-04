@@ -156,95 +156,286 @@ export interface ResolvedMenu {
   readonly items: readonly ResolvedMenuItem[];
 }
 
-// ─── Redirects ──────────────────────────────────────────────────────────────
+// ─── Shared ──────────────────────────────────────────────────────────────────
 
-/**
- * Redirect result returned by `GET /api/cms/redirects/resolve` (HTTP 200).
- * When no redirect matches, the endpoint returns 204 — callers receive `null`.
- */
-export interface RedirectResolveResponse {
-  readonly target: string;
-  readonly statusCode: number;
+/** Generic paged list returned by admin list endpoints. */
+export interface PagedResponse<T> {
+  readonly items: readonly T[];
+  readonly totalCount: number;
+  readonly page: number;
+  readonly pageSize: number;
 }
 
-// ─── SEO ────────────────────────────────────────────────────────────────────
+// ─── Sites admin (§10) ───────────────────────────────────────────────────────
 
-/** Crawler policy for a content item. Maps `Granit.Cms.Seo.Domain.RobotsDirective`. */
-export interface RobotsDirective {
-  readonly index: boolean;
-  readonly follow: boolean;
-  readonly noArchive: boolean;
-  readonly noSnippet: boolean;
-  readonly maxSnippet?: number | null;
-  readonly maxImagePreview?: string | null;
+/** One CMS site. Returned by `GET /api/cms/sites` and `GET /api/cms/sites/{id}`. */
+export interface SiteResponse {
+  readonly id: string;
+  readonly slug: string;
+  readonly defaultCulture: string;
+  readonly allowedCultures: readonly string[];
+  /** Legacy field — manage custom domains via Hostnames. */
+  readonly domains: readonly string[];
+  readonly defaultTheme: string;
+  readonly activated: boolean;
+  readonly tenantId: string | null;
+  readonly displayNames: Readonly<Record<string, string>>;
 }
 
-/** Open Graph / Twitter-card image reference. Maps `Granit.Cms.Seo.Domain.OgImage`. */
-export interface OgImage {
-  readonly documentId?: string | null;
-  readonly versionId?: string | null;
-  readonly renditionId?: string | null;
-  readonly publicLinkId?: string | null;
-  /** Absolute URL emitted as `og:image`. */
-  readonly url?: string | null;
-  readonly dimensions?: { readonly width: number; readonly height: number } | null;
-  readonly mimeType?: string | null;
-  readonly altText?: string | null;
+/** Request body for `POST /api/cms/sites`. */
+export interface CreateSiteRequest {
+  readonly slug: string;
+  readonly defaultCulture: string;
+  readonly allowedCultures: readonly string[];
+  readonly domains?: readonly string[];
+  readonly defaultTheme?: string;
 }
 
-/** `article:*` Open Graph fields. Maps `Granit.Cms.Seo.Domain.OpenGraphArticle`. */
-export interface OpenGraphArticle {
-  readonly publishedTime?: string | null;
-  readonly modifiedTime?: string | null;
-  readonly expirationTime?: string | null;
-  readonly section?: string | null;
-  readonly authors: readonly string[];
-  readonly tags: readonly string[];
+/** Request body for `PUT /api/cms/sites/{id}`. */
+export interface UpdateSiteRequest {
+  readonly defaultCulture: string;
+  readonly allowedCultures: readonly string[];
+  readonly domains: readonly string[];
+  readonly defaultTheme: string;
+  readonly activated: boolean;
 }
 
-/** Open Graph protocol fields. Maps `Granit.Cms.Seo.Domain.OpenGraph`. */
-export interface OpenGraph {
-  readonly type: string;
-  readonly title?: string | null;
-  readonly description?: string | null;
-  readonly url?: string | null;
-  readonly siteName?: string | null;
-  readonly locale?: string | null;
-  readonly alternateLocales: readonly string[];
-  readonly image?: OgImage | null;
-  readonly article?: OpenGraphArticle | null;
+// ─── Pages admin (§11) ───────────────────────────────────────────────────────
+
+/** One node in the page tree. Returned by `GET /api/cms/pages/tree`. */
+export interface PageTreeNodeResponse {
+  readonly id: string;
+  readonly parentId: string | null;
+  readonly slugSegment: string;
+  readonly structurePath: string;
+  readonly depth: number;
+  readonly isSiteRoot: boolean;
 }
 
-/** Twitter / X Card fields. Maps `Granit.Cms.Seo.Domain.TwitterCard`. */
-export interface TwitterCard {
-  readonly card: string;
-  readonly title?: string | null;
-  readonly description?: string | null;
-  readonly image?: OgImage | null;
-  readonly site?: string | null;
-  readonly creator?: string | null;
-}
-
-/** One `hreflang` alternate. Maps `Granit.Cms.Seo.Domain.Hreflang`. */
-export interface Hreflang {
+/** Per-culture translation of a page. */
+export interface PageTranslation {
   readonly culture: string;
-  readonly href: string;
+  readonly urlSlug: string;
+  readonly title: string;
+  readonly path: string;
+}
+
+/** Full page record. Returned by `GET /api/cms/pages/{id}`. */
+export interface PageResponse {
+  readonly id: string;
+  readonly siteId: string;
+  readonly parentId: string | null;
+  readonly slugSegment: string;
+  readonly structurePath: string;
+  readonly depth: number;
+  readonly kind: string;
+  readonly isSiteRoot: boolean;
+  readonly layoutKey: string | null;
+  readonly translations: readonly PageTranslation[];
+}
+
+/** Summary of one page version. Returned by `GET /api/cms/pages/{id}/versions`. */
+export interface PageVersionSummaryResponse {
+  readonly versionId: string;
+  readonly version: number;
+  readonly lifecycleStatus: string;
+  readonly isPublished: boolean;
+  readonly publishedAt: string | null;
+}
+
+/** Request body for `POST /api/cms/pages`. */
+export interface CreatePageRequest {
+  readonly siteId: string;
+  readonly parentId?: string | null;
+  readonly slugSegment: string;
+  readonly layoutKey?: string | null;
+}
+
+/** Request body for `PUT /api/cms/pages/{id}`. */
+export interface UpdatePageRequest {
+  readonly slugSegment: string;
+}
+
+/** Request body for `PUT /api/cms/pages/{id}/translations/{culture}`. */
+export interface UpdatePageTranslationRequest {
+  readonly urlSlug: string;
+  readonly title: string;
+}
+
+/** Request body for `POST /api/cms/pages/{id}/move`. */
+export interface MovePageRequest {
+  readonly parentId: string | null;
+  readonly targetIndex?: number;
+}
+
+/** Request body for `PUT /api/cms/pages/{id}/draft/{culture}`. */
+export interface SaveDraftRequest {
+  readonly contentJson: string;
+  readonly title?: string | null;
+}
+
+/** Problem detail returned in a 409 on concurrent draft edit. */
+export interface PageDraftConflictResponse {
+  readonly pageId: string;
+  readonly culture: string;
+}
+
+// ─── Menus admin (§13) ───────────────────────────────────────────────────────
+
+/** Editable menu item returned by `GET /api/cms/menus/{id}`. */
+export interface MenuItemResponse {
+  readonly id: string;
+  readonly label: string;
+  readonly kind: MenuTargetKind;
+  readonly pageId?: string | null;
+  readonly url?: string | null;
+  readonly anchor?: string | null;
+  readonly isVisible: boolean;
+  readonly icon?: string | null;
+  readonly cssClass?: string | null;
+  readonly children: readonly MenuItemResponse[];
+}
+
+/** Full admin menu. Returned by `GET /api/cms/menus/{id}`. */
+export interface MenuResponse {
+  readonly id: string;
+  readonly siteId: string;
+  readonly key: string;
+  readonly title: string;
+  readonly items: readonly MenuItemResponse[];
+}
+
+/** Writable menu item for create / update requests. */
+export interface MenuItemRequest {
+  readonly label: string;
+  readonly kind: MenuTargetKind;
+  readonly pageId?: string | null;
+  readonly url?: string | null;
+  readonly anchor?: string | null;
+  readonly isVisible?: boolean;
+  readonly icon?: string | null;
+  readonly cssClass?: string | null;
+  readonly children?: readonly MenuItemRequest[];
+}
+
+/** Request body for `POST /api/cms/menus`. */
+export interface CreateMenuRequest {
+  readonly siteId: string;
+  readonly key: string;
+  readonly title: string;
+  readonly items?: readonly MenuItemRequest[];
+}
+
+/** Request body for `PUT /api/cms/menus/{id}`. */
+export interface UpdateMenuRequest {
+  readonly title: string;
+  readonly items: readonly MenuItemRequest[];
+}
+
+// ─── Releases (§14) ──────────────────────────────────────────────────────────
+
+/** Lifecycle state of a release. Maps `Granit.Cms.Releases.Domain.ReleaseStatus`. */
+export type ReleaseStatus = 'Draft' | 'Ready' | 'Executed';
+
+/** Type of a release action. Maps `Granit.Cms.Releases.Domain.ReleaseActionType`. */
+export type ReleaseActionType = 'Publish' | 'Unpublish';
+
+/** Execution status of a release action. Maps `Granit.Cms.Releases.Domain.ReleaseActionStatus`. */
+export type ReleaseActionStatus = 'Pending' | 'Succeeded' | 'Failed';
+
+/** Schedule specification for a release. */
+export interface ReleaseSchedule {
+  readonly localDateTime: string;
+  readonly timeZoneId: string;
+  readonly scheduledAtUtc: string;
+}
+
+/** One content action inside a release. */
+export interface ReleaseActionResponse {
+  readonly id: string;
+  readonly contentType: string;
+  readonly contentId: string;
+  readonly culture: string | null;
+  readonly type: ReleaseActionType;
+  readonly status: ReleaseActionStatus;
+  readonly error: string | null;
+}
+
+/** Full release record. Returned by `GET /api/cms/releases/{id}`. */
+export interface ReleaseResponse {
+  readonly id: string;
+  readonly siteId: string;
+  readonly name: string;
+  readonly status: ReleaseStatus;
+  readonly schedule: ReleaseSchedule | null;
+  readonly tenantId: string | null;
+  readonly actions: readonly ReleaseActionResponse[];
+  readonly concurrencyStamp: string;
+}
+
+/** Request body for `POST /api/cms/releases`. */
+export interface CreateReleaseRequest {
+  readonly siteId: string;
+  readonly name: string;
+}
+
+/** Request body for `PUT /api/cms/releases/{id}`. */
+export interface UpdateReleaseRequest {
+  readonly name: string;
+}
+
+/** Request body for `DELETE /api/cms/releases/{id}/actions/{actionId}` (add action). */
+export interface AddReleaseActionRequest {
+  readonly contentType: string;
+  readonly contentId: string;
+  readonly culture: string | null;
+  readonly type: ReleaseActionType;
+}
+
+/** Request body for `POST /api/cms/releases/{id}/schedule`. */
+export interface ScheduleReleaseRequest {
+  readonly localDateTime: string;
+  /** IANA time-zone identifier (e.g. `"Europe/Brussels"`). */
+  readonly timeZoneId: string;
+}
+
+// ─── List params (admin) ─────────────────────────────────────────────────────
+
+/** Query parameters for `GET /api/cms/sites` (paged). */
+export interface ListSitesParams {
+  readonly page?: number;
+  readonly pageSize?: number;
+  readonly search?: string;
+}
+
+/** Query parameters for `GET /api/cms/pages` (paged). */
+export interface ListPagesParams {
+  readonly siteId?: string;
+  readonly page?: number;
+  readonly pageSize?: number;
+}
+
+/** Query parameters for `GET /api/cms/menus` (paged). */
+export interface ListMenusParams {
+  readonly siteId?: string;
+  readonly page?: number;
+  readonly pageSize?: number;
+}
+
+/** Query parameters for `GET /api/cms/releases` (paged). */
+export interface ListReleasesParams {
+  readonly siteId?: string;
+  readonly page?: number;
+  readonly pageSize?: number;
 }
 
 /**
- * Cascade-resolved, render-ready SEO for a content item.
- * Returned by `GET /api/cms/seo/sites/{siteId}/metadata/{contentType}/{contentId}/{culture}/effective`.
+ * Result of {@link saveDraft}.
+ * Returns `{ ok: false, conflict }` on `409` (concurrent edit).
  */
-export interface EffectiveSeoResponse {
-  readonly title: string;
-  readonly description?: string | null;
-  readonly canonicalUrl?: string | null;
-  readonly robots: RobotsDirective;
-  readonly keywords: readonly string[];
-  readonly openGraph: OpenGraph;
-  readonly twitterCard: TwitterCard;
-  readonly alternates: readonly Hreflang[];
-}
+export type SaveDraftResult =
+  | { readonly ok: true; readonly version: PageVersionSummaryResponse }
+  | { readonly ok: false; readonly conflict: PageDraftConflictResponse };
 
 // ─── Document Resolution ─────────────────────────────────────────────────────
 

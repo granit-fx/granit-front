@@ -50,7 +50,7 @@ describe('useQueryMeta', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith('/api/v1/patients/meta');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/patients/meta', undefined);
     expect(result.current.data).toEqual(meta);
   });
 

@@ -1,24 +1,16 @@
 import type {
+  LookupClientOptions,
   LookupDescriptor,
   LookupItem,
   LookupManifest,
   LookupQueryParams,
   LookupResult,
 } from '../types/index';
-import type { AxiosInstance } from '@granit/api-client';
+
+export type { LookupClientOptions };
 
 /** Default route prefix used by the backend `MapGranitDataLookups()` extension. */
 export const DEFAULT_LOOKUP_BASE_PATH = '/lookups';
-
-/** Options for {@link searchLookup} and {@link resolveLookup}. */
-export interface LookupClientOptions {
-  /** Axios instance used for HTTP requests. */
-  readonly client: AxiosInstance;
-  /** Override the base path. Default: {@link DEFAULT_LOOKUP_BASE_PATH}. */
-  readonly basePath?: string;
-  /** Optional abort signal. */
-  readonly signal?: AbortSignal;
-}
 
 /**
  * Fetches the discovery manifest of every registered lookup source.

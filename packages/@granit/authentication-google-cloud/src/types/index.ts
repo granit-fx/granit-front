@@ -25,6 +25,19 @@ export interface GoogleCloudCoreConfig {
 
   /** OAuth scopes to request on sign-in. */
   scopes?: readonly string[];
+
+  /**
+   * Where Firebase Auth persists its tokens (including the refresh token).
+   * Defaults to `'memory'` (`inMemoryPersistence`) so credentials are not left
+   * in browser-accessible storage (IndexedDB / `localStorage`) where a
+   * same-origin script (XSS, extension) could lift them. Override only when
+   * cross-tab / cross-reload persistence is required AND the app ships an
+   * XSS-hardened CSP. `'localStorage'` maps to Firebase IndexedDB persistence.
+   * Prefer the BFF cookie pattern (`@granit/bff`) for durable sessions. See
+   * security audit VULN-201.
+   */
+  tokenStorage?: 'memory' | 'sessionStorage' | 'localStorage';
+
   /** Called when a token refresh fails. */
   onTokenRefreshError?: () => void;
   /** Called when the session expires. */

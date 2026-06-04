@@ -21,7 +21,9 @@
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
-    "@granit/testing": "workspace:*"
+    "@granit/storage": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*"
   },
   "publishConfig": {
     "exports": {

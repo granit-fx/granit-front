@@ -1,9 +1,9 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { resolveRedirect } from '../api/redirects.js';
+import { resolveRedirect } from '../api/redirects';
 
-import type { RedirectResolveResponse } from '../types/index.js';
+import type { RedirectResolveResponse } from '../types/index';
 
 const basePath = 'https://cms.example.com';
 

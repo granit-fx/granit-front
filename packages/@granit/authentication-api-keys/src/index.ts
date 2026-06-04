@@ -7,9 +7,9 @@ export type {
   ApiKeyCreateResponse,
   ApiKeyRotateResponse,
   ApiKeyUpdateScopesRequest,
+  ListApiKeysParams,
 } from './types/index';
 export { ApiKeyPermissions } from './permissions';
-export type { ListApiKeysParams } from './api/api-keys-api';
 export {
   createApiKey,
   getApiKey,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseReactionEmoji, toReactionEmoji } from '../types/reaction';
+import { parseReactionEmoji, toReactionEmoji } from '../utils/reaction-utils';
 
 describe('toReactionEmoji', () => {
   it('returns the input value (brand is erased at runtime)', () => {

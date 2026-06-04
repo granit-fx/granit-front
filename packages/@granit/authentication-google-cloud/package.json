@@ -17,6 +17,10 @@
     "@granit/authentication": "workspace:*",
     "firebase": ">=10.0.0"
   },
+  "devDependencies": {
+    "@granit/authentication": "workspace:*",
+    "@granit/testing": "workspace:*"
+  },
   "publishConfig": {
     "exports": {
       ".": {

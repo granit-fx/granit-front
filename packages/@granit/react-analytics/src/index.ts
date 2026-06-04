@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------
 
 // Hook
-export { normalizeMetricRequest, useMetric } from './hooks/use-metric';
+export { useMetric } from './hooks/use-metric';
 export type { UseMetricOptions } from './hooks/use-metric';
 
 // Widget renderers — definition-driven. `KpiTile` predates the

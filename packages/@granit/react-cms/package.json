@@ -1,20 +1,38 @@
 {
   "name": "@granit/react-cms",
-  "description": "React block components, Puck config generator and menu renderer for the Granit CMS",
+  "description": "React block components, Puck config generator, menu renderer, and admin hooks for the Granit CMS",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./server": "./src/index.server.ts"
   },
   "devDependencies": {
+    "@granit/api-client": "workspace:*",
     "@granit/cms": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
-    "@puckeditor/core": "^0.21.2"
+    "@granit/utils": "workspace:*",
+    "@puckeditor/core": "^0.21.2",
+    "@tanstack/react-query": "^5.0.0"
   },
   "peerDependencies": {
+    "@granit/api-client": "workspace:*",
     "@granit/cms": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/utils": "workspace:*",
     "@puckeditor/core": "^0.21.0",
+    "@tanstack/react-query": "^5.0.0",
     "react": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@granit/api-client": {
+      "optional": true
+    },
+    "@granit/react-api-client": {
+      "optional": true
+    }
   }
 }

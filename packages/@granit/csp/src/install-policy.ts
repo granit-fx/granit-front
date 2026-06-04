@@ -1,10 +1,7 @@
+import { getTrustedTypesFactory } from './csp-factory';
 import { markInstalled } from './registry';
-import {
-  getTrustedTypesFactory,
-  type GranitPolicyName,
-  type InstallResult,
-  type TrustedTypePolicyOptions,
-} from './types/index';
+
+import type { GranitPolicyName, InstallResult, TrustedTypePolicyOptions } from './types/index';
 
 const installed = new Set<GranitPolicyName>();
 

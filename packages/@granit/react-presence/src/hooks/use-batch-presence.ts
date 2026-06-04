@@ -1,4 +1,4 @@
-import { PRESENCE_DEFAULTS, getBatchPresence } from '@granit/presence';
+import { PRESENCE_DEFAULTS, getBatchPresence, normalizeUserIds } from '@granit/presence';
 import { useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_STALE_TIME_MS } from '../constants';
@@ -11,35 +11,25 @@ import type { BatchPresenceResponse, PresenceResponse } from '@granit/presence';
 import type { UserId } from '@granit/types';
 import type { UseQueryResult } from '@tanstack/react-query';
 
-export interface UseBatchPresenceOptions {
-  /** Set to `false` to suppress the request (e.g. when permission is missing). */
-  readonly enabled?: boolean;
-}
-
 const MAX_BATCH = PRESENCE_DEFAULTS.MaxBatchSize;
 
 /**
- * Returns the deduplicated, sorted list — caller doesn't have to worry
- * about ordering or duplicates when picking IDs from several sources.
+ * Resolves presence for an already normalized list of users, chunking calls
+ * that exceed the server batch cap (`MaxBatchSize`) and merging the results.
+ * Each chunk hits the `getBatchPresence` primitive so the network boundary
+ * stays the single mockable seam.
  */
-export function normalizeUserIds(userIds: readonly UserId[]): UserId[] {
-  return Array.from(new Set(userIds))
-    .filter((id) => id.length > 0)
-    .sort((a, b) => a.localeCompare(b));
-}
-
-export async function fetchBatchPresence(
+async function getBatchPresenceChunked(
   client: AxiosInstance,
   basePath: string,
-  userIds: readonly UserId[]
+  ids: readonly UserId[]
 ): Promise<BatchPresenceResponse> {
-  if (userIds.length <= MAX_BATCH) {
-    return getBatchPresence(client, basePath, { userIds });
+  if (ids.length <= MAX_BATCH) {
+    return getBatchPresence(client, basePath, { userIds: ids });
   }
-  // Server cap is 200 — chunk above that and fan out in parallel.
   const chunks: UserId[][] = [];
-  for (let i = 0; i < userIds.length; i += MAX_BATCH) {
-    chunks.push(userIds.slice(i, i + MAX_BATCH));
+  for (let i = 0; i < ids.length; i += MAX_BATCH) {
+    chunks.push(ids.slice(i, i + MAX_BATCH));
   }
   const responses = await Promise.all(
     chunks.map((chunk) => getBatchPresence(client, basePath, { userIds: chunk }))
@@ -49,6 +39,11 @@ export async function fetchBatchPresence(
     Object.assign(merged, presences);
   }
   return { presences: merged };
+}
+
+export interface UseBatchPresenceOptions {
+  /** Set to `false` to suppress the request (e.g. when permission is missing). */
+  readonly enabled?: boolean;
 }
 
 /**
@@ -72,7 +67,7 @@ export function useBatchPresence(
 
   return useQuery({
     queryKey: buildPresenceQueryKey(config, ...presenceKeys.batch(ids)),
-    queryFn: () => fetchBatchPresence(config.client, config.basePath, ids),
+    queryFn: () => getBatchPresenceChunked(config.client, config.basePath, ids),
     staleTime: DEFAULT_STALE_TIME_MS,
     refetchOnWindowFocus: true,
     enabled: enabled && ids.length > 0,

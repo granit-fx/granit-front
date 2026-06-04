@@ -17,6 +17,10 @@
     "@azure/msal-browser": ">=3.0.0",
     "@granit/authentication": "workspace:*"
   },
+  "devDependencies": {
+    "@granit/authentication": "workspace:*",
+    "@granit/testing": "workspace:*"
+  },
   "publishConfig": {
     "exports": {
       ".": {

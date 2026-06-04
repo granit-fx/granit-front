@@ -23,7 +23,9 @@
     }
   },
   "devDependencies": {
-    "@granit/logger": "workspace:*"
+    "@granit/logger": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*"
   },
   "publishConfig": {
     "exports": {

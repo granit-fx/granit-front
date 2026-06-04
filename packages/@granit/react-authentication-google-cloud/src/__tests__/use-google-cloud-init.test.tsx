@@ -7,7 +7,7 @@ import type { GoogleCloudCoreConfig } from '@granit/authentication-google-cloud'
 
 const {
   mockInitializeApp,
-  mockGetAuth,
+  mockInitializeAuth,
   mockOnAuthStateChanged,
   mockSignInWithRedirect,
   mockSignOut,
@@ -15,11 +15,14 @@ const {
   mockSetTokenGetter,
   mockSetOnUnauthorized,
   GoogleAuthProviderCtor,
+  IN_MEMORY_PERSISTENCE,
+  SESSION_PERSISTENCE,
+  INDEXEDDB_PERSISTENCE,
 } = vi.hoisted(() => {
   const mockAddScope = vi.fn();
   return {
     mockInitializeApp: vi.fn(),
-    mockGetAuth: vi.fn(),
+    mockInitializeAuth: vi.fn(),
     mockOnAuthStateChanged: vi.fn(),
     mockSignInWithRedirect: vi.fn(),
     mockSignOut: vi.fn(),
@@ -29,6 +32,9 @@ const {
     GoogleAuthProviderCtor: vi.fn(function GoogleAuthProvider() {
       return { addScope: mockAddScope };
     }),
+    IN_MEMORY_PERSISTENCE: { __persistence: 'NONE' },
+    SESSION_PERSISTENCE: { __persistence: 'SESSION' },
+    INDEXEDDB_PERSISTENCE: { __persistence: 'LOCAL' },
   };
 });
 
@@ -37,7 +43,10 @@ vi.mock('firebase/app', () => ({
 }));
 
 vi.mock('firebase/auth', () => ({
-  getAuth: mockGetAuth,
+  initializeAuth: mockInitializeAuth,
+  inMemoryPersistence: IN_MEMORY_PERSISTENCE,
+  browserSessionPersistence: SESSION_PERSISTENCE,
+  indexedDBLocalPersistence: INDEXEDDB_PERSISTENCE,
   onAuthStateChanged: mockOnAuthStateChanged,
   signInWithRedirect: mockSignInWithRedirect,
   signOut: mockSignOut,
@@ -74,8 +83,8 @@ describe('useGoogleCloudInit', () => {
     authStateCallback = null;
     mockInitializeApp.mockReset();
     mockInitializeApp.mockReturnValue({});
-    mockGetAuth.mockReset();
-    mockGetAuth.mockReturnValue({});
+    mockInitializeAuth.mockReset();
+    mockInitializeAuth.mockReturnValue({});
     mockOnAuthStateChanged.mockReset();
     mockOnAuthStateChanged.mockImplementation((_auth: unknown, cb: (user: unknown) => void) => {
       authStateCallback = cb as typeof authStateCallback;
@@ -103,6 +112,27 @@ describe('useGoogleCloudInit', () => {
       projectId: 'app-id',
     });
     expect(mockOnAuthStateChanged).toHaveBeenCalled();
+  });
+
+  it('defaults to in-memory persistence so tokens are not stored in IndexedDB (VULN-201)', () => {
+    renderHook(() => useGoogleCloudInit(baseConfig));
+    expect(mockInitializeAuth).toHaveBeenCalledWith(expect.anything(), {
+      persistence: IN_MEMORY_PERSISTENCE,
+    });
+  });
+
+  it('maps tokenStorage="localStorage" to Firebase IndexedDB persistence', () => {
+    renderHook(() => useGoogleCloudInit({ ...baseConfig, tokenStorage: 'localStorage' }));
+    expect(mockInitializeAuth).toHaveBeenCalledWith(expect.anything(), {
+      persistence: INDEXEDDB_PERSISTENCE,
+    });
+  });
+
+  it('maps tokenStorage="sessionStorage" to Firebase session persistence', () => {
+    renderHook(() => useGoogleCloudInit({ ...baseConfig, tokenStorage: 'sessionStorage' }));
+    expect(mockInitializeAuth).toHaveBeenCalledWith(expect.anything(), {
+      persistence: SESSION_PERSISTENCE,
+    });
   });
 
   it('flips authenticated=true and extracts the user when a Firebase user appears', async () => {
@@ -256,8 +286,8 @@ describe('useGoogleCloudInit', () => {
 
   it('logout() is a no-op for signOut when authRef is null', async () => {
     // Simulate an unmounted instance: clear authRef before logout by
-    // making getAuth return undefined.
-    mockGetAuth.mockReturnValue(undefined);
+    // making initializeAuth return undefined.
+    mockInitializeAuth.mockReturnValue(undefined);
     const { result } = renderHook(() => useGoogleCloudInit(baseConfig));
     await waitFor(() => expect(authStateCallback).not.toBeNull());
     // First logout: authRef.current was set to undefined → signOut should not be called.

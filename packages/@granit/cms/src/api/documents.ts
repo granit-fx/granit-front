@@ -1,4 +1,4 @@
-import type { BatchResolveDocumentsRequest, ResolvedDocumentResponse } from '../types/index.js';
+import type { BatchResolveDocumentsRequest, ResolvedDocumentResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**

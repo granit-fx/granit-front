@@ -9,6 +9,12 @@ import type { AIChatRequest, AIChatResponse } from '@granit/ai';
 export interface UseAIChatReturn {
   readonly send: (workspaceName: string, request: AIChatRequest) => void;
   readonly sendAsync: (workspaceName: string, request: AIChatRequest) => Promise<AIChatResponse>;
+  /**
+   * Completion result. ⚠️ **Untrusted**: `data.content` is raw model output —
+   * sanitize it (and scheme-allowlist any links) before rendering as
+   * HTML/markdown; never pass it to `dangerouslySetInnerHTML` unsanitized.
+   * See security audit VULN-303.
+   */
   readonly data: AIChatResponse | undefined;
   readonly isPending: boolean;
   readonly error: Error | null;

@@ -20,7 +20,7 @@
     "@granit/authentication-keycloak": "workspace:*",
     "@granit/csp": "workspace:*",
     "@granit/react-authentication": "workspace:*",
-    "keycloak-js": "*",
+    "keycloak-js": "^26.0.0",
     "react": "^19.0.0"
   },
   "publishConfig": {

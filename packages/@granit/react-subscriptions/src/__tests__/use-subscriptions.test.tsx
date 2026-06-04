@@ -70,7 +70,7 @@ describe('use-subscriptions', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/v1/subscriptions/subscriptions');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/subscriptions/subscriptions', undefined);
       expect(result.current.data?.items).toEqual([sampleSubscription]);
       expect(result.current.data?.totalCount).toBe(1);
     });
@@ -233,7 +233,7 @@ describe('use-subscriptions', () => {
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/custom/path/subscriptions');
+      expect(client.get).toHaveBeenCalledWith('/custom/path/subscriptions', undefined);
     });
   });
 });

@@ -1,26 +1,10 @@
 import { useGranitClient } from '@granit/react-api-client';
 import { useQuery, useQueryClient, type UseQueryResult } from '@tanstack/react-query';
 
-import type { EntityFacet, EntityManifestResponse } from '@granit/entities';
+export { entityManifestQueryKey } from './query-keys';
+import { entityManifestQueryKey } from './query-keys';
 
-/**
- * Cache key for one per-entity manifest. Keyed by `(name, facets-csv)` so a
- * caller asking for the slim `?facets=identity` payload doesn't collide
- * with a prior request that fetched the full manifest, and a permission
- * change that bumps the manifest version invalidates both at once via
- * `queryClient.invalidateQueries({ queryKey: ['entities', 'manifest'] })`.
- *
- * `facets` is normalised to a sorted CSV so callers passing
- * `['forms', 'identity']` and `['identity', 'forms']` share one cache slot.
- */
-export function entityManifestQueryKey(
-  name: string,
-  facets?: readonly EntityFacet[]
-): readonly ['entities', 'manifest', string, string | null] {
-  const facetsKey =
-    facets && facets.length > 0 ? [...facets].sort((a, b) => a.localeCompare(b)).join(',') : null;
-  return ['entities', 'manifest', name, facetsKey] as const;
-}
+import type { EntityFacet, EntityManifestResponse } from '@granit/entities';
 
 interface ManifestCacheEntry {
   readonly manifest: EntityManifestResponse;

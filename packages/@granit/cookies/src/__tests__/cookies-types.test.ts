@@ -4,7 +4,6 @@ import type {
   ConsentState,
   CookieCategory,
   CookieConsentConfig,
-  CookieConsentContextValue,
   CookieConsentProvider,
   CookieDefinitionDto,
   ThirdPartyServiceDto,
@@ -61,23 +60,6 @@ describe('@granit/cookies types', () => {
       expectTypeOf<ThirdPartyServiceDto>().toHaveProperty('name');
       expectTypeOf<ThirdPartyServiceDto>().toHaveProperty('category');
       expectTypeOf<ThirdPartyServiceDto>().toHaveProperty('cookiePatterns');
-    });
-  });
-
-  describe('CookieConsentContextValue', () => {
-    it('should expose consent state and loading', () => {
-      expectTypeOf<CookieConsentContextValue>().toHaveProperty('consents');
-      expectTypeOf<CookieConsentContextValue>().toHaveProperty('isLoaded');
-      expectTypeOf<CookieConsentContextValue['isLoaded']>().toBeBoolean();
-      expectTypeOf<CookieConsentContextValue>().toHaveProperty('hasConsented');
-    });
-
-    it('should expose consent management methods', () => {
-      expectTypeOf<CookieConsentContextValue>().toHaveProperty('acceptCategory');
-      expectTypeOf<CookieConsentContextValue['acceptCategory']>().toBeFunction();
-      expectTypeOf<CookieConsentContextValue>().toHaveProperty('revokeCategory');
-      expectTypeOf<CookieConsentContextValue>().toHaveProperty('acceptAll');
-      expectTypeOf<CookieConsentContextValue>().toHaveProperty('revokeAll');
     });
   });
 });

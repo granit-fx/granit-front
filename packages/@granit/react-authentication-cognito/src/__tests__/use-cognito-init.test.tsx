@@ -5,6 +5,12 @@ import { useCognitoInit } from '../hooks/use-cognito-init';
 
 import type { CognitoCoreConfig } from '@granit/authentication-cognito';
 
+/** Minimal duck type for the Cognito storage contract under assertion. */
+interface ICognitoStorageLike {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+}
+
 const {
   mockGetCurrentUser,
   mockGetSession,
@@ -12,19 +18,27 @@ const {
   mockSignOut,
   mockSetTokenGetter,
   mockSetOnUnauthorized,
-} = vi.hoisted(() => ({
-  mockGetCurrentUser: vi.fn(),
-  mockGetSession: vi.fn(),
-  mockGetUserAttributes: vi.fn(),
-  mockSignOut: vi.fn(),
-  mockSetTokenGetter: vi.fn(),
-  mockSetOnUnauthorized: vi.fn(),
-}));
+  CognitoUserPoolCtor,
+} = vi.hoisted(() => {
+  const mockGetCurrentUser = vi.fn();
+  return {
+    mockGetCurrentUser,
+    mockGetSession: vi.fn(),
+    mockGetUserAttributes: vi.fn(),
+    mockSignOut: vi.fn(),
+    mockSetTokenGetter: vi.fn(),
+    mockSetOnUnauthorized: vi.fn(),
+    CognitoUserPoolCtor: vi.fn(function CognitoUserPool(
+      this: { getCurrentUser: () => unknown },
+      _config: { Storage?: ICognitoStorageLike }
+    ) {
+      this.getCurrentUser = mockGetCurrentUser;
+    }),
+  };
+});
 
 vi.mock('amazon-cognito-identity-js', () => ({
-  CognitoUserPool: vi.fn(function CognitoUserPool(this: { getCurrentUser: () => unknown }) {
-    this.getCurrentUser = mockGetCurrentUser;
-  }),
+  CognitoUserPool: CognitoUserPoolCtor,
 }));
 
 vi.mock('@granit/api-client', () => ({
@@ -54,6 +68,7 @@ describe('useCognitoInit', () => {
     mockSignOut.mockReset();
     mockSetTokenGetter.mockReset();
     mockSetOnUnauthorized.mockReset();
+    CognitoUserPoolCtor.mockClear();
   });
 
   afterEach(() => {
@@ -65,6 +80,25 @@ describe('useCognitoInit', () => {
     const { result } = renderHook(() => useCognitoInit(baseConfig));
     expect(result.current.authenticated).toBe(false);
     expect(result.current.user).toBeNull();
+  });
+
+  it('constructs the pool with an in-memory Storage by default (VULN-102)', () => {
+    mockGetCurrentUser.mockReturnValue(null);
+    renderHook(() => useCognitoInit(baseConfig));
+    const poolConfig = CognitoUserPoolCtor.mock.calls[0]?.[0] as { Storage?: ICognitoStorageLike };
+    expect(poolConfig.Storage).toBeDefined();
+    // Not a Web Storage object → tokens are not readable by same-origin scripts.
+    expect(poolConfig.Storage).not.toBe(globalThis.localStorage);
+    expect(poolConfig.Storage).not.toBe(globalThis.sessionStorage);
+    expect(typeof poolConfig.Storage?.getItem).toBe('function');
+    expect(typeof poolConfig.Storage?.setItem).toBe('function');
+  });
+
+  it('honors tokenStorage="localStorage" as an explicit opt-in', () => {
+    mockGetCurrentUser.mockReturnValue(null);
+    renderHook(() => useCognitoInit({ ...baseConfig, tokenStorage: 'localStorage' }));
+    const poolConfig = CognitoUserPoolCtor.mock.calls[0]?.[0] as { Storage?: ICognitoStorageLike };
+    expect(poolConfig.Storage).toBe(globalThis.localStorage);
   });
 
   it('settles loading=false when no Cognito user is present', async () => {
@@ -214,11 +248,16 @@ describe('useCognitoInit', () => {
       );
       await waitFor(() => expect(result.current.loading).toBe(false));
       result.current.login();
+      await waitFor(() => expect(hrefSetter).toHaveBeenCalled());
 
-      expect(hrefSetter).toHaveBeenCalledWith(
-        expect.stringContaining('https://auth.example.com/login?client_id=test-client-id')
-      );
-      expect(hrefSetter.mock.calls[0]?.[0]).toContain('scope=openid+profile+email');
+      const url = hrefSetter.mock.calls[0]?.[0] as string;
+      expect(url).toContain('https://auth.example.com/login?client_id=test-client-id');
+      expect(url).toContain('scope=openid+profile+email');
+      // PKCE + anti-forgery parameters (VULN-103 / VULN-301)
+      expect(url).toContain('code_challenge_method=S256');
+      expect(url).toMatch(/[?&]code_challenge=[\w-]+/u);
+      expect(url).toMatch(/[?&]state=[\w-]+/u);
+      expect(url).toMatch(/[?&]nonce=[\w-]+/u);
     } finally {
       Object.defineProperty(globalThis, 'location', {
         configurable: true,
@@ -251,9 +290,11 @@ describe('useCognitoInit', () => {
       );
       await waitFor(() => expect(result.current.loading).toBe(false));
       result.current.login({ redirectUri: 'https://app.example/cb' });
+      await waitFor(() => expect(hrefSetter).toHaveBeenCalled());
 
-      expect(hrefSetter.mock.calls[0]?.[0]).toContain('scope=openid+foo');
-      expect(hrefSetter.mock.calls[0]?.[0]).toContain(encodeURIComponent('https://app.example/cb'));
+      const url = hrefSetter.mock.calls[0]?.[0] as string;
+      expect(url).toContain('scope=openid+foo');
+      expect(url).toContain(encodeURIComponent('https://app.example/cb'));
     } finally {
       Object.defineProperty(globalThis, 'location', {
         configurable: true,

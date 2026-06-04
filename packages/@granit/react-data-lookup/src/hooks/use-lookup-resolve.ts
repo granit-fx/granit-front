@@ -1,6 +1,8 @@
 import { resolveLookup } from '@granit/data-lookup';
 import { useQuery } from '@tanstack/react-query';
 
+import { buildLookupResolveQueryKey } from './query-keys';
+
 import type { AxiosInstance } from '@granit/api-client';
 import type { LookupDescriptor, LookupItem } from '@granit/data-lookup';
 import type { UseQueryResult } from '@tanstack/react-query';
@@ -32,14 +34,7 @@ export function useLookupResolve(
   const hasValue = value !== null && value !== undefined && value !== '';
 
   return useQuery<LookupItem | null>({
-    queryKey: [
-      'granit',
-      'data-lookup',
-      'resolve',
-      descriptor.name ?? descriptor.endpoint ?? '(unknown)',
-      value ?? null,
-      culture ?? null,
-    ],
+    queryKey: buildLookupResolveQueryKey(descriptor, value, culture),
     queryFn: ({ signal }) => resolveLookup(descriptor, value, { client, basePath, signal }),
     enabled: forcedEnabled === false ? false : hasValue,
     staleTime: 5 * 60_000,

@@ -3,9 +3,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-import { buildPermissionQueryKey } from './use-permissions';
+import { buildPermissionQueryKey } from './query-keys';
 
-import type { PermissionGrantParams, UsePermissionGrantOptions } from '@granit/authorization';
+import type { UsePermissionGrantOptions } from '../types';
+import type { PermissionGrantParams } from '@granit/authorization';
 import type { UseMutationResult } from '@tanstack/react-query';
 
 /** Return type of the {@link usePermissionGrant} hook. */

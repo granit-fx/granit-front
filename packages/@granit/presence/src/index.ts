@@ -17,6 +17,7 @@ export {
   getBatchPresence,
   getMyPresence,
   getUserPresence,
+  normalizeUserIds,
   pollMyPresence,
   setMyPresence,
 } from './api/presence-api';

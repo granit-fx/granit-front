@@ -38,6 +38,14 @@ describe('extractReturnUrl', () => {
     expect(extractReturnUrl('?returnUrl=%2F%2Fevil.com')).toBeNull();
   });
 
+  it('rejects backslash-authority bypasses (open redirect)', () => {
+    // Browsers normalise `\` → `/` in the authority, so these resolve
+    // off-origin despite the leading single slash. See security audit VULN-202.
+    expect(extractReturnUrl('?returnUrl=%2F%5Cevil.com')).toBeNull(); // /\evil.com
+    expect(extractReturnUrl('?returnUrl=%5C%5Cevil.com')).toBeNull(); // \\evil.com
+    expect(extractReturnUrl('?returnUrl=%2F%5C%2Fevil.com')).toBeNull(); // /\/evil.com
+  });
+
   it('falls back to globalThis.location.search when no argument', () => {
     vi.stubGlobal('location', { search: '?returnUrl=%2Fhome' });
     expect(extractReturnUrl()).toBe('/home');

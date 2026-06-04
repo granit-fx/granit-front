@@ -3,9 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-import { buildPermissionQueryKey } from './use-permissions';
+import { buildPermissionQueryKey } from './query-keys';
 
-import type { PermissionGrantDto, UseRolePermissionsOptions } from '@granit/authorization';
+import type { UseRolePermissionsOptions } from '../types';
+import type { PermissionGrantDto } from '@granit/authorization';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /**
