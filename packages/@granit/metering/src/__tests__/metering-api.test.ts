@@ -314,7 +314,7 @@ describe('metering-api / QueryEngine — meter definitions', () => {
 
       await listMeterDefinitions(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/metering/meter-definitions');
+      expect(client.get).toHaveBeenCalledWith('/metering/meter-definitions', undefined);
     });
   });
 
@@ -325,7 +325,7 @@ describe('metering-api / QueryEngine — meter definitions', () => {
 
       const result = await getMeterDefinitionsQueryMeta(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/metering/meter-definitions/meta');
+      expect(client.get).toHaveBeenCalledWith('/metering/meter-definitions/meta', undefined);
       expect(result).toEqual(sampleMeta);
     });
   });
@@ -428,7 +428,7 @@ describe('metering-api / QueryEngine — usage aggregates', () => {
 
       await listUsageAggregates(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/metering/usage-aggregates');
+      expect(client.get).toHaveBeenCalledWith('/metering/usage-aggregates', undefined);
     });
   });
 
@@ -439,7 +439,7 @@ describe('metering-api / QueryEngine — usage aggregates', () => {
 
       const result = await getUsageAggregatesQueryMeta(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/metering/usage-aggregates/meta');
+      expect(client.get).toHaveBeenCalledWith('/metering/usage-aggregates/meta', undefined);
       expect(result).toEqual(sampleMeta);
     });
   });
@@ -521,6 +521,6 @@ describe('metering-api / QueryEngine — usage aggregates', () => {
 
     await listUsageAggregates(client, '/custom/metering');
 
-    expect(client.get).toHaveBeenCalledWith('/custom/metering/usage-aggregates');
+    expect(client.get).toHaveBeenCalledWith('/custom/metering/usage-aggregates', undefined);
   });
 });
