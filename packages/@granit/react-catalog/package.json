@@ -5,7 +5,8 @@
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./testing": "./src/testing/index.ts"
   },
   "files": [
     "dist"
@@ -16,20 +17,31 @@
   "devDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/react-api-client": "workspace:*",
-    "@granit/types": "workspace:*"
+    "@granit/types": "workspace:*",
+    "msw": "^2.12.0"
   },
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/catalog": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
+    "msw": "^2.12.0",
     "react": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "msw": {
+      "optional": true
+    }
   },
   "publishConfig": {
     "exports": {
       ".": {
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js"
+      },
+      "./testing": {
+        "types": "./dist/testing/index.d.ts",
+        "import": "./dist/testing/index.js"
       }
     },
     "registry": "https://npm.pkg.github.com"

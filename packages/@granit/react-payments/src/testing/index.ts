@@ -10,3 +10,4 @@ export {
   sampleTransactions,
 } from './data';
 export { createPaymentsHandlers, paymentTransactionQueryMetadata } from './handlers';
+export { createPaymentsConfigurationHandlers, mockPaymentProviders } from './configuration';
