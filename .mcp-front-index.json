@@ -1096,6 +1096,88 @@
       ]
     },
     {
+      "name": "@granit/contract-tests",
+      "description": "Contract conformance oracle — verifies hand-written @granit/* DTOs against the backend OpenAPI snapshots (contracts/openapi).",
+      "exports": [
+        {
+          "name": "checkSchemaConformance",
+          "kind": "function",
+          "signature": "function checkSchemaConformance(opts: CheckSchemaOptions): ConformanceViolation[]"
+        },
+        {
+          "name": "CheckSchemaOptions",
+          "kind": "interface",
+          "signature": "interface CheckSchemaOptions",
+          "members": [
+            {
+              "name": "spec",
+              "kind": "property",
+              "signature": "spec: OpenApiDocument"
+            },
+            {
+              "name": "schemaName",
+              "kind": "property",
+              "signature": "schemaName: string"
+            },
+            {
+              "name": "sourceText",
+              "kind": "property",
+              "signature": "sourceText: string"
+            },
+            {
+              "name": "fileName",
+              "kind": "property",
+              "signature": "fileName: string"
+            },
+            {
+              "name": "typeName",
+              "kind": "property",
+              "signature": "typeName?: string"
+            }
+          ]
+        },
+        {
+          "name": "ConformanceViolation",
+          "kind": "interface",
+          "signature": "interface ConformanceViolation",
+          "members": [
+            {
+              "name": "rule",
+              "kind": "property",
+              "signature": "rule: string"
+            },
+            {
+              "name": "schema",
+              "kind": "property",
+              "signature": "schema: string"
+            },
+            {
+              "name": "field",
+              "kind": "property",
+              "signature": "field: string"
+            },
+            {
+              "name": "message",
+              "kind": "property",
+              "signature": "message: string"
+            }
+          ]
+        },
+        {
+          "name": "OpenApiDocument",
+          "kind": "interface",
+          "signature": "interface OpenApiDocument",
+          "members": [
+            {
+              "name": "components",
+              "kind": "property",
+              "signature": "components?: { schemas?: Record<string, OpenApiSchema> }"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "@granit/cookies",
       "description": "Cookie consent abstraction with React context and hooks",
       "exports": []

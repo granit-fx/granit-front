@@ -1,0 +1,14 @@
+{
+  "name": "@granit/contract-tests",
+  "description": "Contract conformance oracle — verifies hand-written @granit/* DTOs against the backend OpenAPI snapshots (contracts/openapi).",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}
