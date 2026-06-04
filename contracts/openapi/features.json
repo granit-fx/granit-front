@@ -7,7 +7,9 @@
   "paths": {
     "/features/definitions": {
       "get": {
-        "tags": ["Features"],
+        "tags": [
+          "Features"
+        ],
         "summary": "Returns all feature definitions grouped by name prefix.",
         "description": "Returns all declared feature definitions, grouped by name prefix (the segment before the first dot in the feature name, e.g. 'Acme' for 'Acme.VideoConference'). Each group contains the features, their value types, defaults, and constraints. Requires the Features.Read permission.",
         "operationId": "GetFeatureDefinitions",
@@ -60,7 +62,9 @@
     },
     "/features/values": {
       "get": {
-        "tags": ["Features"],
+        "tags": [
+          "Features"
+        ],
         "summary": "Returns all resolved feature values for the current context.",
         "description": "Returns a dictionary of all feature values resolved through the Tenant → Plan → Default cascade for the current request context. Any authenticated user can read the features that apply to them.",
         "operationId": "GetAllFeatureValues",
@@ -117,7 +121,9 @@
     },
     "/features/values/{name}": {
       "get": {
-        "tags": ["Features"],
+        "tags": [
+          "Features"
+        ],
         "summary": "Returns the resolved value for a single feature.",
         "description": "Returns the resolved value for the specified feature in the current context. Returns 404 if the feature is not declared in any definition provider.",
         "operationId": "GetFeatureValue",
@@ -188,7 +194,9 @@
     },
     "/features/overrides/{name}": {
       "put": {
-        "tags": ["Features"],
+        "tags": [
+          "Features"
+        ],
         "summary": "Sets a tenant-level feature override.",
         "description": "Creates or updates a tenant-level override for the specified feature. The value is validated against the feature's value type (Toggle: true/false, Numeric: min/max bounds, Selection: allowed values). Returns 404 if the feature is not declared. Requires the Features.Manage permission.",
         "operationId": "SetFeatureOverride",
@@ -270,7 +278,9 @@
         }
       },
       "delete": {
-        "tags": ["Features"],
+        "tags": [
+          "Features"
+        ],
         "summary": "Deletes a tenant-level feature override.",
         "description": "Removes the tenant-level override for the specified feature, reverting to the Plan → Default cascade. Returns 404 if the feature is not declared. Requires the Features.Manage permission.",
         "operationId": "DeleteFeatureOverride",
@@ -367,28 +377,44 @@
             ]
           },
           "selectionValues": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
           },
           "displayName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "description": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "FeatureGroupResponse": {
-        "required": ["name", "displayName", "features"],
+        "required": [
+          "name",
+          "displayName",
+          "features"
+        ],
         "type": "object",
         "properties": {
           "name": {
             "type": "string"
           },
           "displayName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "features": {
             "type": "array",
@@ -399,23 +425,35 @@
         }
       },
       "FeatureNumericConstraintResponse": {
-        "required": ["min", "max"],
+        "required": [
+          "min",
+          "max"
+        ],
         "type": "object",
         "properties": {
           "min": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int64"
           },
           "max": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int64"
           }
         }
       },
       "FeatureValueResponse": {
-        "required": ["name", "value"],
+        "required": [
+          "name",
+          "value"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -452,7 +490,9 @@
         }
       },
       "SetFeatureOverrideRequest": {
-        "required": ["value"],
+        "required": [
+          "value"
+        ],
         "type": "object",
         "properties": {
           "value": {

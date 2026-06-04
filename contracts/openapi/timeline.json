@@ -7,7 +7,9 @@
   "paths": {
     "/timeline/{entityType}/{entityId}": {
       "get": {
-        "tags": ["Timeline"],
+        "tags": [
+          "Timeline"
+        ],
         "summary": "Returns the paginated activity stream for an entity, newest first.",
         "description": "Returns comments, internal notes (staff-only, requires Timeline.InternalNotes.Read), and system log entries. Supports pagination. Soft-deleted entries are excluded.",
         "operationId": "GetTimelineStream",
@@ -107,7 +109,9 @@
     },
     "/timeline/{entityType}/{entityId}/entries": {
       "post": {
-        "tags": ["Timeline"],
+        "tags": [
+          "Timeline"
+        ],
         "summary": "Posts a new comment, internal note, or system log entry.",
         "description": "Creates a new timeline entry for the specified entity. Supports Comment and InternalNote types (SystemLog is system-only). The body supports Markdown. @mentions in the body trigger one-time mention notifications (max 10 per entry). Supports threaded replies via parentEntryId.",
         "operationId": "PostTimelineEntry",
@@ -207,7 +211,9 @@
     },
     "/timeline/{entityType}/{entityId}/anchor": {
       "post": {
-        "tags": ["Timeline"],
+        "tags": [
+          "Timeline"
+        ],
         "summary": "Materializes (or returns) the shadow row for an external timeline source entry.",
         "description": "Idempotent: returns the deterministic v5 GUID of the native anchor row so subsequent reactions/replies can target a stable id. The endpoint snapshots the source's body/author/occurred-at at anchor time; if the source later evolves, the shadow keeps its snapshot (audit retention independence).",
         "operationId": "AnchorExternalTimelineEntry",
@@ -307,7 +313,9 @@
     },
     "/timeline/{entityType}/{entityId}/entries/{entryId}": {
       "patch": {
-        "tags": ["Timeline"],
+        "tags": [
+          "Timeline"
+        ],
         "summary": "Edits the body of an entry the caller authored within the edit window.",
         "description": "Replaces the Markdown body of a Comment or InternalNote authored by the current user, provided the configured edit window (TimelineOptions.EditWindow, default 15 min) has not elapsed. Origin must be Native; SystemLog and external-origin entries are immutable. Returns 403 with reason in extensions when a gate rejects the request.",
         "operationId": "UpdateTimelineEntryBody",
@@ -408,7 +416,9 @@
         }
       },
       "delete": {
-        "tags": ["Timeline"],
+        "tags": [
+          "Timeline"
+        ],
         "summary": "Soft-deletes a comment or internal note (GDPR right to erasure).",
         "description": "Performs a soft-delete on the timeline entry. Only the author or users with Timeline.Entries.Manage permission can delete. SystemLog entries are immutable (ISO 27001). Returns 404 if the entry does not exist.",
         "operationId": "DeleteTimelineEntry",
@@ -491,7 +501,9 @@
     },
     "/timeline/{entityType}/{entityId}/follow": {
       "post": {
-        "tags": ["Timeline"],
+        "tags": [
+          "Timeline"
+        ],
         "summary": "Subscribes the current user as a follower of an entity.",
         "description": "Adds the authenticated user to the follower list for the specified entity. Followers receive notifications when new timeline entries are posted. Idempotent.",
         "operationId": "FollowTimelineEntity",
@@ -552,7 +564,9 @@
         }
       },
       "delete": {
-        "tags": ["Timeline"],
+        "tags": [
+          "Timeline"
+        ],
         "summary": "Unsubscribes the current user from an entity.",
         "description": "Removes the authenticated user from the follower list. Idempotent.",
         "operationId": "UnfollowTimelineEntity",
@@ -615,7 +629,9 @@
     },
     "/timeline/{entityType}/{entityId}/followers": {
       "get": {
-        "tags": ["Timeline"],
+        "tags": [
+          "Timeline"
+        ],
         "summary": "Returns the user IDs of all followers of an entity.",
         "description": "Returns the list of user IDs currently following the specified entity.",
         "operationId": "GetTimelineFollowers",
@@ -688,7 +704,9 @@
     },
     "/timeline/entries/{entryId}/reactions/{emoji}": {
       "post": {
-        "tags": ["Timeline"],
+        "tags": [
+          "Timeline"
+        ],
         "summary": "Toggles a reaction on a timeline entry by the calling user.",
         "description": "Idempotent toggle — adds the reaction if absent, removes if present. Accepts any well-formed Unicode emoji sequence (see EmojiValidator); rejects malformed input with 400 and Granit:Timeline:InvalidEmoji. Emits ReactionToggledEvent on the local bus on success. Concurrent double-POST is collapsed by the unique (EntryId, UserId, Emoji) DB index.",
         "operationId": "ToggleTimelineReaction",
@@ -770,7 +788,10 @@
   "components": {
     "schemas": {
       "AnchorTimelineEntryRequest": {
-        "required": ["sourceKey", "sourceId"],
+        "required": [
+          "sourceKey",
+          "sourceId"
+        ],
         "type": "object",
         "properties": {
           "sourceKey": {
@@ -782,7 +803,9 @@
         }
       },
       "AnchorTimelineEntryResponse": {
-        "required": ["entryId"],
+        "required": [
+          "entryId"
+        ],
         "type": "object",
         "properties": {
           "entryId": {
@@ -795,20 +818,35 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "title": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "status": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "detail": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "instance": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "errors": {
             "type": "object",
@@ -822,7 +860,11 @@
         }
       },
       "PagedResultOfTimelineStreamEntryResponse": {
-        "required": ["items", "totalCount", "hasMore"],
+        "required": [
+          "items",
+          "totalCount",
+          "hasMore"
+        ],
         "type": "object",
         "properties": {
           "items": {
@@ -832,19 +874,28 @@
             }
           },
           "totalCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "PostTimelineEntryRequest": {
-        "required": ["entryType", "body"],
+        "required": [
+          "entryType",
+          "body"
+        ],
         "type": "object",
         "properties": {
           "entryType": {
@@ -854,11 +905,17 @@
             "type": "string"
           },
           "parentEntryId": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "uuid"
           },
           "attachmentBlobIds": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string",
               "format": "uuid"
@@ -892,7 +949,11 @@
         }
       },
       "ReactionAggregateResponse": {
-        "required": ["count", "byCurrentUser", "displayEmoji"],
+        "required": [
+          "count",
+          "byCurrentUser",
+          "displayEmoji"
+        ],
         "type": "object",
         "properties": {
           "count": {
@@ -908,7 +969,12 @@
         }
       },
       "ReactionToggleResponse": {
-        "required": ["entryId", "emoji", "count", "currentUserHasReacted"],
+        "required": [
+          "entryId",
+          "emoji",
+          "count",
+          "currentUserHasReacted"
+        ],
         "type": "object",
         "properties": {
           "entryId": {
@@ -928,7 +994,13 @@
         }
       },
       "TimelineAttachmentInfoResponse": {
-        "required": ["id", "blobId", "fileName", "contentType", "sizeBytes"],
+        "required": [
+          "id",
+          "blobId",
+          "fileName",
+          "contentType",
+          "sizeBytes"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -947,13 +1019,20 @@
           },
           "sizeBytes": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int64"
           }
         }
       },
       "TimelineEntryType": {
-        "enum": ["Comment", "SystemLog", "InternalNote"]
+        "enum": [
+          "Comment",
+          "SystemLog",
+          "InternalNote"
+        ]
       },
       "TimelineStreamEntryResponse": {
         "required": [
@@ -980,10 +1059,16 @@
             "$ref": "#/components/schemas/TimelineStreamEntryType"
           },
           "authorId": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "authorName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "body": {
             "type": "string"
@@ -995,11 +1080,17 @@
             }
           },
           "parentEntryId": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "uuid"
           },
           "reactions": {
-            "type": ["null", "object"],
+            "type": [
+              "null",
+              "object"
+            ],
             "additionalProperties": {
               "$ref": "#/components/schemas/ReactionAggregateResponse"
             }
@@ -1007,10 +1098,16 @@
         }
       },
       "TimelineStreamEntryType": {
-        "enum": ["Comment", "SystemLog", "InternalNote"]
+        "enum": [
+          "Comment",
+          "SystemLog",
+          "InternalNote"
+        ]
       },
       "UpdateTimelineEntryBodyRequest": {
-        "required": ["body"],
+        "required": [
+          "body"
+        ],
         "type": "object",
         "properties": {
           "body": {

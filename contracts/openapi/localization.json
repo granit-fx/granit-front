@@ -7,7 +7,9 @@
   "paths": {
     "/localization": {
       "get": {
-        "tags": ["Localization"],
+        "tags": [
+          "Localization"
+        ],
         "summary": "Returns all localization resources for the requested culture.",
         "description": "Returns all localization resources (key-value pairs) for the requested culture, grouped by resource name. Accepts an optional cultureName query parameter (BCP 47 format); defaults to the Accept-Language header culture. Also returns the list of supported languages. Response is cached for 1 hour (Cache-Control: public, max-age=3600, Vary: Accept-Language). Anonymous — no authentication required.",
         "operationId": "GetLocalization",
@@ -55,12 +57,16 @@
             }
           }
         },
-        "security": [{}]
+        "security": [
+          { }
+        ]
       }
     },
     "/localization/overrides": {
       "get": {
-        "tags": ["Localization"],
+        "tags": [
+          "Localization"
+        ],
         "summary": "Returns a filtered, sorted, and paginated list of LocalizationOverride entries.",
         "description": "Executes a dynamic query against LocalizationOverride using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
         "operationId": "QueryLocalizationOverride",
@@ -71,7 +77,10 @@
             "description": "1-based page index. Ignored when cursor is supplied.",
             "schema": {
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -82,7 +91,10 @@
             "schema": {
               "maximum": 500,
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -91,7 +103,10 @@
             "in": "query",
             "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -99,7 +114,10 @@
             "in": "query",
             "description": "Free-text search across searchable columns declared in the query definition.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -107,7 +125,10 @@
             "in": "query",
             "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -115,7 +136,10 @@
             "in": "query",
             "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -123,7 +147,10 @@
             "in": "query",
             "description": "Comma-separated quick-filter names (declared in the query definition).",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -131,7 +158,10 @@
             "in": "query",
             "description": "Skip the total row count for faster pagination when the client doesn't need it.",
             "schema": {
-              "type": ["null", "boolean"]
+              "type": [
+                "null",
+                "boolean"
+              ]
             }
           },
           {
@@ -141,7 +171,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -154,7 +187,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -225,7 +261,9 @@
     },
     "/localization/overrides/meta": {
       "get": {
-        "tags": ["Localization"],
+        "tags": [
+          "Localization"
+        ],
         "summary": "Returns query metadata for LocalizationOverride (columns, filters, sorts, presets).",
         "description": "Returns the query definition metadata for LocalizationOverride: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
         "operationId": "GetLocalizationOverrideMeta",
@@ -275,7 +313,9 @@
     },
     "/localization/overrides/{resourceName}/{cultureName}/{key}": {
       "put": {
-        "tags": ["Localization"],
+        "tags": [
+          "Localization"
+        ],
         "summary": "Creates or updates a translation override.",
         "description": "Sets a translation override for a specific resource, culture, and key. If an override already exists, it is replaced. The culture name must be a valid BCP 47 tag. Returns 501 if no override store is registered.",
         "operationId": "PutLocalizationOverride",
@@ -385,7 +425,9 @@
         }
       },
       "delete": {
-        "tags": ["Localization"],
+        "tags": [
+          "Localization"
+        ],
         "summary": "Removes a translation override.",
         "description": "Removes the translation override for the specified resource, culture, and key. The original value from the resource file becomes effective again. No-op if the override does not exist. Returns 501 if no override store is registered.",
         "operationId": "DeleteLocalizationOverride",
@@ -479,7 +521,11 @@
   "components": {
     "schemas": {
       "ApplicationLocalizationResponse": {
-        "required": ["cultureName", "resources", "languages"],
+        "required": [
+          "cultureName",
+          "resources",
+          "languages"
+        ],
         "type": "object",
         "properties": {
           "cultureName": {
@@ -538,12 +584,19 @@
             "type": "boolean"
           },
           "format": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "DateFilterMeta": {
-        "required": ["name", "defaultPeriod", "availablePeriods"],
+        "required": [
+          "name",
+          "defaultPeriod",
+          "availablePeriods"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -561,10 +614,22 @@
         }
       },
       "DatePeriod": {
-        "enum": ["Today", "ThisWeek", "ThisMonth", "LastMonth", "ThisQuarter", "ThisYear", "Custom"]
+        "enum": [
+          "Today",
+          "ThisWeek",
+          "ThisMonth",
+          "LastMonth",
+          "ThisQuarter",
+          "ThisYear",
+          "Custom"
+        ]
       },
       "FilterableField": {
-        "required": ["name", "type", "operators"],
+        "required": [
+          "name",
+          "type",
+          "operators"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -580,7 +645,10 @@
             }
           },
           "enumValues": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
@@ -598,7 +666,11 @@
         }
       },
       "FilterGroupMeta": {
-        "required": ["name", "label", "presets"],
+        "required": [
+          "name",
+          "label",
+          "presets"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -630,7 +702,10 @@
         ]
       },
       "GroupByField": {
-        "required": ["name", "type"],
+        "required": [
+          "name",
+          "type"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -642,7 +717,10 @@
         }
       },
       "GroupedResultOfLocalizationOverride": {
-        "required": ["groups", "totalCount"],
+        "required": [
+          "groups",
+          "totalCount"
+        ],
         "type": "object",
         "properties": {
           "groups": {
@@ -658,13 +736,18 @@
         }
       },
       "GroupEntryOfLocalizationOverride": {
-        "required": ["field", "value", "label", "count"],
+        "required": [
+          "field",
+          "value",
+          "label",
+          "count"
+        ],
         "type": "object",
         "properties": {
           "field": {
             "type": "string"
           },
-          "value": {},
+          "value": { },
           "label": {
             "type": "string"
           },
@@ -673,10 +756,16 @@
             "format": "int32"
           },
           "aggregates": {
-            "type": ["null", "object"]
+            "type": [
+              "null",
+              "object"
+            ]
           },
           "items": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/LocalizationOverride"
             }
@@ -687,20 +776,35 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "title": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "status": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "detail": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "instance": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "errors": {
             "type": "object",
@@ -714,7 +818,12 @@
         }
       },
       "LanguageInfoResponse": {
-        "required": ["cultureName", "displayName", "flagIcon", "isDefault"],
+        "required": [
+          "cultureName",
+          "displayName",
+          "flagIcon",
+          "isDefault"
+        ],
         "type": "object",
         "properties": {
           "cultureName": {
@@ -724,7 +833,10 @@
             "type": "string"
           },
           "flagIcon": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "isDefault": {
             "type": "boolean"
@@ -735,7 +847,10 @@
         "type": "object",
         "properties": {
           "tenantId": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "uuid"
           },
           "resourceName": {
@@ -751,12 +866,18 @@
             "type": "string"
           },
           "modifiedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "description": "Last modification timestamp (UTC).",
             "format": "date-time"
           },
           "modifiedBy": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "description": "Identifier of the user who last modified the entity."
           },
           "createdAt": {
@@ -779,23 +900,38 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "endpoint": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "kind": {
             "$ref": "#/components/schemas/LookupKind"
           },
           "requiredPermission": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "searchParam": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "default": "search"
           },
           "scopeKeys": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
@@ -803,11 +939,20 @@
         }
       },
       "LookupKind": {
-        "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
+        "enum": [
+          "QueryEngine",
+          "Simple",
+          "ReferenceData",
+          "Enum"
+        ],
         "default": "QueryEngine"
       },
       "PagedResultOfLocalizationOverride": {
-        "required": ["items", "totalCount", "hasMore"],
+        "required": [
+          "items",
+          "totalCount",
+          "hasMore"
+        ],
         "type": "object",
         "properties": {
           "items": {
@@ -816,7 +961,10 @@
               "type": "object",
               "properties": {
                 "tenantId": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "format": "uuid"
                 },
                 "resourceName": {
@@ -832,12 +980,18 @@
                   "type": "string"
                 },
                 "modifiedAt": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "description": "Last modification timestamp (UTC).",
                   "format": "date-time"
                 },
                 "modifiedBy": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "description": "Identifier of the user who last modified the entity."
                 },
                 "createdAt": {
@@ -858,19 +1012,30 @@
             }
           },
           "totalCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "PaginationMeta": {
-        "required": ["defaultPageSize", "maxPageSize", "maxStreamSize", "supportsCursor"],
+        "required": [
+          "defaultPageSize",
+          "maxPageSize",
+          "maxStreamSize",
+          "supportsCursor"
+        ],
         "type": "object",
         "properties": {
           "defaultPageSize": {
@@ -891,7 +1056,11 @@
         }
       },
       "PresetMeta": {
-        "required": ["name", "label", "isDefault"],
+        "required": [
+          "name",
+          "label",
+          "isDefault"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -989,12 +1158,19 @@
             "$ref": "#/components/schemas/PaginationMeta"
           },
           "defaultSort": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "QuickFilterMeta": {
-        "required": ["name", "label", "isDefault"],
+        "required": [
+          "name",
+          "label",
+          "isDefault"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1009,7 +1185,9 @@
         }
       },
       "SetLocalizationOverrideRequest": {
-        "required": ["value"],
+        "required": [
+          "value"
+        ],
         "type": "object",
         "properties": {
           "value": {
@@ -1018,7 +1196,9 @@
         }
       },
       "SortableField": {
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {

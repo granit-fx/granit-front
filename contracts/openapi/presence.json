@@ -7,7 +7,9 @@
   "paths": {
     "/presence/my": {
       "get": {
-        "tags": ["Presence"],
+        "tags": [
+          "Presence"
+        ],
         "summary": "Returns the caller's current presence snapshot.",
         "description": "Computes the effective presence status for the authenticated user by blending their manual override (if any) with their last reported heartbeat.",
         "operationId": "GetMyPresence",
@@ -55,7 +57,9 @@
         }
       },
       "put": {
-        "tags": ["Presence"],
+        "tags": [
+          "Presence"
+        ],
         "summary": "Sets or clears the caller's manual presence override.",
         "description": "Replaces the caller's manual override. Passing ManualStatus=Available clears the override. UntilUtc is optional and bounded by Presence:MaxOverrideDuration.",
         "operationId": "SetMyPresence",
@@ -145,7 +149,9 @@
     },
     "/presence/my/override": {
       "delete": {
-        "tags": ["Presence"],
+        "tags": [
+          "Presence"
+        ],
         "summary": "Clears the caller's manual presence override.",
         "description": "Removes any active manual override so the effective status is derived from the heartbeat alone.",
         "operationId": "ClearMyPresenceOverride",
@@ -205,7 +211,9 @@
     },
     "/presence/my/poll": {
       "post": {
-        "tags": ["Presence"],
+        "tags": [
+          "Presence"
+        ],
         "summary": "Records a heartbeat and returns the caller's presence snapshot.",
         "description": "Clients should call this every 30-60 seconds with the user's local idle duration (in seconds). The server reconstructs the LastActivityUtc using its own clock to avoid client clock-skew issues, and applies a MAX merge across concurrent tabs.",
         "operationId": "PollMyPresence",
@@ -295,7 +303,9 @@
     },
     "/presence/users/{userId}": {
       "get": {
-        "tags": ["Presence"],
+        "tags": [
+          "Presence"
+        ],
         "summary": "Returns the presence snapshot of one user.",
         "description": "Computes the effective presence status for the specified user. Always returns 200 OK — unknown, never-seen, and policy-denied targets are canonicalized to Offline with a null LastSeenUtc so the response shape cannot be used as an enumeration oracle. Visibility is decided by IPresenceVisibilityPolicy (default: allow-all; multi-tenant apps MUST register a tenant-aware policy).",
         "operationId": "GetUserPresence",
@@ -367,7 +377,9 @@
     },
     "/presence/users/batch": {
       "post": {
-        "tags": ["Presence"],
+        "tags": [
+          "Presence"
+        ],
         "summary": "Returns presence snapshots for a batch of users.",
         "description": "Returns a dictionary keyed by user id. POST is used because UUID lists exceed practical URL length around 50 entries. Targets the caller is not allowed to read (per IPresenceVisibilityPolicy) are silently omitted from the response — not 403'd — to avoid leaking an enumeration channel.",
         "operationId": "GetBatchPresence",
@@ -457,7 +469,9 @@
     },
     "/presence/rooms/{kind}/{id}/heartbeat": {
       "post": {
-        "tags": ["Presence - Rooms"],
+        "tags": [
+          "Presence - Rooms"
+        ],
         "summary": "Joins or refreshes the caller's heartbeat in a resource room.",
         "description": "Acts as both join and refresh — clients should call this every 30-60 s while the user remains in the room. Returns the full room snapshot to save a round-trip; participants are filtered through IResourcePresenceVisibilityPolicy.",
         "operationId": "HeartbeatPresenceRoom",
@@ -582,7 +596,9 @@
     },
     "/presence/rooms/{kind}/{id}": {
       "get": {
-        "tags": ["Presence - Rooms"],
+        "tags": [
+          "Presence - Rooms"
+        ],
         "summary": "Returns the participants currently active in a resource room.",
         "description": "Filters stale entries (older than Presence:OfflineThreshold) and consults IResourcePresenceVisibilityPolicy. Policy denial surfaces as 404 to avoid leaking room existence — same anti-enumeration contract as user presence reads.",
         "operationId": "GetPresenceRoom",
@@ -679,7 +695,9 @@
         }
       },
       "delete": {
-        "tags": ["Presence - Rooms"],
+        "tags": [
+          "Presence - Rooms"
+        ],
         "summary": "Removes the caller from a resource room.",
         "description": "Idempotent — returns 204 whether or not the caller was present. The room cache entry is evicted entirely when the last participant leaves.",
         "operationId": "LeavePresenceRoom",
@@ -763,7 +781,9 @@
   "components": {
     "schemas": {
       "BatchPresenceRequest": {
-        "required": ["userIds"],
+        "required": [
+          "userIds"
+        ],
         "type": "object",
         "properties": {
           "userIds": {
@@ -776,7 +796,9 @@
         }
       },
       "BatchPresenceResponse": {
-        "required": ["presences"],
+        "required": [
+          "presences"
+        ],
         "type": "object",
         "properties": {
           "presences": {
@@ -788,7 +810,9 @@
         }
       },
       "HeartbeatRequest": {
-        "required": ["idleSeconds"],
+        "required": [
+          "idleSeconds"
+        ],
         "type": "object",
         "properties": {
           "idleSeconds": {
@@ -801,7 +825,10 @@
         "type": "object",
         "properties": {
           "metadata": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -809,20 +836,35 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "title": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "status": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "detail": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "instance": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "errors": {
             "type": "object",
@@ -836,7 +878,13 @@
         }
       },
       "ManualPresenceStatus": {
-        "enum": ["Available", "Busy", "DoNotDisturb", "AppearOffline", null]
+        "enum": [
+          "Available",
+          "Busy",
+          "DoNotDisturb",
+          "AppearOffline",
+          null
+        ]
       },
       "PresenceResponse": {
         "required": [
@@ -866,17 +914,29 @@
             ]
           },
           "overrideUntilUtc": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "lastSeenUtc": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           }
         }
       },
       "PresenceStatus": {
-        "enum": ["Online", "Away", "Offline", "Busy", "DoNotDisturb"]
+        "enum": [
+          "Online",
+          "Away",
+          "Offline",
+          "Busy",
+          "DoNotDisturb"
+        ]
       },
       "ProblemDetails": {
         "type": "object",
@@ -904,7 +964,11 @@
         }
       },
       "ResourcePresenceParticipantResponse": {
-        "required": ["userId", "lastSeenUtc", "metadata"],
+        "required": [
+          "userId",
+          "lastSeenUtc",
+          "metadata"
+        ],
         "type": "object",
         "properties": {
           "userId": {
@@ -916,12 +980,19 @@
             "format": "date-time"
           },
           "metadata": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "ResourceRoomResponse": {
-        "required": ["kind", "id", "participants"],
+        "required": [
+          "kind",
+          "id",
+          "participants"
+        ],
         "type": "object",
         "properties": {
           "kind": {
@@ -939,14 +1010,19 @@
         }
       },
       "SetPresenceRequest": {
-        "required": ["manualStatus", "untilUtc"],
+        "required": [
+          "manualStatus"
+        ],
         "type": "object",
         "properties": {
           "manualStatus": {
             "$ref": "#/components/schemas/ManualPresenceStatus"
           },
           "untilUtc": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           }
         }

@@ -7,7 +7,9 @@
   "paths": {
     "/webhooks/event-types": {
       "get": {
-        "tags": ["Webhooks"],
+        "tags": [
+          "Webhooks"
+        ],
         "summary": "Returns all registered webhook event types.",
         "description": "Returns the full list of webhook event types declared by application modules at startup. Each entry includes the event type name, localized display name, description, and category for UI grouping. Labels are resolved based on the Accept-Language header. Use these values when creating webhook subscriptions to ensure the event type is valid. Returns an empty list if no event type providers are registered.",
         "operationId": "GetWebhookEventTypes",
@@ -60,7 +62,9 @@
     },
     "/webhooks/subscriptions/{id}": {
       "get": {
-        "tags": ["Webhooks"],
+        "tags": [
+          "Webhooks"
+        ],
         "summary": "Returns a webhook subscription by its unique identifier.",
         "description": "Fetches the full details of a single webhook subscription including its current status, target URL, event type, and delivery statistics. Returns 404 if the subscription does not exist.",
         "operationId": "GetWebhookSubscription",
@@ -130,7 +134,9 @@
         }
       },
       "put": {
-        "tags": ["Webhooks"],
+        "tags": [
+          "Webhooks"
+        ],
         "summary": "Updates a webhook subscription's target URL.",
         "description": "Replaces the target URL of an existing subscription. The subscription keeps its current status, secret, and event type. Returns 404 if the subscription does not exist.",
         "operationId": "UpdateWebhookSubscription",
@@ -230,7 +236,9 @@
         }
       },
       "delete": {
-        "tags": ["Webhooks"],
+        "tags": [
+          "Webhooks"
+        ],
         "summary": "Deletes a webhook subscription.",
         "description": "Permanently removes a webhook subscription and all its associated delivery history. This action is irreversible.",
         "operationId": "DeleteWebhookSubscription",
@@ -285,7 +293,9 @@
     },
     "/webhooks/subscriptions/{id}/keys": {
       "get": {
-        "tags": ["Webhooks"],
+        "tags": [
+          "Webhooks"
+        ],
         "summary": "Lists the signing keys associated with a subscription.",
         "description": "Returns all signing keys for the subscription, including Active, Retired (within the rotation grace period), and Revoked entries. The protected secret value is never disclosed; rotate the key to obtain a new plain-text secret.",
         "operationId": "ListWebhookSigningKeys",
@@ -358,7 +368,9 @@
         }
       },
       "post": {
-        "tags": ["Webhooks"],
+        "tags": [
+          "Webhooks"
+        ],
         "summary": "Rotates the subscription's signing key with overlap semantics.",
         "description": "Generates a new Active signing key and moves the previous Active key to Retired for a configurable grace period (default 24 hours, controlled by WebhooksOptions.RetiredKeyGracePeriod). Verification accepts both keys until the Retired key expires. The new plain-text secret is returned exactly once.",
         "operationId": "RotateWebhookSigningKey",
@@ -430,7 +442,9 @@
     },
     "/webhooks/subscriptions": {
       "post": {
-        "tags": ["Webhooks"],
+        "tags": [
+          "Webhooks"
+        ],
         "summary": "Creates a new webhook subscription.",
         "description": "Registers a new webhook subscription for the specified event type. The response includes the plain-text signing secret which is only returned once. The subscription starts in the Active status.",
         "operationId": "CreateWebhookSubscription",
@@ -508,7 +522,9 @@
         }
       },
       "get": {
-        "tags": ["Webhooks"],
+        "tags": [
+          "Webhooks"
+        ],
         "summary": "Returns a filtered, sorted, and paginated list of WebhookSubscription entries.",
         "description": "Executes a dynamic query against WebhookSubscription using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
         "operationId": "QueryWebhookSubscription",
@@ -519,7 +535,10 @@
             "description": "1-based page index. Ignored when cursor is supplied.",
             "schema": {
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -530,7 +549,10 @@
             "schema": {
               "maximum": 500,
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -539,7 +561,10 @@
             "in": "query",
             "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -547,7 +572,10 @@
             "in": "query",
             "description": "Free-text search across searchable columns declared in the query definition.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -555,7 +583,10 @@
             "in": "query",
             "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -563,7 +594,10 @@
             "in": "query",
             "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -571,7 +605,10 @@
             "in": "query",
             "description": "Comma-separated quick-filter names (declared in the query definition).",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -579,7 +616,10 @@
             "in": "query",
             "description": "Skip the total row count for faster pagination when the client doesn't need it.",
             "schema": {
-              "type": ["null", "boolean"]
+              "type": [
+                "null",
+                "boolean"
+              ]
             }
           },
           {
@@ -589,7 +629,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -602,7 +645,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -673,7 +719,9 @@
     },
     "/webhooks/subscriptions/{id}/activate": {
       "post": {
-        "tags": ["Webhooks"],
+        "tags": [
+          "Webhooks"
+        ],
         "summary": "Activates a suspended webhook subscription.",
         "description": "Transitions a subscription from Suspended to Active status. Deliveries will resume for matching events. The consecutive failure counter is reset to zero.",
         "operationId": "ActivateWebhookSubscription",
@@ -745,7 +793,9 @@
     },
     "/webhooks/subscriptions/{id}/suspend": {
       "post": {
-        "tags": ["Webhooks"],
+        "tags": [
+          "Webhooks"
+        ],
         "summary": "Suspends an active webhook subscription.",
         "description": "Temporarily pauses event delivery for the subscription. The caller's identity is recorded alongside the suspension reason. Use the activate endpoint to resume deliveries.",
         "operationId": "SuspendWebhookSubscription",
@@ -817,7 +867,9 @@
     },
     "/webhooks/subscriptions/{id}/deactivate": {
       "post": {
-        "tags": ["Webhooks"],
+        "tags": [
+          "Webhooks"
+        ],
         "summary": "Permanently deactivates a webhook subscription.",
         "description": "Moves the subscription to the Deactivated terminal status. No further deliveries will be attempted. A deactivation reason must be provided. This action cannot be reversed — create a new subscription instead.",
         "operationId": "DeactivateWebhookSubscription",
@@ -909,7 +961,9 @@
     },
     "/webhooks/subscriptions/{id}/test-ping": {
       "post": {
-        "tags": ["Webhooks"],
+        "tags": [
+          "Webhooks"
+        ],
         "summary": "Sends a test ping to the subscription's target URL.",
         "description": "Dispatches a synthetic test event to the subscription endpoint and reports the HTTP status code and round-trip duration. Does not affect delivery statistics or the consecutive failure counter.",
         "operationId": "TestWebhookPing",
@@ -981,7 +1035,9 @@
     },
     "/webhooks/stats": {
       "get": {
-        "tags": ["Webhooks"],
+        "tags": [
+          "Webhooks"
+        ],
         "summary": "Returns aggregate webhook delivery statistics.",
         "description": "Provides a summary of all webhook subscriptions: total count by status, number of deliveries in the last 24 hours, success rate, and average response time.",
         "operationId": "GetWebhookStats",
@@ -1031,7 +1087,9 @@
     },
     "/webhooks/subscriptions/{id}/keys/{keyId}": {
       "delete": {
-        "tags": ["Webhooks"],
+        "tags": [
+          "Webhooks"
+        ],
         "summary": "Revokes a specific signing key.",
         "description": "Marks the targeted key as Revoked. Verification will reject signatures produced with this key from now on. The last Active key cannot be revoked — rotate first to introduce a new Active key, then revoke the old one.",
         "operationId": "RevokeWebhookSigningKey",
@@ -1116,7 +1174,9 @@
     },
     "/webhooks/subscriptions/meta": {
       "get": {
-        "tags": ["Webhooks"],
+        "tags": [
+          "Webhooks"
+        ],
         "summary": "Returns query metadata for WebhookSubscription (columns, filters, sorts, presets).",
         "description": "Returns the query definition metadata for WebhookSubscription: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
         "operationId": "GetWebhookSubscriptionMeta",
@@ -1166,7 +1226,9 @@
     },
     "/webhooks/deliveries": {
       "get": {
-        "tags": ["Webhooks"],
+        "tags": [
+          "Webhooks"
+        ],
         "summary": "Returns a filtered, sorted, and paginated list of WebhookDeliveryAttempt entries.",
         "description": "Executes a dynamic query against WebhookDeliveryAttempt using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
         "operationId": "QueryWebhookDeliveryAttempt",
@@ -1177,7 +1239,10 @@
             "description": "1-based page index. Ignored when cursor is supplied.",
             "schema": {
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -1188,7 +1253,10 @@
             "schema": {
               "maximum": 500,
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -1197,7 +1265,10 @@
             "in": "query",
             "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -1205,7 +1276,10 @@
             "in": "query",
             "description": "Free-text search across searchable columns declared in the query definition.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -1213,7 +1287,10 @@
             "in": "query",
             "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -1221,7 +1298,10 @@
             "in": "query",
             "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -1229,7 +1309,10 @@
             "in": "query",
             "description": "Comma-separated quick-filter names (declared in the query definition).",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -1237,7 +1320,10 @@
             "in": "query",
             "description": "Skip the total row count for faster pagination when the client doesn't need it.",
             "schema": {
-              "type": ["null", "boolean"]
+              "type": [
+                "null",
+                "boolean"
+              ]
             }
           },
           {
@@ -1247,7 +1333,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -1260,7 +1349,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -1331,7 +1423,9 @@
     },
     "/webhooks/deliveries/meta": {
       "get": {
-        "tags": ["Webhooks"],
+        "tags": [
+          "Webhooks"
+        ],
         "summary": "Returns query metadata for WebhookDeliveryAttempt (columns, filters, sorts, presets).",
         "description": "Returns the query definition metadata for WebhookDeliveryAttempt: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
         "operationId": "GetWebhookDeliveryAttemptMeta",
@@ -1418,12 +1512,19 @@
             "type": "boolean"
           },
           "format": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "DateFilterMeta": {
-        "required": ["name", "defaultPeriod", "availablePeriods"],
+        "required": [
+          "name",
+          "defaultPeriod",
+          "availablePeriods"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1441,10 +1542,22 @@
         }
       },
       "DatePeriod": {
-        "enum": ["Today", "ThisWeek", "ThisMonth", "LastMonth", "ThisQuarter", "ThisYear", "Custom"]
+        "enum": [
+          "Today",
+          "ThisWeek",
+          "ThisMonth",
+          "LastMonth",
+          "ThisQuarter",
+          "ThisYear",
+          "Custom"
+        ]
       },
       "FilterableField": {
-        "required": ["name", "type", "operators"],
+        "required": [
+          "name",
+          "type",
+          "operators"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1460,7 +1573,10 @@
             }
           },
           "enumValues": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
@@ -1478,7 +1594,11 @@
         }
       },
       "FilterGroupMeta": {
-        "required": ["name", "label", "presets"],
+        "required": [
+          "name",
+          "label",
+          "presets"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1510,7 +1630,10 @@
         ]
       },
       "GroupByField": {
-        "required": ["name", "type"],
+        "required": [
+          "name",
+          "type"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1522,7 +1645,10 @@
         }
       },
       "GroupedResultOfWebhookDeliveryAttempt": {
-        "required": ["groups", "totalCount"],
+        "required": [
+          "groups",
+          "totalCount"
+        ],
         "type": "object",
         "properties": {
           "groups": {
@@ -1538,7 +1664,10 @@
         }
       },
       "GroupedResultOfWebhookSubscription": {
-        "required": ["groups", "totalCount"],
+        "required": [
+          "groups",
+          "totalCount"
+        ],
         "type": "object",
         "properties": {
           "groups": {
@@ -1554,13 +1683,18 @@
         }
       },
       "GroupEntryOfWebhookDeliveryAttempt": {
-        "required": ["field", "value", "label", "count"],
+        "required": [
+          "field",
+          "value",
+          "label",
+          "count"
+        ],
         "type": "object",
         "properties": {
           "field": {
             "type": "string"
           },
-          "value": {},
+          "value": { },
           "label": {
             "type": "string"
           },
@@ -1569,10 +1703,16 @@
             "format": "int32"
           },
           "aggregates": {
-            "type": ["null", "object"]
+            "type": [
+              "null",
+              "object"
+            ]
           },
           "items": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/WebhookDeliveryAttempt"
             }
@@ -1580,13 +1720,18 @@
         }
       },
       "GroupEntryOfWebhookSubscription": {
-        "required": ["field", "value", "label", "count"],
+        "required": [
+          "field",
+          "value",
+          "label",
+          "count"
+        ],
         "type": "object",
         "properties": {
           "field": {
             "type": "string"
           },
-          "value": {},
+          "value": { },
           "label": {
             "type": "string"
           },
@@ -1595,10 +1740,16 @@
             "format": "int32"
           },
           "aggregates": {
-            "type": ["null", "object"]
+            "type": [
+              "null",
+              "object"
+            ]
           },
           "items": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/WebhookSubscription"
             }
@@ -1612,20 +1763,35 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "title": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "status": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "detail": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "instance": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "errors": {
             "type": "object",
@@ -1650,23 +1816,38 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "endpoint": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "kind": {
             "$ref": "#/components/schemas/LookupKind"
           },
           "requiredPermission": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "searchParam": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "default": "search"
           },
           "scopeKeys": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
@@ -1674,11 +1855,20 @@
         }
       },
       "LookupKind": {
-        "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
+        "enum": [
+          "QueryEngine",
+          "Simple",
+          "ReferenceData",
+          "Enum"
+        ],
         "default": "QueryEngine"
       },
       "PagedResultOfWebhookDeliveryAttempt": {
-        "required": ["items", "totalCount", "hasMore"],
+        "required": [
+          "items",
+          "totalCount",
+          "hasMore"
+        ],
         "type": "object",
         "properties": {
           "items": {
@@ -1695,7 +1885,10 @@
                   "format": "uuid"
                 },
                 "tenantId": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "format": "uuid"
                 },
                 "eventType": {
@@ -1705,7 +1898,10 @@
                   "type": "string"
                 },
                 "httpStatusCode": {
-                  "type": ["null", "integer"],
+                  "type": [
+                    "null",
+                    "integer"
+                  ],
                   "format": "int32"
                 },
                 "payloadHash": {
@@ -1717,17 +1913,26 @@
                 },
                 "durationMs": {
                   "pattern": "^-?(?:0|[1-9]\\d*)$",
-                  "type": ["integer", "string"],
+                  "type": [
+                    "integer",
+                    "string"
+                  ],
                   "format": "int64"
                 },
                 "errorMessage": {
-                  "type": ["null", "string"]
+                  "type": [
+                    "null",
+                    "string"
+                  ]
                 },
                 "isSuccess": {
                   "type": "boolean"
                 },
                 "payload": {
-                  "type": ["null", "string"]
+                  "type": [
+                    "null",
+                    "string"
+                  ]
                 },
                 "id": {
                   "type": "string",
@@ -1738,19 +1943,29 @@
             }
           },
           "totalCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "PagedResultOfWebhookSubscription": {
-        "required": ["items", "totalCount", "hasMore"],
+        "required": [
+          "items",
+          "totalCount",
+          "hasMore"
+        ],
         "type": "object",
         "properties": {
           "items": {
@@ -1765,7 +1980,10 @@
                   "type": "string"
                 },
                 "signingKeys": {
-                  "type": ["null", "array"],
+                  "type": [
+                    "null",
+                    "array"
+                  ],
                   "items": {
                     "type": "object",
                     "properties": {
@@ -1781,19 +1999,32 @@
                         "format": "date-time"
                       },
                       "expiresAt": {
-                        "type": ["null", "string"],
+                        "type": [
+                          "null",
+                          "string"
+                        ],
                         "format": "date-time"
                       },
                       "revokedAt": {
-                        "type": ["null", "string"],
+                        "type": [
+                          "null",
+                          "string"
+                        ],
                         "format": "date-time"
                       },
                       "lastRotationNotificationAt": {
-                        "type": ["null", "string"],
+                        "type": [
+                          "null",
+                          "string"
+                        ],
                         "format": "date-time"
                       },
                       "status": {
-                        "enum": ["Active", "Retired", "Revoked"]
+                        "enum": [
+                          "Active",
+                          "Retired",
+                          "Revoked"
+                        ]
                       },
                       "id": {
                         "type": "string",
@@ -1804,51 +2035,85 @@
                   }
                 },
                 "tenantId": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "format": "uuid"
                 },
                 "status": {
-                  "enum": ["Active", "Suspended", "Deactivated"]
+                  "enum": [
+                    "Active",
+                    "Suspended",
+                    "Deactivated"
+                  ]
                 },
                 "signingSecretHint": {
-                  "type": ["null", "string"]
+                  "type": [
+                    "null",
+                    "string"
+                  ]
                 },
                 "deactivationReason": {
-                  "type": ["null", "string"]
+                  "type": [
+                    "null",
+                    "string"
+                  ]
                 },
                 "consecutiveFailureCount": {
                   "type": "integer",
                   "format": "int32"
                 },
                 "lastSuccessAt": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "format": "date-time"
                 },
                 "suspendedAt": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "format": "date-time"
                 },
                 "suspendedBy": {
-                  "type": ["null", "string"]
+                  "type": [
+                    "null",
+                    "string"
+                  ]
                 },
                 "modifiedAt": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "description": "Last modification timestamp (UTC).",
                   "format": "date-time"
                 },
                 "modifiedBy": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "description": "Identifier of the user who last modified the entity."
                 },
                 "domainEvents": {
-                  "type": ["null", "array"],
+                  "type": [
+                    "null",
+                    "array"
+                  ],
                   "items": {
                     "type": "object",
                     "description": "Marker interface for domain events."
                   }
                 },
                 "integrationEvents": {
-                  "type": ["null", "array"],
+                  "type": [
+                    "null",
+                    "array"
+                  ],
                   "items": {
                     "type": "object",
                     "description": "Marker interface for integration events (ETO — Event Transfer Object)."
@@ -1872,19 +2137,30 @@
             }
           },
           "totalCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "PaginationMeta": {
-        "required": ["defaultPageSize", "maxPageSize", "maxStreamSize", "supportsCursor"],
+        "required": [
+          "defaultPageSize",
+          "maxPageSize",
+          "maxStreamSize",
+          "supportsCursor"
+        ],
         "type": "object",
         "properties": {
           "defaultPageSize": {
@@ -1905,7 +2181,11 @@
         }
       },
       "PresetMeta": {
-        "required": ["name", "label", "isDefault"],
+        "required": [
+          "name",
+          "label",
+          "isDefault"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -2003,12 +2283,19 @@
             "$ref": "#/components/schemas/PaginationMeta"
           },
           "defaultSort": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "QuickFilterMeta": {
-        "required": ["name", "label", "isDefault"],
+        "required": [
+          "name",
+          "label",
+          "isDefault"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -2023,7 +2310,9 @@
         }
       },
       "SortableField": {
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -2043,7 +2332,10 @@
             "format": "uuid"
           },
           "tenantId": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "uuid"
           },
           "eventType": {
@@ -2053,7 +2345,10 @@
             "type": "string"
           },
           "httpStatusCode": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "payloadHash": {
@@ -2065,17 +2360,26 @@
           },
           "durationMs": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int64"
           },
           "errorMessage": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "isSuccess": {
             "type": "boolean"
           },
           "payload": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "id": {
             "type": "string",
@@ -2085,20 +2389,34 @@
         }
       },
       "WebhookEventTypeResponse": {
-        "required": ["eventType", "displayName", "description", "category"],
+        "required": [
+          "eventType",
+          "displayName",
+          "description",
+          "category"
+        ],
         "type": "object",
         "properties": {
           "eventType": {
             "type": "string"
           },
           "displayName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "description": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "category": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -2117,15 +2435,24 @@
             "format": "date-time"
           },
           "expiresAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "revokedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "lastRotationNotificationAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "status": {
@@ -2139,7 +2466,12 @@
         }
       },
       "WebhookSigningKeyCreatedResponse": {
-        "required": ["id", "subscriptionId", "createdAt", "plainSecret"],
+        "required": [
+          "id",
+          "subscriptionId",
+          "createdAt",
+          "plainSecret"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2184,15 +2516,24 @@
             "format": "date-time"
           },
           "expiresAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "revokedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "lastRotationNotificationAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "status": {
@@ -2201,7 +2542,11 @@
         }
       },
       "WebhookSigningKeyStatus": {
-        "enum": ["Active", "Retired", "Revoked"]
+        "enum": [
+          "Active",
+          "Retired",
+          "Revoked"
+        ]
       },
       "WebhookSubscription": {
         "type": "object",
@@ -2213,56 +2558,89 @@
             "type": "string"
           },
           "signingKeys": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/WebhookSigningKey"
             }
           },
           "tenantId": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "uuid"
           },
           "status": {
             "$ref": "#/components/schemas/WebhookSubscriptionStatus"
           },
           "signingSecretHint": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "deactivationReason": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "consecutiveFailureCount": {
             "type": "integer",
             "format": "int32"
           },
           "lastSuccessAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "suspendedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "suspendedBy": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "modifiedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "description": "Last modification timestamp (UTC).",
             "format": "date-time"
           },
           "modifiedBy": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "description": "Identifier of the user who last modified the entity."
           },
           "domainEvents": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/IDomainEvent"
             }
           },
           "integrationEvents": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/IIntegrationEvent"
             }
@@ -2284,7 +2662,13 @@
         }
       },
       "WebhookSubscriptionCreatedResponse": {
-        "required": ["id", "targetUrl", "eventType", "status", "signingSecret"],
+        "required": [
+          "id",
+          "targetUrl",
+          "eventType",
+          "status",
+          "signingSecret"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2306,7 +2690,10 @@
         }
       },
       "WebhookSubscriptionCreateRequest": {
-        "required": ["targetUrl", "eventType"],
+        "required": [
+          "targetUrl",
+          "eventType"
+        ],
         "type": "object",
         "properties": {
           "targetUrl": {
@@ -2318,7 +2705,9 @@
         }
       },
       "WebhookSubscriptionDeactivateRequest": {
-        "required": ["reason"],
+        "required": [
+          "reason"
+        ],
         "type": "object",
         "properties": {
           "reason": {
@@ -2358,7 +2747,10 @@
             "format": "int32"
           },
           "lastSuccessAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "createdAt": {
@@ -2366,11 +2758,17 @@
             "format": "date-time"
           },
           "modifiedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "signingSecretHint": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -2408,21 +2806,35 @@
           },
           "successRateLast24h": {
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-            "type": ["number", "string"],
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "avgResponseTimeMsLast24h": {
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-            "type": ["number", "string"],
+            "type": [
+              "number",
+              "string"
+            ],
             "format": "double"
           }
         }
       },
       "WebhookSubscriptionStatus": {
-        "enum": ["Active", "Suspended", "Deactivated"]
+        "enum": [
+          "Active",
+          "Suspended",
+          "Deactivated"
+        ]
       },
       "WebhookSubscriptionTestPingResponse": {
-        "required": ["success", "httpStatusCode", "durationMs"],
+        "required": [
+          "success",
+          "httpStatusCode",
+          "durationMs"
+        ],
         "type": "object",
         "properties": {
           "success": {
@@ -2434,13 +2846,18 @@
           },
           "durationMs": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int64"
           }
         }
       },
       "WebhookSubscriptionUpdateRequest": {
-        "required": ["targetUrl"],
+        "required": [
+          "targetUrl"
+        ],
         "type": "object",
         "properties": {
           "targetUrl": {

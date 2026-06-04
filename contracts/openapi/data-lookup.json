@@ -7,7 +7,9 @@
   "paths": {
     "/lookups": {
       "get": {
-        "tags": ["Data Lookup"],
+        "tags": [
+          "Data Lookup"
+        ],
         "summary": "Returns the manifest of every registered lookup source.",
         "description": "Lists all lookups exposed by the host with their name, kind, required permission, and scope keys. Frontend tooling uses this endpoint to populate pickers and to hide lookups the user is not authorized to call.",
         "operationId": "GetDataLookupManifest",
@@ -57,7 +59,9 @@
     },
     "/lookups/{name}": {
       "get": {
-        "tags": ["Data Lookup"],
+        "tags": [
+          "Data Lookup"
+        ],
         "summary": "Searches a lookup source for matching items.",
         "description": "Performs a paginated typeahead search against the lookup source identified by the route parameter. Honors the Accept-Language header, the ambient tenant context and any scope parameters declared by the source (scope.* query string).",
         "operationId": "SearchDataLookup",
@@ -173,7 +177,9 @@
     },
     "/lookups/{name}/resolve": {
       "get": {
-        "tags": ["Data Lookup"],
+        "tags": [
+          "Data Lookup"
+        ],
         "summary": "Resolves a single lookup item by its value.",
         "description": "Used by clients to rehydrate a previously selected value into a human-readable label. Returns 404 if the value is not present in the source.",
         "operationId": "ResolveDataLookup",
@@ -263,23 +269,40 @@
   "components": {
     "schemas": {
       "LookupItemResponse": {
-        "required": ["value", "label", "extra"],
+        "required": [
+          "value",
+          "label",
+          "extra"
+        ],
         "type": "object",
         "properties": {
-          "value": {},
+          "value": { },
           "label": {
             "type": "string"
           },
           "extra": {
-            "type": ["null", "object"]
+            "type": [
+              "null",
+              "object"
+            ]
           }
         }
       },
       "LookupKind": {
-        "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"]
+        "enum": [
+          "QueryEngine",
+          "Simple",
+          "ReferenceData",
+          "Enum"
+        ]
       },
       "LookupManifestEntryResponse": {
-        "required": ["name", "kind", "requiredPermission", "scopeKeys"],
+        "required": [
+          "name",
+          "kind",
+          "requiredPermission",
+          "scopeKeys"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -289,7 +312,10 @@
             "$ref": "#/components/schemas/LookupKind"
           },
           "requiredPermission": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "scopeKeys": {
             "type": "array",
@@ -300,7 +326,9 @@
         }
       },
       "LookupManifestResponse": {
-        "required": ["lookups"],
+        "required": [
+          "lookups"
+        ],
         "type": "object",
         "properties": {
           "lookups": {
@@ -312,7 +340,11 @@
         }
       },
       "LookupResultResponse": {
-        "required": ["items", "totalCount", "continuationToken"],
+        "required": [
+          "items",
+          "totalCount",
+          "continuationToken"
+        ],
         "type": "object",
         "properties": {
           "items": {
@@ -322,11 +354,17 @@
             }
           },
           "totalCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "continuationToken": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },

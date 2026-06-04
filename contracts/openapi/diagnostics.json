@@ -7,7 +7,9 @@
   "paths": {
     "/diagnostics/health": {
       "get": {
-        "tags": ["Diagnostics"],
+        "tags": [
+          "Diagnostics"
+        ],
         "summary": "Returns the aggregated health status of all registered services.",
         "description": "Returns the current health status, response time, and description for every registered health check. Results are cached for the configured monitoring cache duration (default 30 seconds).",
         "operationId": "GetMonitoringHealth",
@@ -59,7 +61,10 @@
   "components": {
     "schemas": {
       "MonitoringHealthResponse": {
-        "required": ["services", "checkedAt"],
+        "required": [
+          "services",
+          "checkedAt"
+        ],
         "type": "object",
         "properties": {
           "services": {
@@ -100,7 +105,14 @@
         }
       },
       "ServiceHealthResponse": {
-        "required": ["id", "name", "status", "responseTimeMs", "description", "tags"],
+        "required": [
+          "id",
+          "name",
+          "status",
+          "responseTimeMs",
+          "description",
+          "tags"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -114,11 +126,18 @@
           },
           "responseTimeMs": {
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-            "type": ["null", "number", "string"],
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "description": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "tags": {
             "type": "array",

@@ -7,7 +7,9 @@
   "paths": {
     "/bff/user": {
       "get": {
-        "tags": ["BFF - App"],
+        "tags": [
+          "BFF - App"
+        ],
         "summary": "Returns the current user's claims for the SPA.",
         "description": "Reads the session cookie, loads the ID token from the token store, decodes the JWT payload, and returns a filtered set of claims: sub, name, email, roles, tenantId, isHost, and sessionExpiresAt. isHost is server-emitted (true when the id_token carries no tenant_id claim) so the SPA never has to infer Host status from the absence of TenantId. Returns { authenticated: false } if no valid session exists. Tokens are never exposed to the browser.",
         "operationId": "BffGetUserApp",
@@ -37,7 +39,9 @@
     },
     "/bff/csrf-token": {
       "post": {
-        "tags": ["BFF - App"],
+        "tags": [
+          "BFF - App"
+        ],
         "summary": "Generates a CSRF token for the current BFF session.",
         "description": "Reads the session cookie to identify the session, generates an HMAC-SHA256 based CSRF token, and returns it in the response body. The SPA must include this token in the X-CSRF-Token header on all POST/PUT/DELETE/PATCH requests. Returns 401 if no valid session exists.",
         "operationId": "BffGenerateCsrfTokenApp",
@@ -79,7 +83,9 @@
   "components": {
     "schemas": {
       "BffCsrfTokenResponse": {
-        "required": ["csrfToken"],
+        "required": [
+          "csrfToken"
+        ],
         "type": "object",
         "properties": {
           "csrfToken": {

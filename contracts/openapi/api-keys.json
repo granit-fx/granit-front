@@ -7,7 +7,9 @@
   "paths": {
     "/authentication/api-keys": {
       "get": {
-        "tags": ["API Keys"],
+        "tags": [
+          "API Keys"
+        ],
         "summary": "Returns a paginated list of API keys.",
         "description": "Lists all API keys for the current tenant with optional filters on type, environment, search term, and revocation status. The raw secret is never returned — only the prefix and last four characters for identification.",
         "operationId": "ListApiKeys",
@@ -110,7 +112,9 @@
         }
       },
       "post": {
-        "tags": ["API Keys"],
+        "tags": [
+          "API Keys"
+        ],
         "summary": "Creates a new API key. The raw secret is returned once.",
         "description": "Generates a new API key with the specified type, environment, permissions, and optional CIDR restrictions. The caller must possess every permission being assigned (privilege escalation prevention). The response includes the full raw secret — this is the only time the secret is available. Store it securely; it cannot be retrieved later. The key is immediately active.",
         "operationId": "CreateApiKey",
@@ -180,7 +184,9 @@
     },
     "/authentication/api-keys/{id}": {
       "get": {
-        "tags": ["API Keys"],
+        "tags": [
+          "API Keys"
+        ],
         "summary": "Returns a single API key by ID.",
         "description": "Returns the metadata of a single API key. The raw secret is never exposed after creation. Returns 404 if the key does not exist.",
         "operationId": "GetApiKeyById",
@@ -252,7 +258,9 @@
     },
     "/authentication/api-keys/{id}/revoke": {
       "post": {
-        "tags": ["API Keys"],
+        "tags": [
+          "API Keys"
+        ],
         "summary": "Revokes an API key. The key will no longer be accepted for authentication.",
         "description": "Permanently revokes the API key. Any subsequent authentication attempt using this key will be rejected. This operation is irreversible — use rotate instead if you need a replacement key. Returns 404 if the key does not exist.",
         "operationId": "RevokeApiKey",
@@ -317,7 +325,9 @@
     },
     "/authentication/api-keys/{id}/rotate": {
       "post": {
-        "tags": ["API Keys"],
+        "tags": [
+          "API Keys"
+        ],
         "summary": "Rotates an API key: revokes the current key and creates a replacement with the same settings.",
         "description": "Atomically revokes the existing key and creates a new one inheriting the same name, type, environment, permissions, CIDR restrictions, and expiration. The response contains the new raw secret (shown once) and both the old and new key IDs. Returns 404 if the key does not exist or is already revoked.",
         "operationId": "RotateApiKey",
@@ -389,7 +399,9 @@
     },
     "/authentication/api-keys/{id}/scopes": {
       "put": {
-        "tags": ["API Keys"],
+        "tags": [
+          "API Keys"
+        ],
         "summary": "Updates the permissions and allowed CIDR ranges for an API key.",
         "description": "Replaces the full list of permissions and allowed CIDR ranges for the specified key. The caller must possess every permission being assigned (privilege escalation prevention). Both fields are replaced entirely (not merged). Returns 404 if the key does not exist.",
         "operationId": "UpdateApiKeyScopes",
@@ -476,7 +488,11 @@
   "components": {
     "schemas": {
       "ApiKeyCreateRequest": {
-        "required": ["name", "type", "environment"],
+        "required": [
+          "name",
+          "type",
+          "environment"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -489,19 +505,28 @@
             "type": "string"
           },
           "permissions": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
           },
           "allowedCidrs": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
           },
           "expiresAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "cacheBehavior": {
@@ -545,7 +570,10 @@
             "type": "string"
           },
           "expiresAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           }
         }
@@ -600,15 +628,24 @@
             }
           },
           "expiresAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "lastUsedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "revokedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "cacheBehavior": {
@@ -621,7 +658,13 @@
         }
       },
       "ApiKeyRotateResponse": {
-        "required": ["newKeyId", "rawSecret", "prefix", "lastFourChars", "oldKeyId"],
+        "required": [
+          "newKeyId",
+          "rawSecret",
+          "prefix",
+          "lastFourChars",
+          "oldKeyId"
+        ],
         "type": "object",
         "properties": {
           "newKeyId": {
@@ -644,10 +687,18 @@
         }
       },
       "ApiKeyType": {
-        "enum": ["Secret", "Publishable", "Webhook", "Ephemeral"]
+        "enum": [
+          "Secret",
+          "Publishable",
+          "Webhook",
+          "Ephemeral"
+        ]
       },
       "ApiKeyUpdateScopesRequest": {
-        "required": ["permissions", "allowedCidrs"],
+        "required": [
+          "permissions",
+          "allowedCidrs"
+        ],
         "type": "object",
         "properties": {
           "permissions": {
@@ -665,10 +716,17 @@
         }
       },
       "CacheBehavior": {
-        "enum": ["Normal", "NoCache"]
+        "enum": [
+          "Normal",
+          "NoCache"
+        ]
       },
       "PagedResultOfApiKeyResponse": {
-        "required": ["items", "totalCount", "hasMore"],
+        "required": [
+          "items",
+          "totalCount",
+          "hasMore"
+        ],
         "type": "object",
         "properties": {
           "items": {
@@ -678,14 +736,20 @@
             }
           },
           "totalCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },

@@ -7,7 +7,9 @@
   "paths": {
     "/background-jobs/jobs": {
       "get": {
-        "tags": ["Background Jobs"],
+        "tags": [
+          "Background Jobs"
+        ],
         "summary": "Returns the current status of all registered background jobs with pagination.",
         "description": "Lists all background jobs registered in the application with their current execution state, schedule, last run time, and next occurrence. Supports pagination via page and pageSize query parameters.",
         "operationId": "GetAllBackgroundJobs",
@@ -79,7 +81,9 @@
     },
     "/background-jobs/jobs/{name}": {
       "get": {
-        "tags": ["Background Jobs"],
+        "tags": [
+          "Background Jobs"
+        ],
         "summary": "Returns the status of a specific background job.",
         "description": "Returns the detailed status of a single background job identified by its registered name. Includes execution state, last run time, next scheduled occurrence, and error information if the last run failed. Returns 404 if no job with the given name is registered.",
         "operationId": "GetBackgroundJobByName",
@@ -150,7 +154,9 @@
     },
     "/background-jobs/jobs/{name}/pause": {
       "post": {
-        "tags": ["Background Jobs"],
+        "tags": [
+          "Background Jobs"
+        ],
         "summary": "Pauses a recurring background job. The current execution completes normally.",
         "description": "Pauses the job's recurring schedule. If the job is currently executing, the in-flight execution will complete — only future occurrences are suppressed. Use the resume endpoint to re-enable scheduling. Returns 404 if the job name is not registered.",
         "operationId": "PauseBackgroundJob",
@@ -214,7 +220,9 @@
     },
     "/background-jobs/jobs/{name}/resume": {
       "post": {
-        "tags": ["Background Jobs"],
+        "tags": [
+          "Background Jobs"
+        ],
         "summary": "Resumes a paused background job and schedules its next occurrence.",
         "description": "Re-enables the recurring schedule of a previously paused job and computes the next occurrence. No-op if the job is not paused. Returns 404 if the job name is not registered.",
         "operationId": "ResumeBackgroundJob",
@@ -278,7 +286,9 @@
     },
     "/background-jobs/jobs/{name}/trigger": {
       "post": {
-        "tags": ["Background Jobs"],
+        "tags": [
+          "Background Jobs"
+        ],
         "summary": "Triggers an immediate execution of the job, independent of its schedule.",
         "description": "Enqueues the job for immediate execution regardless of its cron schedule or paused state. The response is 202 Accepted — the actual execution is asynchronous. Does not affect the regular schedule. Returns 404 if the job name is not registered.",
         "operationId": "TriggerBackgroundJob",
@@ -366,11 +376,17 @@
             "type": "boolean"
           },
           "lastExecutedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "nextExecutionAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "consecutiveFailures": {
@@ -379,16 +395,26 @@
           },
           "deadLetterCount": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int64"
           },
           "lastError": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "PagedResultOfBackgroundJobStatus": {
-        "required": ["items", "totalCount", "hasMore"],
+        "required": [
+          "items",
+          "totalCount",
+          "hasMore"
+        ],
         "type": "object",
         "properties": {
           "items": {
@@ -398,14 +424,20 @@
             }
           },
           "totalCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },

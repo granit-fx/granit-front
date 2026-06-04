@@ -7,7 +7,9 @@
   "paths": {
     "/auditing/audit-entries": {
       "get": {
-        "tags": ["Audit Log"],
+        "tags": [
+          "Audit Log"
+        ],
         "summary": "Returns a filtered, sorted, and paginated list of AuditEntryResponse entries projected from AuditEntry.",
         "description": "Executes a dynamic query against AuditEntry using the Granit query engine and projects each row to AuditEntryResponse. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult<AuditEntryResponse> by default. When the groupBy query parameter is specified, returns a GroupedResult<AuditEntryResponse> with the same projection applied to the items inside each group.",
         "operationId": "QueryAuditEntry",
@@ -18,7 +20,10 @@
             "description": "1-based page index. Ignored when cursor is supplied.",
             "schema": {
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -29,7 +34,10 @@
             "schema": {
               "maximum": 500,
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -38,7 +46,10 @@
             "in": "query",
             "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -46,7 +57,10 @@
             "in": "query",
             "description": "Free-text search across searchable columns declared in the query definition.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -54,7 +68,10 @@
             "in": "query",
             "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -62,7 +79,10 @@
             "in": "query",
             "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -70,7 +90,10 @@
             "in": "query",
             "description": "Comma-separated quick-filter names (declared in the query definition).",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -78,7 +101,10 @@
             "in": "query",
             "description": "Skip the total row count for faster pagination when the client doesn't need it.",
             "schema": {
-              "type": ["null", "boolean"]
+              "type": [
+                "null",
+                "boolean"
+              ]
             }
           },
           {
@@ -88,7 +114,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -101,7 +130,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -172,7 +204,9 @@
     },
     "/auditing/audit-entries/meta": {
       "get": {
-        "tags": ["Audit Log"],
+        "tags": [
+          "Audit Log"
+        ],
         "summary": "Returns query metadata for AuditEntry (columns, filters, sorts, presets).",
         "description": "Returns the query definition metadata for AuditEntry: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
         "operationId": "GetAuditEntryMeta",
@@ -222,7 +256,9 @@
     },
     "/auditing/audit-entries/{id}": {
       "get": {
-        "tags": ["Audit Log"],
+        "tags": [
+          "Audit Log"
+        ],
         "summary": "Returns a single audit log entry with full change details.",
         "description": "Returns the complete audit log entry including all entity changes and property-level diffs (original → new value). Sensitive properties are masked with '***'. Returns 404 if the entry does not exist.",
         "operationId": "GetAuditEntryById",
@@ -294,7 +330,9 @@
     },
     "/auditing/audit-entries/entity/{entityType}/{entityId}": {
       "get": {
-        "tags": ["Audit Log"],
+        "tags": [
+          "Audit Log"
+        ],
         "summary": "Returns the audit trail for a specific entity instance.",
         "description": "Returns all audit log entries associated with a specific entity, identified by its CLR type name and primary key. Results are paginated and ordered by timestamp descending. Useful for displaying the full change history of a single record. Path parameters are limited to 256 characters.",
         "operationId": "GetAuditEntriesByEntity",
@@ -392,7 +430,9 @@
     },
     "/auditing/audit-entries/correlation/{correlationId}": {
       "get": {
-        "tags": ["Audit Log"],
+        "tags": [
+          "Audit Log"
+        ],
         "summary": "Returns audit entries matching a distributed tracing correlation ID.",
         "description": "Returns all audit log entries that share the given correlation ID, ordered by timestamp descending. This is essential for distributed tracing investigation — correlating audit events across multiple services or operations that belong to the same logical transaction. The correlation ID is limited to 256 characters.",
         "operationId": "GetAuditEntriesByCorrelationId",
@@ -466,7 +506,9 @@
     },
     "/auditing/audit-entries/pseudonymize/{userId}": {
       "post": {
-        "tags": ["Audit Log"],
+        "tags": [
+          "Audit Log"
+        ],
         "summary": "Pseudonymize all audit entries for a specific user.",
         "description": "Replaces personal data (UserId, UserName, IpAddress, UserAgent) in all audit entries belonging to the specified user with pseudonymized values (GDPR Art. 17). The UserId is replaced with a SHA-256 hash to preserve audit trail correlation without re-identification. Audit entry integrity is maintained per ISO 27001 A.12.4. Returns 204 No Content on success.",
         "operationId": "PseudonymizeAuditEntries",
@@ -530,7 +572,9 @@
     },
     "/auditing/audit-entity-changes": {
       "get": {
-        "tags": ["Audit Log"],
+        "tags": [
+          "Audit Log"
+        ],
         "summary": "Returns a filtered, sorted, and paginated list of AuditEntityChangeSummaryResponse entries projected from AuditEntityChange.",
         "description": "Executes a dynamic query against AuditEntityChange using the Granit query engine and projects each row to AuditEntityChangeSummaryResponse. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult<AuditEntityChangeSummaryResponse> by default. When the groupBy query parameter is specified, returns a GroupedResult<AuditEntityChangeSummaryResponse> with the same projection applied to the items inside each group.",
         "operationId": "QueryAuditEntityChange",
@@ -541,7 +585,10 @@
             "description": "1-based page index. Ignored when cursor is supplied.",
             "schema": {
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -552,7 +599,10 @@
             "schema": {
               "maximum": 500,
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -561,7 +611,10 @@
             "in": "query",
             "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -569,7 +622,10 @@
             "in": "query",
             "description": "Free-text search across searchable columns declared in the query definition.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -577,7 +633,10 @@
             "in": "query",
             "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -585,7 +644,10 @@
             "in": "query",
             "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -593,7 +655,10 @@
             "in": "query",
             "description": "Comma-separated quick-filter names (declared in the query definition).",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -601,7 +666,10 @@
             "in": "query",
             "description": "Skip the total row count for faster pagination when the client doesn't need it.",
             "schema": {
-              "type": ["null", "boolean"]
+              "type": [
+                "null",
+                "boolean"
+              ]
             }
           },
           {
@@ -611,7 +679,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -624,7 +695,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -695,7 +769,9 @@
     },
     "/auditing/audit-entity-changes/meta": {
       "get": {
-        "tags": ["Audit Log"],
+        "tags": [
+          "Audit Log"
+        ],
         "summary": "Returns query metadata for AuditEntityChange (columns, filters, sorts, presets).",
         "description": "Returns the query definition metadata for AuditEntityChange: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
         "operationId": "GetAuditEntityChangeMeta",
@@ -756,10 +832,20 @@
         ]
       },
       "AuditChangeType": {
-        "enum": ["Created", "Modified", "Deleted", "SoftDeleted"]
+        "enum": [
+          "Created",
+          "Modified",
+          "Deleted",
+          "SoftDeleted"
+        ]
       },
       "AuditEntityChangeResponse": {
-        "required": ["entityType", "entityId", "changeType", "propertyChanges"],
+        "required": [
+          "entityType",
+          "entityId",
+          "changeType",
+          "propertyChanges"
+        ],
         "type": "object",
         "properties": {
           "entityType": {
@@ -839,20 +925,32 @@
             "type": "string"
           },
           "userName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "category": {
             "type": "string"
           },
           "ipAddress": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "tenantId": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "uuid"
           },
           "correlationId": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "entityChanges": {
             "type": "array",
@@ -888,20 +986,32 @@
             "type": "string"
           },
           "userName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "category": {
             "$ref": "#/components/schemas/AuditCategory"
           },
           "ipAddress": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "tenantId": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "uuid"
           },
           "correlationId": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "entityChangeCount": {
             "type": "integer",
@@ -910,17 +1020,27 @@
         }
       },
       "AuditPropertyChangeResponse": {
-        "required": ["propertyName", "originalValue", "newValue"],
+        "required": [
+          "propertyName",
+          "originalValue",
+          "newValue"
+        ],
         "type": "object",
         "properties": {
           "propertyName": {
             "type": "string"
           },
           "originalValue": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "newValue": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -960,12 +1080,19 @@
             "type": "boolean"
           },
           "format": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "DateFilterMeta": {
-        "required": ["name", "defaultPeriod", "availablePeriods"],
+        "required": [
+          "name",
+          "defaultPeriod",
+          "availablePeriods"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -983,10 +1110,22 @@
         }
       },
       "DatePeriod": {
-        "enum": ["Today", "ThisWeek", "ThisMonth", "LastMonth", "ThisQuarter", "ThisYear", "Custom"]
+        "enum": [
+          "Today",
+          "ThisWeek",
+          "ThisMonth",
+          "LastMonth",
+          "ThisQuarter",
+          "ThisYear",
+          "Custom"
+        ]
       },
       "FilterableField": {
-        "required": ["name", "type", "operators"],
+        "required": [
+          "name",
+          "type",
+          "operators"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1002,7 +1141,10 @@
             }
           },
           "enumValues": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
@@ -1020,7 +1162,11 @@
         }
       },
       "FilterGroupMeta": {
-        "required": ["name", "label", "presets"],
+        "required": [
+          "name",
+          "label",
+          "presets"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1052,7 +1198,10 @@
         ]
       },
       "GroupByField": {
-        "required": ["name", "type"],
+        "required": [
+          "name",
+          "type"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1064,7 +1213,10 @@
         }
       },
       "GroupedResultOfAuditEntityChangeSummaryResponse": {
-        "required": ["groups", "totalCount"],
+        "required": [
+          "groups",
+          "totalCount"
+        ],
         "type": "object",
         "properties": {
           "groups": {
@@ -1080,7 +1232,10 @@
         }
       },
       "GroupedResultOfAuditEntryResponse": {
-        "required": ["groups", "totalCount"],
+        "required": [
+          "groups",
+          "totalCount"
+        ],
         "type": "object",
         "properties": {
           "groups": {
@@ -1096,13 +1251,18 @@
         }
       },
       "GroupEntryOfAuditEntityChangeSummaryResponse": {
-        "required": ["field", "value", "label", "count"],
+        "required": [
+          "field",
+          "value",
+          "label",
+          "count"
+        ],
         "type": "object",
         "properties": {
           "field": {
             "type": "string"
           },
-          "value": {},
+          "value": { },
           "label": {
             "type": "string"
           },
@@ -1111,10 +1271,16 @@
             "format": "int32"
           },
           "aggregates": {
-            "type": ["null", "object"]
+            "type": [
+              "null",
+              "object"
+            ]
           },
           "items": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/AuditEntityChangeSummaryResponse"
             }
@@ -1122,13 +1288,18 @@
         }
       },
       "GroupEntryOfAuditEntryResponse": {
-        "required": ["field", "value", "label", "count"],
+        "required": [
+          "field",
+          "value",
+          "label",
+          "count"
+        ],
         "type": "object",
         "properties": {
           "field": {
             "type": "string"
           },
-          "value": {},
+          "value": { },
           "label": {
             "type": "string"
           },
@@ -1137,10 +1308,16 @@
             "format": "int32"
           },
           "aggregates": {
-            "type": ["null", "object"]
+            "type": [
+              "null",
+              "object"
+            ]
           },
           "items": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/AuditEntryResponse"
             }
@@ -1151,20 +1328,35 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "title": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "status": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "detail": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "instance": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "errors": {
             "type": "object",
@@ -1181,23 +1373,38 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "endpoint": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "kind": {
             "$ref": "#/components/schemas/LookupKind"
           },
           "requiredPermission": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "searchParam": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "default": "search"
           },
           "scopeKeys": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
@@ -1205,11 +1412,20 @@
         }
       },
       "LookupKind": {
-        "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
+        "enum": [
+          "QueryEngine",
+          "Simple",
+          "ReferenceData",
+          "Enum"
+        ],
         "default": "QueryEngine"
       },
       "PagedResultOfAuditEntityChangeSummaryResponse": {
-        "required": ["items", "totalCount", "hasMore"],
+        "required": [
+          "items",
+          "totalCount",
+          "hasMore"
+        ],
         "type": "object",
         "properties": {
           "items": {
@@ -1240,7 +1456,12 @@
                   "type": "string"
                 },
                 "changeType": {
-                  "enum": ["Created", "Modified", "Deleted", "SoftDeleted"]
+                  "enum": [
+                    "Created",
+                    "Modified",
+                    "Deleted",
+                    "SoftDeleted"
+                  ]
                 },
                 "propertyChangeCount": {
                   "type": "integer",
@@ -1250,19 +1471,29 @@
             }
           },
           "totalCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "PagedResultOfAuditEntryResponse": {
-        "required": ["items", "totalCount", "hasMore"],
+        "required": [
+          "items",
+          "totalCount",
+          "hasMore"
+        ],
         "type": "object",
         "properties": {
           "items": {
@@ -1293,7 +1524,10 @@
                   "type": "string"
                 },
                 "userName": {
-                  "type": ["null", "string"]
+                  "type": [
+                    "null",
+                    "string"
+                  ]
                 },
                 "category": {
                   "enum": [
@@ -1305,14 +1539,23 @@
                   ]
                 },
                 "ipAddress": {
-                  "type": ["null", "string"]
+                  "type": [
+                    "null",
+                    "string"
+                  ]
                 },
                 "tenantId": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "format": "uuid"
                 },
                 "correlationId": {
-                  "type": ["null", "string"]
+                  "type": [
+                    "null",
+                    "string"
+                  ]
                 },
                 "entityChangeCount": {
                   "type": "integer",
@@ -1322,19 +1565,30 @@
             }
           },
           "totalCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "PaginationMeta": {
-        "required": ["defaultPageSize", "maxPageSize", "maxStreamSize", "supportsCursor"],
+        "required": [
+          "defaultPageSize",
+          "maxPageSize",
+          "maxStreamSize",
+          "supportsCursor"
+        ],
         "type": "object",
         "properties": {
           "defaultPageSize": {
@@ -1355,7 +1609,11 @@
         }
       },
       "PresetMeta": {
-        "required": ["name", "label", "isDefault"],
+        "required": [
+          "name",
+          "label",
+          "isDefault"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1453,12 +1711,19 @@
             "$ref": "#/components/schemas/PaginationMeta"
           },
           "defaultSort": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "QuickFilterMeta": {
-        "required": ["name", "label", "isDefault"],
+        "required": [
+          "name",
+          "label",
+          "isDefault"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1473,7 +1738,9 @@
         }
       },
       "SortableField": {
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {

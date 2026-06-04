@@ -7,7 +7,9 @@
   "paths": {
     "/data-exchange/import/jobs": {
       "get": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Lists import jobs with optional status filter and pagination.",
         "description": "Returns a paginated list of import jobs ordered by creation date descending. Supports filtering by job status. Intended for admin dashboards monitoring import activity.",
         "operationId": "ListImportJobs",
@@ -85,7 +87,9 @@
         }
       },
       "post": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Uploads a file and creates an import job.",
         "description": "Accepts a multipart/form-data upload with the file and a definitionName field. Validates MIME type and file size against the import definition's constraints. Creates an import job in 'Created' status. The next step is to call the preview endpoint to inspect headers and mapping suggestions.",
         "operationId": "UploadImportFile",
@@ -93,7 +97,10 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": ["file", "definitionName"],
+                "required": [
+                  "file",
+                  "definitionName"
+                ],
                 "type": "object",
                 "allOf": [
                   {
@@ -184,7 +191,9 @@
     },
     "/data-exchange/import/{jobId}/preview": {
       "post": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Extracts headers, preview rows, and mapping suggestions for an import job.",
         "description": "Parses the uploaded file to extract column headers, a preview of the first rows, available target field metadata, and AI-assisted mapping suggestions. Transitions the job to 'Previewed' status. Returns 404 if the job does not exist.",
         "operationId": "PreviewImportJob",
@@ -256,7 +265,9 @@
     },
     "/data-exchange/import/{jobId}/mappings": {
       "put": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Confirms the column-to-property mappings for an import job.",
         "description": "Saves the user-confirmed column-to-property mappings and transitions the job to 'Mapped' status, making it eligible for execution or dry-run. At least one mapping is required. Returns 404 if the job does not exist. Returns 409 if the concurrency stamp does not match the stored value.",
         "operationId": "ConfirmImportMappings",
@@ -361,7 +372,9 @@
     },
     "/data-exchange/import/{jobId}/execute": {
       "post": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Dispatches the import job for asynchronous background execution.",
         "description": "Enqueues the import job for background processing. Returns 202 Accepted — poll the status endpoint to track progress. The job must be in 'Mapped' status (mappings confirmed). Returns 400 if the job is in an invalid state, or 404 if not found.",
         "operationId": "ExecuteImportJob",
@@ -436,7 +449,9 @@
     },
     "/data-exchange/import/{jobId}/dry-run": {
       "post": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Executes a dry-run of the import (validates without persisting data).",
         "description": "Runs the full import pipeline (parsing, mapping, validation) without persisting any data. Returns a detailed report with row-level validation results. Use this to preview errors before committing. The job must be in 'Mapped' status.",
         "operationId": "DryRunImportJob",
@@ -518,7 +533,9 @@
     },
     "/data-exchange/import/{jobId}": {
       "get": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Returns the current status of an import job.",
         "description": "Returns the current state of the import job including status (Created, Previewed, Mapped, Executing, Completed, PartiallyCompleted, Failed, Cancelled), original file name, row counts, and timing information. Returns 404 if not found.",
         "operationId": "GetImportJobStatus",
@@ -588,7 +605,9 @@
         }
       },
       "delete": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Cancels an import job that has not yet started execution.",
         "description": "Cancels the import job and deletes the uploaded file from blob storage. Only jobs that have not yet started execution (Executing, Completed, PartiallyCompleted, Failed) can be cancelled. Returns 400 if the job is in a non-cancellable state.",
         "operationId": "CancelImportJob",
@@ -663,7 +682,9 @@
     },
     "/data-exchange/import/{jobId}/report": {
       "get": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Returns the import execution report for a completed job.",
         "description": "Returns the detailed execution report including total rows processed, success/failure counts, and per-row error details. Available after execution or dry-run completes. Returns 404 if the job does not exist or no report has been generated yet.",
         "operationId": "GetImportReport",
@@ -735,7 +756,9 @@
     },
     "/data-exchange/import/{jobId}/correction-file": {
       "get": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Downloads a correction file containing only the failed rows with error annotations.",
         "description": "Generates and streams a file containing only the rows that failed validation or import, annotated with error messages. The file format matches the original upload. Users can fix the errors and re-upload. Returns 204 if there are no failed rows, or 404 if the job or report does not exist.",
         "operationId": "GetImportCorrectionFile",
@@ -803,7 +826,9 @@
     },
     "/data-exchange/export/jobs": {
       "get": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Lists export jobs with optional status filter and pagination.",
         "description": "Returns a paginated list of export jobs ordered by creation date descending. Supports filtering by job status (Created, Processing, Completed, Failed). Intended for admin dashboards monitoring export activity.",
         "operationId": "ListExportJobs",
@@ -881,7 +906,9 @@
         }
       },
       "post": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Creates and dispatches an export job (sync or background).",
         "description": "Creates an export job for the given definition, format, and field selection. Small datasets may complete synchronously; larger ones are dispatched for background processing. Poll the status endpoint to track progress. Returns 400 if the definition name or format is invalid.",
         "operationId": "CreateExportJob",
@@ -961,7 +988,9 @@
     },
     "/data-exchange/export/jobs/{jobId}": {
       "get": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Returns the current status of an export job.",
         "description": "Returns the current status of the export job (Created, Processing, Completed, Failed). Once the status is Completed, the download endpoint becomes available. Returns 404 if the job ID is not found.",
         "operationId": "GetExportJobStatus",
@@ -1033,7 +1062,9 @@
     },
     "/data-exchange/export/jobs/{jobId}/download": {
       "get": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Downloads the generated export file for a completed job.",
         "description": "Streams the generated export file (xlsx, csv, etc.) as a binary download. The Content-Type and Content-Disposition headers are set according to the export format. Returns 404 if the job does not exist, or 400 if the job has not completed yet.",
         "operationId": "DownloadExportFile",
@@ -1108,7 +1139,9 @@
     },
     "/data-exchange/metadata/definitions": {
       "get": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Lists all registered export definitions.",
         "description": "Returns all export definitions registered by application modules. Each definition describes an exportable dataset, its supported output formats, and metadata. Use the fields endpoint to discover selectable columns for a specific definition.",
         "operationId": "ListExportDefinitions",
@@ -1161,7 +1194,9 @@
     },
     "/data-exchange/metadata/definitions/{name}/fields": {
       "get": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Returns the available fields for a given export definition.",
         "description": "Returns the list of selectable fields for the named export definition — each with its property name, display label, and data type. Use this to populate a field picker UI before creating an export job. Returns 404 if the definition name is not registered.",
         "operationId": "GetExportDefinitionFields",
@@ -1235,7 +1270,9 @@
     },
     "/data-exchange/metadata/presets/{definitionName}": {
       "get": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Lists saved export presets for a given definition.",
         "description": "Returns all saved export presets for the given export definition. Presets store a reusable field selection, output format, and sorting configuration so users can quickly re-export without reconfiguring.",
         "operationId": "ListExportPresets",
@@ -1299,7 +1336,9 @@
     },
     "/data-exchange/metadata/presets": {
       "post": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Saves or updates an export preset.",
         "description": "Creates or updates a named preset for the given export definition. If a preset with the same definition and name already exists, it is overwritten. The definition name must reference a registered export definition. At least one selected field is required.",
         "operationId": "SaveExportPreset",
@@ -1372,7 +1411,9 @@
     },
     "/data-exchange/metadata/presets/{definitionName}/{presetName}": {
       "delete": {
-        "tags": ["Data Exchange"],
+        "tags": [
+          "Data Exchange"
+        ],
         "summary": "Deletes a saved export preset.",
         "description": "Permanently removes the named export preset. Returns 404 if the preset does not exist.",
         "operationId": "DeleteExportPreset",
@@ -1447,7 +1488,10 @@
   "components": {
     "schemas": {
       "ConfirmMappingsRequest": {
-        "required": ["mappings", "concurrencyStamp"],
+        "required": [
+          "mappings",
+          "concurrencyStamp"
+        ],
         "type": "object",
         "properties": {
           "mappings": {
@@ -1465,12 +1509,7 @@
         "required": [
           "definitionName",
           "format",
-          "selectedFields",
-          "includeIdForImport",
-          "sort",
-          "filter",
-          "presets",
-          "search"
+          "includeIdForImport"
         ],
         "type": "object",
         "properties": {
@@ -1480,37 +1519,57 @@
           "format": {
             "type": "string"
           },
+          "includeIdForImport": {
+            "type": "boolean"
+          },
           "selectedFields": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
           },
-          "includeIdForImport": {
-            "type": "boolean"
-          },
           "sort": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "filter": {
-            "type": ["null", "object"],
+            "type": [
+              "null",
+              "object"
+            ],
             "additionalProperties": {
               "type": "string"
             }
           },
           "presets": {
-            "type": ["null", "object"],
+            "type": [
+              "null",
+              "object"
+            ],
             "additionalProperties": {
               "type": "string"
             }
           },
           "search": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "ExportDefinitionResponse": {
-        "required": ["name", "entityType", "supportedFormats", "isAutoGenerated"],
+        "required": [
+          "name",
+          "entityType",
+          "supportedFormats",
+          "isAutoGenerated"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1531,7 +1590,14 @@
         }
       },
       "ExportFieldResponse": {
-        "required": ["propertyPath", "clrTypeName", "header", "format", "order", "isNavigation"],
+        "required": [
+          "propertyPath",
+          "clrTypeName",
+          "header",
+          "format",
+          "order",
+          "isNavigation"
+        ],
         "type": "object",
         "properties": {
           "propertyPath": {
@@ -1541,10 +1607,16 @@
             "type": "string"
           },
           "header": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "format": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "order": {
             "type": "integer",
@@ -1583,27 +1655,44 @@
             "$ref": "#/components/schemas/ExportJobStatus"
           },
           "rowCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "fileName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "errorMessage": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "createdAt": {
             "type": "string",
             "format": "date-time"
           },
           "completedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           }
         }
       },
       "ExportJobStatus": {
-        "enum": ["Queued", "Exporting", "Completed", "Failed"]
+        "enum": [
+          "Queued",
+          "Exporting",
+          "Completed",
+          "Failed"
+        ]
       },
       "ExportPresetResponse": {
         "required": [
@@ -1640,14 +1729,21 @@
         "format": "binary"
       },
       "ImportColumnMapping": {
-        "required": ["sourceColumn", "targetProperty", "confidence"],
+        "required": [
+          "sourceColumn",
+          "targetProperty",
+          "confidence"
+        ],
         "type": "object",
         "properties": {
           "sourceColumn": {
             "type": "string"
           },
           "targetProperty": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "confidence": {
             "$ref": "#/components/schemas/MappingConfidence"
@@ -1655,7 +1751,13 @@
         }
       },
       "ImportFieldMetadata": {
-        "required": ["propertyPath", "clrTypeName", "displayName", "description", "isRequired"],
+        "required": [
+          "propertyPath",
+          "clrTypeName",
+          "displayName",
+          "description",
+          "isRequired"
+        ],
         "type": "object",
         "properties": {
           "propertyPath": {
@@ -1665,10 +1767,16 @@
             "type": "string"
           },
           "displayName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "description": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "isRequired": {
             "type": "boolean"
@@ -1704,7 +1812,10 @@
           },
           "fileSizeBytes": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int64"
           },
           "status": {
@@ -1715,7 +1826,10 @@
             "format": "date-time"
           },
           "completedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "concurrencyStamp": {
@@ -1736,7 +1850,12 @@
         ]
       },
       "ImportPreviewResponse": {
-        "required": ["headers", "previewRows", "suggestions", "fieldMetadata"],
+        "required": [
+          "headers",
+          "previewRows",
+          "suggestions",
+          "fieldMetadata"
+        ],
         "type": "object",
         "properties": {
           "headers": {
@@ -1827,7 +1946,12 @@
         }
       },
       "ImportRowError": {
-        "required": ["rowNumber", "kind", "errorCodes", "message"],
+        "required": [
+          "rowNumber",
+          "kind",
+          "errorCodes",
+          "message"
+        ],
         "type": "object",
         "properties": {
           "rowNumber": {
@@ -1849,13 +1973,28 @@
         }
       },
       "ImportRowErrorKind": {
-        "enum": ["Conversion", "Validation", "Persistence", "Identity"]
+        "enum": [
+          "Conversion",
+          "Validation",
+          "Persistence",
+          "Identity"
+        ]
       },
       "MappingConfidence": {
-        "enum": ["Manual", "Saved", "Exact", "Fuzzy", "Semantic"]
+        "enum": [
+          "Manual",
+          "Saved",
+          "Exact",
+          "Fuzzy",
+          "Semantic"
+        ]
       },
       "PagedResultOfExportJobResponse": {
-        "required": ["items", "totalCount", "hasMore"],
+        "required": [
+          "items",
+          "totalCount",
+          "hasMore"
+        ],
         "type": "object",
         "properties": {
           "items": {
@@ -1865,19 +2004,29 @@
             }
           },
           "totalCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "PagedResultOfImportJobResponse": {
-        "required": ["items", "totalCount", "hasMore"],
+        "required": [
+          "items",
+          "totalCount",
+          "hasMore"
+        ],
         "type": "object",
         "properties": {
           "items": {
@@ -1887,14 +2036,20 @@
             }
           },
           "totalCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },

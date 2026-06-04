@@ -7,7 +7,9 @@
   "paths": {
     "/workflow/{entityType}/{entityId}/history": {
       "get": {
-        "tags": ["Workflow"],
+        "tags": [
+          "Workflow"
+        ],
         "summary": "Returns the ISO 27001-compliant audit trail of workflow transitions for an entity.",
         "description": "Returns a paginated list of all state transitions for the specified entity, ordered by timestamp descending. Each entry includes the source and target state, the actor, an optional comment, and the transition timestamp. This history is immutable and serves as the ISO 27001 A.12.4 audit trail for workflow changes.",
         "operationId": "GetWorkflowTransitionHistory",
@@ -109,7 +111,11 @@
   "components": {
     "schemas": {
       "PagedResultOfWorkflowTransitionHistoryResponse": {
-        "required": ["items", "totalCount", "hasMore"],
+        "required": [
+          "items",
+          "totalCount",
+          "hasMore"
+        ],
         "type": "object",
         "properties": {
           "items": {
@@ -119,14 +125,20 @@
             }
           },
           "totalCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -156,7 +168,13 @@
         }
       },
       "WorkflowTransitionHistoryResponse": {
-        "required": ["previousState", "newState", "transitionedAt", "transitionedBy", "comment"],
+        "required": [
+          "previousState",
+          "newState",
+          "transitionedAt",
+          "transitionedBy",
+          "comment"
+        ],
         "type": "object",
         "properties": {
           "previousState": {
@@ -173,7 +191,10 @@
             "type": "string"
           },
           "comment": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       }

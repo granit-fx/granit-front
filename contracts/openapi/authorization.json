@@ -7,7 +7,9 @@
   "paths": {
     "/authorization/permissions": {
       "get": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "summary": "Returns the list of permissions granted to the current user.",
         "description": "Evaluates all registered permission definitions against the current user's claims and roles. Returns the flat list of granted permission names. Useful for front-end UI to conditionally render actions based on the user's effective permissions.",
         "operationId": "GetMyPermissions",
@@ -57,7 +59,9 @@
     },
     "/authorization/permissions/definitions": {
       "get": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "summary": "Returns all registered permission definitions grouped by category.",
         "description": "Returns the full registry of permission definitions discovered from all loaded modules, organized by permission group. Display names are localized based on the Accept-Language header. This endpoint is intended for admin UIs that manage role-to-permission assignments.",
         "operationId": "GetPermissionDefinitions",
@@ -110,7 +114,9 @@
     },
     "/authorization/roles/{roleName}": {
       "get": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "summary": "Returns the list of permissions explicitly granted to a role.",
         "description": "Returns only the permissions explicitly assigned to the specified role for the current tenant. Does not include inherited or implicit permissions. The role name is case-sensitive and must match the identity provider's role definition. Returns 404 if the role has a RoleMetadata row that is not visible in the caller's context (host-scope role from a tenant admin, or another tenant's role) — no 403 is returned to avoid disclosing the role's existence.",
         "operationId": "GetRolePermissions",
@@ -191,7 +197,9 @@
     },
     "/authorization/roles/{roleName}/{permissionName}": {
       "put": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "summary": "Grants a permission to a role. No-op if already granted.",
         "description": "Grants the specified permission to the role for the current tenant. The permission name must match a registered permission definition (returns 422 otherwise). The calling user must hold the permission being granted (privilege escalation prevention). Idempotent — granting an already-granted permission is a no-op. Returns 404 when the role is not visible in the caller's context.",
         "operationId": "GrantPermission",
@@ -272,7 +280,9 @@
         }
       },
       "delete": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "summary": "Revokes a permission from a role. No-op if not granted.",
         "description": "Revokes the specified permission from the role for the current tenant. The permission name must match a registered permission definition (returns 422 otherwise). The calling user must hold the permission being revoked (privilege escalation prevention). Idempotent — revoking a non-granted permission is a no-op. Returns 404 when the role is not visible in the caller's context.",
         "operationId": "RevokePermission",
@@ -355,7 +365,9 @@
     },
     "/authorization/grants": {
       "get": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "summary": "Returns a filtered, sorted, and paginated list of PermissionGrant entries.",
         "description": "Executes a dynamic query against PermissionGrant using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
         "operationId": "QueryPermissionGrant",
@@ -366,7 +378,10 @@
             "description": "1-based page index. Ignored when cursor is supplied.",
             "schema": {
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -377,7 +392,10 @@
             "schema": {
               "maximum": 500,
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -386,7 +404,10 @@
             "in": "query",
             "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -394,7 +415,10 @@
             "in": "query",
             "description": "Free-text search across searchable columns declared in the query definition.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -402,7 +426,10 @@
             "in": "query",
             "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -410,7 +437,10 @@
             "in": "query",
             "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -418,7 +448,10 @@
             "in": "query",
             "description": "Comma-separated quick-filter names (declared in the query definition).",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -426,7 +459,10 @@
             "in": "query",
             "description": "Skip the total row count for faster pagination when the client doesn't need it.",
             "schema": {
-              "type": ["null", "boolean"]
+              "type": [
+                "null",
+                "boolean"
+              ]
             }
           },
           {
@@ -436,7 +472,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -449,7 +488,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -520,7 +562,9 @@
     },
     "/authorization/grants/meta": {
       "get": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "summary": "Returns query metadata for PermissionGrant (columns, filters, sorts, presets).",
         "description": "Returns the query definition metadata for PermissionGrant: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
         "operationId": "GetPermissionGrantMeta",
@@ -570,7 +614,9 @@
     },
     "/authorization/role-metadata": {
       "get": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "summary": "Returns a filtered, sorted, and paginated list of RoleMetadata entries.",
         "description": "Executes a dynamic query against RoleMetadata using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
         "operationId": "QueryRoleMetadata",
@@ -581,7 +627,10 @@
             "description": "1-based page index. Ignored when cursor is supplied.",
             "schema": {
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -592,7 +641,10 @@
             "schema": {
               "maximum": 500,
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -601,7 +653,10 @@
             "in": "query",
             "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -609,7 +664,10 @@
             "in": "query",
             "description": "Free-text search across searchable columns declared in the query definition.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -617,7 +675,10 @@
             "in": "query",
             "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -625,7 +686,10 @@
             "in": "query",
             "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -633,7 +697,10 @@
             "in": "query",
             "description": "Comma-separated quick-filter names (declared in the query definition).",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -641,7 +708,10 @@
             "in": "query",
             "description": "Skip the total row count for faster pagination when the client doesn't need it.",
             "schema": {
-              "type": ["null", "boolean"]
+              "type": [
+                "null",
+                "boolean"
+              ]
             }
           },
           {
@@ -651,7 +721,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -664,7 +737,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -735,7 +811,9 @@
     },
     "/authorization/role-metadata/meta": {
       "get": {
-        "tags": ["Authorization"],
+        "tags": [
+          "Authorization"
+        ],
         "summary": "Returns query metadata for RoleMetadata (columns, filters, sorts, presets).",
         "description": "Returns the query definition metadata for RoleMetadata: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
         "operationId": "GetRoleMetadataMeta",
@@ -822,12 +900,19 @@
             "type": "boolean"
           },
           "format": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "DateFilterMeta": {
-        "required": ["name", "defaultPeriod", "availablePeriods"],
+        "required": [
+          "name",
+          "defaultPeriod",
+          "availablePeriods"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -845,10 +930,22 @@
         }
       },
       "DatePeriod": {
-        "enum": ["Today", "ThisWeek", "ThisMonth", "LastMonth", "ThisQuarter", "ThisYear", "Custom"]
+        "enum": [
+          "Today",
+          "ThisWeek",
+          "ThisMonth",
+          "LastMonth",
+          "ThisQuarter",
+          "ThisYear",
+          "Custom"
+        ]
       },
       "FilterableField": {
-        "required": ["name", "type", "operators"],
+        "required": [
+          "name",
+          "type",
+          "operators"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -864,7 +961,10 @@
             }
           },
           "enumValues": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
@@ -882,7 +982,11 @@
         }
       },
       "FilterGroupMeta": {
-        "required": ["name", "label", "presets"],
+        "required": [
+          "name",
+          "label",
+          "presets"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -914,7 +1018,10 @@
         ]
       },
       "GroupByField": {
-        "required": ["name", "type"],
+        "required": [
+          "name",
+          "type"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -926,7 +1033,10 @@
         }
       },
       "GroupedResultOfPermissionGrant": {
-        "required": ["groups", "totalCount"],
+        "required": [
+          "groups",
+          "totalCount"
+        ],
         "type": "object",
         "properties": {
           "groups": {
@@ -942,7 +1052,10 @@
         }
       },
       "GroupedResultOfRoleMetadata": {
-        "required": ["groups", "totalCount"],
+        "required": [
+          "groups",
+          "totalCount"
+        ],
         "type": "object",
         "properties": {
           "groups": {
@@ -958,13 +1071,18 @@
         }
       },
       "GroupEntryOfPermissionGrant": {
-        "required": ["field", "value", "label", "count"],
+        "required": [
+          "field",
+          "value",
+          "label",
+          "count"
+        ],
         "type": "object",
         "properties": {
           "field": {
             "type": "string"
           },
-          "value": {},
+          "value": { },
           "label": {
             "type": "string"
           },
@@ -973,10 +1091,16 @@
             "format": "int32"
           },
           "aggregates": {
-            "type": ["null", "object"]
+            "type": [
+              "null",
+              "object"
+            ]
           },
           "items": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/PermissionGrant"
             }
@@ -984,13 +1108,18 @@
         }
       },
       "GroupEntryOfRoleMetadata": {
-        "required": ["field", "value", "label", "count"],
+        "required": [
+          "field",
+          "value",
+          "label",
+          "count"
+        ],
         "type": "object",
         "properties": {
           "field": {
             "type": "string"
           },
-          "value": {},
+          "value": { },
           "label": {
             "type": "string"
           },
@@ -999,10 +1128,16 @@
             "format": "int32"
           },
           "aggregates": {
-            "type": ["null", "object"]
+            "type": [
+              "null",
+              "object"
+            ]
           },
           "items": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/RoleMetadata"
             }
@@ -1013,20 +1148,35 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "title": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "status": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "detail": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "instance": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "errors": {
             "type": "object",
@@ -1051,23 +1201,38 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "endpoint": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "kind": {
             "$ref": "#/components/schemas/LookupKind"
           },
           "requiredPermission": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "searchParam": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "default": "search"
           },
           "scopeKeys": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
@@ -1075,7 +1240,12 @@
         }
       },
       "LookupKind": {
-        "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
+        "enum": [
+          "QueryEngine",
+          "Simple",
+          "ReferenceData",
+          "Enum"
+        ],
         "default": "QueryEngine"
       },
       "MultiTenancySides": {
@@ -1083,7 +1253,9 @@
         "description": "Scope of an object (permission, BFF frontend, ...) relative to the host/tenant boundary."
       },
       "MyPermissionsResponse": {
-        "required": ["permissions"],
+        "required": [
+          "permissions"
+        ],
         "type": "object",
         "properties": {
           "permissions": {
@@ -1095,7 +1267,11 @@
         }
       },
       "PagedResultOfPermissionGrant": {
-        "required": ["items", "totalCount", "hasMore"],
+        "required": [
+          "items",
+          "totalCount",
+          "hasMore"
+        ],
         "type": "object",
         "properties": {
           "items": {
@@ -1113,27 +1289,42 @@
                   "type": "string"
                 },
                 "tenantId": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "format": "uuid"
                 },
                 "modifiedAt": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "description": "Last modification timestamp (UTC).",
                   "format": "date-time"
                 },
                 "modifiedBy": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "description": "Identifier of the user who last modified the entity."
                 },
                 "domainEvents": {
-                  "type": ["null", "array"],
+                  "type": [
+                    "null",
+                    "array"
+                  ],
                   "items": {
                     "type": "object",
                     "description": "Marker interface for domain events."
                   }
                 },
                 "integrationEvents": {
-                  "type": ["null", "array"],
+                  "type": [
+                    "null",
+                    "array"
+                  ],
                   "items": {
                     "type": "object",
                     "description": "Marker interface for integration events (ETO — Event Transfer Object)."
@@ -1157,19 +1348,29 @@
             }
           },
           "totalCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "PagedResultOfRoleMetadata": {
-        "required": ["items", "totalCount", "hasMore"],
+        "required": [
+          "items",
+          "totalCount",
+          "hasMore"
+        ],
         "type": "object",
         "properties": {
           "items": {
@@ -1181,18 +1382,27 @@
                   "type": "string"
                 },
                 "tenantId": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "format": "uuid"
                 },
                 "clientId": {
-                  "type": ["null", "string"]
+                  "type": [
+                    "null",
+                    "string"
+                  ]
                 },
                 "multiTenancySides": {
                   "type": "string",
                   "description": "Scope of an object (permission, BFF frontend, ...) relative to the host/tenant boundary."
                 },
                 "description": {
-                  "type": ["null", "string"]
+                  "type": [
+                    "null",
+                    "string"
+                  ]
                 },
                 "isSystem": {
                   "type": "boolean"
@@ -1201,30 +1411,45 @@
                   "type": "boolean"
                 },
                 "orphanedAt": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "format": "date-time"
                 },
                 "concurrencyStamp": {
                   "type": "string"
                 },
                 "modifiedAt": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "description": "Last modification timestamp (UTC).",
                   "format": "date-time"
                 },
                 "modifiedBy": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "description": "Identifier of the user who last modified the entity."
                 },
                 "domainEvents": {
-                  "type": ["null", "array"],
+                  "type": [
+                    "null",
+                    "array"
+                  ],
                   "items": {
                     "type": "object",
                     "description": "Marker interface for domain events."
                   }
                 },
                 "integrationEvents": {
-                  "type": ["null", "array"],
+                  "type": [
+                    "null",
+                    "array"
+                  ],
                   "items": {
                     "type": "object",
                     "description": "Marker interface for integration events (ETO — Event Transfer Object)."
@@ -1248,19 +1473,30 @@
             }
           },
           "totalCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "PaginationMeta": {
-        "required": ["defaultPageSize", "maxPageSize", "maxStreamSize", "supportsCursor"],
+        "required": [
+          "defaultPageSize",
+          "maxPageSize",
+          "maxStreamSize",
+          "supportsCursor"
+        ],
         "type": "object",
         "properties": {
           "defaultPageSize": {
@@ -1281,14 +1517,21 @@
         }
       },
       "PermissionDefinitionResponse": {
-        "required": ["name", "displayName", "multiTenancySides"],
+        "required": [
+          "name",
+          "displayName",
+          "multiTenancySides"
+        ],
         "type": "object",
         "properties": {
           "name": {
             "type": "string"
           },
           "displayName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "multiTenancySides": {
             "$ref": "#/components/schemas/MultiTenancySides"
@@ -1308,26 +1551,41 @@
             "type": "string"
           },
           "tenantId": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "uuid"
           },
           "modifiedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "description": "Last modification timestamp (UTC).",
             "format": "date-time"
           },
           "modifiedBy": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "description": "Identifier of the user who last modified the entity."
           },
           "domainEvents": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/IDomainEvent"
             }
           },
           "integrationEvents": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/IIntegrationEvent"
             }
@@ -1349,7 +1607,10 @@
         }
       },
       "PermissionGrantResponse": {
-        "required": ["roleName", "permissions"],
+        "required": [
+          "roleName",
+          "permissions"
+        ],
         "type": "object",
         "properties": {
           "roleName": {
@@ -1364,14 +1625,21 @@
         }
       },
       "PermissionGroupResponse": {
-        "required": ["name", "displayName", "permissions"],
+        "required": [
+          "name",
+          "displayName",
+          "permissions"
+        ],
         "type": "object",
         "properties": {
           "name": {
             "type": "string"
           },
           "displayName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "permissions": {
             "type": "array",
@@ -1382,7 +1650,11 @@
         }
       },
       "PresetMeta": {
-        "required": ["name", "label", "isDefault"],
+        "required": [
+          "name",
+          "label",
+          "isDefault"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1480,12 +1752,19 @@
             "$ref": "#/components/schemas/PaginationMeta"
           },
           "defaultSort": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "QuickFilterMeta": {
-        "required": ["name", "label", "isDefault"],
+        "required": [
+          "name",
+          "label",
+          "isDefault"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1506,17 +1785,26 @@
             "type": "string"
           },
           "tenantId": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "uuid"
           },
           "clientId": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "multiTenancySides": {
             "$ref": "#/components/schemas/MultiTenancySides"
           },
           "description": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "isSystem": {
             "type": "boolean"
@@ -1525,29 +1813,44 @@
             "type": "boolean"
           },
           "orphanedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "concurrencyStamp": {
             "type": "string"
           },
           "modifiedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "description": "Last modification timestamp (UTC).",
             "format": "date-time"
           },
           "modifiedBy": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "description": "Identifier of the user who last modified the entity."
           },
           "domainEvents": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/IDomainEvent"
             }
           },
           "integrationEvents": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/IIntegrationEvent"
             }
@@ -1569,7 +1872,9 @@
         }
       },
       "SortableField": {
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {

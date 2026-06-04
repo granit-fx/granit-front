@@ -7,7 +7,9 @@
   "paths": {
     "/blob-storage/blobs/{id}": {
       "get": {
-        "tags": ["Blob Storage"],
+        "tags": [
+          "Blob Storage"
+        ],
         "summary": "Returns a blob descriptor by its unique identifier.",
         "description": "Fetches the full metadata of a blob including its status, content type, size, and validation results. The containerName query parameter is required. Returns 404 if the blob does not exist in the specified container.",
         "operationId": "GetBlobDescriptor",
@@ -86,7 +88,9 @@
         }
       },
       "delete": {
-        "tags": ["Blob Storage"],
+        "tags": [
+          "Blob Storage"
+        ],
         "summary": "Deletes a blob using crypto-shredding.",
         "description": "Permanently removes the blob content from storage via crypto-shredding. The blob descriptor and audit trail are retained with the provided deletion reason. A containerName and deletionReason must be supplied in the request body.",
         "operationId": "DeleteBlob",
@@ -181,7 +185,9 @@
     },
     "/blob-storage/blobs/upload": {
       "post": {
-        "tags": ["Blob Storage"],
+        "tags": [
+          "Blob Storage"
+        ],
         "summary": "Initiates a direct-to-cloud upload and returns a pre-signed URL.",
         "description": "Creates a new blob descriptor and generates a pre-signed URL for direct client-side upload. The response includes the upload URL, required HTTP headers, and expiration time. After uploading, call the confirm endpoint to trigger the validation pipeline.",
         "operationId": "InitiateBlobUpload",
@@ -261,7 +267,9 @@
     },
     "/blob-storage/blobs/{id}/confirm": {
       "post": {
-        "tags": ["Blob Storage"],
+        "tags": [
+          "Blob Storage"
+        ],
         "summary": "Confirms a client-side upload and runs the validation pipeline.",
         "description": "Triggers content-type verification and size validation on an uploaded blob. The response includes the validation result: verified content type, actual size, and an optional rejection reason if the blob failed validation.",
         "operationId": "ConfirmBlobUpload",
@@ -363,7 +371,9 @@
     },
     "/blob-storage/blobs/{id}/download-url": {
       "post": {
-        "tags": ["Blob Storage"],
+        "tags": [
+          "Blob Storage"
+        ],
         "summary": "Generates a time-limited pre-signed download URL.",
         "description": "Creates a pre-signed URL for direct client-side download of the blob content. An optional custom file name can be specified to override the Content-Disposition header. The URL expires after the provider-configured duration.",
         "operationId": "GenerateBlobDownloadUrl",
@@ -465,7 +475,9 @@
     },
     "/blob-storage/blobs/{id}/pending": {
       "delete": {
-        "tags": ["Blob Storage"],
+        "tags": [
+          "Blob Storage"
+        ],
         "summary": "Cancels a Pending upload whose presigned PUT failed client-side.",
         "description": "Short-circuits the orphan-cleanup window by transitioning a Pending blob directly to Rejected. Intended to be called by the client when its PUT to the presigned URL returns 4xx/5xx, so the descriptor does not linger visible for up to BlobStorageOptions.OrphanCleanupAge. Returns 409 Conflict if the blob has already left Pending state.",
         "operationId": "CancelPendingBlobUpload",
@@ -570,7 +582,9 @@
     },
     "/blob-storage/blobs/cleanup-orphans": {
       "post": {
-        "tags": ["Blob Storage"],
+        "tags": [
+          "Blob Storage"
+        ],
         "summary": "Cleans up orphaned blobs stuck in Pending or Uploading state.",
         "description": "Scans for blobs that never completed the upload/confirm cycle and deletes them. Returns the number of orphaned blobs removed. Typically called on a schedule or via the admin dashboard.",
         "operationId": "CleanupOrphanedBlobs",
@@ -630,7 +644,9 @@
     },
     "/blob-storage/blobs": {
       "get": {
-        "tags": ["Blob Storage"],
+        "tags": [
+          "Blob Storage"
+        ],
         "summary": "Returns a filtered, sorted, and paginated list of BlobDescriptor entries.",
         "description": "Executes a dynamic query against BlobDescriptor using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
         "operationId": "QueryBlobDescriptor",
@@ -641,7 +657,10 @@
             "description": "1-based page index. Ignored when cursor is supplied.",
             "schema": {
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -652,7 +671,10 @@
             "schema": {
               "maximum": 500,
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -661,7 +683,10 @@
             "in": "query",
             "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -669,7 +694,10 @@
             "in": "query",
             "description": "Free-text search across searchable columns declared in the query definition.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -677,7 +705,10 @@
             "in": "query",
             "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -685,7 +716,10 @@
             "in": "query",
             "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -693,7 +727,10 @@
             "in": "query",
             "description": "Comma-separated quick-filter names (declared in the query definition).",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -701,7 +738,10 @@
             "in": "query",
             "description": "Skip the total row count for faster pagination when the client doesn't need it.",
             "schema": {
-              "type": ["null", "boolean"]
+              "type": [
+                "null",
+                "boolean"
+              ]
             }
           },
           {
@@ -711,7 +751,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -724,7 +767,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -795,7 +841,9 @@
     },
     "/blob-storage/blobs/meta": {
       "get": {
-        "tags": ["Blob Storage"],
+        "tags": [
+          "Blob Storage"
+        ],
         "summary": "Returns query metadata for BlobDescriptor (columns, filters, sorts, presets).",
         "description": "Returns the query definition metadata for BlobDescriptor: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
         "operationId": "GetBlobDescriptorMeta",
@@ -847,7 +895,10 @@
   "components": {
     "schemas": {
       "BlobCancelPendingRequest": {
-        "required": ["containerName", "reason"],
+        "required": [
+          "containerName",
+          "reason"
+        ],
         "type": "object",
         "properties": {
           "containerName": {
@@ -863,7 +914,9 @@
         }
       },
       "BlobCleanupOrphansResponse": {
-        "required": ["cleanedCount"],
+        "required": [
+          "cleanedCount"
+        ],
         "type": "object",
         "properties": {
           "cleanedCount": {
@@ -873,7 +926,9 @@
         }
       },
       "BlobConfirmUploadRequest": {
-        "required": ["containerName"],
+        "required": [
+          "containerName"
+        ],
         "type": "object",
         "properties": {
           "containerName": {
@@ -906,27 +961,42 @@
             "$ref": "#/components/schemas/BlobStatus"
           },
           "verifiedContentType": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "sizeBytes": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["null", "integer", "string"],
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
             "format": "int64"
           },
           "rejectionReason": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "BlobDeleteRequest": {
-        "required": ["containerName"],
+        "required": [
+          "containerName"
+        ],
         "type": "object",
         "properties": {
           "containerName": {
             "type": "string"
           },
           "deletionReason": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         },
         "example": {
@@ -938,7 +1008,10 @@
         "type": "object",
         "properties": {
           "tenantId": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "uuid"
           },
           "containerName": {
@@ -955,42 +1028,70 @@
           },
           "maxAllowedBytes": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int64"
           },
           "verifiedContentType": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "sizeBytes": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["null", "integer", "string"],
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
             "format": "int64"
           },
           "status": {
             "$ref": "#/components/schemas/BlobStatus"
           },
           "validatedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "deletedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "rejectionReason": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "deletionReason": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "domainEvents": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/IDomainEvent"
             }
           },
           "integrationEvents": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/IIntegrationEvent"
             }
@@ -1043,37 +1144,59 @@
             "type": "string"
           },
           "verifiedContentType": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "declaredSizeBytes": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int64"
           },
           "actualSizeBytes": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["null", "integer", "string"],
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
             "format": "int64"
           },
           "status": {
             "$ref": "#/components/schemas/BlobStatus"
           },
           "rejectionReason": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "deletionReason": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "createdAt": {
             "type": "string",
             "format": "date-time"
           },
           "validatedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "deletedAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           }
         },
@@ -1094,14 +1217,19 @@
         }
       },
       "BlobDownloadUrlRequest": {
-        "required": ["containerName"],
+        "required": [
+          "containerName"
+        ],
         "type": "object",
         "properties": {
           "containerName": {
             "type": "string"
           },
           "fileName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         },
         "example": {
@@ -1110,7 +1238,10 @@
         }
       },
       "BlobDownloadUrlResponse": {
-        "required": ["downloadUrl", "expiresAt"],
+        "required": [
+          "downloadUrl",
+          "expiresAt"
+        ],
         "type": "object",
         "properties": {
           "downloadUrl": {
@@ -1123,10 +1254,21 @@
         }
       },
       "BlobStatus": {
-        "enum": ["Pending", "Uploading", "Valid", "Rejected", "Deleted"]
+        "enum": [
+          "Pending",
+          "Uploading",
+          "Valid",
+          "Rejected",
+          "Deleted"
+        ]
       },
       "BlobUploadInitiateRequest": {
-        "required": ["containerName", "fileName", "contentType", "sizeBytes"],
+        "required": [
+          "containerName",
+          "fileName",
+          "contentType",
+          "sizeBytes"
+        ],
         "type": "object",
         "properties": {
           "containerName": {
@@ -1140,7 +1282,10 @@
           },
           "sizeBytes": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int64"
           }
         },
@@ -1152,7 +1297,13 @@
         }
       },
       "BlobUploadInitiateResponse": {
-        "required": ["blobId", "uploadUrl", "httpMethod", "expiresAt", "requiredHeaders"],
+        "required": [
+          "blobId",
+          "uploadUrl",
+          "httpMethod",
+          "expiresAt",
+          "requiredHeaders"
+        ],
         "type": "object",
         "properties": {
           "blobId": {
@@ -1223,12 +1374,19 @@
             "type": "boolean"
           },
           "format": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "DateFilterMeta": {
-        "required": ["name", "defaultPeriod", "availablePeriods"],
+        "required": [
+          "name",
+          "defaultPeriod",
+          "availablePeriods"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1246,10 +1404,22 @@
         }
       },
       "DatePeriod": {
-        "enum": ["Today", "ThisWeek", "ThisMonth", "LastMonth", "ThisQuarter", "ThisYear", "Custom"]
+        "enum": [
+          "Today",
+          "ThisWeek",
+          "ThisMonth",
+          "LastMonth",
+          "ThisQuarter",
+          "ThisYear",
+          "Custom"
+        ]
       },
       "FilterableField": {
-        "required": ["name", "type", "operators"],
+        "required": [
+          "name",
+          "type",
+          "operators"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1265,7 +1435,10 @@
             }
           },
           "enumValues": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
@@ -1283,7 +1456,11 @@
         }
       },
       "FilterGroupMeta": {
-        "required": ["name", "label", "presets"],
+        "required": [
+          "name",
+          "label",
+          "presets"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1315,7 +1492,10 @@
         ]
       },
       "GroupByField": {
-        "required": ["name", "type"],
+        "required": [
+          "name",
+          "type"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1327,7 +1507,10 @@
         }
       },
       "GroupedResultOfBlobDescriptor": {
-        "required": ["groups", "totalCount"],
+        "required": [
+          "groups",
+          "totalCount"
+        ],
         "type": "object",
         "properties": {
           "groups": {
@@ -1343,13 +1526,18 @@
         }
       },
       "GroupEntryOfBlobDescriptor": {
-        "required": ["field", "value", "label", "count"],
+        "required": [
+          "field",
+          "value",
+          "label",
+          "count"
+        ],
         "type": "object",
         "properties": {
           "field": {
             "type": "string"
           },
-          "value": {},
+          "value": { },
           "label": {
             "type": "string"
           },
@@ -1358,10 +1546,16 @@
             "format": "int32"
           },
           "aggregates": {
-            "type": ["null", "object"]
+            "type": [
+              "null",
+              "object"
+            ]
           },
           "items": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/BlobDescriptor"
             }
@@ -1372,20 +1566,35 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "title": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "status": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "detail": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "instance": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "errors": {
             "type": "object",
@@ -1410,23 +1619,38 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "endpoint": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "kind": {
             "$ref": "#/components/schemas/LookupKind"
           },
           "requiredPermission": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "searchParam": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "default": "search"
           },
           "scopeKeys": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
@@ -1434,11 +1658,20 @@
         }
       },
       "LookupKind": {
-        "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
+        "enum": [
+          "QueryEngine",
+          "Simple",
+          "ReferenceData",
+          "Enum"
+        ],
         "default": "QueryEngine"
       },
       "PagedResultOfBlobDescriptor": {
-        "required": ["items", "totalCount", "hasMore"],
+        "required": [
+          "items",
+          "totalCount",
+          "hasMore"
+        ],
         "type": "object",
         "properties": {
           "items": {
@@ -1447,7 +1680,10 @@
               "type": "object",
               "properties": {
                 "tenantId": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "format": "uuid"
                 },
                 "containerName": {
@@ -1464,43 +1700,77 @@
                 },
                 "maxAllowedBytes": {
                   "pattern": "^-?(?:0|[1-9]\\d*)$",
-                  "type": ["integer", "string"],
+                  "type": [
+                    "integer",
+                    "string"
+                  ],
                   "format": "int64"
                 },
                 "verifiedContentType": {
-                  "type": ["null", "string"]
+                  "type": [
+                    "null",
+                    "string"
+                  ]
                 },
                 "sizeBytes": {
                   "pattern": "^-?(?:0|[1-9]\\d*)$",
-                  "type": ["null", "integer", "string"],
+                  "type": [
+                    "null",
+                    "integer",
+                    "string"
+                  ],
                   "format": "int64"
                 },
                 "status": {
-                  "enum": ["Pending", "Uploading", "Valid", "Rejected", "Deleted"]
+                  "enum": [
+                    "Pending",
+                    "Uploading",
+                    "Valid",
+                    "Rejected",
+                    "Deleted"
+                  ]
                 },
                 "validatedAt": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "format": "date-time"
                 },
                 "deletedAt": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "format": "date-time"
                 },
                 "rejectionReason": {
-                  "type": ["null", "string"]
+                  "type": [
+                    "null",
+                    "string"
+                  ]
                 },
                 "deletionReason": {
-                  "type": ["null", "string"]
+                  "type": [
+                    "null",
+                    "string"
+                  ]
                 },
                 "domainEvents": {
-                  "type": ["null", "array"],
+                  "type": [
+                    "null",
+                    "array"
+                  ],
                   "items": {
                     "type": "object",
                     "description": "Marker interface for domain events."
                   }
                 },
                 "integrationEvents": {
-                  "type": ["null", "array"],
+                  "type": [
+                    "null",
+                    "array"
+                  ],
                   "items": {
                     "type": "object",
                     "description": "Marker interface for integration events (ETO — Event Transfer Object)."
@@ -1524,19 +1794,30 @@
             }
           },
           "totalCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "PaginationMeta": {
-        "required": ["defaultPageSize", "maxPageSize", "maxStreamSize", "supportsCursor"],
+        "required": [
+          "defaultPageSize",
+          "maxPageSize",
+          "maxStreamSize",
+          "supportsCursor"
+        ],
         "type": "object",
         "properties": {
           "defaultPageSize": {
@@ -1557,7 +1838,11 @@
         }
       },
       "PresetMeta": {
-        "required": ["name", "label", "isDefault"],
+        "required": [
+          "name",
+          "label",
+          "isDefault"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1655,12 +1940,19 @@
             "$ref": "#/components/schemas/PaginationMeta"
           },
           "defaultSort": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "QuickFilterMeta": {
-        "required": ["name", "label", "isDefault"],
+        "required": [
+          "name",
+          "label",
+          "isDefault"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1675,7 +1967,9 @@
         }
       },
       "SortableField": {
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {

@@ -7,7 +7,9 @@
   "paths": {
     "/ai/workspaces": {
       "get": {
-        "tags": ["AI - Workspaces"],
+        "tags": [
+          "AI - Workspaces"
+        ],
         "summary": "Lists all AI workspaces, both system and dynamic.",
         "description": "Returns every registered workspace with its provider, model, and configuration. System workspaces are defined in configuration; dynamic workspaces are user-created.",
         "operationId": "ListAIWorkspaces",
@@ -55,7 +57,9 @@
         }
       },
       "post": {
-        "tags": ["AI - Workspaces"],
+        "tags": [
+          "AI - Workspaces"
+        ],
         "summary": "Creates a new dynamic AI workspace.",
         "description": "Registers a new user-defined workspace with the specified provider and model configuration. Returns 409 if a workspace with the same name already exists.",
         "operationId": "CreateAIWorkspace",
@@ -135,7 +139,9 @@
     },
     "/ai/workspaces/{name}": {
       "get": {
-        "tags": ["AI - Workspaces"],
+        "tags": [
+          "AI - Workspaces"
+        ],
         "summary": "Returns an AI workspace by its name.",
         "description": "Fetches the full configuration of a single workspace including provider, model, system prompt, and active status. Returns 404 if no workspace matches the name.",
         "operationId": "GetAIWorkspace",
@@ -204,7 +210,9 @@
         }
       },
       "put": {
-        "tags": ["AI - Workspaces"],
+        "tags": [
+          "AI - Workspaces"
+        ],
         "summary": "Updates an existing dynamic AI workspace.",
         "description": "Replaces the provider, model, and prompt configuration of a dynamic workspace. System workspaces cannot be modified and return 422. Returns 404 if the workspace does not exist.",
         "operationId": "UpdateAIWorkspace",
@@ -293,7 +301,9 @@
         }
       },
       "delete": {
-        "tags": ["AI - Workspaces"],
+        "tags": [
+          "AI - Workspaces"
+        ],
         "summary": "Deletes a dynamic AI workspace.",
         "description": "Permanently removes a user-created workspace. System workspaces cannot be deleted and return 422. Returns 404 if the workspace does not exist.",
         "operationId": "DeleteAIWorkspace",
@@ -367,7 +377,9 @@
     },
     "/ai/usage": {
       "get": {
-        "tags": ["AI - Usage"],
+        "tags": [
+          "AI - Usage"
+        ],
         "summary": "Returns a filtered, sorted, and paginated list of AIUsageRecord entries.",
         "description": "Executes a dynamic query against AIUsageRecord using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
         "operationId": "QueryAIUsageRecord",
@@ -378,7 +390,10 @@
             "description": "1-based page index. Ignored when cursor is supplied.",
             "schema": {
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -389,7 +404,10 @@
             "schema": {
               "maximum": 500,
               "minimum": 1,
-              "type": ["null", "integer"],
+              "type": [
+                "null",
+                "integer"
+              ],
               "format": "int32"
             }
           },
@@ -398,7 +416,10 @@
             "in": "query",
             "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -406,7 +427,10 @@
             "in": "query",
             "description": "Free-text search across searchable columns declared in the query definition.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -414,7 +438,10 @@
             "in": "query",
             "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -422,7 +449,10 @@
             "in": "query",
             "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -430,7 +460,10 @@
             "in": "query",
             "description": "Comma-separated quick-filter names (declared in the query definition).",
             "schema": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           },
           {
@@ -438,7 +471,10 @@
             "in": "query",
             "description": "Skip the total row count for faster pagination when the client doesn't need it.",
             "schema": {
-              "type": ["null", "boolean"]
+              "type": [
+                "null",
+                "boolean"
+              ]
             }
           },
           {
@@ -448,7 +484,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -461,7 +500,10 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": ["null", "object"],
+              "type": [
+                "null",
+                "object"
+              ],
               "additionalProperties": {
                 "type": "string"
               }
@@ -532,7 +574,9 @@
     },
     "/ai/usage/meta": {
       "get": {
-        "tags": ["AI - Usage"],
+        "tags": [
+          "AI - Usage"
+        ],
         "summary": "Returns query metadata for AIUsageRecord (columns, filters, sorts, presets).",
         "description": "Returns the query definition metadata for AIUsageRecord: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
         "operationId": "GetAIUsageRecordMeta",
@@ -582,7 +626,9 @@
     },
     "/ai/providers": {
       "get": {
-        "tags": ["AI - Providers"],
+        "tags": [
+          "AI - Providers"
+        ],
         "summary": "Lists all registered AI providers.",
         "description": "Returns every AI provider registered via dependency injection, along with an indication of whether each provider supports chat and embedding capabilities.",
         "operationId": "ListAIProviders",
@@ -635,7 +681,9 @@
     },
     "/ai/providers/{providerName}/models": {
       "get": {
-        "tags": ["AI - Providers"],
+        "tags": [
+          "AI - Providers"
+        ],
         "summary": "Lists the models available from a specific AI provider.",
         "description": "Returns the models currently available from the specified provider. For cloud providers (OpenAI, AzureOpenAI) this is a static catalog. For local providers (Ollama) this queries the server for installed models. Returns 404 if the provider is not registered, or 502 if the provider's model listing fails.",
         "operationId": "ListAIProviderModels",
@@ -719,7 +767,9 @@
     },
     "/ai/chat/{workspaceName}": {
       "post": {
-        "tags": ["AI - Inference"],
+        "tags": [
+          "AI - Inference"
+        ],
         "summary": "Sends messages to an AI workspace and returns a completion response.",
         "description": "Forwards the conversation to the underlying AI provider configured for the workspace. Returns the assistant's reply, token usage, and response duration. Returns 404 if the workspace does not exist, or 502 if the provider is unavailable.",
         "operationId": "AIChatComplete",
@@ -820,7 +870,9 @@
     },
     "/ai/chat/{workspaceName}/stream": {
       "post": {
-        "tags": ["AI - Inference"],
+        "tags": [
+          "AI - Inference"
+        ],
         "summary": "Streams a chat completion response via Server-Sent Events.",
         "description": "Opens an SSE stream that emits incremental content chunks as they arrive from the provider. The stream ends with a [DONE] sentinel. If the provider returns an error after streaming has started, an SSE 'error' event is emitted before closing. Returns 404 if the workspace does not exist, 422 if the model is not found, or 502/503 if the provider is unavailable.",
         "operationId": "AIChatStream",
@@ -931,7 +983,9 @@
     },
     "/ai/embeddings/{workspaceName}": {
       "post": {
-        "tags": ["AI - Inference"],
+        "tags": [
+          "AI - Inference"
+        ],
         "summary": "Generates vector embeddings for input texts using the specified workspace.",
         "description": "Sends the input texts to the embedding model configured for the workspace and returns float vectors for each input. Returns 404 if the workspace does not exist, or 502 if the provider is unavailable.",
         "operationId": "AIGenerateEmbeddings",
@@ -1034,7 +1088,10 @@
   "components": {
     "schemas": {
       "AIChatMessageRequest": {
-        "required": ["role", "content"],
+        "required": [
+          "role",
+          "content"
+        ],
         "type": "object",
         "properties": {
           "role": {
@@ -1046,7 +1103,9 @@
         }
       },
       "AIChatRequest": {
-        "required": ["messages"],
+        "required": [
+          "messages"
+        ],
         "type": "object",
         "properties": {
           "messages": {
@@ -1058,7 +1117,13 @@
         }
       },
       "AIChatResponse": {
-        "required": ["workspaceName", "model", "content", "usage", "duration"],
+        "required": [
+          "workspaceName",
+          "model",
+          "content",
+          "usage",
+          "duration"
+        ],
         "type": "object",
         "properties": {
           "workspaceName": {
@@ -1087,7 +1152,12 @@
         }
       },
       "AIChatUsageResponse": {
-        "required": ["inputTokens", "outputTokens", "estimatedCost", "costCurrency"],
+        "required": [
+          "inputTokens",
+          "outputTokens",
+          "estimatedCost",
+          "costCurrency"
+        ],
         "type": "object",
         "properties": {
           "inputTokens": {
@@ -1100,16 +1170,26 @@
           },
           "estimatedCost": {
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "type": ["null", "number", "string"],
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "costCurrency": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "AIEmbeddingDataResponse": {
-        "required": ["index", "vector"],
+        "required": [
+          "index",
+          "vector"
+        ],
         "type": "object",
         "properties": {
           "index": {
@@ -1120,14 +1200,19 @@
             "type": "array",
             "items": {
               "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "format": "float"
             }
           }
         }
       },
       "AIEmbeddingRequest": {
-        "required": ["inputs"],
+        "required": [
+          "inputs"
+        ],
         "type": "object",
         "properties": {
           "inputs": {
@@ -1139,7 +1224,12 @@
         }
       },
       "AIEmbeddingResponse": {
-        "required": ["workspaceName", "model", "embeddings", "usage"],
+        "required": [
+          "workspaceName",
+          "model",
+          "embeddings",
+          "usage"
+        ],
         "type": "object",
         "properties": {
           "workspaceName": {
@@ -1167,7 +1257,9 @@
         }
       },
       "AIEmbeddingUsageResponse": {
-        "required": ["inputTokens"],
+        "required": [
+          "inputTokens"
+        ],
         "type": "object",
         "properties": {
           "inputTokens": {
@@ -1212,7 +1304,12 @@
         }
       },
       "AIProviderModelResponse": {
-        "required": ["id", "displayName", "capabilities", "maxContextTokens"],
+        "required": [
+          "id",
+          "displayName",
+          "capabilities",
+          "maxContextTokens"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1225,13 +1322,20 @@
             "$ref": "#/components/schemas/AIModelCapabilities"
           },
           "maxContextTokens": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           }
         }
       },
       "AIProviderResponse": {
-        "required": ["name", "supportsChat", "supportsEmbeddings"],
+        "required": [
+          "name",
+          "supportsChat",
+          "supportsEmbeddings"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1246,7 +1350,13 @@
         }
       },
       "AIUsageRecord": {
-        "required": ["id", "workspaceName", "provider", "model", "timestamp"],
+        "required": [
+          "id",
+          "workspaceName",
+          "provider",
+          "model",
+          "timestamp"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1254,11 +1364,17 @@
             "format": "uuid"
           },
           "tenantId": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "uuid"
           },
           "userId": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "uuid"
           },
           "workspaceName": {
@@ -1280,11 +1396,18 @@
           },
           "estimatedCost": {
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "type": ["null", "number", "string"],
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
             "format": "double"
           },
           "costCurrency": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "timestamp": {
             "type": "string",
@@ -1292,12 +1415,19 @@
           },
           "duration": {
             "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "AIWorkspaceCreateRequest": {
-        "required": ["name", "provider", "model", "systemPrompt", "temperature", "maxOutputTokens"],
+        "required": [
+          "name",
+          "provider",
+          "model"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1310,24 +1440,40 @@
             "type": "string"
           },
           "systemPrompt": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "temperature": {
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-            "type": ["null", "number", "string"],
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
             "format": "float"
           },
           "maxOutputTokens": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           }
         }
       },
       "AIWorkspaceKind": {
-        "enum": ["System", "Dynamic"]
+        "enum": [
+          "System",
+          "Dynamic"
+        ]
       },
       "AIWorkspaceListResponse": {
-        "required": ["workspaces", "totalCount"],
+        "required": [
+          "workspaces",
+          "totalCount"
+        ],
         "type": "object",
         "properties": {
           "workspaces": {
@@ -1366,15 +1512,25 @@
             "type": "string"
           },
           "systemPrompt": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "temperature": {
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-            "type": ["null", "number", "string"],
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
             "format": "float"
           },
           "maxOutputTokens": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "kind": {
@@ -1399,9 +1555,6 @@
         "required": [
           "provider",
           "model",
-          "systemPrompt",
-          "temperature",
-          "maxOutputTokens",
           "activated"
         ],
         "type": "object",
@@ -1412,20 +1565,30 @@
           "model": {
             "type": "string"
           },
+          "activated": {
+            "type": "boolean"
+          },
           "systemPrompt": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "temperature": {
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-            "type": ["null", "number", "string"],
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
             "format": "float"
           },
           "maxOutputTokens": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
-          },
-          "activated": {
-            "type": "boolean"
           }
         }
       },
@@ -1465,12 +1628,19 @@
             "type": "boolean"
           },
           "format": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "DateFilterMeta": {
-        "required": ["name", "defaultPeriod", "availablePeriods"],
+        "required": [
+          "name",
+          "defaultPeriod",
+          "availablePeriods"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1488,10 +1658,22 @@
         }
       },
       "DatePeriod": {
-        "enum": ["Today", "ThisWeek", "ThisMonth", "LastMonth", "ThisQuarter", "ThisYear", "Custom"]
+        "enum": [
+          "Today",
+          "ThisWeek",
+          "ThisMonth",
+          "LastMonth",
+          "ThisQuarter",
+          "ThisYear",
+          "Custom"
+        ]
       },
       "FilterableField": {
-        "required": ["name", "type", "operators"],
+        "required": [
+          "name",
+          "type",
+          "operators"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1507,7 +1689,10 @@
             }
           },
           "enumValues": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
@@ -1525,7 +1710,11 @@
         }
       },
       "FilterGroupMeta": {
-        "required": ["name", "label", "presets"],
+        "required": [
+          "name",
+          "label",
+          "presets"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1557,7 +1746,10 @@
         ]
       },
       "GroupByField": {
-        "required": ["name", "type"],
+        "required": [
+          "name",
+          "type"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1569,7 +1761,10 @@
         }
       },
       "GroupedResultOfAIUsageRecord": {
-        "required": ["groups", "totalCount"],
+        "required": [
+          "groups",
+          "totalCount"
+        ],
         "type": "object",
         "properties": {
           "groups": {
@@ -1585,13 +1780,18 @@
         }
       },
       "GroupEntryOfAIUsageRecord": {
-        "required": ["field", "value", "label", "count"],
+        "required": [
+          "field",
+          "value",
+          "label",
+          "count"
+        ],
         "type": "object",
         "properties": {
           "field": {
             "type": "string"
           },
-          "value": {},
+          "value": { },
           "label": {
             "type": "string"
           },
@@ -1600,10 +1800,16 @@
             "format": "int32"
           },
           "aggregates": {
-            "type": ["null", "object"]
+            "type": [
+              "null",
+              "object"
+            ]
           },
           "items": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/AIUsageRecord"
             }
@@ -1614,20 +1820,35 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "title": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "status": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "detail": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "instance": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "errors": {
             "type": "object",
@@ -1644,23 +1865,38 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "endpoint": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "kind": {
             "$ref": "#/components/schemas/LookupKind"
           },
           "requiredPermission": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "searchParam": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "default": "search"
           },
           "scopeKeys": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
@@ -1668,17 +1904,32 @@
         }
       },
       "LookupKind": {
-        "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
+        "enum": [
+          "QueryEngine",
+          "Simple",
+          "ReferenceData",
+          "Enum"
+        ],
         "default": "QueryEngine"
       },
       "PagedResultOfAIUsageRecord": {
-        "required": ["items", "totalCount", "hasMore"],
+        "required": [
+          "items",
+          "totalCount",
+          "hasMore"
+        ],
         "type": "object",
         "properties": {
           "items": {
             "type": "array",
             "items": {
-              "required": ["id", "workspaceName", "provider", "model", "timestamp"],
+              "required": [
+                "id",
+                "workspaceName",
+                "provider",
+                "model",
+                "timestamp"
+              ],
               "type": "object",
               "properties": {
                 "id": {
@@ -1686,11 +1937,17 @@
                   "format": "uuid"
                 },
                 "tenantId": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "format": "uuid"
                 },
                 "userId": {
-                  "type": ["null", "string"],
+                  "type": [
+                    "null",
+                    "string"
+                  ],
                   "format": "uuid"
                 },
                 "workspaceName": {
@@ -1712,11 +1969,18 @@
                 },
                 "estimatedCost": {
                   "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-                  "type": ["null", "number", "string"],
+                  "type": [
+                    "null",
+                    "number",
+                    "string"
+                  ],
                   "format": "double"
                 },
                 "costCurrency": {
-                  "type": ["null", "string"]
+                  "type": [
+                    "null",
+                    "string"
+                  ]
                 },
                 "timestamp": {
                   "type": "string",
@@ -1724,25 +1988,39 @@
                 },
                 "duration": {
                   "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
-                  "type": ["null", "string"]
+                  "type": [
+                    "null",
+                    "string"
+                  ]
                 }
               }
             }
           },
           "totalCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "PaginationMeta": {
-        "required": ["defaultPageSize", "maxPageSize", "maxStreamSize", "supportsCursor"],
+        "required": [
+          "defaultPageSize",
+          "maxPageSize",
+          "maxStreamSize",
+          "supportsCursor"
+        ],
         "type": "object",
         "properties": {
           "defaultPageSize": {
@@ -1763,7 +2041,11 @@
         }
       },
       "PresetMeta": {
-        "required": ["name", "label", "isDefault"],
+        "required": [
+          "name",
+          "label",
+          "isDefault"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1861,12 +2143,19 @@
             "$ref": "#/components/schemas/PaginationMeta"
           },
           "defaultSort": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "QuickFilterMeta": {
-        "required": ["name", "label", "isDefault"],
+        "required": [
+          "name",
+          "label",
+          "isDefault"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1881,7 +2170,9 @@
         }
       },
       "SortableField": {
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {

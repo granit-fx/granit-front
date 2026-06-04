@@ -7,7 +7,9 @@
   "paths": {
     "/identity/users/capabilities": {
       "get": {
-        "tags": ["Identity - User Cache"],
+        "tags": [
+          "Identity - User Cache"
+        ],
         "summary": "Returns the capabilities of the active identity provider.",
         "description": "Returns the feature flags of the currently active identity provider (Keycloak, Azure AD, etc.): session termination support, native password reset, group hierarchy, custom attributes, credential verification, and user creation. The front-end uses this to conditionally render identity management features.",
         "operationId": "GetIdentityProviderCapabilities",
@@ -57,7 +59,9 @@
     },
     "/identity/users": {
       "get": {
-        "tags": ["Identity - User Cache"],
+        "tags": [
+          "Identity - User Cache"
+        ],
         "summary": "Searches the user cache by free-text term with pagination.",
         "description": "Performs a free-text search across cached user fields (name, email, etc.) with pagination and sorting. Only searches the local cache — does not query the identity provider. Use sync endpoints to refresh stale data.",
         "operationId": "SearchIdentityUserCache",
@@ -107,7 +111,9 @@
     },
     "/identity/users/{userId}": {
       "get": {
-        "tags": ["Identity - User Cache"],
+        "tags": [
+          "Identity - User Cache"
+        ],
         "summary": "Resolves a single user by external ID (cache-aside: fetches from provider if stale/missing).",
         "description": "Looks up the user in the local cache first. If the entry is missing or stale, transparently fetches from the identity provider and updates the cache before returning. Returns 404 if the user does not exist in either the cache or the provider.",
         "operationId": "GetIdentityUserById",
@@ -176,7 +182,9 @@
         }
       },
       "delete": {
-        "tags": ["Identity - User Cache"],
+        "tags": [
+          "Identity - User Cache"
+        ],
         "summary": "GDPR Art. 17 — permanently deletes the cached entry for a user.",
         "description": "Implements the GDPR right to erasure (Article 17). Permanently removes the user's cached identity data. This does not affect the upstream identity provider — the data will be re-cached if the user is looked up again. For full erasure, also delete in the identity provider.",
         "operationId": "EraseIdentityUserCache",
@@ -230,7 +238,9 @@
     },
     "/identity/users/batch": {
       "post": {
-        "tags": ["Identity - User Cache"],
+        "tags": [
+          "Identity - User Cache"
+        ],
         "summary": "Resolves multiple user IDs to identity information in batch.",
         "description": "Resolves a list of user IDs in a single request, using the cache-aside pattern. Unknown IDs are silently omitted from the result. Useful for enriching lists of entities with user display names without N+1 calls.",
         "operationId": "BatchResolveIdentityUsers",
@@ -303,7 +313,9 @@
     },
     "/identity/users/stats": {
       "get": {
-        "tags": ["Identity - User Cache"],
+        "tags": [
+          "Identity - User Cache"
+        ],
         "summary": "Returns cache statistics: total entries, stale count, oldest/newest sync timestamps.",
         "description": "Returns aggregate statistics about the identity user cache: total number of cached entries, count of stale entries needing refresh, and the timestamp range of the oldest and newest synchronization. Useful for monitoring cache health and scheduling sync operations.",
         "operationId": "GetIdentityUserCacheStats",
@@ -353,7 +365,9 @@
     },
     "/identity/users/sync": {
       "post": {
-        "tags": ["Identity - User Cache"],
+        "tags": [
+          "Identity - User Cache"
+        ],
         "summary": "Forces refresh of specific users from the identity provider.",
         "description": "Fetches the latest data for the specified user IDs from the identity provider and updates the cache. Returns the refreshed user records. Users not found in the provider are silently skipped.",
         "operationId": "SyncIdentityUsers",
@@ -426,7 +440,9 @@
     },
     "/identity/users/sync-all": {
       "post": {
-        "tags": ["Identity - User Cache"],
+        "tags": [
+          "Identity - User Cache"
+        ],
         "summary": "Full sync — fetches all users from the identity provider and upserts the cache.",
         "description": "Fetches every user from the identity provider and upserts the entire cache. This is an expensive operation — use sparingly (e.g., nightly scheduled job or initial setup). Returns the count of synchronized entries.",
         "operationId": "SyncAllIdentityUsers",
@@ -476,7 +492,9 @@
     },
     "/identity/users/sync-stale": {
       "post": {
-        "tags": ["Identity - User Cache"],
+        "tags": [
+          "Identity - User Cache"
+        ],
         "summary": "Incremental sync — refreshes only stale cache entries.",
         "description": "Refreshes only cache entries whose last sync timestamp exceeds the configured staleness threshold. More efficient than a full sync for routine maintenance. Returns the count of refreshed entries.",
         "operationId": "SyncStaleIdentityUsers",
@@ -526,7 +544,9 @@
     },
     "/identity/users/{userId}/pseudonymize": {
       "patch": {
-        "tags": ["Identity - User Cache"],
+        "tags": [
+          "Identity - User Cache"
+        ],
         "summary": "GDPR Art. 18 — replaces PII with anonymized data in the cached entry.",
         "description": "Implements the GDPR right to restriction of processing (Article 18). Replaces all personally identifiable information (name, email, etc.) with anonymized placeholders while preserving the entry for referential integrity. Irreversible.",
         "operationId": "PseudonymizeIdentityUserCache",
@@ -580,7 +600,9 @@
     },
     "/identity/webhook": {
       "post": {
-        "tags": ["Identity - Webhook"],
+        "tags": [
+          "Identity - Webhook"
+        ],
         "summary": "Receives identity provider webhook events (user created/updated/deleted).",
         "description": "Webhook receiver for identity provider event notifications. Validates the HMAC signature (if configured) and processes user_created, user_updated, and user_deleted events by refreshing or removing the corresponding cache entries. No bearer authentication — security relies on HMAC signature validation in the handler.",
         "operationId": "IdentityWebhook",
@@ -629,7 +651,9 @@
             }
           }
         },
-        "security": [{}]
+        "security": [
+          { }
+        ]
       }
     }
   },
@@ -680,7 +704,9 @@
         }
       },
       "IdentityUserCacheBatchRequest": {
-        "required": ["userIds"],
+        "required": [
+          "userIds"
+        ],
         "type": "object",
         "properties": {
           "userIds": {
@@ -692,7 +718,12 @@
         }
       },
       "IdentityUserCacheStatsResponse": {
-        "required": ["totalEntries", "staleEntries", "oldestSyncAt", "newestSyncAt"],
+        "required": [
+          "totalEntries",
+          "staleEntries",
+          "oldestSyncAt",
+          "newestSyncAt"
+        ],
         "type": "object",
         "properties": {
           "totalEntries": {
@@ -704,17 +735,25 @@
             "format": "int32"
           },
           "oldestSyncAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "newestSyncAt": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           }
         }
       },
       "IdentityUserCacheSyncAllResponse": {
-        "required": ["syncedCount"],
+        "required": [
+          "syncedCount"
+        ],
         "type": "object",
         "properties": {
           "syncedCount": {
@@ -724,7 +763,9 @@
         }
       },
       "IdentityUserCacheSyncRequest": {
-        "required": ["userIds"],
+        "required": [
+          "userIds"
+        ],
         "type": "object",
         "properties": {
           "userIds": {
@@ -736,7 +777,9 @@
         }
       },
       "IdentityUserCacheSyncStaleResponse": {
-        "required": ["refreshedCount"],
+        "required": [
+          "refreshedCount"
+        ],
         "type": "object",
         "properties": {
           "refreshedCount": {
@@ -746,23 +789,43 @@
         }
       },
       "IdentityUserResponse": {
-        "required": ["userId", "username", "email", "firstName", "lastName", "enabled", "metadata"],
+        "required": [
+          "userId",
+          "username",
+          "email",
+          "firstName",
+          "lastName",
+          "enabled",
+          "metadata"
+        ],
         "type": "object",
         "properties": {
           "userId": {
             "type": "string"
           },
           "username": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "email": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "firstName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "lastName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "enabled": {
             "type": "boolean"
@@ -776,7 +839,11 @@
         }
       },
       "PagedResultOfIdentityUserResponse": {
-        "required": ["items", "totalCount", "hasMore"],
+        "required": [
+          "items",
+          "totalCount",
+          "hasMore"
+        ],
         "type": "object",
         "properties": {
           "items": {
@@ -786,14 +853,20 @@
             }
           },
           "totalCount": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },

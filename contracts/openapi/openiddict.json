@@ -7,7 +7,9 @@
   "paths": {
     "/admin/oidc/applications": {
       "get": {
-        "tags": ["OIDC Admin"],
+        "tags": [
+          "OIDC Admin"
+        ],
         "summary": "Returns all OIDC applications.",
         "description": "Returns all registered OIDC client applications with their client ID, display name, type, and tenant association. Applications are either public (SPA, mobile) or confidential (server-side). Use this list to manage the registered clients in the admin panel.",
         "operationId": "ListOidcApplications",
@@ -58,7 +60,9 @@
         }
       },
       "post": {
-        "tags": ["OIDC Admin"],
+        "tags": [
+          "OIDC Admin"
+        ],
         "summary": "Creates a new OIDC application.",
         "description": "Registers a new OIDC client with the specified permissions and redirect URIs. For confidential clients, a client secret is generated and returned once in the response. Returns 409 Conflict if a client with the same client ID already exists.",
         "operationId": "CreateOidcApplication",
@@ -138,7 +142,9 @@
     },
     "/admin/oidc/applications/{clientId}": {
       "delete": {
-        "tags": ["OIDC Admin"],
+        "tags": [
+          "OIDC Admin"
+        ],
         "summary": "Deletes an OIDC application.",
         "description": "Removes the OIDC client and all associated authorizations and tokens.",
         "operationId": "DeleteOidcApplication",
@@ -202,7 +208,9 @@
     },
     "/admin/oidc/applications/{clientId}/rotate-secret": {
       "post": {
-        "tags": ["OIDC Admin"],
+        "tags": [
+          "OIDC Admin"
+        ],
         "summary": "Rotates an OIDC application's client secret.",
         "description": "Generates a new client secret, invalidating the old one immediately. The new plaintext secret is returned once in the response (never stored in plaintext).",
         "operationId": "RotateOidcApplicationSecret",
@@ -273,7 +281,9 @@
     },
     "/admin/oidc/scopes": {
       "get": {
-        "tags": ["OIDC Admin"],
+        "tags": [
+          "OIDC Admin"
+        ],
         "summary": "Returns all OIDC scopes.",
         "description": "Returns all registered OIDC scopes with their name, display name, and associated resources. Scopes define the claims and resources that tokens can grant access to. Use this endpoint to audit which scopes are available for client configuration.",
         "operationId": "ListOidcScopes",
@@ -324,7 +334,9 @@
         }
       },
       "post": {
-        "tags": ["OIDC Admin"],
+        "tags": [
+          "OIDC Admin"
+        ],
         "summary": "Creates a new OIDC scope.",
         "description": "Registers a new OIDC scope with the specified name, display name, and associated resources. The scope name must be unique. Returns 409 Conflict if a scope with the same name already exists.",
         "operationId": "CreateOidcScope",
@@ -404,7 +416,9 @@
     },
     "/admin/oidc/scopes/{scopeName}": {
       "delete": {
-        "tags": ["OIDC Admin"],
+        "tags": [
+          "OIDC Admin"
+        ],
         "summary": "Deletes an OIDC scope.",
         "description": "Removes the scope. Existing authorizations using this scope are not affected.",
         "operationId": "DeleteOidcScope",
@@ -468,7 +482,9 @@
     },
     "/admin/oidc/authorizations": {
       "get": {
-        "tags": ["OIDC Admin"],
+        "tags": [
+          "OIDC Admin"
+        ],
         "summary": "Returns OIDC authorizations.",
         "description": "Returns OIDC authorizations filterable by user ID and client ID. Each authorization represents a user's consent grant to an application. Includes the authorization status (valid, revoked) and type (permanent, ad-hoc).",
         "operationId": "ListOidcAuthorizations",
@@ -521,7 +537,9 @@
     },
     "/admin/oidc/authorizations/{authorizationId}": {
       "delete": {
-        "tags": ["OIDC Admin"],
+        "tags": [
+          "OIDC Admin"
+        ],
         "summary": "Revokes an OIDC authorization.",
         "description": "Revokes the authorization and all associated tokens. The user will need to re-authorize on next login. Returns 404 if the authorization does not exist.",
         "operationId": "RevokeOidcAuthorization",
@@ -586,7 +604,9 @@
     },
     "/admin/oidc/authorizations/user/{userId}": {
       "delete": {
-        "tags": ["OIDC Admin"],
+        "tags": [
+          "OIDC Admin"
+        ],
         "summary": "Revokes all OIDC authorizations for a user.",
         "description": "Revokes all authorizations and tokens for the specified user. Used for GDPR erasure and security incidents.",
         "operationId": "RevokeUserOidcAuthorizations",
@@ -643,26 +663,49 @@
   "components": {
     "schemas": {
       "AdminOidcApplicationResponse": {
-        "required": ["clientId", "displayName", "type", "tenantId"],
+        "required": [
+          "clientId",
+          "displayName",
+          "type",
+          "tenantId"
+        ],
         "type": "object",
         "properties": {
           "clientId": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "displayName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "type": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "tenantId": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "uuid"
           }
         }
       },
       "AdminOidcAuthorizationResponse": {
-        "required": ["id", "subject", "clientId", "status", "type"],
+        "required": [
+          "id",
+          "subject",
+          "clientId",
+          "status",
+          "type"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -670,61 +713,102 @@
             "format": "uuid"
           },
           "subject": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "clientId": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "status": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "type": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "AdminOidcCreateApplicationRequest": {
-        "required": ["clientId", "displayName", "clientSecret", "type"],
+        "required": [
+          "clientId"
+        ],
         "type": "object",
         "properties": {
           "clientId": {
             "type": "string"
           },
           "displayName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "clientSecret": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "type": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "AdminOidcCreateScopeRequest": {
-        "required": ["name", "displayName", "description"],
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {
             "type": "string"
           },
           "displayName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "description": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "AdminOidcRotateSecretResponse": {
-        "required": ["clientId", "displayName", "newClientSecret"],
+        "required": [
+          "clientId",
+          "displayName",
+          "newClientSecret"
+        ],
         "type": "object",
         "properties": {
           "clientId": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "displayName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "newClientSecret": {
             "type": "string"
@@ -732,17 +816,30 @@
         }
       },
       "AdminOidcScopeResponse": {
-        "required": ["name", "displayName", "description"],
+        "required": [
+          "name",
+          "displayName",
+          "description"
+        ],
         "type": "object",
         "properties": {
           "name": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "displayName": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "description": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -750,20 +847,35 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "title": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "status": {
-            "type": ["null", "integer"],
+            "type": [
+              "null",
+              "integer"
+            ],
             "format": "int32"
           },
           "detail": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "instance": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "errors": {
             "type": "object",
