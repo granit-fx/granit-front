@@ -1,8 +1,4 @@
-import type {
-  FeatureDefinitionResponse,
-  FeatureGroupResponse,
-  FeatureValueResponse,
-} from '@granit/features';
+import type { FeatureDefinitionResponse, FeatureGroupResponse } from '@granit/features';
 
 export const mockFeatureGroups: FeatureGroupResponse[] = [
   {
@@ -59,9 +55,13 @@ export const mockFeatureDefinitions: FeatureDefinitionResponse[] = mockFeatureGr
   (g) => g.features
 );
 
-export const mockFeatureValues: FeatureValueResponse[] = [
-  { name: 'billing.auto-invoicing', value: 'true' },
-  { name: 'billing.max-retry-attempts', value: '3' },
-  { name: 'ui.dark-mode', value: 'true' },
-  { name: 'ui.theme', value: 'compact' },
-];
+/**
+ * Resolved feature values keyed by feature name — mirrors the backend
+ * `GET /values` `IReadOnlyDictionary<string, string>` contract.
+ */
+export const mockFeatureValues: Record<string, string> = {
+  'billing.auto-invoicing': 'true',
+  'billing.max-retry-attempts': '3',
+  'ui.dark-mode': 'true',
+  'ui.theme': 'compact',
+};

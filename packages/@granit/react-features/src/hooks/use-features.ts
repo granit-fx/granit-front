@@ -37,12 +37,15 @@ export function useFeatureDefinitions(): UseQueryResult<readonly FeatureGroupRes
 /**
  * Fetch all resolved feature values for the current tenant.
  *
+ * Resolves to a dictionary keyed by feature name.
+ *
  * @example
  * ```tsx
  * const { data: values } = useFeatureValues();
+ * const darkMode = values?.['ui.dark-mode'];
  * ```
  */
-export function useFeatureValues(): UseQueryResult<readonly FeatureValueResponse[]> {
+export function useFeatureValues(): UseQueryResult<Readonly<Record<string, string>>> {
   const config = useFeaturesConfig();
   const basePath = config.basePath!;
 

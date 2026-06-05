@@ -97,9 +97,10 @@ describe('use-features', () => {
   });
 
   describe('useFeatureValues', () => {
-    it('fetches all feature values', async () => {
+    it('fetches all feature values as a dictionary', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [sampleValue] });
+      const values = { 'ui.dark-mode': 'true' };
+      vi.mocked(client.get).mockResolvedValue({ data: values });
 
       const { result } = renderHook(() => useFeatureValues(), {
         wrapper: createWrapper(client),
@@ -107,7 +108,7 @@ describe('use-features', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.get).toHaveBeenCalledWith('/api/v1/features/values');
-      expect(result.current.data).toEqual([sampleValue]);
+      expect(result.current.data).toEqual(values);
     });
   });
 

@@ -52,6 +52,11 @@ export function accepted() {
   return new HttpResponse(null, { status: 202 });
 }
 
+/** 422 Unprocessable Entity — for validation failures, as a `ProblemDetails` body. */
+export function unprocessableEntity(detail?: string) {
+  return HttpResponse.json({ title: 'Unprocessable Entity', status: 422, detail }, { status: 422 });
+}
+
 // ---------------------------------------------------------------------------
 // Query-engine param parsing — mirrors @granit/query-engine serialization
 // ---------------------------------------------------------------------------

@@ -75,14 +75,15 @@ describe('features-api', () => {
   });
 
   describe('getAllFeatureValues', () => {
-    it('should GET {basePath}/values', async () => {
+    it('should GET {basePath}/values and return a dictionary', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleValue]));
+      const values = { 'ui.dark-mode': 'true', 'ui.max-items': '50' };
+      vi.mocked(client.get).mockResolvedValue(axiosResponse(values));
 
       const result = await getAllFeatureValues(client, basePath);
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/values`);
-      expect(result).toEqual([sampleValue]);
+      expect(result).toEqual(values);
     });
   });
 
