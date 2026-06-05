@@ -10,6 +10,7 @@ export const mockImportHistory: ImportJobResponse[] = [
     status: 'Completed',
     createdAt: '2026-03-07T09:15:00Z',
     completedAt: '2026-03-07T09:15:12Z',
+    concurrencyStamp: 'stamp-imp-001',
   },
   {
     id: 'imp-002',
@@ -20,6 +21,7 @@ export const mockImportHistory: ImportJobResponse[] = [
     status: 'PartiallyCompleted',
     createdAt: '2026-03-06T14:30:00Z',
     completedAt: '2026-03-06T14:30:08Z',
+    concurrencyStamp: 'stamp-imp-002',
   },
   {
     id: 'imp-003',
@@ -30,6 +32,7 @@ export const mockImportHistory: ImportJobResponse[] = [
     status: 'Failed',
     createdAt: '2026-03-05T11:00:00Z',
     completedAt: '2026-03-05T11:00:03Z',
+    concurrencyStamp: 'stamp-imp-003',
   },
   {
     id: 'imp-004',
@@ -40,6 +43,7 @@ export const mockImportHistory: ImportJobResponse[] = [
     status: 'Completed',
     createdAt: '2026-03-04T16:45:00Z',
     completedAt: '2026-03-04T16:45:06Z',
+    concurrencyStamp: 'stamp-imp-004',
   },
   {
     id: 'imp-005',
@@ -50,6 +54,7 @@ export const mockImportHistory: ImportJobResponse[] = [
     status: 'Cancelled',
     createdAt: '2026-03-03T08:20:00Z',
     completedAt: null,
+    concurrencyStamp: 'stamp-imp-005',
   },
   {
     id: 'imp-006',
@@ -60,6 +65,7 @@ export const mockImportHistory: ImportJobResponse[] = [
     status: 'Completed',
     createdAt: '2026-02-28T10:00:00Z',
     completedAt: '2026-02-28T10:00:22Z',
+    concurrencyStamp: 'stamp-imp-006',
   },
   {
     id: 'imp-007',
@@ -70,6 +76,7 @@ export const mockImportHistory: ImportJobResponse[] = [
     status: 'PartiallyCompleted',
     createdAt: '2026-02-25T13:15:00Z',
     completedAt: '2026-02-25T13:15:14Z',
+    concurrencyStamp: 'stamp-imp-007',
   },
 ];
 

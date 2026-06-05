@@ -25,4 +25,6 @@ export interface ImportJobResponse {
   readonly status: ImportJobStatus;
   readonly createdAt: string;
   readonly completedAt: string | null;
+  /** Opaque optimistic-concurrency token. Echo back in update requests to detect concurrent modifications (HTTP 409). */
+  readonly concurrencyStamp: string;
 }

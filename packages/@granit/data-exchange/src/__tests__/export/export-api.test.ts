@@ -122,7 +122,7 @@ describe('export-api', () => {
     const client = createMockClient();
     const page = { items: [{ id: '1' }], totalCount: 1 };
     vi.mocked(client.get).mockResolvedValueOnce({ data: page });
-    const params = { status: 'Completed', page: 1, pageSize: 10 };
+    const params = { status: 'Completed' as const, page: 1, pageSize: 10 };
     const result = await listExportJobs(client, BASE, params);
     expect(client.get).toHaveBeenCalledWith(`${BASE}/export/jobs`, { params });
     expect(result).toEqual(page);

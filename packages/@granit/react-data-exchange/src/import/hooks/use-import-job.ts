@@ -11,7 +11,7 @@ import { useCallback, useState } from 'react';
 import { buildImportQueryKey, useImportConfig } from '../providers/import-provider';
 
 import type {
-  ConfirmMappingsRequest,
+  ImportColumnMapping,
   ImportJobResponse,
   ImportJobStatus,
 } from '@granit/data-exchange';
@@ -19,8 +19,11 @@ import type {
 export interface UseImportJobReturn {
   /** Upload a file to start a new import job. */
   readonly upload: (file: File, definitionName: string) => void;
-  /** Confirm the column mappings. */
-  readonly confirmMap: (request: ConfirmMappingsRequest) => void;
+  /**
+   * Confirm the column mappings. The current concurrency stamp is fetched and
+   * attached automatically, so callers only pass the mappings.
+   */
+  readonly confirmMap: (mappings: readonly ImportColumnMapping[]) => void;
   /** Execute the import. */
   readonly execute: () => void;
   /** Cancel the import job. */
@@ -75,8 +78,16 @@ export function useImportJob(): UseImportJobReturn {
   });
 
   const confirmMutation = useMutation({
-    mutationFn: (request: ConfirmMappingsRequest) =>
-      confirmMappings(config.client, config.basePath, activeJobId ?? '', request),
+    mutationFn: async (mappings: readonly ImportColumnMapping[]) => {
+      const id = activeJobId ?? '';
+      // The preview transition regenerates the optimistic-concurrency stamp, so
+      // re-read the job to obtain the current value before confirming (avoids 409).
+      const current = await getImportJob(config.client, config.basePath, id);
+      await confirmMappings(config.client, config.basePath, id, {
+        mappings,
+        concurrencyStamp: current.concurrencyStamp,
+      });
+    },
     onSuccess: async () => {
       if (activeJobId) {
         const updated = await getImportJob(config.client, config.basePath, activeJobId);
@@ -126,8 +137,8 @@ export function useImportJob(): UseImportJobReturn {
   );
 
   const confirmMap = useCallback(
-    (request: ConfirmMappingsRequest) => {
-      confirmMutation.mutate(request);
+    (mappings: readonly ImportColumnMapping[]) => {
+      confirmMutation.mutate(mappings);
     },
     [confirmMutation]
   );

@@ -6,7 +6,7 @@ export type MappingConfidence = 'Manual' | 'Saved' | 'Exact' | 'Fuzzy' | 'Semant
 
 /**
  * Mapping between a source file column and a target entity property.
- * Mirrors `Granit.DataExchange.Endpoints.Dtos.Import.ColumnMappingDto`.
+ * Mirrors `Granit.DataExchange.Import.Mapping.ImportColumnMapping`.
  */
 export interface ImportColumnMapping {
   readonly sourceColumn: string;
@@ -43,6 +43,6 @@ export interface ImportPreviewResponse {
  */
 export interface ConfirmMappingsRequest {
   readonly mappings: readonly ImportColumnMapping[];
-  /** When true, saves these mappings for reuse in future imports. */
-  readonly saveForReuse?: boolean;
+  /** Stamp from the last read of the job; must match the stored value (prevents lost updates → HTTP 409). */
+  readonly concurrencyStamp: string;
 }

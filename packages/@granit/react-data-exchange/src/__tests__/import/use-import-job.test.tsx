@@ -91,12 +91,15 @@ describe('useImportJob', () => {
     });
     await waitFor(() => expect(result.current.job?.id).toBe('job-2'));
 
-    // Confirm mappings
+    // Confirm mappings — the hook fetches the current job (for the concurrency
+    // stamp) before the PUT, then refetches it again in onSuccess.
     vi.spyOn(mockClient, 'put').mockResolvedValueOnce({ data: undefined });
-    vi.spyOn(mockClient, 'get').mockResolvedValueOnce({ data: mappedJob });
+    const getSpy = vi.spyOn(mockClient, 'get');
+    getSpy.mockResolvedValueOnce({ data: { ...jobResponse, concurrencyStamp: 'stamp-1' } });
+    getSpy.mockResolvedValueOnce({ data: mappedJob });
 
     act(() => {
-      result.current.confirmMap({ mappings: [] });
+      result.current.confirmMap([]);
     });
 
     await waitFor(() => expect(result.current.job?.status).toBe('Mapped'));

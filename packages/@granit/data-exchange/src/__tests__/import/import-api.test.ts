@@ -25,7 +25,7 @@ describe('import-api', () => {
     const file = new File(['content'], 'test.csv', { type: 'text/csv' });
     const result = await uploadImportFile(client, BASE, file, 'Test');
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/import`, expect.any(FormData), {
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/import/jobs`, expect.any(FormData), {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
     expect(result).toEqual(job);
@@ -50,21 +50,25 @@ describe('import-api', () => {
     const client = createMockClient();
     const request = {
       mappings: [{ sourceColumn: 'Col1', targetProperty: 'Email', confidence: 'Manual' as const }],
+      concurrencyStamp: 'stamp-1',
     };
 
     await confirmMappings(client, BASE, 'job-1', request);
     expect(client.put).toHaveBeenCalledWith(`${BASE}/import/job-1/mappings`, request);
   });
 
-  it('confirmMappings forwards saveForReuse flag', async () => {
+  it('confirmMappings forwards the concurrency stamp', async () => {
     const client = createMockClient();
     const request = {
       mappings: [{ sourceColumn: 'Col1', targetProperty: 'Email', confidence: 'Manual' as const }],
-      saveForReuse: true,
+      concurrencyStamp: 'stamp-xyz',
     };
 
     await confirmMappings(client, BASE, 'job-1', request);
-    expect(client.put).toHaveBeenCalledWith(`${BASE}/import/job-1/mappings`, request);
+    expect(client.put).toHaveBeenCalledWith(
+      `${BASE}/import/job-1/mappings`,
+      expect.objectContaining({ concurrencyStamp: 'stamp-xyz' })
+    );
   });
 
   it('executeImport calls POST /import/{jobId}/execute', async () => {
@@ -168,7 +172,7 @@ describe('import-api', () => {
     const client = createMockClient();
     const page = { items: [{ id: '1' }], totalCount: 1 };
     vi.mocked(client.get).mockResolvedValueOnce({ data: page });
-    const params = { status: 'Completed', page: 1, pageSize: 10 };
+    const params = { status: 'Completed' as const, page: 1, pageSize: 10 };
 
     const result = await listImportJobs(client, BASE, params);
     expect(client.get).toHaveBeenCalledWith(`${BASE}/import/jobs`, { params });

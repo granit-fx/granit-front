@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { buildExportQueryKey, useExportConfig } from '../providers/export-provider';
 
-import type { ExportDefinitionResponse, ExportField } from '@granit/data-exchange';
+import type { ExportDefinitionResponse, ExportFieldResponse } from '@granit/data-exchange';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -24,7 +24,7 @@ export function useExportDefinitions(): UseQueryResult<readonly ExportDefinition
  */
 export function useExportFields(
   definitionName: string | undefined
-): UseQueryResult<readonly ExportField[]> {
+): UseQueryResult<readonly ExportFieldResponse[]> {
   const config = useExportConfig();
 
   return useQuery({

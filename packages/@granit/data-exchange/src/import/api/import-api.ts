@@ -1,4 +1,4 @@
-import type { ImportJobResponse } from '../types/import-job';
+import type { ImportJobResponse, ImportJobStatus } from '../types/import-job';
 import type { ConfirmMappingsRequest, ImportPreviewResponse } from '../types/import-preview';
 import type { ImportReportResponse } from '../types/import-report';
 import type { AxiosInstance } from '@granit/api-client';
@@ -6,13 +6,13 @@ import type { PagedResult, PaginationParams } from '@granit/query-engine';
 
 /** Query parameters for listing import jobs. */
 export type ImportJobListParams = PaginationParams & {
-  readonly status?: string;
+  readonly status?: ImportJobStatus;
 };
 
 /**
  * Uploads a file and creates a new import job.
  *
- * `POST {basePath}/import/`
+ * `POST {basePath}/import/jobs`
  */
 export async function uploadImportFile(
   client: AxiosInstance,
@@ -23,7 +23,7 @@ export async function uploadImportFile(
   const formData = new FormData();
   formData.append('file', file);
   formData.append('definitionName', definitionName);
-  const response = await client.post<ImportJobResponse>(`${basePath}/import`, formData, {
+  const response = await client.post<ImportJobResponse>(`${basePath}/import/jobs`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
   return response.data;

@@ -1,11 +1,15 @@
-import type { ExportDefinitionResponse, ExportField } from '../types/export-definition';
-import type { CreateExportJobRequest, ExportJobResponse } from '../types/export-job';
+import type { ExportDefinitionResponse, ExportFieldResponse } from '../types/export-definition';
+import type {
+  CreateExportJobRequest,
+  ExportJobResponse,
+  ExportJobStatus,
+} from '../types/export-job';
 import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult, PaginationParams } from '@granit/query-engine';
 
 /** Query parameters for listing export jobs. */
 export type ExportJobListParams = PaginationParams & {
-  readonly status?: string;
+  readonly status?: ExportJobStatus;
 };
 
 /**
@@ -30,8 +34,8 @@ export async function getExportFields(
   client: AxiosInstance,
   basePath: string,
   definitionName: string
-): Promise<readonly ExportField[]> {
-  const response = await client.get<ExportField[]>(
+): Promise<readonly ExportFieldResponse[]> {
+  const response = await client.get<ExportFieldResponse[]>(
     `${basePath}/metadata/definitions/${encodeURIComponent(definitionName)}/fields`
   );
   return response.data;
