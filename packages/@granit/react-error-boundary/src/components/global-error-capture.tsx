@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { collectErrorContext, ErrorContext } from '../providers/error-context-provider';
+
 import type { GlobalErrorCaptureProps } from '../types/index';
 
 /**
@@ -15,6 +17,15 @@ import type { GlobalErrorCaptureProps } from '../types/index';
  * ```
  */
 export function GlobalErrorCapture({ logger, onError }: GlobalErrorCaptureProps) {
+  // Track the latest error context in a ref so the listener effect below stays
+  // subscribed across breadcrumb updates (the context value changes on every
+  // `addBreadcrumb`) instead of tearing down and re-adding the global listeners.
+  const errorContext = React.useContext(ErrorContext);
+  const contextRef = React.useRef(errorContext);
+  React.useEffect(() => {
+    contextRef.current = errorContext;
+  }, [errorContext]);
+
   React.useEffect(() => {
     const recentErrors = new Set<string>();
 
@@ -35,6 +46,7 @@ export function GlobalErrorCapture({ logger, onError }: GlobalErrorCaptureProps)
         filename: event.filename,
         lineno: event.lineno,
         colno: event.colno,
+        ...collectErrorContext(contextRef.current),
       });
 
       onError?.(error);
@@ -48,7 +60,7 @@ export function GlobalErrorCapture({ logger, onError }: GlobalErrorCaptureProps)
 
       if (isDuplicate(error.message)) return;
 
-      logger.error('Unhandled promise rejection', error);
+      logger.error('Unhandled promise rejection', error, collectErrorContext(contextRef.current));
 
       onError?.(error);
     }

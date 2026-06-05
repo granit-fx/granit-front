@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
 import { GranitErrorBoundary } from '../components/granit-error-boundary';
+import { ErrorContextProvider } from '../providers/error-context-provider';
 
 import type { Logger } from '@granit/logger';
 
@@ -124,6 +125,30 @@ describe('GranitErrorBoundary', () => {
 
     expect(screen.getByText('Test render error')).toBeInTheDocument();
     expect(logger.error).toHaveBeenCalled();
+  });
+
+  it('enriches the logged error with route and user from ErrorContextProvider', () => {
+    const logger = createMockLogger();
+
+    render(
+      <ErrorContextProvider
+        config={{ getRouteInfo: () => '/settings', getUserInfo: () => ({ id: 'user-9' }) }}
+      >
+        <GranitErrorBoundary logger={logger} renderFallback={(error) => <p>{error.message}</p>}>
+          <ThrowingComponent shouldThrow />
+        </GranitErrorBoundary>
+      </ErrorContextProvider>
+    );
+
+    expect(logger.error).toHaveBeenCalledWith(
+      'Uncaught render error',
+      expect.objectContaining({ message: 'Test render error' }),
+      expect.objectContaining({
+        componentStack: expect.any(String),
+        route: '/settings',
+        userId: 'user-9',
+      })
+    );
   });
 
   it('should reset the error boundary and re-render children', async () => {

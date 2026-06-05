@@ -2,6 +2,7 @@ import { render } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { GlobalErrorCapture } from '../components/global-error-capture';
+import { ErrorContextProvider } from '../providers/error-context-provider';
 
 import type { Logger } from '@granit/logger';
 
@@ -85,7 +86,8 @@ describe('GlobalErrorCapture', () => {
 
     expect(logger.error).toHaveBeenCalledWith(
       'Unhandled promise rejection',
-      expect.objectContaining({ message: 'Rejected!' })
+      expect.objectContaining({ message: 'Rejected!' }),
+      expect.objectContaining({})
     );
   });
 
@@ -132,7 +134,8 @@ describe('GlobalErrorCapture', () => {
 
     expect(logger.error).toHaveBeenCalledWith(
       'Unhandled promise rejection',
-      expect.objectContaining({ message: 'string error' })
+      expect.objectContaining({ message: 'string error' }),
+      expect.objectContaining({})
     );
   });
 
@@ -182,7 +185,8 @@ describe('GlobalErrorCapture', () => {
 
     expect(logger.error).toHaveBeenCalledWith(
       'Unhandled promise rejection',
-      expect.objectContaining({ message: 'Unhandled promise rejection' })
+      expect.objectContaining({ message: 'Unhandled promise rejection' }),
+      expect.objectContaining({})
     );
   });
 
@@ -198,7 +202,29 @@ describe('GlobalErrorCapture', () => {
 
     expect(logger.error).toHaveBeenCalledWith(
       'Unhandled promise rejection',
-      expect.objectContaining({ message: 'Unhandled promise rejection' })
+      expect.objectContaining({ message: 'Unhandled promise rejection' }),
+      expect.objectContaining({})
+    );
+  });
+
+  it('enriches captured errors with route and user from ErrorContextProvider', () => {
+    const logger = createMockLogger();
+    render(
+      <ErrorContextProvider
+        config={{ getRouteInfo: () => '/dashboard', getUserInfo: () => ({ id: 'user-1' }) }}
+      >
+        <GlobalErrorCapture logger={logger} />
+      </ErrorContextProvider>
+    );
+
+    globalThis.dispatchEvent(
+      new ErrorEvent('error', { error: new Error('Boom'), message: 'Boom' })
+    );
+
+    expect(logger.error).toHaveBeenCalledWith(
+      'Uncaught error',
+      expect.objectContaining({ message: 'Boom' }),
+      expect.objectContaining({ route: '/dashboard', userId: 'user-1' })
     );
   });
 });

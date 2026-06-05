@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { collectErrorContext, ErrorContext } from '../providers/error-context-provider';
+
 import type { ErrorBoundaryProps } from '../types/index';
 import type { Logger } from '@granit/logger';
 
@@ -35,6 +37,9 @@ type ErrorBoundaryState = {
  * ```
  */
 export class GranitErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  static contextType = ErrorContext;
+  declare context: React.ContextType<typeof ErrorContext>;
+
   private readonly logger: Logger;
 
   constructor(props: ErrorBoundaryProps) {
@@ -50,6 +55,7 @@ export class GranitErrorBoundary extends React.Component<ErrorBoundaryProps, Err
   override componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
     this.logger.error('Uncaught render error', error, {
       componentStack: errorInfo.componentStack ?? undefined,
+      ...collectErrorContext(this.context),
     });
 
     this.props.onError?.(error, errorInfo);
