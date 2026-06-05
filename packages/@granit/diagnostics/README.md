@@ -13,7 +13,7 @@ pnpm add @granit/diagnostics
 ### Types
 
 - `MonitoringHealthResponse` -- aggregated health check response
-- `ServiceHealth` -- individual service health status
+- `ServiceHealthResponse` -- individual service health status
 - `ServiceStatus` -- status enum values
 
 ### Functions

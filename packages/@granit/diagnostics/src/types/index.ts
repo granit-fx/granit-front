@@ -2,7 +2,7 @@
 export type ServiceStatus = 'healthy' | 'degraded' | 'down';
 
 /** Health information for a single monitored service. */
-export interface ServiceHealth {
+export interface ServiceHealthResponse {
   readonly id: string;
   readonly name: string;
   readonly status: ServiceStatus;
@@ -13,7 +13,7 @@ export interface ServiceHealth {
 
 /** Response from the monitoring health endpoint. */
 export interface MonitoringHealthResponse {
-  readonly services: readonly ServiceHealth[];
+  readonly services: readonly ServiceHealthResponse[];
   /** ISO 8601 timestamp of when the health check was performed. */
   readonly checkedAt: string;
 }

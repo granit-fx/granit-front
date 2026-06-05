@@ -1423,9 +1423,9 @@
           "members": []
         },
         {
-          "name": "ServiceHealth",
+          "name": "ServiceHealthResponse",
           "kind": "interface",
-          "signature": "interface ServiceHealth",
+          "signature": "interface ServiceHealthResponse",
           "members": []
         },
         {
@@ -4344,11 +4344,6 @@
           "name": "buildDiagnosticsQueryKey",
           "kind": "function",
           "signature": "function buildDiagnosticsQueryKey( config: Pick<MonitoringHealthOptions, 'queryKeyPrefix'>, ...segments: readonly unknown[] ): readonly unknown[]"
-        },
-        {
-          "name": "diagnosticsKeys",
-          "kind": "const",
-          "signature": "const diagnosticsKeys"
         },
         {
           "name": "useMonitoringHealth",

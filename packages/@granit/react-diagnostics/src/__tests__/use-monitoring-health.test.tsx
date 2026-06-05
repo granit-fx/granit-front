@@ -5,7 +5,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { buildDiagnosticsQueryKey, diagnosticsKeys } from '../hooks/query-keys';
+import { buildDiagnosticsQueryKey } from '../hooks/query-keys';
 import { useMonitoringHealth } from '../hooks/use-monitoring-health';
 
 import type { MonitoringHealthResponse } from '@granit/diagnostics';
@@ -33,16 +33,6 @@ const mockResponse: MonitoringHealthResponse = {
   ],
   checkedAt: '2026-03-20T12:00:00+00:00',
 };
-
-describe('diagnosticsKeys (legacy)', () => {
-  it('should produce stable all key', () => {
-    expect(diagnosticsKeys.all).toEqual(['diagnostics']);
-  });
-
-  it('should produce stable health key', () => {
-    expect(diagnosticsKeys.health()).toEqual(['diagnostics', 'health']);
-  });
-});
 
 describe('buildDiagnosticsQueryKey', () => {
   it('should use default prefix when no queryKeyPrefix is provided', () => {

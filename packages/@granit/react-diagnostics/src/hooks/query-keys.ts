@@ -18,13 +18,3 @@ export function buildDiagnosticsQueryKey(
 ): readonly unknown[] {
   return [...(config.queryKeyPrefix ?? DEFAULT_QUERY_KEY_PREFIX), ...segments];
 }
-
-// ---------------------------------------------------------------------------
-// Legacy query key factory (delegates to default prefix)
-// ---------------------------------------------------------------------------
-
-/** @deprecated Use {@link buildDiagnosticsQueryKey} instead. */
-export const diagnosticsKeys = {
-  all: DEFAULT_QUERY_KEY_PREFIX as readonly string[],
-  health: () => [...DEFAULT_QUERY_KEY_PREFIX, 'health'] as const,
-};

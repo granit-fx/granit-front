@@ -1,6 +1,6 @@
 import { describe, expectTypeOf, it } from 'vitest';
 
-import type { MonitoringHealthResponse, ServiceHealth, ServiceStatus } from '../index';
+import type { MonitoringHealthResponse, ServiceHealthResponse, ServiceStatus } from '../index';
 
 describe('@granit/diagnostics types', () => {
   describe('ServiceStatus', () => {
@@ -9,32 +9,32 @@ describe('@granit/diagnostics types', () => {
     });
   });
 
-  describe('ServiceHealth', () => {
+  describe('ServiceHealthResponse', () => {
     it('should have identification fields', () => {
-      expectTypeOf<ServiceHealth>().toHaveProperty('id');
-      expectTypeOf<ServiceHealth['id']>().toBeString();
-      expectTypeOf<ServiceHealth>().toHaveProperty('name');
-      expectTypeOf<ServiceHealth['name']>().toBeString();
+      expectTypeOf<ServiceHealthResponse>().toHaveProperty('id');
+      expectTypeOf<ServiceHealthResponse['id']>().toBeString();
+      expectTypeOf<ServiceHealthResponse>().toHaveProperty('name');
+      expectTypeOf<ServiceHealthResponse['name']>().toBeString();
     });
 
     it('should have status field', () => {
-      expectTypeOf<ServiceHealth>().toHaveProperty('status');
-      expectTypeOf<ServiceHealth['status']>().toEqualTypeOf<ServiceStatus>();
+      expectTypeOf<ServiceHealthResponse>().toHaveProperty('status');
+      expectTypeOf<ServiceHealthResponse['status']>().toEqualTypeOf<ServiceStatus>();
     });
 
     it('should have nullable responseTimeMs', () => {
-      expectTypeOf<ServiceHealth>().toHaveProperty('responseTimeMs');
-      expectTypeOf<ServiceHealth['responseTimeMs']>().toEqualTypeOf<number | null>();
+      expectTypeOf<ServiceHealthResponse>().toHaveProperty('responseTimeMs');
+      expectTypeOf<ServiceHealthResponse['responseTimeMs']>().toEqualTypeOf<number | null>();
     });
 
     it('should have nullable description', () => {
-      expectTypeOf<ServiceHealth>().toHaveProperty('description');
-      expectTypeOf<ServiceHealth['description']>().toEqualTypeOf<string | null>();
+      expectTypeOf<ServiceHealthResponse>().toHaveProperty('description');
+      expectTypeOf<ServiceHealthResponse['description']>().toEqualTypeOf<string | null>();
     });
 
     it('should have readonly tags array', () => {
-      expectTypeOf<ServiceHealth>().toHaveProperty('tags');
-      expectTypeOf<ServiceHealth['tags']>().toEqualTypeOf<readonly string[]>();
+      expectTypeOf<ServiceHealthResponse>().toHaveProperty('tags');
+      expectTypeOf<ServiceHealthResponse['tags']>().toEqualTypeOf<readonly string[]>();
     });
   });
 
@@ -42,7 +42,7 @@ describe('@granit/diagnostics types', () => {
     it('should have readonly services array', () => {
       expectTypeOf<MonitoringHealthResponse>().toHaveProperty('services');
       expectTypeOf<MonitoringHealthResponse['services']>().toEqualTypeOf<
-        readonly ServiceHealth[]
+        readonly ServiceHealthResponse[]
       >();
     });
 

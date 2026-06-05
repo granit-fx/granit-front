@@ -1,6 +1,5 @@
+import { DEFAULT_DIAGNOSTICS_BASE_PATH } from '@granit/diagnostics';
 import { http, HttpResponse } from 'msw';
-
-import { DEFAULT_BASE_PATH } from '../constants';
 
 import { mockDiagnosticsHealth } from './data';
 
@@ -11,7 +10,7 @@ import { mockDiagnosticsHealth } from './data';
  *
  * @param baseUrl - API base path (default: `/api/v1/diagnostics`)
  */
-export function createDiagnosticsHandlers(baseUrl = DEFAULT_BASE_PATH) {
+export function createDiagnosticsHandlers(baseUrl = DEFAULT_DIAGNOSTICS_BASE_PATH) {
   return [
     http.get(`${baseUrl}/health`, () => {
       return HttpResponse.json({
