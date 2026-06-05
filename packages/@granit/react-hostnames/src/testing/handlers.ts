@@ -6,14 +6,28 @@ import { mockHostnames } from './data';
 
 import type { CreateManagedHostnameRequest, ManagedHostnameResponse } from '@granit/hostnames';
 
+/** Options for {@link createHostnamesHandlers}. */
+export type CreateHostnamesHandlersOptions = {
+  /**
+   * Initial fixtures the in-memory store is seeded with. Lets consumers inject
+   * hostnames whose owners line up with their own mock tenants/sites instead of
+   * the package defaults. Defaults to {@link mockHostnames}.
+   */
+  readonly seed?: readonly ManagedHostnameResponse[];
+};
+
 /**
  * Create MSW handlers for the hostnames API endpoints.
  *
  * @param baseUrl - API base path (default: `/api/hostnames`)
+ * @param options - Optional overrides (e.g. a custom `seed`).
  */
-export function createHostnamesHandlers(baseUrl = DEFAULT_BASE_PATH) {
+export function createHostnamesHandlers(
+  baseUrl = DEFAULT_BASE_PATH,
+  options: CreateHostnamesHandlersOptions = {}
+) {
   // In-memory store — starts from the seeded fixtures, mutable per-session.
-  const store: ManagedHostnameResponse[] = [...mockHostnames];
+  const store: ManagedHostnameResponse[] = [...(options.seed ?? mockHostnames)];
 
   return [
     http.get(`${baseUrl}/availability`, ({ request }) => {
