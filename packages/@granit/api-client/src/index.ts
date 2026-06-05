@@ -286,8 +286,8 @@ export function buildApiUrl(basePath: string, ...segments: string[]): string {
 export { HttpError, TimeoutError, ValidationError } from './errors';
 export type { ProblemDetailsPayload, ValidationDetails } from './errors';
 
-// Idempotency tombstone helpers — see ./idempotency.ts.
-export { isIdempotencyTombstoned, readIdempotencyTombstone } from './idempotency';
+// Idempotency tombstone + replay helpers — see ./idempotency.ts.
+export { isIdempotencyTombstoned, readIdempotencyTombstone, isIdempotentReplay } from './idempotency';
 export type { IdempotencyTombstoneInfo } from './idempotency';
 
 // ---------------------------------------------------------------------------

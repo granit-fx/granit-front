@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { isIdempotencyTombstoned, readIdempotencyTombstone } from '../idempotency';
+import { isIdempotencyTombstoned, isIdempotentReplay, readIdempotencyTombstone } from '../idempotency';
 
 // Builds an AxiosError-shaped object with the given response headers.
 // We intentionally do NOT use the real `AxiosError` constructor — the
@@ -15,6 +15,12 @@ function errorWithHeaders(headers: Record<string, string>, status = 413): unknow
     },
     message: 'Request failed',
   };
+}
+
+// Builds an AxiosResponse-shaped object exposing `headers` directly (success
+// path), as opposed to the error wrapper above (`response.headers`).
+function responseWithHeaders(headers: Record<string, string>, status = 200): unknown {
+  return { status, statusText: 'OK', headers, data: {} };
 }
 
 describe('readIdempotencyTombstone', () => {
@@ -92,5 +98,47 @@ describe('isIdempotencyTombstoned', () => {
   it('is false for non-error input', () => {
     expect(isIdempotencyTombstoned(null)).toBe(false);
     expect(isIdempotencyTombstoned(new Error('network'))).toBe(false);
+  });
+});
+
+describe('isIdempotentReplay', () => {
+  it('is true when a success response carries the replay header', () => {
+    const res = responseWithHeaders({ 'idempotent-replayed': 'true' });
+
+    expect(isIdempotentReplay(res)).toBe(true);
+  });
+
+  it('is true for the canonical-cased header', () => {
+    // Axios normally lowercases headers, but a proxy or test fixture may not.
+    const res = responseWithHeaders({ 'Idempotent-Replayed': 'true' });
+
+    expect(isIdempotentReplay(res)).toBe(true);
+  });
+
+  it('is true when the replay reproduces a cached error status (error shape)', () => {
+    // Cacheable error statuses (e.g. 409, 422) are replayed too — the helper
+    // must read `error.response.headers`, not just `response.headers`.
+    const err = errorWithHeaders({ 'idempotent-replayed': 'true' }, 409);
+
+    expect(isIdempotentReplay(err)).toBe(true);
+  });
+
+  it('is false when the replay header is absent', () => {
+    const res = responseWithHeaders({ 'content-type': 'application/json' });
+
+    expect(isIdempotentReplay(res)).toBe(false);
+  });
+
+  it('is false when the replay header is not "true"', () => {
+    const res = responseWithHeaders({ 'idempotent-replayed': 'false' });
+
+    expect(isIdempotentReplay(res)).toBe(false);
+  });
+
+  it('is false for non-object input', () => {
+    expect(isIdempotentReplay(null)).toBe(false);
+    expect(isIdempotentReplay(undefined)).toBe(false);
+    expect(isIdempotentReplay('true')).toBe(false);
+    expect(isIdempotentReplay({})).toBe(false);
   });
 });

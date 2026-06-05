@@ -15,6 +15,7 @@
 // ---------------------------------------------------------------------------
 
 const TOMBSTONE_HEADER = 'x-idempotency-tombstone';
+const REPLAY_HEADER = 'idempotent-replayed';
 
 /** Reason reported by the backend for the tombstoned response. */
 export interface IdempotencyTombstoneInfo {
@@ -28,24 +29,30 @@ export interface IdempotencyTombstoneInfo {
   readonly reason: string;
 }
 
-// Minimal shape test for an AxiosError-like object without taking a direct
-// dependency on axios's error constructor. This lets the helper accept either
-// a raw AxiosError or a framework-specific error wrapper that preserves
-// `response.headers`.
-interface ErrorWithResponseHeaders {
-  response?: {
-    headers?: Readonly<Record<string, unknown>>;
-  };
-}
+type HeaderBag = Readonly<Record<string, unknown>>;
 
-function hasResponseHeaders(error: unknown): error is ErrorWithResponseHeaders {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    'response' in error &&
-    typeof (error as { response?: unknown }).response === 'object' &&
-    (error as { response?: unknown }).response !== null
-  );
+// Extract the response header bag from either an AxiosResponse (`response.headers`)
+// or an AxiosError-like wrapper (`error.response.headers`), without taking a
+// direct dependency on axios's types. This lets the idempotency helpers accept
+// a successful response, a raw AxiosError, or a framework-specific `HttpError`
+// that preserves the original response headers — covering both the tombstone
+// (always an error) and replay (success or cached error) signals.
+function extractResponseHeaders(value: unknown): HeaderBag | undefined {
+  if (typeof value !== 'object' || value === null) {
+    return undefined;
+  }
+
+  const direct = (value as { headers?: unknown }).headers;
+  if (typeof direct === 'object' && direct !== null) {
+    return direct as HeaderBag;
+  }
+
+  const nested = (value as { response?: { headers?: unknown } }).response?.headers;
+  if (typeof nested === 'object' && nested !== null) {
+    return nested as HeaderBag;
+  }
+
+  return undefined;
 }
 
 /**
@@ -59,11 +66,7 @@ function hasResponseHeaders(error: unknown): error is ErrorWithResponseHeaders {
  * when they preserve the original response headers.
  */
 export function readIdempotencyTombstone(error: unknown): IdempotencyTombstoneInfo | undefined {
-  if (!hasResponseHeaders(error)) {
-    return undefined;
-  }
-
-  const headers = error.response?.headers;
+  const headers = extractResponseHeaders(error);
   if (!headers) {
     return undefined;
   }
@@ -86,4 +89,27 @@ export function readIdempotencyTombstone(error: unknown): IdempotencyTombstoneIn
  */
 export function isIdempotencyTombstoned(error: unknown): boolean {
   return readIdempotencyTombstone(error) !== undefined;
+}
+
+/**
+ * `true` when the response carried the `Idempotent-Replayed: true` header —
+ * the backend served a cached copy of a previously-completed request instead
+ * of re-executing the handler. Useful for telemetry and UX ("already
+ * processed — this was a duplicate submission").
+ *
+ * Accepts either a successful `AxiosResponse` (header read from
+ * `response.headers`) or an `AxiosError` (header read from
+ * `error.response.headers`), since a replay reproduces the original cached
+ * status — which may be a success OR a cached error (e.g. 409, 422).
+ */
+export function isIdempotentReplay(responseOrError: unknown): boolean {
+  const headers = extractResponseHeaders(responseOrError);
+  if (!headers) {
+    return false;
+  }
+
+  // Axios lowercases response headers by default; check the canonical casing
+  // too for adapters/proxies that preserve it.
+  const raw = headers[REPLAY_HEADER] ?? headers['Idempotent-Replayed'];
+  return typeof raw === 'string' && raw.toLowerCase() === 'true';
 }

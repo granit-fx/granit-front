@@ -245,6 +245,11 @@
           "signature": "function readIdempotencyTombstone(error: unknown): IdempotencyTombstoneInfo | undefined"
         },
         {
+          "name": "isIdempotentReplay",
+          "kind": "function",
+          "signature": "function isIdempotentReplay(responseOrError: unknown): boolean"
+        },
+        {
           "name": "IdempotencyTombstoneInfo",
           "kind": "interface",
           "signature": "interface IdempotencyTombstoneInfo",
@@ -1598,19 +1603,14 @@
       "description": "Automatic Idempotency-Key header injection for mutation requests",
       "exports": [
         {
-          "name": "IdempotencyOptions",
+          "name": "IdempotencyClientOptions",
           "kind": "interface",
-          "signature": "interface IdempotencyOptions",
+          "signature": "interface IdempotencyClientOptions",
           "members": [
             {
               "name": "methods",
               "kind": "property",
               "signature": "methods?: string[]"
-            },
-            {
-              "name": "headerName",
-              "kind": "property",
-              "signature": "headerName?: string"
             },
             {
               "name": "keyGenerator",
@@ -1620,9 +1620,14 @@
           ]
         },
         {
+          "name": "IdempotencyOptions",
+          "kind": "type",
+          "signature": "type IdempotencyOptions = IdempotencyClientOptions"
+        },
+        {
           "name": "enableIdempotency",
           "kind": "function",
-          "signature": "function enableIdempotency(options?: IdempotencyOptions): void"
+          "signature": "function enableIdempotency(options?: IdempotencyClientOptions): void"
         },
         {
           "name": "disableIdempotency",

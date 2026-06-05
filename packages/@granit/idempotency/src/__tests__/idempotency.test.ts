@@ -13,7 +13,6 @@ interface ApiClientModule {
 interface IdempotencyModule {
   enableIdempotency: (options?: {
     methods?: string[];
-    headerName?: string;
     keyGenerator?: (config: InternalAxiosRequestConfig) => string | undefined;
   }) => void;
   disableIdempotency: () => void;
@@ -99,6 +98,24 @@ describe('enableIdempotency', () => {
     expect(key1).toBeDefined();
     expect(key2).toBeDefined();
     expect(key1).not.toBe(key2);
+  });
+
+  it('should preserve a caller-provided Idempotency-Key (stable across retries)', async () => {
+    // The default generator must NOT clobber a key the caller already set —
+    // that is the mechanism by which one logical operation keeps the same key
+    // across every retry attempt, so the backend replays instead of re-running.
+    idempotencyMod.enableIdempotency();
+    const client = apiMod.createApiClient({ baseURL: 'https://api.example.com' });
+    client.defaults.adapter = captureAdapter;
+
+    const stableKey = 'stable-operation-key-123';
+    const response = await client.post(
+      '/test',
+      { data: 'value' },
+      { headers: { 'Idempotency-Key': stableKey } }
+    );
+
+    expect(response.config.headers['Idempotency-Key']).toBe(stableKey);
   });
 });
 
