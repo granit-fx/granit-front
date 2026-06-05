@@ -340,6 +340,9 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1227,6 +1230,9 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing

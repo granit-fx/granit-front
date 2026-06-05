@@ -1,8 +1,8 @@
 // ---------------------------------------------------------------------------
-// Permissions (GET /auth/me response DTO)
+// Permissions (GET {basePath}/permissions response DTO)
 // ---------------------------------------------------------------------------
 
-/** Response from the `GET /auth/me` backend endpoint — mirrors `MyPermissionsResponse`. */
+/** Response from the `GET {basePath}/permissions` backend endpoint — mirrors `MyPermissionsResponse`. */
 export type MyPermissionsResponse = {
   permissions: readonly string[];
 };
@@ -48,4 +48,46 @@ export type PermissionGrantResponse = {
 export type PermissionGrantParams = {
   roleName: string;
   permissionName: string;
+};
+
+// ---------------------------------------------------------------------------
+// Admin query surfaces (MapGranitQuery entities — read-only)
+// ---------------------------------------------------------------------------
+//
+// `GET {basePath}/grants` and `GET {basePath}/role-metadata` expose the raw
+// audited aggregates via the query engine (paginated / filterable / groupable).
+// The `domainEvents` / `integrationEvents` marker collections present in the
+// .NET aggregates are persistence/eventing internals — never populated on the
+// HTTP contract — and are intentionally not mirrored here.
+
+/** A single permission grant row — mirrors the `PermissionGrant` aggregate exposed by `GET {basePath}/grants`. */
+export type PermissionGrant = {
+  readonly id: string;
+  readonly name: string;
+  readonly providerName: string;
+  readonly providerKey: string;
+  readonly tenantId: string | null;
+  readonly createdAt: string;
+  readonly createdBy: string;
+  readonly modifiedAt: string | null;
+  readonly modifiedBy: string | null;
+};
+
+/** Role metadata row — mirrors the `RoleMetadata` aggregate exposed by `GET {basePath}/role-metadata`. */
+export type RoleMetadata = {
+  readonly id: string;
+  readonly name: string;
+  readonly tenantId: string | null;
+  readonly clientId: string | null;
+  /** Tenancy sides where this role is valid. */
+  readonly multiTenancySides: PermissionMultiTenancySide;
+  readonly description: string | null;
+  readonly isSystem: boolean;
+  readonly isOrphaned: boolean;
+  readonly orphanedAt: string | null;
+  readonly concurrencyStamp: string;
+  readonly createdAt: string;
+  readonly createdBy: string;
+  readonly modifiedAt: string | null;
+  readonly modifiedBy: string | null;
 };

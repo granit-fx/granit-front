@@ -8,7 +8,7 @@ import type { AxiosInstance } from '@granit/api-client';
 export type UsePermissionsOptions = {
   /** Axios instance to use for the API call. */
   client: AxiosInstance;
-  /** Base path for the authorization API. Default: `'/auth'`. */
+  /** Base path for the authorization API. Default: `'/api/v1/authorization'`. */
   basePath?: string;
   /** Override the enabled state. Default: `true` when authenticated. */
   enabled?: boolean;
@@ -61,6 +61,24 @@ export type UseRolePermissionsOptions = {
 export type UsePermissionGrantOptions = {
   client: AxiosInstance;
   basePath?: string;
+  /** Custom prefix for all query keys produced by this module. */
+  queryKeyPrefix?: readonly string[];
+};
+
+/** Options for the {@link usePermissionGrants} / {@link usePermissionGrantMeta} hooks. */
+export type UsePermissionGrantsOptions = {
+  client: AxiosInstance;
+  basePath?: string;
+  enabled?: boolean;
+  /** Custom prefix for all query keys produced by this module. */
+  queryKeyPrefix?: readonly string[];
+};
+
+/** Options for the {@link useRoleMetadata} / {@link useRoleMetadataMeta} hooks. */
+export type UseRoleMetadataOptions = {
+  client: AxiosInstance;
+  basePath?: string;
+  enabled?: boolean;
   /** Custom prefix for all query keys produced by this module. */
   queryKeyPrefix?: readonly string[];
 };

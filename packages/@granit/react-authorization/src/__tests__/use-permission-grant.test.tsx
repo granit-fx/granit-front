@@ -93,7 +93,7 @@ describe('usePermissionGrant', () => {
     await waitFor(() => expect(result.current.grant.isSuccess).toBe(true));
 
     expect(invalidateSpy).toHaveBeenCalledWith({
-      queryKey: ['auth', 'permissions', 'roles', 'editor'],
+      queryKey: ['authorization', 'permissions', 'roles', 'editor'],
     });
   });
 
@@ -114,7 +114,7 @@ describe('usePermissionGrant', () => {
     await waitFor(() => expect(result.current.revoke.isSuccess).toBe(true));
 
     expect(invalidateSpy).toHaveBeenCalledWith({
-      queryKey: ['auth', 'permissions', 'roles', 'admin'],
+      queryKey: ['authorization', 'permissions', 'roles', 'admin'],
     });
   });
 

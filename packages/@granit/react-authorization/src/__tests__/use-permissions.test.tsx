@@ -45,7 +45,7 @@ function createWrapper() {
 
 describe('buildPermissionQueryKey', () => {
   it('should use default prefix when no queryKeyPrefix is provided', () => {
-    expect(buildPermissionQueryKey({}, 'me')).toEqual(['auth', 'permissions', 'me']);
+    expect(buildPermissionQueryKey({}, 'me')).toEqual(['authorization', 'permissions', 'me']);
   });
 
   it('should use custom prefix when queryKeyPrefix is provided', () => {
@@ -54,12 +54,12 @@ describe('buildPermissionQueryKey', () => {
   });
 
   it('should return only the prefix when no segments are provided', () => {
-    expect(buildPermissionQueryKey({})).toEqual(['auth', 'permissions']);
+    expect(buildPermissionQueryKey({})).toEqual(['authorization', 'permissions']);
   });
 
   it('should handle multiple segments', () => {
     expect(buildPermissionQueryKey({}, 'roles', 'admin')).toEqual([
-      'auth',
+      'authorization',
       'permissions',
       'roles',
       'admin',

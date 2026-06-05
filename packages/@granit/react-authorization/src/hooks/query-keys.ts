@@ -2,7 +2,7 @@
 // Query key builder
 // ---------------------------------------------------------------------------
 
-export const DEFAULT_QUERY_KEY_PREFIX = ['auth', 'permissions'] as const;
+export const DEFAULT_QUERY_KEY_PREFIX = ['authorization', 'permissions'] as const;
 
 /**
  * Builds a query key for permission / authorization queries.
@@ -16,15 +16,3 @@ export function buildPermissionQueryKey(
 ): readonly unknown[] {
   return [...(config.queryKeyPrefix ?? DEFAULT_QUERY_KEY_PREFIX), ...segments];
 }
-
-// ---------------------------------------------------------------------------
-// Legacy query key factory (delegates to default prefix)
-// ---------------------------------------------------------------------------
-
-/** @deprecated Use {@link buildPermissionQueryKey} instead. */
-export const permissionKeys = {
-  all: DEFAULT_QUERY_KEY_PREFIX as readonly string[],
-  me: (userId?: string) => [...DEFAULT_QUERY_KEY_PREFIX, 'me', userId] as const,
-  definitions: () => [...DEFAULT_QUERY_KEY_PREFIX, 'definitions'] as const,
-  role: (roleName: string) => [...DEFAULT_QUERY_KEY_PREFIX, 'roles', roleName] as const,
-};

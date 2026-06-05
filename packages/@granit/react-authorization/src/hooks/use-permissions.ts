@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-export { buildPermissionQueryKey, permissionKeys } from './query-keys';
+export { buildPermissionQueryKey } from './query-keys';
 import { buildPermissionQueryKey } from './query-keys';
 
 import type { UsePermissionsOptions, UsePermissionsReturn } from '../types';

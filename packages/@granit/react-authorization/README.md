@@ -16,10 +16,14 @@ pnpm add @granit/react-authorization
 - `usePermissionDefinitions(options?)` -- fetch all permission definitions
 - `useRolePermissions(options?)` -- fetch permissions for a specific role
 - `usePermissionGrant(options?)` -- grant or revoke a permission
+- `usePermissionGrants(options, request?)` -- paginated permission-grants query surface (`GET /grants`)
+- `usePermissionGrantMeta(options)` -- query metadata for permission grants (`GET /grants/meta`)
+- `useRoleMetadata(options, request?)` -- paginated role-metadata query surface (`GET /role-metadata`)
+- `useRoleMetadataMeta(options)` -- query metadata for role metadata (`GET /role-metadata/meta`)
 
 ### Utilities
 
-- `permissionKeys` -- React Query key factory
+- `buildPermissionQueryKey(config, ...segments)` -- React Query key factory
 
 ### Types
 

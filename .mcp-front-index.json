@@ -3044,11 +3044,6 @@
           "signature": "function buildPermissionQueryKey( config:"
         },
         {
-          "name": "permissionKeys",
-          "kind": "const",
-          "signature": "const permissionKeys"
-        },
-        {
           "name": "usePermissionDefinitions",
           "kind": "function",
           "signature": "function usePermissionDefinitions( options: UsePermissionDefinitionsOptions ): UseQueryResult<PermissionGroupResponse[]>"
@@ -3062,6 +3057,26 @@
           "name": "usePermissionGrant",
           "kind": "function",
           "signature": "function usePermissionGrant(options: UsePermissionGrantOptions): UsePermissionGrantReturn"
+        },
+        {
+          "name": "usePermissionGrants",
+          "kind": "function",
+          "signature": "function usePermissionGrants( options: UsePermissionGrantsOptions, request: QueryRequest ="
+        },
+        {
+          "name": "usePermissionGrantMeta",
+          "kind": "function",
+          "signature": "function usePermissionGrantMeta( options: UsePermissionGrantsOptions ): UseQueryResult<QueryMetadata>"
+        },
+        {
+          "name": "useRoleMetadata",
+          "kind": "function",
+          "signature": "function useRoleMetadata( options: UseRoleMetadataOptions, request: QueryRequest ="
+        },
+        {
+          "name": "useRoleMetadataMeta",
+          "kind": "function",
+          "signature": "function useRoleMetadataMeta( options: UseRoleMetadataOptions ): UseQueryResult<QueryMetadata>"
         },
         {
           "name": "UsePermissionGrantReturn",

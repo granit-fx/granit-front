@@ -2,5 +2,10 @@
 // @granit/react-authorization/testing — Mock data & MSW handlers
 // ---------------------------------------------------------------------------
 
-export { mockPermissionGroups, mockRoleGrants } from './data';
+export {
+  mockPermissionGrants,
+  mockPermissionGroups,
+  mockRoleGrants,
+  mockRoleMetadata,
+} from './data';
 export { createAuthorizationHandlers } from './handlers';

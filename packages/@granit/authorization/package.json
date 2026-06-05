@@ -14,7 +14,8 @@
     "build": "tsup"
   },
   "peerDependencies": {
-    "@granit/api-client": "workspace:*"
+    "@granit/api-client": "workspace:*",
+    "@granit/query-engine": "workspace:*"
   },
   "publishConfig": {
     "exports": {
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/query-engine": "workspace:*",
     "@granit/testing": "workspace:*"
   }
 }

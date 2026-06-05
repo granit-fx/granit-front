@@ -1,13 +1,17 @@
 export { usePermissions } from './hooks/use-permissions';
-export { buildPermissionQueryKey, permissionKeys } from './hooks/query-keys';
+export { buildPermissionQueryKey } from './hooks/query-keys';
 export { usePermissionDefinitions } from './hooks/use-permission-definitions';
 export { useRolePermissions } from './hooks/use-role-permissions';
 export { usePermissionGrant } from './hooks/use-permission-grant';
+export { usePermissionGrants, usePermissionGrantMeta } from './hooks/use-permission-grants';
+export { useRoleMetadata, useRoleMetadataMeta } from './hooks/use-role-metadata';
 export type { UsePermissionGrantReturn } from './hooks/use-permission-grant';
 export type {
   UsePermissionDefinitionsOptions,
   UsePermissionGrantOptions,
+  UsePermissionGrantsOptions,
   UsePermissionsOptions,
   UsePermissionsReturn,
+  UseRoleMetadataOptions,
   UseRolePermissionsOptions,
 } from './types';

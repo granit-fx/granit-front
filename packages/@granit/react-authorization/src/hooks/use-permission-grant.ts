@@ -40,10 +40,15 @@ export function usePermissionGrant(options: UsePermissionGrantOptions): UsePermi
   const { client, basePath = DEFAULT_BASE_PATH } = options;
   const queryClient = useQueryClient();
 
-  const invalidateRole = (params: PermissionGrantParams) =>
-    queryClient.invalidateQueries({
+  const invalidateRole = (params: PermissionGrantParams) => {
+    // Refresh the role's own grant list and the admin grants query surface.
+    void queryClient.invalidateQueries({
       queryKey: buildPermissionQueryKey(options, 'roles', params.roleName),
     });
+    void queryClient.invalidateQueries({
+      queryKey: buildPermissionQueryKey(options, 'grants'),
+    });
+  };
 
   const grant = useMutation({
     mutationFn: (params: PermissionGrantParams) => grantPermission(client, basePath, params),
