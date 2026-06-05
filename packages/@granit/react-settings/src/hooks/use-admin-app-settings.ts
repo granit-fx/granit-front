@@ -1,10 +1,12 @@
-import { getAdminAppSettings, saveAdminAppSettings } from '@granit/settings';
+import { bulkUpdateSettings, getAdminAppSettings } from '@granit/settings';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildSettingsQueryKey, useSettingsConfig } from '../providers/settings-provider';
+import { useSettingsConfig } from '../providers/settings-provider';
+
+import { buildSettingsQueryKey } from './query-keys';
 
 import type {
-  AdminAppSetting,
+  AdminAppSettingResponse,
   AdminSettingsScope,
   BulkSettingEntry,
   BulkUpdateSettingsResponse,
@@ -23,7 +25,7 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 export function useAdminAppSettings(
   scope: AdminSettingsScope,
   options?: { enabled?: boolean }
-): UseQueryResult<AdminAppSetting[]> {
+): UseQueryResult<AdminAppSettingResponse[]> {
   const config = useSettingsConfig();
 
   return useQuery({
@@ -34,7 +36,7 @@ export function useAdminAppSettings(
   });
 }
 
-export type SaveAppSettingsVariables = readonly BulkSettingEntry[];
+export type BulkUpdateSettingsVariables = readonly BulkSettingEntry[];
 
 /**
  * Batch-update admin settings for a scope.
@@ -45,15 +47,15 @@ export type SaveAppSettingsVariables = readonly BulkSettingEntry[];
  * is responsible for surfacing non-`Updated` outcomes. Invalidates the
  * corresponding definitions cache on success.
  */
-export function useSaveAdminAppSettings(
+export function useBulkUpdateSettings(
   scope: AdminSettingsScope
-): UseMutationResult<BulkUpdateSettingsResponse, Error, SaveAppSettingsVariables> {
+): UseMutationResult<BulkUpdateSettingsResponse, Error, BulkUpdateSettingsVariables> {
   const config = useSettingsConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (settings: SaveAppSettingsVariables) =>
-      saveAdminAppSettings(config.client, config.basePath ?? '', scope, settings),
+    mutationFn: (settings: BulkUpdateSettingsVariables) =>
+      bulkUpdateSettings(config.client, config.basePath ?? '', scope, settings),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildSettingsQueryKey(config, 'admin', 'definitions', scope),

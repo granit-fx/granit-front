@@ -1,5 +1,5 @@
 import type {
-  AdminAppSetting,
+  AdminAppSettingResponse,
   AdminSettingsScope,
   BulkSettingEntry,
   BulkUpdateSettingsResponse,
@@ -56,14 +56,15 @@ export async function updateSetting(
 }
 
 /**
- * Delete (reset) a setting value so the cascade takes over.
+ * Delete (reset) a user-level setting so the cascade takes over.
  *
- * `DELETE /settings/{scope}/{name}`
+ * `DELETE /settings/user/{name}` — only valid for the user scope.
+ * To clear a global or tenant setting, use `updateSetting` with `{ value: null }`.
  */
 export async function deleteSetting(
   client: AxiosInstance,
   basePath: string,
-  scope: string,
+  scope: 'user',
   name: string
 ): Promise<void> {
   await client.delete(`${basePath}/settings/${scope}/${encodeURIComponent(name)}`);
@@ -80,8 +81,10 @@ export async function getAdminAppSettings(
   client: AxiosInstance,
   basePath: string,
   scope: AdminSettingsScope
-): Promise<AdminAppSetting[]> {
-  const response = await client.get<AdminAppSetting[]>(`${basePath}/settings/${scope}/definitions`);
+): Promise<AdminAppSettingResponse[]> {
+  const response = await client.get<AdminAppSettingResponse[]>(
+    `${basePath}/settings/${scope}/definitions`
+  );
   return response.data;
 }
 
@@ -95,7 +98,7 @@ export async function getAdminAppSettings(
  * A 422 is returned only for structural validation failures on the request
  * envelope (empty list, too many entries).
  */
-export async function saveAdminAppSettings(
+export async function bulkUpdateSettings(
   client: AxiosInstance,
   basePath: string,
   scope: AdminSettingsScope,

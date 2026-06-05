@@ -42,7 +42,7 @@ afterEach(() => {
 describe('useSetting', () => {
   it('should fetch a single setting by name', async () => {
     const client = createMockClient();
-    const settingValue = { name: 'Granit.Locale', value: 'fr', scope: 'user' };
+    const settingValue = { name: 'Granit.Locale', value: 'fr' };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(settingValue));
 
     const { result } = renderHook(() => useSetting('user', 'Granit.Locale'), {
@@ -57,9 +57,7 @@ describe('useSetting', () => {
 
   it('should use empty string when basePath is undefined', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(
-      axiosResponse({ name: 'x', value: 'y', scope: 'user' })
-    );
+    vi.mocked(client.get).mockResolvedValue(axiosResponse({ name: 'x', value: 'y' }));
 
     const { result } = renderHook(() => useSetting('user', 'x'), {
       wrapper: createWrapper(client),
@@ -83,9 +81,7 @@ describe('useSetting', () => {
 
   it('should fetch when enabled is true explicitly', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(
-      axiosResponse({ name: 'x', value: 'v', scope: 'user' })
-    );
+    vi.mocked(client.get).mockResolvedValue(axiosResponse({ name: 'x', value: 'v' }));
 
     const { result } = renderHook(() => useSetting('user', 'x', { enabled: true }), {
       wrapper: createWrapper(client, '/api'),
@@ -97,9 +93,7 @@ describe('useSetting', () => {
 
   it('should fetch by default when options are omitted', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(
-      axiosResponse({ name: 'x', value: 'v', scope: 'user' })
-    );
+    vi.mocked(client.get).mockResolvedValue(axiosResponse({ name: 'x', value: 'v' }));
 
     const { result } = renderHook(() => useSetting('user', 'x'), {
       wrapper: createWrapper(client, '/api'),
@@ -265,7 +259,7 @@ describe('useDeleteSetting', () => {
     const client = createMockClient();
     vi.mocked(client.delete).mockResolvedValue(axiosResponse(undefined));
 
-    const { result } = renderHook(() => useDeleteSetting('user'), {
+    const { result } = renderHook(() => useDeleteSetting(), {
       wrapper: createWrapper(client, '/api'),
     });
 
@@ -282,7 +276,7 @@ describe('useDeleteSetting', () => {
     const client = createMockClient();
     vi.mocked(client.delete).mockResolvedValue(axiosResponse(undefined));
 
-    const { result } = renderHook(() => useDeleteSetting('user'), {
+    const { result } = renderHook(() => useDeleteSetting(), {
       wrapper: createWrapper(client, '/api'),
     });
 
@@ -297,7 +291,7 @@ describe('useDeleteSetting', () => {
     const client = createMockClient();
     vi.mocked(client.delete).mockResolvedValue(axiosResponse(undefined));
 
-    const { result } = renderHook(() => useDeleteSetting('tenant'), {
+    const { result } = renderHook(() => useDeleteSetting(), {
       wrapper: createWrapper(client),
     });
 
@@ -307,14 +301,14 @@ describe('useDeleteSetting', () => {
 
     await waitFor(() => expect(result.current.isPending).toBe(false));
 
-    expect(client.delete).toHaveBeenCalledWith('/settings/tenant/key');
+    expect(client.delete).toHaveBeenCalledWith('/settings/user/key');
   });
 
   it('should expose error on mutation failure', async () => {
     const client = createMockClient();
     vi.mocked(client.delete).mockRejectedValue(new Error('Not found'));
 
-    const { result } = renderHook(() => useDeleteSetting('user'), {
+    const { result } = renderHook(() => useDeleteSetting(), {
       wrapper: createWrapper(client, '/api'),
     });
 

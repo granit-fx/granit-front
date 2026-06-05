@@ -3004,11 +3004,7 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
-  packages/@granit/storage:
-    devDependencies:
-      '@granit/testing':
-        specifier: workspace:*
-        version: link:../testing
+  packages/@granit/storage: {}
 
   packages/@granit/subscriptions:
     devDependencies:

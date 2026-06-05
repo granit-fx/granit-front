@@ -4,11 +4,8 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  SettingsProvider,
-  buildSettingsQueryKey,
-  useSettingsConfig,
-} from '../providers/settings-provider';
+import { buildSettingsQueryKey } from '../hooks/query-keys';
+import { SettingsProvider, useSettingsConfig } from '../providers/settings-provider';
 
 import type { SettingsConfig } from '../providers/settings-provider';
 import type { AxiosInstance } from 'axios';

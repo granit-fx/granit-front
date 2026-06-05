@@ -6247,6 +6247,16 @@
       "description": "React bindings for @granit/settings — SettingsProvider, useSetting, useSettings, useUpdateSetting, useDeleteSetting",
       "exports": [
         {
+          "name": "SettingsProvider",
+          "kind": "function",
+          "signature": "function SettingsProvider("
+        },
+        {
+          "name": "useSettingsConfig",
+          "kind": "function",
+          "signature": "function useSettingsConfig(): ResolvedSettingsConfig"
+        },
+        {
           "name": "SettingsConfig",
           "kind": "interface",
           "signature": "interface SettingsConfig",
@@ -6259,9 +6269,14 @@
           "members": []
         },
         {
+          "name": "buildSettingsQueryKey",
+          "kind": "function",
+          "signature": "function buildSettingsQueryKey( config: SettingsConfig, ...segments: readonly string[] ): readonly unknown[]"
+        },
+        {
           "name": "useDeleteSetting",
           "kind": "function",
-          "signature": "function useDeleteSetting(scope: SettingScope): UseDeleteSettingReturn"
+          "signature": "function useDeleteSetting(): UseDeleteSettingReturn"
         },
         {
           "name": "UseDeleteSettingReturn",
@@ -6296,14 +6311,14 @@
           "signature": "function useAdminAppSettings( scope: AdminSettingsScope, options?:"
         },
         {
-          "name": "useSaveAdminAppSettings",
+          "name": "useBulkUpdateSettings",
           "kind": "function",
-          "signature": "function useSaveAdminAppSettings( scope: AdminSettingsScope ): UseMutationResult<BulkUpdateSettingsResponse, Error, SaveAppSettingsVariables>"
+          "signature": "function useBulkUpdateSettings( scope: AdminSettingsScope ): UseMutationResult<BulkUpdateSettingsResponse, Error, BulkUpdateSettingsVariables>"
         },
         {
-          "name": "SaveAppSettingsVariables",
+          "name": "BulkUpdateSettingsVariables",
           "kind": "type",
-          "signature": "type SaveAppSettingsVariables = readonly BulkSettingEntry[]"
+          "signature": "type BulkUpdateSettingsVariables = readonly BulkSettingEntry[]"
         }
       ]
     },
@@ -7076,6 +7091,16 @@
       "name": "@granit/scheduling",
       "description": "Scheduled action types and API — mirrors Granit.Scheduling .NET contract",
       "exports": [
+        {
+          "name": "SCHEDULING_STATUS_COLORS",
+          "kind": "const",
+          "signature": "const SCHEDULING_STATUS_COLORS"
+        },
+        {
+          "name": "SCHEDULING_STATUS_LABELS",
+          "kind": "const",
+          "signature": "const SCHEDULING_STATUS_LABELS"
+        },
         {
           "name": "SchedulingPermissions",
           "kind": "const",

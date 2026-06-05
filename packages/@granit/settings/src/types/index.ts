@@ -6,11 +6,12 @@ export interface SettingValueResponse {
 
 /** Request body for `PUT /settings/{scope}/{name}`. */
 export interface UpdateSettingValueRequest {
-  readonly value: string | null;
+  /** Pass `null` to clear the override; omit entirely to leave unchanged. */
+  readonly value?: string | null;
 }
 
-/** Response for `GET /settings/user` — flat key/value map. */
-export type SettingsMap = Record<string, string | null>;
+/** Response for `GET /settings/{scope}` — flat key/value map. Absent keys are unset. */
+export type SettingsMap = Record<string, string>;
 
 /** Setting scope for API routing. */
 export type SettingScope = 'user' | 'global' | 'tenant';
@@ -21,9 +22,9 @@ export type SettingScope = 'user' | 'global' | 'tenant';
  * Value shape of a setting as declared at definition time.
  *
  * Mirrors the .NET `ValueKind` enum. Used by admin UIs to pick the right input
- * control. Encryption is orthogonal — see `AdminAppSetting.isEncrypted`.
+ * control. Encryption is orthogonal — see `AdminAppSettingResponse.isEncrypted`.
  */
-export type SettingValueKind = 'String' | 'Bool' | 'Int' | 'Double' | 'Json';
+export type ValueKind = 'String' | 'Bool' | 'Int' | 'Double' | 'Json';
 
 /**
  * Admin-scoped application setting.
@@ -32,13 +33,13 @@ export type SettingValueKind = 'String' | 'Bool' | 'Int' | 'Double' | 'Json';
  * Encrypted values are returned as `"***"` by the backend; the admin UI must
  * surface a reset-then-rewrite flow rather than an editable value.
  */
-export interface AdminAppSetting {
+export interface AdminAppSettingResponse {
   readonly key: string;
   readonly label: string | null;
   readonly description: string | null;
   readonly defaultValue: string | null;
   readonly value: string | null;
-  readonly valueKind: SettingValueKind;
+  readonly valueKind: ValueKind;
   /**
    * Optional allow-list. When non-null and non-empty, the UI should render a
    * dropdown whose options are these values (labels are localized client-side

@@ -1,7 +1,7 @@
-import type { AdminAppSetting } from '@granit/settings';
+import type { AdminAppSettingResponse } from '@granit/settings';
 import type { Mutable } from '@granit/testing';
 
-export const mockAppSettings: Mutable<AdminAppSetting>[] = [
+export const mockAppSettings: Mutable<AdminAppSettingResponse>[] = [
   {
     key: 'audit.retention_days',
     label: 'Audit Log Retention',
@@ -84,7 +84,7 @@ export const mockAppSettings: Mutable<AdminAppSetting>[] = [
   },
 ];
 
-/** In-memory settings store per scope. */
+/** In-memory settings store per scope. Null values represent cleared overrides. */
 export const mockSettingsStore: Record<string, Record<string, string | null>> = {
   user: {
     'Granit.Localization.PreferredCulture': 'fr',

@@ -1,6 +1,6 @@
 // Types
 export type {
-  AdminAppSetting,
+  AdminAppSettingResponse,
   AdminSettingsScope,
   BulkSettingEntry,
   BulkSettingOutcome,
@@ -8,10 +8,10 @@ export type {
   BulkUpdateSettingsRequest,
   BulkUpdateSettingsResponse,
   SettingScope,
-  SettingValueKind,
-  SettingValueResponse,
   SettingsMap,
+  SettingValueResponse,
   UpdateSettingValueRequest,
+  ValueKind,
 } from './types/index';
 
 // Constants
@@ -19,11 +19,11 @@ export { SETTING_NAMES } from './constants';
 
 // API
 export {
+  bulkUpdateSettings,
   deleteSetting,
   getAdminAppSettings,
   getSetting,
   getSettings,
-  saveAdminAppSettings,
   updateSetting,
 } from './api/settings-api';
 export { SettingsPermissions } from './permissions';

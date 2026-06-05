@@ -1,10 +1,9 @@
 // Provider
-export {
-  SettingsProvider,
-  buildSettingsQueryKey,
-  useSettingsConfig,
-} from './providers/settings-provider';
+export { SettingsProvider, useSettingsConfig } from './providers/settings-provider';
 export type { SettingsConfig, SettingsProviderProps } from './providers/settings-provider';
+
+// Query key factory
+export { buildSettingsQueryKey } from './hooks/query-keys';
 
 // Hooks
 export { useDeleteSetting } from './hooks/use-delete-setting';
@@ -15,5 +14,5 @@ export { useUpdateSetting } from './hooks/use-update-setting';
 export type { UseUpdateSettingReturn } from './hooks/use-update-setting';
 
 // Hooks — Admin
-export { useAdminAppSettings, useSaveAdminAppSettings } from './hooks/use-admin-app-settings';
-export type { SaveAppSettingsVariables } from './hooks/use-admin-app-settings';
+export { useAdminAppSettings, useBulkUpdateSettings } from './hooks/use-admin-app-settings';
+export type { BulkUpdateSettingsVariables } from './hooks/use-admin-app-settings';

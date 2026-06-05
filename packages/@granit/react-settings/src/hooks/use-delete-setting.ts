@@ -2,9 +2,9 @@ import { deleteSetting } from '@granit/settings';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import { buildSettingsQueryKey, useSettingsConfig } from '../providers/settings-provider';
+import { useSettingsConfig } from '../providers/settings-provider';
 
-import type { SettingScope } from '@granit/settings';
+import { buildSettingsQueryKey } from './query-keys';
 
 export interface UseDeleteSettingReturn {
   readonly remove: (name: string) => void;
@@ -14,29 +14,30 @@ export interface UseDeleteSettingReturn {
 }
 
 /**
- * Mutation to delete (reset) a setting value.
+ * Mutation to delete (reset) a user-level setting value.
  *
  * After deletion, the setting falls back to the next level in the cascade
- * (User → Tenant → Global → Config → Default).
+ * (Tenant → Global → Config → Default). Only valid for the user scope —
+ * to clear a global or tenant setting use `useUpdateSetting` with `null`.
  *
  * @example
  * ```tsx
- * const { remove } = useDeleteSetting('user');
+ * const { remove } = useDeleteSetting();
  * remove(SETTING_NAMES.PREFERRED_CULTURE); // resets to tenant/global default
  * ```
  */
-export function useDeleteSetting(scope: SettingScope): UseDeleteSettingReturn {
+export function useDeleteSetting(): UseDeleteSettingReturn {
   const config = useSettingsConfig();
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (name: string) => deleteSetting(config.client, config.basePath ?? '', scope, name),
+    mutationFn: (name: string) => deleteSetting(config.client, config.basePath ?? '', 'user', name),
     onSuccess: (_data, name) => {
       queryClient
-        .invalidateQueries({ queryKey: buildSettingsQueryKey(config, scope) })
+        .invalidateQueries({ queryKey: buildSettingsQueryKey(config, 'user') })
         .catch(() => undefined);
       queryClient
-        .invalidateQueries({ queryKey: buildSettingsQueryKey(config, scope, name) })
+        .invalidateQueries({ queryKey: buildSettingsQueryKey(config, 'user', name) })
         .catch(() => undefined);
     },
   });

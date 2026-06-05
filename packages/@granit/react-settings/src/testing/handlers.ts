@@ -8,6 +8,7 @@ import type {
   BulkSettingResult,
   BulkUpdateSettingsRequest,
   BulkUpdateSettingsResponse,
+  SettingsMap,
 } from '@granit/settings';
 
 /**
@@ -83,7 +84,13 @@ export function createSettingsHandlers(baseUrl = '/api/v1') {
 
     http.get(`${baseUrl}/settings/:scope`, ({ params }) => {
       const scope = params.scope as string;
-      return HttpResponse.json(store[scope] ?? {});
+      // Strip null/cleared entries — the backend only returns keys with an
+      // effective resolved value (absent key = unset, not null).
+      const scopeData = store[scope] ?? {};
+      const result: SettingsMap = Object.fromEntries(
+        Object.entries(scopeData).filter((entry): entry is [string, string] => entry[1] !== null)
+      );
+      return HttpResponse.json(result);
     }),
 
     http.get(`${baseUrl}/settings/:scope/:name`, ({ params }) => {
@@ -96,9 +103,9 @@ export function createSettingsHandlers(baseUrl = '/api/v1') {
     http.put(`${baseUrl}/settings/:scope/:name`, async ({ params, request }) => {
       const scope = params.scope as string;
       const name = decodeURIComponent(params.name as string);
-      const body = (await request.json()) as { value: string | null };
+      const body = (await request.json()) as { value?: string | null };
       store[scope] ??= {};
-      store[scope][name] = body.value;
+      store[scope][name] = body.value ?? null;
       return noContent();
     }),
 
