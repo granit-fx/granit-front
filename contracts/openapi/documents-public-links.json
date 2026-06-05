@@ -1,0 +1,529 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "documents-public-links",
+    "version": "1"
+  },
+  "paths": {
+    "/documents/documents/{id}/public-links": {
+      "post": {
+        "tags": ["Documents - Public Links"],
+        "summary": "Mints a fresh public link for a document.",
+        "description": "Generates a 32-byte random bearer token, persists only its HMAC-SHA256 digest, and returns the raw token together with the fully-qualified redemption URL. The token is shown exactly once and is never recoverable after this response. `ttlDays` is clamped down to the configured maximum; `maxUses` falls back to the configured default when omitted. Returns 422 when the document is missing or excluded by the tenant filter.",
+        "operationId": "CreateDocumentPublicLink",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePublicLinkRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePublicLinkResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Documents - Public Links"],
+        "summary": "Lists every public link issued against a document.",
+        "description": "Newest-first listing. The raw token and its HMAC digest are deliberately omitted — the bearer is only ever shown at creation time. Returns an empty array when the document has no links (or does not exist for the current tenant).",
+        "operationId": "ListDocumentPublicLinks",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PublicLinkResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/documents/public-links/{id}": {
+      "delete": {
+        "tags": ["Documents - Public Links"],
+        "summary": "Revokes an existing public link.",
+        "description": "Idempotency is not enforced: revoking an already-revoked link returns 422. The optional `reason` is persisted on the aggregate and surfaced on the audit trail (DocumentPublicLinkRevokedEvent / Eto).",
+        "operationId": "RevokeDocumentPublicLink",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RevokePublicLinkRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/p/{token}": {
+      "get": {
+        "tags": ["Documents - Public Links"],
+        "summary": "Resolves a bearer token and serves the document as an attachment.",
+        "description": "Anonymous endpoint — no authentication is required. The token is hashed with the host's signing key, looked up bypassing the tenant filter, and validated (not revoked, not expired, MaxUses not exhausted). On success the response is a 302 redirect to a short-lived presigned blob URL with `Content-Disposition: attachment`. EVERY failure path returns 404 with no body — invalid, expired, revoked, exhausted and not-yet-finalised links are indistinguishable on the wire.",
+        "operationId": "RedeemDocumentPublicLinkDownload",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "Single-use token from a confirmation/reset email link.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Found"
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    },
+    "/p/{token}/preview": {
+      "get": {
+        "tags": ["Documents - Public Links"],
+        "summary": "Resolves a bearer token and serves the document inline.",
+        "description": "Anonymous endpoint — no authentication is required. Same resolution path as the download endpoint, but the presigned URL is issued without a forced `Content-Disposition: attachment` header so the browser may preview the bytes inline. EVERY failure path returns 404 with no body.",
+        "operationId": "RedeemDocumentPublicLinkPreview",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "Single-use token from a confirmation/reset email link.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Found"
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreatePublicLinkRequest": {
+        "required": ["scope", "ttlDays", "maxUses"],
+        "type": "object",
+        "properties": {
+          "scope": {
+            "$ref": "#/components/schemas/PublicLinkScope"
+          },
+          "ttlDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxUses": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          }
+        }
+      },
+      "CreatePublicLinkResponse": {
+        "required": ["id", "documentId", "token", "url", "scope", "expiresAt", "maxUses"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "token": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/PublicLinkScope"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "maxUses": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "PublicLinkResponse": {
+        "required": [
+          "id",
+          "documentId",
+          "scope",
+          "expiresAt",
+          "maxUses",
+          "currentUses",
+          "revokedAt",
+          "revocationReason",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/PublicLinkScope"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "maxUses": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "currentUses": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "revokedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "revocationReason": {
+            "type": ["null", "string"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PublicLinkScope": {
+        "enum": ["Download", "View"]
+      },
+      "RevokePublicLinkRequest": {
+        "required": ["reason"],
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": ["null", "string"]
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Documents - Public Links"
+    }
+  ]
+}

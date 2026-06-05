@@ -1,0 +1,384 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "documents-properties",
+    "version": "1"
+  },
+  "paths": {
+    "/documents/documents/{id}/metadata": {
+      "get": {
+        "tags": ["Documents - Properties"],
+        "summary": "Returns extracted metadata for the document's current version.",
+        "description": "Surfaces the typed projection (camera, dimensions, page count, audio track …) plus the verbatim extractor payload under `rawMetadata`. Returns 404 when the document is missing, excluded by the tenant filter, or extraction has not yet completed for the current version.",
+        "operationId": "GetDocumentProperties",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentPropertiesResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/documents/documents/{id}/versions/{versionId}/metadata": {
+      "get": {
+        "tags": ["Documents - Properties"],
+        "summary": "Returns extracted metadata for a specific version of the document.",
+        "description": "Same shape as the current-version endpoint, addressed by an explicit version identifier. Useful for audit trails or comparing metadata between revisions. Returns 404 when the document or version is missing, the version does not belong to the supplied document, or no metadata row has been produced yet.",
+        "operationId": "GetDocumentVersionProperties",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "versionId",
+            "in": "path",
+            "description": "Unique identifier of the version.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentPropertiesResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DocumentPropertiesResponse": {
+        "required": [
+          "id",
+          "documentId",
+          "documentVersionId",
+          "sourceContentType",
+          "status",
+          "createdAt",
+          "completedAt",
+          "failureReason",
+          "extractorCount",
+          "width",
+          "height",
+          "cameraMake",
+          "cameraModel",
+          "lensModel",
+          "iso",
+          "fNumber",
+          "exposureTimeMs",
+          "takenAt",
+          "gpsLatitude",
+          "gpsLongitude",
+          "gpsAltitude",
+          "pageCount",
+          "title",
+          "author",
+          "subject",
+          "keywords",
+          "producer",
+          "revision",
+          "lastModifiedBy",
+          "durationMs",
+          "codec",
+          "bitrate",
+          "artist",
+          "album",
+          "trackNumber",
+          "genre",
+          "rawMetadata"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentVersionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sourceContentType": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/DocumentPropertiesStatus"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "failureReason": {
+            "type": ["null", "string"]
+          },
+          "extractorCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "width": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "height": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "cameraMake": {
+            "type": ["null", "string"]
+          },
+          "cameraModel": {
+            "type": ["null", "string"]
+          },
+          "lensModel": {
+            "type": ["null", "string"]
+          },
+          "iso": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "fNumber": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": ["null", "number", "string"],
+            "format": "double"
+          },
+          "exposureTimeMs": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": ["null", "number", "string"],
+            "format": "double"
+          },
+          "takenAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "gpsLatitude": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": ["null", "number", "string"],
+            "format": "double"
+          },
+          "gpsLongitude": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": ["null", "number", "string"],
+            "format": "double"
+          },
+          "gpsAltitude": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": ["null", "number", "string"],
+            "format": "double"
+          },
+          "pageCount": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "author": {
+            "type": ["null", "string"]
+          },
+          "subject": {
+            "type": ["null", "string"]
+          },
+          "keywords": {
+            "type": ["null", "string"]
+          },
+          "producer": {
+            "type": ["null", "string"]
+          },
+          "revision": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "lastModifiedBy": {
+            "type": ["null", "string"]
+          },
+          "durationMs": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["null", "integer", "string"],
+            "format": "int64"
+          },
+          "codec": {
+            "type": ["null", "string"]
+          },
+          "bitrate": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "artist": {
+            "type": ["null", "string"]
+          },
+          "album": {
+            "type": ["null", "string"]
+          },
+          "trackNumber": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "genre": {
+            "type": ["null", "string"]
+          },
+          "rawMetadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "DocumentPropertiesStatus": {
+        "enum": ["Pending", "Extracting", "Ready", "Failed"]
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Documents - Properties"
+    }
+  ]
+}

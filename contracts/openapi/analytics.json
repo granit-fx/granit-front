@@ -1,0 +1,1443 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "analytics",
+    "version": "1"
+  },
+  "paths": {
+    "/analytics/metrics/{name}": {
+      "post": {
+        "tags": ["Analytics"],
+        "summary": "Evaluates a registered Granit.Analytics MetricDefinition.",
+        "description": "Resolves the metric by name, applies the period (and optional comparison window) through the same filter pipeline grids use, runs the aggregation through the EF Core executor, caches the result via FusionCache (key includes tenant id), and returns the { snapshot, sequence, emittedAt, refreshHint } envelope. Returns 404 when the metric name is unknown, 422 when the period spec is invalid or comparison is requested on a metric without a PeriodSelector.",
+        "operationId": "EvaluateMetric",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MetricRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/widgets/kpi/render": {
+      "post": {
+        "tags": ["Analytics"],
+        "summary": "Renders a single KPI widget definition.",
+        "description": "Used by the dashboard composer / catalogue / preview paths to fetch a KPI snapshot without persisting the widget. Body carries the typed KpiWidgetDefinition (with its embedded Datasource — MetricDatasource or QueryAggregateDatasource) plus an optional render context. Returns the same DashboardRenderedWidgetResponse shape the bundle path emits.",
+        "operationId": "RenderKpiWidget",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KpiWidgetRenderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardRenderedWidgetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/widgets/chart/render": {
+      "post": {
+        "tags": ["Analytics"],
+        "summary": "Renders a single chart widget definition.",
+        "description": "Used by the dashboard composer / catalogue / preview paths to fetch a chart snapshot without persisting the widget. Body carries the typed ChartWidgetDefinition plus an optional render context. Returns the same DashboardRenderedWidgetResponse shape the bundle path emits.",
+        "operationId": "RenderChartWidget",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChartWidgetRenderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardRenderedWidgetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/widgets/table/render": {
+      "post": {
+        "tags": ["Analytics"],
+        "summary": "Renders a single table widget definition.",
+        "description": "Used by the dashboard composer / catalogue / preview paths to fetch a table snapshot without persisting the widget. Body carries the typed TableWidgetDefinition plus an optional render context.",
+        "operationId": "RenderTableWidget",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TableWidgetRenderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardRenderedWidgetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/widgets/pivot/render": {
+      "post": {
+        "tags": ["Analytics"],
+        "summary": "Renders a single pivot widget definition.",
+        "description": "Used by the dashboard composer / catalogue / preview paths to fetch a pivot snapshot without persisting the widget. Body carries the typed PivotWidgetDefinition plus an optional render context.",
+        "operationId": "RenderPivotWidget",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PivotWidgetRenderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardRenderedWidgetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/widgets/map/render": {
+      "post": {
+        "tags": ["Analytics"],
+        "summary": "Renders a single map widget definition.",
+        "description": "Used by the dashboard composer / catalogue / preview paths to fetch a map snapshot without persisting the widget. Body carries the typed MapWidgetDefinition plus an optional render context.",
+        "operationId": "RenderMapWidget",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MapWidgetRenderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardRenderedWidgetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AggregateFunction": {
+        "enum": ["Count", "Sum", "Avg", "Min", "Max"]
+      },
+      "ChartType": {
+        "enum": ["Bar", "HorizontalBar", "Line", "Area", "Pie", "Donut"]
+      },
+      "ChartWidgetDefinition": {
+        "required": [
+          "queryName",
+          "groupBy",
+          "aggregation",
+          "field",
+          "chartType",
+          "slug",
+          "position"
+        ],
+        "type": "object",
+        "properties": {
+          "queryName": {
+            "type": "string"
+          },
+          "groupBy": {
+            "type": "string"
+          },
+          "aggregation": {
+            "$ref": "#/components/schemas/AggregateFunction"
+          },
+          "field": {
+            "type": ["null", "string"]
+          },
+          "chartType": {
+            "$ref": "#/components/schemas/ChartType"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "$ref": "#/components/schemas/WidgetSize"
+          },
+          "requiredPermission": {
+            "type": ["null", "string"]
+          },
+          "timeWindowOverride": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/DashboardTimeWindow"
+              }
+            ]
+          },
+          "actions": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/WidgetAction"
+            }
+          }
+        }
+      },
+      "ChartWidgetRenderRequest": {
+        "required": ["definition"],
+        "type": "object",
+        "properties": {
+          "definition": {
+            "$ref": "#/components/schemas/ChartWidgetDefinition"
+          },
+          "context": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WidgetRenderContextRequest"
+              }
+            ]
+          }
+        }
+      },
+      "DashboardRenderedWidgetResponse": {
+        "required": [
+          "id",
+          "widgetType",
+          "slug",
+          "position",
+          "width",
+          "height",
+          "titleLocalizationKey",
+          "actions",
+          "requiredPermission",
+          "status",
+          "sequence",
+          "emittedAt",
+          "refreshHint",
+          "transport",
+          "snapshot"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "widgetType": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "titleLocalizationKey": {
+            "type": "string"
+          },
+          "actions": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/WidgetAction"
+            }
+          },
+          "requiredPermission": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "$ref": "#/components/schemas/WidgetSnapshotStatus"
+          },
+          "sequence": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "format": "int64"
+          },
+          "emittedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "refreshHint": {
+            "$ref": "#/components/schemas/RefreshHint"
+          },
+          "transport": {
+            "$ref": "#/components/schemas/WidgetTransport"
+          },
+          "snapshot": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/JsonElement"
+              }
+            ]
+          },
+          "reasonLocalizationKey": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "DashboardTimeWindow": {
+        "required": ["period"],
+        "type": "object",
+        "properties": {
+          "period": {
+            "$ref": "#/components/schemas/PeriodSpec"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/TimeWindowKind"
+          },
+          "compareTo": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/PeriodSpec"
+              }
+            ]
+          },
+          "aggregation": {
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "DataKeyFormat": {
+        "required": ["key"],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "labelLocalizationKey": {
+            "type": ["null", "string"]
+          },
+          "color": {
+            "type": ["null", "string"]
+          },
+          "unit": {
+            "type": ["null", "string"]
+          },
+          "decimals": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          }
+        }
+      },
+      "Datasource": {
+        "required": ["kind"],
+        "type": "object",
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/DatasourceMetricDatasource"
+          },
+          {
+            "$ref": "#/components/schemas/DatasourceQueryAggregateDatasource"
+          },
+          {
+            "$ref": "#/components/schemas/DatasourceTelemetryDatasource"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "kind",
+          "mapping": {
+            "metric": "#/components/schemas/DatasourceMetricDatasource",
+            "query-aggregate": "#/components/schemas/DatasourceQueryAggregateDatasource",
+            "iot-telemetry": "#/components/schemas/DatasourceTelemetryDatasource"
+          }
+        }
+      },
+      "DatasourceMetricDatasource": {
+        "required": ["metricName"],
+        "properties": {
+          "kind": {
+            "enum": ["metric"],
+            "type": "string"
+          },
+          "metricName": {
+            "type": "string"
+          }
+        }
+      },
+      "DatasourceQueryAggregateDatasource": {
+        "required": ["queryName", "aggregation"],
+        "properties": {
+          "kind": {
+            "enum": ["query-aggregate"],
+            "type": "string"
+          },
+          "queryName": {
+            "type": "string"
+          },
+          "aggregation": {
+            "$ref": "#/components/schemas/AggregateFunction"
+          },
+          "field": {
+            "type": ["null", "string"]
+          },
+          "keyFormats": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/DataKeyFormat"
+            }
+          }
+        }
+      },
+      "DatasourceTelemetryDatasource": {
+        "required": ["entityAlias", "telemetryKey"],
+        "properties": {
+          "kind": {
+            "enum": ["iot-telemetry"],
+            "type": "string"
+          },
+          "entityAlias": {
+            "type": "string"
+          },
+          "telemetryKey": {
+            "type": "string"
+          },
+          "aggregation": {
+            "$ref": "#/components/schemas/TelemetryAggregation"
+          },
+          "keyFormats": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/DataKeyFormat"
+            }
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "JsonElement": {
+        "type": ["null", "boolean", "number", "string", "object", "array"],
+        "description": "Arbitrary JSON value (object, array, string, number, boolean, or null)."
+      },
+      "KpiWidgetDefinition": {
+        "required": ["datasource", "slug", "position"],
+        "type": "object",
+        "properties": {
+          "datasource": {
+            "$ref": "#/components/schemas/Datasource"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "$ref": "#/components/schemas/WidgetSize"
+          },
+          "requiredPermission": {
+            "type": ["null", "string"]
+          },
+          "timeWindowOverride": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/DashboardTimeWindow"
+              }
+            ]
+          },
+          "actions": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/WidgetAction"
+            }
+          }
+        }
+      },
+      "KpiWidgetRenderRequest": {
+        "required": ["definition"],
+        "type": "object",
+        "properties": {
+          "definition": {
+            "$ref": "#/components/schemas/KpiWidgetDefinition"
+          },
+          "context": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WidgetRenderContextRequest"
+              }
+            ]
+          }
+        }
+      },
+      "MapCenter": {
+        "required": ["latitude", "longitude"],
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": ["number", "string"],
+            "format": "double"
+          },
+          "longitude": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": ["number", "string"],
+            "format": "double"
+          }
+        }
+      },
+      "MapPointSource": {
+        "required": ["kind"],
+        "type": "object",
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/MapPointSourceLatLng"
+          },
+          {
+            "$ref": "#/components/schemas/MapPointSourceGeography"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "kind",
+          "mapping": {
+            "lat-lng": "#/components/schemas/MapPointSourceLatLng",
+            "geography": "#/components/schemas/MapPointSourceGeography"
+          }
+        }
+      },
+      "MapPointSourceGeography": {
+        "required": ["geographyColumn"],
+        "properties": {
+          "kind": {
+            "enum": ["geography"],
+            "type": "string"
+          },
+          "geographyColumn": {
+            "type": "string"
+          }
+        }
+      },
+      "MapPointSourceLatLng": {
+        "required": ["latitudeColumn", "longitudeColumn"],
+        "properties": {
+          "kind": {
+            "enum": ["lat-lng"],
+            "type": "string"
+          },
+          "latitudeColumn": {
+            "type": "string"
+          },
+          "longitudeColumn": {
+            "type": "string"
+          }
+        }
+      },
+      "MapTileLayerKind": {
+        "enum": ["Plan", "Satellite", "Hybrid", "Topo", "Custom", null]
+      },
+      "MapWidgetDefinition": {
+        "required": ["queryName", "pointSource", "popupColumns", "slug", "position"],
+        "type": "object",
+        "properties": {
+          "queryName": {
+            "type": "string"
+          },
+          "pointSource": {
+            "$ref": "#/components/schemas/MapPointSource"
+          },
+          "popupColumns": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "defaultZoom": {
+            "type": "integer",
+            "format": "int32",
+            "default": 5
+          },
+          "defaultCenter": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MapCenter"
+              }
+            ]
+          },
+          "clusterThreshold": {
+            "type": "integer",
+            "format": "int32",
+            "default": 200
+          },
+          "detailRoute": {
+            "type": ["null", "string"]
+          },
+          "tileUrlTemplate": {
+            "type": ["null", "string"]
+          },
+          "defaultLayerKind": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MapTileLayerKind"
+              }
+            ]
+          },
+          "slug": {
+            "type": "string"
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "$ref": "#/components/schemas/WidgetSize"
+          },
+          "requiredPermission": {
+            "type": ["null", "string"]
+          },
+          "timeWindowOverride": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/DashboardTimeWindow"
+              }
+            ]
+          },
+          "actions": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/WidgetAction"
+            }
+          }
+        }
+      },
+      "MapWidgetRenderRequest": {
+        "required": ["definition"],
+        "type": "object",
+        "properties": {
+          "definition": {
+            "$ref": "#/components/schemas/MapWidgetDefinition"
+          },
+          "context": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WidgetRenderContextRequest"
+              }
+            ]
+          }
+        }
+      },
+      "MetricPreviousPayload": {
+        "required": ["value", "deltaRatio", "trend", "isFavorable"],
+        "type": "object",
+        "properties": {
+          "value": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": ["null", "number", "string"],
+            "format": "double"
+          },
+          "deltaRatio": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": ["null", "number", "string"],
+            "format": "double"
+          },
+          "trend": {
+            "type": "string"
+          },
+          "isFavorable": {
+            "type": ["null", "boolean"]
+          }
+        }
+      },
+      "MetricRequest": {
+        "required": ["period"],
+        "type": "object",
+        "properties": {
+          "period": {
+            "$ref": "#/components/schemas/PeriodSpec"
+          },
+          "compareTo": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/PeriodSpec"
+              }
+            ]
+          }
+        }
+      },
+      "MetricResponse": {
+        "required": ["name", "snapshot", "sequence", "emittedAt", "refreshHint"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "snapshot": {
+            "$ref": "#/components/schemas/MetricSnapshotPayload"
+          },
+          "sequence": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "format": "int64"
+          },
+          "emittedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "refreshHint": {
+            "$ref": "#/components/schemas/RefreshHint"
+          }
+        }
+      },
+      "MetricSnapshotPayload": {
+        "required": ["value", "valueKind", "currency", "isHigherBetter", "noData", "previous"],
+        "type": "object",
+        "properties": {
+          "value": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": ["null", "number", "string"],
+            "format": "double"
+          },
+          "valueKind": {
+            "$ref": "#/components/schemas/MetricValueKind"
+          },
+          "currency": {
+            "type": ["null", "string"]
+          },
+          "isHigherBetter": {
+            "type": "boolean"
+          },
+          "noData": {
+            "type": "boolean"
+          },
+          "previous": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MetricPreviousPayload"
+              }
+            ]
+          }
+        }
+      },
+      "MetricValueKind": {
+        "enum": ["Count", "Number", "Currency", "Percentage", "Duration", "Date"]
+      },
+      "PeriodSpec": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "to": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "token": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "PivotWidgetDefinition": {
+        "required": [
+          "queryName",
+          "rowFields",
+          "columnFields",
+          "valueField",
+          "valueAggregation",
+          "slug",
+          "position"
+        ],
+        "type": "object",
+        "properties": {
+          "queryName": {
+            "type": "string"
+          },
+          "rowFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "columnFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "valueField": {
+            "type": ["null", "string"]
+          },
+          "valueAggregation": {
+            "$ref": "#/components/schemas/AggregateFunction"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "$ref": "#/components/schemas/WidgetSize"
+          },
+          "requiredPermission": {
+            "type": ["null", "string"]
+          },
+          "timeWindowOverride": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/DashboardTimeWindow"
+              }
+            ]
+          },
+          "actions": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/WidgetAction"
+            }
+          }
+        }
+      },
+      "PivotWidgetRenderRequest": {
+        "required": ["definition"],
+        "type": "object",
+        "properties": {
+          "definition": {
+            "$ref": "#/components/schemas/PivotWidgetDefinition"
+          },
+          "context": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WidgetRenderContextRequest"
+              }
+            ]
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "RefreshHint": {
+        "enum": ["Static", "Dynamic", "Realtime"]
+      },
+      "TableWidgetDefinition": {
+        "required": ["queryName", "visibleColumns", "pageSize", "slug", "position"],
+        "type": "object",
+        "properties": {
+          "queryName": {
+            "type": "string"
+          },
+          "visibleColumns": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "$ref": "#/components/schemas/WidgetSize"
+          },
+          "requiredPermission": {
+            "type": ["null", "string"]
+          },
+          "timeWindowOverride": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/DashboardTimeWindow"
+              }
+            ]
+          },
+          "actions": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/WidgetAction"
+            }
+          }
+        }
+      },
+      "TableWidgetRenderRequest": {
+        "required": ["definition"],
+        "type": "object",
+        "properties": {
+          "definition": {
+            "$ref": "#/components/schemas/TableWidgetDefinition"
+          },
+          "context": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WidgetRenderContextRequest"
+              }
+            ]
+          }
+        }
+      },
+      "TelemetryAggregation": {
+        "enum": ["Last", "Avg", "Sum", "Min", "Max", "Count"],
+        "default": "Last"
+      },
+      "TimeWindowKind": {
+        "enum": ["History", "Realtime"],
+        "default": "History"
+      },
+      "WidgetAction": {
+        "required": ["trigger", "kind", "target"],
+        "type": "object",
+        "properties": {
+          "trigger": {
+            "$ref": "#/components/schemas/WidgetActionTrigger"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/WidgetActionKind"
+          },
+          "target": {
+            "type": "string"
+          },
+          "params": {
+            "type": ["null", "object"],
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "WidgetActionKind": {
+        "enum": ["Navigate", "OpenDashboardView", "OpenDashboard", "ExportData", "OpenDetail"]
+      },
+      "WidgetActionTrigger": {
+        "enum": ["Click", "RowClick", "SeriesClick", "LegendClick"]
+      },
+      "WidgetRenderContextRequest": {
+        "type": "object",
+        "properties": {
+          "periodFrom": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "periodTo": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "periodToken": {
+            "type": ["null", "string"]
+          },
+          "locale": {
+            "type": ["null", "string"]
+          },
+          "filters": {
+            "type": ["null", "object"],
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "WidgetSize": {
+        "required": ["width", "height"],
+        "type": "object",
+        "properties": {
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "WidgetSnapshotStatus": {
+        "enum": ["Snapshot", "Unavailable", "Error"]
+      },
+      "WidgetTransport": {
+        "enum": ["Pull", "Push"]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Analytics"
+    }
+  ]
+}

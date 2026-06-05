@@ -1,0 +1,290 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "iot-fleet-provisioning",
+    "version": "1"
+  },
+  "paths": {
+    "/api/iot/fleet-provisioning/verify": {
+      "post": {
+        "tags": ["AWS IoT Fleet Provisioning"],
+        "summary": "Pre-provisioning hook called by the customer's AWS Lambda before AWS IoT issues an operational certificate.",
+        "description": "Returns allowProvisioning=false when the serial belongs to a decommissioned device, otherwise allowProvisioning=true. The customer's Lambda forwards this verdict to AWS IoT, which aborts the JITP flow on a deny.",
+        "operationId": "FleetProvisioningVerify",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FleetProvisioningVerifyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FleetProvisioningVerifyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/iot/fleet-provisioning/registered": {
+      "post": {
+        "tags": ["AWS IoT Fleet Provisioning"],
+        "summary": "Post-provisioning hook called once AWS IoT has created the Thing and the operational certificate.",
+        "description": "Atomically materialises the cloud-agnostic Device aggregate and the AwsThingBinding (already in Active status, ProvisionedViaJitp=true). Idempotent on the device serial number — a retried JITP flow returns the existing DeviceId without duplicate writes.",
+        "operationId": "FleetProvisioningRegister",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FleetProvisioningRegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FleetProvisioningRegisterResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FleetProvisioningRegisterRequest": {
+        "required": [
+          "serialNumber",
+          "tenantId",
+          "thingName",
+          "thingArn",
+          "certificateArn",
+          "certificateSecretArn",
+          "model",
+          "firmwareVersion",
+          "label",
+          "claimCertificateExpiresAt"
+        ],
+        "type": "object",
+        "properties": {
+          "serialNumber": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "thingName": {
+            "type": "string"
+          },
+          "thingArn": {
+            "type": "string"
+          },
+          "certificateArn": {
+            "type": "string"
+          },
+          "certificateSecretArn": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "firmwareVersion": {
+            "type": "string"
+          },
+          "label": {
+            "type": ["null", "string"]
+          },
+          "claimCertificateExpiresAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          }
+        }
+      },
+      "FleetProvisioningRegisterResponse": {
+        "required": ["deviceId", "alreadyProvisioned"],
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "alreadyProvisioned": {
+            "type": "boolean"
+          }
+        }
+      },
+      "FleetProvisioningVerifyRequest": {
+        "required": ["serialNumber", "tenantId"],
+        "type": "object",
+        "properties": {
+          "serialNumber": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          }
+        }
+      },
+      "FleetProvisioningVerifyResponse": {
+        "required": ["allowProvisioning", "reason"],
+        "type": "object",
+        "properties": {
+          "allowProvisioning": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "AWS IoT Fleet Provisioning"
+    }
+  ]
+}

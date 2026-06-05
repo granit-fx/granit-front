@@ -1,0 +1,407 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "workspaces",
+    "version": "1"
+  },
+  "paths": {
+    "/workspaces": {
+      "get": {
+        "tags": ["Workspaces"],
+        "summary": "Returns the workspace tree filtered for the requesting user.",
+        "description": "Returns every WorkspaceDefinition the user is allowed to see — workspaces, sections, and items gated by a permission the user does NOT hold are absent from the payload (defense in depth, ADR-040). Empty branches (workspaces / sections with zero surviving items) are dropped. Pass ?includeShells=false to omit Framework shells. Cached 5 minutes per (user-perms-hash, culture, includeShells).",
+        "operationId": "GetWorkspacesTree",
+        "parameters": [
+          {
+            "name": "includeShells",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkspaceTreeResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/landing-route": {
+      "get": {
+        "tags": ["Workspaces"],
+        "summary": "Resolves the requesting user's landing route via the 5-tier precedence chain.",
+        "description": "Precedence per ADR-048: personal-sticky > personal-pinned > role-default > tenant-default > framework. Each tier may be null (provider not configured, no preference) — the resolver falls through. Routes that fail the URL whitelist (configured prefixes) or the access guard are also skipped to the next tier. The framework fallback is configured (not user-supplied) and always wins as the closing tier.",
+        "operationId": "GetLandingRoute",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LandingRouteResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/landing-route/pinned": {
+      "put": {
+        "tags": ["Workspaces"],
+        "summary": "Pins (or clears) the requesting user's preferred landing route.",
+        "description": "The pinned route is consulted at the second-highest precedence tier (after personal-sticky). Pass null in the body to clear the pin. Routes that don't match the URL whitelist are rejected with 400.",
+        "operationId": "SetPinnedLandingRoute",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetPinnedLandingRouteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "LandingRouteResponse": {
+        "required": ["route", "source"],
+        "type": "object",
+        "properties": {
+          "route": {
+            "type": "string"
+          },
+          "source": {
+            "$ref": "#/components/schemas/LandingRouteSource"
+          }
+        }
+      },
+      "LandingRouteSource": {
+        "enum": ["PersonalSticky", "PersonalPinned", "Role", "Tenant", "Framework"]
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "SetPinnedLandingRouteRequest": {
+        "required": ["route"],
+        "type": "object",
+        "properties": {
+          "route": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "WorkspaceItemKind": {
+        "enum": ["Entity", "Dashboard", "Link", "SubWorkspace", "Feature"]
+      },
+      "WorkspaceItemResponse": {
+        "required": [
+          "kind",
+          "order",
+          "displayKey",
+          "icon",
+          "entityName",
+          "entityViewName",
+          "entityPresetOverlay",
+          "dashboardName",
+          "linkUrl",
+          "subWorkspaceName",
+          "featureName",
+          "routeName"
+        ],
+        "type": "object",
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/WorkspaceItemKind"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayKey": {
+            "type": ["null", "string"]
+          },
+          "icon": {
+            "type": ["null", "string"]
+          },
+          "entityName": {
+            "type": ["null", "string"]
+          },
+          "entityViewName": {
+            "type": ["null", "string"]
+          },
+          "entityPresetOverlay": {
+            "type": ["null", "object"]
+          },
+          "dashboardName": {
+            "type": ["null", "string"]
+          },
+          "linkUrl": {
+            "type": ["null", "string"]
+          },
+          "subWorkspaceName": {
+            "type": ["null", "string"]
+          },
+          "featureName": {
+            "type": ["null", "string"]
+          },
+          "routeName": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "WorkspaceResponse": {
+        "required": ["name", "displayKey", "icon", "order", "isShell", "sections"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "displayKey": {
+            "type": ["null", "string"]
+          },
+          "icon": {
+            "type": ["null", "string"]
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isShell": {
+            "type": "boolean"
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkspaceSectionResponse"
+            }
+          }
+        }
+      },
+      "WorkspaceSectionResponse": {
+        "required": ["key", "displayKey", "order", "collapsedByDefault", "items"],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "displayKey": {
+            "type": ["null", "string"]
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "collapsedByDefault": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkspaceItemResponse"
+            }
+          }
+        }
+      },
+      "WorkspaceTreeResponse": {
+        "required": ["schemaVersion", "workspaces"],
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "workspaces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkspaceResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Workspaces"
+    }
+  ]
+}

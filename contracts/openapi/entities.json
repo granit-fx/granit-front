@@ -1,0 +1,1644 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "entities",
+    "version": "1"
+  },
+  "paths": {
+    "/entities": {
+      "get": {
+        "tags": ["Entities"],
+        "summary": "Returns the discovery tree of registered entities, grouped by module.",
+        "description": "Lists every EntityDefinition the requesting user has Read permission on (or that has no PermissionGroup declared), grouped by module. Each item carries a Manifest link plus a List link when the entity exposes a query collection. Empty modules are omitted. Cached 5 minutes per (user-perms-hash, culture).",
+        "operationId": "GetEntitiesDiscovery",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityDiscoveryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/entities/{name}": {
+      "get": {
+        "tags": ["Entities"],
+        "summary": "Returns the per-entity manifest for the requesting user.",
+        "description": "Aggregates identity, permission flags, form variants, detail variants, and collection references (query / export / metric / dashboard / default view) for the addressed entity. Defense-in-depth: fields, sections, side panels gated by a permission the user does NOT hold are absent from the payload, never just hidden. Use ?facets=... to slim the response. Carries a strong ETag and the Granit-Entities-Schema-Version header; honours If-None-Match to short-circuit with 304.",
+        "operationId": "GetEntityManifest",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "facets",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityManifestResponse"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/entities/{name}/{id}/relations/aggregates": {
+      "post": {
+        "tags": ["Entities"],
+        "summary": "Returns the aggregate values for the relations of a single source row, in one round-trip.",
+        "description": "Computes count / sum / avg / min / max per relation declared on the source EntityDefinition. Pass `relations: []` (or omit the body) to get every relation the caller can read; pass an explicit list to slim the response. Each relation is computed in parallel by the registered IRelationAggregateService — the framework default returns an empty dictionary; hosts plug in an EF Core implementation. Defense-in-depth: relations gated by a permission the caller does not hold are absent from the request set and the response. FusionCache 30-second sliding per (sourceEntity, sourceId, relation, perms-hash, culture).",
+        "operationId": "PostEntityRelationAggregates",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RelationAggregatesRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationAggregatesResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/entities/{name}/calendar": {
+      "get": {
+        "tags": ["Entities"],
+        "summary": "Returns calendar items for one entity within a time window.",
+        "description": "Reads the entity's CalendarLayoutDescriptor (selected by the optional ?calendar= name when an entity exposes more than one) and returns the events whose Start/End falls inside [from, to]. The range is enforced server-side: a window wider than 366 days or with To < From is rejected with 400. Permission gate inherited from the underlying entity's Read permission — same defense-in-depth as the manifest endpoint (no calendar-specific permission, rationale: the calendar exposes an aggregate of data the user could already see via the list endpoint). FusionCache TTL is 1 minute by default; the cache key includes the resolved user permission hash plus the From/To window, and the response carries a strong ETag so callers can short-circuit unchanged windows with If-None-Match → 304. Per-entity eviction tags allow the EF Core companion package's CalendarRangeCacheInvalidator<T> to drop every cached window for the entity in one call when one of its rows is created, updated, or deleted (story #1691). Returns an empty list when the entity declares no calendar layout, no item matches, or the host has not yet wired a real ICalendarRangeService implementation.",
+        "operationId": "GetEntityCalendarRange",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "From",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "To",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "Calendar",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CalendarItemResponse"
+                  }
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/entities/{name}/bulk/{action}": {
+      "post": {
+        "tags": ["Entities"],
+        "summary": "Executes a registered entity action against the supplied rows in one round-trip.",
+        "description": "Resolves the entity definition and the named action, gates the call through the action's RequiresPermission (defense in depth), then dispatches the run via the framework's BulkActionExecutionOrchestrator. Hosts wire a scoped IEntityActionExecutor<TEntity> per action; an optional IBulkActionExecutor<TEntity> shortcut lets the executor batch the work (one UPDATE … WHERE Id IN (…) call). Per-row failures are returned in the response payload; the call itself returns HTTP 200 whenever the bulk surface accepted the request. One EntityBulkUpdatedEvent<TEntity> is emitted via ILocalEventBus when at least one row succeeded and the entity implements IEmitEntityLifecycleEvents.",
+        "operationId": "PostEntityBulkAction",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Unique registered name of the background job.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "action",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkActionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkActionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BulkActionFailure": {
+        "required": ["id", "reason"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "BulkActionRequest": {
+        "required": ["ids", "payload"],
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "payload": {
+            "$ref": "#/components/schemas/JsonElement"
+          }
+        }
+      },
+      "BulkActionResponse": {
+        "required": ["affected", "failures"],
+        "type": "object",
+        "properties": {
+          "affected": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "failures": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BulkActionFailure"
+            }
+          }
+        }
+      },
+      "CalendarItemResponse": {
+        "required": ["id", "start", "end", "title", "color"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "title": {
+            "type": "string"
+          },
+          "color": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "EntityActionKind": {
+        "enum": ["ApiCall", "Download", "Navigate", "WorkflowTransition", "OpenDrawer", "OpenModal"]
+      },
+      "EntityActionManifest": {
+        "required": [
+          "name",
+          "kind",
+          "displayKey",
+          "icon",
+          "order",
+          "urlTemplate",
+          "httpMethod",
+          "confirmationKey",
+          "workflowTransitionName",
+          "contributorAssemblyName"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/EntityActionKind"
+          },
+          "displayKey": {
+            "type": ["null", "string"]
+          },
+          "icon": {
+            "type": ["null", "string"]
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "urlTemplate": {
+            "type": ["null", "string"]
+          },
+          "httpMethod": {
+            "type": ["null", "string"]
+          },
+          "confirmationKey": {
+            "type": ["null", "string"]
+          },
+          "workflowTransitionName": {
+            "type": ["null", "string"]
+          },
+          "contributorAssemblyName": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "EntityActivitiesManifest": {
+        "required": ["allowedTypes", "defaultAssignee"],
+        "type": "object",
+        "properties": {
+          "allowedTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "defaultAssignee": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "EntityCalendarLayoutManifest": {
+        "required": [
+          "startPropertyName",
+          "endPropertyName",
+          "titlePropertyName",
+          "colorByPropertyName",
+          "actions"
+        ],
+        "type": "object",
+        "properties": {
+          "startPropertyName": {
+            "type": "string"
+          },
+          "endPropertyName": {
+            "type": ["null", "string"]
+          },
+          "titlePropertyName": {
+            "type": ["null", "string"]
+          },
+          "colorByPropertyName": {
+            "type": ["null", "string"]
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityCalendarTileActionManifest"
+            }
+          }
+        }
+      },
+      "EntityCalendarTileActionManifest": {
+        "required": ["name", "displayKey", "icon", "contributorAssemblyName"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "displayKey": {
+            "type": ["null", "string"]
+          },
+          "icon": {
+            "type": ["null", "string"]
+          },
+          "contributorAssemblyName": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "EntityCollectionReference": {
+        "required": ["name", "clrTypeName"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "clrTypeName": {
+            "type": "string"
+          }
+        }
+      },
+      "EntityCollectionsSection": {
+        "required": [
+          "query",
+          "export",
+          "metrics",
+          "dashboards",
+          "defaultViewId",
+          "listLayouts",
+          "headerActions",
+          "selectionActions"
+        ],
+        "type": "object",
+        "properties": {
+          "query": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/EntityCollectionReference"
+              }
+            ]
+          },
+          "export": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/EntityCollectionReference"
+              }
+            ]
+          },
+          "metrics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityCollectionReference"
+            }
+          },
+          "dashboards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityCollectionReference"
+            }
+          },
+          "defaultViewId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "listLayouts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityListLayoutManifest"
+            }
+          },
+          "headerActions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityHeaderActionManifest"
+            }
+          },
+          "selectionActions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntitySelectionActionManifest"
+            }
+          }
+        }
+      },
+      "EntityDetailManifest": {
+        "required": ["name", "sections", "sidePanels"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityDetailSectionManifest"
+            }
+          },
+          "sidePanels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityDetailSidePanelManifest"
+            }
+          }
+        }
+      },
+      "EntityDetailSectionManifest": {
+        "required": ["key", "labelKey", "order", "inheritsFromFormVariant", "fields"],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "labelKey": {
+            "type": ["null", "string"]
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inheritsFromFormVariant": {
+            "type": ["null", "string"]
+          },
+          "fields": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "EntityDetailSidePanelManifest": {
+        "required": ["kind", "order"],
+        "type": "object",
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/SidePanelKind"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "EntityDiscoveryItemResponse": {
+        "required": ["name", "displayKey", "icon", "permissionGroup", "links"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "displayKey": {
+            "type": ["null", "string"]
+          },
+          "icon": {
+            "type": ["null", "string"]
+          },
+          "permissionGroup": {
+            "type": ["null", "string"]
+          },
+          "links": {
+            "$ref": "#/components/schemas/EntityDiscoveryLinks"
+          }
+        }
+      },
+      "EntityDiscoveryLinks": {
+        "required": ["manifest", "list"],
+        "type": "object",
+        "properties": {
+          "manifest": {
+            "type": "string"
+          },
+          "list": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "EntityDiscoveryResponse": {
+        "required": ["schemaVersion", "modules"],
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "modules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityModuleGroupResponse"
+            }
+          }
+        }
+      },
+      "EntityFormFieldManifest": {
+        "required": [
+          "propertyName",
+          "clrTypeName",
+          "component",
+          "config",
+          "labelKey",
+          "helpKey",
+          "order",
+          "readOnly",
+          "visibleIf"
+        ],
+        "type": "object",
+        "properties": {
+          "propertyName": {
+            "type": "string"
+          },
+          "clrTypeName": {
+            "type": "string"
+          },
+          "component": {
+            "type": "string"
+          },
+          "config": {
+            "type": ["null", "object"]
+          },
+          "labelKey": {
+            "type": ["null", "string"]
+          },
+          "helpKey": {
+            "type": ["null", "string"]
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "readOnly": {
+            "type": "boolean"
+          },
+          "visibleIf": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/VisibilityCondition"
+              }
+            ]
+          },
+          "provenance": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/EntityProvenance"
+              }
+            ]
+          }
+        }
+      },
+      "EntityFormManifest": {
+        "required": ["name", "customizable", "sections"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "customizable": {
+            "type": "boolean"
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityFormSectionManifest"
+            }
+          },
+          "hiddenByOverride": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "EntityFormOwnedCollectionManifest": {
+        "required": [
+          "propertyName",
+          "itemTypeName",
+          "itemFields",
+          "itemDisplayProperty",
+          "maxRendered"
+        ],
+        "type": "object",
+        "properties": {
+          "propertyName": {
+            "type": "string"
+          },
+          "itemTypeName": {
+            "type": "string"
+          },
+          "itemFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityFormFieldManifest"
+            }
+          },
+          "itemDisplayProperty": {
+            "type": ["null", "string"]
+          },
+          "maxRendered": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          }
+        }
+      },
+      "EntityFormSectionManifest": {
+        "required": ["key", "labelKey", "order", "collapsedByDefault", "fields"],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "labelKey": {
+            "type": ["null", "string"]
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "collapsedByDefault": {
+            "type": "boolean"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityFormFieldManifest"
+            }
+          },
+          "ownedCollection": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/EntityFormOwnedCollectionManifest"
+              }
+            ]
+          }
+        }
+      },
+      "EntityGalleryCardActionManifest": {
+        "required": ["name", "displayKey", "icon", "contributorAssemblyName"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "displayKey": {
+            "type": ["null", "string"]
+          },
+          "icon": {
+            "type": ["null", "string"]
+          },
+          "contributorAssemblyName": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "EntityGalleryLayoutManifest": {
+        "required": [
+          "imagePropertyName",
+          "titlePropertyName",
+          "subtitlePropertyName",
+          "groupByPropertyName",
+          "cardSize",
+          "actions"
+        ],
+        "type": "object",
+        "properties": {
+          "imagePropertyName": {
+            "type": "string"
+          },
+          "titlePropertyName": {
+            "type": ["null", "string"]
+          },
+          "subtitlePropertyName": {
+            "type": ["null", "string"]
+          },
+          "groupByPropertyName": {
+            "type": ["null", "string"]
+          },
+          "cardSize": {
+            "$ref": "#/components/schemas/GalleryCardSize"
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityGalleryCardActionManifest"
+            }
+          }
+        }
+      },
+      "EntityHeaderActionManifest": {
+        "required": ["name", "displayKey", "icon", "contributorAssemblyName"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "displayKey": {
+            "type": ["null", "string"]
+          },
+          "icon": {
+            "type": ["null", "string"]
+          },
+          "contributorAssemblyName": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "EntityIdentitySection": {
+        "required": [
+          "name",
+          "entityClrType",
+          "displayKey",
+          "icon",
+          "permissionGroup",
+          "displayProperty",
+          "subtitleProperty"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "entityClrType": {
+            "type": "string"
+          },
+          "displayKey": {
+            "type": ["null", "string"]
+          },
+          "icon": {
+            "type": ["null", "string"]
+          },
+          "permissionGroup": {
+            "type": ["null", "string"]
+          },
+          "displayProperty": {
+            "type": ["null", "string"]
+          },
+          "subtitleProperty": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "EntityKanbanCardActionManifest": {
+        "required": ["name", "displayKey", "icon", "contributorAssemblyName"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "displayKey": {
+            "type": ["null", "string"]
+          },
+          "icon": {
+            "type": ["null", "string"]
+          },
+          "contributorAssemblyName": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "EntityKanbanCardManifest": {
+        "required": ["titleProperty", "fields", "relations", "actions"],
+        "type": "object",
+        "properties": {
+          "titleProperty": {
+            "type": ["null", "string"]
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityFormFieldManifest"
+            }
+          },
+          "relations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityKanbanCardRelationManifest"
+            }
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityKanbanCardActionManifest"
+            }
+          }
+        }
+      },
+      "EntityKanbanCardRelationManifest": {
+        "required": ["name", "displayKey", "icon", "contributorAssemblyName"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "displayKey": {
+            "type": ["null", "string"]
+          },
+          "icon": {
+            "type": ["null", "string"]
+          },
+          "contributorAssemblyName": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "EntityKanbanColumnManifest": {
+        "required": ["value", "color", "defaultState"],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "color": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/KanbanColor"
+              }
+            ]
+          },
+          "defaultState": {
+            "$ref": "#/components/schemas/KanbanColumnState"
+          }
+        }
+      },
+      "EntityKanbanLayoutManifest": {
+        "required": ["groupByPropertyName", "groupByClrTypeName", "card", "columns"],
+        "type": "object",
+        "properties": {
+          "groupByPropertyName": {
+            "type": "string"
+          },
+          "groupByClrTypeName": {
+            "type": "string"
+          },
+          "card": {
+            "$ref": "#/components/schemas/EntityKanbanCardManifest"
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityKanbanColumnManifest"
+            }
+          }
+        }
+      },
+      "EntityListLayoutKind": {
+        "enum": ["List", "Kanban", "Calendar", "Gallery"]
+      },
+      "EntityListLayoutManifest": {
+        "required": ["kind", "isDefault", "kanban", "calendar", "gallery"],
+        "type": "object",
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/EntityListLayoutKind"
+          },
+          "isDefault": {
+            "type": "boolean"
+          },
+          "kanban": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/EntityKanbanLayoutManifest"
+              }
+            ]
+          },
+          "calendar": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/EntityCalendarLayoutManifest"
+              }
+            ]
+          },
+          "gallery": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/EntityGalleryLayoutManifest"
+              }
+            ]
+          }
+        }
+      },
+      "EntityManifestResponse": {
+        "required": [
+          "schemaVersion",
+          "identity",
+          "permissions",
+          "forms",
+          "details",
+          "collections",
+          "relations"
+        ],
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "identity": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/EntityIdentitySection"
+              }
+            ]
+          },
+          "permissions": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/EntityPermissionsSection"
+              }
+            ]
+          },
+          "forms": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/EntityFormManifest"
+            }
+          },
+          "details": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/EntityDetailManifest"
+            }
+          },
+          "collections": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/EntityCollectionsSection"
+              }
+            ]
+          },
+          "relations": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/EntityRelationManifest"
+            }
+          },
+          "actions": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/EntityActionManifest"
+            }
+          },
+          "activities": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/EntityActivitiesManifest"
+              }
+            ]
+          }
+        }
+      },
+      "EntityModuleGroupResponse": {
+        "required": ["module", "items"],
+        "type": "object",
+        "properties": {
+          "module": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityDiscoveryItemResponse"
+            }
+          }
+        }
+      },
+      "EntityPermissionsSection": {
+        "required": ["canRead", "canCreate", "canUpdate", "canDelete", "canManage", "canExecute"],
+        "type": "object",
+        "properties": {
+          "canRead": {
+            "type": "boolean"
+          },
+          "canCreate": {
+            "type": "boolean"
+          },
+          "canUpdate": {
+            "type": "boolean"
+          },
+          "canDelete": {
+            "type": "boolean"
+          },
+          "canManage": {
+            "type": "boolean"
+          },
+          "canExecute": {
+            "type": "boolean"
+          }
+        }
+      },
+      "EntityProvenance": {
+        "required": ["layer", "overrideId"],
+        "type": "object",
+        "properties": {
+          "layer": {
+            "type": "string"
+          },
+          "overrideId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          }
+        }
+      },
+      "EntityRelationAggregateManifest": {
+        "required": ["kind", "propertyName", "labelKey", "format"],
+        "type": "object",
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/RelationAggregateKind"
+          },
+          "propertyName": {
+            "type": ["null", "string"]
+          },
+          "labelKey": {
+            "type": ["null", "string"]
+          },
+          "format": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "EntityRelationManifest": {
+        "required": [
+          "name",
+          "cardinality",
+          "display",
+          "targetEntityName",
+          "displayKey",
+          "icon",
+          "order",
+          "queryDefinitionName",
+          "aggregates",
+          "contributorAssemblyName"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "cardinality": {
+            "$ref": "#/components/schemas/RelationCardinality"
+          },
+          "display": {
+            "$ref": "#/components/schemas/RelationDisplay"
+          },
+          "targetEntityName": {
+            "type": "string"
+          },
+          "displayKey": {
+            "type": ["null", "string"]
+          },
+          "icon": {
+            "type": ["null", "string"]
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "queryDefinitionName": {
+            "type": ["null", "string"]
+          },
+          "aggregates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityRelationAggregateManifest"
+            }
+          },
+          "contributorAssemblyName": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "EntitySelectionActionManifest": {
+        "required": ["name", "displayKey", "icon", "confirmationKey", "contributorAssemblyName"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "displayKey": {
+            "type": ["null", "string"]
+          },
+          "icon": {
+            "type": ["null", "string"]
+          },
+          "confirmationKey": {
+            "type": ["null", "string"]
+          },
+          "contributorAssemblyName": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "FieldOp": {
+        "enum": ["Eq", "NotEq", "In", "NotIn", "Gt", "Lt", "IsNull", "IsNotNull"]
+      },
+      "GalleryCardSize": {
+        "enum": ["Small", "Medium", "Large"]
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "JsonElement": {
+        "type": ["null", "boolean", "number", "string", "object", "array"],
+        "description": "Arbitrary JSON value (object, array, string, number, boolean, or null)."
+      },
+      "KanbanColor": {
+        "enum": [
+          "Neutral",
+          "Gray",
+          "Blue",
+          "Green",
+          "Orange",
+          "Red",
+          "Yellow",
+          "Purple",
+          "Cyan",
+          null
+        ]
+      },
+      "KanbanColumnState": {
+        "enum": ["Open", "Collapsed", "Hidden"]
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "RelationAggregateKind": {
+        "enum": ["Count", "Sum", "Avg", "Min", "Max"]
+      },
+      "RelationAggregatesRequest": {
+        "required": ["relations"],
+        "type": "object",
+        "properties": {
+          "relations": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "RelationAggregatesResponse": {
+        "required": ["aggregates"],
+        "type": "object",
+        "properties": {
+          "aggregates": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/RelationAggregateValue"
+            }
+          }
+        }
+      },
+      "RelationAggregateValue": {
+        "required": ["count", "sum", "avg", "min", "max"],
+        "type": "object",
+        "properties": {
+          "count": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["null", "integer", "string"],
+            "format": "int64"
+          },
+          "sum": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": ["null", "number", "string"],
+            "format": "double"
+          },
+          "avg": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": ["null", "number", "string"],
+            "format": "double"
+          },
+          "min": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": ["null", "number", "string"],
+            "format": "double"
+          },
+          "max": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": ["null", "number", "string"],
+            "format": "double"
+          },
+          "currency": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "RelationCardinality": {
+        "enum": ["Many", "One"]
+      },
+      "RelationDisplay": {
+        "enum": ["Tab", "SmartButton", "Sidebar", "InlineChips"]
+      },
+      "SidePanelKind": {
+        "enum": ["Audit", "Timeline", "Comments", "Documents", "Activities"]
+      },
+      "VisibilityCondition": {
+        "required": ["field", "op", "value"],
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "op": {
+            "$ref": "#/components/schemas/FieldOp"
+          },
+          "value": {}
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Entities"
+    }
+  ]
+}

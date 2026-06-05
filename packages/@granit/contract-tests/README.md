@@ -6,7 +6,7 @@ still mirror the backend contract, using the per-module OpenAPI snapshots in
 
 ## Why an oracle, not codegen
 
-The backend (`Granit.OpenApi.Generator`) emits one OpenAPI document per module.
+The backend OpenAPI generators emit one OpenAPI document per module.
 Generating TypeScript from it would **degrade** the curated public API — the
 spec materializes generics (`PagedResultOfX`), widens every integer to
 `number | string`, drops branded types (`ISODateString` → `string`), and names
@@ -46,8 +46,15 @@ node scripts/sync-openapi-contracts.mjs            # all modules
 node scripts/sync-openapi-contracts.mjs background-jobs
 ```
 
-Reads the build artifacts of `Granit.OpenApi.Generator` (override the source
-with `GRANIT_DOTNET=/path/to/granit-dotnet`).
+Reads the build artifacts of four backend generators — override each source
+with its env var:
+
+| Generator                           | Repo            | Env var           |
+| ----------------------------------- | --------------- | ----------------- |
+| `Granit.OpenApi.Generator`          | granit-dotnet   | `GRANIT_DOTNET`   |
+| `Granit.Cms.OpenApi.Generator`      | granit-website  | `GRANIT_WEBSITE`  |
+| `Granit.IoT.OpenApi.Generator`      | granit-iot      | `GRANIT_IOT`      |
+| `Granit.Business.OpenApi.Generator` | granit-business | `GRANIT_BUSINESS` |
 
 ## Extending coverage
 
@@ -70,5 +77,8 @@ Covered so far: `background-jobs`, `bff`, `blob-storage`, `api-keys`, `ai`,
 Axios-client ones). Modules whose front DTO names still diverge from the spec
 (e.g. `multi-tenancy` `AdminTenant` vs `TenantResponse`, several `webhooks`
 types) need the same rename treatment as auditing/authorization before wiring.
-The `Granit.OpenApi.Generator` ships the 30 framework modules; granit-business
-modules (dashboards, parties, …) need an equivalent generator.
+Four generators feed the snapshots: `Granit.OpenApi.Generator` (framework
+modules), `Granit.Cms.OpenApi.Generator` (CMS), `Granit.IoT.OpenApi.Generator`
+(IoT) and `Granit.Business.OpenApi.Generator` (business — dashboards, parties,
+…). Their slugs are vendored automatically; wiring each into `manifest.ts` is
+opt-in as the matching front DTOs land.

@@ -1,0 +1,307 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "documents-renditions",
+    "version": "1"
+  },
+  "paths": {
+    "/documents/documents/{id}/renditions": {
+      "get": {
+        "tags": ["Documents - Renditions"],
+        "summary": "Lists every rendition for a document's current version.",
+        "description": "Returns each rendition row (any status — including Pending and Failed) so the UI can render placeholders or surface errors. Ordered by Type then Format. Returns 404 when the document is not found or has no current version.",
+        "operationId": "ListDocumentRenditions",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListRenditionsResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/documents/documents/{id}/renditions/{type}/download": {
+      "get": {
+        "tags": ["Documents - Renditions"],
+        "summary": "Issues a presigned download URL for a Ready rendition.",
+        "description": "Returns a short-lived presigned URL the client can use to download the rendition bytes directly from blob storage. Pass `?format=image/webp` to pick a specific MIME when several renditions of the requested Type are Ready; otherwise the first Ready row wins. Returns 404 when the document is missing or no rendition of the requested Type / Format is yet in Ready status — on-demand synchronous generation is deferred to a follow-up; until then callers retry once the F16.4 background job completes.",
+        "operationId": "RequestRenditionDownloadUrl",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "type",
+            "in": "path",
+            "description": "Filter by type discriminator value.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/RenditionType"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RenditionDownloadUrlResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ListRenditionsResponse": {
+        "required": ["documentId", "documentVersionId", "renditions"],
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentVersionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "renditions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RenditionResponse"
+            }
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "RenditionDownloadUrlResponse": {
+        "required": ["url", "expiresAt"],
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "RenditionResponse": {
+        "required": [
+          "id",
+          "documentId",
+          "documentVersionId",
+          "type",
+          "format",
+          "status",
+          "sizeBytes",
+          "width",
+          "height",
+          "createdAt",
+          "completedAt",
+          "failureReason"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentVersionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "$ref": "#/components/schemas/RenditionType"
+          },
+          "format": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/RenditionStatus"
+          },
+          "sizeBytes": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["null", "integer", "string"],
+            "format": "int64"
+          },
+          "width": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "height": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "failureReason": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "RenditionStatus": {
+        "enum": ["Pending", "Generating", "Ready", "Failed"]
+      },
+      "RenditionType": {
+        "enum": ["Thumbnail", "Web", "Print", "Poster"]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Documents - Renditions"
+    }
+  ]
+}

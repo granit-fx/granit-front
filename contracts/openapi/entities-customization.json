@@ -1,0 +1,427 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "entities-customization",
+    "version": "1"
+  },
+  "paths": {
+    "/entities/{entityName}/customization/{layoutKind}": {
+      "get": {
+        "tags": ["Entities - Customization"],
+        "summary": "Returns the tenant's customization for the given (entity, layout) pair.",
+        "description": "Returns 200 with the persisted deltas, or 404 when the tenant has not customized that layout (compiled defaults apply).",
+        "operationId": "GetEntityCustomization",
+        "parameters": [
+          {
+            "name": "entityName",
+            "in": "path",
+            "description": "Entity definition name (matches the registered Granit.Entities entity).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "layoutKind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/LayoutKind"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityCustomizationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Entities - Customization"],
+        "summary": "Replaces the tenant's customization for the given (entity, layout) pair.",
+        "description": "Full-replace semantics — the previous delta list is discarded. Validates each FieldName + group key against the compiled descriptor; rejects unknown names with 400. ISO 27001 audit entry written via IAuditingWriter on success.",
+        "operationId": "PutEntityCustomization",
+        "parameters": [
+          {
+            "name": "entityName",
+            "in": "path",
+            "description": "Entity definition name (matches the registered Granit.Entities entity).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "layoutKind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/LayoutKind"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EntityCustomizationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityCustomizationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Entities - Customization"],
+        "summary": "Reverts the tenant to the compiled defaults for the given (entity, layout) pair.",
+        "description": "Hard-deletes the persisted customization row. Idempotent — deleting a non-existent customization returns 204. ISO 27001 audit entry written on actual deletion only.",
+        "operationId": "DeleteEntityCustomization",
+        "parameters": [
+          {
+            "name": "entityName",
+            "in": "path",
+            "description": "Entity definition name (matches the registered Granit.Entities entity).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "layoutKind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/LayoutKind"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EntityCustomizationRequest": {
+        "required": ["deltas"],
+        "type": "object",
+        "properties": {
+          "deltas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LayoutDelta"
+            }
+          }
+        }
+      },
+      "EntityCustomizationResponse": {
+        "required": ["id", "entityName", "layoutKind", "deltas"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "entityName": {
+            "type": "string"
+          },
+          "layoutKind": {
+            "$ref": "#/components/schemas/LayoutKind"
+          },
+          "deltas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LayoutDelta"
+            }
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "LayoutDelta": {
+        "required": ["$type"],
+        "type": "object",
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/LayoutDeltaReorderDelta"
+          },
+          {
+            "$ref": "#/components/schemas/LayoutDeltaRegroupDelta"
+          },
+          {
+            "$ref": "#/components/schemas/LayoutDeltaHideDelta"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "$type",
+          "mapping": {
+            "reorder": "#/components/schemas/LayoutDeltaReorderDelta",
+            "regroup": "#/components/schemas/LayoutDeltaRegroupDelta",
+            "hide": "#/components/schemas/LayoutDeltaHideDelta"
+          }
+        }
+      },
+      "LayoutDeltaHideDelta": {
+        "required": ["fieldName"],
+        "properties": {
+          "$type": {
+            "enum": ["hide"],
+            "type": "string"
+          },
+          "fieldName": {
+            "type": "string"
+          }
+        }
+      },
+      "LayoutDeltaRegroupDelta": {
+        "required": ["groupKey", "fieldName"],
+        "properties": {
+          "$type": {
+            "enum": ["regroup"],
+            "type": "string"
+          },
+          "groupKey": {
+            "type": "string"
+          },
+          "fieldName": {
+            "type": "string"
+          }
+        }
+      },
+      "LayoutDeltaReorderDelta": {
+        "required": ["beforeFieldName", "afterFieldName", "fieldName"],
+        "properties": {
+          "$type": {
+            "enum": ["reorder"],
+            "type": "string"
+          },
+          "beforeFieldName": {
+            "type": ["null", "string"]
+          },
+          "afterFieldName": {
+            "type": ["null", "string"]
+          },
+          "isAnchorWellFormed": {
+            "type": "boolean"
+          },
+          "fieldName": {
+            "type": "string"
+          }
+        }
+      },
+      "LayoutKind": {
+        "enum": ["FormDefault", "DetailDefault", "List", "Calendar", "Gallery"]
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Entities - Customization"
+    }
+  ]
+}

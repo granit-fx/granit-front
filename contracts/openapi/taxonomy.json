@@ -1,43 +1,46 @@
 {
   "openapi": "3.1.1",
   "info": {
-    "title": "data-exchange",
+    "title": "taxonomy",
     "version": "1"
   },
   "paths": {
-    "/data-exchange/import/jobs": {
+    "/taxonomy/tags": {
       "get": {
-        "tags": ["Data Exchange"],
-        "summary": "Lists import jobs with optional status filter and pagination.",
-        "description": "Returns a paginated list of import jobs ordered by creation date descending. Supports filtering by job status. Intended for admin dashboards monitoring import activity.",
-        "operationId": "ListImportJobs",
+        "tags": ["Taxonomy"],
+        "summary": "Lists tags in a scope, optionally filtered by a name prefix.",
+        "description": "Returns the tenant-scoped tags registered under the given scope, ordered by name. The scope query parameter is mandatory; cross-scope search is exposed by the dedicated /api/v1/taxonomy/search endpoint introduced in story T3.1. The optional q parameter applies a case-insensitive name prefix filter for autocomplete-style lookups.",
+        "operationId": "ListTaxonomyTags",
         "parameters": [
           {
-            "name": "status",
+            "name": "scope",
             "in": "query",
-            "description": "Filter by status value.",
+            "required": true,
             "schema": {
-              "$ref": "#/components/schemas/ImportJobStatus"
+              "type": "string"
             }
           },
           {
-            "name": "page",
+            "name": "q",
             "in": "query",
-            "description": "1-based page index.",
             "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
+              "type": "string"
             }
           },
           {
-            "name": "pageSize",
+            "name": "skip",
             "in": "query",
-            "description": "Number of items per page.",
             "schema": {
               "type": "integer",
-              "format": "int32",
-              "default": 20
+              "format": "int32"
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -47,7 +50,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfImportJobResponse"
+                  "$ref": "#/components/schemas/ListTagsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -85,34 +98,15 @@
         }
       },
       "post": {
-        "tags": ["Data Exchange"],
-        "summary": "Uploads a file and creates an import job.",
-        "description": "Accepts a multipart/form-data upload with the file and a definitionName field. Validates MIME type and file size against the import definition's constraints. Creates an import job in 'Created' status. The next step is to call the preview endpoint to inspect headers and mapping suggestions.",
-        "operationId": "UploadImportFile",
+        "tags": ["Taxonomy"],
+        "summary": "Creates a new tag in the current tenant.",
+        "description": "Creates a new tag in the supplied scope. Returns 201 with the persisted tag. Returns 422 when a tag with the same (TenantId, Scope, Name) already exists.",
+        "operationId": "CreateTaxonomyTag",
         "requestBody": {
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
-                "required": ["file", "definitionName"],
-                "type": "object",
-                "allOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "file": {
-                        "$ref": "#/components/schemas/IFormFile"
-                      }
-                    }
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "definitionName": {
-                        "type": "string"
-                      }
-                    }
-                  }
-                ]
+                "$ref": "#/components/schemas/CreateTagRequest"
               }
             }
           },
@@ -124,7 +118,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ImportJobResponse"
+                  "$ref": "#/components/schemas/TagResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -134,7 +138,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -159,16 +163,6 @@
               }
             }
           },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal Server Error",
             "content": {
@@ -182,17 +176,17 @@
         }
       }
     },
-    "/data-exchange/import/{jobId}/preview": {
-      "post": {
-        "tags": ["Data Exchange"],
-        "summary": "Extracts headers, preview rows, and mapping suggestions for an import job.",
-        "description": "Parses the uploaded file to extract column headers, a preview of the first rows, available target field metadata, and AI-assisted mapping suggestions. Transitions the job to 'Previewed' status. Returns 404 if the job does not exist.",
-        "operationId": "PreviewImportJob",
+    "/taxonomy/tags/{id}": {
+      "get": {
+        "tags": ["Taxonomy"],
+        "summary": "Returns a tag by id.",
+        "description": "Returns the tag identified by the route id. Returns 404 when the tag is missing or excluded by the tenant filter.",
+        "operationId": "GetTaxonomyTag",
         "parameters": [
           {
-            "name": "jobId",
+            "name": "id",
             "in": "path",
-            "description": "Import or export job identifier (UUID).",
+            "description": "Resource identifier (UUID).",
             "required": true,
             "schema": {
               "type": "string",
@@ -206,7 +200,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ImportPreviewResponse"
+                  "$ref": "#/components/schemas/TagResponse"
                 }
               }
             }
@@ -252,19 +246,17 @@
             }
           }
         }
-      }
-    },
-    "/data-exchange/import/{jobId}/mappings": {
-      "put": {
-        "tags": ["Data Exchange"],
-        "summary": "Confirms the column-to-property mappings for an import job.",
-        "description": "Saves the user-confirmed column-to-property mappings and transitions the job to 'Mapped' status, making it eligible for execution or dry-run. At least one mapping is required. Returns 404 if the job does not exist. Returns 409 if the concurrency stamp does not match the stored value.",
-        "operationId": "ConfirmImportMappings",
+      },
+      "patch": {
+        "tags": ["Taxonomy"],
+        "summary": "Partially updates a tag (name / colour / hide-on-entity-card).",
+        "description": "Applies the supplied facets in turn. Each property is independently optional; an empty body is a no-op. Returns 404 when the tag is missing, 422 when a rename collides with an existing (TenantId, Scope, Name) row.",
+        "operationId": "UpdateTaxonomyTag",
         "parameters": [
           {
-            "name": "jobId",
+            "name": "id",
             "in": "path",
-            "description": "Import or export job identifier (UUID).",
+            "description": "Resource identifier (UUID).",
             "required": true,
             "schema": {
               "type": "string",
@@ -276,58 +268,25 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ConfirmMappingsRequest"
+                "$ref": "#/components/schemas/UpdateTagRequest"
               }
             }
           },
           "required": true
         },
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagResponse"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -346,211 +305,12 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/data-exchange/import/{jobId}/execute": {
-      "post": {
-        "tags": ["Data Exchange"],
-        "summary": "Dispatches the import job for asynchronous background execution.",
-        "description": "Enqueues the import job for background processing. Returns 202 Accepted — poll the status endpoint to track progress. The job must be in 'Mapped' status (mappings confirmed). Returns 400 if the job is in an invalid state, or 404 if not found.",
-        "operationId": "ExecuteImportJob",
-        "parameters": [
-          {
-            "name": "jobId",
-            "in": "path",
-            "description": "Import or export job identifier (UUID).",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "202": {
-            "description": "Accepted"
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
           "400": {
             "description": "Bad Request",
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/data-exchange/import/{jobId}/dry-run": {
-      "post": {
-        "tags": ["Data Exchange"],
-        "summary": "Executes a dry-run of the import (validates without persisting data).",
-        "description": "Runs the full import pipeline (parsing, mapping, validation) without persisting any data. Returns a detailed report with row-level validation results. Use this to preview errors before committing. The job must be in 'Mapped' status.",
-        "operationId": "DryRunImportJob",
-        "parameters": [
-          {
-            "name": "jobId",
-            "in": "path",
-            "description": "Import or export job identifier (UUID).",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportReportResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/data-exchange/import/{jobId}": {
-      "get": {
-        "tags": ["Data Exchange"],
-        "summary": "Returns the current status of an import job.",
-        "description": "Returns the current state of the import job including status (Created, Previewed, Mapped, Executing, Completed, PartiallyCompleted, Failed, Cancelled), original file name, row counts, and timing information. Returns 404 if not found.",
-        "operationId": "GetImportJobStatus",
-        "parameters": [
-          {
-            "name": "jobId",
-            "in": "path",
-            "description": "Import or export job identifier (UUID).",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportJobResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -588,15 +348,15 @@
         }
       },
       "delete": {
-        "tags": ["Data Exchange"],
-        "summary": "Cancels an import job that has not yet started execution.",
-        "description": "Cancels the import job and deletes the uploaded file from blob storage. Only jobs that have not yet started execution (Executing, Completed, PartiallyCompleted, Failed) can be cancelled. Returns 400 if the job is in a non-cancellable state.",
-        "operationId": "CancelImportJob",
+        "tags": ["Taxonomy"],
+        "summary": "Hard-deletes a tag.",
+        "description": "Removes the tag row. Cascading cleanup of orphan TagAssignment rows is handled by T5.1's EntityDeletedEto listener. Returns 404 when the tag is missing.",
+        "operationId": "DeleteTaxonomyTag",
         "parameters": [
           {
-            "name": "jobId",
+            "name": "id",
             "in": "path",
-            "description": "Import or export job identifier (UUID).",
+            "description": "Resource identifier (UUID).",
             "required": true,
             "schema": {
               "type": "string",
@@ -610,6 +370,98 @@
           },
           "404": {
             "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/taxonomy/tags/{id}/assign": {
+      "post": {
+        "tags": ["Taxonomy"],
+        "summary": "Idempotently assigns a tag to a target aggregate.",
+        "description": "Creates a new TagAssignment row for the given (TagId, TargetType, TargetId) triplet. When the row already exists, the existing row is returned with status 200 instead of 201 — the operation is idempotent. Returns 422 when targetType is not a registered taggable aggregate; 403 when the per-target permission check fails.",
+        "operationId": "AssignTaxonomyTag",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignTagRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagAssignmentResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagAssignmentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -623,7 +475,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -661,89 +513,36 @@
         }
       }
     },
-    "/data-exchange/import/{jobId}/report": {
-      "get": {
-        "tags": ["Data Exchange"],
-        "summary": "Returns the import execution report for a completed job.",
-        "description": "Returns the detailed execution report including total rows processed, success/failure counts, and per-row error details. Available after execution or dry-run completes. Returns 404 if the job does not exist or no report has been generated yet.",
-        "operationId": "GetImportReport",
+    "/taxonomy/tags/{id}/assign/{targetType}/{targetId}": {
+      "delete": {
+        "tags": ["Taxonomy"],
+        "summary": "Removes a tag assignment.",
+        "description": "Deletes the TagAssignment row matching the (TagId, TargetType, TargetId) triplet. Returns 204 on success, 404 when no matching row exists, 403 when the per-target permission check fails.",
+        "operationId": "UnassignTaxonomyTag",
         "parameters": [
           {
-            "name": "jobId",
+            "name": "id",
             "in": "path",
-            "description": "Import or export job identifier (UUID).",
+            "description": "Resource identifier (UUID).",
             "required": true,
             "schema": {
               "type": "string",
               "format": "uuid"
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportReportResponse"
-                }
-              }
-            }
           },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/data-exchange/import/{jobId}/correction-file": {
-      "get": {
-        "tags": ["Data Exchange"],
-        "summary": "Downloads a correction file containing only the failed rows with error annotations.",
-        "description": "Generates and streams a file containing only the rows that failed validation or import, annotated with error messages. The file format matches the original upload. Users can fix the errors and re-upload. Returns 204 if there are no failed rows, or 404 if the job or report does not exist.",
-        "operationId": "GetImportCorrectionFile",
-        "parameters": [
           {
-            "name": "jobId",
+            "name": "targetType",
             "in": "path",
-            "description": "Import or export job identifier (UUID).",
+            "description": "Type of the target.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "targetId",
+            "in": "path",
+            "description": "Unique identifier of the target.",
             "required": true,
             "schema": {
               "type": "string",
@@ -755,9 +554,6 @@
           "204": {
             "description": "No Content"
           },
-          "200": {
-            "description": "OK"
-          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -801,39 +597,28 @@
         }
       }
     },
-    "/data-exchange/export/jobs": {
+    "/taxonomy/assignments": {
       "get": {
-        "tags": ["Data Exchange"],
-        "summary": "Lists export jobs with optional status filter and pagination.",
-        "description": "Returns a paginated list of export jobs ordered by creation date descending. Supports filtering by job status (Created, Processing, Completed, Failed). Intended for admin dashboards monitoring export activity.",
-        "operationId": "ListExportJobs",
+        "tags": ["Taxonomy"],
+        "summary": "Lists tags currently assigned to a target.",
+        "description": "Returns every Tag assigned to (targetType, targetId), ordered by tag name. Both query parameters are mandatory.",
+        "operationId": "ListTaxonomyAssignments",
         "parameters": [
           {
-            "name": "status",
+            "name": "targetType",
             "in": "query",
-            "description": "Filter by status value.",
+            "required": true,
             "schema": {
-              "$ref": "#/components/schemas/ExportJobStatus"
+              "type": "string"
             }
           },
           {
-            "name": "page",
+            "name": "targetId",
             "in": "query",
-            "description": "1-based page index.",
+            "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "description": "Number of items per page.",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 20
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -843,7 +628,188 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfExportJobResponse"
+                  "$ref": "#/components/schemas/ListTagsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/taxonomy/search": {
+      "get": {
+        "tags": ["Taxonomy"],
+        "summary": "Cross-entity tag search grouped by target type.",
+        "description": "Returns tags whose Name prefix-matches q (case-insensitive) along with the assignments grouped by TargetType so the frontend can dispatch to the matching rendering pipeline. Pass scope=* for cross-scope, otherwise the search is restricted to the matching Tag.Scope. SECURITY: results expose TargetIds the caller may not have per-entity read on — hosts MUST combine with their own per-entity ACL when rendering.",
+        "operationId": "SearchTaxonomy",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/taxonomy/categories": {
+      "get": {
+        "tags": ["Taxonomy"],
+        "summary": "Lists categories under a parent (or roots) within a scope.",
+        "description": "Returns the direct children of parentId in the given scope, ordered by name. When parentId is omitted, returns the root categories of the scope. Use GET /categories/{id} to fetch a single category with its breadcrumb chain.",
+        "operationId": "ListTaxonomyCategories",
+        "parameters": [
+          {
+            "name": "scope",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "parentId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListCategoriesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -881,15 +847,15 @@
         }
       },
       "post": {
-        "tags": ["Data Exchange"],
-        "summary": "Creates and dispatches an export job (sync or background).",
-        "description": "Creates an export job for the given definition, format, and field selection. Small datasets may complete synchronously; larger ones are dispatched for background processing. Poll the status endpoint to track progress. Returns 400 if the definition name or format is invalid.",
-        "operationId": "CreateExportJob",
+        "tags": ["Taxonomy"],
+        "summary": "Creates a new category — root or under an existing parent.",
+        "description": "Creates a new category in the supplied scope. When parentId is supplied the new category is placed under it (must share scope). Returns 422 when the parent does not exist or is in a different scope, or when sibling-name uniqueness is violated.",
+        "operationId": "CreateTaxonomyCategory",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateExportJobRequest"
+                "$ref": "#/components/schemas/CreateCategoryRequest"
               }
             }
           },
@@ -901,37 +867,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ExportJobResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/CategoryResponse"
                 }
               }
             }
@@ -946,129 +882,12 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/data-exchange/export/jobs/{jobId}": {
-      "get": {
-        "tags": ["Data Exchange"],
-        "summary": "Returns the current status of an export job.",
-        "description": "Returns the current status of the export job (Created, Processing, Completed, Failed). Once the status is Completed, the download endpoint becomes available. Returns 404 if the job ID is not found.",
-        "operationId": "GetExportJobStatus",
-        "parameters": [
-          {
-            "name": "jobId",
-            "in": "path",
-            "description": "Import or export job identifier (UUID).",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExportJobResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/data-exchange/export/jobs/{jobId}/download": {
-      "get": {
-        "tags": ["Data Exchange"],
-        "summary": "Downloads the generated export file for a completed job.",
-        "description": "Streams the generated export file (xlsx, csv, etc.) as a binary download. The Content-Type and Content-Disposition headers are set according to the export format. Returns 404 if the job does not exist, or 400 if the job has not completed yet.",
-        "operationId": "DownloadExportFile",
-        "parameters": [
-          {
-            "name": "jobId",
-            "in": "path",
-            "description": "Import or export job identifier (UUID).",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
           "400": {
             "description": "Bad Request",
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -1106,73 +925,21 @@
         }
       }
     },
-    "/data-exchange/metadata/definitions": {
+    "/taxonomy/categories/{id}": {
       "get": {
-        "tags": ["Data Exchange"],
-        "summary": "Lists all registered export definitions.",
-        "description": "Returns all export definitions registered by application modules. Each definition describes an exportable dataset, its supported output formats, and metadata. Use the fields endpoint to discover selectable columns for a specific definition.",
-        "operationId": "ListExportDefinitions",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ExportDefinitionResponse"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/data-exchange/metadata/definitions/{name}/fields": {
-      "get": {
-        "tags": ["Data Exchange"],
-        "summary": "Returns the available fields for a given export definition.",
-        "description": "Returns the list of selectable fields for the named export definition — each with its property name, display label, and data type. Use this to populate a field picker UI before creating an export job. Returns 404 if the definition name is not registered.",
-        "operationId": "GetExportDefinitionFields",
+        "tags": ["Taxonomy"],
+        "summary": "Returns a category with its breadcrumb chain.",
+        "description": "Returns the category and its breadcrumb (root → leaf). Returns 404 when the category is missing or excluded by the tenant filter.",
+        "operationId": "GetTaxonomyCategory",
         "parameters": [
           {
-            "name": "name",
+            "name": "id",
             "in": "path",
-            "description": "Unique registered name of the background job.",
+            "description": "Resource identifier (UUID).",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -1182,10 +949,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ExportFieldResponse"
-                  }
+                  "$ref": "#/components/schemas/CategoryDetailResponse"
                 }
               }
             }
@@ -1231,98 +995,338 @@
             }
           }
         }
-      }
-    },
-    "/data-exchange/metadata/presets/{definitionName}": {
-      "get": {
-        "tags": ["Data Exchange"],
-        "summary": "Lists saved export presets for a given definition.",
-        "description": "Returns all saved export presets for the given export definition. Presets store a reusable field selection, output format, and sorting configuration so users can quickly re-export without reconfiguring.",
-        "operationId": "ListExportPresets",
+      },
+      "patch": {
+        "tags": ["Taxonomy"],
+        "summary": "Partially updates a category (rename / icon / hide).",
+        "description": "Applies the supplied facets in turn. Renaming a category re-materialises descendant paths via a single SQL UPDATE. Returns 404 when the category is missing.",
+        "operationId": "UpdateTaxonomyCategory",
         "parameters": [
           {
-            "name": "definitionName",
+            "name": "id",
             "in": "path",
-            "description": "Import or export definition name.",
+            "description": "Resource identifier (UUID).",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ExportPresetResponse"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/data-exchange/metadata/presets": {
-      "post": {
-        "tags": ["Data Exchange"],
-        "summary": "Saves or updates an export preset.",
-        "description": "Creates or updates a named preset for the given export definition. If a preset with the same definition and name already exists, it is overwritten. The definition name must reference a registered export definition. At least one selected field is required.",
-        "operationId": "SaveExportPreset",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SaveExportPresetRequest"
+                "$ref": "#/components/schemas/UpdateCategoryRequest"
               }
             }
           },
           "required": true
         },
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
             "content": {
               "application/problem+json": {
                 "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Taxonomy"],
+        "summary": "Hard-deletes a leaf category with no active assignments.",
+        "description": "Returns 422 when the category has descendants OR when one or more CategoryAssignment rows still reference it — callers must move / delete descendants and reassign / unassign targets first.",
+        "operationId": "DeleteTaxonomyCategory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/taxonomy/categories/{id}/move": {
+      "post": {
+        "tags": ["Taxonomy"],
+        "summary": "Moves a category under a new parent (or to root).",
+        "description": "Re-parents the category and re-materialises descendant paths and depths in a single SQL UPDATE. Returns 422 on cycle / cross-scope violations, 404 when the category or target parent is missing.",
+        "operationId": "MoveTaxonomyCategory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveCategoryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/taxonomy/categories/{id}/assign": {
+      "post": {
+        "tags": ["Taxonomy"],
+        "summary": "Sets the category for a target. Replaces any existing assignment.",
+        "description": "Single-assignment per target: if a previous assignment exists for (targetType, targetId), it is updated in place to point at the supplied category. Returns 200 on update, 201 on first assignment.",
+        "operationId": "AssignTaxonomyCategory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignCategoryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryAssignmentResponse"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryAssignmentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -1370,29 +1374,30 @@
         }
       }
     },
-    "/data-exchange/metadata/presets/{definitionName}/{presetName}": {
+    "/taxonomy/categories/assign/{targetType}/{targetId}": {
       "delete": {
-        "tags": ["Data Exchange"],
-        "summary": "Deletes a saved export preset.",
-        "description": "Permanently removes the named export preset. Returns 404 if the preset does not exist.",
-        "operationId": "DeleteExportPreset",
+        "tags": ["Taxonomy"],
+        "summary": "Clears the category assignment for a target.",
+        "description": "Removes the CategoryAssignment row for (targetType, targetId). Returns 204 on success, 404 when no assignment matches.",
+        "operationId": "UnassignTaxonomyCategory",
         "parameters": [
           {
-            "name": "definitionName",
+            "name": "targetType",
             "in": "path",
-            "description": "Import or export definition name.",
+            "description": "Type of the target.",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "presetName",
+            "name": "targetId",
             "in": "path",
-            "description": "Export preset name.",
+            "description": "Unique identifier of the target.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -1446,447 +1451,236 @@
   },
   "components": {
     "schemas": {
-      "ConfirmMappingsRequest": {
-        "required": ["mappings", "concurrencyStamp"],
+      "AssignCategoryRequest": {
+        "required": ["targetType", "targetId"],
         "type": "object",
         "properties": {
-          "mappings": {
+          "targetType": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "AssignTagRequest": {
+        "required": ["targetType", "targetId"],
+        "type": "object",
+        "properties": {
+          "targetType": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "CategoryAssignmentResponse": {
+        "required": [
+          "id",
+          "tenantId",
+          "categoryId",
+          "targetType",
+          "targetId",
+          "assignedAt",
+          "assignedByUserId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "targetType": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assignedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "assignedByUserId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "CategoryDetailResponse": {
+        "required": ["category", "breadcrumb"],
+        "type": "object",
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/CategoryResponse"
+          },
+          "breadcrumb": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ImportColumnMapping"
+              "$ref": "#/components/schemas/CategoryResponse"
             }
-          },
-          "concurrencyStamp": {
-            "type": "string"
           }
         }
       },
-      "CreateExportJobRequest": {
-        "required": ["definitionName", "format"],
+      "CategoryResponse": {
+        "required": [
+          "id",
+          "tenantId",
+          "scope",
+          "parentId",
+          "name",
+          "path",
+          "depth",
+          "iconName",
+          "hideOnEntityCard"
+        ],
         "type": "object",
         "properties": {
-          "definitionName": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "scope": {
             "type": "string"
           },
-          "format": {
-            "type": "string"
+          "parentId": {
+            "type": ["null", "string"],
+            "format": "uuid"
           },
-          "selectedFields": {
-            "type": ["null", "array"],
-            "items": {
-              "type": "string"
-            }
-          },
-          "includeIdForImport": {
-            "type": "boolean",
-            "default": false
-          },
-          "sort": {
-            "type": ["null", "string"]
-          },
-          "filter": {
-            "type": ["null", "object"],
-            "additionalProperties": {
-              "type": "string"
-            }
-          },
-          "presets": {
-            "type": ["null", "object"],
-            "additionalProperties": {
-              "type": "string"
-            }
-          },
-          "search": {
-            "type": ["null", "string"]
-          }
-        }
-      },
-      "ExportDefinitionResponse": {
-        "required": ["name", "entityType", "supportedFormats", "isAutoGenerated"],
-        "type": "object",
-        "properties": {
           "name": {
             "type": "string"
           },
-          "entityType": {
+          "path": {
             "type": "string"
           },
-          "supportedFormats": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "isAutoGenerated": {
-            "type": "boolean"
-          }
-        }
-      },
-      "ExportFieldResponse": {
-        "required": ["propertyPath", "clrTypeName", "header", "format", "order", "isNavigation"],
-        "type": "object",
-        "properties": {
-          "propertyPath": {
-            "type": "string"
-          },
-          "clrTypeName": {
-            "type": "string"
-          },
-          "header": {
-            "type": ["null", "string"]
-          },
-          "format": {
-            "type": ["null", "string"]
-          },
-          "order": {
+          "depth": {
             "type": "integer",
             "format": "int32"
           },
-          "isNavigation": {
+          "iconName": {
+            "type": ["null", "string"]
+          },
+          "hideOnEntityCard": {
             "type": "boolean"
           }
         }
       },
-      "ExportJobResponse": {
-        "required": [
-          "id",
-          "definitionName",
-          "format",
-          "status",
-          "rowCount",
-          "fileName",
-          "errorMessage",
-          "createdAt",
-          "completedAt"
-        ],
+      "CreateCategoryRequest": {
+        "required": ["scope", "parentId", "name", "iconName", "hideOnEntityCard"],
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
+          "scope": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": ["null", "string"],
             "format": "uuid"
           },
-          "definitionName": {
+          "name": {
             "type": "string"
           },
-          "format": {
+          "iconName": {
+            "type": ["null", "string"]
+          },
+          "hideOnEntityCard": {
+            "type": ["null", "boolean"]
+          }
+        }
+      },
+      "CreateTagRequest": {
+        "required": ["scope", "name", "color", "hideOnEntityCard"],
+        "type": "object",
+        "properties": {
+          "scope": {
             "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "hideOnEntityCard": {
+            "type": ["null", "boolean"]
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
           },
           "status": {
-            "$ref": "#/components/schemas/ExportJobStatus"
-          },
-          "rowCount": {
             "type": ["null", "integer"],
             "format": "int32"
           },
-          "fileName": {
+          "detail": {
             "type": ["null", "string"]
           },
-          "errorMessage": {
+          "instance": {
             "type": ["null", "string"]
           },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "completedAt": {
-            "type": ["null", "string"],
-            "format": "date-time"
-          }
-        }
-      },
-      "ExportJobStatus": {
-        "enum": ["Queued", "Exporting", "Completed", "Failed"]
-      },
-      "ExportPresetResponse": {
-        "required": [
-          "definitionName",
-          "presetName",
-          "selectedFields",
-          "format",
-          "includeIdForImport"
-        ],
-        "type": "object",
-        "properties": {
-          "definitionName": {
-            "type": "string"
-          },
-          "presetName": {
-            "type": "string"
-          },
-          "selectedFields": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "format": {
-            "type": "string"
-          },
-          "includeIdForImport": {
-            "type": "boolean"
-          }
-        }
-      },
-      "IFormFile": {
-        "type": "string",
-        "format": "binary"
-      },
-      "ImportColumnMapping": {
-        "required": ["sourceColumn", "targetProperty", "confidence"],
-        "type": "object",
-        "properties": {
-          "sourceColumn": {
-            "type": "string"
-          },
-          "targetProperty": {
-            "type": ["null", "string"]
-          },
-          "confidence": {
-            "$ref": "#/components/schemas/MappingConfidence"
-          }
-        }
-      },
-      "ImportFieldMetadata": {
-        "required": ["propertyPath", "clrTypeName", "displayName", "description", "isRequired"],
-        "type": "object",
-        "properties": {
-          "propertyPath": {
-            "type": "string"
-          },
-          "clrTypeName": {
-            "type": "string"
-          },
-          "displayName": {
-            "type": ["null", "string"]
-          },
-          "description": {
-            "type": ["null", "string"]
-          },
-          "isRequired": {
-            "type": "boolean"
-          }
-        }
-      },
-      "ImportJobResponse": {
-        "required": [
-          "id",
-          "definitionName",
-          "originalFileName",
-          "mimeType",
-          "fileSizeBytes",
-          "status",
-          "createdAt",
-          "completedAt",
-          "concurrencyStamp"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "definitionName": {
-            "type": "string"
-          },
-          "originalFileName": {
-            "type": "string"
-          },
-          "mimeType": {
-            "type": "string"
-          },
-          "fileSizeBytes": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
-            "format": "int64"
-          },
-          "status": {
-            "$ref": "#/components/schemas/ImportJobStatus"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "completedAt": {
-            "type": ["null", "string"],
-            "format": "date-time"
-          },
-          "concurrencyStamp": {
-            "type": "string"
-          }
-        }
-      },
-      "ImportJobStatus": {
-        "enum": [
-          "Created",
-          "Previewed",
-          "Mapped",
-          "Executing",
-          "Completed",
-          "PartiallyCompleted",
-          "Failed",
-          "Cancelled"
-        ]
-      },
-      "ImportPreviewResponse": {
-        "required": ["headers", "previewRows", "suggestions", "fieldMetadata"],
-        "type": "object",
-        "properties": {
-          "headers": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "previewRows": {
-            "type": "array",
-            "items": {
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
               "type": "array",
               "items": {
                 "type": "string"
               }
             }
-          },
-          "suggestions": {
+          }
+        }
+      },
+      "ListCategoriesResponse": {
+        "required": ["items"],
+        "type": "object",
+        "properties": {
+          "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ImportColumnMapping"
-            }
-          },
-          "fieldMetadata": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ImportFieldMetadata"
+              "$ref": "#/components/schemas/CategoryResponse"
             }
           }
         }
       },
-      "ImportReportResponse": {
-        "required": [
-          "importJobId",
-          "finalStatus",
-          "totalRows",
-          "succeededRows",
-          "failedRows",
-          "skippedRows",
-          "insertedRows",
-          "updatedRows",
-          "duration",
-          "rowErrors"
-        ],
+      "ListTagsResponse": {
+        "required": ["items"],
         "type": "object",
         "properties": {
-          "importJobId": {
-            "type": "string",
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TagResponse"
+            }
+          }
+        }
+      },
+      "MoveCategoryRequest": {
+        "required": ["newParentId"],
+        "type": "object",
+        "properties": {
+          "newParentId": {
+            "type": ["null", "string"],
             "format": "uuid"
-          },
-          "finalStatus": {
-            "$ref": "#/components/schemas/ImportJobStatus"
-          },
-          "totalRows": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "succeededRows": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "failedRows": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "skippedRows": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "insertedRows": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "updatedRows": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "duration": {
-            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
-            "type": "string"
-          },
-          "rowErrors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ImportRowError"
-            }
-          }
-        }
-      },
-      "ImportRowError": {
-        "required": ["rowNumber", "kind", "errorCodes", "message"],
-        "type": "object",
-        "properties": {
-          "rowNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "kind": {
-            "$ref": "#/components/schemas/ImportRowErrorKind"
-          },
-          "errorCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      },
-      "ImportRowErrorKind": {
-        "enum": ["Conversion", "Validation", "Persistence", "Identity"]
-      },
-      "MappingConfidence": {
-        "enum": ["Manual", "Saved", "Exact", "Fuzzy", "Semantic"]
-      },
-      "PagedResultOfExportJobResponse": {
-        "required": ["items", "totalCount", "hasMore"],
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ExportJobResponse"
-            }
-          },
-          "totalCount": {
-            "type": ["null", "integer"],
-            "format": "int32"
-          },
-          "hasMore": {
-            "type": "boolean"
-          },
-          "nextCursor": {
-            "type": ["null", "string"]
-          }
-        }
-      },
-      "PagedResultOfImportJobResponse": {
-        "required": ["items", "totalCount", "hasMore"],
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ImportJobResponse"
-            }
-          },
-          "totalCount": {
-            "type": ["null", "integer"],
-            "format": "int32"
-          },
-          "hasMore": {
-            "type": "boolean"
-          },
-          "nextCursor": {
-            "type": ["null", "string"]
           }
         }
       },
@@ -1915,33 +1709,169 @@
           }
         }
       },
-      "SaveExportPresetRequest": {
+      "SearchHit": {
+        "required": ["targetId", "tagIds"],
+        "type": "object",
+        "properties": {
+          "targetId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tagIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
+      "SearchResponse": {
+        "required": ["tags", "hits", "totalCount", "skip", "take"],
+        "type": "object",
+        "properties": {
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchTagItem"
+            }
+          },
+          "hits": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/SearchHit"
+              }
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "skip": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "take": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SearchTagItem": {
+        "required": ["id", "name", "color", "scope"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          }
+        }
+      },
+      "TagAssignmentResponse": {
         "required": [
-          "definitionName",
-          "presetName",
-          "selectedFields",
-          "format",
-          "includeIdForImport"
+          "id",
+          "tenantId",
+          "tagId",
+          "targetType",
+          "targetId",
+          "assignedAt",
+          "assignedByUserId"
         ],
         "type": "object",
         "properties": {
-          "definitionName": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "tagId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "targetType": {
             "type": "string"
           },
-          "presetName": {
+          "targetId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assignedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "assignedByUserId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "TagResponse": {
+        "required": ["id", "tenantId", "scope", "name", "color", "hideOnEntityCard"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "scope": {
             "type": "string"
           },
-          "selectedFields": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "format": {
+          "name": {
             "type": "string"
           },
-          "includeIdForImport": {
+          "color": {
+            "type": "string"
+          },
+          "hideOnEntityCard": {
             "type": "boolean"
+          }
+        }
+      },
+      "UpdateCategoryRequest": {
+        "required": ["name", "iconName", "hideOnEntityCard"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": ["null", "string"]
+          },
+          "iconName": {
+            "type": ["null", "string"]
+          },
+          "hideOnEntityCard": {
+            "type": ["null", "boolean"]
+          }
+        }
+      },
+      "UpdateTagRequest": {
+        "required": ["name", "color", "hideOnEntityCard"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": ["null", "string"]
+          },
+          "color": {
+            "type": ["null", "string"]
+          },
+          "hideOnEntityCard": {
+            "type": ["null", "boolean"]
           }
         }
       }
@@ -1949,7 +1879,7 @@
   },
   "tags": [
     {
-      "name": "Data Exchange"
+      "name": "Taxonomy"
     }
   ]
 }

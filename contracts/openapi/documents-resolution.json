@@ -1,0 +1,303 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "documents-resolution",
+    "version": "1"
+  },
+  "paths": {
+    "/documents/resolution/resolve": {
+      "post": {
+        "tags": ["Documents - Resolution"],
+        "summary": "Resolves a batch of document assets into stable render-ready descriptors.",
+        "description": "Each item in the request array is resolved to a stable URL backed by a long-TTL DocumentPublicLink, with dimensions and MIME type from the best available source (Ready rendition when found, original document otherwise). A null slot in the response indicates a missing or revoked document — partial success is intentional. Maximum 100 items per request.",
+        "operationId": "BatchResolveDocumentAssets",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchResolveRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ResolvedDocumentResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/r/{token}": {
+      "get": {
+        "tags": ["Documents - Resolution"],
+        "summary": "Resolves a public-link token and serves the document or rendition inline.",
+        "description": "Anonymous endpoint — no authentication required. Validates the bearer token, then tries to redirect to the requested rendition if `renditionType` is provided and a Ready rendition exists; falls back to the original document inline preview. Every failure path returns 404 with no body (no info disclosure).",
+        "operationId": "ServeResolvedDocument",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "Single-use token from a confirmation/reset email link.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "renditionType",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/RenditionType"
+            }
+          },
+          {
+            "name": "renditionFormat",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BatchResolveRequest": {
+        "required": ["requests"],
+        "type": "object",
+        "properties": {
+          "requests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResolveItemRequest"
+            }
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "RenditionType": {
+        "enum": ["Thumbnail", "Web", "Print", "Poster", null]
+      },
+      "ResolvedDocumentResponse": {
+        "required": [
+          "documentId",
+          "versionId",
+          "url",
+          "width",
+          "height",
+          "mimeType",
+          "sizeBytes",
+          "lastModified"
+        ],
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "versionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "url": {
+            "type": "string"
+          },
+          "width": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "height": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "mimeType": {
+            "type": ["null", "string"]
+          },
+          "sizeBytes": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["null", "integer", "string"],
+            "format": "int64"
+          },
+          "lastModified": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          }
+        }
+      },
+      "ResolveItemRequest": {
+        "required": ["documentId"],
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "versionId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "renditionType": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/RenditionType"
+              }
+            ]
+          },
+          "renditionFormat": {
+            "type": ["null", "string"]
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Documents - Resolution"
+    }
+  ]
+}

@@ -7,9 +7,11 @@
 // NOT committed on the backend side, so we vendor a snapshot here to keep the
 // conformance oracle (@granit/contract-tests) hermetic in CI.
 //
-// Two backend sources, one per generator:
-//   - granit-dotnet  → Granit.OpenApi.Generator     (framework modules)
-//   - granit-website → Granit.Cms.OpenApi.Generator (CMS bounded context)
+// Four backend sources, one per generator:
+//   - granit-dotnet   → Granit.OpenApi.Generator          (framework modules)
+//   - granit-website  → Granit.Cms.OpenApi.Generator      (CMS bounded context)
+//   - granit-iot      → Granit.IoT.OpenApi.Generator      (IoT bounded context)
+//   - granit-business → Granit.Business.OpenApi.Generator (business bounded context)
 //
 // Source → target:
 //   <generator>/generated/<prefix><slug>.json → contracts/openapi/<slug>.json
@@ -19,6 +21,8 @@
 //   node scripts/sync-openapi-contracts.mjs background-jobs # selected slugs
 //   GRANIT_DOTNET=/path/to/granit-dotnet \
 //   GRANIT_WEBSITE=/path/to/granit-website \
+//   GRANIT_IOT=/path/to/granit-iot \
+//   GRANIT_BUSINESS=/path/to/granit-business \
 //     node scripts/sync-openapi-contracts.mjs
 // ---------------------------------------------------------------------------
 
@@ -34,6 +38,10 @@ const GRANIT_DOTNET =
   process.env.GRANIT_DOTNET ?? join(os.homedir(), 'dev', 'granit-fx', 'granit-dotnet');
 const GRANIT_WEBSITE =
   process.env.GRANIT_WEBSITE ?? join(os.homedir(), 'dev', 'granit-fx', 'granit-website');
+const GRANIT_IOT =
+  process.env.GRANIT_IOT ?? join(os.homedir(), 'dev', 'granit-fx', 'granit-iot');
+const GRANIT_BUSINESS =
+  process.env.GRANIT_BUSINESS ?? join(os.homedir(), 'dev', 'granit-fx', 'granit-business');
 
 // Each backend generator: its build-time output dir + the filename prefix it stamps.
 const SOURCES = [
@@ -46,6 +54,16 @@ const SOURCES = [
     label: 'granit-website',
     dir: join(GRANIT_WEBSITE, 'src', 'Granit.Cms.OpenApi.Generator', 'generated'),
     prefix: 'Granit.Cms.OpenApi.Generator_',
+  },
+  {
+    label: 'granit-iot',
+    dir: join(GRANIT_IOT, 'src', 'Granit.IoT.OpenApi.Generator', 'generated'),
+    prefix: 'Granit.IoT.OpenApi.Generator_',
+  },
+  {
+    label: 'granit-business',
+    dir: join(GRANIT_BUSINESS, 'src', 'Granit.Business.OpenApi.Generator', 'generated'),
+    prefix: 'Granit.Business.OpenApi.Generator_',
   },
 ];
 
@@ -79,8 +97,10 @@ for (const { label, dir, prefix } of SOURCES) {
 
 if (!anySource) {
   console.error(
-    'No backend generator output found. Build Granit.OpenApi.Generator (granit-dotnet) ' +
-      'and/or Granit.Cms.OpenApi.Generator (granit-website), or set GRANIT_DOTNET / GRANIT_WEBSITE.'
+    'No backend generator output found. Build one of Granit.OpenApi.Generator (granit-dotnet), ' +
+      'Granit.Cms.OpenApi.Generator (granit-website), Granit.IoT.OpenApi.Generator (granit-iot) ' +
+      'or Granit.Business.OpenApi.Generator (granit-business), or set ' +
+      'GRANIT_DOTNET / GRANIT_WEBSITE / GRANIT_IOT / GRANIT_BUSINESS.'
   );
   process.exit(1);
 }

@@ -1,23 +1,26 @@
 {
   "openapi": "3.1.1",
   "info": {
-    "title": "ai",
+    "title": "catalog",
     "version": "1"
   },
   "paths": {
-    "/ai/workspaces": {
+    "/catalog/products/active": {
       "get": {
-        "tags": ["AI - Workspaces"],
-        "summary": "Lists all AI workspaces, both system and dynamic.",
-        "description": "Returns every registered workspace with its provider, model, and configuration. System workspaces are defined in configuration; dynamic workspaces are user-created.",
-        "operationId": "ListAIWorkspaces",
+        "tags": ["Catalog - Products"],
+        "summary": "Returns the active product catalog (Published only).",
+        "description": "Catalog surface for tenant users — lists products available for use by Subscriptions and Metering (Published status). Draft and Archived products are excluded. For the admin grid with full lifecycle visibility (Draft / Published / Archived), use GET /products which requires Products.Manage.",
+        "operationId": "ListActiveProducts",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AIWorkspaceListResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductResponse"
+                  }
                 }
               }
             }
@@ -34,84 +37,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["AI - Workspaces"],
-        "summary": "Creates a new dynamic AI workspace.",
-        "description": "Registers a new user-defined workspace with the specified provider and model configuration. Returns 409 if a workspace with the same name already exists.",
-        "operationId": "CreateAIWorkspace",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AIWorkspaceCreateRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AIWorkspaceResponse"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -133,20 +58,21 @@
         }
       }
     },
-    "/ai/workspaces/{name}": {
+    "/catalog/products/{id}": {
       "get": {
-        "tags": ["AI - Workspaces"],
-        "summary": "Returns an AI workspace by its name.",
-        "description": "Fetches the full configuration of a single workspace including provider, model, system prompt, and active status. Returns 404 if no workspace matches the name.",
-        "operationId": "GetAIWorkspace",
+        "tags": ["Catalog - Products"],
+        "summary": "Returns a product by ID (any lifecycle status).",
+        "description": "Returns the full product details including external mappings and metadata.",
+        "operationId": "GetCatalogProductById",
         "parameters": [
           {
-            "name": "name",
+            "name": "id",
             "in": "path",
-            "description": "Unique registered name of the background job.",
+            "description": "Resource identifier (UUID).",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -156,7 +82,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AIWorkspaceResponse"
+                  "$ref": "#/components/schemas/ProductResponse"
                 }
               }
             }
@@ -204,18 +130,19 @@
         }
       },
       "put": {
-        "tags": ["AI - Workspaces"],
-        "summary": "Updates an existing dynamic AI workspace.",
-        "description": "Replaces the provider, model, and prompt configuration of a dynamic workspace. System workspaces cannot be modified and return 422. Returns 404 if the workspace does not exist.",
-        "operationId": "UpdateAIWorkspace",
+        "tags": ["Catalog - Products"],
+        "summary": "Updates editable fields of a Draft product.",
+        "description": "Only Draft products can be updated. SKU and Type are immutable post-creation — to change them, archive the product and create a new one.",
+        "operationId": "UpdateCatalogProduct",
         "parameters": [
           {
-            "name": "name",
+            "name": "id",
             "in": "path",
-            "description": "Unique registered name of the background job.",
+            "description": "Resource identifier (UUID).",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -223,7 +150,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AIWorkspaceUpdateRequest"
+                "$ref": "#/components/schemas/ProductUpdateRequest"
               }
             }
           },
@@ -235,7 +162,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AIWorkspaceResponse"
+                  "$ref": "#/components/schemas/ProductResponse"
                 }
               }
             }
@@ -246,6 +173,176 @@
               "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalog/products/by-sku/{sku}": {
+      "get": {
+        "tags": ["Catalog - Products"],
+        "summary": "Returns a product by SKU (any lifecycle status).",
+        "description": "Useful for SKU-based reverse lookups during Stripe / Avalara / Odoo integration syncs.",
+        "operationId": "GetCatalogProductBySku",
+        "parameters": [
+          {
+            "name": "sku",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalog/products": {
+      "post": {
+        "tags": ["Catalog - Products"],
+        "summary": "Creates a new product in Draft status.",
+        "description": "Creates a product that can be configured (metadata, external mappings) before publishing.",
+        "operationId": "CreateCatalogProduct",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -292,85 +389,11 @@
           }
         }
       },
-      "delete": {
-        "tags": ["AI - Workspaces"],
-        "summary": "Deletes a dynamic AI workspace.",
-        "description": "Permanently removes a user-created workspace. System workspaces cannot be deleted and return 422. Returns 404 if the workspace does not exist.",
-        "operationId": "DeleteAIWorkspace",
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "description": "Unique registered name of the background job.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/ai/usage": {
       "get": {
-        "tags": ["AI - Usage"],
-        "summary": "Returns a filtered, sorted, and paginated list of AIUsageRecord entries.",
-        "description": "Executes a dynamic query against AIUsageRecord using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
-        "operationId": "QueryAIUsageRecord",
+        "tags": ["Granit.Business.OpenApi.Generator"],
+        "summary": "Returns a filtered, sorted, and paginated list of Product entries.",
+        "description": "Executes a dynamic query against Product using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
+        "operationId": "QueryProduct",
         "parameters": [
           {
             "name": "page",
@@ -476,10 +499,10 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/PagedResultOfAIUsageRecord"
+                      "$ref": "#/components/schemas/PagedResultOfProduct"
                     },
                     {
-                      "$ref": "#/components/schemas/GroupedResultOfAIUsageRecord"
+                      "$ref": "#/components/schemas/GroupedResultOfProduct"
                     }
                   ],
                   "description": "PagedResult when groupBy is absent; GroupedResult otherwise."
@@ -530,12 +553,451 @@
         }
       }
     },
-    "/ai/usage/meta": {
+    "/catalog/products/{id}/metadata": {
+      "put": {
+        "tags": ["Catalog - Products"],
+        "summary": "Replaces the product metadata dictionary.",
+        "description": "Allowed in any lifecycle state — metadata may need to flow even for Published products (e.g., adjusting Stripe sync attributes). MUST NOT contain PII.",
+        "operationId": "UpdateCatalogProductMetadata",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductMetadataRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalog/products/{id}/publish": {
+      "post": {
+        "tags": ["Catalog - Products"],
+        "summary": "Publishes a Draft product, making it available for use.",
+        "description": "Transitions Draft → Published. This unlocks the product for MeterDefinition.ProductId and PlanPrice.ProductId references.",
+        "operationId": "PublishCatalogProduct",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalog/products/{id}/archive": {
+      "post": {
+        "tags": ["Catalog - Products"],
+        "summary": "Archives a Published product.",
+        "description": "Existing references (meters, plan prices) are unaffected; the product becomes unavailable for new attachments.",
+        "operationId": "ArchiveCatalogProduct",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalog/products/{id}/external-mappings": {
+      "post": {
+        "tags": ["Catalog - Products"],
+        "summary": "Adds an external provider mapping (Stripe / Avalara / Odoo / ...) to a product.",
+        "description": "Allowed in any lifecycle state. Each (provider, externalId) pair must be globally unique (one external identifier maps to exactly one product).",
+        "operationId": "AddCatalogProductExternalMapping",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddProductExternalMappingRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalog/products/{id}/external-mappings/{mappingId}": {
+      "delete": {
+        "tags": ["Catalog - Products"],
+        "summary": "Removes an external provider mapping from a product.",
+        "description": "Returns 404 if either the product or the mapping does not exist.",
+        "operationId": "RemoveCatalogProductExternalMapping",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "mappingId",
+            "in": "path",
+            "description": "Unique identifier of the mapping.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalog/products/meta": {
       "get": {
-        "tags": ["AI - Usage"],
-        "summary": "Returns query metadata for AIUsageRecord (columns, filters, sorts, presets).",
-        "description": "Returns the query definition metadata for AIUsageRecord: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
-        "operationId": "GetAIUsageRecordMeta",
+        "tags": ["Granit.Business.OpenApi.Generator"],
+        "summary": "Returns query metadata for Product (columns, filters, sorts, presets).",
+        "description": "Returns the query definition metadata for Product: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
+        "operationId": "GetProductMeta",
         "responses": {
           "200": {
             "description": "OK",
@@ -579,847 +1041,19 @@
           }
         }
       }
-    },
-    "/ai/providers": {
-      "get": {
-        "tags": ["AI - Providers"],
-        "summary": "Lists all registered AI providers.",
-        "description": "Returns every AI provider registered via dependency injection, along with an indication of whether each provider supports chat and embedding capabilities.",
-        "operationId": "ListAIProviders",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AIProviderResponse"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/ai/providers/{providerName}/models": {
-      "get": {
-        "tags": ["AI - Providers"],
-        "summary": "Lists the models available from a specific AI provider.",
-        "description": "Returns the models currently available from the specified provider. For cloud providers (OpenAI, AzureOpenAI) this is a static catalog. For local providers (Ollama) this queries the server for installed models. Returns 404 if the provider is not registered, or 502 if the provider's model listing fails.",
-        "operationId": "ListAIProviderModels",
-        "parameters": [
-          {
-            "name": "providerName",
-            "in": "path",
-            "description": "External provider identifier (e.g. 'keycloak', 'auth0', 'stripe').",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AIProviderModelResponse"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Bad Gateway",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/ai/chat/{workspaceName}": {
-      "post": {
-        "tags": ["AI - Inference"],
-        "summary": "Sends messages to an AI workspace and returns a completion response.",
-        "description": "Forwards the conversation to the underlying AI provider configured for the workspace. Returns the assistant's reply, token usage, and response duration. Returns 404 if the workspace does not exist, or 502 if the provider is unavailable.",
-        "operationId": "AIChatComplete",
-        "parameters": [
-          {
-            "name": "workspaceName",
-            "in": "path",
-            "description": "Workspace identifier — isolates configuration and routing per AI workspace.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AIChatRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AIChatResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Bad Gateway",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/ai/chat/{workspaceName}/stream": {
-      "post": {
-        "tags": ["AI - Inference"],
-        "summary": "Streams a chat completion response via Server-Sent Events.",
-        "description": "Opens an SSE stream that emits incremental content chunks as they arrive from the provider. The stream ends with a [DONE] sentinel. If the provider returns an error after streaming has started, an SSE 'error' event is emitted before closing. Returns 404 if the workspace does not exist, 422 if the model is not found, or 502/503 if the provider is unavailable.",
-        "operationId": "AIChatStream",
-        "parameters": [
-          {
-            "name": "workspaceName",
-            "in": "path",
-            "description": "Workspace identifier — isolates configuration and routing per AI workspace.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AIChatRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/event-stream": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Bad Gateway",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Service Unavailable",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/ai/embeddings/{workspaceName}": {
-      "post": {
-        "tags": ["AI - Inference"],
-        "summary": "Generates vector embeddings for input texts using the specified workspace.",
-        "description": "Sends the input texts to the embedding model configured for the workspace and returns float vectors for each input. Returns 404 if the workspace does not exist, or 502 if the provider is unavailable.",
-        "operationId": "AIGenerateEmbeddings",
-        "parameters": [
-          {
-            "name": "workspaceName",
-            "in": "path",
-            "description": "Workspace identifier — isolates configuration and routing per AI workspace.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AIEmbeddingRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AIEmbeddingResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "Bad Gateway",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
     }
   },
   "components": {
     "schemas": {
-      "AIChatMessageRequest": {
-        "required": ["role", "content"],
+      "AddProductExternalMappingRequest": {
+        "required": ["providerName", "externalId"],
         "type": "object",
         "properties": {
-          "role": {
+          "providerName": {
             "type": "string"
           },
-          "content": {
+          "externalId": {
             "type": "string"
-          }
-        }
-      },
-      "AIChatRequest": {
-        "required": ["messages"],
-        "type": "object",
-        "properties": {
-          "messages": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AIChatMessageRequest"
-            }
-          }
-        }
-      },
-      "AIChatResponse": {
-        "required": ["workspaceName", "model", "content", "usage", "duration"],
-        "type": "object",
-        "properties": {
-          "workspaceName": {
-            "type": "string"
-          },
-          "model": {
-            "type": "string"
-          },
-          "content": {
-            "type": "string"
-          },
-          "usage": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/AIChatUsageResponse"
-              }
-            ]
-          },
-          "duration": {
-            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
-            "type": "string"
-          }
-        }
-      },
-      "AIChatUsageResponse": {
-        "required": ["inputTokens", "outputTokens", "estimatedCost", "costCurrency"],
-        "type": "object",
-        "properties": {
-          "inputTokens": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "outputTokens": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "estimatedCost": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "type": ["null", "number", "string"],
-            "format": "double"
-          },
-          "costCurrency": {
-            "type": ["null", "string"]
-          }
-        }
-      },
-      "AIEmbeddingDataResponse": {
-        "required": ["index", "vector"],
-        "type": "object",
-        "properties": {
-          "index": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "vector": {
-            "type": "array",
-            "items": {
-              "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-              "type": ["number", "string"],
-              "format": "float"
-            }
-          }
-        }
-      },
-      "AIEmbeddingRequest": {
-        "required": ["inputs"],
-        "type": "object",
-        "properties": {
-          "inputs": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "AIEmbeddingResponse": {
-        "required": ["workspaceName", "model", "embeddings", "usage"],
-        "type": "object",
-        "properties": {
-          "workspaceName": {
-            "type": "string"
-          },
-          "model": {
-            "type": "string"
-          },
-          "embeddings": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AIEmbeddingDataResponse"
-            }
-          },
-          "usage": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/AIEmbeddingUsageResponse"
-              }
-            ]
-          }
-        }
-      },
-      "AIEmbeddingUsageResponse": {
-        "required": ["inputTokens"],
-        "type": "object",
-        "properties": {
-          "inputTokens": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "AIModelCapabilities": {
-        "type": "object",
-        "properties": {
-          "chat": {
-            "type": "boolean"
-          },
-          "embeddings": {
-            "type": "boolean"
-          },
-          "vision": {
-            "type": "boolean"
-          },
-          "imageGeneration": {
-            "type": "boolean"
-          },
-          "audio": {
-            "type": "boolean"
-          },
-          "toolUse": {
-            "type": "boolean"
-          },
-          "streaming": {
-            "type": "boolean"
-          },
-          "structuredOutput": {
-            "type": "boolean"
-          },
-          "extensions": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "AIProviderModelResponse": {
-        "required": ["id", "displayName", "capabilities", "maxContextTokens"],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "displayName": {
-            "type": "string"
-          },
-          "capabilities": {
-            "$ref": "#/components/schemas/AIModelCapabilities"
-          },
-          "maxContextTokens": {
-            "type": ["null", "integer"],
-            "format": "int32"
-          }
-        }
-      },
-      "AIProviderResponse": {
-        "required": ["name", "supportsChat", "supportsEmbeddings"],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "supportsChat": {
-            "type": "boolean"
-          },
-          "supportsEmbeddings": {
-            "type": "boolean"
-          }
-        }
-      },
-      "AIUsageRecord": {
-        "required": ["id", "workspaceName", "provider", "model", "timestamp"],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "tenantId": {
-            "type": ["null", "string"],
-            "format": "uuid"
-          },
-          "userId": {
-            "type": ["null", "string"],
-            "format": "uuid"
-          },
-          "workspaceName": {
-            "type": "string"
-          },
-          "provider": {
-            "type": "string"
-          },
-          "model": {
-            "type": "string"
-          },
-          "inputTokens": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "outputTokens": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "estimatedCost": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "type": ["null", "number", "string"],
-            "format": "double"
-          },
-          "costCurrency": {
-            "type": ["null", "string"]
-          },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "duration": {
-            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
-            "type": ["null", "string"]
-          }
-        }
-      },
-      "AIWorkspaceCreateRequest": {
-        "required": ["name", "provider", "model"],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "provider": {
-            "type": "string"
-          },
-          "model": {
-            "type": "string"
-          },
-          "systemPrompt": {
-            "type": ["null", "string"]
-          },
-          "temperature": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-            "type": ["null", "number", "string"],
-            "format": "float"
-          },
-          "maxOutputTokens": {
-            "type": ["null", "integer"],
-            "format": "int32"
-          }
-        }
-      },
-      "AIWorkspaceKind": {
-        "enum": ["System", "Dynamic"]
-      },
-      "AIWorkspaceListResponse": {
-        "required": ["workspaces", "totalCount"],
-        "type": "object",
-        "properties": {
-          "workspaces": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AIWorkspaceResponse"
-            }
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "AIWorkspaceResponse": {
-        "required": [
-          "name",
-          "provider",
-          "model",
-          "systemPrompt",
-          "temperature",
-          "maxOutputTokens",
-          "kind",
-          "activated",
-          "capabilities"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "provider": {
-            "type": "string"
-          },
-          "model": {
-            "type": "string"
-          },
-          "systemPrompt": {
-            "type": ["null", "string"]
-          },
-          "temperature": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-            "type": ["null", "number", "string"],
-            "format": "float"
-          },
-          "maxOutputTokens": {
-            "type": ["null", "integer"],
-            "format": "int32"
-          },
-          "kind": {
-            "$ref": "#/components/schemas/AIWorkspaceKind"
-          },
-          "activated": {
-            "type": "boolean"
-          },
-          "capabilities": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/AIModelCapabilities"
-              }
-            ]
-          }
-        }
-      },
-      "AIWorkspaceUpdateRequest": {
-        "required": ["provider", "model"],
-        "type": "object",
-        "properties": {
-          "provider": {
-            "type": "string"
-          },
-          "model": {
-            "type": "string"
-          },
-          "systemPrompt": {
-            "type": ["null", "string"]
-          },
-          "temperature": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-            "type": ["null", "number", "string"],
-            "format": "float"
-          },
-          "maxOutputTokens": {
-            "type": ["null", "integer"],
-            "format": "int32"
-          },
-          "activated": {
-            "type": "boolean",
-            "default": false
           }
         }
       },
@@ -1562,14 +1196,14 @@
           }
         }
       },
-      "GroupedResultOfAIUsageRecord": {
+      "GroupedResultOfProduct": {
         "required": ["groups", "totalCount"],
         "type": "object",
         "properties": {
           "groups": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GroupEntryOfAIUsageRecord"
+              "$ref": "#/components/schemas/GroupEntryOfProduct"
             }
           },
           "totalCount": {
@@ -1578,7 +1212,7 @@
           }
         }
       },
-      "GroupEntryOfAIUsageRecord": {
+      "GroupEntryOfProduct": {
         "required": ["field", "value", "label", "count"],
         "type": "object",
         "properties": {
@@ -1599,7 +1233,7 @@
           "items": {
             "type": ["null", "array"],
             "items": {
-              "$ref": "#/components/schemas/AIUsageRecord"
+              "$ref": "#/components/schemas/Product"
             }
           }
         }
@@ -1634,6 +1268,14 @@
           }
         }
       },
+      "IDomainEvent": {
+        "type": "object",
+        "description": "Marker interface for domain events."
+      },
+      "IIntegrationEvent": {
+        "type": "object",
+        "description": "Marker interface for integration events (ETO — Event Transfer Object)."
+      },
       "LookupDescriptor": {
         "type": "object",
         "properties": {
@@ -1665,60 +1307,91 @@
         "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
         "default": "QueryEngine"
       },
-      "PagedResultOfAIUsageRecord": {
+      "PagedResultOfProduct": {
         "required": ["items", "totalCount", "hasMore"],
         "type": "object",
         "properties": {
           "items": {
             "type": "array",
             "items": {
-              "required": ["id", "workspaceName", "provider", "model", "timestamp"],
               "type": "object",
               "properties": {
-                "id": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "tenantId": {
-                  "type": ["null", "string"],
-                  "format": "uuid"
-                },
-                "userId": {
-                  "type": ["null", "string"],
-                  "format": "uuid"
-                },
-                "workspaceName": {
+                "sku": {
                   "type": "string"
                 },
-                "provider": {
+                "name": {
                   "type": "string"
                 },
-                "model": {
-                  "type": "string"
-                },
-                "inputTokens": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "outputTokens": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "estimatedCost": {
-                  "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-                  "type": ["null", "number", "string"],
-                  "format": "double"
-                },
-                "costCurrency": {
+                "description": {
                   "type": ["null", "string"]
                 },
-                "timestamp": {
-                  "type": "string",
+                "type": {
+                  "enum": ["Service", "Metered", "Physical", "Digital"]
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "lifecycleStatus": {
+                  "enum": ["Draft", "PendingReview", "Published", "Archived"]
+                },
+                "metadataJson": {
+                  "type": ["null", "string"]
+                },
+                "externalMappings": {
+                  "type": ["null", "array"],
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "providerName": {
+                        "type": "string"
+                      },
+                      "externalId": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string",
+                        "description": "Unique identifier of the entity.",
+                        "format": "uuid"
+                      }
+                    }
+                  }
+                },
+                "modifiedAt": {
+                  "type": ["null", "string"],
+                  "description": "Last modification timestamp (UTC).",
                   "format": "date-time"
                 },
-                "duration": {
-                  "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
-                  "type": ["null", "string"]
+                "modifiedBy": {
+                  "type": ["null", "string"],
+                  "description": "Identifier of the user who last modified the entity."
+                },
+                "domainEvents": {
+                  "type": ["null", "array"],
+                  "items": {
+                    "type": "object",
+                    "description": "Marker interface for domain events."
+                  }
+                },
+                "integrationEvents": {
+                  "type": ["null", "array"],
+                  "items": {
+                    "type": "object",
+                    "description": "Marker interface for integration events (ETO — Event Transfer Object)."
+                  }
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "Creation timestamp (UTC).",
+                  "format": "date-time"
+                },
+                "createdBy": {
+                  "type": "string",
+                  "description": "Identifier of the user who created the entity."
+                },
+                "id": {
+                  "type": "string",
+                  "description": "Unique identifier of the entity.",
+                  "format": "uuid"
                 }
               }
             }
@@ -1793,6 +1466,194 @@
           "instance": {
             "type": "string",
             "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "sku": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "type": {
+            "$ref": "#/components/schemas/ProductType"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "lifecycleStatus": {
+            "$ref": "#/components/schemas/WorkflowLifecycleStatus"
+          },
+          "metadataJson": {
+            "type": ["null", "string"]
+          },
+          "externalMappings": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/ProductExternalMapping"
+            }
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "description": "Last modification timestamp (UTC).",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": ["null", "string"],
+            "description": "Identifier of the user who last modified the entity."
+          },
+          "domainEvents": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/IDomainEvent"
+            }
+          },
+          "integrationEvents": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/IIntegrationEvent"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp (UTC).",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Identifier of the user who created the entity."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the entity.",
+            "format": "uuid"
+          }
+        }
+      },
+      "ProductCreateRequest": {
+        "required": ["sku", "name", "type", "unit"],
+        "type": "object",
+        "properties": {
+          "sku": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "description": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "ProductExternalMapping": {
+        "type": "object",
+        "properties": {
+          "providerName": {
+            "type": "string"
+          },
+          "externalId": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the entity.",
+            "format": "uuid"
+          }
+        }
+      },
+      "ProductExternalMappingResponse": {
+        "required": ["id", "providerName", "externalId"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "providerName": {
+            "type": "string"
+          },
+          "externalId": {
+            "type": "string"
+          }
+        }
+      },
+      "ProductResponse": {
+        "required": [
+          "id",
+          "sku",
+          "name",
+          "description",
+          "type",
+          "unit",
+          "lifecycleStatus",
+          "metadata",
+          "externalMappings"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "type": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "lifecycleStatus": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "externalMappings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductExternalMappingResponse"
+            }
+          }
+        }
+      },
+      "ProductType": {
+        "enum": ["Service", "Metered", "Physical", "Digital"]
+      },
+      "ProductUpdateRequest": {
+        "required": ["name", "description", "unit"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "unit": {
+            "type": "string"
           }
         }
       },
@@ -1882,21 +1743,30 @@
             "type": "string"
           }
         }
+      },
+      "UpdateProductMetadataRequest": {
+        "required": ["metadata"],
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "WorkflowLifecycleStatus": {
+        "enum": ["Draft", "PendingReview", "Published", "Archived"]
       }
     }
   },
   "tags": [
     {
-      "name": "AI - Inference"
+      "name": "Catalog - Products"
     },
     {
-      "name": "AI - Providers"
-    },
-    {
-      "name": "AI - Usage"
-    },
-    {
-      "name": "AI - Workspaces"
+      "name": "Granit.Business.OpenApi.Generator"
     }
   ]
 }
