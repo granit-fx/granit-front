@@ -39,11 +39,14 @@ function createWrapper(client: AxiosInstance, basePath = '/api/v1') {
 
 const MOCK_TYPES: NotificationDefinition[] = [
   {
-    typeName: 'NewMessage',
-    severity: 'Info',
-    group: 'inbox',
-    defaultChannels: ['inApp'],
-  } as unknown as NotificationDefinition,
+    name: 'NewMessage',
+    defaultSeverity: 'Info',
+    defaultChannels: ['InApp'],
+    displayName: 'New message',
+    description: null,
+    groupName: 'inbox',
+    allowUserOptOut: true,
+  },
 ];
 
 const MOCK_SUBS: NotificationSubscriptionResponse[] = [

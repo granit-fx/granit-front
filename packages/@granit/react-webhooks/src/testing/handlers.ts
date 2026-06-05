@@ -236,8 +236,9 @@ export function createWebhooksHandlers(baseUrl = DEFAULT_WEBHOOKS_BASE_PATH) {
       return HttpResponse.json(mockWebhookConfig);
     }),
 
-    // Stats
-    http.get(`${baseUrl}/subscriptions/stats`, () => {
+    // Stats — lives directly under the webhooks root, NOT under /subscriptions
+    // (see getStats: `GET {basePath}/stats` and OpenAPI route `/webhooks/stats`).
+    http.get(`${baseUrl}/stats`, () => {
       return HttpResponse.json(mockWebhookStats);
     }),
 

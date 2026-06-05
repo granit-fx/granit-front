@@ -6,7 +6,11 @@ import { http, HttpResponse } from 'msw';
 
 import { API_BASE_PATH } from '../constants';
 
-import { mockNotificationPreferences, mockNotifications } from './data';
+import {
+  mockNotificationDefinitions,
+  mockNotificationPreferences,
+  mockNotifications,
+} from './data';
 
 import type {
   NotificationPreference,
@@ -228,6 +232,11 @@ export function createNotificationsHandlers(baseUrl = API_BASE_PATH) {
         n.state === 'Unread' ? { ...n, state: 'Read' as const, readAt: now } : n
       );
       return noContent();
+    }),
+
+    // GET notification type registry — drives the preferences UI
+    http.get(`${baseUrl}/notifications/types`, () => {
+      return HttpResponse.json(mockNotificationDefinitions);
     }),
 
     // GET notification preferences

@@ -3,7 +3,10 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import { createWebhooksHandlers, webhookSubscriptionQueryMetadata } from '../testing/index';
 
-import type { WebhookSubscriptionResponse } from '@granit/webhooks';
+import type {
+  WebhookSubscriptionResponse,
+  WebhookSubscriptionStatsResponse,
+} from '@granit/webhooks';
 
 const BASE = 'http://api.test/api/v1/webhooks';
 const server = setupServer();
@@ -21,6 +24,23 @@ describe('createWebhooksHandlers /meta', () => {
     const response = await fetch(`${BASE}/subscriptions/meta`);
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual(webhookSubscriptionQueryMetadata);
+  });
+});
+
+describe('createWebhooksHandlers /stats', () => {
+  // Regression: the handler must sit at `${baseUrl}/stats` — the path getStats
+  // hits — not under `/subscriptions`. A mismatch lets the request fall through
+  // (server uses onUnhandledRequest: 'error'), so the dashboard receives a
+  // body without `successRateLast24h` and crashes on `.toFixed`.
+  it('responds with stats at /stats and carries every required field', async () => {
+    server.use(...createWebhooksHandlers(BASE));
+    const response = await fetch(`${BASE}/stats`);
+    expect(response.status).toBe(200);
+
+    const stats = (await response.json()) as WebhookSubscriptionStatsResponse;
+    expect(typeof stats.successRateLast24h).toBe('number');
+    expect(typeof stats.avgResponseTimeMsLast24h).toBe('number');
+    expect(typeof stats.totalSubscriptions).toBe('number');
   });
 });
 

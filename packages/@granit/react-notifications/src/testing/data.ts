@@ -1,6 +1,10 @@
 import { toEntityId, toISODateString } from '@granit/types';
 
-import type { NotificationPreference, UserNotification } from '@granit/notifications';
+import type {
+  NotificationDefinition,
+  NotificationPreference,
+  UserNotification,
+} from '@granit/notifications';
 import type { Mutable } from '@granit/testing';
 import type { UserId } from '@granit/types';
 
@@ -243,6 +247,92 @@ export const mockNotifications: Mutable<UserNotification>[] = [
     state: 'Read',
     createdAt: toISODateString('2026-03-10T10:00:00Z'),
     readAt: toISODateString('2026-03-10T12:00:00Z'),
+  },
+];
+
+/**
+ * Registry of notification types returned by `GET /notifications/types`.
+ *
+ * Mirrors the bare `NotificationDefinition[]` the .NET endpoint produces. Every
+ * `notificationTypeName` used in {@link mockNotificationPreferences} and
+ * {@link mockNotifications} has a matching entry so the preferences UI lines up
+ * with the seeded preference rows. `security_alert` and `rgpd_request` are
+ * mandatory (`allowUserOptOut: false`) — the preferences panel hides them.
+ */
+export const mockNotificationDefinitions: NotificationDefinition[] = [
+  {
+    name: 'user_registered',
+    defaultSeverity: 'Info',
+    defaultChannels: ['InApp', 'Email'],
+    displayName: 'User registered',
+    description: 'A new user account has been created and is pending approval.',
+    groupName: 'Users',
+    allowUserOptOut: true,
+  },
+  {
+    name: 'user_role_changed',
+    defaultSeverity: 'Info',
+    defaultChannels: ['InApp', 'Email'],
+    displayName: 'User role changed',
+    description: 'A role has been granted to or revoked from a user.',
+    groupName: 'Users',
+    allowUserOptOut: true,
+  },
+  {
+    name: 'country_updated',
+    defaultSeverity: 'Success',
+    defaultChannels: ['InApp'],
+    displayName: 'Country reference updated',
+    description: 'A country in the reference data has been created, updated or deactivated.',
+    groupName: 'Reference data',
+    allowUserOptOut: true,
+  },
+  {
+    name: 'config_changed',
+    defaultSeverity: 'Warning',
+    defaultChannels: ['InApp', 'Email'],
+    displayName: 'Configuration changed',
+    description: 'A feature flag or system configuration value has been changed.',
+    groupName: 'System',
+    allowUserOptOut: true,
+  },
+  {
+    name: 'security_alert',
+    defaultSeverity: 'Error',
+    defaultChannels: ['InApp', 'Email', 'Push'],
+    displayName: 'Security alert',
+    description: 'A security-relevant event was detected (e.g. authentication failure spike).',
+    groupName: 'Security',
+    allowUserOptOut: false,
+  },
+  {
+    name: 'service_health',
+    defaultSeverity: 'Warning',
+    defaultChannels: ['InApp', 'Email'],
+    displayName: 'Service health',
+    description:
+      'Infrastructure or service health status changed (backups, degradation, maintenance).',
+    groupName: 'System',
+    allowUserOptOut: true,
+  },
+  {
+    name: 'audit_export',
+    defaultSeverity: 'Info',
+    defaultChannels: ['InApp', 'Email'],
+    displayName: 'Audit export ready',
+    description: 'A requested audit log export has finished and is ready to download.',
+    groupName: 'Compliance',
+    allowUserOptOut: true,
+  },
+  {
+    name: 'rgpd_request',
+    defaultSeverity: 'Info',
+    defaultChannels: ['InApp', 'Email', 'Push'],
+    displayName: 'RGPD request',
+    description:
+      'A GDPR data subject request (access, erasure) requires action within the legal delay.',
+    groupName: 'Compliance',
+    allowUserOptOut: false,
   },
 ];
 
