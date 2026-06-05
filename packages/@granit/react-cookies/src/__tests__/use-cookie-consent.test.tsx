@@ -1,25 +1,19 @@
+import { defaultConsentState } from '@granit/cookies';
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useCookieConsent } from '../hooks/use-cookie-consent';
 import { CookieConsentProvider } from '../providers/cookie-consent-provider';
 
-import type {
-  CookieCategory,
-  CookieConsentProvider as ICookieConsentProvider,
-  ConsentState,
-} from '@granit/cookies';
+import type { CookieCategory, CookieConsentAdapter, ConsentState } from '@granit/cookies';
 import type { ReactNode } from 'react';
 
 function createMockProvider(
   consents: Partial<ConsentState> = {},
   consented = false
-): ICookieConsentProvider {
+): CookieConsentAdapter {
   const state: ConsentState = {
-    strictly_necessary: true,
-    preferences: false,
-    analytics: false,
-    marketing: false,
+    ...defaultConsentState(),
     ...consents,
   };
 
@@ -48,7 +42,7 @@ function createMockProvider(
   };
 }
 
-function createWrapper(provider: ICookieConsentProvider) {
+function createWrapper(provider: CookieConsentAdapter) {
   return function Wrapper({ children }: { readonly children: ReactNode }) {
     return <CookieConsentProvider provider={provider}>{children}</CookieConsentProvider>;
   };
@@ -179,6 +173,7 @@ describe('useCookieConsent', () => {
       preferences: true,
       analytics: true,
       marketing: true,
+      saleorsharing: false,
     });
   });
 
@@ -207,6 +202,7 @@ describe('useCookieConsent', () => {
       preferences: false,
       analytics: false,
       marketing: false,
+      saleorsharing: false,
     });
   });
 

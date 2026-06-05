@@ -1,4 +1,4 @@
-import type { CookieCategory, CookieConsentConfig } from '@granit/cookies';
+import type { CookieCategory, CookieConsentConfigResponse } from '@granit/cookies';
 
 /**
  * Maps a Klaro service name to a RGPD cookie category.
@@ -47,7 +47,7 @@ export interface CreateKlaroCookieConsentProviderOptions {
    * Loads the CMP-agnostic cookie configuration from the backend API.
    * When provided, `klaroConfig` and `serviceMappings` are built automatically.
    */
-  readonly loadConfig?: () => Promise<CookieConsentConfig>;
+  readonly loadConfig?: () => Promise<CookieConsentConfigResponse>;
   /** Cookie name used by Klaro to store consent. Default: `"klaro"`. */
   readonly cookieName?: string;
 }

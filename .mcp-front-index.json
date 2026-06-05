@@ -1228,8 +1228,19 @@
     },
     {
       "name": "@granit/cookies",
-      "description": "Cookie consent abstraction with React context and hooks",
-      "exports": []
+      "description": "Framework-agnostic cookie consent abstraction: CMP adapter interface, config API, and shared types",
+      "exports": [
+        {
+          "name": "getCookieConsentConfig",
+          "kind": "function",
+          "signature": "async function getCookieConsentConfig( client: AxiosInstance, basePath: string ): Promise<CookieConsentConfigResponse>"
+        },
+        {
+          "name": "defaultConsentState",
+          "kind": "function",
+          "signature": "function defaultConsentState(): ConsentState"
+        }
+      ]
     },
     {
       "name": "@granit/cookies-cookieconsent",
@@ -1261,7 +1272,7 @@
         {
           "name": "createKlaroCookieConsentProvider",
           "kind": "function",
-          "signature": "function createKlaroCookieConsentProvider( options: CreateKlaroCookieConsentProviderOptions ): CookieConsentProviderInterface"
+          "signature": "function createKlaroCookieConsentProvider( options: CreateKlaroCookieConsentProviderOptions ): CookieConsentAdapter"
         }
       ]
     },

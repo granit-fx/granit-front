@@ -1,18 +1,17 @@
+import { defaultConsentState } from '@granit/cookies';
+
 import type {
   CategoryNames,
   CreateCookieConsentProviderOptions,
   VanillaCookieConsent,
 } from '../types/index';
-import type {
-  CookieCategory,
-  CookieConsentProvider as CookieConsentProviderInterface,
-  ConsentState,
-} from '@granit/cookies';
+import type { CookieCategory, CookieConsentAdapter, ConsentState } from '@granit/cookies';
 
 const DEFAULT_CATEGORY_NAMES: CategoryNames = {
   preferences: 'functional',
   analytics: 'analytics',
   marketing: 'marketing',
+  saleorsharing: 'sale_or_sharing',
 };
 
 /** Category name for the always-on necessary category in vanilla-cookieconsent. */
@@ -20,15 +19,16 @@ const NECESSARY_CATEGORY = 'necessary';
 
 function buildConsentState(cc: VanillaCookieConsent, names: CategoryNames): ConsentState {
   return {
-    strictly_necessary: true,
+    ...defaultConsentState(),
     preferences: cc.acceptedCategory(names.preferences),
     analytics: cc.acceptedCategory(names.analytics),
     marketing: cc.acceptedCategory(names.marketing),
+    saleorsharing: cc.acceptedCategory(names.saleorsharing),
   };
 }
 
 /**
- * Creates a `CookieConsentProvider` backed by vanilla-cookieconsent (cc_cookie format).
+ * Creates a `CookieConsentAdapter` backed by vanilla-cookieconsent (cc_cookie format).
  *
  * The adapter operates in headless mode — it manages consent state without
  * rendering any UI. The consuming application is responsible for showing the
@@ -36,15 +36,17 @@ function buildConsentState(cc: VanillaCookieConsent, names: CategoryNames): Cons
  *
  * @example
  * ```ts
+ * import { getCookieConsentConfig } from '@granit/cookies';
+ *
  * const provider = createCookieConsentProvider({
- *   loadConfig: () => apiClient.get('/api/v1/cookies/config').then(r => r.data),
+ *   loadConfig: () => getCookieConsentConfig(apiClient, '/cookies'),
  *   cookieName: 'cc_cookie',
  * });
  * ```
  */
 export function createCookieConsentProvider(
   options: CreateCookieConsentProviderOptions = {}
-): CookieConsentProviderInterface {
+): CookieConsentAdapter {
   const cookieName = options.cookieName ?? 'cc_cookie';
   const resolvedNames: CategoryNames = {
     ...DEFAULT_CATEGORY_NAMES,
@@ -72,6 +74,7 @@ export function createCookieConsentProvider(
         [resolvedNames.preferences]: {},
         [resolvedNames.analytics]: {},
         [resolvedNames.marketing]: {},
+        [resolvedNames.saleorsharing]: {},
       };
 
       if (options.loadConfig) {
@@ -84,6 +87,7 @@ export function createCookieConsentProvider(
           preferences: resolvedNames.preferences,
           analytics: resolvedNames.analytics,
           marketing: resolvedNames.marketing,
+          saleorsharing: resolvedNames.saleorsharing,
         };
         for (const [granitCat, ccName] of Object.entries(categoryMap)) {
           if (!activeCategories.has(granitCat as CookieCategory)) {
@@ -106,12 +110,7 @@ export function createCookieConsentProvider(
 
     getConsents(): ConsentState {
       if (!cc) {
-        return {
-          strictly_necessary: true,
-          preferences: false,
-          analytics: false,
-          marketing: false,
-        };
+        return defaultConsentState();
       }
       return buildConsentState(cc, resolvedNames);
     },

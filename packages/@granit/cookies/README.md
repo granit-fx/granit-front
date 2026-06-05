@@ -2,7 +2,7 @@
 
 # @granit/cookies
 
-React abstraction for cookie consent: context, `useCookieConsent` hook, and provider interface.
+Framework-agnostic cookie consent abstraction: the `CookieConsentAdapter` interface, the `getCookieConsentConfig` API function, and shared CMP-agnostic types. React bindings live in [`@granit/react-cookies`](../react-cookies/README.md).
 
 Part of the [Granit](https://granit-fx.dev) framework.
 

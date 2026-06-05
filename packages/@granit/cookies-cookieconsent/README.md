@@ -13,11 +13,12 @@ pnpm add @granit/cookies-cookieconsent vanilla-cookieconsent
 ## Usage
 
 ```ts
+import { getCookieConsentConfig } from '@granit/cookies';
 import { createCookieConsentProvider } from '@granit/cookies-cookieconsent';
 
 const provider = createCookieConsentProvider({
-  // Dynamic mode: fetch registered services from the backend
-  loadConfig: () => apiClient.get('/api/v1/cookies/config').then(r => r.data),
+  // Dynamic mode: fetch registered services from the backend (GET /cookies/config)
+  loadConfig: () => getCookieConsentConfig(apiClient, '/cookies'),
   cookieName: 'cc_cookie', // default — must match Http:Cookies:CookieConsent:CookieName
 });
 
@@ -31,12 +32,13 @@ const provider = createCookieConsentProvider({
 
 The adapter maps `CookieCategory` to vanilla-cookieconsent category names:
 
-| `CookieCategory`     | cc_cookie name |
-| -------------------- | -------------- |
-| `strictly_necessary` | `necessary`    |
-| `preferences`        | `functional`   |
-| `analytics`          | `analytics`    |
-| `marketing`          | `marketing`    |
+| `CookieCategory`     | cc_cookie name    |
+| -------------------- | ----------------- |
+| `strictly_necessary` | `necessary`       |
+| `preferences`        | `functional`      |
+| `analytics`          | `analytics`       |
+| `marketing`          | `marketing`       |
+| `saleorsharing`      | `sale_or_sharing` |
 
 Override via `categoryNames` if the backend is configured with non-default names:
 

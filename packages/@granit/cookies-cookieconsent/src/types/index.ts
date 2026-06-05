@@ -1,4 +1,4 @@
-import type { CookieConsentConfig } from '@granit/cookies';
+import type { CookieConsentConfigResponse } from '@granit/cookies';
 
 /**
  * Maps `CookieCategory` keys to the category names used in the cc_cookie.
@@ -12,6 +12,8 @@ export interface CategoryNames {
   readonly analytics: string;
   /** cc_cookie name for the `marketing` category. Default: `"marketing"`. */
   readonly marketing: string;
+  /** cc_cookie name for the `saleorsharing` (CCPA) category. Default: `"sale_or_sharing"`. */
+  readonly saleorsharing: string;
 }
 
 /**
@@ -23,7 +25,7 @@ export interface CreateCookieConsentProviderOptions {
    * When provided, the adapter builds the category list from the service
    * definitions returned by the API.
    */
-  readonly loadConfig?: () => Promise<CookieConsentConfig>;
+  readonly loadConfig?: () => Promise<CookieConsentConfigResponse>;
 
   /**
    * Name of the cookie used to persist consent.

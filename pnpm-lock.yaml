@@ -451,6 +451,9 @@ importers:
 
   packages/@granit/cookies:
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing

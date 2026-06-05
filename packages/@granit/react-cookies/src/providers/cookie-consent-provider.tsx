@@ -1,27 +1,19 @@
+'use client';
+
+import { defaultConsentState } from '@granit/cookies';
 import { createLogger } from '@granit/logger';
 import { createContext, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 
 import type { CookieConsentContextValue } from '../types/index';
-import type {
-  CookieCategory,
-  CookieConsentProvider as ICookieConsentProvider,
-  ConsentState,
-} from '@granit/cookies';
-
-const DEFAULT_CONSENTS: ConsentState = {
-  strictly_necessary: true,
-  preferences: false,
-  analytics: false,
-  marketing: false,
-};
+import type { CookieCategory, CookieConsentAdapter, ConsentState } from '@granit/cookies';
 
 const logger = createLogger('cookies');
 
 export const CookieConsentContext = createContext<CookieConsentContextValue | null>(null);
 
 interface CookieConsentProviderProps {
-  /** The CMP implementation (Klaro, Cookiebot, etc.). */
-  provider: ICookieConsentProvider;
+  /** The CMP adapter implementation (vanilla-cookieconsent, Klaro, etc.). */
+  provider: CookieConsentAdapter;
   children: ReactNode;
 }
 
@@ -40,7 +32,7 @@ export function CookieConsentProvider({
   provider,
   children,
 }: Readonly<CookieConsentProviderProps>) {
-  const [consents, setConsents] = useState<ConsentState>(DEFAULT_CONSENTS);
+  const [consents, setConsents] = useState<ConsentState>(defaultConsentState);
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasConsented, setHasConsented] = useState(false);
 

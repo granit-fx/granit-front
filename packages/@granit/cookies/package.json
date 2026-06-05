@@ -1,6 +1,6 @@
 {
   "name": "@granit/cookies",
-  "description": "Cookie consent abstraction with React context and hooks",
+  "description": "Framework-agnostic cookie consent abstraction: CMP adapter interface, config API, and shared types",
   "version": "0.2.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -13,8 +13,11 @@
   "scripts": {
     "build": "tsup"
   },
-  "peerDependencies": {},
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*"
+  },
   "devDependencies": {
+    "@granit/api-client": "workspace:*",
     "@granit/testing": "workspace:*"
   },
   "publishConfig": {

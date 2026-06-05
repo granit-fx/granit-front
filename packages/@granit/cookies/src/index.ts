@@ -1,8 +1,10 @@
+export { getCookieConsentConfig } from './api/cookie-consent-api';
+export { defaultConsentState } from './consent-state';
 export type {
   CookieCategory,
   ConsentState,
-  CookieConsentProvider,
-  CookieConsentConfig,
-  CookieDefinitionDto,
-  ThirdPartyServiceDto,
+  CookieConsentAdapter,
+  CookieConsentConfigResponse,
+  CookieDefinitionResponse,
+  ThirdPartyServiceResponse,
 } from './types/index';

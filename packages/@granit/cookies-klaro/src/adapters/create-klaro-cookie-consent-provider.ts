@@ -1,3 +1,5 @@
+import { defaultConsentState } from '@granit/cookies';
+
 import type {
   CreateKlaroCookieConsentProviderOptions,
   KlaroConfig,
@@ -7,8 +9,8 @@ import type {
 } from '../types/index';
 import type {
   CookieCategory,
-  CookieConsentConfig,
-  CookieConsentProvider as CookieConsentProviderInterface,
+  CookieConsentConfigResponse,
+  CookieConsentAdapter,
   ConsentState,
 } from '@granit/cookies';
 
@@ -17,6 +19,7 @@ const ALL_CATEGORIES: readonly CookieCategory[] = [
   'preferences',
   'analytics',
   'marketing',
+  'saleorsharing',
 ];
 
 /**
@@ -27,12 +30,7 @@ function buildConsentState(
   manager: KlaroConsentManager,
   serviceMappings: readonly KlaroServiceMapping[]
 ): ConsentState {
-  const state: ConsentState = {
-    strictly_necessary: true,
-    preferences: false,
-    analytics: false,
-    marketing: false,
-  };
+  const state: ConsentState = defaultConsentState();
 
   for (const category of ALL_CATEGORIES) {
     if (category === 'strictly_necessary') continue;
@@ -47,10 +45,10 @@ function buildConsentState(
 }
 
 /**
- * Converts a `CookieConsentConfig` (API response) into `KlaroConfig` + `KlaroServiceMapping[]`.
+ * Converts a `CookieConsentConfigResponse` (API response) into `KlaroConfig` + `KlaroServiceMapping[]`.
  */
 function buildKlaroConfigFromApi(
-  config: CookieConsentConfig,
+  config: CookieConsentConfigResponse,
   cookieName: string
 ): { klaroConfig: KlaroConfig; serviceMappings: KlaroServiceMapping[] } {
   const serviceMappings: KlaroServiceMapping[] = config.services.map((s) => ({
@@ -71,7 +69,7 @@ function buildKlaroConfigFromApi(
 }
 
 /**
- * Creates a `CookieConsentProvider` backed by Klaro CMP.
+ * Creates a `CookieConsentAdapter` backed by Klaro CMP.
  *
  * Supports two modes:
  * - **Static**: pass `klaroConfig` + `serviceMappings` directly.
@@ -94,7 +92,7 @@ function buildKlaroConfigFromApi(
  */
 export function createKlaroCookieConsentProvider(
   options: CreateKlaroCookieConsentProviderOptions
-): CookieConsentProviderInterface {
+): CookieConsentAdapter {
   const cookieName = options.cookieName ?? options.klaroConfig?.cookieName ?? 'klaro';
   let manager: KlaroConsentManager | null = null;
   let resolvedMappings: readonly KlaroServiceMapping[] = options.serviceMappings ?? [];
@@ -122,12 +120,7 @@ export function createKlaroCookieConsentProvider(
 
     getConsents() {
       if (!manager) {
-        return {
-          strictly_necessary: true,
-          preferences: false,
-          analytics: false,
-          marketing: false,
-        };
+        return defaultConsentState();
       }
       return buildConsentState(manager, resolvedMappings);
     },

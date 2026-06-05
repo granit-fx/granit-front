@@ -3,19 +3,20 @@ import { describe, expectTypeOf, it } from 'vitest';
 import type {
   ConsentState,
   CookieCategory,
-  CookieConsentConfig,
-  CookieConsentProvider,
-  CookieDefinitionDto,
-  ThirdPartyServiceDto,
+  CookieConsentAdapter,
+  CookieConsentConfigResponse,
+  CookieDefinitionResponse,
+  ThirdPartyServiceResponse,
 } from '../index';
 
 describe('@granit/cookies types', () => {
   describe('CookieCategory', () => {
-    it('should accept RGPD categories', () => {
+    it('should accept RGPD/CCPA categories', () => {
       expectTypeOf<'strictly_necessary'>().toMatchTypeOf<CookieCategory>();
       expectTypeOf<'preferences'>().toMatchTypeOf<CookieCategory>();
       expectTypeOf<'analytics'>().toMatchTypeOf<CookieCategory>();
       expectTypeOf<'marketing'>().toMatchTypeOf<CookieCategory>();
+      expectTypeOf<'saleorsharing'>().toMatchTypeOf<CookieCategory>();
     });
   });
 
@@ -25,41 +26,42 @@ describe('@granit/cookies types', () => {
       expectTypeOf<ConsentState['strictly_necessary']>().toBeBoolean();
       expectTypeOf<ConsentState>().toHaveProperty('analytics');
       expectTypeOf<ConsentState['analytics']>().toBeBoolean();
+      expectTypeOf<ConsentState>().toHaveProperty('saleorsharing');
     });
   });
 
-  describe('CookieConsentProvider', () => {
+  describe('CookieConsentAdapter', () => {
     it('should have lifecycle methods', () => {
-      expectTypeOf<CookieConsentProvider>().toHaveProperty('init');
-      expectTypeOf<CookieConsentProvider>().toHaveProperty('getConsents');
-      expectTypeOf<CookieConsentProvider>().toHaveProperty('onConsentChange');
-      expectTypeOf<CookieConsentProvider>().toHaveProperty('setConsent');
-      expectTypeOf<CookieConsentProvider>().toHaveProperty('setAllConsents');
-      expectTypeOf<CookieConsentProvider>().toHaveProperty('hasConsented');
+      expectTypeOf<CookieConsentAdapter>().toHaveProperty('init');
+      expectTypeOf<CookieConsentAdapter>().toHaveProperty('getConsents');
+      expectTypeOf<CookieConsentAdapter>().toHaveProperty('onConsentChange');
+      expectTypeOf<CookieConsentAdapter>().toHaveProperty('setConsent');
+      expectTypeOf<CookieConsentAdapter>().toHaveProperty('setAllConsents');
+      expectTypeOf<CookieConsentAdapter>().toHaveProperty('hasConsented');
     });
   });
 
-  describe('CookieConsentConfig', () => {
+  describe('CookieConsentConfigResponse', () => {
     it('should have cookies and services arrays', () => {
-      expectTypeOf<CookieConsentConfig>().toHaveProperty('cookies');
-      expectTypeOf<CookieConsentConfig>().toHaveProperty('services');
+      expectTypeOf<CookieConsentConfigResponse>().toHaveProperty('cookies');
+      expectTypeOf<CookieConsentConfigResponse>().toHaveProperty('services');
     });
   });
 
-  describe('CookieDefinitionDto', () => {
+  describe('CookieDefinitionResponse', () => {
     it('should have cookie metadata fields', () => {
-      expectTypeOf<CookieDefinitionDto>().toHaveProperty('name');
-      expectTypeOf<CookieDefinitionDto>().toHaveProperty('category');
-      expectTypeOf<CookieDefinitionDto>().toHaveProperty('retentionDays');
-      expectTypeOf<CookieDefinitionDto>().toHaveProperty('purpose');
+      expectTypeOf<CookieDefinitionResponse>().toHaveProperty('name');
+      expectTypeOf<CookieDefinitionResponse>().toHaveProperty('category');
+      expectTypeOf<CookieDefinitionResponse>().toHaveProperty('retentionDays');
+      expectTypeOf<CookieDefinitionResponse>().toHaveProperty('purpose');
     });
   });
 
-  describe('ThirdPartyServiceDto', () => {
+  describe('ThirdPartyServiceResponse', () => {
     it('should have service identification and cookie patterns', () => {
-      expectTypeOf<ThirdPartyServiceDto>().toHaveProperty('name');
-      expectTypeOf<ThirdPartyServiceDto>().toHaveProperty('category');
-      expectTypeOf<ThirdPartyServiceDto>().toHaveProperty('cookiePatterns');
+      expectTypeOf<ThirdPartyServiceResponse>().toHaveProperty('name');
+      expectTypeOf<ThirdPartyServiceResponse>().toHaveProperty('category');
+      expectTypeOf<ThirdPartyServiceResponse>().toHaveProperty('cookiePatterns');
     });
   });
 });
