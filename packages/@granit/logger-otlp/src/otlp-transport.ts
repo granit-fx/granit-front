@@ -68,20 +68,39 @@ function toStringAttribute(key: string, value: string): OtlpAttribute {
   return { key, value: { stringValue: value } };
 }
 
+/**
+ * OTLP attribute values are strings. Primitives stringify directly; objects and
+ * arrays are JSON-serialized so structured context survives the transport with
+ * the same fidelity as the console transport (instead of `"[object Object]"`).
+ */
+function toAttributeValue(value: unknown): string {
+  if (typeof value !== 'object' || value === null) return String(value);
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return String(value);
+  }
+}
+
 function contextToAttributes(context: LogContext): OtlpAttribute[] {
-  return Object.entries(context).map(([key, val]) => toStringAttribute(key, String(val)));
+  return Object.entries(context).map(([key, val]) => toStringAttribute(key, toAttributeValue(val)));
 }
 
 function errorToAttributes(error: unknown): OtlpAttribute[] {
-  if (!(error instanceof Error)) return [];
-  const attrs: OtlpAttribute[] = [
-    toStringAttribute('exception.type', error.name),
-    toStringAttribute('exception.message', error.message),
-  ];
-  if (error.stack) {
-    attrs.push(toStringAttribute('exception.stacktrace', error.stack));
+  if (error instanceof Error) {
+    const attrs: OtlpAttribute[] = [
+      toStringAttribute('exception.type', error.name),
+      toStringAttribute('exception.message', error.message),
+    ];
+    if (error.stack) {
+      attrs.push(toStringAttribute('exception.stacktrace', error.stack));
+    }
+    return attrs;
   }
-  return attrs;
+
+  // Non-Error reason (string, plain object, …): preserve it instead of dropping
+  // it silently — the console transport keeps it, so OTLP should too.
+  return [toStringAttribute('exception.message', toAttributeValue(error))];
 }
 
 function buildLogRecord(

@@ -311,4 +311,38 @@ describe('createOtlpTransport', () => {
     // Should not throw
     await expect(transport.flush!()).resolves.toBeUndefined();
   });
+
+  it('serializes object and array context values as JSON (not "[object Object]")', async () => {
+    const transport = createOtlpTransport({
+      endpoint: '/v1/logs',
+      serviceName: 'test',
+      batchSize: 100,
+      redact: (s) => s,
+    });
+    transport.send(makeEntry({ context: { user: { id: 7 }, tags: ['a', 'b'] } }));
+    await transport.flush!();
+
+    const body = JSON.parse(vi.mocked(fetch).mock.calls[0]![1]!.body as string);
+    const attrs = body.resourceLogs[0].scopeLogs[0].logRecords[0].attributes;
+    expect(attrs).toContainEqual({ key: 'user', value: { stringValue: '{"id":7}' } });
+    expect(attrs).toContainEqual({ key: 'tags', value: { stringValue: '["a","b"]' } });
+  });
+
+  it('records non-Error reasons as exception.message instead of dropping them', async () => {
+    const transport = createOtlpTransport({
+      endpoint: '/v1/logs',
+      serviceName: 'test',
+      batchSize: 100,
+      redact: (s) => s,
+    });
+    transport.send(makeEntry({ level: 'ERROR', error: 'plain string failure' }));
+    await transport.flush!();
+
+    const body = JSON.parse(vi.mocked(fetch).mock.calls[0]![1]!.body as string);
+    const attrs = body.resourceLogs[0].scopeLogs[0].logRecords[0].attributes;
+    expect(attrs).toContainEqual({
+      key: 'exception.message',
+      value: { stringValue: 'plain string failure' },
+    });
+  });
 });
