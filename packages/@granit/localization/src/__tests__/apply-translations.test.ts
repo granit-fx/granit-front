@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { applyTranslations } from '../apply-translations';
 
-import type { ApplicationLocalizationDto } from '../types/index';
+import type { ApplicationLocalizationResponse } from '../types/index';
 
 function createMockI18n(language = 'fr') {
   return {
@@ -12,7 +12,7 @@ function createMockI18n(language = 'fr') {
   };
 }
 
-const localizationData: ApplicationLocalizationDto = {
+const localizationData: ApplicationLocalizationResponse = {
   cultureName: 'fr',
   resources: {
     Granit: {
@@ -65,7 +65,7 @@ describe('applyTranslations', () => {
 
   it('should handle empty resources', () => {
     const i18n = createMockI18n();
-    const data: ApplicationLocalizationDto = {
+    const data: ApplicationLocalizationResponse = {
       cultureName: 'en',
       resources: {},
       languages: [],
@@ -77,7 +77,7 @@ describe('applyTranslations', () => {
 
   it('should let later modules override earlier ones on key collision', () => {
     const i18n = createMockI18n();
-    const data: ApplicationLocalizationDto = {
+    const data: ApplicationLocalizationResponse = {
       cultureName: 'fr',
       resources: {
         Base: { 'App.Title': 'Base Title' },

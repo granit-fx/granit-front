@@ -1,4 +1,4 @@
-import type { ApplicationLocalizationDto } from '../types/index';
+import type { ApplicationLocalizationResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**
@@ -13,8 +13,8 @@ export async function getApplicationLocalization(
   client: AxiosInstance,
   basePath: string,
   cultureName?: string
-): Promise<ApplicationLocalizationDto> {
-  const { data } = await client.get<ApplicationLocalizationDto>(basePath, {
+): Promise<ApplicationLocalizationResponse> {
+  const { data } = await client.get<ApplicationLocalizationResponse>(basePath, {
     params: cultureName ? { cultureName } : undefined,
   });
   return data;

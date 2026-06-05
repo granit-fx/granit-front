@@ -5,8 +5,8 @@ export { unflattenKeys } from './unflatten-keys';
 export { LOCALE_STORAGE_KEY } from './constants';
 
 export type {
-  AdminLanguage,
   ApplicationLocalizationDto,
+  ApplicationLocalizationResponse,
   LanguageInfo,
   LocalizationConfig,
   LocalizationOverride,
@@ -17,10 +17,5 @@ export type {
 export { getApplicationLocalization } from './api/localization-api';
 
 // API — Admin
-export {
-  deleteLocalizationOverride,
-  listLanguages,
-  setLocalizationOverride,
-  updateLanguageStatus,
-} from './api/localization-admin-api';
+export { deleteLocalizationOverride, setLocalizationOverride } from './api/localization-admin-api';
 export { LocalizationOverridesPermissions } from './permissions';

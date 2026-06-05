@@ -1,74 +1,12 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import {
-  deleteLocalizationOverride,
-  listLanguages,
-  setLocalizationOverride,
-  updateLanguageStatus,
-} from '../api/localization-admin-api';
+import { deleteLocalizationOverride, setLocalizationOverride } from '../api/localization-admin-api';
+
+const BASE = '/api/v1/localization';
 
 afterEach(() => {
   vi.restoreAllMocks();
-});
-
-// ---------------------------------------------------------------------------
-// listLanguages
-// ---------------------------------------------------------------------------
-
-describe('listLanguages', () => {
-  it('should GET /localization/languages and return data', async () => {
-    const client = createMockClient();
-    const languages = [
-      { cultureName: 'fr', displayName: 'Français', isEnabled: true },
-      { cultureName: 'en', displayName: 'English', isEnabled: false },
-    ];
-    vi.mocked(client.get).mockResolvedValue(axiosResponse(languages));
-
-    const result = await listLanguages(client, '/api');
-
-    expect(client.get).toHaveBeenCalledWith('/api/localization/languages');
-    expect(result).toEqual(languages);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// updateLanguageStatus
-// ---------------------------------------------------------------------------
-
-describe('updateLanguageStatus', () => {
-  it('should PUT to enable a language', async () => {
-    const client = createMockClient();
-    vi.mocked(client.put).mockResolvedValue(axiosResponse(undefined));
-
-    await updateLanguageStatus(client, '/api', 'en', true);
-
-    expect(client.put).toHaveBeenCalledWith('/api/localization/languages/en', {
-      isEnabled: true,
-    });
-  });
-
-  it('should PUT to disable a language', async () => {
-    const client = createMockClient();
-    vi.mocked(client.put).mockResolvedValue(axiosResponse(undefined));
-
-    await updateLanguageStatus(client, '/api', 'de', false);
-
-    expect(client.put).toHaveBeenCalledWith('/api/localization/languages/de', {
-      isEnabled: false,
-    });
-  });
-
-  it('should encode cultureName in the URL', async () => {
-    const client = createMockClient();
-    vi.mocked(client.put).mockResolvedValue(axiosResponse(undefined));
-
-    await updateLanguageStatus(client, '/api', 'zh-Hant', true);
-
-    expect(client.put).toHaveBeenCalledWith('/api/localization/languages/zh-Hant', {
-      isEnabled: true,
-    });
-  });
 });
 
 // ---------------------------------------------------------------------------
@@ -76,13 +14,13 @@ describe('updateLanguageStatus', () => {
 // ---------------------------------------------------------------------------
 
 describe('setLocalizationOverride', () => {
-  it('should PUT the override value', async () => {
+  it('should PUT the override value to {basePath}/overrides/{resource}/{culture}/{key}', async () => {
     const client = createMockClient();
     vi.mocked(client.put).mockResolvedValue(axiosResponse(undefined));
 
-    await setLocalizationOverride(client, '/api', 'Granit', 'fr', 'Common.Save', 'Sauvegarder');
+    await setLocalizationOverride(client, BASE, 'Granit', 'fr', 'Common.Save', 'Sauvegarder');
 
-    expect(client.put).toHaveBeenCalledWith('/api/localization/overrides/Granit/fr/Common.Save', {
+    expect(client.put).toHaveBeenCalledWith(`${BASE}/overrides/Granit/fr/Common.Save`, {
       value: 'Sauvegarder',
     });
   });
@@ -91,12 +29,11 @@ describe('setLocalizationOverride', () => {
     const client = createMockClient();
     vi.mocked(client.put).mockResolvedValue(axiosResponse(undefined));
 
-    await setLocalizationOverride(client, '/api', 'My Resource', 'fr-BE', 'key/sub', 'val');
+    await setLocalizationOverride(client, BASE, 'My Resource', 'fr-BE', 'key/sub', 'val');
 
-    expect(client.put).toHaveBeenCalledWith(
-      '/api/localization/overrides/My%20Resource/fr-BE/key%2Fsub',
-      { value: 'val' }
-    );
+    expect(client.put).toHaveBeenCalledWith(`${BASE}/overrides/My%20Resource/fr-BE/key%2Fsub`, {
+      value: 'val',
+    });
   });
 });
 
@@ -109,19 +46,17 @@ describe('deleteLocalizationOverride', () => {
     const client = createMockClient();
     vi.mocked(client.delete).mockResolvedValue(axiosResponse(undefined));
 
-    await deleteLocalizationOverride(client, '/api', 'Granit', 'fr', 'Common.Save');
+    await deleteLocalizationOverride(client, BASE, 'Granit', 'fr', 'Common.Save');
 
-    expect(client.delete).toHaveBeenCalledWith('/api/localization/overrides/Granit/fr/Common.Save');
+    expect(client.delete).toHaveBeenCalledWith(`${BASE}/overrides/Granit/fr/Common.Save`);
   });
 
   it('should encode special characters in path segments', async () => {
     const client = createMockClient();
     vi.mocked(client.delete).mockResolvedValue(axiosResponse(undefined));
 
-    await deleteLocalizationOverride(client, '/api', 'My Resource', 'fr-BE', 'key/sub');
+    await deleteLocalizationOverride(client, BASE, 'My Resource', 'fr-BE', 'key/sub');
 
-    expect(client.delete).toHaveBeenCalledWith(
-      '/api/localization/overrides/My%20Resource/fr-BE/key%2Fsub'
-    );
+    expect(client.delete).toHaveBeenCalledWith(`${BASE}/overrides/My%20Resource/fr-BE/key%2Fsub`);
   });
 });

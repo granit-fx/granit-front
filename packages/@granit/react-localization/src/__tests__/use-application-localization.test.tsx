@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useApplicationLocalization } from '../hooks/use-application-localization';
 
-import type { ApplicationLocalizationDto } from '@granit/localization';
+import type { ApplicationLocalizationResponse } from '@granit/localization';
 import type { ReactNode } from 'react';
 
 vi.mock('@granit/localization', () => ({
@@ -29,7 +29,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-const EMPTY_DTO: ApplicationLocalizationDto = {
+const EMPTY_DTO: ApplicationLocalizationResponse = {
   cultureName: 'fr-BE',
   resources: {},
   languages: [],

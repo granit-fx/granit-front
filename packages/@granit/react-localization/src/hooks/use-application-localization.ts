@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { DEFAULT_BASE_PATH } from '../constants';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { ApplicationLocalizationDto } from '@granit/localization';
+import type { ApplicationLocalizationResponse } from '@granit/localization';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /** Options accepted by {@link useApplicationLocalization}. */
@@ -32,7 +32,7 @@ export interface UseApplicationLocalizationOptions {
  */
 export function useApplicationLocalization(
   options: UseApplicationLocalizationOptions
-): UseQueryResult<ApplicationLocalizationDto> {
+): UseQueryResult<ApplicationLocalizationResponse> {
   const { client, basePath = DEFAULT_BASE_PATH, cultureName, enabled } = options;
   return useQuery({
     queryKey: ['localization', 'application', cultureName ?? null],

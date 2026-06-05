@@ -1,4 +1,4 @@
-import type { ApplicationLocalizationDto } from './types/index';
+import type { ApplicationLocalizationResponse } from './types/index';
 import type { i18n } from 'i18next';
 
 /**
@@ -16,7 +16,7 @@ import type { i18n } from 'i18next';
  * }, [data]);
  * ```
  */
-export function applyTranslations(instance: i18n, data: ApplicationLocalizationDto): void {
+export function applyTranslations(instance: i18n, data: ApplicationLocalizationResponse): void {
   if (!data.resources) return;
 
   const merged: Record<string, string> = {};

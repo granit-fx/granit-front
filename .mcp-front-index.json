@@ -1691,7 +1691,7 @@
         {
           "name": "applyTranslations",
           "kind": "function",
-          "signature": "function applyTranslations(instance: i18n, data: ApplicationLocalizationDto): void"
+          "signature": "function applyTranslations(instance: i18n, data: ApplicationLocalizationResponse): void"
         },
         {
           "name": "unflattenKeys",
@@ -1706,7 +1706,17 @@
         {
           "name": "getApplicationLocalization",
           "kind": "function",
-          "signature": "async function getApplicationLocalization( client: AxiosInstance, basePath: string, cultureName?: string ): Promise<ApplicationLocalizationDto>"
+          "signature": "async function getApplicationLocalization( client: AxiosInstance, basePath: string, cultureName?: string ): Promise<ApplicationLocalizationResponse>"
+        },
+        {
+          "name": "deleteLocalizationOverride",
+          "kind": "function",
+          "signature": "async function deleteLocalizationOverride( client: AxiosInstance, basePath: string, resourceName: string, cultureName: string, key: string ): Promise<void>"
+        },
+        {
+          "name": "setLocalizationOverride",
+          "kind": "function",
+          "signature": "async function setLocalizationOverride( client: AxiosInstance, basePath: string, resourceName: string, cultureName: string, key: string, value: string ): Promise<void>"
         },
         {
           "name": "LocalizationOverridesPermissions",
@@ -5278,7 +5288,7 @@
         {
           "name": "useApplicationLocalization",
           "kind": "function",
-          "signature": "function useApplicationLocalization( options: UseApplicationLocalizationOptions ): UseQueryResult<ApplicationLocalizationDto>"
+          "signature": "function useApplicationLocalization( options: UseApplicationLocalizationOptions ): UseQueryResult<ApplicationLocalizationResponse>"
         },
         {
           "name": "UseApplicationLocalizationOptions",

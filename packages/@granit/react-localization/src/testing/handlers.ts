@@ -1,11 +1,11 @@
 import { DATE_OPERATORS, ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
-import { noContent, notFound, pagedResponse } from '@granit/testing/msw';
+import { noContent, pagedResponse } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-import { buildMockLocalization, mockLanguages, mockLocalizationOverrides } from './data';
+import { buildMockLocalization, mockLocalizationOverrides } from './data';
 
 import type { LocalizationOverride } from '@granit/localization';
 import type { QueryMetadata } from '@granit/query-engine';
@@ -60,7 +60,7 @@ export const localizationOverrideQueryMetadata: QueryMetadata = {
       isVisible: true,
     },
     {
-      name: 'lastModifiedAt',
+      name: 'modifiedAt',
       label: 'Modified at',
       type: 'DateTime',
       order: 5,
@@ -69,7 +69,7 @@ export const localizationOverrideQueryMetadata: QueryMetadata = {
       isVisible: true,
     },
     {
-      name: 'lastModifiedBy',
+      name: 'modifiedBy',
       label: 'Modified by',
       type: 'String',
       order: 6,
@@ -83,14 +83,14 @@ export const localizationOverrideQueryMetadata: QueryMetadata = {
     { name: 'cultureName', type: 'String', operators: ENUM_OPERATORS },
     { name: 'key', type: 'String', operators: STRING_OPERATORS },
     { name: 'value', type: 'String', operators: STRING_OPERATORS },
-    { name: 'lastModifiedAt', type: 'DateTime', operators: DATE_OPERATORS },
-    { name: 'lastModifiedBy', type: 'String', operators: STRING_OPERATORS },
+    { name: 'modifiedAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'modifiedBy', type: 'String', operators: STRING_OPERATORS },
   ],
   sortableFields: [
     { name: 'resourceName' },
     { name: 'cultureName' },
     { name: 'key' },
-    { name: 'lastModifiedAt' },
+    { name: 'modifiedAt' },
   ],
   presetFilterGroups: [],
   quickFilters: [],
@@ -115,7 +115,6 @@ export const localizationOverrideQueryMetadata: QueryMetadata = {
  * @param baseUrl - API base path (default: `/api/v1/localization`)
  */
 export function createLocalizationHandlers(baseUrl = DEFAULT_BASE_PATH): RequestHandler[] {
-  const languages = [...mockLanguages];
   let overrides: LocalizationOverride[] = [...mockLocalizationOverrides];
   const overridesBase = `${baseUrl}/overrides`;
 
@@ -127,27 +126,6 @@ export function createLocalizationHandlers(baseUrl = DEFAULT_BASE_PATH): Request
     // different TS variants and the cross-package `RequestHandler` then
     // breaks portable type emission (TS2883).
     http.get(`${overridesBase}/meta`, () => HttpResponse.json(localizationOverrideQueryMetadata)),
-
-    // GET /languages — list all languages
-    http.get(`${baseUrl}/languages`, () => {
-      return HttpResponse.json(languages);
-    }),
-
-    // PUT /languages/:cultureName — toggle language enabled state
-    http.put(`${baseUrl}/languages/:cultureName`, async ({ params, request }) => {
-      const cultureName = decodeURIComponent(params.cultureName as string);
-      const body = (await request.json()) as { isEnabled: boolean };
-
-      const lang = languages.find((l) => l.cultureName === cultureName);
-      if (!lang) return notFound();
-
-      if (lang.isDefault && !body.isEnabled) {
-        return HttpResponse.json({ error: 'Cannot disable the default language' }, { status: 400 });
-      }
-
-      lang.isEnabled = body.isEnabled;
-      return HttpResponse.json(lang);
-    }),
 
     // GET / — get localization bundle for a culture
     http.get(baseUrl, ({ request }) => {
@@ -208,22 +186,23 @@ export function createLocalizationHandlers(baseUrl = DEFAULT_BASE_PATH): Request
         overrides[idx] = {
           ...existing,
           value: body.value,
-          lastModifiedAt: toISODateString(new Date().toISOString()),
-          lastModifiedBy: 'admin@granit-showcase.local',
+          modifiedAt: toISODateString(new Date().toISOString()),
+          modifiedBy: 'admin@granit-showcase.local',
         };
       } else {
         overrides = [
           ...overrides,
           {
             id: toEntityId<'LocalizationOverride'>(String(overrides.length + 1)),
+            tenantId: null,
             resourceName,
             cultureName,
             key,
             value: body.value,
             createdAt: toISODateString(new Date().toISOString()),
             createdBy: 'admin@granit-showcase.local',
-            lastModifiedAt: toISODateString(new Date().toISOString()),
-            lastModifiedBy: 'admin@granit-showcase.local',
+            modifiedAt: toISODateString(new Date().toISOString()),
+            modifiedBy: 'admin@granit-showcase.local',
           },
         ];
       }

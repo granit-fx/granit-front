@@ -9,35 +9,44 @@ export interface LanguageInfo {
   isDefault: boolean;
 }
 
-/** Matches backend ApplicationLocalizationDto. */
-export interface ApplicationLocalizationDto {
+/** Matches backend Granit.Localization.Endpoints.Dtos.ApplicationLocalizationResponse. */
+export interface ApplicationLocalizationResponse {
   cultureName: string;
   resources: Record<string, Record<string, string>>;
   languages: LanguageInfo[];
 }
 
-// ── Admin types ─────────────────────────────────────────────────────────────
+/**
+ * @deprecated Renamed to {@link ApplicationLocalizationResponse} to mirror the
+ * backend DTO name. Kept as an alias for backward compatibility; will be
+ * removed in a future major version.
+ */
+export type ApplicationLocalizationDto = ApplicationLocalizationResponse;
 
-/** Admin-scoped language with enable/disable capability. */
-export interface AdminLanguage extends LanguageInfo {
-  isEnabled: boolean;
-  parentCulture?: string;
-}
+// ── Admin types ─────────────────────────────────────────────────────────────
 
 /** Branded localization override identifier. */
 export type LocalizationOverrideId = EntityId<'LocalizationOverride'>;
 
-/** Localization override record for admin translation management. */
+/**
+ * Localization override record for admin translation management.
+ *
+ * Mirrors `Granit.Localization.Domain.LocalizationOverride` (an `AuditedEntity`,
+ * `IMultiTenant`). Audit fields are `modifiedAt` / `modifiedBy` (from
+ * `AuditedEntity`), not `lastModified*`.
+ */
 export interface LocalizationOverride {
   readonly id: LocalizationOverrideId;
+  /** Tenant scope. `null` = host-level override (applies to all tenants). */
+  readonly tenantId: string | null;
   readonly resourceName: string;
   readonly cultureName: string;
   readonly key: string;
   readonly value: string;
   readonly createdAt: ISODateString;
   readonly createdBy: string;
-  readonly lastModifiedAt: ISODateString | null;
-  readonly lastModifiedBy: string | null;
+  readonly modifiedAt: ISODateString | null;
+  readonly modifiedBy: string | null;
 }
 
 export interface LocalizationConfig {
