@@ -1,14 +1,17 @@
 import { getPreferences, updatePreference } from '@granit/notifications';
-import { useCallback, useEffect, useOptimistic, useRef, useState, useTransition } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 
 import { API_BASE_PATH } from '../constants';
 import { useNotificationConfig } from '../providers/notification-provider';
 
-import type { AxiosInstance } from '@granit/api-client';
-import type { NotificationPreference } from '@granit/notifications';
+import type {
+  NotificationPreference,
+  NotificationPreferenceUpdateRequest,
+} from '@granit/notifications';
 
 export interface UseNotificationPreferencesReturn {
-  preferences: NotificationPreference[];
+  preferences: readonly NotificationPreference[];
   loading: boolean;
   error: Error | null;
   saving: boolean;
@@ -16,111 +19,95 @@ export interface UseNotificationPreferencesReturn {
   refresh: () => void;
 }
 
-type OptimisticAction = {
-  preferenceId: string;
-  updated: NotificationPreference;
-};
+const PREFERENCES_KEY = ['notifications', 'preferences'] as const;
 
-async function savePreference(
-  apiClient: AxiosInstance,
-  basePath: string,
-  preferenceId: string,
-  updated: NotificationPreference,
-  mountedRef: React.RefObject<boolean>,
-  setPreferences: React.Dispatch<React.SetStateAction<NotificationPreference[]>>,
-  setError: React.Dispatch<React.SetStateAction<Error | null>>
-): Promise<void> {
-  try {
-    const saved = await updatePreference(apiClient, basePath, updated);
-    if (mountedRef.current) {
-      setPreferences((prev) => prev.map((p) => (p.id === preferenceId ? saved : p)));
-    }
-  } catch (err) {
-    // No manual rollback — useOptimistic reverts automatically when the
-    // transition ends and setPreferences was not called with a new value.
-    if (mountedRef.current) {
-      setError(err instanceof Error ? err : new Error(String(err)));
-    }
-  }
+interface ToggleVars {
+  preferenceId: string;
+  notificationTypeName: string;
+  channelName: string;
+  enabled: boolean;
 }
 
 /**
- * CRUD hook for notification preferences (flat rows: one per type x channel).
+ * CRUD hook for notification preferences (flat rows: one per type × channel).
  *
- * Uses React 19 `useOptimistic` for instant UI feedback with automatic
- * rollback on server failure.
+ * Uses TanStack Query for data fetching and cache-based optimistic updates with
+ * automatic rollback on server failure.
  */
 export function useNotificationPreferences(): UseNotificationPreferencesReturn {
   const { config } = useNotificationConfig();
   const basePath = config.basePath ?? API_BASE_PATH;
+  const queryClient = useQueryClient();
 
-  const [preferences, setPreferences] = useState<NotificationPreference[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const mountedRef = useRef(true);
+  const {
+    data: preferences = [],
+    isLoading: loading,
+    error: queryError,
+    refetch,
+  } = useQuery({
+    queryKey: PREFERENCES_KEY,
+    queryFn: () => getPreferences(config.apiClient, basePath),
+  });
 
-  const [optimisticPreferences, applyOptimistic] = useOptimistic(
-    preferences,
-    (state: NotificationPreference[], action: OptimisticAction) =>
-      state.map((p) => (p.id === action.preferenceId ? action.updated : p))
-  );
-
-  const [saving, startTransition] = useTransition();
-
-  const load = useCallback(async () => {
-    try {
-      const data = await getPreferences(config.apiClient, basePath);
-      if (mountedRef.current) {
-        setPreferences(data);
-        setError(null);
+  const mutation = useMutation({
+    mutationFn: ({ notificationTypeName, channelName, enabled }: ToggleVars) => {
+      const req: NotificationPreferenceUpdateRequest = {
+        notificationTypeName,
+        channelName,
+        isEnabled: enabled,
+      };
+      return updatePreference(config.apiClient, basePath, req);
+    },
+    onMutate: async ({ preferenceId, enabled }) => {
+      await queryClient.cancelQueries({ queryKey: PREFERENCES_KEY });
+      const previous = queryClient.getQueryData<readonly NotificationPreference[]>(PREFERENCES_KEY);
+      queryClient.setQueryData<readonly NotificationPreference[]>(PREFERENCES_KEY, (old = []) =>
+        old.map((p) => (p.id === preferenceId ? { ...p, isEnabled: enabled } : p))
+      );
+      return { previous };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(PREFERENCES_KEY, context.previous);
       }
-    } catch (err) {
-      if (mountedRef.current) {
-        setError(err instanceof Error ? err : new Error(String(err)));
-      }
-    } finally {
-      if (mountedRef.current) setLoading(false);
-    }
-  }, [config.apiClient, basePath]);
-
-  useEffect(() => {
-    mountedRef.current = true;
-    load();
-    return () => {
-      mountedRef.current = false;
-    };
-  }, [load]);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: PREFERENCES_KEY });
+    },
+  });
 
   const togglePreference = useCallback(
     (preferenceId: string, enabled: boolean) => {
-      const pref = preferences.find((p) => p.id === preferenceId);
+      const pref = (
+        queryClient.getQueryData<readonly NotificationPreference[]>(PREFERENCES_KEY) ?? []
+      ).find((p) => p.id === preferenceId);
       if (!pref) return;
-
-      const updated: NotificationPreference = {
-        ...pref,
-        isEnabled: enabled,
-      };
-
-      startTransition(async () => {
-        applyOptimistic({ preferenceId, updated });
-        await savePreference(
-          config.apiClient,
-          basePath,
-          preferenceId,
-          updated,
-          mountedRef,
-          setPreferences,
-          setError
-        );
+      mutation.mutate({
+        preferenceId,
+        notificationTypeName: pref.notificationTypeName,
+        channelName: pref.channelName,
+        enabled,
       });
     },
-    [config.apiClient, basePath, preferences, applyOptimistic]
+    [mutation, queryClient]
   );
 
   const refresh = useCallback(() => {
-    setLoading(true);
-    load();
-  }, [load]);
+    void refetch();
+  }, [refetch]);
 
-  return { preferences: optimisticPreferences, loading, error, saving, togglePreference, refresh };
+  const error = queryError
+    ? queryError instanceof Error
+      ? queryError
+      : new Error(String(queryError))
+    : null;
+
+  return {
+    preferences,
+    loading,
+    error,
+    saving: mutation.isPending,
+    togglePreference,
+    refresh,
+  };
 }

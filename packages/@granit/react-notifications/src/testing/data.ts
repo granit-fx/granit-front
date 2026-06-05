@@ -3,6 +3,7 @@ import { toEntityId, toISODateString } from '@granit/types';
 import type {
   NotificationDefinition,
   NotificationPreference,
+  NotificationSubscriptionResponse,
   UserNotification,
 } from '@granit/notifications';
 import type { Mutable } from '@granit/testing';
@@ -268,6 +269,9 @@ export const mockNotificationDefinitions: NotificationDefinition[] = [
     description: 'A new user account has been created and is pending approval.',
     groupName: 'Users',
     allowUserOptOut: true,
+    allowDoNotDisturbBypass: false,
+    requiredPermission: null,
+    requiredFeature: null,
   },
   {
     name: 'user_role_changed',
@@ -277,6 +281,9 @@ export const mockNotificationDefinitions: NotificationDefinition[] = [
     description: 'A role has been granted to or revoked from a user.',
     groupName: 'Users',
     allowUserOptOut: true,
+    allowDoNotDisturbBypass: false,
+    requiredPermission: null,
+    requiredFeature: null,
   },
   {
     name: 'country_updated',
@@ -286,6 +293,9 @@ export const mockNotificationDefinitions: NotificationDefinition[] = [
     description: 'A country in the reference data has been created, updated or deactivated.',
     groupName: 'Reference data',
     allowUserOptOut: true,
+    allowDoNotDisturbBypass: false,
+    requiredPermission: null,
+    requiredFeature: null,
   },
   {
     name: 'config_changed',
@@ -295,6 +305,9 @@ export const mockNotificationDefinitions: NotificationDefinition[] = [
     description: 'A feature flag or system configuration value has been changed.',
     groupName: 'System',
     allowUserOptOut: true,
+    allowDoNotDisturbBypass: false,
+    requiredPermission: null,
+    requiredFeature: null,
   },
   {
     name: 'security_alert',
@@ -304,6 +317,9 @@ export const mockNotificationDefinitions: NotificationDefinition[] = [
     description: 'A security-relevant event was detected (e.g. authentication failure spike).',
     groupName: 'Security',
     allowUserOptOut: false,
+    allowDoNotDisturbBypass: true,
+    requiredPermission: null,
+    requiredFeature: null,
   },
   {
     name: 'service_health',
@@ -314,6 +330,9 @@ export const mockNotificationDefinitions: NotificationDefinition[] = [
       'Infrastructure or service health status changed (backups, degradation, maintenance).',
     groupName: 'System',
     allowUserOptOut: true,
+    allowDoNotDisturbBypass: false,
+    requiredPermission: null,
+    requiredFeature: null,
   },
   {
     name: 'audit_export',
@@ -323,6 +342,9 @@ export const mockNotificationDefinitions: NotificationDefinition[] = [
     description: 'A requested audit log export has finished and is ready to download.',
     groupName: 'Compliance',
     allowUserOptOut: true,
+    allowDoNotDisturbBypass: false,
+    requiredPermission: null,
+    requiredFeature: null,
   },
   {
     name: 'rgpd_request',
@@ -333,6 +355,9 @@ export const mockNotificationDefinitions: NotificationDefinition[] = [
       'A GDPR data subject request (access, erasure) requires action within the legal delay.',
     groupName: 'Compliance',
     allowUserOptOut: false,
+    allowDoNotDisturbBypass: true,
+    requiredPermission: null,
+    requiredFeature: null,
   },
 ];
 
@@ -504,5 +529,34 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'rgpd_request',
     channelName: 'Push',
     isEnabled: true,
+  },
+];
+
+/** Notification type subscriptions (opt-in). Null entityType/entityId = type-level subscription. */
+export const mockSubscriptions: NotificationSubscriptionResponse[] = [
+  {
+    id: toEntityId<'NotificationSubscription'>('sub-001'),
+    userId: adminUserId,
+    notificationTypeName: 'user_registered',
+    entityType: null,
+    entityId: null,
+  },
+  {
+    id: toEntityId<'NotificationSubscription'>('sub-002'),
+    userId: adminUserId,
+    notificationTypeName: 'security_alert',
+    entityType: null,
+    entityId: null,
+  },
+];
+
+/** Entity-follower subscriptions for a sample entity. */
+export const mockEntityFollowers: NotificationSubscriptionResponse[] = [
+  {
+    id: toEntityId<'NotificationSubscription'>('follow-001'),
+    userId: adminUserId,
+    notificationTypeName: 'country_updated',
+    entityType: 'Country',
+    entityId: 'BE',
   },
 ];

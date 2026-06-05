@@ -1,11 +1,10 @@
 import { listNotifications, markAllAsRead, markAsRead } from '@granit/notifications';
+import { useInfiniteScroll as usePaginatedFetch } from '@granit/react-query-engine';
 import { toISODateString } from '@granit/types';
 import { useCallback } from 'react';
 
 import { API_BASE_PATH } from '../constants';
 import { useNotificationConfig } from '../providers/notification-provider';
-
-import { usePaginatedFetch } from './use-paginated-fetch';
 
 import type { UserNotification, UserNotificationPage } from '@granit/notifications';
 
@@ -42,11 +41,6 @@ export function useNotifications(options: UseNotificationsOptions = {}): UseNoti
     [config.apiClient, basePath]
   );
 
-  const onSuccess = useCallback(
-    (page: UserNotificationPage) => setUnreadCount(page.unreadCount),
-    [setUnreadCount]
-  );
-
   const {
     items: notifications,
     setItems: setNotifications,
@@ -60,7 +54,6 @@ export function useNotifications(options: UseNotificationsOptions = {}): UseNoti
   } = usePaginatedFetch<UserNotification, UserNotificationPage>({
     fetcher,
     pageSize,
-    onSuccess,
   });
 
   const markRead = useCallback(

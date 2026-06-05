@@ -33,9 +33,7 @@ export interface UserNotification {
   readonly readAt: ISODateString | null;
 }
 
-export type UserNotificationPage = PagedResult<UserNotification> & {
-  readonly unreadCount: number;
-};
+export type UserNotificationPage = PagedResult<UserNotification>;
 
 // ---------------------------------------------------------------------------
 // Real-time transport message — shape received via SignalR/SSE
@@ -54,25 +52,6 @@ export interface NotificationTransportMessage {
   readonly relatedEntityId: string | null;
   readonly occurredAt: ISODateString;
 }
-
-// ---------------------------------------------------------------------------
-// Activity feed
-// ---------------------------------------------------------------------------
-
-/** Branded activity feed entry identifier. */
-export type ActivityFeedEntryId = EntityId<'ActivityFeedEntry'>;
-
-export interface ActivityFeedEntry {
-  id: ActivityFeedEntryId;
-  title: string;
-  body: string | null;
-  severity: NotificationSeverity;
-  createdAt: ISODateString;
-  userId: UserId | null;
-  userDisplayName: string | null;
-}
-
-export type ActivityFeedPage = PagedResult<ActivityFeedEntry>;
 
 // ---------------------------------------------------------------------------
 // Channels — extensible string type with well-known constants
@@ -122,6 +101,13 @@ export interface NotificationPreference {
   readonly isEnabled: boolean;
 }
 
+/** Write DTO for upsert. Mirrors `NotificationPreferenceUpdateRequest` from .NET. */
+export interface NotificationPreferenceUpdateRequest {
+  readonly notificationTypeName: string;
+  readonly channelName: string;
+  readonly isEnabled: boolean;
+}
+
 // ---------------------------------------------------------------------------
 // Notification type definitions — mirrors NotificationDefinition .NET
 // ---------------------------------------------------------------------------
@@ -142,6 +128,9 @@ export interface NotificationDefinition {
    * preferences (e.g. security alerts, GDPR breach notifications).
    */
   readonly allowUserOptOut: boolean;
+  readonly allowDoNotDisturbBypass: boolean;
+  readonly requiredPermission: string | null;
+  readonly requiredFeature: string | null;
 }
 
 // ---------------------------------------------------------------------------

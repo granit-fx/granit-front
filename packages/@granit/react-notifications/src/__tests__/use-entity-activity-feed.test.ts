@@ -11,21 +11,26 @@ import {
   createWrapperWithoutBasePath,
 } from './test-utils';
 
-import type { ActivityFeedPage } from '@granit/notifications';
+import type { UserNotification, UserNotificationPage } from '@granit/notifications';
 
-const MOCK_FEED: ActivityFeedPage = {
-  items: [
-    {
-      id: toEntityId<'ActivityFeedEntry'>('a-1'),
-      title: 'Consultation ajoutée',
-      body: null,
-      severity: 'Info',
-      createdAt: toISODateString('2026-01-15T10:00:00Z'),
-      userId: toEntityId<'User'>('u-1'),
-      userDisplayName: 'Dr. Martin',
-    },
-  ],
+const MOCK_ENTRY: UserNotification = {
+  id: toEntityId<'UserNotification'>('n-1'),
+  notificationId: toEntityId<'Notification'>('notif-1'),
+  notificationTypeName: 'country_updated',
+  severity: 'Info',
+  data: { title: 'Consultation ajoutée', body: null, userDisplayName: 'Dr. Martin' },
+  recipientUserId: toEntityId<'User'>('u-1'),
+  relatedEntityType: 'Patient',
+  relatedEntityId: 'p-1',
+  state: 'Unread',
+  createdAt: toISODateString('2026-01-15T10:00:00Z'),
+  readAt: null,
+};
+
+const MOCK_FEED: UserNotificationPage = {
+  items: [MOCK_ENTRY],
   totalCount: 1,
+  hasMore: false,
   nextCursor: null,
 };
 
@@ -46,7 +51,8 @@ describe('useEntityActivityFeed', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     expect(result.current.entries).toHaveLength(1);
-    expect(result.current.entries[0]!.title).toBe('Consultation ajoutée');
+    const data = result.current.entries[0]!.data as { title?: string };
+    expect(data.title).toBe('Consultation ajoutée');
   });
 
   it('should handle fetch errors', async () => {
@@ -69,9 +75,10 @@ describe('useEntityActivityFeed', () => {
   });
 
   it('should report hasMore correctly', async () => {
-    const page: ActivityFeedPage = {
-      items: [MOCK_FEED.items[0]!],
+    const page: UserNotificationPage = {
+      items: [MOCK_ENTRY],
       totalCount: 25,
+      hasMore: true,
       nextCursor: null,
     };
     const client = createMockClient();
@@ -93,19 +100,22 @@ describe('useEntityActivityFeed', () => {
   });
 
   it('should load more entries when loadMore is called', async () => {
-    const page1: ActivityFeedPage = {
-      items: [MOCK_FEED.items[0]!],
+    const entry2: UserNotification = {
+      ...MOCK_ENTRY,
+      id: toEntityId<'UserNotification'>('n-2'),
+      notificationId: toEntityId<'Notification'>('notif-2'),
+      data: { title: 'Deuxième entrée' },
+    };
+    const page1: UserNotificationPage = {
+      items: [MOCK_ENTRY],
       totalCount: 2,
+      hasMore: true,
       nextCursor: null,
     };
-    const entry2 = {
-      ...MOCK_FEED.items[0]!,
-      id: toEntityId<'ActivityFeedEntry'>('a-2'),
-      title: 'Deuxième entrée',
-    };
-    const page2: ActivityFeedPage = {
+    const page2: UserNotificationPage = {
       items: [entry2],
       totalCount: 2,
+      hasMore: false,
       nextCursor: null,
     };
 
@@ -133,7 +143,8 @@ describe('useEntityActivityFeed', () => {
 
     await waitFor(() => expect(result.current.loadingMore).toBe(false));
     expect(result.current.entries).toHaveLength(2);
-    expect(result.current.entries[1]!.title).toBe('Deuxième entrée');
+    const data2 = result.current.entries[1]!.data as { title?: string };
+    expect(data2.title).toBe('Deuxième entrée');
   });
 
   it('should use default pageSize when none is specified', async () => {
@@ -151,7 +162,6 @@ describe('useEntityActivityFeed', () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
-    // Should call with default pageSize (20)
     expect(client.get).toHaveBeenCalledWith(
       expect.stringContaining('notifications/entity/Patient/p-1'),
       expect.objectContaining({ params: expect.objectContaining({ pageSize: 20 }) })
@@ -173,9 +183,10 @@ describe('useEntityActivityFeed', () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
-    const updatedFeed: ActivityFeedPage = {
-      items: [{ ...MOCK_FEED.items[0]!, title: 'Mis à jour' }],
+    const updatedFeed: UserNotificationPage = {
+      items: [{ ...MOCK_ENTRY, data: { title: 'Mis à jour' } }],
       totalCount: 1,
+      hasMore: false,
       nextCursor: null,
     };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(updatedFeed));
@@ -185,7 +196,8 @@ describe('useEntityActivityFeed', () => {
     });
 
     await waitFor(() => expect(result.current.loading).toBe(false));
-    expect(result.current.entries[0]!.title).toBe('Mis à jour');
+    const data = result.current.entries[0]!.data as { title?: string };
+    expect(data.title).toBe('Mis à jour');
   });
 
   it('should use default basePath when config.basePath is undefined', async () => {
@@ -207,9 +219,10 @@ describe('useEntityActivityFeed', () => {
   });
 
   it('should report hasMore as false when all entries are loaded', async () => {
-    const page: ActivityFeedPage = {
-      items: [MOCK_FEED.items[0]!],
+    const page: UserNotificationPage = {
+      items: [MOCK_ENTRY],
       totalCount: 1,
+      hasMore: false,
       nextCursor: null,
     };
     const client = createMockClient();

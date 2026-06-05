@@ -46,6 +46,9 @@ const MOCK_TYPES: NotificationDefinition[] = [
     description: null,
     groupName: 'inbox',
     allowUserOptOut: true,
+    allowDoNotDisturbBypass: false,
+    requiredPermission: null,
+    requiredFeature: null,
   },
 ];
 

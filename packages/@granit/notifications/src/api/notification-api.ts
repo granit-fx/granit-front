@@ -1,9 +1,9 @@
 import { buildApiUrl } from '@granit/api-client';
 
 import type {
-  ActivityFeedPage,
   NotificationDefinition,
   NotificationPreference,
+  NotificationPreferenceUpdateRequest,
   NotificationSubscriptionResponse,
   UserNotificationPage,
 } from '../types/index';
@@ -58,8 +58,8 @@ export async function getEntityActivityFeed(
   entityType: string,
   entityId: string,
   params: PaginationParams = {}
-): Promise<ActivityFeedPage> {
-  const { data } = await client.get<ActivityFeedPage>(
+): Promise<UserNotificationPage> {
+  const { data } = await client.get<UserNotificationPage>(
     buildApiUrl(basePath, 'notifications', 'entity', entityType, entityId),
     { params }
   );
@@ -83,13 +83,9 @@ export async function getPreferences(
 export async function updatePreference(
   client: AxiosInstance,
   basePath: string,
-  preference: NotificationPreference
-): Promise<NotificationPreference> {
-  const { data } = await client.put<NotificationPreference>(
-    buildApiUrl(basePath, 'notifications', 'preferences'),
-    preference
-  );
-  return data;
+  request: NotificationPreferenceUpdateRequest
+): Promise<void> {
+  await client.put(buildApiUrl(basePath, 'notifications', 'preferences'), request);
 }
 
 // ---------------------------------------------------------------------------

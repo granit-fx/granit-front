@@ -1,19 +1,23 @@
 import { DATE_OPERATORS, ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { noContent, notFound } from '@granit/testing/msw';
-import { toISODateString } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
 import { API_BASE_PATH } from '../constants';
 
 import {
+  mockEntityFollowers,
   mockNotificationDefinitions,
   mockNotificationPreferences,
   mockNotifications,
+  mockSubscriptions,
 } from './data';
 
 import type {
   NotificationPreference,
+  NotificationPreferenceUpdateRequest,
+  NotificationSubscriptionResponse,
   UserNotification,
   UserNotificationPage,
 } from '@granit/notifications';
@@ -159,13 +163,15 @@ export const notificationQueryMetadata: QueryMetadata = {
 /**
  * Create stateful MSW handlers for notification endpoints.
  * Handlers mutate in-memory arrays — mark-read / mark-all-read / preference
- * updates are reflected in subsequent GET calls.
+ * updates / follow-unfollow are reflected in subsequent GET calls.
  *
  * @param baseUrl - API base path (default: `/api/v1`)
  */
 export function createNotificationsHandlers(baseUrl = API_BASE_PATH) {
   let notifications: Mutable<UserNotification>[] = [...mockNotifications];
   let preferences: Mutable<NotificationPreference>[] = [...mockNotificationPreferences];
+  let subscriptions: Mutable<NotificationSubscriptionResponse>[] = [...mockSubscriptions];
+  let entityFollowers: Mutable<NotificationSubscriptionResponse>[] = [...mockEntityFollowers];
 
   return [
     // GET /notifications/meta — query metadata
@@ -187,21 +193,23 @@ export function createNotificationsHandlers(baseUrl = API_BASE_PATH) {
       });
     }),
 
-    // GET paginated notifications (skip/take)
+    // GET paginated notifications (page/pageSize)
     http.get(`${baseUrl}/notifications`, ({ request }) => {
       const url = new URL(request.url);
-      const skip = Number(url.searchParams.get('skip') ?? 0);
-      const take = Number(url.searchParams.get('take') ?? 20);
+      const page = Number(url.searchParams.get('page') ?? 1);
+      const pageSize = Number(url.searchParams.get('pageSize') ?? 20);
+      const skip = (page - 1) * pageSize;
 
       const sorted = [...notifications].sort(
         (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
 
+      const items = sorted.slice(skip, skip + pageSize);
       const response: UserNotificationPage = {
-        items: sorted.slice(skip, skip + take),
+        items,
         totalCount: sorted.length,
+        hasMore: skip + pageSize < sorted.length,
         nextCursor: null,
-        unreadCount: sorted.filter((n) => n.state === 'Unread').length,
       };
 
       return HttpResponse.json(response);
@@ -234,6 +242,71 @@ export function createNotificationsHandlers(baseUrl = API_BASE_PATH) {
       return noContent();
     }),
 
+    // GET entity activity feed
+    http.get(`${baseUrl}/notifications/entity/:entityType/:entityId`, ({ params, request }) => {
+      const { entityType, entityId } = params as { entityType: string; entityId: string };
+      const url = new URL(request.url);
+      const page = Number(url.searchParams.get('page') ?? 1);
+      const pageSize = Number(url.searchParams.get('pageSize') ?? 20);
+      const skip = (page - 1) * pageSize;
+
+      const filtered = notifications.filter(
+        (n) => n.relatedEntityType === entityType && n.relatedEntityId === entityId
+      );
+      const sorted = [...filtered].sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+
+      const items = sorted.slice(skip, skip + pageSize);
+      const response: UserNotificationPage = {
+        items,
+        totalCount: sorted.length,
+        hasMore: skip + pageSize < sorted.length,
+        nextCursor: null,
+      };
+
+      return HttpResponse.json(response);
+    }),
+
+    // POST follow entity
+    http.post(`${baseUrl}/notifications/entity/:entityType/:entityId/follow`, ({ params }) => {
+      const { entityType, entityId } = params as { entityType: string; entityId: string };
+      const alreadyFollowing = entityFollowers.some(
+        (f) => f.entityType === entityType && f.entityId === entityId
+      );
+      if (!alreadyFollowing) {
+        entityFollowers = [
+          ...entityFollowers,
+          {
+            id: toEntityId<'NotificationSubscription'>(`follow-${entityType}-${entityId}`),
+            userId: mockNotifications[0]!.recipientUserId,
+            notificationTypeName: '',
+            entityType,
+            entityId,
+          },
+        ];
+      }
+      return noContent();
+    }),
+
+    // DELETE unfollow entity
+    http.delete(`${baseUrl}/notifications/entity/:entityType/:entityId/follow`, ({ params }) => {
+      const { entityType, entityId } = params as { entityType: string; entityId: string };
+      entityFollowers = entityFollowers.filter(
+        (f) => !(f.entityType === entityType && f.entityId === entityId)
+      );
+      return noContent();
+    }),
+
+    // GET entity followers
+    http.get(`${baseUrl}/notifications/entity/:entityType/:entityId/followers`, ({ params }) => {
+      const { entityType, entityId } = params as { entityType: string; entityId: string };
+      const followers = entityFollowers.filter(
+        (f) => f.entityType === entityType && f.entityId === entityId
+      );
+      return HttpResponse.json(followers);
+    }),
+
     // GET notification type registry — drives the preferences UI
     http.get(`${baseUrl}/notifications/types`, () => {
       return HttpResponse.json(mockNotificationDefinitions);
@@ -244,19 +317,69 @@ export function createNotificationsHandlers(baseUrl = API_BASE_PATH) {
       return HttpResponse.json(preferences);
     }),
 
-    // PUT update notification preference
+    // PUT update notification preference (upsert) — 204 No Content
     http.put(`${baseUrl}/notifications/preferences`, async ({ request }) => {
-      const body = (await request.json()) as NotificationPreference;
-      const index = preferences.findIndex((p) => p.id === body.id);
+      const body = (await request.json()) as NotificationPreferenceUpdateRequest;
+      const index = preferences.findIndex(
+        (p) =>
+          p.notificationTypeName === body.notificationTypeName && p.channelName === body.channelName
+      );
 
       if (index === -1) {
-        preferences = [...preferences, { ...body }];
-        return HttpResponse.json(body);
+        preferences = [
+          ...preferences,
+          {
+            id: toEntityId<'NotificationPreference'>(
+              `pref-new-${body.notificationTypeName}-${body.channelName}`
+            ),
+            userId: mockNotificationPreferences[0]!.userId,
+            notificationTypeName: body.notificationTypeName,
+            channelName: body.channelName,
+            isEnabled: body.isEnabled,
+          },
+        ];
+      } else {
+        preferences = preferences.map((p, i) =>
+          i === index ? { ...p, isEnabled: body.isEnabled } : p
+        );
       }
 
-      const updated: Mutable<NotificationPreference> = { ...preferences[index], ...body };
-      preferences = preferences.map((p) => (p.id === body.id ? updated : p));
-      return HttpResponse.json(updated);
+      return noContent();
+    }),
+
+    // GET subscriptions
+    http.get(`${baseUrl}/notifications/subscriptions`, () => {
+      return HttpResponse.json(subscriptions);
+    }),
+
+    // POST subscribe to notification type
+    http.post(`${baseUrl}/notifications/subscriptions/:typeName`, ({ params }) => {
+      const typeName = params.typeName as string;
+      const alreadySubscribed = subscriptions.some(
+        (s) => s.notificationTypeName === typeName && s.entityType === null
+      );
+      if (!alreadySubscribed) {
+        subscriptions = [
+          ...subscriptions,
+          {
+            id: toEntityId<'NotificationSubscription'>(`sub-${typeName}`),
+            userId: mockSubscriptions[0]?.userId ?? mockNotifications[0]!.recipientUserId,
+            notificationTypeName: typeName,
+            entityType: null,
+            entityId: null,
+          },
+        ];
+      }
+      return noContent();
+    }),
+
+    // DELETE unsubscribe from notification type
+    http.delete(`${baseUrl}/notifications/subscriptions/:typeName`, ({ params }) => {
+      const typeName = params.typeName as string;
+      subscriptions = subscriptions.filter(
+        (s) => !(s.notificationTypeName === typeName && s.entityType === null)
+      );
+      return noContent();
     }),
   ];
 }

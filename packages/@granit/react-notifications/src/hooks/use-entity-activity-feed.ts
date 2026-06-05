@@ -1,12 +1,11 @@
 import { getEntityActivityFeed } from '@granit/notifications';
+import { useInfiniteScroll as usePaginatedFetch } from '@granit/react-query-engine';
 import { useCallback } from 'react';
 
 import { API_BASE_PATH } from '../constants';
 import { useNotificationConfig } from '../providers/notification-provider';
 
-import { usePaginatedFetch } from './use-paginated-fetch';
-
-import type { ActivityFeedEntry, ActivityFeedPage } from '@granit/notifications';
+import type { UserNotification, UserNotificationPage } from '@granit/notifications';
 
 export interface UseEntityActivityFeedOptions {
   entityType: string;
@@ -15,7 +14,7 @@ export interface UseEntityActivityFeedOptions {
 }
 
 export interface UseEntityActivityFeedReturn {
-  entries: readonly ActivityFeedEntry[];
+  entries: readonly UserNotification[];
   totalCount: number | null;
   loading: boolean;
   loadingMore: boolean;
@@ -28,7 +27,8 @@ export interface UseEntityActivityFeedReturn {
 const DEFAULT_PAGE_SIZE = 20;
 
 /**
- * Per-entity activity feed.
+ * Per-entity activity feed — returns the same `UserNotification` shape as the inbox.
+ * Render title/body from `entry.data` (e.g. `(entry.data as { title?: string }).title`).
  */
 export function useEntityActivityFeed(
   options: UseEntityActivityFeedOptions
@@ -55,7 +55,7 @@ export function useEntityActivityFeed(
     hasMore,
     loadMore,
     refresh,
-  } = usePaginatedFetch<ActivityFeedEntry, ActivityFeedPage>({
+  } = usePaginatedFetch<UserNotification, UserNotificationPage>({
     fetcher,
     pageSize,
   });

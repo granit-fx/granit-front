@@ -1,8 +1,5 @@
 // Types
 export type {
-  ActivityFeedEntry,
-  ActivityFeedEntryId,
-  ActivityFeedPage,
   ConnectionState,
   NotificationChannel,
   NotificationConfig,
@@ -10,6 +7,7 @@ export type {
   NotificationId,
   NotificationPreference,
   NotificationPreferenceId,
+  NotificationPreferenceUpdateRequest,
   NotificationSeverity,
   NotificationSubscriptionId,
   NotificationSubscriptionResponse,
