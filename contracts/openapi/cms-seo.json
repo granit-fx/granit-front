@@ -1,0 +1,3785 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "cms-seo",
+    "version": "1"
+  },
+  "paths": {
+    "/api/cms/seo/sites/{siteId}/sitemap.xml": {
+      "get": {
+        "tags": ["CMS - SEO"],
+        "summary": "Public sitemap (index or single urlset) for a site.",
+        "description": "Returns the sitemap index (when the site spans multiple files) or a single urlset document from the ISitemapCache. Supports conditional GET via ETag and If-None-Match; responds 304 when the cached document has not changed.",
+        "operationId": "GetCmsSeoSitemap",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "304": {
+            "description": "Not Modified"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    },
+    "/api/cms/seo/sites/{siteId}/sitemap/{file}": {
+      "get": {
+        "tags": ["CMS - SEO"],
+        "summary": "A named child sitemap file for a site.",
+        "description": "Serves a specific child sitemap file referenced by the sitemap index. Supports conditional GET via ETag and If-None-Match. Returns 404 if the named file does not exist in the sitemap cache.",
+        "operationId": "GetCmsSeoSitemapFile",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "file",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "304": {
+            "description": "Not Modified"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    },
+    "/api/cms/seo/sites/{siteId}/robots.txt": {
+      "get": {
+        "tags": ["CMS - SEO"],
+        "summary": "Public robots.txt for a site.",
+        "description": "Generates and returns the robots.txt document from the site's SEO defaults. The sitemap URL is automatically appended when a canonical host is configured. Always returns 200 even when no defaults row exists (falls back to an empty allow-all ruleset).",
+        "operationId": "GetCmsSeoRobots",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    },
+    "/api/cms/seo/sites/{siteId}/manifest.webmanifest": {
+      "get": {
+        "tags": ["CMS - SEO"],
+        "summary": "PWA web app manifest for a site.",
+        "description": "Returns the web app manifest JSON document built from the site's SEO defaults. Returns 404 when no manifest is configured in the site's SEO defaults.",
+        "operationId": "GetCmsSeoManifest",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    },
+    "/api/cms/seo/sites/{siteId}/defaults": {
+      "get": {
+        "tags": ["CMS - SEO"],
+        "summary": "Gets a site's SEO defaults.",
+        "description": "Returns the site-level SEO defaults that content items inherit when they have no explicit metadata row. Returns 404 if no defaults row has been saved for the site yet.",
+        "operationId": "GetCmsSeoDefaults",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteSeoDefaultsResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["CMS - SEO"],
+        "summary": "Creates or replaces a site's SEO defaults.",
+        "description": "Inserts a new site SEO defaults row or replaces all fields on the existing one. Fields set here serve as the fallback for every content item on the site that has no explicit metadata row. Returns the saved defaults on success.",
+        "operationId": "UpsertCmsSeoDefaults",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SiteSeoDefaultsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteSeoDefaultsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cms/seo/sites/{siteId}/sitemap/invalidate": {
+      "post": {
+        "tags": ["CMS - SEO"],
+        "summary": "Forces a rebuild of the site's sitemap on the next read.",
+        "description": "Clears the cached sitemap document for the site so the background job regenerates it on the next read request. Useful after bulk content changes when the scheduled interval is too slow.",
+        "operationId": "InvalidateCmsSeoSitemap",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cms/seo/sites/{siteId}/metadata/{contentType}/{contentId}/{culture}": {
+      "get": {
+        "tags": ["CMS - SEO"],
+        "summary": "Gets the raw (pre-cascade) SEO metadata for a content item.",
+        "description": "Returns only the explicitly-saved fields for this content key; fields not saved here fall back through the cascade (site defaults). Returns 404 if no row has been saved yet.",
+        "operationId": "GetCmsSeoMetadata",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "contentType",
+            "in": "path",
+            "description": "Type of the content.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contentId",
+            "in": "path",
+            "description": "Unique identifier of the content.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "culture",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoMetadataResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["CMS - SEO"],
+        "summary": "Creates or replaces the SEO metadata for a content item.",
+        "description": "Inserts a new SEO metadata row if none exists, or replaces all mutable fields on the existing row. The canonicalUrl must be an absolute HTTPS URL if provided. Validation errors are returned as a 400 problem.",
+        "operationId": "UpsertCmsSeoMetadata",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "contentType",
+            "in": "path",
+            "description": "Type of the content.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contentId",
+            "in": "path",
+            "description": "Unique identifier of the content.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "culture",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SeoMetadataRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoMetadataResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["CMS - SEO"],
+        "summary": "Deletes the SEO metadata so the item falls back to the inherited cascade.",
+        "description": "Removes the stored SEO row for this content key, causing the content item to inherit all fields from the site defaults going forward. Returns 404 if no row existed.",
+        "operationId": "DeleteCmsSeoMetadata",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "contentType",
+            "in": "path",
+            "description": "Type of the content.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contentId",
+            "in": "path",
+            "description": "Unique identifier of the content.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "culture",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cms/seo/sites/{siteId}/metadata/{contentType}/{contentId}/{culture}/effective": {
+      "get": {
+        "tags": ["CMS - SEO"],
+        "summary": "Gets the cascade-resolved, render-ready SEO for a content item.",
+        "description": "Resolves all SEO fields by walking the cascade chain (content row → site defaults → framework fallbacks). The optional contentTitle and contentDescription query parameters seed the resolution when the content row has no explicit title or description. Always returns 200 — missing rows fall back to defaults.",
+        "operationId": "GetCmsSeoEffective",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "contentType",
+            "in": "path",
+            "description": "Type of the content.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contentId",
+            "in": "path",
+            "description": "Unique identifier of the content.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "culture",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contentTitle",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contentDescription",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EffectiveSeoResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cms/seo/sites/{siteId}/metadata/{contentType}/{contentId}/{culture}/preview/serp": {
+      "get": {
+        "tags": ["CMS - SEO"],
+        "summary": "Google-style search-result preview for a content item.",
+        "description": "Returns the cascade-resolved title, description, and canonical URL as they would appear in a Google SERP snippet. Pass optional contentTitle and contentDescription query parameters to seed the preview when the content row has no explicit values.",
+        "operationId": "GetCmsSeoSerpPreview",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "contentType",
+            "in": "path",
+            "description": "Type of the content.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contentId",
+            "in": "path",
+            "description": "Unique identifier of the content.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "culture",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ContentTitle",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ContentDescription",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SerpPreviewResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cms/seo/sites/{siteId}/metadata/{contentType}/{contentId}/{culture}/preview/og": {
+      "get": {
+        "tags": ["CMS - SEO"],
+        "summary": "Open Graph share-card preview for a content item.",
+        "description": "Returns the cascade-resolved Open Graph fields (type, title, description, image, site name) as they would appear when the page URL is shared on social platforms. Pass optional contentTitle and contentDescription query parameters to seed the preview.",
+        "operationId": "GetCmsSeoOgPreview",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "contentType",
+            "in": "path",
+            "description": "Type of the content.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contentId",
+            "in": "path",
+            "description": "Unique identifier of the content.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "culture",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ContentTitle",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ContentDescription",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OgPreviewResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cms/seo/sites/{siteId}/metadata/{contentType}/{contentId}/{culture}/preview/jsonld": {
+      "get": {
+        "tags": ["CMS - SEO"],
+        "summary": "JSON-LD @graph the renderer will emit for a content item.",
+        "description": "Builds and returns the JSON-LD structured-data graph exactly as the Next.js renderer will inject it into the page head. Returns 204 when no structured-data providers are registered for this content type or when auto JSON-LD is disabled.",
+        "operationId": "GetCmsSeoJsonLdPreview",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "contentType",
+            "in": "path",
+            "description": "Type of the content.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contentId",
+            "in": "path",
+            "description": "Unique identifier of the content.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "culture",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ContentTitle",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ContentDescription",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cms/seo/metadata": {
+      "get": {
+        "tags": ["CMS - SEO"],
+        "summary": "Returns a filtered, sorted, and paginated list of SeoMetadata entries.",
+        "description": "Executes a dynamic query against SeoMetadata using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
+        "operationId": "QuerySeoMetadata",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "1-based page index. Ignored when cursor is supplied.",
+            "schema": {
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page (1-500). Server-side cap applies.",
+            "schema": {
+              "maximum": 500,
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Free-text search across searchable columns declared in the query definition.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "groupBy",
+            "in": "query",
+            "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "quickFilters",
+            "in": "query",
+            "description": "Comma-separated quick-filter names (declared in the query definition).",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "skipTotalCount",
+            "in": "query",
+            "description": "Skip the total row count for faster pagination when the client doesn't need it.",
+            "schema": {
+              "type": ["null", "boolean"]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Bracketed filter expressions: 'filter[field.op]=value'. Example: 'filter[name.contains]=alice&filter[age.gt]=18'.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "presets",
+            "in": "query",
+            "description": "Bracketed preset selectors: 'presets[group]=name'. Applies preset filter groups declared in the query definition.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/PagedResultOfSeoMetadata"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GroupedResultOfSeoMetadata"
+                    }
+                  ],
+                  "description": "PagedResult when groupBy is absent; GroupedResult otherwise."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cms/seo/metadata/meta": {
+      "get": {
+        "tags": ["CMS - SEO"],
+        "summary": "Returns query metadata for SeoMetadata (columns, filters, sorts, presets).",
+        "description": "Returns the query definition metadata for SeoMetadata: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
+        "operationId": "GetSeoMetadataMeta",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryMetadata"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cms/seo/ai/suggest": {
+      "post": {
+        "tags": ["CMS - SEO - AI"],
+        "summary": "Generates an AI SEO suggestion for one content item.",
+        "description": "Generates AI SEO fields for the specified content item using the configured language model. ContentTitle is required for grounding; ContentBody is optional but improves quality. Returns the created suggestion on success. An identical fingerprint within 7 days reuses the existing suggestion without re-spending tokens. Outcome is Refused, SchemaViolation or TransportFailure when the model declines or the transport fails.",
+        "operationId": "GenerateCmsSeoAISuggestion",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SeoSuggestRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoSuggestResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cms/seo/ai/suggestions": {
+      "get": {
+        "tags": ["CMS - SEO - AI"],
+        "summary": "Lists AI SEO suggestions for the review inbox, filtered and paginated.",
+        "description": "Returns a page of AI SEO suggestions optionally filtered by siteId, contentType and status. Use skip and take for pagination; take is capped at 100 and defaults to 25.",
+        "operationId": "ListCmsSeoAISuggestions",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "contentType",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by status value.",
+            "schema": {
+              "$ref": "#/components/schemas/SuggestionStatus"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoSuggestionListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cms/seo/ai/suggestions/{id}/apply": {
+      "post": {
+        "tags": ["CMS - SEO - AI"],
+        "summary": "Applies a chosen subset of a suggestion's fields to the live SEO metadata.",
+        "description": "Writes the AI-generated values selected by the Fields mask to the live SEO metadata row for the content item, creating it if it does not exist. The mask is intersected with the suggestion's own scope. Returns 404 when the suggestion does not exist, 409 when it is no longer Pending, and 400 when the selected fields do not overlap with the suggestion's scope.",
+        "operationId": "ApplyCmsSeoAISuggestion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SeoSuggestionApplyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoSuggestionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cms/seo/ai/suggestions/{id}/reject": {
+      "post": {
+        "tags": ["CMS - SEO - AI"],
+        "summary": "Rejects a pending suggestion, recording an optional reason.",
+        "description": "Marks the suggestion as rejected, recording the reviewer identity, the instant, and an optional dismissal reason. No changes are written to the live SEO metadata. Returns 404 when the suggestion does not exist, 409 when it is no longer Pending.",
+        "operationId": "RejectCmsSeoAISuggestion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SeoSuggestionRejectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoSuggestionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cms/seo/ai/suggestions/{id}/diff": {
+      "get": {
+        "tags": ["CMS - SEO - AI"],
+        "summary": "Returns the per-field current-vs-proposed diff for a suggestion.",
+        "description": "Returns a per-field diff comparing the suggestion's proposed values against the content item's current live SEO metadata. Fields in the suggestion but absent from the live row are shown as additions. Use this endpoint to preview the impact of an apply before committing.",
+        "operationId": "DiffCmsSeoAISuggestion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeoSuggestionDiff"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cms/seo/ai/sites/{siteId}/audit": {
+      "post": {
+        "tags": ["CMS - SEO - AI"],
+        "summary": "Queues a bulk SEO generation run for all published content on the site.",
+        "description": "Enqueues a one-off bulk SEO generation job for all published content items on the site that do not yet have SEO metadata. Each item is processed independently; quota exhaustion for one item does not stop the run. Returns 202 Accepted immediately; generated suggestions appear in the review inbox.",
+        "operationId": "BulkAuditCmsSeoAI",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AbsoluteUrl": {
+        "description": "An absolute HTTP or HTTPS URL. Maximum 2048 characters."
+      },
+      "ColumnDefinition": {
+        "required": [
+          "name",
+          "label",
+          "type",
+          "order",
+          "isSortable",
+          "isFilterable",
+          "isVisible",
+          "format"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isSortable": {
+            "type": "boolean"
+          },
+          "isFilterable": {
+            "type": "boolean"
+          },
+          "isVisible": {
+            "type": "boolean"
+          },
+          "format": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "ContentKey": {
+        "required": ["contentType", "contentId"],
+        "type": "object",
+        "properties": {
+          "contentType": {
+            "type": "string"
+          },
+          "contentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "culture": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "DateFilterMeta": {
+        "required": ["name", "defaultPeriod", "availablePeriods"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "defaultPeriod": {
+            "$ref": "#/components/schemas/DatePeriod"
+          },
+          "availablePeriods": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatePeriod"
+            }
+          }
+        }
+      },
+      "DatePeriod": {
+        "enum": ["Today", "ThisWeek", "ThisMonth", "LastMonth", "ThisQuarter", "ThisYear", "Custom"]
+      },
+      "EffectiveSeoResponse": {
+        "required": [
+          "title",
+          "description",
+          "canonicalUrl",
+          "robots",
+          "keywords",
+          "openGraph",
+          "twitterCard",
+          "alternates"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "canonicalUrl": {
+            "type": ["null", "string"]
+          },
+          "robots": {
+            "$ref": "#/components/schemas/RobotsDirective"
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "openGraph": {
+            "$ref": "#/components/schemas/OpenGraph"
+          },
+          "twitterCard": {
+            "$ref": "#/components/schemas/TwitterCard"
+          },
+          "alternates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Hreflang"
+            }
+          }
+        }
+      },
+      "FilterableField": {
+        "required": ["name", "type", "operators"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "operators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterOperator"
+            }
+          },
+          "enumValues": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "lookup": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LookupDescriptor"
+              }
+            ]
+          }
+        }
+      },
+      "FilterGroupMeta": {
+        "required": ["name", "label", "presets"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "presets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PresetMeta"
+            }
+          }
+        }
+      },
+      "FilterOperator": {
+        "enum": [
+          "Eq",
+          "Contains",
+          "StartsWith",
+          "EndsWith",
+          "Gt",
+          "Gte",
+          "Lt",
+          "Lte",
+          "In",
+          "Between"
+        ]
+      },
+      "GroupByField": {
+        "required": ["name", "type"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "GroupedResultOfSeoMetadata": {
+        "required": ["groups", "totalCount"],
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupEntryOfSeoMetadata"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GroupEntryOfSeoMetadata": {
+        "required": ["field", "value", "label", "count"],
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "value": {},
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "aggregates": {
+            "type": ["null", "object"]
+          },
+          "items": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/SeoMetadata"
+            }
+          }
+        }
+      },
+      "Hreflang": {
+        "required": ["culture", "href"],
+        "type": "object",
+        "properties": {
+          "culture": {
+            "type": "string"
+          },
+          "href": {
+            "type": "string"
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "IDomainEvent": {
+        "type": "object",
+        "description": "Marker interface for domain events."
+      },
+      "IIntegrationEvent": {
+        "type": "object",
+        "description": "Marker interface for integration events (ETO — Event Transfer Object)."
+      },
+      "ImageDimensions": {
+        "required": ["width", "height"],
+        "type": "object",
+        "properties": {
+          "width": {
+            "type": "integer",
+            "description": "Width in pixels (non-negative).",
+            "format": "int32"
+          },
+          "height": {
+            "type": "integer",
+            "description": "Height in pixels (non-negative).",
+            "format": "int32"
+          }
+        },
+        "description": "Pixel dimensions of a raster image — width and height. A reusable value object\nfor any domain that records image size: media libraries, document renditions,\nOpen Graph / social cards, thumbnails, avatars."
+      },
+      "LookupDescriptor": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": ["null", "string"]
+          },
+          "endpoint": {
+            "type": ["null", "string"]
+          },
+          "kind": {
+            "$ref": "#/components/schemas/LookupKind"
+          },
+          "requiredPermission": {
+            "type": ["null", "string"]
+          },
+          "searchParam": {
+            "type": ["null", "string"],
+            "default": "search"
+          },
+          "scopeKeys": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LookupKind": {
+        "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
+        "default": "QueryEngine"
+      },
+      "OgImage": {
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "versionId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "renditionId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "publicLinkId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "url": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AbsoluteUrl"
+              }
+            ]
+          },
+          "dimensions": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ImageDimensions"
+              }
+            ]
+          },
+          "mimeType": {
+            "type": ["null", "string"]
+          },
+          "altText": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "OgPreviewResponse": {
+        "required": ["type", "title", "description", "imageUrl", "siteName"],
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "imageUrl": {
+            "type": ["null", "string"]
+          },
+          "siteName": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "OpenGraph": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "url": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AbsoluteUrl"
+              }
+            ]
+          },
+          "siteName": {
+            "type": ["null", "string"]
+          },
+          "locale": {
+            "type": ["null", "string"]
+          },
+          "alternateLocales": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "image": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/OgImage"
+              }
+            ]
+          },
+          "article": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/OpenGraphArticle"
+              }
+            ]
+          }
+        }
+      },
+      "OpenGraphArticle": {
+        "type": "object",
+        "properties": {
+          "author": {
+            "type": ["null", "string"]
+          },
+          "section": {
+            "type": ["null", "string"]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "publishedTime": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          }
+        }
+      },
+      "PagedResultOfSeoMetadata": {
+        "required": ["items", "totalCount", "hasMore"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "siteId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "contentType": {
+                  "type": "string"
+                },
+                "contentId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "culture": {
+                  "type": ["null", "string"]
+                },
+                "contentKey": {
+                  "required": ["contentType", "contentId"],
+                  "type": "object",
+                  "properties": {
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "contentId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "culture": {
+                      "type": ["null", "string"]
+                    }
+                  }
+                },
+                "title": {
+                  "type": ["null", "string"]
+                },
+                "titleTemplate": {
+                  "type": ["null", "string"]
+                },
+                "description": {
+                  "type": ["null", "string"]
+                },
+                "keywords": {
+                  "type": ["null", "array"],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "canonicalUrl": {
+                  "description": "An absolute HTTP or HTTPS URL. Maximum 2048 characters."
+                },
+                "robots": {
+                  "type": "object",
+                  "properties": {
+                    "index": {
+                      "type": "boolean"
+                    },
+                    "follow": {
+                      "type": "boolean"
+                    },
+                    "noArchive": {
+                      "type": "boolean"
+                    },
+                    "noSnippet": {
+                      "type": "boolean"
+                    },
+                    "maxSnippet": {
+                      "type": ["null", "integer"],
+                      "format": "int32"
+                    },
+                    "maxImagePreview": {
+                      "type": ["null", "string"]
+                    }
+                  }
+                },
+                "noIndex": {
+                  "type": "boolean"
+                },
+                "noFollow": {
+                  "type": "boolean"
+                },
+                "openGraph": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": ["null", "string"]
+                    },
+                    "description": {
+                      "type": ["null", "string"]
+                    },
+                    "url": {
+                      "description": "An absolute HTTP or HTTPS URL. Maximum 2048 characters."
+                    },
+                    "siteName": {
+                      "type": ["null", "string"]
+                    },
+                    "locale": {
+                      "type": ["null", "string"]
+                    },
+                    "alternateLocales": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "image": {
+                      "type": "object",
+                      "properties": {
+                        "documentId": {
+                          "type": ["null", "string"],
+                          "format": "uuid"
+                        },
+                        "versionId": {
+                          "type": ["null", "string"],
+                          "format": "uuid"
+                        },
+                        "renditionId": {
+                          "type": ["null", "string"],
+                          "format": "uuid"
+                        },
+                        "publicLinkId": {
+                          "type": ["null", "string"],
+                          "format": "uuid"
+                        },
+                        "url": {
+                          "description": "An absolute HTTP or HTTPS URL. Maximum 2048 characters."
+                        },
+                        "dimensions": {
+                          "required": ["width", "height"],
+                          "type": "object",
+                          "properties": {
+                            "width": {
+                              "type": "integer",
+                              "description": "Width in pixels (non-negative).",
+                              "format": "int32"
+                            },
+                            "height": {
+                              "type": "integer",
+                              "description": "Height in pixels (non-negative).",
+                              "format": "int32"
+                            }
+                          },
+                          "description": "Pixel dimensions of a raster image — width and height. A reusable value object\nfor any domain that records image size: media libraries, document renditions,\nOpen Graph / social cards, thumbnails, avatars."
+                        },
+                        "mimeType": {
+                          "type": ["null", "string"]
+                        },
+                        "altText": {
+                          "type": ["null", "string"]
+                        }
+                      }
+                    },
+                    "article": {
+                      "type": "object",
+                      "properties": {
+                        "author": {
+                          "type": ["null", "string"]
+                        },
+                        "section": {
+                          "type": ["null", "string"]
+                        },
+                        "tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "publishedTime": {
+                          "type": ["null", "string"],
+                          "format": "date-time"
+                        },
+                        "modifiedTime": {
+                          "type": ["null", "string"],
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                },
+                "twitterCard": {
+                  "type": "object",
+                  "properties": {
+                    "card": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": ["null", "string"]
+                    },
+                    "description": {
+                      "type": ["null", "string"]
+                    },
+                    "image": {
+                      "type": "object",
+                      "properties": {
+                        "documentId": {
+                          "type": ["null", "string"],
+                          "format": "uuid"
+                        },
+                        "versionId": {
+                          "type": ["null", "string"],
+                          "format": "uuid"
+                        },
+                        "renditionId": {
+                          "type": ["null", "string"],
+                          "format": "uuid"
+                        },
+                        "publicLinkId": {
+                          "type": ["null", "string"],
+                          "format": "uuid"
+                        },
+                        "url": {
+                          "description": "An absolute HTTP or HTTPS URL. Maximum 2048 characters."
+                        },
+                        "dimensions": {
+                          "required": ["width", "height"],
+                          "type": "object",
+                          "properties": {
+                            "width": {
+                              "type": "integer",
+                              "description": "Width in pixels (non-negative).",
+                              "format": "int32"
+                            },
+                            "height": {
+                              "type": "integer",
+                              "description": "Height in pixels (non-negative).",
+                              "format": "int32"
+                            }
+                          },
+                          "description": "Pixel dimensions of a raster image — width and height. A reusable value object\nfor any domain that records image size: media libraries, document renditions,\nOpen Graph / social cards, thumbnails, avatars."
+                        },
+                        "mimeType": {
+                          "type": ["null", "string"]
+                        },
+                        "altText": {
+                          "type": ["null", "string"]
+                        }
+                      }
+                    },
+                    "site": {
+                      "type": ["null", "string"]
+                    },
+                    "creator": {
+                      "type": ["null", "string"]
+                    }
+                  }
+                },
+                "structuredDataExtras": {
+                  "type": ["null", "string"]
+                },
+                "disableAutoJsonLd": {
+                  "type": "boolean"
+                },
+                "alternateOverrides": {
+                  "type": ["null", "array"],
+                  "items": {
+                    "required": ["culture", "href"],
+                    "type": "object",
+                    "properties": {
+                      "culture": {
+                        "type": "string"
+                      },
+                      "href": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "xDefaultCulture": {
+                  "type": ["null", "string"]
+                },
+                "statusAtLastReview": {
+                  "enum": ["Reviewed", "NeedsReview", "AutoGenerated"]
+                },
+                "lastReviewedAt": {
+                  "type": ["null", "string"],
+                  "format": "date-time"
+                },
+                "appliedSuggestionId": {
+                  "type": ["null", "string"],
+                  "format": "uuid"
+                },
+                "metadataJson": {
+                  "type": ["null", "string"]
+                },
+                "concurrencyStamp": {
+                  "type": "string"
+                },
+                "tenantId": {
+                  "type": ["null", "string"],
+                  "format": "uuid"
+                },
+                "isDeleted": {
+                  "type": "boolean",
+                  "description": "Indicates whether the entity has been soft-deleted."
+                },
+                "deletedAt": {
+                  "type": ["null", "string"],
+                  "description": "Soft deletion timestamp (UTC).",
+                  "format": "date-time"
+                },
+                "deletedBy": {
+                  "type": ["null", "string"],
+                  "description": "Identifier of the user who deleted the entity."
+                },
+                "modifiedAt": {
+                  "type": ["null", "string"],
+                  "description": "Last modification timestamp (UTC).",
+                  "format": "date-time"
+                },
+                "modifiedBy": {
+                  "type": ["null", "string"],
+                  "description": "Identifier of the user who last modified the entity."
+                },
+                "domainEvents": {
+                  "type": ["null", "array"],
+                  "items": {
+                    "type": "object",
+                    "description": "Marker interface for domain events."
+                  }
+                },
+                "integrationEvents": {
+                  "type": ["null", "array"],
+                  "items": {
+                    "type": "object",
+                    "description": "Marker interface for integration events (ETO — Event Transfer Object)."
+                  }
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "Creation timestamp (UTC).",
+                  "format": "date-time"
+                },
+                "createdBy": {
+                  "type": "string",
+                  "description": "Identifier of the user who created the entity."
+                },
+                "id": {
+                  "type": "string",
+                  "description": "Unique identifier of the entity.",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "totalCount": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "PaginationMeta": {
+        "required": ["defaultPageSize", "maxPageSize", "maxStreamSize", "supportsCursor"],
+        "type": "object",
+        "properties": {
+          "defaultPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxStreamSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "supportsCursor": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PresetMeta": {
+        "required": ["name", "label", "isDefault"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "QueryMetadata": {
+        "required": [
+          "columns",
+          "filterableFields",
+          "sortableFields",
+          "presetFilterGroups",
+          "quickFilters",
+          "dateFilters",
+          "groupByFields",
+          "pagination"
+        ],
+        "type": "object",
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ColumnDefinition"
+            }
+          },
+          "filterableFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterableField"
+            }
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortableField"
+            }
+          },
+          "presetFilterGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterGroupMeta"
+            }
+          },
+          "quickFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuickFilterMeta"
+            }
+          },
+          "dateFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DateFilterMeta"
+            }
+          },
+          "groupByFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupByField"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "defaultSort": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "QuickFilterMeta": {
+        "required": ["name", "label", "isDefault"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RobotsDirective": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "boolean"
+          },
+          "follow": {
+            "type": "boolean"
+          },
+          "noArchive": {
+            "type": "boolean"
+          },
+          "noSnippet": {
+            "type": "boolean"
+          },
+          "maxSnippet": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "maxImagePreview": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "RobotsTxtRule": {
+        "type": "object",
+        "properties": {
+          "userAgent": {
+            "type": "string"
+          },
+          "allow": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "disallow": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "crawlDelay": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          }
+        }
+      },
+      "SeoGenerationOutcome": {
+        "enum": ["Succeeded", "Refused", "SchemaViolation", "TransportFailure"]
+      },
+      "SeoMetadata": {
+        "type": "object",
+        "properties": {
+          "siteId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contentType": {
+            "type": "string"
+          },
+          "contentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "culture": {
+            "type": ["null", "string"]
+          },
+          "contentKey": {
+            "$ref": "#/components/schemas/ContentKey"
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "titleTemplate": {
+            "type": ["null", "string"]
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "keywords": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "canonicalUrl": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AbsoluteUrl"
+              }
+            ]
+          },
+          "robots": {
+            "$ref": "#/components/schemas/RobotsDirective"
+          },
+          "noIndex": {
+            "type": "boolean"
+          },
+          "noFollow": {
+            "type": "boolean"
+          },
+          "openGraph": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/OpenGraph"
+              }
+            ]
+          },
+          "twitterCard": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/TwitterCard"
+              }
+            ]
+          },
+          "structuredDataExtras": {
+            "type": ["null", "string"]
+          },
+          "disableAutoJsonLd": {
+            "type": "boolean"
+          },
+          "alternateOverrides": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/Hreflang"
+            }
+          },
+          "xDefaultCulture": {
+            "type": ["null", "string"]
+          },
+          "statusAtLastReview": {
+            "$ref": "#/components/schemas/SeoReviewStatus"
+          },
+          "lastReviewedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "appliedSuggestionId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "metadataJson": {
+            "type": ["null", "string"]
+          },
+          "concurrencyStamp": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "deletedAt": {
+            "type": ["null", "string"],
+            "description": "Soft deletion timestamp (UTC).",
+            "format": "date-time"
+          },
+          "deletedBy": {
+            "type": ["null", "string"],
+            "description": "Identifier of the user who deleted the entity."
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "description": "Last modification timestamp (UTC).",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": ["null", "string"],
+            "description": "Identifier of the user who last modified the entity."
+          },
+          "domainEvents": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/IDomainEvent"
+            }
+          },
+          "integrationEvents": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/IIntegrationEvent"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp (UTC).",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Identifier of the user who created the entity."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the entity.",
+            "format": "uuid"
+          }
+        }
+      },
+      "SeoMetadataRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": ["null", "string"]
+          },
+          "titleTemplate": {
+            "type": ["null", "string"]
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "keywords": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "canonicalUrl": {
+            "type": ["null", "string"]
+          },
+          "robots": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/RobotsDirective"
+              }
+            ]
+          },
+          "openGraph": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/OpenGraph"
+              }
+            ]
+          },
+          "twitterCard": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/TwitterCard"
+              }
+            ]
+          },
+          "structuredDataExtras": {
+            "type": ["null", "string"]
+          },
+          "disableAutoJsonLd": {
+            "type": "boolean",
+            "default": false
+          },
+          "alternateOverrides": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/Hreflang"
+            }
+          },
+          "xDefaultCulture": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "SeoMetadataResponse": {
+        "required": [
+          "id",
+          "siteId",
+          "contentType",
+          "contentId",
+          "culture",
+          "title",
+          "titleTemplate",
+          "description",
+          "keywords",
+          "canonicalUrl",
+          "robots",
+          "openGraph",
+          "twitterCard",
+          "structuredDataExtras",
+          "disableAutoJsonLd",
+          "alternateOverrides",
+          "xDefaultCulture",
+          "statusAtLastReview",
+          "lastReviewedAt",
+          "concurrencyStamp"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "siteId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contentType": {
+            "type": "string"
+          },
+          "contentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "culture": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "titleTemplate": {
+            "type": ["null", "string"]
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "canonicalUrl": {
+            "type": ["null", "string"]
+          },
+          "robots": {
+            "$ref": "#/components/schemas/RobotsDirective"
+          },
+          "openGraph": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/OpenGraph"
+              }
+            ]
+          },
+          "twitterCard": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/TwitterCard"
+              }
+            ]
+          },
+          "structuredDataExtras": {
+            "type": ["null", "string"]
+          },
+          "disableAutoJsonLd": {
+            "type": "boolean"
+          },
+          "alternateOverrides": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Hreflang"
+            }
+          },
+          "xDefaultCulture": {
+            "type": ["null", "string"]
+          },
+          "statusAtLastReview": {
+            "$ref": "#/components/schemas/SeoReviewStatus"
+          },
+          "lastReviewedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "concurrencyStamp": {
+            "type": "string"
+          }
+        }
+      },
+      "SeoReviewStatus": {
+        "enum": ["Reviewed", "NeedsReview", "AutoGenerated"]
+      },
+      "SeoSuggestionApplyRequest": {
+        "required": ["fields"],
+        "type": "object",
+        "properties": {
+          "fields": {
+            "$ref": "#/components/schemas/SuggestionScope"
+          }
+        }
+      },
+      "SeoSuggestionDiff": {
+        "required": ["suggestionId", "scope", "fields"],
+        "type": "object",
+        "properties": {
+          "suggestionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/SuggestionScope"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SeoSuggestionFieldDiff"
+            }
+          }
+        }
+      },
+      "SeoSuggestionFieldDiff": {
+        "required": ["field", "inScope", "current", "proposed"],
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "inScope": {
+            "type": "boolean"
+          },
+          "current": {
+            "type": ["null", "string"]
+          },
+          "proposed": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "SeoSuggestionListResponse": {
+        "required": ["items", "total"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SeoSuggestionResponse"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SeoSuggestionRejectRequest": {
+        "required": ["reason"],
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "SeoSuggestionResponse": {
+        "required": [
+          "id",
+          "siteId",
+          "contentType",
+          "contentId",
+          "culture",
+          "status",
+          "scope",
+          "appliedFields",
+          "title",
+          "description",
+          "keywords",
+          "ogImageAltText",
+          "structuredDataJson",
+          "modelId",
+          "promptTemplateVersion",
+          "createdAt",
+          "reviewedBy",
+          "reviewedAt",
+          "failureReason",
+          "rejectionReason"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "siteId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contentType": {
+            "type": "string"
+          },
+          "contentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "culture": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "$ref": "#/components/schemas/SuggestionStatus"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/SuggestionScope"
+          },
+          "appliedFields": {
+            "$ref": "#/components/schemas/SuggestionScope"
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ogImageAltText": {
+            "type": ["null", "string"]
+          },
+          "structuredDataJson": {
+            "type": ["null", "string"]
+          },
+          "modelId": {
+            "type": "string"
+          },
+          "promptTemplateVersion": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reviewedBy": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "reviewedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "failureReason": {
+            "type": ["null", "string"]
+          },
+          "rejectionReason": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "SeoSuggestRequest": {
+        "required": [
+          "siteId",
+          "contentType",
+          "contentId",
+          "culture",
+          "contentTitle",
+          "contentBody",
+          "scope"
+        ],
+        "type": "object",
+        "properties": {
+          "siteId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contentType": {
+            "type": "string"
+          },
+          "contentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "culture": {
+            "type": ["null", "string"]
+          },
+          "contentTitle": {
+            "type": "string"
+          },
+          "contentBody": {
+            "type": ["null", "string"]
+          },
+          "scope": {
+            "$ref": "#/components/schemas/SuggestionScope"
+          }
+        }
+      },
+      "SeoSuggestResponse": {
+        "required": ["outcome", "suggestion"],
+        "type": "object",
+        "properties": {
+          "outcome": {
+            "$ref": "#/components/schemas/SeoGenerationOutcome"
+          },
+          "suggestion": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/SeoSuggestionResponse"
+              }
+            ]
+          }
+        }
+      },
+      "SerpPreviewResponse": {
+        "required": ["title", "description", "displayUrl"],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "displayUrl": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "SiteSeoDefaultsRequest": {
+        "type": "object",
+        "properties": {
+          "titleTemplate": {
+            "type": ["null", "string"]
+          },
+          "siteName": {
+            "type": ["null", "string"]
+          },
+          "defaultDescription": {
+            "type": ["null", "string"]
+          },
+          "defaultRobots": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/RobotsDirective"
+              }
+            ]
+          },
+          "canonicalHost": {
+            "type": ["null", "string"]
+          },
+          "sitemapMaxUrlsPerFile": {
+            "type": "integer",
+            "format": "int32",
+            "default": 45000
+          },
+          "inheritFromParentPage": {
+            "type": "boolean",
+            "default": false
+          },
+          "defaultOpenGraph": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/OpenGraph"
+              }
+            ]
+          },
+          "defaultTwitterCard": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/TwitterCard"
+              }
+            ]
+          },
+          "defaultOgImage": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/OgImage"
+              }
+            ]
+          },
+          "robotsTxtRules": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/RobotsTxtRule"
+            }
+          },
+          "robotsTxtExtra": {
+            "type": ["null", "string"]
+          },
+          "manifest": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WebManifest"
+              }
+            ]
+          },
+          "enableAutomaticSeoGeneration": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "SiteSeoDefaultsResponse": {
+        "required": [
+          "id",
+          "siteId",
+          "titleTemplate",
+          "siteName",
+          "defaultDescription",
+          "defaultRobots",
+          "canonicalHost",
+          "sitemapMaxUrlsPerFile",
+          "inheritFromParentPage",
+          "defaultOpenGraph",
+          "defaultTwitterCard",
+          "defaultOgImage",
+          "robotsTxtRules",
+          "robotsTxtExtra",
+          "manifest",
+          "enableAutomaticSeoGeneration",
+          "concurrencyStamp"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "siteId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "titleTemplate": {
+            "type": ["null", "string"]
+          },
+          "siteName": {
+            "type": ["null", "string"]
+          },
+          "defaultDescription": {
+            "type": ["null", "string"]
+          },
+          "defaultRobots": {
+            "$ref": "#/components/schemas/RobotsDirective"
+          },
+          "canonicalHost": {
+            "type": ["null", "string"]
+          },
+          "sitemapMaxUrlsPerFile": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inheritFromParentPage": {
+            "type": "boolean"
+          },
+          "defaultOpenGraph": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/OpenGraph"
+              }
+            ]
+          },
+          "defaultTwitterCard": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/TwitterCard"
+              }
+            ]
+          },
+          "defaultOgImage": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/OgImage"
+              }
+            ]
+          },
+          "robotsTxtRules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RobotsTxtRule"
+            }
+          },
+          "robotsTxtExtra": {
+            "type": ["null", "string"]
+          },
+          "manifest": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/WebManifest"
+              }
+            ]
+          },
+          "enableAutomaticSeoGeneration": {
+            "type": "boolean"
+          },
+          "concurrencyStamp": {
+            "type": "string"
+          }
+        }
+      },
+      "SortableField": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "SuggestionScope": {
+        "type": "string"
+      },
+      "SuggestionStatus": {
+        "enum": ["Pending", "Accepted", "Rejected", "Superseded", "Failed"]
+      },
+      "TwitterCard": {
+        "type": "object",
+        "properties": {
+          "card": {
+            "type": "string"
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "image": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/OgImage"
+              }
+            ]
+          },
+          "site": {
+            "type": ["null", "string"]
+          },
+          "creator": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "WebManifest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "shortName": {
+            "type": ["null", "string"]
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "themeColor": {
+            "type": ["null", "string"]
+          },
+          "backgroundColor": {
+            "type": ["null", "string"]
+          },
+          "display": {
+            "type": "string"
+          },
+          "startUrl": {
+            "type": ["null", "string"]
+          },
+          "scope": {
+            "type": ["null", "string"]
+          },
+          "lang": {
+            "type": ["null", "string"]
+          },
+          "icons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebManifestIcon"
+            }
+          }
+        }
+      },
+      "WebManifestIcon": {
+        "type": "object",
+        "properties": {
+          "src": {
+            "type": "string"
+          },
+          "sizes": {
+            "type": "string"
+          },
+          "type": {
+            "type": ["null", "string"]
+          },
+          "purpose": {
+            "type": ["null", "string"]
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "CMS - SEO"
+    },
+    {
+      "name": "CMS - SEO - AI"
+    }
+  ]
+}

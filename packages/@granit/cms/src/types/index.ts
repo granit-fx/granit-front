@@ -344,7 +344,7 @@ export type ReleaseActionStatus = 'Pending' | 'Succeeded' | 'Failed';
 /** Schedule specification for a release. */
 export interface ReleaseSchedule {
   readonly localDateTime: string;
-  readonly timeZoneId: string;
+  readonly timeZoneId: string | null;
   readonly scheduledAtUtc: string;
 }
 
