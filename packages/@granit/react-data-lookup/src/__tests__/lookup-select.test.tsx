@@ -11,8 +11,12 @@ import type { LookupDescriptor, LookupItem, LookupResult } from '@granit/data-lo
 describe('<LookupSelect>', () => {
   it('renders with resolved items and selected item', async () => {
     const client = createMockClient();
-    const searchPayload: LookupResult = { items: [{ value: 'BE', label: 'Belgique' }] };
-    const resolvedItem: LookupItem = { value: 'BE', label: 'Belgique' };
+    const searchPayload: LookupResult = {
+      items: [{ value: 'BE', label: 'Belgique', extra: null }],
+      totalCount: 1,
+      continuationToken: null,
+    };
+    const resolvedItem: LookupItem = { value: 'BE', label: 'Belgique', extra: null };
 
     vi.mocked(client.get).mockImplementation((url) => {
       return url.includes('/resolve')

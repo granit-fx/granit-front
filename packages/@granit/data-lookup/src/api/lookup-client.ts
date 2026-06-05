@@ -90,7 +90,11 @@ export function buildSearchQuery(
   const result: Record<string, string | number> = {};
 
   if (params.search !== undefined && params.search !== '') {
-    const searchParamKey = descriptor.searchParam ?? 'search';
+    // The backend only honors a custom search-param name for `Simple` sources and
+    // for bespoke custom endpoints. QueryEngine/ReferenceData/Enum registry sources
+    // always bind `search`, so forwarding a different key would be silently ignored.
+    const honorsSearchParam = descriptor.kind === 'Simple' || descriptor.endpoint !== undefined;
+    const searchParamKey = honorsSearchParam ? (descriptor.searchParam ?? 'search') : 'search';
     result[searchParamKey] = params.search;
   }
 

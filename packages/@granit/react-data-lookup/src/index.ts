@@ -2,6 +2,18 @@
 // @granit/react-data-lookup — React hooks and headless components
 // ---------------------------------------------------------------------------
 
+// Provider
+export {
+  DataLookupProvider,
+  useDataLookupConfig,
+  useOptionalDataLookupConfig,
+} from './providers/data-lookup-provider';
+export type {
+  DataLookupConfig,
+  DataLookupProviderProps,
+  ResolvedDataLookupConfig,
+} from './providers/data-lookup-provider';
+
 // Query key factories
 export { buildLookupQueryKey, buildLookupResolveQueryKey } from './hooks/query-keys';
 

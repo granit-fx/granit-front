@@ -11,19 +11,20 @@ export interface LookupItem {
   /** Already-localized human-readable label. */
   readonly label: string;
   /**
-   * Optional secondary attributes (e.g. `{ active: true, email: "x@y.z" }`).
-   * Shape is source-specific.
+   * Secondary attributes (e.g. `{ active: true, email: "x@y.z" }`), or `null`
+   * when the source exposes none. Shape is source-specific. The wire contract
+   * (`LookupItemResponse.Extra`) always emits the key, hence required + nullable.
    */
-  readonly extra?: Readonly<Record<string, unknown>>;
+  readonly extra: Readonly<Record<string, unknown>> | null;
 }
 
 /** Canonical paginated response for a lookup search. */
 export interface LookupResult {
   readonly items: readonly LookupItem[];
-  /** Total count across pages; `null` for cursor-based sources. */
-  readonly totalCount?: number | null;
-  /** Opaque token for the next page, when supported. */
-  readonly continuationToken?: string | null;
+  /** Total count across pages; `null` for cursor-based sources. Key always present on the wire. */
+  readonly totalCount: number | null;
+  /** Opaque token for the next page, or `null` when not supported. Key always present on the wire. */
+  readonly continuationToken: string | null;
 }
 
 /**
@@ -33,7 +34,8 @@ export interface LookupResult {
 export interface LookupManifestEntry {
   readonly name: string;
   readonly kind: LookupKind;
-  readonly requiredPermission?: string | null;
+  /** Permission required to invoke the source, or `null` when public. Key always present on the wire. */
+  readonly requiredPermission: string | null;
   readonly scopeKeys: readonly string[];
 }
 

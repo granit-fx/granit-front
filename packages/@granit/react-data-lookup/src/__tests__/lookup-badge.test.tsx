@@ -10,7 +10,7 @@ import type { LookupItem } from '@granit/data-lookup';
 describe('<LookupBadge>', () => {
   it('renders resolved label in a default span', async () => {
     const client = createMockClient();
-    const item: LookupItem = { value: 'BE', label: 'Belgique' };
+    const item: LookupItem = { value: 'BE', label: 'Belgique', extra: null };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(item));
 
     render(<LookupBadge descriptor={{ name: 'ref-country' }} value="BE" client={client} />, {
@@ -60,7 +60,7 @@ describe('<LookupBadge>', () => {
 
   it('uses custom render prop when provided', async () => {
     const client = createMockClient();
-    const item: LookupItem = { value: 'BE', label: 'Belgique' };
+    const item: LookupItem = { value: 'BE', label: 'Belgique', extra: null };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(item));
 
     render(

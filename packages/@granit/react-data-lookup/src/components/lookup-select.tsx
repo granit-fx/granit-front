@@ -1,3 +1,5 @@
+'use client';
+
 import { useMemo, useState } from 'react';
 
 import { useLookup } from '../hooks/use-lookup';
@@ -34,8 +36,8 @@ export interface LookupSelectProps {
   readonly value: unknown;
   /** Called with the new value when the user selects an item (or `null` to clear). */
   readonly onChange: (next: unknown) => void;
-  /** Axios instance used by the underlying hooks. */
-  readonly client: AxiosInstance;
+  /** Axios instance used by the underlying hooks. Falls back to {@link DataLookupProvider}. */
+  readonly client?: AxiosInstance;
   /** Map of `<scope key> → <form field value>` resolved at render time. */
   readonly scope?: Readonly<Record<string, string | null | undefined>>;
   /** Current UI culture — passed to both hooks so caches are per-language. */

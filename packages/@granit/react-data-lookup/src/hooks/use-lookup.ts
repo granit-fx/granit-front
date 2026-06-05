@@ -1,5 +1,9 @@
+'use client';
+
 import { findMissingScopeKey, searchLookup } from '@granit/data-lookup';
 import { useQuery } from '@tanstack/react-query';
+
+import { useOptionalDataLookupConfig } from '../providers/data-lookup-provider';
 
 import { buildLookupQueryKey } from './query-keys';
 
@@ -9,8 +13,8 @@ import type { UseQueryResult } from '@tanstack/react-query';
 
 /** Options accepted by {@link useLookup}. */
 export interface UseLookupOptions {
-  /** Axios instance used for the HTTP request. */
-  readonly client: AxiosInstance;
+  /** Axios instance used for the HTTP request. Falls back to {@link DataLookupProvider}. */
+  readonly client?: AxiosInstance;
   /** Override the base path for registry-backed lookups. */
   readonly basePath?: string;
   /** Current UI culture (e.g. `"fr-CA"`). Added to the queryKey so cached results are invalidated per language. */
@@ -50,9 +54,18 @@ export type UseLookupResult = UseQueryResult<LookupResult> & {
 export function useLookup(
   descriptor: LookupDescriptor,
   params: LookupQueryParams,
-  options: UseLookupOptions
+  options: UseLookupOptions = {}
 ): UseLookupResult {
-  const { client, basePath, culture, staleTime, enabled: forcedEnabled } = options;
+  const config = useOptionalDataLookupConfig();
+  const client = options.client ?? config?.client;
+  if (!client) {
+    throw new Error(
+      'useLookup requires an Axios client. Pass options.client or wrap the tree in a <DataLookupProvider>.'
+    );
+  }
+  const basePath = options.basePath ?? config?.basePath;
+  const culture = options.culture ?? config?.culture;
+  const { staleTime, enabled: forcedEnabled } = options;
   const missingScopeKey = findMissingScopeKey(descriptor, params.scope);
   const scopeSatisfied = missingScopeKey === null;
 

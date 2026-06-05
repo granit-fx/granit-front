@@ -4234,7 +4234,7 @@
         {
           "name": "useLookup",
           "kind": "function",
-          "signature": "function useLookup( descriptor: LookupDescriptor, params: LookupQueryParams, options: UseLookupOptions ): UseLookupResult"
+          "signature": "function useLookup( descriptor: LookupDescriptor, params: LookupQueryParams, options: UseLookupOptions ="
         },
         {
           "name": "UseLookupOptions",
@@ -4250,7 +4250,7 @@
         {
           "name": "useLookupResolve",
           "kind": "function",
-          "signature": "function useLookupResolve( descriptor: LookupDescriptor, value: unknown, options: UseLookupResolveOptions ): UseQueryResult<LookupItem | null>"
+          "signature": "function useLookupResolve( descriptor: LookupDescriptor, value: unknown, options: UseLookupResolveOptions ="
         },
         {
           "name": "UseLookupResolveOptions",

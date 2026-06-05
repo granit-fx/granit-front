@@ -1,3 +1,5 @@
+'use client';
+
 import { useMemo, useState } from 'react';
 
 import { useLookup } from '../hooks/use-lookup';
@@ -25,7 +27,8 @@ export interface LookupPickerProps {
   readonly descriptor: LookupDescriptor;
   readonly value: unknown;
   readonly onChange: (next: unknown) => void;
-  readonly client: AxiosInstance;
+  /** Axios instance used by the underlying hook. Falls back to {@link DataLookupProvider}. */
+  readonly client?: AxiosInstance;
   readonly scope?: Readonly<Record<string, string | null | undefined>>;
   readonly culture?: string;
   readonly basePath?: string;

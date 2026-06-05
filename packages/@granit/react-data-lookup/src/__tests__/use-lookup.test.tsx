@@ -11,7 +11,11 @@ import type { LookupDescriptor, LookupResult } from '@granit/data-lookup';
 describe('useLookup', () => {
   it('emits a search request when scope is satisfied', async () => {
     const client = createMockClient();
-    const payload: LookupResult = { items: [{ value: '1', label: 'Acme' }] };
+    const payload: LookupResult = {
+      items: [{ value: '1', label: 'Acme', extra: null }],
+      totalCount: 1,
+      continuationToken: null,
+    };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(payload));
 
     const { result } = renderHook(
@@ -45,7 +49,11 @@ describe('useLookup', () => {
 
   it('fires again once the missing scope key is filled', async () => {
     const client = createMockClient();
-    const payload: LookupResult = { items: [{ value: 'm1', label: 'Meter One' }] };
+    const payload: LookupResult = {
+      items: [{ value: 'm1', label: 'Meter One', extra: null }],
+      totalCount: 1,
+      continuationToken: null,
+    };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(payload));
 
     const { result, rerender } = renderHook(

@@ -17,9 +17,28 @@ describe('buildSearchQuery', () => {
     expect(query).toEqual({ search: 'acme' });
   });
 
-  it('honors a custom searchParam', () => {
-    const query = buildSearchQuery({ name: 'x', searchParam: 'q' }, { search: 'hello' });
+  it('honors a custom searchParam for Simple sources', () => {
+    const query = buildSearchQuery(
+      { name: 'x', kind: 'Simple', searchParam: 'q' },
+      { search: 'hello' }
+    );
     expect(query).toEqual({ q: 'hello' });
+  });
+
+  it('honors a custom searchParam for custom endpoint sources', () => {
+    const query = buildSearchQuery(
+      { endpoint: '/api/external/x', searchParam: 'q' },
+      { search: 'hello' }
+    );
+    expect(query).toEqual({ q: 'hello' });
+  });
+
+  it('ignores searchParam for non-Simple registry sources (backend always binds "search")', () => {
+    const query = buildSearchQuery(
+      { name: 'x', kind: 'QueryEngine', searchParam: 'q' },
+      { search: 'hello' }
+    );
+    expect(query).toEqual({ search: 'hello' });
   });
 
   it('omits empty search term', () => {
@@ -45,7 +64,11 @@ describe('buildSearchQuery', () => {
 describe('searchLookup', () => {
   it('hits /lookups/{name} by default', async () => {
     const client = createMockClient();
-    const payload: LookupResult = { items: [{ value: '1', label: 'Acme' }], totalCount: 1 };
+    const payload: LookupResult = {
+      items: [{ value: '1', label: 'Acme', extra: null }],
+      totalCount: 1,
+      continuationToken: null,
+    };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(payload));
 
     await searchLookup({ name: 'tenants' }, { search: 'acme' }, { client });
@@ -58,7 +81,7 @@ describe('searchLookup', () => {
 
   it('hits the custom endpoint when descriptor.endpoint is set', async () => {
     const client = createMockClient();
-    const payload: LookupResult = { items: [] };
+    const payload: LookupResult = { items: [], totalCount: 0, continuationToken: null };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(payload));
 
     const descriptor: LookupDescriptor = {
@@ -94,7 +117,7 @@ describe('resolveLookup', () => {
 
   it('returns the resolved item on 200', async () => {
     const client = createMockClient();
-    const item: LookupItem = { value: 'BE', label: 'Belgique' };
+    const item: LookupItem = { value: 'BE', label: 'Belgique', extra: null };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(item));
 
     const result = await resolveLookup({ name: 'ref-country' }, 'BE', { client });
@@ -147,7 +170,9 @@ describe('getLookupManifest', () => {
 describe('basePath override', () => {
   it('uses custom basePath for registry lookups', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [] } as LookupResult));
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse({ items: [], totalCount: 0, continuationToken: null } as LookupResult)
+    );
 
     await searchLookup({ name: 'tenants' }, {}, { client, basePath: '/custom/lookups' });
 

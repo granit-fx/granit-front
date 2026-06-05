@@ -1,5 +1,9 @@
+'use client';
+
 import { resolveLookup } from '@granit/data-lookup';
 import { useQuery } from '@tanstack/react-query';
+
+import { useOptionalDataLookupConfig } from '../providers/data-lookup-provider';
 
 import { buildLookupResolveQueryKey } from './query-keys';
 
@@ -9,7 +13,8 @@ import type { UseQueryResult } from '@tanstack/react-query';
 
 /** Options accepted by {@link useLookupResolve}. */
 export interface UseLookupResolveOptions {
-  readonly client: AxiosInstance;
+  /** Axios instance used for the HTTP request. Falls back to {@link DataLookupProvider}. */
+  readonly client?: AxiosInstance;
   readonly basePath?: string;
   readonly culture?: string;
   readonly enabled?: boolean;
@@ -28,9 +33,18 @@ export interface UseLookupResolveOptions {
 export function useLookupResolve(
   descriptor: LookupDescriptor,
   value: unknown,
-  options: UseLookupResolveOptions
+  options: UseLookupResolveOptions = {}
 ): UseQueryResult<LookupItem | null> {
-  const { client, basePath, culture, enabled: forcedEnabled } = options;
+  const config = useOptionalDataLookupConfig();
+  const client = options.client ?? config?.client;
+  if (!client) {
+    throw new Error(
+      'useLookupResolve requires an Axios client. Pass options.client or wrap the tree in a <DataLookupProvider>.'
+    );
+  }
+  const basePath = options.basePath ?? config?.basePath;
+  const culture = options.culture ?? config?.culture;
+  const { enabled: forcedEnabled } = options;
   const hasValue = value !== null && value !== undefined && value !== '';
 
   return useQuery<LookupItem | null>({

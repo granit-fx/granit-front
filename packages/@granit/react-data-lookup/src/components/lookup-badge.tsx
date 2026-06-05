@@ -1,3 +1,5 @@
+'use client';
+
 import { stringifyLookupValue } from '@granit/data-lookup';
 
 import { useLookupResolve } from '../hooks/use-lookup-resolve';
@@ -16,7 +18,8 @@ export interface LookupBadgeRenderArgs {
 export interface LookupBadgeProps {
   readonly descriptor: LookupDescriptor;
   readonly value: unknown;
-  readonly client: AxiosInstance;
+  /** Axios instance used by the underlying hook. Falls back to {@link DataLookupProvider}. */
+  readonly client?: AxiosInstance;
   readonly culture?: string;
   readonly basePath?: string;
   /**
