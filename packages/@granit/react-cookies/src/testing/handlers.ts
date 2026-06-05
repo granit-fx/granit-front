@@ -11,5 +11,7 @@ import { mockCookieConsentConfig } from './data';
  * @param baseUrl - API base path (default: `/api/v1`)
  */
 export function createCookieConsentHandlers(baseUrl = '/api/v1') {
-  return [http.get(`${baseUrl}/cookies/config`, () => HttpResponse.json(mockCookieConsentConfig))];
+  return [
+    http.get(`${baseUrl}/cookies/config`, () => HttpResponse.json(mockCookieConsentConfig)),
+  ];
 }
