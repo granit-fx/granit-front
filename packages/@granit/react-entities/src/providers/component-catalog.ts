@@ -17,6 +17,13 @@ export interface EntityFormComponentProps {
   readonly readOnly: boolean;
   /** First validation message for this field, when any. */
   readonly errorMessage?: string;
+  /**
+   * All current form values, keyed by property name. Lets a component read
+   * sibling fields — used by the `lookup` component to resolve a cascading
+   * source's scope (e.g. a meter picker scoped to the selected tenant). Most
+   * components ignore it.
+   */
+  readonly formValues?: Readonly<Record<string, unknown>>;
 }
 
 /** Renderer for one field in `<EntityForm />`. */

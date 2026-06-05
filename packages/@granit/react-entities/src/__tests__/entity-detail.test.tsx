@@ -33,6 +33,7 @@ function field(
     order,
     readOnly: false,
     visibleIf: null,
+    lookup: null,
     ...overrides,
   };
 }

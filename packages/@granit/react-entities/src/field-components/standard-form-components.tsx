@@ -1,3 +1,5 @@
+import { LookupFormComponent } from './lookup-form-component';
+
 import type { EntityComponentCatalog, EntityFormComponent } from '../providers/component-catalog';
 import type { ReactNode } from 'react';
 
@@ -263,5 +265,6 @@ export const STANDARD_FORM_COMPONENTS: EntityComponentCatalog = Object.freeze({
     time: TimeComponent,
     datetime: DatetimeComponent,
     select: SelectComponent,
+    lookup: LookupFormComponent,
   }),
 });

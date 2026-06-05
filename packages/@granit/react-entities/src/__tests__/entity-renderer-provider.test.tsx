@@ -22,6 +22,7 @@ const dummyField: EntityFormFieldManifest = {
   order: 0,
   readOnly: false,
   visibleIf: null,
+  lookup: null,
 };
 
 const textWidget: EntityFormComponent = ({ value }) => <span>{String(value)}</span>;

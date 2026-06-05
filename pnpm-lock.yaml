@@ -559,6 +559,9 @@ importers:
         specifier: workspace:*
         version: link:../api-client
     devDependencies:
+      '@granit/data-lookup':
+        specifier: workspace:*
+        version: link:../data-lookup
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1791,6 +1794,9 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/data-lookup':
+        specifier: workspace:*
+        version: link:../data-lookup
       '@granit/entities':
         specifier: workspace:*
         version: link:../entities
@@ -1803,6 +1809,9 @@ importers:
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
+      '@granit/react-data-lookup':
+        specifier: workspace:*
+        version: link:../react-data-lookup
       '@granit/react-query-engine':
         specifier: workspace:*
         version: link:../react-query-engine

@@ -41,6 +41,7 @@ function field(
     order: 0,
     readOnly: false,
     visibleIf: null,
+    lookup: null,
     ...overrides,
   };
 }

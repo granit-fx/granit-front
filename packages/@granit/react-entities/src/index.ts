@@ -62,6 +62,7 @@ export { SelectionProvider } from './selection/selection-provider';
 export type { SelectionProviderProps } from './selection/selection-provider';
 export {
   defaultDetailFormat,
+  LookupFormComponent,
   STANDARD_DETAIL_COMPONENTS,
   STANDARD_FORM_COMPONENTS,
 } from './field-components/index';

@@ -1,4 +1,5 @@
 import type { VisibilityCondition } from './visibility';
+import type { LookupDescriptor } from '@granit/data-lookup';
 
 /**
  * One form field. Mirrors
@@ -27,6 +28,15 @@ export interface EntityFormFieldManifest {
   readonly readOnly: boolean;
   /** Closed-DSL conditional-visibility rule (ADR-040). */
   readonly visibleIf: VisibilityCondition | null;
+  /**
+   * Optional data-lookup source (ADR-028). When set, the form renders a
+   * server-backed typeahead picker (`<LookupSelect>` via the `lookup` catalog
+   * component) instead of a free-text / select control — the same source a
+   * query column binds via `ColumnBuilder.Lookup`, so a foreign-key field
+   * resolves consistently in the grid filter and the edit form. Mirrors the
+   * .NET `FieldDescriptor.Lookup`; `null` for fields without a declared lookup.
+   */
+  readonly lookup: LookupDescriptor | null;
 }
 
 /**

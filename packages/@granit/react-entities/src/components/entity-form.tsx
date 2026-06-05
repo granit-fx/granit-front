@@ -144,14 +144,15 @@ function EntityFormField({
     return null;
   }
 
-  const Component = components.form[field.component];
+  // A declared lookup wins over the type-derived component: the backend's
+  // FieldBuilder.Lookup(...) keeps Component as the CLR-default (e.g. "text"),
+  // so presence of `field.lookup` is what routes a foreign-key field to the
+  // server-backed picker. Apps override the picker via `components.form.lookup`.
+  const componentId = field.lookup ? 'lookup' : field.component;
+  const Component = components.form[componentId];
 
   return (
-    <div
-      data-granit-form-field=""
-      data-property={field.propertyName}
-      data-component={field.component}
-    >
+    <div data-granit-form-field="" data-property={field.propertyName} data-component={componentId}>
       {field.labelKey ? (
         <label data-granit-field-label="">{resolveLabel(field.labelKey)}</label>
       ) : null}
@@ -162,6 +163,7 @@ function EntityFormField({
           onChange={(next) => onFieldChange(field.propertyName, next)}
           readOnly={readOnly || field.readOnly}
           errorMessage={errorMessage}
+          formValues={values}
         />
       ) : (
         <MissingComponent field={field} />

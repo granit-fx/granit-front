@@ -1,4 +1,9 @@
 {
   "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@granit/data-lookup": ["../data-lookup/src/index.ts"]
+    }
+  },
   "include": ["src/**/*.ts"]
 }
