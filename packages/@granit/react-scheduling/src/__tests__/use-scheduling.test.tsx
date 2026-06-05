@@ -29,7 +29,7 @@ const sampleAction: ScheduledActionResponse = {
   payloadType: 'SendEmail',
   executeAt: '2026-04-05T09:00:00Z',
   correlationId: null,
-  status: 0,
+  status: 'Pending',
   executedAt: null,
   cancelledBy: null,
   failureReason: null,
@@ -39,8 +39,7 @@ const sampleAction: ScheduledActionResponse = {
 const samplePagedResult: PagedResult<ScheduledActionResponse> = {
   items: [sampleAction],
   totalCount: 1,
-  page: 1,
-  pageSize: 20,
+  hasMore: false,
   nextCursor: undefined,
 };
 

@@ -1,11 +1,5 @@
 import type { ScheduledActionStatus } from './types/index';
 
-/** Permission strings for the Scheduling module. */
-export const SCHEDULING_PERMISSIONS = {
-  ACTIONS_READ: 'Scheduling.Actions.Read',
-  ACTIONS_MANAGE: 'Scheduling.Actions.Manage',
-} as const;
-
 /** Status → badge color mapping for UI rendering. */
 export const SCHEDULING_STATUS_COLORS = {
   Pending: 'blue',

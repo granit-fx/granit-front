@@ -272,7 +272,7 @@ export function createSchedulingHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return new HttpResponse(null, { status: 204 });
     }),
 
-    // PUT — reschedule a pending action
+    // PUT — reschedule a pending action (200 with no body, matching the backend contract)
     http.put(`${actionsUrl}/:id/reschedule`, async ({ params, request }) => {
       const action = mockScheduledActions.find((a) => a.id === params.id);
       if (!action) {
@@ -294,7 +294,7 @@ export function createSchedulingHandlers(baseUrl = DEFAULT_BASE_PATH) {
       }
       const body = (await request.json()) as { newExecuteAt: string };
       action.executeAt = toISODateString(body.newExecuteAt);
-      return HttpResponse.json(action);
+      return new HttpResponse(null, { status: 200 });
     }),
   ];
 }

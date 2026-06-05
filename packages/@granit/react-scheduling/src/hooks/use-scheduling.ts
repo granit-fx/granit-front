@@ -119,7 +119,7 @@ export function useCancelScheduledAction(): UseMutationResult<void, Error, strin
  * ```
  */
 export function useRescheduleScheduledAction(): UseMutationResult<
-  ScheduledActionResponse,
+  void,
   Error,
   RescheduleVariables
 > {
@@ -128,7 +128,7 @@ export function useRescheduleScheduledAction(): UseMutationResult<
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, request }: RescheduleVariables) =>
+    mutationFn: ({ id, request }: RescheduleVariables) =>
       rescheduleScheduledAction(config.client, actionsPath, id, request),
     onSuccess: async (_data, { id }) => {
       await queryClient.invalidateQueries({ queryKey: buildSchedulingQueryKey(config) });

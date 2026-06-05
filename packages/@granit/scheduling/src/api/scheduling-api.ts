@@ -47,17 +47,13 @@ export async function cancelScheduledAction(
 /**
  * Reschedule a pending action to a new execution time.
  *
- * `PUT {basePath}/{id}/reschedule` — returns 200 on success, 404/409 on error.
+ * `PUT {basePath}/{id}/reschedule` — returns 200 with no body on success, 404/409 on error.
  */
 export async function rescheduleScheduledAction(
   client: AxiosInstance,
   basePath: string,
   id: string,
   request: RescheduleActionRequest
-): Promise<ScheduledActionResponse> {
-  const { data } = await client.put<ScheduledActionResponse>(
-    `${basePath}/${id}/reschedule`,
-    request
-  );
-  return data;
+): Promise<void> {
+  await client.put(`${basePath}/${id}/reschedule`, request);
 }

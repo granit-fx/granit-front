@@ -11,11 +11,8 @@ import {
   listScheduledActions,
   rescheduleScheduledAction,
 } from '../api/scheduling-api';
-import {
-  SCHEDULING_PERMISSIONS,
-  SCHEDULING_STATUS_COLORS,
-  SCHEDULING_STATUS_LABELS,
-} from '../constants';
+import { SCHEDULING_STATUS_COLORS, SCHEDULING_STATUS_LABELS } from '../constants';
+import { SchedulingPermissions } from '../permissions';
 
 import type {
   RescheduleActionRequest,
@@ -164,38 +161,22 @@ describe('rescheduleScheduledAction', () => {
     newExecuteAt: toISODateString('2026-08-01T09:00:00Z'),
   };
 
-  const rescheduledAction: ScheduledActionResponse = {
-    ...sampleAction,
-    executeAt: toISODateString('2026-08-01T09:00:00Z'),
-  };
-
   it('PUTs to {basePath}/{id}/reschedule with the request body', async () => {
     const client = createMockClient();
-    vi.mocked(client.put).mockResolvedValue({ data: rescheduledAction });
+    vi.mocked(client.put).mockResolvedValue({});
 
     await rescheduleScheduledAction(client, basePath, actionId, request);
 
     expect(client.put).toHaveBeenCalledWith(`${basePath}/${actionId}/reschedule`, request);
   });
 
-  it('returns the updated ScheduledActionResponse', async () => {
+  it('resolves void on success', async () => {
     const client = createMockClient();
-    vi.mocked(client.put).mockResolvedValue({ data: rescheduledAction });
+    vi.mocked(client.put).mockResolvedValue({});
 
     const result = await rescheduleScheduledAction(client, basePath, actionId, request);
 
-    expect(result).toEqual(rescheduledAction);
-    expect(result.executeAt).toBe('2026-08-01T09:00:00Z');
-  });
-
-  it('preserves the action id and status from the server response', async () => {
-    const client = createMockClient();
-    vi.mocked(client.put).mockResolvedValue({ data: rescheduledAction });
-
-    const result = await rescheduleScheduledAction(client, basePath, actionId, request);
-
-    expect(result.id).toBe(actionId);
-    expect(result.status).toBe('Pending');
+    expect(result).toBeUndefined();
   });
 });
 
@@ -203,14 +184,14 @@ describe('rescheduleScheduledAction', () => {
 // Constants
 // ---------------------------------------------------------------------------
 
-describe('SCHEDULING_PERMISSIONS', () => {
-  it('exposes ACTIONS_READ and ACTIONS_MANAGE permission strings', () => {
-    expect(SCHEDULING_PERMISSIONS.ACTIONS_READ).toBe('Scheduling.Actions.Read');
-    expect(SCHEDULING_PERMISSIONS.ACTIONS_MANAGE).toBe('Scheduling.Actions.Manage');
+describe('SchedulingPermissions', () => {
+  it('exposes Actions.Read and Actions.Manage permission strings', () => {
+    expect(SchedulingPermissions.Actions.Read).toBe('Scheduling.Actions.Read');
+    expect(SchedulingPermissions.Actions.Manage).toBe('Scheduling.Actions.Manage');
   });
 
-  it('has exactly two permission entries', () => {
-    expect(Object.keys(SCHEDULING_PERMISSIONS)).toHaveLength(2);
+  it('has exactly one sub-group with two entries', () => {
+    expect(Object.keys(SchedulingPermissions.Actions)).toHaveLength(2);
   });
 });
 

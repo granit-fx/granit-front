@@ -7,11 +7,7 @@ export {
 } from './types/index';
 
 // Constants
-export {
-  SCHEDULING_PERMISSIONS,
-  SCHEDULING_STATUS_COLORS,
-  SCHEDULING_STATUS_LABELS,
-} from './constants';
+export { SCHEDULING_STATUS_COLORS, SCHEDULING_STATUS_LABELS } from './constants';
 
 // API
 export {
