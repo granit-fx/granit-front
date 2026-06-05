@@ -4247,19 +4247,9 @@
       "description": "React hooks and components for @granit/data-lookup — useLookup, LookupSelect, LookupPicker, LookupBadge",
       "exports": [
         {
-          "name": "buildLookupQueryKey",
-          "kind": "function",
-          "signature": "function buildLookupQueryKey( descriptor: LookupDescriptor, params: LookupQueryParams, culture?: string ): readonly unknown[]"
-        },
-        {
-          "name": "buildLookupResolveQueryKey",
-          "kind": "function",
-          "signature": "function buildLookupResolveQueryKey( descriptor: LookupDescriptor, value: unknown, culture?: string ): readonly unknown[]"
-        },
-        {
           "name": "useLookup",
           "kind": "function",
-          "signature": "function useLookup( descriptor: LookupDescriptor, params: LookupQueryParams, options: UseLookupOptions ="
+          "signature": "function useLookup( descriptor: LookupDescriptor, params: UseLookupParams ="
         },
         {
           "name": "UseLookupOptions",
@@ -4268,9 +4258,16 @@
           "members": []
         },
         {
+          "name": "UseLookupParams",
+          "kind": "interface",
+          "signature": "interface UseLookupParams",
+          "members": []
+        },
+        {
           "name": "UseLookupResult",
-          "kind": "type",
-          "signature": "type UseLookupResult = UseQueryResult<LookupResult> & { /** Name of the scope key that is currently missing, if any (Empty Scope Trap). */ readonly missingScopeKey: string | null; }"
+          "kind": "interface",
+          "signature": "interface UseLookupResult",
+          "members": []
         },
         {
           "name": "useLookupResolve",
@@ -4282,6 +4279,32 @@
           "kind": "interface",
           "signature": "interface UseLookupResolveOptions",
           "members": []
+        },
+        {
+          "name": "useLookupManifest",
+          "kind": "function",
+          "signature": "function useLookupManifest(options: UseLookupManifestOptions ="
+        },
+        {
+          "name": "useDebouncedValue",
+          "kind": "function",
+          "signature": "function useDebouncedValue<T>(value: T, delayMs: number): T"
+        },
+        {
+          "name": "useIntersectionSentinel",
+          "kind": "function",
+          "signature": "function useIntersectionSentinel( options: UseIntersectionSentinelOptions ): (node: Element | null) => void"
+        },
+        {
+          "name": "UseIntersectionSentinelOptions",
+          "kind": "interface",
+          "signature": "interface UseIntersectionSentinelOptions",
+          "members": []
+        },
+        {
+          "name": "useListboxNavigation",
+          "kind": "function",
+          "signature": "function useListboxNavigation(options: UseListboxNavigationOptions): ListboxNavigation"
         },
         {
           "name": "LookupSelect",

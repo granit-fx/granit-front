@@ -83,4 +83,75 @@ describe('<LookupPicker>', () => {
     expect(args.missingScopeKey).toBe('tenantId');
     expect(client.get).not.toHaveBeenCalled();
   });
+
+  it('toggle adds and removes values in MULTI mode (In operator)', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse({
+        items: [
+          { value: 'a', label: 'A', extra: null },
+          { value: 'b', label: 'B', extra: null },
+        ],
+        totalCount: 2,
+        continuationToken: null,
+      } as LookupResult)
+    );
+    const onChange = vi.fn();
+    const renderSpy = vi.fn((_args: LookupPickerRenderArgs) => <span />);
+
+    render(
+      <LookupPicker
+        descriptor={{ name: 't' }}
+        value={['a']}
+        onChange={onChange}
+        client={client}
+        multi
+        render={renderSpy}
+      />,
+      { wrapper: createQueryWrapper() }
+    );
+
+    await waitFor(() => expect(renderSpy.mock.calls.at(-1)![0].items).toHaveLength(2));
+    const args = renderSpy.mock.calls.at(-1)![0];
+
+    expect(args.isSelected('a')).toBe(true);
+    expect(args.isSelected('b')).toBe(false);
+
+    args.toggle('b'); // add
+    expect(onChange).toHaveBeenLastCalledWith(['a', 'b']);
+
+    args.toggle('a'); // remove
+    expect(onChange).toHaveBeenLastCalledWith([]);
+  });
+
+  it('toggle sets and clears a scalar value in SINGLE mode (Eq operator)', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse({
+        items: [{ value: 'a', label: 'A', extra: null }],
+        totalCount: 1,
+        continuationToken: null,
+      } as LookupResult)
+    );
+    const onChange = vi.fn();
+    const renderSpy = vi.fn((_args: LookupPickerRenderArgs) => <span />);
+
+    render(
+      <LookupPicker
+        descriptor={{ name: 't' }}
+        value="a"
+        onChange={onChange}
+        client={client}
+        render={renderSpy}
+      />,
+      { wrapper: createQueryWrapper() }
+    );
+
+    await waitFor(() => expect(renderSpy.mock.calls.at(-1)![0].items).toHaveLength(1));
+    const args = renderSpy.mock.calls.at(-1)![0];
+
+    expect(args.isSelected('a')).toBe(true);
+    args.toggle('a'); // clears (already selected)
+    expect(onChange).toHaveBeenLastCalledWith(null);
+  });
 });

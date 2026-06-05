@@ -15,13 +15,32 @@ export type {
 } from './providers/data-lookup-provider';
 
 // Query key factories
-export { buildLookupQueryKey, buildLookupResolveQueryKey } from './hooks/query-keys';
+export {
+  buildLookupQueryKey,
+  buildLookupManifestQueryKey,
+  buildLookupResolveQueryKey,
+} from './hooks/query-keys';
 
 // Hooks
 export { useLookup } from './hooks/use-lookup';
-export type { UseLookupOptions, UseLookupResult } from './hooks/use-lookup';
+export type { UseLookupOptions, UseLookupParams, UseLookupResult } from './hooks/use-lookup';
 export { useLookupResolve } from './hooks/use-lookup-resolve';
 export type { UseLookupResolveOptions } from './hooks/use-lookup-resolve';
+export { useLookupManifest } from './hooks/use-lookup-manifest';
+export type {
+  UseLookupManifestOptions,
+  UseLookupManifestResult,
+} from './hooks/use-lookup-manifest';
+
+// Headless helpers (reusable when building a styled combobox in the host app)
+export { useDebouncedValue } from './hooks/use-debounced-value';
+export { useIntersectionSentinel } from './hooks/use-intersection-sentinel';
+export type { UseIntersectionSentinelOptions } from './hooks/use-intersection-sentinel';
+export { useListboxNavigation } from './hooks/use-listbox-navigation';
+export type {
+  ListboxNavigation,
+  UseListboxNavigationOptions,
+} from './hooks/use-listbox-navigation';
 
 // Components
 export { LookupSelect } from './components/lookup-select';

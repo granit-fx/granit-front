@@ -28,18 +28,37 @@ function searchItems(items: readonly LookupItem[], search: string): readonly Loo
   );
 }
 
+/** Behaviour options for {@link createLookupHandlers}. */
+export interface CreateLookupHandlersOptions {
+  /**
+   * Pagination mode emulated by the search handler:
+   * - `'offset'` (default) — honors `page` / `pageSize`, returns `totalCount`,
+   *   `continuationToken: null`.
+   * - `'cursor'` — keyset/infinite-scroll: ignores `page`, returns an opaque
+   *   `continuationToken` until the source is exhausted, `totalCount: null`.
+   */
+  readonly mode?: 'offset' | 'cursor';
+}
+
+/** Continuation token encoding for the cursor-mode handler: opaque offset marker. */
+const CURSOR_PREFIX = 'offset:';
+
 /**
  * Creates MSW handlers for the data-lookup endpoints.
  *
  * @param baseUrl - Base URL the endpoints are mounted at (default: `/lookups`).
  * @param sources - Source map keyed by registry name (default: {@link mockLookupSources}).
  * @param manifest - Manifest returned by `GET {baseUrl}` (default: {@link mockLookupManifest}).
+ * @param options - Behaviour options, e.g. `{ mode: 'cursor' }` to test infinite-scroll keyset paging.
  */
 export function createLookupHandlers(
   baseUrl: string = DEFAULT_LOOKUP_BASE_PATH,
   sources: LookupSourceMap = mockLookupSources,
-  manifest: LookupManifest = mockLookupManifest
+  manifest: LookupManifest = mockLookupManifest,
+  options: CreateLookupHandlersOptions = {}
 ) {
+  const cursorMode = options.mode === 'cursor';
+
   return [
     http.get(baseUrl, () => HttpResponse.json(manifest)),
 
@@ -49,11 +68,25 @@ export function createLookupHandlers(
 
       const url = new URL(request.url);
       const search = url.searchParams.get('search') ?? '';
-      const page = Number(url.searchParams.get('page') ?? 1);
       const pageSize = Number(url.searchParams.get('pageSize') ?? 25);
       const matched = searchItems(source, search);
-      const start = (page - 1) * pageSize;
 
+      if (cursorMode) {
+        const token = url.searchParams.get('continuationToken');
+        const start = token?.startsWith(CURSOR_PREFIX)
+          ? Number(token.slice(CURSOR_PREFIX.length))
+          : 0;
+        const end = start + pageSize;
+        const response: LookupResult = {
+          items: matched.slice(start, end),
+          totalCount: null,
+          continuationToken: end < matched.length ? `${CURSOR_PREFIX}${end}` : null,
+        };
+        return HttpResponse.json(response);
+      }
+
+      const page = Number(url.searchParams.get('page') ?? 1);
+      const start = (page - 1) * pageSize;
       const response: LookupResult = {
         items: matched.slice(start, start + pageSize),
         totalCount: matched.length,

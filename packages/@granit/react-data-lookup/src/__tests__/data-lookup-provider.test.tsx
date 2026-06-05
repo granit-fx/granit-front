@@ -68,7 +68,7 @@ describe('DataLookupProvider', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data).toEqual(payload);
+    expect(result.current.items).toEqual(payload.items);
     expect(client.get).toHaveBeenCalled();
   });
 
