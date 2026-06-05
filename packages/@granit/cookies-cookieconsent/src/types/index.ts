@@ -56,6 +56,15 @@ export interface VanillaCookieConsent {
 
 export interface VanillaCookieConsentConfig {
   categories: Record<string, { enabled?: boolean; readOnly?: boolean }>;
+  /**
+   * Language configuration. Required by vanilla-cookieconsent even in headless
+   * mode: `run()` unconditionally reads `language.translations`, and throws if
+   * the default language has no (truthy) translation entry.
+   */
+  language: {
+    default: string;
+    translations: Record<string, object>;
+  };
   onConsent?: () => void;
   onChange?: () => void;
   cookie?: { name?: string };

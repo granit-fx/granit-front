@@ -82,6 +82,19 @@ describe('createCookieConsentProvider', () => {
       const config = vi.mocked(mockCc.run).mock.calls[0]?.[0];
       expect(config?.autoShow).toBe(false);
     });
+
+    it('passes a language block with a translation for the default language', async () => {
+      // vanilla-cookieconsent's run() reads language.translations and throws
+      // if the default language has no (truthy) translation entry, even in
+      // headless mode. Regression guard for that crash.
+      const provider = createCookieConsentProvider();
+      await provider.init();
+
+      const config = vi.mocked(mockCc.run).mock.calls[0]?.[0];
+      expect(config?.language?.default).toBe('en');
+      expect(config?.language?.translations).toHaveProperty('en');
+      expect(config?.language?.translations.en).toBeTruthy();
+    });
   });
 
   describe('getConsents — after init', () => {

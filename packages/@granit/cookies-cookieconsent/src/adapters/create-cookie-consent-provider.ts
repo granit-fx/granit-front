@@ -101,6 +101,15 @@ export function createCookieConsentProvider(
           [NECESSARY_CATEGORY]: { enabled: true, readOnly: true },
           ...optionalCategories,
         },
+        // Headless mode: the consuming app renders its own banner, so the
+        // library never displays these strings. vanilla-cookieconsent still
+        // requires a `language` block with a truthy translation entry for the
+        // default language — without it, `run()` throws while reading
+        // `language.translations`. An empty translation object is sufficient.
+        language: {
+          default: 'en',
+          translations: { en: {} },
+        },
         onConsent: notify,
         onChange: notify,
         cookie: { name: cookieName },
