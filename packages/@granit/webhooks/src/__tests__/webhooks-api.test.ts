@@ -8,25 +8,26 @@ import {
   deactivateSubscription,
   deleteSubscription,
   getConfig,
-  getDeliveries,
   getEventTypes,
   getStats,
   getSubscription,
+  listSigningKeys,
   retryDelivery,
-  rotateSecret,
+  revokeSigningKey,
+  rotateSigningKey,
   suspendSubscription,
   testPing,
   updateSubscription,
 } from '../api/webhooks-api';
-import { WebhookSubscriptionStatus } from '../types/index';
+import { WebhookSigningKeyStatus, WebhookSubscriptionStatus } from '../types/index';
 
 import type {
-  WebhookDeliveryAttemptResponse,
   WebhookEventTypeResponse,
-  WebhookModuleConfig,
+  WebhookModuleConfigResponse,
+  WebhookSigningKeyCreatedResponse,
+  WebhookSigningKeyResponse,
   WebhookSubscriptionCreatedResponse,
   WebhookSubscriptionResponse,
-  WebhookSubscriptionRotateSecretResponse,
   WebhookSubscriptionStatsResponse,
   WebhookSubscriptionTestPingResponse,
 } from '../types/index';
@@ -163,20 +164,66 @@ describe('webhooks-api', () => {
     });
   });
 
-  // ── Operations ────────────────────────────────────────────────────────────
+  // ── Signing keys ──────────────────────────────────────────────────────────
 
-  describe('rotateSecret', () => {
-    it('sends POST to /{id}/rotate-secret', async () => {
+  describe('listSigningKeys', () => {
+    it('sends GET to /{id}/keys', async () => {
       const client = createMockClient();
-      const response: WebhookSubscriptionRotateSecretResponse = {
-        signingSecret: 'whsec_new456',
+      const response: WebhookSigningKeyResponse[] = [
+        {
+          id: toEntityId<'WebhookSigningKey'>('wsk-001'),
+          subscriptionId: toEntityId<'WebhookSubscription'>('sub-001'),
+          createdAt: toISODateString('2026-03-01T08:00:00Z'),
+          expiresAt: null,
+          revokedAt: null,
+          lastRotationNotificationAt: null,
+          status: WebhookSigningKeyStatus.Active,
+        },
+      ];
+      vi.mocked(client.get).mockResolvedValueOnce({ data: response });
+
+      const result = await listSigningKeys(client, BASE, 'sub-001');
+
+      expect(client.get).toHaveBeenCalledWith(`${BASE}/sub-001/keys`);
+      expect(result).toEqual(response);
+    });
+  });
+
+  describe('rotateSigningKey', () => {
+    it('sends POST to /{id}/keys and returns the created key', async () => {
+      const client = createMockClient();
+      const response: WebhookSigningKeyCreatedResponse = {
+        id: toEntityId<'WebhookSigningKey'>('wsk-002'),
+        subscriptionId: toEntityId<'WebhookSubscription'>('sub-001'),
+        createdAt: toISODateString('2026-03-21T10:00:00Z'),
+        plainSecret: 'whsec_new456',
       };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
-      const result = await rotateSecret(client, BASE, 'sub-001');
+      const result = await rotateSigningKey(client, BASE, 'sub-001');
 
-      expect(client.post).toHaveBeenCalledWith(`${BASE}/sub-001/rotate-secret`);
+      expect(client.post).toHaveBeenCalledWith(`${BASE}/sub-001/keys`);
       expect(result).toEqual(response);
+    });
+  });
+
+  describe('revokeSigningKey', () => {
+    it('sends DELETE to /{id}/keys/{keyId}', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValueOnce({ data: undefined });
+
+      await revokeSigningKey(client, BASE, 'sub-001', 'wsk-001');
+
+      expect(client.delete).toHaveBeenCalledWith(`${BASE}/sub-001/keys/wsk-001`);
+    });
+
+    it('encodes ids with special characters', async () => {
+      const client = createMockClient();
+      vi.mocked(client.delete).mockResolvedValueOnce({ data: undefined });
+
+      await revokeSigningKey(client, BASE, 'id/slash', 'key/slash');
+
+      expect(client.delete).toHaveBeenCalledWith(`${BASE}/id%2Fslash/keys/key%2Fslash`);
     });
   });
 
@@ -243,7 +290,7 @@ describe('webhooks-api', () => {
   describe('getConfig', () => {
     it('sends GET to /config on the webhooks root path', async () => {
       const client = createMockClient();
-      const response: WebhookModuleConfig = { storePayload: false };
+      const response: WebhookModuleConfigResponse = { storePayload: false };
       vi.mocked(client.get).mockResolvedValueOnce({ data: response });
 
       const result = await getConfig(client, '/api/v1/webhooks');
@@ -254,36 +301,6 @@ describe('webhooks-api', () => {
   });
 
   // ── Deliveries ────────────────────────────────────────────────────────────
-
-  describe('getDeliveries', () => {
-    it('sends GET to /deliveries with subscriptionId param', async () => {
-      const client = createMockClient();
-      const response: WebhookDeliveryAttemptResponse[] = [
-        {
-          deliveryId: toEntityId<'WebhookDelivery'>('del-001'),
-          subscriptionId: toEntityId<'WebhookSubscription'>('sub-001'),
-          tenantId: null,
-          eventType: 'document.uploaded',
-          targetUrl: 'https://example.com/webhook',
-          httpStatusCode: 200,
-          payloadHash: 'a'.repeat(64),
-          occurredAt: toISODateString('2026-03-20T10:00:00Z'),
-          durationMs: 142,
-          errorMessage: null,
-          isSuccess: true,
-          payload: null,
-        },
-      ];
-      vi.mocked(client.get).mockResolvedValueOnce({ data: response });
-
-      const result = await getDeliveries(client, '/api/v1/webhooks', { subscriptionId: 'sub-001' });
-
-      expect(client.get).toHaveBeenCalledWith('/api/v1/webhooks/deliveries', {
-        params: { subscriptionId: 'sub-001' },
-      });
-      expect(result).toEqual(response);
-    });
-  });
 
   describe('retryDelivery', () => {
     it('sends POST to /deliveries/{deliveryId}/retry', async () => {

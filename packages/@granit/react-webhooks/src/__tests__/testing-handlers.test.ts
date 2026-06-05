@@ -4,6 +4,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { createWebhooksHandlers, webhookSubscriptionQueryMetadata } from '../testing/index';
 
 import type {
+  WebhookSigningKeyResponse,
   WebhookSubscriptionResponse,
   WebhookSubscriptionStatsResponse,
 } from '@granit/webhooks';
@@ -81,7 +82,7 @@ describe('createWebhooksHandlers signingSecretHint', () => {
     expect(created.signingSecret).toBeUndefined();
   });
 
-  it('rotate-secret refreshes the hint exposed by subsequent GETs', async () => {
+  it('rotating a signing key refreshes the hint exposed by subsequent GETs', async () => {
     server.use(...createWebhooksHandlers(BASE));
 
     const before = (await (
@@ -89,13 +90,91 @@ describe('createWebhooksHandlers signingSecretHint', () => {
     ).json()) as WebhookSubscriptionResponse;
     expect(before.signingSecretHint).toMatch(HINT_PATTERN);
 
-    const rotate = await fetch(`${BASE}/subscriptions/ws-1/rotate-secret`, { method: 'POST' });
-    expect(rotate.status).toBe(200);
+    const rotate = await fetch(`${BASE}/subscriptions/ws-1/keys`, { method: 'POST' });
+    expect(rotate.status).toBe(201);
+    const created = (await rotate.json()) as { plainSecret: string };
+    expect(created.plainSecret).toMatch(/^whsec_[0-9a-f]{32}$/);
 
     const after = (await (
       await fetch(`${BASE}/subscriptions/ws-1`)
     ).json()) as WebhookSubscriptionResponse;
     expect(after.signingSecretHint).toMatch(HINT_PATTERN);
     expect(after.signingSecretHint).not.toBe(before.signingSecretHint);
+  });
+});
+
+describe('createWebhooksHandlers signing keys', () => {
+  it('lists keys and rotation moves the previous Active key to Retired', async () => {
+    server.use(...createWebhooksHandlers(BASE));
+
+    const initial = (await (
+      await fetch(`${BASE}/subscriptions/ws-1/keys`)
+    ).json()) as WebhookSigningKeyResponse[];
+    expect(initial.filter((k) => k.status === 'Active')).toHaveLength(1);
+
+    await fetch(`${BASE}/subscriptions/ws-1/keys`, { method: 'POST' });
+
+    const after = (await (
+      await fetch(`${BASE}/subscriptions/ws-1/keys`)
+    ).json()) as WebhookSigningKeyResponse[];
+    expect(after.filter((k) => k.status === 'Active')).toHaveLength(1);
+    expect(after.filter((k) => k.status === 'Retired').length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('refuses to revoke the last Active key (400)', async () => {
+    server.use(...createWebhooksHandlers(BASE));
+
+    const keys = (await (
+      await fetch(`${BASE}/subscriptions/ws-1/keys`)
+    ).json()) as WebhookSigningKeyResponse[];
+    const active = keys.find((k) => k.status === 'Active')!;
+
+    const revoke = await fetch(`${BASE}/subscriptions/ws-1/keys/${active.id}`, {
+      method: 'DELETE',
+    });
+    expect(revoke.status).toBe(400);
+  });
+
+  it('revokes a Retired key (204)', async () => {
+    server.use(...createWebhooksHandlers(BASE));
+
+    const keys = (await (
+      await fetch(`${BASE}/subscriptions/ws-1/keys`)
+    ).json()) as WebhookSigningKeyResponse[];
+    const retired = keys.find((k) => k.status === 'Retired')!;
+
+    const revoke = await fetch(`${BASE}/subscriptions/ws-1/keys/${retired.id}`, {
+      method: 'DELETE',
+    });
+    expect(revoke.status).toBe(204);
+  });
+});
+
+describe('createWebhooksHandlers deliveries', () => {
+  it('serves a PagedResult at the flat /deliveries route', async () => {
+    server.use(...createWebhooksHandlers(BASE));
+    const response = await fetch(`${BASE}/deliveries?pageSize=100`);
+    expect(response.status).toBe(200);
+    const page = (await response.json()) as { items: unknown[]; totalCount: number };
+    expect(Array.isArray(page.items)).toBe(true);
+    expect(page.items.length).toBeGreaterThan(0);
+  });
+
+  it('scopes by subscription via filter[subscriptionId.eq]', async () => {
+    server.use(...createWebhooksHandlers(BASE));
+    const response = await fetch(`${BASE}/deliveries?pageSize=100&filter[subscriptionId.Eq]=ws-3`);
+    const page = (await response.json()) as {
+      items: { subscriptionId: string }[];
+    };
+    expect(page.items.length).toBeGreaterThan(0);
+    expect(page.items.every((d) => d.subscriptionId === 'ws-3')).toBe(true);
+  });
+
+  it('exposes /deliveries/meta', async () => {
+    server.use(...createWebhooksHandlers(BASE));
+    const response = await fetch(`${BASE}/deliveries/meta`);
+    expect(response.status).toBe(200);
+    const meta = (await response.json()) as { columns: unknown[] };
+    expect(meta.columns.length).toBeGreaterThan(0);
   });
 });

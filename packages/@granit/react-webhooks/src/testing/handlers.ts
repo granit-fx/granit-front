@@ -9,7 +9,7 @@ import {
   sortItems,
 } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
-import { WebhookSubscriptionStatus } from '@granit/webhooks';
+import { WebhookSigningKeyStatus, WebhookSubscriptionStatus } from '@granit/webhooks';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_WEBHOOKS_BASE_PATH } from '../constants';
@@ -17,12 +17,14 @@ import { DEFAULT_WEBHOOKS_BASE_PATH } from '../constants';
 import {
   mockWebhookConfig,
   mockWebhookDeliveryAttempts,
+  mockWebhookSigningKeys,
   mockWebhookStats,
   mockWebhookSubscriptions,
 } from './data';
 
 import type { QueryMetadata } from '@granit/query-engine';
 import type {
+  WebhookSigningKeyResponse,
   WebhookSubscriptionResponse,
   WebhookSubscriptionStatus as WebhookSubscriptionStatusType,
 } from '@granit/webhooks';
@@ -156,6 +158,121 @@ export const webhookSubscriptionQueryMetadata: QueryMetadata = {
   defaultSort: '-createdAt',
 };
 
+/**
+ * Mock /meta payload for the webhook delivery-attempts resource.
+ */
+export const webhookDeliveryQueryMetadata: QueryMetadata = {
+  columns: [
+    {
+      name: 'occurredAt',
+      label: 'Occurred at',
+      type: 'DateTime',
+      order: 0,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'eventType',
+      label: 'Event type',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'targetUrl',
+      label: 'Target URL',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'httpStatusCode',
+      label: 'Status code',
+      type: 'Int32',
+      order: 3,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'durationMs',
+      label: 'Duration (ms)',
+      type: 'Int64',
+      order: 4,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'isSuccess',
+      label: 'Success',
+      type: 'Boolean',
+      order: 5,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'subscriptionId',
+      label: 'Subscription',
+      type: 'Guid',
+      order: 6,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: false,
+    },
+  ],
+  filterableFields: [
+    { name: 'eventType', type: 'String', operators: STRING_OPERATORS },
+    { name: 'targetUrl', type: 'String', operators: STRING_OPERATORS },
+    { name: 'httpStatusCode', type: 'Int32', operators: NUMBER_OPERATORS },
+    { name: 'durationMs', type: 'Int64', operators: NUMBER_OPERATORS },
+    { name: 'occurredAt', type: 'DateTime', operators: DATE_OPERATORS },
+    { name: 'subscriptionId', type: 'Guid', operators: STRING_OPERATORS },
+  ],
+  sortableFields: [
+    { name: 'occurredAt' },
+    { name: 'eventType' },
+    { name: 'targetUrl' },
+    { name: 'httpStatusCode' },
+    { name: 'durationMs' },
+  ],
+  presetFilterGroups: [
+    {
+      name: 'result',
+      label: 'Result',
+      presets: [
+        { name: 'success', label: 'Success', isDefault: false },
+        { name: 'failure', label: 'Failure', isDefault: false },
+      ],
+    },
+  ],
+  quickFilters: [{ name: 'hasError', label: 'Has error', isDefault: false }],
+  dateFilters: [
+    {
+      name: 'occurredAt',
+      defaultPeriod: 'ThisWeek',
+      availablePeriods: ['Today', 'ThisWeek', 'ThisMonth', 'LastMonth', 'ThisYear', 'Custom'],
+    },
+  ],
+  groupByFields: [
+    { name: 'eventType', type: 'String' },
+    { name: 'isSuccess', type: 'Boolean' },
+  ],
+  pagination: {
+    defaultPageSize: 25,
+    maxPageSize: 100,
+    maxStreamSize: 50_000,
+    supportsCursor: false,
+  },
+  defaultSort: '-occurredAt',
+};
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -222,10 +339,16 @@ function hintFromSecret(secret: string): string {
 export function createWebhooksHandlers(baseUrl = DEFAULT_WEBHOOKS_BASE_PATH) {
   let subscriptions = [...mockWebhookSubscriptions];
   const deliveryAttempts = [...mockWebhookDeliveryAttempts];
+  const signingKeys: Record<string, WebhookSigningKeyResponse[]> = Object.fromEntries(
+    Object.entries(mockWebhookSigningKeys).map(([id, keys]) => [id, [...keys]])
+  );
 
   return [
     // GET /subscriptions/meta — query metadata
     createQueryMetaHandler(`${baseUrl}/subscriptions`, webhookSubscriptionQueryMetadata),
+
+    // GET /deliveries/meta — query metadata
+    createQueryMetaHandler(`${baseUrl}/deliveries`, webhookDeliveryQueryMetadata),
 
     // -------------------------------------------------------------------------
     // Static routes MUST come before parameterized routes
@@ -363,13 +486,14 @@ export function createWebhooksHandlers(baseUrl = DEFAULT_WEBHOOKS_BASE_PATH) {
     // Delivery meta (before :id catch-all)
     // -------------------------------------------------------------------------
 
-    http.get(`${baseUrl}/subscriptions/:id/deliveries`, ({ params, request }) => {
-      const subscriptionId = params.id as string;
+    // Deliveries list (Granit.QueryEngine) — flat resource, scoped via
+    // `filter[subscriptionId.Eq]=…`, matching MapGranitQuery<WebhookDeliveryAttempt>.
+    http.get(`${baseUrl}/deliveries`, ({ request }) => {
       const url = new URL(request.url);
       const filters = parseFilters(url);
       const sortEntries = parseSort(url);
 
-      let filtered = deliveryAttempts.filter((d) => d.subscriptionId === subscriptionId);
+      let filtered = [...deliveryAttempts];
 
       // Presets
       const resultPresets = url.searchParams.get('presets[result]');
@@ -388,7 +512,7 @@ export function createWebhooksHandlers(baseUrl = DEFAULT_WEBHOOKS_BASE_PATH) {
         filtered = filtered.filter((d) => d.errorMessage !== null);
       }
 
-      // Filters
+      // Filters (includes subscriptionId.eq scoping)
       for (const f of filters) {
         filtered = filtered.filter((d) => applyFilter(d as unknown as Record<string, unknown>, f));
       }
@@ -411,7 +535,7 @@ export function createWebhooksHandlers(baseUrl = DEFAULT_WEBHOOKS_BASE_PATH) {
       return HttpResponse.json(paginate(filtered, url));
     }),
 
-    // Retry delivery
+    // Retry delivery — enqueues a redelivery; backend returns 202 Accepted, no body.
     http.post(`${baseUrl}/deliveries/:deliveryId/retry`, ({ params }) => {
       const deliveryId = params.deliveryId as string;
       const original = deliveryAttempts.find((d) => d.deliveryId === deliveryId);
@@ -419,20 +543,10 @@ export function createWebhooksHandlers(baseUrl = DEFAULT_WEBHOOKS_BASE_PATH) {
         return new HttpResponse(null, { status: 404 });
       }
       if (original.isSuccess) {
-        return HttpResponse.json({ error: 'Cannot retry a successful delivery' }, { status: 400 });
+        // 409 Conflict — not in a retryable state.
+        return HttpResponse.json({ detail: 'Cannot retry a successful delivery' }, { status: 409 });
       }
-      const now = toISODateString(new Date().toISOString());
-      const retry = {
-        ...original,
-        deliveryId: toEntityId<'WebhookDelivery'>(`del-retry-${Date.now()}`),
-        occurredAt: now,
-        httpStatusCode: 200,
-        durationMs: 150,
-        errorMessage: null,
-        isSuccess: true,
-      };
-      deliveryAttempts.push(retry);
-      return HttpResponse.json(retry, { status: 201 });
+      return new HttpResponse(null, { status: 202 });
     }),
 
     // -------------------------------------------------------------------------
@@ -541,19 +655,86 @@ export function createWebhooksHandlers(baseUrl = DEFAULT_WEBHOOKS_BASE_PATH) {
       return HttpResponse.json(updated);
     }),
 
-    // Rotate secret
-    http.post(`${baseUrl}/subscriptions/:id/rotate-secret`, ({ params }) => {
+    // List signing keys
+    http.get(`${baseUrl}/subscriptions/:id/keys`, ({ params }) => {
+      const id = params.id as string;
+      if (!subscriptions.some((s) => s.id === id)) {
+        return new HttpResponse(null, { status: 404 });
+      }
+      return HttpResponse.json(signingKeys[id] ?? []);
+    }),
+
+    // Rotate signing key — previous Active → Retired, new Active key, plaintext once.
+    http.post(`${baseUrl}/subscriptions/:id/keys`, ({ params }) => {
       const id = params.id as string;
       const idx = subscriptions.findIndex((s) => s.id === id);
       const existing = subscriptions[idx];
       if (idx === -1 || !existing) return new HttpResponse(null, { status: 404 });
+
+      const now = toISODateString(new Date().toISOString());
       const newSecret = generateSecret();
+      const keyId = toEntityId<'WebhookSigningKey'>(`wsk-${Date.now()}`);
+
+      const current = signingKeys[id] ?? [];
+      const retired = current.map((k) =>
+        k.status === WebhookSigningKeyStatus.Active
+          ? { ...k, status: WebhookSigningKeyStatus.Retired, expiresAt: now }
+          : k
+      );
+      signingKeys[id] = [
+        {
+          id: keyId,
+          subscriptionId: toEntityId<'WebhookSubscription'>(id),
+          createdAt: now,
+          expiresAt: null,
+          revokedAt: null,
+          lastRotationNotificationAt: null,
+          status: WebhookSigningKeyStatus.Active,
+        },
+        ...retired,
+      ];
+
+      // The subscription hint is refreshed on every rotation.
       subscriptions[idx] = {
         ...existing,
-        modifiedAt: toISODateString(new Date().toISOString()),
+        modifiedAt: now,
         signingSecretHint: hintFromSecret(newSecret),
       };
-      return HttpResponse.json({ signingSecret: newSecret });
+
+      return HttpResponse.json(
+        {
+          id: keyId,
+          subscriptionId: id,
+          createdAt: now,
+          plainSecret: newSecret,
+        },
+        { status: 201 }
+      );
+    }),
+
+    // Revoke a signing key — the last Active key cannot be revoked.
+    http.delete(`${baseUrl}/subscriptions/:id/keys/:keyId`, ({ params }) => {
+      const id = params.id as string;
+      const keyId = params.keyId as string;
+      const keys = signingKeys[id];
+      if (!keys) return new HttpResponse(null, { status: 404 });
+
+      const target = keys.find((k) => k.id === keyId);
+      if (!target) return new HttpResponse(null, { status: 404 });
+
+      const activeCount = keys.filter((k) => k.status === WebhookSigningKeyStatus.Active).length;
+      if (target.status === WebhookSigningKeyStatus.Active && activeCount <= 1) {
+        return HttpResponse.json(
+          { detail: 'The last Active key cannot be revoked — rotate first.' },
+          { status: 400 }
+        );
+      }
+
+      const now = toISODateString(new Date().toISOString());
+      signingKeys[id] = keys.map((k) =>
+        k.id === keyId ? { ...k, status: WebhookSigningKeyStatus.Revoked, revokedAt: now } : k
+      );
+      return new HttpResponse(null, { status: 204 });
     }),
 
     // Test ping

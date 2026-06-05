@@ -9,7 +9,7 @@ import { useWebhookConfig } from '../hooks/use-webhook-config';
 import { WebhooksProvider } from '../providers/webhooks-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { WebhookModuleConfig } from '@granit/webhooks';
+import type { WebhookModuleConfigResponse } from '@granit/webhooks';
 
 vi.mock('@granit/webhooks', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
@@ -37,7 +37,7 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-const mockConfig: WebhookModuleConfig = {
+const mockConfig: WebhookModuleConfigResponse = {
   storePayload: true,
 };
 

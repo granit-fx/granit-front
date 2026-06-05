@@ -20,15 +20,17 @@ pnpm add @granit/webhooks
 - `WebhookSubscriptionStatsResponse` -- statistics
 - `WebhookDeliveryAttemptResponse` -- delivery tracking
 - `WebhookEventTypeResponse` -- event types
-- `WebhookModuleConfig` -- module configuration
+- `WebhookSigningKeyResponse`, `WebhookSigningKeyCreatedResponse` -- signing keys
+- `WebhookModuleConfigResponse` -- module configuration
 
 ### Functions
 
 - `getSubscription(...)`, `createSubscription(...)`, `updateSubscription(...)`, `deleteSubscription(...)` -- CRUD
 - `activateSubscription(...)`, `suspendSubscription(...)`, `deactivateSubscription(...)` -- lifecycle
-- `rotateSecret(...)` -- secret rotation
+- `listSigningKeys(...)`, `rotateSigningKey(...)`, `revokeSigningKey(...)` -- signing-key rotation
 - `testPing(...)` -- send test ping
-- `getDeliveries(...)`, `retryDelivery(...)` -- delivery management
+- `retryDelivery(...)` -- retry a failed delivery (the delivery list is queried
+  generically via `@granit/react-query-engine` against `{basePath}/deliveries`)
 - `getEventTypes(...)`, `getConfig(...)`, `getStats(...)` -- configuration and stats
 
 ## Usage

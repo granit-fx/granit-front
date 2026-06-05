@@ -1,23 +1,23 @@
 // Types
-export { WebhookSubscriptionStatus } from './types/index';
+export { WebhookSigningKeyStatus, WebhookSubscriptionStatus } from './types/index';
 
 export type {
   WebhookDeliveryAttemptResponse,
   WebhookDeliveryId,
   WebhookEventTypeResponse,
-  WebhookModuleConfig,
+  WebhookModuleConfigResponse,
+  WebhookSigningKeyCreatedResponse,
+  WebhookSigningKeyId,
+  WebhookSigningKeyResponse,
   WebhookSubscriptionCreateRequest,
   WebhookSubscriptionCreatedResponse,
   WebhookSubscriptionDeactivateRequest,
   WebhookSubscriptionId,
   WebhookSubscriptionResponse,
-  WebhookSubscriptionRotateSecretResponse,
   WebhookSubscriptionStatsResponse,
   WebhookSubscriptionTestPingResponse,
   WebhookSubscriptionUpdateRequest,
 } from './types/index';
-
-// Query keys
 
 // API
 export {
@@ -26,12 +26,13 @@ export {
   deactivateSubscription,
   deleteSubscription,
   getConfig,
-  getDeliveries,
   getEventTypes,
   getStats,
   getSubscription,
+  listSigningKeys,
   retryDelivery,
-  rotateSecret,
+  revokeSigningKey,
+  rotateSigningKey,
   suspendSubscription,
   testPing,
   updateSubscription,

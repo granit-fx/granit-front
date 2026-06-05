@@ -10,6 +10,9 @@ export type WebhookSubscriptionId = EntityId<'WebhookSubscription'>;
 /** Branded webhook delivery identifier. */
 export type WebhookDeliveryId = EntityId<'WebhookDelivery'>;
 
+/** Branded webhook signing-key identifier. */
+export type WebhookSigningKeyId = EntityId<'WebhookSigningKey'>;
+
 /**
  * Webhook subscription lifecycle status.
  *
@@ -76,11 +79,6 @@ export interface WebhookSubscriptionCreatedResponse {
   readonly signingSecret: string;
 }
 
-/** Response from `POST /subscriptions/{id}/rotate-secret`. */
-export interface WebhookSubscriptionRotateSecretResponse {
-  readonly signingSecret: string;
-}
-
 /** Response from `POST /subscriptions/{id}/test-ping`. */
 export interface WebhookSubscriptionTestPingResponse {
   readonly success: boolean;
@@ -99,6 +97,49 @@ export interface WebhookSubscriptionStatsResponse {
   readonly avgResponseTimeMsLast24h: number;
 }
 
+// ── Signing keys ──────────────────────────────────────────────────────────
+
+/**
+ * Signing-key lifecycle status.
+ *
+ * Mirrors `Granit.Webhooks.Domain.WebhookSigningKeyStatus` (.NET). Keys rotate
+ * with overlap: a new key becomes `Active` while the previous one is `Retired`
+ * for a grace period (both verify), then it can be `Revoked`.
+ */
+export type WebhookSigningKeyStatus = 'Active' | 'Retired' | 'Revoked';
+
+export const WebhookSigningKeyStatus = {
+  Active: 'Active',
+  Retired: 'Retired',
+  Revoked: 'Revoked',
+} as const satisfies Record<string, WebhookSigningKeyStatus>;
+
+/**
+ * Read-only projection of a signing key. The protected secret is never
+ * disclosed — the plaintext is returned once, at rotation time, via
+ * {@link WebhookSigningKeyCreatedResponse}.
+ */
+export interface WebhookSigningKeyResponse {
+  readonly id: WebhookSigningKeyId;
+  readonly subscriptionId: WebhookSubscriptionId;
+  readonly createdAt: string;
+  readonly expiresAt: string | null;
+  readonly revokedAt: string | null;
+  readonly lastRotationNotificationAt: string | null;
+  readonly status: WebhookSigningKeyStatus;
+}
+
+/**
+ * Response from `POST /subscriptions/{id}/keys` (201 Created). The
+ * `plainSecret` is returned exactly once — store it securely.
+ */
+export interface WebhookSigningKeyCreatedResponse {
+  readonly id: WebhookSigningKeyId;
+  readonly subscriptionId: WebhookSubscriptionId;
+  readonly createdAt: string;
+  readonly plainSecret: string;
+}
+
 // ── Event type discovery ──────────────────────────────────────────────────
 
 /** Registered webhook event type descriptor. Sorted by category, then eventType. */
@@ -111,8 +152,12 @@ export interface WebhookEventTypeResponse {
 
 // ── Module configuration ──────────────────────────────────────────────────
 
-/** Response from `GET /config`. */
-export interface WebhookModuleConfig {
+/**
+ * Response from `GET /config` (opt-in `MapGranitWebhooksConfig` endpoint).
+ *
+ * Mirrors `Granit.Webhooks.Dtos.WebhookModuleConfigResponse` (.NET).
+ */
+export interface WebhookModuleConfigResponse {
   readonly storePayload: boolean;
 }
 

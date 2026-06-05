@@ -18,8 +18,8 @@ export {
   useDeactivateSubscription,
   useSuspendSubscription,
 } from './hooks/use-subscription-lifecycle';
-export { useRotateSecret, useTestPing } from './hooks/use-subscription-operations';
-export { useDeliveries } from './hooks/use-deliveries';
+export { useTestPing } from './hooks/use-subscription-operations';
+export { useRevokeSigningKey, useRotateSigningKey, useSigningKeys } from './hooks/use-signing-keys';
 export { useRetryDelivery } from './hooks/use-retry-delivery';
 export { useEventTypes } from './hooks/use-event-types';
 export { useWebhookConfig } from './hooks/use-webhook-config';

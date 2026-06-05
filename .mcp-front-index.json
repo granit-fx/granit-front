@@ -6920,19 +6920,24 @@
           "signature": "function useSubscription(id: string): UseQueryResult<WebhookSubscriptionResponse>"
         },
         {
-          "name": "useRotateSecret",
-          "kind": "function",
-          "signature": "function useRotateSecret(): UseMutationResult< WebhookSubscriptionRotateSecretResponse, Error, string >"
-        },
-        {
           "name": "useTestPing",
           "kind": "function",
           "signature": "function useTestPing(): UseMutationResult< WebhookSubscriptionTestPingResponse, Error, string >"
         },
         {
-          "name": "useDeliveries",
+          "name": "useRevokeSigningKey",
           "kind": "function",
-          "signature": "function useDeliveries( subscriptionId: string ): UseQueryResult<WebhookDeliveryAttemptResponse[]>"
+          "signature": "function useRevokeSigningKey(): UseMutationResult< void, Error,"
+        },
+        {
+          "name": "useRotateSigningKey",
+          "kind": "function",
+          "signature": "function useRotateSigningKey(): UseMutationResult< WebhookSigningKeyCreatedResponse, Error, string >"
+        },
+        {
+          "name": "useSigningKeys",
+          "kind": "function",
+          "signature": "function useSigningKeys( subscriptionId: string ): UseQueryResult<WebhookSigningKeyResponse[]>"
         },
         {
           "name": "useRetryDelivery",
@@ -6947,7 +6952,7 @@
         {
           "name": "useWebhookConfig",
           "kind": "function",
-          "signature": "function useWebhookConfig(): UseQueryResult<WebhookModuleConfig>"
+          "signature": "function useWebhookConfig(): UseQueryResult<WebhookModuleConfigResponse>"
         },
         {
           "name": "useWebhookStats",
@@ -7453,6 +7458,11 @@
       "name": "@granit/webhooks",
       "description": "Webhook subscription management types and API functions — mirrors Granit.Webhooks .NET contract",
       "exports": [
+        {
+          "name": "WebhookSigningKeyStatus",
+          "kind": "type",
+          "signature": "type WebhookSigningKeyStatus = 'Active' | 'Retired' | 'Revoked'"
+        },
         {
           "name": "WebhookSubscriptionStatus",
           "kind": "type",

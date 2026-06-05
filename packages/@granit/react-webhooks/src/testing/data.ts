@@ -1,9 +1,10 @@
 import { toEntityId, toISODateString } from '@granit/types';
-import { WebhookSubscriptionStatus } from '@granit/webhooks';
+import { WebhookSigningKeyStatus, WebhookSubscriptionStatus } from '@granit/webhooks';
 
 import type {
   WebhookDeliveryAttemptResponse,
-  WebhookModuleConfig,
+  WebhookModuleConfigResponse,
+  WebhookSigningKeyResponse,
   WebhookSubscriptionResponse,
   WebhookSubscriptionStatsResponse,
 } from '@granit/webhooks';
@@ -298,6 +299,54 @@ export const mockWebhookStats: WebhookSubscriptionStatsResponse = {
   avgResponseTimeMsLast24h: 185,
 };
 
-export const mockWebhookConfig: WebhookModuleConfig = {
+export const mockWebhookConfig: WebhookModuleConfigResponse = {
   storePayload: false,
+};
+
+/**
+ * Signing keys keyed by subscription id. ws-1 demonstrates the rotation overlap:
+ * an Active key plus a Retired key still within its grace period. ws-3 has an
+ * Active key and a Revoked one.
+ */
+export const mockWebhookSigningKeys: Record<string, WebhookSigningKeyResponse[]> = {
+  'ws-1': [
+    {
+      id: toEntityId<'WebhookSigningKey'>('wsk-1a'),
+      subscriptionId: toEntityId<'WebhookSubscription'>('ws-1'),
+      createdAt: toISODateString('2026-03-01T09:00:00Z'),
+      expiresAt: null,
+      revokedAt: null,
+      lastRotationNotificationAt: null,
+      status: WebhookSigningKeyStatus.Active,
+    },
+    {
+      id: toEntityId<'WebhookSigningKey'>('wsk-1b'),
+      subscriptionId: toEntityId<'WebhookSubscription'>('ws-1'),
+      createdAt: toISODateString('2025-11-10T09:00:00Z'),
+      expiresAt: toISODateString('2026-03-02T09:00:00Z'),
+      revokedAt: null,
+      lastRotationNotificationAt: toISODateString('2026-03-01T09:00:00Z'),
+      status: WebhookSigningKeyStatus.Retired,
+    },
+  ],
+  'ws-3': [
+    {
+      id: toEntityId<'WebhookSigningKey'>('wsk-3a'),
+      subscriptionId: toEntityId<'WebhookSubscription'>('ws-3'),
+      createdAt: toISODateString('2026-02-25T10:30:00Z'),
+      expiresAt: null,
+      revokedAt: null,
+      lastRotationNotificationAt: null,
+      status: WebhookSigningKeyStatus.Active,
+    },
+    {
+      id: toEntityId<'WebhookSigningKey'>('wsk-3b'),
+      subscriptionId: toEntityId<'WebhookSubscription'>('ws-3'),
+      createdAt: toISODateString('2025-10-05T11:00:00Z'),
+      expiresAt: toISODateString('2026-02-26T10:30:00Z'),
+      revokedAt: toISODateString('2026-02-26T11:00:00Z'),
+      lastRotationNotificationAt: toISODateString('2026-02-25T10:30:00Z'),
+      status: WebhookSigningKeyStatus.Revoked,
+    },
+  ],
 };

@@ -1,12 +1,12 @@
 import type {
-  WebhookDeliveryAttemptResponse,
   WebhookEventTypeResponse,
-  WebhookModuleConfig,
+  WebhookModuleConfigResponse,
+  WebhookSigningKeyCreatedResponse,
+  WebhookSigningKeyResponse,
   WebhookSubscriptionCreateRequest,
   WebhookSubscriptionCreatedResponse,
   WebhookSubscriptionDeactivateRequest,
   WebhookSubscriptionResponse,
-  WebhookSubscriptionRotateSecretResponse,
   WebhookSubscriptionStatsResponse,
   WebhookSubscriptionTestPingResponse,
   WebhookSubscriptionUpdateRequest,
@@ -128,23 +128,57 @@ export async function deactivateSubscription(
   return data;
 }
 
-// ── Operations ──────────────────────────────────────────────────────────────
+// ── Signing keys ──────────────────────────────────────────────────────────
 
 /**
- * Rotate the signing secret of a subscription. The new secret is returned once.
+ * List the signing keys of a subscription (Active, Retired, Revoked).
  *
- * `POST {basePath}/{id}/rotate-secret`
+ * `GET {basePath}/{id}/keys`
  */
-export async function rotateSecret(
+export async function listSigningKeys(
   client: AxiosInstance,
   basePath: string,
   id: string
-): Promise<WebhookSubscriptionRotateSecretResponse> {
-  const { data } = await client.post<WebhookSubscriptionRotateSecretResponse>(
-    `${basePath}/${encodeURIComponent(id)}/rotate-secret`
+): Promise<WebhookSigningKeyResponse[]> {
+  const { data } = await client.get<WebhookSigningKeyResponse[]>(
+    `${basePath}/${encodeURIComponent(id)}/keys`
   );
   return data;
 }
+
+/**
+ * Rotate the signing key of a subscription. The previous Active key moves to
+ * Retired for a grace period; the new plaintext secret is returned exactly once.
+ *
+ * `POST {basePath}/{id}/keys`
+ */
+export async function rotateSigningKey(
+  client: AxiosInstance,
+  basePath: string,
+  id: string
+): Promise<WebhookSigningKeyCreatedResponse> {
+  const { data } = await client.post<WebhookSigningKeyCreatedResponse>(
+    `${basePath}/${encodeURIComponent(id)}/keys`
+  );
+  return data;
+}
+
+/**
+ * Revoke a specific signing key. The last Active key cannot be revoked — rotate
+ * first to introduce a new Active key, then revoke the old one.
+ *
+ * `DELETE {basePath}/{id}/keys/{keyId}`
+ */
+export async function revokeSigningKey(
+  client: AxiosInstance,
+  basePath: string,
+  id: string,
+  keyId: string
+): Promise<void> {
+  await client.delete(`${basePath}/${encodeURIComponent(id)}/keys/${encodeURIComponent(keyId)}`);
+}
+
+// ── Operations ──────────────────────────────────────────────────────────────
 
 /**
  * Send a test ping to a subscription's target URL.
@@ -187,8 +221,8 @@ export async function getEventTypes(
 export async function getConfig(
   client: AxiosInstance,
   basePath: string
-): Promise<WebhookModuleConfig> {
-  const { data } = await client.get<WebhookModuleConfig>(`${basePath}/config`);
+): Promise<WebhookModuleConfigResponse> {
+  const { data } = await client.get<WebhookModuleConfigResponse>(`${basePath}/config`);
   return data;
 }
 
@@ -207,23 +241,10 @@ export async function getStats(
 
 // ── Delivery audit trail ────────────────────────────────────────────────────
 
-/**
- * Query webhook delivery attempts.
- *
- * `GET {basePath}/deliveries`
- *
- * @param basePath - The webhooks root path (e.g. `/api/v1/webhooks`), **not** the subscriptions path.
- */
-export async function getDeliveries(
-  client: AxiosInstance,
-  basePath: string,
-  params?: { subscriptionId?: string }
-): Promise<WebhookDeliveryAttemptResponse[]> {
-  const { data } = await client.get<WebhookDeliveryAttemptResponse[]>(`${basePath}/deliveries`, {
-    params,
-  });
-  return data;
-}
+// The delivery list (`GET {basePath}/deliveries`) and its `/meta` are served by
+// the Granit query engine (`MapGranitQuery<WebhookDeliveryAttempt>`) and consumed
+// generically via `@granit/react-query-engine` — there is no dedicated API
+// function. Filter by subscription with `filter[subscriptionId.Eq]=…`.
 
 /**
  * Retry a previously failed webhook delivery attempt.

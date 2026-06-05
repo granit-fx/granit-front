@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useWebhooksConfig } from '../providers/webhooks-provider';
 
-import type { WebhookModuleConfig } from '@granit/webhooks';
+import type { WebhookModuleConfigResponse } from '@granit/webhooks';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -11,7 +11,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
  *
  * The result is cached permanently (staleTime: Infinity) since module config rarely changes.
  */
-export function useWebhookConfig(): UseQueryResult<WebhookModuleConfig> {
+export function useWebhookConfig(): UseQueryResult<WebhookModuleConfigResponse> {
   const { client, basePath } = useWebhooksConfig();
 
   return useQuery({

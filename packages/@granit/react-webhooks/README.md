@@ -15,10 +15,9 @@ pnpm add @granit/react-webhooks
 - `useSubscription(id, options?)` -- fetch a webhook subscription
 - `useCreateSubscription()`, `useUpdateSubscription()`, `useDeleteSubscription()` -- subscription CRUD
 - `useActivateSubscription()`, `useSuspendSubscription()`, `useDeactivateSubscription()` -- lifecycle
-- `useRotateSecret()` -- rotate subscription secret
+- `useSigningKeys(subscriptionId)`, `useRotateSigningKey()`, `useRevokeSigningKey()` -- signing-key management
 - `useTestPing()` -- send a test ping
-- `useDeliveries(subscriptionId)` -- list delivery attempts
-- `useRetryDelivery(options?)` -- retry a failed delivery
+- `useRetryDelivery(options?)` -- retry a failed delivery (list deliveries via `@granit/react-query-engine` against `{basePath}/deliveries`)
 - `useEventTypes(options?)` -- list available event types
 - `useWebhookConfig(options?)` -- fetch module configuration
 - `useWebhookStats(subscriptionId)` -- fetch subscription statistics
