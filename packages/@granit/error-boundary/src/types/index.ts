@@ -20,8 +20,9 @@ export type Breadcrumb = {
 export type ErrorContextConfig = {
   /** Returns the current route path for error enrichment. */
   getRouteInfo?: () => string;
-  /** Returns the current user identity for error enrichment. */
-  getUserInfo?: () => { id: string };
+  /** Returns the current user identity for error enrichment, or `undefined`
+   * when no user is authenticated. */
+  getUserInfo?: () => { id: string } | undefined;
   /** Maximum number of breadcrumbs to retain (FIFO). Default: `20`. */
   maxBreadcrumbs?: number;
 };
