@@ -4,6 +4,8 @@
 
 import { useCallback, useMemo, useReducer } from 'react';
 
+import { deriveLookupScope } from '../utils/derive-lookup-scope';
+
 import type { LookupDescriptor } from '@granit/data-lookup';
 import type {
   FilterEntry,
@@ -487,6 +489,17 @@ export interface UseSmartFilterReturn {
    * of the free-text / enum input. `undefined` for fields without a lookup source.
    */
   readonly selectedFieldLookup?: LookupDescriptor;
+  /**
+   * Whether the lookup picker should allow multiple selections — `true` for the
+   * `In` operator, `false` for `Eq`. Pass straight to `<LookupPicker multi>`.
+   */
+  readonly selectedFieldLookupMulti: boolean;
+  /**
+   * Scope values for the selected field's lookup, derived from the active
+   * filters (cascade). Pass straight to `<LookupPicker scope>`. Empty when the
+   * field has no lookup or the lookup declares no `scopeKeys`.
+   */
+  readonly selectedFieldLookupScope: Readonly<Record<string, string | undefined>>;
   /** Extracted FilterEntry array from current tokens (for useQueryEndpoint). */
   readonly filters: readonly FilterEntry[];
   /** Extracted search string from tokens. */
@@ -500,6 +513,13 @@ export interface UseSmartFilterReturn {
   readonly selectField: (field: string) => void;
   readonly selectOperator: (operator: FilterOperator) => void;
   readonly confirmValue: (value: string) => void;
+  /**
+   * Commits a value chosen from a `<LookupPicker>`. Unlike {@link confirmValue},
+   * the persisted token value is the opaque lookup key(s) (a scalar for `Eq`, a
+   * comma-joined list for `In`) while the visible token label is the localized
+   * `displayLabel` — so the grid filters by id but the user sees a name.
+   */
+  readonly confirmLookupValue: (value: unknown, displayLabel: string) => void;
   readonly addPresetToken: (group: string, name: string, label: string) => void;
   readonly addQuickFilterToken: (name: string, label: string) => void;
   readonly addSearchToken: (value: string) => void;
@@ -597,8 +617,7 @@ export function useSmartFilter(options?: UseSmartFilterOptions): UseSmartFilterR
       const col = metadata?.columns.find((c) => c.name === field);
       const fieldLabel = col?.label ?? field ?? '';
       const opLabel = (operator && options?.operatorLabels?.[operator]) ?? operator ?? '';
-      const isBool =
-        metadata?.filterableFields.find((f) => f.name === field)?.type === 'Boolean';
+      const isBool = metadata?.filterableFields.find((f) => f.name === field)?.type === 'Boolean';
       let valLabel = value;
       if (isBool && options?.booleanLabels) {
         valLabel = value === 'true' ? options.booleanLabels.true : options.booleanLabels.false;
@@ -617,6 +636,26 @@ export function useSmartFilter(options?: UseSmartFilterOptions): UseSmartFilterR
       options?.operatorLabels,
       options?.booleanLabels,
     ]
+  );
+  const confirmLookupValue = useCallback(
+    (value: unknown, displayLabel: string) => {
+      const field = state.selectedField;
+      const operator = state.selectedOperator;
+      const col = metadata?.columns.find((c) => c.name === field);
+      const fieldLabel = col?.label ?? field ?? '';
+      const opLabel = (operator && options?.operatorLabels?.[operator]) ?? operator ?? '';
+      // Persist the opaque key(s); In → comma-joined to match the query serializer.
+      const serialized = Array.isArray(value)
+        ? value.map((v) => String(v)).join(',')
+        : String(value ?? '');
+      dispatch({
+        type: 'CONFIRM_VALUE',
+        value: serialized,
+        label: `${fieldLabel} ${opLabel} ${displayLabel}`,
+        labelParts: { field: fieldLabel, operator: opLabel, value: displayLabel },
+      });
+    },
+    [state.selectedField, state.selectedOperator, metadata, options?.operatorLabels]
   );
   const addPresetToken = useCallback(
     (group: string, name: string, label: string) =>
@@ -650,6 +689,13 @@ export function useSmartFilter(options?: UseSmartFilterOptions): UseSmartFilterR
     return metadata.filterableFields.find((f) => f.name === state.selectedField)?.lookup;
   }, [state.selectedField, metadata]);
 
+  const selectedFieldLookupMulti = state.selectedOperator === 'In';
+
+  const selectedFieldLookupScope = useMemo(
+    () => deriveLookupScope(selectedFieldLookup?.scopeKeys, filters),
+    [selectedFieldLookup, filters]
+  );
+
   return {
     phase: state.phase,
     inputValue: state.inputValue,
@@ -658,6 +704,8 @@ export function useSmartFilter(options?: UseSmartFilterOptions): UseSmartFilterR
     selectedOperator: state.selectedOperator,
     selectedFieldType,
     selectedFieldLookup,
+    selectedFieldLookupMulti,
+    selectedFieldLookupScope,
     filters,
     search,
     presets,
@@ -666,6 +714,7 @@ export function useSmartFilter(options?: UseSmartFilterOptions): UseSmartFilterR
     selectField,
     selectOperator,
     confirmValue,
+    confirmLookupValue,
     addPresetToken,
     addQuickFilterToken,
     addSearchToken,

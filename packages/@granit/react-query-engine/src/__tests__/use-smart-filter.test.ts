@@ -266,6 +266,56 @@ describe('useSmartFilter — lookup-backed fields', () => {
     expect(result.current.phase).toBe('idle');
     expect(result.current.selectedFieldLookup).toBeUndefined();
   });
+
+  it('maps the operator to selectedFieldLookupMulti (Eq → single, In → multi)', () => {
+    const { result } = renderHook(() => useSmartFilter({ metadata: METADATA_WITH_LOOKUP }));
+
+    act(() => result.current.selectField('TenantId'));
+    act(() => result.current.selectOperator('Eq'));
+    expect(result.current.selectedFieldLookupMulti).toBe(false);
+
+    act(() => result.current.selectOperator('In'));
+    expect(result.current.selectedFieldLookupMulti).toBe(true);
+  });
+
+  it('derives the lookup scope from active filters (cascade), case-insensitively', () => {
+    const { result } = renderHook(() => useSmartFilter({ metadata: METADATA_WITH_LOOKUP }));
+
+    // No tenant filter yet → scope value is undefined (Empty Scope Trap upstream).
+    act(() => result.current.selectField('MeterId'));
+    expect(result.current.selectedFieldLookupScope).toEqual({ tenantId: undefined });
+
+    // Add an active `TenantId Eq acme` filter; the camelCase scopeKey resolves
+    // against the PascalCase field name.
+    act(() => result.current.addFilterToken('TenantId', 'Eq', 'acme', 'Tenant = Acme'));
+    act(() => result.current.selectField('MeterId'));
+    expect(result.current.selectedFieldLookupScope).toEqual({ tenantId: 'acme' });
+  });
+
+  it('confirmLookupValue commits the opaque key with a localized label (Eq)', () => {
+    const { result } = renderHook(() => useSmartFilter({ metadata: METADATA_WITH_LOOKUP }));
+
+    act(() => result.current.selectField('TenantId'));
+    act(() => result.current.selectOperator('Eq'));
+    act(() => result.current.confirmLookupValue('11111111-guid', 'Acme Corp'));
+
+    expect(result.current.filters).toEqual([
+      { field: 'TenantId', operator: 'Eq', value: '11111111-guid' },
+    ]);
+    const token = result.current.tokens.at(-1);
+    expect(token?.label).toContain('Acme Corp');
+    expect(token?.label).not.toContain('11111111-guid');
+  });
+
+  it('confirmLookupValue comma-joins multiple keys for the In operator', () => {
+    const { result } = renderHook(() => useSmartFilter({ metadata: METADATA_WITH_LOOKUP }));
+
+    act(() => result.current.selectField('TenantId'));
+    act(() => result.current.selectOperator('In'));
+    act(() => result.current.confirmLookupValue(['g1', 'g2'], 'Acme, Globex'));
+
+    expect(result.current.filters).toEqual([{ field: 'TenantId', operator: 'In', value: 'g1,g2' }]);
+  });
 });
 
 // ---------------------------------------------------------------------------

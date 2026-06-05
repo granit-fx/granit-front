@@ -33,3 +33,6 @@ export type {
 export { useQueryMeta } from './hooks/use-query-meta';
 export { useSmartFilter } from './hooks/use-smart-filter';
 export type { UseSmartFilterOptions, UseSmartFilterReturn } from './hooks/use-smart-filter';
+
+// SmartFilter ↔ data-lookup wiring helpers
+export { deriveLookupScope } from './utils/derive-lookup-scope';

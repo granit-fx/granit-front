@@ -6145,6 +6145,11 @@
               "signature": "label: string"
             }
           ]
+        },
+        {
+          "name": "deriveLookupScope",
+          "kind": "function",
+          "signature": "function deriveLookupScope( scopeKeys: readonly string[] | undefined, filters: readonly FilterEntry[] ): Readonly<Record<string, string | undefined>>"
         }
       ]
     },
