@@ -2,7 +2,6 @@ import {
   clearPrimary,
   createHostname,
   deleteHostname,
-  reportCertificateStatus,
   setPrimary,
   verifyNow,
 } from '@granit/hostnames';
@@ -12,11 +11,7 @@ import { useHostnamesConfig } from '../providers/hostnames-provider';
 
 import { hostnamesKeys } from './query-keys';
 
-import type {
-  CertificateStatusReportRequest,
-  CreateManagedHostnameRequest,
-  ManagedHostnameResponse,
-} from '@granit/hostnames';
+import type { CreateManagedHostnameRequest, ManagedHostnameResponse } from '@granit/hostnames';
 import type { UseMutationResult } from '@tanstack/react-query';
 
 /**
@@ -140,33 +135,6 @@ export function useVerifyNow(): UseMutationResult<ManagedHostnameResponse, Error
   return useMutation({
     mutationFn: (id: string) => verifyNow(client, basePath, id),
     onSuccess: async (_, id) => {
-      await queryClient.invalidateQueries({ queryKey: hostnamesKeys.hostname(id) });
-    },
-  });
-}
-
-/**
- * Mutation hook to report a certificate status update from an external provider.
- *
- * Invalidates the affected hostname query on success.
- *
- * @example
- * ```tsx
- * const { mutate: report } = useReportCertificateStatus();
- * report({ id: 'hostname-id', request: { status: 'Secured', expiresAt: '2027-01-01T00:00:00Z' } });
- * ```
- */
-export function useReportCertificateStatus(): UseMutationResult<
-  void,
-  Error,
-  { id: string; request: CertificateStatusReportRequest }
-> {
-  const { client, basePath } = useHostnamesConfig();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ id, request }) => reportCertificateStatus(client, basePath, id, request),
-    onSuccess: async (_, { id }) => {
       await queryClient.invalidateQueries({ queryKey: hostnamesKeys.hostname(id) });
     },
   });

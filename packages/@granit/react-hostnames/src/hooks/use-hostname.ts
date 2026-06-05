@@ -5,7 +5,7 @@ import { useHostnamesConfig } from '../providers/hostnames-provider';
 
 import { hostnamesKeys } from './query-keys';
 
-import type { CheckAvailabilityResponse, ManagedHostnameResponse } from '@granit/hostnames';
+import type { HostnameAvailabilityResponse, ManagedHostnameResponse } from '@granit/hostnames';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -39,7 +39,7 @@ export function useHostname(id: string): UseQueryResult<ManagedHostnameResponse>
  * if (data?.isAvailable) { ... }
  * ```
  */
-export function useCheckAvailability(host: string): UseQueryResult<CheckAvailabilityResponse> {
+export function useCheckAvailability(host: string): UseQueryResult<HostnameAvailabilityResponse> {
   const { client, basePath } = useHostnamesConfig();
 
   return useQuery({

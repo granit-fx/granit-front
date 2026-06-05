@@ -1592,9 +1592,9 @@
           "signature": "type DnsConflictType ="
         },
         {
-          "name": "ManagedHostnameStatus",
+          "name": "HostnameStatus",
           "kind": "type",
-          "signature": "type ManagedHostnameStatus = 'Pending' | 'Verifying' | 'Active' | 'Error'"
+          "signature": "type HostnameStatus = 'Pending' | 'Verifying' | 'Active' | 'Error'"
         },
         {
           "name": "HostnamesPermissions",
@@ -5176,7 +5176,7 @@
         {
           "name": "useCheckAvailability",
           "kind": "function",
-          "signature": "function useCheckAvailability(host: string): UseQueryResult<CheckAvailabilityResponse>"
+          "signature": "function useCheckAvailability(host: string): UseQueryResult<HostnameAvailabilityResponse>"
         },
         {
           "name": "useHostname",

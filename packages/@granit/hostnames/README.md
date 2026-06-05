@@ -14,18 +14,19 @@ Part of the [Granit](https://granit-fx.dev) framework.
 
 ### Types
 
-| Type                           | Description                                              |
-| ------------------------------ | -------------------------------------------------------- |
-| `ManagedHostnameResponse`      | Full hostname descriptor (id, host, status, DNS, TLS, …) |
-| `ManagedHostnameStatus`        | `Pending \| Verifying \| Active \| Error`                |
-| `CertificateStatus`            | `Unprovisioned \| Provisioning \| Secured \| Error`      |
-| `CreateManagedHostnameRequest` | Request body for hostname creation                       |
-| `UpdateManagedHostnameRequest` | Request body to toggle `isPrimary`                       |
-| `ListHostnamesParams`          | Query params for the paginated list endpoint             |
-| `CheckAvailabilityResponse`    | `{ isAvailable: boolean }`                               |
-| `ExpectedDnsRecord`            | DNS record required for domain ownership verification    |
-| `HostnameConflict`             | Conflict preventing a hostname from becoming active      |
-| `PagedResponse<T>`             | Generic 0-based pagination envelope                      |
+| Type                             | Description                                               |
+| -------------------------------- | --------------------------------------------------------- |
+| `ManagedHostnameResponse`        | Full hostname descriptor (id, host, status, DNS, TLS, …)  |
+| `HostnameStatus`                 | `Pending \| Verifying \| Active \| Error`                 |
+| `CertificateStatus`              | `Unprovisioned \| Provisioning \| Secured \| Error`       |
+| `DnsRecordType`                  | `A \| Aaaa \| Cname \| Txt`                               |
+| `DnsConflictType`                | DNS conflict category (`MissingTxt`, `DivergentCname`, …) |
+| `ExpectedDnsRecord`              | DNS record required for domain ownership verification     |
+| `DnsConflict`                    | Conflict preventing a hostname from becoming active       |
+| `CreateManagedHostnameRequest`   | Request body for hostname creation                        |
+| `ReportCertificateStatusRequest` | Request body for the certificate-status webhook           |
+| `HostnameAvailabilityResponse`   | `{ host, isAvailable }`                                   |
+| `ListHostnamesParams`            | Query params (`ownerType`, `ownerId`, `maxResults`)       |
 
 ### API functions
 
@@ -37,9 +38,10 @@ All functions take an `AxiosInstance` (from `@granit/api-client`) and a
 | `listHostnames`           | `GET {basePath}`                          |
 | `getHostname`             | `GET {basePath}/{id}`                     |
 | `createHostname`          | `POST {basePath}`                         |
-| `updateHostname`          | `PATCH {basePath}/{id}`                   |
+| `setPrimary`              | `POST {basePath}/{id}/primary`            |
+| `clearPrimary`            | `DELETE {basePath}/{id}/primary`          |
 | `deleteHostname`          | `DELETE {basePath}/{id}`                  |
-| `checkAvailability`       | `GET {basePath}/check-availability?host=` |
+| `checkAvailability`       | `GET {basePath}/availability?host=`       |
 | `verifyNow`               | `POST {basePath}/{id}/verify-now`         |
 | `reportCertificateStatus` | `POST {basePath}/{id}/certificate-status` |
 
@@ -59,9 +61,10 @@ This package is consumed indirectly through `@granit/react-hostnames`. Direct
 use is only needed for headless scenarios (server-side or non-React clients).
 
 ```ts
-import { listHostnames, ManagedHostnameStatus } from '@granit/hostnames';
+import { listHostnames, HostnameStatus } from '@granit/hostnames';
 import type { ListHostnamesParams } from '@granit/hostnames';
 
-const params: ListHostnamesParams = { page: 0, pageSize: 20, status: ManagedHostnameStatus.Active };
-const { items, totalCount } = await listHostnames(axiosClient, '/api/hostnames', params);
+const params: ListHostnamesParams = { ownerType: 'cms.site', ownerId: 'owner-1' };
+const hostnames = await listHostnames(axiosClient, '/api/hostnames', params);
+const active = hostnames.filter((h) => h.status === HostnameStatus.Active);
 ```

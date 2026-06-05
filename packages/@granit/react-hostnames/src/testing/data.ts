@@ -1,9 +1,9 @@
-import { CertificateStatus, ManagedHostnameStatus } from '@granit/hostnames';
+import { CertificateStatus, HostnameStatus } from '@granit/hostnames';
 
 import type { ManagedHostnameResponse } from '@granit/hostnames';
 
 /** Short aliases for use inside the mock fixtures. */
-export const S = ManagedHostnameStatus;
+export const S = HostnameStatus;
 export const C = CertificateStatus;
 
 export const mockHostnames: ManagedHostnameResponse[] = [

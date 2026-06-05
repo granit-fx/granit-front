@@ -8,14 +8,14 @@
  * Mirrors `Granit.Hostnames.Domain.HostnameStatus` (.NET).
  * Serialized as PascalCase strings via the framework's global `JsonStringEnumConverter`.
  */
-export type ManagedHostnameStatus = 'Pending' | 'Verifying' | 'Active' | 'Error';
+export type HostnameStatus = 'Pending' | 'Verifying' | 'Active' | 'Error';
 
-export const ManagedHostnameStatus = {
+export const HostnameStatus = {
   Pending: 'Pending',
   Verifying: 'Verifying',
   Active: 'Active',
   Error: 'Error',
-} as const satisfies Record<string, ManagedHostnameStatus>;
+} as const satisfies Record<string, HostnameStatus>;
 
 /**
  * TLS certificate provisioning status of a managed hostname.
@@ -74,7 +74,7 @@ export const DnsConflictType = {
 } as const satisfies Record<string, DnsConflictType>;
 
 /** A conflict preventing a hostname from becoming active. Mirrors `DnsConflict` (.NET). */
-export interface HostnameConflict {
+export interface DnsConflict {
   readonly conflictType: DnsConflictType;
   readonly details: string;
 }
@@ -89,11 +89,11 @@ export interface ManagedHostnameResponse {
   readonly ownerId: string;
   readonly tenantId: string | null;
   readonly isPrimary: boolean;
-  readonly status: ManagedHostnameStatus;
+  readonly status: HostnameStatus;
   readonly verificationToken: string | null;
   readonly expectedDnsRecords: readonly ExpectedDnsRecord[];
   readonly lastCheckedAt: string | null;
-  readonly conflicts: readonly HostnameConflict[];
+  readonly conflicts: readonly DnsConflict[];
   readonly failedCheckCount: number;
   readonly nextCheckAt: string | null;
   readonly certificateStatus: CertificateStatus;
@@ -126,7 +126,7 @@ export interface ListHostnamesParams {
 // ── Availability ─────────────────────────────────────────────────────────────
 
 /** Response from `GET /availability?host=`. Mirrors `HostnameAvailabilityResponse` (.NET). */
-export interface CheckAvailabilityResponse {
+export interface HostnameAvailabilityResponse {
   readonly host: string;
   readonly isAvailable: boolean;
 }
@@ -134,7 +134,7 @@ export interface CheckAvailabilityResponse {
 // ── Certificate status webhook ────────────────────────────────────────────────
 
 /** Request body for `POST /{id}/certificate-status`. Mirrors `ReportCertificateStatusRequest` (.NET). */
-export interface CertificateStatusReportRequest {
+export interface ReportCertificateStatusRequest {
   readonly status: CertificateStatus;
   readonly expiresAt?: string | null;
 }

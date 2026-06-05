@@ -15,7 +15,6 @@ export {
   useClearPrimary,
   useCreateHostname,
   useDeleteHostname,
-  useReportCertificateStatus,
   useSetPrimary,
   useVerifyNow,
 } from './hooks/use-hostname-mutations';

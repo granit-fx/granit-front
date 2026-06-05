@@ -10,7 +10,6 @@ import {
   useClearPrimary,
   useCreateHostname,
   useDeleteHostname,
-  useReportCertificateStatus,
   useSetPrimary,
   useVerifyNow,
 } from '../hooks/use-hostname-mutations';
@@ -202,33 +201,6 @@ describe('useVerifyNow', () => {
       '/api/hostnames/11111111-0001-4000-a000-000000000001/verify-now'
     );
     expect(result.current.data).toEqual(verifying);
-    expect(invalidateSpy).toHaveBeenCalledWith({
-      queryKey: hostnamesKeys.hostname('11111111-0001-4000-a000-000000000001'),
-    });
-  });
-});
-
-describe('useReportCertificateStatus', () => {
-  it('sends POST to /{id}/certificate-status and invalidates hostname query', async () => {
-    const client = createMockClient();
-    vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
-
-    const { wrapper, queryClient } = createWrapper(client);
-    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
-
-    const { result } = renderHook(() => useReportCertificateStatus(), { wrapper });
-
-    result.current.mutate({
-      id: '11111111-0001-4000-a000-000000000001',
-      request: { status: 'Secured', expiresAt: '2027-06-01T00:00:00Z' },
-    });
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
-
-    expect(client.post).toHaveBeenCalledWith(
-      '/api/hostnames/11111111-0001-4000-a000-000000000001/certificate-status',
-      { status: 'Secured', expiresAt: '2027-06-01T00:00:00Z' }
-    );
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: hostnamesKeys.hostname('11111111-0001-4000-a000-000000000001'),
     });

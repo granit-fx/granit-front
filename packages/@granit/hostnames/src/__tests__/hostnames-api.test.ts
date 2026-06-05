@@ -12,9 +12,9 @@ import {
   setPrimary,
   verifyNow,
 } from '../api/hostnames-api';
-import { CertificateStatus, ManagedHostnameStatus } from '../types/index';
+import { CertificateStatus, HostnameStatus } from '../types/index';
 
-import type { CheckAvailabilityResponse, ManagedHostnameResponse } from '../types/index';
+import type { HostnameAvailabilityResponse, ManagedHostnameResponse } from '../types/index';
 
 const BASE = '/api/hostnames';
 
@@ -25,7 +25,7 @@ const mockHostname: ManagedHostnameResponse = {
   ownerId: '22222222-0002-4000-a000-000000000002',
   tenantId: '33333333-0003-4000-a000-000000000003',
   isPrimary: true,
-  status: ManagedHostnameStatus.Active,
+  status: HostnameStatus.Active,
   verificationToken: null,
   expectedDnsRecords: [],
   lastCheckedAt: '2026-06-01T10:00:00Z',
@@ -141,7 +141,7 @@ describe('hostnames-api', () => {
   describe('checkAvailability', () => {
     it('sends GET to /availability with host param', async () => {
       const client = createMockClient();
-      const response: CheckAvailabilityResponse = { host: 'new.example.com', isAvailable: true };
+      const response: HostnameAvailabilityResponse = { host: 'new.example.com', isAvailable: true };
       vi.mocked(client.get).mockResolvedValueOnce({ data: response });
 
       const result = await checkAvailability(client, BASE, 'new.example.com');

@@ -1,15 +1,15 @@
 // Types
-export { CertificateStatus, DnsConflictType, ManagedHostnameStatus } from './types/index';
+export { CertificateStatus, DnsConflictType, HostnameStatus } from './types/index';
 
 export type {
-  CertificateStatusReportRequest,
-  CheckAvailabilityResponse,
   CreateManagedHostnameRequest,
+  DnsConflict,
   DnsRecordType,
   ExpectedDnsRecord,
-  HostnameConflict,
+  HostnameAvailabilityResponse,
   ListHostnamesParams,
   ManagedHostnameResponse,
+  ReportCertificateStatusRequest,
 } from './types/index';
 
 // API

@@ -1,9 +1,9 @@
 import type {
-  CertificateStatusReportRequest,
-  CheckAvailabilityResponse,
   CreateManagedHostnameRequest,
+  HostnameAvailabilityResponse,
   ListHostnamesParams,
   ManagedHostnameResponse,
+  ReportCertificateStatusRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
@@ -101,8 +101,8 @@ export async function checkAvailability(
   client: AxiosInstance,
   basePath: string,
   host: string
-): Promise<CheckAvailabilityResponse> {
-  const { data } = await client.get<CheckAvailabilityResponse>(`${basePath}/availability`, {
+): Promise<HostnameAvailabilityResponse> {
+  const { data } = await client.get<HostnameAvailabilityResponse>(`${basePath}/availability`, {
     params: { host },
   });
   return data;
@@ -134,7 +134,7 @@ export async function reportCertificateStatus(
   client: AxiosInstance,
   basePath: string,
   id: string,
-  request: CertificateStatusReportRequest
+  request: ReportCertificateStatusRequest
 ): Promise<void> {
   await client.post(`${basePath}/${encodeURIComponent(id)}/certificate-status`, request);
 }

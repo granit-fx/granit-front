@@ -4,7 +4,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { mockHostnames } from '../testing/data';
 import { createHostnamesHandlers } from '../testing/handlers';
 
-import type { CheckAvailabilityResponse, ManagedHostnameResponse } from '@granit/hostnames';
+import type { HostnameAvailabilityResponse, ManagedHostnameResponse } from '@granit/hostnames';
 
 const BASE = 'http://api.test/api/hostnames';
 const server = setupServer();
@@ -19,7 +19,7 @@ describe('createHostnamesHandlers', () => {
       server.use(...createHostnamesHandlers(BASE));
       const res = await fetch(`${BASE}/availability?host=brand-new.example.com`);
       expect(res.status).toBe(200);
-      const data = (await res.json()) as CheckAvailabilityResponse;
+      const data = (await res.json()) as HostnameAvailabilityResponse;
       expect(data.isAvailable).toBe(true);
       expect(data.host).toBe('brand-new.example.com');
     });
@@ -29,7 +29,7 @@ describe('createHostnamesHandlers', () => {
       const takenHost = mockHostnames[0]!.host;
       const res = await fetch(`${BASE}/availability?host=${takenHost}`);
       expect(res.status).toBe(200);
-      const data = (await res.json()) as CheckAvailabilityResponse;
+      const data = (await res.json()) as HostnameAvailabilityResponse;
       expect(data.isAvailable).toBe(false);
     });
   });
