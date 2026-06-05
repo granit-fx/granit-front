@@ -3,6 +3,7 @@ export type {
   BatchPresenceRequest,
   BatchPresenceResponse,
   HeartbeatRequest,
+  HeartbeatRoomRequest,
   ManualPresenceStatus,
   PresenceResponse,
   PresenceStatus,

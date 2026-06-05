@@ -2128,7 +2128,7 @@
         {
           "name": "joinResourceRoom",
           "kind": "function",
-          "signature": "async function joinResourceRoom( client: AxiosInstance, basePath: string, kind: string, id: string, body:"
+          "signature": "async function joinResourceRoom( client: AxiosInstance, basePath: string, kind: string, id: string, body: HeartbeatRoomRequest, signal?: AbortSignal ): Promise<ResourceRoomResponse>"
         },
         {
           "name": "leaveResourceRoom",

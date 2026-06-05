@@ -1,6 +1,6 @@
 import { buildApiUrl } from '@granit/api-client';
 
-import type { ResourceRoomResponse } from '../types/index';
+import type { HeartbeatRoomRequest, ResourceRoomResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 // ---------------------------------------------------------------------------
@@ -59,7 +59,7 @@ export async function joinResourceRoom(
   basePath: string,
   kind: string,
   id: string,
-  body: { metadata?: string | null },
+  body: HeartbeatRoomRequest,
   signal?: AbortSignal
 ): Promise<ResourceRoomResponse> {
   validateKind(kind);

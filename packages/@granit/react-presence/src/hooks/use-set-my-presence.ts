@@ -35,7 +35,7 @@ export function useSetMyPresence(): UseMutationResult<
         const optimistic: PresenceResponse = {
           ...previous,
           manualOverride: isAvailable ? null : request.manualStatus,
-          overrideUntilUtc: isAvailable ? null : request.untilUtc,
+          overrideUntilUtc: isAvailable ? null : (request.untilUtc ?? null),
           effectiveStatus: (() => {
             if (isAvailable) return previous.effectiveStatus;
             if (request.manualStatus === 'AppearOffline') return 'Offline';

@@ -19,7 +19,7 @@ import type { UserId } from '@granit/types';
  *
  * `GET {basePath}/presence/my`
  *
- * Requires authentication only — no extra permission gate.
+ * Requires `Presence.Self.Manage`.
  */
 export async function getMyPresence(
   client: AxiosInstance,

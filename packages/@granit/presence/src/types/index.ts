@@ -33,7 +33,7 @@ export interface ResourceRoomResponse {
   readonly kind: string;
   /** Opaque resource identifier. */
   readonly id: string;
-  readonly participants: ResourcePresenceParticipantResponse[];
+  readonly participants: readonly ResourcePresenceParticipantResponse[];
 }
 
 // ---------------------------------------------------------------------------
@@ -83,7 +83,7 @@ export interface PresenceResponse {
  */
 export interface SetPresenceRequest {
   readonly manualStatus: ManualPresenceStatus;
-  readonly untilUtc: ISODateString | null;
+  readonly untilUtc?: ISODateString | null;
 }
 
 /**
@@ -95,6 +95,17 @@ export interface SetPresenceRequest {
  */
 export interface HeartbeatRequest {
   readonly idleSeconds: number;
+}
+
+/**
+ * Request body for `POST /presence/rooms/{kind}/{id}/heartbeat`.
+ * `metadata` is opaque UTF-8 string (≤ 512 bytes). Pass `null` to clear any
+ * previously recorded metadata.
+ *
+ * Mirrors `Granit.Presence.Endpoints.Dtos.HeartbeatRoomRequest`.
+ */
+export interface HeartbeatRoomRequest {
+  readonly metadata?: string | null;
 }
 
 /**

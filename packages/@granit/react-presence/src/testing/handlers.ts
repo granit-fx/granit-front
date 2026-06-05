@@ -57,7 +57,7 @@ export function createPresenceHandlers(baseUrl = DEFAULT_BASE_PATH) {
     http.put<never, SetPresenceRequest>(`${baseUrl}/presence/my`, async ({ request }) => {
       const body = (await request.json()) as SetPresenceRequest;
       // Server-side validation parity.
-      if (body.manualStatus === 'Available' && body.untilUtc !== null) {
+      if (body.manualStatus === 'Available' && body.untilUtc != null) {
         return HttpResponse.json(
           {
             type: 'about:blank',
@@ -75,7 +75,7 @@ export function createPresenceHandlers(baseUrl = DEFAULT_BASE_PATH) {
       my = {
         ...my,
         manualOverride: override,
-        overrideUntilUtc: override ? body.untilUtc : null,
+        overrideUntilUtc: override ? (body.untilUtc ?? null) : null,
         effectiveStatus: recomputeEffective(override, lastIdleSeconds),
         lastSeenUtc: toISODateString(new Date().toISOString()),
       };
