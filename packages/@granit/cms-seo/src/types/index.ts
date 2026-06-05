@@ -1,13 +1,28 @@
 /**
  * SEO wire-contract types for the Granit CMS API.
- * Mirrors `Granit.Cms.Seo.*` .NET types.
+ *
+ * Mirrors the .NET backends `Granit.Cms.Seo.Endpoints` /
+ * `Granit.Cms.Seo.AI.Endpoints` (DTOs) and the `Granit.Cms.Seo[.AI]` domain
+ * value objects / enums. Field optionality follows the C#-default rule: a
+ * record parameter without a C# default is `required` on the wire (key present,
+ * value possibly `null`); only parameters with a C# default are genuinely
+ * optional (`?`). Guid / DateTimeOffset are serialized as `string`.
  */
+
+import type { PagedResult, QueryRequest } from '@granit/query-engine';
 
 // ─── Shared ──────────────────────────────────────────────────────────────────
 
-export type { PagedResponse } from '@granit/cms';
+/** Paginated audit-grid result (`MapGranitQuery<SeoMetadata>`). */
+export type { PagedResult, QueryRequest } from '@granit/query-engine';
 
-// ─── Public / renderer ───────────────────────────────────────────────────────
+// ─── Domain value objects ────────────────────────────────────────────────────
+
+/** Pixel dimensions. Maps `Granit.Domain.ValueObjects.ImageDimensions`. */
+export interface ImageDimensions {
+  readonly width: number;
+  readonly height: number;
+}
 
 /** Crawler policy for a content item. Maps `Granit.Cms.Seo.Domain.RobotsDirective`. */
 export interface RobotsDirective {
@@ -15,69 +30,104 @@ export interface RobotsDirective {
   readonly follow: boolean;
   readonly noArchive: boolean;
   readonly noSnippet: boolean;
-  readonly maxSnippet?: number | null;
-  readonly maxImagePreview?: string | null;
+  readonly maxSnippet: number | null;
+  readonly maxImagePreview: string | null;
 }
 
 /** Open Graph / Twitter-card image reference. Maps `Granit.Cms.Seo.Domain.OgImage`. */
 export interface OgImage {
-  readonly documentId?: string | null;
-  readonly versionId?: string | null;
-  readonly renditionId?: string | null;
-  readonly publicLinkId?: string | null;
-  readonly url?: string | null;
-  readonly dimensions?: { readonly width: number; readonly height: number } | null;
-  readonly mimeType?: string | null;
-  readonly altText?: string | null;
+  readonly documentId: string | null;
+  readonly versionId: string | null;
+  readonly renditionId: string | null;
+  readonly publicLinkId: string | null;
+  readonly url: string | null;
+  readonly dimensions: ImageDimensions | null;
+  readonly mimeType: string | null;
+  readonly altText: string | null;
 }
 
 /** `article:*` Open Graph fields. Maps `Granit.Cms.Seo.Domain.OpenGraphArticle`. */
 export interface OpenGraphArticle {
-  readonly publishedTime?: string | null;
-  readonly modifiedTime?: string | null;
-  readonly expirationTime?: string | null;
-  readonly section?: string | null;
-  readonly authors: readonly string[];
+  readonly author: string | null;
+  readonly section: string | null;
   readonly tags: readonly string[];
+  readonly publishedTime: string | null;
+  readonly modifiedTime: string | null;
 }
 
 /** Open Graph protocol fields. Maps `Granit.Cms.Seo.Domain.OpenGraph`. */
 export interface OpenGraph {
   readonly type: string;
-  readonly title?: string | null;
-  readonly description?: string | null;
-  readonly url?: string | null;
-  readonly siteName?: string | null;
-  readonly locale?: string | null;
+  readonly title: string | null;
+  readonly description: string | null;
+  readonly url: string | null;
+  readonly siteName: string | null;
+  readonly locale: string | null;
   readonly alternateLocales: readonly string[];
-  readonly image?: OgImage | null;
-  readonly article?: OpenGraphArticle | null;
+  readonly image: OgImage | null;
+  readonly article: OpenGraphArticle | null;
 }
 
 /** Twitter / X Card fields. Maps `Granit.Cms.Seo.Domain.TwitterCard`. */
 export interface TwitterCard {
   readonly card: string;
-  readonly title?: string | null;
-  readonly description?: string | null;
-  readonly image?: OgImage | null;
-  readonly site?: string | null;
-  readonly creator?: string | null;
+  readonly title: string | null;
+  readonly description: string | null;
+  readonly image: OgImage | null;
+  readonly site: string | null;
+  readonly creator: string | null;
 }
 
-/** One `hreflang` alternate. */
+/** One `hreflang` alternate. Maps `Granit.Cms.Seo.Domain.Hreflang`. */
 export interface Hreflang {
   readonly culture: string;
   readonly href: string;
 }
 
+/** One `robots.txt` group. Maps `Granit.Cms.Seo.Domain.RobotsTxtRule`. */
+export interface RobotsTxtRule {
+  readonly userAgent: string;
+  readonly allow: readonly string[];
+  readonly disallow: readonly string[];
+  readonly crawlDelay: number | null;
+}
+
+/** One `manifest.webmanifest` icon entry. Maps `Granit.Cms.Seo.Domain.WebManifestIcon`. */
+export interface WebManifestIcon {
+  readonly src: string;
+  readonly sizes: string;
+  readonly type: string | null;
+  readonly purpose: string | null;
+}
+
+/** PWA web app manifest fields. Maps `Granit.Cms.Seo.Domain.WebManifest`. */
+export interface WebManifest {
+  readonly name: string;
+  readonly shortName: string | null;
+  readonly description: string | null;
+  readonly themeColor: string | null;
+  readonly backgroundColor: string | null;
+  readonly display: string;
+  readonly startUrl: string | null;
+  readonly scope: string | null;
+  readonly lang: string | null;
+  readonly icons: readonly WebManifestIcon[];
+}
+
+/** Editorial review state of a metadata record. Maps `Granit.Cms.Seo.Domain.SeoReviewStatus`. */
+export type SeoReviewStatus = 'Reviewed' | 'NeedsReview' | 'AutoGenerated';
+
+// ─── Public / renderer ───────────────────────────────────────────────────────
+
 /**
  * Cascade-resolved, render-ready SEO for a content item.
- * Returned by `GET /api/cms/seo/sites/{siteId}/metadata/{contentType}/{contentId}/{culture}/effective`.
+ * Maps `EffectiveSeoResponse`. Returned by
+ * `GET .../metadata/{contentType}/{contentId}/{culture}/effective`.
  */
 export interface EffectiveSeoResponse {
   readonly title: string;
-  readonly description?: string | null;
-  readonly canonicalUrl?: string | null;
+  readonly description: string | null;
+  readonly canonicalUrl: string | null;
   readonly robots: RobotsDirective;
   readonly keywords: readonly string[];
   readonly openGraph: OpenGraph;
@@ -85,157 +135,270 @@ export interface EffectiveSeoResponse {
   readonly alternates: readonly Hreflang[];
 }
 
-// ─── Admin write ─────────────────────────────────────────────────────────────
-
-/** Writable robots directive for a metadata upsert. */
-export interface SeoRobotsRequest {
-  readonly index: boolean;
-  readonly follow: boolean;
-  readonly noArchive?: boolean;
-  readonly noSnippet?: boolean;
-  readonly maxSnippet?: number;
-  readonly maxImagePreview?: 'none' | 'standard' | 'large';
-}
-
-/** One `hreflang` alternate in a metadata upsert request. */
-export interface SeoHreflangRequest {
-  readonly culture: string;
-  readonly href: string;
-}
+// ─── Admin metadata ──────────────────────────────────────────────────────────
 
 /**
- * Raw (per-level) SEO metadata request body for
- * `PUT /api/cms/seo/sites/{siteId}/metadata/{contentType}/{contentId}/{culture}`.
+ * Upsert body for a content item's SEO metadata. Maps `SeoMetadataRequest`.
+ * Every parameter has a C# default → all fields genuinely optional. Unset
+ * fields fall through the cascade.
+ *
+ * `PUT .../metadata/{contentType}/{contentId}/{culture}`.
  */
 export interface SeoMetadataRequest {
   readonly title?: string | null;
   readonly titleTemplate?: string | null;
   readonly description?: string | null;
-  readonly keywords?: readonly string[];
+  readonly keywords?: readonly string[] | null;
   readonly canonicalUrl?: string | null;
-  readonly robots?: SeoRobotsRequest;
-  readonly openGraph?: Readonly<Record<string, unknown>>;
-  readonly twitterCard?: Readonly<Record<string, unknown>>;
-  readonly hreflang?: readonly SeoHreflangRequest[];
-  readonly structuredData?: string | null;
+  readonly robots?: RobotsDirective | null;
+  readonly openGraph?: OpenGraph | null;
+  readonly twitterCard?: TwitterCard | null;
+  readonly structuredDataExtras?: string | null;
+  readonly disableAutoJsonLd?: boolean;
+  readonly alternateOverrides?: readonly Hreflang[] | null;
+  readonly xDefaultCulture?: string | null;
 }
 
-/** Raw SEO metadata returned by `GET .../metadata/{contentType}/{contentId}/{culture}`. */
-export type SeoMetadataResponse = SeoMetadataRequest & {
+/**
+ * Stored SEO metadata for a content item (raw, pre-cascade). Maps
+ * `SeoMetadataResponse`. Returned by
+ * `GET .../metadata/{contentType}/{contentId}/{culture}`.
+ */
+export interface SeoMetadataResponse {
+  readonly id: string;
+  readonly siteId: string;
   readonly contentType: string;
   readonly contentId: string;
-  readonly culture: string;
-};
+  readonly culture: string | null;
+  readonly title: string | null;
+  readonly titleTemplate: string | null;
+  readonly description: string | null;
+  readonly keywords: readonly string[];
+  readonly canonicalUrl: string | null;
+  readonly robots: RobotsDirective;
+  readonly openGraph: OpenGraph | null;
+  readonly twitterCard: TwitterCard | null;
+  readonly structuredDataExtras: string | null;
+  readonly disableAutoJsonLd: boolean;
+  readonly alternateOverrides: readonly Hreflang[];
+  readonly xDefaultCulture: string | null;
+  readonly statusAtLastReview: SeoReviewStatus;
+  readonly lastReviewedAt: string | null;
+  readonly concurrencyStamp: string;
+}
 
-/** Site-level SEO defaults. */
+/**
+ * Audit-grid row — a `SeoMetadata` projection over the SQL-translatable columns
+ * exposed by `SeoMetadataQueryDefinition` (`MapGranitQuery<SeoMetadata>`).
+ */
+export interface SeoMetadataListItem {
+  readonly id: string;
+  readonly siteId: string;
+  readonly contentType: string;
+  readonly contentId: string;
+  readonly culture: string | null;
+  readonly title: string | null;
+  readonly description: string | null;
+  readonly canonicalUrl: string | null;
+}
+
+// ─── Site defaults ───────────────────────────────────────────────────────────
+
+/**
+ * Upsert body for a site's SEO defaults. Maps `SiteSeoDefaultsRequest`.
+ * `sitemapMaxUrlsPerFile`, `inheritFromParentPage` and
+ * `enableAutomaticSeoGeneration` carry C# defaults → optional.
+ *
+ * `PUT /sites/{siteId}/defaults`.
+ */
 export interface SiteSeoDefaultsRequest {
   readonly titleTemplate?: string | null;
   readonly siteName?: string | null;
-  readonly robots?: SeoRobotsRequest;
+  readonly defaultDescription?: string | null;
+  readonly defaultRobots?: RobotsDirective | null;
   readonly canonicalHost?: string | null;
+  readonly sitemapMaxUrlsPerFile?: number;
+  readonly inheritFromParentPage?: boolean;
+  readonly defaultOpenGraph?: OpenGraph | null;
+  readonly defaultTwitterCard?: TwitterCard | null;
+  readonly defaultOgImage?: OgImage | null;
+  readonly robotsTxtRules?: readonly RobotsTxtRule[] | null;
+  readonly robotsTxtExtra?: string | null;
+  readonly manifest?: WebManifest | null;
   readonly enableAutomaticSeoGeneration?: boolean;
-  readonly sitemapMaxItems?: number;
-  readonly robotsTxtRules?: string | null;
 }
 
-/** Site SEO defaults with siteId context. */
-export type SiteSeoDefaultsResponse = SiteSeoDefaultsRequest & {
+/** A site's SEO defaults. Maps `SiteSeoDefaultsResponse`. */
+export interface SiteSeoDefaultsResponse {
+  readonly id: string;
   readonly siteId: string;
-};
+  readonly titleTemplate: string | null;
+  readonly siteName: string | null;
+  readonly defaultDescription: string | null;
+  readonly defaultRobots: RobotsDirective;
+  readonly canonicalHost: string | null;
+  readonly sitemapMaxUrlsPerFile: number;
+  readonly inheritFromParentPage: boolean;
+  readonly defaultOpenGraph: OpenGraph | null;
+  readonly defaultTwitterCard: TwitterCard | null;
+  readonly defaultOgImage: OgImage | null;
+  readonly robotsTxtRules: readonly RobotsTxtRule[];
+  readonly robotsTxtExtra: string | null;
+  readonly manifest: WebManifest | null;
+  readonly enableAutomaticSeoGeneration: boolean;
+  readonly concurrencyStamp: string;
+}
 
-/** Quick-filter type for the SEO audit grid. */
-export type SeoAuditIssueType =
+// ─── Previews ────────────────────────────────────────────────────────────────
+
+/** Google-style search-result preview. Maps `SerpPreviewResponse`. */
+export interface SerpPreviewResponse {
+  readonly title: string;
+  readonly description: string | null;
+  readonly displayUrl: string | null;
+}
+
+/** Open Graph share-card preview. Maps `OgPreviewResponse`. */
+export interface OgCardPreviewResponse {
+  readonly type: string;
+  readonly title: string | null;
+  readonly description: string | null;
+  readonly imageUrl: string | null;
+  readonly siteName: string | null;
+}
+
+// ─── SEO-AI enums ────────────────────────────────────────────────────────────
+
+/** Lifecycle of an AI SEO suggestion. Maps `Granit.Cms.Seo.AI.Domain.SuggestionStatus`. */
+export type SuggestionStatus = 'Pending' | 'Accepted' | 'Rejected' | 'Superseded' | 'Failed';
+
+/** Outcome of a suggest call. Maps `Granit.Cms.Seo.AI.Contracts.SeoGenerationOutcome`. */
+export type SeoGenerationOutcome = 'Succeeded' | 'Refused' | 'SchemaViolation' | 'TransportFailure';
+
+/** A single `[Flags] SuggestionScope` member name. */
+export type SuggestionScopeFlag =
+  | 'None'
+  | 'Title'
+  | 'Description'
+  | 'OgImageAltText'
+  | 'Keywords'
+  | 'JsonLd';
+
+/**
+ * Which SEO fields a suggestion covers / was applied with. Maps the
+ * `[Flags] SuggestionScope` enum. System.Text.Json serializes a flags
+ * combination as a comma-joined member-name string (e.g. `"Title, Description"`),
+ * so this is modelled as a `string` of that shape rather than an array.
+ */
+export type SuggestionScope = string;
+
+// ─── SEO-AI suggestions ──────────────────────────────────────────────────────
+
+/** An AI SEO suggestion projected for the review inbox. Maps `SeoSuggestionResponse`. */
+export interface SeoAiSuggestionResponse {
+  readonly id: string;
+  readonly siteId: string;
+  readonly contentType: string;
+  readonly contentId: string;
+  readonly culture: string | null;
+  readonly status: SuggestionStatus;
+  readonly scope: SuggestionScope;
+  readonly appliedFields: SuggestionScope;
+  readonly title: string | null;
+  readonly description: string | null;
+  readonly keywords: readonly string[];
+  readonly ogImageAltText: string | null;
+  readonly structuredDataJson: string | null;
+  readonly modelId: string;
+  readonly promptTemplateVersion: string;
+  readonly createdAt: string;
+  readonly reviewedBy: string | null;
+  readonly reviewedAt: string | null;
+  readonly failureReason: string | null;
+  readonly rejectionReason: string | null;
+}
+
+/** A page of suggestions for the inbox grid. Maps `SeoSuggestionListResponse`. */
+export interface SeoSuggestionListResponse {
+  readonly items: readonly SeoAiSuggestionResponse[];
+  readonly total: number;
+}
+
+/** Outcome of `POST /api/cms/seo/ai/suggest`. Maps `SeoSuggestResponse`. */
+export interface SeoAiSuggestResponse {
+  readonly outcome: SeoGenerationOutcome;
+  readonly suggestion: SeoAiSuggestionResponse | null;
+}
+
+/** Request body for `POST /api/cms/seo/ai/suggest`. Maps `SeoSuggestRequest`. */
+export interface SeoAiSuggestRequest {
+  readonly siteId: string;
+  readonly contentType: string;
+  readonly contentId: string;
+  readonly culture: string | null;
+  readonly contentTitle: string;
+  readonly contentBody: string | null;
+  readonly scope: SuggestionScope;
+}
+
+/**
+ * Request body for `POST /api/cms/seo/ai/suggestions/{id}/apply`. Maps
+ * `SeoSuggestionApplyRequest(SuggestionScope Fields)`. `fields` is the flags
+ * string (e.g. `"Title, Description"`), intersected server-side with the
+ * suggestion's own scope.
+ */
+export interface ApplySeoAiRequest {
+  readonly fields: SuggestionScope;
+}
+
+/** Request body for `POST /api/cms/seo/ai/suggestions/{id}/reject`. Maps `SeoSuggestionRejectRequest`. */
+export interface RejectSeoAiRequest {
+  readonly reason?: string | null;
+}
+
+// ─── SEO-AI diff ─────────────────────────────────────────────────────────────
+
+/** One field's current-vs-proposed diff. Maps `SeoSuggestionFieldDiff`. */
+export interface SeoSuggestionFieldDiff {
+  readonly field: string;
+  readonly inScope: boolean;
+  readonly current: string | null;
+  readonly proposed: string | null;
+}
+
+/** Per-field current-vs-proposed diff for a suggestion. Maps `SeoSuggestionDiff`. */
+export interface SeoSuggestionDiff {
+  readonly suggestionId: string;
+  readonly scope: SuggestionScope;
+  readonly fields: readonly SeoSuggestionFieldDiff[];
+}
+
+// ─── Query params ────────────────────────────────────────────────────────────
+
+/**
+ * Query params for the SEO audit grid (`GET /api/cms/seo/metadata`). The grid is
+ * backed by `MapGranitQuery<SeoMetadata>`, so it accepts the full QueryEngine
+ * request (paging, search, filters, sort) plus the quick filters declared by
+ * `SeoMetadataQueryDefinition`: `MissingDescription`, `NoCanonical`,
+ * `TitleTooLong`, `MissingOgImage`.
+ */
+export type ListSeoMetadataParams = QueryRequest;
+
+/** A quick-filter token recognised by the SEO audit grid. */
+export type SeoAuditQuickFilter =
   | 'MissingDescription'
   | 'NoCanonical'
   | 'TitleTooLong'
   | 'MissingOgImage';
 
-/** One SEO audit issue. */
-export interface SeoAuditIssueResponse {
-  readonly contentType: string;
-  readonly contentId: string;
-  readonly culture: string;
-  readonly issueType: SeoAuditIssueType;
-  readonly detail?: string | null;
-}
-
-/** SERP preview. */
-export interface SerpPreviewResponse {
-  readonly title: string;
-  readonly url: string;
-  readonly description: string;
-}
-
-/** OG-card preview. */
-export interface OgCardPreviewResponse {
-  readonly title: string;
-  readonly description: string;
-  readonly image?: string | null;
-  readonly siteName: string;
-}
-
-// ─── SEO-AI ──────────────────────────────────────────────────────────────────
-
-/** Lifecycle status of a SEO-AI suggestion. */
-export type SeoAiSuggestionStatus = 'Pending' | 'Ready' | 'Applied' | 'Rejected';
-
-/** Outcome of a `POST /api/cms/seo/ai/suggest` call. */
-export type SeoAiSuggestOutcome = 'Success' | 'Reused' | 'Failed';
-
-/** One AI-generated SEO suggestion. */
-export interface SeoAiSuggestionResponse {
-  readonly id: string;
-  readonly contentType: string;
-  readonly contentId: string;
-  readonly culture: string;
-  readonly status: SeoAiSuggestionStatus;
-  readonly suggestion?: SeoMetadataRequest | null;
-  readonly diff?: Readonly<
-    Record<string, { readonly current: unknown; readonly proposed: unknown }>
-  > | null;
-}
-
-/** Response from `POST /api/cms/seo/ai/suggest`. */
-export interface SeoAiSuggestResponse {
-  readonly outcome: SeoAiSuggestOutcome;
-  readonly suggestion?: SeoAiSuggestionResponse | null;
-}
-
-/** Request body for `POST /api/cms/seo/ai/suggest`. */
-export interface SeoAiSuggestRequest {
-  readonly contentType: string;
-  readonly contentId: string;
-  readonly culture: string;
-  readonly contentTitle: string;
-  readonly contentDescription?: string | null;
-}
-
-/** Request body for `POST /api/cms/seo/ai/suggestions/{id}/apply`. */
-export interface ApplySeoAiRequest {
-  readonly fields: readonly string[];
-}
-
-/** Request body for `POST /api/cms/seo/ai/suggestions/{id}/reject`. */
-export interface RejectSeoAiRequest {
-  readonly reason?: string | null;
-}
-
-// ─── Query params ─────────────────────────────────────────────────────────────
-
-/** Query params for the SEO audit grid (`GET /api/cms/seo/metadata`). */
-export interface ListSeoMetadataParams {
-  readonly siteId?: string;
-  readonly contentType?: string;
-  readonly issueType?: SeoAuditIssueType;
-  readonly page?: number;
-  readonly pageSize?: number;
-}
-
 /** Query params for the SEO-AI suggestions inbox (`GET /api/cms/seo/ai/suggestions`). */
 export interface ListSeoSuggestionsParams {
   readonly siteId?: string;
   readonly contentType?: string;
-  readonly status?: SeoAiSuggestionStatus;
-  readonly page?: number;
-  readonly pageSize?: number;
+  readonly status?: SuggestionStatus;
+  readonly skip?: number;
+  readonly take?: number;
 }
+
+/** Convenience alias for the audit-grid page result. */
+export type SeoMetadataPage = PagedResult<SeoMetadataListItem>;

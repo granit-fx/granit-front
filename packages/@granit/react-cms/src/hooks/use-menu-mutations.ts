@@ -15,8 +15,8 @@ export function useCreateMenu(): UseMutationResult<MenuResponse, Error, CreateMe
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (req) => createMenu(client, basePath, req),
-    onSuccess: (data) => {
-      qc.invalidateQueries({ queryKey: cmsKeys.menus.list(queryKeyPrefix, data.siteId) });
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: cmsKeys.menus.all(queryKeyPrefix) });
     },
   });
 }
@@ -32,7 +32,7 @@ export function useUpdateMenu(): UseMutationResult<
     mutationFn: ({ id, request }) => updateMenu(client, basePath, id, request),
     onSuccess: (data) => {
       qc.setQueryData(cmsKeys.menus.detail(queryKeyPrefix, data.id), data);
-      qc.invalidateQueries({ queryKey: cmsKeys.menus.list(queryKeyPrefix, data.siteId) });
+      qc.invalidateQueries({ queryKey: cmsKeys.menus.all(queryKeyPrefix) });
     },
   });
 }
@@ -42,9 +42,9 @@ export function useDeleteMenu(): UseMutationResult<void, Error, { id: string; si
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ id }) => deleteMenu(client, basePath, id),
-    onSuccess: (_data, { id, siteId }) => {
+    onSuccess: (_data, { id }) => {
       qc.removeQueries({ queryKey: cmsKeys.menus.detail(queryKeyPrefix, id) });
-      qc.invalidateQueries({ queryKey: cmsKeys.menus.list(queryKeyPrefix, siteId) });
+      qc.invalidateQueries({ queryKey: cmsKeys.menus.all(queryKeyPrefix) });
     },
   });
 }

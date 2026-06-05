@@ -59,6 +59,7 @@ export const cmsSeoKeys = {
     detail: (prefix: readonly string[], siteId: string) => [...prefix, 'defaults', siteId] as const,
   },
   audit: {
+    all: (prefix: readonly string[]) => [...prefix, 'audit'] as const,
     list: (prefix: readonly string[], params?: ListSeoMetadataParams) =>
       [...prefix, 'audit', params ?? {}] as const,
   },

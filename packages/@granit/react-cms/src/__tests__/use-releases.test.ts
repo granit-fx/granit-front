@@ -9,7 +9,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useRelease, useReleases } from '../hooks/use-releases';
 import { CmsProvider } from '../providers/cms-provider';
 
-import type { PagedResponse, ReleaseResponse } from '@granit/cms';
+import type { ReleaseResponse } from '@granit/cms';
+import type { PagedResult } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -47,20 +48,20 @@ describe('useReleases', () => {
 
   it('fetches paged releases', async () => {
     const client = createMockClient();
-    const paged: PagedResponse<ReleaseResponse> = {
+    const paged: PagedResult<ReleaseResponse> = {
       items: [release],
       totalCount: 1,
-      page: 0,
-      pageSize: 20,
+      hasMore: false,
+      nextCursor: null,
     };
     vi.mocked(listReleases).mockResolvedValue(paged);
 
-    const { result } = renderHook(() => useReleases({ siteId: 'site-1' }), {
+    const { result } = renderHook(() => useReleases({ page: 1, pageSize: 20 }), {
       wrapper: createWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(listReleases).toHaveBeenCalledWith(client, '', { siteId: 'site-1' });
+    expect(listReleases).toHaveBeenCalledWith(client, '', { page: 1, pageSize: 20 });
   });
 });
 

@@ -3,7 +3,8 @@ import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Resolves a menu into a render-ready tree (anonymous).
- * `GET {basePath}/api/cms/menus/resolve?siteId={siteId}&key={key}&culture={culture}`
+ * `GET {basePath}/api/cms/menus/resolve?key={key}&culture={culture}`
+ * + `X-Granit-Site: {siteId}` header (the backend scopes by site via the header).
  *
  * Returns `null` when no menu with the given key exists.
  */
@@ -14,7 +15,8 @@ export async function resolveMenu(
 ): Promise<ResolvedMenu | null> {
   try {
     const response = await client.get<ResolvedMenu>(`${basePath}/api/cms/menus/resolve`, {
-      params,
+      params: { key: params.key, culture: params.culture },
+      headers: { 'X-Granit-Site': params.siteId },
     });
     return response.data;
   } catch (err: unknown) {

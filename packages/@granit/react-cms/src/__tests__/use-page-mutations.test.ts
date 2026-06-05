@@ -86,10 +86,14 @@ describe('useCreatePage', () => {
     vi.mocked(createPage).mockResolvedValue(page);
 
     const { result } = renderHook(() => useCreatePage(), { wrapper: createWrapper(client) });
-    result.current.mutate({ siteId: 'site-1', slugSegment: 'home' });
+    result.current.mutate({ parentId: 'parent-1', slugSegment: 'home', layoutKey: null });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(createPage).toHaveBeenCalledWith(client, '', { siteId: 'site-1', slugSegment: 'home' });
+    expect(createPage).toHaveBeenCalledWith(client, '', {
+      parentId: 'parent-1',
+      slugSegment: 'home',
+      layoutKey: null,
+    });
   });
 });
 
@@ -146,10 +150,10 @@ describe('useMovePage', () => {
     vi.mocked(movePage).mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useMovePage(), { wrapper: createWrapper(client) });
-    result.current.mutate({ id: 'page-1', request: { parentId: 'parent-1' }, siteId: 'site-1' });
+    result.current.mutate({ id: 'page-1', request: { newParentId: 'parent-1' }, siteId: 'site-1' });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(movePage).toHaveBeenCalledWith(client, '', 'page-1', { parentId: 'parent-1' });
+    expect(movePage).toHaveBeenCalledWith(client, '', 'page-1', { newParentId: 'parent-1' });
   });
 });
 
@@ -228,7 +232,7 @@ describe('useRollbackPage', () => {
 
   it('calls rollbackPage with id and versionId', async () => {
     const client = createMockClient();
-    vi.mocked(rollbackPage).mockResolvedValue(version);
+    vi.mocked(rollbackPage).mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useRollbackPage(), { wrapper: createWrapper(client) });
     result.current.mutate({ id: 'page-1', versionId: 'v-1' });

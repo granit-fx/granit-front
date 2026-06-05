@@ -15,18 +15,19 @@ import { cmsSeoKeys } from './query-keys';
 import type {
   ApplySeoAiRequest,
   ListSeoSuggestionsParams,
-  PagedResponse,
   RejectSeoAiRequest,
   SeoAiSuggestRequest,
   SeoAiSuggestResponse,
   SeoAiSuggestionResponse,
+  SeoSuggestionDiff,
+  SeoSuggestionListResponse,
 } from '@granit/cms-seo';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 export function useSeoSuggestions(
   params?: ListSeoSuggestionsParams,
   options?: { readonly enabled?: boolean }
-): UseQueryResult<PagedResponse<SeoAiSuggestionResponse>> {
+): UseQueryResult<SeoSuggestionListResponse> {
   const { client, basePath, queryKeyPrefix } = useCmsSeoConfig();
   return useQuery({
     queryKey: cmsSeoKeys.suggestions.list(queryKeyPrefix, params),
@@ -38,7 +39,7 @@ export function useSeoSuggestions(
 export function useSeoSuggestionDiff(
   id: string,
   options?: { readonly enabled?: boolean }
-): UseQueryResult<SeoAiSuggestionResponse> {
+): UseQueryResult<SeoSuggestionDiff> {
   const { client, basePath, queryKeyPrefix } = useCmsSeoConfig();
   return useQuery({
     queryKey: cmsSeoKeys.suggestions.diff(queryKeyPrefix, id),
@@ -74,7 +75,10 @@ export function useApplySeoSuggestion(): UseMutationResult<
     onSuccess: (data) => {
       qc.setQueryData(cmsSeoKeys.suggestions.detail(queryKeyPrefix, data.id), data);
       qc.invalidateQueries({ queryKey: cmsSeoKeys.suggestions.list(queryKeyPrefix) });
+      // The apply writes live SEO metadata: refresh the raw/effective row, the
+      // audit grid and the cascade-derived previews for the affected content.
       qc.invalidateQueries({ queryKey: cmsSeoKeys.metadata.all(queryKeyPrefix) });
+      qc.invalidateQueries({ queryKey: cmsSeoKeys.audit.all(queryKeyPrefix) });
     },
   });
 }

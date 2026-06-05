@@ -7,10 +7,10 @@ Core (framework-agnostic) package for CMS hostname management.
 - **`listSiteHostnames`** / **`addSiteHostname`** / **`removeSiteHostname`** — CRUD
   operations for managed hostnames on a CMS site
 - **`checkSiteHostnameAvailability`** — checks whether a hostname can be claimed
-- **`setSiteHostnamePrimary`** / **`clearSiteHostnamePrimary`** — primary-hostname management
-- **`verifySiteHostname`** — triggers DNS verification for a pending hostname
-- Re-exports `CertificateStatus`, `ManagedHostnameStatus` and related types from
-  `@granit/hostnames` so consumers need only one import
+- **`verifySiteHostname`** — triggers DNS re-verification for a hostname
+- Exports the narrow, site-scoped CMS DTOs (`SiteHostnameResponse`,
+  `SiteHostnameAvailabilityResponse`, `SiteHostnameDnsRecordResponse`,
+  `SiteHostnameCreateRequest`) mirroring `Granit.Cms.Hostnames.Endpoints`
 
 ## Peer dependencies
 
@@ -21,6 +21,6 @@ Core (framework-agnostic) package for CMS hostname management.
 ```ts
 import { listSiteHostnames, addSiteHostname } from '@granit/cms-hostnames';
 
-const hostnames = await listSiteHostnames(axiosInstance, siteId);
-await addSiteHostname(axiosInstance, siteId, { hostname: 'example.com' });
+const hostnames = await listSiteHostnames(axiosInstance, basePath, siteId);
+await addSiteHostname(axiosInstance, basePath, siteId, { host: 'example.com' });
 ```

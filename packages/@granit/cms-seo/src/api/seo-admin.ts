@@ -1,8 +1,10 @@
+import { serializeQueryRequest } from '@granit/query-engine';
+
 import type {
   ListSeoMetadataParams,
   OgCardPreviewResponse,
-  PagedResponse,
-  SeoAuditIssueResponse,
+  PagedResult,
+  SeoMetadataListItem,
   SeoMetadataRequest,
   SeoMetadataResponse,
   SerpPreviewResponse,
@@ -103,16 +105,20 @@ export async function updateSeoDefaults(
   return res.data;
 }
 
-/** `GET /api/cms/seo/metadata` — audit grid (paged, filterable). Requires `Cms.Seo.Read`. */
-export async function listSeoAuditIssues(
+/**
+ * `GET /api/cms/seo/metadata` — SEO audit grid (`MapGranitQuery<SeoMetadata>`):
+ * paged / filterable / sortable, with the quick filters declared by
+ * `SeoMetadataQueryDefinition`. Requires `Cms.Seo.Read`.
+ */
+export async function listSeoMetadata(
   client: AxiosInstance,
   basePath: string,
-  params?: ListSeoMetadataParams
-): Promise<PagedResponse<SeoAuditIssueResponse>> {
-  const res = await client.get<PagedResponse<SeoAuditIssueResponse>>(
-    `${basePath}/api/cms/seo/metadata`,
-    { params }
-  );
+  params?: ListSeoMetadataParams,
+  options?: { readonly signal?: AbortSignal }
+): Promise<PagedResult<SeoMetadataListItem>> {
+  const qs = params ? serializeQueryRequest(params) : '';
+  const url = `${basePath}/api/cms/seo/metadata${qs ? `?${qs}` : ''}`;
+  const res = await client.get<PagedResult<SeoMetadataListItem>>(url, options);
   return res.data;
 }
 
@@ -165,7 +171,11 @@ export async function getOgCardPreview(
   return res.status === 204 ? null : res.data;
 }
 
-/** `GET .../metadata/{contentType}/{contentId}/{culture}/preview/jsonld`. Returns `@graph` array or `null` (204). Requires `Cms.Seo.Read`. */
+/**
+ * `GET .../metadata/{contentType}/{contentId}/{culture}/preview/jsonld`. Returns
+ * the raw JSON-LD `@graph` document (`application/ld+json`) or `null` (204).
+ * Requires `Cms.Seo.Read`.
+ */
 export async function getJsonLdPreview(
   client: AxiosInstance,
   basePath: string,
@@ -175,11 +185,11 @@ export async function getJsonLdPreview(
     readonly contentId: string;
     readonly culture: string;
   }
-): Promise<readonly unknown[] | null> {
+): Promise<string | null> {
   const { siteId, contentType, contentId, culture } = params;
-  const res = await client.get<readonly unknown[]>(
+  const res = await client.get<string>(
     `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/metadata/${encodeURIComponent(contentType)}/${encodeURIComponent(contentId)}/${encodeURIComponent(culture)}/preview/jsonld`,
-    { validateStatus: (s) => s === 200 || s === 204 }
+    { responseType: 'text', validateStatus: (s) => s === 200 || s === 204 }
   );
   return res.status === 204 ? null : res.data;
 }

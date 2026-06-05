@@ -3,17 +3,14 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { resolveRedirect } from '../api/redirects';
 
-import type { RedirectResolveResponse } from '../types/index';
+import type { ResolveResponse } from '../types/index';
 
 const basePath = 'https://cms.example.com';
 
 describe('resolveRedirect', () => {
-  it('returns the redirect on 200', async () => {
+  it('sends path/culture as query and siteId as the X-Granit-Site header, returns the redirect on 200', async () => {
     const client = createMockClient();
-    const redirect: RedirectResolveResponse = {
-      target: '/new-path',
-      statusCode: 301,
-    };
+    const redirect: ResolveResponse = { target: '/new-path', statusCode: 301 };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(redirect));
 
     const result = await resolveRedirect(client, basePath, {
@@ -25,7 +22,8 @@ describe('resolveRedirect', () => {
     expect(client.get).toHaveBeenCalledWith(
       `${basePath}/api/cms/redirects/resolve`,
       expect.objectContaining({
-        params: { siteId: 'site-1', path: '/old-path', culture: 'fr' },
+        params: { path: '/old-path', culture: 'fr' },
+        headers: { 'X-Granit-Site': 'site-1' },
       })
     );
     expect(result).toEqual(redirect);

@@ -39,7 +39,8 @@ describe('resolveMenu', () => {
     });
 
     expect(client.get).toHaveBeenCalledWith(`${basePath}/api/cms/menus/resolve`, {
-      params: { siteId: 'site-1', key: 'main', culture: 'fr' },
+      params: { key: 'main', culture: 'fr' },
+      headers: { 'X-Granit-Site': 'site-1' },
     });
     expect(result).toEqual(sampleMenu);
   });

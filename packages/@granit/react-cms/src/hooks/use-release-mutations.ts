@@ -4,7 +4,6 @@ import {
   addReleaseAction,
   cancelRelease,
   createRelease,
-  deleteRelease,
   publishRelease,
   removeReleaseAction,
   scheduleRelease,
@@ -34,8 +33,8 @@ export function useCreateRelease(): UseMutationResult<
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (req) => createRelease(client, basePath, req),
-    onSuccess: (data) => {
-      qc.invalidateQueries({ queryKey: cmsKeys.releases.list(queryKeyPrefix, data.siteId) });
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: cmsKeys.releases.all(queryKeyPrefix) });
     },
   });
 }
@@ -51,19 +50,7 @@ export function useUpdateRelease(): UseMutationResult<
     mutationFn: ({ id, request }) => updateRelease(client, basePath, id, request),
     onSuccess: (data) => {
       qc.setQueryData(cmsKeys.releases.detail(queryKeyPrefix, data.id), data);
-      qc.invalidateQueries({ queryKey: cmsKeys.releases.list(queryKeyPrefix, data.siteId) });
-    },
-  });
-}
-
-export function useDeleteRelease(): UseMutationResult<void, Error, { id: string; siteId: string }> {
-  const { client, basePath, queryKeyPrefix } = useCmsConfig();
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: ({ id }) => deleteRelease(client, basePath, id),
-    onSuccess: (_data, { id, siteId }) => {
-      qc.removeQueries({ queryKey: cmsKeys.releases.detail(queryKeyPrefix, id) });
-      qc.invalidateQueries({ queryKey: cmsKeys.releases.list(queryKeyPrefix, siteId) });
+      qc.invalidateQueries({ queryKey: cmsKeys.releases.all(queryKeyPrefix) });
     },
   });
 }
@@ -84,7 +71,7 @@ export function useAddReleaseAction(): UseMutationResult<
 }
 
 export function useRemoveReleaseAction(): UseMutationResult<
-  void,
+  ReleaseResponse,
   Error,
   { id: string; actionId: string }
 > {
@@ -92,8 +79,8 @@ export function useRemoveReleaseAction(): UseMutationResult<
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ id, actionId }) => removeReleaseAction(client, basePath, id, actionId),
-    onSuccess: (_data, { id }) => {
-      qc.invalidateQueries({ queryKey: cmsKeys.releases.detail(queryKeyPrefix, id) });
+    onSuccess: (data) => {
+      qc.setQueryData(cmsKeys.releases.detail(queryKeyPrefix, data.id), data);
     },
   });
 }
@@ -113,13 +100,14 @@ export function useScheduleRelease(): UseMutationResult<
   });
 }
 
-export function useCancelRelease(): UseMutationResult<void, Error, string> {
+export function useCancelRelease(): UseMutationResult<ReleaseResponse, Error, string> {
   const { client, basePath, queryKeyPrefix } = useCmsConfig();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id) => cancelRelease(client, basePath, id),
-    onSuccess: (_data, id) => {
-      qc.invalidateQueries({ queryKey: cmsKeys.releases.detail(queryKeyPrefix, id) });
+    onSuccess: (data) => {
+      qc.setQueryData(cmsKeys.releases.detail(queryKeyPrefix, data.id), data);
+      qc.invalidateQueries({ queryKey: cmsKeys.releases.all(queryKeyPrefix) });
     },
   });
 }
@@ -131,7 +119,7 @@ export function usePublishRelease(): UseMutationResult<ReleaseResponse, Error, s
     mutationFn: (id) => publishRelease(client, basePath, id),
     onSuccess: (data) => {
       qc.setQueryData(cmsKeys.releases.detail(queryKeyPrefix, data.id), data);
-      qc.invalidateQueries({ queryKey: cmsKeys.releases.list(queryKeyPrefix, data.siteId) });
+      qc.invalidateQueries({ queryKey: cmsKeys.releases.all(queryKeyPrefix) });
     },
   });
 }

@@ -109,7 +109,6 @@ export const mockMenus: MenuResponse[] = [
     title: 'Main navigation',
     items: [
       {
-        id: '21000000-0000-4000-8000-000000000001',
         label: 'Home',
         kind: 'Page',
         pageId: '10000000-0000-4000-8000-000000000001',
@@ -121,7 +120,6 @@ export const mockMenus: MenuResponse[] = [
         children: [],
       },
       {
-        id: '21000000-0000-4000-8000-000000000002',
         label: 'About',
         kind: 'Page',
         pageId: '10000000-0000-4000-8000-000000000002',
@@ -141,7 +139,6 @@ export const mockMenus: MenuResponse[] = [
     title: 'Footer links',
     items: [
       {
-        id: '22000000-0000-4000-8000-000000000001',
         label: 'Privacy',
         kind: 'ExternalUrl',
         pageId: null,

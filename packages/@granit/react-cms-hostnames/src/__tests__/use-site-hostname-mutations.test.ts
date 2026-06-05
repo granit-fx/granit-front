@@ -1,10 +1,4 @@
-import {
-  addSiteHostname,
-  clearSiteHostnamePrimary,
-  removeSiteHostname,
-  setSiteHostnamePrimary,
-  verifySiteHostname,
-} from '@granit/cms-hostnames';
+import { addSiteHostname, removeSiteHostname, verifySiteHostname } from '@granit/cms-hostnames';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -14,46 +8,29 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   useAddSiteHostname,
-  useClearSiteHostnamePrimary,
   useRemoveSiteHostname,
-  useSetSiteHostnamePrimary,
   useVerifySiteHostname,
 } from '../hooks/use-site-hostname-mutations';
 import { CmsHostnamesProvider } from '../providers/cms-hostnames-provider';
 
-import type { ManagedHostnameResponse } from '@granit/hostnames';
+import type { SiteHostnameResponse } from '@granit/cms-hostnames';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
 vi.mock('@granit/cms-hostnames', () => ({
   addSiteHostname: vi.fn(),
   removeSiteHostname: vi.fn(),
-  setSiteHostnamePrimary: vi.fn(),
-  clearSiteHostnamePrimary: vi.fn(),
   verifySiteHostname: vi.fn(),
 }));
 
-const hostname: ManagedHostnameResponse = {
+const hostname: SiteHostnameResponse = {
   id: 'h-1',
   host: 'example.com',
-  isPrimary: true,
-  ownerType: 'cms.site',
-  ownerId: 'site-1',
-  tenantId: null,
   status: 'Active',
-  verificationToken: null,
+  isPrimary: true,
   expectedDnsRecords: [],
   lastCheckedAt: null,
-  conflicts: [],
-  failedCheckCount: 0,
-  nextCheckAt: null,
   certificateStatus: 'Unprovisioned',
-  certExpiresAt: null,
-  createdAt: '2026-01-01T00:00:00Z',
-  createdBy: 'system',
-  modifiedAt: null,
-  modifiedBy: null,
-  concurrencyStamp: 'stamp-1',
 };
 
 function createWrapper(client: AxiosInstance) {
@@ -105,44 +82,6 @@ describe('useRemoveSiteHostname', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(removeSiteHostname).toHaveBeenCalledWith(client, '', 'site-1', 'h-1');
-  });
-});
-
-describe('useSetSiteHostnamePrimary', () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('calls setSiteHostnamePrimary', async () => {
-    const client = createMockClient();
-    vi.mocked(setSiteHostnamePrimary).mockResolvedValue(undefined);
-
-    const { result } = renderHook(() => useSetSiteHostnamePrimary('site-1'), {
-      wrapper: createWrapper(client),
-    });
-    result.current.mutate('h-1');
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(setSiteHostnamePrimary).toHaveBeenCalledWith(client, '', 'site-1', 'h-1');
-  });
-});
-
-describe('useClearSiteHostnamePrimary', () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('calls clearSiteHostnamePrimary', async () => {
-    const client = createMockClient();
-    vi.mocked(clearSiteHostnamePrimary).mockResolvedValue(undefined);
-
-    const { result } = renderHook(() => useClearSiteHostnamePrimary('site-1'), {
-      wrapper: createWrapper(client),
-    });
-    result.current.mutate('h-1');
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(clearSiteHostnamePrimary).toHaveBeenCalledWith(client, '', 'site-1', 'h-1');
   });
 });
 

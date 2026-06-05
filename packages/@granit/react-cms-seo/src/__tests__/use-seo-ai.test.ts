@@ -23,7 +23,13 @@ import {
 } from '../hooks/use-seo-ai';
 import { CmsSeoProvider } from '../providers/cms-seo-provider';
 
-import type { PagedResponse, SeoAiSuggestResponse, SeoAiSuggestionResponse } from '@granit/cms-seo';
+import type {
+  SeoAiSuggestRequest,
+  SeoAiSuggestResponse,
+  SeoAiSuggestionResponse,
+  SeoSuggestionDiff,
+  SeoSuggestionListResponse,
+} from '@granit/cms-seo';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -38,10 +44,25 @@ vi.mock('@granit/cms-seo', () => ({
 
 const suggestion: SeoAiSuggestionResponse = {
   id: 'sug-1',
+  siteId: 'site-1',
   contentType: 'page',
   contentId: 'page-1',
   culture: 'fr',
-  status: 'Ready',
+  status: 'Pending',
+  scope: 'Title, Description',
+  appliedFields: 'None',
+  title: 'A title',
+  description: 'A description',
+  keywords: [],
+  ogImageAltText: null,
+  structuredDataJson: null,
+  modelId: 'gpt-4o-mini',
+  promptTemplateVersion: 'v1',
+  createdAt: '2026-06-01T10:00:00.000Z',
+  reviewedBy: null,
+  reviewedAt: null,
+  failureReason: null,
+  rejectionReason: null,
 };
 
 function createWrapper(client: AxiosInstance) {
@@ -62,20 +83,15 @@ describe('useSeoSuggestions', () => {
 
   it('fetches paged suggestions', async () => {
     const client = createMockClient();
-    const paged: PagedResponse<SeoAiSuggestionResponse> = {
-      items: [suggestion],
-      totalCount: 1,
-      page: 0,
-      pageSize: 20,
-    };
-    vi.mocked(listSeoSuggestions).mockResolvedValue(paged);
+    const list: SeoSuggestionListResponse = { items: [suggestion], total: 1 };
+    vi.mocked(listSeoSuggestions).mockResolvedValue(list);
 
-    const { result } = renderHook(() => useSeoSuggestions({ status: 'Ready' }), {
+    const { result } = renderHook(() => useSeoSuggestions({ status: 'Pending' }), {
       wrapper: createWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(listSeoSuggestions).toHaveBeenCalledWith(client, '', { status: 'Ready' });
+    expect(listSeoSuggestions).toHaveBeenCalledWith(client, '', { status: 'Pending' });
   });
 });
 
@@ -86,7 +102,12 @@ describe('useSeoSuggestionDiff', () => {
 
   it('fetches diff for a suggestion', async () => {
     const client = createMockClient();
-    vi.mocked(getSeoSuggestionDiff).mockResolvedValue(suggestion);
+    const diff: SeoSuggestionDiff = {
+      suggestionId: 'sug-1',
+      scope: 'Title, Description',
+      fields: [{ field: 'Title', inScope: true, current: null, proposed: 'New' }],
+    };
+    vi.mocked(getSeoSuggestionDiff).mockResolvedValue(diff);
 
     const { result } = renderHook(() => useSeoSuggestionDiff('sug-1'), {
       wrapper: createWrapper(client),
@@ -113,10 +134,18 @@ describe('useSuggestSeo', () => {
 
   it('calls suggestSeo', async () => {
     const client = createMockClient();
-    const response: SeoAiSuggestResponse = { outcome: 'Success', suggestion };
+    const response: SeoAiSuggestResponse = { outcome: 'Succeeded', suggestion };
     vi.mocked(suggestSeo).mockResolvedValue(response);
 
-    const req = { contentType: 'page', contentId: 'page-1', culture: 'fr', contentTitle: 'Test' };
+    const req: SeoAiSuggestRequest = {
+      siteId: 'site-1',
+      contentType: 'page',
+      contentId: 'page-1',
+      culture: 'fr',
+      contentTitle: 'Test',
+      contentBody: null,
+      scope: 'Title, Description',
+    };
     const { result } = renderHook(() => useSuggestSeo(), { wrapper: createWrapper(client) });
     result.current.mutate(req);
 
@@ -132,15 +161,15 @@ describe('useApplySeoSuggestion', () => {
 
   it('calls applySeoSuggestion', async () => {
     const client = createMockClient();
-    vi.mocked(applySeoSuggestion).mockResolvedValue({ ...suggestion, status: 'Applied' });
+    vi.mocked(applySeoSuggestion).mockResolvedValue({ ...suggestion, status: 'Accepted' });
 
     const { result } = renderHook(() => useApplySeoSuggestion(), {
       wrapper: createWrapper(client),
     });
-    result.current.mutate({ id: 'sug-1', request: { fields: ['title'] } });
+    result.current.mutate({ id: 'sug-1', request: { fields: 'Title' } });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(applySeoSuggestion).toHaveBeenCalledWith(client, '', 'sug-1', { fields: ['title'] });
+    expect(applySeoSuggestion).toHaveBeenCalledWith(client, '', 'sug-1', { fields: 'Title' });
   });
 });
 

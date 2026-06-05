@@ -4,75 +4,104 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   createRedirect,
   deleteRedirect,
+  getRedirect,
+  getRedirectsGrid,
+  getRedirectSettings,
   listRedirects,
+  previewRedirect,
   updateRedirect,
+  updateRedirectSettings,
 } from '../api/redirects-admin';
 
-import type { PagedResponse, RedirectResponse } from '../types/index';
+import type {
+  PagedResult,
+  RedirectCreateRequest,
+  RedirectMutationResult,
+  RedirectPreviewResponse,
+  RedirectResponse,
+  RedirectUpdateRequest,
+  SiteRedirectSettingsResponse,
+} from '../types/index';
 
 const BASE = 'https://cms.example.com';
+const SITE = 'site-1';
 
 const redirect: RedirectResponse = {
   id: 'redir-1',
-  siteId: 'site-1',
-  fromPath: '/old',
-  toPath: '/new',
-  culture: null,
+  siteId: SITE,
+  source: '/old',
+  matchType: 'Exact',
+  target: '/new',
+  type: 'MovedPermanently',
   statusCode: 301,
-  isEnabled: true,
+  isActive: true,
+  culture: null,
+  origin: 'Manual',
+  hitCount: 0,
+  lastHitAt: null,
 };
 
+const mutationResult: RedirectMutationResult = { redirect, conflictWarning: null };
+
 describe('listRedirects', () => {
-  it('GET /api/cms/redirects without params', async () => {
+  it('GET /sites/{siteId}/redirects returns a flat array', async () => {
     const client = createMockClient();
-    const response: PagedResponse<RedirectResponse> = {
-      items: [redirect],
-      totalCount: 1,
-      page: 0,
-      pageSize: 20,
-    };
-    vi.mocked(client.get).mockResolvedValue(axiosResponse(response));
+    vi.mocked(client.get).mockResolvedValue(axiosResponse([redirect]));
 
-    const result = await listRedirects(client, BASE);
+    const result = await listRedirects(client, BASE, SITE);
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/redirects`, { params: undefined });
-    expect(result).toEqual(response);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/redirects/sites/${SITE}/redirects`);
+    expect(result).toEqual([redirect]);
   });
 
-  it('passes siteId and search params', async () => {
+  it('encodes the siteId segment', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(
-      axiosResponse({ items: [], totalCount: 0, page: 0, pageSize: 20 })
-    );
+    vi.mocked(client.get).mockResolvedValue(axiosResponse([]));
 
-    await listRedirects(client, BASE, { siteId: 'site-1', search: '/old' });
+    await listRedirects(client, BASE, 'a/b');
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/redirects`, {
-      params: { siteId: 'site-1', search: '/old' },
-    });
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/redirects/sites/a%2Fb/redirects`);
   });
 });
 
-describe('createRedirect', () => {
-  it('POST /api/cms/redirects', async () => {
+describe('getRedirect', () => {
+  it('GET /{id}', async () => {
     const client = createMockClient();
-    vi.mocked(client.post).mockResolvedValue(axiosResponse(redirect));
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(redirect));
 
-    const request = { siteId: 'site-1', fromPath: '/old', toPath: '/new' };
-    const result = await createRedirect(client, BASE, request);
+    const result = await getRedirect(client, BASE, 'redir-1');
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/redirects`, request);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/redirects/redir-1`);
     expect(result).toEqual(redirect);
   });
 });
 
-describe('updateRedirect', () => {
-  it('PUT /api/cms/redirects/{id}', async () => {
+describe('createRedirect', () => {
+  it('POST /sites/{siteId}/redirects returns the mutation result', async () => {
     const client = createMockClient();
-    const updated = { ...redirect, toPath: '/newer' };
+    vi.mocked(client.post).mockResolvedValue(axiosResponse(mutationResult));
+
+    const request: RedirectCreateRequest = { source: '/old', target: '/new' };
+    const result = await createRedirect(client, BASE, SITE, request);
+
+    expect(client.post).toHaveBeenCalledWith(
+      `${BASE}/api/cms/redirects/sites/${SITE}/redirects`,
+      request
+    );
+    expect(result).toEqual(mutationResult);
+  });
+});
+
+describe('updateRedirect', () => {
+  it('PUT /{id} returns the mutation result', async () => {
+    const client = createMockClient();
+    const updated: RedirectMutationResult = {
+      redirect: { ...redirect, target: '/newer' },
+      conflictWarning: 'shadows a page',
+    };
     vi.mocked(client.put).mockResolvedValue(axiosResponse(updated));
 
-    const request = { fromPath: '/old', toPath: '/newer' };
+    const request: RedirectUpdateRequest = { target: '/newer' };
     const result = await updateRedirect(client, BASE, 'redir-1', request);
 
     expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/redirects/redir-1`, request);
@@ -81,12 +110,78 @@ describe('updateRedirect', () => {
 });
 
 describe('deleteRedirect', () => {
-  it('DELETE /api/cms/redirects/{id}', async () => {
+  it('DELETE /{id}', async () => {
     const client = createMockClient();
     vi.mocked(client.delete).mockResolvedValue({ status: 204, data: undefined });
 
     await deleteRedirect(client, BASE, 'redir-1');
 
     expect(client.delete).toHaveBeenCalledWith(`${BASE}/api/cms/redirects/redir-1`);
+  });
+});
+
+describe('getRedirectSettings', () => {
+  it('GET /sites/{siteId}/settings', async () => {
+    const client = createMockClient();
+    const settings: SiteRedirectSettingsResponse = { siteId: SITE, autoRedirectOnMove: true };
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(settings));
+
+    const result = await getRedirectSettings(client, BASE, SITE);
+
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/redirects/sites/${SITE}/settings`);
+    expect(result).toEqual(settings);
+  });
+});
+
+describe('updateRedirectSettings', () => {
+  it('PUT /sites/{siteId}/settings', async () => {
+    const client = createMockClient();
+    const settings: SiteRedirectSettingsResponse = { siteId: SITE, autoRedirectOnMove: false };
+    vi.mocked(client.put).mockResolvedValue(axiosResponse(settings));
+
+    const result = await updateRedirectSettings(client, BASE, SITE, { autoRedirectOnMove: false });
+
+    expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/redirects/sites/${SITE}/settings`, {
+      autoRedirectOnMove: false,
+    });
+    expect(result).toEqual(settings);
+  });
+});
+
+describe('previewRedirect', () => {
+  it('GET /sites/{siteId}/preview with path/culture query', async () => {
+    const client = createMockClient();
+    const preview: RedirectPreviewResponse = {
+      matched: true,
+      target: '/new',
+      statusCode: 301,
+    };
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(preview));
+
+    const result = await previewRedirect(client, BASE, SITE, { path: '/old', culture: 'fr' });
+
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/redirects/sites/${SITE}/preview`, {
+      params: { path: '/old', culture: 'fr' },
+    });
+    expect(result).toEqual(preview);
+  });
+});
+
+describe('getRedirectsGrid', () => {
+  it('GET /grid with serialized QueryRequest', async () => {
+    const client = createMockClient();
+    const page: PagedResult<RedirectResponse> = {
+      items: [redirect],
+      totalCount: 1,
+    };
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(page));
+
+    const result = await getRedirectsGrid(client, BASE, { page: 1, pageSize: 25 });
+
+    expect(client.get).toHaveBeenCalledWith(
+      `${BASE}/api/cms/redirects/grid?page=1&pageSize=25`,
+      undefined
+    );
+    expect(result).toEqual(page);
   });
 });

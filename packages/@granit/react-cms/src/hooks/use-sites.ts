@@ -7,13 +7,14 @@ import { useCmsConfig } from '../providers/cms-provider';
 
 import { cmsKeys } from './query-keys';
 
-import type { ListSitesParams, PagedResponse, SiteResponse } from '@granit/cms';
+import type { ListSitesParams, SiteResponse } from '@granit/cms';
+import type { PagedResult } from '@granit/query-engine';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 export function useSites(
   params?: ListSitesParams,
   options?: { readonly enabled?: boolean }
-): UseQueryResult<PagedResponse<SiteResponse>> {
+): UseQueryResult<PagedResult<SiteResponse>> {
   const { client, basePath, queryKeyPrefix } = useCmsConfig();
   return useQuery({
     queryKey: cmsKeys.sites.list(queryKeyPrefix, params),

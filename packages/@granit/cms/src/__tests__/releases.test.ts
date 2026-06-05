@@ -5,7 +5,6 @@ import {
   addReleaseAction,
   cancelRelease,
   createRelease,
-  deleteRelease,
   getRelease,
   listReleases,
   publishRelease,
@@ -14,7 +13,8 @@ import {
   updateRelease,
 } from '../api/releases';
 
-import type { PagedResponse, ReleaseResponse } from '../types/index';
+import type { ReleaseResponse } from '../types/index';
+import type { PagedResult } from '@granit/query-engine';
 
 const BASE = 'https://cms.example.com';
 
@@ -32,11 +32,11 @@ const release: ReleaseResponse = {
 describe('listReleases', () => {
   it('GET /api/cms/releases', async () => {
     const client = createMockClient();
-    const response: PagedResponse<ReleaseResponse> = {
+    const response: PagedResult<ReleaseResponse> = {
       items: [release],
       totalCount: 1,
-      page: 0,
-      pageSize: 20,
+      hasMore: false,
+      nextCursor: null,
     };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(response));
 
@@ -86,17 +86,6 @@ describe('updateRelease', () => {
   });
 });
 
-describe('deleteRelease', () => {
-  it('DELETE /api/cms/releases/{id}', async () => {
-    const client = createMockClient();
-    vi.mocked(client.delete).mockResolvedValue({ status: 204, data: undefined });
-
-    await deleteRelease(client, BASE, 'rel-1');
-
-    expect(client.delete).toHaveBeenCalledWith(`${BASE}/api/cms/releases/rel-1`);
-  });
-});
-
 describe('addReleaseAction', () => {
   it('POST /api/cms/releases/{id}/actions', async () => {
     const client = createMockClient();
@@ -116,13 +105,14 @@ describe('addReleaseAction', () => {
 });
 
 describe('removeReleaseAction', () => {
-  it('DELETE /api/cms/releases/{id}/actions/{actionId}', async () => {
+  it('DELETE /api/cms/releases/{id}/actions/{actionId} returns updated release', async () => {
     const client = createMockClient();
-    vi.mocked(client.delete).mockResolvedValue({ status: 204, data: undefined });
+    vi.mocked(client.delete).mockResolvedValue(axiosResponse(release));
 
-    await removeReleaseAction(client, BASE, 'rel-1', 'action-1');
+    const result = await removeReleaseAction(client, BASE, 'rel-1', 'action-1');
 
     expect(client.delete).toHaveBeenCalledWith(`${BASE}/api/cms/releases/rel-1/actions/action-1`);
+    expect(result).toEqual(release);
   });
 });
 
@@ -141,20 +131,22 @@ describe('scheduleRelease', () => {
 });
 
 describe('cancelRelease', () => {
-  it('POST /api/cms/releases/{id}/cancel', async () => {
+  it('POST /api/cms/releases/{id}/cancel returns updated release', async () => {
     const client = createMockClient();
-    vi.mocked(client.post).mockResolvedValue({ status: 204, data: undefined });
+    const cancelled = { ...release, status: 'Draft' as const };
+    vi.mocked(client.post).mockResolvedValue(axiosResponse(cancelled));
 
-    await cancelRelease(client, BASE, 'rel-1');
+    const result = await cancelRelease(client, BASE, 'rel-1');
 
     expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/releases/rel-1/cancel`);
+    expect(result).toEqual(cancelled);
   });
 });
 
 describe('publishRelease', () => {
   it('POST /api/cms/releases/{id}/publish', async () => {
     const client = createMockClient();
-    const executed = { ...release, status: 'Executed' as const };
+    const executed = { ...release, status: 'Done' as const };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(executed));
 
     const result = await publishRelease(client, BASE, 'rel-1');

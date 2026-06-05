@@ -7,6 +7,8 @@
  * Source of truth: the running backend's OpenAPI spec.
  */
 
+import type { PaginationParams } from '@granit/query-engine';
+
 // ─── Block Catalog ──────────────────────────────────────────────────────────
 
 /**
@@ -56,8 +58,9 @@ export interface BlockCatalogEntry {
   readonly sourceModule: string;
   readonly renderSide: BlockRenderSide;
   readonly dataSourceKey: string | null;
-  readonly subscribedContentTypes: readonly string[];
   readonly fields: Readonly<Record<string, BlockFieldDescriptor>>;
+  /** `null` / absent for presentational blocks or data sources not yet registered. */
+  readonly subscribedContentTypes?: readonly string[] | null;
 }
 
 /** One category group of the block catalog. */
@@ -74,7 +77,8 @@ export interface BlockCatalogResponse {
 /** Request body for `POST /api/cms/blocks/data`. */
 export interface BlockDataResolveRequest {
   readonly dataSourceKey: string;
-  readonly query?: string | null;
+  /** Opaque editor-configured binding; key required, value nullable (no C# default). */
+  readonly query: string | null;
   readonly siteId: string;
   readonly culture: string;
 }
@@ -158,14 +162,6 @@ export interface ResolvedMenu {
 
 // ─── Shared ──────────────────────────────────────────────────────────────────
 
-/** Generic paged list returned by admin list endpoints. */
-export interface PagedResponse<T> {
-  readonly items: readonly T[];
-  readonly totalCount: number;
-  readonly page: number;
-  readonly pageSize: number;
-}
-
 // ─── Sites admin (§10) ───────────────────────────────────────────────────────
 
 /** One CMS site. Returned by `GET /api/cms/sites` and `GET /api/cms/sites/{id}`. */
@@ -243,12 +239,16 @@ export interface PageVersionSummaryResponse {
   readonly publishedAt: string | null;
 }
 
-/** Request body for `POST /api/cms/pages`. */
+/**
+ * Request body for `POST /api/cms/pages`. Creates a non-root page under
+ * `parentId`. Site and tenant are inherited from the parent (no `siteId`).
+ */
 export interface CreatePageRequest {
-  readonly siteId: string;
-  readonly parentId?: string | null;
+  /** Owning parent (the site root or any non-deleted page). Required. */
+  readonly parentId: string;
   readonly slugSegment: string;
-  readonly layoutKey?: string | null;
+  /** Optional layout override; key required, value nullable (no C# default). */
+  readonly layoutKey: string | null;
 }
 
 /** Request body for `PUT /api/cms/pages/{id}`. */
@@ -262,10 +262,9 @@ export interface UpdatePageTranslationRequest {
   readonly title: string;
 }
 
-/** Request body for `POST /api/cms/pages/{id}/move`. */
+/** Request body for `POST /api/cms/pages/{id}/move` — reparents the page. */
 export interface MovePageRequest {
-  readonly parentId: string | null;
-  readonly targetIndex?: number;
+  readonly newParentId: string;
 }
 
 /** Request body for `PUT /api/cms/pages/{id}/draft/{culture}`. */
@@ -284,7 +283,6 @@ export interface PageDraftConflictResponse {
 
 /** Editable menu item returned by `GET /api/cms/menus/{id}`. */
 export interface MenuItemResponse {
-  readonly id: string;
   readonly label: string;
   readonly kind: MenuTargetKind;
   readonly pageId?: string | null;
@@ -335,7 +333,7 @@ export interface UpdateMenuRequest {
 // ─── Releases (§14) ──────────────────────────────────────────────────────────
 
 /** Lifecycle state of a release. Maps `Granit.Cms.Releases.Domain.ReleaseStatus`. */
-export type ReleaseStatus = 'Draft' | 'Ready' | 'Executed';
+export type ReleaseStatus = 'Draft' | 'Ready' | 'Running' | 'Done' | 'Failed';
 
 /** Type of a release action. Maps `Granit.Cms.Releases.Domain.ReleaseActionType`. */
 export type ReleaseActionType = 'Publish' | 'Unpublish';
@@ -384,7 +382,7 @@ export interface UpdateReleaseRequest {
   readonly name: string;
 }
 
-/** Request body for `DELETE /api/cms/releases/{id}/actions/{actionId}` (add action). */
+/** Request body for `POST /api/cms/releases/{id}/actions` (add action). */
 export interface AddReleaseActionRequest {
   readonly contentType: string;
   readonly contentId: string;
@@ -400,34 +398,23 @@ export interface ScheduleReleaseRequest {
 }
 
 // ─── List params (admin) ─────────────────────────────────────────────────────
+//
+// All admin list endpoints are mapped via `MapGranitQuery<T>()` on the backend,
+// which binds the standard QueryEngine request (page/pageSize/filters/sort/…).
+// We expose only the pagination surface here; site scoping and free-text search
+// are QueryEngine filters, not ad-hoc query keys.
 
 /** Query parameters for `GET /api/cms/sites` (paged). */
-export interface ListSitesParams {
-  readonly page?: number;
-  readonly pageSize?: number;
-  readonly search?: string;
-}
+export type ListSitesParams = PaginationParams;
 
 /** Query parameters for `GET /api/cms/pages` (paged). */
-export interface ListPagesParams {
-  readonly siteId?: string;
-  readonly page?: number;
-  readonly pageSize?: number;
-}
+export type ListPagesParams = PaginationParams;
 
 /** Query parameters for `GET /api/cms/menus` (paged). */
-export interface ListMenusParams {
-  readonly siteId?: string;
-  readonly page?: number;
-  readonly pageSize?: number;
-}
+export type ListMenusParams = PaginationParams;
 
 /** Query parameters for `GET /api/cms/releases` (paged). */
-export interface ListReleasesParams {
-  readonly siteId?: string;
-  readonly page?: number;
-  readonly pageSize?: number;
-}
+export type ListReleasesParams = PaginationParams;
 
 /**
  * Result of {@link saveDraft}.
@@ -437,33 +424,55 @@ export type SaveDraftResult =
   | { readonly ok: true; readonly version: PageVersionSummaryResponse }
   | { readonly ok: false; readonly conflict: PageDraftConflictResponse };
 
-// ─── Document Resolution ─────────────────────────────────────────────────────
-
-/** Single item in a {@link BatchResolveDocumentsRequest}. */
-export interface ResolveDocumentItem {
-  readonly documentId: string;
-  readonly versionId?: string | null;
-  readonly renditionType?: string | null;
-  readonly renditionFormat?: string | null;
-}
-
-/** Request body for `POST /documents/resolution/resolve`. */
-export interface BatchResolveDocumentsRequest {
-  readonly requests: readonly ResolveDocumentItem[];
-}
+// ─── Page search ─────────────────────────────────────────────────────────────
 
 /**
- * One resolved asset. A `null` slot in the batch response indicates a missing
- * or revoked document.
+ * One search-hit row returned by the admin (`GET /api/cms/pages/search`) or
+ * public (`GET /api/cms/search`) search endpoints. `title` / `path` are resolved
+ * for the requested culture (falling back to the first available translation).
  */
-export interface ResolvedDocumentResponse {
-  readonly documentId: string;
-  readonly versionId: string;
-  /** Stable, CDN-frontable URL for the document content. */
-  readonly url: string;
-  readonly width?: number | null;
-  readonly height?: number | null;
-  readonly mimeType?: string | null;
-  readonly sizeBytes?: number | null;
-  readonly lastModified?: string | null;
+export interface PageSearchHitResponse {
+  readonly pageId: string;
+  readonly siteId: string;
+  /** Culture the `title` / `path` were resolved for. */
+  readonly culture: string;
+  readonly path: string;
+  readonly title: string;
+}
+
+/** Paged search response returned by the admin and public search endpoints. */
+export interface PageSearchPageResponse {
+  /** Hits in score-descending order. */
+  readonly items: readonly PageSearchHitResponse[];
+  /** 1-based page index this response covers. */
+  readonly page: number;
+  readonly pageSize: number;
+  /** Count of items in {@link items} — NOT a tenant-wide row count. */
+  readonly totalAuthorized: number;
+  /** `true` when the authorisation depth was exhausted before filling the page. */
+  readonly hitAuthorizationLimit: boolean;
+}
+
+/** Query parameters shared by both search endpoints. */
+export interface PageSearchParams {
+  /** Free-text query (required server-side). */
+  readonly q: string;
+  /** BCP-47 culture to resolve titles/paths in (required server-side). */
+  readonly culture: string;
+  readonly page?: number;
+  readonly pageSize?: number;
+}
+
+// ─── Page editing presence ─────────────────────────────────────────────────────
+
+/** One participant of a page-editing room. */
+export interface PageEditingPresenceEntryResponse {
+  readonly userId: string;
+  /** UTC ISO 8601 instant the participant was last seen. */
+  readonly lastSeenAt: string;
+}
+
+/** Active participants for `GET /api/cms/pages/{id}/editing`. */
+export interface PageEditingPresenceResponse {
+  readonly editors: readonly PageEditingPresenceEntryResponse[];
 }

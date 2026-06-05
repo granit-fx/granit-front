@@ -1,5 +1,10 @@
-import type { ListPagesParams } from '@granit/cms';
-import type { ListSitesParams } from '@granit/cms';
+import type {
+  ListMenusParams,
+  ListPagesParams,
+  ListReleasesParams,
+  ListSitesParams,
+  PageSearchParams,
+} from '@granit/cms';
 
 export const cmsKeys = {
   sites: {
@@ -17,17 +22,25 @@ export const cmsKeys = {
     detail: (prefix: readonly string[], id: string) => [...prefix, 'pages', id] as const,
     versions: (prefix: readonly string[], id: string) =>
       [...prefix, 'pages', id, 'versions'] as const,
+    editing: (prefix: readonly string[], id: string) =>
+      [...prefix, 'pages', id, 'editing'] as const,
+    search: (prefix: readonly string[], params: PageSearchParams) =>
+      [...prefix, 'pages', 'search', params] as const,
+  },
+  search: {
+    public: (prefix: readonly string[], siteId: string, params: PageSearchParams) =>
+      [...prefix, 'search', siteId, params] as const,
   },
   menus: {
     all: (prefix: readonly string[]) => [...prefix, 'menus'] as const,
-    list: (prefix: readonly string[], siteId?: string) =>
-      [...prefix, 'menus', 'list', siteId ?? ''] as const,
+    list: (prefix: readonly string[], params?: ListMenusParams) =>
+      [...prefix, 'menus', 'list', params ?? {}] as const,
     detail: (prefix: readonly string[], id: string) => [...prefix, 'menus', id] as const,
   },
   releases: {
     all: (prefix: readonly string[]) => [...prefix, 'releases'] as const,
-    list: (prefix: readonly string[], siteId?: string) =>
-      [...prefix, 'releases', 'list', siteId ?? ''] as const,
+    list: (prefix: readonly string[], params?: ListReleasesParams) =>
+      [...prefix, 'releases', 'list', params ?? {}] as const,
     detail: (prefix: readonly string[], id: string) => [...prefix, 'releases', id] as const,
   },
 } as const;

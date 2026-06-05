@@ -9,7 +9,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useSite, useSites } from '../hooks/use-sites';
 import { CmsProvider } from '../providers/cms-provider';
 
-import type { PagedResponse, SiteResponse } from '@granit/cms';
+import type { SiteResponse } from '@granit/cms';
+import type { PagedResult } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -48,11 +49,11 @@ describe('useSites', () => {
 
   it('fetches paged sites list', async () => {
     const client = createMockClient();
-    const paged: PagedResponse<SiteResponse> = {
+    const paged: PagedResult<SiteResponse> = {
       items: [site],
       totalCount: 1,
-      page: 0,
-      pageSize: 20,
+      hasMore: false,
+      nextCursor: null,
     };
     vi.mocked(listSites).mockResolvedValue(paged);
 
@@ -65,14 +66,19 @@ describe('useSites', () => {
 
   it('passes params to listSites', async () => {
     const client = createMockClient();
-    vi.mocked(listSites).mockResolvedValue({ items: [], totalCount: 0, page: 1, pageSize: 10 });
+    vi.mocked(listSites).mockResolvedValue({
+      items: [],
+      totalCount: 0,
+      hasMore: false,
+      nextCursor: null,
+    });
 
-    const { result } = renderHook(() => useSites({ page: 1, pageSize: 10, search: 'acme' }), {
+    const { result } = renderHook(() => useSites({ page: 1, pageSize: 10 }), {
       wrapper: createWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(listSites).toHaveBeenCalledWith(client, '', { page: 1, pageSize: 10, search: 'acme' });
+    expect(listSites).toHaveBeenCalledWith(client, '', { page: 1, pageSize: 10 });
   });
 });
 

@@ -3,7 +3,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { createSite, deleteSite, getSite, listSites, updateSite } from '../api/sites';
 
-import type { PagedResponse, SiteResponse } from '../types/index';
+import type { SiteResponse } from '../types/index';
+import type { PagedResult } from '@granit/query-engine';
 
 const BASE = 'https://cms.example.com';
 
@@ -22,11 +23,11 @@ const site: SiteResponse = {
 describe('listSites', () => {
   it('fetches paged list without params', async () => {
     const client = createMockClient();
-    const response: PagedResponse<SiteResponse> = {
+    const response: PagedResult<SiteResponse> = {
       items: [site],
       totalCount: 1,
-      page: 0,
-      pageSize: 20,
+      hasMore: false,
+      nextCursor: null,
     };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(response));
 
@@ -36,16 +37,16 @@ describe('listSites', () => {
     expect(result).toEqual(response);
   });
 
-  it('passes page and search params', async () => {
+  it('passes pagination params', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
-      axiosResponse({ items: [], totalCount: 0, page: 1, pageSize: 10 })
+      axiosResponse({ items: [], totalCount: 0, hasMore: false, nextCursor: null })
     );
 
-    await listSites(client, BASE, { page: 1, pageSize: 10, search: 'acme' });
+    await listSites(client, BASE, { page: 1, pageSize: 10 });
 
     expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/sites`, {
-      params: { page: 1, pageSize: 10, search: 'acme' },
+      params: { page: 1, pageSize: 10 },
     });
   });
 });

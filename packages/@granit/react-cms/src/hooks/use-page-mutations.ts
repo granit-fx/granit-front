@@ -21,7 +21,6 @@ import type {
   CreatePageRequest,
   MovePageRequest,
   PageResponse,
-  PageVersionSummaryResponse,
   SaveDraftRequest,
   UpdatePageRequest,
   UpdatePageTranslationRequest,
@@ -140,7 +139,7 @@ export function useUnpublishPage(): UseMutationResult<void, Error, string> {
 }
 
 export function useRollbackPage(): UseMutationResult<
-  PageVersionSummaryResponse,
+  void,
   Error,
   { id: string; versionId: string }
 > {

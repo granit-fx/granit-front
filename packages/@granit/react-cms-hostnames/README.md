@@ -9,8 +9,7 @@ React Query hooks and provider for CMS hostname management.
 - **`useSiteHostnames`** — query hook for listing managed hostnames
 - **`useSiteHostnameAvailability`** — query hook for checking hostname availability
 - **`useAddSiteHostname`** / **`useRemoveSiteHostname`** — mutation hooks for adding/removing
-- **`useSetSiteHostnamePrimary`** / **`useClearSiteHostnamePrimary`** — primary hostname mutations
-- **`useVerifySiteHostname`** — triggers DNS verification
+- **`useVerifySiteHostname`** — triggers DNS re-verification
 - **`cmsHostnamesKeys`** — React Query key factory (for manual invalidation)
 
 ## Peer dependencies
@@ -26,14 +25,20 @@ import { CmsHostnamesProvider, useSiteHostnames } from '@granit/react-cms-hostna
 
 function App() {
   return (
-    <CmsHostnamesProvider axios={axiosInstance} siteId={siteId}>
-      <HostnameList />
+    <CmsHostnamesProvider config={{ client: axiosInstance }}>
+      <HostnameList siteId={siteId} />
     </CmsHostnamesProvider>
   );
 }
 
-function HostnameList() {
-  const { data } = useSiteHostnames();
-  return <ul>{data?.map(h => <li key={h.id}>{h.hostname}</li>)}</ul>;
+function HostnameList({ siteId }: { siteId: string }) {
+  const { data } = useSiteHostnames(siteId);
+  return (
+    <ul>
+      {data?.map((h) => (
+        <li key={h.id}>{h.host}</li>
+      ))}
+    </ul>
+  );
 }
 ```

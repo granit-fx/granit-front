@@ -406,6 +406,9 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -415,9 +418,6 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
-      '@granit/hostnames':
-        specifier: workspace:*
-        version: link:../hostnames
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -427,9 +427,9 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
-      '@granit/cms':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../cms
+        version: link:../query-engine
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -439,9 +439,9 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
-      '@granit/cms':
+      '@granit/query-engine':
         specifier: workspace:*
-        version: link:../cms
+        version: link:../query-engine
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -1413,6 +1413,9 @@ importers:
       '@granit/cms':
         specifier: workspace:*
         version: link:../cms
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
@@ -1447,9 +1450,6 @@ importers:
       '@granit/cms-hostnames':
         specifier: workspace:*
         version: link:../cms-hostnames
-      '@granit/hostnames':
-        specifier: workspace:*
-        version: link:../hostnames
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
@@ -1478,6 +1478,9 @@ importers:
       '@granit/cms-redirects':
         specifier: workspace:*
         version: link:../cms-redirects
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client

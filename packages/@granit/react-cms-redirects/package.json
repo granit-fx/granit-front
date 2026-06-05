@@ -11,6 +11,7 @@
   "devDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/cms-redirects": "workspace:*",
+    "@granit/query-engine": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",

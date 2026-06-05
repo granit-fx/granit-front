@@ -1,54 +1,109 @@
 /**
  * Redirect wire-contract types for the Granit CMS API.
- * Mirrors `Granit.Cms.Redirects.*` .NET types.
+ * Mirrors `Granit.Cms.Redirects.Endpoints.Dtos.*` and the domain enums under
+ * `Granit.Cms.Redirects.Domain.*`.
+ *
+ * Optionality follows the C#-default rule: a record parameter without a default
+ * is a required key (mirror as a required property, nullable value when the type
+ * is nullable); a parameter with a default is genuinely optional (`?`).
  */
 
-// ─── Shared ──────────────────────────────────────────────────────────────────
+// ─── Grid (QueryEngine) re-exports ───────────────────────────────────────────
+// The admin grid is backed by `MapGranitQuery<Redirect>` — use the QueryEngine
+// contracts, never `PagedResponse` from `@granit/cms`.
+export type { PagedResult, PaginationParams, QueryRequest } from '@granit/query-engine';
 
-export type { PagedResponse } from '@granit/cms';
+// ─── Domain enums (serialized as PascalCase names) ───────────────────────────
 
 /**
- * Redirect result returned by `GET /api/cms/redirects/resolve` (HTTP 200).
- * When no redirect matches the endpoint returns 204 — callers receive `null`.
+ * HTTP status a redirect emits. Mirrors `RedirectType` — serialized by name
+ * (`ApplyGranitConventions`), not by numeric value.
  */
-export interface RedirectResolveResponse {
+export type RedirectType = 'MovedPermanently' | 'Found' | 'TemporaryRedirect' | 'PermanentRedirect';
+
+/** How a redirect's source is matched against an incoming path. Mirrors `RedirectMatchType`. */
+export type RedirectMatchType = 'Exact' | 'Prefix';
+
+/** Where a redirect came from. Mirrors `RedirectOrigin`. */
+export type RedirectOrigin = 'Manual' | 'AutoFromPageMove' | 'Imported';
+
+// ─── Responses ───────────────────────────────────────────────────────────────
+
+/**
+ * The stored redirect. Mirrors `RedirectResponse`.
+ * `Culture` / `LastHitAt` are nullable-value, required-key (C# params without a default).
+ */
+export interface RedirectResponse {
+  readonly id: string;
+  readonly siteId: string;
+  readonly source: string;
+  readonly matchType: RedirectMatchType;
+  readonly target: string;
+  readonly type: RedirectType;
+  readonly statusCode: number;
+  readonly isActive: boolean;
+  readonly culture: string | null;
+  readonly origin: RedirectOrigin;
+  readonly hitCount: number;
+  readonly lastHitAt: string | null;
+}
+
+/**
+ * A create/update result, with an optional soft page-path-collision warning.
+ * Mirrors `RedirectMutationResult` (`ConflictWarning` is required-key, nullable-value).
+ */
+export interface RedirectMutationResult {
+  readonly redirect: RedirectResponse;
+  readonly conflictWarning: string | null;
+}
+
+/** Resolution result for the public resolve endpoint. Mirrors `ResolveResponse` (HTTP 200). */
+export interface ResolveResponse {
   readonly target: string;
   readonly statusCode: number;
 }
 
-/** One CMS redirect rule. Returned by `GET /api/cms/redirects`. */
-export interface RedirectResponse {
-  readonly id: string;
+/** Admin preview of resolving a candidate path. Mirrors `RedirectPreviewResponse`. */
+export interface RedirectPreviewResponse {
+  readonly matched: boolean;
+  readonly target: string | null;
+  readonly statusCode: number | null;
+}
+
+/** A site's redirect settings. Mirrors `SiteRedirectSettingsResponse`. */
+export interface SiteRedirectSettingsResponse {
   readonly siteId: string;
-  readonly fromPath: string;
-  readonly toPath: string;
-  readonly culture: string | null;
-  readonly statusCode: number;
-  readonly isEnabled: boolean;
+  readonly autoRedirectOnMove: boolean;
 }
 
-/** Request body for `POST /api/cms/redirects`. */
-export interface CreateRedirectRequest {
-  readonly siteId: string;
-  readonly fromPath: string;
-  readonly toPath: string;
+// ─── Requests ────────────────────────────────────────────────────────────────
+
+/**
+ * Create body for a redirect. Mirrors `RedirectCreateRequest`.
+ * `Type` / `MatchType` / `Culture` / `IsActive` all have C# defaults → optional.
+ */
+export interface RedirectCreateRequest {
+  readonly source: string;
+  readonly target: string;
+  readonly type?: RedirectType;
+  readonly matchType?: RedirectMatchType;
   readonly culture?: string | null;
-  readonly statusCode?: number;
+  readonly isActive?: boolean;
 }
 
-/** Request body for `PUT /api/cms/redirects/{id}`. */
-export interface UpdateRedirectRequest {
-  readonly fromPath: string;
-  readonly toPath: string;
-  readonly culture?: string | null;
-  readonly statusCode?: number;
-  readonly isEnabled?: boolean;
+/**
+ * Update body for a redirect — repoints target / status / match type and toggles
+ * active. The source path is immutable (delete + recreate to change it).
+ * Mirrors `RedirectUpdateRequest`.
+ */
+export interface RedirectUpdateRequest {
+  readonly target: string;
+  readonly type?: RedirectType;
+  readonly matchType?: RedirectMatchType;
+  readonly isActive?: boolean;
 }
 
-/** Query parameters for `GET /api/cms/redirects`. */
-export interface ListRedirectsParams {
-  readonly siteId?: string;
-  readonly page?: number;
-  readonly pageSize?: number;
-  readonly search?: string;
+/** Upsert body for a site's redirect settings. Mirrors `SiteRedirectSettingsRequest`. */
+export interface SiteRedirectSettingsRequest {
+  readonly autoRedirectOnMove: boolean;
 }

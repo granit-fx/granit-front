@@ -19,7 +19,6 @@ import type {
   MenuResponse,
   PageResponse,
   PageTreeNodeResponse,
-  PagedResponse,
   ReleaseResponse,
   ScheduleReleaseRequest,
   SiteResponse,
@@ -27,12 +26,18 @@ import type {
   UpdatePageRequest,
   UpdateSiteRequest,
 } from '@granit/cms';
+import type { PagedResult } from '@granit/query-engine';
 
 const notFound = () => new HttpResponse(null, { status: 404 });
 
-function paged<T>(items: readonly T[], page: number, pageSize: number): PagedResponse<T> {
+function paged<T>(items: readonly T[], page: number, pageSize: number): PagedResult<T> {
   const start = (page - 1) * pageSize;
-  return { items: items.slice(start, start + pageSize), totalCount: items.length, page, pageSize };
+  return {
+    items: items.slice(start, start + pageSize),
+    totalCount: items.length,
+    hasMore: start + pageSize < items.length,
+    nextCursor: null,
+  };
 }
 
 /** Sites handlers (`/api/cms/sites`) — list/detail/create/update/delete. */
@@ -139,17 +144,19 @@ export function createPagesHandlers(baseUrl = '/api/cms/pages'): RequestHandler[
     http.post(baseUrl, async ({ request }) => {
       const dto = (await request.json()) as CreatePageRequest;
       const parent = nodes.find((node) => node.id === dto.parentId);
+      if (!parent) return notFound();
       const created: StoredNode = {
         id: crypto.randomUUID(),
-        siteId: dto.siteId,
-        parentId: dto.parentId ?? null,
+        // Site is inherited from the parent (the real backend does the same).
+        siteId: parent.siteId,
+        parentId: dto.parentId,
         slugSegment: dto.slugSegment,
-        structurePath: `${parent && !parent.isSiteRoot ? parent.structurePath : ''}/${dto.slugSegment}`,
-        depth: parent ? parent.depth + 1 : 0,
+        structurePath: `${parent.isSiteRoot ? '' : parent.structurePath}/${dto.slugSegment}`,
+        depth: parent.depth + 1,
         isSiteRoot: false,
       };
       nodes.push(created);
-      return HttpResponse.json(toTreeNode(created), { status: 201 });
+      return HttpResponse.json(toPageResponse(created), { status: 201 });
     }),
 
     http.put(`${baseUrl}/:id`, async ({ params, request }) => {
@@ -158,7 +165,7 @@ export function createPagesHandlers(baseUrl = '/api/cms/pages'): RequestHandler[
       const dto = (await request.json()) as UpdatePageRequest;
       const updated: StoredNode = { ...existing, slugSegment: dto.slugSegment };
       nodes[nodes.indexOf(existing)] = updated;
-      return HttpResponse.json(toTreeNode(updated));
+      return HttpResponse.json(toPageResponse(updated));
     }),
 
     http.delete(`${baseUrl}/:id`, ({ params }) => {
@@ -174,7 +181,6 @@ function toMenuItems(
   items: CreateMenuRequest['items'] | UpdateMenuRequest['items']
 ): MenuItemResponse[] {
   return (items ?? []).map((item) => ({
-    id: crypto.randomUUID(),
     label: item.label,
     kind: item.kind,
     pageId: item.pageId ?? null,
@@ -241,7 +247,7 @@ export function createMenusHandlers(baseUrl = '/api/cms/menus'): RequestHandler[
   ];
 }
 
-/** Releases handlers (`/api/cms/releases`) — list/detail/create/publish/schedule/cancel/delete. */
+/** Releases handlers (`/api/cms/releases`) — list/detail/create/publish/schedule/cancel. */
 export function createReleasesHandlers(baseUrl = '/api/cms/releases'): RequestHandler[] {
   const releases: ReleaseResponse[] = mockReleases.map((release) => ({ ...release }));
 
@@ -281,7 +287,7 @@ export function createReleasesHandlers(baseUrl = '/api/cms/releases'): RequestHa
       if (!existing) return notFound();
       const updated: ReleaseResponse = {
         ...existing,
-        status: 'Executed',
+        status: 'Done',
         actions: existing.actions.map((action) => ({ ...action, status: 'Succeeded' })),
       };
       releases[releases.indexOf(existing)] = updated;
@@ -309,15 +315,9 @@ export function createReleasesHandlers(baseUrl = '/api/cms/releases'): RequestHa
     http.post(`${baseUrl}/:id/cancel`, ({ params }) => {
       const existing = releases.find((candidate) => candidate.id === params.id);
       if (!existing) return notFound();
-      releases[releases.indexOf(existing)] = { ...existing, status: 'Draft', schedule: null };
-      return new HttpResponse(null, { status: 204 });
-    }),
-
-    http.delete(`${baseUrl}/:id`, ({ params }) => {
-      const existing = releases.find((candidate) => candidate.id === params.id);
-      if (!existing) return notFound();
-      releases.splice(releases.indexOf(existing), 1);
-      return new HttpResponse(null, { status: 204 });
+      const updated: ReleaseResponse = { ...existing, status: 'Draft', schedule: null };
+      releases[releases.indexOf(existing)] = updated;
+      return HttpResponse.json(updated);
     }),
   ];
 }

@@ -6,39 +6,36 @@ import { http, HttpResponse, type RequestHandler } from 'msw';
 
 import { mockHostnames } from './data';
 
-import type { ManagedHostnameResponse } from '@granit/cms-hostnames';
-
-type AddHostnameBody = { readonly host: string; readonly isPrimary?: boolean };
+import type { SiteHostnameCreateRequest, SiteHostnameResponse } from '@granit/cms-hostnames';
 
 /**
- * MSW handlers for the site-scoped managed-hostnames API
+ * MSW handlers for the site-scoped CMS hostnames API
  * (`{baseUrl}/sites/{siteId}/hostnames`). The list endpoint returns a BARE
- * ARRAY; mutations cover add/remove/set-primary/verify.
+ * ARRAY of the narrow {@link SiteHostnameResponse} shape; mutations cover
+ * add / remove / verify-now. There is NO `/primary` endpoint.
  *
  * @param baseUrl - CMS API base (default `/api/cms`).
  */
 export function createCmsHostnamesHandlers(baseUrl = '/api/cms'): RequestHandler[] {
   const collection = `${baseUrl}/sites/:siteId/hostnames`;
-  const hostnames: ManagedHostnameResponse[] = mockHostnames.map((hostname) => ({ ...hostname }));
+  const hostnames: SiteHostnameResponse[] = mockHostnames.map((hostname) => ({ ...hostname }));
 
   return [
-    http.get(collection, ({ params }) => {
-      const siteId = params.siteId as string;
-      return HttpResponse.json(hostnames.filter((hostname) => hostname.ownerId === siteId));
+    http.get(`${collection}/availability`, ({ request }) => {
+      const host = new URL(request.url).searchParams.get('host') ?? '';
+      const taken = hostnames.some((hostname) => hostname.host === host);
+      return HttpResponse.json({ host, available: !taken });
     }),
 
-    http.post(collection, async ({ params, request }) => {
-      const siteId = params.siteId as string;
-      const dto = (await request.json()) as AddHostnameBody;
-      const hostname: ManagedHostnameResponse = {
+    http.get(collection, () => HttpResponse.json(hostnames)),
+
+    http.post(collection, async ({ request }) => {
+      const dto = (await request.json()) as SiteHostnameCreateRequest;
+      const hostname: SiteHostnameResponse = {
         id: crypto.randomUUID(),
         host: dto.host,
-        ownerType: 'cms.site',
-        ownerId: siteId,
-        tenantId: null,
-        isPrimary: dto.isPrimary ?? false,
         status: 'Pending',
-        verificationToken: `granit-verify-${crypto.randomUUID().slice(0, 8)}`,
+        isPrimary: dto.isPrimary ?? false,
         expectedDnsRecords: [
           {
             recordType: 'Cname',
@@ -47,32 +44,10 @@ export function createCmsHostnamesHandlers(baseUrl = '/api/cms'): RequestHandler
           },
         ],
         lastCheckedAt: null,
-        conflicts: [],
-        failedCheckCount: 0,
-        nextCheckAt: null,
         certificateStatus: 'Unprovisioned',
-        certExpiresAt: null,
-        createdAt: '2026-06-04T00:00:00Z',
-        createdBy: 'marie.dupont',
-        modifiedAt: null,
-        modifiedBy: null,
-        concurrencyStamp: crypto.randomUUID(),
       };
       hostnames.push(hostname);
       return HttpResponse.json(hostname, { status: 201 });
-    }),
-
-    http.post(`${collection}/:hostnameId/primary`, ({ params }) => {
-      const target = hostnames.find((hostname) => hostname.id === params.hostnameId);
-      if (!target) {
-        return new HttpResponse(null, { status: 404 });
-      }
-      hostnames.forEach((hostname, i) => {
-        if (hostname.ownerId === target.ownerId) {
-          hostnames[i] = { ...hostname, isPrimary: hostname.id === target.id };
-        }
-      });
-      return new HttpResponse(null, { status: 204 });
     }),
 
     http.post(`${collection}/:hostnameId/verify-now`, ({ params }) => {
@@ -80,7 +55,7 @@ export function createCmsHostnamesHandlers(baseUrl = '/api/cms'): RequestHandler
       if (!existing) {
         return new HttpResponse(null, { status: 404 });
       }
-      const updated: ManagedHostnameResponse = {
+      const updated: SiteHostnameResponse = {
         ...existing,
         status: 'Verifying',
         lastCheckedAt: '2026-06-04T00:00:00Z',

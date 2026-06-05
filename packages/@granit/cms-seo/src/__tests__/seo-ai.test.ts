@@ -10,29 +10,53 @@ import {
   triggerBulkSeoAudit,
 } from '../api/seo-ai';
 
-import type { PagedResponse, SeoAiSuggestionResponse, SeoAiSuggestResponse } from '../types/index';
+import type {
+  SeoAiSuggestRequest,
+  SeoAiSuggestResponse,
+  SeoAiSuggestionResponse,
+  SeoSuggestionDiff,
+  SeoSuggestionListResponse,
+} from '../types/index';
 
 const BASE = 'https://cms.example.com';
 
 const suggestion: SeoAiSuggestionResponse = {
   id: 'sug-1',
+  siteId: 'site-1',
   contentType: 'page',
   contentId: 'page-1',
   culture: 'fr',
-  status: 'Ready',
+  status: 'Pending',
+  scope: 'Title, Description',
+  appliedFields: 'None',
+  title: 'A title',
+  description: 'A description',
+  keywords: ['k'],
+  ogImageAltText: null,
+  structuredDataJson: null,
+  modelId: 'gpt-4o-mini',
+  promptTemplateVersion: 'v1',
+  createdAt: '2026-06-01T10:00:00.000Z',
+  reviewedBy: null,
+  reviewedAt: null,
+  failureReason: null,
+  rejectionReason: null,
 };
 
 describe('suggestSeo', () => {
   it('POST /api/cms/seo/ai/suggest', async () => {
     const client = createMockClient();
-    const response: SeoAiSuggestResponse = { outcome: 'Success', suggestion };
+    const response: SeoAiSuggestResponse = { outcome: 'Succeeded', suggestion };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(response));
 
-    const request = {
+    const request: SeoAiSuggestRequest = {
+      siteId: 'site-1',
       contentType: 'page',
       contentId: 'page-1',
       culture: 'fr',
       contentTitle: 'Test',
+      contentBody: 'Body text',
+      scope: 'Title, Description',
     };
     const result = await suggestSeo(client, BASE, request);
 
@@ -44,18 +68,13 @@ describe('suggestSeo', () => {
 describe('listSeoSuggestions', () => {
   it('GET /api/cms/seo/ai/suggestions', async () => {
     const client = createMockClient();
-    const response: PagedResponse<SeoAiSuggestionResponse> = {
-      items: [suggestion],
-      totalCount: 1,
-      page: 0,
-      pageSize: 20,
-    };
+    const response: SeoSuggestionListResponse = { items: [suggestion], total: 1 };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(response));
 
-    const result = await listSeoSuggestions(client, BASE, { status: 'Ready' });
+    const result = await listSeoSuggestions(client, BASE, { status: 'Pending', skip: 0, take: 25 });
 
     expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/seo/ai/suggestions`, {
-      params: { status: 'Ready' },
+      params: { status: 'Pending', skip: 0, take: 25 },
     });
     expect(result).toEqual(response);
   });
@@ -64,25 +83,35 @@ describe('listSeoSuggestions', () => {
 describe('getSeoSuggestionDiff', () => {
   it('GET /api/cms/seo/ai/suggestions/{id}/diff', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse(suggestion));
+    const diff: SeoSuggestionDiff = {
+      suggestionId: 'sug-1',
+      scope: 'Title, Description',
+      fields: [
+        { field: 'Title', inScope: true, current: 'Old', proposed: 'New' },
+        { field: 'Description', inScope: true, current: null, proposed: 'New desc' },
+      ],
+    };
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(diff));
 
     const result = await getSeoSuggestionDiff(client, BASE, 'sug-1');
 
     expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/seo/ai/suggestions/sug-1/diff`);
-    expect(result).toEqual(suggestion);
+    expect(result).toEqual(diff);
   });
 });
 
 describe('applySeoSuggestion', () => {
-  it('POST /api/cms/seo/ai/suggestions/{id}/apply', async () => {
+  it('POST /api/cms/seo/ai/suggestions/{id}/apply with the flags string', async () => {
     const client = createMockClient();
-    const applied = { ...suggestion, status: 'Applied' as const };
+    const applied: SeoAiSuggestionResponse = { ...suggestion, status: 'Accepted' };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(applied));
 
-    const result = await applySeoSuggestion(client, BASE, 'sug-1', { fields: ['title'] });
+    const result = await applySeoSuggestion(client, BASE, 'sug-1', {
+      fields: 'Title, Description',
+    });
 
     expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/seo/ai/suggestions/sug-1/apply`, {
-      fields: ['title'],
+      fields: 'Title, Description',
     });
     expect(result).toEqual(applied);
   });
@@ -91,7 +120,7 @@ describe('applySeoSuggestion', () => {
 describe('rejectSeoSuggestion', () => {
   it('POST /api/cms/seo/ai/suggestions/{id}/reject with reason', async () => {
     const client = createMockClient();
-    const rejected = { ...suggestion, status: 'Rejected' as const };
+    const rejected: SeoAiSuggestionResponse = { ...suggestion, status: 'Rejected' };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(rejected));
 
     await rejectSeoSuggestion(client, BASE, 'sug-1', { reason: 'Not relevant' });

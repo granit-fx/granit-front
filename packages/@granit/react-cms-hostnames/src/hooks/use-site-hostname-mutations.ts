@@ -1,26 +1,16 @@
-import {
-  addSiteHostname,
-  clearSiteHostnamePrimary,
-  removeSiteHostname,
-  setSiteHostnamePrimary,
-  verifySiteHostname,
-} from '@granit/cms-hostnames';
+import { addSiteHostname, removeSiteHostname, verifySiteHostname } from '@granit/cms-hostnames';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCmsHostnamesConfig } from '../providers/cms-hostnames-provider';
 
 import { cmsHostnamesKeys } from './query-keys';
 
-import type { CreateManagedHostnameRequest, ManagedHostnameResponse } from '@granit/hostnames';
+import type { SiteHostnameCreateRequest, SiteHostnameResponse } from '@granit/cms-hostnames';
 import type { UseMutationResult } from '@tanstack/react-query';
 
 export function useAddSiteHostname(
   siteId: string
-): UseMutationResult<
-  ManagedHostnameResponse,
-  Error,
-  Pick<CreateManagedHostnameRequest, 'host' | 'isPrimary'>
-> {
+): UseMutationResult<SiteHostnameResponse, Error, SiteHostnameCreateRequest> {
   const { client, basePath, queryKeyPrefix } = useCmsHostnamesConfig();
   const qc = useQueryClient();
   return useMutation({
@@ -43,33 +33,9 @@ export function useRemoveSiteHostname(siteId: string): UseMutationResult<void, E
   });
 }
 
-export function useSetSiteHostnamePrimary(siteId: string): UseMutationResult<void, Error, string> {
-  const { client, basePath, queryKeyPrefix } = useCmsHostnamesConfig();
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (hostnameId) => setSiteHostnamePrimary(client, basePath, siteId, hostnameId),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: cmsHostnamesKeys.list(queryKeyPrefix, siteId) });
-    },
-  });
-}
-
-export function useClearSiteHostnamePrimary(
-  siteId: string
-): UseMutationResult<void, Error, string> {
-  const { client, basePath, queryKeyPrefix } = useCmsHostnamesConfig();
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (hostnameId) => clearSiteHostnamePrimary(client, basePath, siteId, hostnameId),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: cmsHostnamesKeys.list(queryKeyPrefix, siteId) });
-    },
-  });
-}
-
 export function useVerifySiteHostname(
   siteId: string
-): UseMutationResult<ManagedHostnameResponse, Error, string> {
+): UseMutationResult<SiteHostnameResponse, Error, string> {
   const { client, basePath, queryKeyPrefix } = useCmsHostnamesConfig();
   const qc = useQueryClient();
   return useMutation({

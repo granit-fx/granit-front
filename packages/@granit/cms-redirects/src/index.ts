@@ -1,11 +1,19 @@
 // ─── Types ───────────────────────────────────────────────────────────────────
 export type {
-  CreateRedirectRequest,
-  ListRedirectsParams,
-  PagedResponse,
-  RedirectResolveResponse,
+  PagedResult,
+  PaginationParams,
+  QueryRequest,
+  RedirectCreateRequest,
+  RedirectMatchType,
+  RedirectMutationResult,
+  RedirectOrigin,
+  RedirectPreviewResponse,
   RedirectResponse,
-  UpdateRedirectRequest,
+  RedirectType,
+  RedirectUpdateRequest,
+  ResolveResponse,
+  SiteRedirectSettingsRequest,
+  SiteRedirectSettingsResponse,
 } from './types/index';
 
 // ─── API — Public renderer ────────────────────────────────────────────────────
@@ -15,6 +23,11 @@ export { resolveRedirect } from './api/redirects';
 export {
   createRedirect,
   deleteRedirect,
+  getRedirect,
+  getRedirectsGrid,
+  getRedirectSettings,
   listRedirects,
+  previewRedirect,
   updateRedirect,
+  updateRedirectSettings,
 } from './api/redirects-admin';

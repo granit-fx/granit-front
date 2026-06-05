@@ -1,9 +1,6 @@
 // ─── Types ───────────────────────────────────────────────────────────────────
 export type {
-  // Shared
-  PagedResponse,
   // Blocks
-  BatchResolveDocumentsRequest,
   BlockCatalogEntry,
   BlockCatalogResponse,
   BlockCategoryGroup,
@@ -13,8 +10,6 @@ export type {
   BlockFieldKind,
   BlockFieldOption,
   BlockRenderSide,
-  ResolveDocumentItem,
-  ResolvedDocumentResponse,
   // Pages — public
   DraftPagePreviewResponse,
   MintPreviewTokenRequest,
@@ -31,6 +26,13 @@ export type {
   SaveDraftRequest,
   UpdatePageRequest,
   UpdatePageTranslationRequest,
+  // Pages — search
+  PageSearchHitResponse,
+  PageSearchPageResponse,
+  PageSearchParams,
+  // Pages — editing presence
+  PageEditingPresenceEntryResponse,
+  PageEditingPresenceResponse,
   // Menus — public
   MenuTargetKind,
   ResolvedMenu,
@@ -76,8 +78,8 @@ export { getBlockCatalog, resolveBlockData } from './api/blocks';
 // Menus
 export { resolveMenu } from './api/menus';
 
-// Document Resolution
-export { batchResolveDocuments } from './api/documents';
+// Page search (public + admin)
+export { searchPages, searchPagesAdmin } from './api/page-search';
 
 // ─── API — Admin ──────────────────────────────────────────────────────────────
 
@@ -101,6 +103,13 @@ export {
   updatePageTranslation,
 } from './api/pages-admin';
 
+// Page editing presence
+export {
+  getPageEditingPresence,
+  leavePageEditing,
+  sendPageEditingHeartbeat,
+} from './api/page-presence';
+
 // Menus admin
 export { createMenu, deleteMenu, getMenu, listMenus, updateMenu } from './api/menus-admin';
 
@@ -109,7 +118,6 @@ export {
   addReleaseAction,
   cancelRelease,
   createRelease,
-  deleteRelease,
   getRelease,
   listReleases,
   publishRelease,

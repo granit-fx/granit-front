@@ -11,7 +11,6 @@
   "devDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/cms-hostnames": "workspace:*",
-    "@granit/hostnames": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
@@ -20,7 +19,6 @@
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/cms-hostnames": "workspace:*",
-    "@granit/hostnames": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "msw": "^2.12.0",

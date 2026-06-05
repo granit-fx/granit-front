@@ -9,7 +9,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useSiteHostnameAvailability, useSiteHostnames } from '../hooks/use-site-hostnames';
 import { CmsHostnamesProvider } from '../providers/cms-hostnames-provider';
 
-import type { CheckAvailabilityResponse, ManagedHostnameResponse } from '@granit/hostnames';
+import type { SiteHostnameAvailabilityResponse, SiteHostnameResponse } from '@granit/cms-hostnames';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -18,27 +18,14 @@ vi.mock('@granit/cms-hostnames', () => ({
   checkSiteHostnameAvailability: vi.fn(),
 }));
 
-const hostname: ManagedHostnameResponse = {
+const hostname: SiteHostnameResponse = {
   id: 'h-1',
   host: 'example.com',
-  isPrimary: true,
-  ownerType: 'cms.site',
-  ownerId: 'site-1',
-  tenantId: null,
   status: 'Active',
-  verificationToken: null,
+  isPrimary: true,
   expectedDnsRecords: [],
   lastCheckedAt: null,
-  conflicts: [],
-  failedCheckCount: 0,
-  nextCheckAt: null,
   certificateStatus: 'Unprovisioned',
-  certExpiresAt: null,
-  createdAt: '2026-01-01T00:00:00Z',
-  createdBy: 'system',
-  modifiedAt: null,
-  modifiedBy: null,
-  concurrencyStamp: 'stamp-1',
 };
 
 function createWrapper(client: AxiosInstance) {
@@ -66,7 +53,7 @@ describe('useSiteHostnames', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(listSiteHostnames).toHaveBeenCalledWith(client, '', 'site-1', { maxResults: undefined });
+    expect(listSiteHostnames).toHaveBeenCalledWith(client, '', 'site-1');
     expect(result.current.data).toEqual([hostname]);
   });
 
@@ -85,7 +72,7 @@ describe('useSiteHostnameAvailability', () => {
 
   it('checks hostname availability', async () => {
     const client = createMockClient();
-    const avail: CheckAvailabilityResponse = { host: 'example.com', isAvailable: true };
+    const avail: SiteHostnameAvailabilityResponse = { host: 'example.com', available: true };
     vi.mocked(checkSiteHostnameAvailability).mockResolvedValue(avail);
 
     const { result } = renderHook(() => useSiteHostnameAvailability('site-1', 'example.com'), {

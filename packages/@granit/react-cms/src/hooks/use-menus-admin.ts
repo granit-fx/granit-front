@@ -7,16 +7,17 @@ import { useCmsConfig } from '../providers/cms-provider';
 
 import { cmsKeys } from './query-keys';
 
-import type { ListMenusParams, MenuResponse, PagedResponse } from '@granit/cms';
+import type { ListMenusParams, MenuResponse } from '@granit/cms';
+import type { PagedResult } from '@granit/query-engine';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 export function useMenus(
   params?: ListMenusParams,
   options?: { readonly enabled?: boolean }
-): UseQueryResult<PagedResponse<MenuResponse>> {
+): UseQueryResult<PagedResult<MenuResponse>> {
   const { client, basePath, queryKeyPrefix } = useCmsConfig();
   return useQuery({
-    queryKey: cmsKeys.menus.list(queryKeyPrefix, params?.siteId),
+    queryKey: cmsKeys.menus.list(queryKeyPrefix, params),
     queryFn: () => listMenus(client, basePath, params),
     enabled: options?.enabled ?? true,
     staleTime: 30_000,

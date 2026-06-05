@@ -1,19 +1,19 @@
 import type {
   CreateSiteRequest,
   ListSitesParams,
-  PagedResponse,
   SiteResponse,
   UpdateSiteRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
+import type { PagedResult } from '@granit/query-engine';
 
 /** `GET /api/cms/sites` — list sites (paged). Requires `Cms.Sites.Read`. */
 export async function listSites(
   client: AxiosInstance,
   basePath: string,
   params?: ListSitesParams
-): Promise<PagedResponse<SiteResponse>> {
-  const res = await client.get<PagedResponse<SiteResponse>>(`${basePath}/api/cms/sites`, {
+): Promise<PagedResult<SiteResponse>> {
+  const res = await client.get<PagedResult<SiteResponse>>(`${basePath}/api/cms/sites`, {
     params,
   });
   return res.data;

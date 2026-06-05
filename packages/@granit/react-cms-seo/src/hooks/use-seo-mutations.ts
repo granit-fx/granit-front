@@ -30,9 +30,11 @@ export function useUpsertSeoMetadata(): UseMutationResult<
     mutationFn: ({ key, request }) => upsertSeoMetadata(client, basePath, key, request),
     onSuccess: (data, { key }) => {
       qc.setQueryData(cmsSeoKeys.metadata.detail(queryKeyPrefix, key), data);
+      qc.invalidateQueries({ queryKey: cmsSeoKeys.metadata.effective(queryKeyPrefix, key) });
       qc.invalidateQueries({ queryKey: cmsSeoKeys.metadata.serp(queryKeyPrefix, key) });
       qc.invalidateQueries({ queryKey: cmsSeoKeys.metadata.og(queryKeyPrefix, key) });
       qc.invalidateQueries({ queryKey: cmsSeoKeys.metadata.jsonld(queryKeyPrefix, key) });
+      qc.invalidateQueries({ queryKey: cmsSeoKeys.audit.all(queryKeyPrefix) });
     },
   });
 }
@@ -44,7 +46,11 @@ export function useDeleteSeoMetadata(): UseMutationResult<void, Error, SeoConten
     mutationFn: (key) => deleteSeoMetadata(client, basePath, key),
     onSuccess: (_data, key) => {
       qc.removeQueries({ queryKey: cmsSeoKeys.metadata.detail(queryKeyPrefix, key) });
-      qc.invalidateQueries({ queryKey: cmsSeoKeys.audit.list(queryKeyPrefix) });
+      qc.invalidateQueries({ queryKey: cmsSeoKeys.metadata.effective(queryKeyPrefix, key) });
+      qc.invalidateQueries({ queryKey: cmsSeoKeys.metadata.serp(queryKeyPrefix, key) });
+      qc.invalidateQueries({ queryKey: cmsSeoKeys.metadata.og(queryKeyPrefix, key) });
+      qc.invalidateQueries({ queryKey: cmsSeoKeys.metadata.jsonld(queryKeyPrefix, key) });
+      qc.invalidateQueries({ queryKey: cmsSeoKeys.audit.all(queryKeyPrefix) });
     },
   });
 }

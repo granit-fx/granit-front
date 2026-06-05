@@ -1,17 +1,18 @@
 import type {
   ApplySeoAiRequest,
   ListSeoSuggestionsParams,
-  PagedResponse,
   RejectSeoAiRequest,
   SeoAiSuggestRequest,
   SeoAiSuggestResponse,
   SeoAiSuggestionResponse,
+  SeoSuggestionDiff,
+  SeoSuggestionListResponse,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * `POST /api/cms/seo/ai/suggest` — request a suggestion for a content item.
- * Idempotent: the same content within 7 days reuses the existing suggestion.
+ * Idempotent: the same fingerprint within 7 days reuses the existing suggestion.
  * Requires `Cms.Seo.AI.Generate`.
  */
 export async function suggestSeo(
@@ -26,13 +27,13 @@ export async function suggestSeo(
   return res.data;
 }
 
-/** `GET /api/cms/seo/ai/suggestions` — paged inbox. Requires `Cms.Seo.AI.Read`. */
+/** `GET /api/cms/seo/ai/suggestions` — paged inbox (skip/take). Requires `Cms.Seo.AI.Read`. */
 export async function listSeoSuggestions(
   client: AxiosInstance,
   basePath: string,
   params?: ListSeoSuggestionsParams
-): Promise<PagedResponse<SeoAiSuggestionResponse>> {
-  const res = await client.get<PagedResponse<SeoAiSuggestionResponse>>(
+): Promise<SeoSuggestionListResponse> {
+  const res = await client.get<SeoSuggestionListResponse>(
     `${basePath}/api/cms/seo/ai/suggestions`,
     { params }
   );
@@ -44,8 +45,8 @@ export async function getSeoSuggestionDiff(
   client: AxiosInstance,
   basePath: string,
   id: string
-): Promise<SeoAiSuggestionResponse> {
-  const res = await client.get<SeoAiSuggestionResponse>(
+): Promise<SeoSuggestionDiff> {
+  const res = await client.get<SeoSuggestionDiff>(
     `${basePath}/api/cms/seo/ai/suggestions/${encodeURIComponent(id)}/diff`
   );
   return res.data;
@@ -53,6 +54,7 @@ export async function getSeoSuggestionDiff(
 
 /**
  * `POST /api/cms/seo/ai/suggestions/{id}/apply` — apply a subset of fields.
+ * `request.fields` is the flags string (e.g. `"Title, Description"`).
  * Requires `Cms.Seo.AI.Apply`.
  */
 export async function applySeoSuggestion(

@@ -9,7 +9,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useMenu, useMenus } from '../hooks/use-menus-admin';
 import { CmsProvider } from '../providers/cms-provider';
 
-import type { MenuResponse, PagedResponse } from '@granit/cms';
+import type { MenuResponse } from '@granit/cms';
+import type { PagedResult } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -44,20 +45,20 @@ describe('useMenus', () => {
 
   it('fetches paged menus', async () => {
     const client = createMockClient();
-    const paged: PagedResponse<MenuResponse> = {
+    const paged: PagedResult<MenuResponse> = {
       items: [menu],
       totalCount: 1,
-      page: 0,
-      pageSize: 20,
+      hasMore: false,
+      nextCursor: null,
     };
     vi.mocked(listMenus).mockResolvedValue(paged);
 
-    const { result } = renderHook(() => useMenus({ siteId: 'site-1' }), {
+    const { result } = renderHook(() => useMenus({ page: 1, pageSize: 20 }), {
       wrapper: createWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(listMenus).toHaveBeenCalledWith(client, '', { siteId: 'site-1' });
+    expect(listMenus).toHaveBeenCalledWith(client, '', { page: 1, pageSize: 20 });
   });
 });
 

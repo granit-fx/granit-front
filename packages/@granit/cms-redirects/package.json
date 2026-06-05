@@ -8,11 +8,12 @@
     ".": "./src/index.ts"
   },
   "peerDependencies": {
-    "@granit/api-client": "workspace:*"
+    "@granit/api-client": "workspace:*",
+    "@granit/query-engine": "workspace:*"
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
-    "@granit/cms": "workspace:*",
+    "@granit/query-engine": "workspace:*",
     "@granit/testing": "workspace:*"
   }
 }

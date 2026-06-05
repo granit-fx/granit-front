@@ -50,6 +50,7 @@ describe('resolveBlockData', () => {
     const client = createMockClient();
     const req: BlockDataResolveRequest = {
       dataSourceKey: 'blog-latest',
+      query: null,
       siteId: 'site-1',
       culture: 'fr',
     };

@@ -1012,9 +1012,14 @@
           "signature": "async function resolveMenu( client: AxiosInstance, basePath: string, params:"
         },
         {
-          "name": "batchResolveDocuments",
+          "name": "searchPages",
           "kind": "function",
-          "signature": "async function batchResolveDocuments( client: AxiosInstance, basePath: string, request: BatchResolveDocumentsRequest ): Promise<readonly (ResolvedDocumentResponse | null)[]>"
+          "signature": "async function searchPages( client: AxiosInstance, basePath: string, siteId: string, params: PageSearchParams ): Promise<PageSearchPageResponse>"
+        },
+        {
+          "name": "searchPagesAdmin",
+          "kind": "function",
+          "signature": "async function searchPagesAdmin( client: AxiosInstance, basePath: string, params: PageSearchParams ): Promise<PageSearchPageResponse>"
         },
         {
           "name": "createSite",
@@ -1034,7 +1039,7 @@
         {
           "name": "listSites",
           "kind": "function",
-          "signature": "async function listSites( client: AxiosInstance, basePath: string, params?: ListSitesParams ): Promise<PagedResponse<SiteResponse>>"
+          "signature": "async function listSites( client: AxiosInstance, basePath: string, params?: ListSitesParams ): Promise<PagedResult<SiteResponse>>"
         },
         {
           "name": "updateSite",
@@ -1059,7 +1064,7 @@
         {
           "name": "listMenus",
           "kind": "function",
-          "signature": "async function listMenus( client: AxiosInstance, basePath: string, params?: ListMenusParams ): Promise<PagedResponse<MenuResponse>>"
+          "signature": "async function listMenus( client: AxiosInstance, basePath: string, params?: ListMenusParams ): Promise<PagedResult<MenuResponse>>"
         },
         {
           "name": "updateMenu",
@@ -1070,7 +1075,7 @@
     },
     {
       "name": "@granit/cms-hostnames",
-      "description": "Granit CMS — site-scoped hostname management (wraps @granit/hostnames for /api/cms/sites/{siteId}/hostnames)",
+      "description": "Granit CMS — site-scoped hostname management for /api/cms/sites/{siteId}/hostnames",
       "exports": []
     },
     {
@@ -1092,6 +1097,26 @@
           "name": "getEffectiveSeo",
           "kind": "function",
           "signature": "async function getEffectiveSeo( client: AxiosInstance, basePath: string, params:"
+        },
+        {
+          "name": "getManifest",
+          "kind": "function",
+          "signature": "async function getManifest( client: AxiosInstance, basePath: string, siteId: string ): Promise<string | null>"
+        },
+        {
+          "name": "getRobotsTxt",
+          "kind": "function",
+          "signature": "async function getRobotsTxt( client: AxiosInstance, basePath: string, siteId: string ): Promise<string>"
+        },
+        {
+          "name": "getSitemap",
+          "kind": "function",
+          "signature": "async function getSitemap( client: AxiosInstance, basePath: string, siteId: string ): Promise<string>"
+        },
+        {
+          "name": "getSitemapFile",
+          "kind": "function",
+          "signature": "async function getSitemapFile( client: AxiosInstance, basePath: string, siteId: string, file: string ): Promise<string | null>"
         }
       ]
     },
@@ -3516,6 +3541,16 @@
           "signature": "function usePages( params?: ListPagesParams, options?:"
         },
         {
+          "name": "useSearchPages",
+          "kind": "function",
+          "signature": "function useSearchPages( siteId: string, params: PageSearchParams, options?:"
+        },
+        {
+          "name": "useSearchPagesAdmin",
+          "kind": "function",
+          "signature": "function useSearchPagesAdmin( params: PageSearchParams, options?:"
+        },
+        {
           "name": "useMenu",
           "kind": "function",
           "signature": "function useMenu( id: string, options?:"
@@ -3601,11 +3636,6 @@
           "name": "cmsRedirectsKeys",
           "kind": "const",
           "signature": "const cmsRedirectsKeys"
-        },
-        {
-          "name": "useRedirects",
-          "kind": "function",
-          "signature": "function useRedirects( params?: ListRedirectsParams, options?:"
         }
       ]
     },
@@ -3627,6 +3657,12 @@
           "name": "cmsSeoKeys",
           "kind": "const",
           "signature": "const cmsSeoKeys"
+        },
+        {
+          "name": "SeoContentKey",
+          "kind": "interface",
+          "signature": "interface SeoContentKey",
+          "members": []
         }
       ]
     },

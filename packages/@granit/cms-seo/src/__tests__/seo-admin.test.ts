@@ -9,15 +9,16 @@ import {
   getSeoMetadata,
   getSerpPreview,
   invalidateSitemap,
-  listSeoAuditIssues,
+  listSeoMetadata,
   updateSeoDefaults,
   upsertSeoMetadata,
 } from '../api/seo-admin';
 
 import type {
   OgCardPreviewResponse,
-  PagedResponse,
-  SeoAuditIssueResponse,
+  PagedResult,
+  RobotsDirective,
+  SeoMetadataListItem,
   SeoMetadataResponse,
   SerpPreviewResponse,
   SiteSeoDefaultsResponse,
@@ -27,11 +28,56 @@ const BASE = 'https://cms.example.com';
 const PARAMS = { siteId: 'site-1', contentType: 'page', contentId: 'page-1', culture: 'fr' };
 const META_URL = `${BASE}/api/cms/seo/sites/site-1/metadata/page/page-1/fr`;
 
+const robots: RobotsDirective = {
+  index: true,
+  follow: true,
+  noArchive: false,
+  noSnippet: false,
+  maxSnippet: null,
+  maxImagePreview: null,
+};
+
 const metadata: SeoMetadataResponse = {
+  id: 'm-1',
+  siteId: 'site-1',
   contentType: 'page',
   contentId: 'page-1',
   culture: 'fr',
   title: 'Page title',
+  titleTemplate: null,
+  description: null,
+  keywords: [],
+  canonicalUrl: null,
+  robots,
+  openGraph: null,
+  twitterCard: null,
+  structuredDataExtras: null,
+  disableAutoJsonLd: false,
+  alternateOverrides: [],
+  xDefaultCulture: null,
+  statusAtLastReview: 'NeedsReview',
+  lastReviewedAt: null,
+  concurrencyStamp: 'stamp-1',
+};
+
+const defaults: SiteSeoDefaultsResponse = {
+  id: 'd-1',
+  siteId: 'site-1',
+  titleTemplate: null,
+  siteName: 'ACME',
+  defaultDescription: null,
+  defaultRobots: robots,
+  canonicalHost: null,
+  sitemapMaxUrlsPerFile: 45000,
+  inheritFromParentPage: false,
+  defaultOpenGraph: null,
+  defaultTwitterCard: null,
+  defaultOgImage: null,
+  robotsTxtRules: [],
+  robotsTxtExtra: null,
+  manifest: null,
+  enableAutomaticSeoGeneration: false,
+  concurrencyStamp: 'stamp-1',
 };
 
 describe('getSeoMetadata', () => {
@@ -60,9 +106,17 @@ describe('upsertSeoMetadata', () => {
     const client = createMockClient();
     vi.mocked(client.put).mockResolvedValue(axiosResponse(metadata));
 
-    await upsertSeoMetadata(client, BASE, PARAMS, { title: 'Page title' });
+    await upsertSeoMetadata(client, BASE, PARAMS, {
+      title: 'Page title',
+      alternateOverrides: [{ culture: 'en', href: 'https://example.com/en' }],
+      structuredDataExtras: null,
+    });
 
-    expect(client.put).toHaveBeenCalledWith(META_URL, { title: 'Page title' });
+    expect(client.put).toHaveBeenCalledWith(META_URL, {
+      title: 'Page title',
+      alternateOverrides: [{ culture: 'en', href: 'https://example.com/en' }],
+      structuredDataExtras: null,
+    });
   });
 });
 
@@ -80,7 +134,6 @@ describe('deleteSeoMetadata', () => {
 describe('getSeoDefaults', () => {
   it('GET /api/cms/seo/sites/{siteId}/defaults', async () => {
     const client = createMockClient();
-    const defaults: SiteSeoDefaultsResponse = { siteId: 'site-1', siteName: 'ACME' };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(defaults));
 
     const result = await getSeoDefaults(client, BASE, 'site-1');
@@ -93,8 +146,7 @@ describe('getSeoDefaults', () => {
 describe('updateSeoDefaults', () => {
   it('PUT /api/cms/seo/sites/{siteId}/defaults', async () => {
     const client = createMockClient();
-    const updated: SiteSeoDefaultsResponse = { siteId: 'site-1', siteName: 'Updated' };
-    vi.mocked(client.put).mockResolvedValue(axiosResponse(updated));
+    vi.mocked(client.put).mockResolvedValue(axiosResponse(defaults));
 
     await updateSeoDefaults(client, BASE, 'site-1', { siteName: 'Updated' });
 
@@ -104,25 +156,46 @@ describe('updateSeoDefaults', () => {
   });
 });
 
-describe('listSeoAuditIssues', () => {
-  it('GET /api/cms/seo/metadata', async () => {
+describe('listSeoMetadata', () => {
+  it('GET /api/cms/seo/metadata serializes the query request', async () => {
     const client = createMockClient();
-    const response: PagedResponse<SeoAuditIssueResponse> = {
+    const response: PagedResult<SeoMetadataListItem> = {
       items: [
-        { contentType: 'page', contentId: 'p-1', culture: 'fr', issueType: 'MissingDescription' },
+        {
+          id: 'm-1',
+          siteId: 'site-1',
+          contentType: 'page',
+          contentId: 'p-1',
+          culture: 'fr',
+          title: null,
+          description: null,
+          canonicalUrl: null,
+        },
       ],
       totalCount: 1,
-      page: 0,
-      pageSize: 20,
+      hasMore: false,
+      nextCursor: null,
     };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(response));
 
-    const result = await listSeoAuditIssues(client, BASE, { issueType: 'MissingDescription' });
+    const result = await listSeoMetadata(client, BASE, { quickFilters: ['MissingDescription'] });
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/seo/metadata`, {
-      params: { issueType: 'MissingDescription' },
-    });
+    expect(client.get).toHaveBeenCalledWith(
+      `${BASE}/api/cms/seo/metadata?quickFilters=MissingDescription`,
+      undefined
+    );
     expect(result).toEqual(response);
+  });
+
+  it('omits the query string when no params are passed', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse({ items: [], totalCount: 0, hasMore: false, nextCursor: null })
+    );
+
+    await listSeoMetadata(client, BASE);
+
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/seo/metadata`, undefined);
   });
 });
 
@@ -142,8 +215,8 @@ describe('getSerpPreview', () => {
     const client = createMockClient();
     const preview: SerpPreviewResponse = {
       title: 'T',
-      url: 'https://example.com',
       description: 'D',
+      displayUrl: 'https://example.com',
     };
     vi.mocked(client.get).mockResolvedValue({ status: 200, data: preview });
 
@@ -169,7 +242,13 @@ describe('getSerpPreview', () => {
 describe('getOgCardPreview', () => {
   it('returns preview on 200', async () => {
     const client = createMockClient();
-    const preview: OgCardPreviewResponse = { title: 'T', description: 'D', siteName: 'S' };
+    const preview: OgCardPreviewResponse = {
+      type: 'website',
+      title: 'T',
+      description: 'D',
+      imageUrl: null,
+      siteName: 'S',
+    };
     vi.mocked(client.get).mockResolvedValue({ status: 200, data: preview });
 
     const result = await getOgCardPreview(client, BASE, PARAMS);
@@ -186,14 +265,14 @@ describe('getOgCardPreview', () => {
 });
 
 describe('getJsonLdPreview', () => {
-  it('returns @graph array on 200', async () => {
+  it('returns the @graph document on 200', async () => {
     const client = createMockClient();
-    const graph = [{ '@type': 'WebPage' }];
+    const graph = '{"@graph":[{"@type":"WebPage"}]}';
     vi.mocked(client.get).mockResolvedValue({ status: 200, data: graph });
 
     const result = await getJsonLdPreview(client, BASE, PARAMS);
 
-    expect(result).toEqual(graph);
+    expect(result).toBe(graph);
   });
 
   it('returns null on 204', async () => {

@@ -12,8 +12,8 @@ import type {
   PageResponse,
   PageTreeNodeResponse,
   PageVersionSummaryResponse,
-  PagedResponse,
 } from '@granit/cms';
+import type { PagedResult } from '@granit/query-engine';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 export function usePageTree(
@@ -31,7 +31,7 @@ export function usePageTree(
 export function usePages(
   params?: ListPagesParams,
   options?: { readonly enabled?: boolean }
-): UseQueryResult<PagedResponse<PageResponse>> {
+): UseQueryResult<PagedResult<PageResponse>> {
   const { client, basePath, queryKeyPrefix } = useCmsConfig();
   return useQuery({
     queryKey: cmsKeys.pages.list(queryKeyPrefix, params),

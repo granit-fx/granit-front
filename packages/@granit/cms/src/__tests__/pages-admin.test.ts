@@ -74,13 +74,13 @@ describe('listPages', () => {
   it('GET /api/cms/pages with params', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
-      axiosResponse({ items: [page], totalCount: 1, page: 0, pageSize: 20 })
+      axiosResponse({ items: [page], totalCount: 1, hasMore: false, nextCursor: null })
     );
 
-    await listPages(client, BASE, { siteId: 'site-1' });
+    await listPages(client, BASE, { page: 1, pageSize: 20 });
 
     expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/pages`, {
-      params: { siteId: 'site-1' },
+      params: { page: 1, pageSize: 20 },
     });
   });
 });
@@ -102,7 +102,7 @@ describe('createPage', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValue(axiosResponse(page));
 
-    const request = { siteId: 'site-1', slugSegment: 'home' };
+    const request = { parentId: 'parent-1', slugSegment: 'home', layoutKey: null };
     const result = await createPage(client, BASE, request);
 
     expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/pages`, request);
@@ -145,10 +145,10 @@ describe('movePage', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValue({ status: 204, data: undefined });
 
-    await movePage(client, BASE, 'page-1', { parentId: 'parent-1' });
+    await movePage(client, BASE, 'page-1', { newParentId: 'parent-1' });
 
     expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1/move`, {
-      parentId: 'parent-1',
+      newParentId: 'parent-1',
     });
   });
 });
@@ -220,13 +220,12 @@ describe('unpublishPage', () => {
 });
 
 describe('rollbackPage', () => {
-  it('POST /api/cms/pages/{id}/rollback/{versionId}', async () => {
+  it('POST /api/cms/pages/{id}/rollback/{versionId} (204 NoContent)', async () => {
     const client = createMockClient();
-    vi.mocked(client.post).mockResolvedValue(axiosResponse(version));
+    vi.mocked(client.post).mockResolvedValue({ status: 204, data: undefined });
 
-    const result = await rollbackPage(client, BASE, 'page-1', 'v-1');
+    await rollbackPage(client, BASE, 'page-1', 'v-1');
 
     expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1/rollback/v-1`);
-    expect(result).toEqual(version);
   });
 });

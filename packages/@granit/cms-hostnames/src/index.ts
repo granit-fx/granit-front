@@ -1,20 +1,17 @@
-// Re-export types and enum objects from @granit/hostnames so consumers don't
-// need to depend on both packages.
-export { CertificateStatus, ManagedHostnameStatus } from '@granit/hostnames';
+// ─── Types ──────────────────────────────────────────────────────────────────
 export type {
-  CertificateStatusReportRequest,
-  CheckAvailabilityResponse,
-  ExpectedDnsRecord,
-  ManagedHostnameResponse,
-} from '@granit/hostnames';
+  SiteHostnameAvailabilityResponse,
+  SiteHostnameCreateRequest,
+  SiteHostnameDnsRecordResponse,
+  SiteHostnameDnsRecordType,
+  SiteHostnameResponse,
+} from './types/index';
 
 // ─── API ──────────────────────────────────────────────────────────────────────
 export {
   addSiteHostname,
   checkSiteHostnameAvailability,
-  clearSiteHostnamePrimary,
   listSiteHostnames,
   removeSiteHostname,
-  setSiteHostnamePrimary,
   verifySiteHostname,
 } from './api/hostnames';

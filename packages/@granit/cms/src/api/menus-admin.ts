@@ -2,18 +2,18 @@ import type {
   CreateMenuRequest,
   ListMenusParams,
   MenuResponse,
-  PagedResponse,
   UpdateMenuRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
+import type { PagedResult } from '@granit/query-engine';
 
 /** `GET /api/cms/menus` — paged list. Requires `Cms.Menus.Read`. */
 export async function listMenus(
   client: AxiosInstance,
   basePath: string,
   params?: ListMenusParams
-): Promise<PagedResponse<MenuResponse>> {
-  const res = await client.get<PagedResponse<MenuResponse>>(`${basePath}/api/cms/menus`, {
+): Promise<PagedResult<MenuResponse>> {
+  const res = await client.get<PagedResult<MenuResponse>>(`${basePath}/api/cms/menus`, {
     params,
   });
   return res.data;

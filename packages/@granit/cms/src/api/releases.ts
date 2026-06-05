@@ -2,20 +2,20 @@ import type {
   AddReleaseActionRequest,
   CreateReleaseRequest,
   ListReleasesParams,
-  PagedResponse,
   ReleaseResponse,
   ScheduleReleaseRequest,
   UpdateReleaseRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
+import type { PagedResult } from '@granit/query-engine';
 
 /** `GET /api/cms/releases` — paged list. Requires `Cms.Releases.Read`. */
 export async function listReleases(
   client: AxiosInstance,
   basePath: string,
   params?: ListReleasesParams
-): Promise<PagedResponse<ReleaseResponse>> {
-  const res = await client.get<PagedResponse<ReleaseResponse>>(`${basePath}/api/cms/releases`, {
+): Promise<PagedResult<ReleaseResponse>> {
+  const res = await client.get<PagedResult<ReleaseResponse>>(`${basePath}/api/cms/releases`, {
     params,
   });
   return res.data;
@@ -57,15 +57,6 @@ export async function updateRelease(
   return res.data;
 }
 
-/** `DELETE /api/cms/releases/{id}`. Requires `Cms.Releases.Manage`. Returns `204`. */
-export async function deleteRelease(
-  client: AxiosInstance,
-  basePath: string,
-  id: string
-): Promise<void> {
-  await client.delete(`${basePath}/api/cms/releases/${encodeURIComponent(id)}`);
-}
-
 /** `POST /api/cms/releases/{id}/actions`. Requires `Cms.Releases.Manage`. */
 export async function addReleaseAction(
   client: AxiosInstance,
@@ -80,16 +71,17 @@ export async function addReleaseAction(
   return res.data;
 }
 
-/** `DELETE /api/cms/releases/{id}/actions/{actionId}`. Requires `Cms.Releases.Manage`. Returns `204`. */
+/** `DELETE /api/cms/releases/{id}/actions/{actionId}`. Requires `Cms.Releases.Manage`. Returns the updated release. */
 export async function removeReleaseAction(
   client: AxiosInstance,
   basePath: string,
   id: string,
   actionId: string
-): Promise<void> {
-  await client.delete(
+): Promise<ReleaseResponse> {
+  const res = await client.delete<ReleaseResponse>(
     `${basePath}/api/cms/releases/${encodeURIComponent(id)}/actions/${encodeURIComponent(actionId)}`
   );
+  return res.data;
 }
 
 /** `POST /api/cms/releases/{id}/schedule`. Requires `Cms.Releases.Manage`. */
@@ -106,13 +98,16 @@ export async function scheduleRelease(
   return res.data;
 }
 
-/** `POST /api/cms/releases/{id}/cancel`. Requires `Cms.Releases.Manage`. Returns `204`. */
+/** `POST /api/cms/releases/{id}/cancel`. Requires `Cms.Releases.Manage`. Returns the updated release. */
 export async function cancelRelease(
   client: AxiosInstance,
   basePath: string,
   id: string
-): Promise<void> {
-  await client.post(`${basePath}/api/cms/releases/${encodeURIComponent(id)}/cancel`);
+): Promise<ReleaseResponse> {
+  const res = await client.post<ReleaseResponse>(
+    `${basePath}/api/cms/releases/${encodeURIComponent(id)}/cancel`
+  );
+  return res.data;
 }
 
 /** `POST /api/cms/releases/{id}/publish` — immediate publish. Requires `Cms.Releases.Publish`. */

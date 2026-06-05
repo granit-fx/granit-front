@@ -8,14 +8,16 @@ export type {
 
 // Query keys
 export { cmsSeoKeys } from './hooks/query-keys';
+export type { SeoContentKey } from './hooks/query-keys';
 
 // SEO metadata hooks
 export {
+  useEffectiveSeo,
   useJsonLdPreview,
   useOgCardPreview,
-  useSeoAuditIssues,
   useSeoDefaults,
   useSeoMetadata,
+  useSeoMetadataAudit,
   useSerpPreview,
 } from './hooks/use-seo-metadata';
 
@@ -42,23 +44,38 @@ export type {
   ApplySeoAiRequest,
   EffectiveSeoResponse,
   Hreflang,
+  ImageDimensions,
+  ListSeoMetadataParams,
+  ListSeoSuggestionsParams,
   OgCardPreviewResponse,
   OgImage,
   OpenGraph,
   OpenGraphArticle,
-  PagedResponse,
+  PagedResult,
+  QueryRequest,
   RejectSeoAiRequest,
   RobotsDirective,
+  RobotsTxtRule,
   SeoAiSuggestRequest,
   SeoAiSuggestResponse,
   SeoAiSuggestionResponse,
-  SeoAiSuggestionStatus,
-  SeoAuditIssueResponse,
-  SeoAuditIssueType,
+  SeoAuditQuickFilter,
+  SeoGenerationOutcome,
+  SeoMetadataListItem,
+  SeoMetadataPage,
   SeoMetadataRequest,
   SeoMetadataResponse,
+  SeoReviewStatus,
+  SeoSuggestionDiff,
+  SeoSuggestionFieldDiff,
+  SeoSuggestionListResponse,
   SerpPreviewResponse,
   SiteSeoDefaultsRequest,
   SiteSeoDefaultsResponse,
+  SuggestionScope,
+  SuggestionScopeFlag,
+  SuggestionStatus,
   TwitterCard,
+  WebManifest,
+  WebManifestIcon,
 } from '@granit/cms-seo';

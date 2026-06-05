@@ -1,24 +1,29 @@
 // ─── Types ───────────────────────────────────────────────────────────────────
 export type {
-  // Shared
-  PagedResponse,
-  // Public / renderer
+  // Shared (audit grid)
+  PagedResult,
+  QueryRequest,
+  // Domain value objects
   EffectiveSeoResponse,
   Hreflang,
+  ImageDimensions,
   OgImage,
   OpenGraph,
   OpenGraphArticle,
   RobotsDirective,
+  RobotsTxtRule,
+  SeoReviewStatus,
   TwitterCard,
+  WebManifest,
+  WebManifestIcon,
   // SEO admin
   ListSeoMetadataParams,
   OgCardPreviewResponse,
-  SeoAuditIssueResponse,
-  SeoAuditIssueType,
-  SeoHreflangRequest,
+  SeoAuditQuickFilter,
+  SeoMetadataListItem,
+  SeoMetadataPage,
   SeoMetadataRequest,
   SeoMetadataResponse,
-  SeoRobotsRequest,
   SerpPreviewResponse,
   SiteSeoDefaultsRequest,
   SiteSeoDefaultsResponse,
@@ -26,15 +31,20 @@ export type {
   ApplySeoAiRequest,
   ListSeoSuggestionsParams,
   RejectSeoAiRequest,
-  SeoAiSuggestOutcome,
   SeoAiSuggestRequest,
   SeoAiSuggestResponse,
   SeoAiSuggestionResponse,
-  SeoAiSuggestionStatus,
+  SeoGenerationOutcome,
+  SeoSuggestionDiff,
+  SeoSuggestionFieldDiff,
+  SeoSuggestionListResponse,
+  SuggestionScope,
+  SuggestionScopeFlag,
+  SuggestionStatus,
 } from './types/index';
 
-// ─── API — Public renderer ────────────────────────────────────────────────────
-export { getEffectiveSeo } from './api/seo';
+// ─── API — Public renderer & anonymous documents ─────────────────────────────
+export { getEffectiveSeo, getManifest, getRobotsTxt, getSitemap, getSitemapFile } from './api/seo';
 
 // ─── API — SEO admin ─────────────────────────────────────────────────────────
 export {
@@ -45,7 +55,7 @@ export {
   getOgCardPreview,
   getSerpPreview,
   invalidateSitemap,
-  listSeoAuditIssues,
+  listSeoMetadata,
   updateSeoDefaults,
   upsertSeoMetadata,
 } from './api/seo-admin';

@@ -1,4 +1,9 @@
-import { createRedirect, deleteRedirect, updateRedirect } from '@granit/cms-redirects';
+import {
+  createRedirect,
+  deleteRedirect,
+  updateRedirect,
+  updateRedirectSettings,
+} from '@granit/cms-redirects';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -10,10 +15,15 @@ import {
   useCreateRedirect,
   useDeleteRedirect,
   useUpdateRedirect,
+  useUpdateRedirectSettings,
 } from '../hooks/use-redirect-mutations';
 import { CmsRedirectsProvider } from '../providers/cms-redirects-provider';
 
-import type { RedirectResponse } from '@granit/cms-redirects';
+import type {
+  RedirectMutationResult,
+  RedirectResponse,
+  SiteRedirectSettingsResponse,
+} from '@granit/cms-redirects';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -21,17 +31,25 @@ vi.mock('@granit/cms-redirects', () => ({
   createRedirect: vi.fn(),
   updateRedirect: vi.fn(),
   deleteRedirect: vi.fn(),
+  updateRedirectSettings: vi.fn(),
 }));
 
 const redirect: RedirectResponse = {
   id: 'r-1',
   siteId: 'site-1',
-  fromPath: '/old',
-  toPath: '/new',
-  culture: null,
+  source: '/old',
+  matchType: 'Exact',
+  target: '/new',
+  type: 'MovedPermanently',
   statusCode: 301,
-  isEnabled: true,
+  isActive: true,
+  culture: null,
+  origin: 'Manual',
+  hitCount: 0,
+  lastHitAt: null,
 };
+
+const mutationResult: RedirectMutationResult = { redirect, conflictWarning: null };
 
 function createWrapper(client: AxiosInstance) {
   return function Wrapper({ children }: { children: ReactNode }) {
@@ -45,45 +63,54 @@ function createWrapper(client: AxiosInstance) {
 }
 
 describe('useCreateRedirect', () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
+  afterEach(() => vi.clearAllMocks());
 
-  it('calls createRedirect', async () => {
+  it('calls createRedirect with siteId and exposes the mutation result', async () => {
     const client = createMockClient();
-    vi.mocked(createRedirect).mockResolvedValue(redirect);
+    vi.mocked(createRedirect).mockResolvedValue(mutationResult);
 
-    const req = { siteId: 'site-1', fromPath: '/old', toPath: '/new' };
+    const request = { source: '/old', target: '/new' };
     const { result } = renderHook(() => useCreateRedirect(), { wrapper: createWrapper(client) });
-    result.current.mutate(req);
+    result.current.mutate({ siteId: 'site-1', request });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(createRedirect).toHaveBeenCalledWith(client, '', req);
+    expect(createRedirect).toHaveBeenCalledWith(client, '', 'site-1', request);
+    expect(result.current.data).toEqual(mutationResult);
+  });
+
+  it('surfaces a conflict warning', async () => {
+    const client = createMockClient();
+    vi.mocked(createRedirect).mockResolvedValue({
+      redirect,
+      conflictWarning: 'shadows a live page',
+    });
+
+    const { result } = renderHook(() => useCreateRedirect(), { wrapper: createWrapper(client) });
+    result.current.mutate({ siteId: 'site-1', request: { source: '/old', target: '/new' } });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.data?.conflictWarning).toBe('shadows a live page');
   });
 });
 
 describe('useUpdateRedirect', () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
+  afterEach(() => vi.clearAllMocks());
 
   it('calls updateRedirect', async () => {
     const client = createMockClient();
-    vi.mocked(updateRedirect).mockResolvedValue(redirect);
+    vi.mocked(updateRedirect).mockResolvedValue(mutationResult);
 
-    const req = { fromPath: '/old', toPath: '/new-v2' };
+    const request = { target: '/new-v2' };
     const { result } = renderHook(() => useUpdateRedirect(), { wrapper: createWrapper(client) });
-    result.current.mutate({ id: 'r-1', request: req });
+    result.current.mutate({ id: 'r-1', request });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(updateRedirect).toHaveBeenCalledWith(client, '', 'r-1', req);
+    expect(updateRedirect).toHaveBeenCalledWith(client, '', 'r-1', request);
   });
 });
 
 describe('useDeleteRedirect', () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
+  afterEach(() => vi.clearAllMocks());
 
   it('calls deleteRedirect', async () => {
     const client = createMockClient();
@@ -94,5 +121,24 @@ describe('useDeleteRedirect', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(deleteRedirect).toHaveBeenCalledWith(client, '', 'r-1');
+  });
+});
+
+describe('useUpdateRedirectSettings', () => {
+  afterEach(() => vi.clearAllMocks());
+
+  it('calls updateRedirectSettings', async () => {
+    const client = createMockClient();
+    const settings: SiteRedirectSettingsResponse = { siteId: 'site-1', autoRedirectOnMove: false };
+    vi.mocked(updateRedirectSettings).mockResolvedValue(settings);
+
+    const request = { autoRedirectOnMove: false };
+    const { result } = renderHook(() => useUpdateRedirectSettings(), {
+      wrapper: createWrapper(client),
+    });
+    result.current.mutate({ siteId: 'site-1', request });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(updateRedirectSettings).toHaveBeenCalledWith(client, '', 'site-1', request);
   });
 });

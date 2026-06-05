@@ -9,20 +9,37 @@ export type {
 // Query keys
 export { cmsRedirectsKeys } from './hooks/query-keys';
 
-// Hooks
-export { useRedirects } from './hooks/use-redirects';
+// Query hooks
+export {
+  useRedirect,
+  useRedirectPreview,
+  useRedirects,
+  useRedirectsGrid,
+  useRedirectSettings,
+} from './hooks/use-redirects';
+
+// Mutation hooks
 export {
   useCreateRedirect,
   useDeleteRedirect,
   useUpdateRedirect,
+  useUpdateRedirectSettings,
 } from './hooks/use-redirect-mutations';
 
-// Re-export types from core package
+// Re-export types from the core package
 export type {
-  CreateRedirectRequest,
-  ListRedirectsParams,
-  PagedResponse,
+  PagedResult,
+  PaginationParams,
+  QueryRequest,
+  RedirectCreateRequest,
+  RedirectMatchType,
+  RedirectMutationResult,
+  RedirectOrigin,
+  RedirectPreviewResponse,
   RedirectResponse,
-  RedirectResolveResponse,
-  UpdateRedirectRequest,
+  RedirectType,
+  RedirectUpdateRequest,
+  ResolveResponse,
+  SiteRedirectSettingsRequest,
+  SiteRedirectSettingsResponse,
 } from '@granit/cms-redirects';

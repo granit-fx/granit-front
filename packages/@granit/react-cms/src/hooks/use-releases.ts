@@ -7,16 +7,17 @@ import { useCmsConfig } from '../providers/cms-provider';
 
 import { cmsKeys } from './query-keys';
 
-import type { ListReleasesParams, PagedResponse, ReleaseResponse } from '@granit/cms';
+import type { ListReleasesParams, ReleaseResponse } from '@granit/cms';
+import type { PagedResult } from '@granit/query-engine';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 export function useReleases(
   params?: ListReleasesParams,
   options?: { readonly enabled?: boolean }
-): UseQueryResult<PagedResponse<ReleaseResponse>> {
+): UseQueryResult<PagedResult<ReleaseResponse>> {
   const { client, basePath, queryKeyPrefix } = useCmsConfig();
   return useQuery({
-    queryKey: cmsKeys.releases.list(queryKeyPrefix, params?.siteId),
+    queryKey: cmsKeys.releases.list(queryKeyPrefix, params),
     queryFn: () => listReleases(client, basePath, params),
     enabled: options?.enabled ?? true,
     staleTime: 30_000,

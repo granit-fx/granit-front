@@ -2,7 +2,6 @@ import {
   addReleaseAction,
   cancelRelease,
   createRelease,
-  deleteRelease,
   publishRelease,
   removeReleaseAction,
   scheduleRelease,
@@ -19,7 +18,6 @@ import {
   useAddReleaseAction,
   useCancelRelease,
   useCreateRelease,
-  useDeleteRelease,
   usePublishRelease,
   useRemoveReleaseAction,
   useScheduleRelease,
@@ -34,7 +32,6 @@ import type { ReactNode } from 'react';
 vi.mock('@granit/cms', () => ({
   createRelease: vi.fn(),
   updateRelease: vi.fn(),
-  deleteRelease: vi.fn(),
   addReleaseAction: vi.fn(),
   removeReleaseAction: vi.fn(),
   scheduleRelease: vi.fn(),
@@ -98,23 +95,6 @@ describe('useUpdateRelease', () => {
   });
 });
 
-describe('useDeleteRelease', () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('calls deleteRelease', async () => {
-    const client = createMockClient();
-    vi.mocked(deleteRelease).mockResolvedValue(undefined);
-
-    const { result } = renderHook(() => useDeleteRelease(), { wrapper: createWrapper(client) });
-    result.current.mutate({ id: 'rel-1', siteId: 'site-1' });
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(deleteRelease).toHaveBeenCalledWith(client, '', 'rel-1');
-  });
-});
-
 describe('useAddReleaseAction', () => {
   afterEach(() => {
     vi.clearAllMocks();
@@ -145,7 +125,7 @@ describe('useRemoveReleaseAction', () => {
 
   it('calls removeReleaseAction', async () => {
     const client = createMockClient();
-    vi.mocked(removeReleaseAction).mockResolvedValue(undefined);
+    vi.mocked(removeReleaseAction).mockResolvedValue(release);
 
     const { result } = renderHook(() => useRemoveReleaseAction(), {
       wrapper: createWrapper(client),
@@ -182,7 +162,7 @@ describe('useCancelRelease', () => {
 
   it('calls cancelRelease', async () => {
     const client = createMockClient();
-    vi.mocked(cancelRelease).mockResolvedValue(undefined);
+    vi.mocked(cancelRelease).mockResolvedValue({ ...release, status: 'Draft' });
 
     const { result } = renderHook(() => useCancelRelease(), { wrapper: createWrapper(client) });
     result.current.mutate('rel-1');
@@ -199,7 +179,7 @@ describe('usePublishRelease', () => {
 
   it('calls publishRelease', async () => {
     const client = createMockClient();
-    vi.mocked(publishRelease).mockResolvedValue({ ...release, status: 'Executed' });
+    vi.mocked(publishRelease).mockResolvedValue({ ...release, status: 'Done' });
 
     const { result } = renderHook(() => usePublishRelease(), { wrapper: createWrapper(client) });
     result.current.mutate('rel-1');

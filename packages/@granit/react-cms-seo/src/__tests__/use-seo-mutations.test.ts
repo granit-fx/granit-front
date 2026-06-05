@@ -19,7 +19,11 @@ import {
 } from '../hooks/use-seo-mutations';
 import { CmsSeoProvider } from '../providers/cms-seo-provider';
 
-import type { SeoMetadataResponse, SiteSeoDefaultsResponse } from '@granit/cms-seo';
+import type {
+  RobotsDirective,
+  SeoMetadataResponse,
+  SiteSeoDefaultsResponse,
+} from '@granit/cms-seo';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -31,11 +35,37 @@ vi.mock('@granit/cms-seo', () => ({
 }));
 
 const KEY = { siteId: 'site-1', contentType: 'page', contentId: 'page-1', culture: 'fr' };
+
+const robots: RobotsDirective = {
+  index: true,
+  follow: true,
+  noArchive: false,
+  noSnippet: false,
+  maxSnippet: null,
+  maxImagePreview: null,
+};
+
 const metadata: SeoMetadataResponse = {
+  id: 'm-1',
+  siteId: 'site-1',
   contentType: 'page',
   contentId: 'page-1',
   culture: 'fr',
   title: 'Test',
+  titleTemplate: null,
+  description: null,
+  keywords: [],
+  canonicalUrl: null,
+  robots,
+  openGraph: null,
+  twitterCard: null,
+  structuredDataExtras: null,
+  disableAutoJsonLd: false,
+  alternateOverrides: [],
+  xDefaultCulture: null,
+  statusAtLastReview: 'NeedsReview',
+  lastReviewedAt: null,
+  concurrencyStamp: 'stamp-1',
 };
 
 function createWrapper(client: AxiosInstance) {
@@ -90,7 +120,25 @@ describe('useUpdateSeoDefaults', () => {
 
   it('calls updateSeoDefaults', async () => {
     const client = createMockClient();
-    const updated: SiteSeoDefaultsResponse = { siteId: 'site-1', siteName: 'ACME' };
+    const updated: SiteSeoDefaultsResponse = {
+      id: 'd-1',
+      siteId: 'site-1',
+      titleTemplate: null,
+      siteName: 'ACME',
+      defaultDescription: null,
+      defaultRobots: robots,
+      canonicalHost: null,
+      sitemapMaxUrlsPerFile: 45000,
+      inheritFromParentPage: false,
+      defaultOpenGraph: null,
+      defaultTwitterCard: null,
+      defaultOgImage: null,
+      robotsTxtRules: [],
+      robotsTxtExtra: null,
+      manifest: null,
+      enableAutomaticSeoGeneration: false,
+      concurrencyStamp: 'stamp-1',
+    };
     vi.mocked(updateSeoDefaults).mockResolvedValue(updated);
 
     const { result } = renderHook(() => useUpdateSeoDefaults(), { wrapper: createWrapper(client) });

@@ -9,12 +9,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { usePage, usePageTree, usePageVersions, usePages } from '../hooks/use-pages';
 import { CmsProvider } from '../providers/cms-provider';
 
-import type {
-  PageResponse,
-  PageTreeNodeResponse,
-  PageVersionSummaryResponse,
-  PagedResponse,
-} from '@granit/cms';
+import type { PageResponse, PageTreeNodeResponse, PageVersionSummaryResponse } from '@granit/cms';
+import type { PagedResult } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -94,20 +90,20 @@ describe('usePages', () => {
 
   it('fetches paged list of pages', async () => {
     const client = createMockClient();
-    const paged: PagedResponse<PageResponse> = {
+    const paged: PagedResult<PageResponse> = {
       items: [page],
       totalCount: 1,
-      page: 0,
-      pageSize: 20,
+      hasMore: false,
+      nextCursor: null,
     };
     vi.mocked(listPages).mockResolvedValue(paged);
 
-    const { result } = renderHook(() => usePages({ siteId: 'site-1' }), {
+    const { result } = renderHook(() => usePages({ page: 1, pageSize: 20 }), {
       wrapper: createWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(listPages).toHaveBeenCalledWith(client, '', { siteId: 'site-1' });
+    expect(listPages).toHaveBeenCalledWith(client, '', { page: 1, pageSize: 20 });
   });
 });
 

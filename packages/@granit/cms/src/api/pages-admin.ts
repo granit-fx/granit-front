@@ -6,13 +6,13 @@ import type {
   PageResponse,
   PageTreeNodeResponse,
   PageVersionSummaryResponse,
-  PagedResponse,
   SaveDraftRequest,
   SaveDraftResult,
   UpdatePageRequest,
   UpdatePageTranslationRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
+import type { PagedResult } from '@granit/query-engine';
 
 /** `GET /api/cms/pages/tree` — flat list ordered as tree. Requires `Cms.Pages.Read`. */
 export async function getPageTree(
@@ -31,8 +31,8 @@ export async function listPages(
   client: AxiosInstance,
   basePath: string,
   params?: ListPagesParams
-): Promise<PagedResponse<PageResponse>> {
-  const res = await client.get<PagedResponse<PageResponse>>(`${basePath}/api/cms/pages`, {
+): Promise<PagedResult<PageResponse>> {
+  const res = await client.get<PagedResult<PageResponse>>(`${basePath}/api/cms/pages`, {
     params,
   });
   return res.data;
@@ -159,15 +159,17 @@ export async function unpublishPage(
   await client.post(`${basePath}/api/cms/pages/${encodeURIComponent(id)}/unpublish`);
 }
 
-/** `POST /api/cms/pages/{id}/rollback/{versionId}` — clone version to draft. Requires `Cms.Pages.Manage`. */
+/**
+ * `POST /api/cms/pages/{id}/rollback/{versionId}` — clone the target snapshot's
+ * content into a fresh draft. Requires `Cms.Pages.Publish`. Returns `204 NoContent`.
+ */
 export async function rollbackPage(
   client: AxiosInstance,
   basePath: string,
   id: string,
   versionId: string
-): Promise<PageVersionSummaryResponse> {
-  const res = await client.post<PageVersionSummaryResponse>(
+): Promise<void> {
+  await client.post(
     `${basePath}/api/cms/pages/${encodeURIComponent(id)}/rollback/${encodeURIComponent(versionId)}`
   );
-  return res.data;
 }

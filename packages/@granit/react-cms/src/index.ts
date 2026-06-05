@@ -75,6 +75,16 @@ export {
   useUpdatePageTranslation,
 } from './hooks/use-page-mutations';
 
+// Admin hooks — page search
+export { useSearchPages, useSearchPagesAdmin } from './hooks/use-page-search';
+
+// Admin hooks — page editing presence
+export {
+  useLeavePageEditing,
+  usePageEditingHeartbeat,
+  usePageEditingPresence,
+} from './hooks/use-page-presence';
+
 // Admin hooks — menus
 export { useMenu, useMenus } from './hooks/use-menus-admin';
 export { useCreateMenu, useDeleteMenu, useUpdateMenu } from './hooks/use-menu-mutations';
@@ -85,7 +95,6 @@ export {
   useAddReleaseAction,
   useCancelRelease,
   useCreateRelease,
-  useDeleteRelease,
   usePublishRelease,
   useRemoveReleaseAction,
   useScheduleRelease,
