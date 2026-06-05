@@ -12,6 +12,11 @@ export interface AdminTenant {
   readonly activated: boolean;
   readonly jurisdiction: string | null;
   readonly createdAt: string;
+  /**
+   * Opaque optimistic-concurrency token. Echo it back in
+   * {@link UpdateTenantRequest} to detect concurrent modifications (HTTP 409).
+   */
+  readonly concurrencyStamp: string;
 }
 
 /**
@@ -31,6 +36,8 @@ export interface CreateTenantRequest {
  */
 export interface UpdateTenantRequest {
   readonly name: string;
+  /** Stamp from the last read; must match the stored value (prevents lost updates). */
+  readonly concurrencyStamp: string;
   readonly contactEmail?: string | null;
   readonly jurisdiction?: string | null;
 }

@@ -124,8 +124,12 @@ export function createTenantHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // GET /tenants/meta — query metadata
     createQueryMetaHandler(`${baseUrl}/tenants`, tenantQueryMetadata),
 
-    // GET /tenants — list all
-    http.get(`${baseUrl}/tenants`, () => HttpResponse.json(mockTenants)),
+    // GET /tenants — QueryEngine admin grid (paged). The backend serves the
+    // tenant list through a Granit.QueryEngine endpoint returning PagedResult,
+    // consumed via @granit/react-query-engine (`useQueryEndpoint`/`getPage`).
+    http.get(`${baseUrl}/tenants`, () =>
+      HttpResponse.json({ items: mockTenants, totalCount: mockTenants.length })
+    ),
 
     // GET /tenants/:id — single tenant
     http.get(`${baseUrl}/tenants/:id`, ({ params }) => {
@@ -145,6 +149,7 @@ export function createTenantHandlers(baseUrl = DEFAULT_BASE_PATH) {
         activated: true,
         jurisdiction: body.jurisdiction ?? null,
         createdAt: new Date().toISOString(),
+        concurrencyStamp: `stamp-${Date.now()}`,
       };
       mockTenants.push(newTenant);
       return HttpResponse.json(newTenant, { status: 201 });
@@ -160,6 +165,8 @@ export function createTenantHandlers(baseUrl = DEFAULT_BASE_PATH) {
       if (body.name !== undefined) tenant.name = body.name;
       if (body.contactEmail !== undefined) tenant.contactEmail = body.contactEmail;
       if (body.jurisdiction !== undefined) tenant.jurisdiction = body.jurisdiction;
+      // Rotate the concurrency stamp, as the real backend does on each write.
+      tenant.concurrencyStamp = `stamp-${Date.now()}`;
       return noContent();
     }),
 

@@ -2,19 +2,6 @@ import type { AdminTenant, CreateTenantRequest, UpdateTenantRequest } from '../t
 import type { AxiosInstance } from '@granit/api-client';
 
 /**
- * List all tenants.
- *
- * `GET {basePath}/tenants`
- */
-export async function listTenants(
-  client: AxiosInstance,
-  basePath: string
-): Promise<readonly AdminTenant[]> {
-  const { data } = await client.get<readonly AdminTenant[]>(`${basePath}/tenants`);
-  return data;
-}
-
-/**
  * Get a single tenant by ID.
  *
  * `GET {basePath}/tenants/{id}`

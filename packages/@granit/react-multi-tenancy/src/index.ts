@@ -20,11 +20,12 @@ export { useClearQueriesOnTenantChange } from './hooks/use-clear-queries-on-tena
 export { useClearQueriesOnUserChange } from './hooks/use-clear-queries-on-user-change';
 
 // Hooks — Tenant admin
+// Note: no `useTenants` list hook — tenant listing goes through the
+// Granit.QueryEngine endpoint (PagedResult) via @granit/react-query-engine.
 export {
   useActivateTenant,
   useCreateTenant,
   useDeactivateTenant,
   useTenantDetail,
-  useTenants,
   useUpdateTenant,
 } from './hooks/use-tenant-admin';

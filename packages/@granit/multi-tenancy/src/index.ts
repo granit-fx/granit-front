@@ -15,11 +15,14 @@ export type { JwtClaimTenantResolverOptions } from './resolvers/jwt-claim-tenant
 export { createJwtClaimTenantResolver } from './resolvers/jwt-claim-tenant-resolver';
 
 // API — Tenant admin
+// Note: there is no `listTenants` — the backend deliberately does not expose a
+// plain list endpoint. Tenant listing is served by a Granit.QueryEngine endpoint
+// registered by the consumer at `{basePath}/tenants` (returns PagedResult),
+// consumed generically via @granit/react-query-engine.
 export {
   activateTenant,
   createTenant,
   deactivateTenant,
   getTenant,
-  listTenants,
   updateTenant,
 } from './api/tenant-admin-api';

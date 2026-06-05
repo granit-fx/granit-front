@@ -3,7 +3,6 @@ import {
   createTenant,
   deactivateTenant,
   getTenant,
-  listTenants,
   updateTenant,
 } from '@granit/multi-tenancy';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -12,16 +11,6 @@ import { buildTenantAdminQueryKey, useTenantAdminConfig } from '../providers/ten
 
 import type { AdminTenant, CreateTenantRequest, UpdateTenantRequest } from '@granit/multi-tenancy';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
-
-/** Fetches all tenants. */
-export function useTenants(): UseQueryResult<readonly AdminTenant[]> {
-  const config = useTenantAdminConfig();
-
-  return useQuery({
-    queryKey: buildTenantAdminQueryKey(config, 'tenants'),
-    queryFn: () => listTenants(config.client, config.basePath!),
-  });
-}
 
 /** Fetches a single tenant by ID. Disabled when id is empty. */
 export function useTenantDetail(id: string): UseQueryResult<AdminTenant> {

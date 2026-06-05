@@ -11,6 +11,7 @@ export const mockTenants: Mutable<AdminTenant>[] = [
     activated: true,
     jurisdiction: 'BE',
     createdAt: '2025-09-01T00:00:00Z',
+    concurrencyStamp: 'stamp-acme-0001',
   },
   {
     id: 'tnt_01HZ9KQX0000000000002' as AdminTenant['id'],
@@ -20,6 +21,7 @@ export const mockTenants: Mutable<AdminTenant>[] = [
     activated: true,
     jurisdiction: 'FR',
     createdAt: '2025-11-15T00:00:00Z',
+    concurrencyStamp: 'stamp-globex-0001',
   },
   {
     id: 'tnt_01HZ9KQX0000000000003' as AdminTenant['id'],
@@ -29,5 +31,6 @@ export const mockTenants: Mutable<AdminTenant>[] = [
     activated: false,
     jurisdiction: null,
     createdAt: '2026-01-20T00:00:00Z',
+    concurrencyStamp: 'stamp-initech-0001',
   },
 ];

@@ -3,7 +3,6 @@ import {
   createTenant,
   deactivateTenant,
   getTenant,
-  listTenants,
   updateTenant,
 } from '@granit/multi-tenancy';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -15,7 +14,6 @@ import {
   useCreateTenant,
   useDeactivateTenant,
   useTenantDetail,
-  useTenants,
   useUpdateTenant,
 } from '../hooks/use-tenant-admin';
 import { TenantAdminProvider } from '../providers/tenant-admin-provider';
@@ -28,7 +26,6 @@ vi.mock('@granit/multi-tenancy', async () => {
   const actual = await vi.importActual('@granit/multi-tenancy');
   return {
     ...actual,
-    listTenants: vi.fn(),
     getTenant: vi.fn(),
     createTenant: vi.fn(),
     updateTenant: vi.fn(),
@@ -57,10 +54,10 @@ const SAMPLE_TENANT: AdminTenant = {
   activated: true,
   jurisdiction: 'BE',
   createdAt: '2026-01-01T00:00:00.000Z',
+  concurrencyStamp: 'stamp-1',
 } as unknown as AdminTenant;
 
 beforeEach(() => {
-  vi.mocked(listTenants).mockReset();
   vi.mocked(getTenant).mockReset();
   vi.mocked(createTenant).mockReset();
   vi.mocked(updateTenant).mockReset();
@@ -70,20 +67,6 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.restoreAllMocks();
-});
-
-describe('useTenants', () => {
-  it('calls listTenants with the configured basePath', async () => {
-    vi.mocked(listTenants).mockResolvedValue([SAMPLE_TENANT]);
-
-    const { result } = renderHook(() => useTenants(), {
-      wrapper: wrap(new QueryClient(), '/api/v1/multi-tenancy'),
-    });
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(listTenants).toHaveBeenCalledWith(mockClient, '/api/v1/multi-tenancy');
-    expect(result.current.data).toEqual([SAMPLE_TENANT]);
-  });
 });
 
 describe('useTenantDetail', () => {
