@@ -1,5 +1,5 @@
 // Types
-export { CertificateStatus, ManagedHostnameStatus } from './types/index';
+export { CertificateStatus, DnsConflictType, ManagedHostnameStatus } from './types/index';
 
 export type {
   CertificateStatusReportRequest,

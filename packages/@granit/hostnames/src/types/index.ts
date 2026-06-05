@@ -5,7 +5,7 @@
 /**
  * DNS verification and propagation status of a managed hostname.
  *
- * Mirrors `Granit.Hostnames.Domain.ManagedHostnameStatus` (.NET).
+ * Mirrors `Granit.Hostnames.Domain.HostnameStatus` (.NET).
  * Serialized as PascalCase strings via the framework's global `JsonStringEnumConverter`.
  */
 export type ManagedHostnameStatus = 'Pending' | 'Verifying' | 'Active' | 'Error';
@@ -32,8 +32,12 @@ export const CertificateStatus = {
   Error: 'Error',
 } as const satisfies Record<string, CertificateStatus>;
 
-/** DNS record type used for domain ownership verification. */
-export type DnsRecordType = 'Cname' | 'Txt' | 'A';
+/**
+ * DNS record type used for domain ownership verification.
+ *
+ * Mirrors `Granit.Hostnames.Domain.DnsRecordType` (.NET).
+ */
+export type DnsRecordType = 'A' | 'Aaaa' | 'Cname' | 'Txt';
 
 // ── DNS records ─────────────────────────────────────────────────────────────
 
@@ -46,9 +50,32 @@ export interface ExpectedDnsRecord {
 
 // ── Conflicts ───────────────────────────────────────────────────────────────
 
-/** A conflict preventing a hostname from becoming active. */
+/**
+ * Category of DNS conflict detected during verification.
+ *
+ * Mirrors `Granit.Hostnames.Domain.DnsConflictType` (.NET).
+ * Serialized as PascalCase strings via the framework's global `JsonStringEnumConverter`.
+ */
+export type DnsConflictType =
+  | 'UnexpectedA'
+  | 'UnexpectedAaaa'
+  | 'DivergentCname'
+  | 'MissingCname'
+  | 'MissingTxt'
+  | 'ResolutionFailure';
+
+export const DnsConflictType = {
+  UnexpectedA: 'UnexpectedA',
+  UnexpectedAaaa: 'UnexpectedAaaa',
+  DivergentCname: 'DivergentCname',
+  MissingCname: 'MissingCname',
+  MissingTxt: 'MissingTxt',
+  ResolutionFailure: 'ResolutionFailure',
+} as const satisfies Record<string, DnsConflictType>;
+
+/** A conflict preventing a hostname from becoming active. Mirrors `DnsConflict` (.NET). */
 export interface HostnameConflict {
-  readonly conflictType: string;
+  readonly conflictType: DnsConflictType;
   readonly details: string;
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "@granit/react-hostnames",
-  "description": "React hooks for managed hostname management — useHostnames, useHostname, useCreateHostname, useUpdateHostname, useDeleteHostname, useVerifyNow, useCheckAvailability",
+  "description": "React hooks for managed hostname management — useHostnames, useHostname, useCreateHostname, useDeleteHostname, useSetPrimary, useClearPrimary, useVerifyNow, useCheckAvailability",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",

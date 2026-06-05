@@ -1587,6 +1587,11 @@
           "signature": "type CertificateStatus = 'Unprovisioned' | 'Provisioning' | 'Secured' | 'Error'"
         },
         {
+          "name": "DnsConflictType",
+          "kind": "type",
+          "signature": "type DnsConflictType ="
+        },
+        {
           "name": "ManagedHostnameStatus",
           "kind": "type",
           "signature": "type ManagedHostnameStatus = 'Pending' | 'Verifying' | 'Active' | 'Error'"
@@ -5151,7 +5156,7 @@
     },
     {
       "name": "@granit/react-hostnames",
-      "description": "React hooks for managed hostname management — useHostnames, useHostname, useCreateHostname, useUpdateHostname, useDeleteHostname, useVerifyNow, useCheckAvailability",
+      "description": "React hooks for managed hostname management — useHostnames, useHostname, useCreateHostname, useDeleteHostname, useSetPrimary, useClearPrimary, useVerifyNow, useCheckAvailability",
       "exports": [
         {
           "name": "HostnamesProvider",

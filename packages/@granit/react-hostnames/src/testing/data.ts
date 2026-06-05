@@ -97,9 +97,7 @@ export const mockHostnames: ManagedHostnameResponse[] = [
       },
     ],
     lastCheckedAt: '2026-06-01T06:00:00Z',
-    conflicts: [
-      { conflictType: 'DnsNotPropagated', details: 'TXT record not found after 3 checks' },
-    ],
+    conflicts: [{ conflictType: 'MissingTxt', details: 'TXT record not found after 3 checks' }],
     failedCheckCount: 5,
     nextCheckAt: '2026-06-03T06:00:00Z',
     certificateStatus: C.Error,
