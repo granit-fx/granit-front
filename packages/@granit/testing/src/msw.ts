@@ -16,6 +16,7 @@ export {
   parseFilters,
   parseSort,
   sortItems,
+  unprocessableEntity,
 } from './msw-helpers';
 
 export type { FilterEntry, SortEntry } from './msw-helpers';

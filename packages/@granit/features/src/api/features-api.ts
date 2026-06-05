@@ -21,13 +21,16 @@ export async function getFeatureDefinitions(
 /**
  * Fetch all resolved feature values for the current tenant.
  *
+ * Returns a dictionary keyed by feature name, mirroring the backend
+ * `IReadOnlyDictionary<string, string>` contract.
+ *
  * `GET {basePath}/values`
  */
 export async function getAllFeatureValues(
   client: AxiosInstance,
   basePath: string
-): Promise<readonly FeatureValueResponse[]> {
-  const response = await client.get<readonly FeatureValueResponse[]>(`${basePath}/values`);
+): Promise<Readonly<Record<string, string>>> {
+  const response = await client.get<Record<string, string>>(`${basePath}/values`);
   return response.data;
 }
 

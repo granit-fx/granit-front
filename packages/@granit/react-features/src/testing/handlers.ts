@@ -1,25 +1,56 @@
-import { noContent, notFound } from '@granit/testing/msw';
+import { noContent, notFound, unprocessableEntity } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
 import { mockFeatureGroups, mockFeatureValues } from './data';
 
-import type { FeatureValueResponse } from '@granit/features';
+import type { FeatureDefinitionResponse } from '@granit/features';
 
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+const allDefinitions: readonly FeatureDefinitionResponse[] = mockFeatureGroups.flatMap(
+  (g) => g.features
+);
+
+/**
+ * Validate an override value against a feature definition's value type,
+ * mirroring the backend rules (Toggle: true/false, Numeric: min/max bounds,
+ * Selection: allowed values). Returns an error message, or `null` if valid.
+ */
+function validateValue(definition: FeatureDefinitionResponse, value: string): string | null {
+  switch (definition.valueType) {
+    case 'Toggle':
+      return value === 'true' || value === 'false'
+        ? null
+        : `Value '${value}' is not a valid toggle (expected 'true' or 'false').`;
+    case 'Numeric': {
+      const parsed = Number(value);
+      if (!Number.isInteger(parsed)) {
+        return `Value '${value}' is not a valid integer.`;
+      }
+      const constraint = definition.numericConstraint;
+      if (constraint && (parsed < constraint.min || parsed > constraint.max)) {
+        return `Value ${parsed} is out of range [${constraint.min}, ${constraint.max}].`;
+      }
+      return null;
+    }
+    case 'Selection':
+      return definition.selectionValues?.includes(value)
+        ? null
+        : `Value '${value}' is not an allowed selection value.`;
+    default:
+      return null;
+  }
+}
 
 /**
  * Create stateful MSW handlers for feature flag endpoints.
- * The `featureValues` array is a mutable copy — override/delete calls
+ * The `featureValues` dictionary is a mutable copy — override/delete calls
  * update state that subsequent GET calls reflect.
  *
  * @param baseUrl - API base path (default: `/api/v1/features`)
  */
 export function createFeaturesHandlers(baseUrl = DEFAULT_BASE_PATH) {
-  const featureValues: Mutable<FeatureValueResponse>[] = structuredClone(
-    mockFeatureValues
-  ) as Mutable<FeatureValueResponse>[];
+  const featureValues: Record<string, string> = structuredClone(mockFeatureValues);
 
   return [
     // GET definitions — returns groups with nested feature definitions
@@ -27,7 +58,7 @@ export function createFeaturesHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return HttpResponse.json(mockFeatureGroups);
     }),
 
-    // GET all values
+    // GET all values — dictionary keyed by feature name
     http.get(`${baseUrl}/values`, () => {
       return HttpResponse.json(featureValues);
     }),
@@ -35,32 +66,30 @@ export function createFeaturesHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // GET single value by name
     http.get(`${baseUrl}/values/:name`, ({ params }) => {
       const name = decodeURIComponent(params.name as string);
-      const value = featureValues.find((v) => v.name === name);
-      if (!value) return notFound();
-      return HttpResponse.json(value);
+      if (!(name in featureValues)) return notFound();
+      return HttpResponse.json({ name, value: featureValues[name] });
     }),
 
-    // POST override
-    http.post(`${baseUrl}/overrides/:name`, async ({ params, request }) => {
+    // PUT override — validate against the definition, then upsert state (204)
+    http.put(`${baseUrl}/overrides/:name`, async ({ params, request }) => {
       const name = decodeURIComponent(params.name as string);
+      const definition = allDefinitions.find((f) => f.name === name);
+      if (!definition) return notFound();
+
       const body = (await request.json()) as { value: string };
-      const existing = featureValues.find((v) => v.name === name);
-      if (existing) {
-        existing.value = body.value;
-        return HttpResponse.json(existing);
-      }
-      const created: Mutable<FeatureValueResponse> = { name, value: body.value };
-      featureValues.push(created);
-      return HttpResponse.json(created);
+      const error = validateValue(definition, body.value);
+      if (error) return unprocessableEntity(error);
+
+      featureValues[name] = body.value;
+      return noContent();
     }),
 
-    // DELETE override — reset value to definition default
+    // DELETE override — reset value to definition default (204)
     http.delete(`${baseUrl}/overrides/:name`, ({ params }) => {
       const name = decodeURIComponent(params.name as string);
-      const existing = featureValues.find((v) => v.name === name);
-      if (!existing) return notFound();
-      const definition = mockFeatureGroups.flatMap((g) => g.features).find((f) => f.name === name);
-      existing.value = definition?.defaultValue ?? existing.value;
+      const definition = allDefinitions.find((f) => f.name === name);
+      if (!definition) return notFound();
+      featureValues[name] = definition.defaultValue;
       return noContent();
     }),
   ];
