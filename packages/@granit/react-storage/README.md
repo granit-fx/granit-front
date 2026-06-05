@@ -12,7 +12,7 @@ pnpm add @granit/react-storage
 
 ### Hooks
 
-- `useStorage(key, options?)` -- read and write to browser storage (localStorage/sessionStorage) with cross-tab synchronization
+- `useStorage<T>(key, defaultValue, options?)` — read and write to browser storage (localStorage/sessionStorage) with cross-tab synchronization
 
 ## Usage
 
@@ -20,9 +20,7 @@ pnpm add @granit/react-storage
 import { useStorage } from '@granit/react-storage';
 
 function ThemeSelector() {
-  const [theme, setTheme] = useStorage('app.theme', {
-    defaultValue: 'light',
-  });
+  const [theme, setTheme] = useStorage('app.theme', 'light');
 
   return (
     <select value={theme} onChange={(e) => setTheme(e.target.value)}>

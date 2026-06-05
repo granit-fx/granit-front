@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { useStorage } from '../use-storage';
+import { useStorage } from '../hooks/use-storage';
 
 afterEach(() => {
   localStorage.clear();

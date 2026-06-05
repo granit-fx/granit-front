@@ -2,7 +2,7 @@
 
 # @granit/storage
 
-Typed storage abstraction: `createStorage` factory, `useStorage` hook for localStorage/sessionStorage with JSON serialization.
+Typed localStorage/sessionStorage wrapper: `createStorage` factory with JSON serialization and automatic key prefixing.
 
 Part of the [Granit](https://granit-fx.dev) framework.
 

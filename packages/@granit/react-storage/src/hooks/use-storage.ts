@@ -9,6 +9,10 @@ import type { StorageOptions } from '@granit/storage';
  * Uses `useSyncExternalStore` for tear-free reads and automatic re-renders
  * when the stored value changes (including cross-tab via the `storage` event).
  *
+ * @remarks `serialize` and `deserialize` options must be referentially stable
+ * (defined outside the component or memoized). Changing them between renders
+ * without also changing the `storage` type will have no effect.
+ *
  * @example
  * ```tsx
  * function Sidebar() {
@@ -27,8 +31,10 @@ export function useStorage<T>(
   // Cache the raw string + parsed value to keep referential stability.
   // useSyncExternalStore requires getSnapshot to return the same reference
   // when the underlying data has not changed.
-  const cacheRef = useRef<{ raw: string | null; value: T }>({
-    raw: undefined as unknown as string | null,
+  // `undefined` is used as the initial sentinel: getItem() never returns undefined,
+  // so the first call always populates the cache.
+  const cacheRef = useRef<{ raw: string | null | undefined; value: T }>({
+    raw: undefined,
     value: defaultValue,
   });
 

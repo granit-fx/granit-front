@@ -14,9 +14,6 @@
     "build": "tsup"
   },
   "peerDependencies": {},
-  "devDependencies": {
-    "@granit/testing": "workspace:*"
-  },
   "publishConfig": {
     "exports": {
       ".": {
