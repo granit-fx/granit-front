@@ -58,7 +58,8 @@ describe('useSetLocalizationOverride', () => {
       'App',
       'fr',
       'hello',
-      'Bonjour'
+      'Bonjour',
+      expect.any(String)
     );
   });
 
@@ -84,7 +85,8 @@ describe('useSetLocalizationOverride', () => {
       'App',
       'fr',
       'hello',
-      'Bonjour'
+      'Bonjour',
+      expect.any(String)
     );
   });
 });
@@ -107,6 +109,13 @@ describe('useDeleteLocalizationOverride', () => {
       });
     });
 
-    expect(deleteLocalizationOverride).toHaveBeenCalledWith(client, BASE, 'App', 'fr', 'hello');
+    expect(deleteLocalizationOverride).toHaveBeenCalledWith(
+      client,
+      BASE,
+      'App',
+      'fr',
+      'hello',
+      expect.any(String)
+    );
   });
 });

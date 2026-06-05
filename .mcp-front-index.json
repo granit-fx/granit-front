@@ -1716,12 +1716,12 @@
         {
           "name": "deleteLocalizationOverride",
           "kind": "function",
-          "signature": "async function deleteLocalizationOverride( client: AxiosInstance, basePath: string, resourceName: string, cultureName: string, key: string ): Promise<void>"
+          "signature": "async function deleteLocalizationOverride( client: AxiosInstance, basePath: string, resourceName: string, cultureName: string, key: string, idempotencyKey?: string ): Promise<void>"
         },
         {
           "name": "setLocalizationOverride",
           "kind": "function",
-          "signature": "async function setLocalizationOverride( client: AxiosInstance, basePath: string, resourceName: string, cultureName: string, key: string, value: string ): Promise<void>"
+          "signature": "async function setLocalizationOverride( client: AxiosInstance, basePath: string, resourceName: string, cultureName: string, key: string, value: string, idempotencyKey?: string ): Promise<void>"
         },
         {
           "name": "LocalizationOverridesPermissions",
