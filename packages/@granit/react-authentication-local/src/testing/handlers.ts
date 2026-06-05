@@ -10,8 +10,11 @@ import {
 } from './data';
 
 /**
- * Create MSW handlers for local authentication endpoints (login, 2FA,
- * passkeys, password reset, registration, email confirmation).
+ * Create MSW handlers for local authentication (login) endpoints: credential
+ * login, two-factor login, and passkey assertion (begin/complete).
+ *
+ * Account self-service flows (forgot/reset password, registration, email
+ * confirmation) live in `@granit/react-account/testing` — `createAccountHandlers`.
  *
  * @param baseUrl - API base path (default: `/api/v1/account`)
  */
@@ -72,57 +75,6 @@ export function createLocalAuthHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // POST /passkeys/assertion/complete
     http.post(`${baseUrl}/passkeys/assertion/complete`, () => {
       return HttpResponse.json(mockLoginSuccess);
-    }),
-
-    // POST /forgot-password
-    http.post(`${baseUrl}/forgot-password`, () => {
-      return new HttpResponse(null, { status: 200 });
-    }),
-
-    // POST /reset-password
-    http.post(`${baseUrl}/reset-password`, () => {
-      return new HttpResponse(null, { status: 200 });
-    }),
-
-    // POST /register
-    http.post(`${baseUrl}/register`, async ({ request }) => {
-      const body = (await request.json()) as { email: string };
-
-      if (body.email === 'existing@granit-showcase.local') {
-        return HttpResponse.json(
-          {
-            type: 'https://tools.ietf.org/html/rfc9110#section-15.5.10',
-            title: 'Conflict',
-            status: 409,
-          },
-          { status: 409 }
-        );
-      }
-
-      return HttpResponse.json({
-        userId: 'd2c47314-4d08-4952-98b1-a1b8a6e22ef1',
-        requiresEmailConfirmation: true,
-      });
-    }),
-
-    // GET /confirm-email
-    http.get(`${baseUrl}/confirm-email`, ({ request }) => {
-      const url = new URL(request.url);
-      const userId = url.searchParams.get('userId');
-      const token = url.searchParams.get('token');
-
-      if (userId && token) {
-        return new HttpResponse(null, { status: 200 });
-      }
-
-      return HttpResponse.json(
-        {
-          type: 'https://tools.ietf.org/html/rfc9110#section-15.5.1',
-          title: 'Bad Request',
-          status: 400,
-        },
-        { status: 400 }
-      );
     }),
   ];
 }

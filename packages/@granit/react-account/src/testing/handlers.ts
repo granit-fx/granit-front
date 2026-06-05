@@ -1,4 +1,4 @@
-import { noContent, notFound } from '@granit/testing/msw';
+import { accepted, noContent, notFound } from '@granit/testing/msw';
 import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
@@ -132,24 +132,44 @@ export function createAccountHandlers(baseUrl = DEFAULT_BASE_PATH) {
     }),
 
     // ── Password ─────────────────────────────────────────────────────────────
-    http.post(`${baseUrl}/password/change`, () => noContent()),
-    http.post(`${baseUrl}/password/forgot`, () => noContent()),
-    http.post(`${baseUrl}/password/reset`, () => noContent()),
+    http.post(`${baseUrl}/change-password`, () => noContent()),
+    http.post(`${baseUrl}/forgot-password`, () => accepted()),
+    http.post(`${baseUrl}/reset-password`, () => noContent()),
 
     // ── Registration ─────────────────────────────────────────────────────────
     http.post(`${baseUrl}/register`, async ({ request }) => {
       const body = (await request.json()) as { email?: string };
+      if (body.email === 'existing@granit-showcase.local') {
+        return HttpResponse.json(
+          {
+            type: 'https://tools.ietf.org/html/rfc9110#section-15.5.10',
+            title: 'Conflict',
+            status: 409,
+          },
+          { status: 409 }
+        );
+      }
+      return accepted();
+    }),
+    http.get(`${baseUrl}/confirm-email`, ({ request }) => {
+      const url = new URL(request.url);
+      const userId = url.searchParams.get('userId');
+      const token = url.searchParams.get('token');
+      if (userId && token) return noContent();
       return HttpResponse.json(
-        { userId: `usr_${Date.now()}`, email: body.email ?? '' },
-        { status: 201 }
+        {
+          type: 'https://tools.ietf.org/html/rfc9110#section-15.5.1',
+          title: 'Bad Request',
+          status: 400,
+        },
+        { status: 400 }
       );
     }),
-    http.post(`${baseUrl}/confirm-email`, () => noContent()),
-    http.post(`${baseUrl}/resend-confirmation`, () => noContent()),
+    http.post(`${baseUrl}/resend-confirmation-email`, () => accepted()),
 
     // ── Email change ─────────────────────────────────────────────────────────
-    http.post(`${baseUrl}/email/change`, () => noContent()),
-    http.post(`${baseUrl}/email/confirm-change`, () => noContent()),
+    http.post(`${baseUrl}/change-email`, () => accepted()),
+    http.post(`${baseUrl}/confirm-email-change`, () => noContent()),
 
     // ── Session ──────────────────────────────────────────────────────────────
     http.post(`${baseUrl}/session/heartbeat`, () => noContent()),
@@ -162,6 +182,6 @@ export function createAccountHandlers(baseUrl = DEFAULT_BASE_PATH) {
     ),
 
     // ── Account deletion ─────────────────────────────────────────────────────
-    http.delete(`${baseUrl}/account`, () => noContent()),
+    http.post(`${baseUrl}/delete`, () => accepted()),
   ];
 }
