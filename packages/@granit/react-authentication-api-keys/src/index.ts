@@ -1,5 +1,5 @@
 // Hooks — queries
-export { useApiKeys } from './hooks/use-api-keys';
+export { useApiKeys, useApiKeysQueryMeta } from './hooks/use-api-keys';
 export type { ApiKeyHookOptions, ApiKeyQueryOptions, UseApiKeysParams } from './hooks/use-api-keys';
 export { buildApiKeyQueryKey } from './hooks/query-keys';
 export { useApiKey } from './hooks/use-api-key';

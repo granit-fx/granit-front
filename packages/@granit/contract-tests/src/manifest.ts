@@ -64,6 +64,10 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'ApiKeyUpdateScopesRequest',
     ],
     checkEndpoints: true,
+    // The list (`/api-keys`) and `/api-keys/meta` are served by the query-engine
+    // generic surface (getPage/getQueryMeta), not by a `client.METHOD` call in
+    // this module's api/. The module base auto-detects to `/authentication`.
+    endpointIgnore: ['/api-keys', '/api-keys/meta'],
   },
   {
     slug: 'ai',

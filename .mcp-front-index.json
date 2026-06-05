@@ -666,6 +666,11 @@
       "description": "API key types — TypeScript mirror of Granit.Authentication.ApiKeys .NET",
       "exports": [
         {
+          "name": "ApiKeyQuickFilters",
+          "kind": "const",
+          "signature": "const ApiKeyQuickFilters"
+        },
+        {
           "name": "ApiKeyPermissions",
           "kind": "const",
           "signature": "const ApiKeyPermissions"
@@ -2749,6 +2754,11 @@
           "name": "useApiKeys",
           "kind": "function",
           "signature": "function useApiKeys( options: ApiKeyHookOptions, params: UseApiKeysParams ="
+        },
+        {
+          "name": "useApiKeysQueryMeta",
+          "kind": "function",
+          "signature": "function useApiKeysQueryMeta( options: ApiKeyHookOptions, queryOptions?: ApiKeyQueryOptions ): UseQueryResult<QueryMetadata>"
         },
         {
           "name": "ApiKeyHookOptions",

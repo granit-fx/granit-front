@@ -8,9 +8,13 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { buildApiKeyQueryKey } from '../hooks/query-keys';
 import { useApiKey } from '../hooks/use-api-key';
-import { useApiKeys } from '../hooks/use-api-keys';
+import { useApiKeys, useApiKeysQueryMeta } from '../hooks/use-api-keys';
 
-import type { ApiKeyResponse } from '@granit/authentication-api-keys';
+import type {
+  ApiKeyListItemResponse,
+  ApiKeyListPage,
+  ApiKeyResponse,
+} from '@granit/authentication-api-keys';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -42,7 +46,31 @@ const mockApiKey: ApiKeyResponse = {
   createdAt: toISODateString('2026-01-01T00:00:00Z'),
 };
 
-const emptyPage = { items: [] as ApiKeyResponse[], totalCount: 0, hasMore: false };
+const mockListItem: ApiKeyListItemResponse = {
+  id: 'key-1',
+  name: 'Test Key',
+  type: 'Secret',
+  environment: 'production',
+  prefix: 'test',
+  lastFourChars: 'xYzW',
+  expiresAt: null,
+  lastUsedAt: null,
+  revokedAt: null,
+  cacheBehavior: 'Normal',
+  createdAt: toISODateString('2026-01-01T00:00:00Z'),
+};
+
+const emptyPage: ApiKeyListPage = {
+  items: [],
+  totalCount: 0,
+  hasMore: false,
+  nextCursor: null,
+};
+
+/** Decode the URL string the QueryEngine layer forwarded to `client.get`. */
+function calledUrl(client: ReturnType<typeof createMockClient>, callIndex = 0): string {
+  return decodeURIComponent(vi.mocked(client.get).mock.calls[callIndex]![0] as string);
+}
 
 // ---------------------------------------------------------------------------
 // buildApiKeyQueryKey
@@ -80,7 +108,7 @@ describe('useApiKeys', () => {
   it('should fetch the paginated API key list with default base path', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({
-      data: { items: [mockApiKey], totalCount: 1, hasMore: false },
+      data: { items: [mockListItem], totalCount: 1, hasMore: false, nextCursor: null },
     });
 
     const { wrapper } = createWrapper();
@@ -88,16 +116,28 @@ describe('useApiKeys', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.get).toHaveBeenCalledWith(
-      '/api/v1/authentication/api-keys',
-      expect.objectContaining({})
-    );
+    expect(calledUrl(client)).toBe('/api/v1/authentication/api-keys');
     expect(result.current.data?.items).toHaveLength(1);
     expect(result.current.data?.items[0].id).toBe('key-1');
     expect(result.current.data?.totalCount).toBe(1);
   });
 
-  it('should pass search param to the request', async () => {
+  it('should forward the abort signal to the request', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValueOnce({ data: emptyPage });
+
+    const { wrapper } = createWrapper();
+    renderHook(() => useApiKeys({ client }), { wrapper });
+
+    await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
+
+    expect(client.get).toHaveBeenCalledWith(
+      '/api/v1/authentication/api-keys',
+      expect.objectContaining({ signal: expect.any(AbortSignal) })
+    );
+  });
+
+  it('should serialize the search term into the query string', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: emptyPage });
 
@@ -106,64 +146,57 @@ describe('useApiKeys', () => {
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
-    expect(client.get).toHaveBeenCalledWith(
-      '/api/v1/authentication/api-keys',
-      expect.objectContaining({ params: expect.objectContaining({ search: 'prod' }) })
-    );
+    expect(calledUrl(client)).toContain('search=prod');
   });
 
-  it('should pass the single type filter to the request', async () => {
+  it('should map a type filter to filter[type.Eq]', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: emptyPage });
 
     const { wrapper } = createWrapper();
-    renderHook(() => useApiKeys({ client }, { type: 'Secret' }), { wrapper });
+    renderHook(
+      () =>
+        useApiKeys({ client }, { filters: [{ field: 'type', operator: 'Eq', value: 'Secret' }] }),
+      { wrapper }
+    );
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
-    expect(client.get).toHaveBeenCalledWith(
-      '/api/v1/authentication/api-keys',
-      expect.objectContaining({
-        params: expect.objectContaining({ type: 'Secret' }),
-      })
-    );
+    expect(calledUrl(client)).toContain('filter[type.Eq]=Secret');
   });
 
-  it('should pass environment filter to the request', async () => {
+  it('should map an environment filter to filter[environment.Eq]', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: emptyPage });
 
     const { wrapper } = createWrapper();
-    renderHook(() => useApiKeys({ client }, { environment: 'staging' }), { wrapper });
+    renderHook(
+      () =>
+        useApiKeys(
+          { client },
+          { filters: [{ field: 'environment', operator: 'Eq', value: 'staging' }] }
+        ),
+      { wrapper }
+    );
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
-    expect(client.get).toHaveBeenCalledWith(
-      '/api/v1/authentication/api-keys',
-      expect.objectContaining({
-        params: expect.objectContaining({ environment: 'staging' }),
-      })
-    );
+    expect(calledUrl(client)).toContain('filter[environment.Eq]=staging');
   });
 
-  it('should pass includeRevoked param to the request', async () => {
+  it('should map the "show revoked" toggle to quickFilters=includeRevoked', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: emptyPage });
 
     const { wrapper } = createWrapper();
-    renderHook(() => useApiKeys({ client }, { includeRevoked: true }), { wrapper });
+    renderHook(() => useApiKeys({ client }, { quickFilters: ['includeRevoked'] }), { wrapper });
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
-    expect(client.get).toHaveBeenCalledWith(
-      '/api/v1/authentication/api-keys',
-      expect.objectContaining({
-        params: expect.objectContaining({ includeRevoked: true }),
-      })
-    );
+    expect(calledUrl(client)).toContain('quickFilters=includeRevoked');
   });
 
-  it('should pass pagination params to the request', async () => {
+  it('should serialize pagination params into the query string', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: emptyPage });
 
@@ -172,12 +205,9 @@ describe('useApiKeys', () => {
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
-    expect(client.get).toHaveBeenCalledWith(
-      '/api/v1/authentication/api-keys',
-      expect.objectContaining({
-        params: expect.objectContaining({ page: 2, pageSize: 25 }),
-      })
-    );
+    const url = calledUrl(client);
+    expect(url).toContain('page=2');
+    expect(url).toContain('pageSize=25');
   });
 
   it('should use custom basePath when provided', async () => {
@@ -189,7 +219,7 @@ describe('useApiKeys', () => {
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
-    expect(client.get).toHaveBeenCalledWith('/api/v2/authentication/api-keys', expect.any(Object));
+    expect(calledUrl(client)).toBe('/api/v2/authentication/api-keys');
   });
 
   it('should surface errors from the API', async () => {
@@ -220,7 +250,7 @@ describe('useApiKeys', () => {
   it('accepts TanStack query option overrides (staleTime)', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({
-      data: { items: [mockApiKey], totalCount: 1, hasMore: false },
+      data: { items: [mockListItem], totalCount: 1, hasMore: false, nextCursor: null },
     });
 
     const { wrapper } = createWrapper();
@@ -230,6 +260,33 @@ describe('useApiKeys', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data?.items).toHaveLength(1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// useApiKeysQueryMeta
+// ---------------------------------------------------------------------------
+
+describe('useApiKeysQueryMeta', () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should GET the api-keys /meta sub-path', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValueOnce({
+      data: { columns: [], filterableFields: [], quickFilters: [] },
+    });
+
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useApiKeysQueryMeta({ client }), { wrapper });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(client.get).toHaveBeenCalledWith(
+      '/api/v1/authentication/api-keys/meta',
+      expect.objectContaining({ signal: expect.any(AbortSignal) })
+    );
   });
 });
 

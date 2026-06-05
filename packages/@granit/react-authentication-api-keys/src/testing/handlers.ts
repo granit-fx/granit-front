@@ -1,4 +1,5 @@
-import { notFound, pagedResponse } from '@granit/testing/msw';
+import { parseQueryRequest } from '@granit/query-engine';
+import { notFound } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
@@ -8,11 +9,219 @@ import { mockApiKeys } from './data';
 
 import type {
   ApiKeyCreateRequest,
+  ApiKeyListItemResponse,
   ApiKeyResponse,
   ApiKeyUpdateScopesRequest,
 } from '@granit/authentication-api-keys';
+import type { FilterEntry, QueryMetadata } from '@granit/query-engine';
 
 type MutableApiKey = { -readonly [K in keyof ApiKeyResponse]: ApiKeyResponse[K] };
+
+/**
+ * QueryEngine metadata describing the api-keys grid — returned by
+ * `GET {baseUrl}/meta`. Mirrors the columns, filterable/sortable fields, quick
+ * filters and defaults exposed by `Granit.Authentication.ApiKeys`.
+ */
+const API_KEY_QUERY_META: QueryMetadata = {
+  columns: [
+    {
+      name: 'name',
+      label: 'Name',
+      type: 'String',
+      order: 0,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'type',
+      label: 'Type',
+      type: 'String',
+      order: 1,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'environment',
+      label: 'Environment',
+      type: 'String',
+      order: 2,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'prefix',
+      label: 'Prefix',
+      type: 'String',
+      order: 3,
+      isSortable: false,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'lastFourChars',
+      label: 'Last 4',
+      type: 'String',
+      order: 4,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: true,
+    },
+    {
+      name: 'expiresAt',
+      label: 'Expires',
+      type: 'DateTime',
+      order: 5,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'lastUsedAt',
+      label: 'Last used',
+      type: 'DateTime',
+      order: 6,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+    {
+      name: 'revokedAt',
+      label: 'Revoked',
+      type: 'DateTime',
+      order: 7,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: false,
+    },
+    {
+      name: 'createdAt',
+      label: 'Created',
+      type: 'DateTime',
+      order: 8,
+      isSortable: true,
+      isFilterable: true,
+      isVisible: true,
+    },
+  ],
+  filterableFields: [
+    { name: 'name', type: 'String', operators: ['Eq', 'Contains', 'StartsWith', 'EndsWith', 'In'] },
+    {
+      name: 'type',
+      type: 'String',
+      operators: ['Eq', 'In'],
+      enumValues: ['Secret', 'Publishable', 'Webhook', 'Ephemeral'],
+    },
+    { name: 'environment', type: 'String', operators: ['Eq', 'In'] },
+    { name: 'prefix', type: 'String', operators: ['Eq', 'StartsWith'] },
+    { name: 'tenantId', type: 'String', operators: ['Eq', 'In'] },
+    { name: 'createdAt', type: 'DateTime', operators: ['Eq', 'Gt', 'Gte', 'Lt', 'Lte', 'Between'] },
+    { name: 'expiresAt', type: 'DateTime', operators: ['Eq', 'Gt', 'Gte', 'Lt', 'Lte', 'Between'] },
+    {
+      name: 'lastUsedAt',
+      type: 'DateTime',
+      operators: ['Eq', 'Gt', 'Gte', 'Lt', 'Lte', 'Between'],
+    },
+    { name: 'revokedAt', type: 'DateTime', operators: ['Eq', 'Gt', 'Gte', 'Lt', 'Lte', 'Between'] },
+  ],
+  sortableFields: [
+    { name: 'name' },
+    { name: 'type' },
+    { name: 'environment' },
+    { name: 'expiresAt' },
+    { name: 'lastUsedAt' },
+    { name: 'revokedAt' },
+    { name: 'createdAt' },
+  ],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'active', label: 'Active only', isDefault: true },
+    { name: 'includeRevoked', label: 'Include revoked', isDefault: false },
+  ],
+  dateFilters: [],
+  groupByFields: [],
+  pagination: {
+    defaultPageSize: 20,
+    maxPageSize: 100,
+    maxStreamSize: 10_000,
+    supportsCursor: false,
+  },
+  defaultSort: '-createdAt',
+};
+
+/** Read a filterable/sortable column off a key as a comparable string (or null). */
+function fieldValue(key: MutableApiKey, field: string): string | null {
+  switch (field.toLowerCase()) {
+    case 'name':
+      return key.name;
+    case 'type':
+      return key.type;
+    case 'environment':
+      return key.environment;
+    case 'prefix':
+      return key.prefix;
+    case 'createdat':
+      return key.createdAt;
+    case 'expiresat':
+      return key.expiresAt;
+    case 'lastusedat':
+      return key.lastUsedAt;
+    case 'revokedat':
+      return key.revokedAt;
+    default:
+      return null;
+  }
+}
+
+/** Apply a single `filter[field.op]=value` predicate (operator names case-insensitive). */
+function matchesFilter(key: MutableApiKey, filter: FilterEntry): boolean {
+  const actual = fieldValue(key, filter.field);
+  if (actual === null) return false;
+  const value = filter.value;
+  switch (filter.operator.toLowerCase()) {
+    case 'eq':
+      return actual === value;
+    case 'ne':
+      return actual !== value;
+    case 'contains':
+      return actual.toLowerCase().includes(value.toLowerCase());
+    case 'startswith':
+      return actual.toLowerCase().startsWith(value.toLowerCase());
+    case 'endswith':
+      return actual.toLowerCase().endsWith(value.toLowerCase());
+    case 'in':
+      return value.split(',').includes(actual);
+    case 'gt':
+      return actual > value;
+    case 'gte':
+      return actual >= value;
+    case 'lt':
+      return actual < value;
+    case 'lte':
+      return actual <= value;
+    default:
+      return true;
+  }
+}
+
+/** Project a full key down to the summary row shape returned by the listing. */
+function toListItem(key: MutableApiKey): ApiKeyListItemResponse {
+  return {
+    id: key.id,
+    name: key.name,
+    type: key.type,
+    environment: key.environment,
+    prefix: key.prefix,
+    lastFourChars: key.lastFourChars,
+    expiresAt: key.expiresAt,
+    lastUsedAt: key.lastUsedAt,
+    revokedAt: key.revokedAt,
+    cacheBehavior: key.cacheBehavior,
+    createdAt: key.createdAt,
+  };
+}
 
 function generateSecret(type: string, environment: string): string {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -32,9 +241,13 @@ function generateSecret(type: string, environment: string): string {
 /**
  * Create stateful MSW handlers for API key endpoints.
  *
- * Mirrors `Granit.Authentication.ApiKeys.Endpoints`: the list endpoint returns a
- * `PagedResult<ApiKeyResponse>` and filters on `search`, a single `type`,
- * `environment`, and `includeRevoked` — there is no `/meta` endpoint.
+ * Mirrors `Granit.Authentication.ApiKeys.Endpoints`: the list endpoint is backed
+ * by the generic QueryEngine — it returns a `PagedResult<ApiKeyListItemResponse>`
+ * (summary rows without `permissions`/`allowedCidrs`) and understands the
+ * QueryEngine grammar (`page`, `pageSize`, `sort`, `search` on the name,
+ * `filter[field.op]=value`, `quickFilters`). A companion `GET /meta` endpoint
+ * exposes the grid metadata. Revoked keys are hidden unless
+ * `quickFilters=includeRevoked` is supplied.
  *
  * @param baseUrl - API base path (default: `/api/v1/authentication/api-keys`)
  */
@@ -42,42 +255,59 @@ export function createApiKeyHandlers(baseUrl = `${DEFAULT_BASE_PATH}/api-keys`) 
   const apiKeys: MutableApiKey[] = mockApiKeys.map((k) => ({ ...k }));
 
   return [
-    // GET list — paginated with filters
+    // GET meta — QueryEngine grid metadata
+    http.get(`${baseUrl}/meta`, () => HttpResponse.json(API_KEY_QUERY_META)),
+
+    // GET list — QueryEngine-backed (paginated, filterable, sortable)
     http.get(baseUrl, ({ request }) => {
       const url = new URL(request.url);
-      const search = url.searchParams.get('search');
-      const type = url.searchParams.get('type');
-      const environment = url.searchParams.get('environment');
-      const includeRevoked = url.searchParams.get('includeRevoked') === 'true';
-      const page = Number(url.searchParams.get('page') ?? '1');
-      const pageSize = Number(url.searchParams.get('pageSize') ?? '20');
+      const query = parseQueryRequest(url.search);
 
       let filtered = [...apiKeys];
 
-      if (search) {
-        const q = search.toLowerCase();
-        filtered = filtered.filter(
-          (k) => k.name.toLowerCase().includes(q) || k.prefix.toLowerCase().includes(q)
-        );
+      // Full-text search now matches the name only.
+      if (query.search) {
+        const q = query.search.toLowerCase();
+        filtered = filtered.filter((k) => k.name.toLowerCase().includes(q));
       }
 
-      if (type) {
-        filtered = filtered.filter((k) => k.type === type);
+      // Column filters: filter[field.op]=value (AND semantics).
+      for (const filter of query.filters ?? []) {
+        filtered = filtered.filter((k) => matchesFilter(k, filter));
       }
 
-      if (environment) {
-        filtered = filtered.filter((k) => k.environment === environment);
-      }
-
+      // Quick filters: hide revoked keys unless `includeRevoked` is active.
+      const includeRevoked = (query.quickFilters ?? []).some(
+        (name) => name.toLowerCase() === 'includerevoked'
+      );
       if (!includeRevoked) {
         filtered = filtered.filter((k) => k.revokedAt === null);
       }
 
+      // Sort — explicit `sort` entries, else the server default `-createdAt`.
+      const sort = query.sort?.length
+        ? query.sort
+        : [{ field: 'createdAt', direction: 'desc' as const }];
+      for (const entry of [...sort].reverse()) {
+        filtered.sort((a, b) => {
+          const av = fieldValue(a, entry.field) ?? '';
+          const bv = fieldValue(b, entry.field) ?? '';
+          const cmp = av < bv ? -1 : av > bv ? 1 : 0;
+          return entry.direction === 'desc' ? -cmp : cmp;
+        });
+      }
+
+      const page = query.page ?? 1;
+      const pageSize = query.pageSize ?? 20;
       const start = (page - 1) * pageSize;
-      return pagedResponse<ApiKeyResponse>(
-        filtered.slice(start, start + pageSize) as ApiKeyResponse[],
-        filtered.length
-      );
+      const items = filtered.slice(start, start + pageSize).map(toListItem);
+
+      return HttpResponse.json({
+        items,
+        totalCount: filtered.length,
+        hasMore: start + pageSize < filtered.length,
+        nextCursor: null,
+      });
     }),
 
     // GET single

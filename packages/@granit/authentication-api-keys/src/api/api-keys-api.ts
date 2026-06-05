@@ -1,35 +1,54 @@
+import { getPage, getQueryMeta } from '@granit/query-engine';
+
 import type {
   ApiKeyCreateRequest,
   ApiKeyCreateResponse,
+  ApiKeyListItemResponse,
+  ApiKeyListPage,
   ApiKeyResponse,
   ApiKeyRotateResponse,
   ApiKeyUpdateScopesRequest,
   ListApiKeysParams,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
-import type { PagedResult } from '@granit/query-engine';
+import type { QueryMetadata } from '@granit/query-engine';
+
+/** Sub-path of the QueryEngine listing surface, relative to the module base. */
+const API_KEYS_PATH = 'api-keys';
+
+function apiKeysQueryPath(basePath: string): string {
+  return `${basePath}/${API_KEYS_PATH}`;
+}
 
 /**
- * Lists API keys filtered by the given parameters.
+ * Lists API keys via the generic QueryEngine surface.
  *
- * `GET {basePath}/api-keys` → `PagedResult<ApiKeyResponse>`
+ * `GET {basePath}/api-keys` → `PagedResult<ApiKeyListItemResponse>` — a summary
+ * projection without `permissions`/`allowedCidrs`. Pass the QueryEngine grammar
+ * via {@link ListApiKeysParams} (`page`, `pageSize`, `sort`, `search`,
+ * `filters`, `quickFilters`); by default only active keys are returned.
  */
 export async function listApiKeys(
   client: AxiosInstance,
   basePath: string,
-  params: ListApiKeysParams = {}
-): Promise<PagedResult<ApiKeyResponse>> {
-  const response = await client.get<PagedResult<ApiKeyResponse>>(`${basePath}/api-keys`, {
-    params: {
-      search: params.search,
-      type: params.type,
-      environment: params.environment,
-      includeRevoked: params.includeRevoked,
-      page: params.page,
-      pageSize: params.pageSize,
-    },
-  });
-  return response.data;
+  params: ListApiKeysParams = {},
+  options?: { readonly signal?: AbortSignal }
+): Promise<ApiKeyListPage> {
+  return getPage<ApiKeyListItemResponse>(client, apiKeysQueryPath(basePath), params, options);
+}
+
+/**
+ * Gets the QueryEngine metadata (columns, filterable/sortable fields, quick
+ * filters, default sort, page size) for the api-keys grid.
+ *
+ * `GET {basePath}/api-keys/meta`
+ */
+export async function getApiKeysQueryMeta(
+  client: AxiosInstance,
+  basePath: string,
+  options?: { readonly signal?: AbortSignal }
+): Promise<QueryMetadata> {
+  return getQueryMeta(client, apiKeysQueryPath(basePath), options);
 }
 
 /**
