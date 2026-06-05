@@ -20,7 +20,8 @@ import type {
   LegalDocumentCreateRequest,
   LegalDocumentDetail,
   LegalDocumentUpdateRequest,
-  PrivacyDeletionResponse,
+  PrivacyDeletionRequestResponse,
+  PrivacyDeletionStatusResponse,
   PrivacyExportStatusResponse,
 } from '@granit/privacy';
 import type { QueryMetadata } from '@granit/query-engine';
@@ -116,7 +117,7 @@ export const privacyDeletionQueryMetadata: QueryMetadata = {
       isVisible: false,
     },
     {
-      name: 'status',
+      name: 'state',
       label: 'Status',
       type: 'String',
       order: 1,
@@ -171,7 +172,7 @@ export const privacyDeletionQueryMetadata: QueryMetadata = {
     },
   ],
   filterableFields: [
-    { name: 'status', type: 'String', operators: ENUM_OPERATORS, enumValues: DELETION_STATES },
+    { name: 'state', type: 'String', operators: ENUM_OPERATORS, enumValues: DELETION_STATES },
     { name: 'reason', type: 'String', operators: STRING_OPERATORS },
     { name: 'requestedAt', type: 'DateTime', operators: DATE_OPERATORS },
     { name: 'executedAt', type: 'DateTime', operators: DATE_OPERATORS },
@@ -179,7 +180,7 @@ export const privacyDeletionQueryMetadata: QueryMetadata = {
     { name: 'cancelledAt', type: 'DateTime', operators: DATE_OPERATORS },
   ],
   sortableFields: [
-    { name: 'status' },
+    { name: 'state' },
     { name: 'requestedAt' },
     { name: 'executedAt' },
     { name: 'scheduledDeletionAt' },
@@ -193,7 +194,7 @@ export const privacyDeletionQueryMetadata: QueryMetadata = {
       availablePeriods: ['Today', 'ThisWeek', 'ThisMonth', 'LastMonth', 'ThisYear', 'Custom'],
     },
   ],
-  groupByFields: [{ name: 'status', type: 'String' }],
+  groupByFields: [{ name: 'state', type: 'String' }],
   pagination: {
     defaultPageSize: 25,
     maxPageSize: 100,
@@ -320,9 +321,9 @@ type Mutable<T> = { -readonly [K in keyof T]: T[K] };
  */
 export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
   const exports: Mutable<PrivacyExportStatusResponse>[] = mockExports.map((e) => ({ ...e }));
-  const deletionRequests: Mutable<PrivacyDeletionResponse>[] = mockDeletionRequests.map((d) => ({
-    ...d,
-  }));
+  const deletionRequests: Mutable<PrivacyDeletionStatusResponse>[] = mockDeletionRequests.map(
+    (d) => ({ ...d })
+  );
   const statuses: Mutable<AgreementStatus>[] = mockAgreementStatuses.map((s) => ({ ...s }));
   let history: AgreementHistoryEntry[] = mockAgreementHistory.map((h) => ({ ...h }));
   let exportCounter = exports.length;
@@ -380,18 +381,21 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       deletionCounter++;
       const requestId = `del-${String(deletionCounter).padStart(3, '0')}`;
       const now = new Date().toISOString();
-      const response: Mutable<PrivacyDeletionResponse> = {
+      const scheduledDeletionAt = body.defer
+        ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        : now;
+      const record: Mutable<PrivacyDeletionStatusResponse> = {
         requestId,
-        status: body.defer ? 'Deferred' : 'Executed',
+        state: body.defer ? 'Deferred' : 'Executed',
         reason: body.reason,
         requestedAt: now,
         executedAt: body.defer ? null : now,
-        ...(body.defer && {
-          scheduledDeletionAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-        }),
+        scheduledDeletionAt,
+        cancelledAt: null,
       };
-      deletionRequests.unshift(response);
-      return HttpResponse.json(response, { status: 202 });
+      deletionRequests.unshift(record);
+      const postResponse: PrivacyDeletionRequestResponse = { requestId, scheduledDeletionAt };
+      return HttpResponse.json(postResponse, { status: 202 });
     }),
 
     // GET /deletions — list all deletion requests
@@ -410,14 +414,14 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
     http.post(`${baseUrl}/deletions/:requestId/cancel`, ({ params }) => {
       const item = deletionRequests.find((r) => r.requestId === params.requestId);
       if (!item) return notFound();
-      if (item.status !== 'Deferred') {
+      if (item.state !== 'Deferred') {
         return HttpResponse.json(
           { message: 'Deletion request is already executed or cancelled' },
           { status: 409 }
         );
       }
-      item.status = 'Cancelled';
-      (item as Record<string, unknown>)['cancelledAt'] = new Date().toISOString();
+      item.state = 'Cancelled';
+      item.cancelledAt = new Date().toISOString();
       return new HttpResponse(null, { status: 200 });
     }),
 
@@ -486,18 +490,20 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
     http.post(legalBase, async ({ request }) => {
       const body = (await request.json()) as LegalDocumentCreateRequest;
       legalIdCounter++;
+      const id = `ld-${String(legalIdCounter).padStart(3, '0')}`;
       const now = new Date().toISOString();
       const newDoc: LegalDocumentDetail = {
-        id: `ld-${String(legalIdCounter).padStart(3, '0')}`,
+        id,
         documentId: body.documentId,
         version: 1,
         lifecycleStatus: 'Draft',
         displayName: body.displayName,
-        description: body.description,
-        templateName: body.templateName,
-        documentBlobId: undefined,
+        description: body.description ?? null,
+        templateName: body.templateName ?? null,
+        documentBlobId: null,
         createdAt: now,
         lastModifiedAt: now,
+        concurrencyStamp: `stamp-${id}`,
       };
       legalDocuments.unshift({ ...newDoc });
       return HttpResponse.json(newDoc, { status: 201 });
@@ -520,6 +526,7 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       doc.templateName = body.templateName ?? doc.templateName;
       doc.documentBlobId = body.documentBlobId ?? doc.documentBlobId;
       doc.lastModifiedAt = new Date().toISOString();
+      doc.concurrencyStamp = `stamp-${doc.id}-${doc.lastModifiedAt}`;
       return HttpResponse.json(doc);
     }),
 

@@ -3,12 +3,16 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { buildPrivacyQueryKey, usePrivacyConfig } from '../providers/privacy-provider';
 
-import type { PrivacyDeletionRequest, PrivacyDeletionResponse } from '@granit/privacy';
+import type {
+  PrivacyDeletionRequest,
+  PrivacyDeletionRequestResponse,
+  PrivacyDeletionStatusResponse,
+} from '@granit/privacy';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /** Request deletion of all personal data (GDPR Art. 17). */
 export function useRequestDeletion(): UseMutationResult<
-  PrivacyDeletionResponse,
+  PrivacyDeletionRequestResponse,
   Error,
   PrivacyDeletionRequest
 > {
@@ -27,7 +31,7 @@ export function useRequestDeletion(): UseMutationResult<
 }
 
 /** List all deletion requests for the current user. */
-export function useDeletionRequests(): UseQueryResult<PrivacyDeletionResponse[]> {
+export function useDeletionRequests(): UseQueryResult<PrivacyDeletionStatusResponse[]> {
   const config = usePrivacyConfig();
 
   return useQuery({
@@ -37,7 +41,9 @@ export function useDeletionRequests(): UseQueryResult<PrivacyDeletionResponse[]>
 }
 
 /** Get the status of a specific deletion request. */
-export function useDeletionStatus(requestId: string): UseQueryResult<PrivacyDeletionResponse> {
+export function useDeletionStatus(
+  requestId: string
+): UseQueryResult<PrivacyDeletionStatusResponse> {
   const config = usePrivacyConfig();
 
   return useQuery({

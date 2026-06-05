@@ -57,8 +57,10 @@ const mockDocument: LegalDocumentDetail = {
   displayName: 'Privacy Policy',
   description: 'Initial draft',
   templateName: 'privacy-policy-template',
+  documentBlobId: null,
   createdAt: '2026-04-01T10:00:00Z',
   lastModifiedAt: '2026-04-01T10:00:00Z',
+  concurrencyStamp: 'stamp-ldv-001',
 };
 
 // ---------------------------------------------------------------------------
@@ -191,7 +193,7 @@ describe('useUpdateLegalDocument', () => {
 
     result.current.mutate({
       id: 'ldv-001',
-      request: { displayName: 'Updated Policy' },
+      request: { displayName: 'Updated Policy', concurrencyStamp: 'stamp-ldv-001' },
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -200,7 +202,7 @@ describe('useUpdateLegalDocument', () => {
       expect.anything(),
       '/api/v1/privacy',
       'ldv-001',
-      { displayName: 'Updated Policy' }
+      { displayName: 'Updated Policy', concurrencyStamp: 'stamp-ldv-001' }
     );
     expect(result.current.data).toEqual(updated);
     expect(invalidateSpy).toHaveBeenCalledWith({
@@ -214,7 +216,10 @@ describe('useUpdateLegalDocument', () => {
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useUpdateLegalDocument(), { wrapper });
 
-    result.current.mutate({ id: 'invalid', request: { displayName: 'X' } });
+    result.current.mutate({
+      id: 'invalid',
+      request: { displayName: 'X', concurrencyStamp: 'old' },
+    });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 

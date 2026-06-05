@@ -25,7 +25,8 @@ import type {
   AgreementStatus,
   LegalDocument,
   LegalDocumentDetail,
-  PrivacyDeletionResponse,
+  PrivacyDeletionRequestResponse,
+  PrivacyDeletionStatusResponse,
   PrivacyExportStatusResponse,
 } from '../types/index';
 
@@ -85,12 +86,9 @@ describe('privacy-api', () => {
   describe('requestDeletion', () => {
     it('sends POST to /deletions with reason', async () => {
       const client = createMockClient();
-      const response: PrivacyDeletionResponse = {
+      const response: PrivacyDeletionRequestResponse = {
         requestId: 'del-1',
-        status: 'Executed',
-        reason: 'User requested account deletion',
-        requestedAt: '2026-03-22T10:00:00Z',
-        executedAt: '2026-03-22T10:00:01Z',
+        scheduledDeletionAt: '2026-03-22T10:00:01Z',
       };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
@@ -106,12 +104,8 @@ describe('privacy-api', () => {
 
     it('sends POST to /deletions with defer flag', async () => {
       const client = createMockClient();
-      const response: PrivacyDeletionResponse = {
+      const response: PrivacyDeletionRequestResponse = {
         requestId: 'del-2',
-        status: 'Deferred',
-        reason: 'Closing account',
-        requestedAt: '2026-03-22T10:00:00Z',
-        executedAt: null,
         scheduledDeletionAt: '2026-04-21T10:00:00Z',
       };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
@@ -132,14 +126,15 @@ describe('privacy-api', () => {
   describe('listDeletions', () => {
     it('sends GET to /deletions', async () => {
       const client = createMockClient();
-      const response: PrivacyDeletionResponse[] = [
+      const response: PrivacyDeletionStatusResponse[] = [
         {
           requestId: 'del-1',
-          status: 'Deferred',
+          state: 'Deferred',
           reason: 'Closing account',
           requestedAt: '2026-03-22T10:00:00Z',
           executedAt: null,
           scheduledDeletionAt: '2026-04-21T10:00:00Z',
+          cancelledAt: null,
         },
       ];
       vi.mocked(client.get).mockResolvedValueOnce({ data: response });
@@ -154,13 +149,14 @@ describe('privacy-api', () => {
   describe('getDeletionStatus', () => {
     it('sends GET to /deletions/{requestId}', async () => {
       const client = createMockClient();
-      const response: PrivacyDeletionResponse = {
+      const response: PrivacyDeletionStatusResponse = {
         requestId: 'del-1',
-        status: 'Deferred',
+        state: 'Deferred',
         reason: 'Closing account',
         requestedAt: '2026-03-22T10:00:00Z',
         executedAt: null,
         scheduledDeletionAt: '2026-04-21T10:00:00Z',
+        cancelledAt: null,
       };
       vi.mocked(client.get).mockResolvedValueOnce({ data: response });
 
@@ -264,8 +260,10 @@ describe('privacy-api', () => {
     displayName: 'Privacy Policy',
     description: 'Initial draft',
     templateName: 'privacy-policy-template',
+    documentBlobId: null,
     createdAt: '2026-04-01T10:00:00Z',
     lastModifiedAt: '2026-04-01T10:00:00Z',
+    concurrencyStamp: 'stamp-ldv-001',
   };
 
   describe('createLegalDocument', () => {
@@ -345,11 +343,13 @@ describe('privacy-api', () => {
 
       const result = await updateLegalDocument(client, BASE, 'ldv-001', {
         displayName: 'Updated Policy',
+        concurrencyStamp: 'stamp-ldv-001',
         description: 'Revised draft',
       });
 
       expect(client.put).toHaveBeenCalledWith(`${BASE}/legal-documents/ldv-001`, {
         displayName: 'Updated Policy',
+        concurrencyStamp: 'stamp-ldv-001',
         description: 'Revised draft',
       });
       expect(result).toEqual(updated);
@@ -361,10 +361,12 @@ describe('privacy-api', () => {
 
       await updateLegalDocument(client, BASE, 'id/slash', {
         displayName: 'Test',
+        concurrencyStamp: 'stamp',
       });
 
       expect(client.put).toHaveBeenCalledWith(`${BASE}/legal-documents/id%2Fslash`, {
         displayName: 'Test',
+        concurrencyStamp: 'stamp',
       });
     });
   });

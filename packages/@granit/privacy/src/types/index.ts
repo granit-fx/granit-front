@@ -18,21 +18,31 @@ export type PrivacyExportStatusResponse = {
 
 // ── Data Deletion (GDPR Art. 17) ─────────────────────────────────────────────
 
-export type DeletionStatusValue = 'Deferred' | 'Executed' | 'Cancelled';
+export type DeletionState = 'Deferred' | 'Executed' | 'Cancelled';
+
+/** @deprecated Use DeletionState */
+export type DeletionStatusValue = DeletionState;
 
 export type PrivacyDeletionRequest = {
   readonly reason: string;
   readonly defer?: boolean;
 };
 
-export type PrivacyDeletionResponse = {
+/** Response from POST /privacy/deletions (202 Accepted). */
+export type PrivacyDeletionRequestResponse = {
   readonly requestId: string;
-  readonly status: DeletionStatusValue;
+  readonly scheduledDeletionAt: string;
+};
+
+/** Shape of each entry from GET /privacy/deletions and GET /privacy/deletions/{id}. */
+export type PrivacyDeletionStatusResponse = {
+  readonly requestId: string;
+  readonly state: DeletionState;
   readonly reason: string;
   readonly requestedAt: string;
+  readonly scheduledDeletionAt: string;
+  readonly cancelledAt: string | null;
   readonly executedAt: string | null;
-  readonly scheduledDeletionAt?: string;
-  readonly cancelledAt?: string;
 };
 
 // ── Legal Agreements (GDPR Art. 7) ───────────────────────────────────────────
@@ -77,11 +87,12 @@ export type LegalDocumentDetail = {
   readonly version: number;
   readonly lifecycleStatus: LegalDocumentLifecycleStatus;
   readonly displayName: string;
-  readonly description?: string;
-  readonly templateName?: string;
-  readonly documentBlobId?: string;
+  readonly description: string | null;
+  readonly templateName: string | null;
+  readonly documentBlobId: string | null;
   readonly createdAt: string;
   readonly lastModifiedAt: string;
+  readonly concurrencyStamp: string;
 };
 
 export type LegalDocumentCreateRequest = {
@@ -93,6 +104,7 @@ export type LegalDocumentCreateRequest = {
 
 export type LegalDocumentUpdateRequest = {
   readonly displayName: string;
+  readonly concurrencyStamp: string;
   readonly description?: string;
   readonly templateName?: string;
   readonly documentBlobId?: string;

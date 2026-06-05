@@ -223,9 +223,7 @@ describe('useRequestDeletion', () => {
     const client = createMockClient();
     const response = {
       requestId: 'del-1',
-      status: 'Executed',
-      reason: 'I want my data deleted',
-      requestedAt: '2026-03-22T10:00:00Z',
+      scheduledDeletionAt: '2026-03-22T10:00:01Z',
     };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(response));
 
@@ -249,9 +247,6 @@ describe('useRequestDeletion', () => {
     const client = createMockClient();
     const response = {
       requestId: 'del-2',
-      status: 'Deferred',
-      reason: 'Closing account',
-      requestedAt: '2026-03-22T10:00:00Z',
       scheduledDeletionAt: '2026-04-21T10:00:00Z',
     };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(response));
@@ -270,7 +265,6 @@ describe('useRequestDeletion', () => {
       reason: 'Closing account',
       defer: true,
     });
-    expect(result.current.data?.status).toBe('Deferred');
     expect(result.current.data?.scheduledDeletionAt).toBe('2026-04-21T10:00:00Z');
   });
 
@@ -301,10 +295,12 @@ describe('useDeletionRequests', () => {
     const deletions = [
       {
         requestId: 'del-1',
-        status: 'Deferred',
+        state: 'Deferred',
         reason: 'Closing account',
         requestedAt: '2026-03-22T10:00:00Z',
         scheduledDeletionAt: '2026-04-21T10:00:00Z',
+        cancelledAt: null,
+        executedAt: null,
       },
     ];
     vi.mocked(client.get).mockResolvedValue(axiosResponse(deletions));
@@ -329,10 +325,12 @@ describe('useDeletionStatus', () => {
     const client = createMockClient();
     const status = {
       requestId: 'del-1',
-      status: 'Deferred',
+      state: 'Deferred',
       reason: 'Closing account',
       requestedAt: '2026-03-22T10:00:00Z',
       scheduledDeletionAt: '2026-04-21T10:00:00Z',
+      cancelledAt: null,
+      executedAt: null,
     };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(status));
 

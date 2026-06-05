@@ -8,7 +8,8 @@ import type {
   LegalDocumentListParams,
   LegalDocumentUpdateRequest,
   PrivacyDeletionRequest,
-  PrivacyDeletionResponse,
+  PrivacyDeletionRequestResponse,
+  PrivacyDeletionStatusResponse,
   PrivacyExportRequestResponse,
   PrivacyExportStatusResponse,
 } from '../types/index';
@@ -72,8 +73,11 @@ export async function requestDeletion(
   client: AxiosInstance,
   basePath: string,
   request: PrivacyDeletionRequest
-): Promise<PrivacyDeletionResponse> {
-  const { data } = await client.post<PrivacyDeletionResponse>(`${basePath}/deletions`, request);
+): Promise<PrivacyDeletionRequestResponse> {
+  const { data } = await client.post<PrivacyDeletionRequestResponse>(
+    `${basePath}/deletions`,
+    request
+  );
   return data;
 }
 
@@ -85,8 +89,8 @@ export async function requestDeletion(
 export async function listDeletions(
   client: AxiosInstance,
   basePath: string
-): Promise<PrivacyDeletionResponse[]> {
-  const { data } = await client.get<PrivacyDeletionResponse[]>(`${basePath}/deletions`);
+): Promise<PrivacyDeletionStatusResponse[]> {
+  const { data } = await client.get<PrivacyDeletionStatusResponse[]>(`${basePath}/deletions`);
   return data;
 }
 
@@ -99,8 +103,8 @@ export async function getDeletionStatus(
   client: AxiosInstance,
   basePath: string,
   requestId: string
-): Promise<PrivacyDeletionResponse> {
-  const { data } = await client.get<PrivacyDeletionResponse>(
+): Promise<PrivacyDeletionStatusResponse> {
+  const { data } = await client.get<PrivacyDeletionStatusResponse>(
     `${basePath}/deletions/${encodeURIComponent(requestId)}`
   );
   return data;
