@@ -21,3 +21,14 @@ export type ISODateString = string & { readonly __brand: 'ISODateString' };
 export function toISODateString(value: string): ISODateString {
   return value as ISODateString;
 }
+
+/**
+ * Returns `true` when `value` is a non-empty string (structural guard only).
+ *
+ * Does not validate that the string is a valid ISO 8601 date — use this at
+ * system boundaries to assert the value is at least a non-empty string before
+ * branding it with {@link toISODateString}.
+ */
+export function isISODateString(value: unknown): value is ISODateString {
+  return typeof value === 'string' && value.length > 0;
+}

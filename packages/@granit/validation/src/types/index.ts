@@ -104,9 +104,9 @@ export interface InputConstraintProps {
 // ---------------------------------------------------------------------------
 
 export type {
-  ServerValidationBatchRequest,
-  ServerValidationBatchResponse,
-  ServerValidationRequest,
-  ServerValidationResult,
-  ValidationStatus,
+  ValidationFieldValidateBatchRequest,
+  ValidationFieldValidateBatchResponse,
+  ValidationFieldValidateRequest,
+  ValidationFieldValidateResponse,
+  ValidationFieldStatus,
 } from './server-validation';

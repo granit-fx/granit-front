@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { toISODateString } from '../iso-date-string';
+import { isISODateString, toISODateString } from '../iso-date-string';
 
 import type { ISODateString } from '../iso-date-string';
 
@@ -33,5 +33,30 @@ describe('ISODateString', () => {
 
     expect(date.getFullYear()).toBe(2024);
     expect(date.getMonth()).toBe(5);
+  });
+});
+
+describe('isISODateString', () => {
+  it('returns true for a non-empty string', () => {
+    expect(isISODateString('2024-12-31T23:59:59Z')).toBe(true);
+    expect(isISODateString('any-non-empty')).toBe(true);
+  });
+
+  it('returns false for an empty string', () => {
+    expect(isISODateString('')).toBe(false);
+  });
+
+  it('returns false for non-string values', () => {
+    expect(isISODateString(null)).toBe(false);
+    expect(isISODateString(undefined)).toBe(false);
+    expect(isISODateString(42)).toBe(false);
+  });
+
+  it('narrows the type to ISODateString', () => {
+    const value: unknown = '2024-01-01T00:00:00Z';
+
+    if (isISODateString(value)) {
+      expectTypeOf(value).toMatchTypeOf<ISODateString>();
+    }
   });
 });

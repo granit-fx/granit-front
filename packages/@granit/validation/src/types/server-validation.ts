@@ -1,24 +1,24 @@
-/** Status returned by the server validation endpoint. */
-export type ValidationStatus = 'Valid' | 'Invalid' | 'ValidatorNotFound';
+/** Outcome of a single-field server-side validation. Mirrors .NET ValidationFieldStatus. */
+export type ValidationFieldStatus = 'Valid' | 'Invalid' | 'ValidatorNotFound';
 
-/** Request payload for single field server validation. */
-export interface ServerValidationRequest {
+/** Request payload for single field server validation. Mirrors .NET ValidationFieldValidateRequest. */
+export interface ValidationFieldValidateRequest {
   readonly errorCode: string;
-  readonly value: unknown;
+  readonly value: string | null;
 }
 
-/** Result from single field server validation. */
-export interface ServerValidationResult {
+/** Result from single field server validation. Mirrors .NET ValidationFieldValidateResponse. */
+export interface ValidationFieldValidateResponse {
   readonly errorCode: string;
-  readonly status: ValidationStatus;
+  readonly status: ValidationFieldStatus;
 }
 
-/** Request payload for batch server validation. */
-export interface ServerValidationBatchRequest {
-  readonly fields: readonly ServerValidationRequest[];
+/** Request payload for batch server validation. Mirrors .NET ValidationFieldValidateBatchRequest. */
+export interface ValidationFieldValidateBatchRequest {
+  readonly fields: readonly ValidationFieldValidateRequest[];
 }
 
-/** Response from batch server validation. */
-export interface ServerValidationBatchResponse {
-  readonly results: readonly ServerValidationResult[];
+/** Response from batch server validation. Mirrors .NET ValidationFieldValidateBatchResponse. */
+export interface ValidationFieldValidateBatchResponse {
+  readonly results: readonly ValidationFieldValidateResponse[];
 }

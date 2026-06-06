@@ -9,12 +9,12 @@ export type {
   OpenApiSchemaRef,
   OpenApiSpec,
   SchemaConstraints,
-  ServerValidationBatchRequest,
-  ServerValidationBatchResponse,
-  ServerValidationRequest,
-  ServerValidationResult,
   SpecConstraints,
-  ValidationStatus,
+  ValidationFieldStatus,
+  ValidationFieldValidateBatchRequest,
+  ValidationFieldValidateBatchResponse,
+  ValidationFieldValidateRequest,
+  ValidationFieldValidateResponse,
 } from './types/index';
 
 // Constants
@@ -24,7 +24,7 @@ export type { ValidationErrorCode } from './constants/error-codes';
 // Functions
 export { extractConstraints } from './extract-constraints';
 export { getInputProps } from './get-input-props';
-export { validateField } from './validate-field';
+export { isEmptyFieldValue, validateField } from './validate-field';
 
 // Server validation API
 export {

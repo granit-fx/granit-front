@@ -2093,6 +2093,9 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
+      '@granit/utils':
+        specifier: workspace:*
+        version: link:../utils
 
   packages/@granit/react-map:
     dependencies:
@@ -2911,6 +2914,9 @@ importers:
       '@granit/workflow':
         specifier: workspace:*
         version: link:../workflow
+      '@tanstack/react-query':
+        specifier: 5.100.14
+        version: 5.100.14(react@19.2.7)
       msw:
         specifier: ^2.14.6
         version: 2.14.6(@types/node@25.9.1)(typescript@6.0.3)

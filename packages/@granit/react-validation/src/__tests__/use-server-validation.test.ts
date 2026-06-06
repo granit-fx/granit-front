@@ -6,7 +6,6 @@ import { useServerValidation } from '../use-server-validation';
 
 import type { FieldConstraint } from '@granit/validation';
 
-// Mock the server API call
 vi.mock('@granit/validation', async () => {
   const actual = await vi.importActual('@granit/validation');
   return { ...actual, validateFieldServer: vi.fn() };
@@ -44,24 +43,8 @@ describe('useServerValidation', () => {
     expect(result.current.status).toBe('idle');
   });
 
-  it('returns idle when value is empty and field is not required', () => {
+  it('returns idle when value is empty', () => {
     const constraint: FieldConstraint = {
-      granitValidator: 'Validation:InvalidIban',
-    };
-    const { result } = renderHook(() =>
-      useServerValidation({
-        client: createMockClient(),
-        constraint,
-        value: '',
-        t,
-      })
-    );
-    expect(result.current.status).toBe('idle');
-  });
-
-  it('returns idle when value is empty and field is required (let resolver handle)', () => {
-    const constraint: FieldConstraint = {
-      required: true,
       granitValidator: 'Validation:InvalidIban',
     };
     const { result } = renderHook(() =>
@@ -112,7 +95,7 @@ describe('useServerValidation', () => {
     const constraint: FieldConstraint = {
       granitValidator: 'Validation:InvalidIban',
     };
-    mockValidateFieldServer.mockReturnValue(new Promise(() => {})); // never resolves
+    mockValidateFieldServer.mockReturnValue(new Promise(() => {}));
 
     const { result } = renderHook(() =>
       useServerValidation({
@@ -246,6 +229,35 @@ describe('useServerValidation', () => {
     expect(mockValidateFieldServer).not.toHaveBeenCalled();
   });
 
+  it('coerces non-string value to string before calling server', async () => {
+    const constraint: FieldConstraint = {
+      granitValidator: 'Validation:InvalidIban',
+    };
+    mockValidateFieldServer.mockResolvedValue('Valid');
+
+    renderHook(() =>
+      useServerValidation({
+        client: createMockClient(),
+        constraint,
+        value: 42,
+        t,
+        debounceMs: 100,
+      })
+    );
+
+    await act(async () => {
+      vi.advanceTimersByTime(100);
+    });
+
+    expect(mockValidateFieldServer).toHaveBeenCalledWith(
+      expect.anything(),
+      undefined,
+      'Validation:InvalidIban',
+      '42',
+      expect.any(AbortSignal)
+    );
+  });
+
   it('resets to idle and restarts debounce when value changes', async () => {
     const constraint: FieldConstraint = {
       granitValidator: 'Validation:InvalidIban',
@@ -264,16 +276,13 @@ describe('useServerValidation', () => {
       { initialProps: { value: 'BE68' } }
     );
 
-    // Advance partially
     vi.advanceTimersByTime(200);
     expect(mockValidateFieldServer).not.toHaveBeenCalled();
 
-    // Value changes — restarts debounce
     rerender({ value: 'BE6853' });
     vi.advanceTimersByTime(200);
     expect(mockValidateFieldServer).not.toHaveBeenCalled();
 
-    // Full debounce from last change
     await act(async () => {
       vi.advanceTimersByTime(100);
     });

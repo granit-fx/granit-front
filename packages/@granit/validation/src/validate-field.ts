@@ -5,7 +5,8 @@ import type { FieldConstraint, FieldValidationError } from './types/index';
 // Each segment between @ and dots uses [^\s@.]+ to prevent backtracking overlap
 const EMAIL_REGEX = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
 
-function isEmpty(value: unknown): boolean {
+/** Returns true when the value is absent or blank — used to skip optional-field validation. */
+export function isEmptyFieldValue(value: unknown): boolean {
   return (
     value === undefined || value === null || (typeof value === 'string' && value.trim() === '')
   );
@@ -90,12 +91,12 @@ export function validateField(
 ): readonly FieldValidationError[] {
   const errors: FieldValidationError[] = [];
 
-  if (constraint.required && isEmpty(value)) {
+  if (constraint.required && isEmptyFieldValue(value)) {
     errors.push({ code: VALIDATION_ERROR_CODES.required });
   }
 
   // Skip remaining checks for empty non-required fields
-  if (isEmpty(value)) {
+  if (isEmptyFieldValue(value)) {
     return errors;
   }
 

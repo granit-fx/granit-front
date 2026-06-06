@@ -44,6 +44,7 @@ describe('validateFieldServer', () => {
 
     const result = await validateFieldServer(
       client as never,
+      '/api/v1/validation',
       'Validation:InvalidIban',
       'BE68539007547034'
     );
@@ -62,9 +63,27 @@ describe('validateFieldServer', () => {
       data: { errorCode: 'Validation:InvalidIban', status: 'Invalid' },
     });
 
-    const result = await validateFieldServer(client as never, 'Validation:InvalidIban', 'INVALID');
+    const result = await validateFieldServer(
+      client as never,
+      '/api/v1/validation',
+      'Validation:InvalidIban',
+      'INVALID'
+    );
 
     expect(result).toBe('Invalid');
+  });
+
+  it('accepts null value for nullable fields', async () => {
+    const client = createMockClient();
+    client.post.mockResolvedValue({ data: { errorCode: 'test', status: 'Valid' } });
+
+    await validateFieldServer(client as never, '/api/v1/validation', 'test', null);
+
+    expect(client.post).toHaveBeenCalledWith(
+      '/api/v1/validation/validate',
+      { errorCode: 'test', value: null },
+      { signal: undefined }
+    );
   });
 
   it('passes signal for abort support', async () => {
@@ -76,9 +95,9 @@ describe('validateFieldServer', () => {
 
     await validateFieldServer(
       client as never,
+      '/api/v1/validation',
       'test',
       'value',
-      '/api/v1/validation',
       controller.signal
     );
 
@@ -89,14 +108,27 @@ describe('validateFieldServer', () => {
     );
   });
 
-  it('uses custom basePath', async () => {
+  it('uses custom basePath (second parameter)', async () => {
     const client = createMockClient();
     client.post.mockResolvedValue({ data: { errorCode: 'test', status: 'Valid' } });
 
-    await validateFieldServer(client as never, 'test', 'value', '/custom');
+    await validateFieldServer(client as never, '/custom', 'test', 'value');
 
     expect(client.post).toHaveBeenCalledWith(
       '/custom/validate',
+      expect.anything(),
+      expect.anything()
+    );
+  });
+
+  it('uses default basePath when omitted', async () => {
+    const client = createMockClient();
+    client.post.mockResolvedValue({ data: { errorCode: 'test', status: 'Valid' } });
+
+    await validateFieldServer(client as never, undefined, 'test', 'value');
+
+    expect(client.post).toHaveBeenCalledWith(
+      '/api/v1/validation/validate',
       expect.anything(),
       expect.anything()
     );
@@ -116,7 +148,7 @@ describe('validateFieldsBatch', () => {
       { errorCode: 'Validation:InvalidIban', value: 'BE68539007547034' },
       { errorCode: 'Validation:InvalidBce', value: '0000000000' },
     ];
-    const result = await validateFieldsBatch(client as never, fields);
+    const result = await validateFieldsBatch(client as never, '/api/v1/validation', fields);
 
     expect(client.post).toHaveBeenCalledWith(
       '/api/v1/validation/validate-batch',
@@ -131,12 +163,25 @@ describe('validateFieldsBatch', () => {
     client.post.mockResolvedValue({ data: { results: [] } });
     const controller = new AbortController();
 
-    await validateFieldsBatch(client as never, [], '/api/v1/validation', controller.signal);
+    await validateFieldsBatch(client as never, '/api/v1/validation', [], controller.signal);
 
     expect(client.post).toHaveBeenCalledWith(
       '/api/v1/validation/validate-batch',
       expect.anything(),
       { signal: controller.signal }
+    );
+  });
+
+  it('uses default basePath when omitted', async () => {
+    const client = createMockClient();
+    client.post.mockResolvedValue({ data: { results: [] } });
+
+    await validateFieldsBatch(client as never, undefined, []);
+
+    expect(client.post).toHaveBeenCalledWith(
+      '/api/v1/validation/validate-batch',
+      expect.anything(),
+      expect.anything()
     );
   });
 });

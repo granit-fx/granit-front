@@ -1,4 +1,4 @@
-import { validateField, validateFieldServer } from '@granit/validation';
+import { isEmptyFieldValue, validateField, validateFieldServer } from '@granit/validation';
 import { useEffect, useRef, useState } from 'react';
 
 import type { TranslateFunction } from './create-constraints-resolver';
@@ -24,19 +24,17 @@ const IDLE: ServerValidationState = { status: 'idle' };
 const VALIDATING: ServerValidationState = { status: 'validating' };
 const VALID: ServerValidationState = { status: 'valid' };
 
-function isEmpty(value: unknown): boolean {
-  return (
-    value === undefined || value === null || (typeof value === 'string' && value.trim() === '')
-  );
-}
-
 /**
  * Validates a field against a server-side validator with debounce and abort support.
  *
+ * Uses useState/useEffect rather than TanStack Query intentionally: TQ's caching
+ * and retry semantics conflict with real-time field validation (debounce, abort
+ * on value change, non-blocking network errors).
+ *
  * Skips server call when:
  * - The constraint has no `granitValidator`
- * - The value is empty and the field is not required
- * - Client-side validation already fails (let the resolver handle it)
+ * - The value is empty (let the resolver handle required/empty)
+ * - Client-side validation already fails
  *
  * Returns a state object with `status` and optional `message`.
  */
@@ -48,14 +46,12 @@ export function useServerValidation(options: UseServerValidationOptions): Server
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    // Cleanup previous timer and request
     if (timerRef.current !== null) {
       clearTimeout(timerRef.current);
       timerRef.current = null;
     }
     abortRef.current?.abort();
 
-    // No server validator on this constraint
     if (!constraint.granitValidator || !enabled) {
       setState(IDLE);
       return;
@@ -63,27 +59,27 @@ export function useServerValidation(options: UseServerValidationOptions): Server
 
     const validatorKey = constraint.granitValidator;
 
-    // Empty value — skip (required or not, let client resolver handle it)
-    if (isEmpty(value)) {
+    if (isEmptyFieldValue(value)) {
       setState(IDLE);
       return;
     }
 
-    // Client-side validation fails — let resolver handle, skip server call
     const clientErrors = validateField(value, constraint);
     if (clientErrors.length > 0) {
       setState(IDLE);
       return;
     }
 
-    // Debounce the server call
     timerRef.current = setTimeout(() => {
       const controller = new AbortController();
       abortRef.current = controller;
 
       setState(VALIDATING);
 
-      validateFieldServer(client, validatorKey, value, basePath, controller.signal)
+      // Coerce to string — .NET endpoint expects string? (not arbitrary JSON)
+      const stringValue = typeof value === 'string' ? value : String(value);
+
+      validateFieldServer(client, basePath, validatorKey, stringValue, controller.signal)
         .then((status) => {
           if (controller.signal.aborted) return;
 
@@ -95,13 +91,11 @@ export function useServerValidation(options: UseServerValidationOptions): Server
               message: t(validatorKey, { nsSeparator: false }),
             });
           } else {
-            // ValidatorNotFound — no server validator available
             setState(IDLE);
           }
         })
         .catch((err: unknown) => {
           if (controller.signal.aborted) return;
-          // Network errors are non-blocking — don't prevent form submission
           setState({
             status: 'error',
             message: err instanceof Error ? err.message : String(err),

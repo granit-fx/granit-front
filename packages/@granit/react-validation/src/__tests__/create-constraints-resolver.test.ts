@@ -152,4 +152,26 @@ describe('createConstraintsResolver', () => {
       nsSeparator: false,
     });
   });
+
+  it('uses default " : " separator between constraint message and patternHint', async () => {
+    const patternConstraints = {
+      code: { pattern: '^\\d{5}$', patternHint: 'Hints:ZipCode' },
+    };
+    t.mockImplementation((key: string) => (key === 'Hints:ZipCode' ? 'five digits' : key));
+    const resolver = createConstraintsResolver(patternConstraints, t);
+    const result = await resolver({ code: 'abc' }, undefined, { fields: createFields('code') });
+    expect(result.errors['code']?.message).toContain(' : five digits');
+  });
+
+  it('uses custom patternHintSeparator when provided', async () => {
+    const patternConstraints = {
+      code: { pattern: '^\\d{5}$', patternHint: 'Hints:ZipCode' },
+    };
+    t.mockImplementation((key: string) => (key === 'Hints:ZipCode' ? 'five digits' : key));
+    const resolver = createConstraintsResolver(patternConstraints, t, {
+      patternHintSeparator: ' — ',
+    });
+    const result = await resolver({ code: 'abc' }, undefined, { fields: createFields('code') });
+    expect(result.errors['code']?.message).toContain(' — five digits');
+  });
 });

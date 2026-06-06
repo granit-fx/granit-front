@@ -113,7 +113,7 @@ describe('calculatePercentage', () => {
     expect(calculatePercentage(50, 200)).toBe(25);
   });
 
-  it('should round to the nearest integer', () => {
+  it('should round to the nearest integer by default', () => {
     expect(calculatePercentage(1, 3)).toBe(33);
   });
 
@@ -123,5 +123,14 @@ describe('calculatePercentage', () => {
 
   it('should return 100 when value equals total', () => {
     expect(calculatePercentage(5, 5)).toBe(100);
+  });
+
+  it('should support decimal precision', () => {
+    expect(calculatePercentage(1, 3, 1)).toBe(33.3);
+    expect(calculatePercentage(1, 3, 2)).toBe(33.33);
+  });
+
+  it('decimals=0 behaves like Math.round', () => {
+    expect(calculatePercentage(2, 3, 0)).toBe(67);
   });
 });

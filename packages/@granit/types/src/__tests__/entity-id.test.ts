@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { toEntityId } from '../entity-id';
+import { isEntityId, toEntityId } from '../entity-id';
 
 import type { EntityId, TenantId, UserId } from '../entity-id';
 
@@ -46,5 +46,31 @@ describe('EntityId', () => {
 
     expectTypeOf(id).toMatchTypeOf<InvoiceIdA>();
     expectTypeOf(id).toMatchTypeOf<InvoiceIdB>();
+  });
+});
+
+describe('isEntityId', () => {
+  it('returns true for a non-empty string', () => {
+    expect(isEntityId('550e8400-e29b-41d4-a716-446655440000')).toBe(true);
+    expect(isEntityId('any-string')).toBe(true);
+  });
+
+  it('returns false for an empty string', () => {
+    expect(isEntityId('')).toBe(false);
+  });
+
+  it('returns false for non-string values', () => {
+    expect(isEntityId(null)).toBe(false);
+    expect(isEntityId(undefined)).toBe(false);
+    expect(isEntityId(42)).toBe(false);
+    expect(isEntityId({})).toBe(false);
+  });
+
+  it('narrows the type to EntityId<string>', () => {
+    const value: unknown = 'some-id';
+
+    if (isEntityId(value)) {
+      expectTypeOf(value).toMatchTypeOf<EntityId<string>>();
+    }
   });
 });

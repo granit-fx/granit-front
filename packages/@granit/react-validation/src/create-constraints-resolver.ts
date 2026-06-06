@@ -25,6 +25,11 @@ export interface ConstraintsResolverOptions {
    * Defaults to the field name as-is.
    */
   readonly labelResolver?: (fieldName: string) => string;
+  /**
+   * Separator inserted between the constraint message and the pattern hint.
+   * Defaults to `' : '`.
+   */
+  readonly patternHintSeparator?: string;
 }
 
 /**
@@ -37,6 +42,8 @@ export function createConstraintsResolver(
   t: TranslateFunction,
   options?: ConstraintsResolverOptions
 ): ConstraintsResolver {
+  const separator = options?.patternHintSeparator ?? ' : ';
+
   return async (values, _context, formOptions) => {
     const errors: Record<string, { type: string; message: string }> = {};
 
@@ -61,7 +68,7 @@ export function createConstraintsResolver(
 
         if (constraint.patternHint && first.code === VALIDATION_ERROR_CODES.pattern) {
           const hint = t(constraint.patternHint, { nsSeparator: false });
-          message = `${message} : ${hint}`;
+          message = `${message}${separator}${hint}`;
         }
 
         errors[fieldName] = { type: first.code, message };

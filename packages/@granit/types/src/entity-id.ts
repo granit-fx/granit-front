@@ -28,6 +28,16 @@ export function toEntityId<Brand extends string>(value: string): EntityId<Brand>
   return value as EntityId<Brand>;
 }
 
+/**
+ * Returns `true` when `value` is a non-empty string (structural guard only).
+ *
+ * Use at system boundaries (API deserialization, URL params) to assert the
+ * value is at least a non-empty string before branding it with {@link toEntityId}.
+ */
+export function isEntityId(value: unknown): value is EntityId<string> {
+  return typeof value === 'string' && value.length > 0;
+}
+
 // ── Cross-cutting entity IDs ────────────────────────────────────────────────
 
 /** User identifier — used across identity, notifications, auditing, subscriptions, etc. */

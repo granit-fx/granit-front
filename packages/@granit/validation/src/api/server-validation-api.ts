@@ -1,8 +1,8 @@
 import type {
-  ServerValidationBatchRequest,
-  ServerValidationBatchResponse,
-  ServerValidationResult,
-  ValidationStatus,
+  ValidationFieldValidateBatchRequest,
+  ValidationFieldValidateBatchResponse,
+  ValidationFieldValidateResponse,
+  ValidationFieldStatus,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
@@ -20,12 +20,12 @@ export async function listValidators(
 /** Validate a single field value against a server-side validator. */
 export async function validateFieldServer(
   client: AxiosInstance,
-  errorCode: string,
-  value: unknown,
   basePath: string = DEFAULT_BASE_PATH,
+  errorCode: string,
+  value: string | null,
   signal?: AbortSignal
-): Promise<ValidationStatus> {
-  const { data } = await client.post<ServerValidationResult>(
+): Promise<ValidationFieldStatus> {
+  const { data } = await client.post<ValidationFieldValidateResponse>(
     `${basePath}/validate`,
     { errorCode, value },
     { signal }
@@ -36,13 +36,13 @@ export async function validateFieldServer(
 /** Validate multiple fields in a single batch request. */
 export async function validateFieldsBatch(
   client: AxiosInstance,
-  fields: readonly { errorCode: string; value: unknown }[],
   basePath: string = DEFAULT_BASE_PATH,
+  fields: readonly { errorCode: string; value: string | null }[],
   signal?: AbortSignal
-): Promise<readonly ServerValidationResult[]> {
-  const { data } = await client.post<ServerValidationBatchResponse>(
+): Promise<readonly ValidationFieldValidateResponse[]> {
+  const { data } = await client.post<ValidationFieldValidateBatchResponse>(
     `${basePath}/validate-batch`,
-    { fields } satisfies ServerValidationBatchRequest,
+    { fields } satisfies ValidationFieldValidateBatchRequest,
     { signal }
   );
   return data.results;

@@ -16,6 +16,7 @@
   "peerDependencies": {
     "@date-fns/tz": "^1.0.0",
     "@granit/api-client": "workspace:*",
+    "@granit/utils": "workspace:*",
     "@granit/localization": "workspace:*",
     "@granit/query-engine": "workspace:*",
     "@granit/react-query-engine": "workspace:*",
@@ -54,6 +55,7 @@
   "devDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/testing": "workspace:*",
-    "@granit/types": "workspace:*"
+    "@granit/types": "workspace:*",
+    "@granit/utils": "workspace:*"
   }
 }
