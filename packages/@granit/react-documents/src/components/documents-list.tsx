@@ -470,7 +470,7 @@ function DocumentsListBody({
       return;
     }
     renameDocument.mutate(
-      { id: doc.id, request: { name } },
+      { id: doc.id, request: { name, description: null } },
       { onSettled: () => clearRowMode(doc.id) }
     );
   }

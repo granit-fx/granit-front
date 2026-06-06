@@ -15,7 +15,7 @@ const apiBase = '/api/v1';
 
 const sampleResponse: WorkspaceCustomizationResponse = {
   workspaceName: 'sales',
-  deltas: [{ kind: 'Hide', fieldName: 'pipelineForecast' }],
+  deltas: [{ $type: 'hide', fieldName: 'pipelineForecast' }],
   updatedAt: '2026-05-06T10:00:00Z',
   updatedByUserId: 'user-1',
 };
@@ -46,7 +46,14 @@ describe('putWorkspaceCustomization', () => {
     const client = createMockClient();
     vi.mocked(client.put).mockResolvedValue(axiosResponse(sampleResponse));
     const request: WorkspaceCustomizationRequest = {
-      deltas: [{ kind: 'Reorder', fieldName: 'tile-pipeline', beforeFieldName: 'tile-quotes' }],
+      deltas: [
+        {
+          $type: 'reorder',
+          fieldName: 'tile-pipeline',
+          beforeFieldName: 'tile-quotes',
+          afterFieldName: null,
+        },
+      ],
     };
 
     const result = await putWorkspaceCustomization(client, apiBase, 'sales', request);

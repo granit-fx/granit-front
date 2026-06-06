@@ -1,11 +1,11 @@
 // Types
 export type {
-  FormCustomizationRequest,
-  FormCustomizationResponse,
-  FormVariant,
+  EntityCustomizationRequest,
+  EntityCustomizationResponse,
   HideDelta,
   LayoutDelta,
   LayoutDeltaKind,
+  LayoutKind,
   RegroupDelta,
   ReorderDelta,
   WorkspaceCustomizationRequest,
@@ -15,8 +15,14 @@ export type {
 // Permissions
 export { CustomizationPermissions } from './permissions';
 
-// API
-export { getFormCustomization, putFormCustomization } from './api/form-customization-api';
+// API — entity customization
+export {
+  deleteEntityCustomization,
+  getEntityCustomization,
+  putEntityCustomization,
+} from './api/form-customization-api';
+
+// API — workspace customization
 export {
   getWorkspaceCustomization,
   putWorkspaceCustomization,

@@ -2,6 +2,30 @@ import type { VisibilityCondition } from './visibility';
 import type { LookupDescriptor } from '@granit/data-lookup';
 
 /**
+ * Identifies the manifest layer that contributed a field, and the optional
+ * override record that introduced it. Mirrors
+ * `Granit.Entities.Endpoints.Dtos.EntityProvenance`.
+ */
+export interface EntityProvenance {
+  /** Layer identifier (e.g. `"base"`, `"tenant"`, `"user"`). */
+  readonly layer: string;
+  /** Id of the override record that introduced the field, or `null` for base-layer fields. */
+  readonly overrideId: string | null;
+}
+
+/**
+ * Describes an owned collection rendered inline within a form section.
+ * Mirrors `Granit.Entities.Endpoints.Dtos.EntityFormOwnedCollectionManifest`.
+ */
+export interface EntityFormOwnedCollectionManifest {
+  readonly propertyName: string;
+  readonly itemTypeName: string;
+  readonly itemFields: readonly string[];
+  readonly itemDisplayProperty: string | null;
+  readonly maxRendered: number | null;
+}
+
+/**
  * One form field. Mirrors
  * `Granit.Entities.Endpoints.Dtos.EntityFormFieldManifest`.
  */
@@ -37,6 +61,12 @@ export interface EntityFormFieldManifest {
    * .NET `FieldDescriptor.Lookup`; `null` for fields without a declared lookup.
    */
   readonly lookup: LookupDescriptor | null;
+  /**
+   * Provenance of the field declaration — identifies which manifest layer
+   * and, if applicable, which override record introduced it. `null` for
+   * base-layer fields without a tracked origin.
+   */
+  readonly provenance: EntityProvenance | null;
 }
 
 /**
@@ -54,6 +84,11 @@ export interface EntityFormSectionManifest {
   readonly collapsedByDefault: boolean;
   /** Fields the user is allowed to see — already permission-filtered server-side. */
   readonly fields: readonly EntityFormFieldManifest[];
+  /**
+   * Optional inline owned-collection rendered in this section. `null` when
+   * the section is a plain field group.
+   */
+  readonly ownedCollection: EntityFormOwnedCollectionManifest | null;
 }
 
 /**
@@ -67,4 +102,10 @@ export interface EntityFormManifest {
   readonly customizable: boolean;
   /** Sections in declaration order. */
   readonly sections: readonly EntityFormSectionManifest[];
+  /**
+   * Field names hidden by an active admin override (Layer 1). `null` when
+   * no fields are overridden, or when the manifest was fetched without the
+   * customization facet.
+   */
+  readonly hiddenByOverride: readonly string[] | null;
 }

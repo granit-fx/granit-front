@@ -33,17 +33,17 @@ function applyRegroupDelta(
 
 function applyReorderDelta(
   order: string[],
-  delta: Extract<LayoutDelta, { kind: 'Reorder' }>
+  delta: Extract<LayoutDelta, { $type: 'reorder' }>
 ): void {
   const fromIdx = order.indexOf(delta.fieldName);
   if (fromIdx === -1) return;
   const anchor = delta.beforeFieldName ?? delta.afterFieldName;
-  if (anchor === undefined) return;
+  if (anchor === null) return;
   const anchorIdx = order.indexOf(anchor);
   if (anchorIdx === -1 || anchor === delta.fieldName) return;
   order.splice(fromIdx, 1);
   const reAnchor = order.indexOf(anchor);
-  const targetIdx = delta.beforeFieldName === undefined ? reAnchor + 1 : reAnchor;
+  const targetIdx = delta.beforeFieldName === null ? reAnchor + 1 : reAnchor;
   order.splice(targetIdx, 0, delta.fieldName);
 }
 
@@ -54,15 +54,15 @@ function applyReorderDelta(
  *
  * Resolution semantics (mirrors backend, ADR-053 §4):
  *  - Deltas apply in order; later deltas override earlier ones for the
- *    same field (e.g. two `Hide` deltas idempotent; `Reorder` then
- *    `Reorder` keeps the latter).
- *  - `Reorder.beforeFieldName` and `Reorder.afterFieldName` are honored
+ *    same field (e.g. two `hide` deltas idempotent; `reorder` then
+ *    `reorder` keeps the latter).
+ *  - `reorder.beforeFieldName` and `reorder.afterFieldName` are honored
  *    only if the anchor exists in the current order. Unknown anchors
  *    are silently ignored — backend rejects on PUT, so the editor
  *    never persists an invalid delta.
- *  - `Regroup` overrides `defaultGroup`.
- *  - `Hide` flips `hidden` to true (no `Show` delta — un-hiding means
- *    removing the Hide delta from the list).
+ *  - `regroup` overrides `defaultGroup`.
+ *  - `hide` flips `hidden` to true (no `show` delta — un-hiding means
+ *    removing the hide delta from the list).
  */
 export function applyDeltas(
   fields: readonly SchemaField[],
@@ -76,11 +76,11 @@ export function applyDeltas(
 
   for (const delta of deltas) {
     if (!meta.has(delta.fieldName)) continue;
-    if (delta.kind === 'Hide') {
+    if (delta.$type === 'hide') {
       applyHideDelta(meta, delta.fieldName);
-    } else if (delta.kind === 'Regroup') {
+    } else if (delta.$type === 'regroup') {
       applyRegroupDelta(meta, delta.fieldName, delta.groupKey);
-    } else if (delta.kind === 'Reorder') {
+    } else if (delta.$type === 'reorder') {
       applyReorderDelta(order, delta);
     }
   }
@@ -102,7 +102,10 @@ export function moveFieldUp(
   if (idx <= 0) return deltas;
   const previous = effective[idx - 1];
   if (previous === undefined) return deltas;
-  return [...deltas, { kind: 'Reorder', fieldName, beforeFieldName: previous.name }];
+  return [
+    ...deltas,
+    { $type: 'reorder', fieldName, beforeFieldName: previous.name, afterFieldName: null },
+  ];
 }
 
 /**
@@ -119,12 +122,15 @@ export function moveFieldDown(
   if (idx === -1 || idx >= effective.length - 1) return deltas;
   const next = effective[idx + 1];
   if (next === undefined) return deltas;
-  return [...deltas, { kind: 'Reorder', fieldName, afterFieldName: next.name }];
+  return [
+    ...deltas,
+    { $type: 'reorder', fieldName, beforeFieldName: null, afterFieldName: next.name },
+  ];
 }
 
 /**
- * Flip a field's visibility. Adding a hide appends a `Hide` delta;
- * un-hiding strips every `Hide` delta for that field (deltas remain a
+ * Flip a field's visibility. Adding a hide appends a `hide` delta;
+ * un-hiding strips every `hide` delta for that field (deltas remain a
  * historical/append log on the wire, but the editor's view is
  * declarative).
  */
@@ -137,13 +143,13 @@ export function toggleFieldHidden(
   const target = effective.find((f) => f.name === fieldName);
   if (target === undefined) return deltas;
   if (target.hidden) {
-    return deltas.filter((d) => !(d.kind === 'Hide' && d.fieldName === fieldName));
+    return deltas.filter((d) => !(d.$type === 'hide' && d.fieldName === fieldName));
   }
-  return [...deltas, { kind: 'Hide', fieldName }];
+  return [...deltas, { $type: 'hide', fieldName }];
 }
 
 /**
- * Move a field into a group. Empty `groupKey` removes any `Regroup` delta
+ * Move a field into a group. Empty `groupKey` removes any `regroup` delta
  * (the field falls back to its schema default).
  */
 export function setFieldGroup(
@@ -151,7 +157,7 @@ export function setFieldGroup(
   fieldName: string,
   groupKey: string
 ): readonly LayoutDelta[] {
-  const stripped = deltas.filter((d) => !(d.kind === 'Regroup' && d.fieldName === fieldName));
+  const stripped = deltas.filter((d) => !(d.$type === 'regroup' && d.fieldName === fieldName));
   if (groupKey.length === 0) return stripped;
-  return [...stripped, { kind: 'Regroup', fieldName, groupKey }];
+  return [...stripped, { $type: 'regroup', fieldName, groupKey }];
 }

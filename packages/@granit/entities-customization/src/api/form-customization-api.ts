@@ -1,48 +1,62 @@
 import type {
-  FormCustomizationRequest,
-  FormCustomizationResponse,
-  FormVariant,
+  EntityCustomizationRequest,
+  EntityCustomizationResponse,
+  LayoutKind,
 } from '../types/customization';
 import type { AxiosInstance } from '@granit/api-client';
 
-/** Builds the form-customization endpoint for a given entity + variant. */
-function formPath(apiBase: string, entityName: string, variant: FormVariant): string {
-  return `${apiBase}/entities/${encodeURIComponent(entityName)}/customization/forms/${encodeURIComponent(variant)}`;
+function customizationPath(apiBase: string, entityName: string, layoutKind: LayoutKind): string {
+  return `${apiBase}/entities/${encodeURIComponent(entityName)}/customization/${encodeURIComponent(layoutKind)}`;
 }
 
 /**
- * Read the active form layout deltas for `entityName`/`variant`.
+ * Read the active layout deltas for `entityName`/`layoutKind`.
  *
- * `GET {apiBase}/entities/{name}/customization/forms/{variant}`
+ * `GET {apiBase}/entities/{name}/customization/{layoutKind}`
  */
-export async function getFormCustomization(
+export async function getEntityCustomization(
   client: AxiosInstance,
   apiBase: string,
   entityName: string,
-  variant: FormVariant
-): Promise<FormCustomizationResponse> {
-  const response = await client.get<FormCustomizationResponse>(
-    formPath(apiBase, entityName, variant)
+  layoutKind: LayoutKind
+): Promise<EntityCustomizationResponse> {
+  const response = await client.get<EntityCustomizationResponse>(
+    customizationPath(apiBase, entityName, layoutKind)
   );
   return response.data;
 }
 
 /**
- * Replace the form layout deltas for `entityName`/`variant`. The backend
+ * Replace the layout deltas for `entityName`/`layoutKind`. The backend
  * audits the change (ADR-053 §7) and rejects unknown delta kinds.
  *
- * `PUT {apiBase}/entities/{name}/customization/forms/{variant}`
+ * `PUT {apiBase}/entities/{name}/customization/{layoutKind}`
  */
-export async function putFormCustomization(
+export async function putEntityCustomization(
   client: AxiosInstance,
   apiBase: string,
   entityName: string,
-  variant: FormVariant,
-  request: FormCustomizationRequest
-): Promise<FormCustomizationResponse> {
-  const response = await client.put<FormCustomizationResponse>(
-    formPath(apiBase, entityName, variant),
+  layoutKind: LayoutKind,
+  request: EntityCustomizationRequest
+): Promise<EntityCustomizationResponse> {
+  const response = await client.put<EntityCustomizationResponse>(
+    customizationPath(apiBase, entityName, layoutKind),
     request
   );
   return response.data;
+}
+
+/**
+ * Delete the customization record for `entityName`/`layoutKind`, restoring
+ * the base-layer layout.
+ *
+ * `DELETE {apiBase}/entities/{name}/customization/{layoutKind}`
+ */
+export async function deleteEntityCustomization(
+  client: AxiosInstance,
+  apiBase: string,
+  entityName: string,
+  layoutKind: LayoutKind
+): Promise<void> {
+  await client.delete(customizationPath(apiBase, entityName, layoutKind));
 }

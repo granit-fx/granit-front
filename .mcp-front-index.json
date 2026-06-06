@@ -1478,6 +1478,31 @@
           "name": "getTenantStorageQuota",
           "kind": "function",
           "signature": "async function getTenantStorageQuota( client: AxiosInstance, basePath: string ): Promise<TenantStorageQuotaResponse>"
+        },
+        {
+          "name": "getDocumentProperties",
+          "kind": "function",
+          "signature": "async function getDocumentProperties( client: AxiosInstance, basePath: string, id: string ): Promise<DocumentPropertiesResponse>"
+        },
+        {
+          "name": "getDocumentVersionProperties",
+          "kind": "function",
+          "signature": "async function getDocumentVersionProperties( client: AxiosInstance, basePath: string, id: string, versionId: string ): Promise<DocumentPropertiesResponse>"
+        },
+        {
+          "name": "listDocumentRenditions",
+          "kind": "function",
+          "signature": "async function listDocumentRenditions( client: AxiosInstance, basePath: string, id: string ): Promise<ListRenditionsResponse>"
+        },
+        {
+          "name": "requestRenditionDownloadUrl",
+          "kind": "function",
+          "signature": "async function requestRenditionDownloadUrl( client: AxiosInstance, basePath: string, id: string, type: RenditionType ): Promise<RenditionDownloadUrlResponse>"
+        },
+        {
+          "name": "batchResolveDocumentAssets",
+          "kind": "function",
+          "signature": "async function batchResolveDocumentAssets( client: AxiosInstance, basePath: string, request: BatchResolveRequest ): Promise<readonly ResolvedDocumentResponse[]>"
         }
       ]
     },
@@ -1500,16 +1525,6 @@
           "name": "CustomizationPermissions",
           "kind": "const",
           "signature": "const CustomizationPermissions"
-        },
-        {
-          "name": "getFormCustomization",
-          "kind": "function",
-          "signature": "async function getFormCustomization( client: AxiosInstance, apiBase: string, entityName: string, variant: FormVariant ): Promise<FormCustomizationResponse>"
-        },
-        {
-          "name": "putFormCustomization",
-          "kind": "function",
-          "signature": "async function putFormCustomization( client: AxiosInstance, apiBase: string, entityName: string, variant: FormVariant, request: FormCustomizationRequest ): Promise<FormCustomizationResponse>"
         }
       ]
     },
@@ -4421,6 +4436,21 @@
           "signature": "function useTenantStorageQuota(options?:"
         },
         {
+          "name": "useDocumentRenditions",
+          "kind": "function",
+          "signature": "function useDocumentRenditions( id: string, options?:"
+        },
+        {
+          "name": "useRenditionDownloadUrl",
+          "kind": "function",
+          "signature": "function useRenditionDownloadUrl( id: string, type: RenditionType, options?:"
+        },
+        {
+          "name": "useBatchResolveDocumentAssets",
+          "kind": "function",
+          "signature": "function useBatchResolveDocumentAssets(): UseMutationResult< readonly ResolvedDocumentResponse[], Error, BatchResolveRequest >"
+        },
+        {
           "name": "DocumentDetail",
           "kind": "function",
           "signature": "function DocumentDetail("
@@ -4907,14 +4937,14 @@
           "signature": "const DEFAULT_QUERY_KEY_PREFIX"
         },
         {
-          "name": "useFormCustomization",
+          "name": "useEntityCustomization",
           "kind": "function",
-          "signature": "function useFormCustomization("
+          "signature": "function useEntityCustomization("
         },
         {
-          "name": "usePutFormCustomization",
+          "name": "usePutEntityCustomization",
           "kind": "function",
-          "signature": "function usePutFormCustomization(): UseMutationResult< FormCustomizationResponse, Error, PutFormCustomizationArgs >"
+          "signature": "function usePutEntityCustomization(): UseMutationResult< EntityCustomizationResponse, Error, PutEntityCustomizationArgs >"
         },
         {
           "name": "EffectiveField",

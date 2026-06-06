@@ -2,10 +2,11 @@
 // @granit/react-documents/testing — MSW handlers
 // ---------------------------------------------------------------------------
 //
-// Stateful in-memory implementation of every endpoint in the Phase 1
-// Documents wire contract (folders, documents, versions, shares, tags, quota,
-// trash + QueryEngine list). Handlers mutate module-level arrays so subsequent
-// GETs reflect prior mutations within a single test/dev session.
+// Stateful in-memory implementation of every endpoint in the Documents wire
+// contract (folders, documents, versions, shares, tags, quota, trash,
+// QueryEngine list, properties, public-links, renditions, resolution).
+// Handlers mutate module-level arrays so subsequent GETs reflect prior
+// mutations within a single test/dev session.
 
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { noContent, notFound, pagedResponse, parseFilters, parseSort } from '@granit/testing/msw';
@@ -28,7 +29,11 @@ import { documentQueryMetadata } from './query-meta';
 
 import type {
   AppendVersionRequest,
+  BatchResolveRequest,
   CreateFolderRequest,
+  CreatePublicLinkRequest,
+  CreatePublicLinkResponse,
+  DocumentPropertiesResponse,
   DocumentResponse,
   DocumentTagAssignmentResponse,
   DocumentVersionResponse,
@@ -40,12 +45,17 @@ import type {
   ListDocumentTagsResponse,
   ListDocumentVersionsResponse,
   ListFoldersResponse,
+  ListRenditionsResponse,
   ListSharesResponse,
   ListTrashedDocumentsResponse,
   MoveDocumentRequest,
   MoveFolderRequest,
+  PublicLinkResponse,
   RenameDocumentRequest,
   RenameFolderRequest,
+  RenditionResponse,
+  ResolvedDocumentResponse,
+  RevokePublicLinkRequest,
   ShareResponse,
   TenantStorageQuotaResponse,
   TransferOwnerRequest,
@@ -105,6 +115,8 @@ export function createDocumentsHandlers(
   const trashed = mockTrashedDocumentsData.map((t) => ({ ...t }));
   const shares: ShareResponse[] = mockSharesData.map((s) => ({ ...s }));
   const quota: TenantStorageQuotaResponse = { ...mockQuotaData };
+  const publicLinks: PublicLinkResponse[] = [];
+  const renditions: RenditionResponse[] = [];
 
   function findFolder(id: string): FolderResponse | undefined {
     return folders.find((f) => f.id === id);
@@ -304,7 +316,7 @@ export function createDocumentsHandlers(
         isDefault: body.isDefault ?? true,
         expiresAt: body.expiresAt ?? null,
         createdAt: new Date().toISOString(),
-        createdByUserId: MOCK_OWNER_USER_ID,
+        createdBy: MOCK_OWNER_USER_ID,
       };
       shares.push(share);
       return HttpResponse.json(share, { status: 201 });
@@ -494,7 +506,7 @@ export function createDocumentsHandlers(
         isDefault: false,
         expiresAt: body.expiresAt ?? null,
         createdAt: new Date().toISOString(),
-        createdByUserId: MOCK_OWNER_USER_ID,
+        createdBy: MOCK_OWNER_USER_ID,
       };
       shares.push(share);
       return HttpResponse.json(share, { status: 201 });
@@ -605,5 +617,208 @@ export function createDocumentsHandlers(
 
     // ── Quota ────────────────────────────────────────────────────────────────
     http.get(`${basePath}/quota`, () => HttpResponse.json(quota)),
+
+    // ── Document properties ──────────────────────────────────────────────────
+    http.get(`${basePath}/documents/:id/versions/:versionId/metadata`, ({ params }) => {
+      const id = params.id as string;
+      const versionId = params.versionId as string;
+      if (!findDocument(id)) return notFound();
+      const v = versions.find((ver) => ver.documentId === id && ver.id === versionId);
+      if (!v) return notFound();
+      const props: DocumentPropertiesResponse = {
+        id: `props-${v.id}`,
+        documentId: id,
+        documentVersionId: versionId,
+        sourceContentType: v.contentType,
+        status: 'Ready',
+        createdAt: v.uploadedAt,
+        completedAt: v.uploadedAt,
+        failureReason: null,
+        extractorCount: 1,
+        width: null,
+        height: null,
+        cameraMake: null,
+        cameraModel: null,
+        lensModel: null,
+        iso: null,
+        fNumber: null,
+        exposureTimeMs: null,
+        takenAt: null,
+        gpsLatitude: null,
+        gpsLongitude: null,
+        gpsAltitude: null,
+        pageCount: null,
+        title: null,
+        author: null,
+        subject: null,
+        keywords: null,
+        producer: null,
+        revision: null,
+        lastModifiedBy: null,
+        durationMs: null,
+        codec: null,
+        bitrate: null,
+        artist: null,
+        album: null,
+        trackNumber: null,
+        genre: null,
+        rawMetadata: {},
+      };
+      return HttpResponse.json(props);
+    }),
+
+    http.get(`${basePath}/documents/:id/metadata`, ({ params }) => {
+      const id = params.id as string;
+      const doc = findDocument(id);
+      if (!doc) return notFound();
+      if (!doc.currentVersionId) return notFound();
+      const v = versions.find((ver) => ver.id === doc.currentVersionId);
+      if (!v) return notFound();
+      const props: DocumentPropertiesResponse = {
+        id: `props-${id}`,
+        documentId: id,
+        documentVersionId: doc.currentVersionId,
+        sourceContentType: doc.contentType ?? 'application/octet-stream',
+        status: 'Ready',
+        createdAt: doc.createdAt,
+        completedAt: doc.createdAt,
+        failureReason: null,
+        extractorCount: 1,
+        width: null,
+        height: null,
+        cameraMake: null,
+        cameraModel: null,
+        lensModel: null,
+        iso: null,
+        fNumber: null,
+        exposureTimeMs: null,
+        takenAt: null,
+        gpsLatitude: null,
+        gpsLongitude: null,
+        gpsAltitude: null,
+        pageCount: null,
+        title: null,
+        author: null,
+        subject: null,
+        keywords: null,
+        producer: null,
+        revision: null,
+        lastModifiedBy: null,
+        durationMs: null,
+        codec: null,
+        bitrate: null,
+        artist: null,
+        album: null,
+        trackNumber: null,
+        genre: null,
+        rawMetadata: {},
+      };
+      return HttpResponse.json(props);
+    }),
+
+    // ── Public links ─────────────────────────────────────────────────────────
+    http.post(`${basePath}/documents/:id/public-links`, async ({ params, request }) => {
+      const documentId = params.id as string;
+      if (!findDocument(documentId)) return notFound();
+      const body = (await request.json()) as CreatePublicLinkRequest;
+      const id = newId('lk', shareCounter++);
+      const token = `mock-token-${id.slice(-8)}`;
+      const expiresAt = new Date(Date.now() + body.ttlDays * 24 * 60 * 60 * 1000).toISOString();
+      const created: CreatePublicLinkResponse = {
+        id,
+        documentId,
+        token,
+        url: `/p/${token}`,
+        scope: body.scope,
+        expiresAt,
+        maxUses: body.maxUses,
+      };
+      publicLinks.push({
+        id,
+        documentId,
+        scope: body.scope,
+        expiresAt,
+        maxUses: body.maxUses,
+        currentUses: 0,
+        revokedAt: null,
+        revocationReason: null,
+        createdAt: new Date().toISOString(),
+      });
+      return HttpResponse.json(created, { status: 201 });
+    }),
+
+    http.get(`${basePath}/documents/:id/public-links`, ({ params }) => {
+      const documentId = params.id as string;
+      if (!findDocument(documentId)) return notFound();
+      const items = publicLinks.filter((l) => l.documentId === documentId && l.revokedAt === null);
+      return HttpResponse.json(items);
+    }),
+
+    http.delete(`${basePath}/public-links/:id`, async ({ params, request }) => {
+      const id = params.id as string;
+      const idx = publicLinks.findIndex((l) => l.id === id);
+      if (idx === -1) return notFound();
+      const body = (await request.json()) as RevokePublicLinkRequest;
+      const link = publicLinks[idx];
+      if (link) {
+        Object.assign(link, {
+          ...link,
+          revokedAt: new Date().toISOString(),
+          revocationReason: body.reason,
+        });
+      }
+      return noContent();
+    }),
+
+    // ── Renditions ───────────────────────────────────────────────────────────
+    http.get(`${basePath}/documents/:id/renditions`, ({ params }) => {
+      const id = params.id as string;
+      const doc = findDocument(id);
+      if (!doc) return notFound();
+      const versionId = doc.currentVersionId ?? '';
+      const items: RenditionResponse[] = renditions.filter(
+        (r) => r.documentId === id && r.documentVersionId === versionId
+      );
+      const body: ListRenditionsResponse = {
+        documentId: id,
+        documentVersionId: versionId,
+        renditions: items,
+      };
+      return HttpResponse.json(body);
+    }),
+
+    http.get(`${basePath}/documents/:id/renditions/:type/download`, ({ params }) => {
+      const id = params.id as string;
+      const type = params.type as string;
+      if (!findDocument(id)) return notFound();
+      const body = {
+        url: `mock://renditions/${id}/${type}`,
+        expiresAt: new Date(Date.now() + 15 * 60_000).toISOString(),
+      };
+      return HttpResponse.json(body);
+    }),
+
+    // ── Resolution ───────────────────────────────────────────────────────────
+    http.post(`${basePath}/resolution/resolve`, async ({ request }) => {
+      const body = (await request.json()) as BatchResolveRequest;
+      const results: ResolvedDocumentResponse[] = [];
+      for (const item of body.requests) {
+        const doc = findDocument(item.documentId);
+        if (!doc) continue;
+        const versionId = item.versionId ?? doc.currentVersionId;
+        if (!versionId) continue;
+        results.push({
+          documentId: item.documentId,
+          versionId,
+          url: `mock://resolve/${item.documentId}/${versionId}`,
+          width: null,
+          height: null,
+          mimeType: doc.contentType,
+          sizeBytes: doc.sizeBytes,
+          lastModified: doc.modifiedAt ?? doc.createdAt,
+        });
+      }
+      return HttpResponse.json(results);
+    }),
   ];
 }

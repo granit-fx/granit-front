@@ -14,7 +14,7 @@ export type {
 export { API_VERSION, DEFAULT_API_BASE, DEFAULT_QUERY_KEY_PREFIX } from './constants';
 
 // Hooks
-export { useFormCustomization, usePutFormCustomization } from './hooks/use-form-customization';
+export { useEntityCustomization, usePutEntityCustomization } from './hooks/use-form-customization';
 export {
   usePutWorkspaceCustomization,
   useWorkspaceCustomization,

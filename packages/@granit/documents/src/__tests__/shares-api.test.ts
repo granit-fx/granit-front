@@ -24,7 +24,7 @@ const sampleFolderShare: ShareResponse = {
   isDefault: true,
   expiresAt: null,
   createdAt: '2026-05-01T10:00:00Z',
-  createdByUserId: 'user-1',
+  createdBy: 'user-1',
 };
 
 const sampleDocumentShare: ShareResponse = {

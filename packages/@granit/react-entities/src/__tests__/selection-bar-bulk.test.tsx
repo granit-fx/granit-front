@@ -20,15 +20,13 @@ const ENTITY_NAME = 'Granit.Sales.Quote';
 const BULK_PATH = `http://localhost/api/v1/entities/${encodeURIComponent(ENTITY_NAME)}/bulk/approve`;
 
 const FULL_SUCCESS: BulkActionResponse = {
-  ok: ['q1', 'q2', 'q3'],
-  failed: [],
-  parents: ['Party:p1', 'Party:p2'],
+  affected: 3,
+  failures: [],
 };
 
 const PARTIAL_FAILURE: BulkActionResponse = {
-  ok: ['q1', 'q3'],
-  failed: [{ id: 'q2', error: 'Workflow blocked', errorCode: 'wf.blocked' }],
-  parents: ['Party:p1'],
+  affected: 2,
+  failures: [{ id: 'q2', reason: 'Workflow blocked' }],
 };
 
 let lastBulkBody: { ids: readonly string[] } | null = null;
@@ -142,10 +140,10 @@ describe('EntitySelectionBar — bulk endpoint dispatch', () => {
     await waitFor(() => expect(onComplete).toHaveBeenCalledOnce());
     expect(bulkCallCount).toBe(1);
     expect(perRowCallCount).toBe(0);
-    expect(lastBulkBody).toEqual({ ids: ['q1', 'q2', 'q3'] });
+    expect(lastBulkBody).toMatchObject({ ids: ['q1', 'q2', 'q3'] });
   });
 
-  it('exposes parents from the response in the recap (used by D3 cache eviction)', async () => {
+  it('derives succeeded ids as (input ids) \\ (failures) and surfaces an empty failed list on full success', async () => {
     const Wrapper = makeWrapper();
     const onComplete = vi.fn();
 
@@ -163,7 +161,6 @@ describe('EntitySelectionBar — bulk endpoint dispatch', () => {
     const recap = onComplete.mock.calls[0]?.[1];
     expect(recap.succeeded).toEqual(['q1', 'q2', 'q3']);
     expect(recap.failed).toHaveLength(0);
-    expect(recap.parents).toEqual(['Party:p1', 'Party:p2']);
   });
 
   it('keeps failed rows selected and surfaces per-id errors on partial failure', async () => {
@@ -187,7 +184,8 @@ describe('EntitySelectionBar — bulk endpoint dispatch', () => {
     expect(recap.succeeded).toEqual(['q1', 'q3']);
     expect(recap.failed).toHaveLength(1);
     expect(recap.failed[0]?.id).toBe('q2');
-    expect(recap.failed[0]?.error).toMatchObject({ errorCode: 'wf.blocked' });
+    expect(recap.failed[0]?.error).toBeInstanceOf(Error);
+    expect((recap.failed[0]?.error as Error).message).toBe('Workflow blocked');
 
     // After partial failure, selection narrows to the failed ids so the
     // user can retry without re-picking the rows.
@@ -215,7 +213,6 @@ describe('EntitySelectionBar — bulk endpoint dispatch', () => {
     const recap = onComplete.mock.calls[0]?.[1];
     expect(recap.succeeded).toHaveLength(0);
     expect(recap.failed.map((f: { id: string }) => f.id)).toEqual(['q1', 'q2', 'q3']);
-    expect(recap.parents).toBeUndefined();
   });
 
   it('predicate form: bulk path engaged only for matching action names', async () => {

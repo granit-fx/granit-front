@@ -117,6 +117,8 @@ describe('useFinalizeUpload', () => {
       blobId: 'blob-1',
       folderId: 'fld-1',
       name: 'contract.pdf',
+      description: null,
+      commitMessage: null,
     });
 
     expect(client.post).toHaveBeenCalledWith(
@@ -140,10 +142,14 @@ describe('useRenameDocument', () => {
     const invalidate = vi.spyOn(queryClient, 'invalidateQueries');
 
     const { result } = renderHook(() => useRenameDocument(), { wrapper });
-    await result.current.mutateAsync({ id: 'doc-1', request: { name: 'renamed.pdf' } });
+    await result.current.mutateAsync({
+      id: 'doc-1',
+      request: { name: 'renamed.pdf', description: null },
+    });
 
     expect(client.patch).toHaveBeenCalledWith('/api/v1/documents/documents/doc-1', {
       name: 'renamed.pdf',
+      description: null,
     });
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
     expect(keys).toEqual([['documents', 'documents']]);
@@ -261,10 +267,14 @@ describe('useAppendDocumentVersion', () => {
     const invalidate = vi.spyOn(queryClient, 'invalidateQueries');
 
     const { result } = renderHook(() => useAppendDocumentVersion(), { wrapper });
-    await result.current.mutateAsync({ id: 'doc-1', request: { blobId: 'blob-2' } });
+    await result.current.mutateAsync({
+      id: 'doc-1',
+      request: { blobId: 'blob-2', commitMessage: null },
+    });
 
     expect(client.post).toHaveBeenCalledWith('/api/v1/documents/documents/doc-1/versions', {
       blobId: 'blob-2',
+      commitMessage: null,
     });
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
     expect(keys).toEqual([

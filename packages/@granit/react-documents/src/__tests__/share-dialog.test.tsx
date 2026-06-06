@@ -22,7 +22,7 @@ const folderShare: ShareResponse = {
   isDefault: true,
   expiresAt: null,
   createdAt: '2026-05-01T08:00:00Z',
-  createdByUserId: 'admin',
+  createdBy: 'admin',
 };
 
 function createWrapper(client: AxiosInstance) {
