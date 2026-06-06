@@ -72,5 +72,8 @@ export function useActivitiesCalendar(
   return useQuery({
     queryKey: buildActivitiesQueryKey(config, 'calendar', filter),
     queryFn: () => getActivitiesCalendar(config.client, config.basePath, filter),
+    // Matches the backend FusionCache TTL (1 min default) — avoids redundant
+    // network requests on component re-mounts within the same time window.
+    staleTime: 60_000,
   });
 }
