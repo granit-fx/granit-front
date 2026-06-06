@@ -285,8 +285,11 @@ export function EntitySelectionBar({
 /**
  * Single-shot bulk dispatch. Calls
  * `POST /entities/{name}/bulk/{action}` with all ids and maps the
- * response into the existing recap shape (`succeeded` / `failed`)
- * extended with `parents` for downstream cache-eviction wiring (D3).
+ * response into the existing recap shape (`succeeded` / `failed`).
+ *
+ * Succeeded ids are derived as `ids \ failures` since the backend only
+ * returns `affected` (a count) + per-id failures; the fan-out path
+ * returns per-id results directly.
  *
  * If the endpoint itself rejects (network / 4xx / 5xx), every id is
  * surfaced as failed against the same root error — the user-visible
@@ -300,17 +303,17 @@ async function dispatchBulk(
 ): Promise<EntitySelectionBarRecap> {
   let response: BulkActionResponse;
   try {
-    response = await executeBulkAction(client, entityName, actionName, { ids });
+    response = await executeBulkAction(client, entityName, actionName, { ids, payload: null });
   } catch (error) {
     return {
       succeeded: [],
       failed: ids.map((id) => ({ id, error })),
     };
   }
+  const failedIds = new Set(response.failures.map((f) => f.id));
   return {
-    succeeded: response.ok,
-    failed: response.failed.map((f) => ({ id: f.id, error: f })),
-    parents: response.parents,
+    succeeded: ids.filter((id) => !failedIds.has(id)),
+    failed: response.failures.map((f) => ({ id: f.id, error: new Error(f.reason) })),
   };
 }
 

@@ -69,7 +69,12 @@ describe('FormLayoutEditor', () => {
     fireEvent.click(down);
 
     expect(onChange).toHaveBeenCalledWith([
-      { kind: 'Reorder', fieldName: 'amount', afterFieldName: 'currency' },
+      {
+        $type: 'reorder',
+        fieldName: 'amount',
+        beforeFieldName: null,
+        afterFieldName: 'currency',
+      },
     ]);
     const rows = document.querySelectorAll<HTMLElement>('[data-granit-form-layout-editor-row]');
     expect([...rows].map((r) => r.dataset.fieldName)).toEqual(['name', 'currency', 'amount']);
@@ -85,7 +90,7 @@ describe('FormLayoutEditor', () => {
     )!;
     fireEvent.click(toggle);
 
-    expect(onChange).toHaveBeenCalledWith([{ kind: 'Hide', fieldName: 'amount' }]);
+    expect(onChange).toHaveBeenCalledWith([{ $type: 'hide', fieldName: 'amount' }]);
     expect(row.dataset.hidden).toBe('');
   });
 
@@ -98,7 +103,7 @@ describe('FormLayoutEditor', () => {
     fireEvent.change(select, { target: { value: 'general' } });
 
     expect(onChange).toHaveBeenCalledWith([
-      { kind: 'Regroup', fieldName: 'amount', groupKey: 'general' },
+      { $type: 'regroup', fieldName: 'amount', groupKey: 'general' },
     ]);
   });
 

@@ -1,32 +1,30 @@
 import type { LayoutDelta } from './delta';
 
 /**
- * Form variant — closed catalog mirroring `Granit.EntitiesCustomization.FormVariant`.
- * Customization scopes layouts per variant so the same entity can have different
- * field arrangements on the create form, the edit form, and the read view.
+ * Layout kind — the surface of an entity layout being customized. Mirrors
+ * `Granit.EntitiesCustomization.LayoutKind`.
  */
-export type FormVariant = 'Create' | 'Edit' | 'Read';
+export type LayoutKind = 'FormDefault' | 'DetailDefault' | 'List' | 'Calendar' | 'Gallery';
 
-/** Body for `PUT /api/entities/{name}/customization/forms/{variant}`. */
-export interface FormCustomizationRequest {
+/** Body for `PUT /entities/{name}/customization/{layoutKind}`. */
+export interface EntityCustomizationRequest {
   readonly deltas: readonly LayoutDelta[];
 }
 
-/** Response from `GET|PUT /api/entities/{name}/customization/forms/{variant}`. */
-export interface FormCustomizationResponse {
+/** Response from `GET|PUT /entities/{name}/customization/{layoutKind}`. */
+export interface EntityCustomizationResponse {
+  readonly id: string;
   readonly entityName: string;
-  readonly variant: FormVariant;
+  readonly layoutKind: LayoutKind;
   readonly deltas: readonly LayoutDelta[];
-  readonly updatedAt: string | null;
-  readonly updatedByUserId: string | null;
 }
 
-/** Body for `PUT /api/workspaces/{name}/customization`. */
+/** Body for `PUT /workspaces/{name}/customization`. */
 export interface WorkspaceCustomizationRequest {
   readonly deltas: readonly LayoutDelta[];
 }
 
-/** Response from `GET|PUT /api/workspaces/{name}/customization`. */
+/** Response from `GET|PUT /workspaces/{name}/customization`. */
 export interface WorkspaceCustomizationResponse {
   readonly workspaceName: string;
   readonly deltas: readonly LayoutDelta[];

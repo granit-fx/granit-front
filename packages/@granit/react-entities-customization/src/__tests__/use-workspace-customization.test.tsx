@@ -59,11 +59,11 @@ describe('usePutWorkspaceCustomization', () => {
     const { result } = renderHook(() => usePutWorkspaceCustomization(), { wrapper });
     await result.current.mutateAsync({
       workspaceName: 'sales',
-      request: { deltas: [{ kind: 'Hide', fieldName: 'tile-pipeline' }] },
+      request: { deltas: [{ $type: 'hide', fieldName: 'tile-pipeline' }] },
     });
 
     expect(client.put).toHaveBeenCalledWith('/api/v1/workspaces/sales/customization', {
-      deltas: [{ kind: 'Hide', fieldName: 'tile-pipeline' }],
+      deltas: [{ $type: 'hide', fieldName: 'tile-pipeline' }],
     });
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
     expect(keys).toContainEqual(['entities-customization', 'workspaces', 'sales']);

@@ -1525,16 +1525,6 @@
           "name": "CustomizationPermissions",
           "kind": "const",
           "signature": "const CustomizationPermissions"
-        },
-        {
-          "name": "getFormCustomization",
-          "kind": "function",
-          "signature": "async function getFormCustomization( client: AxiosInstance, apiBase: string, entityName: string, variant: FormVariant ): Promise<FormCustomizationResponse>"
-        },
-        {
-          "name": "putFormCustomization",
-          "kind": "function",
-          "signature": "async function putFormCustomization( client: AxiosInstance, apiBase: string, entityName: string, variant: FormVariant, request: FormCustomizationRequest ): Promise<FormCustomizationResponse>"
         }
       ]
     },
@@ -4947,14 +4937,14 @@
           "signature": "const DEFAULT_QUERY_KEY_PREFIX"
         },
         {
-          "name": "useFormCustomization",
+          "name": "useEntityCustomization",
           "kind": "function",
-          "signature": "function useFormCustomization("
+          "signature": "function useEntityCustomization("
         },
         {
-          "name": "usePutFormCustomization",
+          "name": "usePutEntityCustomization",
           "kind": "function",
-          "signature": "function usePutFormCustomization(): UseMutationResult< FormCustomizationResponse, Error, PutFormCustomizationArgs >"
+          "signature": "function usePutEntityCustomization(): UseMutationResult< EntityCustomizationResponse, Error, PutEntityCustomizationArgs >"
         },
         {
           "name": "EffectiveField",

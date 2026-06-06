@@ -11,15 +11,8 @@ const ACTION = 'Approve';
 const PATH = `http://localhost/api/v1/entities/${encodeURIComponent(ENTITY)}/bulk/${encodeURIComponent(ACTION)}`;
 
 const RESPONSE: BulkActionResponse = {
-  ok: ['q-1', 'q-2'],
-  failed: [
-    {
-      id: 'q-3',
-      error: 'Workflow transition not allowed in state Draft.',
-      errorCode: 'workflow.invalid_transition',
-    },
-  ],
-  parents: ['Party:p-1', 'Party:p-2'],
+  affected: 2,
+  failures: [{ id: 'q-3', reason: 'Workflow transition not allowed in state Draft.' }],
 };
 
 let lastBody: unknown = null;
@@ -45,22 +38,22 @@ afterAll(() => server.close());
 describe('executeBulkAction', () => {
   const client = axios.create({ baseURL: 'http://localhost' });
 
-  it('POSTs the ids + parameters bag to /entities/{name}/bulk/{action}', async () => {
+  it('POSTs the ids + payload to /entities/{name}/bulk/{action}', async () => {
     const response = await executeBulkAction(client, ENTITY, ACTION, {
       ids: ['q-1', 'q-2', 'q-3'],
-      parameters: { reason: 'Quarterly batch approval' },
+      payload: { reason: 'Quarterly batch approval' },
     });
 
     expect(response).toEqual(RESPONSE);
     expect(lastBody).toEqual({
       ids: ['q-1', 'q-2', 'q-3'],
-      parameters: { reason: 'Quarterly batch approval' },
+      payload: { reason: 'Quarterly batch approval' },
     });
   });
 
-  it('omits parameters from the wire body when not provided', async () => {
-    await executeBulkAction(client, ENTITY, ACTION, { ids: ['q-1'] });
-    expect(lastBody).toEqual({ ids: ['q-1'] });
+  it('sends payload:null when there is no action-specific data', async () => {
+    await executeBulkAction(client, ENTITY, ACTION, { ids: ['q-1'], payload: null });
+    expect(lastBody).toEqual({ ids: ['q-1'], payload: null });
   });
 
   it('URI-encodes the entity name and the action segment', async () => {
@@ -77,12 +70,13 @@ describe('executeBulkAction', () => {
   it('returns the partial-failure recap as-is so the caller can drive retry UX', async () => {
     const response = await executeBulkAction(client, ENTITY, ACTION, {
       ids: ['q-1', 'q-2', 'q-3'],
+      payload: null,
     });
 
-    expect(response.ok).toEqual(['q-1', 'q-2']);
-    expect(response.failed).toHaveLength(1);
-    expect(response.failed[0]?.id).toBe('q-3');
-    expect(response.parents).toEqual(['Party:p-1', 'Party:p-2']);
+    expect(response.affected).toBe(2);
+    expect(response.failures).toHaveLength(1);
+    expect(response.failures[0]?.id).toBe('q-3');
+    expect(response.failures[0]?.reason).toContain('Workflow transition');
   });
 
   it('propagates 422 from the backend with the AxiosError surface intact', async () => {
@@ -91,15 +85,15 @@ describe('executeBulkAction', () => {
     );
 
     await expect(
-      executeBulkAction(client, ENTITY, ACTION, { ids: ['q-1'] })
+      executeBulkAction(client, ENTITY, ACTION, { ids: ['q-1'], payload: null })
     ).rejects.toBeInstanceOf(AxiosError);
   });
 
   it('propagates 403 when the caller lacks the action permission', async () => {
     server.use(http.post(PATH, () => HttpResponse.text('forbidden', { status: 403 })));
 
-    await expect(executeBulkAction(client, ENTITY, ACTION, { ids: ['q-1'] })).rejects.toMatchObject(
-      { response: { status: 403 } }
-    );
+    await expect(
+      executeBulkAction(client, ENTITY, ACTION, { ids: ['q-1'], payload: null })
+    ).rejects.toMatchObject({ response: { status: 403 } });
   });
 });

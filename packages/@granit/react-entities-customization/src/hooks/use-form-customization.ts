@@ -1,4 +1,4 @@
-import { getFormCustomization, putFormCustomization } from '@granit/entities-customization';
+import { getEntityCustomization, putEntityCustomization } from '@granit/entities-customization';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import {
@@ -7,61 +7,61 @@ import {
 } from '../providers/customization-provider';
 
 import type {
-  FormCustomizationRequest,
-  FormCustomizationResponse,
-  FormVariant,
+  EntityCustomizationRequest,
+  EntityCustomizationResponse,
+  LayoutKind,
 } from '@granit/entities-customization';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
-interface UseFormCustomizationArgs {
+interface UseEntityCustomizationArgs {
   readonly entityName: string;
-  readonly variant: FormVariant;
+  readonly layoutKind: LayoutKind;
 }
 
 /**
- * Read the active form layout deltas for an entity/variant pair. Disabled
+ * Read the active layout deltas for an entity/layoutKind pair. Disabled
  * when `entityName` is empty.
  */
-export function useFormCustomization({
+export function useEntityCustomization({
   entityName,
-  variant,
-}: UseFormCustomizationArgs): UseQueryResult<FormCustomizationResponse> {
+  layoutKind,
+}: UseEntityCustomizationArgs): UseQueryResult<EntityCustomizationResponse> {
   const config = useCustomizationConfig();
 
   return useQuery({
-    queryKey: buildCustomizationQueryKey(config, 'forms', entityName, variant),
-    queryFn: () => getFormCustomization(config.client, config.apiBase, entityName, variant),
+    queryKey: buildCustomizationQueryKey(config, 'layout', entityName, layoutKind),
+    queryFn: () => getEntityCustomization(config.client, config.apiBase, entityName, layoutKind),
     enabled: entityName.length > 0,
   });
 }
 
-interface PutFormCustomizationArgs {
+interface PutEntityCustomizationArgs {
   readonly entityName: string;
-  readonly variant: FormVariant;
-  readonly request: FormCustomizationRequest;
+  readonly layoutKind: LayoutKind;
+  readonly request: EntityCustomizationRequest;
 }
 
 /**
- * Replace the form layout deltas for an entity/variant. On success:
- * - the matching `useFormCustomization` query is invalidated
+ * Replace the layout deltas for an entity/layoutKind. On success:
+ * - the matching `useEntityCustomization` query is invalidated
  * - the optional `onFormCustomizationChanged(entityName)` provider hook
  *   fires (apps wire it to invalidate the entity manifest cache, since the
  *   layout flows through `@granit/react-entities`).
  */
-export function usePutFormCustomization(): UseMutationResult<
-  FormCustomizationResponse,
+export function usePutEntityCustomization(): UseMutationResult<
+  EntityCustomizationResponse,
   Error,
-  PutFormCustomizationArgs
+  PutEntityCustomizationArgs
 > {
   const config = useCustomizationConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ entityName, variant, request }: PutFormCustomizationArgs) =>
-      putFormCustomization(config.client, config.apiBase, entityName, variant, request),
-    onSuccess: (_data, { entityName, variant }) => {
+    mutationFn: ({ entityName, layoutKind, request }: PutEntityCustomizationArgs) =>
+      putEntityCustomization(config.client, config.apiBase, entityName, layoutKind, request),
+    onSuccess: (_data, { entityName, layoutKind }) => {
       queryClient.invalidateQueries({
-        queryKey: buildCustomizationQueryKey(config, 'forms', entityName, variant),
+        queryKey: buildCustomizationQueryKey(config, 'layout', entityName, layoutKind),
       });
       config.onFormCustomizationChanged?.(entityName);
     },

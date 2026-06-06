@@ -7,6 +7,18 @@ import type { EntityPermissionsSection } from './permissions';
 import type { EntityRelationManifest } from './relations';
 
 /**
+ * Activities configuration for an entity — which activity types are allowed
+ * and the optional default assignee rule. Mirrors
+ * `Granit.Entities.Endpoints.Dtos.EntityActivitiesManifest`.
+ */
+export interface EntityActivitiesManifest {
+  /** Closed list of activity type identifiers allowed for this entity. */
+  readonly allowedTypes: readonly string[];
+  /** Default assignee rule identifier, or `null` when there is no default. */
+  readonly defaultAssignee: string | null;
+}
+
+/**
  * Selectable facets of the per-entity manifest. Wire form: comma-separated
  * lowercase names in the `?facets=` query parameter (e.g.
  * `?facets=identity,forms`). Default — when the query parameter is absent
@@ -26,7 +38,8 @@ export type EntityFacet =
   | 'exports'
   | 'views'
   | 'relations'
-  | 'actions';
+  | 'actions'
+  | 'activities';
 
 /** All facets — handy default value for callers that want everything explicit. */
 export const ALL_ENTITY_FACETS: readonly EntityFacet[] = Object.freeze([
@@ -40,6 +53,7 @@ export const ALL_ENTITY_FACETS: readonly EntityFacet[] = Object.freeze([
   'views',
   'relations',
   'actions',
+  'activities',
 ]);
 
 /**
@@ -61,6 +75,7 @@ export interface EntityManifestResponse {
   readonly collections: EntityCollectionsSection | null;
   readonly relations: readonly EntityRelationManifest[] | null;
   readonly actions: readonly EntityActionManifest[] | null;
+  readonly activities: EntityActivitiesManifest | null;
 }
 
 /**

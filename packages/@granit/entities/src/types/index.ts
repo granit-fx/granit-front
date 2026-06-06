@@ -21,7 +21,9 @@ export type {
 export type {
   EntityFormFieldManifest,
   EntityFormManifest,
+  EntityFormOwnedCollectionManifest,
   EntityFormSectionManifest,
+  EntityProvenance,
 } from './form';
 export type { EntityIdentitySection } from './identity';
 export type {
@@ -43,7 +45,7 @@ export type {
   KanbanColumnState,
 } from './layouts';
 export { ALL_ENTITY_FACETS, MANIFEST_SCHEMA_VERSION } from './manifest';
-export type { EntityFacet, EntityManifestResponse } from './manifest';
+export type { EntityActivitiesManifest, EntityFacet, EntityManifestResponse } from './manifest';
 export type { EntityPermissionsSection } from './permissions';
 export type {
   EntityRelationAggregateManifest,
