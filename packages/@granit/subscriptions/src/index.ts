@@ -33,7 +33,7 @@ export {
   createPriceVersion,
   getPlanById,
   getPlanPriceHistory,
-  listPlans,
+  listActivePlans,
   publishPlan,
   updatePlan,
 } from './api/subscriptions-api';

@@ -24,15 +24,15 @@ import type { PagedResult, QueryRequest } from '@granit/query-engine';
 // ---------------------------------------------------------------------------
 
 /**
- * List all plans.
+ * List all active (Published) plans.
  *
- * `GET {basePath}/plans`
+ * `GET {basePath}/plans/active`
  */
-export async function listPlans(
+export async function listActivePlans(
   client: AxiosInstance,
   basePath: string
 ): Promise<readonly PlanResponse[]> {
-  const response = await client.get<readonly PlanResponse[]>(`${basePath}/plans`);
+  const response = await client.get<readonly PlanResponse[]>(`${basePath}/plans/active`);
   return response.data;
 }
 
@@ -127,17 +127,19 @@ export async function createPriceVersion(
 }
 
 /**
- * Get the full price history for a plan.
+ * Get the price history for a plan filtered by currency and billing interval.
  *
  * `GET {basePath}/plans/{planId}/prices/history`
  */
 export async function getPlanPriceHistory(
   client: AxiosInstance,
   basePath: string,
-  planId: string
+  planId: string,
+  params: { currency: string; interval: string }
 ): Promise<readonly PlanPriceResponse[]> {
   const response = await client.get<readonly PlanPriceResponse[]>(
-    `${basePath}/plans/${encodeURIComponent(planId)}/prices/history`
+    `${basePath}/plans/${encodeURIComponent(planId)}/prices/history`,
+    { params }
   );
   return response.data;
 }
@@ -215,12 +217,8 @@ export async function cancelSubscription(
   basePath: string,
   id: string,
   request: SubscriptionCancelRequest
-): Promise<SubscriptionResponse> {
-  const response = await client.post<SubscriptionResponse>(
-    `${basePath}/subscriptions/${encodeURIComponent(id)}/cancel`,
-    request
-  );
-  return response.data;
+): Promise<void> {
+  await client.post(`${basePath}/subscriptions/${encodeURIComponent(id)}/cancel`, request);
 }
 
 /**
@@ -233,12 +231,8 @@ export async function changeSubscriptionPlan(
   basePath: string,
   id: string,
   request: SubscriptionChangePlanRequest
-): Promise<SubscriptionResponse> {
-  const response = await client.post<SubscriptionResponse>(
-    `${basePath}/subscriptions/${encodeURIComponent(id)}/change-plan`,
-    request
-  );
-  return response.data;
+): Promise<void> {
+  await client.post(`${basePath}/subscriptions/${encodeURIComponent(id)}/change-plan`, request);
 }
 
 /**
@@ -251,12 +245,8 @@ export async function migrateSubscriptionPrice(
   basePath: string,
   id: string,
   request: MigratePriceRequest
-): Promise<SubscriptionResponse> {
-  const response = await client.post<SubscriptionResponse>(
-    `${basePath}/subscriptions/${encodeURIComponent(id)}/migrate-price`,
-    request
-  );
-  return response.data;
+): Promise<void> {
+  await client.post(`${basePath}/subscriptions/${encodeURIComponent(id)}/migrate-price`, request);
 }
 
 /**

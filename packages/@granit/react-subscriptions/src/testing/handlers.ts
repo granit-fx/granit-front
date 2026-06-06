@@ -22,10 +22,10 @@ import type {
 } from '@granit/subscriptions';
 import type { CurrencyCode } from '@granit/types';
 
-const PRICING_MODELS = ['Flat', 'PerSeat', 'Tiered', 'UsageBased'];
-const BILLING_INTERVALS = ['Monthly', 'Quarterly', 'SemiAnnual', 'Annual'];
-const PLAN_LIFECYCLE_STATES = ['Draft', 'Published', 'Archived'];
-const SUBSCRIPTION_STATES = ['Active', 'Trial', 'PastDue', 'Canceled', 'Expired'];
+const PRICING_MODELS = ['Flat', 'PerSeat', 'PerUnit', 'Tiered'];
+const BILLING_INTERVALS = ['Monthly', 'Quarterly', 'Yearly'];
+const PLAN_LIFECYCLE_STATES = ['Draft', 'PendingReview', 'Published', 'Archived'];
+const SUBSCRIPTION_STATES = ['Trial', 'Active', 'PastDue', 'Suspended', 'Cancelled', 'Expired'];
 
 /** Mock /meta payload for the plans resource. */
 export const planQueryMetadata: QueryMetadata = {
@@ -330,8 +330,8 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // Plans
     // ---------------------------------------------------------------------------
 
-    http.get(`${baseUrl}/plans`, () => {
-      return HttpResponse.json(mockPlans);
+    http.get(`${baseUrl}/plans/active`, () => {
+      return HttpResponse.json(mockPlans.filter((p) => p.lifecycleStatus === 'Published'));
     }),
 
     http.get(`${baseUrl}/plans/:planId`, ({ params }) => {
@@ -344,7 +344,12 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const body = (await request.json()) as PlanCreateRequest;
       const newPlan = {
         id: toEntityId<'Plan'>(`plan-${String(mockPlans.length + 1).padStart(3, '0')}`),
-        ...body,
+        name: body.name,
+        description: body.description,
+        pricingModel: body.pricingModel,
+        defaultInterval: body.defaultInterval,
+        trialDays: body.trialDays ?? null,
+        seatLimit: body.seatLimit ?? null,
         sortOrder: mockPlans.length,
         lifecycleStatus: 'Draft' as const,
         prices: [],
@@ -365,14 +370,14 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const plan = mockPlans.find((p) => p.id === params.planId);
       if (!plan) return notFound();
       plan.lifecycleStatus = 'Published';
-      return HttpResponse.json(plan);
+      return noContent();
     }),
 
     http.post(`${baseUrl}/plans/:planId/archive`, ({ params }) => {
       const plan = mockPlans.find((p) => p.id === params.planId);
       if (!plan) return notFound();
       plan.lifecycleStatus = 'Archived';
-      return HttpResponse.json(plan);
+      return noContent();
     }),
 
     // ---------------------------------------------------------------------------
@@ -444,6 +449,7 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
 
     http.post(`${baseUrl}/subscriptions`, async ({ request }) => {
       const body = (await request.json()) as {
+        partyId: string;
         planId: string;
         currency: string;
         trialEndsAt: string | null;
@@ -453,6 +459,7 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
         id: toEntityId<'Subscription'>(
           `sub-${String(mockSubscriptions.length + 1).padStart(3, '0')}`
         ),
+        partyId: toEntityId<'Party'>(body.partyId),
         planId: toEntityId<'Plan'>(body.planId),
         status: body.trialEndsAt ? 'Trial' : 'Active',
         currency: body.currency as CurrencyCode,
@@ -464,7 +471,6 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
         cancelAtPeriodEnd: false,
         cancelledAt: null,
         cancellationReason: null,
-        dunningAttempt: 0,
         seatCount: 0,
         planPriceId: null,
       };
@@ -475,9 +481,9 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
     http.post(`${baseUrl}/subscriptions/:subscriptionId/cancel`, ({ params }) => {
       const sub = mockSubscriptions.find((s) => s.id === params.subscriptionId);
       if (!sub) return notFound();
-      sub.status = 'Canceled';
+      sub.status = 'Cancelled';
       sub.cancelledAt = toISODateString(new Date().toISOString());
-      return HttpResponse.json(sub);
+      return noContent();
     }),
 
     http.post(
@@ -487,7 +493,7 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
         const sub = mockSubscriptions.find((s) => s.id === params.subscriptionId);
         if (!sub) return notFound();
         sub.planId = toEntityId<'Plan'>(body.newPlanId);
-        return HttpResponse.json(sub);
+        return noContent();
       }
     ),
 
@@ -523,11 +529,11 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return HttpResponse.json(newSeat, { status: 201 });
     }),
 
-    http.delete(`${baseUrl}/subscriptions/:subscriptionId/seats/:seatId`, ({ params }) => {
+    http.delete(`${baseUrl}/subscriptions/:subscriptionId/seats/:userId`, ({ params }) => {
       const subscriptionId = params.subscriptionId as string;
-      const seatId = params.seatId as string;
+      const userId = params.userId as string;
       if (mockSeats[subscriptionId]) {
-        mockSeats[subscriptionId] = mockSeats[subscriptionId].filter((s) => s.id !== seatId);
+        mockSeats[subscriptionId] = mockSeats[subscriptionId].filter((s) => s.userId !== userId);
       }
       return noContent();
     }),

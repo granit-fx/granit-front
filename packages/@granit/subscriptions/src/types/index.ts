@@ -9,18 +9,24 @@ export type PlanPriceId = EntityId<'PlanPrice'>;
 /** Branded identifier for a subscription. */
 export type SubscriptionId = EntityId<'Subscription'>;
 
-export type PricingModel = 'Flat' | 'PerSeat' | 'Tiered' | 'UsageBased';
-export type BillingInterval = 'Monthly' | 'Quarterly' | 'SemiAnnual' | 'Annual';
-export type PlanLifecycleStatus = 'Draft' | 'Published' | 'Archived';
-export type SubscriptionStatus = 'Active' | 'Trial' | 'PastDue' | 'Canceled' | 'Expired';
+export type PricingModel = 'Flat' | 'PerSeat' | 'PerUnit' | 'Tiered';
+export type BillingInterval = 'Monthly' | 'Quarterly' | 'Yearly';
+export type PlanLifecycleStatus = 'Draft' | 'PendingReview' | 'Published' | 'Archived';
+export type SubscriptionStatus =
+  | 'Trial'
+  | 'Active'
+  | 'PastDue'
+  | 'Suspended'
+  | 'Cancelled'
+  | 'Expired';
 
 export interface PlanCreateRequest {
   readonly name: string;
   readonly description: string | null;
   readonly pricingModel: PricingModel;
   readonly defaultInterval: BillingInterval;
-  readonly trialDays: number | null;
-  readonly seatLimit: number | null;
+  readonly trialDays?: number | null;
+  readonly seatLimit?: number | null;
 }
 
 export interface PlanUpdateRequest {
@@ -32,18 +38,20 @@ export interface PlanUpdateRequest {
 export interface CreatePriceVersionRequest {
   readonly amount: number;
   readonly currency: string;
-  readonly interval: BillingInterval;
+  readonly interval: string;
+  readonly productId?: string | null;
 }
 
 export interface SubscriptionCreateRequest {
+  readonly partyId: string;
   readonly planId: string;
   readonly currency: string;
   readonly trialEndsAt: string | null;
 }
 
 export interface SubscriptionCancelRequest {
-  readonly reason: string | null;
-  readonly atPeriodEnd: boolean;
+  readonly reason?: string | null;
+  readonly atPeriodEnd?: boolean;
 }
 
 export interface SubscriptionChangePlanRequest {
@@ -86,10 +94,12 @@ export interface PlanPriceResponse {
   readonly isCurrent: boolean;
   readonly replacedByPriceId: string | null;
   readonly replacedAt: string | null;
+  readonly productId?: string | null;
 }
 
 export interface SubscriptionResponse {
   readonly id: string;
+  readonly partyId: string;
   readonly planId: string;
   readonly status: SubscriptionStatus;
   readonly currency: string;
@@ -99,7 +109,6 @@ export interface SubscriptionResponse {
   readonly cancelAtPeriodEnd: boolean;
   readonly cancelledAt: string | null;
   readonly cancellationReason: string | null;
-  readonly dunningAttempt: number;
   readonly seatCount: number;
   readonly planPriceId: string | null;
 }

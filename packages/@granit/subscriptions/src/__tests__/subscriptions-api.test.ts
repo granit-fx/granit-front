@@ -14,7 +14,7 @@ import {
   getPlanById,
   getPlanPriceHistory,
   getSubscriptionById,
-  listPlans,
+  listActivePlans,
   listSeats,
   listSubscriptions,
   migrateSubscriptionPrice,
@@ -60,6 +60,7 @@ const samplePrice: PlanPriceResponse = {
 
 const sampleSubscription: SubscriptionResponse = {
   id: 'sub-1',
+  partyId: 'party-1',
   planId: 'plan-1',
   status: 'Active',
   currency: 'EUR',
@@ -69,7 +70,6 @@ const sampleSubscription: SubscriptionResponse = {
   cancelAtPeriodEnd: false,
   cancelledAt: null,
   cancellationReason: null,
-  dunningAttempt: 0,
   seatCount: 5,
   planPriceId: 'price-1',
 };
@@ -85,14 +85,14 @@ const sampleSeat: SeatResponse = {
 // ---------------------------------------------------------------------------
 
 describe('subscriptions-api — Plans', () => {
-  describe('listPlans', () => {
-    it('should GET {basePath}/plans', async () => {
+  describe('listActivePlans', () => {
+    it('should GET {basePath}/plans/active', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([samplePlan]));
 
-      const result = await listPlans(client, basePath);
+      const result = await listActivePlans(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith(`${basePath}/plans`);
+      expect(client.get).toHaveBeenCalledWith(`${basePath}/plans/active`);
       expect(result).toEqual([samplePlan]);
     });
   });
@@ -235,13 +235,16 @@ describe('subscriptions-api — Plans', () => {
   });
 
   describe('getPlanPriceHistory', () => {
-    it('should GET {basePath}/plans/{planId}/prices/history', async () => {
+    it('should GET {basePath}/plans/{planId}/prices/history with params', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([samplePrice]));
 
-      const result = await getPlanPriceHistory(client, basePath, 'plan-1');
+      const params = { currency: 'EUR', interval: 'Monthly' };
+      const result = await getPlanPriceHistory(client, basePath, 'plan-1', params);
 
-      expect(client.get).toHaveBeenCalledWith(`${basePath}/plans/plan-1/prices/history`);
+      expect(client.get).toHaveBeenCalledWith(`${basePath}/plans/plan-1/prices/history`, {
+        params,
+      });
       expect(result).toEqual([samplePrice]);
     });
   });
@@ -325,7 +328,7 @@ describe('subscriptions-api — Subscriptions', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue(axiosResponse(sampleSubscription));
 
-      const request = { planId: 'plan-1', currency: 'EUR', trialEndsAt: null };
+      const request = { partyId: 'party-1', planId: 'plan-1', currency: 'EUR', trialEndsAt: null };
 
       const result = await createSubscription(client, basePath, request);
 
@@ -337,48 +340,45 @@ describe('subscriptions-api — Subscriptions', () => {
   describe('cancelSubscription', () => {
     it('should POST {basePath}/subscriptions/{id}/cancel', async () => {
       const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValue(axiosResponse(sampleSubscription));
+      vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
 
       const request = { reason: 'Too expensive', atPeriodEnd: true };
 
-      const result = await cancelSubscription(client, basePath, 'sub-1', request);
+      await cancelSubscription(client, basePath, 'sub-1', request);
 
       expect(client.post).toHaveBeenCalledWith(`${basePath}/subscriptions/sub-1/cancel`, request);
-      expect(result).toEqual(sampleSubscription);
     });
   });
 
   describe('changeSubscriptionPlan', () => {
     it('should POST {basePath}/subscriptions/{id}/change-plan', async () => {
       const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValue(axiosResponse(sampleSubscription));
+      vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
 
       const request = { newPlanId: 'plan-2' };
 
-      const result = await changeSubscriptionPlan(client, basePath, 'sub-1', request);
+      await changeSubscriptionPlan(client, basePath, 'sub-1', request);
 
       expect(client.post).toHaveBeenCalledWith(
         `${basePath}/subscriptions/sub-1/change-plan`,
         request
       );
-      expect(result).toEqual(sampleSubscription);
     });
   });
 
   describe('migrateSubscriptionPrice', () => {
     it('should POST {basePath}/subscriptions/{id}/migrate-price', async () => {
       const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValue(axiosResponse(sampleSubscription));
+      vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
 
       const request = { newPlanPriceId: 'price-2' };
 
-      const result = await migrateSubscriptionPrice(client, basePath, 'sub-1', request);
+      await migrateSubscriptionPrice(client, basePath, 'sub-1', request);
 
       expect(client.post).toHaveBeenCalledWith(
         `${basePath}/subscriptions/sub-1/migrate-price`,
         request
       );
-      expect(result).toEqual(sampleSubscription);
     });
   });
 

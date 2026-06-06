@@ -141,7 +141,7 @@ export type CancelSubscriptionVariables = {
  * ```
  */
 export function useCancelSubscription(): UseMutationResult<
-  SubscriptionResponse,
+  void,
   Error,
   CancelSubscriptionVariables
 > {
@@ -177,7 +177,7 @@ export type ChangeSubscriptionPlanVariables = {
  * ```
  */
 export function useChangeSubscriptionPlan(): UseMutationResult<
-  SubscriptionResponse,
+  void,
   Error,
   ChangeSubscriptionPlanVariables
 > {
@@ -213,7 +213,7 @@ export type MigrateSubscriptionPriceVariables = {
  * ```
  */
 export function useMigrateSubscriptionPrice(): UseMutationResult<
-  SubscriptionResponse,
+  void,
   Error,
   MigrateSubscriptionPriceVariables
 > {

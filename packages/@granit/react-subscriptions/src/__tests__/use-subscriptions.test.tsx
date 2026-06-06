@@ -25,6 +25,7 @@ import type { ReactNode } from 'react';
 
 const sampleSubscription: SubscriptionResponse = {
   id: 'sub-1',
+  partyId: 'party-1',
   planId: 'plan-1',
   status: 'Active',
   currency: 'EUR',
@@ -34,7 +35,6 @@ const sampleSubscription: SubscriptionResponse = {
   cancelAtPeriodEnd: false,
   cancelledAt: null,
   cancellationReason: null,
-  dunningAttempt: 0,
   seatCount: 5,
   planPriceId: 'price-1',
 };
@@ -125,7 +125,7 @@ describe('use-subscriptions', () => {
         wrapper: createWrapper(client),
       });
 
-      const request = { planId: 'plan-1', currency: 'EUR', trialEndsAt: null };
+      const request = { partyId: 'party-1', planId: 'plan-1', currency: 'EUR', trialEndsAt: null };
       result.current.mutate(request);
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -136,7 +136,7 @@ describe('use-subscriptions', () => {
   describe('useCancelSubscription', () => {
     it('cancels a subscription via POST', async () => {
       const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValue({ data: sampleSubscription });
+      vi.mocked(client.post).mockResolvedValue({ data: undefined });
 
       const { result } = renderHook(() => useCancelSubscription(), {
         wrapper: createWrapper(client),
@@ -156,7 +156,7 @@ describe('use-subscriptions', () => {
   describe('useChangeSubscriptionPlan', () => {
     it('changes plan via POST', async () => {
       const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValue({ data: sampleSubscription });
+      vi.mocked(client.post).mockResolvedValue({ data: undefined });
 
       const { result } = renderHook(() => useChangeSubscriptionPlan(), {
         wrapper: createWrapper(client),
@@ -176,7 +176,7 @@ describe('use-subscriptions', () => {
   describe('useMigrateSubscriptionPrice', () => {
     it('migrates price via POST', async () => {
       const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValue({ data: sampleSubscription });
+      vi.mocked(client.post).mockResolvedValue({ data: undefined });
 
       const { result } = renderHook(() => useMigrateSubscriptionPrice(), {
         wrapper: createWrapper(client),

@@ -4,7 +4,7 @@ import {
   createPriceVersion,
   getPlanById,
   getPlanPriceHistory,
-  listPlans,
+  listActivePlans,
   publishPlan,
   updatePlan,
 } from '@granit/subscriptions';
@@ -25,20 +25,20 @@ import type {
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /**
- * List all plans.
+ * List all active (Published) plans.
  *
  * @example
  * ```tsx
- * const { data: plans } = usePlans();
+ * const { data: plans } = useActivePlans();
  * ```
  */
-export function usePlans(): UseQueryResult<readonly PlanResponse[]> {
+export function useActivePlans(): UseQueryResult<readonly PlanResponse[]> {
   const config = useSubscriptionsConfig();
   const basePath = config.basePath;
 
   return useQuery({
-    queryKey: buildSubscriptionsQueryKey(config, 'plans'),
-    queryFn: () => listPlans(config.client, basePath),
+    queryKey: buildSubscriptionsQueryKey(config, 'plans', 'active'),
+    queryFn: () => listActivePlans(config.client, basePath),
   });
 }
 
@@ -220,22 +220,33 @@ export function useCreatePriceVersion(): UseMutationResult<
 }
 
 /**
- * Get the full price history for a plan.
+ * Get the price history for a plan filtered by currency and billing interval.
  *
  * The query is automatically disabled when `planId` is empty.
  *
  * @example
  * ```tsx
- * const { data: history } = usePlanPriceHistory(selectedPlanId);
+ * const { data: history } = usePlanPriceHistory(selectedPlanId, { currency: 'EUR', interval: 'Monthly' });
  * ```
  */
-export function usePlanPriceHistory(planId: string): UseQueryResult<readonly PlanPriceResponse[]> {
+export function usePlanPriceHistory(
+  planId: string,
+  params: { currency: string; interval: string }
+): UseQueryResult<readonly PlanPriceResponse[]> {
   const config = useSubscriptionsConfig();
   const basePath = config.basePath;
 
   return useQuery({
-    queryKey: buildSubscriptionsQueryKey(config, 'plans', planId, 'prices', 'history'),
-    queryFn: () => getPlanPriceHistory(config.client, basePath, planId),
+    queryKey: buildSubscriptionsQueryKey(
+      config,
+      'plans',
+      planId,
+      'prices',
+      'history',
+      params.currency,
+      params.interval
+    ),
+    queryFn: () => getPlanPriceHistory(config.client, basePath, planId, params),
     enabled: planId.length > 0,
   });
 }

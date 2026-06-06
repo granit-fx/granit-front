@@ -6,12 +6,12 @@ import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  useActivePlans,
   useArchivePlan,
   useCreatePlan,
   useCreatePriceVersion,
   usePlan,
   usePlanPriceHistory,
-  usePlans,
   usePublishPlan,
   useUpdatePlan,
 } from '../hooks/use-plans';
@@ -63,17 +63,17 @@ describe('use-plans', () => {
     vi.restoreAllMocks();
   });
 
-  describe('usePlans', () => {
-    it('fetches all plans', async () => {
+  describe('useActivePlans', () => {
+    it('fetches active plans', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: [samplePlan] });
 
-      const { result } = renderHook(() => usePlans(), {
+      const { result } = renderHook(() => useActivePlans(), {
         wrapper: createWrapper(client),
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/v1/subscriptions/plans');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/subscriptions/plans/active');
       expect(result.current.data).toEqual([samplePlan]);
     });
   });
@@ -199,25 +199,29 @@ describe('use-plans', () => {
   });
 
   describe('usePlanPriceHistory', () => {
-    it('fetches price history for a plan', async () => {
+    it('fetches price history for a plan with currency and interval', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: [samplePrice] });
 
-      const { result } = renderHook(() => usePlanPriceHistory('plan-1'), {
+      const params = { currency: 'EUR', interval: 'Monthly' };
+      const { result } = renderHook(() => usePlanPriceHistory('plan-1', params), {
         wrapper: createWrapper(client),
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/v1/subscriptions/plans/plan-1/prices/history');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/subscriptions/plans/plan-1/prices/history', {
+        params,
+      });
       expect(result.current.data).toEqual([samplePrice]);
     });
 
     it('is disabled when planId is empty', async () => {
       const client = createMockClient();
 
-      const { result } = renderHook(() => usePlanPriceHistory(''), {
-        wrapper: createWrapper(client),
-      });
+      const { result } = renderHook(
+        () => usePlanPriceHistory('', { currency: 'EUR', interval: 'Monthly' }),
+        { wrapper: createWrapper(client) }
+      );
 
       expect(result.current.fetchStatus).toBe('idle');
       expect(client.get).not.toHaveBeenCalled();
@@ -229,12 +233,12 @@ describe('use-plans', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: [samplePlan] });
 
-      const { result } = renderHook(() => usePlans(), {
+      const { result } = renderHook(() => useActivePlans(), {
         wrapper: createWrapper(client, '/custom/path'),
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/custom/path/plans');
+      expect(client.get).toHaveBeenCalledWith('/custom/path/plans/active');
     });
   });
 });

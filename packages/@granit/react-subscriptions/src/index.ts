@@ -12,12 +12,12 @@ export type {
 
 // Hooks — Plans
 export {
+  useActivePlans,
   useArchivePlan,
   useCreatePlan,
   useCreatePriceVersion,
   usePlan,
   usePlanPriceHistory,
-  usePlans,
   usePublishPlan,
   useUpdatePlan,
 } from './hooks/use-plans';
