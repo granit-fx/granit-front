@@ -54,6 +54,15 @@ describe('useSidePeek — parse', () => {
     const { result } = harness({ search: '?peek=:nothing,broken,Party:' });
     expect(result.current.stack).toEqual([]);
   });
+
+  it('skips empty segments in the peek param', () => {
+    const { result } = harness({
+      search:
+        `?peek=${encodeURIComponent('Granit.Parties.Party')}:42,,` +
+        `${encodeURIComponent('Granit.Invoicing.Invoice')}:100`,
+    });
+    expect(result.current.stack).toEqual([PARTY, INVOICE]);
+  });
 });
 
 describe('useSidePeek — mutate', () => {
@@ -142,6 +151,33 @@ describe('useSidePeek — keyboard shortcuts', () => {
       document.dispatchEvent(
         new KeyboardEvent('keydown', { key: '.', ctrlKey: true, shiftKey: true })
       );
+    });
+    expect(onExpand).not.toHaveBeenCalled();
+    expect(onSearchChange).not.toHaveBeenCalled();
+  });
+
+  it('Ctrl+Shift+. fires expand (ctrlKey alias for metaKey)', () => {
+    const onExpand = vi.fn();
+    harness({
+      search: `?peek=${encodeURIComponent('Granit.Parties.Party')}:42`,
+      onExpand,
+    });
+    act(() => {
+      document.dispatchEvent(
+        new KeyboardEvent('keydown', { key: '.', ctrlKey: true, shiftKey: true, bubbles: true })
+      );
+    });
+    expect(onExpand).toHaveBeenCalledWith('/entity/42');
+  });
+
+  it('ignores unrelated keys when a peek is active', () => {
+    const onExpand = vi.fn();
+    const { onSearchChange } = harness({
+      search: `?peek=${encodeURIComponent('Granit.Parties.Party')}:42`,
+      onExpand,
+    });
+    act(() => {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', bubbles: true }));
     });
     expect(onExpand).not.toHaveBeenCalled();
     expect(onSearchChange).not.toHaveBeenCalled();

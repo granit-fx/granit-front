@@ -52,6 +52,10 @@ describe('parseWorkspaceUrl', () => {
     expect(parseWorkspaceUrl('/w/')).toBeNull();
   });
 
+  it('returns null when the workspace segment is empty (/w//segment)', () => {
+    expect(parseWorkspaceUrl('/w//something')).toBeNull();
+  });
+
   it('round-trips with buildWorkspaceUrl', () => {
     const built = buildWorkspaceUrl('Granit.Framework', 'system', 'users');
     expect(parseWorkspaceUrl(built)).toEqual({
