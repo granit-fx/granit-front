@@ -32,7 +32,7 @@ export const sampleTransactions: Mutable<PaymentTransactionResponse>[] = [
   {
     id: toEntityId<'PaymentTransaction'>('txn_7xYzAbCdEf'),
     invoiceId: toEntityId<'Invoice'>('inv_002'),
-    status: 'Pending',
+    status: 'Created',
     amount: 5000,
     currency: 'EUR' as CurrencyCode,
     providerName: 'Stripe',

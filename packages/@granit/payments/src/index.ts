@@ -14,7 +14,7 @@ export type {
   PaymentMethodResponse,
   PaymentMethodSequenceTypeName,
   PaymentProviderCatalogResponse,
-  PaymentProviderConfiguration,
+  PaymentProviderConfigurationResponse,
   PaymentRefundRequest,
   PaymentRefundResponse,
   PaymentTransactionResponse,

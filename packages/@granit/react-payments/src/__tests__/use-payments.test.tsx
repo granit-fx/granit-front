@@ -31,7 +31,7 @@ import type {
   PaymentMethodConfigurationItem,
   PaymentMethodResponse,
   PaymentProviderCatalogResponse,
-  PaymentProviderConfiguration,
+  PaymentProviderConfigurationResponse,
   PaymentRefundResponse,
   PaymentTransactionResponse,
 } from '@granit/payments';
@@ -107,7 +107,7 @@ const sampleAvailableMethod: PaymentAvailableMethodResponse = {
 const sampleConfigurationItem: PaymentMethodConfigurationItem = {
   methodType: 'bancontact',
   displayLabel: 'Bancontact',
-  category: 1,
+  category: 'BankRedirect',
   activated: true,
   capabilitySnapshot: sampleCapability,
 };
@@ -117,7 +117,7 @@ const sampleProviderCatalog: PaymentProviderCatalogResponse = {
   methods: [
     {
       methodType: 'bancontact',
-      category: 1,
+      category: 'BankRedirect',
       displayLabel: 'Bancontact',
       capability: sampleCapability,
       activated: true,
@@ -381,7 +381,7 @@ describe('use-payments', () => {
   describe('usePaymentMethodConfigurations', () => {
     it('fetches the fused provider configuration list', async () => {
       const client = createMockClient();
-      const payload: readonly PaymentProviderConfiguration[] = [
+      const payload: readonly PaymentProviderConfigurationResponse[] = [
         { providerName: 'mollie', methods: [sampleConfigurationItem] },
       ];
       vi.mocked(client.get).mockResolvedValue({ data: payload });

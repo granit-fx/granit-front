@@ -8,9 +8,8 @@ import type {
   PaymentMethodConfigurationItem,
   PaymentMethodResponse,
   PaymentProviderCatalogResponse,
-  PaymentProviderConfiguration,
+  PaymentProviderConfigurationResponse,
   PaymentRefundRequest,
-  PaymentRefundResponse,
   PaymentTransactionResponse,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
@@ -52,29 +51,27 @@ export async function getPaymentTransaction(
 /**
  * Initiate a payment charge.
  *
- * `POST {basePath}/charge`
+ * `POST {basePath}/charge` → 202 Accepted (fire-and-forget command dispatch, no response body)
  */
 export async function initiatePaymentCharge(
   client: AxiosInstance,
   basePath: string,
   request: PaymentChargeRequest
-): Promise<PaymentTransactionResponse> {
-  const response = await client.post<PaymentTransactionResponse>(`${basePath}/charge`, request);
-  return response.data;
+): Promise<void> {
+  await client.post(`${basePath}/charge`, request);
 }
 
 /**
  * Request a payment refund.
  *
- * `POST {basePath}/refund`
+ * `POST {basePath}/refund` → 202 Accepted (fire-and-forget command dispatch, no response body)
  */
 export async function requestPaymentRefund(
   client: AxiosInstance,
   basePath: string,
   request: PaymentRefundRequest
-): Promise<PaymentRefundResponse> {
-  const response = await client.post<PaymentRefundResponse>(`${basePath}/refund`, request);
-  return response.data;
+): Promise<void> {
+  await client.post(`${basePath}/refund`, request);
 }
 
 /**
@@ -185,8 +182,8 @@ export async function detachPaymentMethod(
 export async function listPaymentMethodConfigurations(
   client: AxiosInstance,
   basePath: string
-): Promise<readonly PaymentProviderConfiguration[]> {
-  const response = await client.get<readonly PaymentProviderConfiguration[]>(
+): Promise<readonly PaymentProviderConfigurationResponse[]> {
+  const response = await client.get<readonly PaymentProviderConfigurationResponse[]>(
     `${basePath}/configuration`
   );
   return response.data;

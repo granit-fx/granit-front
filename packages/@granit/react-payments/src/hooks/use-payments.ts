@@ -28,9 +28,8 @@ import type {
   PaymentMethodConfigurationItem,
   PaymentMethodResponse,
   PaymentProviderCatalogResponse,
-  PaymentProviderConfiguration,
+  PaymentProviderConfigurationResponse,
   PaymentRefundRequest,
-  PaymentRefundResponse,
   PaymentTransactionResponse,
 } from '@granit/payments';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
@@ -84,11 +83,7 @@ export function usePaymentTransaction(id: string): UseQueryResult<PaymentTransac
  * await charge.mutateAsync({ invoiceId: 'inv-1', amount: 5000, ... });
  * ```
  */
-export function useInitiatePaymentCharge(): UseMutationResult<
-  PaymentTransactionResponse,
-  Error,
-  PaymentChargeRequest
-> {
+export function useInitiatePaymentCharge(): UseMutationResult<void, Error, PaymentChargeRequest> {
   const config = usePaymentsConfig();
   const queryClient = useQueryClient();
   const basePath = config.basePath!;
@@ -114,11 +109,7 @@ export function useInitiatePaymentCharge(): UseMutationResult<
  * await refund.mutateAsync({ transactionId: 'txn-1', amount: 2000, ... });
  * ```
  */
-export function useRequestPaymentRefund(): UseMutationResult<
-  PaymentRefundResponse,
-  Error,
-  PaymentRefundRequest
-> {
+export function useRequestPaymentRefund(): UseMutationResult<void, Error, PaymentRefundRequest> {
   const config = usePaymentsConfig();
   const queryClient = useQueryClient();
   const basePath = config.basePath!;
@@ -282,7 +273,7 @@ interface PaymentMethodToggleArgs {
  * ```
  */
 export function usePaymentMethodConfigurations(): UseQueryResult<
-  readonly PaymentProviderConfiguration[]
+  readonly PaymentProviderConfigurationResponse[]
 > {
   const config = usePaymentsConfig();
   const basePath = config.basePath!;

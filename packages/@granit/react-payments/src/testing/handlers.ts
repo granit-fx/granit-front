@@ -6,7 +6,7 @@ import {
 } from '@granit/query-engine';
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { created, noContent, notFound } from '@granit/testing/msw';
-import { toEntityId, toISODateString } from '@granit/types';
+import { toEntityId } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -19,22 +19,16 @@ import {
   sampleTransactions,
 } from './data';
 
-import type {
-  PaymentAttachMethodRequest,
-  PaymentChargeRequest,
-  PaymentCheckoutRequest,
-  PaymentRefundRequest,
-} from '@granit/payments';
+import type { PaymentAttachMethodRequest, PaymentCheckoutRequest } from '@granit/payments';
 import type { QueryMetadata } from '@granit/query-engine';
-import type { CurrencyCode } from '@granit/types';
 
 const PAYMENT_STATUSES = [
-  'Pending',
+  'Created',
+  'RequiresAction',
   'Processing',
   'Succeeded',
   'Failed',
   'Canceled',
-  'RequiresAction',
 ];
 
 /** Mock /meta payload for the payment transactions resource. */
@@ -213,47 +207,14 @@ export function createPaymentsHandlers(baseUrl = DEFAULT_BASE_PATH) {
       });
     }),
 
-    // POST charge
-    http.post(`${baseUrl}/charge`, async ({ request }) => {
-      const body = (await request.json()) as PaymentChargeRequest;
-      return created({
-        id: toEntityId<'PaymentTransaction'>(
-          `txn_mock_${String(sampleTransactions.length + 1).padStart(3, '0')}`
-        ),
-        invoiceId: body.invoiceId,
-        status: 'Processing',
-        amount: body.amount,
-        currency: body.currency as CurrencyCode,
-        providerName: body.providerName,
-        providerTransactionId: null,
-        paymentMethodId: null,
-        actionUrl: null,
-        idempotencyKey: 'idem_mock',
-        failureCode: null,
-        succeededAt: null,
-        canceledAt: null,
-        refunds: [],
-        disputes: [],
-        tenantId: toEntityId<'Tenant'>('tenant_mock'),
-      });
+    // POST charge → 202 Accepted (fire-and-forget, no body)
+    http.post(`${baseUrl}/charge`, () => {
+      return new HttpResponse(null, { status: 202 });
     }),
 
-    // POST refund
-    http.post(`${baseUrl}/transactions/:id/refund`, async ({ params, request }) => {
-      const body = (await request.json()) as PaymentRefundRequest;
-      return created({
-        id: toEntityId<'PaymentRefund'>(
-          `ref_mock_${String(sampleRefunds.length + 1).padStart(3, '0')}`
-        ),
-        transactionId: params.id,
-        status: 'Pending',
-        amount: body.amount,
-        currency: 'EUR' as CurrencyCode,
-        reason: body.reason,
-        providerRefundId: null,
-        createdAt: toISODateString(new Date().toISOString()),
-        completedAt: null,
-      });
+    // POST refund → 202 Accepted (fire-and-forget, no body)
+    http.post(`${baseUrl}/refund`, () => {
+      return new HttpResponse(null, { status: 202 });
     }),
 
     // GET payment methods for the current tenant
@@ -267,7 +228,7 @@ export function createPaymentsHandlers(baseUrl = DEFAULT_BASE_PATH) {
     }),
 
     // POST attach payment method
-    http.post(`${baseUrl}/methods/attach`, async ({ request }) => {
+    http.post(`${baseUrl}/methods`, async ({ request }) => {
       const body = (await request.json()) as PaymentAttachMethodRequest;
       return created({
         id: toEntityId<'PaymentMethod'>(
@@ -288,13 +249,17 @@ export function createPaymentsHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return noContent();
     }),
 
-    // POST checkout session
+    // POST checkout session → 201 Created
     http.post(`${baseUrl}/checkout`, async ({ request }) => {
       const body = (await request.json()) as PaymentCheckoutRequest;
-      return HttpResponse.json({
-        sessionId: `cs_mock_${String(Date.now()).slice(-8)}`,
-        url: `https://checkout.example.com/pay?amount=${body.amount}`,
-      });
+      return HttpResponse.json(
+        {
+          sessionId: 'cs_mock_checkout',
+          url: `https://checkout.example.com/pay?amount=${body.amount}`,
+          expiresAt: '2099-01-01T00:00:00Z',
+        },
+        { status: 201 }
+      );
     }),
   ];
 }

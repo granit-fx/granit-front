@@ -28,9 +28,8 @@ import type {
   PaymentMethodConfigurationItem,
   PaymentMethodResponse,
   PaymentProviderCatalogResponse,
-  PaymentProviderConfiguration,
+  PaymentProviderConfigurationResponse,
   PaymentRefundRequest,
-  PaymentRefundResponse,
   PaymentTransactionResponse,
 } from '../types/index';
 
@@ -53,17 +52,6 @@ const sampleTransaction: PaymentTransactionResponse = {
   refunds: [],
   disputes: [],
   tenantId: null,
-};
-
-const sampleRefund: PaymentRefundResponse = {
-  id: 'ref-1',
-  amount: 2000,
-  currency: 'EUR',
-  status: 'Succeeded',
-  providerRefundId: 're_abc123',
-  reason: 'Customer request',
-  createdAt: '2026-04-02T10:00:00Z',
-  completedAt: '2026-04-02T10:05:00Z',
 };
 
 const sampleCheckoutSession: PaymentCheckoutSessionResponse = {
@@ -101,7 +89,7 @@ const sampleAvailableMethod: PaymentAvailableMethodResponse = {
 const sampleConfigurationItem: PaymentMethodConfigurationItem = {
   methodType: 'bancontact',
   displayLabel: 'Bancontact',
-  category: 1,
+  category: 'BankRedirect',
   activated: true,
   capabilitySnapshot: sampleCapability,
 };
@@ -111,7 +99,7 @@ const sampleProviderCatalog: PaymentProviderCatalogResponse = {
   methods: [
     {
       methodType: 'bancontact',
-      category: 1,
+      category: 'BankRedirect',
       displayLabel: 'Bancontact',
       capability: sampleCapability,
       activated: true,
@@ -119,7 +107,7 @@ const sampleProviderCatalog: PaymentProviderCatalogResponse = {
     },
     {
       methodType: 'ideal',
-      category: 1,
+      category: 'BankRedirect',
       displayLabel: 'iDEAL',
       capability: {
         supportedCountries: ['NL'],
@@ -170,7 +158,7 @@ describe('payments-api', () => {
   });
 
   describe('initiatePaymentCharge', () => {
-    it('should POST {basePath}/charge', async () => {
+    it('should POST {basePath}/charge and return void (202 no body)', async () => {
       const client = createMockClient();
       const request: PaymentChargeRequest = {
         invoiceId: 'inv-1',
@@ -179,29 +167,27 @@ describe('payments-api', () => {
         methodType: 'card',
         providerName: null,
       };
-      vi.mocked(client.post).mockResolvedValue(axiosResponse(sampleTransaction));
+      vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
 
-      const result = await initiatePaymentCharge(client, basePath, request);
+      await initiatePaymentCharge(client, basePath, request);
 
       expect(client.post).toHaveBeenCalledWith(`${basePath}/charge`, request);
-      expect(result).toEqual(sampleTransaction);
     });
   });
 
   describe('requestPaymentRefund', () => {
-    it('should POST {basePath}/refund', async () => {
+    it('should POST {basePath}/refund and return void (202 no body)', async () => {
       const client = createMockClient();
       const request: PaymentRefundRequest = {
         transactionId: 'txn-1',
         amount: 2000,
         reason: 'Customer request',
       };
-      vi.mocked(client.post).mockResolvedValue(axiosResponse(sampleRefund));
+      vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
 
-      const result = await requestPaymentRefund(client, basePath, request);
+      await requestPaymentRefund(client, basePath, request);
 
       expect(client.post).toHaveBeenCalledWith(`${basePath}/refund`, request);
-      expect(result).toEqual(sampleRefund);
     });
   });
 
@@ -306,7 +292,7 @@ describe('payments-api', () => {
   describe('listPaymentMethodConfigurations', () => {
     it('should GET {basePath}/configuration', async () => {
       const client = createMockClient();
-      const payload: readonly PaymentProviderConfiguration[] = [
+      const payload: readonly PaymentProviderConfigurationResponse[] = [
         { providerName: 'mollie', methods: [sampleConfigurationItem] },
       ];
       vi.mocked(client.get).mockResolvedValue(axiosResponse(payload));

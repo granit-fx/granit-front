@@ -1,16 +1,24 @@
 export type PaymentStatus =
-  | 'Pending'
+  | 'Created'
+  | 'RequiresAction'
   | 'Processing'
   | 'Succeeded'
   | 'Failed'
-  | 'Canceled'
-  | 'RequiresAction';
+  | 'Canceled';
 
 export type RefundStatus = 'Pending' | 'Succeeded' | 'Failed';
 
-export type DisputeStatus = 'Open' | 'UnderReview' | 'Won' | 'Lost';
+export type DisputeStatus = 'Open' | 'Won' | 'Lost' | 'Closed';
 
-export type PaymentMethodCategory = 'Card' | 'BankTransfer' | 'Wallet' | 'DirectDebit';
+export type PaymentMethodCategory =
+  | 'Card'
+  | 'BankRedirect'
+  | 'BankTransfer'
+  | 'BankDebit'
+  | 'Wallet'
+  | 'BuyNowPayLater'
+  | 'Voucher'
+  | 'PointOfSale';
 
 export interface PaymentChargeRequest {
   readonly invoiceId: string;
@@ -149,8 +157,7 @@ export interface PaymentMethodCapabilityResponse {
 export interface PaymentMethodConfigurationItem {
   readonly methodType: string;
   readonly displayLabel: string;
-  /** Backend enum value (0=Card, 1=BankRedirect, 2=BankTransfer, 3=BankDebit, 4=Wallet, 5=BuyNowPayLater, 6=Voucher, 7=PointOfSale). */
-  readonly category: number;
+  readonly category: PaymentMethodCategory;
   readonly activated: boolean;
   /**
    * Capability snapshot captured at activation (or last resync).
@@ -161,7 +168,7 @@ export interface PaymentMethodConfigurationItem {
 }
 
 /** All methods declared by a single provider, with activation state. */
-export interface PaymentProviderConfiguration {
+export interface PaymentProviderConfigurationResponse {
   readonly providerName: string;
   readonly methods: readonly PaymentMethodConfigurationItem[];
 }
@@ -174,7 +181,7 @@ export interface PaymentProviderConfiguration {
  */
 export interface PaymentCatalogMethod {
   readonly methodType: string;
-  readonly category: number;
+  readonly category: PaymentMethodCategory;
   readonly displayLabel: string;
   readonly capability: PaymentMethodCapabilityResponse;
   readonly activated: boolean;

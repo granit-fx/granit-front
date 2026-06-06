@@ -13,9 +13,10 @@ import { DEFAULT_BASE_PATH } from '../constants';
 import type {
   PaymentCatalogMethod,
   PaymentMethodCapabilityResponse,
+  PaymentMethodCategory,
   PaymentMethodConfigurationItem,
   PaymentProviderCatalogResponse,
-  PaymentProviderConfiguration,
+  PaymentProviderConfigurationResponse,
 } from '@granit/payments';
 
 const cardCapability: PaymentMethodCapabilityResponse = {
@@ -49,7 +50,7 @@ const walletCapability: PaymentMethodCapabilityResponse = {
 interface MockMethod {
   readonly methodType: string;
   readonly displayLabel: string;
-  readonly category: number;
+  readonly category: PaymentMethodCategory;
   readonly capability: PaymentMethodCapabilityResponse;
 }
 
@@ -63,23 +64,23 @@ export const mockPaymentProviders: readonly MockProvider[] = [
   {
     providerName: 'stripe',
     methods: [
-      { methodType: 'card', displayLabel: 'Card', category: 0, capability: cardCapability },
+      { methodType: 'card', displayLabel: 'Card', category: 'Card', capability: cardCapability },
       {
         methodType: 'bancontact',
         displayLabel: 'Bancontact',
-        category: 1,
+        category: 'BankRedirect',
         capability: bankRedirectCapability,
       },
       {
         methodType: 'sepa_debit',
         displayLabel: 'SEPA Direct Debit',
-        category: 3,
+        category: 'BankDebit',
         capability: sepaCapability,
       },
       {
         methodType: 'apple_pay',
         displayLabel: 'Apple Pay',
-        category: 4,
+        category: 'Wallet',
         capability: walletCapability,
       },
     ],
@@ -90,16 +91,21 @@ export const mockPaymentProviders: readonly MockProvider[] = [
       {
         methodType: 'bancontact',
         displayLabel: 'Bancontact',
-        category: 1,
+        category: 'BankRedirect',
         capability: bankRedirectCapability,
       },
       {
         methodType: 'ideal',
         displayLabel: 'iDEAL',
-        category: 1,
+        category: 'BankRedirect',
         capability: { ...bankRedirectCapability, supportedCountries: ['NL'] },
       },
-      { methodType: 'eps', displayLabel: 'EPS', category: 1, capability: bankRedirectCapability },
+      {
+        methodType: 'eps',
+        displayLabel: 'EPS',
+        category: 'BankRedirect',
+        capability: bankRedirectCapability,
+      },
     ],
   },
 ];
@@ -123,7 +129,7 @@ export function createPaymentsConfigurationHandlers(baseUrl = DEFAULT_BASE_PATH)
   // Legacy record without snapshot — exercises the "pending refresh" badge.
   activated.set(key('mollie', 'ideal'), null);
 
-  function buildConfiguration(provider: MockProvider): PaymentProviderConfiguration {
+  function buildConfiguration(provider: MockProvider): PaymentProviderConfigurationResponse {
     const items: PaymentMethodConfigurationItem[] = provider.methods.map((m) => {
       const k = key(provider.providerName, m.methodType);
       const isActive = activated.has(k);
