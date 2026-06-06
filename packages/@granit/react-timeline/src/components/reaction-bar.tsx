@@ -1,6 +1,11 @@
 import { type ReactNode } from 'react';
 
-import type { ReactionEmoji, ReactionMap, TimelineEntryId } from '@granit/timeline';
+import type {
+  ReactionAggregate,
+  ReactionEmoji,
+  ReactionMap,
+  TimelineEntryId,
+} from '@granit/timeline';
 
 export interface ReactionBarLabels {
   /**
@@ -66,7 +71,7 @@ export function ReactionBar({
 
   const present = Object.entries(reactions ?? {}) as unknown as readonly [
     ReactionEmoji,
-    { count: number; byCurrentUser: boolean },
+    ReactionAggregate,
   ][];
 
   return (
@@ -92,7 +97,7 @@ export function ReactionBar({
             disabled={!isInteractive}
             onClick={isInteractive ? () => onToggle({ entryId, emoji }) : undefined}
           >
-            <span data-granit-reaction-bar-emoji="">{emoji}</span>
+            <span data-granit-reaction-bar-emoji="">{aggregate.displayEmoji}</span>
             <span data-granit-reaction-bar-count="">{aggregate.count}</span>
           </button>
         );

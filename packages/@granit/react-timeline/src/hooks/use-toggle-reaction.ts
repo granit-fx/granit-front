@@ -122,7 +122,7 @@ function streamPrefix(
 function patchEntries(
   old: unknown,
   entryId: TimelineEntryId,
-  mutate: (reactions: ReactionMap | undefined) => ReactionMap | undefined
+  mutate: (reactions: ReactionMap | null | undefined) => ReactionMap | undefined
 ): unknown {
   if (isTimelineEntryPage(old)) {
     return {
@@ -147,50 +147,65 @@ function patchEntries(
  * @internal Not part of the public API; exported only for unit tests.
  */
 export function toggleReactionMap(
-  reactions: ReactionMap | undefined,
+  reactions: ReactionMap | null | undefined,
   emoji: ReactionEmoji
 ): ReactionMap | undefined {
-  const current = reactions?.[emoji];
+  const map = reactions ?? undefined;
+  const current = map?.[emoji];
   if (!current) {
-    return { ...reactions, [emoji]: { count: 1, byCurrentUser: true } };
+    // New emoji — use the glyph itself as displayEmoji (first reactor's choice).
+    return { ...map, [emoji]: { count: 1, byCurrentUser: true, displayEmoji: emoji } };
   }
   if (current.byCurrentUser) {
     const nextCount = current.count - 1;
     if (nextCount <= 0) {
       const rest: ReactionMap = Object.fromEntries(
-        Object.entries(reactions ?? {}).filter(([key]) => key !== emoji)
+        Object.entries(map ?? {}).filter(([key]) => key !== emoji)
       );
       return Object.keys(rest).length === 0 ? undefined : rest;
     }
-    return { ...reactions, [emoji]: { count: nextCount, byCurrentUser: false } };
+    return {
+      ...map,
+      [emoji]: { count: nextCount, byCurrentUser: false, displayEmoji: current.displayEmoji },
+    };
   }
   return {
-    ...reactions,
-    [emoji]: { count: current.count + 1, byCurrentUser: true },
+    ...map,
+    [emoji]: { count: current.count + 1, byCurrentUser: true, displayEmoji: current.displayEmoji },
   };
 }
 
 /**
  * Apply the backend's authoritative `(emoji, count, byCurrentUser)` to a
- * {@link ReactionMap}. Internal utility — used by {@link useToggleReaction}'s
- * `onSuccess` to write server truth into the React Query cache.
+ * {@link ReactionMap}. Exported so host apps that manage entry state outside
+ * React Query (e.g. via `useTimeline.patchEntry`) can stay in sync without
+ * duplicating the merge logic.
  *
- * @internal Not part of the public API.
+ * When `result.count > 0` the existing `displayEmoji` is preserved if the
+ * aggregate was already in the map; otherwise `result.emoji` is used as the
+ * display form. The backend streams the authoritative `displayEmoji` on the
+ * next full page fetch; this fallback only fires between the toggle and the
+ * next refresh.
  */
-function applyToggleResult(
-  reactions: ReactionMap | undefined,
+export function applyToggleResult(
+  reactions: ReactionMap | null | undefined,
   result: ReactionToggleResult
 ): ReactionMap | undefined {
+  const map = reactions ?? undefined;
   if (result.count <= 0) {
-    if (!reactions) return undefined;
+    if (!map) return undefined;
     const rest: ReactionMap = Object.fromEntries(
-      Object.entries(reactions).filter(([key]) => key !== result.emoji)
+      Object.entries(map).filter(([key]) => key !== result.emoji)
     );
     return Object.keys(rest).length === 0 ? undefined : rest;
   }
   return {
-    ...reactions,
-    [result.emoji]: { count: result.count, byCurrentUser: result.currentUserHasReacted },
+    ...map,
+    [result.emoji]: {
+      count: result.count,
+      byCurrentUser: result.currentUserHasReacted,
+      displayEmoji: map?.[result.emoji]?.displayEmoji ?? result.emoji,
+    },
   };
 }
 

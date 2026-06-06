@@ -29,6 +29,13 @@ export interface ReactionAggregate {
   readonly count: number;
   /** True when the authenticated caller is among the reactors. */
   readonly byCurrentUser: boolean;
+  /**
+   * Emoji glyph to display in the UI. May differ from the map key when the
+   * first reactor used a skin-tone variant — the backend stores the canonical
+   * (un-toned) key but surfaces the display form here. Mirror of the backend
+   * `ReactionAggregateResponse.DisplayEmoji` field.
+   */
+  readonly displayEmoji: string;
 }
 
 /**

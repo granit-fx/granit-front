@@ -24,8 +24,8 @@ function buttonFor(container: HTMLElement, emoji: string): HTMLButtonElement {
 describe('<ReactionBar>', () => {
   it('renders one button per present reaction — no closed catalog anymore', () => {
     const reactions: ReactionMap = {
-      [THUMBS_UP]: { count: 5, byCurrentUser: true },
-      [HEART]: { count: 2, byCurrentUser: false },
+      [THUMBS_UP]: { count: 5, byCurrentUser: true, displayEmoji: THUMBS_UP },
+      [HEART]: { count: 2, byCurrentUser: false, displayEmoji: HEART },
     };
     const { container } = render(
       <ReactionBar entryId={ENTRY_ID} reactions={reactions} onToggle={vi.fn()} />
@@ -48,7 +48,9 @@ describe('<ReactionBar>', () => {
   });
 
   it('does not render an "add reaction" trigger — picker UX is the consumer\'s job', () => {
-    const reactions: ReactionMap = { [THUMBS_UP]: { count: 1, byCurrentUser: true } };
+    const reactions: ReactionMap = {
+      [THUMBS_UP]: { count: 1, byCurrentUser: true, displayEmoji: THUMBS_UP },
+    };
     const { container } = render(
       <ReactionBar entryId={ENTRY_ID} reactions={reactions} onToggle={vi.fn()} />
     );
@@ -58,7 +60,9 @@ describe('<ReactionBar>', () => {
   });
 
   it('renders the emoji glyph as plain text inside <span data-granit-reaction-bar-emoji>', () => {
-    const reactions: ReactionMap = { [THUMBS_UP]: { count: 3, byCurrentUser: false } };
+    const reactions: ReactionMap = {
+      [THUMBS_UP]: { count: 3, byCurrentUser: false, displayEmoji: THUMBS_UP },
+    };
     const { container } = render(
       <ReactionBar entryId={ENTRY_ID} reactions={reactions} onToggle={vi.fn()} />
     );
@@ -73,8 +77,8 @@ describe('<ReactionBar>', () => {
 
   it('reflects per-emoji count + aria-pressed from the reactions prop', () => {
     const reactions: ReactionMap = {
-      [THUMBS_UP]: { count: 5, byCurrentUser: true },
-      [HEART]: { count: 2, byCurrentUser: false },
+      [THUMBS_UP]: { count: 5, byCurrentUser: true, displayEmoji: THUMBS_UP },
+      [HEART]: { count: 2, byCurrentUser: false, displayEmoji: HEART },
     };
     const { container } = render(
       <ReactionBar entryId={ENTRY_ID} reactions={reactions} onToggle={vi.fn()} />
@@ -92,7 +96,9 @@ describe('<ReactionBar>', () => {
   });
 
   it('fires onToggle with { entryId, emoji } when an existing reaction is clicked', () => {
-    const reactions: ReactionMap = { [THUMBS_UP]: { count: 1, byCurrentUser: true } };
+    const reactions: ReactionMap = {
+      [THUMBS_UP]: { count: 1, byCurrentUser: true, displayEmoji: THUMBS_UP },
+    };
     const onToggle = vi.fn();
     const { container } = render(
       <ReactionBar entryId={ENTRY_ID} reactions={reactions} onToggle={onToggle} />
@@ -104,7 +110,9 @@ describe('<ReactionBar>', () => {
   });
 
   it('renders read-only — present buttons disabled, no onToggle firing — when callback is omitted', () => {
-    const reactions: ReactionMap = { [THUMBS_UP]: { count: 1, byCurrentUser: false } };
+    const reactions: ReactionMap = {
+      [THUMBS_UP]: { count: 1, byCurrentUser: false, displayEmoji: THUMBS_UP },
+    };
     const { container } = render(<ReactionBar entryId={ENTRY_ID} reactions={reactions} />);
 
     const root = container.querySelector('[data-granit-reaction-bar]') as HTMLElement;
@@ -113,7 +121,9 @@ describe('<ReactionBar>', () => {
   });
 
   it('uses the buttonAriaLabel override when supplied', () => {
-    const reactions: ReactionMap = { [THUMBS_UP]: { count: 1, byCurrentUser: true } };
+    const reactions: ReactionMap = {
+      [THUMBS_UP]: { count: 1, byCurrentUser: true, displayEmoji: THUMBS_UP },
+    };
     const { container } = render(
       <ReactionBar
         entryId={ENTRY_ID}

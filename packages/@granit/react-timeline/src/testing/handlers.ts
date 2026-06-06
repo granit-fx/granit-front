@@ -6,7 +6,12 @@ import { DEFAULT_BASE_PATH } from '../constants';
 
 import { mockTimelineEntries } from './data';
 
-import type { TimelineEntry, TimelineEntryPage } from '@granit/timeline';
+import type {
+  ReactionAggregate,
+  ReactionEmoji,
+  TimelineEntry,
+  TimelineEntryPage,
+} from '@granit/timeline';
 
 /**
  * Create stateful MSW handlers for timeline endpoints.
@@ -23,10 +28,12 @@ export function createTimelineHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const page = Number(url.searchParams.get('page') ?? 1);
       const pageSize = Number(url.searchParams.get('pageSize') ?? 20);
       const start = (page - 1) * pageSize;
+      const slice = entries.slice(start, start + pageSize);
 
       const result: TimelineEntryPage = {
-        items: entries.slice(start, start + pageSize),
+        items: slice,
         totalCount: entries.length,
+        hasMore: start + slice.length < entries.length,
         nextCursor: null,
       };
 
@@ -56,10 +63,67 @@ export function createTimelineHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return created(entry);
     }),
 
+    // PATCH /:entityType/:entityId/entries/:entryId — edit entry body
+    http.patch(`${baseUrl}/:entityType/:entityId/entries/:entryId`, async ({ params, request }) => {
+      const { body: newBody } = (await request.json()) as { body: string };
+      const now = toISODateString(new Date().toISOString());
+      entries = entries.map((e) =>
+        e.id === params.entryId ? { ...e, body: newBody, editedAt: now } : e
+      );
+      return noContent();
+    }),
+
     // DELETE /:entityType/:entityId/entries/:entryId — remove an entry
     http.delete(`${baseUrl}/:entityType/:entityId/entries/:entryId`, ({ params }) => {
       entries = entries.filter((e) => e.id !== params.entryId);
       return noContent();
+    }),
+
+    // POST /:entityType/:entityId/anchor — materialise shadow row for external entry
+    http.post(`${baseUrl}/:entityType/:entityId/anchor`, async ({ request }) => {
+      const { sourceKey, sourceId } = (await request.json()) as {
+        sourceKey: string;
+        sourceId: string;
+      };
+      // Deterministic stub id — real backend derives a v5 GUID from tenant+coords.
+      const stubId = toEntityId<'TimelineEntry'>(`anchor-${sourceKey}-${sourceId}`);
+      return HttpResponse.json({ entryId: stubId });
+    }),
+
+    // POST /entries/:entryId/reactions/:emoji — toggle reaction
+    http.post(`${baseUrl}/entries/:entryId/reactions/:emoji`, ({ params }) => {
+      const entryId = params.entryId as string;
+      const emojiRaw = decodeURIComponent(params.emoji as string);
+      const emoji = emojiRaw as ReactionEmoji;
+
+      let count = 0;
+      let currentUserHasReacted = false;
+
+      entries = entries.map((e) => {
+        if (e.id !== entryId) return e;
+        const reactions: Partial<Record<ReactionEmoji, ReactionAggregate>> = {
+          ...(e.reactions ?? {}),
+        };
+        const existing = reactions[emoji];
+        if (existing?.byCurrentUser) {
+          // Toggle off
+          count = existing.count - 1;
+          currentUserHasReacted = false;
+          if (count <= 0) {
+            delete (reactions as Record<string, unknown>)[emoji];
+          } else {
+            reactions[emoji] = { count, byCurrentUser: false, displayEmoji: emojiRaw };
+          }
+        } else {
+          // Toggle on
+          count = (existing?.count ?? 0) + 1;
+          currentUserHasReacted = true;
+          reactions[emoji] = { count, byCurrentUser: true, displayEmoji: emojiRaw };
+        }
+        return { ...e, reactions };
+      });
+
+      return HttpResponse.json({ entryId, emoji, count, currentUserHasReacted });
     }),
 
     // POST /:entityType/:entityId/follow — follow entity

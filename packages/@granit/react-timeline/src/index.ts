@@ -22,7 +22,7 @@ export type {
   UseTimelineFollowersReturn,
 } from './hooks/use-timeline-followers';
 
-export { useToggleReaction } from './hooks/use-toggle-reaction';
+export { useToggleReaction, applyToggleResult } from './hooks/use-toggle-reaction';
 
 export { useAnchorEntry, useUpdateEntryBody } from './hooks/use-entry-mutations';
 export type { AnchorEntryVariables, UpdateEntryBodyVariables } from './hooks/use-entry-mutations';

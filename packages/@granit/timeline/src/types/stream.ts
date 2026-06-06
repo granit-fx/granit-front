@@ -22,7 +22,12 @@ export interface TimelineAttachmentInfo {
   readonly blobId: BlobId;
   readonly fileName: string;
   readonly contentType: string;
-  readonly sizeBytes: number;
+  /**
+   * File size in bytes. The backend serializes `int64` as a JSON number for
+   * values ≤ 2⁵³, and as a decimal string for larger values to preserve
+   * precision. Mirrors `type: ["integer", "string"]` in the OpenAPI schema.
+   */
+  readonly sizeBytes: number | string;
 }
 
 export interface TimelineEntry {
@@ -35,13 +40,13 @@ export interface TimelineEntry {
   readonly occurredAt: ISODateString;
   readonly attachments: readonly TimelineAttachmentInfo[];
   /**
-   * Aggregated reactions on this entry — dict keyed by the emoji
-   * short name, carrying only emojis with at least one reactor.
-   * Omitted (`undefined`) when the entry has zero reactions to keep
-   * the wire payload tight (mirrors the backend `Reactions` field on
-   * `TimelineStreamEntryResponse`, granit-fx/granit-dotnet#1811).
+   * Aggregated reactions on this entry — dict keyed by the canonical emoji
+   * glyph, carrying only emojis with at least one reactor. The backend
+   * serializes `null` and omits the field interchangeably when there are zero
+   * reactions; both resolve to "no reactions" on the frontend. Mirrors
+   * `type: ["null", "object"]` in the OpenAPI schema.
    */
-  readonly reactions?: ReactionMap;
+  readonly reactions?: ReactionMap | null;
   /**
    * Where this entry originates. `'Native'` for rows stored directly
    * in the timeline; `'External'` for entries projected from a

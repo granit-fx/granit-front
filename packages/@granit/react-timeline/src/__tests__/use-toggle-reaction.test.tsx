@@ -78,36 +78,40 @@ function createHarness(): Harness {
 describe('toggleReactionMap', () => {
   it('adds a fresh reaction with count=1, byCurrentUser=true', () => {
     expect(toggleReactionMap(undefined, THUMBS_UP)).toEqual({
-      [THUMBS_UP]: { count: 1, byCurrentUser: true },
+      [THUMBS_UP]: { count: 1, byCurrentUser: true, displayEmoji: THUMBS_UP },
     });
   });
 
   it('increments count + flips byCurrentUser when caller had not reacted', () => {
-    const before: ReactionMap = { [HEART]: { count: 5, byCurrentUser: false } };
+    const before: ReactionMap = {
+      [HEART]: { count: 5, byCurrentUser: false, displayEmoji: HEART },
+    };
     expect(toggleReactionMap(before, HEART)).toEqual({
-      [HEART]: { count: 6, byCurrentUser: true },
+      [HEART]: { count: 6, byCurrentUser: true, displayEmoji: HEART },
     });
   });
 
   it('decrements count + flips byCurrentUser when caller had reacted', () => {
-    const before: ReactionMap = { [TADA]: { count: 3, byCurrentUser: true } };
+    const before: ReactionMap = {
+      [TADA]: { count: 3, byCurrentUser: true, displayEmoji: TADA },
+    };
     expect(toggleReactionMap(before, TADA)).toEqual({
-      [TADA]: { count: 2, byCurrentUser: false },
+      [TADA]: { count: 2, byCurrentUser: false, displayEmoji: TADA },
     });
   });
 
   it('removes only the toggled-off emoji when other emojis remain in the map', () => {
     const before: ReactionMap = {
-      [THUMBS_UP]: { count: 1, byCurrentUser: true },
-      [HEART]: { count: 3, byCurrentUser: false },
+      [THUMBS_UP]: { count: 1, byCurrentUser: true, displayEmoji: THUMBS_UP },
+      [HEART]: { count: 3, byCurrentUser: false, displayEmoji: HEART },
     };
     expect(toggleReactionMap(before, THUMBS_UP)).toEqual({
-      [HEART]: { count: 3, byCurrentUser: false },
+      [HEART]: { count: 3, byCurrentUser: false, displayEmoji: HEART },
     });
   });
 
   it('removes the entry entirely when toggling off the last reactor', () => {
-    const before: ReactionMap = { [EYES]: { count: 1, byCurrentUser: true } };
+    const before: ReactionMap = { [EYES]: { count: 1, byCurrentUser: true, displayEmoji: EYES } };
     expect(toggleReactionMap(before, EYES)).toBeUndefined();
   });
 });
@@ -140,7 +144,7 @@ describe('useToggleReaction — optimistic update', () => {
     await waitFor(() => {
       const page = queryClient.getQueryData<TimelineEntryPage>(['timeline', 'Quote', 'q-1']);
       expect(page?.items[0]?.reactions).toEqual({
-        [THUMBS_UP]: { count: 1, byCurrentUser: true },
+        [THUMBS_UP]: { count: 1, byCurrentUser: true, displayEmoji: THUMBS_UP },
       });
     });
     const page = queryClient.getQueryData<TimelineEntryPage>(['timeline', 'Quote', 'q-1']);
@@ -151,14 +155,14 @@ describe('useToggleReaction — optimistic update', () => {
 
     const finalPage = queryClient.getQueryData<TimelineEntryPage>(['timeline', 'Quote', 'q-1']);
     expect(finalPage?.items[0]?.reactions).toEqual({
-      [THUMBS_UP]: { count: 7, byCurrentUser: true },
+      [THUMBS_UP]: { count: 7, byCurrentUser: true, displayEmoji: THUMBS_UP },
     });
   });
 
   it('rolls back to the snapshot when the mutation rejects', async () => {
     const { client, queryClient, wrapper } = createHarness();
     const initial = makePage([
-      makeEntry(ENTRY_ID, { [HEART]: { count: 5, byCurrentUser: false } }),
+      makeEntry(ENTRY_ID, { [HEART]: { count: 5, byCurrentUser: false, displayEmoji: HEART } }),
     ]);
     queryClient.setQueryData(['timeline', 'Quote', 'q-1'], initial);
 
@@ -175,7 +179,9 @@ describe('useToggleReaction — optimistic update', () => {
     await waitFor(() => expect(result.current.isError).toBe(true));
 
     const page = queryClient.getQueryData<TimelineEntryPage>(['timeline', 'Quote', 'q-1']);
-    expect(page?.items[0]?.reactions).toEqual({ [HEART]: { count: 5, byCurrentUser: false } });
+    expect(page?.items[0]?.reactions).toEqual({
+      [HEART]: { count: 5, byCurrentUser: false, displayEmoji: HEART },
+    });
   });
 });
 

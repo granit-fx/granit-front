@@ -6824,6 +6824,11 @@
           "signature": "function useToggleReaction(): UseMutationResult< ReactionToggleResult, Error, ToggleReactionVariables, ToggleReactionContext >"
         },
         {
+          "name": "applyToggleResult",
+          "kind": "function",
+          "signature": "function applyToggleResult( reactions: ReactionMap | null | undefined, result: ReactionToggleResult ): ReactionMap | undefined"
+        },
+        {
           "name": "useAnchorEntry",
           "kind": "function",
           "signature": "function useAnchorEntry(): UseMutationResult<TimelineEntryId, Error, AnchorEntryVariables>"
