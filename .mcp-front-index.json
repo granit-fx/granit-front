@@ -6424,21 +6424,6 @@
           "kind": "interface",
           "signature": "interface TaxProviderProps",
           "members": []
-        },
-        {
-          "name": "useTaxRateByCountry",
-          "kind": "function",
-          "signature": "function useTaxRateByCountry(countryCode: string): UseQueryResult<TaxRateResponse>"
-        },
-        {
-          "name": "useTaxRates",
-          "kind": "function",
-          "signature": "function useTaxRates(): UseQueryResult<readonly TaxRateResponse[]>"
-        },
-        {
-          "name": "useValidateTaxId",
-          "kind": "function",
-          "signature": "function useValidateTaxId(): UseMutationResult< TaxValidateResponse, Error, TaxValidateRequest >"
         }
       ]
     },
@@ -7286,24 +7271,6 @@
       "description": "Tax validation and rate lookup — types and API functions",
       "exports": [
         {
-          "name": "TaxRateResponse",
-          "kind": "interface",
-          "signature": "interface TaxRateResponse",
-          "members": []
-        },
-        {
-          "name": "TaxValidateRequest",
-          "kind": "interface",
-          "signature": "interface TaxValidateRequest",
-          "members": []
-        },
-        {
-          "name": "TaxValidateResponse",
-          "kind": "interface",
-          "signature": "interface TaxValidateResponse",
-          "members": []
-        },
-        {
           "name": "TaxPermissions",
           "kind": "const",
           "signature": "const TaxPermissions"
@@ -7314,9 +7281,14 @@
           "signature": "async function getTaxRateByCountry( client: AxiosInstance, basePath: string, countryCode: string ): Promise<TaxRateResponse>"
         },
         {
-          "name": "getTaxRates",
+          "name": "getTaxRatesMeta",
           "kind": "function",
-          "signature": "async function getTaxRates( client: AxiosInstance, basePath: string ): Promise<readonly TaxRateResponse[]>"
+          "signature": "async function getTaxRatesMeta( client: AxiosInstance, basePath: string ): Promise<QueryMetadata>"
+        },
+        {
+          "name": "queryTaxRates",
+          "kind": "function",
+          "signature": "async function queryTaxRates( client: AxiosInstance, basePath: string, request: QueryRequest ="
         },
         {
           "name": "validateTaxId",

@@ -1,7 +1,7 @@
-import type { TaxRateResponse, TaxValidateResponse } from '@granit/tax';
+import type { TaxRateEntry, TaxValidateResponse } from '@granit/tax';
 import type { ISODateString } from '@granit/types';
 
-export const sampleTaxRates: TaxRateResponse[] = [
+export const sampleTaxRates: TaxRateEntry[] = [
   {
     countryCode: 'BE',
     standardRate: 21,

@@ -12,8 +12,33 @@ import { sampleTaxRates, sampleValidation } from './data';
  */
 export function createTaxHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
-    // GET /rates — all rates
-    http.get(`${baseUrl}/rates`, () => HttpResponse.json(sampleTaxRates)),
+    // GET /rates/meta — query metadata (must come before /rates/:countryCode)
+    http.get(`${baseUrl}/rates/meta`, () =>
+      HttpResponse.json({
+        columns: [],
+        filterableFields: [],
+        sortableFields: [],
+        presetFilterGroups: [],
+        quickFilters: [],
+        dateFilters: [],
+        groupByFields: [],
+        pagination: {
+          defaultPageSize: 25,
+          maxPageSize: 500,
+          maxStreamSize: 1000,
+          supportsCursor: true,
+        },
+      })
+    ),
+
+    // GET /rates — query engine list (PagedResult)
+    http.get(`${baseUrl}/rates`, () =>
+      HttpResponse.json({
+        items: sampleTaxRates,
+        totalCount: sampleTaxRates.length,
+        hasMore: false,
+      })
+    ),
 
     // GET /rates/:countryCode — single rate by country
     http.get(`${baseUrl}/rates/:countryCode`, ({ params }) => {

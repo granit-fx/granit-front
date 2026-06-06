@@ -3,4 +3,9 @@ export { TaxProvider, buildTaxQueryKey, useTaxConfig } from './providers/tax-pro
 export type { TaxConfig, TaxProviderProps } from './providers/tax-provider';
 
 // Hooks
-export { useTaxRateByCountry, useTaxRates, useValidateTaxId } from './hooks/use-tax';
+export {
+  useTaxRateByCountry,
+  useTaxRates,
+  useTaxRatesMeta,
+  useValidateTaxId,
+} from './hooks/use-tax';

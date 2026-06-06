@@ -1,8 +1,13 @@
 // Types
-export type { TaxRateResponse, TaxValidateRequest, TaxValidateResponse } from './types/index';
+export type {
+  TaxRateEntry,
+  TaxRateResponse,
+  TaxValidateRequest,
+  TaxValidateResponse,
+} from './types/index';
 
 // Permissions
 export { TaxPermissions } from './permissions';
 
 // API
-export { getTaxRateByCountry, getTaxRates, validateTaxId } from './api/tax-api';
+export { getTaxRateByCountry, getTaxRatesMeta, queryTaxRates, validateTaxId } from './api/tax-api';

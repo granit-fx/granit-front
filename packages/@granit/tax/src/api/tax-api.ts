@@ -1,5 +1,13 @@
-import type { TaxRateResponse, TaxValidateRequest, TaxValidateResponse } from '../types/index';
+import { getPage, getQueryMeta } from '@granit/query-engine';
+
+import type {
+  TaxRateEntry,
+  TaxRateResponse,
+  TaxValidateRequest,
+  TaxValidateResponse,
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
+import type { PagedResult, QueryMetadata, QueryRequest } from '@granit/query-engine';
 
 /**
  * Validate a tax ID (e.g. VAT number) against the configured tax service.
@@ -16,20 +24,32 @@ export async function validateTaxId(
 }
 
 /**
- * Fetch all available tax rates.
+ * Query tax rates with filtering, sorting, and pagination (Query Engine).
  *
  * `GET {basePath}/rates`
  */
-export async function getTaxRates(
+export async function queryTaxRates(
   client: AxiosInstance,
-  basePath: string
-): Promise<readonly TaxRateResponse[]> {
-  const response = await client.get<readonly TaxRateResponse[]>(`${basePath}/rates`);
-  return response.data;
+  basePath: string,
+  request: QueryRequest = {}
+): Promise<PagedResult<TaxRateEntry>> {
+  return getPage<TaxRateEntry>(client, `${basePath}/rates`, request);
 }
 
 /**
- * Fetch the tax rate for a specific country.
+ * Get query metadata for tax rates (columns, filters, sorts, presets).
+ *
+ * `GET {basePath}/rates/meta`
+ */
+export async function getTaxRatesMeta(
+  client: AxiosInstance,
+  basePath: string
+): Promise<QueryMetadata> {
+  return getQueryMeta(client, `${basePath}/rates`);
+}
+
+/**
+ * Get the tax rate for a specific country.
  *
  * `GET {basePath}/rates/{countryCode}`
  */

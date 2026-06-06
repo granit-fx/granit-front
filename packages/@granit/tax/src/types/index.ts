@@ -14,7 +14,18 @@ export interface TaxValidateResponse {
   readonly source: string;
 }
 
-/** Tax rate information for a specific country. */
+/** Tax rate row returned by the query engine (`GET /tax/rates`). */
+export interface TaxRateEntry {
+  readonly countryCode: string;
+  readonly standardRate: number;
+  readonly reducedRate?: number | null;
+  readonly superReducedRate?: number | null;
+  readonly parkingRate?: number | null;
+  readonly effectiveFrom?: string | null;
+  readonly effectiveTo?: string | null;
+}
+
+/** Full tax rate detail for a specific country (`GET /tax/rates/{countryCode}`). */
 export interface TaxRateResponse {
   readonly countryCode: string;
   readonly standardRate: number;

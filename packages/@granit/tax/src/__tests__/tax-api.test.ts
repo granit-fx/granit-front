@@ -1,9 +1,15 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getTaxRateByCountry, getTaxRates, validateTaxId } from '../api/tax-api';
+import { getTaxRateByCountry, getTaxRatesMeta, queryTaxRates, validateTaxId } from '../api/tax-api';
 
-import type { TaxRateResponse, TaxValidateRequest, TaxValidateResponse } from '../types/index';
+import type {
+  TaxRateEntry,
+  TaxRateResponse,
+  TaxValidateRequest,
+  TaxValidateResponse,
+} from '../types/index';
+import type { PagedResult, QueryMetadata } from '@granit/query-engine';
 
 // ---------------------------------------------------------------------------
 // Fixtures
@@ -21,6 +27,26 @@ const mockValidateResponse: TaxValidateResponse = {
   requestIdentifier: 'req-abc-123',
   validatedAt: '2026-04-04T10:00:00Z',
   source: 'VIES',
+};
+
+const mockBelgiumEntry: TaxRateEntry = {
+  countryCode: 'BE',
+  standardRate: 21,
+  reducedRate: 6,
+  superReducedRate: null,
+  parkingRate: 12,
+  effectiveFrom: '2024-01-01T00:00:00Z',
+  effectiveTo: null,
+};
+
+const mockLuxembourgEntry: TaxRateEntry = {
+  countryCode: 'LU',
+  standardRate: 17,
+  reducedRate: 8,
+  superReducedRate: 3,
+  parkingRate: 14,
+  effectiveFrom: '2024-01-01T00:00:00Z',
+  effectiveTo: null,
 };
 
 const mockBelgiumRate: TaxRateResponse = {
@@ -41,6 +67,23 @@ const mockLuxembourgRate: TaxRateResponse = {
   parkingRate: 14,
   effectiveFrom: '2024-01-01',
   effectiveTo: null,
+};
+
+const mockPagedRates: PagedResult<TaxRateEntry> = {
+  items: [mockBelgiumEntry, mockLuxembourgEntry],
+  totalCount: 2,
+  hasMore: false,
+};
+
+const mockMeta: QueryMetadata = {
+  columns: [],
+  filterableFields: [],
+  sortableFields: [],
+  presetFilterGroups: [],
+  quickFilters: [],
+  dateFilters: [],
+  groupByFields: [],
+  pagination: { defaultPageSize: 25, maxPageSize: 500, maxStreamSize: 1000, supportsCursor: true },
 };
 
 // ---------------------------------------------------------------------------
@@ -87,38 +130,79 @@ describe('validateTaxId', () => {
 });
 
 // ---------------------------------------------------------------------------
-// getTaxRates
+// queryTaxRates
 // ---------------------------------------------------------------------------
 
-describe('getTaxRates', () => {
-  it('should GET {basePath}/rates', async () => {
+describe('queryTaxRates', () => {
+  it('should GET {basePath}/rates and return PagedResult', async () => {
     const client = createMockClient();
-    const rates = [mockBelgiumRate, mockLuxembourgRate];
-    vi.mocked(client.get).mockResolvedValue({ data: rates });
+    vi.mocked(client.get).mockResolvedValue({ data: mockPagedRates });
 
-    const result = await getTaxRates(client, '/tax');
+    const result = await queryTaxRates(client, '/tax');
 
-    expect(client.get).toHaveBeenCalledWith('/tax/rates');
-    expect(result).toEqual(rates);
-    expect(result).toHaveLength(2);
+    const [url] = vi.mocked(client.get).mock.calls[0]!;
+    expect(url).toContain('/tax/rates');
+    expect(result).toEqual(mockPagedRates);
+    expect(result.items).toHaveLength(2);
+  });
+
+  it('should forward query params', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({
+      data: { items: [mockBelgiumEntry], totalCount: 1, hasMore: false },
+    });
+
+    await queryTaxRates(client, '/tax', { page: 2, pageSize: 10, search: 'BE' });
+
+    const [url] = vi.mocked(client.get).mock.calls[0]!;
+    expect(url).toContain('/tax/rates');
   });
 
   it('should work with custom basePath', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue({ data: [] });
+    vi.mocked(client.get).mockResolvedValue({ data: mockPagedRates });
 
-    await getTaxRates(client, '/custom/tax');
+    await queryTaxRates(client, '/custom/tax');
 
-    expect(client.get).toHaveBeenCalledWith('/custom/tax/rates');
+    const [url] = vi.mocked(client.get).mock.calls[0]!;
+    expect(url).toContain('/custom/tax/rates');
   });
 
-  it('should return empty array when no rates', async () => {
+  it('should return empty page when no rates', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue({ data: [] });
+    vi.mocked(client.get).mockResolvedValue({ data: { items: [], totalCount: 0, hasMore: false } });
 
-    const result = await getTaxRates(client, '/tax');
+    const result = await queryTaxRates(client, '/tax');
 
-    expect(result).toEqual([]);
+    expect(result.items).toEqual([]);
+    expect(result.totalCount).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// getTaxRatesMeta
+// ---------------------------------------------------------------------------
+
+describe('getTaxRatesMeta', () => {
+  it('should GET {basePath}/rates/meta', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ data: mockMeta });
+
+    const result = await getTaxRatesMeta(client, '/tax');
+
+    const [url] = vi.mocked(client.get).mock.calls[0]!;
+    expect(url).toContain('/tax/rates/meta');
+    expect(result).toEqual(mockMeta);
+  });
+
+  it('should work with custom basePath', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ data: mockMeta });
+
+    await getTaxRatesMeta(client, '/custom/tax');
+
+    const [url] = vi.mocked(client.get).mock.calls[0]!;
+    expect(url).toContain('/custom/tax/rates/meta');
   });
 });
 

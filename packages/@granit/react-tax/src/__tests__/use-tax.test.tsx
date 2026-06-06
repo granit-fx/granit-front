@@ -5,11 +5,17 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useTaxRateByCountry, useTaxRates, useValidateTaxId } from '../hooks/use-tax';
+import {
+  useTaxRateByCountry,
+  useTaxRates,
+  useTaxRatesMeta,
+  useValidateTaxId,
+} from '../hooks/use-tax';
 import { TaxProvider } from '../providers/tax-provider';
 
 import type { TaxConfig } from '../providers/tax-provider';
-import type { TaxRateResponse, TaxValidateResponse } from '@granit/tax';
+import type { PagedResult, QueryMetadata } from '@granit/query-engine';
+import type { TaxRateEntry, TaxRateResponse, TaxValidateResponse } from '@granit/tax';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -38,6 +44,26 @@ const mockValidateResponse: TaxValidateResponse = {
   source: 'VIES',
 };
 
+const mockBelgiumEntry: TaxRateEntry = {
+  countryCode: 'BE',
+  standardRate: 21,
+  reducedRate: 6,
+  superReducedRate: null,
+  parkingRate: 12,
+  effectiveFrom: '2024-01-01',
+  effectiveTo: null,
+};
+
+const mockLuxembourgEntry: TaxRateEntry = {
+  countryCode: 'LU',
+  standardRate: 17,
+  reducedRate: 8,
+  superReducedRate: 3,
+  parkingRate: 14,
+  effectiveFrom: '2024-01-01',
+  effectiveTo: null,
+};
+
 const mockBelgiumRate: TaxRateResponse = {
   countryCode: 'BE',
   standardRate: 21,
@@ -56,6 +82,23 @@ const mockLuxembourgRate: TaxRateResponse = {
   parkingRate: 14,
   effectiveFrom: '2024-01-01',
   effectiveTo: null,
+};
+
+const mockPagedRates: PagedResult<TaxRateEntry> = {
+  items: [mockBelgiumEntry, mockLuxembourgEntry],
+  totalCount: 2,
+  hasMore: false,
+};
+
+const mockMeta: QueryMetadata = {
+  columns: [],
+  filterableFields: [],
+  sortableFields: [],
+  presetFilterGroups: [],
+  quickFilters: [],
+  dateFilters: [],
+  groupByFields: [],
+  pagination: { defaultPageSize: 25, maxPageSize: 500, maxStreamSize: 1000, supportsCursor: true },
 };
 
 // ---------------------------------------------------------------------------
@@ -126,30 +169,47 @@ describe('useTaxRates', () => {
     vi.restoreAllMocks();
   });
 
-  it('fetches all tax rates with default basePath', async () => {
+  it('fetches paged tax rates with default basePath', async () => {
     const client = createMockClient();
-    const rates = [mockBelgiumRate, mockLuxembourgRate];
-    vi.mocked(client.get).mockResolvedValue({ data: rates });
+    vi.mocked(client.get).mockResolvedValue({ data: mockPagedRates });
 
     const { result } = renderHook(() => useTaxRates(), {
       wrapper: createWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/api/v1/tax/rates');
-    expect(result.current.data).toEqual(rates);
+    const [url] = vi.mocked(client.get).mock.calls[0]!;
+    expect(url).toContain('/api/v1/tax/rates');
+    expect(result.current.data?.items).toEqual([mockBelgiumEntry, mockLuxembourgEntry]);
+    expect(result.current.data?.totalCount).toBe(2);
   });
 
-  it('fetches all tax rates with custom basePath', async () => {
+  it('forwards query request params', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue({ data: [] });
+    vi.mocked(client.get).mockResolvedValue({
+      data: { items: [mockBelgiumEntry], totalCount: 1, hasMore: false },
+    });
+
+    const { result } = renderHook(() => useTaxRates({ page: 2, pageSize: 10 }), {
+      wrapper: createWrapper(client),
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    const [url] = vi.mocked(client.get).mock.calls[0]!;
+    expect(url).toContain('/api/v1/tax/rates');
+  });
+
+  it('fetches paged rates with custom basePath', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ data: { items: [], totalCount: 0, hasMore: false } });
 
     const { result } = renderHook(() => useTaxRates(), {
       wrapper: createWrapper(client, '/custom/tax'),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/custom/tax/rates');
+    const [url] = vi.mocked(client.get).mock.calls[0]!;
+    expect(url).toContain('/custom/tax/rates');
   });
 
   it('exposes error state on failure', async () => {
@@ -162,6 +222,43 @@ describe('useTaxRates', () => {
 
     await waitFor(() => expect(result.current.isError).toBe(true));
     expect(result.current.error?.message).toBe('Network error');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// useTaxRatesMeta
+// ---------------------------------------------------------------------------
+
+describe('useTaxRatesMeta', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('fetches query metadata with default basePath', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ data: mockMeta });
+
+    const { result } = renderHook(() => useTaxRatesMeta(), {
+      wrapper: createWrapper(client),
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    const [url] = vi.mocked(client.get).mock.calls[0]!;
+    expect(url).toContain('/api/v1/tax/rates/meta');
+    expect(result.current.data).toEqual(mockMeta);
+  });
+
+  it('fetches metadata with custom basePath', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ data: mockMeta });
+
+    const { result } = renderHook(() => useTaxRatesMeta(), {
+      wrapper: createWrapper(client, '/custom/tax'),
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    const [url] = vi.mocked(client.get).mock.calls[0]!;
+    expect(url).toContain('/custom/tax/rates/meta');
   });
 });
 
