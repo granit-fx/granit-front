@@ -8,11 +8,12 @@ import { TagChipStrip } from '../components/tag-chip-strip.tsx';
 import { TaxonomyProvider } from '../providers/taxonomy-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { TagAssignmentResponse, TagResponse } from '@granit/taxonomy';
+import type { TagResponse } from '@granit/taxonomy';
 import type { ReactNode } from 'react';
 
 const visibleTag: TagResponse = {
   id: 'tag-1',
+  tenantId: null,
   scope: 'documents',
   name: 'Urgent',
   color: '#FF0000',
@@ -23,6 +24,7 @@ const visibleTag: TagResponse = {
 
 const hiddenTag: TagResponse = {
   id: 'tag-2',
+  tenantId: null,
   scope: 'documents',
   name: 'Internal',
   color: '#00FF00',
@@ -30,21 +32,6 @@ const hiddenTag: TagResponse = {
   createdAt: '2026-05-01T08:00:00Z',
   updatedAt: '2026-05-01T08:00:00Z',
 };
-
-const assignments: readonly TagAssignmentResponse[] = [
-  {
-    tagId: 'tag-1',
-    targetType: 'Granit.Documents.Domain.Document',
-    targetId: 'doc-1',
-    assignedAt: '2026-05-02T12:00:00Z',
-  },
-  {
-    tagId: 'tag-2',
-    targetType: 'Granit.Documents.Domain.Document',
-    targetId: 'doc-1',
-    assignedAt: '2026-05-02T12:00:00Z',
-  },
-];
 
 function createWrapperFromClient(client: AxiosInstance) {
   return function Wrapper({ children }: { children: ReactNode }) {
@@ -60,11 +47,8 @@ function createWrapperFromClient(client: AxiosInstance) {
 function buildClient(): AxiosInstance {
   const client = createMockClient();
   vi.mocked(client.get).mockImplementation(((url: string) => {
-    if (url.endsWith('/tag-assignments') || url.endsWith('/tags/assignments')) {
-      return Promise.resolve({ data: assignments });
-    }
-    if (url.endsWith('/tags')) {
-      return Promise.resolve({ data: [visibleTag, hiddenTag] });
+    if (url.includes('/assignments')) {
+      return Promise.resolve({ data: { items: [visibleTag, hiddenTag] } });
     }
     return Promise.resolve({ data: [] });
   }) as AxiosInstance['get']);

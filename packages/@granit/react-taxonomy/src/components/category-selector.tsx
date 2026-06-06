@@ -31,6 +31,17 @@ export interface CategorySelectorProps {
   readonly canManage?: boolean;
   readonly labels?: CategorySelectorLabels;
   readonly className?: string;
+  /**
+   * Called after a successful assignment with the newly assigned category id.
+   * Use this to update local state when the entity response does not yet carry
+   * `categoryId` (e.g. while the backend field is being added).
+   */
+  readonly onAssign?: (categoryId: string) => void;
+  /**
+   * Called after a successful unassignment. Use together with `onAssign` for
+   * local state management.
+   */
+  readonly onUnassign?: () => void;
 }
 
 const DEFAULT_LABELS: Required<CategorySelectorLabels> = {
@@ -56,6 +67,8 @@ export function CategorySelector({
   canManage = false,
   labels,
   className,
+  onAssign,
+  onUnassign,
 }: CategorySelectorProps): ReactNode {
   const labelStrings = { ...DEFAULT_LABELS, ...labels };
   const [open, setOpen] = useState(false);
@@ -66,7 +79,15 @@ export function CategorySelector({
   const unassignCategory = useUnassignCategory();
 
   function handleSelect(category: CategoryResponse): void {
-    assignCategory.mutate({ categoryId: category.id, target }, { onSuccess: () => setOpen(false) });
+    assignCategory.mutate(
+      { categoryId: category.id, target },
+      {
+        onSuccess: () => {
+          setOpen(false);
+          onAssign?.(category.id);
+        },
+      }
+    );
   }
 
   return (
@@ -87,7 +108,10 @@ export function CategorySelector({
               {labelStrings.choose}
             </button>
             {value && (
-              <button type="button" onClick={() => unassignCategory.mutate(target)}>
+              <button
+                type="button"
+                onClick={() => unassignCategory.mutate(target, { onSuccess: () => onUnassign?.() })}
+              >
                 {labelStrings.clear}
               </button>
             )}

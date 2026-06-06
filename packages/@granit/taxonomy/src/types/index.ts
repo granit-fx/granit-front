@@ -25,10 +25,13 @@ export interface TaxonomyTargetRef {
 
 export interface TagResponse {
   readonly id: string;
+  /** `null` for host-level (cross-tenant) tags. */
+  readonly tenantId: string | null;
   readonly scope: string;
   readonly name: string;
   readonly color: HexColor;
   readonly hideOnEntityCard: boolean;
+  /** Audit field — may be absent when the spec is extended; treat as informational. */
   readonly createdAt: string;
   readonly updatedAt: string;
 }
@@ -42,32 +45,40 @@ export interface CreateTagRequest {
   readonly scope: string;
   readonly name: string;
   readonly color: HexColor;
-  readonly hideOnEntityCard: boolean;
+  /** `null` lets the backend apply its default (false). */
+  readonly hideOnEntityCard: boolean | null;
 }
 
 /**
- * PATCH payload for {@link TagResponse}. Every field is optional — only
- * supplied fields are mutated server-side.
+ * PATCH payload for {@link TagResponse}. All fields are required-but-nullable
+ * (OpenAPI `required` + `["null","T"]`): pass `null` to leave a field unchanged
+ * server-side, pass a value to update it.
  */
 export interface UpdateTagRequest {
-  readonly name?: string;
-  readonly color?: HexColor;
-  readonly hideOnEntityCard?: boolean;
+  readonly name: string | null;
+  readonly color: string | null;
+  readonly hideOnEntityCard: boolean | null;
 }
 
 export type TagAssignmentRequest = TaxonomyTargetRef;
 
 export interface TagAssignmentResponse {
+  readonly id: string;
+  /** `null` for host-level assignments. */
+  readonly tenantId: string | null;
   readonly tagId: string;
   readonly targetType: string;
   readonly targetId: string;
   readonly assignedAt: string;
+  readonly assignedByUserId: string;
 }
 
 // ─── Categories ─────────────────────────────────────────────────────────────
 
 export interface CategoryResponse {
   readonly id: string;
+  /** `null` for host-level (cross-tenant) categories. */
+  readonly tenantId: string | null;
   readonly scope: string;
   /** `null` when the node is a scope root. */
   readonly parentId: string | null;
@@ -76,12 +87,23 @@ export interface CategoryResponse {
   readonly name: string;
   /** 0 for scope roots; one greater than the parent's depth otherwise. */
   readonly depth: number;
+  /** `null` when no icon is assigned. */
+  readonly iconName: string | null;
+  readonly hideOnEntityCard: boolean;
+  /**
+   * Derived field for tree-lazy-load: true when at least one child exists.
+   * Not in the published OpenAPI spec but sent by the backend implementation.
+   */
   readonly hasChildren: boolean;
 }
 
 /**
  * Single-category detail, augmented with the full breadcrumb (root → leaf,
  * inclusive of the queried node) for UI rendering without extra round-trips.
+ *
+ * Wire format from the backend: `{ category: CategoryResponse, breadcrumb: CategoryResponse[] }`.
+ * The `getCategory` API function adapts this into the flat shape so components
+ * can access all fields directly without an extra `.category` dereference.
  */
 export interface CategoryDetailResponse extends CategoryResponse {
   readonly breadcrumb: readonly CategoryResponse[];
@@ -98,10 +120,20 @@ export interface CreateCategoryRequest {
   /** `null` to create a scope root. */
   readonly parentId: string | null;
   readonly name: string;
+  /** `null` to create without an icon. */
+  readonly iconName: string | null;
+  /** `null` lets the backend apply its default (false). */
+  readonly hideOnEntityCard: boolean | null;
 }
 
+/**
+ * PATCH payload for {@link CategoryResponse}. All fields are required-but-nullable
+ * (OpenAPI `required` + `["null","T"]`): pass `null` to leave a field unchanged.
+ */
 export interface UpdateCategoryRequest {
-  readonly name?: string;
+  readonly name: string | null;
+  readonly iconName: string | null;
+  readonly hideOnEntityCard: boolean | null;
 }
 
 export interface MoveCategoryRequest {
@@ -112,16 +144,24 @@ export interface MoveCategoryRequest {
 export type CategoryAssignmentRequest = TaxonomyTargetRef;
 
 export interface CategoryAssignmentResponse {
+  readonly id: string;
+  /** `null` for host-level assignments. */
+  readonly tenantId: string | null;
   readonly categoryId: string;
   readonly targetType: string;
   readonly targetId: string;
   readonly assignedAt: string;
+  readonly assignedByUserId: string;
 }
 
 // ─── Search ─────────────────────────────────────────────────────────────────
 
 export interface TaxonomySearchFilter {
   readonly q: string;
+  /** Pass `'*'` for cross-scope search; omit to restrict to a single scope. */
+  readonly scope?: string;
+  readonly skip?: number;
+  readonly take?: number;
 }
 
 export interface TaxonomySearchResultItem {

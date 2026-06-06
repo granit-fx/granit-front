@@ -32,6 +32,20 @@ export async function listTags(
 }
 
 /**
+ * Get a single tag by id.
+ *
+ * `GET {basePath}/tags/{id}`
+ */
+export async function getTag(
+  client: AxiosInstance,
+  basePath: string,
+  id: string
+): Promise<TagResponse> {
+  const response = await client.get<TagResponse>(`${basePath}/tags/${encodeURIComponent(id)}`);
+  return response.data;
+}
+
+/**
  * Create a tag in the given scope.
  *
  * `POST {basePath}/tags`
@@ -46,8 +60,8 @@ export async function createTag(
 }
 
 /**
- * Patch a tag — rename, recolor, or toggle `hideOnEntityCard`. Only supplied
- * fields are mutated.
+ * Patch a tag — rename, recolor, or toggle `hideOnEntityCard`. Pass `null`
+ * for any field to leave it unchanged server-side.
  *
  * `PATCH {basePath}/tags/{id}`
  */
@@ -113,19 +127,20 @@ export async function unassignTag(
 }
 
 /**
- * List all tag assignments for a polymorphic target — used by entity cards
- * to render their chip strip.
+ * List all tags currently assigned to a polymorphic target — used by entity
+ * cards to render their chip strip.
  *
- * `GET {basePath}/tags/assignments`
+ * Calls `GET {basePath}/assignments` (not `/tags/assignments`), which returns
+ * the full `TagResponse` objects for each assigned tag.
  */
-export async function getTagAssignments(
+export async function listAssignedTags(
   client: AxiosInstance,
   basePath: string,
   target: { readonly targetType: string; readonly targetId: string }
-): Promise<readonly TagAssignmentResponse[]> {
-  const response = await client.get<readonly TagAssignmentResponse[]>(
-    `${basePath}/tags/assignments`,
+): Promise<readonly TagResponse[]> {
+  const response = await client.get<{ readonly items: readonly TagResponse[] }>(
+    `${basePath}/assignments`,
     { params: { targetType: target.targetType, targetId: target.targetId } }
   );
-  return response.data;
+  return response.data?.items ?? [];
 }

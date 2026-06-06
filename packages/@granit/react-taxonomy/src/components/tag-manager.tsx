@@ -128,9 +128,9 @@ export function TagManager({
     updateTag.mutate({
       id: tag.id,
       request: {
-        name: patch.name,
-        color: patch.color,
-        hideOnEntityCard: patch.hideOnEntityCard,
+        name: patch.name ?? null,
+        color: patch.color ?? null,
+        hideOnEntityCard: patch.hideOnEntityCard ?? null,
       },
     });
   }

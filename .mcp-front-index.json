@@ -6454,7 +6454,7 @@
         {
           "name": "useTagAssignments",
           "kind": "function",
-          "signature": "function useTagAssignments( target: TaxonomyTargetRef ): UseQueryResult<readonly TagAssignmentResponse[]>"
+          "signature": "function useTagAssignments( target: TaxonomyTargetRef ): UseQueryResult<readonly TagResponse[]>"
         },
         {
           "name": "useTags",

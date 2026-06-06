@@ -7,24 +7,18 @@ import { useTagAssignments, useTags } from '../hooks/use-tags';
 import { TaxonomyProvider } from '../providers/taxonomy-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { TagAssignmentResponse, TagResponse } from '@granit/taxonomy';
+import type { TagResponse } from '@granit/taxonomy';
 import type { ReactNode } from 'react';
 
 const sampleTag: TagResponse = {
   id: 'tag-1',
+  tenantId: null,
   scope: 'documents',
   name: 'Urgent',
   color: '#FF0000',
   hideOnEntityCard: false,
   createdAt: '2026-05-01T08:00:00Z',
   updatedAt: '2026-05-01T08:00:00Z',
-};
-
-const sampleAssignment: TagAssignmentResponse = {
-  tagId: 'tag-1',
-  targetType: 'Granit.Documents.Domain.Document',
-  targetId: 'doc-1',
-  assignedAt: '2026-05-02T12:00:00Z',
 };
 
 function createWrapper(client: AxiosInstance, basePath?: string) {
@@ -92,9 +86,9 @@ describe('useTagAssignments', () => {
     vi.restoreAllMocks();
   });
 
-  it('GETs /tags/assignments with the target ref', async () => {
+  it('GETs /assignments with the target ref and returns TagResponse[]', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue({ data: [sampleAssignment] });
+    vi.mocked(client.get).mockResolvedValue({ data: { items: [sampleTag] } });
 
     const { result } = renderHook(
       () =>
@@ -106,13 +100,13 @@ describe('useTagAssignments', () => {
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/api/v1/taxonomy/tags/assignments', {
+    expect(client.get).toHaveBeenCalledWith('/api/v1/taxonomy/assignments', {
       params: {
         targetType: 'Granit.Documents.Domain.Document',
         targetId: 'doc-1',
       },
     });
-    expect(result.current.data).toEqual([sampleAssignment]);
+    expect(result.current.data).toEqual([sampleTag]);
   });
 
   it('does not fire the query when the target is incomplete', async () => {

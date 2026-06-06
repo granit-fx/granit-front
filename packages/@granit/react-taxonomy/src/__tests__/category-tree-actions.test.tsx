@@ -13,11 +13,14 @@ import type { ReactNode } from 'react';
 
 const root: CategoryResponse = {
   id: 'cat-1',
+  tenantId: null,
   scope: 'documents',
   parentId: null,
   path: '/legal',
   name: 'legal',
   depth: 0,
+  iconName: null,
+  hideOnEntityCard: false,
   hasChildren: false,
 };
 

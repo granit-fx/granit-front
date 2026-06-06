@@ -12,11 +12,12 @@ import { TagManager } from '../components/tag-manager.tsx';
 import { TaxonomyProvider } from '../providers/taxonomy-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { CategoryResponse, TagAssignmentResponse, TagResponse } from '@granit/taxonomy';
+import type { CategoryResponse, TagResponse } from '@granit/taxonomy';
 import type { ReactNode } from 'react';
 
 const tag: TagResponse = {
   id: 'tag-1',
+  tenantId: null,
   scope: 'documents',
   name: 'Urgent',
   color: '#FF0000',
@@ -27,11 +28,14 @@ const tag: TagResponse = {
 
 const root: CategoryResponse = {
   id: 'cat-1',
+  tenantId: null,
   scope: 'documents',
   parentId: null,
   path: '/legal',
   name: 'legal',
   depth: 0,
+  iconName: null,
+  hideOnEntityCard: false,
   hasChildren: false,
 };
 
@@ -49,15 +53,8 @@ function createWrapper(client: AxiosInstance) {
 describe('TagChipStrip — manage flow', () => {
   it('unassigns when × is clicked on a chip under canManage', async () => {
     const client = createMockClient();
-    const assignment: TagAssignmentResponse = {
-      tagId: 'tag-1',
-      targetType: 'Granit.Documents.Domain.Document',
-      targetId: 'doc-1',
-      assignedAt: '2026-05-02T12:00:00Z',
-    };
     vi.mocked(client.get).mockImplementation(((url: string) => {
-      if (url.endsWith('/tags/assignments')) return Promise.resolve({ data: [assignment] });
-      if (url.endsWith('/tags')) return Promise.resolve({ data: [tag] });
+      if (url.includes('/assignments')) return Promise.resolve({ data: { items: [tag] } });
       return Promise.resolve({ data: [] });
     }) as AxiosInstance['get']);
     vi.mocked(client.delete).mockResolvedValue({ data: undefined });

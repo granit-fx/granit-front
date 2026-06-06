@@ -21,19 +21,25 @@ import type { ReactNode } from 'react';
 
 const sampleCategory: CategoryResponse = {
   id: 'cat-1',
+  tenantId: null,
   scope: 'documents',
   parentId: null,
   path: '/legal',
   name: 'legal',
   depth: 0,
+  iconName: null,
+  hideOnEntityCard: false,
   hasChildren: true,
 };
 
 const sampleAssignment: CategoryAssignmentResponse = {
+  id: 'ca-1',
+  tenantId: null,
   categoryId: 'cat-1',
   targetType: 'Granit.Documents.Domain.Document',
   targetId: 'doc-1',
   assignedAt: '2026-05-02T12:00:00Z',
+  assignedByUserId: 'user-1',
 };
 
 interface Harness {
@@ -64,7 +70,13 @@ describe('useCreateCategory', () => {
     const invalidate = vi.spyOn(queryClient, 'invalidateQueries');
 
     const { result } = renderHook(() => useCreateCategory('documents'), { wrapper });
-    await result.current.mutateAsync({ scope: 'documents', parentId: null, name: 'legal' });
+    await result.current.mutateAsync({
+      scope: 'documents',
+      parentId: null,
+      name: 'legal',
+      iconName: null,
+      hideOnEntityCard: null,
+    });
 
     expect(client.post).toHaveBeenCalledWith('/api/v1/taxonomy/categories', expect.any(Object));
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
@@ -83,7 +95,10 @@ describe('useUpdateCategory', () => {
     const invalidate = vi.spyOn(queryClient, 'invalidateQueries');
 
     const { result } = renderHook(() => useUpdateCategory('documents'), { wrapper });
-    await result.current.mutateAsync({ id: 'cat-1', request: { name: 'agreements' } });
+    await result.current.mutateAsync({
+      id: 'cat-1',
+      request: { name: 'agreements', iconName: null, hideOnEntityCard: null },
+    });
 
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
     expect(keys).toEqual([

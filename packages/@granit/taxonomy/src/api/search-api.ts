@@ -13,11 +13,21 @@ import type { AxiosInstance } from '@granit/api-client';
  * to entity stores (apps that surface richer results wire their own
  * cross-entity search on top of this).
  */
+interface BackendSearchTag {
+  readonly id: string;
+  readonly name: string;
+  readonly color: string;
+  readonly scope: string;
+}
+
 interface BackendSearchResponse {
-  readonly tags?: ReadonlyArray<{ readonly id: string; readonly name: string }>;
+  readonly tags?: ReadonlyArray<BackendSearchTag>;
   readonly hits?: Readonly<
     Record<string, ReadonlyArray<{ readonly targetId: string; readonly tagIds: readonly string[] }>>
   >;
+  readonly totalCount?: number;
+  readonly skip?: number;
+  readonly take?: number;
 }
 
 function isBackendEnvelope(
@@ -55,9 +65,14 @@ export async function searchTaxonomy(
   basePath: string,
   filter: TaxonomySearchFilter
 ): Promise<readonly TaxonomySearchResultGroup[]> {
+  const params: Record<string, string | number> = { q: filter.q };
+  if (filter.scope !== undefined) params.scope = filter.scope;
+  if (filter.skip !== undefined) params.skip = filter.skip;
+  if (filter.take !== undefined) params.take = filter.take;
+
   const response = await client.get<BackendSearchResponse | readonly TaxonomySearchResultGroup[]>(
     `${basePath}/search`,
-    { params: { q: filter.q } }
+    { params }
   );
   const data = response.data;
   if (isBackendEnvelope(data)) return adaptBackendResponse(data);

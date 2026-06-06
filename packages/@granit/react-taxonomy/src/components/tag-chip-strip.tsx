@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
 import { useAssignTag, useUnassignTag } from '../hooks/use-tag-mutations';
-import { useTags, useTagAssignments } from '../hooks/use-tags';
+import { useTagAssignments } from '../hooks/use-tags';
 
 import { TagAutocomplete } from './tag-autocomplete.tsx';
 import { TagChip } from './tag-chip.tsx';
@@ -60,20 +60,14 @@ export function TagChipStrip({
 
   const target = { targetType, targetId };
   const assignmentsQuery = useTagAssignments(target);
-  const tagsQuery = useTags({ scope });
   const assign = useAssignTag();
   const unassign = useUnassignTag();
 
   const tags = useMemo<readonly TagResponse[]>(() => {
-    const assignments = assignmentsQuery.data ?? [];
-    const byId = new Map((tagsQuery.data ?? []).map((tag) => [tag.id, tag]));
-    return assignments.flatMap((assignment) => {
-      const tag = byId.get(assignment.tagId);
-      if (!tag) return [];
-      if (hideOnCardOnly && tag.hideOnEntityCard) return [];
-      return [tag];
-    });
-  }, [assignmentsQuery.data, tagsQuery.data, hideOnCardOnly]);
+    const assigned = assignmentsQuery.data ?? [];
+    if (!hideOnCardOnly) return assigned;
+    return assigned.filter((tag) => !tag.hideOnEntityCard);
+  }, [assignmentsQuery.data, hideOnCardOnly]);
 
   const value = useMemo(() => tags.map((tag) => tag.id), [tags]);
 

@@ -24,6 +24,7 @@ export function createTaxonomyStore(): TaxonomyStore {
     tags: [
       {
         id: 'tag-doc-contract',
+        tenantId: null,
         scope: 'documents',
         name: 'Contract',
         color: '#3B82F6',
@@ -33,6 +34,7 @@ export function createTaxonomyStore(): TaxonomyStore {
       },
       {
         id: 'tag-doc-invoice',
+        tenantId: null,
         scope: 'documents',
         name: 'Invoice',
         color: '#10B981',
@@ -42,6 +44,7 @@ export function createTaxonomyStore(): TaxonomyStore {
       },
       {
         id: 'tag-doc-internal',
+        tenantId: null,
         scope: 'documents',
         name: 'Internal',
         color: '#A855F7',
@@ -51,6 +54,7 @@ export function createTaxonomyStore(): TaxonomyStore {
       },
       {
         id: 'tag-party-vip',
+        tenantId: null,
         scope: 'parties',
         name: 'VIP',
         color: '#F59E0B',
@@ -60,6 +64,7 @@ export function createTaxonomyStore(): TaxonomyStore {
       },
       {
         id: 'tag-party-prospect',
+        tenantId: null,
         scope: 'parties',
         name: 'Prospect',
         color: '#EF4444',
@@ -71,29 +76,38 @@ export function createTaxonomyStore(): TaxonomyStore {
     categories: [
       {
         id: 'cat-doc-legal',
+        tenantId: null,
         scope: 'documents',
         parentId: null,
         path: '/legal',
         name: 'Legal',
         depth: 0,
+        iconName: null,
+        hideOnEntityCard: false,
         hasChildren: true,
       },
       {
         id: 'cat-doc-legal-contracts',
+        tenantId: null,
         scope: 'documents',
         parentId: 'cat-doc-legal',
         path: '/legal/contracts',
         name: 'Contracts',
         depth: 1,
+        iconName: null,
+        hideOnEntityCard: false,
         hasChildren: false,
       },
       {
         id: 'cat-doc-finance',
+        tenantId: null,
         scope: 'documents',
         parentId: null,
         path: '/finance',
         name: 'Finance',
         depth: 0,
+        iconName: null,
+        hideOnEntityCard: false,
         hasChildren: false,
       },
     ],

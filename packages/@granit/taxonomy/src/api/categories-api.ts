@@ -40,6 +40,11 @@ export async function listCategories(
 /**
  * Get a single category, including its full root→leaf breadcrumb.
  *
+ * Wire format: `{ category: CategoryResponse, breadcrumb: CategoryResponse[] }`.
+ * This function adapts the envelope into the flat {@link CategoryDetailResponse}
+ * so components can access all category fields without an extra `.category`
+ * dereference.
+ *
  * `GET {basePath}/categories/{id}`
  */
 export async function getCategory(
@@ -47,10 +52,12 @@ export async function getCategory(
   basePath: string,
   id: string
 ): Promise<CategoryDetailResponse> {
-  const response = await client.get<CategoryDetailResponse>(
-    `${basePath}/categories/${encodeURIComponent(id)}`
-  );
-  return response.data;
+  const response = await client.get<{
+    readonly category: CategoryResponse;
+    readonly breadcrumb: readonly CategoryResponse[];
+  }>(`${basePath}/categories/${encodeURIComponent(id)}`);
+  const { category, breadcrumb } = response.data;
+  return { ...category, breadcrumb };
 }
 
 /**
@@ -68,7 +75,7 @@ export async function createCategory(
 }
 
 /**
- * Patch a category — currently only rename is supported on the backend.
+ * Patch a category. Pass `null` for any field to leave it unchanged.
  *
  * `PATCH {basePath}/categories/{id}`
  */
@@ -119,9 +126,8 @@ export async function deleteCategory(
 }
 
 /**
- * Assign a category to a polymorphic target. Categories are single-assignment
- * per scope: re-posting a different `categoryId` for the same target updates
- * the assignment in place rather than 409'ing.
+ * Assign (or re-assign — single-assignment, idempotent server-side) a
+ * category to a target.
  *
  * `POST {basePath}/categories/{id}/assign`
  */

@@ -13,29 +13,38 @@ import type { ReactNode } from 'react';
 
 const detail: CategoryDetailResponse = {
   id: 'cat-2',
+  tenantId: null,
   scope: 'documents',
   parentId: 'cat-1',
   path: '/legal/contracts',
   name: 'contracts',
   depth: 1,
+  iconName: null,
+  hideOnEntityCard: false,
   hasChildren: false,
   breadcrumb: [
     {
       id: 'cat-1',
+      tenantId: null,
       scope: 'documents',
       parentId: null,
       path: '/legal',
       name: 'legal',
       depth: 0,
+      iconName: null,
+      hideOnEntityCard: false,
       hasChildren: true,
     },
     {
       id: 'cat-2',
+      tenantId: null,
       scope: 'documents',
       parentId: 'cat-1',
       path: '/legal/contracts',
       name: 'contracts',
       depth: 1,
+      iconName: null,
+      hideOnEntityCard: false,
       hasChildren: false,
     },
   ],
@@ -121,5 +130,29 @@ describe('CategorySelector', () => {
 
     expect(screen.queryByRole('button', { name: 'Choose…' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Clear' })).toBeNull();
+  });
+
+  it('calls onUnassign after a successful Clear', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ data: detail });
+    vi.mocked(client.delete).mockResolvedValue({ data: undefined });
+    const onUnassign = vi.fn();
+
+    render(
+      <CategorySelector
+        scope="documents"
+        targetType="Granit.Documents.Domain.Document"
+        targetId="doc-1"
+        value="cat-2"
+        canManage
+        onUnassign={onUnassign}
+      />,
+      { wrapper: createWrapper(client) }
+    );
+
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Clear' })).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Clear' }));
+
+    await waitFor(() => expect(onUnassign).toHaveBeenCalledTimes(1));
   });
 });

@@ -47,7 +47,7 @@ describe('searchTaxonomy', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
       axiosResponse({
-        tags: [{ id: 'tag-1', name: 'Urgent' }],
+        tags: [{ id: 'tag-1', name: 'Urgent', color: '#FF0000', scope: 'documents' }],
         hits: {
           'Granit.Documents.Domain.Document': [{ targetId: 'doc-1', tagIds: ['tag-1'] }],
         },
@@ -79,7 +79,13 @@ describe('searchTaxonomy', () => {
   it('returns [] when the backend envelope has no hits', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
-      axiosResponse({ tags: [], hits: {}, totalCount: 0, skip: 0, take: 50 })
+      axiosResponse({
+        tags: [] as { id: string; name: string; color: string; scope: string }[],
+        hits: {},
+        totalCount: 0,
+        skip: 0,
+        take: 50,
+      })
     );
 
     const result = await searchTaxonomy(client, basePath, { q: 'nothing' });

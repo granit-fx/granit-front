@@ -5,7 +5,8 @@ import {
   assignTag,
   createTag,
   deleteTag,
-  getTagAssignments,
+  getTag,
+  listAssignedTags,
   listTags,
   unassignTag,
   updateTag,
@@ -23,6 +24,7 @@ const basePath = '/api/v1/taxonomy';
 
 const sampleTag: TagResponse = {
   id: 'tag-1',
+  tenantId: null,
   scope: 'documents',
   name: 'Urgent',
   color: '#FF0000',
@@ -32,10 +34,13 @@ const sampleTag: TagResponse = {
 };
 
 const sampleAssignment: TagAssignmentResponse = {
+  id: 'ta-1',
+  tenantId: null,
   tagId: 'tag-1',
   targetType: 'Granit.Documents.Domain.Document',
   targetId: 'doc-1',
   assignedAt: '2026-05-02T12:00:00Z',
+  assignedByUserId: 'user-1',
 };
 
 describe('listTags', () => {
@@ -83,6 +88,18 @@ describe('listTags', () => {
   });
 });
 
+describe('getTag', () => {
+  it('GETs /tags/{id}', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(sampleTag));
+
+    const result = await getTag(client, basePath, 'tag-1');
+
+    expect(client.get).toHaveBeenCalledWith(`${basePath}/tags/tag-1`);
+    expect(result).toEqual(sampleTag);
+  });
+});
+
 describe('createTag', () => {
   it('POSTs the request body to /tags', async () => {
     const client = createMockClient();
@@ -99,12 +116,27 @@ describe('createTag', () => {
     expect(client.post).toHaveBeenCalledWith(`${basePath}/tags`, request);
     expect(result).toEqual(sampleTag);
   });
+
+  it('accepts hideOnEntityCard: null', async () => {
+    const client = createMockClient();
+    const request: CreateTagRequest = {
+      scope: 'documents',
+      name: 'Draft',
+      color: '#AABBCC',
+      hideOnEntityCard: null,
+    };
+    vi.mocked(client.post).mockResolvedValue(axiosResponse(sampleTag));
+
+    await createTag(client, basePath, request);
+
+    expect(client.post).toHaveBeenCalledWith(`${basePath}/tags`, request);
+  });
 });
 
 describe('updateTag', () => {
-  it('PATCHes /tags/{id} with the partial payload and url-encodes the id', async () => {
+  it('PATCHes /tags/{id} with the nullable payload and url-encodes the id', async () => {
     const client = createMockClient();
-    const request: UpdateTagRequest = { name: 'Critical' };
+    const request: UpdateTagRequest = { name: 'Critical', color: null, hideOnEntityCard: null };
     vi.mocked(client.patch).mockResolvedValue(axiosResponse({ ...sampleTag, name: 'Critical' }));
 
     const result = await updateTag(client, basePath, 'tag/with slash', request);
@@ -157,22 +189,22 @@ describe('unassignTag', () => {
   });
 });
 
-describe('getTagAssignments', () => {
-  it('GETs /tags/assignments with targetType + targetId query params', async () => {
+describe('listAssignedTags', () => {
+  it('GETs /assignments (not /tags/assignments) and unwraps the items envelope', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleAssignment]));
+    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [sampleTag] }));
 
-    const result = await getTagAssignments(client, basePath, {
+    const result = await listAssignedTags(client, basePath, {
       targetType: 'Granit.Documents.Domain.Document',
       targetId: 'doc-1',
     });
 
-    expect(client.get).toHaveBeenCalledWith(`${basePath}/tags/assignments`, {
+    expect(client.get).toHaveBeenCalledWith(`${basePath}/assignments`, {
       params: {
         targetType: 'Granit.Documents.Domain.Document',
         targetId: 'doc-1',
       },
     });
-    expect(result).toEqual([sampleAssignment]);
+    expect(result).toEqual([sampleTag]);
   });
 });

@@ -89,7 +89,7 @@ function CategoryNode({
     const name = globalThis.prompt('Category name?');
     if (!name?.trim()) return;
     createCategory.mutate(
-      { scope, parentId: category.id, name: name.trim() },
+      { scope, parentId: category.id, name: name.trim(), iconName: null, hideOnEntityCard: null },
       {
         // Auto-expand the parent so the freshly invalidated children query
         // actually fires (`enabled: expanded`) and the new node becomes
@@ -105,7 +105,7 @@ function CategoryNode({
     const next = globalThis.prompt('Rename category', category.name);
     if (!next?.trim() || next.trim() === category.name) return;
     updateCategory.mutate(
-      { id: category.id, request: { name: next.trim() } },
+      { id: category.id, request: { name: next.trim(), iconName: null, hideOnEntityCard: null } },
       { onError: (err) => setError(extractProblemDetail(err)) }
     );
   }
@@ -265,7 +265,7 @@ export function CategoryTree({
     const name = globalThis.prompt('Root category name?');
     if (!name?.trim()) return;
     createCategory.mutate(
-      { scope, parentId: null, name: name.trim() },
+      { scope, parentId: null, name: name.trim(), iconName: null, hideOnEntityCard: null },
       {
         onError: (err) => {
           const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data

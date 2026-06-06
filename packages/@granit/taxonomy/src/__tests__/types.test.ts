@@ -15,9 +15,10 @@ import type {
 } from '../types/index';
 
 describe('Taxonomy types', () => {
-  it('TagResponse carries the readonly hex color contract + audit timestamps', () => {
+  it('TagResponse carries the readonly hex color contract + tenantId + audit timestamps', () => {
     expectTypeOf<TagResponse>().toMatchTypeOf<{
       readonly id: string;
+      readonly tenantId: string | null;
       readonly scope: string;
       readonly name: string;
       readonly color: HexColor;
@@ -35,11 +36,14 @@ describe('Taxonomy types', () => {
     expectTypeOf<CategoryAssignmentRequest>().toEqualTypeOf<TaxonomyTargetRef>();
   });
 
-  it('CategoryResponse parentId is nullable for scope roots', () => {
+  it('CategoryResponse carries all required fields including tenantId, iconName, hideOnEntityCard', () => {
     expectTypeOf<CategoryResponse>().toMatchTypeOf<{
+      readonly tenantId: string | null;
       readonly parentId: string | null;
       readonly path: string;
       readonly depth: number;
+      readonly iconName: string | null;
+      readonly hideOnEntityCard: boolean;
       readonly hasChildren: boolean;
     }>();
   });

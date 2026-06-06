@@ -13,6 +13,7 @@ const basePath = '/api/v1';
 
 const sampleTag: TagResponse = {
   id: 'tag-1',
+  tenantId: null,
   scope: 'documents',
   name: 'Urgent',
   color: '#FF0000',

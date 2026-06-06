@@ -8,6 +8,7 @@ import type { TagResponse } from '@granit/taxonomy';
 
 const sampleTag: TagResponse = {
   id: 'tag-1',
+  tenantId: null,
   scope: 'documents',
   name: 'Urgent',
   color: '#FF0000',

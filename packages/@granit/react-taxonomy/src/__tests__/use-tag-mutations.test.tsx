@@ -20,6 +20,7 @@ import type { ReactNode } from 'react';
 
 const sampleTag: TagResponse = {
   id: 'tag-1',
+  tenantId: null,
   scope: 'documents',
   name: 'Urgent',
   color: '#FF0000',
@@ -29,10 +30,13 @@ const sampleTag: TagResponse = {
 };
 
 const sampleAssignment: TagAssignmentResponse = {
+  id: 'ta-1',
+  tenantId: null,
   tagId: 'tag-1',
   targetType: 'Granit.Documents.Domain.Document',
   targetId: 'doc-1',
   assignedAt: '2026-05-02T12:00:00Z',
+  assignedByUserId: 'user-1',
 };
 
 interface Harness {
@@ -87,7 +91,10 @@ describe('useUpdateTag', () => {
     const invalidate = vi.spyOn(queryClient, 'invalidateQueries');
 
     const { result } = renderHook(() => useUpdateTag('documents'), { wrapper });
-    await result.current.mutateAsync({ id: 'tag-1', request: { color: '#0000FF' } });
+    await result.current.mutateAsync({
+      id: 'tag-1',
+      request: { name: null, color: '#0000FF', hideOnEntityCard: null },
+    });
 
     expect(client.patch).toHaveBeenCalledWith('/api/v1/taxonomy/tags/tag-1', expect.any(Object));
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
@@ -194,7 +201,10 @@ describe('error propagation', () => {
 
     const { result } = renderHook(() => useUpdateTag('documents'), { wrapper });
     await expect(
-      result.current.mutateAsync({ id: 'tag-1', request: { name: 'Urgent' } })
+      result.current.mutateAsync({
+        id: 'tag-1',
+        request: { name: 'Urgent', color: null, hideOnEntityCard: null },
+      })
     ).rejects.toMatchObject({ response: { status: 409 } });
 
     expect(invalidate).not.toHaveBeenCalled();

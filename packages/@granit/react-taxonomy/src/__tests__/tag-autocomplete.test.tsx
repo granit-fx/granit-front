@@ -13,6 +13,7 @@ import type { ReactNode } from 'react';
 
 const sampleTag: TagResponse = {
   id: 'tag-1',
+  tenantId: null,
   scope: 'documents',
   name: 'Urgent',
   color: '#FF0000',
@@ -23,6 +24,7 @@ const sampleTag: TagResponse = {
 
 const otherTag: TagResponse = {
   id: 'tag-2',
+  tenantId: null,
   scope: 'documents',
   name: 'Internal',
   color: '#00FF00',

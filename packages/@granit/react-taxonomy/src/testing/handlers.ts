@@ -9,6 +9,7 @@ import type {
   CategoryResponse,
   CreateCategoryRequest,
   CreateTagRequest,
+  HexColor,
   MoveCategoryRequest,
   TagAssignmentRequest,
   TagResponse,
@@ -46,6 +47,17 @@ function recomputeHasChildren(scope: string, parentId: string | null): void {
   store.categories[idx] = { ...parent, hasChildren: stillHas };
 }
 
+function buildBreadcrumb(cat: CategoryResponse): readonly CategoryResponse[] {
+  const crumbs: CategoryResponse[] = [];
+  let current: CategoryResponse | undefined = cat;
+  while (current) {
+    crumbs.unshift(current);
+    const parentId: string | null = current.parentId;
+    current = parentId ? store.categories.find((c) => c.id === parentId) : undefined;
+  }
+  return crumbs;
+}
+
 /**
  * Create stateful MSW handlers for the taxonomy endpoints (tags, categories,
  * assignments, cross-entity search). Handlers mutate an in-memory store —
@@ -64,14 +76,21 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       if (q) tags = tags.filter((t) => t.name.toLowerCase().includes(q));
       return HttpResponse.json({ items: tags });
     }),
+    http.get(`${baseUrl}/tags/:id`, ({ params }) => {
+      const tag = store.tags.find((t) => t.id === params.id);
+      return tag
+        ? HttpResponse.json(tag)
+        : HttpResponse.json({ error: 'Not found' }, { status: 404 });
+    }),
     http.post(`${baseUrl}/tags`, async ({ request }) => {
       const body = (await request.json()) as CreateTagRequest;
       const tag: TagResponse = {
         id: newId('tag'),
+        tenantId: null,
         scope: body.scope,
         name: body.name,
         color: body.color,
-        hideOnEntityCard: body.hideOnEntityCard,
+        hideOnEntityCard: body.hideOnEntityCard ?? false,
         createdAt: now(),
         updatedAt: now(),
       };
@@ -83,7 +102,13 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const idx = store.tags.findIndex((t) => t.id === params.id);
       const existing = idx === -1 ? undefined : store.tags[idx];
       if (!existing) return HttpResponse.json({ error: 'Not found' }, { status: 404 });
-      const next: TagResponse = { ...existing, ...body, updatedAt: now() };
+      const next: TagResponse = {
+        ...existing,
+        name: body.name ?? existing.name,
+        color: (body.color ?? existing.color) as HexColor,
+        hideOnEntityCard: body.hideOnEntityCard ?? existing.hideOnEntityCard,
+        updatedAt: now(),
+      };
       store.tags[idx] = next;
       return HttpResponse.json(next);
     }),
@@ -95,10 +120,13 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
     http.post(`${baseUrl}/tags/:id/assign`, async ({ params, request }) => {
       const body = (await request.json()) as TagAssignmentRequest;
       const assignment = {
+        id: newId('ta'),
+        tenantId: null as string | null,
         tagId: params.id as string,
         targetType: body.targetType,
         targetId: body.targetId,
         assignedAt: now(),
+        assignedByUserId: 'mock-user',
       };
       store.tagAssignments = [
         ...store.tagAssignments.filter(
@@ -124,13 +152,19 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       );
       return new HttpResponse(null, { status: 204 });
     }),
-    http.get(`${baseUrl}/tags/assignments`, ({ request }) => {
+
+    // ─── Tag assignments (per-target tag list) ───────────────────────────────
+    http.get(`${baseUrl}/assignments`, ({ request }) => {
       const url = new URL(request.url);
       const targetType = url.searchParams.get('targetType');
       const targetId = url.searchParams.get('targetId');
-      return HttpResponse.json(
-        store.tagAssignments.filter((a) => a.targetType === targetType && a.targetId === targetId)
+      const matchedTagIds = new Set(
+        store.tagAssignments
+          .filter((a) => a.targetType === targetType && a.targetId === targetId)
+          .map((a) => a.tagId)
       );
+      const items = store.tags.filter((t) => matchedTagIds.has(t.id));
+      return HttpResponse.json({ items });
     }),
 
     // ─── Categories ─────────────────────────────────────────────────────────
@@ -146,9 +180,8 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
     }),
     http.get(`${baseUrl}/categories/:id`, ({ params }) => {
       const cat = store.categories.find((c) => c.id === params.id);
-      return cat
-        ? HttpResponse.json(cat)
-        : HttpResponse.json({ error: 'Not found' }, { status: 404 });
+      if (!cat) return HttpResponse.json({ error: 'Not found' }, { status: 404 });
+      return HttpResponse.json({ category: cat, breadcrumb: buildBreadcrumb(cat) });
     }),
     http.post(`${baseUrl}/categories`, async ({ request }) => {
       const body = (await request.json()) as CreateCategoryRequest;
@@ -157,11 +190,14 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
         : null;
       const cat: CategoryResponse = {
         id: newId('cat'),
+        tenantId: null,
         scope: body.scope,
         parentId: body.parentId,
         path: parent ? `${parent.path}/${body.name.toLowerCase()}` : `/${body.name.toLowerCase()}`,
         name: body.name,
         depth: parent ? parent.depth + 1 : 0,
+        iconName: body.iconName,
+        hideOnEntityCard: body.hideOnEntityCard ?? false,
         hasChildren: false,
       };
       store.categories.push(cat);
@@ -173,7 +209,12 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const idx = store.categories.findIndex((c) => c.id === params.id);
       const existing = idx === -1 ? undefined : store.categories[idx];
       if (!existing) return HttpResponse.json({ error: 'Not found' }, { status: 404 });
-      const next: CategoryResponse = { ...existing, ...body };
+      const next: CategoryResponse = {
+        ...existing,
+        name: body.name ?? existing.name,
+        iconName: body.iconName ?? existing.iconName,
+        hideOnEntityCard: body.hideOnEntityCard ?? existing.hideOnEntityCard,
+      };
       store.categories[idx] = next;
       return HttpResponse.json(next);
     }),
@@ -185,11 +226,9 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const newParent = body.newParentId
         ? store.categories.find((c) => c.id === body.newParentId)
         : null;
-      // Cross-scope move: target parent exists in another scope.
       if (newParent && newParent.scope !== node.scope) {
         return HttpResponse.json({ detail: 'Cannot move across-scope.' }, { status: 422 });
       }
-      // Cycle: refuse if the new parent is the node itself or one of its descendants.
       if (body.newParentId && wouldCreateCategoryCycle(node.id, body.newParentId)) {
         return HttpResponse.json({ detail: 'Cannot move: cycle detected.' }, { status: 422 });
       }
@@ -211,8 +250,6 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       if (!cat) return new HttpResponse(null, { status: 204 });
       const hasDescendants = store.categories.some((c) => c.parentId === cat.id);
       if (hasDescendants) {
-        // RFC 7807 problem-detail; the framework's CategoryTree matches the
-        // `detail` keyword to map this to the localised error label.
         return HttpResponse.json(
           { detail: 'Cannot delete: this category has descendants.' },
           { status: 422 }
@@ -230,9 +267,41 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return new HttpResponse(null, { status: 204 });
     }),
 
+    // ─── Category assignments ────────────────────────────────────────────────
+    http.post(`${baseUrl}/categories/:id/assign`, async ({ params, request }) => {
+      const body = (await request.json()) as { targetType: string; targetId: string };
+      const existing = store.categoryAssignments.findIndex(
+        (a) => a.targetType === body.targetType && a.targetId === body.targetId
+      );
+      const assignment = {
+        id: existing >= 0 ? store.categoryAssignments[existing]!.id : newId('ca'),
+        tenantId: null as string | null,
+        categoryId: params.id as string,
+        targetType: body.targetType,
+        targetId: body.targetId,
+        assignedAt: now(),
+        assignedByUserId: 'mock-user',
+      };
+      if (existing >= 0) {
+        store.categoryAssignments[existing] = assignment;
+        return HttpResponse.json(assignment, { status: 200 });
+      }
+      store.categoryAssignments.push(assignment);
+      return created(assignment);
+    }),
+    http.delete(`${baseUrl}/categories/assign/:targetType/:targetId`, ({ params }) => {
+      const before = store.categoryAssignments.length;
+      store.categoryAssignments = store.categoryAssignments.filter(
+        (a) => !(a.targetType === params.targetType && a.targetId === params.targetId)
+      );
+      if (store.categoryAssignments.length === before) {
+        return HttpResponse.json({ error: 'Not found' }, { status: 404 });
+      }
+      return new HttpResponse(null, { status: 204 });
+    }),
+
     // ─── Search (cross-entity) ──────────────────────────────────────────────
     http.get(`${baseUrl}/search`, () => {
-      // Empty in mock mode — wire real result groups when entity stores are reachable.
       const groups: readonly TaxonomySearchResultGroup[] = [];
       return HttpResponse.json(groups);
     }),

@@ -13,6 +13,7 @@ import type { ReactNode } from 'react';
 
 const createdTag: TagResponse = {
   id: 'tag-new',
+  tenantId: null,
   scope: 'documents',
   name: 'Brand new',
   color: '#94a3b8',

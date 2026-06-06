@@ -25,21 +25,27 @@ const basePath = '/api/v1/taxonomy';
 
 const sampleRoot: CategoryResponse = {
   id: 'cat-1',
+  tenantId: null,
   scope: 'documents',
   parentId: null,
   path: '/legal',
   name: 'legal',
   depth: 0,
+  iconName: null,
+  hideOnEntityCard: false,
   hasChildren: true,
 };
 
 const sampleChild: CategoryResponse = {
   id: 'cat-2',
+  tenantId: null,
   scope: 'documents',
   parentId: 'cat-1',
   path: '/legal/contracts',
   name: 'contracts',
   depth: 1,
+  iconName: null,
+  hideOnEntityCard: false,
   hasChildren: false,
 };
 
@@ -49,10 +55,13 @@ const sampleDetail: CategoryDetailResponse = {
 };
 
 const sampleAssignment: CategoryAssignmentResponse = {
+  id: 'ca-1',
+  tenantId: null,
   categoryId: 'cat-2',
   targetType: 'Granit.Documents.Domain.Document',
   targetId: 'doc-1',
   assignedAt: '2026-05-02T12:00:00Z',
+  assignedByUserId: 'user-1',
 };
 
 describe('listCategories', () => {
@@ -101,14 +110,31 @@ describe('listCategories', () => {
 });
 
 describe('getCategory', () => {
-  it('GETs /categories/{id} and returns the detail with breadcrumb', async () => {
+  it('GETs /categories/{id}, adapts the wire envelope, and exposes a flat CategoryDetailResponse', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse(sampleDetail));
+    // Wire format: { category: CategoryResponse, breadcrumb: CategoryResponse[] }
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse({ category: sampleChild, breadcrumb: [sampleRoot, sampleChild] })
+    );
 
     const result = await getCategory(client, basePath, 'cat-2');
 
     expect(client.get).toHaveBeenCalledWith(`${basePath}/categories/cat-2`);
+    expect(result.id).toBe(sampleChild.id);
+    expect(result.name).toBe(sampleChild.name);
     expect(result.breadcrumb).toEqual([sampleRoot, sampleChild]);
+  });
+
+  it('flattened result is structurally a CategoryDetailResponse', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse({ category: sampleChild, breadcrumb: [sampleRoot, sampleChild] })
+    );
+
+    const result = await getCategory(client, basePath, 'cat-2');
+    const expected: CategoryDetailResponse = sampleDetail;
+
+    expect(result).toEqual(expected);
   });
 });
 
@@ -119,6 +145,8 @@ describe('createCategory', () => {
       scope: 'documents',
       parentId: null,
       name: 'legal',
+      iconName: null,
+      hideOnEntityCard: null,
     };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(sampleRoot));
 
@@ -130,16 +158,22 @@ describe('createCategory', () => {
 });
 
 describe('updateCategory', () => {
-  it('PATCHes /categories/{id} with the partial payload', async () => {
+  it('PATCHes /categories/{id} with the nullable payload', async () => {
     const client = createMockClient();
     vi.mocked(client.patch).mockResolvedValue(
       axiosResponse({ ...sampleChild, name: 'agreements' })
     );
 
-    const result = await updateCategory(client, basePath, 'cat-2', { name: 'agreements' });
+    const result = await updateCategory(client, basePath, 'cat-2', {
+      name: 'agreements',
+      iconName: null,
+      hideOnEntityCard: null,
+    });
 
     expect(client.patch).toHaveBeenCalledWith(`${basePath}/categories/cat-2`, {
       name: 'agreements',
+      iconName: null,
+      hideOnEntityCard: null,
     });
     expect(result.name).toBe('agreements');
   });
