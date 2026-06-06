@@ -10,13 +10,24 @@ import type { AxiosInstance, AxiosRequestConfig } from '@granit/api-client';
  * permission-filtered sections / items.
  *
  * `GET {basePath}/workspaces`
+ *
+ * Pass `includeShells: false` to omit Framework shell workspaces from the
+ * response — the backend skips computing shell contributions entirely,
+ * which reduces payload size for Tenant-scope contexts.
  */
 export async function getWorkspaceTree(
   client: AxiosInstance,
   basePath: string,
-  config?: AxiosRequestConfig
+  options?: { readonly includeShells?: boolean } & AxiosRequestConfig
 ): Promise<WorkspaceTreeResponse> {
-  const { data } = await client.get<WorkspaceTreeResponse>(`${basePath}/workspaces`, config);
+  const { includeShells, ...config } = options ?? {};
+  const { data } = await client.get<WorkspaceTreeResponse>(`${basePath}/workspaces`, {
+    ...config,
+    params:
+      includeShells !== undefined
+        ? { ...((config.params as Record<string, unknown> | undefined) ?? {}), includeShells }
+        : config.params,
+  });
   return data;
 }
 

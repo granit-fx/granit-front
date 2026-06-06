@@ -38,6 +38,8 @@ const TREE: WorkspaceTreeResponse = {
               dashboardName: null,
               linkUrl: null,
               subWorkspaceName: null,
+              featureName: null,
+              routeName: null,
             },
           ],
         },

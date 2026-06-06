@@ -48,15 +48,16 @@ export function useLandingRedirect(
   options: UseLandingRedirectOptions = {}
 ): UseLandingRedirectReturn {
   const enabled = options.enabled ?? true;
+  const { onResolved } = options;
   const { data: resolved, isLoading } = useLandingRoute({ enabled });
   const firedRef = useRef(false);
 
   useEffect(() => {
     if (!enabled || !resolved || firedRef.current) return;
     firedRef.current = true;
-    options.onResolved?.(resolved);
+    onResolved?.(resolved);
     navigate(resolved.route);
-  }, [enabled, resolved, navigate, options]);
+  }, [enabled, resolved, navigate, onResolved]);
 
   return {
     isResolving: isLoading,

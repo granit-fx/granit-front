@@ -2951,16 +2951,10 @@ importers:
       react:
         specifier: 19.2.7
         version: 19.2.7
-      react-i18next:
-        specifier: ^17.0.0
-        version: 17.0.8(i18next@26.3.0(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
-      '@granit/entities':
-        specifier: workspace:*
-        version: link:../entities
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client

@@ -7619,7 +7619,7 @@
         {
           "name": "getWorkspaceTree",
           "kind": "function",
-          "signature": "async function getWorkspaceTree( client: AxiosInstance, basePath: string, config?: AxiosRequestConfig ): Promise<WorkspaceTreeResponse>"
+          "signature": "async function getWorkspaceTree( client: AxiosInstance, basePath: string, options?:"
         },
         {
           "name": "setPinnedLandingRoute",
