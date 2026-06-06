@@ -13,7 +13,7 @@ import { DEFAULT_BASE_PATH } from '../constants';
 
 import { sampleBalance, sampleTransactions } from './data';
 
-import type { AdminCreditRequest } from '@granit/customer-balance';
+import type { AdminCreditRequest, AdminDebitRequest } from '@granit/customer-balance';
 import type { QueryMetadata } from '@granit/query-engine';
 
 /** Mock /meta payload for the customer balance transactions resource. */
@@ -152,7 +152,7 @@ export const balanceTransactionQueryMetadata: QueryMetadata = {
 
 /**
  * Create stateful MSW handlers for customer balance endpoints.
- * Credit mutations update the in-memory balance amount.
+ * Credit/debit mutations update the in-memory balance amount.
  *
  * @param baseUrl - API base path (default: `/api/v1/customer-balance`)
  */
@@ -172,11 +172,19 @@ export function createCustomerBalanceHandlers(baseUrl = DEFAULT_BASE_PATH) {
     }),
 
     // POST admin credit
-    http.post(`${baseUrl}/credit`, async ({ request }) => {
+    http.post(`${baseUrl}/balance/credit`, async ({ request }) => {
       const body = (await request.json()) as AdminCreditRequest;
       sampleBalance.balance = sampleBalance.balance + body.amount;
       sampleBalance.updatedAt = toISODateString(new Date().toISOString());
       return created({ ...sampleBalance });
+    }),
+
+    // POST admin debit
+    http.post(`${baseUrl}/balance/debit`, async ({ request }) => {
+      const body = (await request.json()) as AdminDebitRequest;
+      sampleBalance.balance = sampleBalance.balance - body.amount;
+      sampleBalance.updatedAt = toISODateString(new Date().toISOString());
+      return HttpResponse.json({ ...sampleBalance });
     }),
   ];
 }

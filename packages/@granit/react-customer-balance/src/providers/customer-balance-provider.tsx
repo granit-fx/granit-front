@@ -63,7 +63,7 @@ export function useCustomerBalanceConfig(): ResolvedCustomerBalanceConfig {
 /** Builds a consistent React Query key for customer-balance operations. */
 export function buildCustomerBalanceQueryKey(
   config: CustomerBalanceConfig,
-  ...segments: readonly string[]
+  ...segments: readonly (string | number)[]
 ): readonly unknown[] {
   const prefix = config.queryKeyPrefix ?? ['customer-balance'];
   return [...prefix, ...segments];

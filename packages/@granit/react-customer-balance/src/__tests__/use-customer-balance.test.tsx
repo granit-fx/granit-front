@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   useAddAdminCredit,
+  useApplyAdminDebit,
   useBalanceTransactions,
   useCustomerBalance,
 } from '../hooks/use-customer-balance';
@@ -15,6 +16,7 @@ import { CustomerBalanceProvider } from '../providers/customer-balance-provider'
 import type { CustomerBalanceConfig } from '../providers/customer-balance-provider';
 import type {
   AdminCreditRequest,
+  AdminDebitRequest,
   BalanceTransactionResponse,
   CustomerBalanceResponse,
 } from '@granit/customer-balance';
@@ -58,16 +60,18 @@ describe('use-customer-balance', () => {
   });
 
   describe('useCustomerBalance', () => {
-    it('fetches the current balance', async () => {
+    it('fetches the current balance with currency param', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: sampleBalance });
 
-      const { result } = renderHook(() => useCustomerBalance(), {
+      const { result } = renderHook(() => useCustomerBalance('EUR'), {
         wrapper: createWrapper(client),
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/v1/customer-balance/balance');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/customer-balance/balance', {
+        params: { currency: 'EUR' },
+      });
       expect(result.current.data).toEqual(sampleBalance);
     });
 
@@ -75,26 +79,31 @@ describe('use-customer-balance', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: sampleBalance });
 
-      const { result } = renderHook(() => useCustomerBalance(), {
+      const { result } = renderHook(() => useCustomerBalance('USD'), {
         wrapper: createWrapper(client, '/custom/balance'),
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/custom/balance/balance');
+      expect(client.get).toHaveBeenCalledWith('/custom/balance/balance', {
+        params: { currency: 'USD' },
+      });
     });
   });
 
   describe('useBalanceTransactions', () => {
-    it('fetches all transactions', async () => {
+    it('fetches transactions with all required params', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: [sampleTransaction] });
 
-      const { result } = renderHook(() => useBalanceTransactions(), {
-        wrapper: createWrapper(client),
-      });
+      const { result } = renderHook(
+        () => useBalanceTransactions({ currency: 'EUR', page: 1, pageSize: 25 }),
+        { wrapper: createWrapper(client) }
+      );
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/v1/customer-balance/transactions');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/customer-balance/transactions', {
+        params: { currency: 'EUR', page: 1, pageSize: 25 },
+      });
       expect(result.current.data).toEqual([sampleTransaction]);
     });
 
@@ -102,9 +111,10 @@ describe('use-customer-balance', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: [] });
 
-      const { result } = renderHook(() => useBalanceTransactions(), {
-        wrapper: createWrapper(client),
-      });
+      const { result } = renderHook(
+        () => useBalanceTransactions({ currency: 'EUR', page: 1, pageSize: 25 }),
+        { wrapper: createWrapper(client) }
+      );
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(result.current.data).toEqual([]);
@@ -112,11 +122,12 @@ describe('use-customer-balance', () => {
   });
 
   describe('useAddAdminCredit', () => {
-    it('posts a credit via POST', async () => {
+    it('posts a credit via POST /balance/credit and returns CustomerBalanceResponse', async () => {
       const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValue({ data: undefined });
+      vi.mocked(client.post).mockResolvedValue({ data: sampleBalance });
 
       const request: AdminCreditRequest = {
+        partyId: 'party-001',
         amount: 50.0,
         currency: 'EUR',
         source: 'Promotional',
@@ -131,14 +142,16 @@ describe('use-customer-balance', () => {
       result.current.mutate(request);
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith('/api/v1/customer-balance/credit', request);
+      expect(client.post).toHaveBeenCalledWith('/api/v1/customer-balance/balance/credit', request);
+      expect(result.current.data).toEqual(sampleBalance);
     });
 
     it('uses custom basePath', async () => {
       const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValue({ data: undefined });
+      vi.mocked(client.post).mockResolvedValue({ data: sampleBalance });
 
       const request: AdminCreditRequest = {
+        partyId: 'party-001',
         amount: 100.0,
         currency: 'USD',
         source: 'ManualAdjustment',
@@ -153,7 +166,54 @@ describe('use-customer-balance', () => {
       result.current.mutate(request);
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.post).toHaveBeenCalledWith('/custom/balance/credit', request);
+      expect(client.post).toHaveBeenCalledWith('/custom/balance/balance/credit', request);
+    });
+  });
+
+  describe('useApplyAdminDebit', () => {
+    it('posts a debit via POST /balance/debit and returns CustomerBalanceResponse', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleBalance });
+
+      const request: AdminDebitRequest = {
+        partyId: 'party-001',
+        amount: 25.0,
+        currency: 'EUR',
+        reason: 'Manual correction',
+      };
+
+      const { result } = renderHook(() => useApplyAdminDebit(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate(request);
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.post).toHaveBeenCalledWith('/api/v1/customer-balance/balance/debit', request);
+      expect(result.current.data).toEqual(sampleBalance);
+    });
+
+    it('passes optional referenceId and referenceType', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleBalance });
+
+      const request: AdminDebitRequest = {
+        partyId: 'party-001',
+        amount: 50.0,
+        currency: 'EUR',
+        reason: 'Invoice adjustment',
+        referenceId: 'ref-uuid-001',
+        referenceType: 'AdminAdjustment',
+      };
+
+      const { result } = renderHook(() => useApplyAdminDebit(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate(request);
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.post).toHaveBeenCalledWith('/api/v1/customer-balance/balance/debit', request);
     });
   });
 });

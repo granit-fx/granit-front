@@ -1,10 +1,28 @@
 /** Request payload for adding an administrative credit to a customer balance. */
 export interface AdminCreditRequest {
+  readonly partyId: string;
   readonly amount: number;
   readonly currency: string;
   readonly source: 'Promotional' | 'ManualAdjustment';
   readonly reason: string;
   readonly expiresAt: string | null;
+}
+
+/** Request payload for applying a manual debit to a customer balance (admin tooling). */
+export interface AdminDebitRequest {
+  readonly partyId: string;
+  readonly amount: number;
+  readonly currency: string;
+  readonly reason: string;
+  readonly referenceId?: string | null;
+  readonly referenceType?: string | null;
+}
+
+/** Query parameters for the list balance transactions endpoint. */
+export interface ListBalanceTransactionsParams {
+  readonly currency: string;
+  readonly page: number;
+  readonly pageSize: number;
 }
 
 /** The current state of a customer's balance account. */
