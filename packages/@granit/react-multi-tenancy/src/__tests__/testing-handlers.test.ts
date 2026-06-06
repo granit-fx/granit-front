@@ -1,14 +1,10 @@
-import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { createMswServer } from '@granit/testing/msw';
+import { describe, expect, it } from 'vitest';
 
 import { createTenantHandlers, tenantQueryMetadata } from '../testing/index';
 
 const BASE = 'http://api.test/api/v1/multi-tenancy';
-const server = setupServer();
-
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+const server = createMswServer();
 
 describe('createTenantHandlers /meta', () => {
   it('responds with tenantQueryMetadata at /tenants/meta', async () => {

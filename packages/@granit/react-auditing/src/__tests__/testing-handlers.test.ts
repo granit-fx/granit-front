@@ -1,5 +1,5 @@
-import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { createMswServer } from '@granit/testing/msw';
+import { describe, expect, it } from 'vitest';
 
 import {
   auditEntityChangeQueryMetadata,
@@ -11,11 +11,7 @@ import {
 import type { AuditEntryDetailResponse, AuditPage } from '@granit/auditing';
 
 const BASE = 'http://api.test/api/v1/auditing';
-const server = setupServer();
-
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+const server = createMswServer();
 
 describe('createAuditHandlers — audit-entries', () => {
   it('serves query metadata at /audit-entries/meta', async () => {

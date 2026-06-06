@@ -48,8 +48,8 @@ export function notFound() {
 }
 
 /** 201 Created — for successful resource creation with a response body. */
-export function created<T extends Record<string, unknown>>(data: T) {
-  return HttpResponse.json(data, { status: 201 });
+export function created<T>(data: T) {
+  return HttpResponse.json(data as unknown as Record<string, unknown>, { status: 201 });
 }
 
 /** 202 Accepted — for asynchronous operations. */

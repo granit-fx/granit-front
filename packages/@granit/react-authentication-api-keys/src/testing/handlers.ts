@@ -1,5 +1,5 @@
 import { parseQueryRequest } from '@granit/query-engine';
-import { notFound } from '@granit/testing/msw';
+import { created, notFound } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
@@ -349,19 +349,16 @@ export function createApiKeyHandlers(baseUrl = `${DEFAULT_BASE_PATH}/api-keys`) 
       };
       apiKeys.push(newKey);
 
-      return HttpResponse.json(
-        {
-          id: newKey.id,
-          rawSecret,
-          prefix,
-          lastFourChars: lastFour,
-          name: body.name,
-          type: body.type,
-          environment: body.environment,
-          expiresAt: body.expiresAt ?? null,
-        },
-        { status: 201 }
-      );
+      return created({
+        id: newKey.id,
+        rawSecret,
+        prefix,
+        lastFourChars: lastFour,
+        name: body.name,
+        type: body.type,
+        environment: body.environment,
+        expiresAt: body.expiresAt ?? null,
+      });
     }),
 
     // POST revoke — backend returns 204 No Content

@@ -5,7 +5,7 @@ import {
   STRING_OPERATORS,
 } from '@granit/query-engine';
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
-import { noContent, notFound } from '@granit/testing/msw';
+import { created, noContent, notFound } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
@@ -216,50 +216,44 @@ export function createPaymentsHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // POST charge
     http.post(`${baseUrl}/charge`, async ({ request }) => {
       const body = (await request.json()) as PaymentChargeRequest;
-      return HttpResponse.json(
-        {
-          id: toEntityId<'PaymentTransaction'>(
-            `txn_mock_${String(sampleTransactions.length + 1).padStart(3, '0')}`
-          ),
-          invoiceId: body.invoiceId,
-          status: 'Processing',
-          amount: body.amount,
-          currency: body.currency as CurrencyCode,
-          providerName: body.providerName,
-          providerTransactionId: null,
-          paymentMethodId: null,
-          actionUrl: null,
-          idempotencyKey: 'idem_mock',
-          failureCode: null,
-          succeededAt: null,
-          canceledAt: null,
-          refunds: [],
-          disputes: [],
-          tenantId: toEntityId<'Tenant'>('tenant_mock'),
-        },
-        { status: 201 }
-      );
+      return created({
+        id: toEntityId<'PaymentTransaction'>(
+          `txn_mock_${String(sampleTransactions.length + 1).padStart(3, '0')}`
+        ),
+        invoiceId: body.invoiceId,
+        status: 'Processing',
+        amount: body.amount,
+        currency: body.currency as CurrencyCode,
+        providerName: body.providerName,
+        providerTransactionId: null,
+        paymentMethodId: null,
+        actionUrl: null,
+        idempotencyKey: 'idem_mock',
+        failureCode: null,
+        succeededAt: null,
+        canceledAt: null,
+        refunds: [],
+        disputes: [],
+        tenantId: toEntityId<'Tenant'>('tenant_mock'),
+      });
     }),
 
     // POST refund
     http.post(`${baseUrl}/transactions/:id/refund`, async ({ params, request }) => {
       const body = (await request.json()) as PaymentRefundRequest;
-      return HttpResponse.json(
-        {
-          id: toEntityId<'PaymentRefund'>(
-            `ref_mock_${String(sampleRefunds.length + 1).padStart(3, '0')}`
-          ),
-          transactionId: params.id,
-          status: 'Pending',
-          amount: body.amount,
-          currency: 'EUR' as CurrencyCode,
-          reason: body.reason,
-          providerRefundId: null,
-          createdAt: toISODateString(new Date().toISOString()),
-          completedAt: null,
-        },
-        { status: 201 }
-      );
+      return created({
+        id: toEntityId<'PaymentRefund'>(
+          `ref_mock_${String(sampleRefunds.length + 1).padStart(3, '0')}`
+        ),
+        transactionId: params.id,
+        status: 'Pending',
+        amount: body.amount,
+        currency: 'EUR' as CurrencyCode,
+        reason: body.reason,
+        providerRefundId: null,
+        createdAt: toISODateString(new Date().toISOString()),
+        completedAt: null,
+      });
     }),
 
     // GET payment methods for the current tenant
@@ -275,21 +269,18 @@ export function createPaymentsHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // POST attach payment method
     http.post(`${baseUrl}/methods/attach`, async ({ request }) => {
       const body = (await request.json()) as PaymentAttachMethodRequest;
-      return HttpResponse.json(
-        {
-          id: toEntityId<'PaymentMethod'>(
-            `pm_mock_${String(samplePaymentMethods.length + 1).padStart(3, '0')}`
-          ),
-          type: body.type,
-          providerName: body.providerName,
-          providerMethodId: `pm_mock_${String(samplePaymentMethods.length + 1).padStart(3, '0')}`,
-          displayLabel: body.type,
-          isDefault: false,
-          expiresAt: null,
-          tenantId: toEntityId<'Tenant'>('tenant_mock'),
-        },
-        { status: 201 }
-      );
+      return created({
+        id: toEntityId<'PaymentMethod'>(
+          `pm_mock_${String(samplePaymentMethods.length + 1).padStart(3, '0')}`
+        ),
+        type: body.type,
+        providerName: body.providerName,
+        providerMethodId: `pm_mock_${String(samplePaymentMethods.length + 1).padStart(3, '0')}`,
+        displayLabel: body.type,
+        isDefault: false,
+        expiresAt: null,
+        tenantId: toEntityId<'Tenant'>('tenant_mock'),
+      });
     }),
 
     // DELETE payment method

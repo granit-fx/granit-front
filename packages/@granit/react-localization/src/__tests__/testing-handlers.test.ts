@@ -1,14 +1,10 @@
-import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { createMswServer } from '@granit/testing/msw';
+import { describe, expect, it } from 'vitest';
 
 import { createLocalizationHandlers, localizationOverrideQueryMetadata } from '../testing/index';
 
 const BASE = 'http://api.test/api/v1/localization';
-const server = setupServer();
-
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+const server = createMswServer();
 
 describe('createLocalizationHandlers /meta', () => {
   it('responds with localizationOverrideQueryMetadata at /overrides/meta', async () => {

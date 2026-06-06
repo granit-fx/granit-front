@@ -2,6 +2,7 @@
 // @granit/react-cms-hostnames/testing — MSW handler factory
 // ---------------------------------------------------------------------------
 
+import { created } from '@granit/testing/msw';
 import { http, HttpResponse, type RequestHandler } from 'msw';
 
 import { mockHostnames } from './data';
@@ -47,7 +48,7 @@ export function createCmsHostnamesHandlers(baseUrl = '/api/cms'): RequestHandler
         certificateStatus: 'Unprovisioned',
       };
       hostnames.push(hostname);
-      return HttpResponse.json(hostname, { status: 201 });
+      return created(hostname);
     }),
 
     http.post(`${collection}/:hostnameId/verify-now`, ({ params }) => {

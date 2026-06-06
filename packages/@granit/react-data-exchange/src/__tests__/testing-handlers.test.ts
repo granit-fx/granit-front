@@ -1,5 +1,5 @@
-import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { createMswServer } from '@granit/testing/msw';
+import { describe, expect, it } from 'vitest';
 
 import {
   createDataExchangeHandlers,
@@ -10,11 +10,7 @@ import {
 const METADATA_BASE = 'http://api.test/api/v1/data-exchange/metadata';
 const IMPORT_BASE = 'http://api.test/api/v1/data-exchange/import';
 const EXPORT_JOBS_BASE = 'http://api.test/api/v1/data-exchange/export/jobs';
-const server = setupServer();
-
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+const server = createMswServer();
 
 describe('createDataExchangeHandlers /meta', () => {
   it('responds with exportJobQueryMetadata at exportJobsBase/meta', async () => {

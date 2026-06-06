@@ -1,14 +1,10 @@
-import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { createMswServer } from '@granit/testing/msw';
+import { describe, expect, it } from 'vitest';
 
 import { createSchedulingHandlers, scheduledActionQueryMetadata } from '../testing/index';
 
 const BASE = 'http://api.test/api/v1/scheduling';
-const server = setupServer();
-
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+const server = createMswServer();
 
 describe('createSchedulingHandlers /meta', () => {
   it('responds with scheduledActionQueryMetadata at /scheduled-actions/meta', async () => {

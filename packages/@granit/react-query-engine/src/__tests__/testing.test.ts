@@ -1,17 +1,15 @@
-import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { createMswServer } from '@granit/testing/msw';
+import { describe, expect, it } from 'vitest';
 
 import { buildEmptyQueryMeta, createQueryMetaHandler } from '../testing/index';
 
 import type { QueryMetadata } from '@granit/query-engine';
 
-const server = setupServer();
+const server = createMswServer();
 
 // 'bypass' lets unhandled requests reach Node's real network stack (→ ENOTFOUND),
 // avoiding MSW stderr noise in tests that deliberately probe non-matching paths.
 beforeAll(() => server.listen({ onUnhandledRequest: 'bypass' }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
 
 const BASE_URL = 'http://api.example.test/api/v1/widgets';
 

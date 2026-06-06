@@ -1,3 +1,4 @@
+import { created } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -52,7 +53,7 @@ export function createHostnamesHandlers(
     http.post<never, CreateManagedHostnameRequest>(`${baseUrl}`, async ({ request }) => {
       const body = await request.json();
       const now = new Date().toISOString();
-      const created: ManagedHostnameResponse = {
+      const newHostname: ManagedHostnameResponse = {
         id: randomId(),
         host: body.host,
         ownerType: body.ownerType,
@@ -80,8 +81,8 @@ export function createHostnamesHandlers(
         modifiedBy: null,
         concurrencyStamp: randomId(),
       };
-      store.push(created);
-      return HttpResponse.json(created, { status: 201 });
+      store.push(newHostname);
+      return created(newHostname);
     }),
 
     http.get(`${baseUrl}/:id`, ({ params }) => {

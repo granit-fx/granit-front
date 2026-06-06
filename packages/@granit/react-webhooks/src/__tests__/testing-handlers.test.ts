@@ -1,5 +1,5 @@
-import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { createMswServer } from '@granit/testing/msw';
+import { describe, expect, it } from 'vitest';
 
 import { createWebhooksHandlers, webhookSubscriptionQueryMetadata } from '../testing/index';
 
@@ -10,11 +10,7 @@ import type {
 } from '@granit/webhooks';
 
 const BASE = 'http://api.test/api/v1/webhooks';
-const server = setupServer();
-
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+const server = createMswServer();
 
 // Backend contract — see WebhookSubscriptionResponse.SigningSecretHint XML doc.
 const HINT_PATTERN = /^whsec_[0-9a-f]{4}\*{16}[0-9a-f]{4}$/;

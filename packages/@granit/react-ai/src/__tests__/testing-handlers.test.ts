@@ -1,14 +1,10 @@
-import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { createMswServer } from '@granit/testing/msw';
+import { describe, expect, it } from 'vitest';
 
 import { aiWorkspaceQueryMetadata, createAIHandlers } from '../testing/index';
 
 const BASE = 'http://api.test/api/v1/ai';
-const server = setupServer();
-
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+const server = createMswServer();
 
 describe('createAIHandlers /meta', () => {
   it('responds with aiWorkspaceQueryMetadata at /workspaces/meta', async () => {

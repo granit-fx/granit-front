@@ -1,15 +1,11 @@
-import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { createMswServer } from '@granit/testing/msw';
+import { describe, expect, it } from 'vitest';
 
 import { createIdentityHandlers, identityUserQueryMetadata } from '../testing/index';
 
 const PROVIDER_BASE = 'http://api.test/api/v1/identity/provider';
 const CACHE_BASE = 'http://api.test/api/v1/identity/users';
-const server = setupServer();
-
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+const server = createMswServer();
 
 describe('createIdentityHandlers /meta', () => {
   it('responds with identityUserQueryMetadata at cacheBase/meta', async () => {

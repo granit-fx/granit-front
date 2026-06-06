@@ -1,5 +1,5 @@
-import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { createMswServer } from '@granit/testing/msw';
+import { describe, expect, it } from 'vitest';
 
 import {
   createSubscriptionsHandlers,
@@ -8,11 +8,7 @@ import {
 } from '../testing/index';
 
 const BASE = 'http://api.test/api/v1/subscriptions';
-const server = setupServer();
-
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+const server = createMswServer();
 
 describe('createSubscriptionsHandlers /meta', () => {
   it('responds with planQueryMetadata at /plans/meta', async () => {

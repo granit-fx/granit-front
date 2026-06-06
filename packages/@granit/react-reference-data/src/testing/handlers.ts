@@ -8,7 +8,7 @@
 // (countries, document-types, …) and full base URL.
 // ---------------------------------------------------------------------------
 
-import { applyStringFilter } from '@granit/testing/msw';
+import { applyStringFilter, created } from '@granit/testing/msw';
 import { toEntityId } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
@@ -189,7 +189,7 @@ export function createReferenceDataHandlers<T extends ReferenceDataEntry>(
       }
       const newEntry = config.createEntry(body);
       store = [...store, newEntry];
-      return HttpResponse.json(newEntry, { status: 201 });
+      return created(newEntry);
     }),
 
     http.put(`${BASE}/:code`, async ({ params, request }) => {

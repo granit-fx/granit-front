@@ -19,8 +19,14 @@
   "peerDependencies": {
     "@granit/testing": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
+    "@testing-library/react": "^16.0.0",
     "react": "^19.0.0",
     "vitest": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@testing-library/react": {
+      "optional": true
+    }
   },
   "publishConfig": {
     "exports": {

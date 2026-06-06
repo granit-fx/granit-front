@@ -1,14 +1,10 @@
-import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { createMswServer } from '@granit/testing/msw';
+import { describe, expect, it } from 'vitest';
 
 import { createApiKeyHandlers } from '../testing/index';
 
 const BASE = 'http://api.test/api/v1/authentication/api-keys';
-const server = setupServer();
-
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+const server = createMswServer();
 
 describe('createApiKeyHandlers', () => {
   it('returns a PagedResult shape (items + totalCount + hasMore) from the list endpoint', async () => {

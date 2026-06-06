@@ -1,6 +1,6 @@
 import { BOOLEAN_OPERATORS, ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
-import { noContent, notFound, pagedResponse } from '@granit/testing/msw';
+import { created, noContent, notFound, pagedResponse } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -363,7 +363,7 @@ export function createOpenIddictAdminHandlers(baseUrl = DEFAULT_BASE_PATH) {
         tenantId: null,
       };
       mockOidcApplications.push(newApp);
-      return HttpResponse.json(newApp, { status: 201 });
+      return created(newApp);
     }),
 
     http.delete(`${baseUrl}/oidc/applications/:clientId`, ({ params }) => {
@@ -394,7 +394,7 @@ export function createOpenIddictAdminHandlers(baseUrl = DEFAULT_BASE_PATH) {
         description: body.description ?? null,
       };
       mockOidcScopes.push(newScope);
-      return HttpResponse.json(newScope, { status: 201 });
+      return created(newScope);
     }),
 
     http.delete(`${baseUrl}/oidc/scopes/:name`, ({ params }) => {

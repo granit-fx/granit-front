@@ -3,7 +3,7 @@
 // Granit.Activities.Endpoints HTTP contract (/api/v1/activities).
 // ---------------------------------------------------------------------------
 
-import { notFound } from '@granit/testing/msw';
+import { created, notFound } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -53,7 +53,7 @@ export function createActivitiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
 
     http.post(baseUrl, async ({ request }) => {
       const body = (await request.json()) as CreateActivityRequest;
-      const created: ActivityResponse = {
+      const newActivity: ActivityResponse = {
         id: `act_${Date.now()}`,
         entityType: body.entityType,
         entityId: body.entityId,
@@ -67,8 +67,8 @@ export function createActivitiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
         completedByUserId: null,
         createdAt: new Date().toISOString(),
       };
-      activities.unshift({ ...created });
-      return HttpResponse.json(created, { status: 201 });
+      activities.unshift({ ...newActivity });
+      return created(newActivity);
     }),
 
     http.post(`${baseUrl}/:id/complete`, ({ params }) => {

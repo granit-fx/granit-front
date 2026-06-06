@@ -5,6 +5,7 @@ import {
   STRING_OPERATORS,
 } from '@granit/query-engine';
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
+import { created } from '@granit/testing/msw';
 import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
@@ -175,7 +176,7 @@ export function createCustomerBalanceHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const body = (await request.json()) as AdminCreditRequest;
       sampleBalance.balance = sampleBalance.balance + body.amount;
       sampleBalance.updatedAt = toISODateString(new Date().toISOString());
-      return HttpResponse.json({ ...sampleBalance }, { status: 201 });
+      return created({ ...sampleBalance });
     }),
   ];
 }

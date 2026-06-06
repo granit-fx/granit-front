@@ -8,7 +8,7 @@
 // GETs reflect prior mutations within a single test/dev session.
 
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
-import { noContent, notFound, parseFilters, parseSort } from '@granit/testing/msw';
+import { noContent, notFound, pagedResponse, parseFilters, parseSort } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -163,7 +163,7 @@ export function createDocumentsHandlers(
 
       const start = (page - 1) * pageSize;
       const items = filtered.slice(start, start + pageSize);
-      return HttpResponse.json({ items, totalCount: filtered.length });
+      return pagedResponse(items, filtered.length);
     }),
 
     // ── Folders ──────────────────────────────────────────────────────────────

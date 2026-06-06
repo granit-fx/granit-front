@@ -1,4 +1,4 @@
-import { noContent } from '@granit/testing/msw';
+import { created, noContent } from '@granit/testing/msw';
 import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
@@ -53,7 +53,7 @@ export function createTimelineHandlers(baseUrl = DEFAULT_BASE_PATH) {
       };
 
       entries = [entry, ...entries];
-      return HttpResponse.json(entry, { status: 201 });
+      return created(entry);
     }),
 
     // DELETE /:entityType/:entityId/entries/:entryId — remove an entry

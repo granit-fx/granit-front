@@ -1,5 +1,5 @@
-import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { createMswServer } from '@granit/testing/msw';
+import { describe, expect, it } from 'vitest';
 
 import {
   createPrivacyHandlers,
@@ -9,11 +9,7 @@ import {
 } from '../testing/index';
 
 const BASE = 'http://api.test/api/v1/privacy';
-const server = setupServer();
-
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+const server = createMswServer();
 
 describe('createPrivacyHandlers /meta', () => {
   it('responds with privacyExportQueryMetadata at /exports/meta', async () => {

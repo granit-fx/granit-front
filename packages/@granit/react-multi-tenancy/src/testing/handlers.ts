@@ -5,7 +5,7 @@ import {
   DATE_OPERATORS,
 } from '@granit/query-engine';
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
-import { noContent, notFound } from '@granit/testing/msw';
+import { noContent, notFound, pagedResponse } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -127,9 +127,7 @@ export function createTenantHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // GET /tenants — QueryEngine admin grid (paged). The backend serves the
     // tenant list through a Granit.QueryEngine endpoint returning PagedResult,
     // consumed via @granit/react-query-engine (`useQueryEndpoint`/`getPage`).
-    http.get(`${baseUrl}/tenants`, () =>
-      HttpResponse.json({ items: mockTenants, totalCount: mockTenants.length })
-    ),
+    http.get(`${baseUrl}/tenants`, () => pagedResponse(mockTenants)),
 
     // GET /tenants/:id — single tenant
     http.get(`${baseUrl}/tenants/:id`, ({ params }) => {

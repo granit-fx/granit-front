@@ -1,5 +1,6 @@
 import { BOOLEAN_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
+import { created } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH, DEFAULT_PROVIDER_BASE_PATH } from '../constants';
@@ -333,7 +334,7 @@ export function createIdentityHandlers(
         enabled: body.enabled,
         metadata: {},
       };
-      return HttpResponse.json(newUser, { status: 201 });
+      return created(newUser);
     }),
 
     http.put(`${providerBase}/users/:userId`, async ({ params, request }) => {

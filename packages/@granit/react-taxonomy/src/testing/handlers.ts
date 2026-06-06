@@ -1,3 +1,4 @@
+import { created } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -75,7 +76,7 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
         updatedAt: now(),
       };
       store.tags.push(tag);
-      return HttpResponse.json(tag, { status: 201 });
+      return created(tag);
     }),
     http.patch(`${baseUrl}/tags/:id`, async ({ params, request }) => {
       const body = (await request.json()) as UpdateTagRequest;
@@ -110,7 +111,7 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
         ),
         assignment,
       ];
-      return HttpResponse.json(assignment, { status: 201 });
+      return created(assignment);
     }),
     http.delete(`${baseUrl}/tags/:id/assign/:targetType/:targetId`, ({ params }) => {
       store.tagAssignments = store.tagAssignments.filter(
@@ -165,7 +166,7 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       };
       store.categories.push(cat);
       recomputeHasChildren(body.scope, body.parentId);
-      return HttpResponse.json(cat, { status: 201 });
+      return created(cat);
     }),
     http.patch(`${baseUrl}/categories/:id`, async ({ params, request }) => {
       const body = (await request.json()) as UpdateCategoryRequest;

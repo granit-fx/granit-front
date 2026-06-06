@@ -1,5 +1,5 @@
-import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { createMswServer } from '@granit/testing/msw';
+import { describe, expect, it } from 'vitest';
 
 import { mockHostnames } from '../testing/data';
 import { createHostnamesHandlers } from '../testing/handlers';
@@ -7,11 +7,7 @@ import { createHostnamesHandlers } from '../testing/handlers';
 import type { HostnameAvailabilityResponse, ManagedHostnameResponse } from '@granit/hostnames';
 
 const BASE = 'http://api.test/api/hostnames';
-const server = setupServer();
-
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+const server = createMswServer();
 
 describe('createHostnamesHandlers', () => {
   describe('GET /availability', () => {

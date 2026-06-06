@@ -1,5 +1,6 @@
 import { ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
+import { created, pagedResponse } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -198,7 +199,7 @@ export function createCatalogHandlers(baseUrl = DEFAULT_BASE_PATH) {
 
       const start = (page - 1) * pageSize;
       const items = filtered.slice(start, start + pageSize);
-      return HttpResponse.json({ items, totalCount: filtered.length });
+      return pagedResponse(items, filtered.length);
     }),
 
     // GET /catalog/products/active → active catalog (Published only).
@@ -224,7 +225,7 @@ export function createCatalogHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // POST /catalog/products (Draft)
     http.post(`${baseUrl}/products`, async ({ request }) => {
       const body = (await request.json()) as ProductCreateRequest;
-      const created: ProductResponse = {
+      const newProduct: ProductResponse = {
         id: nextProductId() as ProductResponse['id'],
         sku: body.sku,
         name: body.name,
@@ -235,8 +236,8 @@ export function createCatalogHandlers(baseUrl = DEFAULT_BASE_PATH) {
         metadata: {},
         externalMappings: [],
       };
-      products = [created, ...products];
-      return HttpResponse.json(created, { status: 201 });
+      products = [newProduct, ...products];
+      return created(newProduct);
     }),
 
     // PUT /catalog/products/{id}
