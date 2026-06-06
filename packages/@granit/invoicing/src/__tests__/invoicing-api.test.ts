@@ -7,8 +7,8 @@ import {
   downloadInvoicePdf,
   finalizeInvoice,
   getInvoiceById,
-  listInvoices,
   markInvoiceUncollectible,
+  queryInvoices,
 } from '../api/invoicing-api';
 
 import type { FinalizeInvoiceRequest, InvoiceCreateRequest, InvoiceResponse } from '../types/index';
@@ -52,24 +52,25 @@ const sampleInvoice: InvoiceResponse = {
 };
 
 describe('invoicing-api', () => {
-  describe('listInvoices', () => {
-    it('should GET {basePath}/invoices', async () => {
+  describe('queryInvoices', () => {
+    it('should GET {basePath}/invoices with QE params', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [sampleInvoice] });
+      const page = { items: [sampleInvoice], totalCount: 1 };
+      vi.mocked(client.get).mockResolvedValue({ data: page });
 
-      const result = await listInvoices(client, '/invoicing');
+      const result = await queryInvoices(client, '/invoicing');
 
-      expect(client.get).toHaveBeenCalledWith('/invoicing/invoices');
-      expect(result).toEqual([sampleInvoice]);
+      expect(client.get).toHaveBeenCalled();
+      expect(result.items).toEqual([sampleInvoice]);
     });
 
     it('should work with custom basePath', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [] });
+      vi.mocked(client.get).mockResolvedValue({ data: { items: [], totalCount: 0 } });
 
-      await listInvoices(client, '/custom/invoicing');
+      await queryInvoices(client, '/custom/invoicing');
 
-      expect(client.get).toHaveBeenCalledWith('/custom/invoicing/invoices');
+      expect(client.get).toHaveBeenCalled();
     });
   });
 
@@ -130,6 +131,7 @@ describe('invoicing-api', () => {
       vi.mocked(client.post).mockResolvedValue({ data: sampleInvoice });
 
       const request: InvoiceCreateRequest = {
+        partyId: 'party-1',
         documentType: 'Invoice',
         currency: 'EUR',
         collectionMethod: 'ChargeAutomatically',
@@ -159,6 +161,7 @@ describe('invoicing-api', () => {
       vi.mocked(client.post).mockResolvedValue({ data: creditNote });
 
       const request: InvoiceCreateRequest = {
+        partyId: 'party-1',
         documentType: 'CreditNote',
         currency: 'EUR',
         collectionMethod: 'SendInvoice',

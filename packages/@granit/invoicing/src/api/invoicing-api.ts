@@ -1,3 +1,6 @@
+import { getPage, getQueryMeta } from '@granit/query-engine';
+import { executeStateMachineTransition, listTransitions } from '@granit/workflow';
+
 import type {
   CancelInvoiceRequest,
   FinalizeInvoiceRequest,
@@ -6,18 +9,36 @@ import type {
   MarkInvoiceUncollectibleRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
+import type { PagedResult, QueryMetadata, QueryRequest } from '@granit/query-engine';
+import type {
+  WorkflowStatus,
+  WorkflowTransitionRequest,
+  WorkflowTransitionResult,
+} from '@granit/workflow';
 
 /**
- * List all invoices.
+ * Query invoices with filtering, sorting, and pagination (Query Engine).
  *
  * `GET {basePath}/invoices`
  */
-export async function listInvoices(
+export async function queryInvoices(
+  client: AxiosInstance,
+  basePath: string,
+  request: QueryRequest = {}
+): Promise<PagedResult<InvoiceResponse>> {
+  return getPage<InvoiceResponse>(client, `${basePath}/invoices`, request);
+}
+
+/**
+ * Get query metadata for invoices (columns, filters, sorts, presets).
+ *
+ * `GET {basePath}/invoices/meta`
+ */
+export async function getInvoiceMeta(
   client: AxiosInstance,
   basePath: string
-): Promise<readonly InvoiceResponse[]> {
-  const response = await client.get<readonly InvoiceResponse[]>(`${basePath}/invoices`);
-  return response.data;
+): Promise<QueryMetadata> {
+  return getQueryMeta(client, `${basePath}/invoices`);
 }
 
 /**
@@ -71,9 +92,6 @@ export async function createInvoice(
 /**
  * Finalize a Draft invoice (Draft → Open).
  *
- * Delegates the transition to the backend `IWorkflowManager<InvoiceStatus>`;
- * the next document number is generated server-side.
- *
  * `POST {basePath}/invoices/{id}/finalize`
  */
 export async function finalizeInvoice(
@@ -123,4 +141,31 @@ export async function markInvoiceUncollectible(
     request
   );
   return response.data;
+}
+
+/**
+ * Get available workflow transitions for a given invoice status.
+ *
+ * `GET {basePath}/invoices/transitions?currentState=...`
+ */
+export async function listInvoiceTransitions(
+  client: AxiosInstance,
+  basePath: string,
+  currentState: string
+): Promise<WorkflowStatus> {
+  return listTransitions(client, `${basePath}/invoices`, currentState);
+}
+
+/**
+ * Execute a workflow transition for invoices.
+ *
+ * `POST {basePath}/invoices/transitions?currentState=...`
+ */
+export async function executeInvoiceTransition(
+  client: AxiosInstance,
+  basePath: string,
+  currentState: string,
+  request: WorkflowTransitionRequest
+): Promise<WorkflowTransitionResult> {
+  return executeStateMachineTransition(client, `${basePath}/invoices`, currentState, request);
 }

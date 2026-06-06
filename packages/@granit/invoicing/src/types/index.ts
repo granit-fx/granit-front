@@ -9,14 +9,18 @@ export type InvoiceDocumentType = 'Invoice' | 'CreditNote';
 /** How payment is collected for an invoice. */
 export type CollectionMethod = 'ChargeAutomatically' | 'SendInvoice';
 
+/** Lifecycle status of an invoice. */
+export type InvoiceStatus = 'Draft' | 'Open' | 'Paid' | 'Cancelled' | 'Uncollectible';
+
+/** The origin type of an invoice (determines template and revenue recognition). */
+export type InvoiceSourceType = 'Subscription' | 'Usage' | 'OneShot' | 'Credit';
+
 /** The reason an invoice was created. */
 export type BillingReason =
-  | 'Subscription'
   | 'SubscriptionCreate'
   | 'SubscriptionCycle'
   | 'SubscriptionUpdate'
-  | 'Manual'
-  | 'Upcoming';
+  | 'Manual';
 
 /** Payload for finalizing a Draft invoice (Draft → Open). */
 export interface FinalizeInvoiceRequest {
@@ -42,6 +46,7 @@ export interface MarkInvoiceUncollectibleRequest {
 
 /** Payload for creating a new invoice. */
 export interface InvoiceCreateRequest {
+  readonly partyId: string;
   readonly documentType: InvoiceDocumentType;
   readonly currency: string;
   readonly collectionMethod: CollectionMethod;

@@ -646,12 +646,18 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
       '@granit/types':
         specifier: workspace:*
         version: link:../types
+      '@granit/workflow':
+        specifier: workspace:*
+        version: link:../workflow
 
   packages/@granit/localization:
     dependencies:
@@ -2013,12 +2019,6 @@ importers:
 
   packages/@granit/react-invoicing:
     dependencies:
-      '@granit/invoicing':
-        specifier: workspace:*
-        version: link:../invoicing
-      '@granit/query-engine':
-        specifier: workspace:*
-        version: link:../query-engine
       '@granit/react-query-engine':
         specifier: workspace:*
         version: link:../react-query-engine
@@ -2035,6 +2035,12 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/invoicing':
+        specifier: workspace:*
+        version: link:../invoicing
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
@@ -2047,6 +2053,9 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
+      '@granit/workflow':
+        specifier: workspace:*
+        version: link:../workflow
 
   packages/@granit/react-localization:
     dependencies:

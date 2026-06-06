@@ -11,9 +11,12 @@ export {
   useCancelInvoice,
   useCreateInvoice,
   useDownloadInvoicePdf,
+  useExecuteInvoiceTransition,
   useFinalizeInvoice,
   useInvoice,
+  useInvoiceMeta,
   useInvoices,
+  useListInvoiceTransitions,
   useMarkInvoiceUncollectible,
 } from './hooks/use-invoicing';
 export type { InvoiceTransitionVariables } from './hooks/use-invoicing';

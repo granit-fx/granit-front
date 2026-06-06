@@ -25,14 +25,7 @@ import type { QueryMetadata } from '@granit/query-engine';
 const INVOICE_DOCUMENT_TYPES = ['Invoice', 'CreditNote'];
 const INVOICE_STATUSES = ['Draft', 'Open', 'Paid', 'Cancelled', 'Uncollectible'];
 const COLLECTION_METHODS = ['ChargeAutomatically', 'SendInvoice'];
-const BILLING_REASONS = [
-  'Subscription',
-  'SubscriptionCreate',
-  'SubscriptionCycle',
-  'SubscriptionUpdate',
-  'Manual',
-  'Upcoming',
-];
+const BILLING_REASONS = ['SubscriptionCreate', 'SubscriptionCycle', 'SubscriptionUpdate', 'Manual'];
 
 /** Mock /meta payload for the invoices resource. */
 export const invoiceQueryMetadata: QueryMetadata = {
@@ -229,9 +222,9 @@ export function createInvoicingHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // GET /invoices/meta — query metadata
     createQueryMetaHandler(`${baseUrl}/invoices`, invoiceQueryMetadata),
 
-    // GET list all invoices
+    // GET list all invoices (Query Engine — returns PagedResult)
     http.get(`${baseUrl}/invoices`, () => {
-      return HttpResponse.json(sampleInvoices);
+      return HttpResponse.json({ items: sampleInvoices, totalCount: sampleInvoices.length });
     }),
 
     // GET single invoice by ID

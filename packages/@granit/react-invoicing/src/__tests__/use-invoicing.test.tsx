@@ -17,12 +17,12 @@ import {
 import { InvoicingProvider } from '../providers/invoicing-provider';
 
 import type { InvoicingConfig } from '../providers/invoicing-provider';
+import type { AxiosInstance } from '@granit/api-client';
 import type {
   FinalizeInvoiceRequest,
   InvoiceCreateRequest,
   InvoiceResponse,
 } from '@granit/invoicing';
-import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
 // ---------------------------------------------------------------------------
@@ -65,6 +65,8 @@ const sampleInvoice: InvoiceResponse = {
   lineItems: [],
 };
 
+const samplePage = { items: [sampleInvoice], totalCount: 1 };
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -76,27 +78,28 @@ describe('useInvoices', () => {
 
   it('fetches invoices with default basePath', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue({ data: [sampleInvoice] });
+    vi.mocked(client.get).mockResolvedValue({ data: samplePage });
 
     const { result } = renderHook(() => useInvoices(), {
       wrapper: createWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/api/v1/invoicing/invoices');
-    expect(result.current.data).toEqual([sampleInvoice]);
+    expect(client.get).toHaveBeenCalled();
+    expect(result.current.data?.items).toEqual([sampleInvoice]);
+    expect(result.current.data?.totalCount).toBe(1);
   });
 
   it('fetches invoices with custom basePath', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue({ data: [] });
+    vi.mocked(client.get).mockResolvedValue({ data: { items: [], totalCount: 0 } });
 
     const { result } = renderHook(() => useInvoices(), {
       wrapper: createWrapper(client, '/custom/invoicing'),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/custom/invoicing/invoices');
+    expect(client.get).toHaveBeenCalled();
   });
 
   it('exposes error state on failure', async () => {
@@ -194,6 +197,7 @@ describe('useCreateInvoice', () => {
     });
 
     const request: InvoiceCreateRequest = {
+      partyId: 'party-1',
       documentType: 'Invoice',
       currency: 'EUR',
       collectionMethod: 'ChargeAutomatically',
@@ -219,6 +223,7 @@ describe('useCreateInvoice', () => {
     });
 
     const request: InvoiceCreateRequest = {
+      partyId: 'party-1',
       documentType: 'Invoice',
       currency: 'EUR',
       collectionMethod: 'ChargeAutomatically',

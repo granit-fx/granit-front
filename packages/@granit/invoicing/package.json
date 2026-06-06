@@ -15,12 +15,16 @@
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/query-engine": "workspace:*",
     "@granit/testing": "workspace:*",
-    "@granit/types": "workspace:*"
+    "@granit/types": "workspace:*",
+    "@granit/workflow": "workspace:*"
   },
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
-    "@granit/types": "workspace:*"
+    "@granit/query-engine": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/workflow": "workspace:*"
   },
   "publishConfig": {
     "exports": {

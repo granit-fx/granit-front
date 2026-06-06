@@ -9,6 +9,8 @@ export type {
   InvoiceId,
   InvoiceLineItemResponse,
   InvoiceResponse,
+  InvoiceSourceType,
+  InvoiceStatus,
   MarkInvoiceUncollectibleRequest,
 } from './types/index';
 
@@ -20,8 +22,11 @@ export {
   cancelInvoice,
   createInvoice,
   downloadInvoicePdf,
+  executeInvoiceTransition,
   finalizeInvoice,
   getInvoiceById,
-  listInvoices,
+  getInvoiceMeta,
+  listInvoiceTransitions,
   markInvoiceUncollectible,
+  queryInvoices,
 } from './api/invoicing-api';

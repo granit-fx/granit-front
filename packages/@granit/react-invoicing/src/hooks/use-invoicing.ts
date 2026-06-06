@@ -2,10 +2,13 @@ import {
   cancelInvoice,
   createInvoice,
   downloadInvoicePdf,
+  executeInvoiceTransition,
   finalizeInvoice,
   getInvoiceById,
-  listInvoices,
+  getInvoiceMeta,
+  listInvoiceTransitions,
   markInvoiceUncollectible,
+  queryInvoices,
 } from '@granit/invoicing';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -18,23 +21,31 @@ import type {
   InvoiceResponse,
   MarkInvoiceUncollectibleRequest,
 } from '@granit/invoicing';
+import type { PagedResult, QueryMetadata, QueryRequest } from '@granit/query-engine';
+import type {
+  WorkflowStatus,
+  WorkflowTransitionRequest,
+  WorkflowTransitionResult,
+} from '@granit/workflow';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /**
- * Fetch all invoices.
+ * Query invoices with optional filtering, sorting, and pagination.
  *
  * @example
  * ```tsx
- * const { data: invoices } = useInvoices();
+ * const { data } = useInvoices();
+ * const rows = data?.items ?? [];
  * ```
  */
-export function useInvoices(): UseQueryResult<readonly InvoiceResponse[]> {
+export function useInvoices(
+  request: QueryRequest = {}
+): UseQueryResult<PagedResult<InvoiceResponse>> {
   const config = useInvoicingConfig();
-  const basePath = config.basePath!;
 
   return useQuery({
-    queryKey: buildInvoicingQueryKey(config, 'invoices', 'list'),
-    queryFn: () => listInvoices(config.client, basePath),
+    queryKey: [...buildInvoicingQueryKey(config, 'invoices', 'list'), request],
+    queryFn: () => queryInvoices(config.client, config.basePath!, request),
   });
 }
 
@@ -50,12 +61,29 @@ export function useInvoices(): UseQueryResult<readonly InvoiceResponse[]> {
  */
 export function useInvoice(id: string): UseQueryResult<InvoiceResponse> {
   const config = useInvoicingConfig();
-  const basePath = config.basePath!;
 
   return useQuery({
     queryKey: buildInvoicingQueryKey(config, 'invoices', id),
-    queryFn: () => getInvoiceById(config.client, basePath, id),
+    queryFn: () => getInvoiceById(config.client, config.basePath!, id),
     enabled: id.length > 0,
+  });
+}
+
+/**
+ * Fetch query metadata for invoices (columns, filterable fields, presets, etc.).
+ *
+ * @example
+ * ```tsx
+ * const { data: meta } = useInvoiceMeta();
+ * ```
+ */
+export function useInvoiceMeta(): UseQueryResult<QueryMetadata> {
+  const config = useInvoicingConfig();
+
+  return useQuery({
+    queryKey: buildInvoicingQueryKey(config, 'invoices', 'meta'),
+    queryFn: () => getInvoiceMeta(config.client, config.basePath!),
+    staleTime: Infinity,
   });
 }
 
@@ -72,10 +100,9 @@ export function useInvoice(id: string): UseQueryResult<InvoiceResponse> {
  */
 export function useDownloadInvoicePdf(): UseMutationResult<Blob, Error, string> {
   const config = useInvoicingConfig();
-  const basePath = config.basePath!;
 
   return useMutation({
-    mutationFn: (id: string) => downloadInvoicePdf(config.client, basePath, id),
+    mutationFn: (id: string) => downloadInvoicePdf(config.client, config.basePath!, id),
   });
 }
 
@@ -86,7 +113,7 @@ export function useDownloadInvoicePdf(): UseMutationResult<Blob, Error, string> 
  * @example
  * ```tsx
  * const create = useCreateInvoice();
- * await create.mutateAsync({ documentType: 'Invoice', currency: 'EUR', ... });
+ * await create.mutateAsync({ partyId: '...', documentType: 'Invoice', currency: 'EUR', ... });
  * ```
  */
 export function useCreateInvoice(): UseMutationResult<
@@ -96,10 +123,10 @@ export function useCreateInvoice(): UseMutationResult<
 > {
   const config = useInvoicingConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath!;
 
   return useMutation({
-    mutationFn: (request: InvoiceCreateRequest) => createInvoice(config.client, basePath, request),
+    mutationFn: (request: InvoiceCreateRequest) =>
+      createInvoice(config.client, config.basePath!, request),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildInvoicingQueryKey(config, 'invoices'),
@@ -108,7 +135,7 @@ export function useCreateInvoice(): UseMutationResult<
   });
 }
 
-/** Variables for the semantic transition mutations: invoice id + optional request body. */
+/** Variables for semantic transition mutations: invoice id + optional request body. */
 export interface InvoiceTransitionVariables<TRequest> {
   readonly id: string;
   readonly request?: TRequest;
@@ -117,12 +144,6 @@ export interface InvoiceTransitionVariables<TRequest> {
 /**
  * Finalize a Draft invoice (Draft → Open).
  * Invalidates invoice queries on success.
- *
- * @example
- * ```tsx
- * const finalize = useFinalizeInvoice();
- * await finalize.mutateAsync({ id: 'inv-1', request: { issuedAt, dueAt } });
- * ```
  */
 export function useFinalizeInvoice(): UseMutationResult<
   InvoiceResponse,
@@ -131,10 +152,9 @@ export function useFinalizeInvoice(): UseMutationResult<
 > {
   const config = useInvoicingConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath!;
 
   return useMutation({
-    mutationFn: ({ id, request }) => finalizeInvoice(config.client, basePath, id, request),
+    mutationFn: ({ id, request }) => finalizeInvoice(config.client, config.basePath!, id, request),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildInvoicingQueryKey(config, 'invoices'),
@@ -146,12 +166,6 @@ export function useFinalizeInvoice(): UseMutationResult<
 /**
  * Cancel an invoice (Open / Uncollectible → Cancelled).
  * Invalidates invoice queries on success.
- *
- * @example
- * ```tsx
- * const cancel = useCancelInvoice();
- * await cancel.mutateAsync({ id: 'inv-1', request: { reason: 'Duplicate' } });
- * ```
  */
 export function useCancelInvoice(): UseMutationResult<
   InvoiceResponse,
@@ -160,10 +174,9 @@ export function useCancelInvoice(): UseMutationResult<
 > {
   const config = useInvoicingConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath!;
 
   return useMutation({
-    mutationFn: ({ id, request }) => cancelInvoice(config.client, basePath, id, request),
+    mutationFn: ({ id, request }) => cancelInvoice(config.client, config.basePath!, id, request),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildInvoicingQueryKey(config, 'invoices'),
@@ -175,12 +188,6 @@ export function useCancelInvoice(): UseMutationResult<
 /**
  * Mark an Open invoice as Uncollectible (bad debt).
  * Invalidates invoice queries on success.
- *
- * @example
- * ```tsx
- * const markUncollectible = useMarkInvoiceUncollectible();
- * await markUncollectible.mutateAsync({ id: 'inv-1', request: { reason: 'Bankruptcy' } });
- * ```
  */
 export function useMarkInvoiceUncollectible(): UseMutationResult<
   InvoiceResponse,
@@ -189,10 +196,57 @@ export function useMarkInvoiceUncollectible(): UseMutationResult<
 > {
   const config = useInvoicingConfig();
   const queryClient = useQueryClient();
-  const basePath = config.basePath!;
 
   return useMutation({
-    mutationFn: ({ id, request }) => markInvoiceUncollectible(config.client, basePath, id, request),
+    mutationFn: ({ id, request }) =>
+      markInvoiceUncollectible(config.client, config.basePath!, id, request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: buildInvoicingQueryKey(config, 'invoices'),
+      });
+    },
+  });
+}
+
+/**
+ * List available workflow transitions for a given invoice status.
+ *
+ * @example
+ * ```tsx
+ * const { data: status } = useListInvoiceTransitions(invoice.status);
+ * ```
+ */
+export function useListInvoiceTransitions(currentState: string): UseQueryResult<WorkflowStatus> {
+  const config = useInvoicingConfig();
+
+  return useQuery({
+    queryKey: buildInvoicingQueryKey(config, 'invoices', 'transitions', currentState),
+    queryFn: () => listInvoiceTransitions(config.client, config.basePath!, currentState),
+    enabled: currentState.length > 0,
+  });
+}
+
+/**
+ * Execute a workflow transition for an invoice.
+ * Invalidates invoice queries on success.
+ *
+ * @example
+ * ```tsx
+ * const execute = useExecuteInvoiceTransition();
+ * await execute.mutateAsync({ currentState: 'Draft', request: { targetState: 'Open' } });
+ * ```
+ */
+export function useExecuteInvoiceTransition(): UseMutationResult<
+  WorkflowTransitionResult,
+  Error,
+  { readonly currentState: string; readonly request: WorkflowTransitionRequest }
+> {
+  const config = useInvoicingConfig();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ currentState, request }) =>
+      executeInvoiceTransition(config.client, config.basePath!, currentState, request),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildInvoicingQueryKey(config, 'invoices'),
