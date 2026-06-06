@@ -73,9 +73,9 @@ const sampleParty: PartyResponse = {
   website: null,
   taxId: null,
   registrationNumber: null,
-  parentContactId: null,
+  parentPartyId: null,
   userId: null,
-  avatarBlobId: null,
+  avatar: null,
   roles: 'Customer',
   status: 'Active',
   addresses: [],
@@ -91,7 +91,7 @@ describe('parties-api', () => {
   describe('listParties', () => {
     it('GETs {basePath} without role filter', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [sampleListItem] });
+      vi.mocked(client.get).mockResolvedValue({ data: { items: [sampleListItem] } });
 
       const result = await listParties(client, basePath);
 
@@ -112,7 +112,7 @@ describe('parties-api', () => {
 
     it('passes role as query param when provided', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [] });
+      vi.mocked(client.get).mockResolvedValue({ data: { items: [] } });
 
       await listParties(client, basePath, { role: 'Customer' });
 
@@ -380,6 +380,7 @@ describe('parties-api', () => {
         isExempt: false,
         reverseCharge: true,
         vatin: 'BE0123456789',
+        evidenceBlobId: null,
       };
 
       await setPartyTaxStatus(client, basePath, partyId, request);

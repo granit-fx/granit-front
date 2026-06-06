@@ -113,9 +113,9 @@ export interface PartyResponse {
   readonly website: string | null;
   readonly taxId: string | null;
   readonly registrationNumber: string | null;
-  readonly parentContactId: PartyId | null;
+  readonly parentPartyId: PartyId | null;
   readonly userId: UserId | null;
-  readonly avatarBlobId: EvidenceBlobId | null;
+  readonly avatar: string | null;
   readonly roles: string;
   readonly status: PartyStatus;
   readonly addresses: readonly PartyAddressResponse[];
@@ -181,6 +181,18 @@ export interface CreatePartyOptions {
 }
 
 /**
+ * Lightweight match summary included in a 409 create-conflict response. Each
+ * entry points to an existing party that the Tier-1 (Deterministic) detector
+ * matched against the inbound payload.
+ */
+export interface PartyCreateDuplicateCandidate {
+  readonly candidateId: PartyId;
+  readonly score: number;
+  readonly tier: DuplicateMatchTier;
+  readonly signals: readonly DuplicateMatchSignalResponse[];
+}
+
+/**
  * 409 response body returned by `POST {basePath}` when the server's Tier-1
  * (Deterministic) duplicate detector matches the inbound payload against an
  * existing party. The client typically renders a "potential duplicates"
@@ -188,14 +200,10 @@ export interface CreatePartyOptions {
  * `force: true`, or merge into the matched party.
  *
  * `candidates` carries the lightweight summary for each match (max 5 rows).
- * `tier` always equals `'Deterministic'` today — the `Blocking` and `Fuzzy`
- * tiers run asynchronously via the scan job and never short-circuit a create.
  */
 export interface PartyCreateConflictResponse {
-  readonly title: string;
-  readonly detail: string;
-  readonly tier: DuplicateMatchTier;
-  readonly candidates: readonly PartyListItemResponse[];
+  readonly reason: string;
+  readonly candidates: readonly PartyCreateDuplicateCandidate[];
 }
 
 /** Request payload to update a party's identity fields. */
@@ -265,8 +273,8 @@ export interface PartyRoleRequest {
 export interface PartyTaxStatusRequest {
   readonly isExempt: boolean;
   readonly reverseCharge: boolean;
-  readonly vatin?: string | null;
-  readonly evidenceBlobId?: EvidenceBlobId | null;
+  readonly vatin: string | null;
+  readonly evidenceBlobId: EvidenceBlobId | null;
 }
 
 // ── Merge ────────────────────────────────────────────────────────────────

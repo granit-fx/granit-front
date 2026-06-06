@@ -11,6 +11,7 @@ export type {
   PartyAddressRequest,
   PartyAddressResponse,
   PartyCreateConflictResponse,
+  PartyCreateDuplicateCandidate,
   PartyCreateRequest,
   PartyDuplicateCandidateId,
   PartyDuplicateCandidateResponse,

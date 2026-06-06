@@ -294,10 +294,13 @@ export function createPartiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
           .slice(0, 5);
         if (matches.length > 0) {
           const conflict: PartyCreateConflictResponse = {
-            title: 'Duplicate party detected',
-            detail: `A ${matches.length === 1 ? 'party' : 'few parties'} with the name "${body.name}" already exist. Pick how to proceed.`,
-            tier: 'Deterministic',
-            candidates: matches,
+            reason: `A ${matches.length === 1 ? 'party' : 'few parties'} with the name "${body.name}" already exist. Pick how to proceed.`,
+            candidates: matches.map((p) => ({
+              candidateId: p.id,
+              score: 1.0,
+              tier: 'Deterministic' as const,
+              signals: [{ kind: 'NameExact', score: 1.0 }],
+            })),
           };
           return HttpResponse.json(conflict, { status: 409 });
         }
@@ -317,9 +320,9 @@ export function createPartiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
         website: body.website ?? null,
         taxId: body.taxId ?? null,
         registrationNumber: body.registrationNumber ?? null,
-        parentContactId: null,
+        parentPartyId: null,
         userId: null,
-        avatarBlobId: null,
+        avatar: null,
         roles: body.roles ?? 'Customer',
         status: 'Active',
         addresses: [],

@@ -75,9 +75,9 @@ const sampleParty: PartyResponse = {
   website: null,
   taxId: null,
   registrationNumber: null,
-  parentContactId: null,
+  parentPartyId: null,
   userId: null,
-  avatarBlobId: null,
+  avatar: null,
   roles: 'Customer',
   status: 'Active',
   addresses: [],
@@ -324,6 +324,7 @@ describe('use-parties', () => {
         isExempt: false,
         reverseCharge: true,
         vatin: 'BE0123456789',
+        evidenceBlobId: null,
       };
 
       const { result } = renderHook(() => useSetPartyTaxStatusMutation(), {
