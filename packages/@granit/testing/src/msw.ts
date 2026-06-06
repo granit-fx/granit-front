@@ -23,3 +23,5 @@ export {
 export type { FilterEntry, SortEntry } from './msw-helpers';
 
 export { createMswServer } from './msw-server';
+
+export type { MswServerOptions } from './msw-server';

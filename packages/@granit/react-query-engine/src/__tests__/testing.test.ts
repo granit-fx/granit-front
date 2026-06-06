@@ -5,11 +5,9 @@ import { buildEmptyQueryMeta, createQueryMetaHandler } from '../testing/index';
 
 import type { QueryMetadata } from '@granit/query-engine';
 
-const server = createMswServer();
-
 // 'bypass' lets unhandled requests reach Node's real network stack (→ ENOTFOUND),
 // avoiding MSW stderr noise in tests that deliberately probe non-matching paths.
-beforeAll(() => server.listen({ onUnhandledRequest: 'bypass' }));
+const server = createMswServer({ onUnhandledRequest: 'bypass' });
 
 const BASE_URL = 'http://api.example.test/api/v1/widgets';
 
