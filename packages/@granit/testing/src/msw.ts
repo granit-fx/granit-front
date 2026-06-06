@@ -1,5 +1,7 @@
 // ---------------------------------------------------------------------------
-// @granit/testing/msw — MSW response helpers for @granit/* handler factories
+// @granit/testing/msw — browser-safe MSW response helpers for @granit/* handler factories
+//
+// Node-only: import createMswServer from '@granit/testing/msw-server'
 // ---------------------------------------------------------------------------
 
 export {
@@ -21,7 +23,3 @@ export {
 } from './msw-helpers';
 
 export type { FilterEntry, SortEntry } from './msw-helpers';
-
-export { createMswServer } from './msw-server';
-
-export type { MswServerOptions } from './msw-server';

@@ -7,6 +7,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./msw": "./src/msw.ts",
+    "./msw-server": "./src/msw-server.ts",
     "./setup": "./src/setup.ts"
   },
   "files": [
@@ -38,6 +39,10 @@
       "./msw": {
         "types": "./dist/msw.d.ts",
         "import": "./dist/msw.js"
+      },
+      "./msw-server": {
+        "types": "./dist/msw-server.d.ts",
+        "import": "./dist/msw-server.js"
       },
       "./setup": {
         "types": "./dist/setup.d.ts",

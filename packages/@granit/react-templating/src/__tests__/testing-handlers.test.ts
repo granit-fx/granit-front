@@ -1,4 +1,4 @@
-import { createMswServer } from '@granit/testing/msw';
+import { createMswServer } from '@granit/testing/msw-server';
 import { describe, expect, it } from 'vitest';
 
 import { createTemplatesHandlers, templateQueryMetadata } from '../testing/index';
