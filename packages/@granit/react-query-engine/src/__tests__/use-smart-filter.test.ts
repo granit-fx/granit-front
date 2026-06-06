@@ -357,3 +357,46 @@ describe('useSmartFilter — resilient to non-conforming metadata', () => {
     expect(result.current.suggestions).toEqual([]);
   });
 });
+
+// ---------------------------------------------------------------------------
+// buildFieldSearchSuggestions — operator fallback and column-label paths
+// ---------------------------------------------------------------------------
+
+describe('useSmartFilter — field search suggestion branches', () => {
+  it('uses Eq operator when Contains is absent from the field operators', () => {
+    const metadata: QueryMetadata = {
+      ...MOCK_METADATA,
+      filterableFields: [{ name: 'Code', type: 'String', operators: ['Eq', 'StartsWith'] }],
+      columns: [{ name: 'Code', label: 'Code', type: 'String', order: 0, isSortable: false, isFilterable: true, isVisible: true }],
+    };
+    const { result } = renderHook(() => useSmartFilter({ metadata }));
+    act(() => result.current.setInput('A'));
+    const suggestion = result.current.suggestions.find((s) => s.field === 'Code');
+    expect(suggestion).toBeDefined();
+    expect(suggestion!.operator).toBe('Eq');
+  });
+
+  it('skips a String field whose operators include neither Contains nor Eq', () => {
+    const metadata: QueryMetadata = {
+      ...MOCK_METADATA,
+      filterableFields: [{ name: 'Slug', type: 'String', operators: ['StartsWith'] }],
+      columns: [{ name: 'Slug', label: 'Slug', type: 'String', order: 0, isSortable: false, isFilterable: true, isVisible: true }],
+    };
+    const { result } = renderHook(() => useSmartFilter({ metadata }));
+    act(() => result.current.setInput('a'));
+    expect(result.current.suggestions.find((s) => s.field === 'Slug')).toBeUndefined();
+  });
+
+  it('falls back to field.name when the field is absent from metadata.columns', () => {
+    const metadata: QueryMetadata = {
+      ...MOCK_METADATA,
+      filterableFields: [{ name: 'OrphanField', type: 'String', operators: ['Contains'] }],
+      columns: [],
+    };
+    const { result } = renderHook(() => useSmartFilter({ metadata }));
+    act(() => result.current.setInput('x'));
+    const suggestion = result.current.suggestions.find((s) => s.field === 'OrphanField');
+    expect(suggestion).toBeDefined();
+    expect(suggestion!.label).toBe('OrphanField');
+  });
+});

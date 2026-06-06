@@ -96,6 +96,16 @@ describe('toggleReactionMap', () => {
     });
   });
 
+  it('removes only the toggled-off emoji when other emojis remain in the map', () => {
+    const before: ReactionMap = {
+      [THUMBS_UP]: { count: 1, byCurrentUser: true },
+      [HEART]: { count: 3, byCurrentUser: false },
+    };
+    expect(toggleReactionMap(before, THUMBS_UP)).toEqual({
+      [HEART]: { count: 3, byCurrentUser: false },
+    });
+  });
+
   it('removes the entry entirely when toggling off the last reactor', () => {
     const before: ReactionMap = { [EYES]: { count: 1, byCurrentUser: true } };
     expect(toggleReactionMap(before, EYES)).toBeUndefined();
@@ -166,6 +176,56 @@ describe('useToggleReaction — optimistic update', () => {
 
     const page = queryClient.getQueryData<TimelineEntryPage>(['timeline', 'Quote', 'q-1']);
     expect(page?.items[0]?.reactions).toEqual({ [HEART]: { count: 5, byCurrentUser: false } });
+  });
+});
+
+describe('useToggleReaction — bare TimelineEntry in cache', () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it('patches a bare TimelineEntry (not wrapped in a page) when its id matches', async () => {
+    const { client, queryClient, wrapper } = createHarness();
+    const bareEntry = makeEntry(ENTRY_ID);
+    queryClient.setQueryData(['timeline', 'Quote', 'q-1'], bareEntry);
+
+    vi.mocked(client.post).mockResolvedValue(
+      axiosResponse(makeToggleResult(ENTRY_ID, THUMBS_UP, 7, true))
+    );
+
+    const { result } = renderHook(() => useToggleReaction(), { wrapper });
+    result.current.mutate({
+      entityType: 'Quote',
+      entityId: 'q-1',
+      entryId: ENTRY_ID,
+      emoji: THUMBS_UP,
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    const entry = queryClient.getQueryData<TimelineEntry>(['timeline', 'Quote', 'q-1']);
+    expect(entry?.reactions?.[THUMBS_UP]).toBeDefined();
+  });
+
+  it('leaves a bare TimelineEntry unchanged when its id does not match', async () => {
+    const { client, queryClient, wrapper } = createHarness();
+    const otherEntry = makeEntry(OTHER_ENTRY_ID);
+    queryClient.setQueryData(['timeline', 'Quote', 'q-1'], otherEntry);
+
+    vi.mocked(client.post).mockResolvedValue(
+      axiosResponse(makeToggleResult(ENTRY_ID, HEART, 1, true))
+    );
+
+    const { result } = renderHook(() => useToggleReaction(), { wrapper });
+    result.current.mutate({
+      entityType: 'Quote',
+      entityId: 'q-1',
+      entryId: ENTRY_ID,
+      emoji: HEART,
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    const entry = queryClient.getQueryData<TimelineEntry>(['timeline', 'Quote', 'q-1']);
+    expect(entry?.reactions).toBeUndefined();
   });
 });
 

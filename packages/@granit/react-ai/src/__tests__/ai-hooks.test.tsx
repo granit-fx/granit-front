@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { useAIChat } from '../hooks/use-ai-chat';
 import { useAIEmbeddings } from '../hooks/use-ai-embeddings';
+import { useAIProviders } from '../hooks/use-ai-providers';
 import { useAIWorkspace } from '../hooks/use-ai-workspace';
 import { useAIWorkspaces } from '../hooks/use-ai-workspaces';
 import { useCreateAIWorkspace } from '../hooks/use-create-ai-workspace';
@@ -222,6 +223,73 @@ describe('useAIEmbeddings', () => {
     expect(client.post).toHaveBeenCalledWith('/api/v1/ai/embeddings/default', {
       inputs: ['Hello'],
     });
+    expect(result.current.data).toEqual(response);
+  });
+});
+
+// -- AI Providers ------------------------------------------------------------
+
+describe('useAIProviders', () => {
+  it('GETs the list of AI providers', async () => {
+    const client = createMockClient();
+    const response = [{ name: 'openai', displayName: 'OpenAI' }];
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(response));
+
+    const { result } = renderHook(() => useAIProviders(), {
+      wrapper: createWrapper(client, '/api/v1/ai'),
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith(expect.stringContaining('/providers'));
+    expect(result.current.data).toEqual(response);
+  });
+
+  it('does not fetch when enabled is false', () => {
+    const client = createMockClient();
+
+    const { result } = renderHook(() => useAIProviders({ enabled: false }), {
+      wrapper: createWrapper(client, '/api/v1/ai'),
+    });
+
+    expect(result.current.fetchStatus).toBe('idle');
+    expect(client.get).not.toHaveBeenCalled();
+  });
+
+  it('uses empty basePath when provider has no basePath configured', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(axiosResponse([]));
+
+    const { result } = renderHook(() => useAIProviders(), {
+      wrapper: createWrapper(client),
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+  });
+});
+
+// -- useAIChat no basePath ---------------------------------------------------
+
+describe('useAIChat — no basePath', () => {
+  it('falls back to empty string basePath when none is configured', async () => {
+    const client = createMockClient();
+    const response = {
+      workspaceName: 'default',
+      model: 'gpt-4o',
+      content: 'Hi!',
+      usage: null,
+      duration: '00:00:01',
+    };
+    vi.mocked(client.post).mockResolvedValue(axiosResponse(response));
+
+    const { result } = renderHook(() => useAIChat(), {
+      wrapper: createWrapper(client),
+    });
+
+    await act(async () => {
+      result.current.send('default', { messages: [{ role: 'user', content: 'Hello' }] });
+    });
+
+    await waitFor(() => expect(result.current.isPending).toBe(false));
     expect(result.current.data).toEqual(response);
   });
 });

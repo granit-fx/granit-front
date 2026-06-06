@@ -207,6 +207,6 @@ function isTimelineEntry(value: unknown): value is TimelineEntry {
     typeof value === 'object' &&
     value !== null &&
     typeof (value as { id?: unknown }).id === 'string' &&
-    typeof (value as { entryType?: unknown }).entryType === 'number'
+    typeof (value as { entryType?: unknown }).entryType === 'string'
   );
 }
