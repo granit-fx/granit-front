@@ -85,8 +85,11 @@ export async function publishTemplate(
   basePath: string,
   name: string,
   culture?: string
-): Promise<void> {
-  await client.post(templateUrl(basePath, name, 'publish'), null, { params: { culture } });
+): Promise<TemplateDetail> {
+  const { data } = await client.post<TemplateDetail>(templateUrl(basePath, name, 'publish'), null, {
+    params: { culture },
+  });
+  return data;
 }
 
 export async function unpublishTemplate(
@@ -185,7 +188,7 @@ export async function getVariables(
 // ---------------------------------------------------------------------------
 
 export async function getLayouts(client: AxiosInstance, basePath: string): Promise<string[]> {
-  const { data } = await client.get<string[]>(`${basePath}/templates/layouts`);
+  const { data } = await client.get<string[]>(`${basePath}/layouts`);
   return data;
 }
 

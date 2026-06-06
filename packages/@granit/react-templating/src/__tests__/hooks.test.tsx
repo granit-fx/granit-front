@@ -60,6 +60,7 @@ describe('useTemplates', () => {
       items: [
         {
           name: 'Billing.Invoice',
+          culture: null,
           layoutName: 'Layout.Email',
           currentStatus: TemplateLifecycleStatus.Draft,
           mimeType: 'text/html',
@@ -124,16 +125,21 @@ describe('useTemplate', () => {
     const client = createMockClient();
     const detail: TemplateDetail = {
       name: 'Billing.Invoice',
+      culture: null,
       layoutName: 'Layout.Email',
       draft: {
         revisionId: toEntityId<'TemplateRevision'>('rev-1'),
         content: '<p>Hello</p>',
         mimeType: 'text/html',
-        status: TemplateLifecycleStatus.Draft,
+        status: 'Draft',
         layoutName: 'Layout.Email',
         createdAt: toISODateString('2026-03-01T10:00:00Z'),
         createdBy: 'admin',
+        publishedAt: null,
+        publishedBy: null,
+        concurrencyStamp: 'cs-rev-1',
       },
+      published: null,
     };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(detail));
 
@@ -157,7 +163,13 @@ describe('useTemplate', () => {
 
   it('should pass culture param', async () => {
     const client = createMockClient();
-    const detail: TemplateDetail = { name: 'Billing.Invoice', culture: 'fr-BE', layoutName: null };
+    const detail: TemplateDetail = {
+      name: 'Billing.Invoice',
+      culture: 'fr-BE',
+      layoutName: null,
+      draft: null,
+      published: null,
+    };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(detail));
 
     renderHook(() => useTemplate('Billing.Invoice', 'fr-BE'), {
@@ -194,7 +206,13 @@ describe('useTemplateMutations', () => {
 
   it('should save draft and invalidate queries', async () => {
     const client = createMockClient();
-    const detail: TemplateDetail = { name: 'Billing.Invoice', layoutName: null };
+    const detail: TemplateDetail = {
+      name: 'Billing.Invoice',
+      culture: null,
+      layoutName: null,
+      draft: null,
+      published: null,
+    };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(detail));
 
     const { result } = renderHook(() => useTemplateMutations(), {
@@ -212,7 +230,14 @@ describe('useTemplateMutations', () => {
 
   it('should publish template', async () => {
     const client = createMockClient();
-    vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
+    const detail: TemplateDetail = {
+      name: 'Billing.Invoice',
+      culture: null,
+      layoutName: null,
+      draft: null,
+      published: null,
+    };
+    vi.mocked(client.post).mockResolvedValue(axiosResponse(detail));
 
     const { result } = renderHook(() => useTemplateMutations(), {
       wrapper: createWrapper(client),
@@ -271,7 +296,13 @@ describe('useTemplateMutations', () => {
 
   it('should update draft', async () => {
     const client = createMockClient();
-    const detail: TemplateDetail = { name: 'Billing.Invoice', layoutName: null };
+    const detail: TemplateDetail = {
+      name: 'Billing.Invoice',
+      culture: null,
+      layoutName: null,
+      draft: null,
+      published: null,
+    };
     vi.mocked(client.put).mockResolvedValue(axiosResponse(detail));
 
     const { result } = renderHook(() => useTemplateMutations(), {
@@ -320,7 +351,13 @@ describe('useTemplateMutations', () => {
 
   it('should invalidate cache after saveDraft succeeds', async () => {
     const client = createMockClient();
-    const detail: TemplateDetail = { name: 'Billing.Invoice', layoutName: null };
+    const detail: TemplateDetail = {
+      name: 'Billing.Invoice',
+      culture: null,
+      layoutName: null,
+      draft: null,
+      published: null,
+    };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(detail));
 
     const { wrapper, queryClient } = createWrapperWithQueryClient(client);
@@ -341,21 +378,27 @@ describe('useTemplateMutations', () => {
 
   it('should invalidate cache after publish succeeds', async () => {
     const client = createMockClient();
-    vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
+    const detail: TemplateDetail = {
+      name: 'Billing.Invoice',
+      culture: null,
+      layoutName: null,
+      draft: null,
+      published: null,
+    };
+    vi.mocked(client.post).mockResolvedValue(axiosResponse(detail));
 
     const { wrapper, queryClient } = createWrapperWithQueryClient(client);
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
+    const setDataSpy = vi.spyOn(queryClient, 'setQueryData');
 
     const { result } = renderHook(() => useTemplateMutations(), { wrapper });
 
     result.current.publish.mutate({ name: 'Billing.Invoice' });
 
     await waitFor(() => expect(result.current.publish.isSuccess).toBe(true));
+    expect(setDataSpy).toHaveBeenCalledWith(['templates', 'detail', 'Billing.Invoice'], detail);
     expect(invalidateSpy).toHaveBeenCalledWith(
       expect.objectContaining({ queryKey: ['templates'] })
-    );
-    expect(invalidateSpy).toHaveBeenCalledWith(
-      expect.objectContaining({ queryKey: ['templates', 'detail', 'Billing.Invoice'] })
     );
     expect(invalidateSpy).toHaveBeenCalledWith(
       expect.objectContaining({ queryKey: ['templates', 'history', 'Billing.Invoice'] })
@@ -407,7 +450,13 @@ describe('useTemplateMutations', () => {
 
   it('should invalidate cache after updateDraft succeeds', async () => {
     const client = createMockClient();
-    const detail: TemplateDetail = { name: 'Billing.Invoice', layoutName: null };
+    const detail: TemplateDetail = {
+      name: 'Billing.Invoice',
+      culture: null,
+      layoutName: null,
+      draft: null,
+      published: null,
+    };
     vi.mocked(client.put).mockResolvedValue(axiosResponse(detail));
 
     const { wrapper, queryClient } = createWrapperWithQueryClient(client);
@@ -495,12 +544,13 @@ describe('useTemplateRevision', () => {
       revisionId: toEntityId<'TemplateRevision'>('rev-1'),
       content: '<p>Hello</p>',
       mimeType: 'text/html',
-      status: TemplateLifecycleStatus.Published,
+      status: 'Published',
       layoutName: null,
       createdAt: toISODateString('2026-03-01T10:00:00Z'),
       createdBy: 'admin',
       publishedAt: toISODateString('2026-03-02T10:00:00Z'),
       publishedBy: 'admin',
+      concurrencyStamp: 'cs-rev-1',
     };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(revision));
 
@@ -647,7 +697,7 @@ describe('useTemplateVariables', () => {
   it('should fetch variables', async () => {
     const client = createMockClient();
     const variables: TemplateVariables = {
-      globalVariables: [{ name: 'AppName', type: 'string' }],
+      globalVariables: [{ name: 'AppName', type: 'string', description: null }],
       modelVariables: [],
       enrichedVariables: [],
     };
@@ -698,6 +748,8 @@ describe('useTemplateCategories', () => {
       {
         id: toEntityId<'TemplateCategory'>('cat-1'),
         name: 'Billing',
+        description: null,
+        icon: null,
         sortOrder: 1,
         templateCount: 5,
       },
@@ -745,7 +797,7 @@ describe('useTemplateLayouts', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual(layouts);
-    expect(client.get).toHaveBeenCalledWith('/api/v1/templating/templates/layouts');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/templating/layouts');
   });
 
   it('should expose error state on failure', async () => {
@@ -775,6 +827,8 @@ describe('useTemplateCategoryMutations', () => {
     const created: TemplateCategory = {
       id: toEntityId<'TemplateCategory'>('cat-2'),
       name: 'Legal',
+      description: null,
+      icon: null,
       sortOrder: 2,
       templateCount: 0,
     };
@@ -799,6 +853,8 @@ describe('useTemplateCategoryMutations', () => {
     const updated: TemplateCategory = {
       id: toEntityId<'TemplateCategory'>('cat-1'),
       name: 'Billing Updated',
+      description: null,
+      icon: null,
       sortOrder: 1,
       templateCount: 5,
     };
@@ -854,6 +910,8 @@ describe('useTemplateCategoryMutations', () => {
     const created: TemplateCategory = {
       id: toEntityId<'TemplateCategory'>('cat-2'),
       name: 'Legal',
+      description: null,
+      icon: null,
       sortOrder: 2,
       templateCount: 0,
     };
@@ -877,6 +935,8 @@ describe('useTemplateCategoryMutations', () => {
     const updated: TemplateCategory = {
       id: toEntityId<'TemplateCategory'>('cat-1'),
       name: 'Billing v2',
+      description: null,
+      icon: null,
       sortOrder: 1,
       templateCount: 5,
     };

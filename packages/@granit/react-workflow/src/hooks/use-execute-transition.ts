@@ -1,8 +1,11 @@
 import { createLogger } from '@granit/logger';
 import { executeStateMachineTransition } from '@granit/workflow';
-import { useCallback, useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 
 import { useWorkflowConfig } from '../providers/workflow-provider';
+
+import { buildWorkflowQueryKey } from './query-keys';
 
 import type { WorkflowTransitionResult } from '@granit/workflow';
 
@@ -14,24 +17,48 @@ export interface UseExecuteTransitionOptions {
 }
 
 export interface UseExecuteTransitionReturn {
-  transition: (
+  readonly transition: (
     currentState: string,
     targetState: string,
     comment?: string
   ) => Promise<WorkflowTransitionResult | null>;
-  loading: boolean;
-  result: WorkflowTransitionResult | null;
-  error: Error | null;
+  readonly isPending: boolean;
+  readonly data: WorkflowTransitionResult | null;
+  readonly error: Error | null;
 }
 
 export function useExecuteTransition(
   options?: UseExecuteTransitionOptions
 ): UseExecuteTransitionReturn {
-  const { client, basePath } = useWorkflowConfig();
+  const config = useWorkflowConfig();
+  const queryClient = useQueryClient();
 
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<WorkflowTransitionResult | null>(null);
-  const [error, setError] = useState<Error | null>(null);
+  const mutation = useMutation({
+    mutationFn: ({
+      currentState,
+      targetState,
+      comment,
+    }: {
+      currentState: string;
+      targetState: string;
+      comment?: string;
+    }) =>
+      executeStateMachineTransition(config.client, config.basePath, currentState, {
+        targetState,
+        comment,
+      }),
+    onSuccess: (result) => {
+      queryClient
+        .invalidateQueries({ queryKey: buildWorkflowQueryKey(config) })
+        .catch(() => undefined);
+      options?.onSuccess?.(result);
+    },
+    onError: (err) => {
+      const wrapped = err instanceof Error ? err : new Error(String(err));
+      logger.error('Failed to execute transition', wrapped);
+      options?.onError?.(wrapped);
+    },
+  });
 
   const transition = useCallback(
     async (
@@ -39,29 +66,19 @@ export function useExecuteTransition(
       targetState: string,
       comment?: string
     ): Promise<WorkflowTransitionResult | null> => {
-      setLoading(true);
-      setError(null);
-
       try {
-        const data = await executeStateMachineTransition(client, basePath, currentState, {
-          targetState,
-          comment,
-        });
-        setResult(data);
-        options?.onSuccess?.(data);
-        return data;
-      } catch (err) {
-        const wrapped = err instanceof Error ? err : new Error(String(err));
-        logger.error('Failed to execute transition', wrapped);
-        setError(wrapped);
-        options?.onError?.(wrapped);
+        return await mutation.mutateAsync({ currentState, targetState, comment });
+      } catch {
         return null;
-      } finally {
-        setLoading(false);
       }
     },
-    [client, basePath, options?.onSuccess, options?.onError]
+    [mutation]
   );
 
-  return { transition, loading, result, error };
+  return {
+    transition,
+    isPending: mutation.isPending,
+    data: mutation.data ?? null,
+    error: mutation.error,
+  };
 }

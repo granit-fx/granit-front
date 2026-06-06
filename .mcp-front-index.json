@@ -6626,6 +6626,11 @@
           "signature": "function useTemplateRevision(name: string, revisionId: string)"
         },
         {
+          "name": "useTemplateLifecycle",
+          "kind": "function",
+          "signature": "function useTemplateLifecycle(name: string, culture?: string)"
+        },
+        {
           "name": "useTemplateMutations",
           "kind": "function",
           "signature": "function useTemplateMutations()"
@@ -6891,6 +6896,22 @@
       "description": "React hooks for @granit/validation — resolver factory for react-hook-form, useFieldProps",
       "exports": [
         {
+          "name": "ValidationProvider",
+          "kind": "function",
+          "signature": "function ValidationProvider("
+        },
+        {
+          "name": "useValidationConfig",
+          "kind": "function",
+          "signature": "function useValidationConfig(): ValidationConfig"
+        },
+        {
+          "name": "ValidationConfig",
+          "kind": "interface",
+          "signature": "interface ValidationConfig",
+          "members": []
+        },
+        {
           "name": "createConstraintsResolver",
           "kind": "function",
           "signature": "function createConstraintsResolver( constraints: SchemaConstraints, t: TranslateFunction, options?: ConstraintsResolverOptions ): ConstraintsResolver"
@@ -6922,6 +6943,11 @@
           "kind": "interface",
           "signature": "interface UseServerValidationOptions",
           "members": []
+        },
+        {
+          "name": "useServerValidationBatch",
+          "kind": "function",
+          "signature": "function useServerValidationBatch( options: UseServerValidationBatchOptions ): ServerValidationBatchState"
         }
       ]
     },
@@ -6996,6 +7022,11 @@
       "description": "React bindings for @granit/workflow — WorkflowProvider, useWorkflowStatus, useWorkflowTransition, useWorkflowHistory",
       "exports": [
         {
+          "name": "buildWorkflowQueryKey",
+          "kind": "function",
+          "signature": "function buildWorkflowQueryKey( config: WorkflowConfig, ...segments: readonly string[] ): readonly unknown[]"
+        },
+        {
           "name": "useExecuteTransition",
           "kind": "function",
           "signature": "function useExecuteTransition( options?: UseExecuteTransitionOptions ): UseExecuteTransitionReturn"
@@ -7014,33 +7045,11 @@
               "name": "currentState",
               "kind": "property",
               "signature": "currentState: string"
-            }
-          ]
-        },
-        {
-          "name": "UseTransitionsReturn",
-          "kind": "interface",
-          "signature": "interface UseTransitionsReturn",
-          "members": [
-            {
-              "name": "transitions",
-              "kind": "property",
-              "signature": "transitions: readonly WorkflowTransition[]"
             },
             {
-              "name": "loading",
+              "name": "enabled",
               "kind": "property",
-              "signature": "loading: boolean"
-            },
-            {
-              "name": "error",
-              "kind": "property",
-              "signature": "error: Error | null"
-            },
-            {
-              "name": "refetch",
-              "kind": "method",
-              "signature": "refetch: () => Promise<void>"
+              "signature": "enabled?: boolean"
             }
           ]
         },
@@ -7048,6 +7057,38 @@
           "name": "useWorkflowHistory",
           "kind": "function",
           "signature": "function useWorkflowHistory("
+        },
+        {
+          "name": "UseWorkflowHistoryOptions",
+          "kind": "interface",
+          "signature": "interface UseWorkflowHistoryOptions",
+          "members": [
+            {
+              "name": "entityType",
+              "kind": "property",
+              "signature": "entityType: string"
+            },
+            {
+              "name": "entityId",
+              "kind": "property",
+              "signature": "entityId: string"
+            },
+            {
+              "name": "page",
+              "kind": "property",
+              "signature": "page?: number"
+            },
+            {
+              "name": "pageSize",
+              "kind": "property",
+              "signature": "pageSize?: number"
+            },
+            {
+              "name": "enabled",
+              "kind": "property",
+              "signature": "enabled?: boolean"
+            }
+          ]
         },
         {
           "name": "buildLifecycleTransitionPrompt",
@@ -7391,14 +7432,34 @@
       "description": "Cross-cutting branded types for the Granit framework",
       "exports": [
         {
+          "name": "isEntityId",
+          "kind": "function",
+          "signature": "function isEntityId(value: unknown): value is EntityId<string>"
+        },
+        {
           "name": "toEntityId",
           "kind": "function",
           "signature": "function toEntityId<Brand extends string>(value: string): EntityId<Brand>"
         },
         {
+          "name": "isISODateString",
+          "kind": "function",
+          "signature": "function isISODateString(value: unknown): value is ISODateString"
+        },
+        {
           "name": "toISODateString",
           "kind": "function",
           "signature": "function toISODateString(value: string): ISODateString"
+        },
+        {
+          "name": "isTimeZoneId",
+          "kind": "function",
+          "signature": "function isTimeZoneId(value: unknown): value is TimeZoneId"
+        },
+        {
+          "name": "toTimeZoneId",
+          "kind": "function",
+          "signature": "function toTimeZoneId(value: string): TimeZoneId"
         },
         {
           "name": "CurrencyCode",
@@ -7429,6 +7490,11 @@
           "name": "ISODateString",
           "kind": "type",
           "signature": "type ISODateString = string & { readonly __brand: 'ISODateString' }"
+        },
+        {
+          "name": "TimeZoneId",
+          "kind": "type",
+          "signature": "type TimeZoneId = string & { readonly __brand: 'TimeZoneId' }"
         }
       ]
     },
@@ -7481,6 +7547,11 @@
           "name": "getInputProps",
           "kind": "function",
           "signature": "function getInputProps(constraint: FieldConstraint): InputConstraintProps"
+        },
+        {
+          "name": "isEmptyFieldValue",
+          "kind": "function",
+          "signature": "function isEmptyFieldValue(value: unknown): boolean"
         },
         {
           "name": "validateField",

@@ -1,5 +1,5 @@
 import { toISODateString } from '@granit/types';
-import { act, renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useWorkflowHistory } from '../hooks/use-workflow-history';
@@ -29,7 +29,12 @@ describe('useWorkflowHistory', () => {
   it('should load history on mount', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
-      axiosResponse({ items: sampleHistory, totalCount: sampleHistory.length, nextCursor: null })
+      axiosResponse({
+        items: sampleHistory,
+        totalCount: sampleHistory.length,
+        hasMore: false,
+        nextCursor: null,
+      })
     );
 
     const { result } = renderHook(
@@ -37,13 +42,14 @@ describe('useWorkflowHistory', () => {
       { wrapper: createWrapper(client) }
     );
 
-    expect(result.current.loading).toBe(true);
+    expect(result.current.isLoading).toBe(true);
 
-    await waitFor(() => expect(result.current.loading).toBe(false));
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    expect(result.current.history).toHaveLength(2);
-    expect(result.current.history[0]!.newState).toBe('PendingReview');
-    expect(result.current.history[1]!.transitionedBy).toBe('Dr. Marchand');
+    expect(result.current.data?.items).toHaveLength(2);
+    expect(result.current.data?.items[0]!.newState).toBe('PendingReview');
+    expect(result.current.data?.items[1]!.transitionedBy).toBe('Dr. Marchand');
+    expect(result.current.data?.hasMore).toBe(false);
   });
 
   it('should set error state on failure', async () => {
@@ -55,10 +61,10 @@ describe('useWorkflowHistory', () => {
       { wrapper: createWrapper(client) }
     );
 
-    await waitFor(() => expect(result.current.loading).toBe(false));
+    await waitFor(() => expect(result.current.isError).toBe(true));
 
     expect(result.current.error?.message).toBe('Not found');
-    expect(result.current.history).toHaveLength(0);
+    expect(result.current.data).toBeUndefined();
   });
 
   it('should not fetch when enabled is false', () => {
@@ -70,93 +76,53 @@ describe('useWorkflowHistory', () => {
     );
 
     expect(client.get).not.toHaveBeenCalled();
-    expect(result.current.loading).toBe(false);
-    expect(result.current.history).toHaveLength(0);
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.fetchStatus).toBe('idle');
   });
 
-  it('should wrap non-Error thrown values', async () => {
+  it('should pass page and pageSize params', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockRejectedValue('string error');
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse({
+        items: sampleHistory,
+        totalCount: 40,
+        hasMore: true,
+        nextCursor: null,
+      })
+    );
 
     const { result } = renderHook(
-      () => useWorkflowHistory({ entityType: 'Document', entityId: 'doc-1' }),
+      () =>
+        useWorkflowHistory({ entityType: 'Document', entityId: 'doc-1', page: 2, pageSize: 10 }),
       { wrapper: createWrapper(client) }
     );
 
-    await waitFor(() => expect(result.current.loading).toBe(false));
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    expect(result.current.error).toBeInstanceOf(Error);
-    expect(result.current.error?.message).toBe('string error');
-    expect(result.current.history).toHaveLength(0);
-  });
-
-  it('should discard results when unmounted during fetch', async () => {
-    const client = createMockClient();
-    let resolveGet!: (value: unknown) => void;
-    vi.mocked(client.get).mockReturnValue(
-      new Promise((resolve) => {
-        resolveGet = resolve;
-      })
+    expect(client.get).toHaveBeenCalledWith(
+      expect.stringContaining('/Document/doc-1/history'),
+      expect.objectContaining({ params: { page: 2, pageSize: 10 } })
     );
-
-    const { result, unmount } = renderHook(
-      () => useWorkflowHistory({ entityType: 'Document', entityId: 'doc-1' }),
-      { wrapper: createWrapper(client) }
-    );
-
-    expect(result.current.loading).toBe(true);
-
-    // Unmount before the fetch resolves — triggers abort
-    unmount();
-
-    // Resolve after unmount — state updates should be skipped
-    await act(async () => {
-      resolveGet(
-        axiosResponse({ items: sampleHistory, totalCount: sampleHistory.length, nextCursor: null })
-      );
-    });
-
-    // The hook was unmounted, so we cannot inspect result.current meaningfully,
-    // but the key assertion is that no React "setState on unmounted" warning is thrown.
-    expect(true).toBe(true);
-  });
-
-  it('should discard errors when unmounted during fetch', async () => {
-    const client = createMockClient();
-    let rejectGet!: (reason: unknown) => void;
-    vi.mocked(client.get).mockReturnValue(
-      new Promise((_resolve, reject) => {
-        rejectGet = reject;
-      })
-    );
-
-    const { unmount } = renderHook(
-      () => useWorkflowHistory({ entityType: 'Document', entityId: 'doc-1' }),
-      { wrapper: createWrapper(client) }
-    );
-
-    // Unmount before the fetch rejects — triggers abort
-    unmount();
-
-    // Reject after unmount — error state updates should be skipped
-    await act(async () => {
-      rejectGet(new Error('Late error'));
-    });
-
-    // No React warnings expected
-    expect(true).toBe(true);
+    expect(result.current.data?.hasMore).toBe(true);
+    expect(result.current.data?.totalCount).toBe(40);
   });
 
   it('should refetch when refetch is called', async () => {
     const client = createMockClient();
     vi.mocked(client.get)
       .mockResolvedValueOnce(
-        axiosResponse({ items: [sampleHistory[0]], totalCount: 1, nextCursor: null })
+        axiosResponse({
+          items: [sampleHistory[0]],
+          totalCount: 1,
+          hasMore: false,
+          nextCursor: null,
+        })
       )
       .mockResolvedValueOnce(
         axiosResponse({
           items: sampleHistory,
           totalCount: sampleHistory.length,
+          hasMore: false,
           nextCursor: null,
         })
       );
@@ -166,11 +132,11 @@ describe('useWorkflowHistory', () => {
       { wrapper: createWrapper(client) }
     );
 
-    await waitFor(() => expect(result.current.loading).toBe(false));
-    expect(result.current.history).toHaveLength(1);
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    expect(result.current.data?.items).toHaveLength(1);
 
     await result.current.refetch();
 
-    await waitFor(() => expect(result.current.history).toHaveLength(2));
+    await waitFor(() => expect(result.current.data?.items).toHaveLength(2));
   });
 });

@@ -100,6 +100,7 @@ export function createWorkflowHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return HttpResponse.json({
         items: history,
         totalCount: history.length,
+        hasMore: false,
         nextCursor: null,
       });
     }),

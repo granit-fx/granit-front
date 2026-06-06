@@ -13,6 +13,4 @@ export type {
 
 export type { WorkflowStatus } from './workflow-status';
 
-export type { WorkflowConfig } from './config';
-
 export type { WorkflowHistoryPage } from './history';

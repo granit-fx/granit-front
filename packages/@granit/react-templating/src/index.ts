@@ -14,6 +14,7 @@ export {
   useTemplateCategoryMutations,
 } from './hooks/use-template-categories';
 export { useTemplateHistory, useTemplateRevision } from './hooks/use-template-history';
+export { useTemplateLifecycle } from './hooks/use-template-lifecycle';
 export { useTemplateMutations } from './hooks/use-template-mutations';
 export { useTemplateBinaryPreview, useTemplatePreview } from './hooks/use-template-preview';
 export { useTemplateVariables } from './hooks/use-template-variables';

@@ -6,6 +6,7 @@ import type {
   TemplateDetail,
   TemplateListItem,
   TemplateRevisionId,
+  WorkflowLifecycleStatus,
 } from '@granit/templating';
 import type { Mutable } from '@granit/testing';
 
@@ -48,6 +49,13 @@ export interface MockTemplate {
   lastModifiedBy: string;
   hasPublishedVersion: boolean;
 }
+
+const STATUS_MAP: Record<number, WorkflowLifecycleStatus> = {
+  [TemplateLifecycleStatus.Draft]: 'Draft',
+  [TemplateLifecycleStatus.PendingReview]: 'PendingReview',
+  [TemplateLifecycleStatus.Published]: 'Published',
+  [TemplateLifecycleStatus.Archived]: 'Archived',
+};
 
 export const mockTemplatesData: MockTemplate[] = [
   {
@@ -93,7 +101,7 @@ export const mockTemplatesData: MockTemplate[] = [
 export function toTemplateListItem(t: MockTemplate): Mutable<TemplateListItem> {
   return {
     name: t.name,
-    culture: t.culture,
+    culture: t.culture ?? null,
     category: t.category,
     layoutName: t.layoutName ?? null,
     currentStatus: t.status as TemplateListItem['currentStatus'],
@@ -110,21 +118,25 @@ export function toTemplateDetail(t: MockTemplate): Mutable<TemplateDetail> {
     content: t.content,
     mimeType: t.mimeType,
     layoutName: t.layoutName ?? null,
-    status: t.status as TemplateListItem['currentStatus'],
+    status: STATUS_MAP[t.status] ?? 'Draft',
     createdAt: toISODateString(t.lastModifiedAt),
     createdBy: t.lastModifiedBy,
+    publishedAt: null,
+    publishedBy: null,
+    concurrencyStamp: `stamp_${t.name.replaceAll('.', '_')}_1`,
   };
   return {
     name: t.name,
-    culture: t.culture,
-    category: t.category,
+    culture: t.culture ?? null,
     layoutName: t.layoutName ?? null,
-    draft: t.status === TemplateLifecycleStatus.Draft ? revision : undefined,
+    draft: t.status === TemplateLifecycleStatus.Draft ? revision : null,
     published: t.hasPublishedVersion
       ? {
           ...revision,
-          status: TemplateLifecycleStatus.Published as TemplateListItem['currentStatus'],
+          status: 'Published' as WorkflowLifecycleStatus,
+          publishedAt: toISODateString(t.lastModifiedAt),
+          publishedBy: t.lastModifiedBy,
         }
-      : undefined,
+      : null,
   };
 }

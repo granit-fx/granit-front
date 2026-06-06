@@ -3,10 +3,9 @@
 // ---------------------------------------------------------------------------
 
 // Types
-export { DocumentFormat, TemplateLifecycleStatus } from './types/index';
+export { TemplateLifecycleStatus } from './types/index';
 
 export type {
-  DocumentFormatValue,
   SaveTemplateCategoryRequest,
   SaveTemplateRequest,
   TemplateCategory,
@@ -27,6 +26,7 @@ export type {
   TemplateVariable,
   TemplateVariables,
   TemplatingConfig,
+  WorkflowLifecycleStatus,
 } from './types/index';
 
 // Query keys (for advanced usage / custom queries)

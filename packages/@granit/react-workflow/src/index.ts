@@ -4,7 +4,6 @@
 
 // Provider
 export {
-  buildWorkflowQueryKey,
   useWorkflowConfig,
   WorkflowProvider,
 } from './providers/workflow-provider';
@@ -14,6 +13,9 @@ export type {
   WorkflowProviderProps,
 } from './providers/workflow-provider';
 
+// Query key factory
+export { buildWorkflowQueryKey } from './hooks/query-keys';
+
 // Hooks
 export { useExecuteTransition } from './hooks/use-execute-transition';
 export type {
@@ -22,13 +24,10 @@ export type {
 } from './hooks/use-execute-transition';
 
 export { useTransitions } from './hooks/use-transitions';
-export type { UseTransitionsOptions, UseTransitionsReturn } from './hooks/use-transitions';
+export type { UseTransitionsOptions } from './hooks/use-transitions';
 
 export { useWorkflowHistory } from './hooks/use-workflow-history';
-export type {
-  UseWorkflowHistoryOptions,
-  UseWorkflowHistoryReturn,
-} from './hooks/use-workflow-history';
+export type { UseWorkflowHistoryOptions } from './hooks/use-workflow-history';
 
 // Lifecycle transition prompt metadata + i18n bundles
 export { buildLifecycleTransitionPrompt } from './transitions/lifecycle-transition-prompt';

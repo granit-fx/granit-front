@@ -23,7 +23,7 @@ describe('workflow api', () => {
       },
     ];
     vi.mocked(client.get).mockResolvedValue(
-      axiosResponse({ items: historyItems, totalCount: 1, nextCursor: null })
+      axiosResponse({ items: historyItems, totalCount: 1, hasMore: false, nextCursor: null })
     );
 
     const result = await getHistory(client, basePath, entityType, entityId);
@@ -31,7 +31,7 @@ describe('workflow api', () => {
     expect(client.get).toHaveBeenCalledWith('/api/v1/workflow/Document/doc-1/history', {
       params: {},
     });
-    expect(result).toEqual({ items: historyItems, totalCount: 1, nextCursor: null });
+    expect(result).toEqual({ items: historyItems, totalCount: 1, hasMore: false, nextCursor: null });
   });
 
   it('should call GET with query param for listTransitions', async () => {
@@ -87,7 +87,7 @@ describe('workflow api', () => {
       },
     ];
     vi.mocked(client.get).mockResolvedValue(
-      axiosResponse({ items: historyItems, totalCount: 10, nextCursor: 'abc' })
+      axiosResponse({ items: historyItems, totalCount: 10, hasMore: true, nextCursor: 'abc' })
     );
 
     const result = await getHistory(client, basePath, entityType, entityId, {
@@ -99,6 +99,7 @@ describe('workflow api', () => {
       params: { page: 2, pageSize: 5 },
     });
     expect(result.totalCount).toBe(10);
+    expect(result.hasMore).toBe(true);
     expect(result.nextCursor).toBe('abc');
   });
 });

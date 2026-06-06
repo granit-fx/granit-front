@@ -12,7 +12,6 @@ export type {
   TransitionOutcomeValue,
   WorkflowTransitionRequest,
   WorkflowTransitionResult,
-  WorkflowConfig,
   WorkflowHistoryPage,
   WorkflowLifecycleStatusValue,
   WorkflowStatus,

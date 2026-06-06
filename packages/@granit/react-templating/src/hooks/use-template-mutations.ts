@@ -32,7 +32,7 @@ export function useTemplateMutations() {
     mutationFn: (request: SaveTemplateRequest) => saveDraft(client, basePath, request),
     onSuccess: (_data, vars) => {
       invalidateAll();
-      invalidateDetail(vars.name);
+      if (vars.name) invalidateDetail(vars.name);
     },
   });
 
@@ -54,9 +54,9 @@ export function useTemplateMutations() {
   const publishMutation = useMutation({
     mutationFn: ({ name, culture }: { name: string; culture?: string }) =>
       publishTemplate(client, basePath, name, culture),
-    onSuccess: (_data, vars) => {
+    onSuccess: (data, vars) => {
+      queryClient.setQueryData(templateKeys.detail(queryKeyPrefix, vars.name), data);
       invalidateAll();
-      invalidateDetail(vars.name);
       invalidateLifecycle(vars.name);
     },
   });

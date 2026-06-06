@@ -33,9 +33,9 @@ describe('useExecuteTransition', () => {
       { params: { currentState: 'Draft' } }
     );
     expect(returned).toEqual(transitionResult);
-    expect(result.current.result).toEqual(transitionResult);
+    await waitFor(() => expect(result.current.data).toEqual(transitionResult));
     expect(onSuccess).toHaveBeenCalledWith(transitionResult);
-    expect(result.current.loading).toBe(false);
+    await waitFor(() => expect(result.current.isPending).toBe(false));
   });
 
   it('should handle transition error', async () => {
@@ -53,12 +53,12 @@ describe('useExecuteTransition', () => {
     });
 
     expect(returned).toBeNull();
-    expect(result.current.error?.message).toBe('Forbidden');
+    await waitFor(() => expect(result.current.error?.message).toBe('Forbidden'));
     expect(onError).toHaveBeenCalled();
-    expect(result.current.loading).toBe(false);
+    await waitFor(() => expect(result.current.isPending).toBe(false));
   });
 
-  it('should set loading state during transition', async () => {
+  it('should set isPending state during transition', async () => {
     const client = createMockClient();
     let resolvePost!: (value: unknown) => void;
     vi.mocked(client.post).mockReturnValue(
@@ -71,14 +71,14 @@ describe('useExecuteTransition', () => {
       wrapper: createWrapper(client),
     });
 
-    expect(result.current.loading).toBe(false);
+    expect(result.current.isPending).toBe(false);
 
     let promise: Promise<unknown>;
     act(() => {
       promise = result.current.transition('Draft', 'Published');
     });
 
-    await waitFor(() => expect(result.current.loading).toBe(true));
+    await waitFor(() => expect(result.current.isPending).toBe(true));
 
     await act(async () => {
       resolvePost(
@@ -91,28 +91,7 @@ describe('useExecuteTransition', () => {
       await promise!;
     });
 
-    expect(result.current.loading).toBe(false);
-  });
-
-  it('should wrap non-Error thrown values', async () => {
-    const client = createMockClient();
-    vi.mocked(client.post).mockRejectedValue('string error');
-    const onError = vi.fn();
-
-    const { result } = renderHook(() => useExecuteTransition({ onError }), {
-      wrapper: createWrapper(client),
-    });
-
-    let returned: WorkflowTransitionResult | null = null;
-    await act(async () => {
-      returned = await result.current.transition('Draft', 'Published');
-    });
-
-    expect(returned).toBeNull();
-    expect(result.current.error).toBeInstanceOf(Error);
-    expect(result.current.error?.message).toBe('string error');
-    expect(onError).toHaveBeenCalledWith(expect.any(Error));
-    expect(result.current.loading).toBe(false);
+    await waitFor(() => expect(result.current.isPending).toBe(false));
   });
 
   it('should handle approval-requested outcome', async () => {

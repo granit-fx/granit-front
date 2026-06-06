@@ -170,8 +170,8 @@ export function createTemplatesHandlers(baseUrl = DEFAULT_BASE_PATH) {
 
     // ── Static routes MUST come before parameterized /:name routes ────────────
 
-    // Layouts
-    http.get(`${BASE}/layouts`, () =>
+    // Layouts — route is /templating/layouts, NOT nested under /templates
+    http.get(`${baseUrl}/layouts`, () =>
       HttpResponse.json(['Layout.Email', 'Layout.Pdf', 'Layout.Letter'])
     ),
 
@@ -185,8 +185,8 @@ export function createTemplatesHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const newCat: (typeof categories)[number] = {
         id: `cat_${nextCatIdx++}` as TemplateCategory['id'],
         name: body.name,
-        description: body.description,
-        icon: body.icon,
+        description: body.description ?? null,
+        icon: body.icon ?? null,
         sortOrder: body.sortOrder ?? categories.length + 1,
         templateCount: 0,
       };
@@ -200,8 +200,8 @@ export function createTemplatesHandlers(baseUrl = DEFAULT_BASE_PATH) {
       if (!cat) return notFound();
       const body = (await request.json()) as SaveTemplateCategoryRequest;
       if (body.name !== undefined) cat.name = body.name;
-      if (body.description !== undefined) cat.description = body.description;
-      if (body.icon !== undefined) cat.icon = body.icon;
+      if (body.description !== undefined) cat.description = body.description ?? null;
+      if (body.icon !== undefined) cat.icon = body.icon ?? null;
       if (body.sortOrder !== undefined) cat.sortOrder = body.sortOrder;
       return HttpResponse.json(cat);
     }),
@@ -274,14 +274,14 @@ export function createTemplatesHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return noContent();
     }),
 
-    // Publish
+    // Publish — returns the updated TemplateDetail (200, not 204)
     http.post(`${BASE}/:name/publish`, ({ params }) => {
       const name = params.name as string;
       const template = templates.find((t) => t.name === name);
       if (!template) return notFound();
       template.status = TemplateLifecycleStatus.Published;
       template.hasPublishedVersion = true;
-      return noContent();
+      return HttpResponse.json(toTemplateDetail(template));
     }),
 
     // Unpublish
@@ -293,29 +293,38 @@ export function createTemplatesHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return noContent();
     }),
 
-    // Lifecycle info
+    // Lifecycle info — returns string status values matching WorkflowLifecycleStatus
     http.get(`${BASE}/:name/lifecycle`, ({ params }) => {
       const name = params.name as string;
       const template = templates.find((t) => t.name === name);
       if (!template) return notFound();
 
-      const transitions: number[] = [];
+      const currentStatus =
+        template.status === TemplateLifecycleStatus.Draft
+          ? 'Draft'
+          : template.status === TemplateLifecycleStatus.PendingReview
+            ? 'PendingReview'
+            : template.status === TemplateLifecycleStatus.Published
+              ? 'Published'
+              : 'Archived';
+
+      const availableTransitions: string[] = [];
       if (template.status === TemplateLifecycleStatus.Draft) {
-        transitions.push(TemplateLifecycleStatus.Published);
+        availableTransitions.push('Published');
       }
       if (template.status === TemplateLifecycleStatus.Published) {
-        transitions.push(TemplateLifecycleStatus.Archived);
+        availableTransitions.push('Archived');
       }
       if (template.status === TemplateLifecycleStatus.Archived) {
-        transitions.push(TemplateLifecycleStatus.Draft);
+        availableTransitions.push('Draft');
       }
 
       return HttpResponse.json({
         name: template.name,
-        culture: template.culture,
-        currentStatus: template.status,
+        culture: template.culture ?? null,
+        currentStatus,
         workflowEnabled: false,
-        availableTransitions: transitions,
+        availableTransitions,
       });
     }),
 
@@ -324,14 +333,25 @@ export function createTemplatesHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const name = params.name as string;
       const template = templates.find((t) => t.name === name);
       if (!template) return notFound();
+
+      const status =
+        template.status === TemplateLifecycleStatus.Draft
+          ? 'Draft'
+          : template.status === TemplateLifecycleStatus.PendingReview
+            ? 'PendingReview'
+            : template.status === TemplateLifecycleStatus.Published
+              ? 'Published'
+              : 'Archived';
+
       return HttpResponse.json({
         revisions: [
           {
             revisionId: `rev_${name.replaceAll('.', '_')}_1`,
-            status: template.status,
+            status,
             createdAt: template.lastModifiedAt,
             createdBy: template.lastModifiedBy,
-            mimeType: template.mimeType,
+            publishedAt: template.hasPublishedVersion ? template.lastModifiedAt : null,
+            publishedBy: template.hasPublishedVersion ? template.lastModifiedBy : null,
             contentLength: template.content.length,
           },
         ],
@@ -346,14 +366,27 @@ export function createTemplatesHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const name = params.name as string;
       const template = templates.find((t) => t.name === name);
       if (!template) return notFound();
+
+      const status =
+        template.status === TemplateLifecycleStatus.Draft
+          ? 'Draft'
+          : template.status === TemplateLifecycleStatus.PendingReview
+            ? 'PendingReview'
+            : template.status === TemplateLifecycleStatus.Published
+              ? 'Published'
+              : 'Archived';
+
       return HttpResponse.json({
         revisionId: params.revisionId,
         content: template.content,
         mimeType: template.mimeType,
         layoutName: template.layoutName ?? null,
-        status: template.status,
+        status,
         createdAt: template.lastModifiedAt,
         createdBy: template.lastModifiedBy,
+        publishedAt: template.hasPublishedVersion ? template.lastModifiedAt : null,
+        publishedBy: template.hasPublishedVersion ? template.lastModifiedBy : null,
+        concurrencyStamp: `stamp_${name.replaceAll('.', '_')}_1`,
       });
     }),
 
@@ -391,12 +424,12 @@ export function createTemplatesHandlers(baseUrl = DEFAULT_BASE_PATH) {
 
       return HttpResponse.json({
         globalVariables: [
-          { name: 'app.name', type: 'String' },
-          { name: 'app.url', type: 'String' },
+          { name: 'app.name', type: 'String', description: null },
+          { name: 'app.url', type: 'String', description: null },
           { name: 'now.date', type: 'DateTime', description: 'Current date' },
           { name: 'now.year', type: 'Int32', description: 'Current year' },
         ],
-        modelVariables: vars.map((v) => ({ name: v, type: 'String' })),
+        modelVariables: vars.map((v) => ({ name: v, type: 'String', description: null })),
         enrichedVariables: [],
       });
     }),

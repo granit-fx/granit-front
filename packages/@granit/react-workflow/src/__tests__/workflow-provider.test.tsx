@@ -1,11 +1,8 @@
 import { render, renderHook, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import {
-  buildWorkflowQueryKey,
-  useWorkflowConfig,
-  WorkflowProvider,
-} from '../providers/workflow-provider';
+import { buildWorkflowQueryKey } from '../hooks/query-keys';
+import { useWorkflowConfig, WorkflowProvider } from '../providers/workflow-provider';
 
 import { createMockClient } from './test-utils.tsx';
 

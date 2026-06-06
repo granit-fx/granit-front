@@ -1,7 +1,6 @@
-export { DocumentFormat, TemplateLifecycleStatus } from './template-types';
+export { TemplateLifecycleStatus } from './template-types';
 
 export type {
-  DocumentFormatValue,
   SaveTemplateCategoryRequest,
   SaveTemplateRequest,
   TemplateCategory,
@@ -22,4 +21,5 @@ export type {
   TemplateVariable,
   TemplateVariables,
   TemplatingConfig,
+  WorkflowLifecycleStatus,
 } from './template-types';

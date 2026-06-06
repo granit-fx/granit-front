@@ -45,6 +45,7 @@ describe('templates-api', () => {
         items: [
           {
             name: 'Billing.Invoice',
+            culture: null,
             layoutName: 'Layout.Email',
             currentStatus: TemplateLifecycleStatus.Draft,
             mimeType: 'text/html',
@@ -54,6 +55,7 @@ describe('templates-api', () => {
           },
         ],
         totalCount: 1,
+        hasMore: false,
       };
       vi.mocked(client.get).mockResolvedValue(axiosResponse(response));
 
@@ -69,7 +71,9 @@ describe('templates-api', () => {
 
     it('should call GET /templates without params', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [], totalCount: 0 }));
+      vi.mocked(client.get).mockResolvedValue(
+        axiosResponse({ items: [], totalCount: 0, hasMore: false })
+      );
 
       await getTemplates(client, basePath);
 
@@ -84,17 +88,21 @@ describe('templates-api', () => {
       const client = createMockClient();
       const detail: TemplateDetail = {
         name: 'Billing.Invoice',
-        category: 'billing',
+        culture: null,
         layoutName: 'Layout.Email',
         draft: {
           revisionId: toEntityId<'TemplateRevision'>('rev-1'),
           content: '<p>Hello</p>',
           mimeType: 'text/html',
-          status: TemplateLifecycleStatus.Draft,
+          status: 'Draft',
           layoutName: 'Layout.Email',
           createdAt: toISODateString('2026-03-01T10:00:00Z'),
           createdBy: 'admin',
+          publishedAt: null,
+          publishedBy: null,
+          concurrencyStamp: 'stamp-1',
         },
+        published: null,
       };
       vi.mocked(client.get).mockResolvedValue(axiosResponse(detail));
 
@@ -111,7 +119,13 @@ describe('templates-api', () => {
     it('should call POST /templates', async () => {
       const client = createMockClient();
       const request = { name: 'Billing.Invoice', content: '<p>Hello</p>' };
-      const detail: TemplateDetail = { name: 'Billing.Invoice', layoutName: null };
+      const detail: TemplateDetail = {
+        name: 'Billing.Invoice',
+        culture: null,
+        layoutName: null,
+        draft: null,
+        published: null,
+      };
       vi.mocked(client.post).mockResolvedValue(axiosResponse(detail));
 
       const result = await saveDraft(client, basePath, request);
@@ -125,7 +139,13 @@ describe('templates-api', () => {
     it('should call PUT /templates/{name}', async () => {
       const client = createMockClient();
       const request = { name: 'Billing.Invoice', content: '<p>Updated</p>' };
-      const detail: TemplateDetail = { name: 'Billing.Invoice', layoutName: null };
+      const detail: TemplateDetail = {
+        name: 'Billing.Invoice',
+        culture: null,
+        layoutName: null,
+        draft: null,
+        published: null,
+      };
       vi.mocked(client.put).mockResolvedValue(axiosResponse(detail));
 
       const result = await updateDraft(client, basePath, 'Billing.Invoice', request);
@@ -155,11 +175,18 @@ describe('templates-api', () => {
   });
 
   describe('publishTemplate', () => {
-    it('should call POST /templates/{name}/publish', async () => {
+    it('should call POST /templates/{name}/publish and return detail', async () => {
       const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
+      const detail: TemplateDetail = {
+        name: 'Billing.Invoice',
+        culture: null,
+        layoutName: null,
+        draft: null,
+        published: null,
+      };
+      vi.mocked(client.post).mockResolvedValue(axiosResponse(detail));
 
-      await publishTemplate(client, basePath, 'Billing.Invoice');
+      const result = await publishTemplate(client, basePath, 'Billing.Invoice');
 
       expect(client.post).toHaveBeenCalledWith(
         '/api/v1/templating/templates/Billing.Invoice/publish',
@@ -168,6 +195,7 @@ describe('templates-api', () => {
           params: { culture: undefined },
         }
       );
+      expect(result).toEqual(detail);
     });
   });
 
@@ -191,9 +219,10 @@ describe('templates-api', () => {
       const client = createMockClient();
       const info: TemplateLifecycle = {
         name: 'Billing.Invoice',
-        currentStatus: TemplateLifecycleStatus.Draft,
+        culture: null,
+        currentStatus: 'Draft',
         workflowEnabled: true,
-        availableTransitions: [TemplateLifecycleStatus.Published],
+        availableTransitions: ['Published'],
       };
       vi.mocked(client.get).mockResolvedValue(axiosResponse(info));
 
@@ -242,12 +271,13 @@ describe('templates-api', () => {
         revisionId: toEntityId<'TemplateRevision'>('rev-1'),
         content: '<p>Hello</p>',
         mimeType: 'text/html',
-        status: TemplateLifecycleStatus.Published,
+        status: 'Published',
         layoutName: null,
         createdAt: toISODateString('2026-03-01T10:00:00Z'),
         createdBy: 'admin',
         publishedAt: toISODateString('2026-03-02T10:00:00Z'),
         publishedBy: 'admin',
+        concurrencyStamp: 'stamp-2',
       };
       vi.mocked(client.get).mockResolvedValue(axiosResponse(revision));
 
@@ -265,7 +295,7 @@ describe('templates-api', () => {
       const client = createMockClient();
       const response: TemplatePreviewResponse = {
         html: '<p>Rendered</p>',
-        revisionId: toEntityId<'TemplateRevision'>('rev-1'),
+        revisionId: 'rev-1',
         renderTimeMs: 42,
       };
       vi.mocked(client.post).mockResolvedValue(axiosResponse(response));
@@ -288,7 +318,7 @@ describe('templates-api', () => {
     it('should call GET /templates/{name}/variables', async () => {
       const client = createMockClient();
       const variables: TemplateVariables = {
-        globalVariables: [{ name: 'AppName', type: 'string' }],
+        globalVariables: [{ name: 'AppName', type: 'string', description: null }],
         modelVariables: [],
         enrichedVariables: [],
       };
@@ -304,14 +334,14 @@ describe('templates-api', () => {
   });
 
   describe('getLayouts', () => {
-    it('should call GET /templates/layouts', async () => {
+    it('should call GET /layouts', async () => {
       const client = createMockClient();
       const layouts = ['Layout.Email', 'Layout.Pdf', 'Layout.Letter'];
       vi.mocked(client.get).mockResolvedValue(axiosResponse(layouts));
 
       const result = await getLayouts(client, basePath);
 
-      expect(client.get).toHaveBeenCalledWith('/api/v1/templating/templates/layouts');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/templating/layouts');
       expect(result).toEqual(layouts);
     });
 
@@ -326,12 +356,14 @@ describe('templates-api', () => {
   });
 
   describe('categories', () => {
-    it('should call GET /template-categories', async () => {
+    it('should call GET /categories', async () => {
       const client = createMockClient();
       const categories: TemplateCategory[] = [
         {
           id: toEntityId<'TemplateCategory'>('cat-1'),
           name: 'Billing',
+          description: null,
+          icon: null,
           sortOrder: 1,
           templateCount: 5,
         },
@@ -344,12 +376,14 @@ describe('templates-api', () => {
       expect(result).toEqual(categories);
     });
 
-    it('should call POST /template-categories', async () => {
+    it('should call POST /categories', async () => {
       const client = createMockClient();
       const request = { name: 'Billing', sortOrder: 1 };
       const category: TemplateCategory = {
         id: toEntityId<'TemplateCategory'>('cat-1'),
         name: 'Billing',
+        description: null,
+        icon: null,
         sortOrder: 1,
         templateCount: 0,
       };
@@ -361,12 +395,14 @@ describe('templates-api', () => {
       expect(result).toEqual(category);
     });
 
-    it('should call PUT /template-categories/{id}', async () => {
+    it('should call PUT /categories/{id}', async () => {
       const client = createMockClient();
       const request = { name: 'Updated', sortOrder: 2 };
       const category: TemplateCategory = {
         id: toEntityId<'TemplateCategory'>('cat-1'),
         name: 'Updated',
+        description: null,
+        icon: null,
         sortOrder: 2,
         templateCount: 5,
       };
@@ -378,7 +414,7 @@ describe('templates-api', () => {
       expect(result).toEqual(category);
     });
 
-    it('should call DELETE /template-categories/{id}', async () => {
+    it('should call DELETE /categories/{id}', async () => {
       const client = createMockClient();
       vi.mocked(client.delete).mockResolvedValue(axiosResponse(undefined));
 

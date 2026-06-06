@@ -1,4 +1,4 @@
-import { act, renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useTransitions } from '../hooks/use-transitions';
@@ -23,13 +23,13 @@ describe('useTransitions', () => {
       wrapper: createWrapper(client),
     });
 
-    expect(result.current.loading).toBe(true);
+    expect(result.current.isLoading).toBe(true);
 
-    await waitFor(() => expect(result.current.loading).toBe(false));
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    expect(result.current.transitions).toHaveLength(2);
-    expect(result.current.transitions[0]!.name).toBe('Publier');
-    expect(result.current.transitions[1]!.requiresApproval).toBe(true);
+    expect(result.current.data?.availableTransitions).toHaveLength(2);
+    expect(result.current.data?.availableTransitions[0]!.name).toBe('Publier');
+    expect(result.current.data?.availableTransitions[1]!.requiresApproval).toBe(true);
   });
 
   it('should set error state on failure', async () => {
@@ -40,78 +40,26 @@ describe('useTransitions', () => {
       wrapper: createWrapper(client),
     });
 
-    await waitFor(() => expect(result.current.loading).toBe(false));
+    await waitFor(() => expect(result.current.isError).toBe(true));
 
     expect(result.current.error?.message).toBe('Network error');
-    expect(result.current.transitions).toHaveLength(0);
+    expect(result.current.data).toBeUndefined();
   });
 
-  it('should wrap non-Error thrown values', async () => {
+  it('should not fetch when enabled is false', () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockRejectedValue('string error');
 
-    const { result } = renderHook(() => useTransitions({ currentState: 'Draft' }), {
-      wrapper: createWrapper(client),
-    });
-
-    await waitFor(() => expect(result.current.loading).toBe(false));
-
-    expect(result.current.error).toBeInstanceOf(Error);
-    expect(result.current.error?.message).toBe('string error');
-  });
-
-  it('should discard results when unmounted during fetch', async () => {
-    const client = createMockClient();
-    let resolveGet!: (value: unknown) => void;
-    vi.mocked(client.get).mockReturnValue(
-      new Promise((resolve) => {
-        resolveGet = resolve;
-      })
+    const { result } = renderHook(
+      () => useTransitions({ currentState: 'Draft', enabled: false }),
+      { wrapper: createWrapper(client) }
     );
 
-    const { result, unmount } = renderHook(() => useTransitions({ currentState: 'Draft' }), {
-      wrapper: createWrapper(client),
-    });
-
-    expect(result.current.loading).toBe(true);
-
-    unmount();
-
-    await act(async () => {
-      resolveGet(
-        axiosResponse({
-          currentState: 'Draft',
-          availableTransitions: [],
-        })
-      );
-    });
-
-    expect(true).toBe(true);
+    expect(client.get).not.toHaveBeenCalled();
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.fetchStatus).toBe('idle');
   });
 
-  it('should discard errors when unmounted during fetch', async () => {
-    const client = createMockClient();
-    let rejectGet!: (reason: unknown) => void;
-    vi.mocked(client.get).mockReturnValue(
-      new Promise((_resolve, reject) => {
-        rejectGet = reject;
-      })
-    );
-
-    const { unmount } = renderHook(() => useTransitions({ currentState: 'Draft' }), {
-      wrapper: createWrapper(client),
-    });
-
-    unmount();
-
-    await act(async () => {
-      rejectGet(new Error('Late error'));
-    });
-
-    expect(true).toBe(true);
-  });
-
-  it('should refetch when refetch is called', async () => {
+  it('should refetch on manual refetch call', async () => {
     const client = createMockClient();
     const status1: WorkflowStatus = {
       currentState: 'Draft',
@@ -134,11 +82,13 @@ describe('useTransitions', () => {
       wrapper: createWrapper(client),
     });
 
-    await waitFor(() => expect(result.current.loading).toBe(false));
-    expect(result.current.transitions).toHaveLength(1);
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    expect(result.current.data?.availableTransitions).toHaveLength(1);
 
     await result.current.refetch();
 
-    await waitFor(() => expect(result.current.transitions).toHaveLength(2));
+    await waitFor(() =>
+      expect(result.current.data?.availableTransitions).toHaveLength(2)
+    );
   });
 });

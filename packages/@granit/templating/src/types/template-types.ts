@@ -2,8 +2,13 @@ import type { AxiosInstance } from '@granit/api-client';
 import type { PaginationParams } from '@granit/query-engine';
 import type { EntityId, ISODateString } from '@granit/types';
 
-// ── Template lifecycle status (mirrors .NET Granit.Templating.Domain.TemplateLifecycleStatus) ──
+// ── Template lifecycle status ─────────────────────────────────────────────────
 
+/**
+ * Numeric const for query-engine list context.
+ * The QE list endpoint projects WorkflowLifecycleStatus as Int32.
+ * Use this for TemplateListItem.currentStatus comparisons and QE filter params.
+ */
 export const TemplateLifecycleStatus = {
   Draft: 0,
   PendingReview: 1,
@@ -14,24 +19,20 @@ export const TemplateLifecycleStatus = {
 export type TemplateLifecycleStatusValue =
   (typeof TemplateLifecycleStatus)[keyof typeof TemplateLifecycleStatus];
 
-// ── Document format ──
+/**
+ * String literal union matching the OpenAPI WorkflowLifecycleStatus schema.
+ * Used for detail / lifecycle / revision endpoints which serialize as strings.
+ */
+export type WorkflowLifecycleStatus = 'Draft' | 'PendingReview' | 'Published' | 'Archived';
 
-export const DocumentFormat = {
-  Html: 0,
-  Pdf: 1,
-  Excel: 2,
-} as const;
-
-export type DocumentFormatValue = (typeof DocumentFormat)[keyof typeof DocumentFormat];
-
-// ── Template key ──
+// ── Template key ─────────────────────────────────────────────────────────────
 
 export type TemplateKey = {
   readonly name: string;
   readonly culture?: string;
 };
 
-// ── Branded identifiers ──
+// ── Branded identifiers ───────────────────────────────────────────────────────
 
 /** Branded template revision identifier. */
 export type TemplateRevisionId = EntityId<'TemplateRevision'>;
@@ -39,31 +40,40 @@ export type TemplateRevisionId = EntityId<'TemplateRevision'>;
 /** Branded template category identifier. */
 export type TemplateCategoryId = EntityId<'TemplateCategory'>;
 
-// ── Revision ──
+// ── Revision ─────────────────────────────────────────────────────────────────
 
 export type TemplateRevision = {
   readonly revisionId: TemplateRevisionId;
   readonly content: string;
   readonly mimeType: string;
-  readonly status: TemplateLifecycleStatusValue;
+  readonly status: WorkflowLifecycleStatus;
   readonly layoutName: string | null;
   readonly createdAt: ISODateString;
   readonly createdBy: string;
-  readonly publishedAt?: ISODateString;
-  readonly publishedBy?: string;
+  readonly publishedAt: ISODateString | null;
+  readonly publishedBy: string | null;
+  readonly concurrencyStamp: string;
 };
 
-export type TemplateRevisionSummary = Omit<TemplateRevision, 'content' | 'mimeType'> & {
+export type TemplateRevisionSummary = {
+  readonly revisionId: TemplateRevisionId;
+  readonly status: WorkflowLifecycleStatus;
+  readonly createdAt: ISODateString;
+  readonly createdBy: string;
+  readonly publishedAt: ISODateString | null;
+  readonly publishedBy: string | null;
   readonly contentLength: number;
 };
 
-// ── List ──
+// ── List ──────────────────────────────────────────────────────────────────────
 
 export type TemplateListItem = {
+  readonly tenantId?: string | null;
   readonly name: string;
-  readonly culture?: string;
+  readonly culture: string | null;
+  /** Category name — projected by the query engine via JOIN; not in the base TemplateSummary DTO. */
   readonly category?: string;
-  readonly layoutName: string | null;
+  readonly layoutName?: string | null;
   readonly currentStatus: TemplateLifecycleStatusValue;
   readonly mimeType: string;
   readonly lastModifiedAt: ISODateString;
@@ -78,54 +88,53 @@ export type TemplateListParams = PaginationParams & {
   readonly culture?: string;
 };
 
-// ── Detail ──
+// ── Detail ───────────────────────────────────────────────────────────────────
 
 export type TemplateDetail = {
   readonly name: string;
-  readonly culture?: string;
-  readonly category?: string;
+  readonly culture: string | null;
   readonly layoutName: string | null;
-  readonly draft?: TemplateRevision;
-  readonly published?: TemplateRevision;
+  readonly draft: TemplateRevision | null;
+  readonly published: TemplateRevision | null;
 };
 
-// ── Save ──
+// ── Save ──────────────────────────────────────────────────────────────────────
 
 export type SaveTemplateRequest = {
-  readonly name: string;
-  readonly culture?: string;
+  readonly name?: string | null;
+  readonly culture?: string | null;
   readonly content: string;
   readonly mimeType?: string;
-  readonly category?: string;
   readonly layoutName?: string | null;
+  /** Optimistic concurrency stamp from the current draft revision. Pass when updating. */
+  readonly concurrencyStamp?: string | null;
 };
 
-// ── Lifecycle ──
+// ── Lifecycle ────────────────────────────────────────────────────────────────
 
 export type TemplateLifecycle = {
   readonly name: string;
-  readonly culture?: string;
-  readonly currentStatus: TemplateLifecycleStatusValue;
+  readonly culture: string | null;
+  readonly currentStatus: WorkflowLifecycleStatus;
   readonly workflowEnabled: boolean;
-  readonly availableTransitions: readonly TemplateLifecycleStatusValue[];
+  readonly availableTransitions: readonly WorkflowLifecycleStatus[];
 };
 
-// ── Preview ──
+// ── Preview ──────────────────────────────────────────────────────────────────
 
 export type TemplatePreviewRequest = {
-  readonly culture?: string;
-  readonly format?: DocumentFormatValue;
-  readonly data?: Record<string, unknown>;
+  readonly culture?: string | null;
+  /** Arbitrary JSON value passed as template data (object, array, string, number, boolean, or null). */
+  readonly data?: unknown;
 };
 
 export type TemplatePreviewResponse = {
   readonly html: string;
-  readonly plainText?: string;
-  readonly subject?: string;
-  readonly revisionId: TemplateRevisionId;
+  readonly revisionId: string | null;
   readonly renderTimeMs: number;
 };
 
+/** Frontend-only error model for template parse errors. Not a backend DTO. */
 export type TemplateParseError = {
   readonly message: string;
   readonly line?: number;
@@ -133,13 +142,12 @@ export type TemplateParseError = {
   readonly snippet?: string;
 };
 
-// ── Variables ──
+// ── Variables ────────────────────────────────────────────────────────────────
 
 export type TemplateVariable = {
   readonly name: string;
   readonly type: string;
-  readonly description?: string;
-  readonly example?: string;
+  readonly description: string | null;
 };
 
 export type TemplateVariables = {
@@ -148,25 +156,25 @@ export type TemplateVariables = {
   readonly enrichedVariables: readonly TemplateVariable[];
 };
 
-// ── Categories ──
+// ── Categories ───────────────────────────────────────────────────────────────
 
 export type TemplateCategory = {
   readonly id: TemplateCategoryId;
   readonly name: string;
-  readonly description?: string;
-  readonly icon?: string;
+  readonly description: string | null;
+  readonly icon: string | null;
   readonly sortOrder: number;
   readonly templateCount: number;
 };
 
 export type SaveTemplateCategoryRequest = {
   readonly name: string;
-  readonly description?: string;
-  readonly icon?: string;
+  readonly description?: string | null;
+  readonly icon?: string | null;
   readonly sortOrder?: number;
 };
 
-// ── History (paginated) ──
+// ── History (paginated) ──────────────────────────────────────────────────────
 
 export type TemplateHistory = {
   readonly revisions: readonly TemplateRevisionSummary[];
@@ -175,7 +183,7 @@ export type TemplateHistory = {
   readonly pageSize: number;
 };
 
-// ── Configuration ──
+// ── Configuration ────────────────────────────────────────────────────────────
 
 export type TemplatingConfig = {
   readonly client: AxiosInstance;

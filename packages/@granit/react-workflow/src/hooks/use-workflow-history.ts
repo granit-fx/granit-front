@@ -1,74 +1,41 @@
-import { createLogger } from '@granit/logger';
 import { getHistory } from '@granit/workflow';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import { useWorkflowConfig } from '../providers/workflow-provider';
 
-import type { TransitionHistory } from '@granit/workflow';
+import { buildWorkflowQueryKey } from './query-keys';
 
-const logger = createLogger('workflow:history');
+import type { WorkflowHistoryPage } from '@granit/workflow';
+import type { UseQueryResult } from '@tanstack/react-query';
 
 export interface UseWorkflowHistoryOptions {
   entityType: string;
   entityId: string;
+  page?: number;
+  pageSize?: number;
   enabled?: boolean;
-}
-
-export interface UseWorkflowHistoryReturn {
-  history: readonly TransitionHistory[];
-  loading: boolean;
-  error: Error | null;
-  refetch: () => Promise<void>;
 }
 
 export function useWorkflowHistory({
   entityType,
   entityId,
+  page,
+  pageSize,
   enabled = true,
-}: UseWorkflowHistoryOptions): UseWorkflowHistoryReturn {
-  const { client, basePath } = useWorkflowConfig();
+}: UseWorkflowHistoryOptions): UseQueryResult<WorkflowHistoryPage> {
+  const config = useWorkflowConfig();
 
-  const [history, setHistory] = useState<readonly TransitionHistory[]>([]);
-  const [loading, setLoading] = useState(enabled);
-  const [error, setError] = useState<Error | null>(null);
-
-  const abortRef = useRef<AbortController | null>(null);
-
-  const refetch = useCallback(async () => {
-    abortRef.current?.abort();
-    const controller = new AbortController();
-    abortRef.current = controller;
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const result = await getHistory(client, basePath, entityType, entityId);
-
-      if (!controller.signal.aborted) {
-        setHistory(result.items);
-      }
-    } catch (err) {
-      if (!controller.signal.aborted) {
-        const wrapped = err instanceof Error ? err : new Error(String(err));
-        logger.error('Failed to fetch workflow history', wrapped);
-        setError(wrapped);
-      }
-    } finally {
-      if (!controller.signal.aborted) {
-        setLoading(false);
-      }
-    }
-  }, [client, basePath, entityType, entityId]);
-
-  useEffect(() => {
-    if (enabled) {
-      refetch().catch(() => {}); // Effect cleanup handles abort; error state set inside refetch
-    }
-    return () => {
-      abortRef.current?.abort();
-    };
-  }, [enabled, refetch]);
-
-  return { history, loading, error, refetch };
+  return useQuery({
+    queryKey: buildWorkflowQueryKey(
+      config,
+      'history',
+      entityType,
+      entityId,
+      String(page ?? 1),
+      String(pageSize ?? 20)
+    ),
+    queryFn: () => getHistory(config.client, config.basePath, entityType, entityId, { page, pageSize }),
+    enabled,
+    staleTime: Infinity, // ISO 27001 audit trail is immutable — cache forever
+  });
 }

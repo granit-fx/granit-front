@@ -1,5 +1,4 @@
-import { createTestQueryClient } from '@granit/react-testing';
-import { QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { TemplatingProvider } from '../providers/templating-provider';
 
@@ -12,7 +11,12 @@ export function createWrapper(
   basePath?: string,
   queryKeyPrefix?: readonly string[]
 ) {
-  const queryClient = createTestQueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false, gcTime: Infinity, throwOnError: false },
+      mutations: { retry: false },
+    },
+  });
   return function Wrapper({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
       <QueryClientProvider client={queryClient}>
