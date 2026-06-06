@@ -1,3 +1,4 @@
+import type { DashboardCategory } from './dashboard-category';
 import type { DashboardStatus } from './dashboard-status';
 import type { WidgetDefinitionBase } from './widget-definition';
 import type { AxiosRequestConfig } from '@granit/api-client';
@@ -9,6 +10,14 @@ import type { AxiosRequestConfig } from '@granit/api-client';
  * each call site.
  */
 export type DashboardsRequestOptions = Pick<AxiosRequestConfig, 'signal'>;
+
+/**
+ * Query params accepted by `GET {basePath}/catalog`.
+ */
+export interface DashboardCatalogParams {
+  /** Filter catalog entries to a specific category. `undefined` = all categories. */
+  readonly category?: DashboardCategory;
+}
 
 /**
  * Query params accepted by `GET {basePath}/`.

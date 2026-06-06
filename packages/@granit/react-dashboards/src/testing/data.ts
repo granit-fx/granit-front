@@ -64,6 +64,7 @@ export const SAMPLE_FINANCE_BUNDLE: DashboardRenderResponse = {
       sequence: 1,
       emittedAt: '2026-04-29T12:34:56.789Z',
       refreshHint: 'Static',
+      transport: 'Pull',
       snapshot: {
         contentLocalizationKey: 'Widget:Granit.Showcase.InvoicingOverview.Banner.Content',
       },
@@ -136,6 +137,7 @@ export const SAMPLE_FINANCE_BUNDLE: DashboardRenderResponse = {
       sequence: 1,
       emittedAt: '2026-04-29T12:34:56.789Z',
       refreshHint: 'Dynamic',
+      transport: 'Pull',
       snapshot: {
         chartType: 'Bar',
         groupBy: 'IssuedAtMonth',
@@ -164,6 +166,7 @@ export const SAMPLE_FINANCE_BUNDLE: DashboardRenderResponse = {
       sequence: 1,
       emittedAt: '2026-04-29T12:34:56.789Z',
       refreshHint: 'Dynamic',
+      transport: 'Pull',
       snapshot: {
         columns: [
           { name: 'invoiceNumber', labelLocalizationKey: 'Column:Invoice.Number' },
@@ -193,6 +196,7 @@ export const SAMPLE_FINANCE_BUNDLE: DashboardRenderResponse = {
       sequence: 1,
       emittedAt: '2026-04-29T12:34:56.789Z',
       refreshHint: 'Dynamic',
+      transport: 'Pull',
       snapshot: {
         rowFields: ['Region'],
         columnFields: ['Status'],
@@ -222,6 +226,7 @@ export const SAMPLE_FINANCE_BUNDLE: DashboardRenderResponse = {
       sequence: 1,
       emittedAt: '2026-04-29T12:34:56.789Z',
       refreshHint: 'Dynamic',
+      transport: 'Pull',
       snapshot: {
         points: [
           {
@@ -281,6 +286,7 @@ export const SAMPLE_WELCOME_BUNDLE: DashboardRenderResponse = {
       sequence: 1,
       emittedAt: '2026-04-30T08:00:00.000Z',
       refreshHint: 'Static',
+      transport: 'Pull',
       snapshot: { contentLocalizationKey: 'Widget:Granit.Showcase.Welcome.Banner.Content' },
       reasonLocalizationKey: null,
     },
@@ -298,6 +304,7 @@ export const SAMPLE_WELCOME_BUNDLE: DashboardRenderResponse = {
       sequence: 1,
       emittedAt: '2026-04-30T08:00:00.000Z',
       refreshHint: 'Static',
+      transport: 'Pull',
       snapshot: {
         source: 'https://placehold.co/1200x600/0f172a/f8fafc.png?text=Granit+Showcase',
         altLocalizationKey: 'Widget:Granit.Showcase.Welcome.Hero.Alt',
@@ -319,6 +326,7 @@ export const SAMPLE_WELCOME_BUNDLE: DashboardRenderResponse = {
       sequence: 1,
       emittedAt: '2026-04-30T08:00:00.000Z',
       refreshHint: 'Static',
+      transport: 'Pull',
       snapshot: {
         contentLocalizationKey: 'Widget:Granit.Showcase.Welcome.NextSteps.Content',
         style: 'Subheading',

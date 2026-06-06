@@ -118,17 +118,14 @@ function freshHandlers() {
         return HttpResponse.json(SUMMARY);
       }
     ),
-    http.post(
-      `http://localhost/api/v1/dashboards/${encodeURIComponent(ID)}/publish`,
-      () => new HttpResponse(null, { status: 204 })
+    http.post(`http://localhost/api/v1/dashboards/${encodeURIComponent(ID)}/publish`, () =>
+      HttpResponse.json({ ...SUMMARY, status: 'Published' })
     ),
-    http.post(
-      `http://localhost/api/v1/dashboards/${encodeURIComponent(ID)}/archive`,
-      () => new HttpResponse(null, { status: 204 })
+    http.post(`http://localhost/api/v1/dashboards/${encodeURIComponent(ID)}/archive`, () =>
+      HttpResponse.json({ ...SUMMARY, status: 'Archived' })
     ),
-    http.post(
-      `http://localhost/api/v1/dashboards/${encodeURIComponent(ID)}/restore`,
-      () => new HttpResponse(null, { status: 204 })
+    http.post(`http://localhost/api/v1/dashboards/${encodeURIComponent(ID)}/restore`, () =>
+      HttpResponse.json({ ...SUMMARY, status: 'Draft' })
     ),
     http.post(`http://localhost/api/v1/dashboards/${encodeURIComponent(ID)}/resync`, () =>
       HttpResponse.json({
@@ -279,16 +276,20 @@ describe('useArchiveDashboard / useRestoreDashboard / usePublishDashboard', () =
     expect(queryClient.getQueryState(dashboardDetailQueryKey(ID))?.isInvalidated).toBe(true);
   });
 
-  it('publish: POSTs to /publish', async () => {
+  it('publish: POSTs to /publish and returns the updated summary', async () => {
     const { wrapper } = makeWrapper();
     const { result } = renderHook(() => usePublishDashboard(), { wrapper });
-    await expect(result.current.mutateAsync(ID)).resolves.toBeUndefined();
+    const summary = await result.current.mutateAsync(ID);
+    expect(summary.id).toBe(ID);
+    expect(summary.status).toBe('Published');
   });
 
-  it('restore: POSTs to /restore', async () => {
+  it('restore: POSTs to /restore and returns the updated summary', async () => {
     const { wrapper } = makeWrapper();
     const { result } = renderHook(() => useRestoreDashboard(), { wrapper });
-    await expect(result.current.mutateAsync(ID)).resolves.toBeUndefined();
+    const summary = await result.current.mutateAsync(ID);
+    expect(summary.id).toBe(ID);
+    expect(summary.status).toBe('Draft');
   });
 });
 

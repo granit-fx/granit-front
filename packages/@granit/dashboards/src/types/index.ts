@@ -83,7 +83,11 @@ export type { WidgetInstanceResponse } from './widget-instance-response';
 export type { AddWidgetRequest, UpdateWidgetRequest } from './widget-requests';
 
 // API request params / options (framework-agnostic, used by api/ layer)
-export type { DashboardListParams, DashboardsRequestOptions } from './dashboard-api-params';
+export type {
+  DashboardCatalogParams,
+  DashboardListParams,
+  DashboardsRequestOptions,
+} from './dashboard-api-params';
 export type {
   WidgetRenderBody,
   WidgetRenderContextPayload,

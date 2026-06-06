@@ -15,6 +15,10 @@ export default defineConfig({
         'packages/@granit/arch-tests-kit/src/index.ts'
       ),
       '@granit/testing/msw': path.resolve(__dirname, 'packages/@granit/testing/src/msw.ts'),
+      '@granit/testing/msw-server': path.resolve(
+        __dirname,
+        'packages/@granit/testing/src/msw-server.ts'
+      ),
       '@granit/react-auditing/testing': path.resolve(
         __dirname,
         'packages/@granit/react-auditing/src/testing/index.ts'

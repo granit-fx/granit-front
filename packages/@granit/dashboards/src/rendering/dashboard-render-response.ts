@@ -126,10 +126,12 @@ export interface DashboardRenderedWidget {
   /** Runtime outcome (`'Snapshot'` / `'Unavailable'` / `'Error'`). */
   readonly status: WidgetSnapshotStatus;
   /**
-   * Always `1` in pull mode; future push transport increments per
-   * (widget, tenant). EPIC #1366 invariant #2.
+   * Monotonically-increasing delivery counter per (widget, tenant).
+   * Always `1` in pull mode; push transport increments per SSE frame.
+   * Serialised as int64 on the wire — JSON may represent large values as
+   * strings; always coerce with `Number()` before comparing.
    */
-  readonly sequence: number;
+  readonly sequence: number | string;
   /** Server-side timestamp of the widget's computation (ISO 8601 UTC). */
   readonly emittedAt: string;
   /** Pull / push transport hint — drives the per-widget cache TTL. */
@@ -140,12 +142,8 @@ export interface DashboardRenderedWidget {
    * updates from `GET /dashboards/{id}/stream`; `'Pull'` means polling
    * via the render endpoint per `refreshHint` cadence. Hosts that
    * haven't loaded `Granit.Dashboards.Push` always emit `'Pull'`.
-   *
-   * Optional on the wire for backwards compatibility — older bundles
-   * served before P2.4 omit the field, in which case the framework
-   * treats the widget as `'Pull'`.
    */
-  readonly transport?: WidgetTransport;
+  readonly transport: WidgetTransport;
   /**
    * Pre-serialised typed payload. `null` when {@link status} is not
    * `'Snapshot'`. Frontend renderers narrow this to a kind-specific shape

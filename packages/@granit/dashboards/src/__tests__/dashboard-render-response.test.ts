@@ -24,6 +24,7 @@ const KPI_WIDGET: DashboardRenderedWidget = {
   sequence: 1,
   emittedAt: '2026-04-29T12:34:56.789Z',
   refreshHint: 'Dynamic',
+  transport: 'Pull',
   snapshot: {
     value: 12,
     valueKind: 'Count',
@@ -49,6 +50,7 @@ const MARKDOWN_WIDGET: DashboardRenderedWidget = {
   sequence: 1,
   emittedAt: '2026-04-29T12:34:56.789Z',
   refreshHint: 'Static',
+  transport: 'Pull',
   snapshot: { contentLocalizationKey: 'Widget:Test.Banner' },
   reasonLocalizationKey: null,
 };
@@ -67,6 +69,7 @@ const UNAVAILABLE_WIDGET: DashboardRenderedWidget = {
   sequence: 1,
   emittedAt: '2026-04-29T12:34:56.789Z',
   refreshHint: 'Static',
+  transport: 'Pull',
   snapshot: null,
   reasonLocalizationKey: 'Widget:Unavailable',
 };

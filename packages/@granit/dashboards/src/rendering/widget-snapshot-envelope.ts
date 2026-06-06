@@ -36,10 +36,12 @@ export interface WidgetSnapshotEnvelope {
    */
   readonly snapshot: unknown;
   /**
-   * Always `1` in pull mode; future push transport increments per
-   * (widget instance, tenant). Locked v1 per EPIC #1366 invariant #2.
+   * Monotonically-increasing delivery counter per (widget, tenant).
+   * Always `1` in pull mode; push transport increments per SSE frame.
+   * Serialised as int64 on the wire — JSON may represent large values as
+   * strings; always coerce with `Number()` before comparing.
    */
-  readonly sequence: number;
+  readonly sequence: number | string;
   /** Server-side timestamp of the computation (ISO 8601 UTC). */
   readonly emittedAt: string;
   /** Pull / push transport hint inherited from the underlying definition. */

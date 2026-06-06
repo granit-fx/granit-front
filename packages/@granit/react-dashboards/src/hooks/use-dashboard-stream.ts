@@ -45,12 +45,14 @@ export function applyStreamSnapshot(
   event: DashboardStreamSnapshot
 ): DashboardRenderedWidget | undefined {
   if (!current) return current;
-  if (current.sequence > event.sequence) return current;
+  if (Number(current.sequence) > Number(event.sequence)) return current;
   return {
     ...current,
     widgetType: event.widgetType,
     status: event.status,
-    sequence: event.sequence,
+    // SSE frames always carry a plain JS number; cast to satisfy the
+    // number | string union on DashboardRenderedWidget.sequence.
+    sequence: event.sequence as number | string,
     emittedAt: event.emittedAt,
     refreshHint: event.refreshHint,
     snapshot: event.snapshot,

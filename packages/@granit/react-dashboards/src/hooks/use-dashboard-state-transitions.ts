@@ -5,10 +5,29 @@ import { useDashboardsConfig } from '../providers/dashboards-provider';
 
 import { dashboardDetailQueryKey } from './use-dashboard-detail';
 
+import type { DashboardSummaryResponse, PagedResponse } from '@granit/dashboards';
+
 /**
- * Shared invalidation routine — all three transitions affect the list
- * (status filter changes which dashboards a query returns) plus the
- * specific detail entry.
+ * Patch the in-memory list cache immediately with the returned summary so
+ * the status badge flips before the background refetch completes. The list
+ * is still invalidated below to handle status-filter pages.
+ */
+function patchListCache(
+  queryClient: ReturnType<typeof useQueryClient>,
+  summary: DashboardSummaryResponse
+): void {
+  queryClient.setQueriesData<PagedResponse<DashboardSummaryResponse>>(
+    { queryKey: ['dashboards', 'list'] },
+    (old) => {
+      if (!old) return old;
+      return { ...old, items: old.items.map((item) => (item.id === summary.id ? summary : item)) };
+    }
+  );
+}
+
+/**
+ * Invalidate both the list (status filter changes the visible set) and the
+ * specific detail entry after a state transition.
  */
 async function invalidateAfterTransition(
   queryClient: ReturnType<typeof useQueryClient>,
@@ -28,12 +47,15 @@ async function invalidateAfterTransition(
  *
  * Backend rejects 400 if the dashboard is already Published or Archived.
  */
-export function usePublishDashboard(): UseMutationResult<void, Error, string> {
+export function usePublishDashboard(): UseMutationResult<DashboardSummaryResponse, Error, string> {
   const { client, basePath } = useDashboardsConfig();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => publishDashboard(client, basePath, id),
-    onSuccess: (_void, id) => invalidateAfterTransition(queryClient, id),
+    onSuccess: (summary, id) => {
+      patchListCache(queryClient, summary);
+      return invalidateAfterTransition(queryClient, id);
+    },
   });
 }
 
@@ -45,12 +67,15 @@ export function usePublishDashboard(): UseMutationResult<void, Error, string> {
  * Replaces the (non-existent) DELETE endpoint — Granit dashboards are
  * never deleted, only archived. Restore via {@link useRestoreDashboard}.
  */
-export function useArchiveDashboard(): UseMutationResult<void, Error, string> {
+export function useArchiveDashboard(): UseMutationResult<DashboardSummaryResponse, Error, string> {
   const { client, basePath } = useDashboardsConfig();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => archiveDashboard(client, basePath, id),
-    onSuccess: (_void, id) => invalidateAfterTransition(queryClient, id),
+    onSuccess: (summary, id) => {
+      patchListCache(queryClient, summary);
+      return invalidateAfterTransition(queryClient, id);
+    },
   });
 }
 
@@ -59,11 +84,14 @@ export function useArchiveDashboard(): UseMutationResult<void, Error, string> {
  * Draft. Mirrors
  * `Granit.Dashboards.Endpoints.DashboardStateTransitionEndpoints.RestoreAsync`.
  */
-export function useRestoreDashboard(): UseMutationResult<void, Error, string> {
+export function useRestoreDashboard(): UseMutationResult<DashboardSummaryResponse, Error, string> {
   const { client, basePath } = useDashboardsConfig();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => restoreDashboard(client, basePath, id),
-    onSuccess: (_void, id) => invalidateAfterTransition(queryClient, id),
+    onSuccess: (summary, id) => {
+      patchListCache(queryClient, summary);
+      return invalidateAfterTransition(queryClient, id);
+    },
   });
 }

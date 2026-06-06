@@ -30,7 +30,7 @@ export function KpiSnapshotTile({ widget }: { readonly widget: DashboardRendered
         // an aria-label fallback — passing the widget id keeps a stable hook.
         name: widget.id,
         snapshot: widget.snapshot,
-        sequence: widget.sequence,
+        sequence: Number(widget.sequence),
         emittedAt: widget.emittedAt,
         refreshHint: widget.refreshHint,
       }}

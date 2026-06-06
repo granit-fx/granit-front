@@ -83,32 +83,25 @@ Full frontend conventions: `../granit-dotnet/docs/guide/conventions/frontend/`
 ### Mirroring DTOs from `contracts/openapi/*.json`
 
 Specs are authoritative for routes, HTTP methods, status codes, field names
-(PascalCase .NET → camelCase JSON). TS optionality (`?`) comes from the schema's
-`required` array, NOT nullability:
+(PascalCase .NET → camelCase JSON). TS `?` comes from the `required` array, NOT
+nullability — these are independent axes:
 
-- `.NET` marks every positional-record param without a C# default as `required`
-  (System.Text.Json needs the key present).
-- `string? Foo` (no default) → `required` + `type:["null","string"]` →
-  **`foo: T | null`** (key required, value nullable), NOT `foo?: T`.
-- Only params with a C# default (`bool X = false`) are absent from `required` →
-  **`foo?: T`** (genuinely optional).
-- When in doubt cross-check the record + FluentValidation validator in
-  `granit-dotnet/src/Granit.{Module}.Endpoints/` — a missing `NotEmpty()`/`NotNull()`
-  constrains the value, not key presence.
+- `string? Foo` with no C# default → `required` + `type:["null","string"]` →
+  **`foo: T | null`** (required key, nullable value). NOT `foo?: T`.
+- C#-defaulted param (`bool X = false`) → absent from `required` → **`foo?: T`**.
+- Cross-check the FluentValidation validator in `granit-dotnet/src/Granit.{Module}.Endpoints/`.
 
 ## Architecture tests
 
-Framework-wide conformance lives in dedicated packages — check/extend before
-adding new runtime patterns:
+Check/extend before adding new runtime patterns:
 
-- **`@granit/arch-tests`**: framework suite (bans `console.*` in runtime,
-  enforces `createLogger`, import boundaries).
+- **`@granit/arch-tests`**: bans `console.*` in runtime, enforces `createLogger`,
+  import boundaries.
 - **`@granit/arch-tests-kit`**: reusable helpers (published — see above).
-- **`pnpm check:csp`** (`scripts/check-csp-policies.mjs`): any `@granit/*`
-  writing to a DOM script sink (`.innerHTML`, `.outerHTML`, `.insertAdjacentHTML`,
-  `iframe/script.setAttribute('src',…)`, direct `.src=`) MUST expose a `<pkg>/csp`
-  subpath with idempotent `installPolicy()` (Trusted Types). Exceptions are
-  hard-coded with justification — add new ones only as last resort.
+- **`pnpm check:csp`** (`scripts/check-csp-policies.mjs`): any `@granit/*` writing
+  to a DOM script sink (`.innerHTML`, `.outerHTML`, `.insertAdjacentHTML`,
+  `iframe/script.setAttribute('src',…)`, `.src=`) MUST expose a `<pkg>/csp`
+  subpath with idempotent `installPolicy()` (Trusted Types).
 
 ## Code index (`.mcp-front-index.json`)
 

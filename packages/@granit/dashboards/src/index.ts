@@ -123,6 +123,7 @@ export {
   updateWidget,
 } from './api/index';
 export type {
+  DashboardCatalogParams,
   DashboardListParams,
   DashboardsRequestOptions,
   WidgetRenderBody,

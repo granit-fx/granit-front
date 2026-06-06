@@ -164,6 +164,7 @@ export function createDashboardsHandlers(baseUrl = DEFAULT_BASE_PATH) {
       sequence: 1,
       emittedAt: new Date().toISOString(),
       refreshHint: fixture.refreshHint,
+      transport: 'Pull',
       snapshot: fixture.snapshot,
       reasonLocalizationKey: null,
     };
@@ -373,19 +374,19 @@ export function createDashboardsHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const dashboard = store.get(String(params.id));
       if (!dashboard) return notFound(String(params.id));
       dashboard.status = 'Published';
-      return new HttpResponse(null, { status: 204 });
+      return HttpResponse.json(summarize(dashboard));
     }),
     http.post(`${baseUrl}/:id/archive`, ({ params }) => {
       const dashboard = store.get(String(params.id));
       if (!dashboard) return notFound(String(params.id));
       dashboard.status = 'Archived';
-      return new HttpResponse(null, { status: 204 });
+      return HttpResponse.json(summarize(dashboard));
     }),
     http.post(`${baseUrl}/:id/restore`, ({ params }) => {
       const dashboard = store.get(String(params.id));
       if (!dashboard) return notFound(String(params.id));
       dashboard.status = 'Draft';
-      return new HttpResponse(null, { status: 204 });
+      return HttpResponse.json(summarize(dashboard));
     }),
     http.post(`${baseUrl}/:id/resync`, ({ params }) => {
       const dashboard = store.get(String(params.id));

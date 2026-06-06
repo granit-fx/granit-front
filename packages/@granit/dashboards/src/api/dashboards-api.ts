@@ -6,6 +6,7 @@ import type {
 import type {
   AddWidgetRequest,
   DashboardCatalogEntryResponse,
+  DashboardCatalogParams,
   DashboardDetailResponse,
   DashboardImportResponse,
   DashboardListParams,
@@ -24,6 +25,7 @@ import type {
 import type { AxiosInstance } from '@granit/api-client';
 
 export type {
+  DashboardCatalogParams,
   DashboardListParams,
   DashboardsRequestOptions,
   WidgetRenderBody,
@@ -32,18 +34,19 @@ export type {
 };
 
 /**
- * `GET {basePath}/catalog` — returns the catalog of available
+ * `GET {basePath}/catalog?category=` — returns the catalog of available
  * `DashboardDefinition` descriptors. Mirrors
  * `Granit.Dashboards.Endpoints.DashboardCatalogEndpoints`.
  */
 export async function getDashboardCatalog(
   client: AxiosInstance,
   basePath: string,
+  params?: DashboardCatalogParams,
   options?: DashboardsRequestOptions
 ): Promise<readonly DashboardCatalogEntryResponse[]> {
   const response = await client.get<readonly DashboardCatalogEntryResponse[]>(
     `${basePath}/catalog`,
-    options
+    { ...options, params: { category: params?.category } }
   );
   return response.data;
 }
@@ -109,7 +112,8 @@ export async function renderDashboard(
 
 /**
  * `POST {basePath}/{id}/publish` — promotes a Draft dashboard to Published.
- * Mirrors
+ * Returns the updated summary so callers can patch their local cache without
+ * an extra round-trip. Mirrors
  * `Granit.Dashboards.Endpoints.DashboardStateTransitionEndpoints.PublishAsync`.
  */
 export async function publishDashboard(
@@ -117,13 +121,18 @@ export async function publishDashboard(
   basePath: string,
   id: string,
   options?: DashboardsRequestOptions
-): Promise<void> {
-  await client.post(`${basePath}/${encodeURIComponent(id)}/publish`, undefined, options);
+): Promise<DashboardSummaryResponse> {
+  const response = await client.post<DashboardSummaryResponse>(
+    `${basePath}/${encodeURIComponent(id)}/publish`,
+    undefined,
+    options
+  );
+  return response.data;
 }
 
 /**
  * `POST {basePath}/{id}/archive` — hides a dashboard from the catalog but
- * keeps the row for audit / restore. Mirrors
+ * keeps the row for audit / restore. Returns the updated summary. Mirrors
  * `Granit.Dashboards.Endpoints.DashboardStateTransitionEndpoints.ArchiveAsync`.
  */
 export async function archiveDashboard(
@@ -131,13 +140,18 @@ export async function archiveDashboard(
   basePath: string,
   id: string,
   options?: DashboardsRequestOptions
-): Promise<void> {
-  await client.post(`${basePath}/${encodeURIComponent(id)}/archive`, undefined, options);
+): Promise<DashboardSummaryResponse> {
+  const response = await client.post<DashboardSummaryResponse>(
+    `${basePath}/${encodeURIComponent(id)}/archive`,
+    undefined,
+    options
+  );
+  return response.data;
 }
 
 /**
  * `POST {basePath}/{id}/restore` — moves an Archived dashboard back to
- * Draft. Mirrors
+ * Draft. Returns the updated summary. Mirrors
  * `Granit.Dashboards.Endpoints.DashboardStateTransitionEndpoints.RestoreAsync`.
  */
 export async function restoreDashboard(
@@ -145,8 +159,13 @@ export async function restoreDashboard(
   basePath: string,
   id: string,
   options?: DashboardsRequestOptions
-): Promise<void> {
-  await client.post(`${basePath}/${encodeURIComponent(id)}/restore`, undefined, options);
+): Promise<DashboardSummaryResponse> {
+  const response = await client.post<DashboardSummaryResponse>(
+    `${basePath}/${encodeURIComponent(id)}/restore`,
+    undefined,
+    options
+  );
+  return response.data;
 }
 
 /**
