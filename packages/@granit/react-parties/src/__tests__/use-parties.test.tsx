@@ -109,7 +109,7 @@ describe('use-parties', () => {
   describe('usePartiesQuery', () => {
     it('lists parties without role filter', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [sampleListItem] });
+      vi.mocked(client.get).mockResolvedValue({ data: { items: [sampleListItem] } });
 
       const { result } = renderHook(() => usePartiesQuery(), {
         wrapper: createWrapper(client),
@@ -124,7 +124,7 @@ describe('use-parties', () => {
 
     it('passes role as query param', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [] });
+      vi.mocked(client.get).mockResolvedValue({ data: { items: [] } });
 
       const { result } = renderHook(() => usePartiesQuery({ role: 'Customer' }), {
         wrapper: createWrapper(client),
@@ -138,7 +138,7 @@ describe('use-parties', () => {
 
     it('uses custom basePath', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [] });
+      vi.mocked(client.get).mockResolvedValue({ data: { items: [] } });
 
       const { result } = renderHook(() => usePartiesQuery(), {
         wrapper: createWrapper(client, '/custom/parties'),
