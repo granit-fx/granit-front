@@ -1,5 +1,5 @@
 import { createMockClient } from '@granit/react-testing';
-import { toEntityId } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -24,7 +24,7 @@ const MOCK_PRESENCE: PresenceResponse = {
   effectiveStatus: 'Online',
   manualOverride: null,
   overrideUntilUtc: null,
-  lastSeenUtc: '2026-06-06T12:00:00Z' as ReturnType<typeof import('@granit/types').toISODateString>,
+  lastSeenUtc: toISODateString('2026-06-06T12:00:00Z'),
 };
 
 afterEach(() => vi.clearAllMocks());
