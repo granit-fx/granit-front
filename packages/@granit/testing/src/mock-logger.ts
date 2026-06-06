@@ -1,13 +1,14 @@
 import { vi } from 'vitest';
 
+import type { Logger } from '@granit/logger';
 import type { Mock } from 'vitest';
 
-export interface MockLogger {
-  debug: Mock;
-  info: Mock;
-  warn: Mock;
-  error: Mock;
-  child: Mock;
+export interface MockLogger extends Logger {
+  debug: Mock<Logger['debug']>;
+  info: Mock<Logger['info']>;
+  warn: Mock<Logger['warn']>;
+  error: Mock<Logger['error']>;
+  child: Mock<(subPrefix: string) => MockLogger>;
 }
 
 /**

@@ -4,8 +4,7 @@ import type {
   AdminOidcScope,
   AdminUser,
 } from '@granit/openiddict-admin';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { Mutable } from '@granit/testing';
 
 // ---------------------------------------------------------------------------
 // Users

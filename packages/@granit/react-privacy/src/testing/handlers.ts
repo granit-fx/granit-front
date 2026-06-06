@@ -25,6 +25,7 @@ import type {
   PrivacyExportStatusResponse,
 } from '@granit/privacy';
 import type { QueryMetadata } from '@granit/query-engine';
+import type { Mutable } from '@granit/testing';
 
 const EXPORT_STATES = ['Pending', 'Completed', 'PartiallyCompleted', 'TimedOut'];
 const DELETION_STATES = ['Deferred', 'Executed', 'Cancelled'];
@@ -310,8 +311,6 @@ export const legalDocumentQueryMetadata: QueryMetadata = {
   },
   defaultSort: '-lastModifiedAt',
 };
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
 
 /**
  * Create stateful MSW handlers for privacy endpoints (GDPR export, deletion,

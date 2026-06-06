@@ -8,6 +8,7 @@ export {
   applyFilter,
   applyNumberFilter,
   applyStringFilter,
+  created,
   groupBy,
   noContent,
   notFound,

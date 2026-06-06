@@ -2,8 +2,7 @@ import { ScheduledActionStatus } from '@granit/scheduling';
 import { toEntityId, toISODateString } from '@granit/types';
 
 import type { ScheduledActionResponse } from '@granit/scheduling';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { Mutable } from '@granit/testing';
 
 export const mockScheduledActions: Mutable<ScheduledActionResponse>[] = [
   {

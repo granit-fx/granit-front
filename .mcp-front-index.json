@@ -6670,6 +6670,11 @@
           "name": "createTestQueryClient",
           "kind": "function",
           "signature": "function createTestQueryClient(): QueryClient"
+        },
+        {
+          "name": "composeWrappers",
+          "kind": "function",
+          "signature": "function composeWrappers( ...wrappers: Array<ComponentType<Readonly<"
         }
       ]
     },
@@ -7308,32 +7313,32 @@
         {
           "name": "MockLogger",
           "kind": "interface",
-          "signature": "interface MockLogger",
+          "signature": "interface MockLogger extends Logger",
           "members": [
             {
               "name": "debug",
               "kind": "property",
-              "signature": "debug: Mock"
+              "signature": "debug: Mock<Logger['debug']>"
             },
             {
               "name": "info",
               "kind": "property",
-              "signature": "info: Mock"
+              "signature": "info: Mock<Logger['info']>"
             },
             {
               "name": "warn",
               "kind": "property",
-              "signature": "warn: Mock"
+              "signature": "warn: Mock<Logger['warn']>"
             },
             {
               "name": "error",
               "kind": "property",
-              "signature": "error: Mock"
+              "signature": "error: Mock<Logger['error']>"
             },
             {
               "name": "child",
-              "kind": "property",
-              "signature": "child: Mock"
+              "kind": "method",
+              "signature": "child: Mock<(subPrefix: string) => MockLogger>"
             }
           ]
         }

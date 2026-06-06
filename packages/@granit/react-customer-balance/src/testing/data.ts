@@ -1,8 +1,7 @@
 import { toEntityId, toISODateString } from '@granit/types';
 
 import type { BalanceTransactionResponse, CustomerBalanceResponse } from '@granit/customer-balance';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { Mutable } from '@granit/testing';
 
 export const sampleBalance: Mutable<CustomerBalanceResponse> = {
   balanceAccountId: toEntityId<'BalanceAccount'>('ba_01'),

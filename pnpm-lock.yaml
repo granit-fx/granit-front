@@ -2207,6 +2207,9 @@ importers:
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
 
   packages/@granit/react-notifications:
     dependencies:
@@ -3066,6 +3069,9 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/logger':
+        specifier: workspace:*
+        version: link:../logger
 
   packages/@granit/timeline:
     devDependencies:

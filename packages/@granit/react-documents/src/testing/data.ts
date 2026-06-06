@@ -1,11 +1,3 @@
-// ---------------------------------------------------------------------------
-// @granit/react-documents/testing — In-memory fixtures
-// ---------------------------------------------------------------------------
-//
-// Stable UUIDs + ISO timestamps anchored on 2026-05-11T10:00:00Z (currentDate).
-// Imported by the MSW handler factory; consumers may import the raw fixtures
-// directly to seed Storybook stories or visual tests.
-
 import type {
   DocumentResponse,
   DocumentVersionResponse,
@@ -14,8 +6,14 @@ import type {
   TenantStorageQuotaResponse,
   TrashedDocumentResponse,
 } from '@granit/documents';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { Mutable } from '@granit/testing';
+// ---------------------------------------------------------------------------
+// @granit/react-documents/testing — In-memory fixtures
+// ---------------------------------------------------------------------------
+//
+// Stable UUIDs + ISO timestamps anchored on 2026-05-11T10:00:00Z (currentDate).
+// Imported by the MSW handler factory; consumers may import the raw fixtures
+// directly to seed Storybook stories or visual tests.
 
 // Stable owner identifiers used across all fixtures.
 const OWNER_USER_ID = '00000000-0000-4000-8000-0000000000a1';

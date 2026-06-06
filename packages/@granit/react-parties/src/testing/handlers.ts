@@ -30,8 +30,7 @@ import type {
   PartyUpdateRequest,
 } from '@granit/parties';
 import type { QueryMetadata } from '@granit/query-engine';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { Mutable } from '@granit/testing';
 
 const PARTY_KINDS = ['Individual', 'Company', 'Department'];
 const PARTY_STATUSES = ['Active', 'Suspended', 'Archived'];

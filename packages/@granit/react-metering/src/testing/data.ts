@@ -7,9 +7,8 @@ import type {
   UsageAggregate,
   UsageAggregateResponse,
 } from '@granit/metering';
+import type { Mutable } from '@granit/testing';
 import type { TenantId } from '@granit/types';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
 
 const TENANT_ID = toEntityId<'Tenant'>('tnt_001') as unknown as TenantId;
 

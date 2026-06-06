@@ -1,9 +1,8 @@
 import { TimelineEntryType } from '@granit/timeline';
 import { toEntityId, toISODateString } from '@granit/types';
 
+import type { Mutable } from '@granit/testing';
 import type { TimelineEntry } from '@granit/timeline';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
 
 export const mockTimelineEntries: Mutable<TimelineEntry>[] = [
   {

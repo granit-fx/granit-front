@@ -16,9 +16,8 @@ import type {
   ResourceRoomResponse,
   SetPresenceRequest,
 } from '@granit/presence';
+import type { Mutable } from '@granit/testing';
 import type { UserId } from '@granit/types';
-
-type Mutable<T> = { -readonly [P in keyof T]: T[P] };
 
 function recomputeEffective(
   override: ManualPresenceStatus | null,

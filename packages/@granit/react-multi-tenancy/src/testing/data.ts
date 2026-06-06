@@ -1,6 +1,5 @@
 import type { AdminTenant } from '@granit/multi-tenancy';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { Mutable } from '@granit/testing';
 
 export const mockTenants: Mutable<AdminTenant>[] = [
   {

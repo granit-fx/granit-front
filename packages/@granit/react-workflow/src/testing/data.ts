@@ -1,8 +1,7 @@
 import { toISODateString } from '@granit/types';
 
+import type { Mutable } from '@granit/testing';
 import type { TransitionHistory, WorkflowStatus } from '@granit/workflow';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
 
 export const USER_WORKFLOW_STATES = [
   'PendingValidation',

@@ -3,9 +3,7 @@
 // ---------------------------------------------------------------------------
 
 // Re-export everything from @granit/testing
-export { axiosResponse, createMockClient, createMockLogger } from '@granit/testing';
-
-export type { MockLogger } from '@granit/testing';
+export * from '@granit/testing';
 
 // React-specific utilities
-export { createQueryWrapper, createTestQueryClient } from './query-helpers';
+export { createQueryWrapper, createTestQueryClient, composeWrappers } from './query-helpers';

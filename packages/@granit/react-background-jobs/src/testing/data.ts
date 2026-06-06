@@ -1,8 +1,7 @@
 import { toISODateString } from '@granit/types';
 
 import type { BackgroundJobStatus } from '@granit/background-jobs';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { Mutable } from '@granit/testing';
 
 export const mockBackgroundJobs: Mutable<BackgroundJobStatus>[] = [
   {

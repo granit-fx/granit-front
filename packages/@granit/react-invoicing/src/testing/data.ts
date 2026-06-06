@@ -1,8 +1,7 @@
 import { toEntityId, toISODateString } from '@granit/types';
 
 import type { InvoiceLineItemResponse, InvoiceResponse } from '@granit/invoicing';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { Mutable } from '@granit/testing';
 
 export const sampleInvoiceLineItems: Mutable<InvoiceLineItemResponse>[] = [
   {

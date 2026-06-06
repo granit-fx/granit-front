@@ -7,8 +7,7 @@ import type {
   TemplateListItem,
   TemplateRevisionId,
 } from '@granit/templating';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { Mutable } from '@granit/testing';
 
 // ---------------------------------------------------------------------------
 // Categories

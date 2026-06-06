@@ -7,8 +7,7 @@ import type {
   AccountSettingsResponse,
   AccountTwoFactorStatusResponse,
 } from '@granit/account';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { Mutable } from '@granit/testing';
 
 // ---------------------------------------------------------------------------
 // Profile

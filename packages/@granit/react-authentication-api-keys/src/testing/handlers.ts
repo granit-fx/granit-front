@@ -14,8 +14,9 @@ import type {
   ApiKeyUpdateScopesRequest,
 } from '@granit/authentication-api-keys';
 import type { FilterEntry, QueryMetadata } from '@granit/query-engine';
+import type { Mutable } from '@granit/testing';
 
-type MutableApiKey = { -readonly [K in keyof ApiKeyResponse]: ApiKeyResponse[K] };
+type MutableApiKey = Mutable<ApiKeyResponse>;
 
 /**
  * QueryEngine metadata describing the api-keys grid — returned by

@@ -7,9 +7,8 @@ import type {
   PaymentRefundResponse,
   PaymentTransactionResponse,
 } from '@granit/payments';
+import type { Mutable } from '@granit/testing';
 import type { CurrencyCode } from '@granit/types';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
 
 export const sampleTransactions: Mutable<PaymentTransactionResponse>[] = [
   {

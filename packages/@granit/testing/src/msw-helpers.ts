@@ -47,6 +47,11 @@ export function notFound() {
   return new HttpResponse(null, { status: 404 });
 }
 
+/** 201 Created — for successful resource creation with a response body. */
+export function created<T extends Record<string, unknown>>(data: T) {
+  return HttpResponse.json(data, { status: 201 });
+}
+
 /** 202 Accepted — for asynchronous operations. */
 export function accepted() {
   return new HttpResponse(null, { status: 202 });
@@ -122,8 +127,10 @@ export function applyStringFilter(value: string, operator: string, filterValue: 
       return v.includes(f);
     case 'StartsWith':
       return v.startsWith(f);
+    case 'EndsWith':
+      return v.endsWith(f);
     case 'In':
-      return filterValue.split(',').some((item) => item.toLowerCase() === v);
+      return filterValue.split(',').some((item) => item.trim().toLowerCase() === v);
     default:
       return true;
   }
@@ -173,14 +180,20 @@ export function applyDateFilter(value: string, operator: string, filterValue: st
   }
 }
 
+const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}(T|$)/;
+
 /**
  * Apply a single {@link FilterEntry} against a record (generic object).
  * Dispatches to the appropriate typed filter based on the runtime value type.
+ * ISO 8601 date strings (YYYY-MM-DD…) are dispatched to {@link applyDateFilter}.
  */
 export function applyFilter(record: Record<string, unknown>, f: FilterEntry): boolean {
   const fieldValue = record[f.field];
   if (typeof fieldValue === 'number') {
     return applyNumberFilter(fieldValue, f.operator, f.value);
+  }
+  if (typeof fieldValue === 'string' && ISO_DATE_RE.test(fieldValue)) {
+    return applyDateFilter(fieldValue, f.operator, f.value);
   }
   return applyStringFilter(fieldValue != null ? String(fieldValue) : '', f.operator, f.value);
 }
@@ -195,6 +208,11 @@ export function applyFilter(record: Record<string, unknown>, f: FilterEntry): bo
  *
  * @returns The same array (mutated).
  */
+function compareValues(aVal: unknown, bVal: unknown): number {
+  if (typeof aVal === 'number' && typeof bVal === 'number') return aVal - bVal;
+  return (aVal != null ? String(aVal) : '').localeCompare(bVal != null ? String(bVal) : '');
+}
+
 export function sortItems<T extends Record<string, unknown>>(
   items: T[],
   sortEntries: SortEntry[],
@@ -203,29 +221,16 @@ export function sortItems<T extends Record<string, unknown>>(
   const firstSort = sortEntries[0];
   if (firstSort) {
     const { field, desc } = firstSort;
-    items.sort((a, b) => {
-      const aVal = a[field];
-      const bVal = b[field];
-      let cmp: number;
-      if (typeof aVal === 'number' && typeof bVal === 'number') {
-        cmp = aVal - bVal;
-      } else {
-        cmp = (aVal != null ? String(aVal) : '').localeCompare(bVal != null ? String(bVal) : '');
-      }
+    return [...items].sort((a, b) => {
+      const cmp = compareValues(a[field], b[field]);
       return desc ? -cmp : cmp;
     });
-  } else if (defaultSort) {
+  }
+  if (defaultSort) {
     const desc = defaultSort.startsWith('-');
     const field = desc ? defaultSort.slice(1) : defaultSort;
-    items.sort((a, b) => {
-      const aVal = a[field];
-      const bVal = b[field];
-      let cmp: number;
-      if (typeof aVal === 'number' && typeof bVal === 'number') {
-        cmp = aVal - bVal;
-      } else {
-        cmp = (aVal != null ? String(aVal) : '').localeCompare(bVal != null ? String(bVal) : '');
-      }
+    return [...items].sort((a, b) => {
+      const cmp = compareValues(a[field], b[field]);
       return desc ? -cmp : cmp;
     });
   }

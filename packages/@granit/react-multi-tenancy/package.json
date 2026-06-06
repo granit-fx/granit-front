@@ -50,6 +50,7 @@
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
-    "@granit/react-api-client": "workspace:*"
+    "@granit/react-api-client": "workspace:*",
+    "@granit/testing": "workspace:*"
   }
 }

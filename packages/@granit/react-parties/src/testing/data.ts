@@ -11,8 +11,7 @@ import type {
   PartyPhoneId,
   PartyResponse,
 } from '@granit/parties';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { Mutable } from '@granit/testing';
 
 const id = (n: number): PartyId =>
   toEntityId<'Party'>(`00000000-0000-0000-0000-${n.toString(16).padStart(12, '0')}`);

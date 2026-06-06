@@ -25,8 +25,7 @@ import type {
   DashboardRenderResponse,
   WidgetInstanceResponse,
 } from '@granit/dashboards';
-
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+import type { Mutable } from '@granit/testing';
 
 export const SAMPLE_FINANCE_DASHBOARD_ID = '8c6b1e10-0000-4000-8000-000000000001';
 export const SAMPLE_WELCOME_DASHBOARD_ID = '8c6b1e10-0000-4000-8000-000000000002';
