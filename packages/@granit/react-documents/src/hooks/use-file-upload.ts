@@ -111,6 +111,8 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
           blobId: ticket.blobId,
           folderId,
           name: file.name,
+          description: null,
+          commitMessage: null,
         });
         setProgress(null);
         return document;

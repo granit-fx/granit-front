@@ -134,7 +134,7 @@ export function DocumentDetail({
       return;
     }
     renameDocument.mutate(
-      { id: document.id, request: { name: trimmed } },
+      { id: document.id, request: { name: trimmed, description: null } },
       { onSuccess: () => setEditing(false) }
     );
   }

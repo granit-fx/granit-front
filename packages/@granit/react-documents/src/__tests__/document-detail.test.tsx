@@ -172,6 +172,6 @@ describe('DocumentDetail', () => {
 
     await waitFor(() => expect(client.patch).toHaveBeenCalled());
     const [, body] = vi.mocked(client.patch).mock.calls[0] ?? [];
-    expect(body).toEqual({ name: 'NewName.pdf' });
+    expect(body).toEqual({ name: 'NewName.pdf', description: null });
   });
 });

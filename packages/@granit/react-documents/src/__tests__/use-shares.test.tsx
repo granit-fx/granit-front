@@ -21,7 +21,7 @@ const sampleShare: ShareResponse = {
   isDefault: true,
   expiresAt: null,
   createdAt: '2026-05-01T00:00:00Z',
-  createdByUserId: 'user-1',
+  createdBy: 'user-1',
 };
 const sampleResponse: ListSharesResponse = { items: [sampleShare] };
 

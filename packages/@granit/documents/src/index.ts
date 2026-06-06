@@ -1,7 +1,12 @@
 // Types
 export type {
   AppendVersionRequest,
+  BatchResolveRequest,
   CreateFolderRequest,
+  CreatePublicLinkRequest,
+  CreatePublicLinkResponse,
+  DocumentPropertiesResponse,
+  DocumentPropertiesStatus,
   DocumentResponse,
   DocumentStatus,
   DocumentTagAssignmentResponse,
@@ -18,13 +23,23 @@ export type {
   ListDocumentVersionsResponse,
   ListFoldersFilter,
   ListFoldersResponse,
+  ListRenditionsResponse,
   ListSharesResponse,
   ListTrashedDocumentsResponse,
   MoveDocumentRequest,
   MoveFolderRequest,
   PageFilter,
+  PublicLinkResponse,
+  PublicLinkScope,
   RenameDocumentRequest,
   RenameFolderRequest,
+  RenditionDownloadUrlResponse,
+  RenditionResponse,
+  RenditionStatus,
+  RenditionType,
+  ResolveItemRequest,
+  ResolvedDocumentResponse,
+  RevokePublicLinkRequest,
   ShareGranteeType,
   SharePermissionLevel,
   ShareResponse,
@@ -83,3 +98,19 @@ export { assignDocumentTag, listDocumentTags, unassignDocumentTag } from './api/
 
 // API — Quota
 export { getTenantStorageQuota } from './api/quota-api';
+
+// API — Document properties
+export { getDocumentProperties, getDocumentVersionProperties } from './api/properties-api';
+
+// API — Public links
+export {
+  createDocumentPublicLink,
+  listDocumentPublicLinks,
+  revokeDocumentPublicLink,
+} from './api/public-links-api';
+
+// API — Renditions
+export { listDocumentRenditions, requestRenditionDownloadUrl } from './api/renditions-api';
+
+// API — Resolution
+export { batchResolveDocumentAssets } from './api/resolution-api';

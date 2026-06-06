@@ -144,24 +144,25 @@ export interface FinalizeUploadRequest {
   /** `null` drops the document directly under the tenant root. */
   readonly folderId: string | null;
   readonly name: string;
-  readonly description?: string | null;
-  readonly commitMessage?: string | null;
+  readonly description: string | null;
+  readonly commitMessage: string | null;
 }
 
 /** Request payload for `POST /documents/{id}/versions`. */
 export interface AppendVersionRequest {
   readonly blobId: string;
-  readonly commitMessage?: string | null;
+  readonly commitMessage: string | null;
 }
 
 /**
- * PATCH payload for `PATCH /documents/{id}`. Fields left `null`/absent are
- * unchanged; use {@link clearDescription} to drop an existing description
- * (sending an empty string sets a non-null empty value).
+ * PATCH payload for `PATCH /documents/{id}`. Pass `null` for `name` or
+ * `description` to leave the field unchanged; use {@link clearDescription}
+ * to explicitly drop an existing description (sending an empty string sets a
+ * non-null empty value instead).
  */
 export interface RenameDocumentRequest {
-  readonly name?: string | null;
-  readonly description?: string | null;
+  readonly name: string | null;
+  readonly description: string | null;
   /** When `true`, clears the description regardless of {@link description}. */
   readonly clearDescription?: boolean;
 }
@@ -251,7 +252,6 @@ export interface DocumentTagResponse {
   readonly name: string;
   readonly color: string;
   readonly hideOnEntityCard: boolean;
-  readonly rowVersion: number;
 }
 
 export interface ListDocumentTagsResponse {
@@ -286,7 +286,7 @@ export interface ShareResponse {
   readonly isDefault: boolean;
   readonly expiresAt: string | null;
   readonly createdAt: string;
-  readonly createdByUserId: string;
+  readonly createdBy: string;
 }
 
 /** Wrapper response for the folder- and document-scoped share listings. */
@@ -319,4 +319,168 @@ export interface TenantStorageQuotaResponse {
   /** `usageBytes / limitBytes * 100`, clamped at 100 and rounded to two decimals. */
   readonly percentUsed: number;
   readonly updatedAt: string;
+}
+
+// ─── Document properties (extracted metadata) ───────────────────────────────
+
+export type DocumentPropertiesStatus = 'Pending' | 'Extracting' | 'Ready' | 'Failed';
+
+/**
+ * Rich metadata extracted from a document version by the background extractor
+ * pipeline. All domain-specific fields (`width`, `pageCount`, `durationMs`, …)
+ * are `null` when the extractor did not populate them for the given content
+ * type.
+ */
+export interface DocumentPropertiesResponse {
+  readonly id: string;
+  readonly documentId: string;
+  readonly documentVersionId: string;
+  readonly sourceContentType: string;
+  readonly status: DocumentPropertiesStatus;
+  readonly createdAt: string;
+  readonly completedAt: string | null;
+  readonly failureReason: string | null;
+  readonly extractorCount: number;
+  // Image / photo
+  readonly width: number | null;
+  readonly height: number | null;
+  readonly cameraMake: string | null;
+  readonly cameraModel: string | null;
+  readonly lensModel: string | null;
+  readonly iso: number | null;
+  readonly fNumber: number | null;
+  readonly exposureTimeMs: number | null;
+  readonly takenAt: string | null;
+  readonly gpsLatitude: number | null;
+  readonly gpsLongitude: number | null;
+  readonly gpsAltitude: number | null;
+  // Document / PDF
+  readonly pageCount: number | null;
+  readonly title: string | null;
+  readonly author: string | null;
+  readonly subject: string | null;
+  readonly keywords: string | null;
+  readonly producer: string | null;
+  readonly revision: number | null;
+  readonly lastModifiedBy: string | null;
+  // Audio / video
+  readonly durationMs: number | null;
+  readonly codec: string | null;
+  readonly bitrate: number | null;
+  readonly artist: string | null;
+  readonly album: string | null;
+  readonly trackNumber: number | null;
+  readonly genre: string | null;
+  /** Raw key/value pairs emitted by all extractors. */
+  readonly rawMetadata: Readonly<Record<string, string>>;
+}
+
+// ─── Public links ────────────────────────────────────────────────────────────
+
+/** Scope of a public link: download-only or view (preview). */
+export type PublicLinkScope = 'Download' | 'View';
+
+/** Request body for `POST /documents/{id}/public-links`. */
+export interface CreatePublicLinkRequest {
+  readonly scope: PublicLinkScope;
+  /** Number of days until the link expires. */
+  readonly ttlDays: number;
+  /** Maximum number of uses; `null` means unlimited. */
+  readonly maxUses: number | null;
+}
+
+/** Response from `POST /documents/{id}/public-links`. Includes the one-time `token` and the full `url`. */
+export interface CreatePublicLinkResponse {
+  readonly id: string;
+  readonly documentId: string;
+  readonly token: string;
+  readonly url: string;
+  readonly scope: PublicLinkScope;
+  readonly expiresAt: string;
+  readonly maxUses: number | null;
+}
+
+/** Read-only view of a public link returned by `GET /documents/{id}/public-links`. */
+export interface PublicLinkResponse {
+  readonly id: string;
+  readonly documentId: string;
+  readonly scope: PublicLinkScope;
+  readonly expiresAt: string;
+  readonly maxUses: number | null;
+  readonly currentUses: number;
+  readonly revokedAt: string | null;
+  readonly revocationReason: string | null;
+  readonly createdAt: string;
+}
+
+/** Request body for `DELETE /documents/public-links/{id}`. */
+export interface RevokePublicLinkRequest {
+  /** `null` records no reason. */
+  readonly reason: string | null;
+}
+
+// ─── Renditions ──────────────────────────────────────────────────────────────
+
+/** Rendition variant: thumbnail, web-optimised, print, or video poster frame. */
+export type RenditionType = 'Thumbnail' | 'Web' | 'Print' | 'Poster';
+
+/** Generation status of a rendition. */
+export type RenditionStatus = 'Pending' | 'Generating' | 'Ready' | 'Failed';
+
+export interface RenditionResponse {
+  readonly id: string;
+  readonly documentId: string;
+  readonly documentVersionId: string;
+  readonly type: RenditionType;
+  /** Output format (e.g. `"image/webp"`). */
+  readonly format: string;
+  readonly status: RenditionStatus;
+  readonly sizeBytes: number | null;
+  readonly width: number | null;
+  readonly height: number | null;
+  readonly createdAt: string;
+  readonly completedAt: string | null;
+  readonly failureReason: string | null;
+}
+
+/** Response for `GET /documents/{id}/renditions`. */
+export interface ListRenditionsResponse {
+  readonly documentId: string;
+  readonly documentVersionId: string;
+  readonly renditions: readonly RenditionResponse[];
+}
+
+/** Response for `GET /documents/{id}/renditions/{type}/download`. */
+export interface RenditionDownloadUrlResponse {
+  readonly url: string;
+  readonly expiresAt: string;
+}
+
+// ─── Document resolution ─────────────────────────────────────────────────────
+
+/** A single item in a batch-resolve request. */
+export interface ResolveItemRequest {
+  readonly documentId: string;
+  /** Omit to resolve the current version. */
+  readonly versionId?: string | null;
+  /** Omit to resolve the original blob; provide to request a specific rendition. */
+  readonly renditionType?: RenditionType | null;
+  readonly renditionFormat?: string | null;
+}
+
+/** Request body for `POST /documents/resolution/resolve`. */
+export interface BatchResolveRequest {
+  readonly requests: readonly ResolveItemRequest[];
+}
+
+/** Single resolved asset returned by `POST /documents/resolution/resolve`. */
+export interface ResolvedDocumentResponse {
+  readonly documentId: string;
+  readonly versionId: string;
+  readonly url: string;
+  readonly width: number | null;
+  readonly height: number | null;
+  readonly mimeType: string | null;
+  readonly sizeBytes: number | null;
+  readonly lastModified: string | null;
 }

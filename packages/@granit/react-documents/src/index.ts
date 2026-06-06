@@ -73,6 +73,25 @@ export {
 // Quota
 export { useTenantStorageQuota } from './hooks/use-quota';
 
+// Document properties
+export {
+  useDocumentProperties,
+  useDocumentVersionProperties,
+} from './hooks/use-document-properties';
+
+// Public links
+export {
+  useCreateDocumentPublicLink,
+  useDocumentPublicLinks,
+  useRevokeDocumentPublicLink,
+} from './hooks/use-public-links';
+
+// Renditions
+export { useDocumentRenditions, useRenditionDownloadUrl } from './hooks/use-renditions';
+
+// Resolution
+export { useBatchResolveDocumentAssets } from './hooks/use-resolution';
+
 // Components — Documents
 export { DocumentDetail } from './components/document-detail';
 export type { DocumentDetailLabels, DocumentDetailProps } from './components/document-detail';

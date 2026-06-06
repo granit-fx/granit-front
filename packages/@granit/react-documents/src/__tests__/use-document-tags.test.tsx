@@ -27,7 +27,6 @@ const sampleTag: DocumentTagResponse = {
   name: 'Urgent',
   color: '#FF0000',
   hideOnEntityCard: false,
-  rowVersion: 1,
 };
 const sampleList: ListDocumentTagsResponse = { items: [sampleTag] };
 const sampleAssignment: DocumentTagAssignmentResponse = {
