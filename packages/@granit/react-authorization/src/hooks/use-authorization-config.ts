@@ -1,6 +1,5 @@
-import { useOptionalAuthorizationConfig } from '../providers/authorization-provider';
-
 import { DEFAULT_BASE_PATH } from '../constants';
+import { useOptionalAuthorizationConfig } from '../providers/authorization-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 
