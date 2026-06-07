@@ -1,9 +1,8 @@
 import { getRoleMetadataMeta, queryRoleMetadata } from '@granit/authorization';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { DEFAULT_BASE_PATH } from '../constants';
-
 import { buildPermissionQueryKey } from './query-keys';
+import { useResolvedAuthorizationConfig } from './use-authorization-config';
 
 import type { UseRoleMetadataOptions } from '../types';
 import type { RoleMetadata } from '@granit/authorization';
@@ -27,14 +26,15 @@ import type { UseQueryResult } from '@tanstack/react-query';
  * ```
  */
 export function useRoleMetadata(
-  options: UseRoleMetadataOptions,
+  options: UseRoleMetadataOptions = {},
   request: QueryRequest = {}
 ): UseQueryResult<PagedResult<RoleMetadata>> {
-  const { client, basePath = DEFAULT_BASE_PATH, enabled } = options;
+  const { enabled } = options;
+  const config = useResolvedAuthorizationConfig(options);
 
   return useQuery({
-    queryKey: buildPermissionQueryKey(options, 'role-metadata', request),
-    queryFn: ({ signal }) => queryRoleMetadata(client, basePath, request, { signal }),
+    queryKey: buildPermissionQueryKey(config, 'role-metadata', request),
+    queryFn: ({ signal }) => queryRoleMetadata(config.client, config.basePath, request, { signal }),
     enabled: enabled ?? true,
     placeholderData: keepPreviousData,
   });
@@ -49,13 +49,14 @@ export function useRoleMetadata(
  * @returns Standard React Query result with the query metadata.
  */
 export function useRoleMetadataMeta(
-  options: UseRoleMetadataOptions
+  options: UseRoleMetadataOptions = {}
 ): UseQueryResult<QueryMetadata> {
-  const { client, basePath = DEFAULT_BASE_PATH, enabled } = options;
+  const { enabled } = options;
+  const config = useResolvedAuthorizationConfig(options);
 
   return useQuery({
-    queryKey: buildPermissionQueryKey(options, 'role-metadata', 'meta'),
-    queryFn: ({ signal }) => getRoleMetadataMeta(client, basePath, { signal }),
+    queryKey: buildPermissionQueryKey(config, 'role-metadata', 'meta'),
+    queryFn: ({ signal }) => getRoleMetadataMeta(config.client, config.basePath, { signal }),
     enabled: enabled ?? true,
     staleTime: Infinity,
   });

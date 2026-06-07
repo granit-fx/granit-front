@@ -1,9 +1,8 @@
 import { getPermissionGrantMeta, queryPermissionGrants } from '@granit/authorization';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { DEFAULT_BASE_PATH } from '../constants';
-
 import { buildPermissionQueryKey } from './query-keys';
+import { useResolvedAuthorizationConfig } from './use-authorization-config';
 
 import type { UsePermissionGrantsOptions } from '../types';
 import type { PermissionGrant } from '@granit/authorization';
@@ -27,14 +26,15 @@ import type { UseQueryResult } from '@tanstack/react-query';
  * ```
  */
 export function usePermissionGrants(
-  options: UsePermissionGrantsOptions,
+  options: UsePermissionGrantsOptions = {},
   request: QueryRequest = {}
 ): UseQueryResult<PagedResult<PermissionGrant>> {
-  const { client, basePath = DEFAULT_BASE_PATH, enabled } = options;
+  const { enabled } = options;
+  const config = useResolvedAuthorizationConfig(options);
 
   return useQuery({
-    queryKey: buildPermissionQueryKey(options, 'grants', request),
-    queryFn: ({ signal }) => queryPermissionGrants(client, basePath, request, { signal }),
+    queryKey: buildPermissionQueryKey(config, 'grants', request),
+    queryFn: ({ signal }) => queryPermissionGrants(config.client, config.basePath, request, { signal }),
     enabled: enabled ?? true,
     placeholderData: keepPreviousData,
   });
@@ -49,13 +49,14 @@ export function usePermissionGrants(
  * @returns Standard React Query result with the query metadata.
  */
 export function usePermissionGrantMeta(
-  options: UsePermissionGrantsOptions
+  options: UsePermissionGrantsOptions = {}
 ): UseQueryResult<QueryMetadata> {
-  const { client, basePath = DEFAULT_BASE_PATH, enabled } = options;
+  const { enabled } = options;
+  const config = useResolvedAuthorizationConfig(options);
 
   return useQuery({
-    queryKey: buildPermissionQueryKey(options, 'grants', 'meta'),
-    queryFn: ({ signal }) => getPermissionGrantMeta(client, basePath, { signal }),
+    queryKey: buildPermissionQueryKey(config, 'grants', 'meta'),
+    queryFn: ({ signal }) => getPermissionGrantMeta(config.client, config.basePath, { signal }),
     enabled: enabled ?? true,
     staleTime: Infinity,
   });

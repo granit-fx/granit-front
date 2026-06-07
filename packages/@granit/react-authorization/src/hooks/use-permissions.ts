@@ -2,10 +2,9 @@ import { getMyPermissions } from '@granit/authorization';
 import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 
-import { DEFAULT_BASE_PATH } from '../constants';
-
 export { buildPermissionQueryKey } from './query-keys';
 import { buildPermissionQueryKey } from './query-keys';
+import { useResolvedAuthorizationConfig } from './use-authorization-config';
 
 import type { UsePermissionsOptions, UsePermissionsReturn } from '../types';
 import type { MyPermissionsResponse } from '@granit/authorization';
@@ -37,12 +36,13 @@ const EMPTY_SET: ReadonlySet<string> = new Set<string>();
  * return <DeleteButton />;
  * ```
  */
-export function usePermissions(options: UsePermissionsOptions): UsePermissionsReturn {
-  const { client, basePath = DEFAULT_BASE_PATH, enabled } = options;
+export function usePermissions(options: UsePermissionsOptions = {}): UsePermissionsReturn {
+  const { enabled } = options;
+  const config = useResolvedAuthorizationConfig(options);
 
   const query = useQuery<MyPermissionsResponse>({
-    queryKey: buildPermissionQueryKey(options, 'me'),
-    queryFn: () => getMyPermissions(client, basePath),
+    queryKey: buildPermissionQueryKey(config, 'me'),
+    queryFn: () => getMyPermissions(config.client, config.basePath),
     enabled: enabled ?? true,
     staleTime: Infinity,
   });

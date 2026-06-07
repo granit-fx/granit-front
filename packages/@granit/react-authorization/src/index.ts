@@ -1,3 +1,13 @@
+export {
+  AuthorizationProvider,
+  useAuthorizationConfig,
+  useOptionalAuthorizationConfig,
+} from './providers/authorization-provider';
+export type {
+  AuthorizationConfig,
+  AuthorizationProviderProps,
+  ResolvedAuthorizationConfig,
+} from './providers/authorization-provider';
 export { usePermissions } from './hooks/use-permissions';
 export { buildPermissionQueryKey } from './hooks/query-keys';
 export { usePermissionDefinitions } from './hooks/use-permission-definitions';

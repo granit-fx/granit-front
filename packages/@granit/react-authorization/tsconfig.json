@@ -3,7 +3,8 @@
   "compilerOptions": {
     "paths": {
       "@granit/api-client": ["../api-client/src/index.ts"],
-      "@granit/authorization": ["../authorization/src/index.ts"]
+      "@granit/authorization": ["../authorization/src/index.ts"],
+      "@granit/react-api-client": ["../react-api-client/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],

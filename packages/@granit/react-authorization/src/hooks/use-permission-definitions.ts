@@ -1,9 +1,8 @@
 import { listPermissionDefinitions } from '@granit/authorization';
 import { useQuery } from '@tanstack/react-query';
 
-import { DEFAULT_BASE_PATH } from '../constants';
-
 import { buildPermissionQueryKey } from './query-keys';
+import { useResolvedAuthorizationConfig } from './use-authorization-config';
 
 import type { UsePermissionDefinitionsOptions } from '../types';
 import type { PermissionGroupResponse } from '@granit/authorization';
@@ -27,13 +26,14 @@ import type { UseQueryResult } from '@tanstack/react-query';
  * ```
  */
 export function usePermissionDefinitions(
-  options: UsePermissionDefinitionsOptions
+  options: UsePermissionDefinitionsOptions = {}
 ): UseQueryResult<PermissionGroupResponse[]> {
-  const { client, basePath = DEFAULT_BASE_PATH, enabled } = options;
+  const { enabled } = options;
+  const config = useResolvedAuthorizationConfig(options);
 
   return useQuery({
-    queryKey: buildPermissionQueryKey(options, 'definitions'),
-    queryFn: () => listPermissionDefinitions(client, basePath),
+    queryKey: buildPermissionQueryKey(config, 'definitions'),
+    queryFn: () => listPermissionDefinitions(config.client, config.basePath),
     enabled: enabled ?? true,
     staleTime: 5 * 60 * 1000,
   });

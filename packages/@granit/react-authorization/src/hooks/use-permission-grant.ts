@@ -1,9 +1,8 @@
 import { grantPermission, revokePermission } from '@granit/authorization';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DEFAULT_BASE_PATH } from '../constants';
-
 import { buildPermissionQueryKey } from './query-keys';
+import { useResolvedAuthorizationConfig } from './use-authorization-config';
 
 import type { UsePermissionGrantOptions } from '../types';
 import type { PermissionGrantParams } from '@granit/authorization';
@@ -36,27 +35,28 @@ export type UsePermissionGrantReturn = {
  * revoke.mutate({ roleName: 'editor', permissionName: 'Invoices.Delete' });
  * ```
  */
-export function usePermissionGrant(options: UsePermissionGrantOptions): UsePermissionGrantReturn {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+export function usePermissionGrant(options: UsePermissionGrantOptions = {}): UsePermissionGrantReturn {
+  const config = useResolvedAuthorizationConfig(options);
   const queryClient = useQueryClient();
 
   const invalidateRole = (params: PermissionGrantParams) => {
-    // Refresh the role's own grant list and the admin grants query surface.
     queryClient.invalidateQueries({
-      queryKey: buildPermissionQueryKey(options, 'roles', params.roleName),
+      queryKey: buildPermissionQueryKey(config, 'roles', params.roleName),
     });
     queryClient.invalidateQueries({
-      queryKey: buildPermissionQueryKey(options, 'grants'),
+      queryKey: buildPermissionQueryKey(config, 'grants'),
     });
   };
 
   const grant = useMutation({
-    mutationFn: (params: PermissionGrantParams) => grantPermission(client, basePath, params),
+    mutationFn: (params: PermissionGrantParams) =>
+      grantPermission(config.client, config.basePath, params),
     onSuccess: (_data, params) => invalidateRole(params),
   });
 
   const revoke = useMutation({
-    mutationFn: (params: PermissionGrantParams) => revokePermission(client, basePath, params),
+    mutationFn: (params: PermissionGrantParams) =>
+      revokePermission(config.client, config.basePath, params),
     onSuccess: (_data, params) => invalidateRole(params),
   });
 

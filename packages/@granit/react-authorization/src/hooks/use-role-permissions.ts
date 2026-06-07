@@ -1,9 +1,8 @@
 import { getRolePermissions } from '@granit/authorization';
 import { useQuery } from '@tanstack/react-query';
 
-import { DEFAULT_BASE_PATH } from '../constants';
-
 import { buildPermissionQueryKey } from './query-keys';
+import { useResolvedAuthorizationConfig } from './use-authorization-config';
 
 import type { UseRolePermissionsOptions } from '../types';
 import type { PermissionGrantResponse } from '@granit/authorization';
@@ -32,11 +31,12 @@ import type { UseQueryResult } from '@tanstack/react-query';
 export function useRolePermissions(
   options: UseRolePermissionsOptions
 ): UseQueryResult<PermissionGrantResponse> {
-  const { client, roleName, basePath = DEFAULT_BASE_PATH, enabled } = options;
+  const { roleName, enabled } = options;
+  const config = useResolvedAuthorizationConfig(options);
 
   return useQuery({
-    queryKey: buildPermissionQueryKey(options, 'roles', roleName),
-    queryFn: () => getRolePermissions(client, basePath, roleName),
+    queryKey: buildPermissionQueryKey(config, 'roles', roleName),
+    queryFn: () => getRolePermissions(config.client, config.basePath, roleName),
     enabled: enabled ?? true,
   });
 }
