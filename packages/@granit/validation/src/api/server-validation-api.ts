@@ -20,9 +20,9 @@ export async function listValidators(
 /** Validate a single field value against a server-side validator. */
 export async function validateFieldServer(
   client: AxiosInstance,
-  basePath: string = DEFAULT_BASE_PATH,
   errorCode: string,
   value: string | null,
+  basePath: string = DEFAULT_BASE_PATH,
   signal?: AbortSignal
 ): Promise<ValidationFieldStatus> {
   const { data } = await client.post<ValidationFieldValidateResponse>(
@@ -36,8 +36,8 @@ export async function validateFieldServer(
 /** Validate multiple fields in a single batch request. */
 export async function validateFieldsBatch(
   client: AxiosInstance,
-  basePath: string = DEFAULT_BASE_PATH,
   fields: readonly { errorCode: string; value: string | null }[],
+  basePath: string = DEFAULT_BASE_PATH,
   signal?: AbortSignal
 ): Promise<readonly ValidationFieldValidateResponse[]> {
   const { data } = await client.post<ValidationFieldValidateBatchResponse>(

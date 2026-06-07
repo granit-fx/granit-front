@@ -39,7 +39,7 @@ export function isSafeUrl(
   // `/\evil.com`, `\\evil.com` and `/\/evil.com` all resolve off-origin just
   // like `//evil.com`. Normalise before the relative-path fast paths so the
   // leading-slash shortcut cannot be tricked into accepting an absolute URL.
-  const normalized = input.replace(/\\/g, '/');
+  const normalized = input.replaceAll('\\', '/');
   if (normalized.startsWith('//')) return false;
   if (normalized.startsWith('/')) return true;
   const url = parseUrl(input);

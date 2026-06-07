@@ -120,6 +120,40 @@ function isNullish(node: ts.TypeNode): boolean {
   );
 }
 
+function familyOfLiteralType(node: ts.LiteralTypeNode): Family {
+  const lit = node.literal.kind;
+  if (lit === ts.SyntaxKind.StringLiteral) return 'string';
+  if (lit === ts.SyntaxKind.NumericLiteral) return 'number';
+  if (lit === ts.SyntaxKind.TrueKeyword || lit === ts.SyntaxKind.FalseKeyword) return 'boolean';
+  return 'unknown';
+}
+
+function familyOfIntersection(
+  node: ts.IntersectionTypeNode,
+  aliases: AliasMap,
+  seen: ReadonlySet<string>
+): Family {
+  for (const member of node.types) {
+    const fam = familyOf(member, aliases, seen);
+    if (fam !== 'object' && fam !== 'unknown') return fam;
+  }
+  return 'object';
+}
+
+function familyOfTypeReference(
+  node: ts.TypeReferenceNode,
+  aliases: AliasMap,
+  seen: ReadonlySet<string>
+): Family {
+  const name = node.typeName.getText();
+  if (name === 'Array' || name === 'ReadonlyArray') return 'array';
+  const brand = BRAND_FAMILY[name];
+  if (brand) return brand;
+  const alias = aliases.get(name);
+  if (alias && !seen.has(name)) return familyOf(alias, aliases, new Set([...seen, name]));
+  return 'object';
+}
+
 /**
  * Coarse family of a type node, resolving framework brands and local type
  * aliases (`type FooId = EntityId<'Foo'>`, string-union enums) so a branded
@@ -144,33 +178,14 @@ function familyOf(
       break;
   }
   if (ts.isArrayTypeNode(node)) return 'array';
-  if (ts.isLiteralTypeNode(node)) {
-    const lit = node.literal.kind;
-    if (lit === ts.SyntaxKind.StringLiteral) return 'string';
-    if (lit === ts.SyntaxKind.NumericLiteral) return 'number';
-    if (lit === ts.SyntaxKind.TrueKeyword || lit === ts.SyntaxKind.FalseKeyword) return 'boolean';
-  }
+  if (ts.isLiteralTypeNode(node)) return familyOfLiteralType(node);
   if (ts.isUnionTypeNode(node)) {
     const base = node.types.find((t) => !isNullish(t));
     return base ? familyOf(base, aliases, seen) : 'unknown';
   }
-  if (ts.isIntersectionTypeNode(node)) {
-    // Brand pattern `string & { __brand }` — the primitive member wins.
-    for (const member of node.types) {
-      const fam = familyOf(member, aliases, seen);
-      if (fam !== 'object' && fam !== 'unknown') return fam;
-    }
-    return 'object';
-  }
-  if (ts.isTypeReferenceNode(node)) {
-    const name = node.typeName.getText();
-    if (name === 'Array' || name === 'ReadonlyArray') return 'array';
-    const brand = BRAND_FAMILY[name];
-    if (brand) return brand;
-    const alias = aliases.get(name);
-    if (alias && !seen.has(name)) return familyOf(alias, aliases, new Set([...seen, name]));
-    return 'object';
-  }
+  // Brand pattern `string & { __brand }` — the primitive member wins.
+  if (ts.isIntersectionTypeNode(node)) return familyOfIntersection(node, aliases, seen);
+  if (ts.isTypeReferenceNode(node)) return familyOfTypeReference(node, aliases, seen);
   if (ts.isTypeLiteralNode(node)) return 'object';
   return 'unknown';
 }
@@ -238,6 +253,32 @@ export interface CheckSchemaOptions {
   typeName?: string;
 }
 
+function compareField(
+  schemaName: string,
+  name: string,
+  sp: PropShape & { required: boolean },
+  tp: PropShape
+): ConformanceViolation[] {
+  const out: ConformanceViolation[] = [];
+  if (sp.family !== 'unknown' && tp.family !== 'unknown' && sp.family !== tp.family) {
+    out.push({
+      rule: 'type-family',
+      schema: schemaName,
+      field: name,
+      message: `field "${name}": backend is ${sp.family}, front is ${tp.family}`,
+    });
+  }
+  if (sp.nullable && !tp.nullable) {
+    out.push({
+      rule: 'nullability',
+      schema: schemaName,
+      field: name,
+      message: `field "${name}": backend allows null, front type does not`,
+    });
+  }
+  return out;
+}
+
 /**
  * Verify a hand-written front interface conforms to its backend OpenAPI schema —
  * field presence, nullability and coarse type family — while tolerating the
@@ -247,7 +288,6 @@ export interface CheckSchemaOptions {
  */
 export function checkSchemaConformance(opts: CheckSchemaOptions): ConformanceViolation[] {
   const typeName = opts.typeName ?? opts.schemaName;
-  const out: ConformanceViolation[] = [];
 
   const schema = opts.spec.components?.schemas?.[opts.schemaName];
   if (!schema) {
@@ -275,6 +315,7 @@ export function checkSchemaConformance(opts: CheckSchemaOptions): ConformanceVio
 
   const backend = specProps(schema, opts.spec.components?.schemas ?? {});
   const front = tsProps(members, aliases);
+  const out: ConformanceViolation[] = [];
 
   for (const [name, sp] of backend) {
     const tp = front.get(name);
@@ -289,22 +330,7 @@ export function checkSchemaConformance(opts: CheckSchemaOptions): ConformanceVio
       }
       continue;
     }
-    if (sp.family !== 'unknown' && tp.family !== 'unknown' && sp.family !== tp.family) {
-      out.push({
-        rule: 'type-family',
-        schema: opts.schemaName,
-        field: name,
-        message: `field "${name}": backend is ${sp.family}, front is ${tp.family}`,
-      });
-    }
-    if (sp.nullable && !tp.nullable) {
-      out.push({
-        rule: 'nullability',
-        schema: opts.schemaName,
-        field: name,
-        message: `field "${name}": backend allows null, front type does not`,
-      });
-    }
+    out.push(...compareField(opts.schemaName, name, sp, tp));
   }
 
   for (const name of front.keys()) {

@@ -93,14 +93,13 @@ export function useNotificationPreferences(): UseNotificationPreferencesReturn {
   );
 
   const refresh = useCallback(() => {
-    void refetch();
+    refetch();
   }, [refetch]);
 
-  const error = queryError
-    ? queryError instanceof Error
-      ? queryError
-      : new Error(String(queryError))
-    : null;
+  let error: Error | null = null;
+  if (queryError) {
+    error = queryError instanceof Error ? queryError : new Error(String(queryError));
+  }
 
   return {
     preferences,

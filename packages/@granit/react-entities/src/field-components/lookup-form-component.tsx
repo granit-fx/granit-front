@@ -36,7 +36,12 @@ function deriveScopeFromValues(
   const scope: Record<string, string | undefined> = {};
   for (const key of scopeKeys) {
     const raw = lowerToValue.get(key.toLowerCase());
-    scope[key] = raw === null || raw === undefined ? undefined : String(raw);
+    scope[key] =
+      raw === null || raw === undefined
+        ? undefined
+        : typeof raw === 'object'
+          ? JSON.stringify(raw)
+          : String(raw);
   }
   return scope;
 }
@@ -146,6 +151,7 @@ function LookupCombobox({
       {value != null && selectedItem ? (
         <span data-granit-lookup-selected="">{selectedItem.label}</span>
       ) : null}
+      {/* NOSONAR: custom combobox listbox — native <select> cannot support the required UX */}
       <ul id={listboxId} role="listbox" data-loading={isLoading ? '' : undefined}>
         {items.map((item) => (
           <li

@@ -68,7 +68,7 @@ export function useLookupManifest(options: UseLookupManifestOptions = {}): UseLo
     queryKey: buildLookupManifestQueryKey(basePath),
     queryFn: ({ signal }) => getLookupManifest({ client, basePath, signal }),
     staleTime: staleTime ?? DEFAULT_MANIFEST_STALE_TIME_MS,
-    enabled: enabled === false ? false : true,
+    enabled: enabled !== false,
   });
 
   const lookups = useMemo<readonly LookupManifestEntry[]>(

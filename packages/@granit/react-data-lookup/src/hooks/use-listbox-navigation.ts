@@ -43,21 +43,21 @@ export interface ListboxNavigation {
 export function useListboxNavigation(options: UseListboxNavigationOptions): ListboxNavigation {
   const { optionCount, onSelect, onEscape } = options;
   const baseId = useId();
-  const [activeIndex, setActiveIndexState] = useState(-1);
+  const [activeIndex, setActiveIndex] = useState(-1);
 
   // Reset the highlight when the result set changes — a new search must not
   // leave the cursor pointing at a row that no longer exists.
   useEffect(() => {
-    setActiveIndexState(-1);
+    setActiveIndex(-1);
   }, [optionCount]);
 
-  const setActiveIndex = useCallback(
+  const clampedSetActiveIndex = useCallback(
     (index: number) => {
       if (optionCount === 0) {
-        setActiveIndexState(-1);
+        setActiveIndex(-1);
         return;
       }
-      setActiveIndexState(Math.max(0, Math.min(index, optionCount - 1)));
+      setActiveIndex(Math.max(0, Math.min(index, optionCount - 1)));
     },
     [optionCount]
   );
@@ -67,24 +67,24 @@ export function useListboxNavigation(options: UseListboxNavigationOptions): List
       switch (event.key) {
         case 'ArrowDown':
           event.preventDefault();
-          setActiveIndexState((prev) => (optionCount === 0 ? -1 : (prev + 1) % optionCount));
+          setActiveIndex((prev) => (optionCount === 0 ? -1 : (prev + 1) % optionCount));
           break;
         case 'ArrowUp':
           event.preventDefault();
-          setActiveIndexState((prev) =>
+          setActiveIndex((prev) =>
             optionCount === 0 ? -1 : (prev - 1 + optionCount) % optionCount
           );
           break;
         case 'Home':
           if (optionCount > 0) {
             event.preventDefault();
-            setActiveIndexState(0);
+            setActiveIndex(0);
           }
           break;
         case 'End':
           if (optionCount > 0) {
             event.preventDefault();
-            setActiveIndexState(optionCount - 1);
+            setActiveIndex(optionCount - 1);
           }
           break;
         case 'Enter':
@@ -107,7 +107,7 @@ export function useListboxNavigation(options: UseListboxNavigationOptions): List
 
   return {
     activeIndex,
-    setActiveIndex,
+    setActiveIndex: clampedSetActiveIndex,
     listboxId: `${baseId}-listbox`,
     getOptionId,
     activeDescendant: activeIndex >= 0 ? getOptionId(activeIndex) : undefined,

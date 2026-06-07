@@ -645,9 +645,7 @@ export function useSmartFilter(options?: UseSmartFilterOptions): UseSmartFilterR
       const fieldLabel = col?.label ?? field ?? '';
       const opLabel = (operator && options?.operatorLabels?.[operator]) ?? operator ?? '';
       // Persist the opaque key(s); In → comma-joined to match the query serializer.
-      const serialized = Array.isArray(value)
-        ? value.map((v) => String(v)).join(',')
-        : String(value ?? '');
+      const serialized = Array.isArray(value) ? value.map(String).join(',') : String(value ?? ''); // NOSONAR: filter values are scalars at runtime; objects caught by Array.isArray above
       dispatch({
         type: 'CONFIRM_VALUE',
         value: serialized,

@@ -18,8 +18,8 @@ const TOKEN_BYTES = 32;
 /** base64url-encode without padding (RFC 7636 Appendix A). */
 function base64UrlEncode(bytes: Uint8Array): string {
   let binary = '';
-  for (const byte of bytes) binary += String.fromCharCode(byte);
-  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/u, '');
+  for (const byte of bytes) binary += String.fromCodePoint(byte);
+  return btoa(binary).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
 }
 
 /** Cryptographically-random URL-safe token (verifier, `state`, `nonce`). */

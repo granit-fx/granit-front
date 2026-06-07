@@ -19,17 +19,16 @@ import type {
   WidgetDefinitionBase,
   WidgetInstanceResponse,
   WidgetRenderBody,
-  WidgetRenderContextPayload,
   WidgetRenderKind,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
+export type { WidgetRenderContextPayload } from '../types/index';
 export type {
   DashboardCatalogParams,
   DashboardListParams,
   DashboardsRequestOptions,
   WidgetRenderBody,
-  WidgetRenderContextPayload,
   WidgetRenderKind,
 };
 

@@ -5,10 +5,9 @@ import type { AllowlistedScanContext, Violation } from '../types';
 // React APIs that establish a client boundary: using any of them in a module
 // imported by a React Server Components app (e.g. the Next.js CMS renderer)
 // requires a top-of-file `'use client'` directive, or the build errors.
-//
-// NOSONAR: bounded developer source files only — no user input, no ReDoS risk.
-const CLIENT_API_RE =
-  /\buse(State|Effect|LayoutEffect|InsertionEffect|Reducer|Ref|Context|Memo|Callback|Id|SyncExternalStore|Transition|DeferredValue|ImperativeHandle)\s*\(|\bcreateContext\s*\(/;
+// Alternatives are all distinct after the `use` prefix so no catastrophic backtracking occurs.
+const CLIENT_API_RE = // NOSONAR S5852: bounded developer source files only — no user input
+  /\buse(?:State|Effect|LayoutEffect|InsertionEffect|Reducer|Ref|Context|Memo|Callback|Id|SyncExternalStore|Transition|DeferredValue|ImperativeHandle)\s*\(|\bcreateContext\s*\(/;
 
 const USE_CLIENT_RE = /^\s*['"]use client['"]\s*;?\s*$/;
 

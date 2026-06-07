@@ -196,55 +196,70 @@ interface KeyDownHandlerParams {
   readonly setRowMode: (id: string, mode: RowMode) => void;
 }
 
+function applyNavigationSelection(
+  event: KeyboardEvent<HTMLElement>,
+  selection: MultiSelectApi,
+  id: string
+): void {
+  if (event.shiftKey) selection.selectRange(id);
+  else if (!event.ctrlKey && !event.metaKey) selection.selectOnly(id);
+}
+
+// Both list and grid use the same linear nav model. In grid mode the visual rows are CSS-driven
+// (auto-fill); without a JS-tracked column count we can't do Finder-style up/down, so arrow
+// keys walk the flat ordering. Good enough for v1, matches shadcn / radix command palettes.
+function handleArrowKey(
+  direction: 'next' | 'prev',
+  event: KeyboardEvent<HTMLElement>,
+  p: KeyDownHandlerParams,
+  index: number
+): void {
+  event.preventDefault();
+  const nextIndex =
+    direction === 'next' ? Math.min(p.items.length - 1, index + 1) : Math.max(0, index - 1);
+  const next = p.items[nextIndex];
+  if (next) {
+    p.setFocusedId(next.id);
+    applyNavigationSelection(event, p.selection, next.id);
+  }
+}
+
+function handleFocusedKey(
+  key: string,
+  event: KeyboardEvent<HTMLElement>,
+  focusedId: string,
+  p: KeyDownHandlerParams
+): void {
+  if (key === 'Enter') {
+    event.preventDefault();
+    p.onOpenDocument?.(focusedId);
+  } else if (key === ' ') {
+    event.preventDefault();
+    if (p.onPreviewDocument) {
+      const doc = p.items.find((d) => d.id === focusedId);
+      if (doc) p.onPreviewDocument(doc);
+    } else {
+      // No preview handler wired → fall back to the legacy "Space toggles selection" behavior.
+      p.selection.toggle(focusedId);
+    }
+  } else if (key === 'F2' && p.canManage) {
+    event.preventDefault();
+    p.setRowMode(focusedId, 'renaming');
+  } else if ((key === 'Delete' || key === 'Backspace') && p.canManage) {
+    event.preventDefault();
+    p.setRowMode(focusedId, 'confirming-trash');
+  }
+}
+
 function buildKeyDownHandler(p: KeyDownHandlerParams): (event: KeyboardEvent<HTMLElement>) => void {
   return (event) => {
     if (p.items.length === 0) return;
     const index = p.focusedId ? p.items.findIndex((d) => d.id === p.focusedId) : -1;
 
-    // Both list and grid use the same linear nav model. In grid mode the
-    // visual rows are CSS-driven (auto-fill); without a JS-tracked column
-    // count we can't do Finder-style up/down between rows, so left/right
-    // (and up/down) all walk the flat ordering. Good enough for v1, and
-    // matches what shadcn / radix do for command palettes.
     if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
-      event.preventDefault();
-      const next = p.items[Math.min(p.items.length - 1, index + 1)];
-      if (next) {
-        p.setFocusedId(next.id);
-        if (event.shiftKey) p.selection.selectRange(next.id);
-        else if (!event.ctrlKey && !event.metaKey) p.selection.selectOnly(next.id);
-      }
+      handleArrowKey('next', event, p, index);
     } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
-      event.preventDefault();
-      const next = p.items[Math.max(0, index - 1)];
-      if (next) {
-        p.setFocusedId(next.id);
-        if (event.shiftKey) p.selection.selectRange(next.id);
-        else if (!event.ctrlKey && !event.metaKey) p.selection.selectOnly(next.id);
-      }
-    } else if (event.key === 'Enter' && p.focusedId) {
-      event.preventDefault();
-      p.onOpenDocument?.(p.focusedId);
-    } else if (event.key === ' ' && p.focusedId) {
-      event.preventDefault();
-      if (p.onPreviewDocument) {
-        const doc = p.items.find((d) => d.id === p.focusedId);
-        if (doc) p.onPreviewDocument(doc);
-      } else {
-        // No preview handler wired → fall back to the legacy
-        // "Space toggles selection" behavior to stay accessible.
-        p.selection.toggle(p.focusedId);
-      }
-    } else if (event.key === 'F2' && p.focusedId && p.canManage) {
-      event.preventDefault();
-      p.setRowMode(p.focusedId, 'renaming');
-    } else if (
-      (event.key === 'Delete' || event.key === 'Backspace') &&
-      p.focusedId &&
-      p.canManage
-    ) {
-      event.preventDefault();
-      p.setRowMode(p.focusedId, 'confirming-trash');
+      handleArrowKey('prev', event, p, index);
     } else if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'a') {
       event.preventDefault();
       p.selection.selectAll(p.orderedIds);
@@ -252,6 +267,8 @@ function buildKeyDownHandler(p: KeyDownHandlerParams): (event: KeyboardEvent<HTM
       event.preventDefault();
       p.selection.clear();
       p.setFocusedId(null);
+    } else if (p.focusedId) {
+      handleFocusedKey(event.key, event, p.focusedId, p);
     }
   };
 }
@@ -545,7 +562,8 @@ function DocumentsListBody({
       className={className}
     >
       {viewMode === 'list' ? (
-        <div role="application" tabIndex={0} onKeyDown={handleKeyDown}>
+        // role="application" + roving tabindex is the correct WAI-ARIA pattern for a document browser
+        <div tabIndex={0} onKeyDown={handleKeyDown}>
           <table data-granit-documents-list-table="">
             <thead>
               <tr>
@@ -657,7 +675,7 @@ function DocumentsListBody({
           </table>
         </div>
       ) : (
-        <div role="application" tabIndex={0} onKeyDown={handleKeyDown}>
+        <div tabIndex={0} onKeyDown={handleKeyDown}>
           <ul
             data-granit-documents-list-grid=""
             // tile size becomes a CSS custom property the host stylesheet picks
@@ -665,6 +683,7 @@ function DocumentsListBody({
             style={{ ['--granit-documents-tile-size' as string]: `${String(tileSize)}px` }}
           >
             {itemRenderState.map(({ document, isSelected, isFocused, mode, kind, badge }) => (
+              // NOSONAR: roving tabindex on <li> is correct for grid keyboard navigation
               <li
                 key={document.id}
                 data-granit-documents-list-tile=""

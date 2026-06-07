@@ -65,7 +65,7 @@ function assertAllowedScriptUrl(input: string): string {
     );
   }
   // Same-origin URLs (app-hosted, e.g. silent-check-sso.html) are always OK.
-  if (globalThis.location !== undefined && url.origin === globalThis.location.origin) {
+  if (globalThis.location?.origin === url.origin) {
     return input;
   }
   if (allowedOrigins.size === 0) {

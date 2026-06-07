@@ -1,4 +1,4 @@
-import { createContext, useContext, type ReactNode } from 'react';
+import { createContext, useContext, useMemo, type ReactNode } from 'react';
 
 import type { AxiosInstance } from '@granit/api-client';
 
@@ -25,9 +25,8 @@ interface ValidationProviderProps extends ValidationConfig {
  * ```
  */
 export function ValidationProvider({ client, basePath, children }: ValidationProviderProps) {
-  return (
-    <ValidationContext.Provider value={{ client, basePath }}>{children}</ValidationContext.Provider>
-  );
+  const value = useMemo(() => ({ client, basePath }), [client, basePath]);
+  return <ValidationContext.Provider value={value}>{children}</ValidationContext.Provider>;
 }
 
 /**

@@ -19,14 +19,13 @@ import type {
   SiteRedirectSettingsRequest,
   SiteRedirectSettingsResponse,
 } from '@granit/cms-redirects';
-import type { QueryClient } from '@tanstack/react-query';
-import type { UseMutationResult } from '@tanstack/react-query';
+import type { QueryClient, UseMutationResult } from '@tanstack/react-query';
 
 /** Invalidates the per-site list and the grid after a redirect mutation. */
 function invalidateSiteRedirects(qc: QueryClient, prefix: readonly string[], siteId: string): void {
-  void qc.invalidateQueries({ queryKey: cmsRedirectsKeys.list(prefix, siteId) });
+  qc.invalidateQueries({ queryKey: cmsRedirectsKeys.list(prefix, siteId) });
   // Invalidate every grid query regardless of its QueryRequest params.
-  void qc.invalidateQueries({ queryKey: [...prefix, 'redirects', 'grid'] });
+  qc.invalidateQueries({ queryKey: [...prefix, 'redirects', 'grid'] });
 }
 
 export function useCreateRedirect(): UseMutationResult<
@@ -71,7 +70,7 @@ export function useDeleteRedirect(): UseMutationResult<
   return useMutation({
     mutationFn: ({ id }) => deleteRedirect(client, basePath, id),
     onSuccess: (_data, { id, siteId }) => {
-      void qc.removeQueries({ queryKey: cmsRedirectsKeys.detail(queryKeyPrefix, id) });
+      qc.removeQueries({ queryKey: cmsRedirectsKeys.detail(queryKeyPrefix, id) });
       invalidateSiteRedirects(qc, queryKeyPrefix, siteId);
     },
   });

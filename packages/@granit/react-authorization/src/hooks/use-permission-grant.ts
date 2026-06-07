@@ -42,10 +42,10 @@ export function usePermissionGrant(options: UsePermissionGrantOptions): UsePermi
 
   const invalidateRole = (params: PermissionGrantParams) => {
     // Refresh the role's own grant list and the admin grants query surface.
-    void queryClient.invalidateQueries({
+    queryClient.invalidateQueries({
       queryKey: buildPermissionQueryKey(options, 'roles', params.roleName),
     });
-    void queryClient.invalidateQueries({
+    queryClient.invalidateQueries({
       queryKey: buildPermissionQueryKey(options, 'grants'),
     });
   };

@@ -24,9 +24,9 @@ export async function getWorkspaceTree(
   const { data } = await client.get<WorkspaceTreeResponse>(`${basePath}/workspaces`, {
     ...config,
     params:
-      includeShells !== undefined
-        ? { ...((config.params as Record<string, unknown> | undefined) ?? {}), includeShells }
-        : config.params,
+      includeShells === undefined
+        ? config.params
+        : { ...(config.params as Record<string, unknown> | undefined), includeShells },
   });
   return data;
 }

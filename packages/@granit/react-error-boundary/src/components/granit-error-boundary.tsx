@@ -37,7 +37,7 @@ type ErrorBoundaryState = {
  * ```
  */
 export class GranitErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  static contextType = ErrorContext;
+  static readonly contextType = ErrorContext;
   declare context: React.ContextType<typeof ErrorContext>;
 
   private readonly logger: Logger;

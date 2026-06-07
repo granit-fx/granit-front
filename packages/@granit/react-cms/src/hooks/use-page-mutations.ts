@@ -22,10 +22,10 @@ import type {
   MovePageRequest,
   PageResponse,
   SaveDraftRequest,
+  SaveDraftResult,
   UpdatePageRequest,
   UpdatePageTranslationRequest,
 } from '@granit/cms';
-import type { SaveDraftResult } from '@granit/cms';
 import type { UseMutationResult } from '@tanstack/react-query';
 
 export function useCreatePage(): UseMutationResult<PageResponse, Error, CreatePageRequest> {

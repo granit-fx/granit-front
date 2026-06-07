@@ -156,12 +156,12 @@ export function useLookup(
 
   const fetchNextPage = useCallback(() => {
     if (query.hasNextPage && !query.isFetchingNextPage) {
-      void query.fetchNextPage();
+      query.fetchNextPage();
     }
   }, [query]);
 
   const refetch = useCallback(() => {
-    void query.refetch();
+    query.refetch();
   }, [query]);
 
   return {

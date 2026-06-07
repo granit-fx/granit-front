@@ -44,9 +44,9 @@ describe('validateFieldServer', () => {
 
     const result = await validateFieldServer(
       client as never,
-      '/api/v1/validation',
       'Validation:InvalidIban',
-      'BE68539007547034'
+      'BE68539007547034',
+      '/api/v1/validation'
     );
 
     expect(client.post).toHaveBeenCalledWith(
@@ -65,9 +65,9 @@ describe('validateFieldServer', () => {
 
     const result = await validateFieldServer(
       client as never,
-      '/api/v1/validation',
       'Validation:InvalidIban',
-      'INVALID'
+      'INVALID',
+      '/api/v1/validation'
     );
 
     expect(result).toBe('Invalid');
@@ -77,7 +77,7 @@ describe('validateFieldServer', () => {
     const client = createMockClient();
     client.post.mockResolvedValue({ data: { errorCode: 'test', status: 'Valid' } });
 
-    await validateFieldServer(client as never, '/api/v1/validation', 'test', null);
+    await validateFieldServer(client as never, 'test', null, '/api/v1/validation');
 
     expect(client.post).toHaveBeenCalledWith(
       '/api/v1/validation/validate',
@@ -95,9 +95,9 @@ describe('validateFieldServer', () => {
 
     await validateFieldServer(
       client as never,
-      '/api/v1/validation',
       'test',
       'value',
+      '/api/v1/validation',
       controller.signal
     );
 
@@ -112,7 +112,7 @@ describe('validateFieldServer', () => {
     const client = createMockClient();
     client.post.mockResolvedValue({ data: { errorCode: 'test', status: 'Valid' } });
 
-    await validateFieldServer(client as never, '/custom', 'test', 'value');
+    await validateFieldServer(client as never, 'test', 'value', '/custom');
 
     expect(client.post).toHaveBeenCalledWith(
       '/custom/validate',
@@ -125,7 +125,7 @@ describe('validateFieldServer', () => {
     const client = createMockClient();
     client.post.mockResolvedValue({ data: { errorCode: 'test', status: 'Valid' } });
 
-    await validateFieldServer(client as never, undefined, 'test', 'value');
+    await validateFieldServer(client as never, 'test', 'value');
 
     expect(client.post).toHaveBeenCalledWith(
       '/api/v1/validation/validate',
@@ -148,7 +148,7 @@ describe('validateFieldsBatch', () => {
       { errorCode: 'Validation:InvalidIban', value: 'BE68539007547034' },
       { errorCode: 'Validation:InvalidBce', value: '0000000000' },
     ];
-    const result = await validateFieldsBatch(client as never, '/api/v1/validation', fields);
+    const result = await validateFieldsBatch(client as never, fields, '/api/v1/validation');
 
     expect(client.post).toHaveBeenCalledWith(
       '/api/v1/validation/validate-batch',
@@ -163,7 +163,7 @@ describe('validateFieldsBatch', () => {
     client.post.mockResolvedValue({ data: { results: [] } });
     const controller = new AbortController();
 
-    await validateFieldsBatch(client as never, '/api/v1/validation', [], controller.signal);
+    await validateFieldsBatch(client as never, [], '/api/v1/validation', controller.signal);
 
     expect(client.post).toHaveBeenCalledWith(
       '/api/v1/validation/validate-batch',
@@ -176,7 +176,7 @@ describe('validateFieldsBatch', () => {
     const client = createMockClient();
     client.post.mockResolvedValue({ data: { results: [] } });
 
-    await validateFieldsBatch(client as never, undefined, []);
+    await validateFieldsBatch(client as never, []);
 
     expect(client.post).toHaveBeenCalledWith(
       '/api/v1/validation/validate-batch',

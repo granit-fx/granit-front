@@ -84,11 +84,11 @@ export function useServerValidationBatch(
 
       validateFieldsBatch(
         client,
-        basePath,
         eligible.map((f) => ({
           errorCode: f.constraint.granitValidator!,
           value: typeof f.value === 'string' ? f.value : String(f.value),
         })),
+        basePath,
         controller.signal
       )
         .then((results) => {
@@ -105,7 +105,7 @@ export function useServerValidationBatch(
             } else if (result.status === 'Invalid') {
               nextState[field.name] = {
                 status: 'invalid',
-                message: t(field.constraint.granitValidator!, { nsSeparator: false }),
+                message: t(field.constraint.granitValidator ?? '', { nsSeparator: false }),
               };
             } else {
               nextState[field.name] = { status: 'idle' };

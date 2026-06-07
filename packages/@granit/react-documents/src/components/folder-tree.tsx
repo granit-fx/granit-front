@@ -225,6 +225,7 @@ function FolderNode({
       data-granit-folder-depth={folder.depth}
       data-granit-folder-tree-current={isCurrent ? '' : undefined}
     >
+      {/* NOSONAR: role="group" is correct for a tree item's content group in the WAI-ARIA tree pattern */}
       <div
         role="group"
         data-granit-folder-tree-row=""

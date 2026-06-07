@@ -117,7 +117,8 @@ export async function listSeoMetadata(
   options?: { readonly signal?: AbortSignal }
 ): Promise<PagedResult<SeoMetadataListItem>> {
   const qs = params ? serializeQueryRequest(params) : '';
-  const url = `${basePath}/api/cms/seo/metadata${qs ? `?${qs}` : ''}`;
+  const suffix = qs ? `?${qs}` : '';
+  const url = `${basePath}/api/cms/seo/metadata${suffix}`;
   const res = await client.get<PagedResult<SeoMetadataListItem>>(url, options);
   return res.data;
 }

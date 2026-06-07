@@ -95,7 +95,7 @@ export function LookupPicker(props: LookupPickerProps): ReactElement {
   const selectedValues = useMemo(() => asArray(value), [value]);
 
   const isSelected = useCallback(
-    (itemValue: unknown) => selectedValues.some((v) => v === itemValue),
+    (itemValue: unknown) => selectedValues.includes(itemValue),
     [selectedValues]
   );
 

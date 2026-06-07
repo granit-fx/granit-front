@@ -89,7 +89,9 @@ export function useInfiniteScroll<T, P extends InfiniteScrollPage<T> = InfiniteS
         if (controller.signal.aborted) return;
 
         if (!Array.isArray(page.items)) {
-          throw new Error(`Invalid page response: expected items array, got ${typeof page.items}`);
+          throw new TypeError(
+            `Invalid page response: expected items array, got ${typeof page.items}`
+          );
         }
         setItems((prev) => (append ? [...prev, ...page.items] : [...page.items]));
         setTotalCount(page.totalCount);

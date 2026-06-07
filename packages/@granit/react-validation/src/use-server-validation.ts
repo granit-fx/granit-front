@@ -79,7 +79,7 @@ export function useServerValidation(options: UseServerValidationOptions): Server
       // Coerce to string — .NET endpoint expects string? (not arbitrary JSON)
       const stringValue = typeof value === 'string' ? value : String(value);
 
-      validateFieldServer(client, basePath, validatorKey, stringValue, controller.signal)
+      validateFieldServer(client, validatorKey, stringValue, basePath, controller.signal)
         .then((status) => {
           if (controller.signal.aborted) return;
 

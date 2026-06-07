@@ -77,7 +77,7 @@ export function UploadDropZone({
   const [over, setOver] = useState(false);
   const depthRef = useRef(0);
 
-  const carriesFiles = useCallback((event: DragEvent<HTMLDivElement>): boolean => {
+  const carriesFiles = useCallback((event: DragEvent<HTMLElement>): boolean => {
     const types = event.dataTransfer.types;
     for (const type of types) {
       if (type === 'Files') return true;
@@ -85,25 +85,25 @@ export function UploadDropZone({
     return false;
   }, []);
 
-  function handleDragEnter(event: DragEvent<HTMLDivElement>): void {
+  function handleDragEnter(event: DragEvent<HTMLElement>): void {
     if (disabled || !carriesFiles(event)) return;
     depthRef.current += 1;
     if (depthRef.current === 1) setOver(true);
   }
 
-  function handleDragLeave(event: DragEvent<HTMLDivElement>): void {
+  function handleDragLeave(event: DragEvent<HTMLElement>): void {
     if (disabled || !carriesFiles(event)) return;
     depthRef.current = Math.max(0, depthRef.current - 1);
     if (depthRef.current === 0) setOver(false);
   }
 
-  function handleDragOver(event: DragEvent<HTMLDivElement>): void {
+  function handleDragOver(event: DragEvent<HTMLElement>): void {
     if (disabled || !carriesFiles(event)) return;
     event.preventDefault();
     event.dataTransfer.dropEffect = 'copy';
   }
 
-  async function handleDrop(event: DragEvent<HTMLDivElement>): Promise<void> {
+  async function handleDrop(event: DragEvent<HTMLElement>): Promise<void> {
     if (disabled || !carriesFiles(event)) return;
     event.preventDefault();
     depthRef.current = 0;
@@ -132,8 +132,7 @@ export function UploadDropZone({
   const isBusy = batch !== null;
 
   return (
-    <div
-      role="region"
+    <section
       aria-label="File drop zone"
       data-granit-upload-drop-zone=""
       data-granit-upload-drop-zone-over={showOverlay ? '' : undefined}
@@ -164,6 +163,6 @@ export function UploadDropZone({
           {errorMessage}
         </div>
       )}
-    </div>
+    </section>
   );
 }

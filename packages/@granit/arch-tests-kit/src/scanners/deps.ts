@@ -63,6 +63,36 @@ function declaredDeps(pkg: PkgJson): Set<string> {
   ]);
 }
 
+function isRuntimeFile(file: string): boolean {
+  return !isTestFile(file) && !isTestingDir(file);
+}
+
+function scanModuleImports(
+  m: UndeclaredDepsOptions['modules'][number],
+  declared: Set<string>,
+  self: string,
+  ignore: Set<string>,
+  repoRoot: string
+): Violation[] {
+  const reported = new Set<string>();
+  const violations: Violation[] = [];
+  for (const f of walkSourceFiles(m.srcDir, isRuntimeFile)) {
+    for (const spec of collectImports(f)) {
+      if (isNonPackageSpecifier(spec) || ignore.has(spec)) continue;
+      const name = packageName(spec);
+      if (name === self || ignore.has(name) || declared.has(name) || reported.has(name)) continue;
+      reported.add(name);
+      violations.push({
+        rule: 'no-undeclared-dep',
+        module: m.name,
+        file: rel(f, repoRoot),
+        message: `imports "${name}" but it is not declared in package.json (add it to dependencies / peerDependencies / devDependencies)`,
+      });
+    }
+  }
+  return violations;
+}
+
 /**
  * Every bare import in a module's runtime source must be declared in that
  * module's own `package.json` (any of deps / peerDeps / devDeps /
@@ -85,23 +115,7 @@ export function scanUndeclaredDeps(opts: UndeclaredDepsOptions): Violation[] {
     const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8')) as PkgJson;
     const declared = declaredDeps(pkg);
     const self = pkg.name ?? m.name;
-
-    const reported = new Set<string>();
-    for (const f of walkSourceFiles(m.srcDir, (file) => !isTestFile(file) && !isTestingDir(file))) {
-      for (const spec of collectImports(f)) {
-        if (isNonPackageSpecifier(spec) || ignore.has(spec)) continue;
-        const name = packageName(spec);
-        if (name === self || ignore.has(name) || declared.has(name)) continue;
-        if (reported.has(name)) continue;
-        reported.add(name);
-        out.push({
-          rule: 'no-undeclared-dep',
-          module: m.name,
-          file: rel(f, opts.repoRoot),
-          message: `imports "${name}" but it is not declared in package.json (add it to dependencies / peerDependencies / devDependencies)`,
-        });
-      }
-    }
+    out.push(...scanModuleImports(m, declared, self, ignore, opts.repoRoot));
   }
 
   return out;

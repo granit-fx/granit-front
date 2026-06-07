@@ -18,7 +18,7 @@ interface Endpoint {
   route: string;
 }
 
-const normalizeRoute = (route: string): string => route.replace(/\{[^}]+\}/g, '{}');
+const normalizeRoute = (route: string): string => route.replace(/\{[^}]+\}/g, '{}'); // NOSONAR S5852: [^}]+ and } are disjoint — no backtracking possible
 
 // --- OpenAPI side ----------------------------------------------------------
 
