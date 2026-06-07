@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { TracingProvider, useTracingConfig, useTracer } from '../providers/tracing-provider';
+import { TracingProvider, useTracingConfig } from '../providers/tracing-provider';
 
 import type { TracingConfig } from '@granit/tracing';
 
@@ -234,12 +234,6 @@ describe('TracingProvider', () => {
 describe('useTracingConfig', () => {
   it('should throw when used outside TracingProvider', () => {
     expect(() => renderHook(() => useTracingConfig())).toThrowError(
-      'useTracingConfig must be used within a TracingProvider'
-    );
-  });
-
-  it('should still work via deprecated useTracer alias', () => {
-    expect(() => renderHook(() => useTracer())).toThrowError(
       'useTracingConfig must be used within a TracingProvider'
     );
   });

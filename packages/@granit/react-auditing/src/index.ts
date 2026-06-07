@@ -16,7 +16,6 @@ export { useAuditEntityChanges, useAuditEntityChangesMeta } from './hooks/use-au
 
 // Custom-lookup hooks
 export {
-  useAuditLogEntries,
   useAuditLogEntry,
   useAuditEntriesByCorrelation,
   useEntityAuditTrail,

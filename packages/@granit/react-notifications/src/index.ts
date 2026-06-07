@@ -1,9 +1,5 @@
 // Provider
-export {
-  NotificationProvider,
-  useNotificationConfig,
-  useNotificationContext,
-} from './providers/notification-provider';
+export { NotificationProvider, useNotificationConfig } from './providers/notification-provider';
 
 // Hooks
 export { useRealTimeNotifications } from './hooks/use-real-time-notifications';

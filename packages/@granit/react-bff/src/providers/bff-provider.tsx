@@ -191,6 +191,3 @@ export function useBffConfig(): BffContextType {
   }
   return context;
 }
-
-/** @deprecated Use useBffConfig instead */
-export const useBffContext = useBffConfig;

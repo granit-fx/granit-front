@@ -6,7 +6,7 @@ import { BffGuard } from '../components/bff-guard';
 import { useBffAuth } from '../hooks/use-bff-auth';
 import { useBffCsrf } from '../hooks/use-bff-csrf';
 import { useBffFetch } from '../hooks/use-bff-fetch';
-import { BffProvider, useBffConfig, useBffContext } from '../providers/bff-provider';
+import { BffProvider, useBffConfig } from '../providers/bff-provider';
 
 import type { BffConfig } from '@granit/bff';
 
@@ -136,12 +136,6 @@ describe('useBffConfig', () => {
   it('should throw when used outside BffProvider', () => {
     expect(() => {
       renderHook(() => useBffConfig());
-    }).toThrow('useBffConfig must be used within a <BffProvider>');
-  });
-
-  it('should still work via deprecated useBffContext alias', () => {
-    expect(() => {
-      renderHook(() => useBffContext());
     }).toThrow('useBffConfig must be used within a <BffProvider>');
   });
 });

@@ -102,9 +102,6 @@ export function useTracingConfig(): Tracer {
   return tracer;
 }
 
-/** @deprecated Use useTracingConfig instead */
-export const useTracer = useTracingConfig;
-
 // ---------------------------------------------------------------------------
 // Provider
 // ---------------------------------------------------------------------------

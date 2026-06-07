@@ -9,7 +9,6 @@ export type {
   LegalDocumentDetailResponse,
   // Legal document admin — shared
   DeletionState,
-  DeletionStatusValue,
   LegalDocumentCreateRequest,
   LegalDocumentLifecycleStatus,
   LegalDocumentListParams,

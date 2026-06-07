@@ -1,7 +1,6 @@
 import {
   getAuditEntriesByCorrelationId,
   getAuditLogEntry,
-  listAuditLogEntries, // NOSONAR: used only inside the deprecated useAuditLogEntries hook
   listEntityAuditTrail,
   pseudonymizeUserAuditLogs,
 } from '@granit/auditing';
@@ -11,12 +10,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { buildAuditLogQueryKey, useAuditLogConfig } from '../providers/audit-log-provider';
 
 import type { AxiosError, ProblemDetails } from '@granit/api-client';
-import type {
-  AuditEntryResponse,
-  AuditEntryDetailResponse,
-  AuditListParams, // NOSONAR: used only inside the deprecated useAuditLogEntries hook
-  AuditPage,
-} from '@granit/auditing';
+import type { AuditEntryResponse, AuditEntryDetailResponse, AuditPage } from '@granit/auditing';
 import type { PaginationParams } from '@granit/query-engine';
 import type { UseQueryEndpointOptions, UseQueryEndpointReturn } from '@granit/react-query-engine';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
@@ -45,30 +39,6 @@ export function useAuditEntries(
 
 /** Query metadata (columns, filterable/sortable/group-by fields) for the audit-entries surface. */
 export { useQueryMeta as useAuditEntriesMeta } from '@granit/react-query-engine';
-
-/**
- * List paginated audit log entries with optional filters.
- *
- * @deprecated The list endpoint is a QueryEngine endpoint, so the flat filter
- * params (`category`, `userId`, `from`, `to`, …) are ignored by the backend —
- * only `page`/`pageSize` take effect. Use {@link useAuditEntries} instead, which
- * serializes filters in the format the backend understands.
- *
- * @example
- * ```tsx
- * const { data } = useAuditLogEntries({ category: AuditCategory.DataMutation });
- * ```
- */
-export function useAuditLogEntries(params?: AuditListParams): UseQueryResult<AuditPage> {
-  // NOSONAR: hook is deprecated itself
-  const config = useAuditLogConfig();
-  const auditEntriesPath = `${config.basePath}/audit-entries`;
-
-  return useQuery({
-    queryKey: buildAuditLogQueryKey(config, 'list', params),
-    queryFn: () => listAuditLogEntries(config.client, auditEntriesPath, params), // NOSONAR: deprecated function used inside deprecated hook
-  });
-}
 
 /**
  * Get a single audit log entry by ID (includes entity change details).

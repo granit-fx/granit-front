@@ -5,7 +5,6 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   getAuditEntriesByCorrelationId,
   getAuditLogEntry,
-  listAuditLogEntries,
   listEntityAuditTrail,
 } from '../api/audit-log-api';
 import { AuditCategory } from '../types/index';
@@ -15,36 +14,6 @@ import type { AuditEntryDetailResponse, AuditPage } from '../types/index';
 const basePath = '/audit-log';
 
 describe('audit-log-api', () => {
-  describe('listAuditLogEntries', () => {
-    it('should call GET with params', async () => {
-      const client = createMockClient();
-      const page: AuditPage = {
-        items: [],
-        totalCount: 0,
-        hasMore: false,
-        nextCursor: null,
-      };
-      vi.mocked(client.get).mockResolvedValue(axiosResponse(page));
-
-      const params = { category: AuditCategory.DataMutation, page: 1, pageSize: 20 };
-      const result = await listAuditLogEntries(client, basePath, params);
-
-      expect(client.get).toHaveBeenCalledWith('/audit-log', { params });
-      expect(result).toEqual(page);
-    });
-
-    it('should call GET without params', async () => {
-      const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue(
-        axiosResponse({ items: [], totalCount: 0, hasMore: false, nextCursor: null })
-      );
-
-      await listAuditLogEntries(client, basePath);
-
-      expect(client.get).toHaveBeenCalledWith('/audit-log', { params: undefined });
-    });
-  });
-
   describe('getAuditLogEntry', () => {
     it('should call GET with encoded id', async () => {
       const client = createMockClient();

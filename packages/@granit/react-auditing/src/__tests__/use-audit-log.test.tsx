@@ -6,7 +6,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useAuditLogEntries, useAuditLogEntry, useEntityAuditTrail } from '../hooks/use-audit-log';
+import { useAuditLogEntry, useEntityAuditTrail } from '../hooks/use-audit-log';
 import { AuditLogProvider } from '../providers/audit-log-provider';
 
 import type { AuditLogProviderProps } from '../providers/audit-log-provider';
@@ -32,24 +32,6 @@ const emptyPage: AuditPage = {
   hasMore: false,
   nextCursor: null,
 };
-
-describe('useAuditLogEntries', () => {
-  it('should fetch entries', async () => {
-    const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse(emptyPage));
-
-    const { result } = renderHook(
-      () => useAuditLogEntries({ category: AuditCategory.DataMutation }),
-      { wrapper: createWrapper(client) }
-    );
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data).toEqual(emptyPage);
-    expect(client.get).toHaveBeenCalledWith('/api/v1/auditing/audit-entries', {
-      params: { category: AuditCategory.DataMutation },
-    });
-  });
-});
 
 describe('useAuditLogEntry', () => {
   it('should fetch a single entry', async () => {

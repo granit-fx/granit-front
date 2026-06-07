@@ -14,14 +14,12 @@ export type {
   AuditEntityChangeResponse,
   AuditEntityChangeId,
   AuditEntityChangeSummaryResponse,
-  AuditListParams,
   AuditPage,
   AuditPropertyChangeResponse,
 } from './types/index';
 
 // API
 export {
-  listAuditLogEntries,
   getAuditLogEntry,
   getAuditEntriesByCorrelationId,
   listEntityAuditTrail,

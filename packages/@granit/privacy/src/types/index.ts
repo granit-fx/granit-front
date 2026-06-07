@@ -20,9 +20,6 @@ export type PrivacyExportStatusResponse = {
 
 export type DeletionState = 'Deferred' | 'Executed' | 'Cancelled';
 
-/** @deprecated Use DeletionState */
-export type DeletionStatusValue = DeletionState; // NOSONAR: deprecated alias kept for backwards compatibility
-
 export type PrivacyDeletionRequest = {
   readonly reason: string;
   readonly defer?: boolean;

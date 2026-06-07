@@ -1,26 +1,6 @@
-import type { AuditEntryDetailResponse, AuditListParams, AuditPage } from '../types/index'; // NOSONAR: deprecated symbols used only inside the deprecated listAuditLogEntries function
+import type { AuditEntryDetailResponse, AuditPage } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { PaginationParams } from '@granit/query-engine';
-
-/**
- * List audit log entries with optional filters and pagination.
- *
- * `GET {basePath}`
- *
- * @deprecated `{basePath}` is a Granit QueryEngine endpoint
- * (`MapGranitQuery<AuditEntryResponse>`). The flat filter params in {@link AuditListParams}
- * are ignored by the backend binder (only `page`/`pageSize` work). Use
- * `getPage<AuditEntryResponse>(client, basePath, request)` from `@granit/query-engine`,
- * or the `useAuditEntries()` hook from `@granit/react-auditing`.
- */
-export async function listAuditLogEntries(
-  client: AxiosInstance,
-  basePath: string,
-  params?: AuditListParams
-): Promise<AuditPage> {
-  const { data } = await client.get<AuditPage>(basePath, { params });
-  return data;
-}
 
 /**
  * Get a single audit log entry by ID (includes entity change details).

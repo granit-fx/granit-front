@@ -35,14 +35,6 @@ export interface IdempotencyClientOptions {
   keyGenerator?: (config: InternalAxiosRequestConfig) => string | undefined;
 }
 
-/**
- * @deprecated Renamed to {@link IdempotencyClientOptions} to avoid colliding
- * with the unrelated server-side `IdempotencyOptions` (.NET middleware config).
- * This alias is kept for backward compatibility and will be removed in a
- * future major version.
- */
-export type IdempotencyOptions = IdempotencyClientOptions;
-
 const DEFAULT_METHODS = ['post', 'put', 'patch', 'delete'];
 
 // ---------------------------------------------------------------------------

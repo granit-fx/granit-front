@@ -33,9 +33,6 @@ export function useNotificationConfig(): NotificationContextValue {
   return ctx;
 }
 
-/** @deprecated Use useNotificationConfig instead */
-export const useNotificationContext = useNotificationConfig;
-
 // ---------------------------------------------------------------------------
 // Provider
 // ---------------------------------------------------------------------------

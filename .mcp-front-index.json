@@ -1640,11 +1640,6 @@
           ]
         },
         {
-          "name": "IdempotencyOptions",
-          "kind": "type",
-          "signature": "type IdempotencyOptions = IdempotencyClientOptions"
-        },
-        {
           "name": "enableIdempotency",
           "kind": "function",
           "signature": "function enableIdempotency(options?: IdempotencyClientOptions): void"
@@ -3189,11 +3184,6 @@
           "name": "useBffConfig",
           "kind": "function",
           "signature": "function useBffConfig(): BffContextType"
-        },
-        {
-          "name": "useBffContext",
-          "kind": "const",
-          "signature": "const useBffContext"
         },
         {
           "name": "BffContextType",
@@ -5145,6 +5135,16 @@
           "signature": "function GlobalErrorCapture("
         },
         {
+          "name": "ErrorContextProvider",
+          "kind": "function",
+          "signature": "function ErrorContextProvider("
+        },
+        {
+          "name": "useErrorBoundaryConfig",
+          "kind": "function",
+          "signature": "function useErrorBoundaryConfig(): ErrorContextValue"
+        },
+        {
           "name": "useBreadcrumb",
           "kind": "function",
           "signature": "function useBreadcrumb(): UseBreadcrumbReturn"
@@ -5527,6 +5527,16 @@
       "name": "@granit/react-notifications",
       "description": "React bindings for @granit/notifications — NotificationProvider, hooks",
       "exports": [
+        {
+          "name": "NotificationProvider",
+          "kind": "function",
+          "signature": "function NotificationProvider("
+        },
+        {
+          "name": "useNotificationConfig",
+          "kind": "function",
+          "signature": "function useNotificationConfig(): NotificationContextValue"
+        },
         {
           "name": "useRealTimeNotifications",
           "kind": "function",
@@ -6279,11 +6289,6 @@
           "signature": "function buildSchedulingQueryKey( config:"
         },
         {
-          "name": "schedulingKeys",
-          "kind": "const",
-          "signature": "const schedulingKeys"
-        },
-        {
           "name": "RescheduleVariables",
           "kind": "interface",
           "signature": "interface RescheduleVariables",
@@ -6913,11 +6918,6 @@
           "name": "useTracingConfig",
           "kind": "function",
           "signature": "function useTracingConfig(): Tracer"
-        },
-        {
-          "name": "useTracer",
-          "kind": "const",
-          "signature": "const useTracer"
         },
         {
           "name": "useSpan",

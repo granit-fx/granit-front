@@ -3,11 +3,7 @@ import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
 import { useBreadcrumb } from '../hooks/use-breadcrumb';
-import {
-  ErrorContextProvider,
-  useErrorBoundaryConfig,
-  useErrorContext,
-} from '../providers/error-context-provider';
+import { ErrorContextProvider, useErrorBoundaryConfig } from '../providers/error-context-provider';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -106,12 +102,6 @@ describe('ErrorContextProvider', () => {
 
   it('should throw when useErrorBoundaryConfig is used outside provider', () => {
     expect(() => renderHook(() => useErrorBoundaryConfig())).toThrowError(
-      'useErrorBoundaryConfig must be used within an ErrorContextProvider'
-    );
-  });
-
-  it('should still work via deprecated useErrorContext alias', () => {
-    expect(() => renderHook(() => useErrorContext())).toThrowError(
       'useErrorBoundaryConfig must be used within an ErrorContextProvider'
     );
   });

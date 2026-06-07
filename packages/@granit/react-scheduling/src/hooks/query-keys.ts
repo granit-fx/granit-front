@@ -1,5 +1,3 @@
-import type { QueryRequest } from '@granit/query-engine';
-
 // ---------------------------------------------------------------------------
 // Query key builder
 // ---------------------------------------------------------------------------
@@ -18,14 +16,3 @@ export function buildSchedulingQueryKey(
 ): readonly unknown[] {
   return [...(config.queryKeyPrefix ?? DEFAULT_QUERY_KEY_PREFIX), ...segments];
 }
-
-// ---------------------------------------------------------------------------
-// Legacy query key factory (delegates to default prefix)
-// ---------------------------------------------------------------------------
-
-/** @deprecated Use {@link buildSchedulingQueryKey} instead. */
-export const schedulingKeys = {
-  all: DEFAULT_QUERY_KEY_PREFIX as readonly string[],
-  list: (request?: QueryRequest) => [...DEFAULT_QUERY_KEY_PREFIX, 'list', request ?? {}] as const,
-  detail: (id: string) => [...DEFAULT_QUERY_KEY_PREFIX, 'detail', id] as const,
-};

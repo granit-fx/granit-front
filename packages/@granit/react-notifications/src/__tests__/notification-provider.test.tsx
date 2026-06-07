@@ -2,11 +2,7 @@ import { toEntityId, toISODateString } from '@granit/types';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import {
-  NotificationProvider,
-  useNotificationConfig,
-  useNotificationContext,
-} from '../providers/notification-provider';
+import { NotificationProvider, useNotificationConfig } from '../providers/notification-provider';
 
 import { createMockClient } from './test-utils';
 
@@ -71,12 +67,6 @@ describe('NotificationProvider', () => {
   it('should throw when used outside provider', () => {
     expect(() => {
       renderHook(() => useNotificationConfig());
-    }).toThrow('useNotificationConfig must be used within a <NotificationProvider>');
-  });
-
-  it('should still work via deprecated useNotificationContext alias', () => {
-    expect(() => {
-      renderHook(() => useNotificationContext());
     }).toThrow('useNotificationConfig must be used within a <NotificationProvider>');
   });
 

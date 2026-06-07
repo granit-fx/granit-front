@@ -1,4 +1,4 @@
-import type { PagedResult, PaginationParams } from '@granit/query-engine';
+import type { PagedResult } from '@granit/query-engine';
 import type { CorrelationId, EntityId, ISODateString, TenantId, UserId } from '@granit/types';
 
 // ---------------------------------------------------------------------------
@@ -71,27 +71,6 @@ export type AuditEntryDetailResponse = {
   readonly tenantId: TenantId | null;
   readonly correlationId: CorrelationId | null;
   readonly entityChanges: readonly AuditEntityChangeResponse[];
-};
-
-/**
- * Flat query parameters for the legacy audit list call.
- *
- * @deprecated The audit list endpoint (`GET /audit-entries`) is a Granit
- * QueryEngine endpoint (`MapGranitQuery<AuditEntryResponse>`), so flat filter
- * params (`category`, `userId`, `from`, `to`, …) are ignored by the backend
- * binder — only `page`/`pageSize` are honored. Use the QueryEngine surface
- * instead: `useAuditEntries()` (from `@granit/react-auditing`) or
- * `getPage<AuditEntryResponse>()` (from `@granit/query-engine`), which serialize
- * filters as `filter[field.op]=value`. There is no `AuditingQueryParameters` DTO
- * on the backend.
- */
-export type AuditListParams = PaginationParams & {
-  readonly userId?: string;
-  readonly entityType?: string;
-  readonly entityId?: string;
-  readonly category?: AuditCategoryValue;
-  readonly from?: ISODateString;
-  readonly to?: ISODateString;
 };
 
 /** Summary projection of an entity change — mirrors `AuditEntityChangeSummaryResponse`. */

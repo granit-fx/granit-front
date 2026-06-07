@@ -28,9 +28,6 @@ export function useErrorBoundaryConfig(): ErrorContextValue {
   return ctx;
 }
 
-/** @deprecated Use useErrorBoundaryConfig instead */
-export const useErrorContext = useErrorBoundaryConfig;
-
 /**
  * Projects the error context into a flat {@link LogContext} attached to every
  * error logged by `GranitErrorBoundary` / `GlobalErrorCapture`. Returns an
