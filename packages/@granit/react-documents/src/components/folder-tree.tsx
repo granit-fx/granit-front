@@ -226,7 +226,6 @@ function FolderNode({
       data-granit-folder-tree-current={isCurrent ? '' : undefined}
     >
       <div
-        role="none"
         data-granit-folder-tree-row=""
         data-granit-folder-tree-current={isCurrent ? '' : undefined}
         data-granit-folder-tree-drop-over={dropOver ? '' : undefined}
