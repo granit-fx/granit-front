@@ -563,7 +563,7 @@ function DocumentsListBody({
     >
       {viewMode === 'list' ? (
         // role="application" + roving tabindex is the correct WAI-ARIA pattern for a document browser
-        <div tabIndex={0} onKeyDown={handleKeyDown}>
+        <div role="application" tabIndex={0} onKeyDown={handleKeyDown}>
           <table data-granit-documents-list-table="">
             <thead>
               <tr>
@@ -675,7 +675,7 @@ function DocumentsListBody({
           </table>
         </div>
       ) : (
-        <div tabIndex={0} onKeyDown={handleKeyDown}>
+        <div role="application" tabIndex={0} onKeyDown={handleKeyDown}>
           <ul
             data-granit-documents-list-grid=""
             // tile size becomes a CSS custom property the host stylesheet picks
