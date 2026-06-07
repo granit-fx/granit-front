@@ -1,4 +1,4 @@
-import type { AuditEntryDetailResponse, AuditListParams, AuditPage } from '../types/index';
+import type { AuditEntryDetailResponse, AuditListParams, AuditPage } from '../types/index'; // NOSONAR: deprecated symbols used only inside the deprecated listAuditLogEntries function
 import type { AxiosInstance } from '@granit/api-client';
 import type { PaginationParams } from '@granit/query-engine';
 

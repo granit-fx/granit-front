@@ -290,7 +290,7 @@ export type SuggestionScopeFlag =
  * combination as a comma-joined member-name string (e.g. `"Title, Description"`),
  * so this is modelled as a `string` of that shape rather than an array.
  */
-export type SuggestionScope = string;
+export type SuggestionScope = string; // NOSONAR: [Flags] enum serialized as comma-joined string — <select> cannot model this; alias preserves named intent
 
 // ─── SEO-AI suggestions ──────────────────────────────────────────────────────
 

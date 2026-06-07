@@ -1,7 +1,7 @@
 import {
   getAuditEntriesByCorrelationId,
   getAuditLogEntry,
-  listAuditLogEntries,
+  listAuditLogEntries, // NOSONAR: used only inside the deprecated useAuditLogEntries hook
   listEntityAuditTrail,
   pseudonymizeUserAuditLogs,
 } from '@granit/auditing';
@@ -14,7 +14,7 @@ import type { AxiosError, ProblemDetails } from '@granit/api-client';
 import type {
   AuditEntryResponse,
   AuditEntryDetailResponse,
-  AuditListParams,
+  AuditListParams, // NOSONAR: used only inside the deprecated useAuditLogEntries hook
   AuditPage,
 } from '@granit/auditing';
 import type { PaginationParams } from '@granit/query-engine';
@@ -60,12 +60,13 @@ export { useQueryMeta as useAuditEntriesMeta } from '@granit/react-query-engine'
  * ```
  */
 export function useAuditLogEntries(params?: AuditListParams): UseQueryResult<AuditPage> {
+  // NOSONAR: hook is deprecated itself
   const config = useAuditLogConfig();
   const auditEntriesPath = `${config.basePath}/audit-entries`;
 
   return useQuery({
     queryKey: buildAuditLogQueryKey(config, 'list', params),
-    queryFn: () => listAuditLogEntries(config.client, auditEntriesPath, params),
+    queryFn: () => listAuditLogEntries(config.client, auditEntriesPath, params), // NOSONAR: deprecated function used inside deprecated hook
   });
 }
 

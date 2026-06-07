@@ -562,120 +562,122 @@ function DocumentsListBody({
       className={className}
     >
       {viewMode === 'list' ? (
-        // role="application" + roving tabindex is the correct WAI-ARIA pattern for a document browser
-        <div role="application" tabIndex={0} onKeyDown={handleKeyDown}>
-          <table data-granit-documents-list-table="">
-            <thead>
-              <tr>
-                <th data-granit-documents-list-select-col="">
+        <table
+          data-granit-documents-list-table=""
+          role="grid"
+          tabIndex={0}
+          onKeyDown={handleKeyDown}
+        >
+          <thead>
+            <tr>
+              <th data-granit-documents-list-select-col="">
+                <input
+                  type="checkbox"
+                  aria-label={labelStrings.selectHeader}
+                  checked={allSelected}
+                  onChange={(event) =>
+                    event.target.checked ? selection.selectAll(orderedIds) : selection.clear()
+                  }
+                />
+              </th>
+              <th>{labelStrings.nameHeader}</th>
+              <th>{labelStrings.statusHeader}</th>
+              {canManage && <th data-granit-documents-list-actions-col="" />}
+            </tr>
+          </thead>
+          <tbody>
+            {itemRenderState.map(({ document, isSelected, isFocused, mode, kind }) => (
+              <tr
+                key={document.id}
+                data-granit-documents-list-row=""
+                data-granit-document-id={document.id}
+                data-granit-document-kind={kind}
+                data-granit-documents-list-selected={isSelected ? '' : undefined}
+                data-granit-documents-list-focused={isFocused ? '' : undefined}
+                data-granit-documents-list-draggable={canManage ? '' : undefined}
+                aria-selected={isSelected}
+                tabIndex={-1}
+                draggable={canManage}
+                onClick={(event) => handleItemClick(event, document)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    selection.selectOnly(document.id);
+                    setFocusedId(document.id);
+                    onOpenDocument?.(document.id);
+                  }
+                }}
+                onDragStart={(event) => handleItemDragStart(event, document)}
+              >
+                <td data-granit-documents-list-select-cell="">
                   <input
                     type="checkbox"
-                    aria-label={labelStrings.selectHeader}
-                    checked={allSelected}
-                    onChange={(event) =>
-                      event.target.checked ? selection.selectAll(orderedIds) : selection.clear()
-                    }
+                    aria-label={`${labelStrings.selectRow} ${document.name}`}
+                    checked={isSelected}
+                    onClick={(event) => event.stopPropagation()}
+                    onChange={() => selection.toggle(document.id)}
                   />
-                </th>
-                <th>{labelStrings.nameHeader}</th>
-                <th>{labelStrings.statusHeader}</th>
-                {canManage && <th data-granit-documents-list-actions-col="" />}
+                </td>
+                <td>
+                  <DocumentNameCell
+                    mode={mode}
+                    canManage={canManage}
+                    document={document}
+                    onNameClick={onOpenDocument ? handleNameClick : undefined}
+                    renameLabel={labelStrings.rename}
+                    commitRename={commitRename}
+                    clearRowMode={clearRowMode}
+                    setRowMode={setRowMode}
+                  />
+                </td>
+                <td>{document.status}</td>
+                {canManage && (
+                  <td data-granit-documents-list-actions="">
+                    {mode === 'confirming-trash' ? (
+                      <span data-granit-documents-list-confirm="" role="alertdialog">
+                        <button type="button" onClick={() => clearRowMode(document.id)}>
+                          {labelStrings.trashCancel}
+                        </button>
+                        <button
+                          type="button"
+                          data-granit-documents-list-confirm-ok=""
+                          onClick={() => confirmTrash(document)}
+                          disabled={trashDocument.isPending}
+                        >
+                          {labelStrings.trashConfirm}
+                        </button>
+                      </span>
+                    ) : (
+                      <>
+                        <button
+                          type="button"
+                          aria-label={labelStrings.rename}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            setRowMode(document.id, 'renaming');
+                          }}
+                        >
+                          {labelStrings.rename}
+                        </button>
+                        <button
+                          type="button"
+                          aria-label={labelStrings.trash}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            setRowMode(document.id, 'confirming-trash');
+                          }}
+                        >
+                          {labelStrings.trash}
+                        </button>
+                      </>
+                    )}
+                  </td>
+                )}
               </tr>
-            </thead>
-            <tbody>
-              {itemRenderState.map(({ document, isSelected, isFocused, mode, kind }) => (
-                <tr
-                  key={document.id}
-                  data-granit-documents-list-row=""
-                  data-granit-document-id={document.id}
-                  data-granit-document-kind={kind}
-                  data-granit-documents-list-selected={isSelected ? '' : undefined}
-                  data-granit-documents-list-focused={isFocused ? '' : undefined}
-                  data-granit-documents-list-draggable={canManage ? '' : undefined}
-                  aria-selected={isSelected}
-                  tabIndex={-1}
-                  draggable={canManage}
-                  onClick={(event) => handleItemClick(event, document)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      selection.selectOnly(document.id);
-                      setFocusedId(document.id);
-                      onOpenDocument?.(document.id);
-                    }
-                  }}
-                  onDragStart={(event) => handleItemDragStart(event, document)}
-                >
-                  <td data-granit-documents-list-select-cell="">
-                    <input
-                      type="checkbox"
-                      aria-label={`${labelStrings.selectRow} ${document.name}`}
-                      checked={isSelected}
-                      onClick={(event) => event.stopPropagation()}
-                      onChange={() => selection.toggle(document.id)}
-                    />
-                  </td>
-                  <td>
-                    <DocumentNameCell
-                      mode={mode}
-                      canManage={canManage}
-                      document={document}
-                      onNameClick={onOpenDocument ? handleNameClick : undefined}
-                      renameLabel={labelStrings.rename}
-                      commitRename={commitRename}
-                      clearRowMode={clearRowMode}
-                      setRowMode={setRowMode}
-                    />
-                  </td>
-                  <td>{document.status}</td>
-                  {canManage && (
-                    <td data-granit-documents-list-actions="">
-                      {mode === 'confirming-trash' ? (
-                        <span data-granit-documents-list-confirm="" role="alertdialog">
-                          <button type="button" onClick={() => clearRowMode(document.id)}>
-                            {labelStrings.trashCancel}
-                          </button>
-                          <button
-                            type="button"
-                            data-granit-documents-list-confirm-ok=""
-                            onClick={() => confirmTrash(document)}
-                            disabled={trashDocument.isPending}
-                          >
-                            {labelStrings.trashConfirm}
-                          </button>
-                        </span>
-                      ) : (
-                        <>
-                          <button
-                            type="button"
-                            aria-label={labelStrings.rename}
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              setRowMode(document.id, 'renaming');
-                            }}
-                          >
-                            {labelStrings.rename}
-                          </button>
-                          <button
-                            type="button"
-                            aria-label={labelStrings.trash}
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              setRowMode(document.id, 'confirming-trash');
-                            }}
-                          >
-                            {labelStrings.trash}
-                          </button>
-                        </>
-                      )}
-                    </td>
-                  )}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       ) : (
-        <div role="application" tabIndex={0} onKeyDown={handleKeyDown}>
+        <div role="grid" tabIndex={0} onKeyDown={handleKeyDown}>
           <ul
             data-granit-documents-list-grid=""
             // tile size becomes a CSS custom property the host stylesheet picks
@@ -683,9 +685,9 @@ function DocumentsListBody({
             style={{ ['--granit-documents-tile-size' as string]: `${String(tileSize)}px` }}
           >
             {itemRenderState.map(({ document, isSelected, isFocused, mode, kind, badge }) => (
-              // NOSONAR: roving tabindex on <li> is correct for grid keyboard navigation
               <li
                 key={document.id}
+                role="row"
                 data-granit-documents-list-tile=""
                 data-granit-document-id={document.id}
                 data-granit-document-kind={kind}

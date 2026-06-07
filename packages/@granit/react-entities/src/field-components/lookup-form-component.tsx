@@ -28,8 +28,10 @@ import type { ReactNode } from 'react';
  */
 function coerceScopeValue(raw: unknown): string | undefined {
   if (raw === null || raw === undefined) return undefined;
-  if (typeof raw === 'object') return JSON.stringify(raw);
-  return String(raw);
+  if (typeof raw === 'string') return raw;
+  if (typeof raw === 'number' || typeof raw === 'boolean' || typeof raw === 'bigint')
+    return `${raw}`;
+  return JSON.stringify(raw);
 }
 
 function deriveScopeFromValues(
@@ -151,8 +153,8 @@ function LookupCombobox({
       {value != null && selectedItem ? (
         <span data-granit-lookup-selected="">{selectedItem.label}</span>
       ) : null}
-      {/* NOSONAR: custom combobox listbox — native <select> cannot support the required UX */}
       <ul id={listboxId} role="listbox" data-loading={isLoading ? '' : undefined}>
+        {/* NOSONAR: custom combobox — native <select> cannot implement debounced typeahead with separate label/value */}
         {items.map((item) => (
           <li
             key={String(item.value)}
@@ -162,6 +164,12 @@ function LookupCombobox({
             onClick={() => {
               onChange(item.value);
               setSearch('');
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                onChange(item.value);
+                setSearch('');
+              }
             }}
           >
             {item.label}
