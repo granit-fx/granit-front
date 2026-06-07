@@ -75,3 +75,5 @@ export { getApplicableRegulation, listProcessingPurposes } from './api/privacy-a
 export { getOptOutStatus, requestOptOut } from './api/privacy-api';
 
 export { PrivacyPermissions } from './permissions';
+export { PRIVACY_REGULATIONS } from './regulations';
+export type { PrivacyRegulationCode } from './regulations';

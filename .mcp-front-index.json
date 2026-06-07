@@ -2185,6 +2185,16 @@
           "name": "PrivacyPermissions",
           "kind": "const",
           "signature": "const PrivacyPermissions"
+        },
+        {
+          "name": "PRIVACY_REGULATIONS",
+          "kind": "const",
+          "signature": "const PRIVACY_REGULATIONS"
+        },
+        {
+          "name": "PrivacyRegulationCode",
+          "kind": "type",
+          "signature": "type PrivacyRegulationCode = (typeof PRIVACY_REGULATIONS)[number]['code']"
         }
       ]
     },
