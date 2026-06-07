@@ -2,8 +2,12 @@ import type {
   LegalDocumentDetailResponse,
   PrivacyConsentStatusResponse,
   PrivacyDeletionStatusResponse,
+  PrivacyExportScopeResponse,
   PrivacyExportStatusResponse,
   PrivacyLegalDocumentResponse,
+  PrivacyOptOutStatusResponse,
+  PrivacyProcessingPurposeResponse,
+  PrivacyRegulationProfileResponse,
   PrivacyUserAgreementResponse,
 } from '@granit/privacy';
 
@@ -147,6 +151,109 @@ export const mockAgreementHistory: PrivacyUserAgreementResponse[] = [
     isLatest: false,
   },
 ];
+
+export const mockRegulationProfile: PrivacyRegulationProfileResponse = {
+  regulation: 'GDPR',
+  displayName: 'General Data Protection Regulation',
+  jurisdictionCode: 'EU',
+  consentModel: 'OptIn',
+  availableLegalBases: [
+    'Consent',
+    'ContractPerformance',
+    'LegalObligation',
+    'VitalInterests',
+    'PublicTask',
+    'LegitimateInterests',
+  ],
+  subjectAccessRequestDays: 30,
+  subjectAccessRequestExtensionDays: 60,
+  deletionRequestDays: 30,
+  defaultDeletionGracePeriodDays: 30,
+  maxDeletionGracePeriodDays: 90,
+  breachNotifyAuthorityHours: 72,
+  breachNotifyIndividualsHours: null,
+  minimumConsentAge: 16,
+  requiresParentalIdentityVerification: true,
+  cookieConsentModel: 'OptIn',
+  honorGlobalPrivacyControl: false,
+  requiresCrossBorderAssessment: true,
+  transferMechanisms: ['SCCs', 'BCRs', 'AdequacyDecision'],
+  dataLocalizationRequired: false,
+  requiresDpoOrRepresentative: true,
+  requiredExportFormats: ['JSON', 'CSV'],
+};
+
+export const mockProcessingPurposes: PrivacyProcessingPurposeResponse[] = [
+  {
+    purposeId: 'account-management',
+    displayName: 'Account Management',
+    description: 'Managing user accounts and authentication.',
+    legalBasis: 'ContractPerformance',
+    requiresExplicitConsent: false,
+    dataCategory: 'Identity',
+  },
+  {
+    purposeId: 'analytics',
+    displayName: 'Usage Analytics',
+    description: 'Analysing how users interact with the platform.',
+    legalBasis: 'LegitimateInterests',
+    requiresExplicitConsent: false,
+    dataCategory: 'Behavioural',
+  },
+  {
+    purposeId: 'marketing-emails',
+    displayName: 'Marketing Communications',
+    description: 'Sending promotional emails and product updates.',
+    legalBasis: 'Consent',
+    requiresExplicitConsent: true,
+    dataCategory: 'Contact',
+  },
+  {
+    purposeId: 'fraud-prevention',
+    displayName: 'Fraud Prevention',
+    description: 'Detecting and preventing fraudulent activities.',
+    legalBasis: 'LegalObligation',
+    requiresExplicitConsent: false,
+    dataCategory: null,
+  },
+];
+
+export const mockExportScopes: PrivacyExportScopeResponse[] = [
+  {
+    providerName: 'Identity',
+    displayKey: 'Privacy.Scopes.Identity',
+    featureName: null,
+    defaultSelected: true,
+    estimatedSizeBytes: 4096,
+  },
+  {
+    providerName: 'Notifications',
+    displayKey: 'Privacy.Scopes.Notifications',
+    featureName: 'Notifications',
+    defaultSelected: true,
+    estimatedSizeBytes: 51200,
+  },
+  {
+    providerName: 'Audit',
+    displayKey: 'Privacy.Scopes.Audit',
+    featureName: null,
+    defaultSelected: false,
+    estimatedSizeBytes: 204800,
+  },
+  {
+    providerName: 'Preferences',
+    displayKey: 'Privacy.Scopes.Preferences',
+    featureName: null,
+    defaultSelected: true,
+    estimatedSizeBytes: 1024,
+  },
+];
+
+export const mockOptOutStatus: PrivacyOptOutStatusResponse = {
+  isOptedOut: false,
+  optedOutAt: null,
+  regulation: 'GDPR',
+};
 
 export const mockLegalDocumentDetails: LegalDocumentDetailResponse[] = [
   {

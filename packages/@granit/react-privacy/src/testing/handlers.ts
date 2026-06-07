@@ -9,9 +9,13 @@ import {
   mockAgreementHistory,
   mockAgreementStatuses,
   mockDeletionRequests,
+  mockExportScopes,
   mockExports,
   mockLegalDocumentDetails,
   mockLegalDocuments,
+  mockOptOutStatus,
+  mockProcessingPurposes,
+  mockRegulationProfile,
 } from './data';
 
 import type {
@@ -21,7 +25,9 @@ import type {
   PrivacyConsentStatusResponse,
   PrivacyDeletionRequestResponse,
   PrivacyDeletionStatusResponse,
+  PrivacyExportOnBehalfOfRequest,
   PrivacyExportStatusResponse,
+  PrivacyOptOutStatusResponse,
   PrivacyUserAgreementResponse,
 } from '@granit/privacy';
 import type { QueryMetadata } from '@granit/query-engine';
@@ -337,7 +343,47 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
 
   const legalBase = `${baseUrl}/legal-documents`;
 
+  let optOutStatus: PrivacyOptOutStatusResponse = { ...mockOptOutStatus };
+
   return [
+    // GET /regulation — applicable regulation profile
+    http.get(`${baseUrl}/regulation`, () => {
+      return HttpResponse.json(mockRegulationProfile);
+    }),
+
+    // GET /purposes — processing purposes
+    http.get(`${baseUrl}/purposes`, () => {
+      return HttpResponse.json(mockProcessingPurposes);
+    }),
+
+    // GET /exports/scopes — available export scopes
+    http.get(`${baseUrl}/exports/scopes`, () => {
+      return HttpResponse.json(mockExportScopes);
+    }),
+
+    // POST /exports/on-behalf-of — admin DSR export
+    http.post(`${baseUrl}/exports/on-behalf-of`, async ({ request }) => {
+      const body = (await request.json()) as PrivacyExportOnBehalfOfRequest;
+      const requestId = `exp-behalf-${body.subjectUserId.slice(0, 8)}`;
+      const requestedAt = new Date().toISOString();
+      return HttpResponse.json({ requestId, requestedAt }, { status: 202 });
+    }),
+
+    // GET /opt-out/status — current opt-out status
+    http.get(`${baseUrl}/opt-out/status`, () => {
+      return HttpResponse.json(optOutStatus);
+    }),
+
+    // POST /opt-out — record opt-out preference
+    http.post(`${baseUrl}/opt-out`, () => {
+      optOutStatus = {
+        isOptedOut: true,
+        optedOutAt: new Date().toISOString(),
+        regulation: mockRegulationProfile.regulation,
+      };
+      return HttpResponse.json(optOutStatus, { status: 201 });
+    }),
+
     // GET /exports/meta — query metadata
     createQueryMetaHandler(`${baseUrl}/exports`, privacyExportQueryMetadata),
 
