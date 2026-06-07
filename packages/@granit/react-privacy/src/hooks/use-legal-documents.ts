@@ -11,7 +11,7 @@ import { buildPrivacyQueryKey, usePrivacyConfig } from '../providers/privacy-pro
 
 import type {
   LegalDocumentCreateRequest,
-  LegalDocumentDetail,
+  LegalDocumentDetailResponse,
   LegalDocumentListParams,
   LegalDocumentUpdateRequest,
 } from '@granit/privacy';
@@ -20,7 +20,7 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 /** List legal document versions, optionally filtered by document ID. */
 export function useLegalDocuments(
   params?: LegalDocumentListParams
-): UseQueryResult<LegalDocumentDetail[]> {
+): UseQueryResult<LegalDocumentDetailResponse[]> {
   const config = usePrivacyConfig();
 
   return useQuery({
@@ -30,7 +30,7 @@ export function useLegalDocuments(
 }
 
 /** Fetch a single legal document version by ID. Disabled when id is empty. */
-export function useLegalDocument(id: string): UseQueryResult<LegalDocumentDetail> {
+export function useLegalDocument(id: string): UseQueryResult<LegalDocumentDetailResponse> {
   const config = usePrivacyConfig();
 
   return useQuery({
@@ -42,7 +42,7 @@ export function useLegalDocument(id: string): UseQueryResult<LegalDocumentDetail
 
 /** Create a new legal document draft. Invalidates legal-documents on success. */
 export function useCreateLegalDocument(): UseMutationResult<
-  LegalDocumentDetail,
+  LegalDocumentDetailResponse,
   Error,
   LegalDocumentCreateRequest
 > {
@@ -67,7 +67,7 @@ export interface UpdateLegalDocumentVariables {
 
 /** Update a legal document draft. Invalidates legal-documents on success. */
 export function useUpdateLegalDocument(): UseMutationResult<
-  LegalDocumentDetail,
+  LegalDocumentDetailResponse,
   Error,
   UpdateLegalDocumentVariables
 > {
@@ -86,7 +86,11 @@ export function useUpdateLegalDocument(): UseMutationResult<
 }
 
 /** Publish a legal document draft. Invalidates legal-documents on success. */
-export function usePublishLegalDocument(): UseMutationResult<LegalDocumentDetail, Error, string> {
+export function usePublishLegalDocument(): UseMutationResult<
+  LegalDocumentDetailResponse,
+  Error,
+  string
+> {
   const config = usePrivacyConfig();
   const queryClient = useQueryClient();
 

@@ -1,10 +1,10 @@
 import type {
-  AgreementHistoryEntry,
-  AgreementStatus,
-  LegalDocument,
-  LegalDocumentDetail,
+  LegalDocumentDetailResponse,
+  PrivacyConsentStatusResponse,
   PrivacyDeletionStatusResponse,
   PrivacyExportStatusResponse,
+  PrivacyLegalDocumentResponse,
+  PrivacyUserAgreementResponse,
 } from '@granit/privacy';
 
 export const mockExports: PrivacyExportStatusResponse[] = [
@@ -34,7 +34,7 @@ export const mockExports: PrivacyExportStatusResponse[] = [
   },
 ];
 
-export const mockLegalDocuments: LegalDocument[] = [
+export const mockLegalDocuments: PrivacyLegalDocumentResponse[] = [
   {
     documentId: 'doc-privacy-policy',
     currentVersion: '2.1.0',
@@ -52,7 +52,7 @@ export const mockLegalDocuments: LegalDocument[] = [
   },
 ];
 
-export const mockAgreementStatuses: AgreementStatus[] = [
+export const mockAgreementStatuses: PrivacyConsentStatusResponse[] = [
   {
     documentId: 'doc-privacy-policy',
     currentVersion: '2.1.0',
@@ -103,7 +103,7 @@ export const mockDeletionRequests: PrivacyDeletionStatusResponse[] = [
   },
 ];
 
-export const mockAgreementHistory: AgreementHistoryEntry[] = [
+export const mockAgreementHistory: PrivacyUserAgreementResponse[] = [
   {
     id: 'ah-1',
     documentId: 'doc-privacy-policy',
@@ -148,7 +148,7 @@ export const mockAgreementHistory: AgreementHistoryEntry[] = [
   },
 ];
 
-export const mockLegalDocumentDetails: LegalDocumentDetail[] = [
+export const mockLegalDocumentDetails: LegalDocumentDetailResponse[] = [
   {
     id: 'ld-001',
     documentId: 'privacy-policy',

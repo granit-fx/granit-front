@@ -47,20 +47,20 @@ export type PrivacyDeletionStatusResponse = {
 
 // ── Legal Agreements (GDPR Art. 7) ───────────────────────────────────────────
 
-export type LegalDocument = {
+export type PrivacyLegalDocumentResponse = {
   readonly documentId: string;
   readonly currentVersion: string;
   readonly displayName: string;
 };
 
-export type AgreementStatus = {
+export type PrivacyConsentStatusResponse = {
   readonly documentId: string;
   readonly currentVersion: string;
   readonly hasAcceptedLatest: boolean;
   readonly lastAcceptedAt: string | null;
 };
 
-export type AgreementHistoryEntry = {
+export type PrivacyUserAgreementResponse = {
   readonly id: string;
   readonly documentId: string;
   readonly version: string;
@@ -68,7 +68,7 @@ export type AgreementHistoryEntry = {
   readonly isLatest: boolean;
 };
 
-export type AcceptAgreementRequest = {
+export type PrivacyAcceptAgreementRequest = {
   readonly documentId: string;
   readonly version: string;
 };
@@ -81,7 +81,7 @@ export type LegalDocumentListParams = {
   readonly documentId?: string;
 };
 
-export type LegalDocumentDetail = {
+export type LegalDocumentDetailResponse = {
   readonly id: string;
   readonly documentId: string;
   readonly version: number;
@@ -93,6 +93,72 @@ export type LegalDocumentDetail = {
   readonly createdAt: string;
   readonly lastModifiedAt: string;
   readonly concurrencyStamp: string;
+};
+
+// ── Regulation Profile ────────────────────────────────────────────────────────
+
+export type PrivacyRegulationProfileResponse = {
+  readonly regulation: string;
+  readonly displayName: string;
+  readonly jurisdictionCode: string;
+  readonly consentModel: string;
+  readonly availableLegalBases: readonly string[];
+  readonly subjectAccessRequestDays: number;
+  readonly subjectAccessRequestExtensionDays: number | null;
+  readonly deletionRequestDays: number | null;
+  readonly defaultDeletionGracePeriodDays: number;
+  readonly maxDeletionGracePeriodDays: number;
+  readonly breachNotifyAuthorityHours: number | null;
+  readonly breachNotifyIndividualsHours: number | null;
+  readonly minimumConsentAge: number;
+  readonly requiresParentalIdentityVerification: boolean;
+  readonly cookieConsentModel: string;
+  readonly honorGlobalPrivacyControl: boolean;
+  readonly requiresCrossBorderAssessment: boolean;
+  readonly transferMechanisms: readonly string[];
+  readonly dataLocalizationRequired: boolean;
+  readonly requiresDpoOrRepresentative: boolean;
+  readonly requiredExportFormats: readonly string[];
+};
+
+// ── Processing Purposes ───────────────────────────────────────────────────────
+
+export type PrivacyProcessingPurposeResponse = {
+  readonly purposeId: string;
+  readonly displayName: string;
+  readonly description: string;
+  readonly legalBasis: string;
+  readonly requiresExplicitConsent: boolean;
+  readonly dataCategory: string | null;
+};
+
+// ── Opt-Out (CCPA) ────────────────────────────────────────────────────────────
+
+export type PrivacyOptOutStatusResponse = {
+  readonly isOptedOut: boolean;
+  readonly optedOutAt: string | null;
+  readonly regulation: string | null;
+};
+
+// ── Export Scopes ─────────────────────────────────────────────────────────────
+
+export type PrivacyExportScopeResponse = {
+  readonly providerName: string;
+  readonly displayKey: string;
+  readonly featureName: string | null;
+  readonly defaultSelected: boolean;
+  readonly estimatedSizeBytes: number | null;
+};
+
+// ── Export Requests ───────────────────────────────────────────────────────────
+
+export type PrivacyExportRequest = {
+  readonly scopes?: readonly string[] | null;
+};
+
+export type PrivacyExportOnBehalfOfRequest = {
+  readonly subjectUserId: string;
+  readonly scopes?: readonly string[] | null;
 };
 
 export type LegalDocumentCreateRequest = {

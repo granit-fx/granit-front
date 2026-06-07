@@ -2,7 +2,7 @@ import { serializeQueryRequest } from '@granit/query-engine';
 
 import type {
   ListSeoMetadataParams,
-  OgCardPreviewResponse,
+  OgPreviewResponse,
   PagedResult,
   SeoMetadataListItem,
   SeoMetadataRequest,
@@ -163,9 +163,9 @@ export async function getOgCardPreview(
     readonly contentId: string;
     readonly culture: string;
   }
-): Promise<OgCardPreviewResponse | null> {
+): Promise<OgPreviewResponse | null> {
   const { siteId, contentType, contentId, culture } = params;
-  const res = await client.get<OgCardPreviewResponse>(
+  const res = await client.get<OgPreviewResponse>(
     `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/metadata/${encodeURIComponent(contentType)}/${encodeURIComponent(contentId)}/${encodeURIComponent(culture)}/preview/og`,
     { validateStatus: (s) => s === 200 || s === 204 }
   );

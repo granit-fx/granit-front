@@ -259,7 +259,7 @@ export interface SerpPreviewResponse {
 }
 
 /** Open Graph share-card preview. Maps `OgPreviewResponse`. */
-export interface OgCardPreviewResponse {
+export interface OgPreviewResponse {
   readonly type: string;
   readonly title: string | null;
   readonly description: string | null;
@@ -295,7 +295,7 @@ export type SuggestionScope = string; // NOSONAR: [Flags] enum serialized as com
 // ─── SEO-AI suggestions ──────────────────────────────────────────────────────
 
 /** An AI SEO suggestion projected for the review inbox. Maps `SeoSuggestionResponse`. */
-export interface SeoAiSuggestionResponse {
+export interface SeoSuggestionResponse {
   readonly id: string;
   readonly siteId: string;
   readonly contentType: string;
@@ -320,18 +320,18 @@ export interface SeoAiSuggestionResponse {
 
 /** A page of suggestions for the inbox grid. Maps `SeoSuggestionListResponse`. */
 export interface SeoSuggestionListResponse {
-  readonly items: readonly SeoAiSuggestionResponse[];
+  readonly items: readonly SeoSuggestionResponse[];
   readonly total: number;
 }
 
 /** Outcome of `POST /api/cms/seo/ai/suggest`. Maps `SeoSuggestResponse`. */
-export interface SeoAiSuggestResponse {
+export interface SeoSuggestResponse {
   readonly outcome: SeoGenerationOutcome;
-  readonly suggestion: SeoAiSuggestionResponse | null;
+  readonly suggestion: SeoSuggestionResponse | null;
 }
 
 /** Request body for `POST /api/cms/seo/ai/suggest`. Maps `SeoSuggestRequest`. */
-export interface SeoAiSuggestRequest {
+export interface SeoSuggestRequest {
   readonly siteId: string;
   readonly contentType: string;
   readonly contentId: string;
@@ -347,7 +347,7 @@ export interface SeoAiSuggestRequest {
  * string (e.g. `"Title, Description"`), intersected server-side with the
  * suggestion's own scope.
  */
-export interface ApplySeoAiRequest {
+export interface SeoSuggestionApplyRequest {
   readonly fields: SuggestionScope;
 }
 

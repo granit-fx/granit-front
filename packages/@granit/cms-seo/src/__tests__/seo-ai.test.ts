@@ -11,16 +11,16 @@ import {
 } from '../api/seo-ai';
 
 import type {
-  SeoAiSuggestRequest,
-  SeoAiSuggestResponse,
-  SeoAiSuggestionResponse,
+  SeoSuggestRequest,
+  SeoSuggestResponse,
+  SeoSuggestionResponse,
   SeoSuggestionDiff,
   SeoSuggestionListResponse,
 } from '../types/index';
 
 const BASE = 'https://cms.example.com';
 
-const suggestion: SeoAiSuggestionResponse = {
+const suggestion: SeoSuggestionResponse = {
   id: 'sug-1',
   siteId: 'site-1',
   contentType: 'page',
@@ -46,10 +46,10 @@ const suggestion: SeoAiSuggestionResponse = {
 describe('suggestSeo', () => {
   it('POST /api/cms/seo/ai/suggest', async () => {
     const client = createMockClient();
-    const response: SeoAiSuggestResponse = { outcome: 'Succeeded', suggestion };
+    const response: SeoSuggestResponse = { outcome: 'Succeeded', suggestion };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(response));
 
-    const request: SeoAiSuggestRequest = {
+    const request: SeoSuggestRequest = {
       siteId: 'site-1',
       contentType: 'page',
       contentId: 'page-1',
@@ -103,7 +103,7 @@ describe('getSeoSuggestionDiff', () => {
 describe('applySeoSuggestion', () => {
   it('POST /api/cms/seo/ai/suggestions/{id}/apply with the flags string', async () => {
     const client = createMockClient();
-    const applied: SeoAiSuggestionResponse = { ...suggestion, status: 'Accepted' };
+    const applied: SeoSuggestionResponse = { ...suggestion, status: 'Accepted' };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(applied));
 
     const result = await applySeoSuggestion(client, BASE, 'sug-1', {
@@ -120,7 +120,7 @@ describe('applySeoSuggestion', () => {
 describe('rejectSeoSuggestion', () => {
   it('POST /api/cms/seo/ai/suggestions/{id}/reject with reason', async () => {
     const client = createMockClient();
-    const rejected: SeoAiSuggestionResponse = { ...suggestion, status: 'Rejected' };
+    const rejected: SeoSuggestionResponse = { ...suggestion, status: 'Rejected' };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(rejected));
 
     await rejectSeoSuggestion(client, BASE, 'sug-1', { reason: 'Not relevant' });

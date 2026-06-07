@@ -8,7 +8,7 @@ import { mockSeoDefaults, mockSeoMetadataAudit, mockSeoSuggestions } from './dat
 
 import type {
   PagedResult,
-  SeoAiSuggestionResponse,
+  SeoSuggestionResponse,
   SeoMetadataListItem,
   SeoSuggestionListResponse,
   SiteSeoDefaultsRequest,
@@ -19,7 +19,7 @@ function paged<T>(items: readonly T[]): PagedResult<T> {
   return { items, totalCount: items.length, hasMore: false, nextCursor: null };
 }
 
-function suggestionList(items: readonly SeoAiSuggestionResponse[]): SeoSuggestionListResponse {
+function suggestionList(items: readonly SeoSuggestionResponse[]): SeoSuggestionListResponse {
   return { items, total: items.length };
 }
 
@@ -32,7 +32,7 @@ function suggestionList(items: readonly SeoAiSuggestionResponse[]): SeoSuggestio
 export function createCmsSeoHandlers(baseUrl = '/api/cms/seo'): RequestHandler[] {
   const defaultsBySite: Record<string, SiteSeoDefaultsResponse> = { ...mockSeoDefaults };
   const auditRows: SeoMetadataListItem[] = mockSeoMetadataAudit.map((row) => ({ ...row }));
-  const suggestions: SeoAiSuggestionResponse[] = mockSeoSuggestions.map((item) => ({ ...item }));
+  const suggestions: SeoSuggestionResponse[] = mockSeoSuggestions.map((item) => ({ ...item }));
 
   return [
     http.get(`${baseUrl}/sites/:siteId/defaults`, ({ params }) => {
@@ -84,7 +84,7 @@ export function createCmsSeoHandlers(baseUrl = '/api/cms/seo'): RequestHandler[]
       if (!existing) {
         return new HttpResponse(null, { status: 404 });
       }
-      const updated: SeoAiSuggestionResponse = {
+      const updated: SeoSuggestionResponse = {
         ...existing,
         status: 'Accepted',
         appliedFields: existing.scope,
@@ -98,7 +98,7 @@ export function createCmsSeoHandlers(baseUrl = '/api/cms/seo'): RequestHandler[]
       if (!existing) {
         return new HttpResponse(null, { status: 404 });
       }
-      const updated: SeoAiSuggestionResponse = {
+      const updated: SeoSuggestionResponse = {
         ...existing,
         status: 'Rejected',
         rejectionReason: 'Not relevant',

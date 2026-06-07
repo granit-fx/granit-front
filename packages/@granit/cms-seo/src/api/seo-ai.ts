@@ -1,10 +1,10 @@
 import type {
-  ApplySeoAiRequest,
+  SeoSuggestionApplyRequest,
   ListSeoSuggestionsParams,
   RejectSeoAiRequest,
-  SeoAiSuggestRequest,
-  SeoAiSuggestResponse,
-  SeoAiSuggestionResponse,
+  SeoSuggestRequest,
+  SeoSuggestResponse,
+  SeoSuggestionResponse,
   SeoSuggestionDiff,
   SeoSuggestionListResponse,
 } from '../types/index';
@@ -18,12 +18,9 @@ import type { AxiosInstance } from '@granit/api-client';
 export async function suggestSeo(
   client: AxiosInstance,
   basePath: string,
-  request: SeoAiSuggestRequest
-): Promise<SeoAiSuggestResponse> {
-  const res = await client.post<SeoAiSuggestResponse>(
-    `${basePath}/api/cms/seo/ai/suggest`,
-    request
-  );
+  request: SeoSuggestRequest
+): Promise<SeoSuggestResponse> {
+  const res = await client.post<SeoSuggestResponse>(`${basePath}/api/cms/seo/ai/suggest`, request);
   return res.data;
 }
 
@@ -61,9 +58,9 @@ export async function applySeoSuggestion(
   client: AxiosInstance,
   basePath: string,
   id: string,
-  request: ApplySeoAiRequest
-): Promise<SeoAiSuggestionResponse> {
-  const res = await client.post<SeoAiSuggestionResponse>(
+  request: SeoSuggestionApplyRequest
+): Promise<SeoSuggestionResponse> {
+  const res = await client.post<SeoSuggestionResponse>(
     `${basePath}/api/cms/seo/ai/suggestions/${encodeURIComponent(id)}/apply`,
     request
   );
@@ -76,8 +73,8 @@ export async function rejectSeoSuggestion(
   basePath: string,
   id: string,
   request?: RejectSeoAiRequest
-): Promise<SeoAiSuggestionResponse> {
-  const res = await client.post<SeoAiSuggestionResponse>(
+): Promise<SeoSuggestionResponse> {
+  const res = await client.post<SeoSuggestionResponse>(
     `${basePath}/api/cms/seo/ai/suggestions/${encodeURIComponent(id)}/reject`,
     request ?? {}
   );

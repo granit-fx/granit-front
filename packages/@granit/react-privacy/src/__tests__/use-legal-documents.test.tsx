@@ -21,7 +21,7 @@ import {
 } from '../hooks/use-legal-documents';
 import { PrivacyProvider } from '../providers/privacy-provider';
 
-import type { LegalDocumentDetail } from '@granit/privacy';
+import type { LegalDocumentDetailResponse } from '@granit/privacy';
 
 vi.mock('@granit/privacy', () => ({
   createLegalDocument: vi.fn(),
@@ -49,7 +49,7 @@ function createWrapper() {
   };
 }
 
-const mockDocument: LegalDocumentDetail = {
+const mockDocument: LegalDocumentDetailResponse = {
   id: 'ldv-001',
   documentId: 'privacy-policy',
   version: 1,

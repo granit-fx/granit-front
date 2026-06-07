@@ -1,33 +1,33 @@
 import {
   acceptAgreement,
-  getAgreementDocuments,
-  getAgreementHistory,
   getAgreementStatuses,
+  listAgreementDocuments,
+  listAgreementHistory,
 } from '@granit/privacy';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { buildPrivacyQueryKey, usePrivacyConfig } from '../providers/privacy-provider';
 
 import type {
-  AcceptAgreementRequest,
-  AgreementHistoryEntry,
-  AgreementStatus,
-  LegalDocument,
+  PrivacyAcceptAgreementRequest,
+  PrivacyConsentStatusResponse,
+  PrivacyLegalDocumentResponse,
+  PrivacyUserAgreementResponse,
 } from '@granit/privacy';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /** List all legal documents. */
-export function useAgreementDocuments(): UseQueryResult<LegalDocument[]> {
+export function useAgreementDocuments(): UseQueryResult<PrivacyLegalDocumentResponse[]> {
   const config = usePrivacyConfig();
 
   return useQuery({
     queryKey: buildPrivacyQueryKey(config, 'agreements', 'documents'),
-    queryFn: () => getAgreementDocuments(config.client, config.basePath!),
+    queryFn: () => listAgreementDocuments(config.client, config.basePath!),
   });
 }
 
 /** Get the acceptance status for each legal document. */
-export function useAgreementStatuses(): UseQueryResult<AgreementStatus[]> {
+export function useAgreementStatuses(): UseQueryResult<PrivacyConsentStatusResponse[]> {
   const config = usePrivacyConfig();
 
   return useQuery({
@@ -37,22 +37,26 @@ export function useAgreementStatuses(): UseQueryResult<AgreementStatus[]> {
 }
 
 /** Get the full acceptance history. */
-export function useAgreementHistory(): UseQueryResult<AgreementHistoryEntry[]> {
+export function useAgreementHistory(): UseQueryResult<PrivacyUserAgreementResponse[]> {
   const config = usePrivacyConfig();
 
   return useQuery({
     queryKey: buildPrivacyQueryKey(config, 'agreements', 'history'),
-    queryFn: () => getAgreementHistory(config.client, config.basePath!),
+    queryFn: () => listAgreementHistory(config.client, config.basePath!),
   });
 }
 
 /** Accept a legal document version. */
-export function useAcceptAgreement(): UseMutationResult<void, Error, AcceptAgreementRequest> {
+export function useAcceptAgreement(): UseMutationResult<
+  void,
+  Error,
+  PrivacyAcceptAgreementRequest
+> {
   const config = usePrivacyConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (request: AcceptAgreementRequest) =>
+    mutationFn: (request: PrivacyAcceptAgreementRequest) =>
       acceptAgreement(config.client, config.basePath!, request),
     onSuccess: () => {
       queryClient.invalidateQueries({

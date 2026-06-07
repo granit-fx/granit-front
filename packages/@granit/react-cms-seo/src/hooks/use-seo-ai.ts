@@ -13,12 +13,12 @@ import { useCmsSeoConfig } from '../providers/cms-seo-provider';
 import { cmsSeoKeys } from './query-keys';
 
 import type {
-  ApplySeoAiRequest,
+  SeoSuggestionApplyRequest,
   ListSeoSuggestionsParams,
   RejectSeoAiRequest,
-  SeoAiSuggestRequest,
-  SeoAiSuggestResponse,
-  SeoAiSuggestionResponse,
+  SeoSuggestRequest,
+  SeoSuggestResponse,
+  SeoSuggestionResponse,
   SeoSuggestionDiff,
   SeoSuggestionListResponse,
 } from '@granit/cms-seo';
@@ -48,11 +48,7 @@ export function useSeoSuggestionDiff(
   });
 }
 
-export function useSuggestSeo(): UseMutationResult<
-  SeoAiSuggestResponse,
-  Error,
-  SeoAiSuggestRequest
-> {
+export function useSuggestSeo(): UseMutationResult<SeoSuggestResponse, Error, SeoSuggestRequest> {
   const { client, basePath, queryKeyPrefix } = useCmsSeoConfig();
   const qc = useQueryClient();
   return useMutation({
@@ -64,9 +60,9 @@ export function useSuggestSeo(): UseMutationResult<
 }
 
 export function useApplySeoSuggestion(): UseMutationResult<
-  SeoAiSuggestionResponse,
+  SeoSuggestionResponse,
   Error,
-  { id: string; request: ApplySeoAiRequest }
+  { id: string; request: SeoSuggestionApplyRequest }
 > {
   const { client, basePath, queryKeyPrefix } = useCmsSeoConfig();
   const qc = useQueryClient();
@@ -84,7 +80,7 @@ export function useApplySeoSuggestion(): UseMutationResult<
 }
 
 export function useRejectSeoSuggestion(): UseMutationResult<
-  SeoAiSuggestionResponse,
+  SeoSuggestionResponse,
   Error,
   { id: string; request?: RejectSeoAiRequest }
 > {

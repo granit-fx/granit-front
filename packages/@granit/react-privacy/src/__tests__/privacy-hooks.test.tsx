@@ -468,7 +468,7 @@ describe('useRequestExport', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(client.post).toHaveBeenCalledWith('/api/privacy/exports');
+    expect(client.post).toHaveBeenCalledWith('/api/privacy/exports', undefined);
     expect(result.current.data).toEqual(response);
   });
 

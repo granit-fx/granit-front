@@ -41,13 +41,13 @@ export {
 
 // Re-export types from core package
 export type {
-  ApplySeoAiRequest,
+  SeoSuggestionApplyRequest,
   EffectiveSeoResponse,
   Hreflang,
   ImageDimensions,
   ListSeoMetadataParams,
   ListSeoSuggestionsParams,
-  OgCardPreviewResponse,
+  OgPreviewResponse,
   OgImage,
   OpenGraph,
   OpenGraphArticle,
@@ -56,9 +56,9 @@ export type {
   RejectSeoAiRequest,
   RobotsDirective,
   RobotsTxtRule,
-  SeoAiSuggestRequest,
-  SeoAiSuggestResponse,
-  SeoAiSuggestionResponse,
+  SeoSuggestRequest,
+  SeoSuggestResponse,
+  SeoSuggestionResponse,
   SeoAuditQuickFilter,
   SeoGenerationOutcome,
   SeoMetadataListItem,

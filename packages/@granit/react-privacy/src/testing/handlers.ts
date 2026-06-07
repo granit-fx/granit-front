@@ -15,14 +15,14 @@ import {
 } from './data';
 
 import type {
-  AgreementHistoryEntry,
-  AgreementStatus,
   LegalDocumentCreateRequest,
-  LegalDocumentDetail,
+  LegalDocumentDetailResponse,
   LegalDocumentUpdateRequest,
+  PrivacyConsentStatusResponse,
   PrivacyDeletionRequestResponse,
   PrivacyDeletionStatusResponse,
   PrivacyExportStatusResponse,
+  PrivacyUserAgreementResponse,
 } from '@granit/privacy';
 import type { QueryMetadata } from '@granit/query-engine';
 import type { Mutable } from '@granit/testing';
@@ -323,14 +323,16 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
   const deletionRequests: Mutable<PrivacyDeletionStatusResponse>[] = mockDeletionRequests.map(
     (d) => ({ ...d })
   );
-  const statuses: Mutable<AgreementStatus>[] = mockAgreementStatuses.map((s) => ({ ...s }));
-  let history: AgreementHistoryEntry[] = mockAgreementHistory.map((h) => ({ ...h }));
+  const statuses: Mutable<PrivacyConsentStatusResponse>[] = mockAgreementStatuses.map((s) => ({
+    ...s,
+  }));
+  let history: PrivacyUserAgreementResponse[] = mockAgreementHistory.map((h) => ({ ...h }));
   let exportCounter = exports.length;
   let deletionCounter = deletionRequests.length;
 
-  const legalDocuments: Mutable<LegalDocumentDetail>[] = mockLegalDocumentDetails.map((d) => ({
-    ...d,
-  }));
+  const legalDocuments: Mutable<LegalDocumentDetailResponse>[] = mockLegalDocumentDetails.map(
+    (d) => ({ ...d })
+  );
   let legalIdCounter = legalDocuments.length;
 
   const legalBase = `${baseUrl}/legal-documents`;
@@ -469,9 +471,11 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const url = new URL(request.url);
       const documentId = url.searchParams.get('documentId');
 
-      let result = legalDocuments as LegalDocumentDetail[];
+      let result = legalDocuments as LegalDocumentDetailResponse[];
       if (documentId) {
-        result = legalDocuments.filter((d) => d.documentId === documentId) as LegalDocumentDetail[];
+        result = legalDocuments.filter(
+          (d) => d.documentId === documentId
+        ) as LegalDocumentDetailResponse[];
       }
 
       result = [...result].sort((a, b) => b.version - a.version);
@@ -491,7 +495,7 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       legalIdCounter++;
       const id = `ld-${String(legalIdCounter).padStart(3, '0')}`;
       const now = new Date().toISOString();
-      const newDoc: LegalDocumentDetail = {
+      const newDoc: LegalDocumentDetailResponse = {
         id,
         documentId: body.documentId,
         version: 1,

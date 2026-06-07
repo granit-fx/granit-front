@@ -8,9 +8,11 @@ export type { PrivacyConfig, PrivacyProviderProps } from './providers/privacy-pr
 
 // Hooks — Data export
 export {
+  useExportScopes,
   usePrivacyExportStatus,
   usePrivacyExports,
   useRequestExport,
+  useRequestExportOnBehalfOf,
 } from './hooks/use-privacy-export';
 
 // Hooks — Data deletion
@@ -28,6 +30,12 @@ export {
   useAgreementHistory,
   useAgreementStatuses,
 } from './hooks/use-privacy-agreements';
+
+// Hooks — Regulation & purposes
+export { useApplicableRegulation, useProcessingPurposes } from './hooks/use-privacy-regulation';
+
+// Hooks — Opt-out
+export { useOptOutStatus, useRequestOptOut } from './hooks/use-privacy-opt-out';
 
 // Hooks — Legal document admin
 export {

@@ -2167,19 +2167,24 @@
       "description": "GDPR privacy types and API — data export, deletion, legal agreements — mirrors Granit.Privacy .NET contract",
       "exports": [
         {
-          "name": "getExportStatus",
+          "name": "getApplicableRegulation",
           "kind": "function",
-          "signature": "async function getExportStatus( client: AxiosInstance, basePath: string, requestId: string ): Promise<PrivacyExportStatusResponse>"
+          "signature": "async function getApplicableRegulation( client: AxiosInstance, basePath: string ): Promise<PrivacyRegulationProfileResponse>"
         },
         {
-          "name": "listExports",
+          "name": "listProcessingPurposes",
           "kind": "function",
-          "signature": "async function listExports( client: AxiosInstance, basePath: string ): Promise<PrivacyExportStatusResponse[]>"
+          "signature": "async function listProcessingPurposes( client: AxiosInstance, basePath: string ): Promise<PrivacyProcessingPurposeResponse[]>"
         },
         {
-          "name": "requestExport",
+          "name": "getOptOutStatus",
           "kind": "function",
-          "signature": "async function requestExport( client: AxiosInstance, basePath: string ): Promise<PrivacyExportRequestResponse>"
+          "signature": "async function getOptOutStatus( client: AxiosInstance, basePath: string ): Promise<PrivacyOptOutStatusResponse>"
+        },
+        {
+          "name": "requestOptOut",
+          "kind": "function",
+          "signature": "async function requestOptOut( client: AxiosInstance, basePath: string ): Promise<PrivacyOptOutStatusResponse>"
         },
         {
           "name": "PrivacyPermissions",
@@ -6089,6 +6094,26 @@
           "kind": "interface",
           "signature": "interface PrivacyProviderProps",
           "members": []
+        },
+        {
+          "name": "useApplicableRegulation",
+          "kind": "function",
+          "signature": "function useApplicableRegulation(): UseQueryResult<PrivacyRegulationProfileResponse>"
+        },
+        {
+          "name": "useProcessingPurposes",
+          "kind": "function",
+          "signature": "function useProcessingPurposes(): UseQueryResult<PrivacyProcessingPurposeResponse[]>"
+        },
+        {
+          "name": "useOptOutStatus",
+          "kind": "function",
+          "signature": "function useOptOutStatus(): UseQueryResult<PrivacyOptOutStatusResponse>"
+        },
+        {
+          "name": "useRequestOptOut",
+          "kind": "function",
+          "signature": "function useRequestOptOut(): UseMutationResult<PrivacyOptOutStatusResponse, Error, void>"
         },
         {
           "name": "UpdateLegalDocumentVariables",

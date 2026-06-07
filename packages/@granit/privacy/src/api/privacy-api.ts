@@ -1,17 +1,23 @@
 import type {
-  AcceptAgreementRequest,
-  AgreementHistoryEntry,
-  AgreementStatus,
-  LegalDocument,
   LegalDocumentCreateRequest,
-  LegalDocumentDetail,
+  LegalDocumentDetailResponse,
   LegalDocumentListParams,
   LegalDocumentUpdateRequest,
+  PrivacyAcceptAgreementRequest,
+  PrivacyConsentStatusResponse,
   PrivacyDeletionRequest,
   PrivacyDeletionRequestResponse,
   PrivacyDeletionStatusResponse,
+  PrivacyExportOnBehalfOfRequest,
+  PrivacyExportRequest,
   PrivacyExportRequestResponse,
+  PrivacyExportScopeResponse,
   PrivacyExportStatusResponse,
+  PrivacyLegalDocumentResponse,
+  PrivacyOptOutStatusResponse,
+  PrivacyProcessingPurposeResponse,
+  PrivacyRegulationProfileResponse,
+  PrivacyUserAgreementResponse,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
@@ -24,9 +30,10 @@ import type { AxiosInstance } from '@granit/api-client';
  */
 export async function requestExport(
   client: AxiosInstance,
-  basePath: string
+  basePath: string,
+  request?: PrivacyExportRequest
 ): Promise<PrivacyExportRequestResponse> {
-  const { data } = await client.post<PrivacyExportRequestResponse>(`${basePath}/exports`);
+  const { data } = await client.post<PrivacyExportRequestResponse>(`${basePath}/exports`, request);
   return data;
 }
 
@@ -132,11 +139,13 @@ export async function cancelDeletion(
  *
  * `GET {basePath}/agreements/documents`
  */
-export async function getAgreementDocuments(
+export async function listAgreementDocuments(
   client: AxiosInstance,
   basePath: string
-): Promise<LegalDocument[]> {
-  const { data } = await client.get<LegalDocument[]>(`${basePath}/agreements/documents`);
+): Promise<PrivacyLegalDocumentResponse[]> {
+  const { data } = await client.get<PrivacyLegalDocumentResponse[]>(
+    `${basePath}/agreements/documents`
+  );
   return data;
 }
 
@@ -148,21 +157,25 @@ export async function getAgreementDocuments(
 export async function getAgreementStatuses(
   client: AxiosInstance,
   basePath: string
-): Promise<AgreementStatus[]> {
-  const { data } = await client.get<AgreementStatus[]>(`${basePath}/agreements/status`);
+): Promise<PrivacyConsentStatusResponse[]> {
+  const { data } = await client.get<PrivacyConsentStatusResponse[]>(
+    `${basePath}/agreements/status`
+  );
   return data;
 }
 
 /**
- * Get the full acceptance history.
+ * List the full acceptance history.
  *
  * `GET {basePath}/agreements/history`
  */
-export async function getAgreementHistory(
+export async function listAgreementHistory(
   client: AxiosInstance,
   basePath: string
-): Promise<AgreementHistoryEntry[]> {
-  const { data } = await client.get<AgreementHistoryEntry[]>(`${basePath}/agreements/history`);
+): Promise<PrivacyUserAgreementResponse[]> {
+  const { data } = await client.get<PrivacyUserAgreementResponse[]>(
+    `${basePath}/agreements/history`
+  );
   return data;
 }
 
@@ -177,7 +190,7 @@ export async function getAgreementHistory(
 export async function acceptAgreement(
   client: AxiosInstance,
   basePath: string,
-  request: AcceptAgreementRequest
+  request: PrivacyAcceptAgreementRequest
 ): Promise<void> {
   await client.post(`${basePath}/agreements/accept`, request);
 }
@@ -193,8 +206,11 @@ export async function createLegalDocument(
   client: AxiosInstance,
   basePath: string,
   request: LegalDocumentCreateRequest
-): Promise<LegalDocumentDetail> {
-  const { data } = await client.post<LegalDocumentDetail>(`${basePath}/legal-documents`, request);
+): Promise<LegalDocumentDetailResponse> {
+  const { data } = await client.post<LegalDocumentDetailResponse>(
+    `${basePath}/legal-documents`,
+    request
+  );
   return data;
 }
 
@@ -207,8 +223,8 @@ export async function getLegalDocument(
   client: AxiosInstance,
   basePath: string,
   id: string
-): Promise<LegalDocumentDetail> {
-  const { data } = await client.get<LegalDocumentDetail>(
+): Promise<LegalDocumentDetailResponse> {
+  const { data } = await client.get<LegalDocumentDetailResponse>(
     `${basePath}/legal-documents/${encodeURIComponent(id)}`
   );
   return data;
@@ -223,8 +239,8 @@ export async function listLegalDocuments(
   client: AxiosInstance,
   basePath: string,
   params?: LegalDocumentListParams
-): Promise<LegalDocumentDetail[]> {
-  const { data } = await client.get<LegalDocumentDetail[]>(`${basePath}/legal-documents`, {
+): Promise<LegalDocumentDetailResponse[]> {
+  const { data } = await client.get<LegalDocumentDetailResponse[]>(`${basePath}/legal-documents`, {
     params,
   });
   return data;
@@ -240,8 +256,8 @@ export async function updateLegalDocument(
   basePath: string,
   id: string,
   request: LegalDocumentUpdateRequest
-): Promise<LegalDocumentDetail> {
-  const { data } = await client.put<LegalDocumentDetail>(
+): Promise<LegalDocumentDetailResponse> {
+  const { data } = await client.put<LegalDocumentDetailResponse>(
     `${basePath}/legal-documents/${encodeURIComponent(id)}`,
     request
   );
@@ -258,9 +274,162 @@ export async function publishLegalDocument(
   client: AxiosInstance,
   basePath: string,
   id: string
-): Promise<LegalDocumentDetail> {
-  const { data } = await client.post<LegalDocumentDetail>(
+): Promise<LegalDocumentDetailResponse> {
+  const { data } = await client.post<LegalDocumentDetailResponse>(
     `${basePath}/legal-documents/${encodeURIComponent(id)}/publish`
+  );
+  return data;
+}
+
+// ── Regulation Profile ────────────────────────────────────────────────────────
+
+/**
+ * Returns the privacy regulation profile applicable to the current tenant.
+ *
+ * `GET {basePath}/regulation`
+ */
+export async function getApplicableRegulation(
+  client: AxiosInstance,
+  basePath: string
+): Promise<PrivacyRegulationProfileResponse> {
+  const { data } = await client.get<PrivacyRegulationProfileResponse>(`${basePath}/regulation`);
+  return data;
+}
+
+// ── Processing Purposes ───────────────────────────────────────────────────────
+
+/**
+ * Lists all processing purposes for the current tenant.
+ *
+ * `GET {basePath}/purposes`
+ */
+export async function listProcessingPurposes(
+  client: AxiosInstance,
+  basePath: string
+): Promise<PrivacyProcessingPurposeResponse[]> {
+  const { data } = await client.get<PrivacyProcessingPurposeResponse[]>(`${basePath}/purposes`);
+  return data;
+}
+
+// ── Opt-Out (CCPA) ────────────────────────────────────────────────────────────
+
+/**
+ * Opts out of data sale/sharing (CCPA — Do Not Sell or Share).
+ *
+ * Supports both authenticated users and anonymous visitors.
+ *
+ * `POST {basePath}/opt-out`
+ */
+export async function requestOptOut(
+  client: AxiosInstance,
+  basePath: string
+): Promise<PrivacyOptOutStatusResponse> {
+  const { data } = await client.post<PrivacyOptOutStatusResponse>(`${basePath}/opt-out`);
+  return data;
+}
+
+/**
+ * Returns the current opt-out status for the requesting user or visitor.
+ *
+ * `GET {basePath}/opt-out/status`
+ */
+export async function getOptOutStatus(
+  client: AxiosInstance,
+  basePath: string
+): Promise<PrivacyOptOutStatusResponse> {
+  const { data } = await client.get<PrivacyOptOutStatusResponse>(`${basePath}/opt-out/status`);
+  return data;
+}
+
+// ── Export Scopes ─────────────────────────────────────────────────────────────
+
+/**
+ * Lists available export scopes for the current tenant.
+ *
+ * `GET {basePath}/exports/scopes`
+ */
+export async function listExportScopes(
+  client: AxiosInstance,
+  basePath: string
+): Promise<PrivacyExportScopeResponse[]> {
+  const { data } = await client.get<PrivacyExportScopeResponse[]>(`${basePath}/exports/scopes`);
+  return data;
+}
+
+// ── Export On Behalf Of (admin DSR) ──────────────────────────────────────────
+
+/**
+ * Requests a personal data export on behalf of another data subject (admin DSR).
+ *
+ * Requires the `Privacy.Exports.ExecuteOnBehalfOf` permission.
+ *
+ * `POST {basePath}/exports/on-behalf-of`
+ */
+export async function requestExportOnBehalfOf(
+  client: AxiosInstance,
+  basePath: string,
+  request: PrivacyExportOnBehalfOfRequest
+): Promise<PrivacyExportRequestResponse> {
+  const { data } = await client.post<PrivacyExportRequestResponse>(
+    `${basePath}/exports/on-behalf-of`,
+    request
+  );
+  return data;
+}
+
+// ── Export Downloads (blob/stream) ────────────────────────────────────────────
+
+/**
+ * Downloads the personal data export archive (compat — single-shard or manifest).
+ *
+ * Returns a streaming response. Use `adapter: 'fetch', responseType: 'stream'`
+ * to handle the binary payload.
+ *
+ * `GET {basePath}/exports/{requestId}/download`
+ */
+export async function downloadExport(
+  client: AxiosInstance,
+  basePath: string,
+  requestId: string
+): Promise<ReadableStream> {
+  const { data } = await client.get<ReadableStream>(
+    `${basePath}/exports/${encodeURIComponent(requestId)}/download`,
+    { adapter: 'fetch', responseType: 'stream' }
+  );
+  return data;
+}
+
+/**
+ * Downloads the manifest sidecar describing the export's shards.
+ *
+ * `GET {basePath}/exports/{requestId}/download/manifest`
+ */
+export async function downloadExportManifest(
+  client: AxiosInstance,
+  basePath: string,
+  requestId: string
+): Promise<ReadableStream> {
+  const { data } = await client.get<ReadableStream>(
+    `${basePath}/exports/${encodeURIComponent(requestId)}/download/manifest`,
+    { adapter: 'fetch', responseType: 'stream' }
+  );
+  return data;
+}
+
+/**
+ * Downloads a single shard of a sharded personal data export.
+ *
+ * `GET {basePath}/exports/{requestId}/download/{shardIndex}`
+ */
+export async function downloadExportShard(
+  client: AxiosInstance,
+  basePath: string,
+  requestId: string,
+  shardIndex: number
+): Promise<ReadableStream> {
+  const { data } = await client.get<ReadableStream>(
+    `${basePath}/exports/${encodeURIComponent(requestId)}/download/${shardIndex}`,
+    { adapter: 'fetch', responseType: 'stream' }
   );
   return data;
 }

@@ -27,7 +27,7 @@ import { CmsSeoProvider } from '../providers/cms-seo-provider';
 
 import type {
   EffectiveSeoResponse,
-  OgCardPreviewResponse,
+  OgPreviewResponse,
   PagedResult,
   RobotsDirective,
   SeoMetadataListItem,
@@ -275,7 +275,7 @@ describe('useOgCardPreview', () => {
 
   it('fetches OG card preview', async () => {
     const client = createMockClient();
-    const preview: OgCardPreviewResponse = {
+    const preview: OgPreviewResponse = {
       type: 'website',
       title: 'T',
       description: 'D',

@@ -15,7 +15,7 @@ import {
 } from '../api/seo-admin';
 
 import type {
-  OgCardPreviewResponse,
+  OgPreviewResponse,
   PagedResult,
   RobotsDirective,
   SeoMetadataListItem,
@@ -242,7 +242,7 @@ describe('getSerpPreview', () => {
 describe('getOgCardPreview', () => {
   it('returns preview on 200', async () => {
     const client = createMockClient();
-    const preview: OgCardPreviewResponse = {
+    const preview: OgPreviewResponse = {
       type: 'website',
       title: 'T',
       description: 'D',

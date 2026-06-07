@@ -17,7 +17,7 @@ import type { SeoContentKey } from './query-keys';
 import type {
   EffectiveSeoResponse,
   ListSeoMetadataParams,
-  OgCardPreviewResponse,
+  OgPreviewResponse,
   PagedResult,
   SeoMetadataListItem,
   SeoMetadataResponse,
@@ -99,7 +99,7 @@ export function useSerpPreview(
 export function useOgCardPreview(
   key: SeoContentKey,
   options?: { readonly enabled?: boolean }
-): UseQueryResult<OgCardPreviewResponse | null> {
+): UseQueryResult<OgPreviewResponse | null> {
   const { client, basePath, queryKeyPrefix } = useCmsSeoConfig();
   return useQuery({
     queryKey: cmsSeoKeys.metadata.og(queryKeyPrefix, key),

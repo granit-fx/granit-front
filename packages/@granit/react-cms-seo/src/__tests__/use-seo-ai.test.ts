@@ -24,9 +24,9 @@ import {
 import { CmsSeoProvider } from '../providers/cms-seo-provider';
 
 import type {
-  SeoAiSuggestRequest,
-  SeoAiSuggestResponse,
-  SeoAiSuggestionResponse,
+  SeoSuggestRequest,
+  SeoSuggestResponse,
+  SeoSuggestionResponse,
   SeoSuggestionDiff,
   SeoSuggestionListResponse,
 } from '@granit/cms-seo';
@@ -42,7 +42,7 @@ vi.mock('@granit/cms-seo', () => ({
   triggerBulkSeoAudit: vi.fn(),
 }));
 
-const suggestion: SeoAiSuggestionResponse = {
+const suggestion: SeoSuggestionResponse = {
   id: 'sug-1',
   siteId: 'site-1',
   contentType: 'page',
@@ -134,10 +134,10 @@ describe('useSuggestSeo', () => {
 
   it('calls suggestSeo', async () => {
     const client = createMockClient();
-    const response: SeoAiSuggestResponse = { outcome: 'Succeeded', suggestion };
+    const response: SeoSuggestResponse = { outcome: 'Succeeded', suggestion };
     vi.mocked(suggestSeo).mockResolvedValue(response);
 
-    const req: SeoAiSuggestRequest = {
+    const req: SeoSuggestRequest = {
       siteId: 'site-1',
       contentType: 'page',
       contentId: 'page-1',

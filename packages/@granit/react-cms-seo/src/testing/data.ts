@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------
 
 import type {
-  SeoAiSuggestionResponse,
+  SeoSuggestionResponse,
   SeoMetadataListItem,
   SiteSeoDefaultsResponse,
 } from '@granit/cms-seo';
@@ -67,7 +67,7 @@ export const mockSeoMetadataAudit: SeoMetadataListItem[] = [
 ];
 
 /** AI suggestions inbox returned by `useSeoSuggestions`. */
-export const mockSeoSuggestions: SeoAiSuggestionResponse[] = [
+export const mockSeoSuggestions: SeoSuggestionResponse[] = [
   {
     id: '40000000-0000-4000-8000-000000000001',
     siteId: CORPORATE_SITE_ID,
