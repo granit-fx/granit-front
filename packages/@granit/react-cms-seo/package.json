@@ -14,13 +14,13 @@
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
-    "@tanstack/react-query": "^5.0.0"
+    "@tanstack/react-query": "^5.101.0"
   },
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/cms-seo": "workspace:*",
     "@granit/react-api-client": "workspace:*",
-    "@tanstack/react-query": "^5.0.0",
+    "@tanstack/react-query": "^5.101.0",
     "msw": "^2.12.0",
     "react": "^19.0.0"
   },
