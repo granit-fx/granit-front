@@ -2,6 +2,7 @@ export type {
   AdminOidcApplication,
   AdminOidcApplicationCreateRequest,
   AdminOidcApplicationSecretResponse,
+  AdminOidcApplicationUpdateRequest,
 } from './admin-oidc-application';
 
 export type {

@@ -357,13 +357,41 @@ export function createOpenIddictAdminHandlers(baseUrl = DEFAULT_BASE_PATH) {
     http.post(`${baseUrl}/oidc/applications`, async ({ request }) => {
       const body = (await request.json()) as Partial<AdminOidcApplication>;
       const newApp: (typeof mockOidcApplications)[number] = {
-        clientId: body.clientId ?? `client-${Date.now()}`,
+        clientId: body.clientId ?? `client-${String(mockOidcApplications.length)}`,
         displayName: body.displayName ?? null,
-        type: 'public',
+        type: body.type ?? null,
         tenantId: null,
+        permissions: body.permissions ?? [],
+        redirectUris: body.redirectUris ?? [],
+        postLogoutRedirectUris: body.postLogoutRedirectUris ?? [],
+        consentType: body.consentType ?? null,
+        clientSide: body.clientSide ?? null,
+        hasSigningKey: false,
       };
       mockOidcApplications.push(newApp);
       return created(newApp);
+    }),
+
+    http.put(`${baseUrl}/oidc/applications/:clientId`, async ({ params, request }) => {
+      const idx = mockOidcApplications.findIndex((a) => a.clientId === params.clientId);
+      if (idx === -1) return notFound();
+      const body = (await request.json()) as Partial<AdminOidcApplication>;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const existing = mockOidcApplications[idx]!;
+      const updated: (typeof mockOidcApplications)[number] = {
+        clientId: existing.clientId,
+        tenantId: existing.tenantId,
+        hasSigningKey: existing.hasSigningKey,
+        displayName: 'displayName' in body ? (body.displayName ?? null) : existing.displayName,
+        type: 'type' in body ? (body.type ?? null) : existing.type,
+        permissions: body.permissions ?? existing.permissions,
+        redirectUris: body.redirectUris ?? existing.redirectUris,
+        postLogoutRedirectUris: body.postLogoutRedirectUris ?? existing.postLogoutRedirectUris,
+        consentType: 'consentType' in body ? (body.consentType ?? null) : existing.consentType,
+        clientSide: 'clientSide' in body ? (body.clientSide ?? null) : existing.clientSide,
+      };
+      mockOidcApplications[idx] = updated;
+      return HttpResponse.json(updated);
     }),
 
     http.delete(`${baseUrl}/oidc/applications/:clientId`, ({ params }) => {
@@ -378,7 +406,7 @@ export function createOpenIddictAdminHandlers(baseUrl = DEFAULT_BASE_PATH) {
       if (!app) return notFound();
       return HttpResponse.json({
         clientId: String(params.clientId),
-        newSecret: `mock-secret-${Date.now()}`,
+        newSecret: `mock-secret-rotated`,
       });
     }),
 

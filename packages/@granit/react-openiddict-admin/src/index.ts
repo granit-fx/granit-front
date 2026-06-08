@@ -18,6 +18,7 @@ export {
   useDeleteOidcApplication,
   useOidcApplications,
   useRotateApplicationSecret,
+  useUpdateOidcApplication,
 } from './hooks/use-oidc-applications';
 
 // Hooks — OIDC Scopes

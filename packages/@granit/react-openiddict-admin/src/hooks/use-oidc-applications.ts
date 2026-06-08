@@ -3,6 +3,7 @@ import {
   deleteApplication,
   listApplications,
   rotateApplicationSecret,
+  updateApplication,
 } from '@granit/openiddict-admin';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -12,6 +13,7 @@ import type {
   AdminOidcApplication,
   AdminOidcApplicationCreateRequest,
   AdminOidcApplicationSecretResponse,
+  AdminOidcApplicationUpdateRequest,
 } from '@granit/openiddict-admin';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
@@ -52,6 +54,26 @@ export function useDeleteOidcApplication(): UseMutationResult<void, Error, strin
 
   return useMutation({
     mutationFn: (clientId: string) => deleteApplication(config.client, config.basePath!, clientId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: buildAdminQueryKey(config, 'oidc', 'applications'),
+      });
+    },
+  });
+}
+
+/** Updates an OIDC application. Invalidates applications on success. */
+export function useUpdateOidcApplication(): UseMutationResult<
+  AdminOidcApplication,
+  Error,
+  { clientId: string; request: AdminOidcApplicationUpdateRequest }
+> {
+  const config = useAdminConfig();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ clientId, request }) =>
+      updateApplication(config.client, config.basePath!, clientId, request),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: buildAdminQueryKey(config, 'oidc', 'applications'),

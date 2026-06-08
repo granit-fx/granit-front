@@ -4,6 +4,7 @@ export type {
   AdminOidcApplication,
   AdminOidcApplicationCreateRequest,
   AdminOidcApplicationSecretResponse,
+  AdminOidcApplicationUpdateRequest,
   AdminOidcAuthorization,
   AdminOidcAuthorizationListParams,
   AdminOidcScope,
@@ -24,6 +25,7 @@ export {
   deleteApplication,
   listApplications,
   rotateApplicationSecret,
+  updateApplication,
 } from './api/admin-oidc-application-api';
 
 // API — OIDC Scopes

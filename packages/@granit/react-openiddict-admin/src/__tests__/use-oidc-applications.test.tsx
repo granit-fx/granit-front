@@ -3,6 +3,7 @@ import {
   deleteApplication,
   listApplications,
   rotateApplicationSecret,
+  updateApplication,
 } from '@granit/openiddict-admin';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
@@ -16,6 +17,7 @@ import {
   useDeleteOidcApplication,
   useOidcApplications,
   useRotateApplicationSecret,
+  useUpdateOidcApplication,
 } from '../hooks/use-oidc-applications';
 import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider';
 
@@ -29,6 +31,7 @@ vi.mock('@granit/openiddict-admin', () => ({
   createApplication: vi.fn(),
   deleteApplication: vi.fn(),
   rotateApplicationSecret: vi.fn(),
+  updateApplication: vi.fn(),
 }));
 
 function createWrapper() {
@@ -50,6 +53,12 @@ const mockApp: AdminOidcApplication = {
   displayName: 'Guava Frontend',
   type: 'confidential',
   tenantId: null,
+  permissions: ['ept:token', 'gt:authorization_code'],
+  redirectUris: ['https://guava.local/callback'],
+  postLogoutRedirectUris: ['https://guava.local/signout-callback'],
+  consentType: 'implicit',
+  clientSide: 3,
+  hasSigningKey: false,
 };
 
 const mockApps: readonly AdminOidcApplication[] = [mockApp];
@@ -149,6 +158,43 @@ describe('useDeleteOidcApplication', () => {
     const { result } = renderHook(() => useDeleteOidcApplication(), { wrapper });
 
     result.current.mutate('invalid');
+
+    await waitFor(() => expect(result.current.isError).toBe(true));
+
+    expect(result.current.error?.message).toBe('Not Found');
+  });
+});
+
+describe('useUpdateOidcApplication', () => {
+  it('should update an application and invalidate applications query', async () => {
+    const updated: AdminOidcApplication = { ...mockApp, displayName: 'Guava Frontend v2' };
+    vi.mocked(updateApplication).mockResolvedValueOnce(updated);
+
+    const { wrapper, queryClient } = createWrapper();
+    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
+
+    const { result } = renderHook(() => useUpdateOidcApplication(), { wrapper });
+
+    result.current.mutate({ clientId: 'guava-front', request: { displayName: 'Guava Frontend v2' } });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(updateApplication).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', 'guava-front', {
+      displayName: 'Guava Frontend v2',
+    });
+    expect(result.current.data).toEqual(updated);
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: ['openiddict-admin', 'oidc', 'applications'],
+    });
+  });
+
+  it('should handle update error', async () => {
+    vi.mocked(updateApplication).mockRejectedValueOnce(new Error('Not Found'));
+
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useUpdateOidcApplication(), { wrapper });
+
+    result.current.mutate({ clientId: 'unknown', request: { displayName: 'X' } });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 

@@ -6,6 +6,7 @@ import {
   deleteApplication,
   listApplications,
   rotateApplicationSecret,
+  updateApplication,
 } from '../api/admin-oidc-application-api';
 
 import type { AdminOidcApplication, AdminOidcApplicationSecretResponse } from '../types/index';
@@ -17,6 +18,12 @@ const mockApplication: AdminOidcApplication = {
   displayName: 'My SPA',
   type: 'public',
   tenantId: null,
+  permissions: ['ept:token', 'gt:authorization_code'],
+  redirectUris: ['https://example.com/callback'],
+  postLogoutRedirectUris: ['https://example.com/signout-callback'],
+  consentType: 'implicit',
+  clientSide: 3,
+  hasSigningKey: false,
 };
 
 describe('admin-oidc-application-api', () => {
@@ -73,6 +80,36 @@ describe('admin-oidc-application-api', () => {
       await deleteApplication(client, BASE, 'id/slash');
 
       expect(client.delete).toHaveBeenCalledWith(`${BASE}/oidc/applications/id%2Fslash`);
+    });
+  });
+
+  // ── Update ────────────────────────────────────────────────────────────────
+
+  describe('updateApplication', () => {
+    it('sends PUT to /oidc/applications/{clientId} with request body', async () => {
+      const client = createMockClient();
+      const updated: AdminOidcApplication = { ...mockApplication, displayName: 'Updated SPA' };
+      vi.mocked(client.put).mockResolvedValueOnce({ data: updated });
+
+      const result = await updateApplication(client, BASE, 'my-spa', {
+        displayName: 'Updated SPA',
+      });
+
+      expect(client.put).toHaveBeenCalledWith(`${BASE}/oidc/applications/my-spa`, {
+        displayName: 'Updated SPA',
+      });
+      expect(result).toEqual(updated);
+    });
+
+    it('encodes client ID with special characters', async () => {
+      const client = createMockClient();
+      vi.mocked(client.put).mockResolvedValueOnce({ data: mockApplication });
+
+      await updateApplication(client, BASE, 'id/slash', { type: 'web' });
+
+      expect(client.put).toHaveBeenCalledWith(`${BASE}/oidc/applications/id%2Fslash`, {
+        type: 'web',
+      });
     });
   });
 

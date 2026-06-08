@@ -48,14 +48,26 @@ export const mockOidcApplications: Mutable<AdminOidcApplication>[] = [
   {
     clientId: 'granit-showcase-admin',
     displayName: 'Granit Showcase Admin',
-    type: 'public',
+    type: 'web',
     tenantId: null,
+    permissions: ['ept:token', 'gt:authorization_code', 'gt:refresh_token', 'rst:identity'],
+    redirectUris: ['https://showcase.granit-fx.dev/callback'],
+    postLogoutRedirectUris: ['https://showcase.granit-fx.dev/signout-callback'],
+    consentType: 'implicit',
+    clientSide: 3,
+    hasSigningKey: false,
   },
   {
     clientId: 'granit-api-m2m',
     displayName: 'Granit API (Machine-to-Machine)',
-    type: 'confidential',
+    type: 'native',
     tenantId: null,
+    permissions: ['ept:token', 'gt:client_credentials'],
+    redirectUris: [],
+    postLogoutRedirectUris: [],
+    consentType: null,
+    clientSide: 1,
+    hasSigningKey: false,
   },
 ];
 

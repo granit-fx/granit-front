@@ -2,6 +2,7 @@ import type {
   AdminOidcApplication,
   AdminOidcApplicationCreateRequest,
   AdminOidcApplicationSecretResponse,
+  AdminOidcApplicationUpdateRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
@@ -50,6 +51,24 @@ export async function deleteApplication(
   clientId: string
 ): Promise<void> {
   await client.delete(`${basePath}/oidc/applications/${encodeURIComponent(clientId)}`);
+}
+
+/**
+ * Update an OIDC application by client ID.
+ *
+ * `PUT {basePath}/oidc/applications/{clientId}`
+ */
+export async function updateApplication(
+  client: AxiosInstance,
+  basePath: string,
+  clientId: string,
+  request: AdminOidcApplicationUpdateRequest
+): Promise<AdminOidcApplication> {
+  const { data } = await client.put<AdminOidcApplication>(
+    `${basePath}/oidc/applications/${encodeURIComponent(clientId)}`,
+    request
+  );
+  return data;
 }
 
 /**
