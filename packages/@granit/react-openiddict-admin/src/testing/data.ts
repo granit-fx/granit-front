@@ -76,10 +76,25 @@ export const mockOidcApplications: Mutable<AdminOidcApplication>[] = [
 // ---------------------------------------------------------------------------
 
 export const mockOidcScopes: Mutable<AdminOidcScope>[] = [
-  { name: 'openid', displayName: 'OpenID', description: 'OpenID Connect identity scope' },
-  { name: 'profile', displayName: 'Profile', description: 'User profile information' },
-  { name: 'email', displayName: 'Email', description: 'User email address' },
-  { name: 'granit:admin', displayName: 'Granit Admin', description: 'Platform administration' },
+  {
+    name: 'openid',
+    displayName: 'OpenID',
+    description: 'OpenID Connect identity scope',
+    resources: [],
+  },
+  {
+    name: 'profile',
+    displayName: 'Profile',
+    description: 'User profile information',
+    resources: [],
+  },
+  { name: 'email', displayName: 'Email', description: 'User email address', resources: [] },
+  {
+    name: 'granit:admin',
+    displayName: 'Granit Admin',
+    description: 'Platform administration',
+    resources: ['api://granit-admin'],
+  },
 ];
 
 // ---------------------------------------------------------------------------

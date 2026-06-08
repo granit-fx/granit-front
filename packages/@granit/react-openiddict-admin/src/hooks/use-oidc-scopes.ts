@@ -40,7 +40,7 @@ export function useCreateOidcScope(): UseMutationResult<
   });
 }
 
-/** Updates an OIDC scope's display name and/or description. Invalidates scopes on success. */
+/** Updates an OIDC scope. Invalidates scopes on success. */
 export function useUpdateOidcScope(): UseMutationResult<
   AdminOidcScope,
   Error,

@@ -11,6 +11,7 @@ const mockScope: AdminOidcScope = {
   name: 'api',
   displayName: 'API Access',
   description: null,
+  resources: ['api://my-api'],
 };
 
 describe('admin-oidc-scope-api', () => {
@@ -39,12 +40,14 @@ describe('admin-oidc-scope-api', () => {
         name: 'api',
         displayName: 'API Access',
         description: 'Grants API access',
+        resources: ['api://my-api'],
       });
 
       expect(client.post).toHaveBeenCalledWith(`${BASE}/oidc/scopes`, {
         name: 'api',
         displayName: 'API Access',
         description: 'Grants API access',
+        resources: ['api://my-api'],
       });
       expect(result).toEqual(mockScope);
     });
@@ -72,10 +75,10 @@ describe('admin-oidc-scope-api', () => {
       const client = createMockClient();
       vi.mocked(client.put).mockResolvedValueOnce({ data: mockScope });
 
-      await updateScope(client, BASE, 'scope/slash', { description: 'desc' });
+      await updateScope(client, BASE, 'scope/slash', { resources: [] });
 
       expect(client.put).toHaveBeenCalledWith(`${BASE}/oidc/scopes/scope%2Fslash`, {
-        description: 'desc',
+        resources: [],
       });
     });
   });

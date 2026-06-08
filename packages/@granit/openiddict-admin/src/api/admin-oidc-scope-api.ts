@@ -35,7 +35,7 @@ export async function createScope(
 }
 
 /**
- * Update an OIDC scope's display name and/or description.
+ * Update an OIDC scope by name.
  *
  * `PUT {basePath}/oidc/scopes/{scopeName}`
  */

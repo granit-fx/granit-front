@@ -421,9 +421,10 @@ export function createOpenIddictAdminHandlers(baseUrl = DEFAULT_BASE_PATH) {
     http.post(`${baseUrl}/oidc/scopes`, async ({ request }) => {
       const body = (await request.json()) as Partial<AdminOidcScope>;
       const newScope: (typeof mockOidcScopes)[number] = {
-        name: body.name ?? `scope-${Date.now()}`,
+        name: body.name ?? `scope-${String(mockOidcScopes.length)}`,
         displayName: body.displayName ?? null,
         description: body.description ?? null,
+        resources: body.resources ?? [],
       };
       mockOidcScopes.push(newScope);
       return created(newScope);
@@ -435,7 +436,8 @@ export function createOpenIddictAdminHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const body = (await request.json()) as AdminOidcScopeUpdateRequest;
       if (body.displayName !== undefined) scope.displayName = body.displayName;
       if (body.description !== undefined) scope.description = body.description;
-      return HttpResponse.json({ ...scope });
+      if (body.resources !== undefined) scope.resources = body.resources ?? [];
+      return HttpResponse.json(scope);
     }),
 
     http.delete(`${baseUrl}/oidc/scopes/:name`, ({ params }) => {
