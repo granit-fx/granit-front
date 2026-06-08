@@ -18,6 +18,7 @@ const mockAuthorization: AdminOidcAuthorization = {
   subject: 'user-001',
   type: 'permanent',
   status: 'valid',
+  scopes: ['openid', 'profile'],
 };
 
 const mockAuthorizations: readonly AdminOidcAuthorization[] = [mockAuthorization];

@@ -459,6 +459,7 @@ export function createOpenIddictAdminHandlers(baseUrl = DEFAULT_BASE_PATH) {
         subject: body.subject,
         status: 'valid',
         type: 'permanent',
+        scopes: [...body.scopes],
       };
       mockOidcAuthorizations.push(newAuth);
       return created(newAuth);

@@ -108,6 +108,7 @@ export const mockOidcAuthorizations: Mutable<AdminOidcAuthorization>[] = [
     subject: 'usr_01HZ9KQX0000000000001',
     status: 'valid',
     type: 'permanent',
+    scopes: ['openid', 'profile', 'email'],
   },
   {
     id: 'auth_01HZ9KQX0000000000002',
@@ -115,6 +116,7 @@ export const mockOidcAuthorizations: Mutable<AdminOidcAuthorization>[] = [
     subject: 'usr_01HZ9KQX0000000000002',
     status: 'valid',
     type: 'ad-hoc',
+    scopes: ['granit:admin'],
   },
   {
     id: 'auth_01HZ9KQX0000000000003',
@@ -122,5 +124,6 @@ export const mockOidcAuthorizations: Mutable<AdminOidcAuthorization>[] = [
     subject: 'usr_01HZ9KQX0000000000003',
     status: 'revoked',
     type: 'permanent',
+    scopes: ['openid'],
   },
 ];
