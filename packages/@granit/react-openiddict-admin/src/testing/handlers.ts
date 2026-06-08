@@ -376,8 +376,7 @@ export function createOpenIddictAdminHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const idx = mockOidcApplications.findIndex((a) => a.clientId === params.clientId);
       if (idx === -1) return notFound();
       const body = (await request.json()) as Partial<AdminOidcApplication>;
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const existing = mockOidcApplications[idx]!;
+      const existing = mockOidcApplications[idx] as (typeof mockOidcApplications)[number];
       const updated: (typeof mockOidcApplications)[number] = {
         clientId: existing.clientId,
         tenantId: existing.tenantId,
