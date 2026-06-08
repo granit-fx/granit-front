@@ -9,6 +9,7 @@ export type {
   AdminOidcAuthorizationListParams,
   AdminOidcScope,
   AdminOidcScopeCreateRequest,
+  AdminOidcScopeUpdateRequest,
   AdminUser,
   AdminUserListParams,
   AdminUserPage,
@@ -29,7 +30,7 @@ export {
 } from './api/admin-oidc-application-api';
 
 // API — OIDC Scopes
-export { createScope, deleteScope, listScopes } from './api/admin-oidc-scope-api';
+export { createScope, deleteScope, listScopes, updateScope } from './api/admin-oidc-scope-api';
 
 // API — OIDC Authorizations
 export {

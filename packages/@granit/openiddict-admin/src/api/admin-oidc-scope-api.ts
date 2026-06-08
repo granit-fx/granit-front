@@ -1,4 +1,8 @@
-import type { AdminOidcScope, AdminOidcScopeCreateRequest } from '../types/index';
+import type {
+  AdminOidcScope,
+  AdminOidcScopeCreateRequest,
+  AdminOidcScopeUpdateRequest,
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 // ── OIDC Scope CRUD ──────────────────────────────────────────────────────────
@@ -27,6 +31,24 @@ export async function createScope(
   request: AdminOidcScopeCreateRequest
 ): Promise<AdminOidcScope> {
   const { data } = await client.post<AdminOidcScope>(`${basePath}/oidc/scopes`, request);
+  return data;
+}
+
+/**
+ * Update an OIDC scope by name.
+ *
+ * `PUT {basePath}/oidc/scopes/{scopeName}`
+ */
+export async function updateScope(
+  client: AxiosInstance,
+  basePath: string,
+  scopeName: string,
+  request: AdminOidcScopeUpdateRequest
+): Promise<AdminOidcScope> {
+  const { data } = await client.put<AdminOidcScope>(
+    `${basePath}/oidc/scopes/${encodeURIComponent(scopeName)}`,
+    request
+  );
   return data;
 }
 

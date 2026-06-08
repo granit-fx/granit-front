@@ -12,7 +12,11 @@ import {
   mockOidcScopes,
 } from './data';
 
-import type { AdminOidcApplication, AdminOidcScope } from '@granit/openiddict-admin';
+import type {
+  AdminOidcApplication,
+  AdminOidcScope,
+  AdminOidcScopeUpdateRequest,
+} from '@granit/openiddict-admin';
 import type { QueryMetadata } from '@granit/query-engine';
 
 const OIDC_APPLICATION_TYPES = ['public', 'confidential'];
@@ -416,12 +420,23 @@ export function createOpenIddictAdminHandlers(baseUrl = DEFAULT_BASE_PATH) {
     http.post(`${baseUrl}/oidc/scopes`, async ({ request }) => {
       const body = (await request.json()) as Partial<AdminOidcScope>;
       const newScope: (typeof mockOidcScopes)[number] = {
-        name: body.name ?? `scope-${Date.now()}`,
+        name: body.name ?? `scope-${String(mockOidcScopes.length)}`,
         displayName: body.displayName ?? null,
         description: body.description ?? null,
+        resources: body.resources ?? [],
       };
       mockOidcScopes.push(newScope);
       return created(newScope);
+    }),
+
+    http.put(`${baseUrl}/oidc/scopes/:name`, async ({ params, request }) => {
+      const scope = mockOidcScopes.find((s) => s.name === params.name);
+      if (!scope) return notFound();
+      const body = (await request.json()) as AdminOidcScopeUpdateRequest;
+      if (body.displayName !== undefined) scope.displayName = body.displayName;
+      if (body.description !== undefined) scope.description = body.description;
+      if (body.resources !== undefined) scope.resources = body.resources ?? [];
+      return HttpResponse.json(scope);
     }),
 
     http.delete(`${baseUrl}/oidc/scopes/:name`, ({ params }) => {

@@ -1,4 +1,4 @@
-import { createScope, deleteScope, listScopes } from '@granit/openiddict-admin';
+import { createScope, deleteScope, listScopes, updateScope } from '@granit/openiddict-admin';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -6,7 +6,12 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useCreateOidcScope, useDeleteOidcScope, useOidcScopes } from '../hooks/use-oidc-scopes';
+import {
+  useCreateOidcScope,
+  useDeleteOidcScope,
+  useOidcScopes,
+  useUpdateOidcScope,
+} from '../hooks/use-oidc-scopes';
 import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider';
 
 import type { AdminOidcScope } from '@granit/openiddict-admin';
@@ -15,6 +20,7 @@ vi.mock('@granit/openiddict-admin', () => ({
   listScopes: vi.fn(),
   createScope: vi.fn(),
   deleteScope: vi.fn(),
+  updateScope: vi.fn(),
 }));
 
 function createWrapper() {
@@ -35,11 +41,12 @@ const mockScope: AdminOidcScope = {
   name: 'api',
   displayName: 'API access',
   description: null,
+  resources: ['api://my-api'],
 };
 
 const mockScopes: readonly AdminOidcScope[] = [
   mockScope,
-  { name: 'openid', displayName: 'OpenID', description: null },
+  { name: 'openid', displayName: 'OpenID', description: null, resources: [] },
 ];
 
 describe('useOidcScopes', () => {
@@ -106,6 +113,43 @@ describe('useCreateOidcScope', () => {
     await waitFor(() => expect(result.current.isError).toBe(true));
 
     expect(result.current.error?.message).toBe('Conflict');
+  });
+});
+
+describe('useUpdateOidcScope', () => {
+  it('should update a scope and invalidate scopes query', async () => {
+    const updated: AdminOidcScope = { ...mockScope, displayName: 'API access v2' };
+    vi.mocked(updateScope).mockResolvedValueOnce(updated);
+
+    const { wrapper, queryClient } = createWrapper();
+    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
+
+    const { result } = renderHook(() => useUpdateOidcScope(), { wrapper });
+
+    result.current.mutate({ scopeName: 'api', request: { displayName: 'API access v2' } });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(updateScope).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', 'api', {
+      displayName: 'API access v2',
+    });
+    expect(result.current.data).toEqual(updated);
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: ['openiddict-admin', 'oidc', 'scopes'],
+    });
+  });
+
+  it('should handle update error', async () => {
+    vi.mocked(updateScope).mockRejectedValueOnce(new Error('Not Found'));
+
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useUpdateOidcScope(), { wrapper });
+
+    result.current.mutate({ scopeName: 'unknown', request: { resources: [] } });
+
+    await waitFor(() => expect(result.current.isError).toBe(true));
+
+    expect(result.current.error?.message).toBe('Not Found');
   });
 });
 

@@ -2098,6 +2098,11 @@
           "signature": "async function listScopes( client: AxiosInstance, basePath: string ): Promise<readonly AdminOidcScope[]>"
         },
         {
+          "name": "updateScope",
+          "kind": "function",
+          "signature": "async function updateScope( client: AxiosInstance, basePath: string, scopeName: string, request: AdminOidcScopeUpdateRequest ): Promise<AdminOidcScope>"
+        },
+        {
           "name": "OpenIddictPermissions",
           "kind": "const",
           "signature": "const OpenIddictPermissions"
@@ -5849,21 +5854,6 @@
           "name": "useImpersonateUser",
           "kind": "function",
           "signature": "function useImpersonateUser(): UseMutationResult<AdminImpersonationResult, Error, string>"
-        },
-        {
-          "name": "useCreateOidcScope",
-          "kind": "function",
-          "signature": "function useCreateOidcScope(): UseMutationResult< AdminOidcScope, Error, AdminOidcScopeCreateRequest >"
-        },
-        {
-          "name": "useDeleteOidcScope",
-          "kind": "function",
-          "signature": "function useDeleteOidcScope(): UseMutationResult<void, Error, string>"
-        },
-        {
-          "name": "useOidcScopes",
-          "kind": "function",
-          "signature": "function useOidcScopes(): UseQueryResult<readonly AdminOidcScope[]>"
         },
         {
           "name": "openIddictAdminKeys",

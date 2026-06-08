@@ -10,7 +10,11 @@ export type {
   AdminOidcAuthorizationListParams,
 } from './admin-oidc-authorization';
 
-export type { AdminOidcScope, AdminOidcScopeCreateRequest } from './admin-oidc-scope';
+export type {
+  AdminOidcScope,
+  AdminOidcScopeCreateRequest,
+  AdminOidcScopeUpdateRequest,
+} from './admin-oidc-scope';
 
 export type {
   AdminImpersonationResult,

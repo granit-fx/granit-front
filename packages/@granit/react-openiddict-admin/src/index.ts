@@ -22,7 +22,12 @@ export {
 } from './hooks/use-oidc-applications';
 
 // Hooks — OIDC Scopes
-export { useCreateOidcScope, useDeleteOidcScope, useOidcScopes } from './hooks/use-oidc-scopes';
+export {
+  useCreateOidcScope,
+  useDeleteOidcScope,
+  useOidcScopes,
+  useUpdateOidcScope,
+} from './hooks/use-oidc-scopes';
 
 // Hooks — OIDC Authorizations
 export {

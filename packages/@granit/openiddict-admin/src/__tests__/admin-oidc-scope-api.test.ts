@@ -1,7 +1,7 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { createScope, deleteScope, listScopes } from '../api/admin-oidc-scope-api';
+import { createScope, deleteScope, listScopes, updateScope } from '../api/admin-oidc-scope-api';
 
 import type { AdminOidcScope } from '../types/index';
 
@@ -11,6 +11,7 @@ const mockScope: AdminOidcScope = {
   name: 'api',
   displayName: 'API Access',
   description: null,
+  resources: ['api://my-api'],
 };
 
 describe('admin-oidc-scope-api', () => {
@@ -39,14 +40,46 @@ describe('admin-oidc-scope-api', () => {
         name: 'api',
         displayName: 'API Access',
         description: 'Grants API access',
+        resources: ['api://my-api'],
       });
 
       expect(client.post).toHaveBeenCalledWith(`${BASE}/oidc/scopes`, {
         name: 'api',
         displayName: 'API Access',
         description: 'Grants API access',
+        resources: ['api://my-api'],
       });
       expect(result).toEqual(mockScope);
+    });
+  });
+
+  // ── Update ────────────────────────────────────────────────────────────────
+
+  describe('updateScope', () => {
+    it('sends PUT to /oidc/scopes/{scopeName} with request body', async () => {
+      const client = createMockClient();
+      const updated: AdminOidcScope = { ...mockScope, displayName: 'Updated API Access' };
+      vi.mocked(client.put).mockResolvedValueOnce({ data: updated });
+
+      const result = await updateScope(client, BASE, 'api', {
+        displayName: 'Updated API Access',
+      });
+
+      expect(client.put).toHaveBeenCalledWith(`${BASE}/oidc/scopes/api`, {
+        displayName: 'Updated API Access',
+      });
+      expect(result).toEqual(updated);
+    });
+
+    it('encodes scope name with special characters', async () => {
+      const client = createMockClient();
+      vi.mocked(client.put).mockResolvedValueOnce({ data: mockScope });
+
+      await updateScope(client, BASE, 'scope/slash', { resources: [] });
+
+      expect(client.put).toHaveBeenCalledWith(`${BASE}/oidc/scopes/scope%2Fslash`, {
+        resources: [],
+      });
     });
   });
 
