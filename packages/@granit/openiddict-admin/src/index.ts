@@ -25,6 +25,7 @@ export { impersonateUser, listUsers } from './api/admin-user-api';
 export {
   createApplication,
   deleteApplication,
+  getApplication,
   listApplications,
   rotateApplicationSecret,
   updateApplication,

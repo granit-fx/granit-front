@@ -16,6 +16,7 @@ export { useAdminUsers, useImpersonateUser } from './hooks/use-admin-users';
 export {
   useCreateOidcApplication,
   useDeleteOidcApplication,
+  useOidcApplication,
   useOidcApplications,
   useRotateApplicationSecret,
   useUpdateOidcApplication,

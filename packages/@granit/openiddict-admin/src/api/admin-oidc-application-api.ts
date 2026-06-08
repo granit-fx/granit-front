@@ -24,6 +24,22 @@ export async function listApplications(
 }
 
 /**
+ * Get a single OIDC application by client ID.
+ *
+ * `GET {basePath}/oidc/applications/{clientId}`
+ */
+export async function getApplication(
+  client: AxiosInstance,
+  basePath: string,
+  clientId: string
+): Promise<AdminOidcApplication> {
+  const { data } = await client.get<AdminOidcApplication>(
+    `${basePath}/oidc/applications/${encodeURIComponent(clientId)}`
+  );
+  return data;
+}
+
+/**
  * Create a new OIDC application.
  *
  * `POST {basePath}/oidc/applications`

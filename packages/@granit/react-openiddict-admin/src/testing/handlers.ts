@@ -359,6 +359,13 @@ export function createOpenIddictAdminHandlers(baseUrl = DEFAULT_BASE_PATH) {
 
     http.get(`${baseUrl}/oidc/applications`, () => HttpResponse.json(mockOidcApplications)),
 
+    http.get(`${baseUrl}/oidc/applications/:clientId`, ({ params }) => {
+      const app = mockOidcApplications.find(
+        (a) => a.clientId === decodeURIComponent(params.clientId as string)
+      );
+      return app ? HttpResponse.json(app) : notFound();
+    }),
+
     http.post(`${baseUrl}/oidc/applications`, async ({ request }) => {
       const body = (await request.json()) as Partial<AdminOidcApplication>;
       const newApp: (typeof mockOidcApplications)[number] = {

@@ -1,6 +1,7 @@
 import {
   createApplication,
   deleteApplication,
+  getApplication,
   listApplications,
   rotateApplicationSecret,
   updateApplication,
@@ -16,6 +17,27 @@ import type {
   AdminOidcApplicationUpdateRequest,
 } from '@granit/openiddict-admin';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
+
+/** Fetches a single OIDC application by client ID. Returns `undefined` while loading, `null` on 404. */
+export function useOidcApplication(
+  clientId: string | null
+): UseQueryResult<AdminOidcApplication | null> {
+  const config = useAdminConfig();
+
+  return useQuery({
+    queryKey: buildAdminQueryKey(config, 'oidc', 'applications', clientId ?? ''),
+    queryFn: async () => {
+      try {
+        return await getApplication(config.client, config.basePath!, clientId!);
+      } catch (err: unknown) {
+        const status = (err as { response?: { status?: number } })?.response?.status;
+        if (status === 404) return null;
+        throw err;
+      }
+    },
+    enabled: !!clientId,
+  });
+}
 
 /** Fetches all OIDC applications. */
 export function useOidcApplications(): UseQueryResult<readonly AdminOidcApplication[]> {
