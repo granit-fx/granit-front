@@ -40,6 +40,22 @@ export async function getApplication(
 }
 
 /**
+ * Get public display info for an OIDC application (non-admin, consent page use).
+ *
+ * `GET {oidcBasePath}/applications/{clientId}`
+ */
+export async function getApplicationInfo(
+  client: AxiosInstance,
+  oidcBasePath: string,
+  clientId: string
+): Promise<{ clientId: string | null; displayName: string | null }> {
+  const { data } = await client.get<{ clientId: string | null; displayName: string | null }>(
+    `${oidcBasePath}/applications/${encodeURIComponent(clientId)}`
+  );
+  return data;
+}
+
+/**
  * Create a new OIDC application.
  *
  * `POST {basePath}/oidc/applications`

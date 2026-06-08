@@ -26,6 +26,7 @@ export {
   createApplication,
   deleteApplication,
   getApplication,
+  getApplicationInfo,
   listApplications,
   rotateApplicationSecret,
   updateApplication,

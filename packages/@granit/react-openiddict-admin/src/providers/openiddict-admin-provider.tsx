@@ -9,6 +9,8 @@ import type { ReactNode } from 'react';
 export interface OpenIddictAdminConfig {
   readonly client?: AxiosInstance;
   readonly basePath?: string;
+  /** Base path for authenticated (non-admin) OIDC endpoints, e.g. `/api/v1/oidc`. Used by the consent page. */
+  readonly oidcBasePath?: string;
   readonly queryKeyPrefix?: readonly string[];
 }
 

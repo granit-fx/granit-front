@@ -39,6 +39,8 @@ export {
 } from './hooks/use-oidc-authorizations';
 
 // Hooks — Auth flows
+export { useConsentApplication } from './hooks/use-consent-application';
+export type { ConsentApplicationInfo } from './hooks/use-consent-application';
 export { useConsentFlow } from './hooks/use-consent-flow';
 export type { ConsentFlowState } from './hooks/use-consent-flow';
 export { useDeviceVerification } from './hooks/use-device-verification';

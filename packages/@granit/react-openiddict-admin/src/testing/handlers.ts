@@ -312,9 +312,25 @@ export const oidcAuthorizationQueryMetadata: QueryMetadata = {
  * Handlers mutate in-memory state — mutations are reflected by subsequent GETs.
  *
  * @param baseUrl - API base path (default: `/api/v1/admin`)
+ * @param oidcBaseUrl - Base path for non-admin OIDC endpoints used by the consent page (default: `/api/v1/oidc`)
  */
-export function createOpenIddictAdminHandlers(baseUrl = DEFAULT_BASE_PATH) {
+export function createOpenIddictAdminHandlers(
+  baseUrl = DEFAULT_BASE_PATH,
+  oidcBaseUrl = '/api/v1/oidc'
+) {
   return [
+    // ── Consent (non-admin) ──────────────────────────────────────────────────
+
+    http.get(`${oidcBaseUrl}/applications/:clientId`, ({ params }) => {
+      const app = mockOidcApplications.find(
+        (a) => a.clientId === decodeURIComponent(params.clientId as string)
+      );
+      return app
+        ? HttpResponse.json({ clientId: app.clientId, displayName: app.displayName })
+        : notFound();
+    }),
+
+
     // ── Query metadata ───────────────────────────────────────────────────────
 
     createQueryMetaHandler(`${baseUrl}/users`, adminUserQueryMetadata),

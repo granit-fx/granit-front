@@ -5838,6 +5838,17 @@
           "signature": "function useImpersonateUser(): UseMutationResult<AdminImpersonationResult, Error, string>"
         },
         {
+          "name": "useConsentApplication",
+          "kind": "function",
+          "signature": "function useConsentApplication( clientId: string | null ): UseQueryResult<ConsentApplicationInfo | null>"
+        },
+        {
+          "name": "ConsentApplicationInfo",
+          "kind": "interface",
+          "signature": "interface ConsentApplicationInfo",
+          "members": []
+        },
+        {
           "name": "useConsentFlow",
           "kind": "function",
           "signature": "function useConsentFlow(returnUrl: string | null, subject: string | null): ConsentFlowState"
