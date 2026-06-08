@@ -330,7 +330,6 @@ export function createOpenIddictAdminHandlers(
         : notFound();
     }),
 
-
     // ── Query metadata ───────────────────────────────────────────────────────
 
     createQueryMetaHandler(`${baseUrl}/users`, adminUserQueryMetadata),

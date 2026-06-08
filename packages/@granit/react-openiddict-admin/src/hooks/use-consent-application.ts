@@ -1,6 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-
 import { getApplicationInfo } from '@granit/openiddict-admin';
+import { useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_OIDC_BASE_PATH } from '../constants';
 import { buildAdminQueryKey, useAdminConfig } from '../providers/openiddict-admin-provider';
