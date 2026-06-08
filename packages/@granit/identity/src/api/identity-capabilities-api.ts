@@ -1,4 +1,4 @@
-import type { IdentityProviderCapabilities } from '../types/index';
+import type { IdentityProviderCapabilitiesResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**
@@ -9,7 +9,9 @@ import type { AxiosInstance } from '@granit/api-client';
 export async function getIdentityCapabilities(
   client: AxiosInstance,
   basePath: string
-): Promise<IdentityProviderCapabilities> {
-  const response = await client.get<IdentityProviderCapabilities>(`${basePath}/capabilities`);
+): Promise<IdentityProviderCapabilitiesResponse> {
+  const response = await client.get<IdentityProviderCapabilitiesResponse>(
+    `${basePath}/capabilities`
+  );
   return response.data;
 }

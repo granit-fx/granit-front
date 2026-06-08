@@ -1,5 +1,5 @@
 // Types
-export type { IdentityProviderCapabilities } from './types/index';
+export type { IdentityProviderCapabilitiesResponse } from './types/index';
 export type {
   IdentityUser,
   IdentityUserCacheStats,

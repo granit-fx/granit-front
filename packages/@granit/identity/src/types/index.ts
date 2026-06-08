@@ -30,7 +30,7 @@ export type IdentityProviderUserListParams = {
 };
 
 /** Response from `GET /identity/users/capabilities`. */
-export interface IdentityProviderCapabilities {
+export interface IdentityProviderCapabilitiesResponse {
   /** Display name of the active identity provider (e.g. "Keycloak", "Entra ID"). */
   readonly providerName: string;
   /** Whether the provider can terminate a specific session without revoking all sessions. */

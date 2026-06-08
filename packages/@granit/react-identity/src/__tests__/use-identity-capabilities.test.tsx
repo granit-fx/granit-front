@@ -9,7 +9,7 @@ import { useIdentityCapabilities } from '../hooks/use-identity-capabilities';
 import { IdentityProvider } from '../providers/identity-provider';
 
 import type { IdentityProviderProps } from '../providers/identity-provider';
-import type { IdentityProviderCapabilities } from '@granit/identity';
+import type { IdentityProviderCapabilitiesResponse } from '@granit/identity';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -29,7 +29,7 @@ function createWrapper(client: AxiosInstance, basePath?: string) {
   };
 }
 
-const mockCapabilities: IdentityProviderCapabilities = {
+const mockCapabilities: IdentityProviderCapabilitiesResponse = {
   providerName: 'Keycloak',
   supportsIndividualSessionTermination: true,
   supportsNativePasswordResetEmail: false,

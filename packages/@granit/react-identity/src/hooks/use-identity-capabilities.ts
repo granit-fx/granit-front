@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider';
 
-import type { IdentityProviderCapabilities } from '@granit/identity';
+import type { IdentityProviderCapabilitiesResponse } from '@granit/identity';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -22,7 +22,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
  */
 export function useIdentityCapabilities(options?: {
   enabled?: boolean;
-}): UseQueryResult<IdentityProviderCapabilities> {
+}): UseQueryResult<IdentityProviderCapabilitiesResponse> {
   const config = useIdentityConfig();
 
   return useQuery({

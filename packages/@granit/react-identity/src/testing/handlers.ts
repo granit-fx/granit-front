@@ -7,7 +7,7 @@ import { DEFAULT_BASE_PATH, DEFAULT_PROVIDER_BASE_PATH } from '../constants';
 
 import { mockDevices, mockPasswordChangedAt, mockSessions, mockUsers } from './data';
 
-import type { IdentityProviderCapabilities, IdentityUser } from '@granit/identity';
+import type { IdentityProviderCapabilitiesResponse, IdentityUser } from '@granit/identity';
 import type { QueryMetadata } from '@granit/query-engine';
 
 /** Mock /meta payload for the cached identity-users resource. */
@@ -184,7 +184,7 @@ function findGroupById(id: string): MockGroup | undefined {
 // Capabilities
 // ---------------------------------------------------------------------------
 
-const capabilities: IdentityProviderCapabilities = {
+const capabilities: IdentityProviderCapabilitiesResponse = {
   providerName: 'Keycloak',
   supportsIndividualSessionTermination: true,
   supportsNativePasswordResetEmail: true,

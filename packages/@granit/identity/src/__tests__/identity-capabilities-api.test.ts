@@ -3,9 +3,9 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { getIdentityCapabilities } from '../api/identity-capabilities-api';
 
-import type { IdentityProviderCapabilities } from '../types/index';
+import type { IdentityProviderCapabilitiesResponse } from '../types/index';
 
-const keycloakCapabilities: IdentityProviderCapabilities = {
+const keycloakCapabilities: IdentityProviderCapabilitiesResponse = {
   providerName: 'Keycloak',
   supportsIndividualSessionTermination: true,
   supportsNativePasswordResetEmail: true,
@@ -38,7 +38,7 @@ describe('identity-capabilities-api', () => {
   });
 
   it('should return Entra ID capabilities', async () => {
-    const entraCapabilities: IdentityProviderCapabilities = {
+    const entraCapabilities: IdentityProviderCapabilitiesResponse = {
       providerName: 'Entra ID',
       supportsIndividualSessionTermination: false,
       supportsNativePasswordResetEmail: false,

@@ -1661,9 +1661,9 @@
       "description": "Identity provider capabilities — types and API for GET /identity/users/capabilities",
       "exports": [
         {
-          "name": "IdentityProviderCapabilities",
+          "name": "IdentityProviderCapabilitiesResponse",
           "kind": "interface",
-          "signature": "interface IdentityProviderCapabilities",
+          "signature": "interface IdentityProviderCapabilitiesResponse",
           "members": []
         },
         {
@@ -1674,7 +1674,7 @@
         {
           "name": "getIdentityCapabilities",
           "kind": "function",
-          "signature": "async function getIdentityCapabilities( client: AxiosInstance, basePath: string ): Promise<IdentityProviderCapabilities>"
+          "signature": "async function getIdentityCapabilities( client: AxiosInstance, basePath: string ): Promise<IdentityProviderCapabilitiesResponse>"
         },
         {
           "name": "IdentityPermissions",
