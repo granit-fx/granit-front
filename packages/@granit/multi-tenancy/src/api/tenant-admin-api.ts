@@ -1,4 +1,8 @@
-import type { AdminTenant, CreateTenantRequest, UpdateTenantRequest } from '../types/admin-tenant';
+import type {
+  TenantResponse,
+  CreateTenantRequest,
+  UpdateTenantRequest,
+} from '../types/tenant-response';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**
@@ -10,8 +14,10 @@ export async function getTenant(
   client: AxiosInstance,
   basePath: string,
   id: string
-): Promise<AdminTenant> {
-  const { data } = await client.get<AdminTenant>(`${basePath}/tenants/${encodeURIComponent(id)}`);
+): Promise<TenantResponse> {
+  const { data } = await client.get<TenantResponse>(
+    `${basePath}/tenants/${encodeURIComponent(id)}`
+  );
   return data;
 }
 
@@ -24,8 +30,8 @@ export async function createTenant(
   client: AxiosInstance,
   basePath: string,
   request: CreateTenantRequest
-): Promise<AdminTenant> {
-  const { data } = await client.post<AdminTenant>(`${basePath}/tenants`, request);
+): Promise<TenantResponse> {
+  const { data } = await client.post<TenantResponse>(`${basePath}/tenants`, request);
   return data;
 }
 

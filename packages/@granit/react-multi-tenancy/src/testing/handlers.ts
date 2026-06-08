@@ -12,7 +12,7 @@ import { DEFAULT_BASE_PATH } from '../constants';
 
 import { mockTenants } from './data';
 
-import type { AdminTenant } from '@granit/multi-tenancy';
+import type { TenantResponse } from '@granit/multi-tenancy';
 import type { QueryMetadata } from '@granit/query-engine';
 
 /** Mock /meta payload for the tenant resource. */
@@ -138,9 +138,9 @@ export function createTenantHandlers(baseUrl = DEFAULT_BASE_PATH) {
 
     // POST /tenants — create
     http.post(`${baseUrl}/tenants`, async ({ request }) => {
-      const body = (await request.json()) as Partial<AdminTenant>;
+      const body = (await request.json()) as Partial<TenantResponse>;
       const newTenant: (typeof mockTenants)[number] = {
-        id: `tnt_${Date.now()}` as AdminTenant['id'],
+        id: `tnt_${Date.now()}` as TenantResponse['id'],
         name: body.name ?? 'New Tenant',
         identifier: body.identifier ?? `tenant-${Date.now()}`,
         contactEmail: body.contactEmail ?? null,
@@ -159,7 +159,7 @@ export function createTenantHandlers(baseUrl = DEFAULT_BASE_PATH) {
       if (idx === -1) return notFound();
       const tenant = mockTenants[idx];
       if (!tenant) return notFound();
-      const body = (await request.json()) as Partial<AdminTenant>;
+      const body = (await request.json()) as Partial<TenantResponse>;
       if (body.name !== undefined) tenant.name = body.name;
       if (body.contactEmail !== undefined) tenant.contactEmail = body.contactEmail;
       if (body.jurisdiction !== undefined) tenant.jurisdiction = body.jurisdiction;

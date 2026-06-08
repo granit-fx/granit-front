@@ -9,11 +9,15 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { buildTenantAdminQueryKey, useTenantAdminConfig } from '../providers/tenant-admin-provider';
 
-import type { AdminTenant, CreateTenantRequest, UpdateTenantRequest } from '@granit/multi-tenancy';
+import type {
+  TenantResponse,
+  CreateTenantRequest,
+  UpdateTenantRequest,
+} from '@granit/multi-tenancy';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /** Fetches a single tenant by ID. Disabled when id is empty. */
-export function useTenantDetail(id: string): UseQueryResult<AdminTenant> {
+export function useTenantDetail(id: string): UseQueryResult<TenantResponse> {
   const config = useTenantAdminConfig();
 
   return useQuery({
@@ -24,7 +28,7 @@ export function useTenantDetail(id: string): UseQueryResult<AdminTenant> {
 }
 
 /** Creates a new tenant. Invalidates tenant list on success. */
-export function useCreateTenant(): UseMutationResult<AdminTenant, Error, CreateTenantRequest> {
+export function useCreateTenant(): UseMutationResult<TenantResponse, Error, CreateTenantRequest> {
   const config = useTenantAdminConfig();
   const queryClient = useQueryClient();
 

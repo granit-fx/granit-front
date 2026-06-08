@@ -1885,24 +1885,6 @@
           "members": []
         },
         {
-          "name": "AdminTenant",
-          "kind": "interface",
-          "signature": "interface AdminTenant",
-          "members": []
-        },
-        {
-          "name": "CreateTenantRequest",
-          "kind": "interface",
-          "signature": "interface CreateTenantRequest",
-          "members": []
-        },
-        {
-          "name": "UpdateTenantRequest",
-          "kind": "interface",
-          "signature": "interface UpdateTenantRequest",
-          "members": []
-        },
-        {
           "name": "DEFAULT_MULTI_TENANCY_OPTIONS",
           "kind": "const",
           "signature": "const DEFAULT_MULTI_TENANCY_OPTIONS: Required<MultiTenancyOptions>"
@@ -2096,6 +2078,11 @@
           "name": "listScopes",
           "kind": "function",
           "signature": "async function listScopes( client: AxiosInstance, basePath: string ): Promise<readonly AdminOidcScope[]>"
+        },
+        {
+          "name": "updateScope",
+          "kind": "function",
+          "signature": "async function updateScope( client: AxiosInstance, basePath: string, scopeName: string, request: AdminOidcScopeUpdateRequest ): Promise<AdminOidcScope>"
         },
         {
           "name": "OpenIddictPermissions",
@@ -5851,19 +5838,20 @@
           "signature": "function useImpersonateUser(): UseMutationResult<AdminImpersonationResult, Error, string>"
         },
         {
-          "name": "useCreateOidcScope",
+          "name": "useConsentFlow",
           "kind": "function",
-          "signature": "function useCreateOidcScope(): UseMutationResult< AdminOidcScope, Error, AdminOidcScopeCreateRequest >"
+          "signature": "function useConsentFlow(returnUrl: string | null, subject: string | null): ConsentFlowState"
         },
         {
-          "name": "useDeleteOidcScope",
-          "kind": "function",
-          "signature": "function useDeleteOidcScope(): UseMutationResult<void, Error, string>"
+          "name": "ConsentFlowState",
+          "kind": "interface",
+          "signature": "interface ConsentFlowState",
+          "members": []
         },
         {
-          "name": "useOidcScopes",
+          "name": "useDeviceVerification",
           "kind": "function",
-          "signature": "function useOidcScopes(): UseQueryResult<readonly AdminOidcScope[]>"
+          "signature": "function useDeviceVerification(verifyEndpoint = '/connect/verify'): DeviceVerificationState"
         },
         {
           "name": "openIddictAdminKeys",

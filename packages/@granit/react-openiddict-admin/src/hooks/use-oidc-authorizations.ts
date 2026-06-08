@@ -1,4 +1,5 @@
 import {
+  createAuthorization,
   listAuthorizations,
   revokeAuthorization,
   revokeUserAuthorizations,
@@ -9,9 +10,30 @@ import { buildAdminQueryKey, useAdminConfig } from '../providers/openiddict-admi
 
 import type {
   AdminOidcAuthorization,
+  AdminOidcAuthorizationCreateRequest,
   AdminOidcAuthorizationListParams,
 } from '@granit/openiddict-admin';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
+
+/** Creates an OIDC authorization (admin consent grant). Invalidates authorizations on success. */
+export function useCreateOidcAuthorization(): UseMutationResult<
+  AdminOidcAuthorization,
+  Error,
+  AdminOidcAuthorizationCreateRequest
+> {
+  const config = useAdminConfig();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (request: AdminOidcAuthorizationCreateRequest) =>
+      createAuthorization(config.client, config.basePath!, request),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: buildAdminQueryKey(config, 'oidc', 'authorizations'),
+      });
+    },
+  });
+}
 
 /** Fetches OIDC authorizations with optional filtering. */
 export function useOidcAuthorizations(

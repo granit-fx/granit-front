@@ -98,6 +98,7 @@ export type PrivacyRegulationProfileResponse = {
   readonly regulation: string;
   readonly displayName: string;
   readonly jurisdictionCode: string;
+  readonly contributingRegulations: readonly string[];
   readonly consentModel: string;
   readonly availableLegalBases: readonly string[];
   readonly subjectAccessRequestDays: number;

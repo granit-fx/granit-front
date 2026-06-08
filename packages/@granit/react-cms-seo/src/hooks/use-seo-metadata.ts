@@ -63,7 +63,7 @@ export function useEffectiveSeo(
 export function useSeoDefaults(
   siteId: string,
   options?: { readonly enabled?: boolean }
-): UseQueryResult<SiteSeoDefaultsResponse> {
+): UseQueryResult<SiteSeoDefaultsResponse | null> {
   const { client, basePath, queryKeyPrefix } = useCmsSeoConfig();
   return useQuery({
     queryKey: cmsSeoKeys.defaults.detail(queryKeyPrefix, siteId),

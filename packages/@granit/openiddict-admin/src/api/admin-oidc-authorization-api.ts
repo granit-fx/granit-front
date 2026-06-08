@@ -1,7 +1,28 @@
-import type { AdminOidcAuthorization, AdminOidcAuthorizationListParams } from '../types/index';
+import type {
+  AdminOidcAuthorization,
+  AdminOidcAuthorizationCreateRequest,
+  AdminOidcAuthorizationListParams,
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 // ── OIDC Authorization management ────────────────────────────────────────────
+
+/**
+ * Create an OIDC authorization (admin consent grant).
+ *
+ * `POST {basePath}/oidc/authorizations`
+ */
+export async function createAuthorization(
+  client: AxiosInstance,
+  basePath: string,
+  request: AdminOidcAuthorizationCreateRequest
+): Promise<AdminOidcAuthorization> {
+  const { data } = await client.post<AdminOidcAuthorization>(
+    `${basePath}/oidc/authorizations`,
+    request
+  );
+  return data;
+}
 
 /**
  * List OIDC authorizations with optional filtering.

@@ -21,7 +21,7 @@ export async function getPageTree(
   siteId: string
 ): Promise<readonly PageTreeNodeResponse[]> {
   const res = await client.get<readonly PageTreeNodeResponse[]>(`${basePath}/api/cms/pages/tree`, {
-    params: { siteId },
+    headers: { 'X-Granit-Site': siteId },
   });
   return res.data;
 }

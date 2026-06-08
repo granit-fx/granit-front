@@ -156,6 +156,7 @@ export const mockRegulationProfile: PrivacyRegulationProfileResponse = {
   regulation: 'GDPR',
   displayName: 'General Data Protection Regulation',
   jurisdictionCode: 'EU',
+  contributingRegulations: ['EU_GDPR'],
   consentModel: 'OptIn',
   availableLegalBases: [
     'Consent',

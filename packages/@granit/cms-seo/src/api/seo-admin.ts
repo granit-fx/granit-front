@@ -79,16 +79,20 @@ export async function deleteSeoMetadata(
   );
 }
 
-/** `GET /api/cms/seo/sites/{siteId}/defaults`. Requires `Cms.Seo.Read`. */
+/**
+ * `GET /api/cms/seo/sites/{siteId}/defaults`. Requires `Cms.Seo.Read`.
+ * Returns `null` when no defaults row has been saved for the site yet (404).
+ */
 export async function getSeoDefaults(
   client: AxiosInstance,
   basePath: string,
   siteId: string
-): Promise<SiteSeoDefaultsResponse> {
+): Promise<SiteSeoDefaultsResponse | null> {
   const res = await client.get<SiteSeoDefaultsResponse>(
-    `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/defaults`
+    `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/defaults`,
+    { validateStatus: (s) => s === 200 || s === 404 }
   );
-  return res.data;
+  return res.status === 404 ? null : res.data;
 }
 
 /** `PUT /api/cms/seo/sites/{siteId}/defaults`. Requires `Cms.Seo.Manage`. */

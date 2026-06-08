@@ -1,9 +1,9 @@
-import type { AdminTenant } from '@granit/multi-tenancy';
+import type { TenantResponse } from '@granit/multi-tenancy';
 import type { Mutable } from '@granit/testing';
 
-export const mockTenants: Mutable<AdminTenant>[] = [
+export const mockTenants: Mutable<TenantResponse>[] = [
   {
-    id: 'tnt_01HZ9KQX0000000000001' as AdminTenant['id'],
+    id: 'tnt_01HZ9KQX0000000000001' as TenantResponse['id'],
     name: 'Acme Corporation',
     identifier: 'acme',
     contactEmail: 'admin@acme.example',
@@ -13,7 +13,7 @@ export const mockTenants: Mutable<AdminTenant>[] = [
     concurrencyStamp: 'stamp-acme-0001',
   },
   {
-    id: 'tnt_01HZ9KQX0000000000002' as AdminTenant['id'],
+    id: 'tnt_01HZ9KQX0000000000002' as TenantResponse['id'],
     name: 'Globex Industries',
     identifier: 'globex',
     contactEmail: 'it@globex.example',
@@ -23,7 +23,7 @@ export const mockTenants: Mutable<AdminTenant>[] = [
     concurrencyStamp: 'stamp-globex-0001',
   },
   {
-    id: 'tnt_01HZ9KQX0000000000003' as AdminTenant['id'],
+    id: 'tnt_01HZ9KQX0000000000003' as TenantResponse['id'],
     name: 'Initech',
     identifier: 'initech',
     contactEmail: null,

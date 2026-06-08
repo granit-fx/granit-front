@@ -12,10 +12,15 @@ import {
   mockOidcScopes,
 } from './data';
 
-import type { AdminOidcApplication, AdminOidcScope } from '@granit/openiddict-admin';
+import type {
+  AdminOidcApplication,
+  AdminOidcAuthorizationCreateRequest,
+  AdminOidcScope,
+  AdminOidcScopeUpdateRequest,
+} from '@granit/openiddict-admin';
 import type { QueryMetadata } from '@granit/query-engine';
 
-const OIDC_APPLICATION_TYPES = ['public', 'confidential'];
+const OIDC_APPLICATION_TYPES = ['web', 'native'];
 const OIDC_AUTHORIZATION_STATUSES = ['valid', 'revoked', 'inactive'];
 const OIDC_AUTHORIZATION_TYPES = ['permanent', 'ad-hoc'];
 
@@ -424,6 +429,15 @@ export function createOpenIddictAdminHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return created(newScope);
     }),
 
+    http.put(`${baseUrl}/oidc/scopes/:name`, async ({ params, request }) => {
+      const scope = mockOidcScopes.find((s) => s.name === params.name);
+      if (!scope) return notFound();
+      const body = (await request.json()) as AdminOidcScopeUpdateRequest;
+      if (body.displayName !== undefined) scope.displayName = body.displayName;
+      if (body.description !== undefined) scope.description = body.description;
+      return HttpResponse.json({ ...scope });
+    }),
+
     http.delete(`${baseUrl}/oidc/scopes/:name`, ({ params }) => {
       const idx = mockOidcScopes.findIndex((s) => s.name === params.name);
       if (idx === -1) return notFound();
@@ -432,6 +446,21 @@ export function createOpenIddictAdminHandlers(baseUrl = DEFAULT_BASE_PATH) {
     }),
 
     // ── OIDC Authorizations ───────────────────────────────────────────────────
+
+    http.post(`${baseUrl}/oidc/authorizations`, async ({ request }) => {
+      const body = (await request.json()) as AdminOidcAuthorizationCreateRequest;
+      const app = mockOidcApplications.find((a) => a.clientId === body.clientId);
+      if (!app) return notFound();
+      const newAuth = {
+        id: `auth_new_${mockOidcAuthorizations.length + 1}`,
+        clientId: body.clientId,
+        subject: body.subject,
+        status: 'valid',
+        type: 'permanent',
+      };
+      mockOidcAuthorizations.push(newAuth);
+      return created(newAuth);
+    }),
 
     http.get(`${baseUrl}/oidc/authorizations`, ({ request }) => {
       const url = new URL(request.url);

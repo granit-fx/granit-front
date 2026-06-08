@@ -1,6 +1,10 @@
 // Types
 export type { CurrentTenant, MultiTenancyOptions, TenantInfo } from './types/index';
-export type { AdminTenant, CreateTenantRequest, UpdateTenantRequest } from './types/admin-tenant';
+export type {
+  TenantResponse,
+  CreateTenantRequest,
+  UpdateTenantRequest,
+} from './types/tenant-response';
 
 // Constants
 export { DEFAULT_MULTI_TENANCY_OPTIONS } from './types/index';

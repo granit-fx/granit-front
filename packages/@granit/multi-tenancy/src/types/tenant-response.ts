@@ -4,7 +4,7 @@ import type { TenantId } from '@granit/types';
  * Tenant admin response.
  * Mirrors .NET Granit.MultiTenancy.Endpoints TenantResponse.
  */
-export interface AdminTenant {
+export interface TenantResponse {
   readonly id: TenantId;
   readonly name: string;
   readonly identifier: string;

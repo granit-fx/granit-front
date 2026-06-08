@@ -20,6 +20,8 @@ export const OpenIddictPermissions = {
   Authorizations: {
     /** Permission to list and view OIDC authorizations. */
     Read: 'OpenIddict.Authorizations.Read',
+    /** Permission to create OIDC authorizations (admin consent grant). */
+    Create: 'OpenIddict.Authorizations.Create',
     /** Permission to revoke OIDC authorizations. */
     Revoke: 'OpenIddict.Authorizations.Revoke',
   },

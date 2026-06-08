@@ -129,7 +129,7 @@ export function createPagesHandlers(baseUrl = '/api/cms/pages'): RequestHandler[
 
   return [
     http.get(`${baseUrl}/tree`, ({ request }) => {
-      const siteId = new URL(request.url).searchParams.get('siteId');
+      const siteId = request.headers.get('X-Granit-Site');
       const tree = (siteId ? nodes.filter((node) => node.siteId === siteId) : nodes).map(
         toTreeNode
       );

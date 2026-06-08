@@ -57,14 +57,14 @@ const version: PageVersionSummaryResponse = {
 };
 
 describe('getPageTree', () => {
-  it('GET /api/cms/pages/tree with siteId param', async () => {
+  it('GET /api/cms/pages/tree with X-Granit-Site header', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse([treeNode]));
 
     const result = await getPageTree(client, BASE, 'site-1');
 
     expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/pages/tree`, {
-      params: { siteId: 'site-1' },
+      headers: { 'X-Granit-Site': 'site-1' },
     });
     expect(result).toEqual([treeNode]);
   });

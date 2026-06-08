@@ -132,14 +132,25 @@ describe('deleteSeoMetadata', () => {
 });
 
 describe('getSeoDefaults', () => {
-  it('GET /api/cms/seo/sites/{siteId}/defaults', async () => {
+  it('GET /api/cms/seo/sites/{siteId}/defaults returns response on 200', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse(defaults));
 
     const result = await getSeoDefaults(client, BASE, 'site-1');
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/seo/sites/site-1/defaults`);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/seo/sites/site-1/defaults`, {
+      validateStatus: expect.any(Function),
+    });
     expect(result).toEqual(defaults);
+  });
+
+  it('GET /api/cms/seo/sites/{siteId}/defaults returns null on 404', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ ...axiosResponse(null), status: 404 });
+
+    const result = await getSeoDefaults(client, BASE, 'site-1');
+
+    expect(result).toBeNull();
   });
 });
 

@@ -22,14 +22,29 @@ export {
 } from './hooks/use-oidc-applications';
 
 // Hooks — OIDC Scopes
-export { useCreateOidcScope, useDeleteOidcScope, useOidcScopes } from './hooks/use-oidc-scopes';
+export {
+  useCreateOidcScope,
+  useDeleteOidcScope,
+  useOidcScopes,
+  useUpdateOidcScope,
+} from './hooks/use-oidc-scopes';
 
 // Hooks — OIDC Authorizations
 export {
+  useCreateOidcAuthorization,
   useOidcAuthorizations,
   useRevokeAuthorization,
   useRevokeUserAuthorizations,
 } from './hooks/use-oidc-authorizations';
+
+// Hooks — Auth flows
+export { useConsentFlow } from './hooks/use-consent-flow';
+export type { ConsentFlowState } from './hooks/use-consent-flow';
+export { useDeviceVerification } from './hooks/use-device-verification';
+export type {
+  DeviceVerificationState,
+  DeviceVerificationStatus,
+} from './hooks/use-device-verification';
 
 // Query keys
 export { openIddictAdminKeys } from './hooks/query-keys';

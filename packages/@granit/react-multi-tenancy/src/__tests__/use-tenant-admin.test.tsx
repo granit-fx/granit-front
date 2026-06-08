@@ -18,7 +18,11 @@ import {
 } from '../hooks/use-tenant-admin';
 import { TenantAdminProvider } from '../providers/tenant-admin-provider';
 
-import type { AdminTenant, CreateTenantRequest, UpdateTenantRequest } from '@granit/multi-tenancy';
+import type {
+  TenantResponse,
+  CreateTenantRequest,
+  UpdateTenantRequest,
+} from '@granit/multi-tenancy';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -46,7 +50,7 @@ function wrap(client: QueryClient, basePath?: string) {
   );
 }
 
-const SAMPLE_TENANT: AdminTenant = {
+const SAMPLE_TENANT: TenantResponse = {
   id: 'tenant-1',
   name: 'Tenant 1',
   identifier: 'tenant-1',
@@ -55,7 +59,7 @@ const SAMPLE_TENANT: AdminTenant = {
   jurisdiction: 'BE',
   createdAt: '2026-01-01T00:00:00.000Z',
   concurrencyStamp: 'stamp-1',
-} as unknown as AdminTenant;
+} as unknown as TenantResponse;
 
 beforeEach(() => {
   vi.mocked(getTenant).mockReset();
