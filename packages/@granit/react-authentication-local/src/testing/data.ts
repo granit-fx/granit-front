@@ -12,6 +12,7 @@ export const mockLoginRequiresTwoFactor: AccountLoginResponse = {
   requiresTwoFactor: true,
   isLockedOut: false,
   isNotAllowed: false,
+  twoFactorMethods: ['Authenticator', 'Email', 'RecoveryCode'],
 };
 
 export const mockLoginNotAllowed: AccountLoginResponse = {
@@ -28,3 +29,4 @@ export const MOCK_CREDENTIALS = {
 
 export const MOCK_TOTP_CODE = '123456';
 export const MOCK_RECOVERY_CODE = 'XXXX-XXXX-XXXX';
+export const MOCK_EMAIL_OTP_CODE = '654321';

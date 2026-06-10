@@ -65,6 +65,7 @@ export function createAccountHandlers(baseUrl = DEFAULT_BASE_PATH) {
     http.post(`${baseUrl}/two-factor/disable`, () => {
       mockTwoFactorStatus.isEnabled = false;
       mockTwoFactorStatus.hasAuthenticatorApp = false;
+      mockTwoFactorStatus.hasEmailOtp = false;
       mockTwoFactorStatus.recoveryCodesLeft = 0;
       return noContent();
     }),
@@ -83,6 +84,20 @@ export function createAccountHandlers(baseUrl = DEFAULT_BASE_PATH) {
           '5555-6666',
         ],
       });
+    }),
+
+    // Email OTP enrollment
+    http.post(`${baseUrl}/two-factor/email/send`, () => noContent()),
+
+    http.post(`${baseUrl}/two-factor/email/enable`, () => {
+      mockTwoFactorStatus.isEnabled = true;
+      mockTwoFactorStatus.hasEmailOtp = true;
+      return noContent();
+    }),
+
+    http.post(`${baseUrl}/two-factor/email/disable`, () => {
+      mockTwoFactorStatus.hasEmailOtp = false;
+      return noContent();
     }),
 
     // ── Passkeys ─────────────────────────────────────────────────────────────

@@ -19,10 +19,13 @@ export { changePassword, forgotPassword, resetPassword } from './api/account-pas
 // API — Two-Factor
 export {
   disableTwoFactor,
+  disableTwoFactorEmail,
   enableTwoFactor,
+  enableTwoFactorEmail,
   generateRecoveryCodes,
   getAuthenticatorKey,
   getTwoFactorStatus,
+  sendTwoFactorEmailEnrollmentCode,
 } from './api/account-two-factor-api';
 
 // API — External Logins

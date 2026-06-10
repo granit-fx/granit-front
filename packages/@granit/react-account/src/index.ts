@@ -23,8 +23,11 @@ export { useChangePassword, useForgotPassword, useResetPassword } from './hooks/
 export {
   useAuthenticatorKey,
   useDisableTwoFactor,
+  useDisableTwoFactorEmail,
   useEnableTwoFactor,
+  useEnableTwoFactorEmail,
   useGenerateRecoveryCodes,
+  useSendTwoFactorEmailEnrollmentCode,
   useTwoFactorStatus,
 } from './hooks/use-two-factor';
 

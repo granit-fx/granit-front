@@ -11,7 +11,9 @@ import type { UseMutationResult } from '@tanstack/react-query';
 
 /**
  * Completes a two-factor login after the initial login returned
- * `requiresTwoFactor: true`. Submits a TOTP code or recovery code.
+ * `requiresTwoFactor: true`. Set `request.method` to pick the factor the code
+ * belongs to (`"Authenticator"` — the default — `"RecoveryCode"`, or `"Email"`);
+ * only offer methods present in the login response's `twoFactorMethods`.
  */
 export function useVerifyTwoFactorLogin(): UseMutationResult<
   AccountLoginResponse,

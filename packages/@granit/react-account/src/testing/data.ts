@@ -39,6 +39,7 @@ export const mockAccountSettings: Mutable<AccountSettingsResponse> = {
 export const mockTwoFactorStatus: Mutable<AccountTwoFactorStatusResponse> = {
   isEnabled: false,
   hasAuthenticatorApp: false,
+  hasEmailOtp: false,
   recoveryCodesLeft: 0,
 };
 

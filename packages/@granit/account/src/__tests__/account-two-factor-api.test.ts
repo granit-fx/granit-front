@@ -3,10 +3,13 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   disableTwoFactor,
+  disableTwoFactorEmail,
   enableTwoFactor,
+  enableTwoFactorEmail,
   generateRecoveryCodes,
   getAuthenticatorKey,
   getTwoFactorStatus,
+  sendTwoFactorEmailEnrollmentCode,
 } from '../api/account-two-factor-api';
 
 import type {
@@ -21,6 +24,7 @@ const BASE = '/api/account';
 const mockStatus: AccountTwoFactorStatusResponse = {
   isEnabled: false,
   hasAuthenticatorApp: false,
+  hasEmailOtp: false,
   recoveryCodesLeft: 0,
 };
 
@@ -94,6 +98,43 @@ describe('account-two-factor-api', () => {
         password: 'P@ssw0rd!',
       });
       expect(result.recoveryCodes).toEqual(mockRecoveryCodes);
+    });
+  });
+
+  describe('sendTwoFactorEmailEnrollmentCode', () => {
+    it('sends POST /two-factor/email/send with no body', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
+
+      await sendTwoFactorEmailEnrollmentCode(client, BASE);
+
+      expect(client.post).toHaveBeenCalledWith(`${BASE}/two-factor/email/send`);
+    });
+  });
+
+  describe('enableTwoFactorEmail', () => {
+    it('sends POST /two-factor/email/enable with the enrollment code', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
+
+      await enableTwoFactorEmail(client, BASE, { code: '123456' });
+
+      expect(client.post).toHaveBeenCalledWith(`${BASE}/two-factor/email/enable`, {
+        code: '123456',
+      });
+    });
+  });
+
+  describe('disableTwoFactorEmail', () => {
+    it('sends POST /two-factor/email/disable with the current password', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
+
+      await disableTwoFactorEmail(client, BASE, { password: 'P@ssw0rd!' });
+
+      expect(client.post).toHaveBeenCalledWith(`${BASE}/two-factor/email/disable`, {
+        password: 'P@ssw0rd!',
+      });
     });
   });
 });

@@ -1,9 +1,12 @@
 import {
   disableTwoFactor,
+  disableTwoFactorEmail,
   enableTwoFactor,
+  enableTwoFactorEmail,
   generateRecoveryCodes,
   getAuthenticatorKey,
   getTwoFactorStatus,
+  sendTwoFactorEmailEnrollmentCode,
 } from '@granit/account';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -14,6 +17,7 @@ import type {
   AccountGenerateRecoveryCodesRequest,
   AccountRecoveryCodesResponse,
   AccountTwoFactorDisableRequest,
+  AccountTwoFactorEmailEnableRequest,
   AccountTwoFactorEnableRequest,
   AccountTwoFactorEnableResponse,
   AccountTwoFactorStatusResponse,
@@ -92,6 +96,55 @@ export function useGenerateRecoveryCodes(): UseMutationResult<
   return useMutation({
     mutationFn: (request: AccountGenerateRecoveryCodesRequest) =>
       generateRecoveryCodes(config.client, config.basePath!, request),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: buildAccountQueryKey(config, 'two-factor'),
+      });
+    },
+  });
+}
+
+/** Sends an email enrollment code to begin enabling the email OTP factor. */
+export function useSendTwoFactorEmailEnrollmentCode(): UseMutationResult<void, Error, void> {
+  const config = useAccountConfig();
+
+  return useMutation({
+    mutationFn: () => sendTwoFactorEmailEnrollmentCode(config.client, config.basePath!),
+  });
+}
+
+/** Enables the email OTP factor with an enrollment code. Invalidates 2FA status on success. */
+export function useEnableTwoFactorEmail(): UseMutationResult<
+  void,
+  Error,
+  AccountTwoFactorEmailEnableRequest
+> {
+  const config = useAccountConfig();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (request: AccountTwoFactorEmailEnableRequest) =>
+      enableTwoFactorEmail(config.client, config.basePath!, request),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: buildAccountQueryKey(config, 'two-factor'),
+      });
+    },
+  });
+}
+
+/** Disables the email OTP factor (requires the current password). Invalidates 2FA status on success. */
+export function useDisableTwoFactorEmail(): UseMutationResult<
+  void,
+  Error,
+  AccountTwoFactorDisableRequest
+> {
+  const config = useAccountConfig();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (request: AccountTwoFactorDisableRequest) =>
+      disableTwoFactorEmail(config.client, config.basePath!, request),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: buildAccountQueryKey(config, 'two-factor'),

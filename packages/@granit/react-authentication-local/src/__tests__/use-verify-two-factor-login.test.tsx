@@ -78,13 +78,37 @@ describe('useVerifyTwoFactorLogin', () => {
       wrapper: createWrapper(client),
     });
 
-    result.current.mutate({ code: 'ABCD-1234-EFGH', useRecoveryCode: true });
+    result.current.mutate({ code: 'ABCD-1234-EFGH', method: 'RecoveryCode' });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(verifyTwoFactorLogin).toHaveBeenCalledWith(client, '/api/v1/account', {
       code: 'ABCD-1234-EFGH',
-      useRecoveryCode: true,
+      method: 'RecoveryCode',
+    });
+  });
+
+  it('should call verifyTwoFactorLogin with an emailed code', async () => {
+    const client = createMockClient();
+    const response: AccountLoginResponse = {
+      succeeded: true,
+      requiresTwoFactor: false,
+      isLockedOut: false,
+      isNotAllowed: false,
+    };
+    vi.mocked(verifyTwoFactorLogin).mockResolvedValue(response);
+
+    const { result } = renderHook(() => useVerifyTwoFactorLogin(), {
+      wrapper: createWrapper(client),
+    });
+
+    result.current.mutate({ code: '654321', method: 'Email' });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(verifyTwoFactorLogin).toHaveBeenCalledWith(client, '/api/v1/account', {
+      code: '654321',
+      method: 'Email',
     });
   });
 

@@ -21,6 +21,7 @@ pnpm add @granit/react-account
 - `useRegister()`, `useConfirmEmail(...)`, `useResendConfirmation()` -- registration
 - `useChangePassword()`, `useForgotPassword()`, `useResetPassword()` -- password
 - `useTwoFactorStatus()`, `useEnableTwoFactor()`, `useDisableTwoFactor()`, `useAuthenticatorKey()`, `useGenerateRecoveryCodes()` -- 2FA
+- `useSendTwoFactorEmailEnrollmentCode()`, `useEnableTwoFactorEmail()`, `useDisableTwoFactorEmail()` -- email OTP factor (enrolled status via `useTwoFactorStatus().data.hasEmailOtp`)
 - `useExternalLogins()`, `useChallengeExternalLogin()`, `useUnlinkExternalLogin()` -- external logins
 - `usePasskeys()`, `useBeginPasskeyRegistration()`, `useCompletePasskeyRegistration()`, `useDeletePasskey()`, `useRenamePasskey(...)` -- passkeys
 - `useSessionHeartbeat()`, `useBackToImpersonator()` -- session

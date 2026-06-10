@@ -4,10 +4,13 @@ import { DEFAULT_BASE_PATH } from '../constants';
 
 import {
   MOCK_CREDENTIALS,
+  MOCK_EMAIL_OTP_CODE,
   MOCK_TOTP_CODE,
   mockLoginRequiresTwoFactor,
   mockLoginSuccess,
 } from './data';
+
+import type { TwoFactorMethod } from '@granit/authentication-local';
 
 /**
  * Create MSW handlers for local authentication (login) endpoints: credential
@@ -44,9 +47,15 @@ export function createLocalAuthHandlers(baseUrl = DEFAULT_BASE_PATH) {
 
     // POST /login/two-factor
     http.post(`${baseUrl}/login/two-factor`, async ({ request }) => {
-      const body = (await request.json()) as { code: string; useRecoveryCode?: boolean };
+      const body = (await request.json()) as { code: string; method?: TwoFactorMethod };
+      const method = body.method ?? 'Authenticator';
 
-      if (body.code === MOCK_TOTP_CODE || body.useRecoveryCode) {
+      const accepted =
+        (method === 'Authenticator' && body.code === MOCK_TOTP_CODE) ||
+        (method === 'Email' && body.code === MOCK_EMAIL_OTP_CODE) ||
+        method === 'RecoveryCode';
+
+      if (accepted) {
         return HttpResponse.json(mockLoginSuccess);
       }
 
@@ -59,6 +68,12 @@ export function createLocalAuthHandlers(baseUrl = DEFAULT_BASE_PATH) {
         { status: 401 }
       );
     }),
+
+    // POST /login/two-factor/send-email — emails an OTP to the pending 2FA user
+    http.post(
+      `${baseUrl}/login/two-factor/send-email`,
+      () => new HttpResponse(null, { status: 204 })
+    ),
 
     // POST /passkeys/assertion/begin
     http.post(`${baseUrl}/passkeys/assertion/begin`, () => {

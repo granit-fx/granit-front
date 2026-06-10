@@ -3,4 +3,5 @@ export type {
   AccountLoginResponse,
   AccountPasskeyLoginRequest,
   AccountTwoFactorLoginRequest,
+  TwoFactorMethod,
 } from './account-login';

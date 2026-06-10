@@ -9,6 +9,17 @@ Ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ### Ajouté
 
+- **@granit/account** et **@granit/react-account** : facteur 2FA par code à usage
+  unique envoyé par email (opt-in). Endpoints d'enrôlement
+  (`sendTwoFactorEmailEnrollmentCode`, `enableTwoFactorEmail`,
+  `disableTwoFactorEmail`) et hooks associés (`useSendTwoFactorEmailEnrollmentCode`,
+  `useEnableTwoFactorEmail`, `useDisableTwoFactorEmail`) ; champ `hasEmailOtp`
+  exposé par `useTwoFactorStatus` (2026-06-10)
+- **@granit/authentication-local** et **@granit/react-authentication-local** :
+  envoi du code OTP email au login 2FA (`sendTwoFactorLoginEmailCode`,
+  `useSendTwoFactorLoginEmailCode`) et exposition de `twoFactorMethods` dans la
+  réponse de login — l'UI n'offre que les méthodes enrôlées par l'utilisateur
+  (2026-06-10)
 - **@granit/query-engine** : enrichissement de `useSmartFilter` avec support enum, boolean,
   field search et labels localisables (2026-03-07)
 - **@granit/query-engine** : ajout de `labelParts` aux tokens et exposition de
@@ -62,6 +73,13 @@ Ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ### Modifié
 
+- **@granit/authentication-local** et **@granit/react-authentication-local** :
+  le contrat de login 2FA remplace `useRecoveryCode?: boolean` par
+  `method?: "Authenticator" | "RecoveryCode" | "Email"` (défaut `Authenticator`)
+  dans `AccountTwoFactorLoginRequest`. **Breaking** — alignement sur Granit dotnet
+  (Granit.Identity.Local). Migration : remplacer `{ useRecoveryCode: true }` par
+  `{ method: "RecoveryCode" }`. Pré-1.0, clean break sans shim de compatibilité.
+  (2026-06-10)
 - **@granit/identity, @granit/openiddict-admin, @granit/reference-data**
   (et leurs `react-*`) : renommage du champ wire format
   `extraProperties` → `metadata` pour s'aligner sur le renommage backend

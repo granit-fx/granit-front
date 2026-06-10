@@ -4,13 +4,17 @@ export type {
   AccountLoginResponse,
   AccountPasskeyLoginRequest,
   AccountTwoFactorLoginRequest,
+  TwoFactorMethod,
 } from './types/index';
 
 // API — Login
 export { loginAccount } from './api/account-login-api';
 
 // API — Two-factor login verification
-export { verifyTwoFactorLogin } from './api/account-two-factor-login-api';
+export {
+  sendTwoFactorLoginEmailCode,
+  verifyTwoFactorLogin,
+} from './api/account-two-factor-login-api';
 
 // API — Passkey assertion (for login)
 export {

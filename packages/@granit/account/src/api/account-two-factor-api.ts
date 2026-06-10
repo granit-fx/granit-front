@@ -3,6 +3,7 @@ import type {
   AccountGenerateRecoveryCodesRequest,
   AccountRecoveryCodesResponse,
   AccountTwoFactorDisableRequest,
+  AccountTwoFactorEmailEnableRequest,
   AccountTwoFactorEnableRequest,
   AccountTwoFactorEnableResponse,
   AccountTwoFactorStatusResponse,
@@ -84,4 +85,45 @@ export async function generateRecoveryCodes(
     request
   );
   return data;
+}
+
+/**
+ * Send an enrollment code to the current user's email address to begin enabling
+ * the email one-time-code factor.
+ *
+ * `POST {basePath}/two-factor/email/send`
+ */
+export async function sendTwoFactorEmailEnrollmentCode(
+  client: AxiosInstance,
+  basePath: string
+): Promise<void> {
+  await client.post(`${basePath}/two-factor/email/send`);
+}
+
+/**
+ * Enable the email one-time-code factor by verifying the code sent via
+ * {@link sendTwoFactorEmailEnrollmentCode}.
+ *
+ * `POST {basePath}/two-factor/email/enable`
+ */
+export async function enableTwoFactorEmail(
+  client: AxiosInstance,
+  basePath: string,
+  request: AccountTwoFactorEmailEnableRequest
+): Promise<void> {
+  await client.post(`${basePath}/two-factor/email/enable`, request);
+}
+
+/**
+ * Disable the email one-time-code factor. Requires the current password as
+ * step-up authentication.
+ *
+ * `POST {basePath}/two-factor/email/disable`
+ */
+export async function disableTwoFactorEmail(
+  client: AxiosInstance,
+  basePath: string,
+  request: AccountTwoFactorDisableRequest
+): Promise<void> {
+  await client.post(`${basePath}/two-factor/email/disable`, request);
 }

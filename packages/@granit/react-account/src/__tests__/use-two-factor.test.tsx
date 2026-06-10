@@ -8,8 +8,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   useAuthenticatorKey,
   useDisableTwoFactor,
+  useDisableTwoFactorEmail,
   useEnableTwoFactor,
+  useEnableTwoFactorEmail,
   useGenerateRecoveryCodes,
+  useSendTwoFactorEmailEnrollmentCode,
   useTwoFactorStatus,
 } from '../hooks/use-two-factor';
 import { AccountProvider } from '../providers/account-provider';
@@ -33,6 +36,9 @@ vi.mock('@granit/account', async (importOriginal) => {
     enableTwoFactor: vi.fn(),
     disableTwoFactor: vi.fn(),
     generateRecoveryCodes: vi.fn(),
+    sendTwoFactorEmailEnrollmentCode: vi.fn(),
+    enableTwoFactorEmail: vi.fn(),
+    disableTwoFactorEmail: vi.fn(),
   };
 });
 
@@ -42,6 +48,9 @@ const {
   enableTwoFactor,
   disableTwoFactor,
   generateRecoveryCodes,
+  sendTwoFactorEmailEnrollmentCode,
+  enableTwoFactorEmail,
+  disableTwoFactorEmail,
 } = await import('@granit/account');
 
 function createWrapper(client: AxiosInstance) {
@@ -73,6 +82,7 @@ function createWrapperWithQueryClient(client: AxiosInstance) {
 const mockStatus: AccountTwoFactorStatusResponse = {
   isEnabled: false,
   hasAuthenticatorApp: false,
+  hasEmailOtp: false,
   recoveryCodesLeft: 0,
 };
 
@@ -211,6 +221,69 @@ describe('useGenerateRecoveryCodes', () => {
       password: 'P@ssw0rd!',
     });
     expect(result.current.data).toEqual(response);
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: ['account', 'two-factor'],
+    });
+  });
+});
+
+describe('useSendTwoFactorEmailEnrollmentCode', () => {
+  it('should call sendTwoFactorEmailEnrollmentCode with no arguments', async () => {
+    const client = createMockClient();
+    vi.mocked(sendTwoFactorEmailEnrollmentCode).mockResolvedValue();
+
+    const { result } = renderHook(() => useSendTwoFactorEmailEnrollmentCode(), {
+      wrapper: createWrapper(client),
+    });
+
+    result.current.mutate();
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(sendTwoFactorEmailEnrollmentCode).toHaveBeenCalledWith(client, '/api/v1/account');
+  });
+});
+
+describe('useEnableTwoFactorEmail', () => {
+  it('should call enableTwoFactorEmail and invalidate two-factor query on success', async () => {
+    const client = createMockClient();
+    vi.mocked(enableTwoFactorEmail).mockResolvedValue(undefined);
+
+    const { wrapper, queryClient } = createWrapperWithQueryClient(client);
+    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
+
+    const { result } = renderHook(() => useEnableTwoFactorEmail(), { wrapper });
+
+    result.current.mutate({ code: '123456' });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(enableTwoFactorEmail).toHaveBeenCalledWith(client, '/api/v1/account', {
+      code: '123456',
+    });
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: ['account', 'two-factor'],
+    });
+  });
+});
+
+describe('useDisableTwoFactorEmail', () => {
+  it('should call disableTwoFactorEmail and invalidate two-factor query on success', async () => {
+    const client = createMockClient();
+    vi.mocked(disableTwoFactorEmail).mockResolvedValue(undefined);
+
+    const { wrapper, queryClient } = createWrapperWithQueryClient(client);
+    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
+
+    const { result } = renderHook(() => useDisableTwoFactorEmail(), { wrapper });
+
+    result.current.mutate({ password: 'P@ssw0rd!' });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(disableTwoFactorEmail).toHaveBeenCalledWith(client, '/api/v1/account', {
+      password: 'P@ssw0rd!',
+    });
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['account', 'two-factor'],
     });

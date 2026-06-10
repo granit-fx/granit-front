@@ -6,6 +6,8 @@
 export interface AccountTwoFactorStatusResponse {
   readonly isEnabled: boolean;
   readonly hasAuthenticatorApp: boolean;
+  /** Whether the email one-time-code factor is enrolled. */
+  readonly hasEmailOtp: boolean;
   readonly recoveryCodesLeft: number;
 }
 
@@ -17,6 +19,14 @@ export interface AccountAuthenticatorKeyResponse {
 
 /** Request body for `POST /two-factor/enable`. */
 export interface AccountTwoFactorEnableRequest {
+  readonly code: string;
+}
+
+/**
+ * Request body for `POST /two-factor/email/enable`. The `code` is the one
+ * previously sent by `POST /two-factor/email/send`.
+ */
+export interface AccountTwoFactorEmailEnableRequest {
   readonly code: string;
 }
 

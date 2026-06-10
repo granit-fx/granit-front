@@ -882,11 +882,6 @@
           "signature": "async function loginAccount( client: AxiosInstance, basePath: string, request: AccountLoginRequest ): Promise<AccountLoginResponse>"
         },
         {
-          "name": "verifyTwoFactorLogin",
-          "kind": "function",
-          "signature": "async function verifyTwoFactorLogin( client: AxiosInstance, basePath: string, request: AccountTwoFactorLoginRequest ): Promise<AccountLoginResponse>"
-        },
-        {
           "name": "extractReturnUrl",
           "kind": "function",
           "signature": "function extractReturnUrl(search?: string): string | null"
@@ -3107,6 +3102,11 @@
           "name": "useVerifyTwoFactorLogin",
           "kind": "function",
           "signature": "function useVerifyTwoFactorLogin(): UseMutationResult< AccountLoginResponse, Error, AccountTwoFactorLoginRequest >"
+        },
+        {
+          "name": "useSendTwoFactorLoginEmailCode",
+          "kind": "function",
+          "signature": "function useSendTwoFactorLoginEmailCode(): UseMutationResult<void, Error, void>"
         },
         {
           "name": "useBeginPasskeyAssertion",

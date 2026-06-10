@@ -21,11 +21,28 @@ export interface AccountLoginResponse {
   readonly requiresTwoFactor: boolean;
   readonly isLockedOut: boolean;
   readonly isNotAllowed: boolean;
+  /**
+   * The factors this user can complete the challenge with — populated only when
+   * `requiresTwoFactor` is `true`, otherwise omitted. The UI must offer only the
+   * methods listed here (`"Email"` appears only if the user has opted in).
+   *
+   * Mirrors the backend `AccountLoginResponse.TwoFactorMethods`. Values align
+   * with {@link TwoFactorMethod} but are typed as `string` because the set is
+   * server-driven and may grow independently of this SDK.
+   */
+  readonly twoFactorMethods?: readonly string[];
 }
 
 // ---------------------------------------------------------------------------
 // Two-factor login verification
 // ---------------------------------------------------------------------------
+
+/**
+ * A second factor the user can complete the two-factor challenge with.
+ *
+ * Mirrors the backend `Granit.Identity.Local.Services.TwoFactorMethod` enum.
+ */
+export type TwoFactorMethod = 'Authenticator' | 'RecoveryCode' | 'Email';
 
 /**
  * Request body for `POST {basePath}/login/two-factor`.
@@ -36,7 +53,12 @@ export interface AccountLoginResponse {
  */
 export interface AccountTwoFactorLoginRequest {
   readonly code: string;
-  readonly useRecoveryCode?: boolean;
+  /**
+   * Which factor `code` belongs to. Must be one of the values returned in the
+   * login response's `twoFactorMethods`. Mirrors the backend
+   * `AccountTwoFactorLoginRequest.Method`. Default (server-side): `"Authenticator"`.
+   */
+  readonly method?: TwoFactorMethod;
   /**
    * When `true`, the Identity session cookie is marked as persistent.
    * Mirrors the backend `AccountTwoFactorLoginRequest.RememberMe`. Default: `false`.
