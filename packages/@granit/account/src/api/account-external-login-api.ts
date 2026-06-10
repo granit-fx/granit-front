@@ -1,9 +1,10 @@
+import { HttpError, isAxiosError } from '@granit/api-client';
+
+import type { AxiosInstance } from '@granit/api-client';
 import type {
   AccountExternalLoginCallbackResponse,
   AccountExternalLoginInfo,
 } from '../types/index';
-import type { AxiosInstance } from '@granit/api-client';
-import { HttpError, isAxiosError } from '@granit/api-client';
 
 /**
  * List linked external login providers for the current user.

@@ -1,4 +1,3 @@
-import { HttpError } from '@granit/api-client';
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
