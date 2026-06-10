@@ -307,3 +307,4 @@ export type {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
+export { isAxiosError } from 'axios';

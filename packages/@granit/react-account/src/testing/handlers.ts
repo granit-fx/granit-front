@@ -17,8 +17,16 @@ import {
  * Handlers mutate in-memory state — mutations are reflected by subsequent GETs.
  *
  * @param baseUrl - API base path (default: `/api/v1/account`)
+ * @param options.unavailableProviders - Provider scheme names that return 500 on challenge
+ *   (simulates a provider configured in the registry but whose authentication handler is
+ *   not registered — `HttpError(500)` in the SDK). Useful for testing the "provider
+ *   unavailable" UI state.
  */
-export function createAccountHandlers(baseUrl = DEFAULT_BASE_PATH) {
+export function createAccountHandlers(
+  baseUrl = DEFAULT_BASE_PATH,
+  options: { unavailableProviders?: readonly string[] } = {}
+) {
+  const unavailableProviders = new Set(options.unavailableProviders ?? []);
   return [
     // ── Settings (anonymous) ─────────────────────────────────────────────────
     http.get(`${baseUrl}/config`, () => HttpResponse.json(mockAccountSettings)),
@@ -120,7 +128,16 @@ export function createAccountHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // ── External logins ──────────────────────────────────────────────────────
     http.get(`${baseUrl}/external-logins`, () => HttpResponse.json(mockExternalLogins)),
 
-    http.post(`${baseUrl}/external-logins/challenge/:provider`, () => noContent()),
+    http.post(`${baseUrl}/external-logins/challenge/:provider`, ({ params }) => {
+      const provider = String(params.provider);
+      if (unavailableProviders.has(provider)) {
+        return HttpResponse.json(
+          { title: 'Internal Server Error', status: 500 },
+          { status: 500 }
+        );
+      }
+      return noContent();
+    }),
 
     http.delete(`${baseUrl}/external-logins/:provider`, ({ params }) => {
       const idx = mockExternalLogins.findIndex(
