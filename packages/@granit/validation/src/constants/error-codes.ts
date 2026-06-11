@@ -3,15 +3,15 @@
  * These keys mirror the .NET Validation: error-code convention.
  */
 export const VALIDATION_ERROR_CODES = {
-  required: 'Validation:NotEmptyValidator',
-  maxLength: 'Validation:MaximumLengthValidator',
-  minLength: 'Validation:MinimumLengthValidator',
-  pattern: 'Validation:RegularExpressionValidator',
-  formatEmail: 'Validation:EmailValidator',
-  minimum: 'Validation:GreaterThanOrEqualValidator',
-  maximum: 'Validation:LessThanOrEqualValidator',
-  exclusiveMinimum: 'Validation:GreaterThanValidator',
-  exclusiveMaximum: 'Validation:LessThanValidator',
+  required: 'Validation:Builtin:NotEmpty',
+  maxLength: 'Validation:Builtin:MaximumLength',
+  minLength: 'Validation:Builtin:MinimumLength',
+  pattern: 'Validation:Builtin:RegularExpression',
+  formatEmail: 'Validation:Builtin:Email',
+  minimum: 'Validation:Builtin:GreaterThanOrEqual',
+  maximum: 'Validation:Builtin:LessThanOrEqual',
+  exclusiveMinimum: 'Validation:Builtin:GreaterThan',
+  exclusiveMaximum: 'Validation:Builtin:LessThan',
 } as const;
 
 export type ValidationErrorCode =

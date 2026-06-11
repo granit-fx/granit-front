@@ -124,7 +124,7 @@ describe('extractConstraints', () => {
             properties: {
               iban: {
                 type: 'string',
-                'x-granit-validator': 'Validation:InvalidIban',
+                'x-granit-validator': 'Validation:Format:Iban',
               },
             },
           },
@@ -134,7 +134,7 @@ describe('extractConstraints', () => {
 
     const result = extractConstraints(spec);
     expect(result['Payment']!['iban']).toEqual({
-      granitValidator: 'Validation:InvalidIban',
+      granitValidator: 'Validation:Format:Iban',
     });
   });
 

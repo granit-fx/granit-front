@@ -45,8 +45,8 @@ describe('createConstraintsResolver', () => {
       fields: createFields('name', 'email'),
     });
     expect(result.errors['name']).toEqual({
-      type: 'Validation:NotEmptyValidator',
-      message: 'Validation:NotEmptyValidator (PropertyName=name)',
+      type: 'Validation:Builtin:NotEmpty',
+      message: 'Validation:Builtin:NotEmpty (PropertyName=name)',
     });
   });
 
@@ -55,7 +55,7 @@ describe('createConstraintsResolver', () => {
     const result = await resolver({ name: 'a'.repeat(101), email: 'a@b.com' }, undefined, {
       fields: createFields('name', 'email'),
     });
-    expect(result.errors['name']!.type).toBe('Validation:MaximumLengthValidator');
+    expect(result.errors['name']!.type).toBe('Validation:Builtin:MaximumLength');
   });
 
   it('returns error for pattern violation', async () => {
@@ -66,7 +66,7 @@ describe('createConstraintsResolver', () => {
     const result = await resolver({ code: 'abc' }, undefined, {
       fields: createFields('code'),
     });
-    expect(result.errors['code']!.type).toBe('Validation:RegularExpressionValidator');
+    expect(result.errors['code']!.type).toBe('Validation:Builtin:RegularExpression');
   });
 
   it('calls t() with error code and params for parameterized errors', async () => {
@@ -75,7 +75,7 @@ describe('createConstraintsResolver', () => {
     await resolver({ name: 'a'.repeat(101), email: 'a@b.com' }, undefined, {
       fields: createFields('name', 'email'),
     });
-    expect(t).toHaveBeenCalledWith('Validation:MaximumLengthValidator', {
+    expect(t).toHaveBeenCalledWith('Validation:Builtin:MaximumLength', {
       maxLength: 100,
       PropertyName: 'name',
       nsSeparator: false,
@@ -125,7 +125,7 @@ describe('createConstraintsResolver', () => {
     t.mockClear();
     const resolver = createConstraintsResolver(constraints, t);
     await resolver({ name: '' }, undefined, { fields: createFields('name') });
-    expect(t).toHaveBeenCalledWith('Validation:NotEmptyValidator', {
+    expect(t).toHaveBeenCalledWith('Validation:Builtin:NotEmpty', {
       PropertyName: 'name',
       nsSeparator: false,
     });
@@ -137,7 +137,7 @@ describe('createConstraintsResolver', () => {
       labelResolver: (f) => f.toUpperCase(),
     });
     await resolver({ name: '' }, undefined, { fields: createFields('name') });
-    expect(t).toHaveBeenCalledWith('Validation:NotEmptyValidator', {
+    expect(t).toHaveBeenCalledWith('Validation:Builtin:NotEmpty', {
       PropertyName: 'NAME',
       nsSeparator: false,
     });
@@ -147,7 +147,7 @@ describe('createConstraintsResolver', () => {
     t.mockClear();
     const resolver = createConstraintsResolver(constraints, t);
     await resolver({ email: '' }, undefined, { fields: createFields('email') });
-    expect(t).toHaveBeenCalledWith('Validation:NotEmptyValidator', {
+    expect(t).toHaveBeenCalledWith('Validation:Builtin:NotEmpty', {
       PropertyName: 'email',
       nsSeparator: false,
     });

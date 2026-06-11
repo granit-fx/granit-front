@@ -20,7 +20,7 @@ function createMockClient() {
 
 const t = vi.fn((key: string) => `translated:${key}`);
 
-const ibanConstraint: FieldConstraint = { granitValidator: 'Validation:InvalidIban' };
+const ibanConstraint: FieldConstraint = { granitValidator: 'Validation:Format:Iban' };
 const bceConstraint: FieldConstraint = { granitValidator: 'Validation:InvalidBce' };
 const plainConstraint: FieldConstraint = { required: true, maxLength: 100 };
 
@@ -94,7 +94,7 @@ describe('useServerValidationBatch', () => {
       { name: 'iban', constraint: ibanConstraint, value: 'BE68539007547034' },
     ];
     mockValidateFieldsBatch.mockResolvedValue([
-      { errorCode: 'Validation:InvalidIban', status: 'Valid' },
+      { errorCode: 'Validation:Format:Iban', status: 'Valid' },
     ]);
 
     const { result } = renderHook(() =>
@@ -113,7 +113,7 @@ describe('useServerValidationBatch', () => {
       { name: 'iban', constraint: ibanConstraint, value: 'INVALID' },
     ];
     mockValidateFieldsBatch.mockResolvedValue([
-      { errorCode: 'Validation:InvalidIban', status: 'Invalid' },
+      { errorCode: 'Validation:Format:Iban', status: 'Invalid' },
     ]);
 
     const { result } = renderHook(() =>
@@ -125,7 +125,7 @@ describe('useServerValidationBatch', () => {
     });
 
     expect(result.current['iban']?.status).toBe('invalid');
-    expect(result.current['iban']?.message).toBe('translated:Validation:InvalidIban');
+    expect(result.current['iban']?.message).toBe('translated:Validation:Format:Iban');
   });
 
   it('maps ValidatorNotFound to idle', async () => {
@@ -133,7 +133,7 @@ describe('useServerValidationBatch', () => {
       { name: 'iban', constraint: ibanConstraint, value: 'something' },
     ];
     mockValidateFieldsBatch.mockResolvedValue([
-      { errorCode: 'Validation:InvalidIban', status: 'ValidatorNotFound' },
+      { errorCode: 'Validation:Format:Iban', status: 'ValidatorNotFound' },
     ]);
 
     const { result } = renderHook(() =>
@@ -169,7 +169,7 @@ describe('useServerValidationBatch', () => {
   it('excludes fields that fail client-side validation', async () => {
     const strictConstraint: FieldConstraint = {
       maxLength: 5,
-      granitValidator: 'Validation:InvalidIban',
+      granitValidator: 'Validation:Format:Iban',
     };
     const fields: BatchFieldSpec[] = [
       { name: 'iban', constraint: strictConstraint, value: 'WAY_TOO_LONG_VALUE' },

@@ -16,7 +16,7 @@ function createMockClient() {
 describe('listValidators', () => {
   it('calls GET /validators and returns the list', async () => {
     const client = createMockClient();
-    const validators = ['Validation:InvalidIban', 'Validation:InvalidBce'];
+    const validators = ['Validation:Format:Iban', 'Validation:InvalidBce'];
     client.get.mockResolvedValue({ data: validators });
 
     const result = await listValidators(client as never);
@@ -39,19 +39,19 @@ describe('validateFieldServer', () => {
   it('calls POST /validate and returns the status', async () => {
     const client = createMockClient();
     client.post.mockResolvedValue({
-      data: { errorCode: 'Validation:InvalidIban', status: 'Valid' },
+      data: { errorCode: 'Validation:Format:Iban', status: 'Valid' },
     });
 
     const result = await validateFieldServer(
       client as never,
-      'Validation:InvalidIban',
+      'Validation:Format:Iban',
       'BE68539007547034',
       '/api/v1/validation'
     );
 
     expect(client.post).toHaveBeenCalledWith(
       '/api/v1/validation/validate',
-      { errorCode: 'Validation:InvalidIban', value: 'BE68539007547034' },
+      { errorCode: 'Validation:Format:Iban', value: 'BE68539007547034' },
       { signal: undefined }
     );
     expect(result).toBe('Valid');
@@ -60,12 +60,12 @@ describe('validateFieldServer', () => {
   it('returns Invalid for invalid values', async () => {
     const client = createMockClient();
     client.post.mockResolvedValue({
-      data: { errorCode: 'Validation:InvalidIban', status: 'Invalid' },
+      data: { errorCode: 'Validation:Format:Iban', status: 'Invalid' },
     });
 
     const result = await validateFieldServer(
       client as never,
-      'Validation:InvalidIban',
+      'Validation:Format:Iban',
       'INVALID',
       '/api/v1/validation'
     );
@@ -139,13 +139,13 @@ describe('validateFieldsBatch', () => {
   it('calls POST /validate-batch and returns results', async () => {
     const client = createMockClient();
     const results = [
-      { errorCode: 'Validation:InvalidIban', status: 'Valid' as const },
+      { errorCode: 'Validation:Format:Iban', status: 'Valid' as const },
       { errorCode: 'Validation:InvalidBce', status: 'Invalid' as const },
     ];
     client.post.mockResolvedValue({ data: { results } });
 
     const fields = [
-      { errorCode: 'Validation:InvalidIban', value: 'BE68539007547034' },
+      { errorCode: 'Validation:Format:Iban', value: 'BE68539007547034' },
       { errorCode: 'Validation:InvalidBce', value: '0000000000' },
     ];
     const result = await validateFieldsBatch(client as never, fields, '/api/v1/validation');

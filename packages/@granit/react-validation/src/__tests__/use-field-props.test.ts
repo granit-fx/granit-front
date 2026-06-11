@@ -12,7 +12,7 @@ describe('useFieldProps', () => {
     name: { required: true, maxLength: 100 },
     iban: {
       required: true,
-      granitValidator: 'Validation:InvalidIban',
+      granitValidator: 'Validation:Format:Iban',
     },
   };
 
@@ -28,7 +28,7 @@ describe('useFieldProps', () => {
 
   it('returns serverHint when granitValidator is present', () => {
     const { result } = renderHook(() => useFieldProps(constraints, 'iban', t));
-    expect(result.current.serverHint).toBe('translated:Validation:InvalidIban');
+    expect(result.current.serverHint).toBe('translated:Validation:Format:Iban');
   });
 
   it('omits serverHint when no granitValidator', () => {
