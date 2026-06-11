@@ -2889,6 +2889,21 @@
           }
         }
       },
+      "ExternalLoginProviderInfo": {
+        "required": ["name", "type", "displayName"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          }
+        }
+      },
       "HttpValidationProblemDetails": {
         "type": "object",
         "properties": {
@@ -2920,11 +2935,17 @@
         }
       },
       "IdentityLocalConfigResponse": {
-        "required": ["allowSelfRegistration"],
+        "required": ["allowSelfRegistration", "externalProviders"],
         "type": "object",
         "properties": {
           "allowSelfRegistration": {
             "type": "boolean"
+          },
+          "externalProviders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalLoginProviderInfo"
+            }
           }
         }
       },

@@ -12,6 +12,8 @@ import {
   mockTwoFactorStatus,
 } from './data';
 
+import type { AccountSettingsResponse, ExternalLoginProvider } from '@granit/account';
+
 /**
  * Create stateful MSW handlers for account self-service endpoints.
  * Handlers mutate in-memory state — mutations are reflected by subsequent GETs.
@@ -21,15 +23,25 @@ import {
  *   (simulates a provider configured in the registry but whose authentication handler is
  *   not registered — `HttpError(500)` in the SDK). Useful for testing the "provider
  *   unavailable" UI state.
+ * @param options.externalProviders - Overrides `config.externalProviders` for `GET /config`.
+ *   Pass `[]` to exercise the "no external providers" state. Defaults to
+ *   {@link mockAccountSettings}'s providers (Google, Microsoft, an OIDC scheme).
  */
 export function createAccountHandlers(
   baseUrl = DEFAULT_BASE_PATH,
-  options: { unavailableProviders?: readonly string[] } = {}
+  options: {
+    unavailableProviders?: readonly string[];
+    externalProviders?: readonly ExternalLoginProvider[];
+  } = {}
 ) {
   const unavailableProviders = new Set(options.unavailableProviders ?? []);
+  const settings: AccountSettingsResponse = {
+    ...mockAccountSettings,
+    externalProviders: options.externalProviders ?? mockAccountSettings.externalProviders,
+  };
   return [
     // ── Settings (anonymous) ─────────────────────────────────────────────────
-    http.get(`${baseUrl}/config`, () => HttpResponse.json(mockAccountSettings)),
+    http.get(`${baseUrl}/config`, () => HttpResponse.json(settings)),
 
     // ── Profile ──────────────────────────────────────────────────────────────
     http.get(`${baseUrl}/profile`, () => HttpResponse.json(mockProfile)),
@@ -146,10 +158,7 @@ export function createAccountHandlers(
     http.post(`${baseUrl}/external-logins/challenge/:provider`, ({ params }) => {
       const provider = String(params.provider);
       if (unavailableProviders.has(provider)) {
-        return HttpResponse.json(
-          { title: 'Internal Server Error', status: 500 },
-          { status: 500 }
-        );
+        return HttpResponse.json({ title: 'Internal Server Error', status: 500 }, { status: 500 });
       }
       return noContent();
     }),

@@ -5,7 +5,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { useAccountSettings } from '../hooks/use-account-settings';
+import { useAvailableExternalProviders } from '../hooks/use-available-external-providers';
 import { AccountProvider } from '../providers/account-provider';
 
 import type { AccountConfig } from '../providers/account-provider';
@@ -39,26 +39,40 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-describe('useAccountSettings', () => {
-  it('should fetch account settings with default basePath', async () => {
+describe('useAvailableExternalProviders', () => {
+  it('derives the providers list from the account config', async () => {
     const client = createMockClient();
     const response: AccountSettingsResponse = {
       allowSelfRegistration: true,
-      externalProviders: [],
+      externalProviders: [
+        { name: 'Google', type: 'Google', displayName: 'Google' },
+        { name: 'corp-sso', type: 'Oidc', displayName: 'Corporate SSO' },
+      ],
     };
     vi.mocked(getAccountSettings).mockResolvedValue(response);
 
-    const { result } = renderHook(() => useAccountSettings(), {
+    const { result } = renderHook(() => useAvailableExternalProviders(), {
       wrapper: createWrapper(client),
     });
 
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    expect(getAccountSettings).toHaveBeenCalledWith(client, '/api/v1/account');
-    expect(result.current.data).toEqual({ allowSelfRegistration: true, externalProviders: [] });
+    expect(result.current.providers).toEqual(response.externalProviders);
   });
 
-  it('should return allowSelfRegistration false when endpoint returns false', async () => {
+  it('returns an empty list while loading', () => {
+    const client = createMockClient();
+    vi.mocked(getAccountSettings).mockReturnValue(new Promise(() => {}));
+
+    const { result } = renderHook(() => useAvailableExternalProviders(), {
+      wrapper: createWrapper(client),
+    });
+
+    expect(result.current.isLoading).toBe(true);
+    expect(result.current.providers).toEqual([]);
+  });
+
+  it('returns an empty list when the config exposes no providers', async () => {
     const client = createMockClient();
     const response: AccountSettingsResponse = {
       allowSelfRegistration: false,
@@ -66,39 +80,25 @@ describe('useAccountSettings', () => {
     };
     vi.mocked(getAccountSettings).mockResolvedValue(response);
 
-    const { result } = renderHook(() => useAccountSettings(), {
+    const { result } = renderHook(() => useAvailableExternalProviders(), {
       wrapper: createWrapper(client),
     });
 
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    expect(result.current.data?.allowSelfRegistration).toBe(false);
+    expect(result.current.providers).toEqual([]);
   });
 
-  it('should have no data when fetch fails (fail-closed)', async () => {
+  it('returns an empty list (fail-closed) when the config fetch fails', async () => {
     const client = createMockClient();
     vi.mocked(getAccountSettings).mockRejectedValue(new Error('Network Error'));
 
-    const { result } = renderHook(() => useAccountSettings(), {
+    const { result } = renderHook(() => useAvailableExternalProviders(), {
       wrapper: createWrapper(client),
     });
 
-    await waitFor(() => expect(result.current.isError).toBe(true));
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    // No data on error — consumers use `data?.allowSelfRegistration ?? false`
-    expect(result.current.data).toBeUndefined();
-  });
-
-  it('should not retry on failure', async () => {
-    const client = createMockClient();
-    vi.mocked(getAccountSettings).mockRejectedValue(new Error('Network Error'));
-
-    const { result } = renderHook(() => useAccountSettings(), {
-      wrapper: createWrapper(client),
-    });
-
-    await waitFor(() => expect(result.current.isError).toBe(true));
-
-    expect(getAccountSettings).toHaveBeenCalledTimes(1);
+    expect(result.current.providers).toEqual([]);
   });
 });

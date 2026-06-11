@@ -30,6 +30,11 @@ export const mockProfile: Mutable<AccountProfileResponse> = {
 
 export const mockAccountSettings: Mutable<AccountSettingsResponse> = {
   allowSelfRegistration: true,
+  externalProviders: [
+    { name: 'Google', type: 'Google', displayName: 'Google' },
+    { name: 'Microsoft', type: 'Microsoft', displayName: 'Microsoft' },
+    { name: 'corp-sso', type: 'Oidc', displayName: 'Corporate SSO' },
+  ],
 };
 
 // ---------------------------------------------------------------------------

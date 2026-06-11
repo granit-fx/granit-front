@@ -8,6 +8,8 @@ export type { AccountConfig, AccountProviderProps } from './providers/account-pr
 
 // Hooks — Settings
 export { useAccountSettings } from './hooks/use-account-settings';
+export { useAvailableExternalProviders } from './hooks/use-available-external-providers';
+export type { AvailableExternalProviders } from './hooks/use-available-external-providers';
 
 // Hooks — Profile
 export { useProfile, useUpdateProfile } from './hooks/use-profile';

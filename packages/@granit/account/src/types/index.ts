@@ -38,4 +38,6 @@ export type { AccountDeleteRequest } from './account-deletion';
 
 export type { AccountSettingsResponse } from './account-settings';
 
+export type { ExternalLoginProvider, ExternalProviderType } from './external-login-provider';
+
 export type { AccountChangeEmailRequest, AccountConfirmEmailChangeRequest } from './account-email';

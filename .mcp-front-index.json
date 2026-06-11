@@ -2259,6 +2259,17 @@
           "signature": "function useAccountSettings(): UseQueryResult<AccountSettingsResponse>"
         },
         {
+          "name": "useAvailableExternalProviders",
+          "kind": "function",
+          "signature": "function useAvailableExternalProviders(): AvailableExternalProviders"
+        },
+        {
+          "name": "AvailableExternalProviders",
+          "kind": "interface",
+          "signature": "interface AvailableExternalProviders",
+          "members": []
+        },
+        {
           "name": "useProfile",
           "kind": "function",
           "signature": "function useProfile(): UseQueryResult<AccountProfileResponse>"
