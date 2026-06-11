@@ -59,14 +59,14 @@ Last updated: 2026-06-02
 | lucide-react                    | 1.17.0   | Copyright (c) Lucide Contributors          |
 | markdownlint-cli2               | 0.22.1   | Copyright (c) David Anson                  |
 | msw                             | 2.14.6   | Copyright (c) Artem Zakharchenko           |
-| prettier                        | 3.8.3    | Copyright (c) James Long                   |
+| prettier                        | 3.8.4    | Copyright (c) James Long                   |
 | react                           | 19.2.7   | Copyright (c) Meta Platforms, Inc.         |
 | react-dom                       | 19.2.7   | Copyright (c) Meta Platforms, Inc.         |
 | react-hook-form                 | 7.77.0   | Copyright (c) react-hook-form Contributors |
 | react-i18next                   | 17.0.8   | Copyright (c) i18next Contributors         |
 | tailwind-merge                  | 3.6.0    | Copyright (c) Dany Castillo                |
 | tsup                            | 8.5.1    | Copyright (c) EGOIST                       |
-| typescript-eslint               | 8.60.1   | typescript-eslint Contributors             |
+| typescript-eslint               | 8.61.0   | typescript-eslint Contributors             |
 | vanilla-cookieconsent           | 3.1.0    | Copyright (c) Orest Bida                   |
 | vite                            | 8.0.16   | Copyright (c) Evan You                     |
 | amazon-cognito-identity-js      | 6.3.16   | Copyright (c) Amazon.com, Inc.             |
