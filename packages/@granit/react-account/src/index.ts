@@ -36,6 +36,8 @@ export {
 // Hooks — External Logins
 export {
   useChallengeExternalLogin,
+  useCompleteExternalRegistration,
+  useExternalLoginStartUrl,
   useExternalLogins,
   useUnlinkExternalLogin,
 } from './hooks/use-external-logins';

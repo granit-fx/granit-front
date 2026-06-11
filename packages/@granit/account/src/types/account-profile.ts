@@ -18,6 +18,7 @@ export interface AccountProfileResponse {
 
 /** Request body for `PUT /profile`. */
 export interface AccountProfileUpdateRequest {
+  readonly email?: string;
   readonly firstName?: string;
   readonly lastName?: string;
 }

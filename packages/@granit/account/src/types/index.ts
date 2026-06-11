@@ -20,8 +20,12 @@ export type {
 } from './account-two-factor';
 
 export type {
+  AccountCompleteExternalRegistrationRequest,
   AccountExternalLoginCallbackResponse,
+  AccountExternalLoginCompleted,
   AccountExternalLoginInfo,
+  AccountExternalLoginNeedsProfile,
+  AccountExternalLoginPrefill,
 } from './account-external-login';
 
 export type {

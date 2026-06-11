@@ -31,7 +31,9 @@ export {
 // API — External Logins
 export {
   challengeExternalLogin,
+  completeExternalRegistration,
   externalLoginCallback,
+  getExternalLoginStartUrl,
   getExternalLogins,
   unlinkExternalLogin,
 } from './api/account-external-login-api';

@@ -7,13 +7,18 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   useChallengeExternalLogin,
+  useCompleteExternalRegistration,
+  useExternalLoginStartUrl,
   useExternalLogins,
   useUnlinkExternalLogin,
 } from '../hooks/use-external-logins';
 import { AccountProvider } from '../providers/account-provider';
 
 import type { AccountConfig } from '../providers/account-provider';
-import type { AccountExternalLoginInfo } from '@granit/account';
+import type {
+  AccountCompleteExternalRegistrationRequest,
+  AccountExternalLoginInfo,
+} from '@granit/account';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -23,12 +28,17 @@ vi.mock('@granit/account', async (importOriginal) => {
     ...actual,
     getExternalLogins: vi.fn(),
     challengeExternalLogin: vi.fn(),
+    completeExternalRegistration: vi.fn(),
     unlinkExternalLogin: vi.fn(),
   };
 });
 
-const { getExternalLogins, challengeExternalLogin, unlinkExternalLogin } =
-  await import('@granit/account');
+const {
+  getExternalLogins,
+  challengeExternalLogin,
+  completeExternalRegistration,
+  unlinkExternalLogin,
+} = await import('@granit/account');
 
 function createWrapper(client: AxiosInstance) {
   return function Wrapper({ children }: { children: ReactNode }) {
@@ -115,6 +125,58 @@ describe('useChallengeExternalLogin', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(challengeExternalLogin).toHaveBeenCalledWith(client, '/api/v1/account', 'Google');
+  });
+});
+
+describe('useExternalLoginStartUrl', () => {
+  it('builds the challenge start URL bound to the configured basePath', () => {
+    const client = createMockClient();
+
+    const { result } = renderHook(() => useExternalLoginStartUrl(), {
+      wrapper: createWrapper(client),
+    });
+
+    expect(result.current('Google')).toBe('/api/v1/account/external-logins/challenge/Google/start');
+    expect(result.current('Google', '/account/security')).toBe(
+      '/api/v1/account/external-logins/challenge/Google/start?returnUrl=%2Faccount%2Fsecurity'
+    );
+  });
+});
+
+describe('useCompleteExternalRegistration', () => {
+  const request: AccountCompleteExternalRegistrationRequest = {
+    token: 'opaque-token',
+    email: 'jane@example.com',
+    firstName: 'Jane',
+  };
+
+  it('should call completeExternalRegistration with the request', async () => {
+    const client = createMockClient();
+    vi.mocked(completeExternalRegistration).mockResolvedValue(undefined);
+
+    const { result } = renderHook(() => useCompleteExternalRegistration(), {
+      wrapper: createWrapper(client),
+    });
+
+    result.current.mutate(request);
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(completeExternalRegistration).toHaveBeenCalledWith(client, '/api/v1/account', request);
+  });
+
+  it('should surface the error on failure', async () => {
+    const client = createMockClient();
+    vi.mocked(completeExternalRegistration).mockRejectedValue(new Error('Conflict'));
+
+    const { result } = renderHook(() => useCompleteExternalRegistration(), {
+      wrapper: createWrapper(client),
+    });
+
+    result.current.mutate(request);
+
+    await waitFor(() => expect(result.current.isError).toBe(true));
+    expect(result.current.error?.message).toBe('Conflict');
   });
 });
 
