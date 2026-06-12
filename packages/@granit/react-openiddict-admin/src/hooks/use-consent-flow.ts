@@ -32,7 +32,7 @@ export function useConsentFlow(returnUrl: string | null, subject: string | null)
     try {
       const url = new URL(
         returnUrl,
-        typeof window !== 'undefined' ? window.location.origin : 'http://localhost'
+        typeof globalThis.window === 'undefined' ? 'http://localhost' : globalThis.location.origin
       );
       return {
         clientId: url.searchParams.get('client_id'),
@@ -50,11 +50,11 @@ export function useConsentFlow(returnUrl: string | null, subject: string | null)
       clientId: parsed.clientId,
       scopes: parsed.scopes,
     });
-    window.location.href = returnUrl;
+    globalThis.location.href = returnUrl;
   };
 
   const deny = (redirectUrl = '/') => {
-    window.location.href = redirectUrl;
+    globalThis.location.href = redirectUrl;
   };
 
   return {
