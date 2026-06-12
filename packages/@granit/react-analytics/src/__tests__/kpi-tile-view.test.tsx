@@ -122,6 +122,39 @@ describe('KpiTileView', () => {
     expect(onRetry).toHaveBeenCalledOnce();
   });
 
+  it('does not nest the retry button inside the tile button when onClick and error coexist', () => {
+    const { container } = render(
+      <KpiTileView
+        title="X"
+        data={undefined}
+        isLoading={false}
+        error={new Error('boom')}
+        onClick={vi.fn()}
+        onRetry={vi.fn()}
+        errorRetryLabel="Try again"
+      />
+    );
+    // The tile must not be an interactive <button> while erroring, otherwise the
+    // retry <button> would be a nested button (invalid HTML + hydration error).
+    expect(container.querySelector('[data-slot="kpi-tile"]')?.tagName).toBe('DIV');
+    expect(container.querySelectorAll('button')).toHaveLength(1);
+  });
+
+  it('renders the tile as an interactive button when onClick is set and there is no error', () => {
+    const { container } = render(
+      <KpiTileView
+        title="X"
+        data={makeResponse()}
+        isLoading={false}
+        error={null}
+        onClick={vi.fn()}
+      />
+    );
+    const tile = container.querySelector('[data-slot="kpi-tile"]');
+    expect(tile?.tagName).toBe('BUTTON');
+    expect(tile).toHaveAttribute('data-interactive', '');
+  });
+
   it('renders the trendVisual slot when provided', () => {
     const { container } = render(
       <KpiTileView

@@ -101,7 +101,10 @@ export function KpiTileView({
     </>
   );
 
-  if (onClick) {
+  // In the error state the body renders its own Retry <button>; wrapping the tile in an
+  // outer <button> would nest buttons (invalid HTML + hydration error). Fall through to the
+  // non-interactive <div> wrapper while erroring — the tile isn't actionable until it loads.
+  if (onClick && !error) {
     return (
       <button
         type="button"
