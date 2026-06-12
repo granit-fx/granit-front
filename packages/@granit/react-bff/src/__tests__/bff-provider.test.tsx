@@ -44,6 +44,7 @@ describe('BffProvider', () => {
 
   beforeEach(() => {
     globalThis.fetch = vi.fn();
+    globalThis.sessionStorage?.clear();
   });
 
   afterEach(() => {
@@ -130,6 +131,86 @@ describe('BffProvider', () => {
       expect(result.current.csrfToken).toBe('csrf-test-token');
     });
   });
+
+  it('should stay authenticated when the CSRF token prefetch fails', async () => {
+    // authenticated user, then the csrf-token request rejects.
+    const fn = vi.fn();
+    fn.mockResolvedValueOnce(new Response(JSON.stringify(authenticatedResponse), { status: 200 }));
+    fn.mockRejectedValueOnce(new Error('csrf boom'));
+    globalThis.fetch = fn;
+
+    const config: BffConfig = { pathPrefix: '/admin', sessionCheckInterval: 0 };
+    const { result } = renderHook(() => useBffAuth(), {
+      wrapper: createWrapper(config),
+    });
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    // A transient CSRF failure must NOT bounce the user back to unauthenticated.
+    expect(result.current.isAuthenticated).toBe(true);
+    expect(result.current.user?.sub).toBe('user-123');
+  });
+
+  it('should re-check after a transient unauthenticated response while login is pending', async () => {
+    // Simulate the post-callback window: a login redirect was in flight.
+    globalThis.sessionStorage?.setItem('granit.bff.login-pending', '1');
+
+    // First /bff/user lands before the cookie is readable → authenticated:false;
+    // the backoff re-check then sees the established session.
+    const fn = vi.fn();
+    fn.mockResolvedValueOnce(
+      new Response(JSON.stringify(unauthenticatedResponse), { status: 200 })
+    );
+    fn.mockResolvedValueOnce(new Response(JSON.stringify(authenticatedResponse), { status: 200 }));
+    fn.mockResolvedValueOnce(new Response(JSON.stringify(csrfResponse), { status: 200 }));
+    globalThis.fetch = fn;
+
+    const onUnauthenticated = vi.fn();
+    const config: BffConfig = { pathPrefix: '/admin', sessionCheckInterval: 0, onUnauthenticated };
+    const { result } = renderHook(() => useBffAuth(), {
+      wrapper: createWrapper(config),
+    });
+
+    await waitFor(() => {
+      expect(result.current.isAuthenticated).toBe(true);
+    });
+
+    // The transient false never reached the unauthenticated handler, and the
+    // pending flag is cleared once authenticated.
+    expect(onUnauthenticated).not.toHaveBeenCalled();
+    expect(globalThis.sessionStorage?.getItem('granit.bff.login-pending')).toBeNull();
+  });
+
+  it('should give up after exhausting the backoff and report unauthenticated', async () => {
+    globalThis.sessionStorage?.setItem('granit.bff.login-pending', '1');
+
+    // Persistently unauthenticated: initial + 2 backoff retries all return false.
+    // A fresh Response per call — a body can only be consumed once.
+    const fn = vi.fn(
+      () =>
+        new Response(JSON.stringify(unauthenticatedResponse), {
+          status: 200,
+        }) as unknown as Response
+    );
+    globalThis.fetch = fn as unknown as typeof fetch;
+
+    const onUnauthenticated = vi.fn();
+    const config: BffConfig = { pathPrefix: '/admin', sessionCheckInterval: 0, onUnauthenticated };
+    const { result } = renderHook(() => useBffAuth(), {
+      wrapper: createWrapper(config),
+    });
+
+    await waitFor(() => {
+      expect(onUnauthenticated).toHaveBeenCalled();
+    });
+
+    expect(result.current.isAuthenticated).toBe(false);
+    // initial attempt + LOGIN_RECHECK_BACKOFF_MS.length (2) retries = 3 calls.
+    expect(fn).toHaveBeenCalledTimes(3);
+    expect(globalThis.sessionStorage?.getItem('granit.bff.login-pending')).toBeNull();
+  });
 });
 
 describe('useBffConfig', () => {
@@ -145,6 +226,7 @@ describe('useBffFetch', () => {
 
   beforeEach(() => {
     globalThis.fetch = vi.fn();
+    globalThis.sessionStorage?.clear();
   });
 
   afterEach(() => {
@@ -172,6 +254,7 @@ describe('BffGuard', () => {
 
   beforeEach(() => {
     globalThis.fetch = vi.fn();
+    globalThis.sessionStorage?.clear();
     Object.defineProperty(window, 'location', {
       writable: true,
       value: { ...originalLocation, href: '' },
