@@ -31,6 +31,10 @@ const sessionsResponse = {
       isCurrent: true,
       createdAt: '2026-03-23T10:00:00Z',
       userAgent: 'Mozilla/5.0',
+      lastAccessedAt: '2026-03-23T11:30:00Z',
+      location: { city: 'Brussels', countryCode: 'BE', latitude: 50.85, longitude: 4.35 },
+      ipAddress: '203.0.113.xxx',
+      riskLevel: 'Low',
     },
     {
       sessionId: 'cd34...wx67',
@@ -64,6 +68,7 @@ describe('useBffSessions', () => {
 
   beforeEach(() => {
     globalThis.fetch = vi.fn();
+    globalThis.sessionStorage?.clear();
   });
 
   afterEach(() => {
@@ -90,6 +95,33 @@ describe('useBffSessions', () => {
     expect(result.current.sessions[0].sessionId).toBe('ab12...yz89');
     expect(result.current.sessions[0].isCurrent).toBe(true);
     expect(result.current.error).toBeNull();
+  });
+
+  it('should expose normalized enrichment fields (last-activity, geo, risk)', async () => {
+    globalThis.fetch = mockFetchResponses(
+      { body: authenticatedResponse },
+      { body: csrfResponse },
+      { body: sessionsResponse }
+    );
+
+    const { result } = renderHook(() => useBffSessions(), {
+      wrapper: createWrapper(defaultConfig),
+    });
+
+    await waitFor(() => {
+      expect(result.current.sessions).toHaveLength(2);
+    });
+
+    const [first, second] = result.current.sessions;
+    expect(first.lastAccessedAt).toBe('2026-03-23T11:30:00Z');
+    expect(first.location).toMatchObject({ city: 'Brussels', countryCode: 'BE' });
+    expect(first.riskLevel).toBe('Low');
+    expect(first.ipAddress).toBe('203.0.113.xxx');
+    // Absent enrichment fields are normalized to null, never undefined.
+    expect(second.lastAccessedAt).toBeNull();
+    expect(second.location).toBeNull();
+    expect(second.riskLevel).toBeNull();
+    expect(second.ipAddress).toBeNull();
   });
 
   it('should return empty sessions when not authenticated', async () => {
@@ -153,6 +185,7 @@ describe('useRevokeBffSession', () => {
 
   beforeEach(() => {
     globalThis.fetch = vi.fn();
+    globalThis.sessionStorage?.clear();
   });
 
   afterEach(() => {
@@ -214,6 +247,7 @@ describe('useRevokeAllOtherBffSessions', () => {
 
   beforeEach(() => {
     globalThis.fetch = vi.fn();
+    globalThis.sessionStorage?.clear();
   });
 
   afterEach(() => {

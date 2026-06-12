@@ -5,8 +5,10 @@
 // Mutation endpoints (DELETE) require a CSRF token via CsrfManager.
 // ---------------------------------------------------------------------------
 
+import { parseBffSessionList } from '../validation/index';
+
 import type { CsrfManager } from '../csrf/index';
-import type { BffSessionInfo, BffSessionListResponse } from '../types/index';
+import type { BffSessionInfo } from '../types/index';
 
 /**
  * Lists the current user's active BFF sessions.
@@ -23,8 +25,15 @@ export async function listBffSessions(pathPrefix: string): Promise<readonly BffS
   if (!response.ok) {
     throw new Error(`Failed to list BFF sessions: ${response.status}`);
   }
-  const data = (await response.json()) as BffSessionListResponse;
-  return data.sessions;
+  // Normalize and bound the enrichment fields (user-agent, geolocation, risk)
+  // before they reach the UI — `userAgent`/`location.*` are not first-party
+  // text. A malformed envelope (e.g. an HTML error page that still returned 200)
+  // is rejected rather than cast blindly.
+  const parsed = parseBffSessionList(await response.json());
+  if (!parsed.success) {
+    throw new Error(`Malformed BFF sessions response: ${parsed.issues.join('; ')}`);
+  }
+  return parsed.data;
 }
 
 /**

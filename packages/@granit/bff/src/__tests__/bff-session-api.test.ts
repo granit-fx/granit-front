@@ -27,12 +27,20 @@ describe('BFF session API', () => {
           isCurrent: true,
           createdAt: toISODateString('2026-03-23T10:00:00Z'),
           userAgent: 'Mozilla/5.0',
+          lastAccessedAt: null,
+          location: null,
+          ipAddress: null,
+          riskLevel: null,
         },
         {
           sessionId: 'cd34...wx67',
           isCurrent: false,
           createdAt: toISODateString('2026-03-22T08:00:00Z'),
           userAgent: null,
+          lastAccessedAt: null,
+          location: null,
+          ipAddress: null,
+          riskLevel: null,
         },
       ];
       vi.mocked(globalThis.fetch).mockResolvedValue(

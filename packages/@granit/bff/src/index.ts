@@ -5,6 +5,8 @@ export type {
   BffSessionId,
   BffSessionInfo,
   BffSessionListResponse,
+  BffSessionLocation,
+  BffSessionRiskLevel,
   BffTenantUser,
   BffUnauthenticated,
   BffUser,
@@ -19,5 +21,5 @@ export {
   revokeBffSession,
 } from './api/bff-session-api';
 
-export { parseBffSessionResponse } from './validation/index';
+export { parseBffSessionList, parseBffSessionResponse } from './validation/index';
 export type { ParseResult } from './validation/index';
