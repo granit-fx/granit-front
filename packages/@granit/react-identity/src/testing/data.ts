@@ -148,6 +148,15 @@ export const mockSessions: IdentitySession[] = [
     lastAccess: toISODateString('2026-03-06T09:30:00Z'),
     rememberMe: false,
     clients: ['granit-showcase-admin', 'granit-showcase-app'],
+    location: {
+      city: 'Brussels',
+      region: 'Brussels-Capital',
+      country: 'Belgium',
+      countryCode: 'BE',
+      latitude: 50.8503,
+      longitude: 4.3517,
+    },
+    riskLevel: 'None',
   },
   {
     sessionId: toEntityId<'IdentitySession'>('sess-abc-002'),
@@ -156,6 +165,8 @@ export const mockSessions: IdentitySession[] = [
     lastAccess: toISODateString('2026-03-05T20:15:00Z'),
     rememberMe: true,
     clients: ['granit-showcase-app'],
+    location: null,
+    riskLevel: 'Low',
   },
 ];
 
@@ -170,6 +181,14 @@ export const mockDevices: IdentityDeviceActivity[] = [
     mobile: false,
     current: true,
     sessions: mockSessions,
+    location: {
+      city: 'Brussels',
+      region: 'Brussels-Capital',
+      country: 'Belgium',
+      countryCode: 'BE',
+      latitude: 50.8503,
+      longitude: 4.3517,
+    },
   },
   {
     ipAddress: '10.0.1.55',
@@ -181,6 +200,7 @@ export const mockDevices: IdentityDeviceActivity[] = [
     mobile: true,
     current: false,
     sessions: [],
+    location: null,
   },
 ];
 

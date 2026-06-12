@@ -26,6 +26,8 @@ const sampleSession: IdentitySession = {
   lastAccess: toISODateString('2026-03-20T12:00:00Z'),
   rememberMe: false,
   clients: ['web-app'],
+  location: null,
+  riskLevel: null,
 };
 
 const sampleDevice: IdentityDeviceActivity = {
@@ -38,6 +40,7 @@ const sampleDevice: IdentityDeviceActivity = {
   mobile: false,
   current: true,
   sessions: [sampleSession],
+  location: null,
 };
 
 function createWrapper(client: AxiosInstance) {

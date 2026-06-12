@@ -364,6 +364,9 @@ importers:
 
   packages/@granit/bff:
     devDependencies:
+      '@granit/ip-geolocation':
+        specifier: workspace:*
+        version: link:../ip-geolocation
       '@granit/logger':
         specifier: workspace:*
         version: link:../logger
@@ -373,6 +376,9 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
+      '@granit/user-sessions':
+        specifier: workspace:*
+        version: link:../user-sessions
 
   packages/@granit/blob-storage:
     devDependencies:
@@ -631,6 +637,9 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/ip-geolocation':
+        specifier: workspace:*
+        version: link:../ip-geolocation
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
@@ -640,6 +649,9 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
+      '@granit/user-sessions':
+        specifier: workspace:*
+        version: link:../user-sessions
 
   packages/@granit/invoicing:
     devDependencies:
@@ -658,6 +670,8 @@ importers:
       '@granit/workflow':
         specifier: workspace:*
         version: link:../workflow
+
+  packages/@granit/ip-geolocation: {}
 
   packages/@granit/localization:
     dependencies:
@@ -3127,6 +3141,8 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+
+  packages/@granit/user-sessions: {}
 
   packages/@granit/utils:
     dependencies:

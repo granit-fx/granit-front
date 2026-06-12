@@ -1690,6 +1690,18 @@
       ]
     },
     {
+      "name": "@granit/ip-geolocation",
+      "description": "Geolocation contract — TypeScript mirror of Granit.IpGeolocation.GeoLocation",
+      "exports": [
+        {
+          "name": "GeoLocation",
+          "kind": "interface",
+          "signature": "interface GeoLocation",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/localization",
       "description": "i18next helpers and localization hooks",
       "exports": [
@@ -7547,6 +7559,17 @@
           "name": "TimeZoneId",
           "kind": "type",
           "signature": "type TimeZoneId = string & { readonly __brand: 'TimeZoneId' }"
+        }
+      ]
+    },
+    {
+      "name": "@granit/user-sessions",
+      "description": "User-session risk contract — TypeScript mirror of Granit.UserSessions",
+      "exports": [
+        {
+          "name": "UserSessionRiskLevel",
+          "kind": "type",
+          "signature": "type UserSessionRiskLevel = 'None' | 'Low' | 'Medium' | 'High'"
         }
       ]
     },

@@ -15,14 +15,18 @@
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/ip-geolocation": "workspace:*",
     "@granit/query-engine": "workspace:*",
     "@granit/testing": "workspace:*",
-    "@granit/types": "workspace:*"
+    "@granit/types": "workspace:*",
+    "@granit/user-sessions": "workspace:*"
   },
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/ip-geolocation": "workspace:*",
     "@granit/query-engine": "workspace:*",
-    "@granit/types": "workspace:*"
+    "@granit/types": "workspace:*",
+    "@granit/user-sessions": "workspace:*"
   },
   "publishConfig": {
     "exports": {

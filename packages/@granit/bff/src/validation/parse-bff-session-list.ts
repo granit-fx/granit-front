@@ -18,13 +18,10 @@
 // ---------------------------------------------------------------------------
 
 import type { ParseResult } from './parse-bff-user';
-import type {
-  BffSessionId,
-  BffSessionInfo,
-  BffSessionLocation,
-  BffSessionRiskLevel,
-} from '../types/index';
+import type { BffSessionId, BffSessionInfo } from '../types/index';
+import type { GeoLocation } from '@granit/ip-geolocation';
 import type { ISODateString } from '@granit/types';
+import type { UserSessionRiskLevel } from '@granit/user-sessions';
 
 // Length bounds for untrusted free-text fields. Generous enough for legitimate
 // values, tight enough to stop an oversized string from bloating the UI/logs.
@@ -33,7 +30,7 @@ const MAX_IP = 64;
 const MAX_GEO_TEXT = 128;
 const MAX_COUNTRY_CODE = 8;
 
-const RISK_LEVELS: ReadonlySet<string> = new Set<BffSessionRiskLevel>([
+const RISK_LEVELS: ReadonlySet<string> = new Set<UserSessionRiskLevel>([
   'None',
   'Low',
   'Medium',
@@ -59,13 +56,13 @@ function finiteNumber(x: unknown): number | null {
   return typeof x === 'number' && Number.isFinite(x) ? x : null;
 }
 
-function normalizeRiskLevel(x: unknown): BffSessionRiskLevel | null {
-  return typeof x === 'string' && RISK_LEVELS.has(x) ? (x as BffSessionRiskLevel) : null;
+function normalizeRiskLevel(x: unknown): UserSessionRiskLevel | null {
+  return typeof x === 'string' && RISK_LEVELS.has(x) ? (x as UserSessionRiskLevel) : null;
 }
 
-function normalizeLocation(x: unknown): BffSessionLocation | null {
+function normalizeLocation(x: unknown): GeoLocation | null {
   if (!isObject(x)) return null;
-  const location: BffSessionLocation = {
+  const location: GeoLocation = {
     city: boundedString(x.city, MAX_GEO_TEXT),
     region: boundedString(x.region, MAX_GEO_TEXT),
     country: boundedString(x.country, MAX_GEO_TEXT),

@@ -5,13 +5,17 @@ export type {
   BffSessionId,
   BffSessionInfo,
   BffSessionListResponse,
-  BffSessionLocation,
-  BffSessionRiskLevel,
   BffTenantUser,
   BffUnauthenticated,
   BffUser,
   BffUserResponse,
 } from './types/index';
+
+// Re-export the shared session-enrichment contracts so consumers can type the
+// `location` / `riskLevel` fields of BffSessionInfo without reaching into the
+// owning packages directly.
+export type { GeoLocation } from '@granit/ip-geolocation';
+export type { UserSessionRiskLevel } from '@granit/user-sessions';
 
 export { CsrfManager } from './csrf/index';
 

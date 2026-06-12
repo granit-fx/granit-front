@@ -14,6 +14,12 @@ export type {
   IdentitySession,
   IdentitySessionId,
 } from './identity-session';
+
+// Shared session-enrichment contracts re-exported so consumers can type the
+// `location` / `riskLevel` fields without reaching into the owning packages.
+export type { GeoLocation } from '@granit/ip-geolocation';
+export type { UserSessionRiskLevel } from '@granit/user-sessions';
+
 export type { IdentityPasswordChangedAtResponse } from './identity-password';
 export type {
   IdentitySetTemporaryPasswordRequest,
