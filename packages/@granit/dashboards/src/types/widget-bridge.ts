@@ -107,8 +107,19 @@ function denormalizeReferences(widget: WidgetDefinitionBase): {
  * Strips the structural fields from a widget definition and serializes
  * the remainder to JSON. Round-trip-safe: `configJsonToWidgetFields`
  * undoes this exactly when paired with the same structural fields.
+ *
+ * KPI is special-cased: its `configJson` is the *bare* polymorphic
+ * {@link Datasource} (matching the backend's `JsonSerializer.Serialize<Datasource>`),
+ * not the generic strip-structural-fields blob. KPI `actions` are intentionally
+ * not persisted — there's no server-side Actions column for KPI and the bare
+ * datasource has no room for them, so they don't round-trip. If KPI action
+ * persistence is wanted, that's a separate story.
  */
 function widgetFieldsToConfigJson(widget: WidgetDefinitionBase): string {
+  if (widget.type === 'kpi') {
+    const datasource = (widget as unknown as { datasource?: unknown }).datasource;
+    return JSON.stringify(datasource ?? null);
+  }
   const config: Record<string, unknown> = {};
   const w = widget as unknown as Readonly<Record<string, unknown>>;
   for (const key of Object.keys(w)) {
@@ -152,7 +163,16 @@ export function widgetInstanceToDefinition(
   dashboardName: string
 ): WidgetDefinition {
   const slug = extractSlugFromTitleKey(instance.titleLocalizationKey, dashboardName);
-  const fields = configJsonToWidgetFields(instance.configJson) ?? {};
+  const parsed = configJsonToWidgetFields(instance.configJson) ?? {};
+  // A KPI persists its `configJson` as the *bare* polymorphic `Datasource`
+  // (backend: `JsonSerializer.Serialize<Datasource>(k.Datasource)` →
+  // `{"kind":"metric","metricName":"…"}`), not a strip-structural-fields blob.
+  // Lift it under the `datasource` key the editor's `KpiWidgetDefinition`
+  // expects instead of spreading it flat — a flat spread leaves
+  // `widget.datasource` undefined and crashes `<KpiTile>`. KPI `actions` are
+  // not part of `configJson` (no server-side Actions column for KPI), so they
+  // don't round-trip through detail/edit — consistent with the backend.
+  const fields = instance.widgetType === 'Kpi' ? { datasource: parsed } : parsed;
   const widget: WidgetDefinitionBase & Readonly<Record<string, unknown>> = {
     ...fields,
     slug,

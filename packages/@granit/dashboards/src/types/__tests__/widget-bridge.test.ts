@@ -260,6 +260,52 @@ describe('widgetDefinitionToUpdateRequest', () => {
   });
 });
 
+describe('KPI configJson bridge (bare-Datasource contract)', () => {
+  // The backend treats a KPI's `configJson` as the bare polymorphic
+  // `Datasource` (`JsonSerializer.Serialize<Datasource>`): a top-level
+  // `{ kind, metricName }`, NOT a `{ datasource: { … } }` wrapper. The bridge
+  // must lift it under `datasource` on read and re-emit it bare on write.
+  const BARE_DATASOURCE = {
+    kind: 'metric',
+    metricName: 'Granit.Invoicing.UnpaidInvoiceCountMetric',
+  };
+
+  it('lifts a bare-datasource configJson under `widget.datasource` (regression: KpiTile crash)', () => {
+    const instance: WidgetInstanceResponse = {
+      id: WIDGET_ID,
+      widgetType: 'Kpi',
+      position: 2,
+      width: 3,
+      height: 2,
+      titleLocalizationKey: `Widget:${DASHBOARD_NAME}.UnpaidCount`,
+      metricName: 'Granit.Invoicing.UnpaidInvoiceCountMetric',
+      queryName: null,
+      configJson: JSON.stringify(BARE_DATASOURCE),
+      requiredPermission: null,
+    };
+    const widget = widgetInstanceToDefinition(instance, DASHBOARD_NAME) as KpiWidgetStub;
+    // The crash was `isMetricDatasource(undefined)` — assert the binding is
+    // present and correctly shaped, not spread flat onto the widget.
+    expect(widget.datasource).toBeDefined();
+    expect(widget.datasource).toEqual(BARE_DATASOURCE);
+    expect((widget as unknown as Record<string, unknown>)['kind']).toBeUndefined();
+    expect((widget as unknown as Record<string, unknown>)['metricName']).toBeUndefined();
+  });
+
+  it('re-emits the bare datasource (not a wrapper) on write', () => {
+    const widget: KpiWidgetStub = {
+      slug: 'UnpaidCount',
+      type: 'kpi',
+      position: 2,
+      size: { width: 3, height: 2 },
+      datasource: { kind: 'metric', metricName: 'Granit.Invoicing.UnpaidInvoiceCountMetric' },
+    };
+    const request = widgetDefinitionToAddRequest(widget, DASHBOARD_NAME);
+    expect(JSON.parse(request.configJson)).toEqual(BARE_DATASOURCE);
+    expect(JSON.parse(request.configJson)).not.toHaveProperty('datasource');
+  });
+});
+
 describe('round-trip: instance → definition → addRequest → instance-shaped fields', () => {
   it('preserves every widget field across the bridge', () => {
     const original: WidgetInstanceResponse = {
@@ -271,8 +317,10 @@ describe('round-trip: instance → definition → addRequest → instance-shaped
       titleLocalizationKey: `Widget:${DASHBOARD_NAME}.UnpaidCount`,
       metricName: 'Granit.Invoicing.UnpaidInvoiceCountMetric',
       queryName: null,
+      // Bare polymorphic Datasource — exactly what the backend persists.
       configJson: JSON.stringify({
-        datasource: { kind: 'metric', metricName: 'Granit.Invoicing.UnpaidInvoiceCountMetric' },
+        kind: 'metric',
+        metricName: 'Granit.Invoicing.UnpaidInvoiceCountMetric',
       }),
       requiredPermission: null,
     };
@@ -283,6 +331,7 @@ describe('round-trip: instance → definition → addRequest → instance-shaped
     expect(addRequest.width).toBe(original.width);
     expect(addRequest.height).toBe(original.height);
     expect(addRequest.titleLocalizationKey).toBe(original.titleLocalizationKey);
+    // `metricName` is denormalized off the datasource, reproducing the column.
     expect(addRequest.metricName).toBe(original.metricName);
     expect(addRequest.queryName).toBe(original.queryName);
     expect(JSON.parse(addRequest.configJson)).toEqual(JSON.parse(original.configJson));

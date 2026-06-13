@@ -15,7 +15,7 @@
 //
 // Mock data typed against `@granit/dashboards` wire contracts.
 
-import { Datasource, WIDGET_SIZE } from '@granit/dashboards';
+import { Datasource, WIDGET_SIZE, widgetDefinitionToAddRequest } from '@granit/dashboards';
 
 import type {
   DashboardCatalogEntryResponse,
@@ -411,8 +411,10 @@ const sampleFinanceDashboard: DashboardDefinition = {
       ],
     },
     // `kpi` widgets are declared by `@granit/analytics`; the testing module
-    // serialises them as plain data (no analytics dependency), so the
-    // persisted `configJson` matches the real import byte-for-byte.
+    // serialises them as plain data (no analytics dependency). The persisted
+    // `configJson` is produced by the write-direction bridge helper (see
+    // `seedStoredDashboard`), which emits the bare `Datasource` for KPI so the
+    // mock stays byte-compatible with the backend and the read-direction bridge.
   ] as DashboardDefinition['widgets'],
 };
 
@@ -474,18 +476,26 @@ function seedStoredDashboard(
     sourceDefinitionVersion: definition.version,
     layoutColumns: definition.layout.columns,
     layoutRowHeight: definition.layout.rowHeight,
-    widgets: definition.widgets.map((widget, index) => ({
-      id: `${id.slice(0, -3)}${(widgetIdBase + index).toString(16).padStart(3, '0')}`,
-      widgetType: widget.type.charAt(0).toUpperCase() + widget.type.slice(1),
-      position: widget.position,
-      width: widget.size.width,
-      height: widget.size.height,
-      titleLocalizationKey: `Widget:${definition.name}.${widget.slug}`,
-      metricName: null,
-      queryName: null,
-      configJson: JSON.stringify(widget),
-      requiredPermission: null,
-    })),
+    widgets: definition.widgets.map((widget, index) => {
+      // Derive the persisted shape through the write-direction bridge so the
+      // mock's `configJson` / `metricName` / `queryName` are byte-compatible
+      // with what the backend persists (and what the read-direction bridge
+      // expects) per widget kind — KPI emits a bare `Datasource`, not a
+      // wrapped or whole-widget blob.
+      const request = widgetDefinitionToAddRequest(widget, definition.name);
+      return {
+        id: `${id.slice(0, -3)}${(widgetIdBase + index).toString(16).padStart(3, '0')}`,
+        widgetType: widget.type.charAt(0).toUpperCase() + widget.type.slice(1),
+        position: widget.position,
+        width: widget.size.width,
+        height: widget.size.height,
+        titleLocalizationKey: `Widget:${definition.name}.${widget.slug}`,
+        metricName: request.metricName ?? null,
+        queryName: request.queryName ?? null,
+        configJson: request.configJson,
+        requiredPermission: null,
+      };
+    }),
   };
 }
 

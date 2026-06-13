@@ -36,7 +36,11 @@ export function KpiTile({ widget }: KpiTileProps) {
   const { t, i18n } = useTranslation();
   const { datasource } = widget;
 
-  const metricName = isMetricDatasource(datasource) ? datasource.metricName : '';
+  // `datasource` can be undefined when a persisted KPI's `configJson` failed to
+  // parse (or pre-fix data lifted the bare datasource flat) — guard before
+  // narrowing so a malformed binding renders the "unsupported" tile instead of
+  // crashing on `datasource.kind`.
+  const metricName = datasource && isMetricDatasource(datasource) ? datasource.metricName : '';
 
   const query = useMetric(metricName, DEFAULT_PERIOD, { enabled: metricName !== '' });
 
@@ -46,15 +50,16 @@ export function KpiTile({ widget }: KpiTileProps) {
   const onClick = useWidgetTriggerHandler('Click', widget.actions);
   const handleClick = onClick ? () => onClick() : undefined;
 
-  if (!isMetricDatasource(datasource)) {
+  if (!datasource || !isMetricDatasource(datasource)) {
+    const kind = datasource?.kind ?? 'none';
     const message = t('Analytics.UnsupportedDatasource', {
       defaultValue: 'Datasource not supported yet ({{kind}})',
-      kind: datasource.kind,
+      kind,
     });
     return (
       <div
         data-slot="kpi-tile"
-        data-datasource-kind={datasource.kind}
+        data-datasource-kind={kind}
         className="flex h-full items-center text-xs text-muted-foreground"
       >
         {message}
