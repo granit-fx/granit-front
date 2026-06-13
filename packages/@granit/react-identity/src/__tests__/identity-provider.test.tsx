@@ -15,6 +15,7 @@ const mockConfig: IdentityConfig = {
   client: {} as AxiosInstance,
   basePath: '/api/v1/identity/users',
   providerBasePath: '/api/v1/identity/provider',
+  sessionsBasePath: '/api/v1',
 };
 
 function createWrapper(config: IdentityConfig) {

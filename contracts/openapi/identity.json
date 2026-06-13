@@ -581,8 +581,8 @@
     "/identity/webhook": {
       "post": {
         "tags": ["Identity - Webhook"],
-        "summary": "Receives identity provider webhook events (user created/updated/deleted).",
-        "description": "Webhook receiver for identity provider event notifications. Validates the HMAC signature (if configured) and processes user_created, user_updated, and user_deleted events by refreshing or removing the corresponding cache entries. No bearer authentication — security relies on HMAC signature validation in the handler.",
+        "summary": "Receives identity provider webhook events (user created/updated/deleted, login).",
+        "description": "Webhook receiver for identity provider event notifications. Validates the HMAC signature (if configured) and processes user_created, user_updated, and user_deleted events by refreshing or removing the corresponding cache entries, and login events by announcing a UserSessionCreatedEto so anomaly detection runs off the login path (the IdP's push channel for session-created — used by Keycloak via its event SPI). No bearer authentication — security relies on HMAC signature validation in the handler.",
         "operationId": "IdentityWebhook",
         "responses": {
           "200": {
@@ -1135,6 +1135,7 @@
           "createdAt",
           "lastAccessedAt",
           "userAgent",
+          "ipAddress",
           "location",
           "riskLevel",
           "riskReasons"
@@ -1156,6 +1157,9 @@
             "format": "date-time"
           },
           "userAgent": {
+            "type": ["null", "string"]
+          },
+          "ipAddress": {
             "type": ["null", "string"]
           },
           "location": {

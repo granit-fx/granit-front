@@ -37,6 +37,14 @@ export const CONTRACTS: readonly ModuleContract[] = [
   },
   { slug: 'bff', package: 'bff', types: ['BffCsrfTokenResponse'] },
   {
+    // Only the self-service session/device schemas are published; the provider
+    // admin + user-cache surfaces are conditionally registered and absent from
+    // the generated spec, so they cannot be oracle-checked here.
+    slug: 'identity',
+    package: 'identity',
+    types: ['UserSessionResponse', 'UserDeviceResponse', 'UserSessionsRevokedResponse'],
+  },
+  {
     slug: 'blob-storage',
     package: 'blob-storage',
     types: [

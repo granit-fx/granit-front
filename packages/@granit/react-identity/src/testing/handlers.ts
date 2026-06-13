@@ -3,7 +3,11 @@ import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { created } from '@granit/testing/msw';
 import { http, HttpResponse } from 'msw';
 
-import { DEFAULT_BASE_PATH, DEFAULT_PROVIDER_BASE_PATH } from '../constants';
+import {
+  DEFAULT_BASE_PATH,
+  DEFAULT_PROVIDER_BASE_PATH,
+  DEFAULT_SESSIONS_BASE_PATH,
+} from '../constants';
 
 import { mockDevices, mockPasswordChangedAt, mockSessions, mockUsers } from './data';
 
@@ -221,10 +225,12 @@ function toIdentityUser(u: IdentityUser) {
  *
  * @param providerBase - Provider API base path (default: `/api/v1/identity/provider`)
  * @param cacheBase    - Cache API base path (default: `/api/v1/identity/users`)
+ * @param sessionsBase - Self-service session/device base path (default: `/api/v1`)
  */
 export function createIdentityHandlers(
   providerBase = DEFAULT_PROVIDER_BASE_PATH,
-  cacheBase = DEFAULT_BASE_PATH
+  cacheBase = DEFAULT_BASE_PATH,
+  sessionsBase = DEFAULT_SESSIONS_BASE_PATH
 ) {
   return [
     // ── Cache endpoints (/identity/users) ───────────────────────────────────
@@ -483,5 +489,20 @@ export function createIdentityHandlers(
     http.post(`${providerBase}/users/:userId/password/temporary`, () => {
       return new HttpResponse(null, { status: 204 });
     }),
+
+    // ── Self-service sessions/devices (the caller's own: /sessions, /devices) ─
+
+    http.get(`${sessionsBase}/sessions`, () => HttpResponse.json(mockSessions)),
+
+    http.get(`${sessionsBase}/devices`, () => HttpResponse.json(mockDevices)),
+
+    http.delete(
+      `${sessionsBase}/sessions/:sessionId`,
+      () => new HttpResponse(null, { status: 204 })
+    ),
+
+    http.delete(`${sessionsBase}/sessions`, () =>
+      HttpResponse.json({ revokedCount: mockSessions.filter((s) => !s.isCurrent).length })
+    ),
   ];
 }

@@ -28,6 +28,10 @@ const BRAND_FAMILY: Record<string, Family> = {
   TenantId: 'string',
   UserId: 'string',
   CorrelationId: 'string',
+  // Cross-package string-union enums (@granit/identity-abstractions) — the spec
+  // serializes them as their string name, so they read as `string`.
+  DeviceKind: 'string',
+  UserSessionRiskLevel: 'string',
 };
 
 interface PropShape {

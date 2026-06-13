@@ -1,6 +1,15 @@
-import type { IdentityDeviceActivity, IdentitySession, IdentitySessionId } from '../types/index';
+import type { UserDeviceResponse, UserSessionId, UserSessionResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { UserId } from '@granit/types';
+
+// ---------------------------------------------------------------------------
+// Admin session/device management — another user's sessions, served by the
+// canonical session manager. Mirrors Granit.Identity.Endpoints
+// IdentityProviderSession{Read,Write}Endpoints + IdentityProviderDeviceEndpoints.
+//
+// Authorization is permission-based on the backend (Identity.Sessions.Read /
+// Identity.Sessions.Manage); the front issues the calls and surfaces 403/501.
+// ---------------------------------------------------------------------------
 
 /**
  * List active sessions for a user.
@@ -11,24 +20,24 @@ export async function listUserSessions(
   client: AxiosInstance,
   basePath: string,
   userId: UserId
-): Promise<readonly IdentitySession[]> {
-  const response = await client.get<readonly IdentitySession[]>(
+): Promise<readonly UserSessionResponse[]> {
+  const response = await client.get<readonly UserSessionResponse[]>(
     `${basePath}/users/${encodeURIComponent(userId)}/sessions`
   );
   return response.data;
 }
 
 /**
- * Get device activity for a user.
+ * List the devices a user has signed in from.
  *
  * `GET {basePath}/users/{userId}/devices`
  */
-export async function getUserDeviceActivity(
+export async function listUserDevices(
   client: AxiosInstance,
   basePath: string,
   userId: UserId
-): Promise<readonly IdentityDeviceActivity[]> {
-  const response = await client.get<readonly IdentityDeviceActivity[]>(
+): Promise<readonly UserDeviceResponse[]> {
+  const response = await client.get<readonly UserDeviceResponse[]>(
     `${basePath}/users/${encodeURIComponent(userId)}/devices`
   );
   return response.data;
@@ -43,7 +52,7 @@ export async function terminateSession(
   client: AxiosInstance,
   basePath: string,
   userId: UserId,
-  sessionId: IdentitySessionId
+  sessionId: UserSessionId
 ): Promise<void> {
   await client.delete(
     `${basePath}/users/${encodeURIComponent(userId)}/sessions/${encodeURIComponent(sessionId)}`

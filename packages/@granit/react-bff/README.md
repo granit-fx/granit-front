@@ -1,6 +1,11 @@
 # @granit/react-bff
 
-React bindings for `@granit/bff` -- BFF authentication, CSRF management, session management, route guard.
+React bindings for `@granit/bff` -- BFF authentication, CSRF management, route guard.
+
+> **Sessions moved.** The caller's own session listing/revocation is no longer a
+> BFF concern (granit-dotnet #2692). Use `@granit/react-identity`
+> (`useMySessions`, `useRevokeMySession`, `useRevokeMyOtherSessions`,
+> `useMyDevices`) against the canonical `/sessions` (+ `/devices`) endpoints.
 
 ## Installation
 
@@ -21,9 +26,6 @@ pnpm add @granit/react-bff
 - `useBffAuth()` -- authentication state and actions
 - `useBffCsrf()` -- CSRF token management
 - `useBffFetch()` -- fetch wrapper with CSRF and credentials
-- `useBffSessions()` -- list active sessions
-- `useRevokeBffSession()` -- revoke a specific session
-- `useRevokeAllOtherBffSessions()` -- revoke all other sessions
 
 ## Usage
 

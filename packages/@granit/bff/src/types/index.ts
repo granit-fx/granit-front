@@ -1,7 +1,5 @@
-import type { UserSessionRiskLevel } from '@granit/identity-abstractions';
-import type { GeoLocation } from '@granit/ip-geolocation';
 import type { Logger } from '@granit/logger';
-import type { EntityId, ISODateString, TenantId } from '@granit/types';
+import type { ISODateString, TenantId } from '@granit/types';
 
 // ---------------------------------------------------------------------------
 // BFF authentication types — mirrors Granit.Bff .NET contract
@@ -48,44 +46,12 @@ export interface BffUnauthenticated {
 /** Union type for the /bff/user endpoint response. */
 export type BffUserResponse = BffUser | BffUnauthenticated;
 
-/** Branded BFF session identifier. */
-export type BffSessionId = EntityId<'BffSession'>;
-
-/** A single BFF session entry. Session IDs are masked server-side for security. */
-export interface BffSessionInfo {
-  /** Masked session identifier (e.g. "ab12...yz89"). */
-  readonly sessionId: BffSessionId;
-  /** Whether this is the calling session. */
-  readonly isCurrent: boolean;
-  /** When the session was created. ISO 8601 string. */
-  readonly createdAt: ISODateString;
-  /**
-   * User-Agent string captured at session creation, if available.
-   *
-   * Client-controlled free text — display-only and length-bounded by the
-   * parser; never interpolate into HTML.
-   */
-  readonly userAgent: string | null;
-  /**
-   * When the session was last used. Null when the backend has not recorded an
-   * access since creation. ISO 8601 string. (Backend `LastAccessedAt`.)
-   */
-  readonly lastAccessedAt: ISODateString | null;
-  /** Approximate geolocation of the session IP, or null when unresolved. */
-  readonly location: GeoLocation | null;
-  /**
-   * Session IP address — masked by default, raw only when the BFF is configured
-   * with `ExposeRawIpAddress`. Null when unavailable.
-   */
-  readonly ipAddress: string | null;
-  /** Coarse risk level, or null when no verdict was stored for the session. */
-  readonly riskLevel: UserSessionRiskLevel | null;
-}
-
-/** Response from GET /{prefix}/bff/sessions. */
-export interface BffSessionListResponse {
-  readonly sessions: readonly BffSessionInfo[];
-}
+// Session listing/revocation moved off the BFF (granit-dotnet #2692): the
+// caller's own sessions are now served by the canonical, transport-agnostic
+// `/sessions` (+ `/devices`) endpoints — see `@granit/identity`
+// (`listMySessions`, `revokeMySession`, …) and `@granit/react-identity`
+// (`useMySessions`, …). The BFF retains only auth bootstrap (`/bff/user`) and
+// CSRF (`/bff/csrf-token`).
 
 /** Response from POST /{prefix}/bff/csrf-token. Mirrors Granit.Bff `BffCsrfTokenResponse`. */
 export interface BffCsrfTokenResponse {

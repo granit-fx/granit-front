@@ -45,14 +45,26 @@ export {
 } from './hooks/use-identity-groups';
 export type { GroupMutationVariables } from './hooks/use-identity-groups';
 
-// Hooks — Sessions
+// Hooks — Sessions (admin: another user's sessions/devices)
 export {
   useTerminateAllSessions,
   useTerminateSession,
-  useUserDeviceActivity,
+  useUserDevices,
   useUserSessions,
 } from './hooks/use-identity-sessions';
 export type { TerminateSessionVariables } from './hooks/use-identity-sessions';
+
+// Hooks — Self-service sessions/devices (the caller's own)
+export {
+  useMyDevices,
+  useMySessions,
+  useRevokeMyOtherSessions,
+  useRevokeMySession,
+} from './hooks/use-my-sessions';
+
+// i18next resource bundles (namespace: "identity")
+export { identityTranslationsEn, identityTranslationsFr } from './locales/index';
+export type { IdentityTranslations } from './locales/index';
 
 // Hooks — Passwords
 export {

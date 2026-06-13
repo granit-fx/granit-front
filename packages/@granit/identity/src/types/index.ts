@@ -10,15 +10,18 @@ export type {
 export type { IdentityRole, IdentityRoleId } from './identity-role';
 export type { IdentityGroup, IdentityGroupId } from './identity-group';
 export type {
-  IdentityDeviceActivity,
-  IdentitySession,
-  IdentitySessionId,
-} from './identity-session';
+  UserDeviceId,
+  UserDeviceResponse,
+  UserSessionId,
+  UserSessionResponse,
+  UserSessionsRevokedResponse,
+} from './user-session';
 
-// Shared session-enrichment contracts re-exported so consumers can type the
-// `location` / `riskLevel` fields without reaching into the owning packages.
+// Shared session/device contracts re-exported so consumers can type the
+// `location` / `riskLevel` / `kind` fields without reaching into the owning
+// packages.
 export type { GeoLocation } from '@granit/ip-geolocation';
-export type { UserSessionRiskLevel } from '@granit/identity-abstractions';
+export type { DeviceKind, UserSessionRiskLevel } from '@granit/identity-abstractions';
 
 export type { IdentityPasswordChangedAtResponse } from './identity-password';
 export type {

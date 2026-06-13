@@ -1,7 +1,11 @@
 import { useOptionalGranitClient } from '@granit/react-api-client';
 import { createContext, useContext, useMemo } from 'react';
 
-import { DEFAULT_BASE_PATH, DEFAULT_PROVIDER_BASE_PATH } from '../constants';
+import {
+  DEFAULT_BASE_PATH,
+  DEFAULT_PROVIDER_BASE_PATH,
+  DEFAULT_SESSIONS_BASE_PATH,
+} from '../constants';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
@@ -13,6 +17,12 @@ export interface IdentityConfig {
   readonly basePath: string;
   /** Base path for identity provider endpoints (default: `/api/v1/identity/provider`). */
   readonly providerBasePath: string;
+  /**
+   * Base path for the caller's own (self-service) session/device endpoints,
+   * mounted at the API root (default: `/api/v1`, yielding `/api/v1/sessions`
+   * and `/api/v1/devices`).
+   */
+  readonly sessionsBasePath: string;
   readonly queryKeyPrefix?: readonly string[];
 }
 
@@ -26,8 +36,8 @@ export interface ResolvedIdentityConfig extends IdentityConfig {
 
 /** Props accepted by {@link IdentityProvider}. Paths are optional — defaults are applied by the provider. */
 export interface IdentityProviderProps {
-  readonly config: Omit<IdentityConfig, 'basePath' | 'providerBasePath'> &
-    Partial<Pick<IdentityConfig, 'basePath' | 'providerBasePath'>>;
+  readonly config: Omit<IdentityConfig, 'basePath' | 'providerBasePath' | 'sessionsBasePath'> &
+    Partial<Pick<IdentityConfig, 'basePath' | 'providerBasePath' | 'sessionsBasePath'>>;
   readonly children: ReactNode;
 }
 
@@ -47,6 +57,7 @@ export function IdentityProvider({ config, children }: Readonly<IdentityProvider
       ...config,
       basePath: config.basePath ?? DEFAULT_BASE_PATH,
       providerBasePath: config.providerBasePath ?? DEFAULT_PROVIDER_BASE_PATH,
+      sessionsBasePath: config.sessionsBasePath ?? DEFAULT_SESSIONS_BASE_PATH,
       client,
     };
   }, [config, contextClient]);

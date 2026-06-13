@@ -364,12 +364,6 @@ importers:
 
   packages/@granit/bff:
     devDependencies:
-      '@granit/identity-abstractions':
-        specifier: workspace:*
-        version: link:../identity-abstractions
-      '@granit/ip-geolocation':
-        specifier: workspace:*
-        version: link:../ip-geolocation
       '@granit/logger':
         specifier: workspace:*
         version: link:../logger

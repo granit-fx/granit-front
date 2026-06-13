@@ -1,1 +1,1 @@
-export type { UserSessionRiskLevel } from './types/index';
+export type { DeviceKind, UserSessionRiskLevel } from './types/index';

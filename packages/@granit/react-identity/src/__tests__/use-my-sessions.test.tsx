@@ -7,11 +7,11 @@ import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
-  useTerminateAllSessions,
-  useTerminateSession,
-  useUserDevices,
-  useUserSessions,
-} from '../hooks/use-identity-sessions';
+  useMyDevices,
+  useMySessions,
+  useRevokeMyOtherSessions,
+  useRevokeMySession,
+} from '../hooks/use-my-sessions';
 import { IdentityProvider } from '../providers/identity-provider';
 
 import type { IdentityProviderProps } from '../providers/identity-provider';
@@ -21,7 +21,7 @@ import type { ReactNode } from 'react';
 
 const sampleSession: UserSessionResponse = {
   sessionId: toEntityId<'UserSession'>('session-1'),
-  isCurrent: false,
+  isCurrent: true,
   createdAt: toISODateString('2026-03-20T10:00:00Z'),
   lastAccessedAt: toISODateString('2026-03-20T12:00:00Z'),
   userAgent: 'Mozilla/5.0',
@@ -33,9 +33,9 @@ const sampleSession: UserSessionResponse = {
 
 const sampleDevice: UserDeviceResponse = {
   deviceId: toEntityId<'UserDevice'>('device-1'),
-  kind: 'Browser',
-  operatingSystem: 'Windows',
-  browser: 'Chrome',
+  kind: 'MobileApp',
+  operatingSystem: 'iOS',
+  browser: null,
   lastSeen: toISODateString('2026-03-20T12:00:00Z'),
   sessionCount: 1,
   lastLocation: null,
@@ -53,110 +53,79 @@ function createWrapper(client: AxiosInstance) {
   };
 }
 
-describe('use-identity-sessions', () => {
+describe('use-my-sessions', () => {
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  describe('useUserSessions', () => {
-    it('fetches sessions for a user', async () => {
+  describe('useMySessions', () => {
+    it('fetches the caller’s own sessions from /sessions', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: [sampleSession] });
 
-      const { result } = renderHook(() => useUserSessions(toEntityId<'User'>('user-1')), {
-        wrapper: createWrapper(client),
-      });
+      const { result } = renderHook(() => useMySessions(), { wrapper: createWrapper(client) });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/v1/identity/provider/users/user-1/sessions');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/sessions');
       expect(result.current.data).toEqual([sampleSession]);
-    });
-
-    it('is disabled when userId is empty', async () => {
-      const client = createMockClient();
-
-      const { result } = renderHook(() => useUserSessions(toEntityId<'User'>('')), {
-        wrapper: createWrapper(client),
-      });
-
-      expect(result.current.fetchStatus).toBe('idle');
-      expect(client.get).not.toHaveBeenCalled();
     });
   });
 
-  describe('useUserDevices', () => {
-    it('fetches devices for a user', async () => {
+  describe('useMyDevices', () => {
+    it('fetches the caller’s own devices from /devices', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: [sampleDevice] });
 
-      const { result } = renderHook(() => useUserDevices(toEntityId<'User'>('user-1')), {
-        wrapper: createWrapper(client),
-      });
+      const { result } = renderHook(() => useMyDevices(), { wrapper: createWrapper(client) });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/v1/identity/provider/users/user-1/devices');
+      expect(client.get).toHaveBeenCalledWith('/api/v1/devices');
       expect(result.current.data).toEqual([sampleDevice]);
     });
-
-    it('is disabled when userId is empty', async () => {
-      const client = createMockClient();
-
-      const { result } = renderHook(() => useUserDevices(toEntityId<'User'>('')), {
-        wrapper: createWrapper(client),
-      });
-
-      expect(result.current.fetchStatus).toBe('idle');
-    });
   });
 
-  describe('useTerminateSession', () => {
-    it('terminates a specific session via DELETE', async () => {
+  describe('useRevokeMySession', () => {
+    it('revokes one session via DELETE /sessions/{id}', async () => {
       const client = createMockClient();
       vi.mocked(client.delete).mockResolvedValue({ data: undefined });
 
-      const { result } = renderHook(() => useTerminateSession(), {
-        wrapper: createWrapper(client),
-      });
+      const { result } = renderHook(() => useRevokeMySession(), { wrapper: createWrapper(client) });
 
-      result.current.mutate({
-        userId: toEntityId<'User'>('user-1'),
-        sessionId: toEntityId<'UserSession'>('session-1'),
-      });
+      result.current.mutate(toEntityId<'UserSession'>('session-1'));
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.delete).toHaveBeenCalledWith(
-        '/api/v1/identity/provider/users/user-1/sessions/session-1'
-      );
+      expect(client.delete).toHaveBeenCalledWith('/api/v1/sessions/session-1');
     });
   });
 
-  describe('useTerminateAllSessions', () => {
-    it('terminates all sessions via DELETE', async () => {
+  describe('useRevokeMyOtherSessions', () => {
+    it('revokes all other sessions via DELETE /sessions and returns the count', async () => {
       const client = createMockClient();
-      vi.mocked(client.delete).mockResolvedValue({ data: undefined });
+      vi.mocked(client.delete).mockResolvedValue({ data: { revokedCount: 2 } });
 
-      const { result } = renderHook(() => useTerminateAllSessions(), {
+      const { result } = renderHook(() => useRevokeMyOtherSessions(), {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate(toEntityId<'User'>('user-1'));
+      result.current.mutate();
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.delete).toHaveBeenCalledWith('/api/v1/identity/provider/users/user-1/sessions');
+      expect(client.delete).toHaveBeenCalledWith('/api/v1/sessions');
+      expect(result.current.data).toEqual({ revokedCount: 2 });
     });
 
     it('exposes error state on failure', async () => {
       const client = createMockClient();
-      vi.mocked(client.delete).mockRejectedValue(new Error('Not Implemented'));
+      vi.mocked(client.delete).mockRejectedValue(new Error('Unauthorized'));
 
-      const { result } = renderHook(() => useTerminateAllSessions(), {
+      const { result } = renderHook(() => useRevokeMyOtherSessions(), {
         wrapper: createWrapper(client),
       });
 
-      result.current.mutate(toEntityId<'User'>('user-1'));
+      result.current.mutate();
 
       await waitFor(() => expect(result.current.isError).toBe(true));
-      expect(result.current.error?.message).toBe('Not Implemented');
+      expect(result.current.error?.message).toBe('Unauthorized');
     });
   });
 });

@@ -10,7 +10,16 @@ export type {
 } from './types/index';
 export type { IdentityRole, IdentityRoleId } from './types/index';
 export type { IdentityGroup, IdentityGroupId } from './types/index';
-export type { IdentityDeviceActivity, IdentitySession, IdentitySessionId } from './types/index';
+export type {
+  DeviceKind,
+  UserDeviceId,
+  UserDeviceResponse,
+  UserSessionId,
+  UserSessionResponse,
+  UserSessionRiskLevel,
+  UserSessionsRevokedResponse,
+} from './types/index';
+export type { GeoLocation } from './types/index';
 export type { IdentityPasswordChangedAtResponse } from './types/index';
 export type {
   IdentitySetTemporaryPasswordRequest,
@@ -56,14 +65,26 @@ export {
   removeUserFromGroup,
 } from './api/identity-provider-group-api';
 export {
-  getUserDeviceActivity,
+  listUserDevices,
   listUserSessions,
   terminateAllSessions,
   terminateSession,
 } from './api/identity-provider-session-api';
+
+// API — Self-service sessions/devices (the caller's own)
+export {
+  listMyDevices,
+  listMySessions,
+  revokeMyOtherSessions,
+  revokeMySession,
+} from './api/user-session-api';
 export {
   getPasswordChangedAt,
   sendPasswordResetEmail,
   setTemporaryPassword,
 } from './api/identity-provider-password-api';
 export { IdentityPermissions } from './permissions';
+
+// Device label composition
+export { composeDeviceLabel } from './device-label';
+export type { DeviceLabelStrings } from './device-label';

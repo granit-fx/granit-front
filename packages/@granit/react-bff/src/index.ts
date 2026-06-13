@@ -6,11 +6,5 @@ export { useBffCsrf } from './hooks/use-bff-csrf';
 export { useBffFetch } from './hooks/use-bff-fetch';
 export { resolveBffTenantId, useBffTenantGetter } from './hooks/use-bff-tenant';
 
-export {
-  useBffSessions,
-  useRevokeBffSession,
-  useRevokeAllOtherBffSessions,
-} from './hooks/use-bff-sessions';
-
 export { BffGuard } from './components/bff-guard';
 export type { BffGuardProps } from './components/bff-guard';

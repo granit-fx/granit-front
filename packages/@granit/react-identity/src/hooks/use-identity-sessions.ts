@@ -1,5 +1,5 @@
 import {
-  getUserDeviceActivity,
+  listUserDevices,
   listUserSessions,
   terminateAllSessions,
   terminateSession,
@@ -8,7 +8,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider';
 
-import type { IdentityDeviceActivity, IdentitySession, IdentitySessionId } from '@granit/identity';
+import type { UserDeviceResponse, UserSessionId, UserSessionResponse } from '@granit/identity';
 import type { UserId } from '@granit/types';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
@@ -22,7 +22,7 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
  * const { data: sessions } = useUserSessions(selectedUserId);
  * ```
  */
-export function useUserSessions(userId: UserId): UseQueryResult<readonly IdentitySession[]> {
+export function useUserSessions(userId: UserId): UseQueryResult<readonly UserSessionResponse[]> {
   const config = useIdentityConfig();
   const basePath = config.providerBasePath;
 
@@ -40,18 +40,16 @@ export function useUserSessions(userId: UserId): UseQueryResult<readonly Identit
  *
  * @example
  * ```tsx
- * const { data: devices } = useUserDeviceActivity(selectedUserId);
+ * const { data: devices } = useUserDevices(selectedUserId);
  * ```
  */
-export function useUserDeviceActivity(
-  userId: UserId
-): UseQueryResult<readonly IdentityDeviceActivity[]> {
+export function useUserDevices(userId: UserId): UseQueryResult<readonly UserDeviceResponse[]> {
   const config = useIdentityConfig();
   const basePath = config.providerBasePath;
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'provider', 'users', userId, 'devices'),
-    queryFn: () => getUserDeviceActivity(config.client, basePath, userId),
+    queryFn: () => listUserDevices(config.client, basePath, userId),
     enabled: userId.length > 0,
   });
 }
@@ -59,7 +57,7 @@ export function useUserDeviceActivity(
 /** Variables for `useTerminateSession` mutation. */
 export type TerminateSessionVariables = {
   readonly userId: UserId;
-  readonly sessionId: IdentitySessionId;
+  readonly sessionId: UserSessionId;
 };
 
 /**

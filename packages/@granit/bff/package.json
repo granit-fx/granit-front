@@ -14,10 +14,8 @@
     "build": "tsup"
   },
   "peerDependencies": {
-    "@granit/ip-geolocation": "workspace:*",
     "@granit/logger": "workspace:*",
-    "@granit/types": "workspace:*",
-    "@granit/identity-abstractions": "workspace:*"
+    "@granit/types": "workspace:*"
   },
   "peerDependenciesMeta": {
     "@granit/logger": {
@@ -25,11 +23,9 @@
     }
   },
   "devDependencies": {
-    "@granit/ip-geolocation": "workspace:*",
     "@granit/logger": "workspace:*",
     "@granit/testing": "workspace:*",
-    "@granit/types": "workspace:*",
-    "@granit/identity-abstractions": "workspace:*"
+    "@granit/types": "workspace:*"
   },
   "publishConfig": {
     "exports": {

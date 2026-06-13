@@ -1,6 +1,6 @@
 import { toEntityId, toISODateString } from '@granit/types';
 
-import type { IdentityDeviceActivity, IdentitySession, IdentityUser } from '@granit/identity';
+import type { IdentityUser, UserDeviceResponse, UserSessionResponse } from '@granit/identity';
 
 export const mockUsers: IdentityUser[] = [
   {
@@ -140,14 +140,14 @@ export const mockUsers: IdentityUser[] = [
   },
 ];
 
-export const mockSessions: IdentitySession[] = [
+export const mockSessions: UserSessionResponse[] = [
   {
-    sessionId: toEntityId<'IdentitySession'>('sess-abc-001'),
-    ipAddress: '10.0.1.42',
-    startedAt: toISODateString('2026-03-06T08:00:00Z'),
-    lastAccess: toISODateString('2026-03-06T09:30:00Z'),
-    rememberMe: false,
-    clients: ['granit-showcase-admin', 'granit-showcase-app'],
+    sessionId: toEntityId<'UserSession'>('sess-abc-001'),
+    isCurrent: true,
+    createdAt: toISODateString('2026-03-06T08:00:00Z'),
+    lastAccessedAt: toISODateString('2026-03-06T09:30:00Z'),
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/122.0',
+    ipAddress: '10.0.1.0',
     location: {
       city: 'Brussels',
       region: 'Brussels-Capital',
@@ -157,31 +157,30 @@ export const mockSessions: IdentitySession[] = [
       longitude: 4.3517,
     },
     riskLevel: 'None',
+    riskReasons: null,
   },
   {
-    sessionId: toEntityId<'IdentitySession'>('sess-abc-002'),
-    ipAddress: '10.0.1.42',
-    startedAt: toISODateString('2026-03-05T18:00:00Z'),
-    lastAccess: toISODateString('2026-03-05T20:15:00Z'),
-    rememberMe: true,
-    clients: ['granit-showcase-app'],
+    sessionId: toEntityId<'UserSession'>('sess-abc-002'),
+    isCurrent: false,
+    createdAt: toISODateString('2026-03-05T18:00:00Z'),
+    lastAccessedAt: toISODateString('2026-03-05T20:15:00Z'),
+    userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0) Safari/17.0',
+    ipAddress: '10.0.1.0',
     location: null,
     riskLevel: 'Low',
+    riskReasons: ['new_location'],
   },
 ];
 
-export const mockDevices: IdentityDeviceActivity[] = [
+export const mockDevices: UserDeviceResponse[] = [
   {
-    ipAddress: '10.0.1.42',
-    lastAccess: toISODateString('2026-03-06T09:30:00Z'),
-    device: 'Desktop',
+    deviceId: toEntityId<'UserDevice'>('dev-abc-001'),
+    kind: 'Browser',
     operatingSystem: 'Windows',
-    operatingSystemVersion: '11',
-    browser: 'Chrome/122.0',
-    mobile: false,
-    current: true,
-    sessions: mockSessions,
-    location: {
+    browser: 'Chrome',
+    lastSeen: toISODateString('2026-03-06T09:30:00Z'),
+    sessionCount: 2,
+    lastLocation: {
       city: 'Brussels',
       region: 'Brussels-Capital',
       country: 'Belgium',
@@ -191,16 +190,13 @@ export const mockDevices: IdentityDeviceActivity[] = [
     },
   },
   {
-    ipAddress: '10.0.1.55',
-    lastAccess: toISODateString('2026-03-04T12:00:00Z'),
-    device: 'Mobile',
+    deviceId: toEntityId<'UserDevice'>('dev-abc-002'),
+    kind: 'MobileApp',
     operatingSystem: 'iOS',
-    operatingSystemVersion: '17',
-    browser: 'Safari/17.0',
-    mobile: true,
-    current: false,
-    sessions: [],
-    location: null,
+    browser: null,
+    lastSeen: toISODateString('2026-03-04T12:00:00Z'),
+    sessionCount: 0,
+    lastLocation: null,
   },
 ];
 

@@ -1675,6 +1675,17 @@
           "name": "IdentityPermissions",
           "kind": "const",
           "signature": "const IdentityPermissions"
+        },
+        {
+          "name": "composeDeviceLabel",
+          "kind": "function",
+          "signature": "function composeDeviceLabel( device: Pick<UserDeviceResponse, 'kind' | 'operatingSystem' | 'browser'>, labels: DeviceLabelStrings ): string"
+        },
+        {
+          "name": "DeviceLabelStrings",
+          "kind": "interface",
+          "signature": "interface DeviceLabelStrings",
+          "members": []
         }
       ]
     },
@@ -1682,6 +1693,11 @@
       "name": "@granit/identity-abstractions",
       "description": "Identity abstractions — TypeScript mirror of Granit.Identity.Abstractions (shared session-risk contract)",
       "exports": [
+        {
+          "name": "DeviceKind",
+          "kind": "type",
+          "signature": "type DeviceKind ="
+        },
         {
           "name": "UserSessionRiskLevel",
           "kind": "type",
@@ -5320,7 +5336,7 @@
         {
           "name": "TerminateSessionVariables",
           "kind": "type",
-          "signature": "type TerminateSessionVariables = { readonly userId: UserId; readonly sessionId: IdentitySessionId; }"
+          "signature": "type TerminateSessionVariables = { readonly userId: UserId; readonly sessionId: UserSessionId; }"
         },
         {
           "name": "SetTemporaryPasswordVariables",

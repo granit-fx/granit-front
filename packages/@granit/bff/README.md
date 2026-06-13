@@ -1,6 +1,13 @@
 # @granit/bff
 
-BFF (Backend-for-Frontend) authentication types, CSRF token manager, and session API. Mirrors `Granit.Bff` .NET contract.
+BFF (Backend-for-Frontend) authentication types and CSRF token manager. Mirrors
+the `Granit.Bff` .NET contract (`GET /bff/user`, `POST /bff/csrf-token`).
+
+> **Sessions moved.** Listing and revoking the caller's own sessions is no
+> longer a BFF concern (granit-dotnet #2692). Use the canonical, transport-
+> agnostic `/sessions` (+ `/devices`) endpoints via `@granit/identity`
+> (`listMySessions`, `revokeMySession`, `revokeMyOtherSessions`, `listMyDevices`)
+> and `@granit/react-identity` (`useMySessions`, `useRevokeMySession`, …).
 
 ## Installation
 
@@ -14,26 +21,19 @@ pnpm add @granit/bff
 
 - `BffUser`, `BffUserResponse`, `BffUnauthenticated` -- user state
 - `BffConfig` -- BFF configuration
-- `BffSessionInfo`, `BffSessionListResponse` -- session management
+- `BffCsrfTokenResponse` -- CSRF token issuance response
 
 ### Classes
 
 - `CsrfManager` -- CSRF token lifecycle management
 
-### Functions
-
-- `fetchBffSessions(...)` -- list active sessions
-- `revokeBffSession(...)` -- revoke a specific session
-- `revokeAllOtherBffSessions(...)` -- revoke all sessions except current
-
 ## Usage
 
 ```ts
-import { CsrfManager, fetchBffSessions } from '@granit/bff';
+import { CsrfManager } from '@granit/bff';
 import type { BffUser } from '@granit/bff';
 
 const csrf = new CsrfManager();
-const sessions = await fetchBffSessions(client, basePath);
 ```
 
 ## License
