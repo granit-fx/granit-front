@@ -65,7 +65,7 @@ export async function getCacheStats(
 }
 
 /**
- * Trigger a cache sync for specific user IDs.
+ * Trigger a cache sync for specific user IDs and return the refreshed records.
  *
  * `POST {basePath}/sync`
  */
@@ -73,8 +73,9 @@ export async function syncUsers(
   client: AxiosInstance,
   basePath: string,
   userIds: readonly UserId[]
-): Promise<void> {
-  await client.post(`${basePath}/sync`, { userIds });
+): Promise<readonly IdentityUser[]> {
+  const response = await client.post<readonly IdentityUser[]>(`${basePath}/sync`, { userIds });
+  return response.data;
 }
 
 /**
@@ -114,4 +115,18 @@ export async function eraseUserCache(
   userId: UserId
 ): Promise<void> {
   await client.delete(`${basePath}/${encodeURIComponent(userId)}`);
+}
+
+/**
+ * Pseudonymize a user's cached data (GDPR Art. 18 — replaces PII with
+ * anonymized placeholders while preserving the entry for referential integrity).
+ *
+ * `PATCH {basePath}/{userId}/pseudonymize`
+ */
+export async function pseudonymizeUserCache(
+  client: AxiosInstance,
+  basePath: string,
+  userId: UserId
+): Promise<void> {
+  await client.patch(`${basePath}/${encodeURIComponent(userId)}/pseudonymize`);
 }

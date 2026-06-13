@@ -52,6 +52,20 @@ describe('useIdentityRgpd', () => {
     expect(client.delete).toHaveBeenCalledWith('/api/v1/identity/users/user-1');
   });
 
+  it('pseudonymize mutation patches user cache', async () => {
+    const client = createMockClient();
+    vi.mocked(client.patch).mockResolvedValue({ data: undefined });
+
+    const { result } = renderHook(() => useIdentityRgpd(), {
+      wrapper: createWrapper(client),
+    });
+
+    result.current.pseudonymize.mutate(toEntityId<'User'>('user-1'));
+
+    await waitFor(() => expect(result.current.pseudonymize.isSuccess).toBe(true));
+    expect(client.patch).toHaveBeenCalledWith('/api/v1/identity/users/user-1/pseudonymize');
+  });
+
   it('uses custom basePath', async () => {
     const client = createMockClient();
     vi.mocked(client.delete).mockResolvedValue({ data: undefined });

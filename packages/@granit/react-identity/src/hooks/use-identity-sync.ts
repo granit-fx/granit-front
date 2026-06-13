@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-provider';
 
 import type {
+  IdentityUser,
   IdentityUserCacheSyncAllResult,
   IdentityUserCacheSyncStaleResult,
 } from '@granit/identity';
@@ -13,7 +14,7 @@ import type { UseMutationResult } from '@tanstack/react-query';
 /**
  * Returns mutations for synchronizing the identity user cache.
  *
- * - `sync` — sync specific user IDs, invalidates user list queries
+ * - `sync` — sync specific user IDs (resolves to the refreshed records), invalidates user list queries
  * - `syncAll` — full sync of all identity provider users, invalidates all identity queries
  * - `syncStale` — sync stale entries only, invalidates user list queries
  *
@@ -26,7 +27,7 @@ import type { UseMutationResult } from '@tanstack/react-query';
  * ```
  */
 export function useIdentitySync(): {
-  sync: UseMutationResult<void, Error, UserId[]>;
+  sync: UseMutationResult<readonly IdentityUser[], Error, UserId[]>;
   syncAll: UseMutationResult<IdentityUserCacheSyncAllResult, Error, void>;
   syncStale: UseMutationResult<IdentityUserCacheSyncStaleResult, Error, void>;
 } {

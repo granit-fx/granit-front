@@ -7,6 +7,7 @@ import {
   eraseUserCache,
   getCacheStats,
   getUserById,
+  pseudonymizeUserCache,
   searchUsers,
   syncAllUsers,
   syncStaleUsers,
@@ -126,11 +127,11 @@ describe('identity-user-cache-api', () => {
   });
 
   describe('syncUsers', () => {
-    it('should POST {basePath}/sync with userIds body', async () => {
+    it('should POST {basePath}/sync with userIds body and return refreshed users', async () => {
       const client = createMockClient();
-      vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
+      vi.mocked(client.post).mockResolvedValue(axiosResponse([sampleUser]));
 
-      await syncUsers(client, basePath, [
+      const actual = await syncUsers(client, basePath, [
         toEntityId<'User'>('user-1'),
         toEntityId<'User'>('user-2'),
       ]);
@@ -138,6 +139,7 @@ describe('identity-user-cache-api', () => {
       expect(client.post).toHaveBeenCalledWith(`${basePath}/sync`, {
         userIds: [toEntityId<'User'>('user-1'), toEntityId<'User'>('user-2')],
       });
+      expect(actual).toEqual([sampleUser]);
     });
   });
 
@@ -185,6 +187,28 @@ describe('identity-user-cache-api', () => {
 
       expect(client.delete).toHaveBeenCalledWith(
         `${basePath}/${encodeURIComponent('user/special@id')}`
+      );
+    });
+  });
+
+  describe('pseudonymizeUserCache', () => {
+    it('should PATCH {basePath}/{userId}/pseudonymize', async () => {
+      const client = createMockClient();
+      vi.mocked(client.patch).mockResolvedValue(axiosResponse(undefined));
+
+      await pseudonymizeUserCache(client, basePath, toEntityId<'User'>('user-1'));
+
+      expect(client.patch).toHaveBeenCalledWith(`${basePath}/user-1/pseudonymize`);
+    });
+
+    it('should encode userId with special characters', async () => {
+      const client = createMockClient();
+      vi.mocked(client.patch).mockResolvedValue(axiosResponse(undefined));
+
+      await pseudonymizeUserCache(client, basePath, toEntityId<'User'>('user/special@id'));
+
+      expect(client.patch).toHaveBeenCalledWith(
+        `${basePath}/${encodeURIComponent('user/special@id')}/pseudonymize`
       );
     });
   });

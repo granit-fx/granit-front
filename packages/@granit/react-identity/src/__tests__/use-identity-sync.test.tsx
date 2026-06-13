@@ -47,7 +47,7 @@ describe('useIdentitySync', () => {
 
   it('sync mutation posts user IDs', async () => {
     const client = createMockClient();
-    vi.mocked(client.post).mockResolvedValue({ data: undefined });
+    vi.mocked(client.post).mockResolvedValue({ data: [] });
 
     const { result } = renderHook(() => useIdentitySync(), {
       wrapper: createWrapper(client),
@@ -59,6 +59,7 @@ describe('useIdentitySync', () => {
     expect(client.post).toHaveBeenCalledWith('/api/v1/identity/users/sync', {
       userIds: [toEntityId<'User'>('user-1'), toEntityId<'User'>('user-2')],
     });
+    expect(result.current.sync.data).toEqual([]);
   });
 
   it('syncAll mutation triggers full sync', async () => {

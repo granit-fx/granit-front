@@ -284,11 +284,19 @@ export function createIdentityHandlers(
       return HttpResponse.json(users);
     }),
 
-    http.post(`${cacheBase}/sync`, () => new HttpResponse(null, { status: 204 })),
+    http.post(`${cacheBase}/sync`, async ({ request }) => {
+      const body = (await request.json()) as { userIds: string[] };
+      const users = body.userIds
+        .map((id) => mockUsers.find((u) => u.userId === id))
+        .filter(Boolean)
+        .map((u) => toIdentityUser(u!));
+      return HttpResponse.json(users);
+    }),
     http.post(`${cacheBase}/sync-all`, () => HttpResponse.json({ syncedCount: mockUsers.length })),
     http.post(`${cacheBase}/sync-stale`, () => HttpResponse.json({ refreshedCount: 2 })),
 
     http.delete(`${cacheBase}/:userId`, () => new HttpResponse(null, { status: 204 })),
+    http.patch(`${cacheBase}/:userId/pseudonymize`, () => new HttpResponse(null, { status: 204 })),
 
     // ── Provider user endpoints (/identity/provider) ───────────────────────
 
