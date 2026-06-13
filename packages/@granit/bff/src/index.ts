@@ -15,7 +15,7 @@ export type {
 // `location` / `riskLevel` fields of BffSessionInfo without reaching into the
 // owning packages directly.
 export type { GeoLocation } from '@granit/ip-geolocation';
-export type { UserSessionRiskLevel } from '@granit/user-sessions';
+export type { UserSessionRiskLevel } from '@granit/identity-abstractions';
 
 export { CsrfManager } from './csrf/index';
 

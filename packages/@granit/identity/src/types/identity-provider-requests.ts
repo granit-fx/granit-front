@@ -13,7 +13,8 @@ export type IdentityUserUpdateRequest = {
   readonly email?: string;
   readonly firstName?: string;
   readonly lastName?: string;
-  readonly metadata?: Readonly<Record<string, string | null>>;
+  /** Custom provider attributes. Serializes to the backend's `attributes` field (max 50 entries). */
+  readonly attributes?: Readonly<Record<string, string | null>>;
 };
 
 /** Request body for `PATCH /identity/provider/users/{userId}/enabled`. */

@@ -17,7 +17,7 @@
     "@granit/ip-geolocation": "workspace:*",
     "@granit/logger": "workspace:*",
     "@granit/types": "workspace:*",
-    "@granit/user-sessions": "workspace:*"
+    "@granit/identity-abstractions": "workspace:*"
   },
   "peerDependenciesMeta": {
     "@granit/logger": {
@@ -29,7 +29,7 @@
     "@granit/logger": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/types": "workspace:*",
-    "@granit/user-sessions": "workspace:*"
+    "@granit/identity-abstractions": "workspace:*"
   },
   "publishConfig": {
     "exports": {

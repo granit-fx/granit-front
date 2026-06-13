@@ -19,9 +19,9 @@
 
 import type { ParseResult } from './parse-bff-user';
 import type { BffSessionId, BffSessionInfo } from '../types/index';
+import type { UserSessionRiskLevel } from '@granit/identity-abstractions';
 import type { GeoLocation } from '@granit/ip-geolocation';
 import type { ISODateString } from '@granit/types';
-import type { UserSessionRiskLevel } from '@granit/user-sessions';
 
 // Length bounds for untrusted free-text fields. Generous enough for legitimate
 // values, tight enough to stop an oversized string from bloating the UI/logs.

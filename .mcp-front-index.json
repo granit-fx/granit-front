@@ -1679,6 +1679,17 @@
       ]
     },
     {
+      "name": "@granit/identity-abstractions",
+      "description": "Identity abstractions — TypeScript mirror of Granit.Identity.Abstractions (shared session-risk contract)",
+      "exports": [
+        {
+          "name": "UserSessionRiskLevel",
+          "kind": "type",
+          "signature": "type UserSessionRiskLevel = 'None' | 'Low' | 'Medium' | 'High'"
+        }
+      ]
+    },
+    {
       "name": "@granit/invoicing",
       "description": "Invoice lifecycle — types and API functions for invoices and credit notes",
       "exports": [
@@ -7559,17 +7570,6 @@
           "name": "TimeZoneId",
           "kind": "type",
           "signature": "type TimeZoneId = string & { readonly __brand: 'TimeZoneId' }"
-        }
-      ]
-    },
-    {
-      "name": "@granit/user-sessions",
-      "description": "User-session risk contract — TypeScript mirror of Granit.UserSessions",
-      "exports": [
-        {
-          "name": "UserSessionRiskLevel",
-          "kind": "type",
-          "signature": "type UserSessionRiskLevel = 'None' | 'Low' | 'Medium' | 'High'"
         }
       ]
     },

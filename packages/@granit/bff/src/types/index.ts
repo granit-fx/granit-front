@@ -1,7 +1,7 @@
+import type { UserSessionRiskLevel } from '@granit/identity-abstractions';
 import type { GeoLocation } from '@granit/ip-geolocation';
 import type { Logger } from '@granit/logger';
 import type { EntityId, ISODateString, TenantId } from '@granit/types';
-import type { UserSessionRiskLevel } from '@granit/user-sessions';
 
 // ---------------------------------------------------------------------------
 // BFF authentication types — mirrors Granit.Bff .NET contract

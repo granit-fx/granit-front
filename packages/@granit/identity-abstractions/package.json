@@ -1,6 +1,6 @@
 {
-  "name": "@granit/user-sessions",
-  "description": "User-session risk contract — TypeScript mirror of Granit.UserSessions",
+  "name": "@granit/identity-abstractions",
+  "description": "Identity abstractions — TypeScript mirror of Granit.Identity.Abstractions (shared session-risk contract)",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",

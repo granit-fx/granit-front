@@ -1,6 +1,6 @@
+import type { UserSessionRiskLevel } from '@granit/identity-abstractions';
 import type { GeoLocation } from '@granit/ip-geolocation';
 import type { EntityId, ISODateString } from '@granit/types';
-import type { UserSessionRiskLevel } from '@granit/user-sessions';
 
 /** Branded session identifier for identity provider sessions. */
 export type IdentitySessionId = EntityId<'IdentitySession'>;
@@ -24,8 +24,8 @@ export type IdentityDeviceActivity = {
   readonly ipAddress: string | null;
   readonly lastAccess: ISODateString;
   readonly device: string | null;
-  readonly os: string | null;
-  readonly osVersion: string | null;
+  readonly operatingSystem: string | null;
+  readonly operatingSystemVersion: string | null;
   readonly browser: string | null;
   readonly mobile: boolean;
   readonly current: boolean;

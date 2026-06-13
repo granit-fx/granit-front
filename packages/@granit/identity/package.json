@@ -19,14 +19,14 @@
     "@granit/query-engine": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/types": "workspace:*",
-    "@granit/user-sessions": "workspace:*"
+    "@granit/identity-abstractions": "workspace:*"
   },
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/ip-geolocation": "workspace:*",
     "@granit/query-engine": "workspace:*",
     "@granit/types": "workspace:*",
-    "@granit/user-sessions": "workspace:*"
+    "@granit/identity-abstractions": "workspace:*"
   },
   "publishConfig": {
     "exports": {
