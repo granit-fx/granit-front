@@ -1,6 +1,19 @@
 // Provider
 export { NotificationProvider, useNotificationConfig } from './providers/notification-provider';
 
+// Rendering — view registry, resolution, default view
+export { registerNotificationView, getNotificationView } from './rendering/registry';
+export { resolveNotificationPresentation } from './rendering/resolve';
+export { presentDefault } from './rendering/default-view';
+export type {
+  NotificationActionLink,
+  NotificationPresentation,
+  NotificationPresentContext,
+  NotificationView,
+  PresentableNotification,
+  TranslateFn,
+} from './rendering/types';
+
 // Hooks
 export { useRealTimeNotifications } from './hooks/use-real-time-notifications';
 export type { UseRealTimeNotificationsReturn } from './hooks/use-real-time-notifications';

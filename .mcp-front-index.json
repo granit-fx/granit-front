@@ -5605,6 +5605,26 @@
           "signature": "function useNotificationConfig(): NotificationContextValue"
         },
         {
+          "name": "registerNotificationView",
+          "kind": "function",
+          "signature": "function registerNotificationView<TData>(view: NotificationView<TData>): void"
+        },
+        {
+          "name": "getNotificationView",
+          "kind": "function",
+          "signature": "function getNotificationView(code: string): NotificationView | undefined"
+        },
+        {
+          "name": "resolveNotificationPresentation",
+          "kind": "function",
+          "signature": "function resolveNotificationPresentation( notification: PresentableNotification, ctx: NotificationPresentContext ): NotificationPresentation"
+        },
+        {
+          "name": "presentDefault",
+          "kind": "function",
+          "signature": "function presentDefault(notification: PresentableNotification): NotificationPresentation"
+        },
+        {
           "name": "useRealTimeNotifications",
           "kind": "function",
           "signature": "function useRealTimeNotifications(): UseRealTimeNotificationsReturn"
