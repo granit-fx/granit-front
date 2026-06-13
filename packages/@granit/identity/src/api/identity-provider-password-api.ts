@@ -1,4 +1,7 @@
-import type { IdentityPasswordChangedAtResponse } from '../types/index';
+import type {
+  IdentityPasswordChangedAtResponse,
+  IdentitySetTemporaryPasswordRequest,
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { UserId } from '@granit/types';
 
@@ -40,10 +43,11 @@ export async function sendPasswordResetEmail(
 export async function setTemporaryPassword(
   client: AxiosInstance,
   basePath: string,
-  userId: string,
-  password: string
+  userId: UserId,
+  request: IdentitySetTemporaryPasswordRequest
 ): Promise<void> {
-  await client.post(`${basePath}/users/${encodeURIComponent(userId)}/password/temporary`, {
-    password,
-  });
+  await client.post(
+    `${basePath}/users/${encodeURIComponent(userId)}/password/temporary`,
+    request
+  );
 }

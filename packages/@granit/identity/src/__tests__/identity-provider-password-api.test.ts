@@ -65,7 +65,9 @@ describe('identity-provider-password-api', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
 
-      await setTemporaryPassword(client, basePath, 'user-1', 'temp123!');
+      await setTemporaryPassword(client, basePath, toEntityId<'User'>('user-1'), {
+        password: 'temp123!',
+      });
 
       expect(client.post).toHaveBeenCalledWith(`${basePath}/users/user-1/password/temporary`, {
         password: 'temp123!',

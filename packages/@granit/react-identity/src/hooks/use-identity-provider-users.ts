@@ -140,7 +140,7 @@ export function useSetUserEnabled(): UseMutationResult<void, Error, SetUserEnabl
 
   return useMutation({
     mutationFn: ({ userId, enabled }: SetUserEnabledVariables) =>
-      setUserEnabled(config.client, basePath, userId, enabled),
+      setUserEnabled(config.client, basePath, userId, { enabled }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildIdentityQueryKey(config, 'provider', 'users'),

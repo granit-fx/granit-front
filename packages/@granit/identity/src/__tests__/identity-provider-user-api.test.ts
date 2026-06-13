@@ -118,7 +118,7 @@ describe('identity-provider-user-api', () => {
       const client = createMockClient();
       vi.mocked(client.patch).mockResolvedValue(axiosResponse(undefined));
 
-      await setUserEnabled(client, basePath, toEntityId<'User'>('user-1'), false);
+      await setUserEnabled(client, basePath, toEntityId<'User'>('user-1'), { enabled: false });
 
       expect(client.patch).toHaveBeenCalledWith(`${basePath}/users/user-1/enabled`, {
         enabled: false,
@@ -129,7 +129,9 @@ describe('identity-provider-user-api', () => {
       const client = createMockClient();
       vi.mocked(client.patch).mockResolvedValue(axiosResponse(undefined));
 
-      await setUserEnabled(client, basePath, toEntityId<'User'>('user/special@id'), true);
+      await setUserEnabled(client, basePath, toEntityId<'User'>('user/special@id'), {
+        enabled: true,
+      });
 
       expect(client.patch).toHaveBeenCalledWith(
         `${basePath}/users/${encodeURIComponent('user/special@id')}/enabled`,

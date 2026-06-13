@@ -79,6 +79,6 @@ export function useSetTemporaryPassword(): UseMutationResult<
 
   return useMutation({
     mutationFn: ({ userId, password }: SetTemporaryPasswordVariables) =>
-      setTemporaryPassword(config.client, basePath, userId, password),
+      setTemporaryPassword(config.client, basePath, userId, { password }),
   });
 }

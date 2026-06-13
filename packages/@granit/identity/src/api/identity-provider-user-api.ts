@@ -2,6 +2,7 @@ import type {
   IdentityProviderUserListParams,
   IdentityUser,
   IdentityUserCreateRequest,
+  IdentityUserSetEnabledRequest,
   IdentityUserUpdateRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
@@ -79,7 +80,7 @@ export async function setUserEnabled(
   client: AxiosInstance,
   basePath: string,
   userId: UserId,
-  enabled: boolean
+  request: IdentityUserSetEnabledRequest
 ): Promise<void> {
-  await client.patch(`${basePath}/users/${encodeURIComponent(userId)}/enabled`, { enabled });
+  await client.patch(`${basePath}/users/${encodeURIComponent(userId)}/enabled`, request);
 }
