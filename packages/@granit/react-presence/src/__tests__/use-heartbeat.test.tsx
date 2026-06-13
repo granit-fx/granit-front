@@ -3,7 +3,9 @@ import { toEntityId, toISODateString } from '@granit/types';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { presenceKeys } from '../hooks/query-keys';
 import { useHeartbeat } from '../hooks/use-heartbeat';
+import { useMyPresence } from '../hooks/use-my-presence';
 
 import { createPresenceTestHarness } from './test-utils';
 
@@ -12,10 +14,10 @@ import type { UserId } from '@granit/types';
 
 vi.mock('@granit/presence', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
-  return { ...actual, pollMyPresence: vi.fn() };
+  return { ...actual, pollMyPresence: vi.fn(), getMyPresence: vi.fn() };
 });
 
-const { pollMyPresence } = await import('@granit/presence');
+const { pollMyPresence, getMyPresence } = await import('@granit/presence');
 
 const snapshot: PresenceResponse = {
   userId: toEntityId<'User'>('user-1') as UserId,
@@ -83,6 +85,43 @@ describe('useHeartbeat', () => {
       await vi.advanceTimersByTimeAsync(0);
     });
     expect(pollMyPresence).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps the heartbeat snapshot when a concurrent useMyPresence GET resolves later with a staler one', async () => {
+    const client = createMockClient();
+    const { wrapper, queryClient } = createPresenceTestHarness(client);
+
+    const offlineSnapshot: PresenceResponse = { ...snapshot, effectiveStatus: 'Offline' };
+    let resolveGet: (value: PresenceResponse) => void = () => {};
+    vi.mocked(getMyPresence).mockReturnValue(
+      new Promise<PresenceResponse>((resolve) => {
+        resolveGet = resolve;
+      })
+    );
+
+    renderHook(
+      () => {
+        useMyPresence();
+        useHeartbeat({ intervalMs: 1_000 });
+      },
+      { wrapper }
+    );
+
+    // Immediate heartbeat resolves (Online) and takes ownership of the cache,
+    // cancelling the still-in-flight GET on the same key.
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    // The initial GET resolves last with a stale Offline snapshot — it must not
+    // clobber the authoritative heartbeat result.
+    await act(async () => {
+      resolveGet(offlineSnapshot);
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    const cached = queryClient.getQueryData<PresenceResponse>(['presence', ...presenceKeys.my()]);
+    expect(cached?.effectiveStatus).toBe('Online');
   });
 
   it('does nothing when disabled', async () => {

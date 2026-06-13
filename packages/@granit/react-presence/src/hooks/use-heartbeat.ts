@@ -72,6 +72,13 @@ export function useHeartbeat(options: UseHeartbeatOptions = {}): void {
         const idleSeconds = Math.max(0, Math.floor((Date.now() - lastActivityRef.current) / 1000));
         const data = await pollMyPresence(config.client, config.basePath, { idleSeconds });
         if (!cancelled) {
+          // The poll returns the authoritative snapshot, so it owns the cache.
+          // Cancel any in-flight `useMyPresence` GET on the same key first: a
+          // concurrent GET resolving after this write would otherwise clobber
+          // the cache with a staler snapshot (e.g. Offline, captured before the
+          // server registered this heartbeat) and regress the UI until the next
+          // tick. This races on initial mount and on every tab re-focus.
+          await queryClient.cancelQueries({ queryKey });
           queryClient.setQueryData<PresenceResponse>(queryKey, data);
         }
       } catch {
