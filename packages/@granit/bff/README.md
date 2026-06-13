@@ -6,8 +6,8 @@ the `Granit.Bff` .NET contract (`GET /bff/user`, `POST /bff/csrf-token`).
 > **Sessions moved.** Listing and revoking the caller's own sessions is no
 > longer a BFF concern (granit-dotnet #2692). Use the canonical, transport-
 > agnostic `/sessions` (+ `/devices`) endpoints via `@granit/identity`
-> (`listMySessions`, `revokeMySession`, `revokeMyOtherSessions`, `listMyDevices`)
-> and `@granit/react-identity` (`useMySessions`, `useRevokeMySession`, …).
+> (`listMyUserSessions`, `revokeMyUserSession`, `revokeMyOtherUserSessions`, `listMyUserDevices`)
+> and `@granit/react-identity` (`useMyUserSessions`, `useRevokeMyUserSession`, …).
 
 ## Installation
 

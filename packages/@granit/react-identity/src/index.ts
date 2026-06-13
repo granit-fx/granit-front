@@ -56,10 +56,10 @@ export type { TerminateSessionVariables } from './hooks/use-identity-sessions';
 
 // Hooks — Self-service sessions/devices (the caller's own)
 export {
-  useMyDevices,
-  useMySessions,
-  useRevokeMyOtherSessions,
-  useRevokeMySession,
+  useMyUserDevices,
+  useMyUserSessions,
+  useRevokeMyOtherUserSessions,
+  useRevokeMyUserSession,
 } from './hooks/use-my-sessions';
 
 // i18next resource bundles (namespace: "identity")

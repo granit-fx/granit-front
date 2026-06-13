@@ -7,10 +7,10 @@ import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
-  useMyDevices,
-  useMySessions,
-  useRevokeMyOtherSessions,
-  useRevokeMySession,
+  useMyUserDevices,
+  useMyUserSessions,
+  useRevokeMyOtherUserSessions,
+  useRevokeMyUserSession,
 } from '../hooks/use-my-sessions';
 import { IdentityProvider } from '../providers/identity-provider';
 
@@ -58,12 +58,12 @@ describe('use-my-sessions', () => {
     vi.restoreAllMocks();
   });
 
-  describe('useMySessions', () => {
+  describe('useMyUserSessions', () => {
     it('fetches the caller’s own sessions from /sessions', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: [sampleSession] });
 
-      const { result } = renderHook(() => useMySessions(), { wrapper: createWrapper(client) });
+      const { result } = renderHook(() => useMyUserSessions(), { wrapper: createWrapper(client) });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.get).toHaveBeenCalledWith('/api/v1/sessions');
@@ -71,12 +71,12 @@ describe('use-my-sessions', () => {
     });
   });
 
-  describe('useMyDevices', () => {
+  describe('useMyUserDevices', () => {
     it('fetches the caller’s own devices from /devices', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: [sampleDevice] });
 
-      const { result } = renderHook(() => useMyDevices(), { wrapper: createWrapper(client) });
+      const { result } = renderHook(() => useMyUserDevices(), { wrapper: createWrapper(client) });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.get).toHaveBeenCalledWith('/api/v1/devices');
@@ -84,12 +84,14 @@ describe('use-my-sessions', () => {
     });
   });
 
-  describe('useRevokeMySession', () => {
+  describe('useRevokeMyUserSession', () => {
     it('revokes one session via DELETE /sessions/{id}', async () => {
       const client = createMockClient();
       vi.mocked(client.delete).mockResolvedValue({ data: undefined });
 
-      const { result } = renderHook(() => useRevokeMySession(), { wrapper: createWrapper(client) });
+      const { result } = renderHook(() => useRevokeMyUserSession(), {
+        wrapper: createWrapper(client),
+      });
 
       result.current.mutate(toEntityId<'UserSession'>('session-1'));
 
@@ -98,12 +100,12 @@ describe('use-my-sessions', () => {
     });
   });
 
-  describe('useRevokeMyOtherSessions', () => {
+  describe('useRevokeMyOtherUserSessions', () => {
     it('revokes all other sessions via DELETE /sessions and returns the count', async () => {
       const client = createMockClient();
       vi.mocked(client.delete).mockResolvedValue({ data: { revokedCount: 2 } });
 
-      const { result } = renderHook(() => useRevokeMyOtherSessions(), {
+      const { result } = renderHook(() => useRevokeMyOtherUserSessions(), {
         wrapper: createWrapper(client),
       });
 
@@ -118,7 +120,7 @@ describe('use-my-sessions', () => {
       const client = createMockClient();
       vi.mocked(client.delete).mockRejectedValue(new Error('Unauthorized'));
 
-      const { result } = renderHook(() => useRevokeMyOtherSessions(), {
+      const { result } = renderHook(() => useRevokeMyOtherUserSessions(), {
         wrapper: createWrapper(client),
       });
 

@@ -23,7 +23,7 @@ import type { AxiosInstance } from '@granit/api-client';
  *
  * `GET {basePath}/sessions`
  */
-export async function listMySessions(
+export async function listMyUserSessions(
   client: AxiosInstance,
   basePath: string
 ): Promise<readonly UserSessionResponse[]> {
@@ -36,7 +36,7 @@ export async function listMySessions(
  *
  * `GET {basePath}/devices`
  */
-export async function listMyDevices(
+export async function listMyUserDevices(
   client: AxiosInstance,
   basePath: string
 ): Promise<readonly UserDeviceResponse[]> {
@@ -51,7 +51,7 @@ export async function listMyDevices(
  *
  * `DELETE {basePath}/sessions/{sessionId}`
  */
-export async function revokeMySession(
+export async function revokeMyUserSession(
   client: AxiosInstance,
   basePath: string,
   sessionId: UserSessionId
@@ -67,7 +67,7 @@ export async function revokeMySession(
  *
  * @returns The number of sessions revoked.
  */
-export async function revokeMyOtherSessions(
+export async function revokeMyOtherUserSessions(
   client: AxiosInstance,
   basePath: string
 ): Promise<UserSessionsRevokedResponse> {

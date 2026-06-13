@@ -49,8 +49,8 @@ export type BffUserResponse = BffUser | BffUnauthenticated;
 // Session listing/revocation moved off the BFF (granit-dotnet #2692): the
 // caller's own sessions are now served by the canonical, transport-agnostic
 // `/sessions` (+ `/devices`) endpoints — see `@granit/identity`
-// (`listMySessions`, `revokeMySession`, …) and `@granit/react-identity`
-// (`useMySessions`, …). The BFF retains only auth bootstrap (`/bff/user`) and
+// (`listMyUserSessions`, `revokeMyUserSession`, …) and `@granit/react-identity`
+// (`useMyUserSessions`, …). The BFF retains only auth bootstrap (`/bff/user`) and
 // CSRF (`/bff/csrf-token`).
 
 /** Response from POST /{prefix}/bff/csrf-token. Mirrors Granit.Bff `BffCsrfTokenResponse`. */

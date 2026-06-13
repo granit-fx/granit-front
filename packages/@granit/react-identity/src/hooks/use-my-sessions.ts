@@ -1,8 +1,8 @@
 import {
-  listMyDevices,
-  listMySessions,
-  revokeMyOtherSessions,
-  revokeMySession,
+  listMyUserDevices,
+  listMyUserSessions,
+  revokeMyOtherUserSessions,
+  revokeMyUserSession,
 } from '@granit/identity';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -27,16 +27,16 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
  *
  * @example
  * ```tsx
- * const { data: sessions } = useMySessions();
+ * const { data: sessions } = useMyUserSessions();
  * ```
  */
-export function useMySessions(): UseQueryResult<readonly UserSessionResponse[]> {
+export function useMyUserSessions(): UseQueryResult<readonly UserSessionResponse[]> {
   const config = useIdentityConfig();
   const basePath = config.sessionsBasePath;
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'me', 'sessions'),
-    queryFn: () => listMySessions(config.client, basePath),
+    queryFn: () => listMyUserSessions(config.client, basePath),
   });
 }
 
@@ -45,16 +45,16 @@ export function useMySessions(): UseQueryResult<readonly UserSessionResponse[]> 
  *
  * @example
  * ```tsx
- * const { data: devices } = useMyDevices();
+ * const { data: devices } = useMyUserDevices();
  * ```
  */
-export function useMyDevices(): UseQueryResult<readonly UserDeviceResponse[]> {
+export function useMyUserDevices(): UseQueryResult<readonly UserDeviceResponse[]> {
   const config = useIdentityConfig();
   const basePath = config.sessionsBasePath;
 
   return useQuery({
     queryKey: buildIdentityQueryKey(config, 'me', 'devices'),
-    queryFn: () => listMyDevices(config.client, basePath),
+    queryFn: () => listMyUserDevices(config.client, basePath),
   });
 }
 
@@ -64,17 +64,18 @@ export function useMyDevices(): UseQueryResult<readonly UserDeviceResponse[]> {
  *
  * @example
  * ```tsx
- * const revoke = useRevokeMySession();
+ * const revoke = useRevokeMyUserSession();
  * await revoke.mutateAsync(sessionId);
  * ```
  */
-export function useRevokeMySession(): UseMutationResult<void, Error, UserSessionId> {
+export function useRevokeMyUserSession(): UseMutationResult<void, Error, UserSessionId> {
   const config = useIdentityConfig();
   const queryClient = useQueryClient();
   const basePath = config.sessionsBasePath;
 
   return useMutation({
-    mutationFn: (sessionId: UserSessionId) => revokeMySession(config.client, basePath, sessionId),
+    mutationFn: (sessionId: UserSessionId) =>
+      revokeMyUserSession(config.client, basePath, sessionId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: buildIdentityQueryKey(config, 'me') });
     },
@@ -88,11 +89,11 @@ export function useRevokeMySession(): UseMutationResult<void, Error, UserSession
  *
  * @example
  * ```tsx
- * const revokeOthers = useRevokeMyOtherSessions();
+ * const revokeOthers = useRevokeMyOtherUserSessions();
  * const { revokedCount } = await revokeOthers.mutateAsync();
  * ```
  */
-export function useRevokeMyOtherSessions(): UseMutationResult<
+export function useRevokeMyOtherUserSessions(): UseMutationResult<
   UserSessionsRevokedResponse,
   Error,
   void
@@ -102,7 +103,7 @@ export function useRevokeMyOtherSessions(): UseMutationResult<
   const basePath = config.sessionsBasePath;
 
   return useMutation({
-    mutationFn: () => revokeMyOtherSessions(config.client, basePath),
+    mutationFn: () => revokeMyOtherUserSessions(config.client, basePath),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: buildIdentityQueryKey(config, 'me') });
     },

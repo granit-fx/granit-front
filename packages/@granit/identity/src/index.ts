@@ -73,10 +73,10 @@ export {
 
 // API — Self-service sessions/devices (the caller's own)
 export {
-  listMyDevices,
-  listMySessions,
-  revokeMyOtherSessions,
-  revokeMySession,
+  listMyUserDevices,
+  listMyUserSessions,
+  revokeMyOtherUserSessions,
+  revokeMyUserSession,
 } from './api/user-session-api';
 export {
   getPasswordChangedAt,

@@ -3,10 +3,10 @@ import { toEntityId, toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
-  listMyDevices,
-  listMySessions,
-  revokeMyOtherSessions,
-  revokeMySession,
+  listMyUserDevices,
+  listMyUserSessions,
+  revokeMyOtherUserSessions,
+  revokeMyUserSession,
 } from '../api/user-session-api';
 
 import type {
@@ -40,36 +40,36 @@ const sampleDevice: UserDeviceResponse = {
 const basePath = '/api/v1';
 
 describe('user-session-api', () => {
-  describe('listMySessions', () => {
+  describe('listMyUserSessions', () => {
     it('should GET {basePath}/sessions', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleSession]));
 
-      const result = await listMySessions(client, basePath);
+      const result = await listMyUserSessions(client, basePath);
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/sessions`);
       expect(result).toEqual([sampleSession]);
     });
   });
 
-  describe('listMyDevices', () => {
+  describe('listMyUserDevices', () => {
     it('should GET {basePath}/devices', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleDevice]));
 
-      const result = await listMyDevices(client, basePath);
+      const result = await listMyUserDevices(client, basePath);
 
       expect(client.get).toHaveBeenCalledWith(`${basePath}/devices`);
       expect(result).toEqual([sampleDevice]);
     });
   });
 
-  describe('revokeMySession', () => {
+  describe('revokeMyUserSession', () => {
     it('should DELETE {basePath}/sessions/{sessionId}', async () => {
       const client = createMockClient();
       vi.mocked(client.delete).mockResolvedValue(axiosResponse(undefined));
 
-      await revokeMySession(client, basePath, toEntityId<'UserSession'>('session-1'));
+      await revokeMyUserSession(client, basePath, toEntityId<'UserSession'>('session-1'));
 
       expect(client.delete).toHaveBeenCalledWith(`${basePath}/sessions/session-1`);
     });
@@ -78,7 +78,7 @@ describe('user-session-api', () => {
       const client = createMockClient();
       vi.mocked(client.delete).mockResolvedValue(axiosResponse(undefined));
 
-      await revokeMySession(client, basePath, toEntityId<'UserSession'>('session/special@id'));
+      await revokeMyUserSession(client, basePath, toEntityId<'UserSession'>('session/special@id'));
 
       expect(client.delete).toHaveBeenCalledWith(
         `${basePath}/sessions/${encodeURIComponent('session/special@id')}`
@@ -86,13 +86,13 @@ describe('user-session-api', () => {
     });
   });
 
-  describe('revokeMyOtherSessions', () => {
+  describe('revokeMyOtherUserSessions', () => {
     it('should DELETE {basePath}/sessions and return the revoked count', async () => {
       const client = createMockClient();
       const revoked: UserSessionsRevokedResponse = { revokedCount: 3 };
       vi.mocked(client.delete).mockResolvedValue(axiosResponse(revoked));
 
-      const result = await revokeMyOtherSessions(client, basePath);
+      const result = await revokeMyOtherUserSessions(client, basePath);
 
       expect(client.delete).toHaveBeenCalledWith(`${basePath}/sessions`);
       expect(result).toEqual(revoked);
