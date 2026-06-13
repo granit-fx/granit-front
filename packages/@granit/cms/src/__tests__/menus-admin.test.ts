@@ -29,11 +29,11 @@ describe('listMenus', () => {
 
     const result = await listMenus(client, BASE);
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/menus`, { params: undefined });
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/menus`, undefined);
     expect(result).toEqual(response);
   });
 
-  it('passes pagination params', async () => {
+  it('serializes the QueryEngine request into the query string', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
       axiosResponse({ items: [], totalCount: 0, hasMore: false, nextCursor: null })
@@ -41,9 +41,7 @@ describe('listMenus', () => {
 
     await listMenus(client, BASE, { page: 1, pageSize: 20 });
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/menus`, {
-      params: { page: 1, pageSize: 20 },
-    });
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/menus?page=1&pageSize=20`, undefined);
   });
 });
 

@@ -1,3 +1,5 @@
+import { getPage } from '@granit/query-engine';
+
 import type {
   AddReleaseActionRequest,
   CreateReleaseRequest,
@@ -9,16 +11,14 @@ import type {
 import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult } from '@granit/query-engine';
 
-/** `GET /api/cms/releases` — paged list. Requires `Cms.Releases.Read`. */
+/** `GET /api/cms/releases` — QueryEngine grid (filter/sort/quickFilters). Requires `Cms.Releases.Read`. */
 export async function listReleases(
   client: AxiosInstance,
   basePath: string,
-  params?: ListReleasesParams
+  params?: ListReleasesParams,
+  options?: { readonly signal?: AbortSignal }
 ): Promise<PagedResult<ReleaseResponse>> {
-  const res = await client.get<PagedResult<ReleaseResponse>>(`${basePath}/api/cms/releases`, {
-    params,
-  });
-  return res.data;
+  return getPage<ReleaseResponse>(client, `${basePath}/api/cms/releases`, params ?? {}, options);
 }
 
 /** `GET /api/cms/releases/{id}`. Requires `Cms.Releases.Read`. */

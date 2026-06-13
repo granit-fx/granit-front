@@ -58,7 +58,12 @@ describe('useMenus', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(listMenus).toHaveBeenCalledWith(client, '', { page: 1, pageSize: 20 });
+    expect(listMenus).toHaveBeenCalledWith(
+      client,
+      '',
+      { page: 1, pageSize: 20 },
+      expect.objectContaining({ signal: expect.any(AbortSignal) })
+    );
   });
 });
 

@@ -61,7 +61,12 @@ describe('useReleases', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(listReleases).toHaveBeenCalledWith(client, '', { page: 1, pageSize: 20 });
+    expect(listReleases).toHaveBeenCalledWith(
+      client,
+      '',
+      { page: 1, pageSize: 20 },
+      expect.objectContaining({ signal: expect.any(AbortSignal) })
+    );
   });
 });
 

@@ -71,7 +71,7 @@ describe('getPageTree', () => {
 });
 
 describe('listPages', () => {
-  it('GET /api/cms/pages with params', async () => {
+  it('serializes the QueryEngine request into the query string', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
       axiosResponse({ items: [page], totalCount: 1, hasMore: false, nextCursor: null })
@@ -79,9 +79,7 @@ describe('listPages', () => {
 
     await listPages(client, BASE, { page: 1, pageSize: 20 });
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/pages`, {
-      params: { page: 1, pageSize: 20 },
-    });
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/pages?page=1&pageSize=20`, undefined);
   });
 });
 

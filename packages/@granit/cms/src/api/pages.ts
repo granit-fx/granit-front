@@ -41,7 +41,7 @@ export async function mintPreviewToken(
   request: MintPreviewTokenRequest
 ): Promise<MintPreviewTokenResponse> {
   const response = await client.post<MintPreviewTokenResponse>(
-    `${basePath}/api/cms/pages/${pageId}/preview-token`,
+    `${basePath}/api/cms/pages/${encodeURIComponent(pageId)}/preview-token`,
     request
   );
   return response.data;

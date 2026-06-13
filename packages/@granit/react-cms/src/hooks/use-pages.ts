@@ -35,7 +35,7 @@ export function usePages(
   const { client, basePath, queryKeyPrefix } = useCmsConfig();
   return useQuery({
     queryKey: cmsKeys.pages.list(queryKeyPrefix, params),
-    queryFn: () => listPages(client, basePath, params),
+    queryFn: ({ signal }) => listPages(client, basePath, params, { signal }),
     enabled: options?.enabled ?? true,
   });
 }

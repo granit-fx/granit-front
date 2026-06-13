@@ -1,3 +1,5 @@
+import { getPage } from '@granit/query-engine';
+
 import type {
   CreateMenuRequest,
   ListMenusParams,
@@ -7,16 +9,14 @@ import type {
 import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult } from '@granit/query-engine';
 
-/** `GET /api/cms/menus` — paged list. Requires `Cms.Menus.Read`. */
+/** `GET /api/cms/menus` — QueryEngine grid (filter/sort/quickFilters). Requires `Cms.Menus.Read`. */
 export async function listMenus(
   client: AxiosInstance,
   basePath: string,
-  params?: ListMenusParams
+  params?: ListMenusParams,
+  options?: { readonly signal?: AbortSignal }
 ): Promise<PagedResult<MenuResponse>> {
-  const res = await client.get<PagedResult<MenuResponse>>(`${basePath}/api/cms/menus`, {
-    params,
-  });
-  return res.data;
+  return getPage<MenuResponse>(client, `${basePath}/api/cms/menus`, params ?? {}, options);
 }
 
 /** `GET /api/cms/menus/{id}`. Requires `Cms.Menus.Read`. */

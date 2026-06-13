@@ -42,8 +42,22 @@ describe('listReleases', () => {
 
     const result = await listReleases(client, BASE);
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/releases`, { params: undefined });
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/releases`, undefined);
     expect(result).toEqual(response);
+  });
+
+  it('serializes the QueryEngine request into the query string', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse({ items: [], totalCount: 0, hasMore: false, nextCursor: null })
+    );
+
+    await listReleases(client, BASE, { page: 1, pageSize: 20 });
+
+    expect(client.get).toHaveBeenCalledWith(
+      `${BASE}/api/cms/releases?page=1&pageSize=20`,
+      undefined
+    );
   });
 });
 

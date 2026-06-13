@@ -1,3 +1,5 @@
+import { getPage as getResultsPage } from '@granit/query-engine';
+
 import type {
   CreatePageRequest,
   ListPagesParams,
@@ -26,16 +28,14 @@ export async function getPageTree(
   return res.data;
 }
 
-/** `GET /api/cms/pages` — paged list. Requires `Cms.Pages.Read`. */
+/** `GET /api/cms/pages` — QueryEngine grid (filter/sort/quickFilters). Requires `Cms.Pages.Read`. */
 export async function listPages(
   client: AxiosInstance,
   basePath: string,
-  params?: ListPagesParams
+  params?: ListPagesParams,
+  options?: { readonly signal?: AbortSignal }
 ): Promise<PagedResult<PageResponse>> {
-  const res = await client.get<PagedResult<PageResponse>>(`${basePath}/api/cms/pages`, {
-    params,
-  });
-  return res.data;
+  return getResultsPage<PageResponse>(client, `${basePath}/api/cms/pages`, params ?? {}, options);
 }
 
 /** `GET /api/cms/pages/{id}`. Requires `Cms.Pages.Read`. */

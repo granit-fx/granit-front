@@ -7,7 +7,7 @@
  * Source of truth: the running backend's OpenAPI spec.
  */
 
-import type { PaginationParams } from '@granit/query-engine';
+import type { QueryRequest } from '@granit/query-engine';
 
 // ─── Block Catalog ──────────────────────────────────────────────────────────
 
@@ -400,21 +400,22 @@ export interface ScheduleReleaseRequest {
 // ─── List params (admin) ─────────────────────────────────────────────────────
 //
 // All admin list endpoints are mapped via `MapGranitQuery<T>()` on the backend,
-// which binds the standard QueryEngine request (page/pageSize/filters/sort/…).
-// We expose only the pagination surface here; site scoping and free-text search
-// are QueryEngine filters, not ad-hoc query keys.
+// which binds the standard QueryEngine request (page/pageSize/filter/sort/
+// quickFilters/…). We expose the full `QueryRequest` so callers can drive
+// server-side filtering, sorting and quick filters — same as the sibling CMS
+// grids (`@granit/cms-redirects`, `@granit/cms-seo`).
 
-/** Query parameters for `GET /api/cms/sites` (paged). */
-export type ListSitesParams = PaginationParams;
+/** Query parameters for `GET /api/cms/sites` (QueryEngine grid). */
+export type ListSitesParams = QueryRequest;
 
-/** Query parameters for `GET /api/cms/pages` (paged). */
-export type ListPagesParams = PaginationParams;
+/** Query parameters for `GET /api/cms/pages` (QueryEngine grid). */
+export type ListPagesParams = QueryRequest;
 
-/** Query parameters for `GET /api/cms/menus` (paged). */
-export type ListMenusParams = PaginationParams;
+/** Query parameters for `GET /api/cms/menus` (QueryEngine grid). */
+export type ListMenusParams = QueryRequest;
 
-/** Query parameters for `GET /api/cms/releases` (paged). */
-export type ListReleasesParams = PaginationParams;
+/** Query parameters for `GET /api/cms/releases` (QueryEngine grid). */
+export type ListReleasesParams = QueryRequest;
 
 /**
  * Result of {@link saveDraft}.

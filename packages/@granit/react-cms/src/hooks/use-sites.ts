@@ -18,7 +18,7 @@ export function useSites(
   const { client, basePath, queryKeyPrefix } = useCmsConfig();
   return useQuery({
     queryKey: cmsKeys.sites.list(queryKeyPrefix, params),
-    queryFn: () => listSites(client, basePath, params),
+    queryFn: ({ signal }) => listSites(client, basePath, params, { signal }),
     enabled: options?.enabled ?? true,
     staleTime: 30_000,
   });

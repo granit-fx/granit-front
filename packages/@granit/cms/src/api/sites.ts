@@ -1,3 +1,5 @@
+import { getPage } from '@granit/query-engine';
+
 import type {
   CreateSiteRequest,
   ListSitesParams,
@@ -7,16 +9,14 @@ import type {
 import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult } from '@granit/query-engine';
 
-/** `GET /api/cms/sites` — list sites (paged). Requires `Cms.Sites.Read`. */
+/** `GET /api/cms/sites` — QueryEngine grid (filter/sort/quickFilters). Requires `Cms.Sites.Read`. */
 export async function listSites(
   client: AxiosInstance,
   basePath: string,
-  params?: ListSitesParams
+  params?: ListSitesParams,
+  options?: { readonly signal?: AbortSignal }
 ): Promise<PagedResult<SiteResponse>> {
-  const res = await client.get<PagedResult<SiteResponse>>(`${basePath}/api/cms/sites`, {
-    params,
-  });
-  return res.data;
+  return getPage<SiteResponse>(client, `${basePath}/api/cms/sites`, params ?? {}, options);
 }
 
 /** `GET /api/cms/sites/{id}`. Requires `Cms.Sites.Read`. */

@@ -18,7 +18,7 @@ export function useReleases(
   const { client, basePath, queryKeyPrefix } = useCmsConfig();
   return useQuery({
     queryKey: cmsKeys.releases.list(queryKeyPrefix, params),
-    queryFn: () => listReleases(client, basePath, params),
+    queryFn: ({ signal }) => listReleases(client, basePath, params, { signal }),
     enabled: options?.enabled ?? true,
     staleTime: 30_000,
   });

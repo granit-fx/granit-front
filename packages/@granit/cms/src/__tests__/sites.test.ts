@@ -33,11 +33,11 @@ describe('listSites', () => {
 
     const result = await listSites(client, BASE);
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/sites`, { params: undefined });
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/sites`, undefined);
     expect(result).toEqual(response);
   });
 
-  it('passes pagination params', async () => {
+  it('serializes the QueryEngine request into the query string', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
       axiosResponse({ items: [], totalCount: 0, hasMore: false, nextCursor: null })
@@ -45,9 +45,7 @@ describe('listSites', () => {
 
     await listSites(client, BASE, { page: 1, pageSize: 10 });
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/sites`, {
-      params: { page: 1, pageSize: 10 },
-    });
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/sites?page=1&pageSize=10`, undefined);
   });
 });
 

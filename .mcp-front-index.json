@@ -1044,7 +1044,7 @@
         {
           "name": "listSites",
           "kind": "function",
-          "signature": "async function listSites( client: AxiosInstance, basePath: string, params?: ListSitesParams ): Promise<PagedResult<SiteResponse>>"
+          "signature": "async function listSites( client: AxiosInstance, basePath: string, params?: ListSitesParams, options?:"
         },
         {
           "name": "updateSite",
@@ -1069,7 +1069,7 @@
         {
           "name": "listMenus",
           "kind": "function",
-          "signature": "async function listMenus( client: AxiosInstance, basePath: string, params?: ListMenusParams ): Promise<PagedResult<MenuResponse>>"
+          "signature": "async function listMenus( client: AxiosInstance, basePath: string, params?: ListMenusParams, options?:"
         },
         {
           "name": "updateMenu",

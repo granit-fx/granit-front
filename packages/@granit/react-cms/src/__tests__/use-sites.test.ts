@@ -60,7 +60,12 @@ describe('useSites', () => {
     const { result } = renderHook(() => useSites(), { wrapper: createWrapper(client) });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(listSites).toHaveBeenCalledWith(client, '', undefined);
+    expect(listSites).toHaveBeenCalledWith(
+      client,
+      '',
+      undefined,
+      expect.objectContaining({ signal: expect.any(AbortSignal) })
+    );
     expect(result.current.data).toEqual(paged);
   });
 
@@ -78,7 +83,12 @@ describe('useSites', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(listSites).toHaveBeenCalledWith(client, '', { page: 1, pageSize: 10 });
+    expect(listSites).toHaveBeenCalledWith(
+      client,
+      '',
+      { page: 1, pageSize: 10 },
+      expect.objectContaining({ signal: expect.any(AbortSignal) })
+    );
   });
 });
 

@@ -18,7 +18,7 @@ export function useMenus(
   const { client, basePath, queryKeyPrefix } = useCmsConfig();
   return useQuery({
     queryKey: cmsKeys.menus.list(queryKeyPrefix, params),
-    queryFn: () => listMenus(client, basePath, params),
+    queryFn: ({ signal }) => listMenus(client, basePath, params, { signal }),
     enabled: options?.enabled ?? true,
     staleTime: 30_000,
   });
