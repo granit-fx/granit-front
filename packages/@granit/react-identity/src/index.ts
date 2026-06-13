@@ -62,6 +62,9 @@ export {
   useRevokeMyUserSession,
 } from './hooks/use-my-sessions';
 
+// Hooks — Session review ("Was this you?" — anonymous, token-protected)
+export { useSessionReviewContext, useSubmitSessionReview } from './hooks/use-session-review';
+
 // i18next resource bundles (namespace: "identity")
 export { identityTranslationsEn, identityTranslationsFr } from './locales/index';
 export type { IdentityTranslations } from './locales/index';

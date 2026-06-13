@@ -16,6 +16,12 @@ export type {
   UserSessionResponse,
   UserSessionsRevokedResponse,
 } from './user-session';
+export type {
+  SessionReviewContextResponse,
+  SessionReviewDecision,
+  SessionReviewDecisionRequest,
+  SessionReviewResultResponse,
+} from './session-review';
 
 // Shared session/device contracts re-exported so consumers can type the
 // `location` / `riskLevel` / `kind` fields without reaching into the owning

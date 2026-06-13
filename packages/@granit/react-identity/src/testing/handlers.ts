@@ -232,6 +232,16 @@ export function createIdentityHandlers(
   cacheBase = DEFAULT_BASE_PATH,
   sessionsBase = DEFAULT_SESSIONS_BASE_PATH
 ) {
+  // Mutable per handler-set, so the single-use session-review flow stays
+  // isolated between tests that build their own handlers.
+  const sessionReviews: Record<
+    string,
+    { country: string | null; decision: 'Confirmed' | 'Denied' | null }
+  > = {
+    'valid-review-token': { country: 'Belgium', decision: null },
+    'reviewed-review-token': { country: 'France', decision: 'Confirmed' },
+  };
+
   return [
     // ── Cache endpoints (/identity/users) ───────────────────────────────────
 
@@ -504,5 +514,30 @@ export function createIdentityHandlers(
     http.delete(`${sessionsBase}/sessions`, () =>
       HttpResponse.json({ revokedCount: mockSessions.filter((s) => !s.isCurrent).length })
     ),
+
+    // ── Session review ("Was this you?" — anonymous, token-protected) ───────
+    // Stateful per handler-set so the single-use / idempotency flow is testable.
+    // `valid-review-token` is unreviewed; `reviewed-review-token` already has a
+    // verdict; any other token is treated as invalid/expired (400).
+    http.get(`${sessionsBase}/sessions/review`, ({ request }) => {
+      const token = new URL(request.url).searchParams.get('token');
+      const review = token ? sessionReviews[token] : undefined;
+      if (!review) return new HttpResponse(null, { status: 400 });
+      return HttpResponse.json({ country: review.country, decision: review.decision });
+    }),
+
+    http.post(`${sessionsBase}/sessions/review`, async ({ request }) => {
+      const body = (await request.json()) as {
+        token: string;
+        decision: 'Confirmed' | 'Denied';
+      };
+      const review = sessionReviews[body.token];
+      if (!review) return new HttpResponse(null, { status: 400 });
+      if (review.decision !== null) {
+        return HttpResponse.json({ decision: review.decision, applied: false });
+      }
+      review.decision = body.decision;
+      return HttpResponse.json({ decision: body.decision, applied: true });
+    }),
   ];
 }

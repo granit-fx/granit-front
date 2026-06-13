@@ -19,6 +19,12 @@ export type {
   UserSessionRiskLevel,
   UserSessionsRevokedResponse,
 } from './types/index';
+export type {
+  SessionReviewContextResponse,
+  SessionReviewDecision,
+  SessionReviewDecisionRequest,
+  SessionReviewResultResponse,
+} from './types/index';
 export type { GeoLocation } from './types/index';
 export type { IdentityPasswordChangedAtResponse } from './types/index';
 export type {
@@ -78,6 +84,9 @@ export {
   revokeMyOtherUserSessions,
   revokeMyUserSession,
 } from './api/user-session-api';
+
+// API — Session review ("Was this you?" — anonymous, token-protected)
+export { getSessionReviewContext, submitSessionReview } from './api/session-review-api';
 export {
   getPasswordChangedAt,
   sendPasswordResetEmail,

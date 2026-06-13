@@ -1672,6 +1672,16 @@
           "signature": "async function getIdentityCapabilities( client: AxiosInstance, basePath: string ): Promise<IdentityProviderCapabilitiesResponse>"
         },
         {
+          "name": "getSessionReviewContext",
+          "kind": "function",
+          "signature": "async function getSessionReviewContext( client: AxiosInstance, basePath: string, token: string ): Promise<SessionReviewContextResponse>"
+        },
+        {
+          "name": "submitSessionReview",
+          "kind": "function",
+          "signature": "async function submitSessionReview( client: AxiosInstance, basePath: string, request: SessionReviewDecisionRequest ): Promise<SessionReviewResultResponse>"
+        },
+        {
           "name": "IdentityPermissions",
           "kind": "const",
           "signature": "const IdentityPermissions"
@@ -5337,6 +5347,16 @@
           "name": "TerminateSessionVariables",
           "kind": "type",
           "signature": "type TerminateSessionVariables = { readonly userId: UserId; readonly sessionId: UserSessionId; }"
+        },
+        {
+          "name": "useSessionReviewContext",
+          "kind": "function",
+          "signature": "function useSessionReviewContext( token: string | null | undefined ): UseQueryResult<SessionReviewContextResponse>"
+        },
+        {
+          "name": "useSubmitSessionReview",
+          "kind": "function",
+          "signature": "function useSubmitSessionReview(): UseMutationResult< SessionReviewResultResponse, Error, SessionReviewDecisionRequest >"
         },
         {
           "name": "SetTemporaryPasswordVariables",
