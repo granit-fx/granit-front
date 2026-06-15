@@ -1,5 +1,5 @@
 import type { MapTileLayerKind } from './map-widget';
-import type { WidgetSnapshotEnvelope, WidgetSnapshotEnvelopeOf } from '@granit/dashboards';
+import type { WidgetSnapshotEnvelopeOf } from '@granit/dashboards';
 
 /**
  * Wire shape for {@link MapWidgetSnapshot.defaultCenter}. Mirrors
@@ -76,12 +76,5 @@ export interface MapWidgetSnapshot {
   readonly defaultLayerKind?: MapTileLayerKind | null;
 }
 
-/** Narrowed {@link WidgetSnapshotEnvelope} for the `'Map'` widget kind. */
+/** Narrowed `WidgetSnapshotEnvelope` for the `'Map'` widget kind. */
 export type MapSnapshotEnvelope = WidgetSnapshotEnvelopeOf<'Map', MapWidgetSnapshot>;
-
-/** Type guard refining a generic envelope to {@link MapSnapshotEnvelope}. */
-export function isMapSnapshotEnvelope(
-  envelope: WidgetSnapshotEnvelope
-): envelope is MapSnapshotEnvelope {
-  return envelope.widgetType === 'Map';
-}

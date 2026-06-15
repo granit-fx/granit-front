@@ -1,4 +1,4 @@
-import type { WidgetSnapshotEnvelope, WidgetSnapshotEnvelopeOf } from '@granit/dashboards';
+import type { WidgetSnapshotEnvelopeOf } from '@granit/dashboards';
 
 /**
  * One column header on the wire envelope. Mirrors
@@ -50,12 +50,5 @@ export interface TableWidgetSnapshot {
   readonly totalRowCount: number;
 }
 
-/** Narrowed {@link WidgetSnapshotEnvelope} for the `'Table'` widget kind. */
+/** Narrowed `WidgetSnapshotEnvelope` for the `'Table'` widget kind. */
 export type TableSnapshotEnvelope = WidgetSnapshotEnvelopeOf<'Table', TableWidgetSnapshot>;
-
-/** Type guard refining a generic envelope to {@link TableSnapshotEnvelope}. */
-export function isTableSnapshotEnvelope(
-  envelope: WidgetSnapshotEnvelope
-): envelope is TableSnapshotEnvelope {
-  return envelope.widgetType === 'Table';
-}

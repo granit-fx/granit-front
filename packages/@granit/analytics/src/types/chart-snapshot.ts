@@ -1,6 +1,6 @@
 import type { AggregateFunction } from './aggregation';
 import type { ChartType } from './chart-widget';
-import type { WidgetSnapshotEnvelope, WidgetSnapshotEnvelopeOf } from '@granit/dashboards';
+import type { WidgetSnapshotEnvelopeOf } from '@granit/dashboards';
 
 /**
  * One data point on the chart's category axis. Mirrors
@@ -54,12 +54,5 @@ export interface ChartWidgetSnapshot {
   readonly currency?: string | null;
 }
 
-/** Narrowed {@link WidgetSnapshotEnvelope} for the `'Chart'` widget kind. */
+/** Narrowed `WidgetSnapshotEnvelope` for the `'Chart'` widget kind. */
 export type ChartSnapshotEnvelope = WidgetSnapshotEnvelopeOf<'Chart', ChartWidgetSnapshot>;
-
-/** Type guard refining a generic envelope to {@link ChartSnapshotEnvelope}. */
-export function isChartSnapshotEnvelope(
-  envelope: WidgetSnapshotEnvelope
-): envelope is ChartSnapshotEnvelope {
-  return envelope.widgetType === 'Chart';
-}

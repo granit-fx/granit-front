@@ -32,7 +32,8 @@ export type MapTileLayerKind = 'Plan' | 'Satellite' | 'Hybrid' | 'Topo' | 'Custo
  * column — unlocks server-side spatial filters but is PostGIS-only.
  *
  * Wire format uses the `kind` discriminator with kebab tags (`'lat-lng'` /
- * `'geography'`) — same convention as `Datasource`.
+ * `'geography'`) — same convention as `Datasource`. Refine a value with the
+ * `isLatLngMapPointSource` / `isGeographyMapPointSource` guards.
  */
 export interface LatLngMapPointSource {
   readonly kind: 'lat-lng';
@@ -49,16 +50,6 @@ export interface GeographyMapPointSource {
 }
 
 export type MapPointSource = LatLngMapPointSource | GeographyMapPointSource;
-
-export function isLatLngMapPointSource(source: MapPointSource): source is LatLngMapPointSource {
-  return source.kind === 'lat-lng';
-}
-
-export function isGeographyMapPointSource(
-  source: MapPointSource
-): source is GeographyMapPointSource {
-  return source.kind === 'geography';
-}
 
 /**
  * Latitude / longitude pair seeding {@link MapWidgetDefinition.defaultCenter}.

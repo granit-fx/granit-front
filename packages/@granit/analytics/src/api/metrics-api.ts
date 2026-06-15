@@ -1,4 +1,4 @@
-import type { MetricRequest, MetricResponse } from '../metrics/index';
+import type { MetricRequest, MetricResponse } from '../types';
 import type { AxiosInstance, AxiosRequestConfig } from '@granit/api-client';
 
 /**

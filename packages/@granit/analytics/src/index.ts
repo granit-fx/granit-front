@@ -5,8 +5,9 @@
 // API — runtime metric evaluation
 export { evaluateMetric } from './api/metrics-api';
 
-// Metrics — runtime evaluation envelopes
+// DTO contracts
 export type {
+  // Metrics — runtime evaluation envelopes
   CompareSpec,
   CompareToken,
   MetricPreviousPayload,
@@ -18,19 +19,7 @@ export type {
   RefreshHint,
   Trend,
   ValueKind,
-} from './metrics/index';
-
-// Widgets — catalog declarations + snapshot envelopes consumed by @granit/dashboards
-export {
-  isChartSnapshotEnvelope,
-  isGeographyMapPointSource,
-  isKpiSnapshotEnvelope,
-  isLatLngMapPointSource,
-  isMapSnapshotEnvelope,
-  isPivotSnapshotEnvelope,
-  isTableSnapshotEnvelope,
-} from './widgets/index';
-export type {
+  // Widgets — catalog declarations + snapshot envelopes consumed by @granit/dashboards
   AggregateFunction,
   AnalyticsWidgetDefinition,
   ChartBucket,
@@ -59,4 +48,15 @@ export type {
   TableWidgetColumn,
   TableWidgetDefinition,
   TableWidgetSnapshot,
-} from './widgets/index';
+} from './types';
+
+// Widgets — runtime type guards
+export {
+  isChartSnapshotEnvelope,
+  isGeographyMapPointSource,
+  isKpiSnapshotEnvelope,
+  isLatLngMapPointSource,
+  isMapSnapshotEnvelope,
+  isPivotSnapshotEnvelope,
+  isTableSnapshotEnvelope,
+} from './widgets';

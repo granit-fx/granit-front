@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { RefreshHint, Trend, ValueKind } from '../metrics/metric-response';
+import type { RefreshHint, Trend, ValueKind } from '../types';
 
 // Pinned wire-format fixtures for the @granit/analytics enum surface.
 

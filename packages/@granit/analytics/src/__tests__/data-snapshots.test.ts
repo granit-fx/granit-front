@@ -11,7 +11,7 @@ import type {
   ChartType,
   PivotSnapshotEnvelope,
   TableSnapshotEnvelope,
-} from '../widgets/index';
+} from '../types';
 import type { WidgetSnapshotEnvelope } from '@granit/dashboards';
 
 // Pinned wire-format fixtures mirroring B3-4 / B3-5 / B3-6 backend output:

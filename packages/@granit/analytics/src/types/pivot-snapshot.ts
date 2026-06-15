@@ -1,5 +1,5 @@
 import type { AggregateFunction } from './aggregation';
-import type { WidgetSnapshotEnvelope, WidgetSnapshotEnvelopeOf } from '@granit/dashboards';
+import type { WidgetSnapshotEnvelopeOf } from '@granit/dashboards';
 
 /**
  * One cell of the pivot matrix. Mirrors
@@ -63,12 +63,5 @@ export interface PivotWidgetSnapshot {
   readonly currency?: string | null;
 }
 
-/** Narrowed {@link WidgetSnapshotEnvelope} for the `'Pivot'` widget kind. */
+/** Narrowed `WidgetSnapshotEnvelope` for the `'Pivot'` widget kind. */
 export type PivotSnapshotEnvelope = WidgetSnapshotEnvelopeOf<'Pivot', PivotWidgetSnapshot>;
-
-/** Type guard refining a generic envelope to {@link PivotSnapshotEnvelope}. */
-export function isPivotSnapshotEnvelope(
-  envelope: WidgetSnapshotEnvelope
-): envelope is PivotSnapshotEnvelope {
-  return envelope.widgetType === 'Pivot';
-}
