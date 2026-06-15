@@ -122,6 +122,20 @@ export const CONTRACTS: readonly ModuleContract[] = [
     checkEndpoints: true,
   },
   {
+    slug: 'ai-prompts',
+    package: 'ai-prompts',
+    types: [
+      'PromptSummaryResponse',
+      'PromptResponse',
+      'PromptPickerResponse',
+      'PromptPickerCategoryResponse',
+      'PromptPickerItemResponse',
+      'CreatePromptRequest',
+      'UpdatePromptRequest',
+    ],
+    checkEndpoints: true,
+  },
+  {
     slug: 'auditing',
     package: 'auditing',
     types: [

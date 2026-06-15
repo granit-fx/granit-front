@@ -116,6 +116,32 @@
       ]
     },
     {
+      "name": "@granit/ai-prompts",
+      "description": "AI prompt catalogue — prompt CRUD, the chat picker, and copy-on-customise types and API functions. Mirrors Granit.AI.Prompts.Endpoints .NET",
+      "exports": [
+        {
+          "name": "GENERAL_CATEGORY_NAME",
+          "kind": "const",
+          "signature": "const GENERAL_CATEGORY_NAME"
+        },
+        {
+          "name": "ICON_COLOR_PATTERN",
+          "kind": "const",
+          "signature": "const ICON_COLOR_PATTERN"
+        },
+        {
+          "name": "PROMPT_LIMITS",
+          "kind": "const",
+          "signature": "const PROMPT_LIMITS"
+        },
+        {
+          "name": "AIPromptsPermissions",
+          "kind": "const",
+          "signature": "const AIPromptsPermissions"
+        }
+      ]
+    },
+    {
       "name": "@granit/analytics",
       "description": "Framework-agnostic types for Granit.Analytics — MetricResponse runtime envelopes plus KPI / Chart / Table / Pivot widget definitions consumed by @granit/dashboards",
       "exports": [

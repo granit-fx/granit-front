@@ -1,0 +1,33 @@
+{
+  "name": "@granit/ai-prompts",
+  "description": "AI prompt catalogue — prompt CRUD, the chat picker, and copy-on-customise types and API functions. Mirrors Granit.AI.Prompts.Endpoints .NET",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/testing": "workspace:*"
+  },
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/types": "workspace:*"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  }
+}
