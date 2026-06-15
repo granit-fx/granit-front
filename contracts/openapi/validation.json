@@ -7,9 +7,7 @@
   "paths": {
     "/validation/validate": {
       "post": {
-        "tags": [
-          "Validation"
-        ],
+        "tags": ["Validation"],
         "summary": "Validates a single field value against a registered server-side validator.",
         "description": "Looks up the validator by error code and returns the validation result. Returns 404 if no validator is registered for the specified error code. Use the GET /validators endpoint to discover available validators.",
         "operationId": "ValidateField",
@@ -69,9 +67,7 @@
     },
     "/validation/validate-batch": {
       "post": {
-        "tags": [
-          "Validation"
-        ],
+        "tags": ["Validation"],
         "summary": "Validates multiple field values in a single round-trip (max 20).",
         "description": "For each field, looks up the validator by error code and returns the result. Unknown error codes return ValidatorNotFound status instead of failing the entire batch.",
         "operationId": "ValidateFieldBatch",
@@ -131,9 +127,7 @@
     },
     "/validation/validators": {
       "get": {
-        "tags": [
-          "Validation"
-        ],
+        "tags": ["Validation"],
         "summary": "Lists all registered server-side validator error codes.",
         "description": "Returns the list of error codes that can be used with the validate and validate-batch endpoints. Useful for frontend discovery: only error codes listed here can be validated in real-time.",
         "operationId": "GetRegisteredValidators",
@@ -171,35 +165,20 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "title": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "status": {
-            "type": [
-              "null",
-              "integer"
-            ],
+            "type": ["null", "integer"],
             "format": "int32"
           },
           "detail": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "instance": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "errors": {
             "type": "object",
@@ -238,30 +217,23 @@
         }
       },
       "ValidationFieldStatus": {
-        "enum": [
-          "Valid",
-          "Invalid",
-          "ValidatorNotFound"
-        ]
+        "enum": ["Valid", "Invalid", "ValidatorNotFound"]
       },
       "ValidationFieldValidateBatchRequest": {
-        "required": [
-          "fields"
-        ],
+        "required": ["fields"],
         "type": "object",
         "properties": {
           "fields": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ValidationFieldValidateRequest"
-            }
+            },
+            "x-granit-validator": "Validation:Rule:MaxBatchSize"
           }
         }
       },
       "ValidationFieldValidateBatchResponse": {
-        "required": [
-          "results"
-        ],
+        "required": ["results"],
         "type": "object",
         "properties": {
           "results": {
@@ -273,27 +245,22 @@
         }
       },
       "ValidationFieldValidateRequest": {
-        "required": [
-          "errorCode"
-        ],
+        "required": ["errorCode"],
         "type": "object",
         "properties": {
           "errorCode": {
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9:._]+$",
             "type": "string"
           },
           "value": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "maxLength": 500,
+            "type": ["null", "string"]
           }
         }
       },
       "ValidationFieldValidateResponse": {
-        "required": [
-          "errorCode",
-          "status"
-        ],
+        "required": ["errorCode", "status"],
         "type": "object",
         "properties": {
           "errorCode": {

@@ -168,6 +168,98 @@ export const CONTRACTS: readonly ModuleContract[] = [
     ],
     checkEndpoints: true,
   },
+  // ─── Framework — additional module coverage (granit-dotnet) ─────────────────
+  // Object DTOs only (types-only — route conformance can be layered on later).
+  // String-union enums and raw query-engine grid entities are verified
+  // indirectly (via referencing fields / the grid), not listed here.
+  {
+    slug: 'cookies',
+    package: 'cookies',
+    types: ['CookieConsentConfigResponse', 'CookieDefinitionResponse', 'ThirdPartyServiceResponse'],
+  },
+  {
+    slug: 'diagnostics',
+    package: 'diagnostics',
+    types: ['MonitoringHealthResponse', 'ServiceHealthResponse'],
+  },
+  {
+    slug: 'hostnames',
+    package: 'hostnames',
+    types: [
+      'ManagedHostnameResponse',
+      'HostnameAvailabilityResponse',
+      'CreateManagedHostnameRequest',
+      'ReportCertificateStatusRequest',
+      'DnsConflict',
+      'ExpectedDnsRecord',
+    ],
+  },
+  {
+    slug: 'multi-tenancy',
+    package: 'multi-tenancy',
+    types: ['TenantResponse', 'CreateTenantRequest', 'UpdateTenantRequest'],
+  },
+  {
+    slug: 'presence',
+    package: 'presence',
+    types: [
+      'PresenceResponse',
+      'SetPresenceRequest',
+      'HeartbeatRequest',
+      'HeartbeatRoomRequest',
+      'BatchPresenceRequest',
+      'BatchPresenceResponse',
+      'ResourceRoomResponse',
+      'ResourcePresenceParticipantResponse',
+    ],
+  },
+  {
+    slug: 'privacy',
+    package: 'privacy',
+    types: [
+      'PrivacyConsentStatusResponse',
+      'PrivacyUserAgreementResponse',
+      'PrivacyAcceptAgreementRequest',
+      'PrivacyLegalDocumentResponse',
+      'LegalDocumentDetailResponse',
+      'LegalDocumentCreateRequest',
+      'LegalDocumentUpdateRequest',
+      'PrivacyProcessingPurposeResponse',
+      'PrivacyRegulationProfileResponse',
+      'PrivacyOptOutStatusResponse',
+      'PrivacyExportRequest',
+      'PrivacyExportOnBehalfOfRequest',
+      'PrivacyExportRequestResponse',
+      'PrivacyExportStatusResponse',
+      'PrivacyExportScopeResponse',
+      'PrivacyDeletionRequest',
+      'PrivacyDeletionRequestResponse',
+      'PrivacyDeletionStatusResponse',
+    ],
+  },
+  {
+    slug: 'settings',
+    package: 'settings',
+    types: [
+      'SettingValueResponse',
+      'AdminAppSettingResponse',
+      'UpdateSettingValueRequest',
+      'BulkUpdateSettingsRequest',
+      'BulkUpdateSettingsResponse',
+      'BulkSettingEntry',
+      'BulkSettingResult',
+    ],
+  },
+  {
+    slug: 'validation',
+    package: 'validation',
+    types: [
+      'ValidationFieldValidateRequest',
+      'ValidationFieldValidateResponse',
+      'ValidationFieldValidateBatchRequest',
+      'ValidationFieldValidateBatchResponse',
+    ],
+  },
   // ─── CMS bounded context (granit-website / Granit.Cms.*.Endpoints) ──────────
   // Specs vendored from Granit.Cms.OpenApi.Generator. Object DTOs only — the
   // oracle is a field-by-field checker, so standalone string-union enums

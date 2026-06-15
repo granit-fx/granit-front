@@ -7,9 +7,7 @@
   "paths": {
     "/multi-tenancy/tenants/{id}": {
       "get": {
-        "tags": [
-          "Platform - Tenants"
-        ],
+        "tags": ["Multi-Tenancy - Tenants"],
         "summary": "Returns a tenant by ID.",
         "description": "Fetches the full tenant details by unique identifier. Returns 404 if the tenant does not exist. Requires the MultiTenancy.Tenants.Read permission.",
         "operationId": "GetTenant",
@@ -79,9 +77,7 @@
         }
       },
       "put": {
-        "tags": [
-          "Platform - Tenants"
-        ],
+        "tags": ["Multi-Tenancy - Tenants"],
         "summary": "Updates a tenant's details.",
         "description": "Updates the display name and contact email of an existing tenant. Returns 404 if the tenant does not exist. Returns 409 if the concurrency stamp does not match the stored value. Requires the MultiTenancy.Tenants.Update permission.",
         "operationId": "UpdateTenant",
@@ -186,9 +182,7 @@
     },
     "/multi-tenancy/tenants": {
       "post": {
-        "tags": [
-          "Platform - Tenants"
-        ],
+        "tags": ["Multi-Tenancy - Tenants"],
         "summary": "Creates a new tenant.",
         "description": "Creates a new active tenant with the specified name and identifier. The identifier must be unique, lowercase alphanumeric with hyphens (slug format). Returns the created tenant. Requires the MultiTenancy.Tenants.Create permission.",
         "operationId": "CreateTenant",
@@ -268,9 +262,7 @@
     },
     "/multi-tenancy/tenants/{id}/activate": {
       "post": {
-        "tags": [
-          "Platform - Tenants"
-        ],
+        "tags": ["Multi-Tenancy - Tenants"],
         "summary": "Activates a tenant.",
         "description": "Activates a previously deactivated tenant, allowing it to be resolved by the tenant resolution middleware. Returns 404 if the tenant does not exist. Requires the MultiTenancy.Tenants.Manage permission.",
         "operationId": "ActivateTenant",
@@ -335,9 +327,7 @@
     },
     "/multi-tenancy/tenants/{id}/deactivate": {
       "post": {
-        "tags": [
-          "Platform - Tenants"
-        ],
+        "tags": ["Multi-Tenancy - Tenants"],
         "summary": "Deactivates a tenant.",
         "description": "Deactivates a tenant, preventing it from being resolved by the tenant resolution middleware. Raises a TenantDeactivatedEvent that can trigger session invalidation. Returns 404 if the tenant does not exist. Requires the MultiTenancy.Tenants.Manage permission.",
         "operationId": "DeactivateTenant",
@@ -404,29 +394,26 @@
   "components": {
     "schemas": {
       "CreateTenantRequest": {
-        "required": [
-          "name",
-          "identifier"
-        ],
+        "required": ["name", "identifier"],
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 256,
             "type": "string"
           },
           "identifier": {
+            "maxLength": 64,
+            "pattern": "^[a-z0-9-]+$",
             "type": "string"
           },
           "contactEmail": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "maxLength": 256,
+            "type": ["null", "string"],
+            "format": "email"
           },
           "jurisdiction": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "maxLength": 16,
+            "type": ["null", "string"]
           }
         }
       },
@@ -434,35 +421,20 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "title": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "status": {
-            "type": [
-              "null",
-              "integer"
-            ],
+            "type": ["null", "integer"],
             "format": "int32"
           },
           "detail": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "instance": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "errors": {
             "type": "object",
@@ -524,19 +496,13 @@
             "type": "string"
           },
           "contactEmail": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "activated": {
             "type": "boolean"
           },
           "jurisdiction": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "createdAt": {
             "type": "string",
@@ -548,29 +514,24 @@
         }
       },
       "UpdateTenantRequest": {
-        "required": [
-          "name",
-          "concurrencyStamp"
-        ],
+        "required": ["name", "concurrencyStamp"],
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 256,
             "type": "string"
           },
           "concurrencyStamp": {
             "type": "string"
           },
           "contactEmail": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "maxLength": 256,
+            "type": ["null", "string"],
+            "format": "email"
           },
           "jurisdiction": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "maxLength": 16,
+            "type": ["null", "string"]
           }
         }
       }
@@ -578,7 +539,7 @@
   },
   "tags": [
     {
-      "name": "Platform - Tenants"
+      "name": "Multi-Tenancy - Tenants"
     }
   ]
 }

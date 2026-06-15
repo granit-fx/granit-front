@@ -7,9 +7,7 @@
   "paths": {
     "/hostnames": {
       "get": {
-        "tags": [
-          "Hostnames"
-        ],
+        "tags": ["Hostnames"],
         "summary": "Lists the hostnames registered for an owning resource.",
         "description": "Returns hostnames registered for the specified owner (ownerType + ownerId pair), ordered by host name. At most maxResults entries are returned (capped at 500). An empty list is returned when the owner has no registered hostnames. Requires the Hostnames.Read permission.",
         "operationId": "ListManagedHostnames",
@@ -88,9 +86,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Hostnames"
-        ],
+        "tags": ["Hostnames"],
         "summary": "Registers a new managed hostname.",
         "description": "Registers a fully-qualified hostname against an owning resource. The hostname must be globally unique — a second registration for the same host, regardless of owner, is rejected with 409. Returns the created hostname record with a 201 status. Requires the Hostnames.Manage permission.",
         "operationId": "CreateManagedHostname",
@@ -180,9 +176,7 @@
     },
     "/hostnames/availability": {
       "get": {
-        "tags": [
-          "Hostnames"
-        ],
+        "tags": ["Hostnames"],
         "summary": "Checks whether a hostname is available for registration.",
         "description": "Pre-flight check: returns whether the given fully-qualified hostname is free. A hostname is unavailable when it is already registered by any owner (globally unique constraint). Use before CreateManagedHostname to give immediate feedback. Requires the Hostnames.Read permission.",
         "operationId": "CheckHostnameAvailability",
@@ -252,9 +246,7 @@
     },
     "/hostnames/{id}": {
       "get": {
-        "tags": [
-          "Hostnames"
-        ],
+        "tags": ["Hostnames"],
         "summary": "Returns a managed hostname by id.",
         "description": "Returns the full hostname record for the given id. Returns 404 when no hostname with that id exists. Requires the Hostnames.Read permission.",
         "operationId": "GetManagedHostname",
@@ -324,9 +316,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Hostnames"
-        ],
+        "tags": ["Hostnames"],
         "summary": "Deletes a managed hostname.",
         "description": "Removes a hostname registration, freeing the host for re-registration by any owner. Returns 204 on success, 404 when not found. Requires the Hostnames.Manage permission.",
         "operationId": "DeleteManagedHostname",
@@ -391,9 +381,7 @@
     },
     "/hostnames/{id}/primary": {
       "post": {
-        "tags": [
-          "Hostnames"
-        ],
+        "tags": ["Hostnames"],
         "summary": "Marks a hostname as the owner's canonical hostname.",
         "description": "Sets the IsPrimary flag on the specified hostname. This does not automatically clear the flag on other hostnames owned by the same resource — manage that explicitly. Returns 204 on success, 404 when not found. Requires the Hostnames.Manage permission.",
         "operationId": "SetPrimaryHostname",
@@ -456,9 +444,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Hostnames"
-        ],
+        "tags": ["Hostnames"],
         "summary": "Clears the canonical hostname flag.",
         "description": "Removes the IsPrimary flag from the specified hostname. Returns 204 on success, 404 when not found. Requires the Hostnames.Manage permission.",
         "operationId": "ClearPrimaryHostname",
@@ -523,9 +509,7 @@
     },
     "/hostnames/{id}/verify-now": {
       "post": {
-        "tags": [
-          "Hostnames"
-        ],
+        "tags": ["Hostnames"],
         "summary": "Manually triggers DNS verification for a hostname.",
         "description": "For Verifying, Error, or Active hostnames: resets exponential backoff and re-queues the DNS check (transitions to Verifying). For Pending hostnames: initializes verification by minting the challenge token and expected DNS records, then transitions to Verifying. Returns 409 when the hostname is Pending and the platform ingress target is not configured. Returns 202 Accepted with the updated hostname record. Returns 404 when not found. Requires the Hostnames.Manage permission.",
         "operationId": "VerifyHostnameNow",
@@ -607,9 +591,7 @@
     },
     "/hostnames/{id}/certificate-status": {
       "post": {
-        "tags": [
-          "Hostnames"
-        ],
+        "tags": ["Hostnames"],
         "summary": "Reports the SSL/TLS certificate status from the edge provider.",
         "description": "Webhook endpoint called by the edge provider (e.g. Cloudflare, AWS) when the certificate state changes. The request must carry a valid HMAC-SHA-256 signature in the configured header when Hostnames:CertificateWebhookSecret is set. Stores the new CertificateStatus and expiry date, and dispatches the appropriate integration event (HostnameCertificateSecuredEto or HostnameCertificateFailedEto). Idempotent: repeated delivery of the same status does not re-raise events. Returns 204 on success, 404 when not found. Requires the Hostnames.Certificates.Report permission.",
         "operationId": "ReportHostnameCertificateStatus",
@@ -696,25 +678,18 @@
   "components": {
     "schemas": {
       "CertificateStatus": {
-        "enum": [
-          "Unprovisioned",
-          "Provisioning",
-          "Secured",
-          "Error"
-        ]
+        "enum": ["Unprovisioned", "Provisioning", "Secured", "Error"]
       },
       "CreateManagedHostnameRequest": {
-        "required": [
-          "host",
-          "ownerType",
-          "ownerId"
-        ],
+        "required": ["host", "ownerType", "ownerId"],
         "type": "object",
         "properties": {
           "host": {
+            "maxLength": 253,
             "type": "string"
           },
           "ownerType": {
+            "maxLength": 100,
             "type": "string"
           },
           "ownerId": {
@@ -722,10 +697,7 @@
             "format": "uuid"
           },
           "tenantId": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "format": "uuid"
           },
           "isPrimary": {
@@ -735,10 +707,7 @@
         }
       },
       "DnsConflict": {
-        "required": [
-          "conflictType",
-          "details"
-        ],
+        "required": ["conflictType", "details"],
         "type": "object",
         "properties": {
           "conflictType": {
@@ -760,19 +729,10 @@
         ]
       },
       "DnsRecordType": {
-        "enum": [
-          "A",
-          "Aaaa",
-          "Cname",
-          "Txt"
-        ]
+        "enum": ["A", "Aaaa", "Cname", "Txt"]
       },
       "ExpectedDnsRecord": {
-        "required": [
-          "recordType",
-          "name",
-          "value"
-        ],
+        "required": ["recordType", "name", "value"],
         "type": "object",
         "properties": {
           "recordType": {
@@ -787,10 +747,7 @@
         }
       },
       "HostnameAvailabilityResponse": {
-        "required": [
-          "host",
-          "isAvailable"
-        ],
+        "required": ["host", "isAvailable"],
         "type": "object",
         "properties": {
           "host": {
@@ -805,35 +762,20 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "title": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "status": {
-            "type": [
-              "null",
-              "integer"
-            ],
+            "type": ["null", "integer"],
             "format": "int32"
           },
           "detail": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "instance": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "errors": {
             "type": "object",
@@ -886,10 +828,7 @@
             "format": "uuid"
           },
           "tenantId": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "format": "uuid"
           },
           "isPrimary": {
@@ -899,10 +838,7 @@
             "type": "string"
           },
           "verificationToken": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "expectedDnsRecords": {
             "type": "array",
@@ -911,10 +847,7 @@
             }
           },
           "lastCheckedAt": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "format": "date-time"
           },
           "conflicts": {
@@ -928,20 +861,14 @@
             "format": "int32"
           },
           "nextCheckAt": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "format": "date-time"
           },
           "certificateStatus": {
             "type": "string"
           },
           "certExpiresAt": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "format": "date-time"
           },
           "createdAt": {
@@ -952,17 +879,11 @@
             "type": "string"
           },
           "modifiedAt": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "format": "date-time"
           },
           "modifiedBy": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "concurrencyStamp": {
             "type": "string"
@@ -995,19 +916,14 @@
         }
       },
       "ReportCertificateStatusRequest": {
-        "required": [
-          "status"
-        ],
+        "required": ["status"],
         "type": "object",
         "properties": {
           "status": {
             "$ref": "#/components/schemas/CertificateStatus"
           },
           "expiresAt": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "format": "date-time"
           }
         }
