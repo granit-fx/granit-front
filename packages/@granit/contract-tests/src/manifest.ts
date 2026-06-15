@@ -335,4 +335,95 @@ export const CONTRACTS: readonly ModuleContract[] = [
     checkEndpoints: true,
     endpointIgnore: ['/mandates', '/mandates/meta'],
   },
+  // ─── Business — additional module coverage (granit-business) ────────────────
+  // Object DTOs only (types-only — route conformance can be layered on later).
+  // Raw query-engine grid entities and string-union enums are verified
+  // indirectly (via the grid / referencing fields), not listed here.
+  {
+    slug: 'activities',
+    package: 'activities',
+    types: [
+      'ActivityResponse',
+      'ActivityListResponse',
+      'ActivityCalendarItemResponse',
+      'CreateActivityRequest',
+      'ReassignActivityRequest',
+      'RescheduleActivityRequest',
+    ],
+    // CompleteActivityRequest / CancelActivityRequest are empty-body DTOs
+    // (`Record<string, never>`) — no fields to verify, not listed.
+  },
+  {
+    slug: 'customer-balance',
+    package: 'customer-balance',
+    types: [
+      'CustomerBalanceResponse',
+      'BalanceTransactionResponse',
+      'AdminCreditRequest',
+      'AdminDebitRequest',
+    ],
+  },
+  {
+    slug: 'documents-properties',
+    package: 'documents',
+    types: ['DocumentPropertiesResponse'],
+  },
+  {
+    slug: 'documents-public-links',
+    package: 'documents',
+    types: [
+      'PublicLinkResponse',
+      'CreatePublicLinkRequest',
+      'CreatePublicLinkResponse',
+      'RevokePublicLinkRequest',
+    ],
+  },
+  {
+    slug: 'documents-renditions',
+    package: 'documents',
+    types: ['RenditionResponse', 'ListRenditionsResponse', 'RenditionDownloadUrlResponse'],
+  },
+  {
+    slug: 'documents-resolution',
+    package: 'documents',
+    types: ['ResolvedDocumentResponse', 'BatchResolveRequest', 'ResolveItemRequest'],
+  },
+  {
+    slug: 'metering',
+    package: 'metering',
+    types: [
+      'MeterDefinitionResponse',
+      'MeterDefinitionCreateRequest',
+      'MeterDefinitionUpdateRequest',
+      'MeterDefinition',
+      'MeterEventRequest',
+      'RecordUsageRequest',
+      'BackfillUsageRequest',
+      'BackfillUsageResponse',
+      'RecomputeUsageRequest',
+      'RecomputeUsageResponse',
+      'DeprecateEventRequest',
+      'DeprecateEventResponse',
+      'MeteringQuotaStatusResponse',
+      'UsageAggregate',
+      'UsageAggregateResponse',
+    ],
+  },
+  {
+    slug: 'tax',
+    package: 'tax',
+    types: ['TaxRateResponse', 'TaxRateEntry', 'TaxValidateRequest', 'TaxValidateResponse'],
+  },
+  {
+    slug: 'workspaces',
+    package: 'workspaces',
+    types: [
+      'WorkspaceResponse',
+      'WorkspaceSectionResponse',
+      'WorkspaceItemResponse',
+      'WorkspaceTreeResponse',
+      'LandingRouteResponse',
+      'SetPinnedLandingRouteRequest',
+    ],
+  },
 ];
