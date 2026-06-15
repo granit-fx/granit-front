@@ -2850,6 +2850,92 @@
       ]
     },
     {
+      "name": "@granit/react-ai-prompts",
+      "description": "React bindings for @granit/ai-prompts — AIPromptsProvider, prompt catalogue CRUD + customise hooks, the / picker hook + popover, an icon picker, and the catalogue manager UI",
+      "exports": [
+        {
+          "name": "AIPromptsProvider",
+          "kind": "function",
+          "signature": "function AIPromptsProvider("
+        },
+        {
+          "name": "useAIPromptsConfig",
+          "kind": "function",
+          "signature": "function useAIPromptsConfig(): ResolvedAIPromptsConfig"
+        },
+        {
+          "name": "promptKeys",
+          "kind": "const",
+          "signature": "const promptKeys"
+        },
+        {
+          "name": "usePrompts",
+          "kind": "function",
+          "signature": "function usePrompts(options?:"
+        },
+        {
+          "name": "usePrompt",
+          "kind": "function",
+          "signature": "function usePrompt( id: PromptId | null, options?:"
+        },
+        {
+          "name": "usePromptPicker",
+          "kind": "function",
+          "signature": "function usePromptPicker(options?:"
+        },
+        {
+          "name": "useCreatePrompt",
+          "kind": "function",
+          "signature": "function useCreatePrompt(): UseCreatePromptReturn"
+        },
+        {
+          "name": "UseCreatePromptReturn",
+          "kind": "interface",
+          "signature": "interface UseCreatePromptReturn",
+          "members": []
+        },
+        {
+          "name": "useUpdatePrompt",
+          "kind": "function",
+          "signature": "function useUpdatePrompt(): UseUpdatePromptReturn"
+        },
+        {
+          "name": "UpdatePromptVariables",
+          "kind": "interface",
+          "signature": "interface UpdatePromptVariables",
+          "members": []
+        },
+        {
+          "name": "UseUpdatePromptReturn",
+          "kind": "interface",
+          "signature": "interface UseUpdatePromptReturn",
+          "members": []
+        },
+        {
+          "name": "useDeletePrompt",
+          "kind": "function",
+          "signature": "function useDeletePrompt(): UseDeletePromptReturn"
+        },
+        {
+          "name": "UseDeletePromptReturn",
+          "kind": "interface",
+          "signature": "interface UseDeletePromptReturn",
+          "members": []
+        },
+        {
+          "name": "useCustomisePrompt",
+          "kind": "function",
+          "signature": "function useCustomisePrompt(): UseCustomisePromptReturn"
+        },
+        {
+          "name": "UseCustomisePromptReturn",
+          "kind": "interface",
+          "signature": "interface UseCustomisePromptReturn",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/react-analytics",
       "description": "React hooks and renderers for @granit/analytics — useMetric hook plus KpiTile widget renderer registered into the @granit/dashboards widget registry",
       "exports": [

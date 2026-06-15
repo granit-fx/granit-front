@@ -1034,6 +1034,43 @@ importers:
         specifier: workspace:*
         version: link:../utils
 
+  packages/@granit/react-ai-prompts:
+    dependencies:
+      '@tanstack/react-query':
+        specifier: 5.101.0
+        version: 5.101.0(react@19.2.7)
+      lucide-react:
+        specifier: ^1.0.0
+        version: 1.17.0(react@19.2.7)
+      msw:
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.9.2)(typescript@6.0.3)
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+    devDependencies:
+      '@granit/ai-prompts':
+        specifier: workspace:*
+        version: link:../ai-prompts
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
+      '@granit/utils':
+        specifier: workspace:*
+        version: link:../utils
+
   packages/@granit/react-analytics:
     dependencies:
       '@tanstack/react-query':
