@@ -1,0 +1,33 @@
+{
+  "name": "@granit/ai-chat",
+  "description": "Agentic AI chat — conversation CRUD and the SSE message stream types and API functions. Mirrors Granit.AI.Chat.Endpoints .NET",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/testing": "workspace:*"
+  },
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/types": "workspace:*"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  }
+}

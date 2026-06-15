@@ -205,6 +205,19 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/ai-chat:
+    dependencies:
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/analytics:
     dependencies:
       '@granit/api-client':

@@ -102,6 +102,26 @@ export const CONTRACTS: readonly ModuleContract[] = [
     endpointIgnore: ['/usage', '/usage/meta'],
   },
   {
+    slug: 'ai-chat',
+    package: 'ai-chat',
+    types: [
+      'ConversationSummaryResponse',
+      'ConversationResponse',
+      'MessageResponse',
+      'CreateConversationRequest',
+      'RenameConversationRequest',
+      'SendMessageRequest',
+      'MentionRequest',
+      'AttachmentRequest',
+      'ChatStreamEvent',
+      'SuggestedActionResponse',
+      'ClarificationResponse',
+      'ClarificationOptionResponse',
+      'ChatWorkspacesResponse',
+    ],
+    checkEndpoints: true,
+  },
+  {
     slug: 'auditing',
     package: 'auditing',
     types: [

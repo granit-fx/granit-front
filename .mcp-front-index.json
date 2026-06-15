@@ -105,6 +105,17 @@
       ]
     },
     {
+      "name": "@granit/ai-chat",
+      "description": "Agentic AI chat — conversation CRUD and the SSE message stream types and API functions. Mirrors Granit.AI.Chat.Endpoints .NET",
+      "exports": [
+        {
+          "name": "AIChatPermissions",
+          "kind": "const",
+          "signature": "const AIChatPermissions"
+        }
+      ]
+    },
+    {
       "name": "@granit/analytics",
       "description": "Framework-agnostic types for Granit.Analytics — MetricResponse runtime envelopes plus KPI / Chart / Table / Pivot widget definitions consumed by @granit/dashboards",
       "exports": [
