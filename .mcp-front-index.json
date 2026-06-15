@@ -2662,6 +2662,86 @@
       ]
     },
     {
+      "name": "@granit/react-ai-chat",
+      "description": "React bindings for @granit/ai-chat — AIChatProvider, useChatStream (SSE), conversation CRUD hooks, and headless chat UI (thread, composer with / and @ pickers, attachments, suggested actions, clarifications)",
+      "exports": [
+        {
+          "name": "AIChatProvider",
+          "kind": "function",
+          "signature": "function AIChatProvider("
+        },
+        {
+          "name": "useAIChatConfig",
+          "kind": "function",
+          "signature": "function useAIChatConfig(): ResolvedAIChatConfig"
+        },
+        {
+          "name": "conversationKeys",
+          "kind": "const",
+          "signature": "const conversationKeys"
+        },
+        {
+          "name": "useConversations",
+          "kind": "function",
+          "signature": "function useConversations(options?:"
+        },
+        {
+          "name": "useConversation",
+          "kind": "function",
+          "signature": "function useConversation( id: ConversationId | null, options?:"
+        },
+        {
+          "name": "useChatWorkspaces",
+          "kind": "function",
+          "signature": "function useChatWorkspaces(options?:"
+        },
+        {
+          "name": "useCreateConversation",
+          "kind": "function",
+          "signature": "function useCreateConversation(): UseCreateConversationReturn"
+        },
+        {
+          "name": "UseCreateConversationReturn",
+          "kind": "interface",
+          "signature": "interface UseCreateConversationReturn",
+          "members": []
+        },
+        {
+          "name": "useRenameConversation",
+          "kind": "function",
+          "signature": "function useRenameConversation(): UseRenameConversationReturn"
+        },
+        {
+          "name": "useDeleteConversation",
+          "kind": "function",
+          "signature": "function useDeleteConversation(): UseDeleteConversationReturn"
+        },
+        {
+          "name": "UseDeleteConversationReturn",
+          "kind": "interface",
+          "signature": "interface UseDeleteConversationReturn",
+          "members": []
+        },
+        {
+          "name": "useChatStream",
+          "kind": "function",
+          "signature": "function useChatStream(): UseChatStreamReturn"
+        },
+        {
+          "name": "ChatStreamUsage",
+          "kind": "interface",
+          "signature": "interface ChatStreamUsage",
+          "members": []
+        },
+        {
+          "name": "UseChatStreamReturn",
+          "kind": "interface",
+          "signature": "interface UseChatStreamReturn",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/react-analytics",
       "description": "React hooks and renderers for @granit/analytics — useMetric hook plus KpiTile widget renderer registered into the @granit/dashboards widget registry",
       "exports": [
