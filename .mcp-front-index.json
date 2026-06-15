@@ -2932,6 +2932,67 @@
           "kind": "interface",
           "signature": "interface UseCustomisePromptReturn",
           "members": []
+        },
+        {
+          "name": "PromptIcon",
+          "kind": "function",
+          "signature": "function PromptIcon("
+        },
+        {
+          "name": "PromptIconProps",
+          "kind": "interface",
+          "signature": "interface PromptIconProps",
+          "members": []
+        },
+        {
+          "name": "IconPicker",
+          "kind": "function",
+          "signature": "function IconPicker("
+        },
+        {
+          "name": "IconPickerProps",
+          "kind": "interface",
+          "signature": "interface IconPickerProps",
+          "members": []
+        },
+        {
+          "name": "PromptForm",
+          "kind": "function",
+          "signature": "function PromptForm("
+        },
+        {
+          "name": "PromptFormProps",
+          "kind": "interface",
+          "signature": "interface PromptFormProps",
+          "members": []
+        },
+        {
+          "name": "PromptFormValues",
+          "kind": "interface",
+          "signature": "interface PromptFormValues",
+          "members": []
+        },
+        {
+          "name": "PromptCatalogue",
+          "kind": "function",
+          "signature": "function PromptCatalogue("
+        },
+        {
+          "name": "PromptCatalogueProps",
+          "kind": "interface",
+          "signature": "interface PromptCatalogueProps",
+          "members": []
+        },
+        {
+          "name": "PromptPicker",
+          "kind": "function",
+          "signature": "function PromptPicker("
+        },
+        {
+          "name": "PromptPickerProps",
+          "kind": "interface",
+          "signature": "interface PromptPickerProps",
+          "members": []
         }
       ]
     },
