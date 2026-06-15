@@ -908,9 +908,12 @@
         "type": "object",
         "properties": {
           "taxId": {
+            "maxLength": 30,
             "type": "string"
           },
           "countryCode": {
+            "maxLength": 2,
+            "minLength": 2,
             "type": "string"
           }
         }

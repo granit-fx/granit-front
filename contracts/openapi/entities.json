@@ -65,7 +65,7 @@
           {
             "name": "name",
             "in": "path",
-            "description": "Unique registered name of the background job.",
+            "description": "Unique registered name of the entity definition.",
             "required": true,
             "schema": {
               "type": "string"
@@ -146,7 +146,7 @@
           {
             "name": "name",
             "in": "path",
-            "description": "Unique registered name of the background job.",
+            "description": "Unique registered name of the entity definition.",
             "required": true,
             "schema": {
               "type": "string"
@@ -158,7 +158,8 @@
             "description": "Resource identifier (UUID).",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -246,20 +247,20 @@
       "get": {
         "tags": ["Entities"],
         "summary": "Returns calendar items for one entity within a time window.",
-        "description": "Reads the entity's CalendarLayoutDescriptor (selected by the optional ?calendar= name when an entity exposes more than one) and returns the events whose Start/End falls inside [from, to]. The range is enforced server-side: a window wider than 366 days or with To < From is rejected with 400. Permission gate inherited from the underlying entity's Read permission — same defense-in-depth as the manifest endpoint (no calendar-specific permission, rationale: the calendar exposes an aggregate of data the user could already see via the list endpoint). FusionCache TTL is 1 minute by default; the cache key includes the resolved user permission hash plus the From/To window, and the response carries a strong ETag so callers can short-circuit unchanged windows with If-None-Match → 304. Per-entity eviction tags allow the EF Core companion package's CalendarRangeCacheInvalidator<T> to drop every cached window for the entity in one call when one of its rows is created, updated, or deleted (story #1691). Returns an empty list when the entity declares no calendar layout, no item matches, or the host has not yet wired a real ICalendarRangeService implementation.",
+        "description": "Reads the entity's CalendarLayoutDescriptor (selected by the optional ?calendar= name) and returns events whose Start/End falls inside [from, to]. The range is enforced server-side: a window wider than 366 days or with To < From is rejected with 400. Permission gate inherited from the underlying entity's Read permission; response carries a strong ETag so callers can short-circuit with If-None-Match → 304. Returns an empty list when the entity declares no calendar layout, no item falls in range, or the host has not wired a real ICalendarRangeService.",
         "operationId": "GetEntityCalendarRange",
         "parameters": [
           {
             "name": "name",
             "in": "path",
-            "description": "Unique registered name of the background job.",
+            "description": "Unique registered name of the entity definition.",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "From",
+            "name": "from",
             "in": "query",
             "required": true,
             "schema": {
@@ -268,7 +269,7 @@
             }
           },
           {
-            "name": "To",
+            "name": "to",
             "in": "query",
             "required": true,
             "schema": {
@@ -277,7 +278,7 @@
             }
           },
           {
-            "name": "Calendar",
+            "name": "calendar",
             "in": "query",
             "schema": {
               "type": "string"
@@ -364,7 +365,7 @@
           {
             "name": "name",
             "in": "path",
-            "description": "Unique registered name of the background job.",
+            "description": "Unique registered name of the entity definition.",
             "required": true,
             "schema": {
               "type": "string"
@@ -373,6 +374,7 @@
           {
             "name": "action",
             "in": "path",
+            "description": "Name of the registered bulk action to execute.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1555,10 +1557,10 @@
         "enum": ["Count", "Sum", "Avg", "Min", "Max"]
       },
       "RelationAggregatesRequest": {
-        "required": ["relations"],
         "type": "object",
         "properties": {
           "relations": {
+            "maxLength": 256,
             "type": ["null", "array"],
             "items": {
               "type": "string"

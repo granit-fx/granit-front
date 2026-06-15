@@ -97,7 +97,15 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not Found",
@@ -424,6 +432,9 @@
               }
             }
           },
+          "202": {
+            "description": "Accepted"
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -542,6 +553,9 @@
               }
             }
           },
+          "202": {
+            "description": "Accepted"
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -649,6 +663,9 @@
                 }
               }
             }
+          },
+          "202": {
+            "description": "Accepted"
           },
           "404": {
             "description": "Not Found",
@@ -960,6 +977,7 @@
         "type": "object",
         "properties": {
           "reason": {
+            "maxLength": 1000,
             "type": ["null", "string"]
           }
         }
@@ -1007,6 +1025,9 @@
           }
         }
       },
+      "ContentType": {
+        "description": "MIME content type (e.g. `text/html`, `application/pdf`).\nValidates the `type/subtype` format per RFC 6838."
+      },
       "DateFilterMeta": {
         "required": ["name", "defaultPeriod", "availablePeriods"],
         "type": "object",
@@ -1027,6 +1048,9 @@
       },
       "DatePeriod": {
         "enum": ["Today", "ThisWeek", "ThisMonth", "LastMonth", "ThisQuarter", "ThisYear", "Custom"]
+      },
+      "FileName": {
+        "description": "A file name validated for safety: non-empty, max 260 characters, no path traversal."
       },
       "FilterableField": {
         "required": ["name", "type", "operators"],
@@ -1095,7 +1119,7 @@
         ]
       },
       "FinalizeInvoiceRequest": {
-        "required": ["issuedAt", "dueAt"],
+        "required": ["issuedAt"],
         "type": "object",
         "properties": {
           "issuedAt": {
@@ -1107,6 +1131,7 @@
             "format": "date-time"
           },
           "comment": {
+            "maxLength": 500,
             "type": ["null", "string"]
           }
         }
@@ -1379,6 +1404,7 @@
             "$ref": "#/components/schemas/InvoiceDocumentType"
           },
           "currency": {
+            "maxLength": 3,
             "type": "string"
           },
           "collectionMethod": {
@@ -1392,6 +1418,7 @@
             "format": "uuid"
           },
           "creditNoteReason": {
+            "maxLength": 500,
             "type": ["null", "string"]
           },
           "periodStart": {
@@ -1423,10 +1450,10 @@
             "format": "uuid"
           },
           "fileName": {
-            "type": "string"
+            "$ref": "#/components/schemas/FileName"
           },
           "contentType": {
-            "type": "string"
+            "$ref": "#/components/schemas/ContentType"
           },
           "generatedAt": {
             "type": "string",
@@ -1776,6 +1803,7 @@
         "type": "object",
         "properties": {
           "reason": {
+            "maxLength": 1000,
             "type": ["null", "string"]
           }
         }
@@ -1989,10 +2017,10 @@
                         "format": "uuid"
                       },
                       "fileName": {
-                        "type": "string"
+                        "description": "A file name validated for safety: non-empty, max 260 characters, no path traversal."
                       },
                       "contentType": {
-                        "type": "string"
+                        "description": "MIME content type (e.g. `text/html`, `application/pdf`).\nValidates the `type/subtype` format per RFC 6838."
                       },
                       "generatedAt": {
                         "type": "string",

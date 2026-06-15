@@ -460,6 +460,9 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden"
+          },
           "422": {
             "description": "Unprocessable Entity",
             "content": {
@@ -482,16 +485,6 @@
           },
           "401": {
             "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -564,18 +557,11 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden"
+          },
           "401": {
             "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1044,6 +1030,16 @@
               }
             }
           },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -1066,16 +1062,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1456,6 +1442,7 @@
         "type": "object",
         "properties": {
           "targetType": {
+            "maxLength": 256,
             "type": "string"
           },
           "targetId": {
@@ -1469,6 +1456,7 @@
         "type": "object",
         "properties": {
           "targetType": {
+            "maxLength": 256,
             "type": "string"
           },
           "targetId": {
@@ -1581,20 +1569,24 @@
         }
       },
       "CreateCategoryRequest": {
-        "required": ["scope", "parentId", "name", "iconName", "hideOnEntityCard"],
+        "required": ["scope", "name"],
         "type": "object",
         "properties": {
           "scope": {
+            "maxLength": 64,
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 100,
+            "pattern": "^[^/]+$",
             "type": "string"
           },
           "parentId": {
             "type": ["null", "string"],
             "format": "uuid"
           },
-          "name": {
-            "type": "string"
-          },
           "iconName": {
+            "maxLength": 100,
             "type": ["null", "string"]
           },
           "hideOnEntityCard": {
@@ -1603,16 +1595,19 @@
         }
       },
       "CreateTagRequest": {
-        "required": ["scope", "name", "color", "hideOnEntityCard"],
+        "required": ["scope", "name", "color"],
         "type": "object",
         "properties": {
           "scope": {
+            "maxLength": 64,
             "type": "string"
           },
           "name": {
+            "maxLength": 50,
             "type": "string"
           },
           "color": {
+            "pattern": "^#[0-9A-Fa-f]{6}$",
             "type": "string"
           },
           "hideOnEntityCard": {
@@ -1675,7 +1670,6 @@
         }
       },
       "MoveCategoryRequest": {
-        "required": ["newParentId"],
         "type": "object",
         "properties": {
           "newParentId": {
@@ -1846,13 +1840,15 @@
         }
       },
       "UpdateCategoryRequest": {
-        "required": ["name", "iconName", "hideOnEntityCard"],
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 100,
+            "pattern": "^[^/]+$",
             "type": ["null", "string"]
           },
           "iconName": {
+            "maxLength": 100,
             "type": ["null", "string"]
           },
           "hideOnEntityCard": {
@@ -1861,13 +1857,14 @@
         }
       },
       "UpdateTagRequest": {
-        "required": ["name", "color", "hideOnEntityCard"],
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 50,
             "type": ["null", "string"]
           },
           "color": {
+            "pattern": "^#[0-9A-Fa-f]{6}$",
             "type": ["null", "string"]
           },
           "hideOnEntityCard": {

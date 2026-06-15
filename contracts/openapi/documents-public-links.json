@@ -208,6 +208,16 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -355,17 +365,20 @@
   "components": {
     "schemas": {
       "CreatePublicLinkRequest": {
-        "required": ["scope", "ttlDays", "maxUses"],
+        "required": ["scope", "ttlDays"],
         "type": "object",
         "properties": {
           "scope": {
             "$ref": "#/components/schemas/PublicLinkScope"
           },
           "ttlDays": {
+            "maximum": 90,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
           "maxUses": {
+            "exclusiveMinimum": 0,
             "type": ["null", "integer"],
             "format": "int32"
           }
@@ -511,10 +524,10 @@
         "enum": ["Download", "View"]
       },
       "RevokePublicLinkRequest": {
-        "required": ["reason"],
         "type": "object",
         "properties": {
           "reason": {
+            "maxLength": 500,
             "type": ["null", "string"]
           }
         }

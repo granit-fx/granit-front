@@ -244,7 +244,7 @@
       "post": {
         "tags": ["Subscriptions - Plans"],
         "summary": "Creates a new plan in Draft status.",
-        "description": "Creates a plan that can be configured with prices and features before publishing.",
+        "description": "Creates a plan in Draft status that can be configured with prices and features before publishing. Draft plans are not yet purchasable. Use the publish endpoint to make the plan available for subscription.",
         "operationId": "CreatePlan",
         "requestBody": {
           "content": {
@@ -562,7 +562,7 @@
       "post": {
         "tags": ["Subscriptions - Plans"],
         "summary": "Archives a published plan.",
-        "description": "Archived plans are no longer purchasable but remain usable by existing subscribers.",
+        "description": "Archives a published plan, preventing new subscriptions while keeping existing ones active. An archived plan's price history and seat assignments remain valid. This action cannot be undone.",
         "operationId": "ArchivePlan",
         "parameters": [
           {
@@ -1136,7 +1136,7 @@
       "get": {
         "tags": ["Subscriptions - Instances"],
         "summary": "Returns a subscription by ID.",
-        "description": "Returns the full subscription details including seat count and dunning status.",
+        "description": "Returns the full subscription details including plan, seat count, dunning status, and cancellation schedule. Returns 404 if no subscription with that id exists. Requires tenant context or host access.",
         "operationId": "GetSubscriptionById",
         "parameters": [
           {
@@ -1461,7 +1461,7 @@
       "post": {
         "tags": ["Subscriptions - Instances"],
         "summary": "Cancels a subscription.",
-        "description": "Cancels immediately or schedules cancellation at period end based on the request.",
+        "description": "Cancels the subscription immediately or at the end of the current billing period depending on the cancelAtPeriodEnd flag. Returns 404 if the subscription does not exist. Returns 409 if the subscription is already cancelled.",
         "operationId": "CancelSubscription",
         "parameters": [
           {
@@ -1711,7 +1711,7 @@
       "get": {
         "tags": ["Subscriptions - Seats"],
         "summary": "Returns all seat assignments for a subscription.",
-        "description": "Lists users assigned to seats on the specified subscription.",
+        "description": "Returns all seat assignments for the specified subscription, including user identifiers and assignment metadata. Returns 404 if the subscription does not exist.",
         "operationId": "ListSeats",
         "parameters": [
           {
@@ -1906,7 +1906,7 @@
       "delete": {
         "tags": ["Subscriptions - Seats"],
         "summary": "Revokes a seat from a user.",
-        "description": "Removes the user's seat assignment from the subscription.",
+        "description": "Revokes the seat assignment for the specified user, freeing up a seat slot on the subscription. Returns 404 if the subscription or user seat does not exist.",
         "operationId": "RevokeSeat",
         "parameters": [
           {
@@ -2066,11 +2066,13 @@
         "type": "object",
         "properties": {
           "amount": {
+            "minimum": 0,
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
             "type": ["number", "string"],
             "format": "double"
           },
           "currency": {
+            "maxLength": 3,
             "type": "string"
           },
           "interval": {
@@ -2842,14 +2844,12 @@
         }
       },
       "PlanCreateRequest": {
-        "required": ["name", "description", "pricingModel", "defaultInterval"],
+        "required": ["name", "pricingModel", "defaultInterval"],
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 200,
             "type": "string"
-          },
-          "description": {
-            "type": ["null", "string"]
           },
           "pricingModel": {
             "type": "string"
@@ -2857,11 +2857,17 @@
           "defaultInterval": {
             "type": "string"
           },
+          "description": {
+            "maxLength": 2000,
+            "type": ["null", "string"]
+          },
           "trialDays": {
+            "minimum": 0,
             "type": ["null", "integer"],
             "format": "int32"
           },
           "seatLimit": {
+            "exclusiveMinimum": 0,
             "type": ["null", "integer"],
             "format": "int32"
           }
@@ -3051,18 +3057,21 @@
         }
       },
       "PlanUpdateRequest": {
-        "required": ["name", "description", "sortOrder"],
+        "required": ["name", "sortOrder"],
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 200,
             "type": "string"
           },
-          "description": {
-            "type": ["null", "string"]
-          },
           "sortOrder": {
+            "minimum": 0,
             "type": "integer",
             "format": "int32"
+          },
+          "description": {
+            "maxLength": 2000,
+            "type": ["null", "string"]
           }
         }
       },
@@ -3369,6 +3378,7 @@
         "type": "object",
         "properties": {
           "reason": {
+            "maxLength": 500,
             "type": ["null", "string"]
           },
           "atPeriodEnd": {
@@ -3400,6 +3410,7 @@
             "format": "uuid"
           },
           "currency": {
+            "maxLength": 3,
             "type": "string"
           },
           "trialEndsAt": {

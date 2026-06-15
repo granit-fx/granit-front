@@ -524,6 +524,16 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -1484,6 +1494,16 @@
               "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -2765,7 +2785,7 @@
   "components": {
     "schemas": {
       "AppendVersionRequest": {
-        "required": ["blobId", "commitMessage"],
+        "required": ["blobId"],
         "type": "object",
         "properties": {
           "blobId": {
@@ -2773,6 +2793,7 @@
             "format": "uuid"
           },
           "commitMessage": {
+            "maxLength": 1000,
             "type": ["null", "string"]
           }
         }
@@ -2817,16 +2838,21 @@
           }
         }
       },
+      "ContentType": {
+        "description": "MIME content type (e.g. `text/html`, `application/pdf`).\nValidates the `type/subtype` format per RFC 6838."
+      },
       "CreateFolderRequest": {
-        "required": ["parentFolderId", "name"],
+        "required": ["name"],
         "type": "object",
         "properties": {
+          "name": {
+            "maxLength": 255,
+            "pattern": "^[^/]+$",
+            "type": "string"
+          },
           "parentFolderId": {
             "type": ["null", "string"],
             "format": "uuid"
-          },
-          "name": {
-            "type": "string"
           }
         }
       },
@@ -2882,7 +2908,14 @@
             "format": "int64"
           },
           "currentVersionContentType": {
-            "type": ["null", "string"]
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ContentType"
+              }
+            ]
           },
           "status": {
             "$ref": "#/components/schemas/DocumentStatus"
@@ -3197,24 +3230,27 @@
         ]
       },
       "FinalizeUploadRequest": {
-        "required": ["blobId", "folderId", "name", "description", "commitMessage"],
+        "required": ["blobId", "name"],
         "type": "object",
         "properties": {
           "blobId": {
             "type": "string",
             "format": "uuid"
           },
+          "name": {
+            "maxLength": 255,
+            "type": "string"
+          },
           "folderId": {
             "type": ["null", "string"],
             "format": "uuid"
           },
-          "name": {
-            "type": "string"
-          },
           "description": {
+            "maxLength": 2000,
             "type": ["null", "string"]
           },
           "commitMessage": {
+            "maxLength": 1000,
             "type": ["null", "string"]
           }
         }
@@ -3514,7 +3550,6 @@
         "default": "QueryEngine"
       },
       "MoveDocumentRequest": {
-        "required": ["newFolderId"],
         "type": "object",
         "properties": {
           "newFolderId": {
@@ -3524,7 +3559,6 @@
         }
       },
       "MoveFolderRequest": {
-        "required": ["newParentFolderId"],
         "type": "object",
         "properties": {
           "newParentFolderId": {
@@ -3570,7 +3604,7 @@
                   "format": "int64"
                 },
                 "currentVersionContentType": {
-                  "type": ["null", "string"]
+                  "description": "MIME content type (e.g. `text/html`, `application/pdf`).\nValidates the `type/subtype` format per RFC 6838."
                 },
                 "status": {
                   "enum": ["Active", "Trashed", "PermanentlyDeleted"]
@@ -3774,13 +3808,14 @@
         }
       },
       "RenameDocumentRequest": {
-        "required": ["name", "description"],
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 255,
             "type": ["null", "string"]
           },
           "description": {
+            "maxLength": 2000,
             "type": ["null", "string"]
           },
           "clearDescription": {
@@ -3794,6 +3829,8 @@
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 255,
+            "pattern": "^[^/]+$",
             "type": "string"
           }
         }
@@ -3959,12 +3996,16 @@
         "type": "object",
         "properties": {
           "fileName": {
+            "maxLength": 500,
             "type": "string"
           },
           "contentType": {
+            "maxLength": 127,
             "type": "string"
           },
           "maxAllowedBytes": {
+            "maximum": 10737418240,
+            "exclusiveMinimum": 0,
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": ["integer", "string"],
             "format": "int64"

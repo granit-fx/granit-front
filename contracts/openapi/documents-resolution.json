@@ -158,7 +158,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ResolveItemRequest"
-            }
+            },
+            "x-granit-validator": "Validation:Rule:MaxBatchSize"
           }
         }
       },

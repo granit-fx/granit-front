@@ -62,7 +62,7 @@
       "get": {
         "tags": ["Catalog - Products"],
         "summary": "Returns a product by ID (any lifecycle status).",
-        "description": "Returns the full product details including external mappings and metadata.",
+        "description": "Returns the full product details including external mappings, metadata, and current lifecycle status. Returns 404 if no product with that id exists.",
         "operationId": "GetCatalogProductById",
         "parameters": [
           {
@@ -244,7 +244,7 @@
       "get": {
         "tags": ["Catalog - Products"],
         "summary": "Returns a product by SKU (any lifecycle status).",
-        "description": "Useful for SKU-based reverse lookups during Stripe / Avalara / Odoo integration syncs.",
+        "description": "Returns a product by its unique SKU, regardless of lifecycle status. Useful for reverse lookups during Stripe / Avalara / Odoo integration syncs. Returns 404 if no product with that SKU exists.",
         "operationId": "GetCatalogProductBySku",
         "parameters": [
           {
@@ -734,7 +734,7 @@
       "post": {
         "tags": ["Catalog - Products"],
         "summary": "Archives a Published product.",
-        "description": "Existing references (meters, plan prices) are unaffected; the product becomes unavailable for new attachments.",
+        "description": "Transitions a Published product to Archived, preventing new attachments (meters, plan prices) while keeping existing references valid. Returns 404 if the product does not exist. Returns 409 if the product is not in Published state.",
         "operationId": "ArchiveCatalogProduct",
         "parameters": [
           {
@@ -921,7 +921,7 @@
       "delete": {
         "tags": ["Catalog - Products"],
         "summary": "Removes an external provider mapping from a product.",
-        "description": "Returns 404 if either the product or the mapping does not exist.",
+        "description": "Removes an external provider mapping by its id. Returns 404 if either the product or the mapping does not exist. Idempotent — multiple deletes of the same mapping return 204.",
         "operationId": "RemoveCatalogProductExternalMapping",
         "parameters": [
           {
@@ -1050,9 +1050,11 @@
         "type": "object",
         "properties": {
           "providerName": {
+            "maxLength": 64,
             "type": "string"
           },
           "externalId": {
+            "maxLength": 256,
             "type": "string"
           }
         }
@@ -1541,18 +1543,22 @@
         "type": "object",
         "properties": {
           "sku": {
+            "maxLength": 64,
             "type": "string"
           },
           "name": {
+            "maxLength": 200,
             "type": "string"
           },
           "type": {
             "type": "string"
           },
           "unit": {
+            "maxLength": 64,
             "type": "string"
           },
           "description": {
+            "maxLength": 2000,
             "type": ["null", "string"]
           }
         }
@@ -1643,17 +1649,20 @@
         "enum": ["Service", "Metered", "Physical", "Digital"]
       },
       "ProductUpdateRequest": {
-        "required": ["name", "description", "unit"],
+        "required": ["name", "unit"],
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 200,
+            "type": "string"
+          },
+          "unit": {
+            "maxLength": 64,
             "type": "string"
           },
           "description": {
+            "maxLength": 2000,
             "type": ["null", "string"]
-          },
-          "unit": {
-            "type": "string"
           }
         }
       },

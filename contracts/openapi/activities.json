@@ -9,7 +9,7 @@
       "get": {
         "tags": ["Activities"],
         "summary": "Returns a paginated list of activities matching the query filter.",
-        "description": "Filter by entity (entityType + entityId), assignee (assignedToUserId or 'me'), status (open / done / cancelled), or due-date window (dueAtFrom / dueAtTo, half-open). Ordered by DueAt ascending. Caps page size at ActivitiesEndpointsOptions.MaxPageSize (default 100). Activities pinned to hosts the caller cannot read are filtered out (IActivityHostAuthorizationProvider). Listing peers' activities (assignedToUserId != caller) requires Activities.Activities.ReadOthers.",
+        "description": "Filter by entity (entityType + entityId), assignee (assignedToUserId or 'me'), status (open / done / cancelled), or due-date window (dueAtFrom / dueAtTo, half-open). Ordered by DueAt ascending with page size capped at ActivitiesEndpointsOptions.MaxPageSize (default 100). Activities pinned to hosts the caller cannot read are filtered out by IActivityHostAuthorizationProvider. Listing peers' activities (assignedToUserId != caller) requires Activities.Activities.ReadOthers.",
         "operationId": "ListActivities",
         "parameters": [
           {
@@ -537,6 +537,16 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -624,7 +634,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -696,7 +706,7 @@
       "get": {
         "tags": ["Activities"],
         "summary": "Returns activities positioned on the cross-entity calendar within a time window.",
-        "description": "Spans every entity type the caller can read. The window must be <= ActivitiesEndpointsOptions.MaxCalendarRangeDays (default 90 days) and (To > From) — otherwise 400. Filter by assignee ('me' resolves from the JWT 'sub' claim or any string-form Guid), entityType (polymorphic FK), type (comma-separated), or status (defaults to OpenOrOverdue). FusionCache TTL is 1 minute by default; the cache key includes the resolved tenant id, the user permission hash, the window, and every filter. Per-tenant eviction tags drop every cached calendar window when an Activity row changes (handler in this same package). Returns 304 on If-None-Match match.",
+        "description": "Spans every entity type the caller can read. The window must be <= ActivitiesEndpointsOptions.MaxCalendarRangeDays (default 90 days) and To > From — otherwise 400. Filter by assignee ('me' resolves from the JWT 'sub' claim), entityType (polymorphic FK), type (comma-separated), or status (defaults to OpenOrOverdue). Results are cached 1 minute per (tenant, user permission hash, window, filters); per-tenant eviction tags invalidate all windows when an Activity row changes. Returns 304 on If-None-Match match.",
         "operationId": "GetActivityCalendar",
         "parameters": [
           {
@@ -968,6 +978,7 @@
         "type": "object",
         "properties": {
           "entityType": {
+            "maxLength": 256,
             "type": "string"
           },
           "entityId": {
@@ -975,6 +986,7 @@
             "format": "uuid"
           },
           "type": {
+            "maxLength": 64,
             "type": "string"
           },
           "assignedToUserId": {
@@ -986,6 +998,7 @@
             "format": "date-time"
           },
           "description": {
+            "maxLength": 2000,
             "type": ["null", "string"]
           }
         }

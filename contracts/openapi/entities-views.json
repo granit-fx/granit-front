@@ -8,7 +8,7 @@
     "/entities/{entityName}/views": {
       "get": {
         "tags": ["Entities - Views"],
-        "summary": "Lists every saved view accessible to the current user for the given entity.",
+        "summary": "List every saved view accessible to the current user for the given entity.",
         "description": "Returns Personal views owned by the user, Shared views whose audience targets the user (by role or user id), and every Tenant view in the current tenant. Sorted by SortOrder ascending then Name.",
         "operationId": "ListEntityViews",
         "parameters": [
@@ -36,8 +36,8 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -46,8 +46,8 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
+          "403": {
+            "description": "Forbidden",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -70,7 +70,7 @@
       },
       "post": {
         "tags": ["Entities - Views"],
-        "summary": "Creates a Personal saved view for the current user.",
+        "summary": "Create a Personal saved view for the current user.",
         "description": "Requires the Entities.Views.Create permission. The created view is owned by the caller and bound to the supplied compiled collection (BasedOn) and kind. Returns 201 with the created descriptor.",
         "operationId": "CreateEntityView",
         "parameters": [
@@ -105,16 +105,6 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -127,6 +117,16 @@
           },
           "401": {
             "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -161,7 +161,7 @@
     "/entities/{entityName}/views/{id}": {
       "get": {
         "tags": ["Entities - Views"],
-        "summary": "Gets one saved view by id.",
+        "summary": "Get one saved view by id.",
         "description": "Returns 404 when the view does not exist or is not accessible to the current user (defense-in-depth: same response shape, no scope leakage).",
         "operationId": "GetEntityView",
         "parameters": [
@@ -240,10 +240,19 @@
       },
       "put": {
         "tags": ["Entities - Views"],
-        "summary": "Updates the name / description / icon / state of a saved view.",
-        "description": "Requires ownership for Personal / Shared views, or Entities.Views.Manage for Tenant views. BasedOn and Kind are immutable post-creation and rejected if changed.",
+        "summary": "Update the name / description / icon / state of a saved view.",
+        "description": "Requires ownership for Personal / Shared views, or Entities.Views.Manage for Tenant views (enforced in the writer). BasedOn and Kind are immutable post-creation and rejected if changed.",
         "operationId": "UpdateEntityView",
         "parameters": [
+          {
+            "name": "entityName",
+            "in": "path",
+            "description": "Entity definition name (matches the registered Granit.Entities entity).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "id",
             "in": "path",
@@ -272,16 +281,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/EntityViewResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -316,6 +315,16 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable Entity",
             "content": {
@@ -340,10 +349,19 @@
       },
       "delete": {
         "tags": ["Entities - Views"],
-        "summary": "Deletes a saved view.",
-        "description": "The owner can delete their own views; moderation deletes require Entities.Views.DeleteAny. Returns 204 on success.",
+        "summary": "Delete a saved view.",
+        "description": "The owner can delete their own views; moderation deletes require Entities.Views.DeleteAny (enforced in the writer). Returns 204 on success.",
         "operationId": "DeleteEntityView",
         "parameters": [
+          {
+            "name": "entityName",
+            "in": "path",
+            "description": "Entity definition name (matches the registered Granit.Entities entity).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "id",
             "in": "path",
@@ -359,16 +377,6 @@
           "204": {
             "description": "No Content"
           },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -381,6 +389,16 @@
           },
           "401": {
             "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -405,7 +423,7 @@
     "/entities/{entityName}/views/_default": {
       "get": {
         "tags": ["Entities - Views"],
-        "summary": "Resolves the user's effective default saved view for the entity.",
+        "summary": "Resolve the user's effective default saved view for the entity.",
         "description": "Precedence per ADR-047 §4: IsPersonalDefault > IsDefault > compiled fallback. Returns 204 when no saved or pinned view exists — the renderer falls back to the compiled default collection.",
         "operationId": "GetEntityDefaultView",
         "parameters": [
@@ -469,10 +487,19 @@
     "/entities/{entityName}/views/{id}/pin": {
       "post": {
         "tags": ["Entities - Views"],
-        "summary": "Pins or unpins a saved view in the workspace tab strip.",
+        "summary": "Pin or unpin a saved view in the workspace tab strip.",
         "description": "Requires Entities.Views.Manage. The pinned flag is independent from IsDefault / IsPersonalDefault.",
         "operationId": "ToggleEntityViewPinned",
         "parameters": [
+          {
+            "name": "entityName",
+            "in": "path",
+            "description": "Entity definition name (matches the registered Granit.Entities entity).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "id",
             "in": "path",
@@ -505,16 +532,6 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -527,6 +544,16 @@
           },
           "401": {
             "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -561,10 +588,19 @@
     "/entities/{entityName}/views/{id}/set-default": {
       "post": {
         "tags": ["Entities - Views"],
-        "summary": "Sets or clears the tenant-default flag.",
+        "summary": "Set or clear the tenant-default flag.",
         "description": "Requires Entities.Views.Manage. At most one IsDefault view per (entity, tenant) — setting one clears any existing tenant default.",
         "operationId": "ToggleEntityViewTenantDefault",
         "parameters": [
+          {
+            "name": "entityName",
+            "in": "path",
+            "description": "Entity definition name (matches the registered Granit.Entities entity).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "id",
             "in": "path",
@@ -597,16 +633,6 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -619,6 +645,16 @@
           },
           "401": {
             "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -653,10 +689,19 @@
     "/entities/{entityName}/views/{id}/star": {
       "post": {
         "tags": ["Entities - Views"],
-        "summary": "Sets or clears the personal-default flag for the current user.",
+        "summary": "Set or clear the personal-default flag for the current user.",
         "description": "Requires the caller to own the view (group-level Read permission suffices — ownership is enforced in the writer). At most one IsPersonalDefault view per (entity, user) — setting one clears any existing personal default.",
         "operationId": "ToggleEntityViewPersonalDefault",
         "parameters": [
+          {
+            "name": "entityName",
+            "in": "path",
+            "description": "Entity definition name (matches the registered Granit.Entities entity).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "id",
             "in": "path",
@@ -689,16 +734,6 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -711,6 +746,16 @@
           },
           "401": {
             "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -745,10 +790,19 @@
     "/entities/{entityName}/views/{id}/share": {
       "post": {
         "tags": ["Entities - Views"],
-        "summary": "Promotes a Personal view to Shared with the given audience.",
+        "summary": "Promote a Personal view to Shared with the given audience.",
         "description": "Requires Entities.Views.Share. The audience must include at least one role or user — empty audiences are rejected.",
         "operationId": "ShareEntityView",
         "parameters": [
+          {
+            "name": "entityName",
+            "in": "path",
+            "description": "Entity definition name (matches the registered Granit.Entities entity).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "id",
             "in": "path",
@@ -781,16 +835,6 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -813,6 +857,16 @@
           },
           "401": {
             "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -848,26 +902,31 @@
   "components": {
     "schemas": {
       "EntityViewCreateBodyRequest": {
-        "required": ["basedOn", "kind", "name", "description", "icon", "state"],
+        "required": ["basedOn", "kind", "name", "state"],
         "type": "object",
         "properties": {
           "basedOn": {
+            "maxLength": 128,
             "type": "string"
           },
           "kind": {
+            "maxLength": 64,
             "type": "string"
           },
           "name": {
+            "maxLength": 200,
             "type": "string"
-          },
-          "description": {
-            "type": ["null", "string"]
-          },
-          "icon": {
-            "type": ["null", "string"]
           },
           "state": {
             "$ref": "#/components/schemas/JsonObject"
+          },
+          "description": {
+            "maxLength": 2000,
+            "type": ["null", "string"]
+          },
+          "icon": {
+            "maxLength": 64,
+            "type": ["null", "string"]
           }
         }
       },
@@ -996,20 +1055,23 @@
         }
       },
       "EntityViewUpdateBodyRequest": {
-        "required": ["name", "description", "icon", "state"],
+        "required": ["name", "state"],
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 200,
             "type": "string"
-          },
-          "description": {
-            "type": ["null", "string"]
-          },
-          "icon": {
-            "type": ["null", "string"]
           },
           "state": {
             "$ref": "#/components/schemas/JsonObject"
+          },
+          "description": {
+            "maxLength": 2000,
+            "type": ["null", "string"]
+          },
+          "icon": {
+            "maxLength": 64,
+            "type": ["null", "string"]
           }
         }
       },

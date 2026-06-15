@@ -334,7 +334,7 @@
   "components": {
     "schemas": {
       "AdminCreditRequest": {
-        "required": ["partyId", "amount", "currency", "source", "reason", "expiresAt"],
+        "required": ["partyId", "amount", "currency", "source", "reason"],
         "type": "object",
         "properties": {
           "partyId": {
@@ -342,17 +342,22 @@
             "format": "uuid"
           },
           "amount": {
+            "exclusiveMinimum": 0,
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
             "type": ["number", "string"],
             "format": "double"
           },
           "currency": {
+            "maxLength": 3,
+            "minLength": 3,
             "type": "string"
           },
           "source": {
+            "maxLength": 50,
             "type": "string"
           },
           "reason": {
+            "maxLength": 500,
             "type": "string"
           },
           "expiresAt": {
@@ -370,14 +375,18 @@
             "format": "uuid"
           },
           "amount": {
+            "exclusiveMinimum": 0,
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
             "type": ["number", "string"],
             "format": "double"
           },
           "currency": {
+            "maxLength": 3,
+            "minLength": 3,
             "type": "string"
           },
           "reason": {
+            "maxLength": 500,
             "type": "string"
           },
           "referenceId": {
@@ -385,6 +394,7 @@
             "format": "uuid"
           },
           "referenceType": {
+            "maxLength": 64,
             "type": ["null", "string"]
           }
         }

@@ -9,7 +9,7 @@
       "get": {
         "tags": ["Workspaces"],
         "summary": "Returns the workspace tree filtered for the requesting user.",
-        "description": "Returns every WorkspaceDefinition the user is allowed to see — workspaces, sections, and items gated by a permission the user does NOT hold are absent from the payload (defense in depth, ADR-040). Empty branches (workspaces / sections with zero surviving items) are dropped. Pass ?includeShells=false to omit Framework shells. Cached 5 minutes per (user-perms-hash, culture, includeShells).",
+        "description": "Returns every WorkspaceDefinition the user is allowed to see — workspaces, sections, and items gated by a permission the user does NOT hold are absent from the payload (defense in depth, ADR-044 §6). Empty branches (workspaces / sections with zero surviving items) are dropped. Pass ?includeShells=false to omit Framework shells. Cached 5 minutes per (user-perms-hash, culture, includeShells).",
         "operationId": "GetWorkspacesTree",
         "parameters": [
           {
@@ -68,7 +68,7 @@
       "get": {
         "tags": ["Workspaces"],
         "summary": "Resolves the requesting user's landing route via the 5-tier precedence chain.",
-        "description": "Precedence per ADR-048: personal-sticky > personal-pinned > role-default > tenant-default > framework. Each tier may be null (provider not configured, no preference) — the resolver falls through. Routes that fail the URL whitelist (configured prefixes) or the access guard are also skipped to the next tier. The framework fallback is configured (not user-supplied) and always wins as the closing tier.",
+        "description": "Precedence per ADR-049: personal-sticky > personal-pinned > role-default > tenant-default > framework. Each tier may be null (provider not configured, no preference) — the resolver falls through. Routes that fail the URL whitelist (configured prefixes) or the access guard are also skipped to the next tier. The framework fallback is configured (not user-supplied) and always wins as the closing tier.",
         "operationId": "GetLandingRoute",
         "responses": {
           "200": {
@@ -261,10 +261,10 @@
         }
       },
       "SetPinnedLandingRouteRequest": {
-        "required": ["route"],
         "type": "object",
         "properties": {
           "route": {
+            "maxLength": 2048,
             "type": ["null", "string"]
           }
         }
