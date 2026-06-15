@@ -26,3 +26,36 @@ export type { UseDeleteConversationReturn } from './hooks/use-delete-conversatio
 // Hooks — streaming
 export { useChatStream } from './hooks/use-chat-stream';
 export type { ChatStreamUsage, UseChatStreamReturn } from './hooks/use-chat-stream';
+
+// Components
+export { ChatMessage } from './components/chat-message';
+export type { ChatMessageProps } from './components/chat-message';
+export { ConversationThread } from './components/conversation-thread';
+export type { ConversationThreadProps } from './components/conversation-thread';
+export { SuggestedActions } from './components/suggested-actions';
+export type { SuggestedActionsProps } from './components/suggested-actions';
+export { ClarificationPrompt } from './components/clarification-prompt';
+export type { ClarificationPromptProps } from './components/clarification-prompt';
+export { AttachmentChips } from './components/attachment-chips';
+export type {
+  AttachmentChipsProps,
+  AttachmentStatus,
+  ComposerAttachment,
+} from './components/attachment-chips';
+export { ChatComposer } from './components/chat-composer';
+export type { ChatComposerProps } from './components/chat-composer';
+export { ComposerSuggestions } from './components/composer-suggestions';
+export type { ComposerSuggestionsProps } from './components/composer-suggestions';
+export { detectTrigger } from './components/detect-trigger';
+export type { ActiveTrigger } from './components/detect-trigger';
+export type {
+  MentionOption,
+  PromptOption,
+  SearchMentions,
+  StagedMention,
+  UploadAttachment,
+} from './components/composer-types';
+
+// i18n
+export { aiChatTranslationsEn, aiChatTranslationsFr, defaultChatLabels } from './locales/index';
+export type { ChatTranslations } from './locales/index';

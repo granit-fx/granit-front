@@ -6,9 +6,11 @@
       "@granit/api-client": ["../api-client/src/index.ts"],
       "@granit/react-api-client": ["../react-api-client/src/index.ts"],
       "@granit/types": ["../types/src/index.ts"],
+      "@granit/utils": ["../utils/src/index.ts"],
       "@granit/testing": ["../testing/src/index.ts"],
       "@granit/react-testing": ["../react-testing/src/index.ts"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["src/__tests__/**"]
 }

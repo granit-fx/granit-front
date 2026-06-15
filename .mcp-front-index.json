@@ -2738,6 +2738,88 @@
           "kind": "interface",
           "signature": "interface UseChatStreamReturn",
           "members": []
+        },
+        {
+          "name": "ChatMessage",
+          "kind": "function",
+          "signature": "function ChatMessage("
+        },
+        {
+          "name": "ChatMessageProps",
+          "kind": "interface",
+          "signature": "interface ChatMessageProps",
+          "members": []
+        },
+        {
+          "name": "ConversationThread",
+          "kind": "function",
+          "signature": "function ConversationThread("
+        },
+        {
+          "name": "ConversationThreadProps",
+          "kind": "interface",
+          "signature": "interface ConversationThreadProps",
+          "members": []
+        },
+        {
+          "name": "SuggestedActions",
+          "kind": "function",
+          "signature": "function SuggestedActions("
+        },
+        {
+          "name": "SuggestedActionsProps",
+          "kind": "interface",
+          "signature": "interface SuggestedActionsProps",
+          "members": []
+        },
+        {
+          "name": "ClarificationPrompt",
+          "kind": "function",
+          "signature": "function ClarificationPrompt("
+        },
+        {
+          "name": "ClarificationPromptProps",
+          "kind": "interface",
+          "signature": "interface ClarificationPromptProps",
+          "members": []
+        },
+        {
+          "name": "AttachmentChips",
+          "kind": "function",
+          "signature": "function AttachmentChips("
+        },
+        {
+          "name": "ChatComposer",
+          "kind": "function",
+          "signature": "function ChatComposer("
+        },
+        {
+          "name": "ChatComposerProps",
+          "kind": "interface",
+          "signature": "interface ChatComposerProps",
+          "members": []
+        },
+        {
+          "name": "ComposerSuggestions",
+          "kind": "function",
+          "signature": "function ComposerSuggestions<T>("
+        },
+        {
+          "name": "ComposerSuggestionsProps",
+          "kind": "interface",
+          "signature": "interface ComposerSuggestionsProps<T>",
+          "members": []
+        },
+        {
+          "name": "detectTrigger",
+          "kind": "function",
+          "signature": "function detectTrigger(text: string, caret: number): ActiveTrigger | null"
+        },
+        {
+          "name": "ActiveTrigger",
+          "kind": "interface",
+          "signature": "interface ActiveTrigger",
+          "members": []
         }
       ]
     },
