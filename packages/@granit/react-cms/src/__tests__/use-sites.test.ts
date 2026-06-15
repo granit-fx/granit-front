@@ -29,6 +29,7 @@ const site: SiteResponse = {
   activated: true,
   tenantId: null,
   displayNames: {},
+  homePageId: null,
 };
 
 function createWrapper(client: AxiosInstance) {

@@ -18,6 +18,7 @@ const site: SiteResponse = {
   activated: true,
   tenantId: null,
   displayNames: { fr: 'ACME', en: 'ACME' },
+  homePageId: null,
 };
 
 describe('listSites', () => {

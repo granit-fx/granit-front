@@ -1484,9 +1484,13 @@
         "type": "object",
         "properties": {
           "source": {
+            "maxLength": 2048,
+            "pattern": "^/",
             "type": "string"
           },
           "target": {
+            "maxLength": 2048,
+            "pattern": "^(https?://|/)",
             "type": "string"
           },
           "type": {
@@ -1496,6 +1500,7 @@
             "$ref": "#/components/schemas/RedirectMatchType"
           },
           "culture": {
+            "maxLength": 20,
             "type": ["null", "string"]
           },
           "isActive": {
@@ -1609,6 +1614,8 @@
         "type": "object",
         "properties": {
           "target": {
+            "maxLength": 2048,
+            "pattern": "^(https?://|/)",
             "type": "string"
           },
           "type": {

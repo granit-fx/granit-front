@@ -77,6 +77,7 @@ export function createSitesHandlers(baseUrl = '/api/cms/sites'): RequestHandler[
         activated: true,
         tenantId: null,
         displayNames: { [dto.defaultCulture]: dto.slug },
+        homePageId: null,
       };
       sites.push(site);
       return HttpResponse.json(site, { status: 201 });

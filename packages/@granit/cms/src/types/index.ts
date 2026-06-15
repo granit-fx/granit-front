@@ -176,6 +176,8 @@ export interface SiteResponse {
   readonly activated: boolean;
   readonly tenantId: string | null;
   readonly displayNames: Readonly<Record<string, string>>;
+  /** Page designated at `/` (the site home page); `null` when none is set. */
+  readonly homePageId: string | null;
 }
 
 /** Request body for `POST /api/cms/sites`. */

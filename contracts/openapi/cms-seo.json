@@ -25,7 +25,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/xml": {}
+            }
           },
           "304": {
             "description": "Not Modified"
@@ -72,7 +75,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/xml": {}
+            }
           },
           "304": {
             "description": "Not Modified"
@@ -121,7 +127,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {}
+            }
           },
           "500": {
             "description": "Internal Server Error",
@@ -157,7 +166,15 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/manifest+json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not Found",
@@ -1079,7 +1096,15 @@
             "description": "No Content"
           },
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized",
@@ -3057,12 +3082,15 @@
         "type": "object",
         "properties": {
           "title": {
+            "maxLength": 300,
             "type": ["null", "string"]
           },
           "titleTemplate": {
+            "maxLength": 300,
             "type": ["null", "string"]
           },
           "description": {
+            "maxLength": 2000,
             "type": ["null", "string"]
           },
           "keywords": {
@@ -3072,6 +3100,8 @@
             }
           },
           "canonicalUrl": {
+            "maxLength": 2048,
+            "pattern": "^https://",
             "type": ["null", "string"]
           },
           "robots": {
@@ -3105,6 +3135,7 @@
             ]
           },
           "structuredDataExtras": {
+            "maxLength": 32768,
             "type": ["null", "string"]
           },
           "disableAutoJsonLd": {
@@ -3118,6 +3149,7 @@
             }
           },
           "xDefaultCulture": {
+            "maxLength": 20,
             "type": ["null", "string"]
           }
         }
@@ -3303,6 +3335,7 @@
         "type": "object",
         "properties": {
           "reason": {
+            "maxLength": 1000,
             "type": ["null", "string"]
           }
         }
@@ -3420,6 +3453,7 @@
             "format": "uuid"
           },
           "contentType": {
+            "maxLength": 100,
             "type": "string"
           },
           "contentId": {
@@ -3427,12 +3461,15 @@
             "format": "uuid"
           },
           "culture": {
+            "maxLength": 20,
             "type": ["null", "string"]
           },
           "contentTitle": {
+            "maxLength": 300,
             "type": "string"
           },
           "contentBody": {
+            "maxLength": 50000,
             "type": ["null", "string"]
           },
           "scope": {
@@ -3478,12 +3515,15 @@
         "type": "object",
         "properties": {
           "titleTemplate": {
+            "maxLength": 300,
             "type": ["null", "string"]
           },
           "siteName": {
+            "maxLength": 200,
             "type": ["null", "string"]
           },
           "defaultDescription": {
+            "maxLength": 2000,
             "type": ["null", "string"]
           },
           "defaultRobots": {
@@ -3497,9 +3537,13 @@
             ]
           },
           "canonicalHost": {
+            "maxLength": 2048,
+            "pattern": "^https://",
             "type": ["null", "string"]
           },
           "sitemapMaxUrlsPerFile": {
+            "maximum": 50000,
+            "minimum": 1,
             "type": "integer",
             "format": "int32",
             "default": 45000
@@ -3545,6 +3589,7 @@
             }
           },
           "robotsTxtExtra": {
+            "maxLength": 4096,
             "type": ["null", "string"]
           },
           "manifest": {

@@ -492,6 +492,7 @@
         "type": "object",
         "properties": {
           "host": {
+            "maxLength": 253,
             "type": "string"
           },
           "isPrimary": {

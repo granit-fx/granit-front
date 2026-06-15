@@ -483,6 +483,178 @@
         }
       }
     },
+    "/api/cms/sites/{id}/home-page": {
+      "put": {
+        "tags": ["CMS - Sites"],
+        "summary": "Designates the page served at the site root path '/'.",
+        "description": "Promotes an existing, non-root page of this site to the homepage: its public per-culture path becomes '/' (it stops resolving at its own slug). Any previously designated homepage reverts to its structural slug path. Returns 404 if the site or page does not exist, 400 if the page belongs to another site or is the technical site root.",
+        "operationId": "SetCmsSiteHomePage",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetSiteHomePageRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["CMS - Sites"],
+        "summary": "Clears the homepage designation.",
+        "description": "Removes the page designated at '/'; the previously designated page reverts to its slug path and '/' stops resolving. Returns 404 if the site does not exist.",
+        "operationId": "ClearCmsSiteHomePage",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/cms/sites/meta": {
       "get": {
         "tags": ["CMS - Sites"],
@@ -1932,7 +2104,7 @@
         "tags": ["CMS - Pages"],
         "summary": "Records or refreshes the caller's presence in the page-editing room.",
         "description": "Idempotent — calling on an already-active participant just refreshes the timestamp. The user id is resolved from the authenticated principal.",
-        "operationId": "PageEditingPresenceHeartbeat",
+        "operationId": "HeartbeatCmsPageEditingPresence",
         "parameters": [
           {
             "name": "id",
@@ -2014,7 +2186,7 @@
         "tags": ["CMS - Pages"],
         "summary": "Removes the caller from the page-editing room.",
         "description": "Called by the editor on tab close so the room reflects the truth immediately rather than waiting for the heartbeat TTL to expire.",
-        "operationId": "PageEditingPresenceLeave",
+        "operationId": "LeaveCmsPageEditingPresence",
         "parameters": [
           {
             "name": "id",
@@ -2087,7 +2259,7 @@
         "tags": ["CMS - Pages"],
         "summary": "Lists the editors currently in the page-editing room.",
         "description": "Ordered freshest first. Stale entries (older than the configured threshold) are filtered at read time.",
-        "operationId": "PageEditingPresenceList",
+        "operationId": "ListCmsPageEditingPresence",
         "parameters": [
           {
             "name": "id",
@@ -4095,6 +4267,7 @@
         "type": "object",
         "properties": {
           "contentType": {
+            "maxLength": 100,
             "type": "string"
           },
           "contentId": {
@@ -4102,6 +4275,7 @@
             "format": "uuid"
           },
           "culture": {
+            "maxLength": 20,
             "type": ["null", "string"]
           },
           "type": {
@@ -4174,9 +4348,11 @@
         "type": "object",
         "properties": {
           "dataSourceKey": {
+            "maxLength": 256,
             "type": "string"
           },
           "query": {
+            "maxLength": 10000,
             "type": ["null", "string"]
           },
           "siteId": {
@@ -4184,6 +4360,7 @@
             "format": "uuid"
           },
           "culture": {
+            "maxLength": 20,
             "type": "string"
           }
         }
@@ -4311,9 +4488,13 @@
             "format": "uuid"
           },
           "slugSegment": {
+            "maxLength": 200,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
             "type": "string"
           },
           "layoutKey": {
+            "maxLength": 100,
+            "pattern": "^[a-z0-9]+([._-][a-z0-9]+)*$",
             "type": ["null", "string"]
           }
         }
@@ -4327,6 +4508,7 @@
             "format": "uuid"
           },
           "name": {
+            "maxLength": 200,
             "type": "string"
           }
         }
@@ -4336,9 +4518,12 @@
         "type": "object",
         "properties": {
           "slug": {
+            "maxLength": 200,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
             "type": "string"
           },
           "defaultCulture": {
+            "maxLength": 20,
             "type": "string"
           },
           "allowedCultures": {
@@ -4802,9 +4987,12 @@
             "format": "uuid"
           },
           "key": {
+            "maxLength": 100,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
             "type": "string"
           },
           "title": {
+            "maxLength": 200,
             "type": "string"
           },
           "items": {
@@ -4848,6 +5036,7 @@
         "type": "object",
         "properties": {
           "label": {
+            "maxLength": 200,
             "type": "string"
           },
           "kind": {
@@ -4981,6 +5170,7 @@
         "type": "object",
         "properties": {
           "title": {
+            "maxLength": 200,
             "type": "string"
           },
           "items": {
@@ -5888,6 +6078,10 @@
                 "activated": {
                   "type": "boolean"
                 },
+                "homePageId": {
+                  "type": ["null", "string"],
+                  "format": "uuid"
+                },
                 "tenantId": {
                   "type": ["null", "string"],
                   "format": "uuid"
@@ -5934,6 +6128,10 @@
                           "activated": {
                             "type": "boolean"
                           },
+                          "homePageId": {
+                            "type": ["null", "string"],
+                            "format": "uuid"
+                          },
                           "tenantId": {
                             "type": ["null", "string"],
                             "format": "uuid"
@@ -5969,6 +6167,10 @@
                                     },
                                     "activated": {
                                       "type": "boolean"
+                                    },
+                                    "homePageId": {
+                                      "type": ["null", "string"],
+                                      "format": "uuid"
                                     },
                                     "tenantId": {
                                       "type": ["null", "string"],
@@ -6874,6 +7076,8 @@
         "type": "object",
         "properties": {
           "slugSegment": {
+            "maxLength": 200,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
             "type": "string"
           }
         }
@@ -6883,6 +7087,7 @@
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 200,
             "type": "string"
           }
         }
@@ -6940,9 +7145,11 @@
         "type": "object",
         "properties": {
           "contentJson": {
+            "maxLength": 2097152,
             "type": "string"
           },
           "title": {
+            "maxLength": 500,
             "type": ["null", "string"]
           }
         }
@@ -6956,6 +7163,7 @@
             "format": "date-time"
           },
           "timeZoneId": {
+            "maxLength": 64,
             "type": "string"
           }
         }
@@ -6968,7 +7176,18 @@
             "type": "string"
           },
           "title": {
+            "maxLength": 500,
             "type": "string"
+          }
+        }
+      },
+      "SetSiteHomePageRequest": {
+        "required": ["pageId"],
+        "type": "object",
+        "properties": {
+          "pageId": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },
@@ -6998,6 +7217,10 @@
           },
           "activated": {
             "type": "boolean"
+          },
+          "homePageId": {
+            "type": ["null", "string"],
+            "format": "uuid"
           },
           "tenantId": {
             "type": ["null", "string"],
@@ -7069,7 +7292,8 @@
           "defaultTheme",
           "activated",
           "tenantId",
-          "displayNames"
+          "displayNames",
+          "homePageId"
         ],
         "type": "object",
         "properties": {
@@ -7110,6 +7334,10 @@
             "additionalProperties": {
               "type": "string"
             }
+          },
+          "homePageId": {
+            "type": ["null", "string"],
+            "format": "uuid"
           }
         }
       },
@@ -7175,6 +7403,7 @@
         "type": "object",
         "properties": {
           "defaultCulture": {
+            "maxLength": 20,
             "type": "string"
           },
           "allowedCultures": {
@@ -7190,6 +7419,7 @@
             }
           },
           "defaultTheme": {
+            "maxLength": 100,
             "type": "string"
           },
           "activated": {
