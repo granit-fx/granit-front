@@ -267,6 +267,36 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'SiteHostnameCreateRequest',
     ],
   },
+  // ─── Business payments (granit-business / Granit.Payments.Endpoints) ────────
+  // Object DTOs only. The list/grid surfaces (GET /transactions, /methods,
+  // /configuration) are served by the query-engine generic helper, so route
+  // conformance is left off here. Standalone string-union enums (PaymentStatus,
+  // RefundStatus, DisputeStatus, PaymentMethodCategory, PaymentMethodSequenceTypeName
+  // — the last also name-shifted from the spec's `PaymentMethodSequenceType`) are
+  // verified indirectly via the fields that reference them, per the field-by-field
+  // oracle, not listed here.
+  {
+    slug: 'payments',
+    package: 'payments',
+    types: [
+      'PaymentChargeRequest',
+      'PaymentRefundRequest',
+      'PaymentCheckoutRequest',
+      'PaymentAttachMethodRequest',
+      'PaymentTransactionResponse',
+      'PaymentRefundResponse',
+      'PaymentDisputeResponse',
+      'PaymentCheckoutSessionResponse',
+      'PaymentMethodResponse',
+      'PaymentAvailableMethodResponse',
+      'PaymentMethodCapabilityResponse',
+      'PaymentMethodAmountBoundResponse',
+      'PaymentMethodConfigurationItemResponse',
+      'PaymentProviderConfigurationResponse',
+      'PaymentCatalogMethod',
+      'PaymentProviderCatalogResponse',
+    ],
+  },
   {
     slug: 'sepa-transfer',
     package: 'payments-sepa-transfer',

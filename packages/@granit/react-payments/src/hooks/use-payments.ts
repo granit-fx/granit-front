@@ -25,7 +25,7 @@ import type {
   PaymentChargeRequest,
   PaymentCheckoutRequest,
   PaymentCheckoutSessionResponse,
-  PaymentMethodConfigurationItem,
+  PaymentMethodConfigurationItemResponse,
   PaymentMethodResponse,
   PaymentProviderCatalogResponse,
   PaymentProviderConfigurationResponse,
@@ -295,7 +295,7 @@ export function usePaymentMethodConfigurations(): UseQueryResult<
  * ```
  */
 export function useActivatePaymentMethod(): UseMutationResult<
-  PaymentMethodConfigurationItem,
+  PaymentMethodConfigurationItemResponse,
   Error,
   PaymentMethodToggleArgs
 > {
@@ -332,7 +332,7 @@ export function useActivatePaymentMethod(): UseMutationResult<
  * ```
  */
 export function useDeactivatePaymentMethod(): UseMutationResult<
-  PaymentMethodConfigurationItem,
+  PaymentMethodConfigurationItemResponse,
   Error,
   PaymentMethodToggleArgs
 > {
@@ -392,7 +392,7 @@ export function useProviderCatalog(
  * ```
  */
 export function useResyncPaymentMethod(): UseMutationResult<
-  PaymentMethodConfigurationItem,
+  PaymentMethodConfigurationItemResponse,
   Error,
   PaymentMethodToggleArgs
 > {

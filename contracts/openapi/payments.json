@@ -1217,6 +1217,16 @@
               }
             }
           },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "403": {
             "description": "Forbidden",
             "content": {
@@ -1674,7 +1684,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaymentMethodConfigurationItem"
+                  "$ref": "#/components/schemas/PaymentMethodConfigurationItemResponse"
                 }
               }
             }
@@ -1764,7 +1774,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaymentMethodConfigurationItem"
+                  "$ref": "#/components/schemas/PaymentMethodConfigurationItemResponse"
                 }
               }
             }
@@ -1854,7 +1864,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaymentMethodConfigurationItem"
+                  "$ref": "#/components/schemas/PaymentMethodConfigurationItemResponse"
                 }
               }
             }
@@ -2565,6 +2575,10 @@
                   "type": ["null", "string"],
                   "format": "uuid"
                 },
+                "mandateId": {
+                  "type": ["null", "string"],
+                  "format": "uuid"
+                },
                 "actionUrl": {
                   "type": ["null", "string"]
                 },
@@ -2660,6 +2674,9 @@
                       }
                     }
                   }
+                },
+                "metadataJson": {
+                  "type": ["null", "string"]
                 },
                 "tenantId": {
                   "type": ["null", "string"],
@@ -2797,12 +2814,15 @@
         "type": "object",
         "properties": {
           "providerName": {
+            "maxLength": 50,
             "type": "string"
           },
           "type": {
+            "maxLength": 50,
             "type": "string"
           },
           "token": {
+            "maxLength": 500,
             "type": "string"
           }
         }
@@ -2875,17 +2895,22 @@
             "format": "uuid"
           },
           "amount": {
+            "maximum": 999999999.99,
+            "exclusiveMinimum": 0,
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
             "type": ["number", "string"],
             "format": "double"
           },
           "currency": {
+            "pattern": "^[A-Z]{3}$",
             "type": "string"
           },
           "methodType": {
+            "maxLength": 50,
             "type": "string"
           },
           "providerName": {
+            "maxLength": 50,
             "type": ["null", "string"]
           }
         }
@@ -2906,23 +2931,32 @@
             "format": "uuid"
           },
           "amount": {
+            "maximum": 999999999.99,
+            "exclusiveMinimum": 0,
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
             "type": ["number", "string"],
             "format": "double"
           },
           "currency": {
+            "pattern": "^[A-Z]{3}$",
             "type": "string"
           },
           "methodType": {
+            "maxLength": 50,
             "type": "string"
           },
           "successUrl": {
-            "type": "string"
+            "maxLength": 2048,
+            "type": "string",
+            "x-granit-validator": "Validation:Format:UrlHttps"
           },
           "cancelUrl": {
-            "type": "string"
+            "maxLength": 2048,
+            "type": "string",
+            "x-granit-validator": "Validation:Format:UrlHttps"
           },
           "providerName": {
+            "maxLength": 50,
             "type": ["null", "string"]
           }
         }
@@ -3116,7 +3150,7 @@
           "PointOfSale"
         ]
       },
-      "PaymentMethodConfigurationItem": {
+      "PaymentMethodConfigurationItemResponse": {
         "required": ["methodType", "displayLabel", "category", "activated", "capabilitySnapshot"],
         "type": "object",
         "properties": {
@@ -3211,13 +3245,13 @@
           "methods": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PaymentMethodConfigurationItem"
+              "$ref": "#/components/schemas/PaymentMethodConfigurationItemResponse"
             }
           }
         }
       },
       "PaymentRefundRequest": {
-        "required": ["transactionId", "amount", "reason"],
+        "required": ["transactionId", "amount"],
         "type": "object",
         "properties": {
           "transactionId": {
@@ -3225,11 +3259,14 @@
             "format": "uuid"
           },
           "amount": {
+            "maximum": 999999999.99,
+            "exclusiveMinimum": 0,
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
             "type": ["number", "string"],
             "format": "double"
           },
           "reason": {
+            "maxLength": 500,
             "type": ["null", "string"]
           }
         }
@@ -3312,6 +3349,10 @@
             "type": ["null", "string"],
             "format": "uuid"
           },
+          "mandateId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
           "actionUrl": {
             "type": ["null", "string"]
           },
@@ -3343,6 +3384,9 @@
             "items": {
               "$ref": "#/components/schemas/Dispute"
             }
+          },
+          "metadataJson": {
+            "type": ["null", "string"]
           },
           "tenantId": {
             "type": ["null", "string"],

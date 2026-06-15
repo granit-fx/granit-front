@@ -154,7 +154,7 @@ export interface PaymentMethodCapabilityResponse {
 }
 
 /** A single payment method declared by a provider with its activation state. */
-export interface PaymentMethodConfigurationItem {
+export interface PaymentMethodConfigurationItemResponse {
   readonly methodType: string;
   readonly displayLabel: string;
   readonly category: PaymentMethodCategory;
@@ -170,12 +170,12 @@ export interface PaymentMethodConfigurationItem {
 /** All methods declared by a single provider, with activation state. */
 export interface PaymentProviderConfigurationResponse {
   readonly providerName: string;
-  readonly methods: readonly PaymentMethodConfigurationItem[];
+  readonly methods: readonly PaymentMethodConfigurationItemResponse[];
 }
 
 /**
  * A method entry in the live provider catalog (fetched on-demand from the
- * provider via `GET /configuration/catalog`). Unlike `PaymentMethodConfigurationItem`,
+ * provider via `GET /configuration/catalog`). Unlike `PaymentMethodConfigurationItemResponse`,
  * `capability` is always present — the catalog is a live read from the provider,
  * not a stored snapshot.
  */

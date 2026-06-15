@@ -14,7 +14,7 @@ import type {
   PaymentCatalogMethod,
   PaymentMethodCapabilityResponse,
   PaymentMethodCategory,
-  PaymentMethodConfigurationItem,
+  PaymentMethodConfigurationItemResponse,
   PaymentProviderCatalogResponse,
   PaymentProviderConfigurationResponse,
 } from '@granit/payments';
@@ -130,7 +130,7 @@ export function createPaymentsConfigurationHandlers(baseUrl = DEFAULT_BASE_PATH)
   activated.set(key('mollie', 'ideal'), null);
 
   function buildConfiguration(provider: MockProvider): PaymentProviderConfigurationResponse {
-    const items: PaymentMethodConfigurationItem[] = provider.methods.map((m) => {
+    const items: PaymentMethodConfigurationItemResponse[] = provider.methods.map((m) => {
       const k = key(provider.providerName, m.methodType);
       const isActive = activated.has(k);
       return {
@@ -165,7 +165,7 @@ export function createPaymentsConfigurationHandlers(baseUrl = DEFAULT_BASE_PATH)
     provider: string | readonly string[] | undefined,
     method: string | readonly string[] | undefined,
     capability: PaymentMethodCapabilityResponse | null
-  ): PaymentMethodConfigurationItem | null {
+  ): PaymentMethodConfigurationItemResponse | null {
     const found = mockPaymentProviders.find((p) => p.providerName === provider);
     const m = found?.methods.find((x) => x.methodType === method);
     if (!found || !m) return null;

@@ -28,7 +28,7 @@ import type {
   PaymentAvailableMethodResponse,
   PaymentCheckoutSessionResponse,
   PaymentMethodCapabilityResponse,
-  PaymentMethodConfigurationItem,
+  PaymentMethodConfigurationItemResponse,
   PaymentMethodResponse,
   PaymentProviderCatalogResponse,
   PaymentProviderConfigurationResponse,
@@ -104,7 +104,7 @@ const sampleAvailableMethod: PaymentAvailableMethodResponse = {
   capability: sampleCapability,
 };
 
-const sampleConfigurationItem: PaymentMethodConfigurationItem = {
+const sampleConfigurationItem: PaymentMethodConfigurationItemResponse = {
   methodType: 'bancontact',
   displayLabel: 'Bancontact',
   category: 'BankRedirect',
@@ -432,7 +432,7 @@ describe('use-payments', () => {
   describe('useDeactivatePaymentMethod', () => {
     it('posts to the deactivate endpoint and returns the refreshed config item', async () => {
       const client = createMockClient();
-      const deactivated: PaymentMethodConfigurationItem = {
+      const deactivated: PaymentMethodConfigurationItemResponse = {
         ...sampleConfigurationItem,
         activated: false,
       };

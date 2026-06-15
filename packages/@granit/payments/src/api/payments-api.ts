@@ -5,7 +5,7 @@ import type {
   PaymentChargeRequest,
   PaymentCheckoutRequest,
   PaymentCheckoutSessionResponse,
-  PaymentMethodConfigurationItem,
+  PaymentMethodConfigurationItemResponse,
   PaymentMethodResponse,
   PaymentProviderCatalogResponse,
   PaymentProviderConfigurationResponse,
@@ -200,8 +200,8 @@ export async function activatePaymentMethod(
   basePath: string,
   providerName: string,
   methodType: string
-): Promise<PaymentMethodConfigurationItem> {
-  const response = await client.post<PaymentMethodConfigurationItem>(
+): Promise<PaymentMethodConfigurationItemResponse> {
+  const response = await client.post<PaymentMethodConfigurationItemResponse>(
     `${basePath}/configuration/${encodeURIComponent(providerName)}/${encodeURIComponent(methodType)}/activate`
   );
   return response.data;
@@ -217,8 +217,8 @@ export async function deactivatePaymentMethod(
   basePath: string,
   providerName: string,
   methodType: string
-): Promise<PaymentMethodConfigurationItem> {
-  const response = await client.post<PaymentMethodConfigurationItem>(
+): Promise<PaymentMethodConfigurationItemResponse> {
+  const response = await client.post<PaymentMethodConfigurationItemResponse>(
     `${basePath}/configuration/${encodeURIComponent(providerName)}/${encodeURIComponent(methodType)}/deactivate`
   );
   return response.data;
@@ -255,8 +255,8 @@ export async function resyncPaymentMethodConfiguration(
   basePath: string,
   providerName: string,
   methodType: string
-): Promise<PaymentMethodConfigurationItem> {
-  const response = await client.post<PaymentMethodConfigurationItem>(
+): Promise<PaymentMethodConfigurationItemResponse> {
+  const response = await client.post<PaymentMethodConfigurationItemResponse>(
     `${basePath}/configuration/${encodeURIComponent(providerName)}/${encodeURIComponent(methodType)}/resync`
   );
   return response.data;

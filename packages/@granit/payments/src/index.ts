@@ -10,7 +10,7 @@ export type {
   PaymentDisputeResponse,
   PaymentMethodAmountBoundResponse,
   PaymentMethodCapabilityResponse,
-  PaymentMethodConfigurationItem,
+  PaymentMethodConfigurationItemResponse,
   PaymentMethodResponse,
   PaymentMethodSequenceTypeName,
   PaymentProviderCatalogResponse,
