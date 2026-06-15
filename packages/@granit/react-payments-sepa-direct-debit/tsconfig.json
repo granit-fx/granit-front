@@ -1,0 +1,12 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@granit/payments-sepa-direct-debit": ["../payments-sepa-direct-debit/src/index.ts"],
+      "@granit/query-engine": ["../query-engine/src/index.ts"],
+      "@granit/react-query-engine/testing": ["../react-query-engine/src/testing/index.ts"],
+      "@granit/testing/msw": ["../testing/src/msw.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

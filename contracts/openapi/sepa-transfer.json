@@ -1,0 +1,263 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "sepa-transfer",
+    "version": "1"
+  },
+  "paths": {
+    "/sepa-transfer/configuration": {
+      "get": {
+        "tags": ["SEPA Transfer"],
+        "summary": "Returns the current tenant's SEPA bank transfer configuration.",
+        "description": "Fetches the tenant's beneficiary account (masked IBAN), beneficiary name and active flag. Returns 404 when SEPA transfer has not been configured for the tenant. Requires the SepaTransfer.Configuration.Manage permission.",
+        "operationId": "GetSepaTransferConfiguration",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SepaTransferConfigurationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["SEPA Transfer"],
+        "summary": "Creates or updates the current tenant's SEPA bank transfer configuration.",
+        "description": "Upserts the tenant's SEPA transfer configuration (one per tenant). When a beneficiary IBAN is supplied, the account is provisioned into the BankAccounts referential on the company Party and stamped onto the configuration. Requires the SepaTransfer.Configuration.Manage permission.",
+        "operationId": "UpsertSepaTransferConfiguration",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SepaTransferConfigurationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SepaTransferConfigurationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "SepaTransferConfigurationRequest": {
+        "type": "object",
+        "properties": {
+          "beneficiaryName": {
+            "maxLength": 70,
+            "type": ["null", "string"]
+          },
+          "isActive": {
+            "type": "boolean",
+            "default": true
+          },
+          "companyPartyId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "beneficiaryIban": {
+            "type": ["null", "string"],
+            "x-granit-validator": "Validation:Format:Iban"
+          },
+          "beneficiaryBic": {
+            "type": ["null", "string"],
+            "x-granit-validator": "Validation:Format:BicSwift"
+          }
+        }
+      },
+      "SepaTransferConfigurationResponse": {
+        "required": [
+          "beneficiaryName",
+          "isActive",
+          "companyPartyId",
+          "beneficiaryIbanMasked",
+          "beneficiaryBic",
+          "tenantId",
+          "concurrencyStamp"
+        ],
+        "type": "object",
+        "properties": {
+          "beneficiaryName": {
+            "type": ["null", "string"]
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "companyPartyId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "beneficiaryIbanMasked": {
+            "type": ["null", "string"]
+          },
+          "beneficiaryBic": {
+            "type": ["null", "string"]
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "concurrencyStamp": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "SEPA Transfer"
+    }
+  ]
+}

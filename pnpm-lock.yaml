@@ -856,6 +856,24 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/payments-sepa-direct-debit:
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
+  packages/@granit/payments-sepa-transfer:
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/presence:
     devDependencies:
       '@granit/api-client':
@@ -2512,6 +2530,74 @@ importers:
       lucide-react:
         specifier: ^1.0.0
         version: 1.17.0(react@19.2.7)
+      msw:
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.9.3)(typescript@6.0.3)
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
+
+  packages/@granit/react-payments-sepa-direct-debit:
+    dependencies:
+      '@granit/payments-sepa-direct-debit':
+        specifier: workspace:*
+        version: link:../payments-sepa-direct-debit
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
+      '@granit/react-query-engine':
+        specifier: workspace:*
+        version: link:../react-query-engine
+      '@tanstack/react-query':
+        specifier: 5.101.0
+        version: 5.101.0(react@19.2.7)
+      msw:
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.9.3)(typescript@6.0.3)
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
+
+  packages/@granit/react-payments-sepa-transfer:
+    dependencies:
+      '@granit/payments-sepa-transfer':
+        specifier: workspace:*
+        version: link:../payments-sepa-transfer
+      '@tanstack/react-query':
+        specifier: 5.101.0
+        version: 5.101.0(react@19.2.7)
       msw:
         specifier: ^2.14.6
         version: 2.14.6(@types/node@25.9.3)(typescript@6.0.3)

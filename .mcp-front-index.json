@@ -2210,6 +2210,48 @@
       ]
     },
     {
+      "name": "@granit/payments-sepa-direct-debit",
+      "description": "SEPA Direct Debit — mandate lifecycle and per-tenant SEPA configuration types and API functions",
+      "exports": [
+        {
+          "name": "CollectionStatus",
+          "kind": "type",
+          "signature": "type CollectionStatus ="
+        },
+        {
+          "name": "ConsentSource",
+          "kind": "type",
+          "signature": "type ConsentSource = 'AdminConfirm' | 'ProviderWebhook' | 'CustomerSelfService'"
+        },
+        {
+          "name": "MandateStatus",
+          "kind": "type",
+          "signature": "type MandateStatus = 'Pending' | 'Active' | 'Suspended' | 'Cancelled' | 'Failed' | 'Expired'"
+        },
+        {
+          "name": "SddScheme",
+          "kind": "type",
+          "signature": "type SddScheme = 'Core' | 'B2B'"
+        },
+        {
+          "name": "SepaDirectDebitPermissions",
+          "kind": "const",
+          "signature": "const SepaDirectDebitPermissions"
+        }
+      ]
+    },
+    {
+      "name": "@granit/payments-sepa-transfer",
+      "description": "SEPA bank transfer — per-tenant beneficiary configuration types and API functions",
+      "exports": [
+        {
+          "name": "SepaTransferPermissions",
+          "kind": "const",
+          "signature": "const SepaTransferPermissions"
+        }
+      ]
+    },
+    {
       "name": "@granit/presence",
       "description": "User presence types and API — mirrors Granit.Presence .NET contract",
       "exports": [
@@ -6424,6 +6466,23 @@
           "members": []
         }
       ]
+    },
+    {
+      "name": "@granit/react-payments-sepa-direct-debit",
+      "description": "React bindings for @granit/payments-sepa-direct-debit — SepaDirectDebitProvider and hooks",
+      "exports": [
+        {
+          "name": "ConfirmMandateArgs",
+          "kind": "interface",
+          "signature": "interface ConfirmMandateArgs",
+          "members": []
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-payments-sepa-transfer",
+      "description": "React bindings for @granit/payments-sepa-transfer — SepaTransferProvider and hooks",
+      "exports": []
     },
     {
       "name": "@granit/react-presence",

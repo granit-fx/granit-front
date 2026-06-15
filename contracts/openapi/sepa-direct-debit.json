@@ -1,0 +1,1769 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "sepa-direct-debit",
+    "version": "1"
+  },
+  "paths": {
+    "/sepa-direct-debit/mandates": {
+      "post": {
+        "tags": ["SEPA Direct Debit - Mandates"],
+        "summary": "Sets up a SEPA Direct Debit mandate for the current tenant.",
+        "description": "Resolves the configured provider, stamps the tenant's Creditor Identifier, and persists a new mandate in Pending status. Returns the mandate together with any provider-hosted signature URL. Returns 409 when the tenant has no active SEPA configuration. Requires the SepaDirectDebit.Mandates.Create permission.",
+        "operationId": "CreateSepaMandate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMandateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MandateSetupResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["SEPA Direct Debit - Mandates"],
+        "summary": "Returns a filtered, sorted, and paginated list of Mandate entries.",
+        "description": "Executes a dynamic query against Mandate using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
+        "operationId": "QueryMandate",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "1-based page index. Ignored when cursor is supplied.",
+            "schema": {
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page (1-500). Server-side cap applies.",
+            "schema": {
+              "maximum": 500,
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Free-text search across searchable columns declared in the query definition.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "groupBy",
+            "in": "query",
+            "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "quickFilters",
+            "in": "query",
+            "description": "Comma-separated quick-filter names (declared in the query definition).",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "skipTotalCount",
+            "in": "query",
+            "description": "Skip the total row count for faster pagination when the client doesn't need it.",
+            "schema": {
+              "type": ["null", "boolean"]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Bracketed filter expressions: 'filter[field.op]=value'. Example: 'filter[name.contains]=alice&filter[age.gt]=18'.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "presets",
+            "in": "query",
+            "description": "Bracketed preset selectors: 'presets[group]=name'. Applies preset filter groups declared in the query definition.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/PagedResultOfMandate"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GroupedResultOfMandate"
+                    }
+                  ],
+                  "description": "PagedResult when groupBy is absent; GroupedResult otherwise."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sepa-direct-debit/mandates/{id}/confirm": {
+      "post": {
+        "tags": ["SEPA Direct Debit - Mandates"],
+        "summary": "Confirms (activates) a pending mandate after the customer signature.",
+        "description": "Activates a Pending or Suspended mandate, recording verifiable consent evidence (the required signature time, masked source IP, actor) and raising the mandate-activated integration event. Returns 404 when the mandate does not exist, 409 when it cannot transition to active, and 403 when confirming a provider-backed mandate without the SepaDirectDebit.Mandates.ConfirmOverride permission (such mandates activate via the provider's verified flow). Requires the SepaDirectDebit.Mandates.Confirm permission.",
+        "operationId": "ConfirmSepaMandate",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmMandateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MandateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sepa-direct-debit/mandates/{id}/cancel": {
+      "post": {
+        "tags": ["SEPA Direct Debit - Mandates"],
+        "summary": "Cancels (revokes) a mandate.",
+        "description": "Cancels the mandate and notifies the provider when a provider mandate id is present. Returns 404 when the mandate does not exist and 409 when it is already in a terminal status. Requires the SepaDirectDebit.Mandates.Cancel permission.",
+        "operationId": "CancelSepaMandate",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MandateResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sepa-direct-debit/mandates/{id}": {
+      "get": {
+        "tags": ["SEPA Direct Debit - Mandates"],
+        "summary": "Returns a mandate by id.",
+        "description": "Fetches a single mandate, with the debtor IBAN masked. Scoped to the current tenant. Returns 404 when the mandate does not exist. Requires the SepaDirectDebit.Mandates.Read permission.",
+        "operationId": "GetSepaMandate",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MandateResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sepa-direct-debit/mandates/meta": {
+      "get": {
+        "tags": ["SEPA Direct Debit - Mandates"],
+        "summary": "Returns query metadata for Mandate (columns, filters, sorts, presets).",
+        "description": "Returns the query definition metadata for Mandate: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
+        "operationId": "GetMandateMeta",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryMetadata"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sepa-direct-debit/configuration": {
+      "get": {
+        "tags": ["SEPA Direct Debit - Configuration"],
+        "summary": "Returns the current tenant's SEPA Direct Debit configuration.",
+        "description": "Fetches the tenant's Creditor Identifier (SCI), scheme and provider defaults, and active flag. Returns 404 when SEPA has not been configured for the tenant. Requires the SepaDirectDebit.Configuration.Manage permission.",
+        "operationId": "GetSepaConfiguration",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SepaConfigurationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["SEPA Direct Debit - Configuration"],
+        "summary": "Creates or updates the current tenant's SEPA Direct Debit configuration.",
+        "description": "Upserts the tenant's SEPA configuration (one per tenant). The Creditor Identifier (SCI) is locked once the tenant has mandates: changing it then returns 409, as it requires a SEPA mandate migration rather than an in-place edit. Requires the SepaDirectDebit.Configuration.Manage permission.",
+        "operationId": "UpsertSepaConfiguration",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SepaConfigurationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SepaConfigurationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CollectionStatus": {
+        "enum": ["Pending", "Submitted", "Processing", "Succeeded", "Failed", "Refunded"]
+      },
+      "ColumnDefinition": {
+        "required": [
+          "name",
+          "label",
+          "type",
+          "order",
+          "isSortable",
+          "isFilterable",
+          "isVisible",
+          "format"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isSortable": {
+            "type": "boolean"
+          },
+          "isFilterable": {
+            "type": "boolean"
+          },
+          "isVisible": {
+            "type": "boolean"
+          },
+          "format": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "ConfirmMandateRequest": {
+        "required": ["signedAt"],
+        "type": "object",
+        "properties": {
+          "signedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "documentReference": {
+            "maxLength": 128,
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "ConsentEvidence": {
+        "type": "object",
+        "properties": {
+          "signedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "source": {
+            "$ref": "#/components/schemas/ConsentSource"
+          },
+          "sourceIpMasked": {
+            "type": ["null", "string"]
+          },
+          "actor": {
+            "type": ["null", "string"]
+          },
+          "actorKind": {
+            "type": ["null", "string"]
+          },
+          "documentReference": {
+            "type": ["null", "string"]
+          },
+          "userAgent": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "ConsentSource": {
+        "enum": ["AdminConfirm", "ProviderWebhook", "CustomerSelfService"]
+      },
+      "CreateMandateRequest": {
+        "required": ["debtorPartyId", "debtorName", "debtorIban"],
+        "type": "object",
+        "properties": {
+          "debtorPartyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "debtorName": {
+            "maxLength": 70,
+            "type": "string"
+          },
+          "debtorIban": {
+            "type": "string",
+            "x-granit-validator": "Validation:Format:Iban"
+          },
+          "debtorBic": {
+            "type": ["null", "string"],
+            "x-granit-validator": "Validation:Format:BicSwift"
+          },
+          "scheme": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/SddScheme"
+              }
+            ]
+          },
+          "providerName": {
+            "maxLength": 64,
+            "type": ["null", "string"]
+          },
+          "redirectUrl": {
+            "maxLength": 2048,
+            "type": ["null", "string"],
+            "x-granit-validator": "Validation:Format:UrlHttps"
+          }
+        }
+      },
+      "DateFilterMeta": {
+        "required": ["name", "defaultPeriod", "availablePeriods"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "defaultPeriod": {
+            "$ref": "#/components/schemas/DatePeriod"
+          },
+          "availablePeriods": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatePeriod"
+            }
+          }
+        }
+      },
+      "DatePeriod": {
+        "enum": ["Today", "ThisWeek", "ThisMonth", "LastMonth", "ThisQuarter", "ThisYear", "Custom"]
+      },
+      "DirectDebitPayment": {
+        "type": "object",
+        "properties": {
+          "invoiceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": ["number", "string"],
+            "format": "double"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CollectionStatus"
+          },
+          "scheduledDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "submittedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "settledAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "failureCode": {
+            "type": ["null", "string"]
+          },
+          "failureReason": {
+            "type": ["null", "string"]
+          },
+          "providerCollectionId": {
+            "type": ["null", "string"]
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the entity.",
+            "format": "uuid"
+          }
+        }
+      },
+      "FilterableField": {
+        "required": ["name", "type", "operators"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "operators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterOperator"
+            }
+          },
+          "enumValues": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "lookup": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LookupDescriptor"
+              }
+            ]
+          }
+        }
+      },
+      "FilterGroupMeta": {
+        "required": ["name", "label", "presets"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "presets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PresetMeta"
+            }
+          }
+        }
+      },
+      "FilterOperator": {
+        "enum": [
+          "Eq",
+          "Contains",
+          "StartsWith",
+          "EndsWith",
+          "Gt",
+          "Gte",
+          "Lt",
+          "Lte",
+          "In",
+          "Between"
+        ]
+      },
+      "GroupByField": {
+        "required": ["name", "type"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "GroupedResultOfMandate": {
+        "required": ["groups", "totalCount"],
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupEntryOfMandate"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GroupEntryOfMandate": {
+        "required": ["field", "value", "label", "count"],
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "value": {},
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "aggregates": {
+            "type": ["null", "object"]
+          },
+          "items": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/Mandate"
+            }
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "IDomainEvent": {
+        "type": "object",
+        "description": "Marker interface for domain events."
+      },
+      "IIntegrationEvent": {
+        "type": "object",
+        "description": "Marker interface for integration events (ETO — Event Transfer Object)."
+      },
+      "LookupDescriptor": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": ["null", "string"]
+          },
+          "endpoint": {
+            "type": ["null", "string"]
+          },
+          "kind": {
+            "$ref": "#/components/schemas/LookupKind"
+          },
+          "requiredPermission": {
+            "type": ["null", "string"]
+          },
+          "searchParam": {
+            "type": ["null", "string"],
+            "default": "search"
+          },
+          "scopeKeys": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LookupKind": {
+        "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
+        "default": "QueryEngine"
+      },
+      "Mandate": {
+        "type": "object",
+        "properties": {
+          "mandateReference": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/MandateStatus"
+          },
+          "scheme": {
+            "$ref": "#/components/schemas/SddScheme"
+          },
+          "debtorName": {
+            "type": "string"
+          },
+          "debtorIban": {
+            "type": "string"
+          },
+          "debtorBic": {
+            "type": ["null", "string"]
+          },
+          "creditorId": {
+            "type": "string"
+          },
+          "debtorPartyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "debtorBankAccountId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "signedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "activatedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "cancelledAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "lastCollectionAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "providerName": {
+            "type": ["null", "string"]
+          },
+          "providerMandateId": {
+            "type": ["null", "string"]
+          },
+          "consent": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ConsentEvidence"
+              }
+            ]
+          },
+          "activationSource": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ConsentSource"
+              }
+            ]
+          },
+          "collections": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/DirectDebitPayment"
+            }
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "concurrencyStamp": {
+            "type": "string"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "description": "Last modification timestamp (UTC).",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": ["null", "string"],
+            "description": "Identifier of the user who last modified the entity."
+          },
+          "domainEvents": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/IDomainEvent"
+            }
+          },
+          "integrationEvents": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/IIntegrationEvent"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp (UTC).",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Identifier of the user who created the entity."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the entity.",
+            "format": "uuid"
+          }
+        }
+      },
+      "MandateResponse": {
+        "required": [
+          "id",
+          "mandateReference",
+          "status",
+          "scheme",
+          "debtorName",
+          "debtorIbanMasked",
+          "creditorId",
+          "providerName",
+          "providerMandateId",
+          "signedAt",
+          "activatedAt",
+          "cancelledAt",
+          "tenantId",
+          "concurrencyStamp"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "mandateReference": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/MandateStatus"
+          },
+          "scheme": {
+            "$ref": "#/components/schemas/SddScheme"
+          },
+          "debtorName": {
+            "type": "string"
+          },
+          "debtorIbanMasked": {
+            "type": "string"
+          },
+          "creditorId": {
+            "type": "string"
+          },
+          "providerName": {
+            "type": ["null", "string"]
+          },
+          "providerMandateId": {
+            "type": ["null", "string"]
+          },
+          "signedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "activatedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "cancelledAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "concurrencyStamp": {
+            "type": "string"
+          }
+        }
+      },
+      "MandateSetupResponse": {
+        "required": ["id", "mandateReference", "status", "redirectUrl"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "mandateReference": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/MandateStatus"
+          },
+          "redirectUrl": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "MandateStatus": {
+        "enum": ["Pending", "Active", "Suspended", "Cancelled", "Failed", "Expired"]
+      },
+      "PagedResultOfMandate": {
+        "required": ["items", "totalCount", "hasMore"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "mandateReference": {
+                  "type": "string"
+                },
+                "status": {
+                  "enum": ["Pending", "Active", "Suspended", "Cancelled", "Failed", "Expired"]
+                },
+                "scheme": {
+                  "enum": ["Core", "B2B"]
+                },
+                "debtorName": {
+                  "type": "string"
+                },
+                "debtorIban": {
+                  "type": "string"
+                },
+                "debtorBic": {
+                  "type": ["null", "string"]
+                },
+                "creditorId": {
+                  "type": "string"
+                },
+                "debtorPartyId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "debtorBankAccountId": {
+                  "type": ["null", "string"],
+                  "format": "uuid"
+                },
+                "signedAt": {
+                  "type": ["null", "string"],
+                  "format": "date-time"
+                },
+                "activatedAt": {
+                  "type": ["null", "string"],
+                  "format": "date-time"
+                },
+                "cancelledAt": {
+                  "type": ["null", "string"],
+                  "format": "date-time"
+                },
+                "lastCollectionAt": {
+                  "type": ["null", "string"],
+                  "format": "date-time"
+                },
+                "providerName": {
+                  "type": ["null", "string"]
+                },
+                "providerMandateId": {
+                  "type": ["null", "string"]
+                },
+                "consent": {
+                  "type": "object",
+                  "properties": {
+                    "signedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "source": {
+                      "enum": ["AdminConfirm", "ProviderWebhook", "CustomerSelfService"]
+                    },
+                    "sourceIpMasked": {
+                      "type": ["null", "string"]
+                    },
+                    "actor": {
+                      "type": ["null", "string"]
+                    },
+                    "actorKind": {
+                      "type": ["null", "string"]
+                    },
+                    "documentReference": {
+                      "type": ["null", "string"]
+                    },
+                    "userAgent": {
+                      "type": ["null", "string"]
+                    }
+                  }
+                },
+                "activationSource": {
+                  "enum": ["AdminConfirm", "ProviderWebhook", "CustomerSelfService", null]
+                },
+                "collections": {
+                  "type": ["null", "array"],
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "invoiceId": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "amount": {
+                        "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+                        "type": ["number", "string"],
+                        "format": "double"
+                      },
+                      "currency": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "enum": [
+                          "Pending",
+                          "Submitted",
+                          "Processing",
+                          "Succeeded",
+                          "Failed",
+                          "Refunded"
+                        ]
+                      },
+                      "scheduledDate": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "submittedAt": {
+                        "type": ["null", "string"],
+                        "format": "date-time"
+                      },
+                      "settledAt": {
+                        "type": ["null", "string"],
+                        "format": "date-time"
+                      },
+                      "failureCode": {
+                        "type": ["null", "string"]
+                      },
+                      "failureReason": {
+                        "type": ["null", "string"]
+                      },
+                      "providerCollectionId": {
+                        "type": ["null", "string"]
+                      },
+                      "id": {
+                        "type": "string",
+                        "description": "Unique identifier of the entity.",
+                        "format": "uuid"
+                      }
+                    }
+                  }
+                },
+                "tenantId": {
+                  "type": ["null", "string"],
+                  "format": "uuid"
+                },
+                "concurrencyStamp": {
+                  "type": "string"
+                },
+                "modifiedAt": {
+                  "type": ["null", "string"],
+                  "description": "Last modification timestamp (UTC).",
+                  "format": "date-time"
+                },
+                "modifiedBy": {
+                  "type": ["null", "string"],
+                  "description": "Identifier of the user who last modified the entity."
+                },
+                "domainEvents": {
+                  "type": ["null", "array"],
+                  "items": {
+                    "type": "object",
+                    "description": "Marker interface for domain events."
+                  }
+                },
+                "integrationEvents": {
+                  "type": ["null", "array"],
+                  "items": {
+                    "type": "object",
+                    "description": "Marker interface for integration events (ETO — Event Transfer Object)."
+                  }
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "Creation timestamp (UTC).",
+                  "format": "date-time"
+                },
+                "createdBy": {
+                  "type": "string",
+                  "description": "Identifier of the user who created the entity."
+                },
+                "id": {
+                  "type": "string",
+                  "description": "Unique identifier of the entity.",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "totalCount": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "PaginationMeta": {
+        "required": ["defaultPageSize", "maxPageSize", "maxStreamSize", "supportsCursor"],
+        "type": "object",
+        "properties": {
+          "defaultPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxStreamSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "supportsCursor": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PresetMeta": {
+        "required": ["name", "label", "isDefault"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "QueryMetadata": {
+        "required": [
+          "columns",
+          "filterableFields",
+          "sortableFields",
+          "presetFilterGroups",
+          "quickFilters",
+          "dateFilters",
+          "groupByFields",
+          "pagination"
+        ],
+        "type": "object",
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ColumnDefinition"
+            }
+          },
+          "filterableFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterableField"
+            }
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortableField"
+            }
+          },
+          "presetFilterGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterGroupMeta"
+            }
+          },
+          "quickFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuickFilterMeta"
+            }
+          },
+          "dateFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DateFilterMeta"
+            }
+          },
+          "groupByFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupByField"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "defaultSort": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "QuickFilterMeta": {
+        "required": ["name", "label", "isDefault"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SddScheme": {
+        "enum": ["Core", "B2B", null]
+      },
+      "SepaConfigurationRequest": {
+        "required": ["creditorId", "defaultScheme"],
+        "type": "object",
+        "properties": {
+          "creditorId": {
+            "maxLength": 35,
+            "type": "string",
+            "x-granit-validator": "Validation:Format:SepaCreditorIdentifier"
+          },
+          "defaultScheme": {
+            "$ref": "#/components/schemas/SddScheme"
+          },
+          "creditorName": {
+            "maxLength": 70,
+            "type": ["null", "string"]
+          },
+          "defaultProviderName": {
+            "maxLength": 64,
+            "type": ["null", "string"]
+          },
+          "isActive": {
+            "type": "boolean",
+            "default": true
+          },
+          "companyPartyId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "creditorIban": {
+            "type": ["null", "string"],
+            "x-granit-validator": "Validation:Format:Iban"
+          },
+          "creditorBic": {
+            "type": ["null", "string"],
+            "x-granit-validator": "Validation:Format:BicSwift"
+          }
+        }
+      },
+      "SepaConfigurationResponse": {
+        "required": [
+          "creditorId",
+          "creditorName",
+          "defaultScheme",
+          "defaultProviderName",
+          "isActive",
+          "companyPartyId",
+          "creditorIbanMasked",
+          "creditorBic",
+          "tenantId",
+          "concurrencyStamp"
+        ],
+        "type": "object",
+        "properties": {
+          "creditorId": {
+            "type": "string"
+          },
+          "creditorName": {
+            "type": ["null", "string"]
+          },
+          "defaultScheme": {
+            "$ref": "#/components/schemas/SddScheme"
+          },
+          "defaultProviderName": {
+            "type": ["null", "string"]
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "companyPartyId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "creditorIbanMasked": {
+            "type": ["null", "string"]
+          },
+          "creditorBic": {
+            "type": ["null", "string"]
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "concurrencyStamp": {
+            "type": "string"
+          }
+        }
+      },
+      "SortableField": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "SEPA Direct Debit - Configuration"
+    },
+    {
+      "name": "SEPA Direct Debit - Mandates"
+    }
+  ]
+}

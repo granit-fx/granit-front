@@ -267,4 +267,28 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'SiteHostnameCreateRequest',
     ],
   },
+  {
+    slug: 'sepa-transfer',
+    package: 'payments-sepa-transfer',
+    types: ['SepaTransferConfigurationRequest', 'SepaTransferConfigurationResponse'],
+    checkEndpoints: true,
+  },
+  {
+    // The mandate admin grid (GET /mandates + /mandates/meta) is served by the
+    // query-engine generic surface, not by an api/ function — ignore those
+    // routes (POST /mandates create shares the route, so it is unchecked here
+    // but covered by the package's own unit tests).
+    slug: 'sepa-direct-debit',
+    package: 'payments-sepa-direct-debit',
+    types: [
+      'CreateMandateRequest',
+      'ConfirmMandateRequest',
+      'MandateSetupResponse',
+      'MandateResponse',
+      'SepaConfigurationRequest',
+      'SepaConfigurationResponse',
+    ],
+    checkEndpoints: true,
+    endpointIgnore: ['/mandates', '/mandates/meta'],
+  },
 ];

@@ -1,0 +1,10 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@granit/payments-sepa-transfer": ["../payments-sepa-transfer/src/index.ts"],
+      "@granit/testing/msw": ["../testing/src/msw.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

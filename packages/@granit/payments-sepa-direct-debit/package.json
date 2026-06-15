@@ -1,0 +1,32 @@
+{
+  "name": "@granit/payments-sepa-direct-debit",
+  "description": "SEPA Direct Debit — mandate lifecycle and per-tenant SEPA configuration types and API functions",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/testing": "workspace:*"
+  },
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  }
+}

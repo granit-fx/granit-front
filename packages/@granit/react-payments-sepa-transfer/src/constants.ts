@@ -1,0 +1,3 @@
+export const API_VERSION = 'v1';
+export const MODULE = 'sepa-transfer';
+export const DEFAULT_BASE_PATH = `/api/${API_VERSION}/${MODULE}`;
