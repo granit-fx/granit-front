@@ -78,6 +78,21 @@
       "description": "AI workspace management, chat completion, embedding generation, and usage tracking types and API functions — mirrors Granit.AI.Endpoints .NET",
       "exports": [
         {
+          "name": "AI_CAPABILITY_EXTENSIONS",
+          "kind": "const",
+          "signature": "const AI_CAPABILITY_EXTENSIONS"
+        },
+        {
+          "name": "AI_STREAM_DONE_MARKER",
+          "kind": "const",
+          "signature": "const AI_STREAM_DONE_MARKER"
+        },
+        {
+          "name": "AI_WORKSPACE_KINDS",
+          "kind": "const",
+          "signature": "const AI_WORKSPACE_KINDS"
+        },
+        {
           "name": "listAIProviderModels",
           "kind": "function",
           "signature": "async function listAIProviderModels( client: AxiosInstance, basePath: string, providerName: string ): Promise<readonly AIProviderModelResponse[]>"
@@ -2556,11 +2571,6 @@
           "signature": "function AIProvider("
         },
         {
-          "name": "buildAIQueryKey",
-          "kind": "function",
-          "signature": "function buildAIQueryKey( config: AIConfig, ...segments: readonly string[] ): readonly unknown[]"
-        },
-        {
           "name": "useAIConfig",
           "kind": "function",
           "signature": "function useAIConfig(): ResolvedAIConfig"
@@ -2576,6 +2586,17 @@
           "kind": "interface",
           "signature": "interface AIProviderProps",
           "members": []
+        },
+        {
+          "name": "ResolvedAIConfig",
+          "kind": "interface",
+          "signature": "interface ResolvedAIConfig extends AIConfig",
+          "members": []
+        },
+        {
+          "name": "aiKeys",
+          "kind": "const",
+          "signature": "const aiKeys"
         },
         {
           "name": "useAIProviderModels",

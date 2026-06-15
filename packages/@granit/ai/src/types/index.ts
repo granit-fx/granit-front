@@ -13,15 +13,6 @@ export const AI_WORKSPACE_KINDS = {
   DYNAMIC: 'Dynamic',
 } as const;
 
-/** AI permission strings. Mirrors `AIPermissions` in Granit.AI.Endpoints. */
-export const AI_PERMISSIONS = {
-  WORKSPACES_READ: 'AI.Workspaces.Read',
-  WORKSPACES_MANAGE: 'AI.Workspaces.Manage',
-  USAGE_READ: 'AI.Usage.Read',
-  CHAT_EXECUTE: 'AI.Chat.Execute',
-  EMBEDDINGS_EXECUTE: 'AI.Embeddings.Execute',
-} as const;
-
 /** Well-known capability extension identifiers. Mirrors `WellKnownAICapabilities`. */
 export const AI_CAPABILITY_EXTENSIONS = {
   WEB_SEARCH: 'web-search',
