@@ -1007,7 +1007,7 @@ importers:
         version: 1.17.0(react@19.2.7)
       msw:
         specifier: ^2.14.6
-        version: 2.14.6(@types/node@25.9.2)(typescript@6.0.3)
+        version: 2.14.6(@types/node@25.9.3)(typescript@6.0.3)
       react:
         specifier: 19.2.7
         version: 19.2.7
@@ -1044,7 +1044,7 @@ importers:
         version: 1.17.0(react@19.2.7)
       msw:
         specifier: ^2.14.6
-        version: 2.14.6(@types/node@25.9.2)(typescript@6.0.3)
+        version: 2.14.6(@types/node@25.9.3)(typescript@6.0.3)
       react:
         specifier: 19.2.7
         version: 19.2.7
