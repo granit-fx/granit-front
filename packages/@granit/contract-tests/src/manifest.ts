@@ -297,6 +297,20 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'PaymentProviderCatalogResponse',
     ],
   },
+  // ─── Business bank accounts (granit-business / Granit.BankAccounts.Endpoints) ─
+  // `BankAccountResponse` (masked CRUD projection) + `BankAccount` (raw QE grid
+  // entity) + the create request. Standalone enums (BankAccountScheme/Status/Type)
+  // are verified indirectly via referencing fields. The admin grid (GET '' +
+  // '/meta') is served by the query-engine generic helper, so those routes are
+  // ignored — POST '' (create) shares the base route and is therefore unchecked
+  // here, but covered by the package's own unit tests.
+  {
+    slug: 'bank-accounts',
+    package: 'bank-accounts',
+    types: ['CreateBankAccountRequest', 'BankAccountResponse', 'BankAccount'],
+    checkEndpoints: true,
+    endpointIgnore: ['', '/meta'],
+  },
   {
     slug: 'sepa-transfer',
     package: 'payments-sepa-transfer',
