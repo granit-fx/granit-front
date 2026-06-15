@@ -146,6 +146,56 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'AuditPropertyChangeResponse',
     ],
   },
+  // ─── Framework — Tier B module coverage (granit-dotnet) ─────────────────────
+  // Matching request/response DTOs only. Raw query-engine grid entities
+  // (ScheduledAction, WebhookSubscription, WebhookDeliveryAttempt, …) and DTOs
+  // the front names differently / does not model (UserNotificationResponse,
+  // TemplateDetailResponse, …) are not listed here.
+  {
+    slug: 'notifications',
+    package: 'notifications',
+    types: [
+      'NotificationDefinition',
+      'NotificationSubscriptionResponse',
+      'NotificationPreferenceUpdateRequest',
+    ],
+  },
+  {
+    slug: 'localization',
+    package: 'localization',
+    types: ['ApplicationLocalizationResponse', 'LocalizationOverride'],
+  },
+  {
+    slug: 'scheduling',
+    package: 'scheduling',
+    types: ['ScheduledActionResponse', 'RescheduleActionRequest'],
+  },
+  {
+    slug: 'templating',
+    package: 'templating',
+    types: [
+      'SaveTemplateRequest',
+      'SaveTemplateCategoryRequest',
+      'TemplatePreviewRequest',
+      'TemplatePreviewResponse',
+    ],
+  },
+  {
+    slug: 'webhooks',
+    package: 'webhooks',
+    types: [
+      'WebhookSubscriptionResponse',
+      'WebhookSubscriptionCreateRequest',
+      'WebhookSubscriptionCreatedResponse',
+      'WebhookSubscriptionUpdateRequest',
+      'WebhookSubscriptionDeactivateRequest',
+      'WebhookSubscriptionStatsResponse',
+      'WebhookSubscriptionTestPingResponse',
+      'WebhookEventTypeResponse',
+      'WebhookSigningKeyResponse',
+      'WebhookSigningKeyCreatedResponse',
+    ],
+  },
   {
     slug: 'authorization',
     package: 'authorization',

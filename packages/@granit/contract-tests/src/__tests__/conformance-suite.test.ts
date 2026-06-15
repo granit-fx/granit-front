@@ -22,7 +22,10 @@ function loadSpec(slug: string): OpenApiDocument {
 
 /** Find the source file declaring `interface X` or `type X = …` under a package's src. */
 function findInterfaceFile(srcDir: string, typeName: string): string | undefined {
-  const needle = new RegExp(`\\b(?:interface|type)\\s+${typeName}\\b`);
+  // Match a declaration (`interface X` / `type X =` / `type X<`), not a
+  // re-export specifier (`export { type X }` barrels list `type X,` which would
+  // otherwise resolve to the barrel file instead of the declaration).
+  const needle = new RegExp(`\\binterface\\s+${typeName}\\b|\\btype\\s+${typeName}\\s*[=<]`);
   const stack = [srcDir];
   while (stack.length) {
     const dir = stack.pop();

@@ -7,9 +7,7 @@
   "paths": {
     "/scheduling/scheduled-actions/{id}": {
       "get": {
-        "tags": [
-          "Scheduling"
-        ],
+        "tags": ["Scheduling"],
         "summary": "Returns a scheduled action by ID.",
         "description": "Returns the full details of a single scheduled action identified by its GUID. Returns 404 if the action does not exist or belongs to a different tenant.",
         "operationId": "GetScheduledActionById",
@@ -79,9 +77,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Scheduling"
-        ],
+        "tags": ["Scheduling"],
         "summary": "Cancels a pending scheduled action.",
         "description": "Cancels a scheduled action that has not yet been executed. Returns 204 on success. Returns 404 if the action does not exist, or 409 if the action is no longer in Pending status.",
         "operationId": "CancelScheduledAction",
@@ -156,9 +152,7 @@
     },
     "/scheduling/scheduled-actions/{id}/reschedule": {
       "put": {
-        "tags": [
-          "Scheduling"
-        ],
+        "tags": ["Scheduling"],
         "summary": "Reschedules a pending action to a new date.",
         "description": "Changes the execution date of a pending scheduled action. Returns 200 on success. Returns 404 if the action does not exist, or 409 if the action is no longer in Pending status.",
         "operationId": "RescheduleScheduledAction",
@@ -263,9 +257,7 @@
     },
     "/scheduling/scheduled-actions": {
       "get": {
-        "tags": [
-          "Scheduling"
-        ],
+        "tags": ["Scheduling"],
         "summary": "Returns a filtered, sorted, and paginated list of ScheduledAction entries.",
         "description": "Executes a dynamic query against ScheduledAction using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
         "operationId": "QueryScheduledAction",
@@ -276,10 +268,7 @@
             "description": "1-based page index. Ignored when cursor is supplied.",
             "schema": {
               "minimum": 1,
-              "type": [
-                "null",
-                "integer"
-              ],
+              "type": ["null", "integer"],
               "format": "int32"
             }
           },
@@ -290,10 +279,7 @@
             "schema": {
               "maximum": 500,
               "minimum": 1,
-              "type": [
-                "null",
-                "integer"
-              ],
+              "type": ["null", "integer"],
               "format": "int32"
             }
           },
@@ -302,10 +288,7 @@
             "in": "query",
             "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
             "schema": {
-              "type": [
-                "null",
-                "string"
-              ]
+              "type": ["null", "string"]
             }
           },
           {
@@ -313,10 +296,7 @@
             "in": "query",
             "description": "Free-text search across searchable columns declared in the query definition.",
             "schema": {
-              "type": [
-                "null",
-                "string"
-              ]
+              "type": ["null", "string"]
             }
           },
           {
@@ -324,10 +304,7 @@
             "in": "query",
             "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
             "schema": {
-              "type": [
-                "null",
-                "string"
-              ]
+              "type": ["null", "string"]
             }
           },
           {
@@ -335,10 +312,7 @@
             "in": "query",
             "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
             "schema": {
-              "type": [
-                "null",
-                "string"
-              ]
+              "type": ["null", "string"]
             }
           },
           {
@@ -346,10 +320,7 @@
             "in": "query",
             "description": "Comma-separated quick-filter names (declared in the query definition).",
             "schema": {
-              "type": [
-                "null",
-                "string"
-              ]
+              "type": ["null", "string"]
             }
           },
           {
@@ -357,10 +328,7 @@
             "in": "query",
             "description": "Skip the total row count for faster pagination when the client doesn't need it.",
             "schema": {
-              "type": [
-                "null",
-                "boolean"
-              ]
+              "type": ["null", "boolean"]
             }
           },
           {
@@ -370,10 +338,7 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": [
-                "null",
-                "object"
-              ],
+              "type": ["null", "object"],
               "additionalProperties": {
                 "type": "string"
               }
@@ -386,10 +351,7 @@
             "style": "deepObject",
             "explode": true,
             "schema": {
-              "type": [
-                "null",
-                "object"
-              ],
+              "type": ["null", "object"],
               "additionalProperties": {
                 "type": "string"
               }
@@ -460,9 +422,7 @@
     },
     "/scheduling/scheduled-actions/meta": {
       "get": {
-        "tags": [
-          "Scheduling"
-        ],
+        "tags": ["Scheduling"],
         "summary": "Returns query metadata for ScheduledAction (columns, filters, sorts, presets).",
         "description": "Returns the query definition metadata for ScheduledAction: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
         "operationId": "GetScheduledActionMeta",
@@ -549,19 +509,12 @@
             "type": "boolean"
           },
           "format": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         }
       },
       "DateFilterMeta": {
-        "required": [
-          "name",
-          "defaultPeriod",
-          "availablePeriods"
-        ],
+        "required": ["name", "defaultPeriod", "availablePeriods"],
         "type": "object",
         "properties": {
           "name": {
@@ -579,22 +532,10 @@
         }
       },
       "DatePeriod": {
-        "enum": [
-          "Today",
-          "ThisWeek",
-          "ThisMonth",
-          "LastMonth",
-          "ThisQuarter",
-          "ThisYear",
-          "Custom"
-        ]
+        "enum": ["Today", "ThisWeek", "ThisMonth", "LastMonth", "ThisQuarter", "ThisYear", "Custom"]
       },
       "FilterableField": {
-        "required": [
-          "name",
-          "type",
-          "operators"
-        ],
+        "required": ["name", "type", "operators"],
         "type": "object",
         "properties": {
           "name": {
@@ -610,10 +551,7 @@
             }
           },
           "enumValues": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": ["null", "array"],
             "items": {
               "type": "string"
             }
@@ -631,11 +569,7 @@
         }
       },
       "FilterGroupMeta": {
-        "required": [
-          "name",
-          "label",
-          "presets"
-        ],
+        "required": ["name", "label", "presets"],
         "type": "object",
         "properties": {
           "name": {
@@ -667,10 +601,7 @@
         ]
       },
       "GroupByField": {
-        "required": [
-          "name",
-          "type"
-        ],
+        "required": ["name", "type"],
         "type": "object",
         "properties": {
           "name": {
@@ -682,10 +613,7 @@
         }
       },
       "GroupedResultOfScheduledAction": {
-        "required": [
-          "groups",
-          "totalCount"
-        ],
+        "required": ["groups", "totalCount"],
         "type": "object",
         "properties": {
           "groups": {
@@ -701,18 +629,13 @@
         }
       },
       "GroupEntryOfScheduledAction": {
-        "required": [
-          "field",
-          "value",
-          "label",
-          "count"
-        ],
+        "required": ["field", "value", "label", "count"],
         "type": "object",
         "properties": {
           "field": {
             "type": "string"
           },
-          "value": { },
+          "value": {},
           "label": {
             "type": "string"
           },
@@ -721,16 +644,10 @@
             "format": "int32"
           },
           "aggregates": {
-            "type": [
-              "null",
-              "object"
-            ]
+            "type": ["null", "object"]
           },
           "items": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": ["null", "array"],
             "items": {
               "$ref": "#/components/schemas/ScheduledAction"
             }
@@ -741,35 +658,20 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "title": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "status": {
-            "type": [
-              "null",
-              "integer"
-            ],
+            "type": ["null", "integer"],
             "format": "int32"
           },
           "detail": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "instance": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "errors": {
             "type": "object",
@@ -794,38 +696,23 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "endpoint": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "kind": {
             "$ref": "#/components/schemas/LookupKind"
           },
           "requiredPermission": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "searchParam": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "default": "search"
           },
           "scopeKeys": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": ["null", "array"],
             "items": {
               "type": "string"
             }
@@ -833,20 +720,11 @@
         }
       },
       "LookupKind": {
-        "enum": [
-          "QueryEngine",
-          "Simple",
-          "ReferenceData",
-          "Enum"
-        ],
+        "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
         "default": "QueryEngine"
       },
       "PagedResultOfScheduledAction": {
-        "required": [
-          "items",
-          "totalCount",
-          "hasMore"
-        ],
+        "required": ["items", "totalCount", "hasMore"],
         "type": "object",
         "properties": {
           "items": {
@@ -865,76 +743,43 @@
                   "format": "date-time"
                 },
                 "correlationId": {
-                  "type": [
-                    "null",
-                    "string"
-                  ]
+                  "type": ["null", "string"]
                 },
                 "status": {
-                  "enum": [
-                    "Pending",
-                    "Executed",
-                    "Cancelled",
-                    "Failed",
-                    "Processing"
-                  ]
+                  "enum": ["Pending", "Executed", "Cancelled", "Failed", "Processing"]
                 },
                 "executedAt": {
-                  "type": [
-                    "null",
-                    "string"
-                  ],
+                  "type": ["null", "string"],
                   "format": "date-time"
                 },
                 "cancelledBy": {
-                  "type": [
-                    "null",
-                    "string"
-                  ]
+                  "type": ["null", "string"]
                 },
                 "failureReason": {
-                  "type": [
-                    "null",
-                    "string"
-                  ]
+                  "type": ["null", "string"]
                 },
                 "tenantId": {
-                  "type": [
-                    "null",
-                    "string"
-                  ],
+                  "type": ["null", "string"],
                   "format": "uuid"
                 },
                 "modifiedAt": {
-                  "type": [
-                    "null",
-                    "string"
-                  ],
+                  "type": ["null", "string"],
                   "description": "Last modification timestamp (UTC).",
                   "format": "date-time"
                 },
                 "modifiedBy": {
-                  "type": [
-                    "null",
-                    "string"
-                  ],
+                  "type": ["null", "string"],
                   "description": "Identifier of the user who last modified the entity."
                 },
                 "domainEvents": {
-                  "type": [
-                    "null",
-                    "array"
-                  ],
+                  "type": ["null", "array"],
                   "items": {
                     "type": "object",
                     "description": "Marker interface for domain events."
                   }
                 },
                 "integrationEvents": {
-                  "type": [
-                    "null",
-                    "array"
-                  ],
+                  "type": ["null", "array"],
                   "items": {
                     "type": "object",
                     "description": "Marker interface for integration events (ETO — Event Transfer Object)."
@@ -958,30 +803,19 @@
             }
           },
           "totalCount": {
-            "type": [
-              "null",
-              "integer"
-            ],
+            "type": ["null", "integer"],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         }
       },
       "PaginationMeta": {
-        "required": [
-          "defaultPageSize",
-          "maxPageSize",
-          "maxStreamSize",
-          "supportsCursor"
-        ],
+        "required": ["defaultPageSize", "maxPageSize", "maxStreamSize", "supportsCursor"],
         "type": "object",
         "properties": {
           "defaultPageSize": {
@@ -1002,11 +836,7 @@
         }
       },
       "PresetMeta": {
-        "required": [
-          "name",
-          "label",
-          "isDefault"
-        ],
+        "required": ["name", "label", "isDefault"],
         "type": "object",
         "properties": {
           "name": {
@@ -1104,19 +934,12 @@
             "$ref": "#/components/schemas/PaginationMeta"
           },
           "defaultSort": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         }
       },
       "QuickFilterMeta": {
-        "required": [
-          "name",
-          "label",
-          "isDefault"
-        ],
+        "required": ["name", "label", "isDefault"],
         "type": "object",
         "properties": {
           "name": {
@@ -1131,14 +954,13 @@
         }
       },
       "RescheduleActionRequest": {
-        "required": [
-          "newExecuteAt"
-        ],
+        "required": ["newExecuteAt"],
         "type": "object",
         "properties": {
           "newExecuteAt": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "x-granit-validator": "Validation:ScheduledAction:FutureDate"
           }
         }
       },
@@ -1156,69 +978,42 @@
             "format": "date-time"
           },
           "correlationId": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "status": {
             "$ref": "#/components/schemas/ScheduledActionStatus"
           },
           "executedAt": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "format": "date-time"
           },
           "cancelledBy": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "failureReason": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "tenantId": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "format": "uuid"
           },
           "modifiedAt": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "description": "Last modification timestamp (UTC).",
             "format": "date-time"
           },
           "modifiedBy": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "description": "Identifier of the user who last modified the entity."
           },
           "domainEvents": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": ["null", "array"],
             "items": {
               "$ref": "#/components/schemas/IDomainEvent"
             }
           },
           "integrationEvents": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": ["null", "array"],
             "items": {
               "$ref": "#/components/schemas/IIntegrationEvent"
             }
@@ -1265,32 +1060,20 @@
             "format": "date-time"
           },
           "correlationId": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "status": {
             "$ref": "#/components/schemas/ScheduledActionStatus"
           },
           "executedAt": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "format": "date-time"
           },
           "cancelledBy": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "failureReason": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "createdAt": {
             "type": "string",
@@ -1299,18 +1082,10 @@
         }
       },
       "ScheduledActionStatus": {
-        "enum": [
-          "Pending",
-          "Executed",
-          "Cancelled",
-          "Failed",
-          "Processing"
-        ]
+        "enum": ["Pending", "Executed", "Cancelled", "Failed", "Processing"]
       },
       "SortableField": {
-        "required": [
-          "name"
-        ],
+        "required": ["name"],
         "type": "object",
         "properties": {
           "name": {

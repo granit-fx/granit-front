@@ -7,9 +7,7 @@
   "paths": {
     "/notifications": {
       "get": {
-        "tags": [
-          "Notifications"
-        ],
+        "tags": ["Notifications"],
         "summary": "Returns the user's notification inbox, newest first.",
         "description": "Returns a paginated list of the current user's notifications. Supports filtering by read/unread status. Results are sorted by creation date, newest first.",
         "operationId": "GetNotifications",
@@ -81,9 +79,7 @@
     },
     "/notifications/unread/count": {
       "get": {
-        "tags": [
-          "Notifications"
-        ],
+        "tags": ["Notifications"],
         "summary": "Returns the number of unread notifications for the current user.",
         "description": "Returns the total count of unread notifications for the authenticated user within the current tenant. Use this to display a badge count in the UI.",
         "operationId": "GetUnreadCount",
@@ -133,9 +129,7 @@
     },
     "/notifications/{id}/read": {
       "post": {
-        "tags": [
-          "Notifications"
-        ],
+        "tags": ["Notifications"],
         "summary": "Marks a single notification as read.",
         "description": "Marks the specified notification as read by setting its read timestamp. Idempotent — marking an already-read notification is a no-op.",
         "operationId": "MarkAsRead",
@@ -190,9 +184,7 @@
     },
     "/notifications/read-all": {
       "post": {
-        "tags": [
-          "Notifications"
-        ],
+        "tags": ["Notifications"],
         "summary": "Marks all notifications as read for the current user.",
         "description": "Marks all unread notifications as read for the authenticated user within the current tenant. Useful for a 'mark all as read' bulk action.",
         "operationId": "MarkAllAsRead",
@@ -235,9 +227,7 @@
     },
     "/notifications/entity/{entityType}/{entityId}": {
       "get": {
-        "tags": [
-          "Notifications"
-        ],
+        "tags": ["Notifications"],
         "summary": "Returns the activity feed for a specific entity.",
         "description": "Returns a paginated list of notifications related to a specific entity. Useful for displaying an activity log on an entity detail page. Results are sorted by creation date, newest first.",
         "operationId": "GetEntityActivityFeed",
@@ -327,9 +317,7 @@
     },
     "/notifications/preferences": {
       "get": {
-        "tags": [
-          "Notifications"
-        ],
+        "tags": ["Notifications"],
         "summary": "Returns notification delivery preferences for the current user.",
         "description": "Returns all notification delivery preferences for the authenticated user within the current tenant. Each preference indicates whether a specific notification type is enabled or disabled for a given channel.",
         "operationId": "GetPreferences",
@@ -380,9 +368,7 @@
         }
       },
       "put": {
-        "tags": [
-          "Notifications"
-        ],
+        "tags": ["Notifications"],
         "summary": "Creates or updates a notification delivery preference.",
         "description": "Creates or updates a delivery preference for a specific notification type and channel. If a preference already exists for the same type and channel, it is replaced (upsert).",
         "operationId": "UpdatePreference",
@@ -455,9 +441,7 @@
     },
     "/notifications/types": {
       "get": {
-        "tags": [
-          "Notifications"
-        ],
+        "tags": ["Notifications"],
         "summary": "Returns all registered notification type definitions.",
         "description": "Returns all notification types registered in the system with their metadata. Use this to build the preferences UI, showing which notification types are available and their supported channels.",
         "operationId": "GetNotificationTypes",
@@ -510,9 +494,7 @@
     },
     "/notifications/subscriptions": {
       "get": {
-        "tags": [
-          "Notifications"
-        ],
+        "tags": ["Notifications"],
         "summary": "Returns all notification subscriptions for the current user.",
         "description": "Returns all notification type subscriptions for the authenticated user within the current tenant. Each subscription indicates a notification type the user has opted into.",
         "operationId": "GetSubscriptions",
@@ -565,9 +547,7 @@
     },
     "/notifications/subscriptions/{typeName}": {
       "post": {
-        "tags": [
-          "Notifications"
-        ],
+        "tags": ["Notifications"],
         "summary": "Subscribes the current user to a notification type.",
         "description": "Subscribes the authenticated user to the specified notification type within the current tenant. Idempotent — subscribing to an already-subscribed type is a no-op.",
         "operationId": "Subscribe",
@@ -619,9 +599,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Notifications"
-        ],
+        "tags": ["Notifications"],
         "summary": "Unsubscribes the current user from a notification type.",
         "description": "Removes the authenticated user's subscription to the specified notification type within the current tenant. Idempotent — unsubscribing from a non-subscribed type is a no-op.",
         "operationId": "Unsubscribe",
@@ -675,9 +653,7 @@
     },
     "/notifications/entity/{entityType}/{entityId}/follow": {
       "post": {
-        "tags": [
-          "Notifications"
-        ],
+        "tags": ["Notifications"],
         "summary": "Subscribes the current user as a follower of an entity.",
         "description": "Adds the authenticated user as a follower of the specified entity within the current tenant. Followers receive notifications when activity occurs on the entity. Idempotent.",
         "operationId": "FollowEntity",
@@ -738,9 +714,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Notifications"
-        ],
+        "tags": ["Notifications"],
         "summary": "Unsubscribes the current user from an entity.",
         "description": "Removes the authenticated user from the follower list of the specified entity within the current tenant. The user will no longer receive entity-level notifications. Idempotent.",
         "operationId": "UnfollowEntity",
@@ -803,9 +777,7 @@
     },
     "/notifications/entity/{entityType}/{entityId}/followers": {
       "get": {
-        "tags": [
-          "Notifications"
-        ],
+        "tags": ["Notifications"],
         "summary": "Returns all followers of a specific entity.",
         "description": "Returns all users following the specified entity within the current tenant. Each entry includes the user ID and subscription metadata.",
         "operationId": "GetEntityFollowers",
@@ -883,35 +855,20 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "title": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "status": {
-            "type": [
-              "null",
-              "integer"
-            ],
+            "type": ["null", "integer"],
             "format": "int32"
           },
           "detail": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "instance": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "errors": {
             "type": "object",
@@ -925,9 +882,7 @@
         }
       },
       "NotificationDefinition": {
-        "required": [
-          "name"
-        ],
+        "required": ["name"],
         "type": "object",
         "properties": {
           "name": {
@@ -943,22 +898,13 @@
             }
           },
           "displayName": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "description": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "groupName": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "allowUserOptOut": {
             "type": "boolean"
@@ -967,27 +913,15 @@
             "type": "boolean"
           },
           "requiredPermission": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "requiredFeature": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         }
       },
       "NotificationPreferenceResponse": {
-        "required": [
-          "id",
-          "userId",
-          "notificationTypeName",
-          "channelName",
-          "isEnabled"
-        ],
+        "required": ["id", "userId", "notificationTypeName", "channelName", "isEnabled"],
         "type": "object",
         "properties": {
           "id": {
@@ -1009,17 +943,15 @@
         }
       },
       "NotificationPreferenceUpdateRequest": {
-        "required": [
-          "notificationTypeName",
-          "channelName",
-          "isEnabled"
-        ],
+        "required": ["notificationTypeName", "channelName", "isEnabled"],
         "type": "object",
         "properties": {
           "notificationTypeName": {
+            "maxLength": 256,
             "type": "string"
           },
           "channelName": {
+            "maxLength": 64,
             "type": "string"
           },
           "isEnabled": {
@@ -1028,22 +960,10 @@
         }
       },
       "NotificationSeverity": {
-        "enum": [
-          "Info",
-          "Success",
-          "Warning",
-          "Error",
-          "Fatal"
-        ]
+        "enum": ["Info", "Success", "Warning", "Error", "Fatal"]
       },
       "NotificationSubscriptionResponse": {
-        "required": [
-          "id",
-          "userId",
-          "notificationTypeName",
-          "entityType",
-          "entityId"
-        ],
+        "required": ["id", "userId", "notificationTypeName", "entityType", "entityId"],
         "type": "object",
         "properties": {
           "id": {
@@ -1057,25 +977,15 @@
             "type": "string"
           },
           "entityType": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "entityId": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         }
       },
       "PagedResultOfUserNotificationResponse": {
-        "required": [
-          "items",
-          "totalCount",
-          "hasMore"
-        ],
+        "required": ["items", "totalCount", "hasMore"],
         "type": "object",
         "properties": {
           "items": {
@@ -1085,20 +995,14 @@
             }
           },
           "totalCount": {
-            "type": [
-              "null",
-              "integer"
-            ],
+            "type": ["null", "integer"],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         }
       },
@@ -1128,9 +1032,7 @@
         }
       },
       "UnreadCountResponse": {
-        "required": [
-          "count"
-        ],
+        "required": ["count"],
         "type": "object",
         "properties": {
           "count": {
@@ -1172,7 +1074,7 @@
           "recipientUserId": {
             "type": "string"
           },
-          "data": { },
+          "data": {},
           "state": {
             "$ref": "#/components/schemas/UserNotificationState"
           },
@@ -1181,31 +1083,19 @@
             "format": "date-time"
           },
           "readAt": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "format": "date-time"
           },
           "relatedEntityType": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "relatedEntityId": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         }
       },
       "UserNotificationState": {
-        "enum": [
-          "Unread",
-          "Read"
-        ]
+        "enum": ["Unread", "Read"]
       }
     }
   },
