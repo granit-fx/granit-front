@@ -1,7 +1,9 @@
 import { listAIProviders } from '@granit/ai';
 import { useQuery } from '@tanstack/react-query';
 
-import { buildAIQueryKey, useAIConfig } from '../providers/ai-provider';
+import { useAIConfig } from '../providers/ai-provider';
+
+import { aiKeys } from './query-keys';
 
 import type { AIProviderResponse } from '@granit/ai';
 import type { UseQueryResult } from '@tanstack/react-query';
@@ -21,8 +23,8 @@ export function useAIProviders(options?: {
   const config = useAIConfig();
 
   return useQuery({
-    queryKey: buildAIQueryKey(config, 'providers'),
-    queryFn: () => listAIProviders(config.client, config.basePath ?? ''),
+    queryKey: aiKeys.providers(config.queryKeyPrefix),
+    queryFn: () => listAIProviders(config.client, config.basePath),
     enabled: options?.enabled ?? true,
   });
 }

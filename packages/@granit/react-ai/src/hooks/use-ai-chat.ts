@@ -36,7 +36,7 @@ export function useAIChat(): UseAIChatReturn {
 
   const mutation = useMutation({
     mutationFn: ({ workspaceName, request }: { workspaceName: string; request: AIChatRequest }) =>
-      chatComplete(config.client, config.basePath ?? '', workspaceName, request),
+      chatComplete(config.client, config.basePath, workspaceName, request),
   });
 
   const send = useCallback(

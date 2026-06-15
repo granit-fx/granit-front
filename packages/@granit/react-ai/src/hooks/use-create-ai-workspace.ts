@@ -2,7 +2,9 @@ import { createAIWorkspace } from '@granit/ai';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import { buildAIQueryKey, useAIConfig } from '../providers/ai-provider';
+import { useAIConfig } from '../providers/ai-provider';
+
+import { aiKeys } from './query-keys';
 
 import type { AIWorkspaceCreateRequest, AIWorkspaceResponse } from '@granit/ai';
 
@@ -30,10 +32,10 @@ export function useCreateAIWorkspace(): UseCreateAIWorkspaceReturn {
 
   const mutation = useMutation({
     mutationFn: (request: AIWorkspaceCreateRequest) =>
-      createAIWorkspace(config.client, config.basePath ?? '', request),
+      createAIWorkspace(config.client, config.basePath, request),
     onSuccess: () => {
       queryClient
-        .invalidateQueries({ queryKey: buildAIQueryKey(config, 'workspaces') })
+        .invalidateQueries({ queryKey: aiKeys.workspaces(config.queryKeyPrefix) })
         .catch(() => undefined);
     },
   });

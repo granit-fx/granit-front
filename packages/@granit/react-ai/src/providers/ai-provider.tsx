@@ -5,7 +5,7 @@
 import { useOptionalGranitClient } from '@granit/react-api-client';
 import { createContext, useContext, useMemo } from 'react';
 
-import { DEFAULT_BASE_PATH } from '../constants';
+import { DEFAULT_BASE_PATH, DEFAULT_QUERY_KEY_PREFIX } from '../constants';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
@@ -21,11 +21,14 @@ export interface AIConfig {
 }
 
 /**
- * AIConfig after the provider has resolved `client` from
- * `config.client` or the nearest `<GranitClientProvider>`.
+ * {@link AIConfig} after the provider has resolved `client` from
+ * `config.client` or the nearest `<GranitClientProvider>` and applied the
+ * `basePath` / `queryKeyPrefix` defaults.
  */
 export interface ResolvedAIConfig extends AIConfig {
   readonly client: AxiosInstance;
+  readonly basePath: string;
+  readonly queryKeyPrefix: readonly string[];
 }
 
 export interface AIProviderProps {
@@ -47,8 +50,9 @@ export function AIProvider({ config, children }: Readonly<AIProviderProps>) {
     }
     return {
       ...config,
-      basePath: config.basePath ?? DEFAULT_BASE_PATH,
       client,
+      basePath: config.basePath ?? DEFAULT_BASE_PATH,
+      queryKeyPrefix: config.queryKeyPrefix ?? DEFAULT_QUERY_KEY_PREFIX,
     };
   }, [config, contextClient]);
   return <AIConfigContext value={value}>{children}</AIConfigContext>;
@@ -61,13 +65,4 @@ export function useAIConfig(): ResolvedAIConfig {
     throw new Error('useAIConfig must be used within an AIProvider');
   }
   return ctx;
-}
-
-/** Builds a consistent React Query key for AI operations. */
-export function buildAIQueryKey(
-  config: AIConfig,
-  ...segments: readonly string[]
-): readonly unknown[] {
-  const prefix = config.queryKeyPrefix ?? ['ai'];
-  return [...prefix, ...segments];
 }

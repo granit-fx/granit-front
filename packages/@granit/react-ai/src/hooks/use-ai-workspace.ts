@@ -1,7 +1,9 @@
 import { getAIWorkspace } from '@granit/ai';
 import { useQuery } from '@tanstack/react-query';
 
-import { buildAIQueryKey, useAIConfig } from '../providers/ai-provider';
+import { useAIConfig } from '../providers/ai-provider';
+
+import { aiKeys } from './query-keys';
 
 import type { AIWorkspaceResponse } from '@granit/ai';
 import type { UseQueryResult } from '@tanstack/react-query';
@@ -22,8 +24,8 @@ export function useAIWorkspace(
   const config = useAIConfig();
 
   return useQuery({
-    queryKey: buildAIQueryKey(config, 'workspaces', name),
-    queryFn: () => getAIWorkspace(config.client, config.basePath ?? '', name),
+    queryKey: aiKeys.workspace(config.queryKeyPrefix, name),
+    queryFn: () => getAIWorkspace(config.client, config.basePath, name),
     enabled: options?.enabled ?? true,
   });
 }

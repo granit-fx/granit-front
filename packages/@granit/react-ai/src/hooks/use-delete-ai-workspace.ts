@@ -2,7 +2,9 @@ import { deleteAIWorkspace } from '@granit/ai';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import { buildAIQueryKey, useAIConfig } from '../providers/ai-provider';
+import { useAIConfig } from '../providers/ai-provider';
+
+import { aiKeys } from './query-keys';
 
 export interface UseDeleteAIWorkspaceReturn {
   readonly remove: (name: string) => void;
@@ -27,10 +29,10 @@ export function useDeleteAIWorkspace(): UseDeleteAIWorkspaceReturn {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (name: string) => deleteAIWorkspace(config.client, config.basePath ?? '', name),
+    mutationFn: (name: string) => deleteAIWorkspace(config.client, config.basePath, name),
     onSuccess: () => {
       queryClient
-        .invalidateQueries({ queryKey: buildAIQueryKey(config, 'workspaces') })
+        .invalidateQueries({ queryKey: aiKeys.workspaces(config.queryKeyPrefix) })
         .catch(() => undefined);
     },
   });

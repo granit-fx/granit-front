@@ -81,7 +81,7 @@ export function useAIChatStream(): UseAIChatStreamReturn {
           let accumulated = '';
           for await (const event of chatStream(
             config.client,
-            config.basePath ?? '',
+            config.basePath,
             workspaceName,
             request,
             controller.signal

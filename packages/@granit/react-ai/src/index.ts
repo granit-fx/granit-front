@@ -1,6 +1,9 @@
 // Provider
-export { AIProvider, buildAIQueryKey, useAIConfig } from './providers/ai-provider';
-export type { AIConfig, AIProviderProps } from './providers/ai-provider';
+export { AIProvider, useAIConfig } from './providers/ai-provider';
+export type { AIConfig, AIProviderProps, ResolvedAIConfig } from './providers/ai-provider';
+
+// Query keys
+export { aiKeys } from './hooks/query-keys';
 
 // Hooks — Providers
 export { useAIProviderModels } from './hooks/use-ai-provider-models';

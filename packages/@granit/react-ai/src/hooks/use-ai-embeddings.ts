@@ -37,7 +37,7 @@ export function useAIEmbeddings(): UseAIEmbeddingsReturn {
     }: {
       workspaceName: string;
       request: AIEmbeddingRequest;
-    }) => generateEmbeddings(config.client, config.basePath ?? '', workspaceName, request),
+    }) => generateEmbeddings(config.client, config.basePath, workspaceName, request),
   });
 
   const generate = useCallback(
