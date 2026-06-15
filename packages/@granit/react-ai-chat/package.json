@@ -18,6 +18,7 @@
     "@granit/ai-chat": "workspace:*",
     "@granit/api-client": "workspace:*",
     "@granit/react-api-client": "workspace:*",
+    "@granit/types": "workspace:*",
     "@granit/utils": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "lucide-react": "^1.0.0",
