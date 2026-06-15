@@ -1,0 +1,36 @@
+{
+  "name": "@granit/bank-accounts",
+  "description": "Centralized bank account referential — types and API functions (create, read, list per party, verify, archive)",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/query-engine": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*"
+  },
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/query-engine": "workspace:*",
+    "@granit/types": "workspace:*"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  }
+}

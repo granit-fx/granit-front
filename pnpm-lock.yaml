@@ -389,6 +389,21 @@ importers:
         specifier: workspace:*
         version: link:../types
 
+  packages/@granit/bank-accounts:
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
+
   packages/@granit/bff:
     devDependencies:
       '@granit/logger':
@@ -1374,6 +1389,43 @@ importers:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
+      '@tanstack/react-query':
+        specifier: 5.101.0
+        version: 5.101.0(react@19.2.7)
+      msw:
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@25.9.3)(typescript@6.0.3)
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
+
+  packages/@granit/react-bank-accounts:
+    dependencies:
+      '@granit/bank-accounts':
+        specifier: workspace:*
+        version: link:../bank-accounts
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
+      '@granit/react-query-engine':
+        specifier: workspace:*
+        version: link:../react-query-engine
       '@tanstack/react-query':
         specifier: 5.101.0
         version: 5.101.0(react@19.2.7)

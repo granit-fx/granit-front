@@ -974,6 +974,17 @@
       ]
     },
     {
+      "name": "@granit/bank-accounts",
+      "description": "Centralized bank account referential — types and API functions (create, read, list per party, verify, archive)",
+      "exports": [
+        {
+          "name": "BankAccountsPermissions",
+          "kind": "const",
+          "signature": "const BankAccountsPermissions"
+        }
+      ]
+    },
+    {
       "name": "@granit/bff",
       "description": "BFF authentication types and CSRF manager — TypeScript mirror of Granit.Bff .NET",
       "exports": []
@@ -3593,6 +3604,11 @@
     {
       "name": "@granit/react-background-jobs",
       "description": "React hooks for background job monitoring — useBackgroundJobs, usePauseJob, useResumeJob, useTriggerJob",
+      "exports": []
+    },
+    {
+      "name": "@granit/react-bank-accounts",
+      "description": "React bindings for @granit/bank-accounts — BankAccountsProvider and hooks",
       "exports": []
     },
     {
