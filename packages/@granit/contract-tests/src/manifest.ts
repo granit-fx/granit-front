@@ -88,20 +88,24 @@ export const CONTRACTS: readonly ModuleContract[] = [
   {
     slug: 'data-lookup',
     package: 'data-lookup',
-    // TODO(contract): LookupManifestEntryResponse deferred — `kind` is a string
-    // enum backend-side but an object front-side (type-family mismatch).
-    types: ['LookupItemResponse', 'LookupResultResponse', 'LookupManifestResponse'],
+    types: [
+      'LookupItemResponse',
+      'LookupResultResponse',
+      'LookupManifestResponse',
+      'LookupManifestEntryResponse',
+    ],
   },
   {
     slug: 'timeline',
     package: 'timeline',
-    // TODO(contract): TimelineStreamEntryResponse (front-only origin/sourceKey/
-    // sourceId/editedAt + object `entryType`) and PostTimelineEntryRequest
-    // (object `entryType`) deferred — front enriches beyond the backend schema.
+    // TODO(contract): TimelineStreamEntryResponse deferred — front enriches the
+    // backend schema with origin/sourceKey/sourceId/editedAt for external-source
+    // projection (front-only, intentional).
     types: [
       'ReactionAggregateResponse',
       'ReactionToggleResponse',
       'TimelineAttachmentInfoResponse',
+      'PostTimelineEntryRequest',
     ],
   },
   {
@@ -304,10 +308,12 @@ export const CONTRACTS: readonly ModuleContract[] = [
   {
     slug: 'dashboards',
     package: 'dashboards',
-    // TODO(contract): Dashboard{Summary,Detail,CatalogEntry,Import,Resync}Response
-    // deferred — front models `category`/`status` as objects while the backend
-    // schema is a string enum (real type-family mismatch to reconcile).
     types: [
+      'DashboardSummaryResponse',
+      'DashboardDetailResponse',
+      'DashboardCatalogEntryResponse',
+      'DashboardImportResponse',
+      'DashboardResyncResponse',
       'DashboardMetadataUpdateRequest',
       'WidgetInstanceResponse',
       'AddWidgetRequest',
@@ -858,7 +864,13 @@ export const CONTRACTS: readonly ModuleContract[] = [
     // Widget definitions (extends WidgetDefinitionBase), MapPointSource (union)
     // and PeriodSpec (union) are not field-by-field checkable. MetricResponse
     // deferred — `refreshHint` is a string enum backend-side, object front-side.
-    types: ['MetricRequest', 'MetricPreviousPayload', 'MetricSnapshotPayload', 'MapCenter'],
+    types: [
+      'MetricResponse',
+      'MetricRequest',
+      'MetricPreviousPayload',
+      'MetricSnapshotPayload',
+      'MapCenter',
+    ],
   },
   {
     slug: 'data-exchange',
@@ -878,6 +890,7 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'ImportRowError',
       'ImportColumnMapping',
       'ConfirmMappingsRequest',
+      'ImportReportResponse',
     ],
   },
 ];

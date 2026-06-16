@@ -1,8 +1,14 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { describe, expect, it } from 'vitest';
 
 import { checkSchemaConformance } from '../conformance';
 
 import type { OpenApiDocument } from '../conformance';
+
+const here = path.dirname(fileURLToPath(import.meta.url));
 
 // A spec with one field of each kind the oracle reasons about, plus the
 // representation warts the normalization table must absorb.
@@ -85,5 +91,27 @@ describe('conformance oracle — positive & negative controls', () => {
     expect(check(src)).toContainEqual(
       expect.objectContaining({ rule: 'orphan-field', field: 'extra' })
     );
+  });
+
+  // The codebase keeps each string-union enum in its own file. A field typed as
+  // an imported enum must follow the import to resolve to `string`, not default
+  // an unresolved reference to `object` (which produced false type-family drift).
+  it('resolves a string-union enum imported from a sibling file', () => {
+    const enumSpec: OpenApiDocument = {
+      components: {
+        schemas: {
+          Sample: { type: 'object', required: ['kind'], properties: { kind: { $ref: '#/x' } } },
+          x: { enum: ['Alpha', 'Beta', 'Gamma'], type: 'string' },
+        },
+      },
+    };
+    const dtoFile = path.join(here, '__fixtures__/imported-enum/dto.ts');
+    const violations = checkSchemaConformance({
+      spec: enumSpec,
+      schemaName: 'Sample',
+      sourceText: readFileSync(dtoFile, 'utf8'),
+      fileName: dtoFile,
+    });
+    expect(violations).toEqual([]);
   });
 });

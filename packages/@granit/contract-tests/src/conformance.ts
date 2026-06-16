@@ -1,3 +1,6 @@
+import { existsSync, readFileSync } from 'node:fs';
+import path from 'node:path';
+
 import * as ts from 'typescript';
 
 /** A single contract-conformance violation between a backend schema and a front type. */
@@ -213,20 +216,112 @@ interface ParsedSource {
   aliases: AliasMap;
 }
 
-function parseSource(sourceText: string, fileName: string, typeName: string): ParsedSource {
+/**
+ * Per-file local type aliases + the module specifiers it imports / re-exports.
+ * Cached process-wide so the dependency graph is parsed at most once across the
+ * whole suite, however many DTOs reference a shared file.
+ */
+interface FileInfo {
+  aliases: ReadonlyMap<string, ts.TypeNode>;
+  imports: readonly string[];
+}
+const fileInfoCache = new Map<string, FileInfo>();
+const MAX_IMPORT_DEPTH = 8;
+const RESOLVE_EXTS = ['.ts', '.tsx'] as const;
+
+function parseFileInfo(fileName: string, sourceText: string): FileInfo {
+  const cached = fileInfoCache.get(fileName);
+  if (cached) return cached;
   const sf = ts.createSourceFile(fileName, sourceText, ts.ScriptTarget.Latest, true);
   const aliases = new Map<string, ts.TypeNode>();
-  let members: readonly ts.TypeElement[] | undefined;
+  const imports: string[] = [];
   sf.forEachChild((node) => {
     if (ts.isTypeAliasDeclaration(node)) {
       aliases.set(node.name.text, node.type);
-      if (node.name.text === typeName && ts.isTypeLiteralNode(node.type))
-        members = node.type.members;
+    } else if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
+      imports.push(node.moduleSpecifier.text);
+    } else if (
+      ts.isExportDeclaration(node) &&
+      node.moduleSpecifier &&
+      ts.isStringLiteral(node.moduleSpecifier)
+    ) {
+      imports.push(node.moduleSpecifier.text);
+    }
+  });
+  const info: FileInfo = { aliases, imports };
+  fileInfoCache.set(fileName, info);
+  return info;
+}
+
+/** Resolve a relative or `@granit/*` module specifier to its on-disk source file. */
+function resolveModuleFile(spec: string, fromFile: string): string | undefined {
+  let base: string;
+  if (spec.startsWith('.')) {
+    base = path.resolve(path.dirname(fromFile), spec);
+  } else if (spec.startsWith('@granit/')) {
+    const marker = `${path.sep}packages${path.sep}@granit${path.sep}`;
+    const idx = fromFile.indexOf(marker);
+    if (idx === -1) return undefined;
+    const repoPackages = fromFile.slice(0, idx + marker.length);
+    base = path.join(repoPackages, spec.slice('@granit/'.length), 'src', 'index');
+  } else {
+    return undefined; // node_modules / unrelated package — nothing to resolve
+  }
+  for (const ext of RESOLVE_EXTS) if (existsSync(base + ext)) return base + ext;
+  for (const ext of RESOLVE_EXTS) {
+    const idxFile = path.join(base, `index${ext}`);
+    if (existsSync(idxFile)) return idxFile;
+  }
+  return undefined;
+}
+
+/**
+ * Merge the entry file's type aliases with those reachable through its
+ * `import type` / `export … from` edges. The codebase keeps each string-union
+ * enum in its own file, so a field typed as an imported enum must follow the
+ * import to resolve to its real family instead of defaulting to `object`.
+ * Local aliases win; cycles and depth are bounded.
+ */
+function collectAliases(fileName: string, sourceText: string): AliasMap {
+  const merged = new Map<string, ts.TypeNode>();
+  const visited = new Set<string>();
+  const stack: { file: string; text: string; depth: number }[] = [
+    { file: fileName, text: sourceText, depth: 0 },
+  ];
+  while (stack.length) {
+    const { file, text, depth } = stack.pop()!;
+    if (visited.has(file) || depth > MAX_IMPORT_DEPTH) continue;
+    visited.add(file);
+    const info = parseFileInfo(file, text);
+    for (const [name, node] of info.aliases) if (!merged.has(name)) merged.set(name, node);
+    for (const spec of info.imports) {
+      const target = resolveModuleFile(spec, file);
+      if (!target || visited.has(target)) continue;
+      try {
+        stack.push({ file: target, text: readFileSync(target, 'utf8'), depth: depth + 1 });
+      } catch {
+        // unreadable (generated / out-of-tree) — skip silently
+      }
+    }
+  }
+  return merged;
+}
+
+function parseSource(sourceText: string, fileName: string, typeName: string): ParsedSource {
+  const sf = ts.createSourceFile(fileName, sourceText, ts.ScriptTarget.Latest, true);
+  let members: readonly ts.TypeElement[] | undefined;
+  sf.forEachChild((node) => {
+    if (
+      ts.isTypeAliasDeclaration(node) &&
+      node.name.text === typeName &&
+      ts.isTypeLiteralNode(node.type)
+    ) {
+      members = node.type.members;
     } else if (ts.isInterfaceDeclaration(node) && node.name.text === typeName) {
       members = node.members;
     }
   });
-  return { members, aliases };
+  return { members, aliases: collectAliases(fileName, sourceText) };
 }
 
 function tsProps(members: readonly ts.TypeElement[], aliases: AliasMap): Map<string, PropShape> {
