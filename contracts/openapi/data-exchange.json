@@ -756,7 +756,15 @@
             "description": "No Content"
           },
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not Found",
@@ -1051,7 +1059,15 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not Found",
@@ -1169,7 +1185,7 @@
           {
             "name": "name",
             "in": "path",
-            "description": "Unique registered name of the background job.",
+            "description": "Unique registered name.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1454,7 +1470,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ImportColumnMapping"
-            }
+            },
+            "x-granit-validator": "Validation:AtLeastOneMappingTarget"
           },
           "concurrencyStamp": {
             "type": "string"
@@ -1466,9 +1483,11 @@
         "type": "object",
         "properties": {
           "definitionName": {
+            "maxLength": 500,
             "type": "string"
           },
           "format": {
+            "maxLength": 10,
             "type": "string"
           },
           "selectedFields": {
@@ -1482,6 +1501,7 @@
             "default": false
           },
           "sort": {
+            "maxLength": 2000,
             "type": ["null", "string"]
           },
           "filter": {
@@ -1497,6 +1517,7 @@
             }
           },
           "search": {
+            "maxLength": 1000,
             "type": ["null", "string"]
           }
         }

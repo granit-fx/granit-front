@@ -814,4 +814,32 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'SetPinnedLandingRouteRequest',
     ],
   },
+  // ─── Analytics + data-exchange (granit-business / granit-dotnet) ────────────
+  {
+    slug: 'analytics',
+    package: 'analytics',
+    // Widget definitions (extends WidgetDefinitionBase), MapPointSource (union)
+    // and PeriodSpec (union) are not field-by-field checkable. MetricResponse
+    // deferred — `refreshHint` is a string enum backend-side, object front-side.
+    types: ['MetricRequest', 'MetricPreviousPayload', 'MetricSnapshotPayload', 'MapCenter'],
+  },
+  {
+    slug: 'data-exchange',
+    package: 'data-exchange',
+    // TODO(contract): ImportReportResponse (`finalStatus` string-vs-object) and
+    // ImportFieldMetadata (`displayName` nullability) deferred — real field drift.
+    types: [
+      'ExportDefinitionResponse',
+      'ExportFieldResponse',
+      'ExportJobResponse',
+      'ExportPresetResponse',
+      'CreateExportJobRequest',
+      'SaveExportPresetRequest',
+      'ImportJobResponse',
+      'ImportPreviewResponse',
+      'ImportRowError',
+      'ImportColumnMapping',
+      'ConfirmMappingsRequest',
+    ],
+  },
 ];
