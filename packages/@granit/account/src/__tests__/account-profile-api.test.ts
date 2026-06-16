@@ -44,15 +44,18 @@ describe('account-profile-api', () => {
       expect(result.firstName).toBe('Jane');
     });
 
-    it('forwards email in the request body', async () => {
+    it('forwards the name fields in the request body', async () => {
       const client = createMockClient();
-      const updated = { ...mockProfile, email: 'jane@example.com' };
+      const updated = { ...mockProfile, firstName: 'Jane', lastName: 'Doe' };
       vi.mocked(client.put).mockResolvedValueOnce({ data: updated });
 
-      const result = await updateProfile(client, BASE, { email: 'jane@example.com' });
+      const result = await updateProfile(client, BASE, { firstName: 'Jane', lastName: 'Doe' });
 
-      expect(client.put).toHaveBeenCalledWith(`${BASE}/profile`, { email: 'jane@example.com' });
-      expect(result.email).toBe('jane@example.com');
+      expect(client.put).toHaveBeenCalledWith(`${BASE}/profile`, {
+        firstName: 'Jane',
+        lastName: 'Doe',
+      });
+      expect(result.firstName).toBe('Jane');
     });
   });
 });

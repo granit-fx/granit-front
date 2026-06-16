@@ -44,6 +44,43 @@ export const CONTRACTS: readonly ModuleContract[] = [
     package: 'identity',
     types: ['UserSessionResponse', 'UserDeviceResponse', 'UserSessionsRevokedResponse'],
   },
+  // identity-local is split across two front packages: account (self-service)
+  // and authentication-local (login). The spec also exposes External*/Passkey*/
+  // Role*/Impersonation*/IdentityLocalConfigResponse schemas the front does not
+  // (yet) hand-write — left unregistered until those DTOs exist.
+  {
+    slug: 'identity-local',
+    package: 'account',
+    types: [
+      'AccountAuthenticatorKeyResponse',
+      'AccountChangeEmailRequest',
+      'AccountConfirmEmailChangeRequest',
+      'AccountDeleteRequest',
+      'AccountForgotPasswordRequest',
+      'AccountGenerateRecoveryCodesRequest',
+      'AccountPasswordChangeRequest',
+      'AccountPasswordResetRequest',
+      'AccountProfileResponse',
+      'AccountProfileUpdateRequest',
+      'AccountRecoveryCodesResponse',
+      'AccountRegisterRequest',
+      'AccountTwoFactorDisableRequest',
+      'AccountTwoFactorEmailEnableRequest',
+      'AccountTwoFactorEnableRequest',
+      'AccountTwoFactorEnableResponse',
+      'AccountTwoFactorStatusResponse',
+    ],
+  },
+  {
+    slug: 'identity-local',
+    package: 'authentication-local',
+    types: [
+      'AccountLoginRequest',
+      'AccountLoginResponse',
+      'AccountPasskeyLoginRequest',
+      'AccountTwoFactorLoginRequest',
+    ],
+  },
   // ─── Suffix-aligned modules (front DTOs renamed to mirror the spec schema) ──
   // These packages previously dropped the Response/Request suffix; aligned to
   // the universal convention (name === spec schema) so they are oracle-checked

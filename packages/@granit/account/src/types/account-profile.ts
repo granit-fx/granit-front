@@ -12,13 +12,12 @@ export interface AccountProfileResponse {
   readonly firstName: string | null;
   readonly lastName: string | null;
   readonly twoFactorEnabled: boolean;
-  readonly hasPassword: boolean;
+  readonly hasPassword: boolean | null;
   readonly externalLogins: readonly string[];
 }
 
 /** Request body for `PUT /profile`. */
 export interface AccountProfileUpdateRequest {
-  readonly email?: string;
   readonly firstName?: string;
   readonly lastName?: string;
 }

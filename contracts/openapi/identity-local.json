@@ -69,8 +69,8 @@
     "/account/login/two-factor": {
       "post": {
         "tags": ["Account - Login"],
-        "summary": "Completes login with a TOTP code or recovery code.",
-        "description": "Finalizes the two-factor authentication challenge after a successful password-based login returned requiresTwoFactor: true. The Identity.TwoFactorUserId cookie (set by the initial login) identifies the user. Accepts either a 6-digit TOTP code from an authenticator app or a single-use recovery code (when useRecoveryCode is true). On success, sets the Identity authentication cookie and returns 200. Returns 401 if the code is invalid or the 2FA session has expired.",
+        "summary": "Completes login with a TOTP, email, or recovery code.",
+        "description": "Finalizes the two-factor authentication challenge after a successful password-based login returned requiresTwoFactor: true. The Identity.TwoFactorUserId cookie (set by the initial login) identifies the user. The method field selects the factor: a 6-digit TOTP code from an authenticator app, a one-time code sent by email, or a single-use recovery code. On success, sets the Identity authentication cookie and returns 200. Returns 401 if the code is invalid or the 2FA session has expired.",
         "operationId": "AccountTwoFactorLogin",
         "requestBody": {
           "content": {
@@ -115,6 +115,40 @@
           },
           "422": {
             "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    },
+    "/account/login/two-factor/send-email": {
+      "post": {
+        "tags": ["Account - Login"],
+        "summary": "Sends a one-time code by email for the two-factor challenge.",
+        "description": "Generates and emails a one-time code to the user identified by the Identity.TwoFactorUserId cookie, for use with the email two-factor method. Only sends when the user has enrolled the email factor. Always returns 204 (even when no code is sent) to avoid leaking which factors are configured. Returns 400 if there is no active two-factor session.",
+        "operationId": "SendTwoFactorLoginEmailCode",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -728,7 +762,7 @@
       "get": {
         "tags": ["Account - Two-Factor"],
         "summary": "Returns the current 2FA status.",
-        "description": "Returns whether 2FA is enabled, whether an authenticator app is configured, and the number of unused recovery codes.",
+        "description": "Returns whether 2FA is enabled, whether an authenticator app and the email one-time-code factor are configured, and the number of unused recovery codes.",
         "operationId": "GetTwoFactorStatus",
         "responses": {
           "200": {
@@ -827,7 +861,7 @@
     "/account/two-factor/enable": {
       "post": {
         "tags": ["Account - Two-Factor"],
-        "summary": "Enables 2FA after TOTP code verification.",
+        "summary": "Enables the authenticator factor after TOTP code verification.",
         "description": "Validates the provided TOTP code against the shared key. On success, enables 2FA and returns single-use recovery codes. Returns 400 if the code is invalid.",
         "operationId": "EnableTwoFactor",
         "requestBody": {
@@ -907,8 +941,8 @@
     "/account/two-factor/disable": {
       "post": {
         "tags": ["Account - Two-Factor"],
-        "summary": "Disables 2FA for the authenticated user.",
-        "description": "Disables TOTP-based two-factor authentication. Requires password confirmation as step-up authentication (OWASP ASVS V2.8.1).",
+        "summary": "Disables all two-factor methods for the authenticated user.",
+        "description": "Turns off every two-factor method (authenticator and email) for the user. Requires password confirmation as step-up authentication (OWASP ASVS V2.8.1).",
         "operationId": "DisableTwoFactor",
         "requestBody": {
           "content": {
@@ -981,7 +1015,7 @@
       "post": {
         "tags": ["Account - Two-Factor"],
         "summary": "Generates new recovery codes.",
-        "description": "Generates 10 new single-use recovery codes. Previously generated codes are invalidated. Requires password confirmation as step-up authentication. Recovery codes can be used instead of a TOTP code during login.",
+        "description": "Generates 10 new single-use recovery codes. Previously generated codes are invalidated. Requires password confirmation as step-up authentication. Recovery codes can be used instead of a TOTP or email code during login.",
         "operationId": "GenerateRecoveryCodes",
         "requestBody": {
           "content": {
@@ -1003,6 +1037,195 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/two-factor/email/send": {
+      "post": {
+        "tags": ["Account - Two-Factor"],
+        "summary": "Emails a one-time code to verify email-factor enrollment.",
+        "description": "Generates and emails a one-time code to the authenticated user's address. Submit the code to /two-factor/email/enable to enroll the email factor. Returns 204 regardless of whether the user has an email address on file.",
+        "operationId": "SendTwoFactorEmailEnrollmentCode",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/two-factor/email/enable": {
+      "post": {
+        "tags": ["Account - Two-Factor"],
+        "summary": "Enables the email one-time-code factor after code verification.",
+        "description": "Validates the code previously sent to the user's email. On success, enrolls the email two-factor method (and enables 2FA if it is the first factor). Returns 400 if the code is invalid or expired.",
+        "operationId": "EnableTwoFactorEmail",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountTwoFactorEmailEnableRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/two-factor/email/disable": {
+      "post": {
+        "tags": ["Account - Two-Factor"],
+        "summary": "Disables the email one-time-code factor.",
+        "description": "Removes the email two-factor method. Other factors (authenticator) remain active. Requires password confirmation as step-up authentication (OWASP ASVS V2.8.1).",
+        "operationId": "DisableTwoFactorEmail",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountTwoFactorDisableRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -1114,7 +1337,7 @@
       "post": {
         "tags": ["Account - External Logins"],
         "summary": "Initiates an OAuth flow with an external provider.",
-        "description": "Validates that the specified provider is registered in IExternalProviderRegistry and returns 200 with metadata for the frontend to initiate the redirect via the standard OAuth client flow. Returns 400 if the provider is not configured.",
+        "description": "Validates that the specified provider is configured AND backed by a registered authentication handler. Returns 200 to confirm the provider is available; the frontend then initiates the OAuth redirect via the standard client challenge flow. Returns 400 if the provider is not configured, or 500 if it is configured but no authentication handler is registered for it (a host wiring error).",
         "operationId": "ChallengeExternalLogin",
         "parameters": [
           {
@@ -1154,19 +1377,153 @@
         "security": [{}]
       }
     },
+    "/account/external-logins/challenge/{provider}/start": {
+      "get": {
+        "tags": ["Account - External Logins"],
+        "summary": "Starts the OAuth flow by redirecting to the external provider.",
+        "description": "Issues the actual OAuth challenge: validates the provider then returns a 302 redirect to it. The browser navigates here directly (it is not an XHR endpoint). An optional site-relative returnUrl is carried through the external ticket so the callback can resume the original authorization request after sign-in. Returns 400 if the provider is not configured or has no registered handler.",
+        "operationId": "StartExternalLogin",
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "returnUrl",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    },
     "/account/external-logins/callback": {
       "get": {
         "tags": ["Account - External Logins"],
         "summary": "Processes the OAuth callback from an external provider.",
-        "description": "Handles the redirect from the external provider. Links the external account to an existing user or creates a new one if AutoRegisterExternalUsers is enabled. Returns 400 if the provider query parameter is missing. Returns 409 if the email is taken by another account. Returns 403 if auto-registration is disabled and no account exists.",
+        "description": "Handles the redirect from the external provider. Authenticates an existing account or creates a new one when account creation is enabled, then establishes the Identity session. When the provider data is insufficient (e.g. no email), returns a 'needs-profile-completion' result with a signed continuation token instead of creating an account. Responds with a 302 redirect to the configured frontend URL, or JSON when no redirect URL is configured or ?mode=json is set. Returns 400 if the callback carries no scheme, 409 if the email is taken by another account, 403 if account creation is disabled and no account exists.",
         "operationId": "ExternalLoginCallback",
+        "parameters": [
+          {
+            "name": "mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProcessCallbackResult"
+                  "$ref": "#/components/schemas/ExternalLoginCallbackResponse"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    },
+    "/account/external-logins/complete-registration": {
+      "post": {
+        "tags": ["Account - External Logins"],
+        "summary": "Completes registration started from an external provider.",
+        "description": "Creates an account from the user-completed fields when the external provider did not return enough data for a one-click sign-up. The provider and provider key are taken from the signed continuation token, never from the request body. Links the external login, establishes the session, and returns 200. Returns 400 if the token is invalid or expired, 403 if account creation is disabled or the token does not match the current tenant, 409 if the email is already taken, 422 if the email does not match the provider-verified one.",
+        "operationId": "CompleteExternalRegistration",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterExternalRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountLoginResponse"
                 }
               }
             }
@@ -1193,6 +1550,16 @@
           },
           "409": {
             "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -2083,7 +2450,17 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -2260,6 +2637,16 @@
               }
             }
           },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -2333,213 +2720,12 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
+          "409": {
+            "description": "Conflict",
             "content": {
               "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/account/login/two-factor/send-email": {
-      "post": {
-        "tags": ["Account - Login"],
-        "summary": "Sends a one-time code to the email of the user pending two-factor login.",
-        "description": "Anonymous; identifies the user via the two-factor session cookie set during login. No-op (still 204) if the user has not enrolled the email factor. Returns 400 when there is no active two-factor session.",
-        "operationId": "SendTwoFactorLoginEmailCode",
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/account/two-factor/email/send": {
-      "post": {
-        "tags": ["Account - Two-Factor"],
-        "summary": "Sends an email enrollment code to the authenticated user.",
-        "operationId": "SendTwoFactorEmailEnrollmentCode",
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/account/two-factor/email/enable": {
-      "post": {
-        "tags": ["Account - Two-Factor"],
-        "summary": "Enables the email one-time-code two-factor method.",
-        "description": "Verifies the code previously sent via /two-factor/email/send. Returns 400 if the code is invalid.",
-        "operationId": "EnableTwoFactorEmail",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AccountTwoFactorEmailEnableRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/account/two-factor/email/disable": {
-      "post": {
-        "tags": ["Account - Two-Factor"],
-        "summary": "Disables the email one-time-code two-factor method.",
-        "description": "Requires password confirmation as step-up authentication (OWASP ASVS V2.8.1). Returns 400 if the password is incorrect.",
-        "operationId": "DisableTwoFactorEmail",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AccountTwoFactorDisableRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -2597,11 +2783,16 @@
         "type": "object",
         "properties": {
           "newEmail": {
-            "type": "string"
+            "maxLength": 256,
+            "type": "string",
+            "format": "email"
           },
           "currentPassword": {
             "type": "string"
           }
+        },
+        "example": {
+          "newEmail": "alice.new@acme.example"
         }
       },
       "AccountConfirmEmailChangeRequest": {
@@ -2612,11 +2803,18 @@
             "type": "string"
           },
           "newEmail": {
-            "type": "string"
+            "maxLength": 256,
+            "type": "string",
+            "format": "email"
           },
           "token": {
             "type": "string"
           }
+        },
+        "example": {
+          "userId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+          "newEmail": "alice.new@acme.example",
+          "token": "<confirmation-token-from-email>"
         }
       },
       "AccountDeleteRequest": {
@@ -2626,6 +2824,9 @@
           "password": {
             "type": "string"
           }
+        },
+        "example": {
+          "password": "<your-password>"
         }
       },
       "AccountForgotPasswordRequest": {
@@ -2633,8 +2834,12 @@
         "type": "object",
         "properties": {
           "email": {
-            "type": "string"
+            "type": "string",
+            "format": "email"
           }
+        },
+        "example": {
+          "email": "alice@acme.example"
         }
       },
       "AccountGenerateRecoveryCodesRequest": {
@@ -2651,15 +2856,22 @@
         "type": "object",
         "properties": {
           "login": {
+            "maxLength": 256,
             "type": "string"
           },
           "password": {
+            "maxLength": 256,
             "type": "string"
           },
           "rememberMe": {
             "type": "boolean",
             "default": false
           }
+        },
+        "example": {
+          "login": "alice@acme.example",
+          "password": "<your-password>",
+          "rememberMe": true
         }
       },
       "AccountLoginResponse": {
@@ -2687,6 +2899,13 @@
               "type": "string"
             }
           }
+        },
+        "example": {
+          "succeeded": false,
+          "requiresTwoFactor": true,
+          "isLockedOut": false,
+          "isNotAllowed": false,
+          "twoFactorMethods": ["Authenticator", "Email", "RecoveryCode"]
         }
       },
       "AccountPasskeyLoginRequest": {
@@ -2696,6 +2915,9 @@
           "credentialJson": {
             "type": "string"
           }
+        },
+        "example": {
+          "credentialJson": "{\"id\":\"credential-id\",\"rawId\":\"...\",\"type\":\"public-key\",\"response\":{\"clientDataJSON\":\"...\",\"authenticatorData\":\"...\",\"signature\":\"...\",\"userHandle\":\"...\"}}"
         }
       },
       "AccountPasswordChangeRequest": {
@@ -2706,8 +2928,13 @@
             "type": "string"
           },
           "newPassword": {
+            "minLength": 8,
             "type": "string"
           }
+        },
+        "example": {
+          "currentPassword": "<current-password>",
+          "newPassword": "<new-password>"
         }
       },
       "AccountPasswordResetRequest": {
@@ -2721,8 +2948,14 @@
             "type": "string"
           },
           "newPassword": {
+            "minLength": 8,
             "type": "string"
           }
+        },
+        "example": {
+          "userId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+          "token": "<reset-token-from-email>",
+          "newPassword": "<new-password>"
         }
       },
       "AccountProfileResponse": {
@@ -2758,7 +2991,7 @@
             "type": "boolean"
           },
           "hasPassword": {
-            "type": "boolean"
+            "type": ["null", "boolean"]
           },
           "externalLogins": {
             "type": "array",
@@ -2772,11 +3005,17 @@
         "type": "object",
         "properties": {
           "firstName": {
+            "maxLength": 256,
             "type": ["null", "string"]
           },
           "lastName": {
+            "maxLength": 256,
             "type": ["null", "string"]
           }
+        },
+        "example": {
+          "firstName": "Alice",
+          "lastName": "Martin"
         }
       },
       "AccountRecoveryCodesResponse": {
@@ -2796,17 +3035,27 @@
         "type": "object",
         "properties": {
           "email": {
-            "type": "string"
+            "type": "string",
+            "format": "email"
           },
           "password": {
+            "minLength": 8,
             "type": "string"
           },
           "firstName": {
+            "maxLength": 256,
             "type": ["null", "string"]
           },
           "lastName": {
+            "maxLength": 256,
             "type": ["null", "string"]
           }
+        },
+        "example": {
+          "email": "alice@acme.example",
+          "password": "<your-password>",
+          "firstName": "Alice",
+          "lastName": "Martin"
         }
       },
       "AccountTwoFactorDisableRequest": {
@@ -2816,6 +3065,23 @@
           "password": {
             "type": "string"
           }
+        },
+        "example": {
+          "password": "<your-password>"
+        }
+      },
+      "AccountTwoFactorEmailEnableRequest": {
+        "required": ["code"],
+        "type": "object",
+        "properties": {
+          "code": {
+            "maxLength": 6,
+            "minLength": 6,
+            "type": "string"
+          }
+        },
+        "example": {
+          "code": "123456"
         }
       },
       "AccountTwoFactorEnableRequest": {
@@ -2823,8 +3089,13 @@
         "type": "object",
         "properties": {
           "code": {
+            "maxLength": 6,
+            "minLength": 6,
             "type": "string"
           }
+        },
+        "example": {
+          "code": "123456"
         }
       },
       "AccountTwoFactorEnableResponse": {
@@ -2844,6 +3115,7 @@
         "type": "object",
         "properties": {
           "code": {
+            "maxLength": 256,
             "type": "string"
           },
           "method": {
@@ -2853,6 +3125,11 @@
             "type": "boolean",
             "default": false
           }
+        },
+        "example": {
+          "code": "123456",
+          "method": "Authenticator",
+          "rememberMe": false
         }
       },
       "AccountTwoFactorStatusResponse": {
@@ -2871,6 +3148,35 @@
           "recoveryCodesLeft": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "ExternalLoginCallbackResponse": {
+        "required": ["status", "userId", "isNewUser", "continuationToken", "prefill"],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "userId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "isNewUser": {
+            "type": "boolean"
+          },
+          "continuationToken": {
+            "type": ["null", "string"]
+          },
+          "prefill": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ExternalProfilePrefillResponse"
+              }
+            ]
           }
         }
       },
@@ -2901,6 +3207,21 @@
           },
           "displayName": {
             "type": "string"
+          }
+        }
+      },
+      "ExternalProfilePrefillResponse": {
+        "required": ["email", "firstName", "lastName"],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": ["null", "string"]
+          },
+          "firstName": {
+            "type": ["null", "string"]
+          },
+          "lastName": {
+            "type": ["null", "string"]
           }
         }
       },
@@ -2998,8 +3319,13 @@
             "type": "string"
           },
           "name": {
+            "maxLength": 100,
             "type": ["null", "string"]
           }
+        },
+        "example": {
+          "credentialJson": "{\"id\":\"credential-id\",\"rawId\":\"...\",\"type\":\"public-key\",\"response\":{\"clientDataJSON\":\"...\",\"attestationObject\":\"...\"}}",
+          "name": "iPhone 15"
         }
       },
       "PasskeyRenameRequest": {
@@ -3007,8 +3333,12 @@
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 100,
             "type": "string"
           }
+        },
+        "example": {
+          "name": "MacBook Pro (work)"
         }
       },
       "ProblemDetails": {
@@ -3036,16 +3366,24 @@
           }
         }
       },
-      "ProcessCallbackResult": {
-        "required": ["userId", "isNewUser"],
+      "RegisterExternalRequest": {
+        "required": ["token", "email"],
         "type": "object",
         "properties": {
-          "userId": {
-            "type": "string",
-            "format": "uuid"
+          "token": {
+            "type": "string"
           },
-          "isNewUser": {
-            "type": "boolean"
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "firstName": {
+            "maxLength": 256,
+            "type": ["null", "string"]
+          },
+          "lastName": {
+            "maxLength": 256,
+            "type": ["null", "string"]
           }
         }
       },
@@ -3054,6 +3392,7 @@
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 256,
             "type": "string"
           },
           "multiTenancySides": {
@@ -3064,6 +3403,7 @@
             "format": "uuid"
           },
           "description": {
+            "maxLength": 2048,
             "type": ["null", "string"]
           }
         }
@@ -3120,24 +3460,18 @@
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 256,
             "type": "string"
           },
           "description": {
+            "maxLength": 2048,
             "type": ["null", "string"]
           }
         }
       },
       "TwoFactorMethod": {
-        "enum": ["Authenticator", "RecoveryCode", "Email"]
-      },
-      "AccountTwoFactorEmailEnableRequest": {
-        "required": ["code"],
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string"
-          }
-        }
+        "enum": ["Authenticator", "RecoveryCode", "Email"],
+        "default": "Authenticator"
       }
     }
   },

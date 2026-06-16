@@ -5,6 +5,7 @@
 /** Request body for `POST /change-email`. */
 export interface AccountChangeEmailRequest {
   readonly newEmail: string;
+  readonly currentPassword: string;
 }
 
 /** Request body for `POST /confirm-email-change`. */

@@ -11,10 +11,11 @@ describe('account-email-api', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
 
-      await changeEmail(client, BASE, { newEmail: 'new@example.com' });
+      await changeEmail(client, BASE, { newEmail: 'new@example.com', currentPassword: 'pw' });
 
       expect(client.post).toHaveBeenCalledWith(`${BASE}/change-email`, {
         newEmail: 'new@example.com',
+        currentPassword: 'pw',
       });
     });
   });

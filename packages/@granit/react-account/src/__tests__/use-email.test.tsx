@@ -48,12 +48,13 @@ describe('useChangeEmail', () => {
       wrapper: createWrapper(client),
     });
 
-    result.current.mutate({ newEmail: 'new@example.com' });
+    result.current.mutate({ newEmail: 'new@example.com', currentPassword: 'pw' });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(changeEmail).toHaveBeenCalledWith(client, '/api/v1/account', {
       newEmail: 'new@example.com',
+      currentPassword: 'pw',
     });
   });
 
@@ -65,7 +66,7 @@ describe('useChangeEmail', () => {
       wrapper: createWrapper(client),
     });
 
-    result.current.mutate({ newEmail: 'new@example.com' });
+    result.current.mutate({ newEmail: 'new@example.com', currentPassword: 'pw' });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
     expect(result.current.error?.message).toBe('Service Unavailable');
