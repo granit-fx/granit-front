@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { HttpError, TimeoutError, ValidationError } from '../errors';
+import {
+  ConcurrencyConflictError,
+  HttpError,
+  isConcurrencyConflict,
+  TimeoutError,
+  ValidationError,
+} from '../errors';
 
 describe('HttpError', () => {
   it('should set name, message, and status', () => {
@@ -41,6 +47,40 @@ describe('ValidationError', () => {
     const error = new ValidationError('Validation failed', details);
 
     expect(error.details).toEqual(details);
+  });
+});
+
+describe('ConcurrencyConflictError', () => {
+  it('is an HttpError fixed to status 409', () => {
+    const details = { title: 'Conflict', status: 409, detail: 'Stale stamp' };
+    const error = new ConcurrencyConflictError('Resource changed', details);
+
+    expect(error).toBeInstanceOf(HttpError);
+    expect(error.name).toBe('ConcurrencyConflictError');
+    expect(error.status).toBe(409);
+    expect(error.problemDetails).toEqual(details);
+  });
+});
+
+describe('isConcurrencyConflict', () => {
+  it('matches a ConcurrencyConflictError', () => {
+    expect(isConcurrencyConflict(new ConcurrencyConflictError('x'))).toBe(true);
+  });
+
+  it('matches an HttpError with status 409', () => {
+    expect(isConcurrencyConflict(new HttpError('Conflict', 409))).toBe(true);
+    expect(isConcurrencyConflict(new HttpError('Not Found', 404))).toBe(false);
+  });
+
+  it('matches a raw Axios-shaped error with response status 409', () => {
+    expect(isConcurrencyConflict({ response: { status: 409 } })).toBe(true);
+    expect(isConcurrencyConflict({ response: { status: 400 } })).toBe(false);
+  });
+
+  it('is false for unrelated values', () => {
+    expect(isConcurrencyConflict(null)).toBe(false);
+    expect(isConcurrencyConflict(new Error('boom'))).toBe(false);
+    expect(isConcurrencyConflict('409')).toBe(false);
   });
 });
 

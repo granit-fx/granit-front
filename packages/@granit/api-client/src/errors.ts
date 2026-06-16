@@ -19,7 +19,7 @@
  * ```
  */
 export class HttpError extends Error {
-  override readonly name = 'HttpError';
+  override readonly name: string = 'HttpError';
 
   /** HTTP status code (e.g. 400, 404, 500). */
   readonly status: number;
@@ -31,6 +31,48 @@ export class HttpError extends Error {
     this.status = status;
     this.problemDetails = problemDetails;
   }
+}
+
+/**
+ * Optimistic-concurrency conflict (HTTP 409).
+ *
+ * Thrown when a write is rejected because the resource changed since the client
+ * read it. Granit's framework convention is a body-field concurrency stamp
+ * (`IConcurrencyStampRequest`): the `*Response` carries `concurrencyStamp`, the
+ * `Update*Request` echoes it back, and a stale stamp surfaces as a `409`
+ * (`DbUpdateConcurrencyException` → `EfCoreExceptionStatusCodeMapper`). There is
+ * no `If-Match`/`412` mechanism.
+ *
+ * @example
+ * ```ts
+ * try {
+ *   await updateTag(client, basePath, id, { ...form, concurrencyStamp });
+ * } catch (err) {
+ *   if (isConcurrencyConflict(err)) {
+ *     // refetch the resource, re-apply the user's edits onto the fresh stamp,
+ *     // then resubmit — or surface a "someone else changed this" prompt.
+ *   }
+ * }
+ * ```
+ */
+export class ConcurrencyConflictError extends HttpError {
+  override readonly name = 'ConcurrencyConflictError';
+
+  constructor(message: string, problemDetails?: ProblemDetailsPayload) {
+    super(message, 409, problemDetails);
+  }
+}
+
+/**
+ * Type guard: did this error come from an optimistic-concurrency conflict (409)?
+ * Matches a {@link ConcurrencyConflictError}, an {@link HttpError} with status
+ * 409, or a raw Axios error whose response status is 409 — so it works whether
+ * the caller mapped the error or let the bare Axios error propagate.
+ */
+export function isConcurrencyConflict(error: unknown): boolean {
+  if (error instanceof HttpError) return error.status === 409;
+  const response = (error as { response?: { status?: number } } | null)?.response;
+  return response?.status === 409;
 }
 
 /**

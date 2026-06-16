@@ -260,21 +260,6 @@
           "members": []
         },
         {
-          "name": "HttpError",
-          "kind": "class",
-          "signature": "class HttpError extends Error"
-        },
-        {
-          "name": "TimeoutError",
-          "kind": "class",
-          "signature": "class TimeoutError extends Error"
-        },
-        {
-          "name": "ValidationError",
-          "kind": "class",
-          "signature": "class ValidationError extends Error"
-        },
-        {
           "name": "ProblemDetailsPayload",
           "kind": "interface",
           "signature": "interface ProblemDetailsPayload",
@@ -285,21 +270,6 @@
           "kind": "interface",
           "signature": "interface ValidationDetails",
           "members": []
-        },
-        {
-          "name": "isIdempotencyTombstoned",
-          "kind": "function",
-          "signature": "function isIdempotencyTombstoned(error: unknown): boolean"
-        },
-        {
-          "name": "readIdempotencyTombstone",
-          "kind": "function",
-          "signature": "function readIdempotencyTombstone(error: unknown): IdempotencyTombstoneInfo | undefined"
-        },
-        {
-          "name": "isIdempotentReplay",
-          "kind": "function",
-          "signature": "function isIdempotentReplay(responseOrError: unknown): boolean"
         },
         {
           "name": "IdempotencyTombstoneInfo",

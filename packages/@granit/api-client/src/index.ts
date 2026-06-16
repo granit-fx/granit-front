@@ -283,11 +283,21 @@ export function buildApiUrl(basePath: string, ...segments: string[]): string {
 // Domain error classes
 // ---------------------------------------------------------------------------
 
-export { HttpError, TimeoutError, ValidationError } from './errors';
+export {
+  ConcurrencyConflictError,
+  HttpError,
+  isConcurrencyConflict,
+  TimeoutError,
+  ValidationError,
+} from './errors';
 export type { ProblemDetailsPayload, ValidationDetails } from './errors';
 
 // Idempotency tombstone + replay helpers — see ./idempotency.ts.
-export { isIdempotencyTombstoned, readIdempotencyTombstone, isIdempotentReplay } from './idempotency';
+export {
+  isIdempotencyTombstoned,
+  readIdempotencyTombstone,
+  isIdempotentReplay,
+} from './idempotency';
 export type { IdempotencyTombstoneInfo } from './idempotency';
 
 // ---------------------------------------------------------------------------
