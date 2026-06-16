@@ -4,14 +4,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { buildAdminQueryKey, useAdminConfig } from '../providers/openiddict-admin-provider';
 
 import type {
-  AdminOidcScope,
-  AdminOidcScopeCreateRequest,
-  AdminOidcScopeUpdateRequest,
+  AdminOidcScopeResponse,
+  AdminOidcCreateScopeRequest,
+  AdminOidcUpdateScopeRequest,
 } from '@granit/openiddict-admin';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /** Fetches all OIDC scopes. */
-export function useOidcScopes(): UseQueryResult<readonly AdminOidcScope[]> {
+export function useOidcScopes(): UseQueryResult<readonly AdminOidcScopeResponse[]> {
   const config = useAdminConfig();
 
   return useQuery({
@@ -22,15 +22,15 @@ export function useOidcScopes(): UseQueryResult<readonly AdminOidcScope[]> {
 
 /** Creates an OIDC scope. Invalidates scopes on success. */
 export function useCreateOidcScope(): UseMutationResult<
-  AdminOidcScope,
+  AdminOidcScopeResponse,
   Error,
-  AdminOidcScopeCreateRequest
+  AdminOidcCreateScopeRequest
 > {
   const config = useAdminConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (request: AdminOidcScopeCreateRequest) =>
+    mutationFn: (request: AdminOidcCreateScopeRequest) =>
       createScope(config.client, config.basePath!, request),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -42,9 +42,9 @@ export function useCreateOidcScope(): UseMutationResult<
 
 /** Updates an OIDC scope. Invalidates scopes on success. */
 export function useUpdateOidcScope(): UseMutationResult<
-  AdminOidcScope,
+  AdminOidcScopeResponse,
   Error,
-  { scopeName: string; request: AdminOidcScopeUpdateRequest }
+  { scopeName: string; request: AdminOidcUpdateScopeRequest }
 > {
   const config = useAdminConfig();
   const queryClient = useQueryClient();

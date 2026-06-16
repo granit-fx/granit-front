@@ -7,7 +7,7 @@ import { useListboxNavigation } from '../hooks/use-listbox-navigation';
 import { useLookup } from '../hooks/use-lookup';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { LookupDescriptor, LookupItem } from '@granit/data-lookup';
+import type { LookupDescriptor, LookupItemResponse } from '@granit/data-lookup';
 import type { KeyboardEvent, ReactElement } from 'react';
 
 /** Render-prop signature for the SmartFilterBar typeahead. */
@@ -20,7 +20,7 @@ export interface LookupPickerRenderArgs {
   /** Whether the picker is in multi-select mode (e.g. the `In` filter operator). */
   readonly multi: boolean;
   /** Items matching the current search term — accumulated across pages. */
-  readonly items: readonly LookupItem[];
+  readonly items: readonly LookupItemResponse[];
   /** Total count across pages, or `null` for cursor-based sources. */
   readonly totalCount: number | null;
   readonly isLoading: boolean;

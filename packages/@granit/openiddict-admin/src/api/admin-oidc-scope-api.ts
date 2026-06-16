@@ -1,7 +1,7 @@
 import type {
-  AdminOidcScope,
-  AdminOidcScopeCreateRequest,
-  AdminOidcScopeUpdateRequest,
+  AdminOidcScopeResponse,
+  AdminOidcCreateScopeRequest,
+  AdminOidcUpdateScopeRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
@@ -15,8 +15,8 @@ import type { AxiosInstance } from '@granit/api-client';
 export async function listScopes(
   client: AxiosInstance,
   basePath: string
-): Promise<readonly AdminOidcScope[]> {
-  const { data } = await client.get<readonly AdminOidcScope[]>(`${basePath}/oidc/scopes`);
+): Promise<readonly AdminOidcScopeResponse[]> {
+  const { data } = await client.get<readonly AdminOidcScopeResponse[]>(`${basePath}/oidc/scopes`);
   return data;
 }
 
@@ -28,9 +28,9 @@ export async function listScopes(
 export async function createScope(
   client: AxiosInstance,
   basePath: string,
-  request: AdminOidcScopeCreateRequest
-): Promise<AdminOidcScope> {
-  const { data } = await client.post<AdminOidcScope>(`${basePath}/oidc/scopes`, request);
+  request: AdminOidcCreateScopeRequest
+): Promise<AdminOidcScopeResponse> {
+  const { data } = await client.post<AdminOidcScopeResponse>(`${basePath}/oidc/scopes`, request);
   return data;
 }
 
@@ -43,9 +43,9 @@ export async function updateScope(
   client: AxiosInstance,
   basePath: string,
   scopeName: string,
-  request: AdminOidcScopeUpdateRequest
-): Promise<AdminOidcScope> {
-  const { data } = await client.put<AdminOidcScope>(
+  request: AdminOidcUpdateScopeRequest
+): Promise<AdminOidcScopeResponse> {
+  const { data } = await client.put<AdminOidcScopeResponse>(
     `${basePath}/oidc/scopes/${encodeURIComponent(scopeName)}`,
     request
   );

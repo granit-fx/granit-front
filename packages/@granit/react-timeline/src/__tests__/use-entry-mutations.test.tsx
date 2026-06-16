@@ -27,7 +27,7 @@ function createWrapper(client: AxiosInstance) {
 
 describe('useAnchorEntry', () => {
   it('POSTs to the anchor endpoint and returns the entryId', async () => {
-    const entryId = toEntityId<'TimelineEntry'>('entry-42');
+    const entryId = toEntityId<'TimelineStreamEntryResponse'>('entry-42');
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValue(axiosResponse({ entryId }));
 
@@ -66,7 +66,7 @@ describe('useUpdateEntryBody', () => {
       await result.current.mutateAsync({
         entityType: 'Invoice',
         entityId: 'inv-1',
-        entryId: toEntityId<'TimelineEntry'>('entry-3'),
+        entryId: toEntityId<'TimelineStreamEntryResponse'>('entry-3'),
         body: 'updated body',
       });
     });

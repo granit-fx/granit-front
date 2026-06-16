@@ -9,23 +9,23 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { buildAdminQueryKey, useAdminConfig } from '../providers/openiddict-admin-provider';
 
 import type {
-  AdminOidcAuthorization,
-  AdminOidcAuthorizationCreateRequest,
+  AdminOidcAuthorizationResponse,
+  AdminOidcCreateAuthorizationRequest,
   AdminOidcAuthorizationListParams,
 } from '@granit/openiddict-admin';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /** Creates an OIDC authorization (admin consent grant). Invalidates authorizations on success. */
 export function useCreateOidcAuthorization(): UseMutationResult<
-  AdminOidcAuthorization,
+  AdminOidcAuthorizationResponse,
   Error,
-  AdminOidcAuthorizationCreateRequest
+  AdminOidcCreateAuthorizationRequest
 > {
   const config = useAdminConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (request: AdminOidcAuthorizationCreateRequest) =>
+    mutationFn: (request: AdminOidcCreateAuthorizationRequest) =>
       createAuthorization(config.client, config.basePath!, request),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -38,7 +38,7 @@ export function useCreateOidcAuthorization(): UseMutationResult<
 /** Fetches OIDC authorizations with optional filtering. */
 export function useOidcAuthorizations(
   params?: AdminOidcAuthorizationListParams
-): UseQueryResult<readonly AdminOidcAuthorization[]> {
+): UseQueryResult<readonly AdminOidcAuthorizationResponse[]> {
   const config = useAdminConfig();
 
   return useQuery({

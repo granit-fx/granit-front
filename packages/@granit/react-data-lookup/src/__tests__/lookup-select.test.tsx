@@ -6,17 +6,21 @@ import { describe, expect, it, vi } from 'vitest';
 import { LookupSelect } from '../components/lookup-select';
 
 import type { LookupSelectRenderArgs } from '../components/lookup-select';
-import type { LookupDescriptor, LookupItem, LookupResult } from '@granit/data-lookup';
+import type {
+  LookupDescriptor,
+  LookupItemResponse,
+  LookupResultResponse,
+} from '@granit/data-lookup';
 
 describe('<LookupSelect>', () => {
   it('renders with resolved items and selected item', async () => {
     const client = createMockClient();
-    const searchPayload: LookupResult = {
+    const searchPayload: LookupResultResponse = {
       items: [{ value: 'BE', label: 'Belgique', extra: null }],
       totalCount: 1,
       continuationToken: null,
     };
-    const resolvedItem: LookupItem = { value: 'BE', label: 'Belgique', extra: null };
+    const resolvedItem: LookupItemResponse = { value: 'BE', label: 'Belgique', extra: null };
 
     vi.mocked(client.get).mockImplementation((url) => {
       return url.includes('/resolve')

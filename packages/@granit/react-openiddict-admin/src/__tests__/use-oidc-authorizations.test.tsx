@@ -17,7 +17,7 @@ import {
 } from '../hooks/use-oidc-authorizations';
 import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider';
 
-import type { AdminOidcAuthorization } from '@granit/openiddict-admin';
+import type { AdminOidcAuthorizationResponse } from '@granit/openiddict-admin';
 
 vi.mock('@granit/openiddict-admin', () => ({
   listAuthorizations: vi.fn(),
@@ -39,7 +39,7 @@ function createWrapper() {
   };
 }
 
-const mockAuthorizations: readonly AdminOidcAuthorization[] = [
+const mockAuthorizations: readonly AdminOidcAuthorizationResponse[] = [
   {
     id: 'auth-001',
     clientId: 'guava-front',

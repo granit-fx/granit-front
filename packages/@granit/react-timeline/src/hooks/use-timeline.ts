@@ -4,7 +4,11 @@ import { useCallback, useState } from 'react';
 
 import { useTimelineConfig } from '../providers/timeline-provider';
 
-import type { TimelineEntry, TimelineEntryPage, TimelineStreamPage } from '@granit/timeline';
+import type {
+  TimelineStreamEntryResponse,
+  TimelineEntryPage,
+  TimelineStreamPage,
+} from '@granit/timeline';
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -15,7 +19,7 @@ export interface UseTimelineOptions {
 }
 
 export interface UseTimelineReturn {
-  entries: readonly TimelineEntry[];
+  entries: readonly TimelineStreamEntryResponse[];
   totalCount: number | null;
   loading: boolean;
   loadingMore: boolean;
@@ -23,7 +27,7 @@ export interface UseTimelineReturn {
   hasMore: boolean;
   loadMore: () => void;
   refresh: () => void;
-  addOptimisticEntry: (entry: TimelineEntry) => void;
+  addOptimisticEntry: (entry: TimelineStreamEntryResponse) => void;
   removeOptimisticEntry: (entryId: string) => void;
   /**
    * Patch one entry in place. The `updater` receives the matching
@@ -32,7 +36,10 @@ export interface UseTimelineReturn {
    * surgical updates (reaction toggles, edits) that should not trigger
    * a full stream refresh.
    */
-  patchEntry: (entryId: string, updater: (entry: TimelineEntry) => TimelineEntry) => void;
+  patchEntry: (
+    entryId: string,
+    updater: (entry: TimelineStreamEntryResponse) => TimelineStreamEntryResponse
+  ) => void;
   /**
    * Source keys reported degraded by the latest stream fetch. Empty
    * unless one or more registered `ITimelineSource` contributors timed
@@ -82,10 +89,10 @@ export function useTimeline({
     hasMore,
     loadMore,
     refresh,
-  } = useInfiniteScroll<TimelineEntry>({ fetcher, pageSize });
+  } = useInfiniteScroll<TimelineStreamEntryResponse>({ fetcher, pageSize });
 
   const addOptimisticEntry = useCallback(
-    (entry: TimelineEntry) => {
+    (entry: TimelineStreamEntryResponse) => {
       setEntries((prev) => [entry, ...prev]);
     },
     [setEntries]
@@ -99,7 +106,10 @@ export function useTimeline({
   );
 
   const patchEntry = useCallback(
-    (entryId: string, updater: (entry: TimelineEntry) => TimelineEntry) => {
+    (
+      entryId: string,
+      updater: (entry: TimelineStreamEntryResponse) => TimelineStreamEntryResponse
+    ) => {
       setEntries((prev) => prev.map((e) => (e.id === entryId ? updater(e) : e)));
     },
     [setEntries]

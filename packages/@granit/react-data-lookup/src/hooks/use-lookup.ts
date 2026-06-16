@@ -10,7 +10,11 @@ import { buildLookupQueryKey } from './query-keys';
 import { useDebouncedValue } from './use-debounced-value';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { LookupDescriptor, LookupItem, LookupResult } from '@granit/data-lookup';
+import type {
+  LookupDescriptor,
+  LookupItemResponse,
+  LookupResultResponse,
+} from '@granit/data-lookup';
 import type { InfiniteData } from '@tanstack/react-query';
 
 /** Default page size when the caller does not specify one. */
@@ -49,7 +53,7 @@ export interface UseLookupOptions {
 /** Shape returned by {@link useLookup}. */
 export interface UseLookupResult {
   /** Flattened items across every fetched page. */
-  readonly items: readonly LookupItem[];
+  readonly items: readonly LookupItemResponse[];
   /** Total count across pages, or `null` for cursor-based sources. */
   readonly totalCount: number | null;
   /** First page is loading (no data yet). */
@@ -123,9 +127,9 @@ export function useLookup(
   const effectiveEnabled = options.enabled === false ? false : scopeSatisfied;
 
   const query = useInfiniteQuery<
-    LookupResult,
+    LookupResultResponse,
     unknown,
-    InfiniteData<LookupResult, LookupPageParam>,
+    InfiniteData<LookupResultResponse, LookupPageParam>,
     readonly unknown[],
     LookupPageParam
   >({
@@ -147,7 +151,7 @@ export function useLookup(
     placeholderData: keepPreviousData,
   });
 
-  const items = useMemo<readonly LookupItem[]>(
+  const items = useMemo<readonly LookupItemResponse[]>(
     () => query.data?.pages.flatMap((p) => p.items) ?? [],
     [query.data]
   );
@@ -187,8 +191,8 @@ export function useLookup(
  * stops otherwise.
  */
 function nextLookupPageParam(
-  last: LookupResult,
-  pages: readonly LookupResult[]
+  last: LookupResultResponse,
+  pages: readonly LookupResultResponse[]
 ): LookupPageParam | undefined {
   if (last.continuationToken != null) {
     return { continuationToken: last.continuationToken };

@@ -7,10 +7,14 @@ import { buildLookupQueryKey } from '../hooks/query-keys';
 import { useLookup } from '../hooks/use-lookup';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { LookupDescriptor, LookupItem, LookupResult } from '@granit/data-lookup';
+import type {
+  LookupDescriptor,
+  LookupItemResponse,
+  LookupResultResponse,
+} from '@granit/data-lookup';
 
 /** Builds N sample items: `{ value: "0", label: "Item 0" }`, … */
-function sampleItems(count: number): LookupItem[] {
+function sampleItems(count: number): LookupItemResponse[] {
   return Array.from({ length: count }, (_, i) => ({
     value: String(i),
     label: `Item ${i}`,
@@ -28,7 +32,7 @@ function lastParams(client: AxiosInstance): Record<string, unknown> {
 describe('useLookup', () => {
   it('emits a search request and exposes flattened items when scope is satisfied', async () => {
     const client = createMockClient();
-    const payload: LookupResult = {
+    const payload: LookupResultResponse = {
       items: [{ value: '1', label: 'Acme', extra: null }],
       totalCount: 1,
       continuationToken: null,
@@ -72,7 +76,7 @@ describe('useLookup', () => {
         items: sampleItems(1),
         totalCount: 1,
         continuationToken: null,
-      } as LookupResult)
+      } as LookupResultResponse)
     );
 
     const { result, rerender } = renderHook(
@@ -119,7 +123,7 @@ describe('useLookup', () => {
           items: all.slice(start, start + pageSize),
           totalCount: all.length,
           continuationToken: null,
-        } as LookupResult)
+        } as LookupResultResponse)
       );
     });
 
@@ -157,7 +161,7 @@ describe('useLookup', () => {
           items: all.slice(start, end),
           totalCount: null,
           continuationToken: end < all.length ? String(end) : null,
-        } as LookupResult)
+        } as LookupResultResponse)
       );
     });
 
@@ -184,7 +188,7 @@ describe('useLookup', () => {
   it('debounces the search term so rapid keystrokes coalesce into one request', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
-      axiosResponse({ items: [], totalCount: 0, continuationToken: null } as LookupResult)
+      axiosResponse({ items: [], totalCount: 0, continuationToken: null } as LookupResultResponse)
     );
 
     const { rerender } = renderHook(

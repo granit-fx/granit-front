@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------
 
 /** OIDC application descriptor — mirrors `AdminOidcApplicationResponse`. */
-export interface AdminOidcApplication {
+export interface AdminOidcApplicationResponse {
   readonly clientId: string | null;
   readonly displayName: string | null;
   readonly type: string | null;
@@ -18,7 +18,7 @@ export interface AdminOidcApplication {
 }
 
 /** Request body for `POST /oidc/applications`. */
-export interface AdminOidcApplicationCreateRequest {
+export interface AdminOidcCreateApplicationRequest {
   readonly clientId: string;
   readonly clientSecret?: string;
   readonly displayName?: string;
@@ -34,7 +34,7 @@ export interface AdminOidcApplicationCreateRequest {
 }
 
 /** Request body for `PUT /oidc/applications/{clientId}`. All fields optional — `null` clears the field. */
-export interface AdminOidcApplicationUpdateRequest {
+export interface AdminOidcUpdateApplicationRequest {
   readonly displayName?: string | null;
   readonly type?: string | null;
   readonly permissions?: string[] | null;
@@ -48,7 +48,7 @@ export interface AdminOidcApplicationUpdateRequest {
 }
 
 /** Response from `POST /oidc/applications/{clientId}/rotate-secret`. */
-export interface AdminOidcApplicationSecretResponse {
+export interface AdminOidcRotateSecretResponse {
   readonly clientId: string;
   readonly newSecret: string;
 }

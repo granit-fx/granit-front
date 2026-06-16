@@ -7,11 +7,13 @@ import { useTimeline } from '../hooks/use-timeline';
 
 import { axiosResponse, createMockClient, createWrapper } from './test-utils.tsx';
 
-import type { TimelineEntry, TimelineEntryPage } from '@granit/timeline';
+import type { TimelineStreamEntryResponse, TimelineEntryPage } from '@granit/timeline';
 
-function makeEntry(overrides: Partial<TimelineEntry> = {}): TimelineEntry {
+function makeEntry(
+  overrides: Partial<TimelineStreamEntryResponse> = {}
+): TimelineStreamEntryResponse {
   return {
-    id: toEntityId<'TimelineEntry'>('e-1'),
+    id: toEntityId<'TimelineStreamEntryResponse'>('e-1'),
     entryType: TimelineEntryType.Comment,
     body: 'Test comment',
     authorId: toEntityId<'User'>('u-1'),
@@ -64,7 +66,7 @@ describe('useTimeline', () => {
   it('should detect hasMore when totalCount > loaded entries', async () => {
     const client = createMockClient();
     const items = Array.from({ length: 20 }, (_, i) =>
-      makeEntry({ id: toEntityId<'TimelineEntry'>(`e-${i}`) })
+      makeEntry({ id: toEntityId<'TimelineStreamEntryResponse'>(`e-${i}`) })
     );
     const page: TimelineEntryPage = { items, totalCount: 50, nextCursor: null };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(page));
@@ -84,12 +86,12 @@ describe('useTimeline', () => {
   it('should load more entries via loadMore', async () => {
     const client = createMockClient();
     const firstPage: TimelineEntryPage = {
-      items: [makeEntry({ id: toEntityId<'TimelineEntry'>('e-1') })],
+      items: [makeEntry({ id: toEntityId<'TimelineStreamEntryResponse'>('e-1') })],
       totalCount: 2,
       nextCursor: null,
     };
     const secondPage: TimelineEntryPage = {
-      items: [makeEntry({ id: toEntityId<'TimelineEntry'>('e-2'), body: 'Second' })],
+      items: [makeEntry({ id: toEntityId<'TimelineStreamEntryResponse'>('e-2'), body: 'Second' })],
       totalCount: 2,
       nextCursor: null,
     };
@@ -116,7 +118,7 @@ describe('useTimeline', () => {
   it('should add an optimistic entry at the top', async () => {
     const client = createMockClient();
     const page: TimelineEntryPage = {
-      items: [makeEntry({ id: toEntityId<'TimelineEntry'>('e-1') })],
+      items: [makeEntry({ id: toEntityId<'TimelineStreamEntryResponse'>('e-1') })],
       totalCount: 1,
       nextCursor: null,
     };
@@ -128,7 +130,10 @@ describe('useTimeline', () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
-    const optimistic = makeEntry({ id: toEntityId<'TimelineEntry'>('e-new'), body: 'Optimistic' });
+    const optimistic = makeEntry({
+      id: toEntityId<'TimelineStreamEntryResponse'>('e-new'),
+      body: 'Optimistic',
+    });
     result.current.addOptimisticEntry(optimistic);
 
     await waitFor(() => expect(result.current.entries).toHaveLength(2));
@@ -141,8 +146,8 @@ describe('useTimeline', () => {
     const client = createMockClient();
     const page: TimelineEntryPage = {
       items: [
-        makeEntry({ id: toEntityId<'TimelineEntry'>('e-1') }),
-        makeEntry({ id: toEntityId<'TimelineEntry'>('e-2') }),
+        makeEntry({ id: toEntityId<'TimelineStreamEntryResponse'>('e-1') }),
+        makeEntry({ id: toEntityId<'TimelineStreamEntryResponse'>('e-2') }),
       ],
       totalCount: 2,
       nextCursor: null,

@@ -1,6 +1,6 @@
 import { buildApiUrl } from '@granit/api-client';
 
-import type { ReactionEmoji, ReactionToggleResult } from '../types/reaction';
+import type { ReactionEmoji, ReactionToggleResponse } from '../types/reaction';
 import type { TimelineEntryId } from '../types/stream';
 import type { AxiosInstance } from '@granit/api-client';
 
@@ -31,8 +31,8 @@ export async function toggleReaction(
   basePath: string,
   entryId: TimelineEntryId,
   emoji: ReactionEmoji
-): Promise<ReactionToggleResult> {
-  const { data } = await client.post<ReactionToggleResult>(
+): Promise<ReactionToggleResponse> {
+  const { data } = await client.post<ReactionToggleResponse>(
     buildApiUrl(
       basePath,
       'entries',

@@ -8,7 +8,7 @@ import { useLookup } from '../hooks/use-lookup';
 import { DataLookupProvider, useDataLookupConfig } from '../providers/data-lookup-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { LookupItem, LookupResult } from '@granit/data-lookup';
+import type { LookupItemResponse, LookupResultResponse } from '@granit/data-lookup';
 import type { ReactNode } from 'react';
 
 /** Wraps children in a QueryClient + DataLookupProvider with the given client. */
@@ -56,7 +56,7 @@ describe('DataLookupProvider', () => {
 
   it('lets useLookup resolve the client from the provider (no client option)', async () => {
     const client = createMockClient();
-    const payload: LookupResult = {
+    const payload: LookupResultResponse = {
       items: [{ value: '1', label: 'Acme', extra: null }],
       totalCount: 1,
       continuationToken: null,
@@ -74,7 +74,7 @@ describe('DataLookupProvider', () => {
 
   it('lets a component resolve the client from the provider (no client prop)', async () => {
     const client = createMockClient();
-    const item: LookupItem = { value: 'BE', label: 'Belgique', extra: null };
+    const item: LookupItemResponse = { value: 'BE', label: 'Belgique', extra: null };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(item));
 
     const { container } = render(<LookupBadge descriptor={{ name: 'ref-country' }} value="BE" />, {

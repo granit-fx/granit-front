@@ -8,11 +8,14 @@ import {
   revokeUserAuthorizations,
 } from '../api/admin-oidc-authorization-api';
 
-import type { AdminOidcAuthorization, AdminOidcAuthorizationCreateRequest } from '../types/index';
+import type {
+  AdminOidcAuthorizationResponse,
+  AdminOidcCreateAuthorizationRequest,
+} from '../types/index';
 
 const BASE = '/admin';
 
-const mockAuthorization: AdminOidcAuthorization = {
+const mockAuthorization: AdminOidcAuthorizationResponse = {
   id: 'auth-001',
   clientId: 'my-spa',
   subject: 'user-001',
@@ -21,7 +24,7 @@ const mockAuthorization: AdminOidcAuthorization = {
   scopes: ['openid', 'profile'],
 };
 
-const mockAuthorizations: readonly AdminOidcAuthorization[] = [mockAuthorization];
+const mockAuthorizations: readonly AdminOidcAuthorizationResponse[] = [mockAuthorization];
 
 describe('admin-oidc-authorization-api', () => {
   // ── Create ────────────────────────────────────────────────────────────────
@@ -31,7 +34,7 @@ describe('admin-oidc-authorization-api', () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValueOnce({ data: mockAuthorization });
 
-      const request: AdminOidcAuthorizationCreateRequest = {
+      const request: AdminOidcCreateAuthorizationRequest = {
         subject: 'user-001',
         clientId: 'my-spa',
         scopes: ['openid', 'profile'],

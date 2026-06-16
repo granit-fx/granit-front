@@ -6,12 +6,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { LookupPicker } from '../components/lookup-picker';
 
 import type { LookupPickerRenderArgs } from '../components/lookup-picker';
-import type { LookupResult } from '@granit/data-lookup';
+import type { LookupResultResponse } from '@granit/data-lookup';
 
 describe('<LookupPicker>', () => {
   it('delivers items and multi flag to the render prop', async () => {
     const client = createMockClient();
-    const payload: LookupResult = {
+    const payload: LookupResultResponse = {
       items: [{ value: 'g1', label: 'Acme', extra: null }],
       totalCount: 1,
       continuationToken: null,
@@ -44,7 +44,7 @@ describe('<LookupPicker>', () => {
   it('defaults multi to false', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
-      axiosResponse({ items: [], totalCount: 0, continuationToken: null } as LookupResult)
+      axiosResponse({ items: [], totalCount: 0, continuationToken: null } as LookupResultResponse)
     );
 
     const renderSpy = vi.fn((_args: LookupPickerRenderArgs) => <span />);
@@ -94,7 +94,7 @@ describe('<LookupPicker>', () => {
         ],
         totalCount: 2,
         continuationToken: null,
-      } as LookupResult)
+      } as LookupResultResponse)
     );
     const onChange = vi.fn();
     const renderSpy = vi.fn((_args: LookupPickerRenderArgs) => <span />);
@@ -131,7 +131,7 @@ describe('<LookupPicker>', () => {
         items: [{ value: 'a', label: 'A', extra: null }],
         totalCount: 1,
         continuationToken: null,
-      } as LookupResult)
+      } as LookupResultResponse)
     );
     const onChange = vi.fn();
     const renderSpy = vi.fn((_args: LookupPickerRenderArgs) => <span />);

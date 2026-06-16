@@ -1,6 +1,6 @@
 import type {
-  AdminOidcAuthorization,
-  AdminOidcAuthorizationCreateRequest,
+  AdminOidcAuthorizationResponse,
+  AdminOidcCreateAuthorizationRequest,
   AdminOidcAuthorizationListParams,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
@@ -15,9 +15,9 @@ import type { AxiosInstance } from '@granit/api-client';
 export async function createAuthorization(
   client: AxiosInstance,
   basePath: string,
-  request: AdminOidcAuthorizationCreateRequest
-): Promise<AdminOidcAuthorization> {
-  const { data } = await client.post<AdminOidcAuthorization>(
+  request: AdminOidcCreateAuthorizationRequest
+): Promise<AdminOidcAuthorizationResponse> {
+  const { data } = await client.post<AdminOidcAuthorizationResponse>(
     `${basePath}/oidc/authorizations`,
     request
   );
@@ -33,8 +33,8 @@ export async function listAuthorizations(
   client: AxiosInstance,
   basePath: string,
   params?: AdminOidcAuthorizationListParams
-): Promise<readonly AdminOidcAuthorization[]> {
-  const { data } = await client.get<readonly AdminOidcAuthorization[]>(
+): Promise<readonly AdminOidcAuthorizationResponse[]> {
+  const { data } = await client.get<readonly AdminOidcAuthorizationResponse[]>(
     `${basePath}/oidc/authorizations`,
     { params }
   );

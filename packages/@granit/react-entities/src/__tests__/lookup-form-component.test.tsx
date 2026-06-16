@@ -11,11 +11,11 @@ import { STANDARD_FORM_COMPONENTS } from '../field-components/index';
 import { EntityRendererProvider } from '../providers/index';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { LookupDescriptor, LookupItem } from '@granit/data-lookup';
+import type { LookupDescriptor, LookupItemResponse } from '@granit/data-lookup';
 import type { EntityFormFieldManifest, EntityFormManifest } from '@granit/entities';
 import type { ReactNode } from 'react';
 
-const TENANTS: LookupItem[] = [
+const TENANTS: LookupItemResponse[] = [
   { value: 't-1', label: 'Acme Corp', extra: null },
   { value: 't-2', label: 'Globex', extra: null },
 ];

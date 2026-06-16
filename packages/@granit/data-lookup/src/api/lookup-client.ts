@@ -1,10 +1,10 @@
 import type {
   LookupClientOptions,
   LookupDescriptor,
-  LookupItem,
-  LookupManifest,
+  LookupItemResponse,
+  LookupManifestResponse,
   LookupQueryParams,
-  LookupResult,
+  LookupResultResponse,
 } from '../types/index';
 
 export type { LookupClientOptions };
@@ -15,11 +15,13 @@ export const DEFAULT_LOOKUP_BASE_PATH = '/lookups';
 /**
  * Fetches the discovery manifest of every registered lookup source.
  *
- * `GET {basePath}` → {@link LookupManifest}.
+ * `GET {basePath}` → {@link LookupManifestResponse}.
  */
-export async function getLookupManifest(options: LookupClientOptions): Promise<LookupManifest> {
+export async function getLookupManifest(
+  options: LookupClientOptions
+): Promise<LookupManifestResponse> {
   const { client, basePath = DEFAULT_LOOKUP_BASE_PATH, signal } = options;
-  const { data } = await client.get<LookupManifest>(basePath, { signal });
+  const { data } = await client.get<LookupManifestResponse>(basePath, { signal });
   return data;
 }
 
@@ -35,11 +37,11 @@ export async function searchLookup(
   descriptor: LookupDescriptor,
   params: LookupQueryParams,
   options: LookupClientOptions
-): Promise<LookupResult> {
+): Promise<LookupResultResponse> {
   const { client, signal } = options;
   const url = resolveLookupUrl(descriptor, options.basePath);
   const query = buildSearchQuery(descriptor, params);
-  const { data } = await client.get<LookupResult>(url, { params: query, signal });
+  const { data } = await client.get<LookupResultResponse>(url, { params: query, signal });
   return data;
 }
 
@@ -48,7 +50,7 @@ export async function searchLookup(
  * identifier into a human-readable label (e.g., when loading a form that was
  * saved with a foreign-key value).
  *
- * `GET {basePath}/{name}/resolve?value=…` → {@link LookupItem} | `null`.
+ * `GET {basePath}/{name}/resolve?value=…` → {@link LookupItemResponse} | `null`.
  *
  * Returns `null` when the value is not present in the source (HTTP 404).
  */
@@ -56,7 +58,7 @@ export async function resolveLookup(
   descriptor: LookupDescriptor,
   value: unknown,
   options: LookupClientOptions
-): Promise<LookupItem | null> {
+): Promise<LookupItemResponse | null> {
   if (value === null || value === undefined || value === '') {
     return null;
   }
@@ -66,7 +68,7 @@ export async function resolveLookup(
   const resolveUrl = `${baseUrl}/resolve`;
 
   try {
-    const { data } = await client.get<LookupItem>(resolveUrl, {
+    const { data } = await client.get<LookupItemResponse>(resolveUrl, {
       params: { value: stringifyLookupValue(value) },
       signal,
     });

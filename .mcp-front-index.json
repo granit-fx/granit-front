@@ -2174,7 +2174,7 @@
         {
           "name": "createScope",
           "kind": "function",
-          "signature": "async function createScope( client: AxiosInstance, basePath: string, request: AdminOidcScopeCreateRequest ): Promise<AdminOidcScope>"
+          "signature": "async function createScope( client: AxiosInstance, basePath: string, request: AdminOidcCreateScopeRequest ): Promise<AdminOidcScopeResponse>"
         },
         {
           "name": "deleteScope",
@@ -2184,12 +2184,12 @@
         {
           "name": "listScopes",
           "kind": "function",
-          "signature": "async function listScopes( client: AxiosInstance, basePath: string ): Promise<readonly AdminOidcScope[]>"
+          "signature": "async function listScopes( client: AxiosInstance, basePath: string ): Promise<readonly AdminOidcScopeResponse[]>"
         },
         {
           "name": "updateScope",
           "kind": "function",
-          "signature": "async function updateScope( client: AxiosInstance, basePath: string, scopeName: string, request: AdminOidcScopeUpdateRequest ): Promise<AdminOidcScope>"
+          "signature": "async function updateScope( client: AxiosInstance, basePath: string, scopeName: string, request: AdminOidcUpdateScopeRequest ): Promise<AdminOidcScopeResponse>"
         },
         {
           "name": "OpenIddictPermissions",
@@ -7320,7 +7320,7 @@
             {
               "name": "entries",
               "kind": "property",
-              "signature": "entries: readonly TimelineEntry[]"
+              "signature": "entries: readonly TimelineStreamEntryResponse[]"
             },
             {
               "name": "totalCount",
@@ -7360,7 +7360,7 @@
             {
               "name": "addOptimisticEntry",
               "kind": "method",
-              "signature": "addOptimisticEntry: (entry: TimelineEntry) => void"
+              "signature": "addOptimisticEntry: (entry: TimelineStreamEntryResponse) => void"
             },
             {
               "name": "removeOptimisticEntry",
@@ -7370,7 +7370,17 @@
             {
               "name": "patchEntry",
               "kind": "method",
-              "signature": "patchEntry: (entryId: string, updater: (entry: TimelineEntry) => TimelineEntry) => void"
+              "signature": "patchEntry: ("
+            },
+            {
+              "name": "entryId",
+              "kind": "property",
+              "signature": "entryId: string,"
+            },
+            {
+              "name": "updater",
+              "kind": "method",
+              "signature": "updater: (entry: TimelineStreamEntryResponse) => TimelineStreamEntryResponse"
             },
             {
               "name": "degradedSources",
@@ -7392,12 +7402,12 @@
         {
           "name": "useToggleReaction",
           "kind": "function",
-          "signature": "function useToggleReaction(): UseMutationResult< ReactionToggleResult, Error, ToggleReactionVariables, ToggleReactionContext >"
+          "signature": "function useToggleReaction(): UseMutationResult< ReactionToggleResponse, Error, ToggleReactionVariables, ToggleReactionContext >"
         },
         {
           "name": "applyToggleResult",
           "kind": "function",
-          "signature": "function applyToggleResult( reactions: ReactionMap | null | undefined, result: ReactionToggleResult ): ReactionMap | undefined"
+          "signature": "function applyToggleResult( reactions: ReactionMap | null | undefined, result: ReactionToggleResponse ): ReactionMap | undefined"
         },
         {
           "name": "useAnchorEntry",
@@ -7970,7 +7980,7 @@
         {
           "name": "toggleReaction",
           "kind": "function",
-          "signature": "async function toggleReaction( client: AxiosInstance, basePath: string, entryId: TimelineEntryId, emoji: ReactionEmoji ): Promise<ReactionToggleResult>"
+          "signature": "async function toggleReaction( client: AxiosInstance, basePath: string, entryId: TimelineEntryId, emoji: ReactionEmoji ): Promise<ReactionToggleResponse>"
         }
       ]
     },

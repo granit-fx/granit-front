@@ -5,12 +5,12 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { useLookupResolve } from '../hooks/use-lookup-resolve';
 
-import type { LookupItem } from '@granit/data-lookup';
+import type { LookupItemResponse } from '@granit/data-lookup';
 
 describe('useLookupResolve', () => {
   it('fetches the item when value is defined', async () => {
     const client = createMockClient();
-    const item: LookupItem = { value: 'BE', label: 'Belgium', extra: null };
+    const item: LookupItemResponse = { value: 'BE', label: 'Belgium', extra: null };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(item));
 
     const { result } = renderHook(

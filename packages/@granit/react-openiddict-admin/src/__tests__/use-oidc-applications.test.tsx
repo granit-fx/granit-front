@@ -22,8 +22,8 @@ import {
 import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider';
 
 import type {
-  AdminOidcApplication,
-  AdminOidcApplicationSecretResponse,
+  AdminOidcApplicationResponse,
+  AdminOidcRotateSecretResponse,
 } from '@granit/openiddict-admin';
 
 vi.mock('@granit/openiddict-admin', () => ({
@@ -48,7 +48,7 @@ function createWrapper() {
   };
 }
 
-const mockApp: AdminOidcApplication = {
+const mockApp: AdminOidcApplicationResponse = {
   clientId: 'guava-front',
   displayName: 'Guava Frontend',
   type: 'confidential',
@@ -61,7 +61,7 @@ const mockApp: AdminOidcApplication = {
   hasSigningKey: false,
 };
 
-const mockApps: readonly AdminOidcApplication[] = [mockApp];
+const mockApps: readonly AdminOidcApplicationResponse[] = [mockApp];
 
 describe('useOidcApplications', () => {
   it('should fetch all OIDC applications', async () => {
@@ -167,7 +167,7 @@ describe('useDeleteOidcApplication', () => {
 
 describe('useUpdateOidcApplication', () => {
   it('should update an application and invalidate applications query', async () => {
-    const updated: AdminOidcApplication = { ...mockApp, displayName: 'Guava Frontend v2' };
+    const updated: AdminOidcApplicationResponse = { ...mockApp, displayName: 'Guava Frontend v2' };
     vi.mocked(updateApplication).mockResolvedValueOnce(updated);
 
     const { wrapper, queryClient } = createWrapper();
@@ -175,13 +175,21 @@ describe('useUpdateOidcApplication', () => {
 
     const { result } = renderHook(() => useUpdateOidcApplication(), { wrapper });
 
-    result.current.mutate({ clientId: 'guava-front', request: { displayName: 'Guava Frontend v2' } });
+    result.current.mutate({
+      clientId: 'guava-front',
+      request: { displayName: 'Guava Frontend v2' },
+    });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(updateApplication).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', 'guava-front', {
-      displayName: 'Guava Frontend v2',
-    });
+    expect(updateApplication).toHaveBeenCalledWith(
+      expect.anything(),
+      '/api/v1/admin',
+      'guava-front',
+      {
+        displayName: 'Guava Frontend v2',
+      }
+    );
     expect(result.current.data).toEqual(updated);
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'oidc', 'applications'],
@@ -203,7 +211,7 @@ describe('useUpdateOidcApplication', () => {
 });
 
 describe('useRotateApplicationSecret', () => {
-  const mockSecretResponse: AdminOidcApplicationSecretResponse = {
+  const mockSecretResponse: AdminOidcRotateSecretResponse = {
     clientId: 'guava-front',
     newSecret: 'generated-secret-value',
   };

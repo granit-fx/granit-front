@@ -1,9 +1,9 @@
 import { buildApiUrl } from '@granit/api-client';
 
 import type {
-  CreateTimelineEntryRequest,
+  PostTimelineEntryRequest,
   TimelineQueryParams,
-  TimelineEntry,
+  TimelineStreamEntryResponse,
   TimelineEntryId,
   TimelineEntryPage,
   TimelineStreamPage,
@@ -67,9 +67,9 @@ export async function createEntry(
   basePath: string,
   entityType: string,
   entityId: string,
-  request: CreateTimelineEntryRequest
-): Promise<TimelineEntry> {
-  const { data } = await client.post<TimelineEntry>(
+  request: PostTimelineEntryRequest
+): Promise<TimelineStreamEntryResponse> {
+  const { data } = await client.post<TimelineStreamEntryResponse>(
     buildEntityUrl(basePath, entityType, entityId, 'entries'),
     request
   );

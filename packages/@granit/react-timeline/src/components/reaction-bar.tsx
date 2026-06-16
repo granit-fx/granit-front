@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
 
 import type {
-  ReactionAggregate,
+  ReactionAggregateResponse,
   ReactionEmoji,
   ReactionMap,
   TimelineEntryId,
@@ -71,7 +71,7 @@ export function ReactionBar({
 
   const present = Object.entries(reactions ?? {}) as unknown as readonly [
     ReactionEmoji,
-    ReactionAggregate,
+    ReactionAggregateResponse,
   ][];
 
   return (

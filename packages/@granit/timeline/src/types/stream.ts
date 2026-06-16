@@ -13,11 +13,11 @@ export type TimelineAttachmentId = EntityId<'TimelineAttachment'>;
 export type BlobId = EntityId<'Blob'>;
 
 /** Branded timeline entry identifier. */
-export type TimelineEntryId = EntityId<'TimelineEntry'>;
+export type TimelineEntryId = EntityId<'TimelineStreamEntryResponse'>;
 
 // --- API response types ---
 
-export interface TimelineAttachmentInfo {
+export interface TimelineAttachmentInfoResponse {
   readonly id: TimelineAttachmentId;
   readonly blobId: BlobId;
   readonly fileName: string;
@@ -30,7 +30,7 @@ export interface TimelineAttachmentInfo {
   readonly sizeBytes: number | string;
 }
 
-export interface TimelineEntry {
+export interface TimelineStreamEntryResponse {
   readonly id: TimelineEntryId;
   readonly entryType: TimelineEntryType;
   readonly body: string;
@@ -38,7 +38,7 @@ export interface TimelineEntry {
   readonly authorName: string | null;
   readonly parentEntryId: TimelineEntryId | null;
   readonly occurredAt: ISODateString;
-  readonly attachments: readonly TimelineAttachmentInfo[];
+  readonly attachments: readonly TimelineAttachmentInfoResponse[];
   /**
    * Aggregated reactions on this entry — dict keyed by the canonical emoji
    * glyph, carrying only emojis with at least one reactor. The backend
@@ -72,7 +72,7 @@ export interface TimelineEntry {
   readonly editedAt?: ISODateString | null;
 }
 
-export type TimelineEntryPage = PagedResult<TimelineEntry>;
+export type TimelineEntryPage = PagedResult<TimelineStreamEntryResponse>;
 
 /**
  * Stream fetch result — paged entries plus the list of registered

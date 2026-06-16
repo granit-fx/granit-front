@@ -44,6 +44,45 @@ export const CONTRACTS: readonly ModuleContract[] = [
     package: 'identity',
     types: ['UserSessionResponse', 'UserDeviceResponse', 'UserSessionsRevokedResponse'],
   },
+  // ─── Suffix-aligned modules (front DTOs renamed to mirror the spec schema) ──
+  // These packages previously dropped the Response/Request suffix; aligned to
+  // the universal convention (name === spec schema) so they are oracle-checked
+  // without a name-map.
+  {
+    slug: 'data-lookup',
+    package: 'data-lookup',
+    // TODO(contract): LookupManifestEntryResponse deferred — `kind` is a string
+    // enum backend-side but an object front-side (type-family mismatch).
+    types: ['LookupItemResponse', 'LookupResultResponse', 'LookupManifestResponse'],
+  },
+  {
+    slug: 'timeline',
+    package: 'timeline',
+    // TODO(contract): TimelineStreamEntryResponse (front-only origin/sourceKey/
+    // sourceId/editedAt + object `entryType`) and PostTimelineEntryRequest
+    // (object `entryType`) deferred — front enriches beyond the backend schema.
+    types: [
+      'ReactionAggregateResponse',
+      'ReactionToggleResponse',
+      'TimelineAttachmentInfoResponse',
+    ],
+  },
+  {
+    slug: 'openiddict',
+    package: 'openiddict-admin',
+    // TODO(contract): AdminOidcApplicationResponse (missing `deviceKind`),
+    // AdminOidcRotateSecretResponse (front newSecret vs backend displayName/
+    // newClientSecret) and AdminOidcAuthorizationResponse (subject/status/type
+    // nullability) deferred — real field drift to reconcile.
+    types: [
+      'AdminOidcCreateApplicationRequest',
+      'AdminOidcUpdateApplicationRequest',
+      'AdminOidcScopeResponse',
+      'AdminOidcCreateScopeRequest',
+      'AdminOidcUpdateScopeRequest',
+      'AdminOidcCreateAuthorizationRequest',
+    ],
+  },
   {
     slug: 'blob-storage',
     package: 'blob-storage',

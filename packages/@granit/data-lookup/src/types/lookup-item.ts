@@ -5,7 +5,7 @@ import type { LookupKind } from './lookup-descriptor';
  * server-side in the caller's `Accept-Language` culture — the frontend renders
  * it verbatim.
  */
-export interface LookupItem {
+export interface LookupItemResponse {
   /** Opaque value to submit back (GUID, code, enum name). */
   readonly value: unknown;
   /** Already-localized human-readable label. */
@@ -19,8 +19,8 @@ export interface LookupItem {
 }
 
 /** Canonical paginated response for a lookup search. */
-export interface LookupResult {
-  readonly items: readonly LookupItem[];
+export interface LookupResultResponse {
+  readonly items: readonly LookupItemResponse[];
   /** Total count across pages; `null` for cursor-based sources. Key always present on the wire. */
   readonly totalCount: number | null;
   /** Opaque token for the next page, or `null` when not supported. Key always present on the wire. */
@@ -31,7 +31,7 @@ export interface LookupResult {
  * Public metadata about a registered lookup source, returned by
  * `GET /lookups`.
  */
-export interface LookupManifestEntry {
+export interface LookupManifestEntryResponse {
   readonly name: string;
   readonly kind: LookupKind;
   /** Permission required to invoke the source, or `null` when public. Key always present on the wire. */
@@ -40,8 +40,8 @@ export interface LookupManifestEntry {
 }
 
 /** Response shape of `GET /lookups`. */
-export interface LookupManifest {
-  readonly lookups: readonly LookupManifestEntry[];
+export interface LookupManifestResponse {
+  readonly lookups: readonly LookupManifestEntryResponse[];
 }
 
 /** Query parameters passed to the lookup client. */

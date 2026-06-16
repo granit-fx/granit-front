@@ -7,7 +7,7 @@ import { ReactionBar } from '../components/reaction-bar';
 
 import type { ReactionMap, TimelineEntryId } from '@granit/timeline';
 
-const ENTRY_ID = toEntityId<'TimelineEntry'>('e-42') as TimelineEntryId;
+const ENTRY_ID = toEntityId<'TimelineStreamEntryResponse'>('e-42') as TimelineEntryId;
 const THUMBS_UP = toReactionEmoji('👍');
 const HEART = toReactionEmoji('❤️');
 

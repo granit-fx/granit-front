@@ -3,7 +3,7 @@ import type { PaginationParams } from '@granit/query-engine';
 
 // --- API request types ---
 
-export interface CreateTimelineEntryRequest {
+export interface PostTimelineEntryRequest {
   readonly entryType: TimelineEntryType;
   readonly body: string;
   readonly parentEntryId?: string;

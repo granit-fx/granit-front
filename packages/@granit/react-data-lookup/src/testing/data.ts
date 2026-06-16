@@ -7,10 +7,10 @@
 // sources instead, keeping their seed data in the app while reusing the handler
 // plumbing shipped here.
 
-import type { LookupItem, LookupManifest } from '@granit/data-lookup';
+import type { LookupItemResponse, LookupManifestResponse } from '@granit/data-lookup';
 
 /** Sample reference-data source: ISO country codes with localized-ish labels. */
-export const mockCountries: readonly LookupItem[] = [
+export const mockCountries: readonly LookupItemResponse[] = [
   { value: 'BE', label: 'Belgium', extra: null },
   { value: 'FR', label: 'France', extra: null },
   { value: 'DE', label: 'Germany', extra: null },
@@ -18,11 +18,11 @@ export const mockCountries: readonly LookupItem[] = [
 ];
 
 /** Default source map keyed by registry name. */
-export const mockLookupSources: Readonly<Record<string, readonly LookupItem[]>> = {
+export const mockLookupSources: Readonly<Record<string, readonly LookupItemResponse[]>> = {
   countries: mockCountries,
 };
 
 /** Default manifest mirroring {@link mockLookupSources}. */
-export const mockLookupManifest: LookupManifest = {
+export const mockLookupManifest: LookupManifestResponse = {
   lookups: [{ name: 'countries', kind: 'ReferenceData', requiredPermission: null, scopeKeys: [] }],
 };

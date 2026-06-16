@@ -7,9 +7,9 @@ import { DEFAULT_BASE_PATH } from '../constants';
 import { mockTimelineEntries } from './data';
 
 import type {
-  ReactionAggregate,
+  ReactionAggregateResponse,
   ReactionEmoji,
-  TimelineEntry,
+  TimelineStreamEntryResponse,
   TimelineEntryPage,
 } from '@granit/timeline';
 
@@ -19,7 +19,7 @@ import type {
  * @param baseUrl - API base path (default: `/api/v1/timeline`)
  */
 export function createTimelineHandlers(baseUrl = DEFAULT_BASE_PATH) {
-  let entries: TimelineEntry[] = [...mockTimelineEntries];
+  let entries: TimelineStreamEntryResponse[] = [...mockTimelineEntries];
 
   return [
     // GET /:entityType/:entityId — paginated stream
@@ -43,18 +43,20 @@ export function createTimelineHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // POST /:entityType/:entityId/entries — add a new entry
     http.post(`${baseUrl}/:entityType/:entityId/entries`, async ({ request }) => {
       const body = (await request.json()) as {
-        entryType: TimelineEntry['entryType'];
+        entryType: TimelineStreamEntryResponse['entryType'];
         body: string;
         parentEntryId?: string;
       };
 
-      const entry: TimelineEntry = {
-        id: toEntityId<'TimelineEntry'>(`tl-${Date.now()}`),
+      const entry: TimelineStreamEntryResponse = {
+        id: toEntityId<'TimelineStreamEntryResponse'>(`tl-${Date.now()}`),
         entryType: body.entryType,
         body: body.body,
         authorId: toEntityId<'User'>('admin-001'),
         authorName: 'System Admin',
-        parentEntryId: body.parentEntryId ? toEntityId<'TimelineEntry'>(body.parentEntryId) : null,
+        parentEntryId: body.parentEntryId
+          ? toEntityId<'TimelineStreamEntryResponse'>(body.parentEntryId)
+          : null,
         occurredAt: toISODateString(new Date().toISOString()),
         attachments: [],
       };
@@ -86,7 +88,7 @@ export function createTimelineHandlers(baseUrl = DEFAULT_BASE_PATH) {
         sourceId: string;
       };
       // Deterministic stub id — real backend derives a v5 GUID from tenant+coords.
-      const stubId = toEntityId<'TimelineEntry'>(`anchor-${sourceKey}-${sourceId}`);
+      const stubId = toEntityId<'TimelineStreamEntryResponse'>(`anchor-${sourceKey}-${sourceId}`);
       return HttpResponse.json({ entryId: stubId });
     }),
 
@@ -101,7 +103,7 @@ export function createTimelineHandlers(baseUrl = DEFAULT_BASE_PATH) {
 
       entries = entries.map((e) => {
         if (e.id !== entryId) return e;
-        const reactions: Partial<Record<ReactionEmoji, ReactionAggregate>> = {
+        const reactions: Partial<Record<ReactionEmoji, ReactionAggregateResponse>> = {
           ...(e.reactions ?? {}),
         };
         const existing = reactions[emoji];

@@ -1,7 +1,7 @@
 import type {
-  AdminOidcApplication,
-  AdminOidcAuthorization,
-  AdminOidcScope,
+  AdminOidcApplicationResponse,
+  AdminOidcAuthorizationResponse,
+  AdminOidcScopeResponse,
   AdminUser,
 } from '@granit/openiddict-admin';
 import type { Mutable } from '@granit/testing';
@@ -44,7 +44,7 @@ export const mockAdminUsers: Mutable<AdminUser>[] = [
 // OIDC Applications
 // ---------------------------------------------------------------------------
 
-export const mockOidcApplications: Mutable<AdminOidcApplication>[] = [
+export const mockOidcApplications: Mutable<AdminOidcApplicationResponse>[] = [
   {
     clientId: 'granit-showcase-admin',
     displayName: 'Granit Showcase Admin',
@@ -75,7 +75,7 @@ export const mockOidcApplications: Mutable<AdminOidcApplication>[] = [
 // OIDC Scopes
 // ---------------------------------------------------------------------------
 
-export const mockOidcScopes: Mutable<AdminOidcScope>[] = [
+export const mockOidcScopes: Mutable<AdminOidcScopeResponse>[] = [
   {
     name: 'openid',
     displayName: 'OpenID',
@@ -101,7 +101,7 @@ export const mockOidcScopes: Mutable<AdminOidcScope>[] = [
 // OIDC Authorizations
 // ---------------------------------------------------------------------------
 
-export const mockOidcAuthorizations: Mutable<AdminOidcAuthorization>[] = [
+export const mockOidcAuthorizations: Mutable<AdminOidcAuthorizationResponse>[] = [
   {
     id: 'auth_01HZ9KQX0000000000001',
     clientId: 'granit-showcase-admin',

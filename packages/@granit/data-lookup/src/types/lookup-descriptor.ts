@@ -14,12 +14,12 @@ export type LookupKind = 'QueryEngine' | 'Simple' | 'ReferenceData' | 'Enum';
  * - `name`: resolved against the central `/lookups/{name}` registry
  *   (preferred).
  * - `endpoint`: absolute or relative URL for a bespoke source that returns the
- *   canonical {@link LookupResult} shape.
+ *   canonical {@link LookupResultResponse} shape.
  */
 export interface LookupDescriptor {
   /** Registry key of the lookup source (e.g. `"tenants"`). */
   readonly name?: string;
-  /** Custom URL when bypassing the registry. Must return {@link LookupResult}. */
+  /** Custom URL when bypassing the registry. Must return {@link LookupResultResponse}. */
   readonly endpoint?: string;
   /** Kind of backing source. */
   readonly kind?: LookupKind;

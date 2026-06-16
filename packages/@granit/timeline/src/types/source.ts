@@ -1,8 +1,8 @@
 /**
- * Where a {@link TimelineEntry} originates in the federated stream.
+ * Where a {@link TimelineStreamEntryResponse} originates in the federated stream.
  *
  * The concrete contributor name (`"auditing"`, `"workflow"`, …) lives
- * in `TimelineEntry.sourceKey` as a soft string contract, so new
+ * in `TimelineStreamEntryResponse.sourceKey` as a soft string contract, so new
  * contributors can plug in without bumping this enum. Mirror of
  * `Granit.Timeline.TimelineEntryOrigin` on the backend.
  */

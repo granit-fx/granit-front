@@ -5,12 +5,12 @@
 // Types
 export type {
   LookupDescriptor,
-  LookupItem,
+  LookupItemResponse,
   LookupKind,
-  LookupManifest,
-  LookupManifestEntry,
+  LookupManifestResponse,
+  LookupManifestEntryResponse,
   LookupQueryParams,
-  LookupResult,
+  LookupResultResponse,
 } from './types/index';
 
 // HTTP client

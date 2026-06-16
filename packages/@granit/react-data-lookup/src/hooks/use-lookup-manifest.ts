@@ -9,7 +9,7 @@ import { useOptionalDataLookupConfig } from '../providers/data-lookup-provider';
 import { buildLookupManifestQueryKey } from './query-keys';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { LookupManifest, LookupManifestEntry } from '@granit/data-lookup';
+import type { LookupManifestResponse, LookupManifestEntryResponse } from '@granit/data-lookup';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /** Default staleTime — the manifest is registry-stable, so cache it generously. */
@@ -36,15 +36,15 @@ export interface UseLookupManifestOptions {
 }
 
 /** Shape returned by {@link useLookupManifest}. */
-export type UseLookupManifestResult = UseQueryResult<LookupManifest> & {
+export type UseLookupManifestResult = UseQueryResult<LookupManifestResponse> & {
   /** Every registered source (unfiltered). */
-  readonly lookups: readonly LookupManifestEntry[];
+  readonly lookups: readonly LookupManifestEntryResponse[];
   /** Sources the current user may use, per the `hasPermission` predicate. */
-  readonly accessibleLookups: readonly LookupManifestEntry[];
+  readonly accessibleLookups: readonly LookupManifestEntryResponse[];
   /** Whether the named source exists AND the user holds its required permission. */
   readonly canUse: (name: string) => boolean;
   /** Returns the manifest entry for a name, or `undefined`. */
-  readonly getEntry: (name: string) => LookupManifestEntry | undefined;
+  readonly getEntry: (name: string) => LookupManifestEntryResponse | undefined;
 };
 
 /**
@@ -64,19 +64,19 @@ export function useLookupManifest(options: UseLookupManifestOptions = {}): UseLo
   const basePath = options.basePath ?? config?.basePath;
   const { hasPermission, staleTime, enabled } = options;
 
-  const query = useQuery<LookupManifest>({
+  const query = useQuery<LookupManifestResponse>({
     queryKey: buildLookupManifestQueryKey(basePath),
     queryFn: ({ signal }) => getLookupManifest({ client, basePath, signal }),
     staleTime: staleTime ?? DEFAULT_MANIFEST_STALE_TIME_MS,
     enabled: enabled !== false,
   });
 
-  const lookups = useMemo<readonly LookupManifestEntry[]>(
+  const lookups = useMemo<readonly LookupManifestEntryResponse[]>(
     () => query.data?.lookups ?? [],
     [query.data]
   );
 
-  const accessibleLookups = useMemo<readonly LookupManifestEntry[]>(() => {
+  const accessibleLookups = useMemo<readonly LookupManifestEntryResponse[]>(() => {
     if (!hasPermission) return lookups;
     return lookups.filter(
       (entry) => entry.requiredPermission == null || hasPermission(entry.requiredPermission)

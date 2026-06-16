@@ -1,20 +1,20 @@
 export type {
-  AdminOidcApplication,
-  AdminOidcApplicationCreateRequest,
-  AdminOidcApplicationSecretResponse,
-  AdminOidcApplicationUpdateRequest,
+  AdminOidcApplicationResponse,
+  AdminOidcCreateApplicationRequest,
+  AdminOidcRotateSecretResponse,
+  AdminOidcUpdateApplicationRequest,
 } from './admin-oidc-application';
 
 export type {
-  AdminOidcAuthorization,
-  AdminOidcAuthorizationCreateRequest,
+  AdminOidcAuthorizationResponse,
+  AdminOidcCreateAuthorizationRequest,
   AdminOidcAuthorizationListParams,
 } from './admin-oidc-authorization';
 
 export type {
-  AdminOidcScope,
-  AdminOidcScopeCreateRequest,
-  AdminOidcScopeUpdateRequest,
+  AdminOidcScopeResponse,
+  AdminOidcCreateScopeRequest,
+  AdminOidcUpdateScopeRequest,
 } from './admin-oidc-scope';
 
 export type {

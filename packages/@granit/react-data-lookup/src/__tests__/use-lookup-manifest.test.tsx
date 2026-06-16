@@ -5,9 +5,9 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { useLookupManifest } from '../hooks/use-lookup-manifest';
 
-import type { LookupManifest } from '@granit/data-lookup';
+import type { LookupManifestResponse } from '@granit/data-lookup';
 
-const manifest: LookupManifest = {
+const manifest: LookupManifestResponse = {
   lookups: [
     { name: 'countries', kind: 'ReferenceData', requiredPermission: null, scopeKeys: [] },
     { name: 'tenants', kind: 'QueryEngine', requiredPermission: 'Tenant.Read', scopeKeys: [] },

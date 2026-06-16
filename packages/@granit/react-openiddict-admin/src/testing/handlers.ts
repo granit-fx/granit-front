@@ -13,10 +13,10 @@ import {
 } from './data';
 
 import type {
-  AdminOidcApplication,
-  AdminOidcAuthorizationCreateRequest,
-  AdminOidcScope,
-  AdminOidcScopeUpdateRequest,
+  AdminOidcApplicationResponse,
+  AdminOidcCreateAuthorizationRequest,
+  AdminOidcScopeResponse,
+  AdminOidcUpdateScopeRequest,
 } from '@granit/openiddict-admin';
 import type { QueryMetadata } from '@granit/query-engine';
 
@@ -382,7 +382,7 @@ export function createOpenIddictAdminHandlers(
     }),
 
     http.post(`${baseUrl}/oidc/applications`, async ({ request }) => {
-      const body = (await request.json()) as Partial<AdminOidcApplication>;
+      const body = (await request.json()) as Partial<AdminOidcApplicationResponse>;
       const newApp: (typeof mockOidcApplications)[number] = {
         clientId: body.clientId ?? `client-${String(mockOidcApplications.length)}`,
         displayName: body.displayName ?? null,
@@ -402,7 +402,7 @@ export function createOpenIddictAdminHandlers(
     http.put(`${baseUrl}/oidc/applications/:clientId`, async ({ params, request }) => {
       const idx = mockOidcApplications.findIndex((a) => a.clientId === params.clientId);
       if (idx === -1) return notFound();
-      const body = (await request.json()) as Partial<AdminOidcApplication>;
+      const body = (await request.json()) as Partial<AdminOidcApplicationResponse>;
       const existing = mockOidcApplications[idx] as (typeof mockOidcApplications)[number];
       const updated: (typeof mockOidcApplications)[number] = {
         clientId: existing.clientId,
@@ -441,7 +441,7 @@ export function createOpenIddictAdminHandlers(
     http.get(`${baseUrl}/oidc/scopes`, () => HttpResponse.json(mockOidcScopes)),
 
     http.post(`${baseUrl}/oidc/scopes`, async ({ request }) => {
-      const body = (await request.json()) as Partial<AdminOidcScope>;
+      const body = (await request.json()) as Partial<AdminOidcScopeResponse>;
       const newScope: (typeof mockOidcScopes)[number] = {
         name: body.name ?? `scope-${String(mockOidcScopes.length)}`,
         displayName: body.displayName ?? null,
@@ -455,7 +455,7 @@ export function createOpenIddictAdminHandlers(
     http.put(`${baseUrl}/oidc/scopes/:name`, async ({ params, request }) => {
       const scope = mockOidcScopes.find((s) => s.name === params.name);
       if (!scope) return notFound();
-      const body = (await request.json()) as AdminOidcScopeUpdateRequest;
+      const body = (await request.json()) as AdminOidcUpdateScopeRequest;
       if (body.displayName !== undefined) scope.displayName = body.displayName;
       if (body.description !== undefined) scope.description = body.description;
       if (body.resources !== undefined) scope.resources = body.resources ?? [];
@@ -472,7 +472,7 @@ export function createOpenIddictAdminHandlers(
     // ── OIDC Authorizations ───────────────────────────────────────────────────
 
     http.post(`${baseUrl}/oidc/authorizations`, async ({ request }) => {
-      const body = (await request.json()) as AdminOidcAuthorizationCreateRequest;
+      const body = (await request.json()) as AdminOidcCreateAuthorizationRequest;
       const app = mockOidcApplications.find((a) => a.clientId === body.clientId);
       if (!app) return notFound();
       const newAuth = {

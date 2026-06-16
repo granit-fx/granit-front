@@ -11,8 +11,8 @@ import { TimelineProvider } from '../providers/timeline-provider';
 
 import type {
   ReactionMap,
-  ReactionToggleResult,
-  TimelineEntry,
+  ReactionToggleResponse,
+  TimelineStreamEntryResponse,
   TimelineEntryId,
   TimelineEntryPage,
 } from '@granit/timeline';
@@ -20,15 +20,15 @@ import type { ISODateString } from '@granit/types';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
-const ENTRY_ID = toEntityId<'TimelineEntry'>('e-1') as TimelineEntryId;
-const OTHER_ENTRY_ID = toEntityId<'TimelineEntry'>('e-99') as TimelineEntryId;
+const ENTRY_ID = toEntityId<'TimelineStreamEntryResponse'>('e-1') as TimelineEntryId;
+const OTHER_ENTRY_ID = toEntityId<'TimelineStreamEntryResponse'>('e-99') as TimelineEntryId;
 
 const THUMBS_UP = toReactionEmoji('👍');
 const HEART = toReactionEmoji('❤️');
 const TADA = toReactionEmoji('🎉');
 const EYES = toReactionEmoji('👀');
 
-function makeEntry(id: TimelineEntryId, reactions?: ReactionMap): TimelineEntry {
+function makeEntry(id: TimelineEntryId, reactions?: ReactionMap): TimelineStreamEntryResponse {
   return {
     id,
     entryType: TimelineEntryType.Comment,
@@ -42,16 +42,16 @@ function makeEntry(id: TimelineEntryId, reactions?: ReactionMap): TimelineEntry 
   };
 }
 
-function makePage(items: readonly TimelineEntry[]): TimelineEntryPage {
+function makePage(items: readonly TimelineStreamEntryResponse[]): TimelineEntryPage {
   return { items, totalCount: items.length, nextCursor: null };
 }
 
 function makeToggleResult(
   entryId: string,
-  emoji: ReactionToggleResult['emoji'],
+  emoji: ReactionToggleResponse['emoji'],
   count: number,
   byCurrentUser: boolean
-): ReactionToggleResult {
+): ReactionToggleResponse {
   return { entryId, emoji, count, currentUserHasReacted: byCurrentUser };
 }
 
@@ -124,8 +124,8 @@ describe('useToggleReaction — optimistic update', () => {
     const initial = makePage([makeEntry(ENTRY_ID), makeEntry(OTHER_ENTRY_ID)]);
     queryClient.setQueryData(['timeline', 'Quote', 'q-1'], initial);
 
-    let resolveNetwork: (value: ReactionToggleResult) => void = () => {};
-    const networkPromise = new Promise<ReactionToggleResult>((resolve) => {
+    let resolveNetwork: (value: ReactionToggleResponse) => void = () => {};
+    const networkPromise = new Promise<ReactionToggleResponse>((resolve) => {
       resolveNetwork = resolve;
     });
     vi.mocked(client.post).mockImplementation(
@@ -185,10 +185,10 @@ describe('useToggleReaction — optimistic update', () => {
   });
 });
 
-describe('useToggleReaction — bare TimelineEntry in cache', () => {
+describe('useToggleReaction — bare TimelineStreamEntryResponse in cache', () => {
   afterEach(() => vi.restoreAllMocks());
 
-  it('patches a bare TimelineEntry (not wrapped in a page) when its id matches', async () => {
+  it('patches a bare TimelineStreamEntryResponse (not wrapped in a page) when its id matches', async () => {
     const { client, queryClient, wrapper } = createHarness();
     const bareEntry = makeEntry(ENTRY_ID);
     queryClient.setQueryData(['timeline', 'Quote', 'q-1'], bareEntry);
@@ -207,11 +207,15 @@ describe('useToggleReaction — bare TimelineEntry in cache', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    const entry = queryClient.getQueryData<TimelineEntry>(['timeline', 'Quote', 'q-1']);
+    const entry = queryClient.getQueryData<TimelineStreamEntryResponse>([
+      'timeline',
+      'Quote',
+      'q-1',
+    ]);
     expect(entry?.reactions?.[THUMBS_UP]).toBeDefined();
   });
 
-  it('leaves a bare TimelineEntry unchanged when its id does not match', async () => {
+  it('leaves a bare TimelineStreamEntryResponse unchanged when its id does not match', async () => {
     const { client, queryClient, wrapper } = createHarness();
     const otherEntry = makeEntry(OTHER_ENTRY_ID);
     queryClient.setQueryData(['timeline', 'Quote', 'q-1'], otherEntry);
@@ -230,7 +234,11 @@ describe('useToggleReaction — bare TimelineEntry in cache', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    const entry = queryClient.getQueryData<TimelineEntry>(['timeline', 'Quote', 'q-1']);
+    const entry = queryClient.getQueryData<TimelineStreamEntryResponse>([
+      'timeline',
+      'Quote',
+      'q-1',
+    ]);
     expect(entry?.reactions).toBeUndefined();
   });
 });
@@ -244,11 +252,15 @@ describe('useToggleReaction — scoped invalidation', () => {
     queryClient.setQueryData(['timeline', 'Quote', 'q-1'], makePage([makeEntry(ENTRY_ID)]));
     queryClient.setQueryData(
       ['timeline', 'Quote', 'q-2'],
-      makePage([makeEntry(toEntityId<'TimelineEntry'>('e-other-1') as TimelineEntryId)])
+      makePage([
+        makeEntry(toEntityId<'TimelineStreamEntryResponse'>('e-other-1') as TimelineEntryId),
+      ])
     );
     queryClient.setQueryData(
       ['timeline', 'Party', 'p-7'],
-      makePage([makeEntry(toEntityId<'TimelineEntry'>('e-other-2') as TimelineEntryId)])
+      makePage([
+        makeEntry(toEntityId<'TimelineStreamEntryResponse'>('e-other-2') as TimelineEntryId),
+      ])
     );
     queryClient.setQueryData(['unrelated'], 'keep-me');
 

@@ -1,9 +1,9 @@
 export type { LookupDescriptor, LookupKind } from './lookup-descriptor';
 export type {
-  LookupItem,
-  LookupManifest,
-  LookupManifestEntry,
+  LookupItemResponse,
+  LookupManifestResponse,
+  LookupManifestEntryResponse,
   LookupQueryParams,
-  LookupResult,
+  LookupResultResponse,
 } from './lookup-item';
 export type { LookupClientOptions } from './lookup-client-options';

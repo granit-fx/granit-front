@@ -11,17 +11,17 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { buildAdminQueryKey, useAdminConfig } from '../providers/openiddict-admin-provider';
 
 import type {
-  AdminOidcApplication,
-  AdminOidcApplicationCreateRequest,
-  AdminOidcApplicationSecretResponse,
-  AdminOidcApplicationUpdateRequest,
+  AdminOidcApplicationResponse,
+  AdminOidcCreateApplicationRequest,
+  AdminOidcRotateSecretResponse,
+  AdminOidcUpdateApplicationRequest,
 } from '@granit/openiddict-admin';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /** Fetches a single OIDC application by client ID. Returns `undefined` while loading, `null` on 404. */
 export function useOidcApplication(
   clientId: string | null
-): UseQueryResult<AdminOidcApplication | null> {
+): UseQueryResult<AdminOidcApplicationResponse | null> {
   const config = useAdminConfig();
 
   return useQuery({
@@ -40,7 +40,7 @@ export function useOidcApplication(
 }
 
 /** Fetches all OIDC applications. */
-export function useOidcApplications(): UseQueryResult<readonly AdminOidcApplication[]> {
+export function useOidcApplications(): UseQueryResult<readonly AdminOidcApplicationResponse[]> {
   const config = useAdminConfig();
 
   return useQuery({
@@ -51,15 +51,15 @@ export function useOidcApplications(): UseQueryResult<readonly AdminOidcApplicat
 
 /** Creates an OIDC application. Invalidates applications on success. */
 export function useCreateOidcApplication(): UseMutationResult<
-  AdminOidcApplication,
+  AdminOidcApplicationResponse,
   Error,
-  AdminOidcApplicationCreateRequest
+  AdminOidcCreateApplicationRequest
 > {
   const config = useAdminConfig();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (request: AdminOidcApplicationCreateRequest) =>
+    mutationFn: (request: AdminOidcCreateApplicationRequest) =>
       createApplication(config.client, config.basePath!, request),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -86,9 +86,9 @@ export function useDeleteOidcApplication(): UseMutationResult<void, Error, strin
 
 /** Updates an OIDC application. Invalidates applications on success. */
 export function useUpdateOidcApplication(): UseMutationResult<
-  AdminOidcApplication,
+  AdminOidcApplicationResponse,
   Error,
-  { clientId: string; request: AdminOidcApplicationUpdateRequest }
+  { clientId: string; request: AdminOidcUpdateApplicationRequest }
 > {
   const config = useAdminConfig();
   const queryClient = useQueryClient();
@@ -106,7 +106,7 @@ export function useUpdateOidcApplication(): UseMutationResult<
 
 /** Rotates an OIDC application's client secret. */
 export function useRotateApplicationSecret(): UseMutationResult<
-  AdminOidcApplicationSecretResponse,
+  AdminOidcRotateSecretResponse,
   Error,
   string
 > {

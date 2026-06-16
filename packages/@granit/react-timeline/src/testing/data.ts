@@ -2,11 +2,11 @@ import { TimelineEntryType } from '@granit/timeline';
 import { toEntityId, toISODateString } from '@granit/types';
 
 import type { Mutable } from '@granit/testing';
-import type { TimelineEntry } from '@granit/timeline';
+import type { TimelineStreamEntryResponse } from '@granit/timeline';
 
-export const mockTimelineEntries: Mutable<TimelineEntry>[] = [
+export const mockTimelineEntries: Mutable<TimelineStreamEntryResponse>[] = [
   {
-    id: toEntityId<'TimelineEntry'>('tl-1'),
+    id: toEntityId<'TimelineStreamEntryResponse'>('tl-1'),
     entryType: TimelineEntryType.Comment,
     body: 'Account created and initial roles assigned.',
     authorId: toEntityId<'User'>('admin-001'),
@@ -16,7 +16,7 @@ export const mockTimelineEntries: Mutable<TimelineEntry>[] = [
     attachments: [],
   },
   {
-    id: toEntityId<'TimelineEntry'>('tl-2'),
+    id: toEntityId<'TimelineStreamEntryResponse'>('tl-2'),
     entryType: TimelineEntryType.InternalNote,
     body: 'Reviewed user access — confirmed granit-showcase-admin role required for project onboarding.',
     authorId: toEntityId<'User'>('admin-002'),
@@ -26,7 +26,7 @@ export const mockTimelineEntries: Mutable<TimelineEntry>[] = [
     attachments: [],
   },
   {
-    id: toEntityId<'TimelineEntry'>('tl-3'),
+    id: toEntityId<'TimelineStreamEntryResponse'>('tl-3'),
     entryType: TimelineEntryType.SystemLog,
     body: 'Role granit-showcase-readonly removed by admin.',
     authorId: toEntityId<'User'>('system'),

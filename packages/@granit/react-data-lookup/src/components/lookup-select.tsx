@@ -8,7 +8,7 @@ import { useLookup } from '../hooks/use-lookup';
 import { useLookupResolve } from '../hooks/use-lookup-resolve';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { LookupDescriptor, LookupItem } from '@granit/data-lookup';
+import type { LookupDescriptor, LookupItemResponse } from '@granit/data-lookup';
 import type { KeyboardEvent, ReactElement } from 'react';
 
 /** Render-prop signature for custom UIs. Callers bring their own combobox primitive. */
@@ -22,9 +22,9 @@ export interface LookupSelectRenderArgs {
   /** Setter for the selected value. Accepts `null` to clear. */
   readonly onChange: (next: unknown) => void;
   /** Currently selected item, resolved via the /resolve endpoint. */
-  readonly selectedItem: LookupItem | null;
+  readonly selectedItem: LookupItemResponse | null;
   /** Items for the dropdown — accumulated across every fetched page. */
-  readonly items: readonly LookupItem[];
+  readonly items: readonly LookupItemResponse[];
   /** Total count across pages, or `null` for cursor-based sources. */
   readonly totalCount: number | null;
   /** First page is loading (no data yet). */

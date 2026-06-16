@@ -6,19 +6,19 @@ import { toggleReaction } from '../api/reaction-api';
 import { TimelinePermissions } from '../permissions';
 import { toReactionEmoji } from '../utils/reaction-utils';
 
-import type { ReactionToggleResult } from '../types/reaction';
+import type { ReactionToggleResponse } from '../types/reaction';
 import type { TimelineEntryId } from '../types/stream';
 import type { AxiosInstance } from 'axios';
 
 const BASE_PATH = '/api/v1/timeline';
-const ENTRY_ID: TimelineEntryId = toEntityId<'TimelineEntry'>('e-42');
+const ENTRY_ID: TimelineEntryId = toEntityId<'TimelineStreamEntryResponse'>('e-42');
 
 const THUMBS_UP = toReactionEmoji('👍');
 const HEART = toReactionEmoji('❤️');
 const ROCKET = toReactionEmoji('🚀');
 const ZWJ_FAMILY = toReactionEmoji('👨‍👩‍👧');
 
-const SAMPLE_RESULT: ReactionToggleResult = {
+const SAMPLE_RESULT: ReactionToggleResponse = {
   entryId: ENTRY_ID,
   emoji: THUMBS_UP,
   count: 3,
@@ -44,7 +44,7 @@ describe('toggleReaction', () => {
   });
 
   it('returns the post-toggle aggregate — caller patches its cache from this payload', async () => {
-    const heartResult: ReactionToggleResult = {
+    const heartResult: ReactionToggleResponse = {
       entryId: ENTRY_ID,
       emoji: HEART,
       count: 1,

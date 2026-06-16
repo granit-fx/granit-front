@@ -24,7 +24,7 @@ export type ReactionEmoji = string & { readonly __reactionEmoji: unique symbol }
  * only carries emojis with at least one reaction, so an entry with
  * zero reactions has `reactions` either undefined or `{}`.
  */
-export interface ReactionAggregate {
+export interface ReactionAggregateResponse {
   /** Distinct users who reacted with this emoji. */
   readonly count: number;
   /** True when the authenticated caller is among the reactors. */
@@ -45,13 +45,13 @@ export interface ReactionAggregate {
  * `ReactionEmoji` brand is erased at runtime so the record key is just
  * the literal emoji glyph.
  */
-export type ReactionMap = Readonly<Partial<Record<ReactionEmoji, ReactionAggregate>>>;
+export type ReactionMap = Readonly<Partial<Record<ReactionEmoji, ReactionAggregateResponse>>>;
 
 /**
  * Post-toggle authoritative state for a single (entry, emoji) pair,
  * returned by `POST /entries/{entryId}/reactions/{emoji}`.
  */
-export interface ReactionToggleResult {
+export interface ReactionToggleResponse {
   readonly entryId: string;
   readonly emoji: ReactionEmoji;
   readonly count: number;

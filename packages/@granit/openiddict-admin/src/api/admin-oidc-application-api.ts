@@ -1,8 +1,8 @@
 import type {
-  AdminOidcApplication,
-  AdminOidcApplicationCreateRequest,
-  AdminOidcApplicationSecretResponse,
-  AdminOidcApplicationUpdateRequest,
+  AdminOidcApplicationResponse,
+  AdminOidcCreateApplicationRequest,
+  AdminOidcRotateSecretResponse,
+  AdminOidcUpdateApplicationRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
@@ -16,8 +16,8 @@ import type { AxiosInstance } from '@granit/api-client';
 export async function listApplications(
   client: AxiosInstance,
   basePath: string
-): Promise<readonly AdminOidcApplication[]> {
-  const { data } = await client.get<readonly AdminOidcApplication[]>(
+): Promise<readonly AdminOidcApplicationResponse[]> {
+  const { data } = await client.get<readonly AdminOidcApplicationResponse[]>(
     `${basePath}/oidc/applications`
   );
   return data;
@@ -32,8 +32,8 @@ export async function getApplication(
   client: AxiosInstance,
   basePath: string,
   clientId: string
-): Promise<AdminOidcApplication> {
-  const { data } = await client.get<AdminOidcApplication>(
+): Promise<AdminOidcApplicationResponse> {
+  const { data } = await client.get<AdminOidcApplicationResponse>(
     `${basePath}/oidc/applications/${encodeURIComponent(clientId)}`
   );
   return data;
@@ -63,9 +63,9 @@ export async function getApplicationInfo(
 export async function createApplication(
   client: AxiosInstance,
   basePath: string,
-  request: AdminOidcApplicationCreateRequest
-): Promise<AdminOidcApplication> {
-  const { data } = await client.post<AdminOidcApplication>(
+  request: AdminOidcCreateApplicationRequest
+): Promise<AdminOidcApplicationResponse> {
+  const { data } = await client.post<AdminOidcApplicationResponse>(
     `${basePath}/oidc/applications`,
     request
   );
@@ -94,9 +94,9 @@ export async function updateApplication(
   client: AxiosInstance,
   basePath: string,
   clientId: string,
-  request: AdminOidcApplicationUpdateRequest
-): Promise<AdminOidcApplication> {
-  const { data } = await client.put<AdminOidcApplication>(
+  request: AdminOidcUpdateApplicationRequest
+): Promise<AdminOidcApplicationResponse> {
+  const { data } = await client.put<AdminOidcApplicationResponse>(
     `${basePath}/oidc/applications/${encodeURIComponent(clientId)}`,
     request
   );
@@ -112,8 +112,8 @@ export async function rotateApplicationSecret(
   client: AxiosInstance,
   basePath: string,
   clientId: string
-): Promise<AdminOidcApplicationSecretResponse> {
-  const { data } = await client.post<AdminOidcApplicationSecretResponse>(
+): Promise<AdminOidcRotateSecretResponse> {
+  const { data } = await client.post<AdminOidcRotateSecretResponse>(
     `${basePath}/oidc/applications/${encodeURIComponent(clientId)}/rotate-secret`
   );
   return data;

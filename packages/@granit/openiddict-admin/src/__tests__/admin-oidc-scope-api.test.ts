@@ -3,11 +3,11 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { createScope, deleteScope, listScopes, updateScope } from '../api/admin-oidc-scope-api';
 
-import type { AdminOidcScope } from '../types/index';
+import type { AdminOidcScopeResponse } from '../types/index';
 
 const BASE = '/admin';
 
-const mockScope: AdminOidcScope = {
+const mockScope: AdminOidcScopeResponse = {
   name: 'api',
   displayName: 'API Access',
   description: null,
@@ -58,7 +58,7 @@ describe('admin-oidc-scope-api', () => {
   describe('updateScope', () => {
     it('sends PUT to /oidc/scopes/{scopeName} with request body', async () => {
       const client = createMockClient();
-      const updated: AdminOidcScope = { ...mockScope, displayName: 'Updated API Access' };
+      const updated: AdminOidcScopeResponse = { ...mockScope, displayName: 'Updated API Access' };
       vi.mocked(client.put).mockResolvedValueOnce({ data: updated });
 
       const result = await updateScope(client, BASE, 'api', {

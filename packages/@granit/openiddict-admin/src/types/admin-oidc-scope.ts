@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------
 
 /** OIDC scope descriptor — mirrors `AdminOidcScopeResponse`. */
-export interface AdminOidcScope {
+export interface AdminOidcScopeResponse {
   readonly name: string | null;
   readonly displayName: string | null;
   readonly description: string | null;
@@ -11,7 +11,7 @@ export interface AdminOidcScope {
 }
 
 /** Request body for `POST /oidc/scopes`. */
-export interface AdminOidcScopeCreateRequest {
+export interface AdminOidcCreateScopeRequest {
   readonly name: string;
   readonly displayName?: string;
   readonly description?: string;
@@ -19,7 +19,7 @@ export interface AdminOidcScopeCreateRequest {
 }
 
 /** Request body for `PUT /oidc/scopes/{scopeName}`. All fields optional — `null` clears the field. */
-export interface AdminOidcScopeUpdateRequest {
+export interface AdminOidcUpdateScopeRequest {
   readonly displayName?: string | null;
   readonly description?: string | null;
   /** `null` leaves resources unchanged; `[]` clears all resources. */
@@ -27,7 +27,7 @@ export interface AdminOidcScopeUpdateRequest {
 }
 
 /** Request body for `PUT /oidc/scopes/{scopeName}`. All fields optional — `null` clears the field. */
-export interface AdminOidcScopeUpdateRequest {
+export interface AdminOidcUpdateScopeRequest {
   readonly displayName?: string | null;
   readonly description?: string | null;
 }

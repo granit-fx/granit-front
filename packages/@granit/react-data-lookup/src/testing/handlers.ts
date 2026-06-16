@@ -15,12 +15,19 @@ import { http, HttpResponse } from 'msw';
 
 import { mockLookupManifest, mockLookupSources } from './data';
 
-import type { LookupItem, LookupManifest, LookupResult } from '@granit/data-lookup';
+import type {
+  LookupItemResponse,
+  LookupManifestResponse,
+  LookupResultResponse,
+} from '@granit/data-lookup';
 
 /** A registry source: its kind is described by the manifest, its items live here. */
-export type LookupSourceMap = Readonly<Record<string, readonly LookupItem[]>>;
+export type LookupSourceMap = Readonly<Record<string, readonly LookupItemResponse[]>>;
 
-function searchItems(items: readonly LookupItem[], search: string): readonly LookupItem[] {
+function searchItems(
+  items: readonly LookupItemResponse[],
+  search: string
+): readonly LookupItemResponse[] {
   const q = search.trim().toLowerCase();
   if (!q) return items;
   return items.filter(
@@ -54,7 +61,7 @@ const CURSOR_PREFIX = 'offset:';
 export function createLookupHandlers(
   baseUrl: string = DEFAULT_LOOKUP_BASE_PATH,
   sources: LookupSourceMap = mockLookupSources,
-  manifest: LookupManifest = mockLookupManifest,
+  manifest: LookupManifestResponse = mockLookupManifest,
   options: CreateLookupHandlersOptions = {}
 ) {
   const cursorMode = options.mode === 'cursor';
@@ -77,7 +84,7 @@ export function createLookupHandlers(
           ? Number(token.slice(CURSOR_PREFIX.length))
           : 0;
         const end = start + pageSize;
-        const response: LookupResult = {
+        const response: LookupResultResponse = {
           items: matched.slice(start, end),
           totalCount: null,
           continuationToken: end < matched.length ? `${CURSOR_PREFIX}${end}` : null,
@@ -87,7 +94,7 @@ export function createLookupHandlers(
 
       const page = Number(url.searchParams.get('page') ?? 1);
       const start = (page - 1) * pageSize;
-      const response: LookupResult = {
+      const response: LookupResultResponse = {
         items: matched.slice(start, start + pageSize),
         totalCount: matched.length,
         continuationToken: null,

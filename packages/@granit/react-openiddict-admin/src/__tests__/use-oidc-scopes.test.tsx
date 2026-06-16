@@ -14,7 +14,7 @@ import {
 } from '../hooks/use-oidc-scopes';
 import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider';
 
-import type { AdminOidcScope } from '@granit/openiddict-admin';
+import type { AdminOidcScopeResponse } from '@granit/openiddict-admin';
 
 vi.mock('@granit/openiddict-admin', () => ({
   listScopes: vi.fn(),
@@ -37,14 +37,14 @@ function createWrapper() {
   };
 }
 
-const mockScope: AdminOidcScope = {
+const mockScope: AdminOidcScopeResponse = {
   name: 'api',
   displayName: 'API access',
   description: null,
   resources: ['api://my-api'],
 };
 
-const mockScopes: readonly AdminOidcScope[] = [
+const mockScopes: readonly AdminOidcScopeResponse[] = [
   mockScope,
   { name: 'openid', displayName: 'OpenID', description: null, resources: [] },
 ];
@@ -118,7 +118,7 @@ describe('useCreateOidcScope', () => {
 
 describe('useUpdateOidcScope', () => {
   it('should update a scope and invalidate scopes query', async () => {
-    const updated: AdminOidcScope = { ...mockScope, displayName: 'API access v2' };
+    const updated: AdminOidcScopeResponse = { ...mockScope, displayName: 'API access v2' };
     vi.mocked(updateScope).mockResolvedValueOnce(updated);
 
     const { wrapper, queryClient } = createWrapper();

@@ -9,7 +9,12 @@ import {
   searchLookup,
 } from '../api/lookup-client';
 
-import type { LookupDescriptor, LookupItem, LookupManifest, LookupResult } from '../types/index';
+import type {
+  LookupDescriptor,
+  LookupItemResponse,
+  LookupManifestResponse,
+  LookupResultResponse,
+} from '../types/index';
 
 describe('buildSearchQuery', () => {
   it('uses the default "search" param name', () => {
@@ -64,7 +69,7 @@ describe('buildSearchQuery', () => {
 describe('searchLookup', () => {
   it('hits /lookups/{name} by default', async () => {
     const client = createMockClient();
-    const payload: LookupResult = {
+    const payload: LookupResultResponse = {
       items: [{ value: '1', label: 'Acme', extra: null }],
       totalCount: 1,
       continuationToken: null,
@@ -81,7 +86,7 @@ describe('searchLookup', () => {
 
   it('hits the custom endpoint when descriptor.endpoint is set', async () => {
     const client = createMockClient();
-    const payload: LookupResult = { items: [], totalCount: 0, continuationToken: null };
+    const payload: LookupResultResponse = { items: [], totalCount: 0, continuationToken: null };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(payload));
 
     const descriptor: LookupDescriptor = {
@@ -117,7 +122,7 @@ describe('resolveLookup', () => {
 
   it('returns the resolved item on 200', async () => {
     const client = createMockClient();
-    const item: LookupItem = { value: 'BE', label: 'Belgique', extra: null };
+    const item: LookupItemResponse = { value: 'BE', label: 'Belgique', extra: null };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(item));
 
     const result = await resolveLookup({ name: 'ref-country' }, 'BE', { client });
@@ -155,7 +160,7 @@ describe('resolveLookup', () => {
 describe('getLookupManifest', () => {
   it('returns the discovery manifest', async () => {
     const client = createMockClient();
-    const manifest: LookupManifest = {
+    const manifest: LookupManifestResponse = {
       lookups: [{ name: 'tenants', kind: 'QueryEngine', requiredPermission: null, scopeKeys: [] }],
     };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(manifest));
@@ -171,7 +176,7 @@ describe('basePath override', () => {
   it('uses custom basePath for registry lookups', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
-      axiosResponse({ items: [], totalCount: 0, continuationToken: null } as LookupResult)
+      axiosResponse({ items: [], totalCount: 0, continuationToken: null } as LookupResultResponse)
     );
 
     await searchLookup({ name: 'tenants' }, {}, { client, basePath: '/custom/lookups' });

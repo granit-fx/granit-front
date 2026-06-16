@@ -4,19 +4,19 @@ import { useCallback, useState } from 'react';
 
 import { useTimelineConfig } from '../providers/timeline-provider';
 
-import type { CreateTimelineEntryRequest, TimelineEntry } from '@granit/timeline';
+import type { PostTimelineEntryRequest, TimelineStreamEntryResponse } from '@granit/timeline';
 
 const logger = createLogger('timeline:actions');
 
 export interface UseTimelineActionsOptions {
   entityType: string;
   entityId: string;
-  onEntryCreated?: (entry: TimelineEntry) => void;
+  onEntryCreated?: (entry: TimelineStreamEntryResponse) => void;
   onEntryDeleted?: (entryId: string) => void;
 }
 
 export interface UseTimelineActionsReturn {
-  postEntry: (request: CreateTimelineEntryRequest) => Promise<TimelineEntry>;
+  postEntry: (request: PostTimelineEntryRequest) => Promise<TimelineStreamEntryResponse>;
   removeEntry: (entryId: string) => Promise<void>;
   posting: boolean;
   deleting: boolean;
@@ -36,7 +36,7 @@ export function useTimelineActions({
   const [error, setError] = useState<Error | null>(null);
 
   const postEntry = useCallback(
-    async (request: CreateTimelineEntryRequest): Promise<TimelineEntry> => {
+    async (request: PostTimelineEntryRequest): Promise<TimelineStreamEntryResponse> => {
       setPosting(true);
       setError(null);
 

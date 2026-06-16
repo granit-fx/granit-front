@@ -6,8 +6,8 @@ import { buildTimelineQueryKey, useTimelineConfig } from '../providers/timeline-
 import type {
   ReactionEmoji,
   ReactionMap,
-  ReactionToggleResult,
-  TimelineEntry,
+  ReactionToggleResponse,
+  TimelineStreamEntryResponse,
   TimelineEntryId,
   TimelineEntryPage,
 } from '@granit/timeline';
@@ -50,7 +50,7 @@ interface ToggleReactionContext {
  *   the toggle immediately.
  * - `onError` restores the snapshot taken in `onMutate`.
  * - `onSuccess` writes server truth (the authoritative
- *   `ReactionToggleResult` for the toggled emoji) into the map of
+ *   `ReactionToggleResponse` for the toggled emoji) into the map of
  *   any matching cached entries, then invalidates the prefix so any
  *   in-flight subscribers refetch from authority.
  * - The prefix is `[...queryKeyPrefix, entityType, entityId]` — a
@@ -64,7 +64,7 @@ interface ToggleReactionContext {
  * Query stream cache benefit from the scoped patching out of the box.
  */
 export function useToggleReaction(): UseMutationResult<
-  ReactionToggleResult,
+  ReactionToggleResponse,
   Error,
   ToggleReactionVariables,
   ToggleReactionContext
@@ -72,38 +72,40 @@ export function useToggleReaction(): UseMutationResult<
   const config = useTimelineConfig();
   const queryClient = useQueryClient();
 
-  return useMutation<ReactionToggleResult, Error, ToggleReactionVariables, ToggleReactionContext>({
-    mutationFn: ({ entryId, emoji }) =>
-      toggleReaction(config.client, config.basePath, entryId, emoji),
+  return useMutation<ReactionToggleResponse, Error, ToggleReactionVariables, ToggleReactionContext>(
+    {
+      mutationFn: ({ entryId, emoji }) =>
+        toggleReaction(config.client, config.basePath, entryId, emoji),
 
-    onMutate: async (vars) => {
-      const prefix = streamPrefix(config, vars);
-      await queryClient.cancelQueries({ queryKey: prefix });
+      onMutate: async (vars) => {
+        const prefix = streamPrefix(config, vars);
+        await queryClient.cancelQueries({ queryKey: prefix });
 
-      const previousQueries = queryClient.getQueriesData({ queryKey: prefix });
+        const previousQueries = queryClient.getQueriesData({ queryKey: prefix });
 
-      queryClient.setQueriesData<unknown>({ queryKey: prefix }, (old: unknown) =>
-        patchEntries(old, vars.entryId, (reactions) => toggleReactionMap(reactions, vars.emoji))
-      );
+        queryClient.setQueriesData<unknown>({ queryKey: prefix }, (old: unknown) =>
+          patchEntries(old, vars.entryId, (reactions) => toggleReactionMap(reactions, vars.emoji))
+        );
 
-      return { previousQueries };
-    },
+        return { previousQueries };
+      },
 
-    onError: (_error, _vars, context) => {
-      if (!context) return;
-      for (const [key, snapshot] of context.previousQueries) {
-        queryClient.setQueryData(key, snapshot);
-      }
-    },
+      onError: (_error, _vars, context) => {
+        if (!context) return;
+        for (const [key, snapshot] of context.previousQueries) {
+          queryClient.setQueryData(key, snapshot);
+        }
+      },
 
-    onSuccess: (result, vars) => {
-      const prefix = streamPrefix(config, vars);
-      queryClient.setQueriesData<unknown>({ queryKey: prefix }, (old: unknown) =>
-        patchEntries(old, vars.entryId, (reactions) => applyToggleResult(reactions, result))
-      );
-      queryClient.invalidateQueries({ queryKey: prefix });
-    },
-  });
+      onSuccess: (result, vars) => {
+        const prefix = streamPrefix(config, vars);
+        queryClient.setQueriesData<unknown>({ queryKey: prefix }, (old: unknown) =>
+          patchEntries(old, vars.entryId, (reactions) => applyToggleResult(reactions, result))
+        );
+        queryClient.invalidateQueries({ queryKey: prefix });
+      },
+    }
+  );
 }
 
 function streamPrefix(
@@ -116,7 +118,7 @@ function streamPrefix(
 /**
  * Patch every cached entry matching `entryId` by replacing its
  * `reactions` map with `mutate(entry.reactions)`. Walks the two known
- * cache shapes (`TimelineEntryPage` + bare `TimelineEntry`); other
+ * cache shapes (`TimelineEntryPage` + bare `TimelineStreamEntryResponse`); other
  * shapes pass through unchanged.
  */
 function patchEntries(
@@ -189,7 +191,7 @@ export function toggleReactionMap(
  */
 export function applyToggleResult(
   reactions: ReactionMap | null | undefined,
-  result: ReactionToggleResult
+  result: ReactionToggleResponse
 ): ReactionMap | undefined {
   const map = reactions ?? undefined;
   if (result.count <= 0) {
@@ -217,7 +219,7 @@ function isTimelineEntryPage(value: unknown): value is TimelineEntryPage {
   );
 }
 
-function isTimelineEntry(value: unknown): value is TimelineEntry {
+function isTimelineEntry(value: unknown): value is TimelineStreamEntryResponse {
   return (
     typeof value === 'object' &&
     value !== null &&

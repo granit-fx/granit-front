@@ -9,7 +9,7 @@ export interface AdminOidcAuthorizationListParams {
 }
 
 /** OIDC authorization descriptor — mirrors `AdminOidcAuthorizationResponse`. */
-export interface AdminOidcAuthorization {
+export interface AdminOidcAuthorizationResponse {
   readonly id: string;
   readonly clientId: string | null;
   readonly subject: string;
@@ -19,7 +19,7 @@ export interface AdminOidcAuthorization {
 }
 
 /** Request body for `POST /oidc/authorizations` (admin consent grant). All fields required. */
-export interface AdminOidcAuthorizationCreateRequest {
+export interface AdminOidcCreateAuthorizationRequest {
   readonly subject: string;
   readonly clientId: string;
   readonly scopes: readonly string[];

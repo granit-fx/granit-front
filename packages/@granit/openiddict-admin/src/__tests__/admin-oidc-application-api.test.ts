@@ -9,11 +9,11 @@ import {
   updateApplication,
 } from '../api/admin-oidc-application-api';
 
-import type { AdminOidcApplication, AdminOidcApplicationSecretResponse } from '../types/index';
+import type { AdminOidcApplicationResponse, AdminOidcRotateSecretResponse } from '../types/index';
 
 const BASE = '/admin';
 
-const mockApplication: AdminOidcApplication = {
+const mockApplication: AdminOidcApplicationResponse = {
   clientId: 'my-spa',
   displayName: 'My SPA',
   type: 'public',
@@ -88,7 +88,10 @@ describe('admin-oidc-application-api', () => {
   describe('updateApplication', () => {
     it('sends PUT to /oidc/applications/{clientId} with request body', async () => {
       const client = createMockClient();
-      const updated: AdminOidcApplication = { ...mockApplication, displayName: 'Updated SPA' };
+      const updated: AdminOidcApplicationResponse = {
+        ...mockApplication,
+        displayName: 'Updated SPA',
+      };
       vi.mocked(client.put).mockResolvedValueOnce({ data: updated });
 
       const result = await updateApplication(client, BASE, 'my-spa', {
@@ -118,7 +121,7 @@ describe('admin-oidc-application-api', () => {
   describe('rotateApplicationSecret', () => {
     it('sends POST to /oidc/applications/{clientId}/rotate-secret', async () => {
       const client = createMockClient();
-      const response: AdminOidcApplicationSecretResponse = {
+      const response: AdminOidcRotateSecretResponse = {
         clientId: 'my-spa',
         newSecret: 'new-secret-value',
       };

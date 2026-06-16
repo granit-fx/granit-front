@@ -11,7 +11,7 @@ import {
 } from '../api/timeline-api';
 import { TimelineEntryType } from '../types/index';
 
-import type { CreateTimelineEntryRequest, TimelineEntryPage } from '../types/index';
+import type { PostTimelineEntryRequest, TimelineEntryPage } from '../types/index';
 import type { AxiosInstance } from 'axios';
 
 const BASE_PATH = '/api/v1/timeline';
@@ -42,7 +42,7 @@ describe('timeline API', () => {
 
   describe('createEntry', () => {
     it('should call POST /{entityType}/{entityId}/entries', async () => {
-      const request: CreateTimelineEntryRequest = {
+      const request: PostTimelineEntryRequest = {
         entryType: TimelineEntryType.Comment,
         body: 'Hello',
       };
