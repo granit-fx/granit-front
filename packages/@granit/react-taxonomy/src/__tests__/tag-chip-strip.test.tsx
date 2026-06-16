@@ -19,7 +19,7 @@ const visibleTag: TagResponse = {
   color: '#FF0000',
   hideOnEntityCard: false,
   createdAt: '2026-05-01T08:00:00Z',
-  updatedAt: '2026-05-01T08:00:00Z',
+  modifiedAt: '2026-05-01T08:00:00Z',
 };
 
 const hiddenTag: TagResponse = {
@@ -30,7 +30,7 @@ const hiddenTag: TagResponse = {
   color: '#00FF00',
   hideOnEntityCard: true,
   createdAt: '2026-05-01T08:00:00Z',
-  updatedAt: '2026-05-01T08:00:00Z',
+  modifiedAt: '2026-05-01T08:00:00Z',
 };
 
 function createWrapperFromClient(client: AxiosInstance) {

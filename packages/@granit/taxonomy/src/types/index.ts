@@ -31,9 +31,13 @@ export interface TagResponse {
   readonly name: string;
   readonly color: HexColor;
   readonly hideOnEntityCard: boolean;
-  /** Audit field — may be absent when the spec is extended; treat as informational. */
   readonly createdAt: string;
-  readonly updatedAt: string;
+  /**
+   * Last-modification timestamp; `null` until the tag is first modified
+   * (framework audit convention). For a non-null "updated at", coalesce
+   * `modifiedAt ?? createdAt` at the call site.
+   */
+  readonly modifiedAt: string | null;
 }
 
 export interface TagListFilter {
@@ -90,10 +94,7 @@ export interface CategoryResponse {
   /** `null` when no icon is assigned. */
   readonly iconName: string | null;
   readonly hideOnEntityCard: boolean;
-  /**
-   * Derived field for tree-lazy-load: true when at least one child exists.
-   * Not in the published OpenAPI spec but sent by the backend implementation.
-   */
+  /** `true` when at least one child exists — drives tree lazy-load. */
   readonly hasChildren: boolean;
 }
 

@@ -30,7 +30,7 @@ export function createTaxonomyStore(): TaxonomyStore {
         color: '#3B82F6',
         hideOnEntityCard: false,
         createdAt: now(),
-        updatedAt: now(),
+        modifiedAt: now(),
       },
       {
         id: 'tag-doc-invoice',
@@ -40,7 +40,7 @@ export function createTaxonomyStore(): TaxonomyStore {
         color: '#10B981',
         hideOnEntityCard: false,
         createdAt: now(),
-        updatedAt: now(),
+        modifiedAt: now(),
       },
       {
         id: 'tag-doc-internal',
@@ -50,7 +50,7 @@ export function createTaxonomyStore(): TaxonomyStore {
         color: '#A855F7',
         hideOnEntityCard: true,
         createdAt: now(),
-        updatedAt: now(),
+        modifiedAt: now(),
       },
       {
         id: 'tag-party-vip',
@@ -60,7 +60,7 @@ export function createTaxonomyStore(): TaxonomyStore {
         color: '#F59E0B',
         hideOnEntityCard: false,
         createdAt: now(),
-        updatedAt: now(),
+        modifiedAt: now(),
       },
       {
         id: 'tag-party-prospect',
@@ -70,7 +70,7 @@ export function createTaxonomyStore(): TaxonomyStore {
         color: '#EF4444',
         hideOnEntityCard: false,
         createdAt: now(),
-        updatedAt: now(),
+        modifiedAt: now(),
       },
     ],
     categories: [

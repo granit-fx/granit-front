@@ -1531,7 +1531,8 @@
           "path",
           "depth",
           "iconName",
-          "hideOnEntityCard"
+          "hideOnEntityCard",
+          "hasChildren"
         ],
         "type": "object",
         "properties": {
@@ -1564,6 +1565,9 @@
             "type": ["null", "string"]
           },
           "hideOnEntityCard": {
+            "type": "boolean"
+          },
+          "hasChildren": {
             "type": "boolean"
           }
         }
@@ -1814,7 +1818,16 @@
         }
       },
       "TagResponse": {
-        "required": ["id", "tenantId", "scope", "name", "color", "hideOnEntityCard"],
+        "required": [
+          "id",
+          "tenantId",
+          "scope",
+          "name",
+          "color",
+          "hideOnEntityCard",
+          "createdAt",
+          "modifiedAt"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1836,6 +1849,14 @@
           },
           "hideOnEntityCard": {
             "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
           }
         }
       },

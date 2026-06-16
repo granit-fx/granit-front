@@ -19,7 +19,7 @@ const createdTag: TagResponse = {
   color: '#94a3b8',
   hideOnEntityCard: false,
   createdAt: '2026-05-01T08:00:00Z',
-  updatedAt: '2026-05-01T08:00:00Z',
+  modifiedAt: '2026-05-01T08:00:00Z',
 };
 
 function createWrapper(client: AxiosInstance) {

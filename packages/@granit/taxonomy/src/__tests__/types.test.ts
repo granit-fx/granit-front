@@ -24,7 +24,7 @@ describe('Taxonomy types', () => {
       readonly color: HexColor;
       readonly hideOnEntityCard: boolean;
       readonly createdAt: string;
-      readonly updatedAt: string;
+      readonly modifiedAt: string | null;
     }>();
   });
 

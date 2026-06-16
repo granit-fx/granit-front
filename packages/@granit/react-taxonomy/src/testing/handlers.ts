@@ -92,7 +92,7 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
         color: body.color,
         hideOnEntityCard: body.hideOnEntityCard ?? false,
         createdAt: now(),
-        updatedAt: now(),
+        modifiedAt: now(),
       };
       store.tags.push(tag);
       return created(tag);
@@ -107,7 +107,7 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
         name: body.name ?? existing.name,
         color: (body.color ?? existing.color) as HexColor,
         hideOnEntityCard: body.hideOnEntityCard ?? existing.hideOnEntityCard,
-        updatedAt: now(),
+        modifiedAt: now(),
       };
       store.tags[idx] = next;
       return HttpResponse.json(next);

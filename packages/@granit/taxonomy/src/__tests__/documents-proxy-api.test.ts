@@ -19,7 +19,7 @@ const sampleTag: TagResponse = {
   color: '#FF0000',
   hideOnEntityCard: false,
   createdAt: '2026-05-01T08:00:00Z',
-  updatedAt: '2026-05-01T08:00:00Z',
+  modifiedAt: '2026-05-01T08:00:00Z',
 };
 
 describe('listDocumentTags', () => {

@@ -850,7 +850,8 @@
           "helpKey",
           "order",
           "readOnly",
-          "visibleIf"
+          "visibleIf",
+          "lookup"
         ],
         "type": "object",
         "properties": {
@@ -886,6 +887,16 @@
               },
               {
                 "$ref": "#/components/schemas/VisibilityCondition"
+              }
+            ]
+          },
+          "lookup": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LookupDescriptor"
               }
             ]
           },
@@ -1527,6 +1538,37 @@
       },
       "KanbanColumnState": {
         "enum": ["Open", "Collapsed", "Hidden"]
+      },
+      "LookupDescriptor": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": ["null", "string"]
+          },
+          "endpoint": {
+            "type": ["null", "string"]
+          },
+          "kind": {
+            "$ref": "#/components/schemas/LookupKind"
+          },
+          "requiredPermission": {
+            "type": ["null", "string"]
+          },
+          "searchParam": {
+            "type": ["null", "string"],
+            "default": "search"
+          },
+          "scopeKeys": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LookupKind": {
+        "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
+        "default": "QueryEngine"
       },
       "ProblemDetails": {
         "type": "object",

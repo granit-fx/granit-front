@@ -392,11 +392,11 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'CalendarItemResponse',
       'BulkActionResponse',
       'BulkActionFailure',
+      'EntityFormFieldManifest',
     ],
-    // TODO(contract): EntityFormFieldManifest deferred — front carries a `lookup`
-    // field absent from the backend schema. BulkActionRequest deferred — its
-    // `payload` is `unknown` front-side (which subsumes null) but the oracle
-    // reads a bare `unknown` as non-nullable; an oracle limitation, not a drift.
+    // TODO(contract): BulkActionRequest deferred — its `payload` is `unknown`
+    // front-side (which subsumes null) but the oracle reads a bare `unknown` as
+    // non-nullable; an oracle limitation, not a drift.
   },
   {
     slug: 'entities-customization',
@@ -419,10 +419,12 @@ export const CONTRACTS: readonly ModuleContract[] = [
   {
     slug: 'taxonomy',
     package: 'taxonomy',
-    // TODO(contract): CategoryResponse (orphan `hasChildren`), CategoryDetailResponse
-    // (missing `category`) and TagResponse (orphan `createdAt`/`updatedAt`) deferred —
-    // front fields diverge from the current backend schema.
+    // CategoryDetailResponse stays unregistered — the front intentionally
+    // flattens the wire shape ({ category: CategoryResponse, breadcrumb })
+    // into `extends CategoryResponse`, which the oracle cannot mirror.
     types: [
+      'CategoryResponse',
+      'TagResponse',
       'CategoryAssignmentResponse',
       'CreateCategoryRequest',
       'UpdateCategoryRequest',
