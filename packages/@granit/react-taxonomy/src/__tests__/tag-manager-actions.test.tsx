@@ -20,6 +20,7 @@ const tag: TagResponse = {
   hideOnEntityCard: false,
   createdAt: '2026-05-01T08:00:00Z',
   modifiedAt: '2026-05-01T08:00:00Z',
+  concurrencyStamp: 'stamp-1',
 };
 
 function createWrapper(client: AxiosInstance) {

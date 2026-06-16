@@ -30,6 +30,8 @@ export interface CustomerBalanceResponse {
   readonly balanceAccountId: string;
   readonly currency: string;
   readonly balance: number;
+  /** Optimistic-concurrency token; echo back on edit to detect conflicts (409). */
+  readonly concurrencyStamp: string;
   readonly updatedAt: string | null;
 }
 

@@ -332,6 +332,8 @@ export function createPartiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
         taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
         metadata: {},
         internalNotes: body.internalNotes ?? null,
+        createdAt: '2026-01-01T00:00:00Z',
+        modifiedAt: null,
       };
       sampleParties.push(newParty);
       return created(newParty);

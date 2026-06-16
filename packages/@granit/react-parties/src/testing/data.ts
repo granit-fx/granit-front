@@ -106,6 +106,8 @@ export const sampleParty: Mutable<PartyResponse> = {
   },
   metadata: { segment: 'enterprise', region: 'EU', tier: 'gold' },
   internalNotes: 'Strategic account — escalate billing issues to AM team.',
+  createdAt: '2026-01-01T00:00:00Z',
+  modifiedAt: null,
 };
 
 /** Alice Martin — Individual, Lead role. */
@@ -139,6 +141,8 @@ const aliceMartin: Mutable<PartyResponse> = {
   taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
   metadata: { source: 'website-form' },
   internalNotes: null,
+  createdAt: '2026-01-01T00:00:00Z',
+  modifiedAt: null,
 };
 
 /** Globex Inc — Customer, Suspended for overdue invoices. */
@@ -194,6 +198,8 @@ const globex: Mutable<PartyResponse> = {
   taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
   metadata: { segment: 'mid-market' },
   internalNotes: 'Suspended 2026-03-12 — 90+ days overdue on INV-2026-0042.',
+  createdAt: '2026-01-01T00:00:00Z',
+  modifiedAt: null,
 };
 
 /** Initech BV — Customer with intra-EU reverse-charge tax status. */
@@ -246,6 +252,8 @@ const initech: Mutable<PartyResponse> = {
   },
   metadata: {},
   internalNotes: null,
+  createdAt: '2026-01-01T00:00:00Z',
+  modifiedAt: null,
 };
 
 /** Stark Industries — Department under a parent company, Customer. */
@@ -279,6 +287,8 @@ const starkRD: Mutable<PartyResponse> = {
   taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
   metadata: { 'cost-center': 'RD-401' },
   internalNotes: null,
+  createdAt: '2026-01-01T00:00:00Z',
+  modifiedAt: null,
 };
 
 /** Bob Dupont — former Employee, Archived (terminal state). */
@@ -312,6 +322,8 @@ const bobDupont: Mutable<PartyResponse> = {
   taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
   metadata: {},
   internalNotes: 'Left the company 2025-09-30. Kept for legal retention.',
+  createdAt: '2026-01-01T00:00:00Z',
+  modifiedAt: null,
 };
 
 /** NGO Helpers — fully VAT-exempt customer (charity). */
@@ -359,6 +371,8 @@ const ngoHelpers: Mutable<PartyResponse> = {
   taxStatus: { isExempt: true, reverseCharge: false, vatin: null, evidenceBlobId: null },
   metadata: { segment: 'non-profit' },
   internalNotes: 'VAT exemption certificate on file (BE-NGO-2024-1142).',
+  createdAt: '2026-01-01T00:00:00Z',
+  modifiedAt: null,
 };
 
 /**

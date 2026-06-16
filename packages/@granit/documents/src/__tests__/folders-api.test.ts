@@ -31,6 +31,8 @@ const sampleFolder: FolderResponse = {
   depth: 1,
   ownerId: 'user-1',
   status: 'Active',
+  createdAt: '2026-05-01T10:00:00Z',
+  modifiedAt: null,
   trashedAt: null,
   permission: null,
 };

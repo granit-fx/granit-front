@@ -23,6 +23,7 @@ import type {
   ProductUpdateRequest,
   UpdateProductMetadataRequest,
 } from '@granit/catalog';
+import type { PagedResult } from '@granit/query-engine';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 // ---------------------------------------------------------------------------
@@ -30,7 +31,7 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 // ---------------------------------------------------------------------------
 
 /** Lists the active product catalog (Published status only). */
-export function useActiveProducts(): UseQueryResult<readonly ProductResponse[]> {
+export function useActiveProducts(): UseQueryResult<PagedResult<ProductResponse>> {
   const config = useCatalogConfig();
   return useQuery({
     queryKey: buildCatalogQueryKey(config, 'products', 'active'),

@@ -72,6 +72,9 @@ describe('entityTaxonomy', () => {
             name: 'legal',
             depth: 0,
             hasChildren: false,
+            createdAt: '2026-05-01T08:00:00Z',
+            modifiedAt: null,
+            concurrencyStamp: 'stamp-1',
             breadcrumb: [
               {
                 id: 'cat-9',
@@ -81,6 +84,9 @@ describe('entityTaxonomy', () => {
                 name: 'legal',
                 depth: 0,
                 hasChildren: false,
+                createdAt: '2026-05-01T08:00:00Z',
+                modifiedAt: null,
+                concurrencyStamp: 'stamp-1',
               },
             ],
           },

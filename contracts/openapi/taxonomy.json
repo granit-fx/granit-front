@@ -1532,7 +1532,10 @@
           "depth",
           "iconName",
           "hideOnEntityCard",
-          "hasChildren"
+          "hasChildren",
+          "createdAt",
+          "modifiedAt",
+          "concurrencyStamp"
         ],
         "type": "object",
         "properties": {
@@ -1569,6 +1572,17 @@
           },
           "hasChildren": {
             "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "concurrencyStamp": {
+            "type": "string"
           }
         }
       },
@@ -1826,7 +1840,8 @@
           "color",
           "hideOnEntityCard",
           "createdAt",
-          "modifiedAt"
+          "modifiedAt",
+          "concurrencyStamp"
         ],
         "type": "object",
         "properties": {
@@ -1857,6 +1872,9 @@
           "modifiedAt": {
             "type": ["null", "string"],
             "format": "date-time"
+          },
+          "concurrencyStamp": {
+            "type": "string"
           }
         }
       },

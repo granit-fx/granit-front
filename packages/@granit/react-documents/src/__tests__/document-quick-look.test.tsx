@@ -29,6 +29,7 @@ function makeDocument(id: string, name: string): DocumentResponse {
     status: 'Active',
     ownerId: 'u',
     currentVersionId: 'v',
+    concurrencyStamp: 'stamp-1',
     sizeBytes: 1024,
     contentType: 'application/pdf',
     createdAt: '2026-05-01T10:00:00Z',

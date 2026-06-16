@@ -93,6 +93,7 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
         hideOnEntityCard: body.hideOnEntityCard ?? false,
         createdAt: now(),
         modifiedAt: now(),
+        concurrencyStamp: 'stamp-1',
       };
       store.tags.push(tag);
       return created(tag);
@@ -108,6 +109,7 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
         color: (body.color ?? existing.color) as HexColor,
         hideOnEntityCard: body.hideOnEntityCard ?? existing.hideOnEntityCard,
         modifiedAt: now(),
+        concurrencyStamp: 'stamp-1',
       };
       store.tags[idx] = next;
       return HttpResponse.json(next);
@@ -199,6 +201,9 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
         iconName: body.iconName,
         hideOnEntityCard: body.hideOnEntityCard ?? false,
         hasChildren: false,
+        createdAt: '2026-05-01T08:00:00Z',
+        modifiedAt: null,
+        concurrencyStamp: 'stamp-1',
       };
       store.categories.push(cat);
       recomputeHasChildren(body.scope, body.parentId);

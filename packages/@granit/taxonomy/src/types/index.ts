@@ -38,6 +38,8 @@ export interface TagResponse {
    * `modifiedAt ?? createdAt` at the call site.
    */
   readonly modifiedAt: string | null;
+  /** Optimistic-concurrency token; echo back on edit to detect conflicts (409). */
+  readonly concurrencyStamp: string;
 }
 
 export interface TagListFilter {
@@ -96,6 +98,11 @@ export interface CategoryResponse {
   readonly hideOnEntityCard: boolean;
   /** `true` when at least one child exists — drives tree lazy-load. */
   readonly hasChildren: boolean;
+  readonly createdAt: string;
+  /** Last-modification timestamp; `null` until first modified (coalesce `?? createdAt`). */
+  readonly modifiedAt: string | null;
+  /** Optimistic-concurrency token; echo back on edit to detect conflicts (409). */
+  readonly concurrencyStamp: string;
 }
 
 /**

@@ -110,6 +110,10 @@ export interface SubscriptionResponse {
   readonly cancelledAt: string | null;
   readonly cancellationReason: string | null;
   readonly seatCount: number;
+  /** UTC instant the subscription was created (ISO 8601). Always present. */
+  readonly createdAt: string;
+  /** Last-modification timestamp; `null` until first modified (coalesce `?? createdAt`). */
+  readonly modifiedAt: string | null;
   readonly planPriceId: string | null;
 }
 

@@ -32,6 +32,7 @@ import type {
   PaymentRefundRequest,
   PaymentTransactionResponse,
 } from '@granit/payments';
+import type { PagedResult } from '@granit/query-engine';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -42,7 +43,7 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
  * const { data: transactions } = usePaymentTransactions();
  * ```
  */
-export function usePaymentTransactions(): UseQueryResult<readonly PaymentTransactionResponse[]> {
+export function usePaymentTransactions(): UseQueryResult<PagedResult<PaymentTransactionResponse>> {
   const config = usePaymentsConfig();
   const basePath = config.basePath!;
 

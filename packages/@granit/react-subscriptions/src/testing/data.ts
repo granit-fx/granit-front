@@ -150,6 +150,8 @@ export const mockSubscriptions: Mutable<SubscriptionResponse>[] = [
     cancelledAt: null,
     cancellationReason: null,
     seatCount: 5,
+    createdAt: toISODateString('2026-03-01T00:00:00Z'),
+    modifiedAt: null,
     planPriceId: toEntityId<'PlanPrice'>('price-002-3'),
   },
   {
@@ -165,6 +167,8 @@ export const mockSubscriptions: Mutable<SubscriptionResponse>[] = [
     cancelledAt: null,
     cancellationReason: null,
     seatCount: 2,
+    createdAt: toISODateString('2026-03-01T00:00:00Z'),
+    modifiedAt: null,
     planPriceId: toEntityId<'PlanPrice'>('price-002-3'),
   },
   {
@@ -180,6 +184,8 @@ export const mockSubscriptions: Mutable<SubscriptionResponse>[] = [
     cancelledAt: null,
     cancellationReason: null,
     seatCount: 3,
+    createdAt: toISODateString('2026-03-01T00:00:00Z'),
+    modifiedAt: null,
     planPriceId: toEntityId<'PlanPrice'>('price-002-3'),
   },
   {
@@ -195,6 +201,8 @@ export const mockSubscriptions: Mutable<SubscriptionResponse>[] = [
     cancelledAt: toISODateString('2025-12-31T23:59:59Z'),
     cancellationReason: 'Migrating to new plan',
     seatCount: 10,
+    createdAt: toISODateString('2026-03-01T00:00:00Z'),
+    modifiedAt: null,
     planPriceId: toEntityId<'PlanPrice'>('price-003-1'),
   },
 ];

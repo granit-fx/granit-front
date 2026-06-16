@@ -4248,7 +4248,9 @@
           "externalMappings",
           "taxStatus",
           "metadata",
-          "internalNotes"
+          "internalNotes",
+          "createdAt",
+          "modifiedAt"
         ],
         "type": "object",
         "properties": {
@@ -4336,6 +4338,14 @@
           },
           "internalNotes": {
             "type": ["null", "string"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
           }
         }
       },

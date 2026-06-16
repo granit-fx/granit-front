@@ -480,7 +480,8 @@
           "currentUses",
           "revokedAt",
           "revocationReason",
-          "createdAt"
+          "createdAt",
+          "concurrencyStamp"
         ],
         "type": "object",
         "properties": {
@@ -517,6 +518,9 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "concurrencyStamp": {
+            "type": "string"
           }
         }
       },

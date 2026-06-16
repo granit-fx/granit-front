@@ -18,6 +18,7 @@ import type {
   CustomerBalanceResponse,
   ListBalanceTransactionsParams,
 } from '@granit/customer-balance';
+import type { PagedResult } from '@granit/query-engine';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -48,7 +49,7 @@ export function useCustomerBalance(currency: string): UseQueryResult<CustomerBal
  */
 export function useBalanceTransactions(
   params: ListBalanceTransactionsParams
-): UseQueryResult<readonly BalanceTransactionResponse[]> {
+): UseQueryResult<PagedResult<BalanceTransactionResponse>> {
   const config = useCustomerBalanceConfig();
   const basePath = config.basePath!;
 

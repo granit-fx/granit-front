@@ -168,7 +168,10 @@ export function createCustomerBalanceHandlers(baseUrl = DEFAULT_BASE_PATH) {
 
     // GET transaction history
     http.get(`${baseUrl}/transactions`, () => {
-      return HttpResponse.json(sampleTransactions);
+      return HttpResponse.json({
+        items: sampleTransactions,
+        totalCount: sampleTransactions.length,
+      });
     }),
 
     // POST admin credit

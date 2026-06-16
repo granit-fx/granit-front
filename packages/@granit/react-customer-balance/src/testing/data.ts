@@ -7,6 +7,7 @@ export const sampleBalance: Mutable<CustomerBalanceResponse> = {
   balanceAccountId: toEntityId<'BalanceAccount'>('ba_01'),
   currency: 'EUR',
   balance: 15000,
+  concurrencyStamp: 'stamp-1',
   updatedAt: toISODateString('2026-04-04T08:30:00Z'),
 };
 

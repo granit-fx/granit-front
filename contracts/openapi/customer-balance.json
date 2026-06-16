@@ -80,7 +80,7 @@
       "get": {
         "tags": ["Customer Balance"],
         "summary": "Returns paginated transaction history for the current tenant.",
-        "description": "Returns the append-only transaction ledger for the specified currency. Ordered by creation date descending (most recent first). Each entry shows the transaction type, amount, source, and optional reference.",
+        "description": "Returns the append-only transaction ledger for the specified currency. Ordered by creation date descending (most recent first). Each entry shows the transaction type, amount, source, and optional reference. The response wraps the page slice with the total count for pagination.",
         "operationId": "ListBalanceTransactions",
         "parameters": [
           {
@@ -119,10 +119,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BalanceTransactionResponse"
-                  }
+                  "$ref": "#/components/schemas/ListBalanceTransactionsResponse"
                 }
               }
             }
@@ -449,7 +446,7 @@
         }
       },
       "CustomerBalanceResponse": {
-        "required": ["balanceAccountId", "currency", "balance", "updatedAt"],
+        "required": ["balanceAccountId", "currency", "balance", "concurrencyStamp", "updatedAt"],
         "type": "object",
         "properties": {
           "balanceAccountId": {
@@ -463,6 +460,9 @@
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
             "type": ["number", "string"],
             "format": "double"
+          },
+          "concurrencyStamp": {
+            "type": "string"
           },
           "updatedAt": {
             "type": ["null", "string"],
@@ -497,6 +497,22 @@
                 "type": "string"
               }
             }
+          }
+        }
+      },
+      "ListBalanceTransactionsResponse": {
+        "required": ["items", "totalCount"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BalanceTransactionResponse"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },

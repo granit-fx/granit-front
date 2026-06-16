@@ -375,5 +375,7 @@ function makeParty(
     },
     metadata: {},
     internalNotes: null,
+    createdAt: '2026-01-01T00:00:00Z',
+    modifiedAt: null,
   };
 }

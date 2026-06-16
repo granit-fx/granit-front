@@ -30,6 +30,9 @@ const sampleCategory: CategoryResponse = {
   iconName: null,
   hideOnEntityCard: false,
   hasChildren: true,
+  createdAt: '2026-05-01T08:00:00Z',
+  modifiedAt: null,
+  concurrencyStamp: 'stamp-1',
 };
 
 const sampleAssignment: CategoryAssignmentResponse = {

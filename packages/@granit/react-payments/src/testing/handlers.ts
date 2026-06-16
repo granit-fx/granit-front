@@ -193,7 +193,10 @@ export function createPaymentsHandlers(baseUrl = DEFAULT_BASE_PATH) {
 
     // GET transactions for the current tenant
     http.get(`${baseUrl}/transactions/mine`, () => {
-      return HttpResponse.json(sampleTransactions);
+      return HttpResponse.json({
+        items: sampleTransactions,
+        totalCount: sampleTransactions.length,
+      });
     }),
 
     // GET single transaction by ID (includes refunds + disputes)

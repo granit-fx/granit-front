@@ -131,6 +131,10 @@ export interface PartyResponse {
   readonly metadata: Readonly<Record<string, string>>;
   /** Admin-only free-form notes (max 8 000 chars). NEVER store PII. */
   readonly internalNotes: string | null;
+  /** UTC instant the party was created (ISO 8601). Always present. */
+  readonly createdAt: string;
+  /** Last-modification timestamp; `null` until first modified (coalesce `?? createdAt`). */
+  readonly modifiedAt: string | null;
 }
 
 /** Lightweight summary used by list endpoints. */

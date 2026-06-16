@@ -22,6 +22,9 @@ const detail: CategoryDetailResponse = {
   iconName: null,
   hideOnEntityCard: false,
   hasChildren: false,
+  createdAt: '2026-05-01T08:00:00Z',
+  modifiedAt: null,
+  concurrencyStamp: 'stamp-1',
   breadcrumb: [
     {
       id: 'cat-1',
@@ -34,6 +37,9 @@ const detail: CategoryDetailResponse = {
       iconName: null,
       hideOnEntityCard: false,
       hasChildren: true,
+      createdAt: '2026-05-01T08:00:00Z',
+      modifiedAt: null,
+      concurrencyStamp: 'stamp-1',
     },
     {
       id: 'cat-2',
@@ -46,6 +52,9 @@ const detail: CategoryDetailResponse = {
       iconName: null,
       hideOnEntityCard: false,
       hasChildren: false,
+      createdAt: '2026-05-01T08:00:00Z',
+      modifiedAt: null,
+      concurrencyStamp: 'stamp-1',
     },
   ],
 };

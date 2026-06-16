@@ -17,6 +17,8 @@ const a: FolderResponse = {
   name: 'Contracts',
   path: '/Contracts',
   depth: 1,
+  createdAt: '2026-05-01T10:00:00Z',
+  modifiedAt: null,
   ownerId: 'user-1',
   status: 'Active',
   trashedAt: null,
@@ -30,6 +32,8 @@ const b: FolderResponse = {
   name: '2026',
   path: '/Contracts/2026',
   depth: 2,
+  createdAt: '2026-05-01T10:00:00Z',
+  modifiedAt: null,
 };
 
 function createWrapper(client: AxiosInstance) {

@@ -43,6 +43,7 @@ const sampleDocument: DocumentResponse = {
   status: 'Active',
   createdAt: '2026-05-01T10:00:00Z',
   modifiedAt: null,
+  concurrencyStamp: 'stamp-1',
   trashedAt: null,
   permission: null,
 };

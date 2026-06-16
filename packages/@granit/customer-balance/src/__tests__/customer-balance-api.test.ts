@@ -19,6 +19,7 @@ const sampleBalance: CustomerBalanceResponse = {
   balanceAccountId: 'ba-001',
   currency: 'EUR',
   balance: 150.0,
+  concurrencyStamp: 'stamp-1',
   updatedAt: '2026-04-01T10:00:00Z',
 };
 

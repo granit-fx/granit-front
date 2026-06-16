@@ -167,6 +167,7 @@ describe('UploadDropZone', () => {
       status: 'Active',
       ownerId: 'u',
       currentVersionId: 'v',
+      concurrencyStamp: 'stamp-1',
       description: null,
       trashedAt: null,
       permission: null,

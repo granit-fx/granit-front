@@ -6,6 +6,7 @@ import type {
   ListBalanceTransactionsParams,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
+import type { PagedResult } from '@granit/query-engine';
 
 /**
  * Fetch the current customer balance for a given currency.
@@ -32,8 +33,8 @@ export async function listBalanceTransactions(
   client: AxiosInstance,
   basePath: string,
   params: ListBalanceTransactionsParams
-): Promise<readonly BalanceTransactionResponse[]> {
-  const response = await client.get<readonly BalanceTransactionResponse[]>(
+): Promise<PagedResult<BalanceTransactionResponse>> {
+  const response = await client.get<PagedResult<BalanceTransactionResponse>>(
     `${basePath}/transactions`,
     { params }
   );

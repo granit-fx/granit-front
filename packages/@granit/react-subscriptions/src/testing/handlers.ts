@@ -472,6 +472,8 @@ export function createSubscriptionsHandlers(baseUrl = DEFAULT_BASE_PATH) {
         cancelledAt: null,
         cancellationReason: null,
         seatCount: 0,
+        createdAt: toISODateString('2026-03-01T00:00:00Z'),
+        modifiedAt: null,
         planPriceId: null,
       };
       mockSubscriptions.push(newSub);

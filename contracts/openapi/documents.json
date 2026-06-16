@@ -2977,7 +2977,8 @@
           "sizeBytes",
           "contentType",
           "createdAt",
-          "modifiedAt"
+          "modifiedAt",
+          "concurrencyStamp"
         ],
         "type": "object",
         "properties": {
@@ -3025,6 +3026,9 @@
           "modifiedAt": {
             "type": ["null", "string"],
             "format": "date-time"
+          },
+          "concurrencyStamp": {
+            "type": "string"
           },
           "permission": {
             "type": ["null", "string"]
@@ -3276,7 +3280,9 @@
           "depth",
           "ownerId",
           "status",
-          "trashedAt"
+          "trashedAt",
+          "createdAt",
+          "modifiedAt"
         ],
         "type": "object",
         "properties": {
@@ -3306,6 +3312,14 @@
             "type": "string"
           },
           "trashedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
             "type": ["null", "string"],
             "format": "date-time"
           },

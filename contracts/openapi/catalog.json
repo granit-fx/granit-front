@@ -17,10 +17,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ProductResponse"
-                  }
+                  "$ref": "#/components/schemas/ListProductsResponse"
                 }
               }
             }
@@ -1277,6 +1274,22 @@
       "IIntegrationEvent": {
         "type": "object",
         "description": "Marker interface for integration events (ETO — Event Transfer Object)."
+      },
+      "ListProductsResponse": {
+        "required": ["items", "totalCount"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductResponse"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
       },
       "LookupDescriptor": {
         "type": "object",

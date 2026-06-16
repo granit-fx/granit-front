@@ -17,6 +17,9 @@ const root: CategoryResponse = {
   iconName: null,
   hideOnEntityCard: false,
   hasChildren: true,
+  createdAt: '2026-05-01T08:00:00Z',
+  modifiedAt: null,
+  concurrencyStamp: 'stamp-1',
 };
 
 const leaf: CategoryResponse = {
@@ -30,6 +33,9 @@ const leaf: CategoryResponse = {
   iconName: null,
   hideOnEntityCard: false,
   hasChildren: false,
+  createdAt: '2026-05-01T08:00:00Z',
+  modifiedAt: null,
+  concurrencyStamp: 'stamp-1',
 };
 
 const detail: CategoryDetailResponse = { ...leaf, breadcrumb: [root, leaf] };

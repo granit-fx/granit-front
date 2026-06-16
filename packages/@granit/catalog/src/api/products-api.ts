@@ -8,11 +8,13 @@ import type {
   UpdateProductMetadataRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
+import type { PagedResult } from '@granit/query-engine';
 
 /**
  * Lists the active product catalog (Published status only).
  *
- * `GET {basePath}/products/active`
+ * `GET {basePath}/products/active` — returns a `{ items, totalCount }` envelope
+ * (mirrors the backend `ListProductsResponse`; structurally a `PagedResult`).
  *
  * The bare `GET {basePath}/products` route is the `Products.Manage`-gated
  * query-engine admin grid (paginated, full lifecycle) — consume it via
@@ -21,8 +23,8 @@ import type { AxiosInstance } from '@granit/api-client';
 export async function listActiveProducts(
   client: AxiosInstance,
   basePath: string
-): Promise<readonly ProductResponse[]> {
-  const { data } = await client.get<ProductResponse[]>(`${basePath}/products/active`);
+): Promise<PagedResult<ProductResponse>> {
+  const { data } = await client.get<PagedResult<ProductResponse>>(`${basePath}/products/active`);
   return data;
 }
 

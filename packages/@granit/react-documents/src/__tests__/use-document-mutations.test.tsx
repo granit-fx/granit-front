@@ -33,6 +33,7 @@ const sampleDoc: DocumentResponse = {
   description: null,
   ownerId: 'user-1',
   currentVersionId: 'ver-1',
+  concurrencyStamp: 'stamp-1',
   sizeBytes: 1024,
   contentType: 'application/pdf',
   status: 'Active',

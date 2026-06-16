@@ -46,6 +46,10 @@ export interface FolderResponse {
   readonly depth: number;
   readonly ownerId: string;
   readonly status: FolderStatus;
+  /** UTC instant the folder was created (ISO 8601). Always present. */
+  readonly createdAt: string;
+  /** UTC instant of the last change; `null` if never modified since creation. */
+  readonly modifiedAt: string | null;
   /** UTC instant the folder was trashed; `null` while active. */
   readonly trashedAt: string | null;
   /** Effective permission resolved via F6.5b; `null` when not requested. */
@@ -111,6 +115,8 @@ export interface DocumentResponse {
   readonly createdAt: string;
   /** UTC instant of the last content/metadata change; `null` if never modified since creation. */
   readonly modifiedAt: string | null;
+  /** Optimistic-concurrency token; echo back on edit to detect conflicts (409). */
+  readonly concurrencyStamp: string;
   readonly trashedAt: string | null;
   /** Effective permission resolved via F6.5; `null` when not requested. */
   readonly permission: EffectivePermissionLevel | null;
@@ -411,6 +417,8 @@ export interface PublicLinkResponse {
   readonly revokedAt: string | null;
   readonly revocationReason: string | null;
   readonly createdAt: string;
+  /** Optimistic-concurrency token; echo back on edit to detect conflicts (409). */
+  readonly concurrencyStamp: string;
 }
 
 /** Request body for `DELETE /documents/public-links/{id}`. */

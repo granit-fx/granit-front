@@ -205,7 +205,7 @@ export function createCatalogHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // GET /catalog/products/active → active catalog (Published only).
     http.get(`${baseUrl}/products/active`, () => {
       const published = products.filter((p) => p.lifecycleStatus === 'Published');
-      return HttpResponse.json(published);
+      return HttpResponse.json({ items: published, totalCount: published.length });
     }),
 
     // GET /catalog/products/{id}

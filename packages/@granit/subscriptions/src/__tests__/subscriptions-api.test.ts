@@ -71,6 +71,8 @@ const sampleSubscription: SubscriptionResponse = {
   cancelledAt: null,
   cancellationReason: null,
   seatCount: 5,
+  createdAt: '2026-03-01T00:00:00Z',
+  modifiedAt: null,
   planPriceId: 'price-1',
 };
 

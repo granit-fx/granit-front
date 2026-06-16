@@ -3482,7 +3482,9 @@
           "cancelAtPeriodEnd",
           "cancelledAt",
           "cancellationReason",
-          "seatCount"
+          "seatCount",
+          "createdAt",
+          "modifiedAt"
         ],
         "type": "object",
         "properties": {
@@ -3529,6 +3531,14 @@
           "seatCount": {
             "type": "integer",
             "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
           },
           "planPriceId": {
             "type": ["null", "string"],

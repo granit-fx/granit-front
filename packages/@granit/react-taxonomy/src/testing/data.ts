@@ -31,6 +31,7 @@ export function createTaxonomyStore(): TaxonomyStore {
         hideOnEntityCard: false,
         createdAt: now(),
         modifiedAt: now(),
+        concurrencyStamp: 'stamp-1',
       },
       {
         id: 'tag-doc-invoice',
@@ -41,6 +42,7 @@ export function createTaxonomyStore(): TaxonomyStore {
         hideOnEntityCard: false,
         createdAt: now(),
         modifiedAt: now(),
+        concurrencyStamp: 'stamp-1',
       },
       {
         id: 'tag-doc-internal',
@@ -51,6 +53,7 @@ export function createTaxonomyStore(): TaxonomyStore {
         hideOnEntityCard: true,
         createdAt: now(),
         modifiedAt: now(),
+        concurrencyStamp: 'stamp-1',
       },
       {
         id: 'tag-party-vip',
@@ -61,6 +64,7 @@ export function createTaxonomyStore(): TaxonomyStore {
         hideOnEntityCard: false,
         createdAt: now(),
         modifiedAt: now(),
+        concurrencyStamp: 'stamp-1',
       },
       {
         id: 'tag-party-prospect',
@@ -71,6 +75,7 @@ export function createTaxonomyStore(): TaxonomyStore {
         hideOnEntityCard: false,
         createdAt: now(),
         modifiedAt: now(),
+        concurrencyStamp: 'stamp-1',
       },
     ],
     categories: [
@@ -85,6 +90,9 @@ export function createTaxonomyStore(): TaxonomyStore {
         iconName: null,
         hideOnEntityCard: false,
         hasChildren: true,
+        createdAt: '2026-05-01T08:00:00Z',
+        modifiedAt: null,
+        concurrencyStamp: 'stamp-1',
       },
       {
         id: 'cat-doc-legal-contracts',
@@ -97,6 +105,9 @@ export function createTaxonomyStore(): TaxonomyStore {
         iconName: null,
         hideOnEntityCard: false,
         hasChildren: false,
+        createdAt: '2026-05-01T08:00:00Z',
+        modifiedAt: null,
+        concurrencyStamp: 'stamp-1',
       },
       {
         id: 'cat-doc-finance',
@@ -109,6 +120,9 @@ export function createTaxonomyStore(): TaxonomyStore {
         iconName: null,
         hideOnEntityCard: false,
         hasChildren: false,
+        createdAt: '2026-05-01T08:00:00Z',
+        modifiedAt: null,
+        concurrencyStamp: 'stamp-1',
       },
     ],
     tagAssignments: [],

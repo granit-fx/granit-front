@@ -20,6 +20,7 @@ const sampleLink: PublicLinkResponse = {
   scope: 'Download',
   expiresAt: '2026-07-01T00:00:00Z',
   maxUses: null,
+  concurrencyStamp: 'stamp-1',
   currentUses: 0,
   revokedAt: null,
   revocationReason: null,
@@ -59,9 +60,7 @@ describe('useDocumentPublicLinks', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith(
-      '/api/v1/documents/documents/doc-1/public-links'
-    );
+    expect(client.get).toHaveBeenCalledWith('/api/v1/documents/documents/doc-1/public-links');
     expect(result.current.data).toEqual([sampleLink]);
   });
 

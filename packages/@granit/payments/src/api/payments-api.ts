@@ -13,6 +13,7 @@ import type {
   PaymentTransactionResponse,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
+import type { PagedResult } from '@granit/query-engine';
 
 /**
  * List payment transactions belonging to the current tenant.
@@ -25,8 +26,8 @@ import type { AxiosInstance } from '@granit/api-client';
 export async function listPaymentTransactions(
   client: AxiosInstance,
   basePath: string
-): Promise<readonly PaymentTransactionResponse[]> {
-  const response = await client.get<readonly PaymentTransactionResponse[]>(
+): Promise<PagedResult<PaymentTransactionResponse>> {
+  const response = await client.get<PagedResult<PaymentTransactionResponse>>(
     `${basePath}/transactions/mine`
   );
   return response.data;
