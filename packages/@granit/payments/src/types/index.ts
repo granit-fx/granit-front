@@ -1,3 +1,5 @@
+import type { ISODateString } from '@granit/types';
+
 export type PaymentStatus =
   | 'Created'
   | 'RequiresAction'
@@ -62,8 +64,8 @@ export interface PaymentTransactionResponse {
   readonly actionUrl: string | null;
   readonly idempotencyKey: string;
   readonly failureCode: string | null;
-  readonly succeededAt: string | null;
-  readonly canceledAt: string | null;
+  readonly succeededAt: ISODateString | null;
+  readonly canceledAt: ISODateString | null;
   readonly refunds: readonly PaymentRefundResponse[];
   readonly disputes: readonly PaymentDisputeResponse[];
   readonly tenantId: string | null;
@@ -76,8 +78,8 @@ export interface PaymentRefundResponse {
   readonly status: RefundStatus;
   readonly providerRefundId: string | null;
   readonly reason: string | null;
-  readonly createdAt: string;
-  readonly completedAt: string | null;
+  readonly createdAt: ISODateString;
+  readonly completedAt: ISODateString | null;
 }
 
 export interface PaymentDisputeResponse {
@@ -87,14 +89,14 @@ export interface PaymentDisputeResponse {
   readonly reason: string;
   readonly amount: number;
   readonly currency: string;
-  readonly createdAt: string;
-  readonly resolvedAt: string | null;
+  readonly createdAt: ISODateString;
+  readonly resolvedAt: ISODateString | null;
 }
 
 export interface PaymentCheckoutSessionResponse {
   readonly url: string;
   readonly sessionId: string;
-  readonly expiresAt: string;
+  readonly expiresAt: ISODateString;
 }
 
 export interface PaymentMethodResponse {
@@ -104,7 +106,7 @@ export interface PaymentMethodResponse {
   readonly providerMethodId: string;
   readonly displayLabel: string;
   readonly isDefault: boolean;
-  readonly expiresAt: string | null;
+  readonly expiresAt: ISODateString | null;
   readonly tenantId: string | null;
 }
 

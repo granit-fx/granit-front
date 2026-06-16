@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -29,14 +30,14 @@ const sampleSubscription: SubscriptionResponse = {
   planId: 'plan-1',
   status: 'Active',
   currency: 'EUR',
-  currentPeriodStart: '2026-01-01T00:00:00Z',
-  currentPeriodEnd: '2026-02-01T00:00:00Z',
+  currentPeriodStart: toISODateString('2026-01-01T00:00:00Z'),
+  currentPeriodEnd: toISODateString('2026-02-01T00:00:00Z'),
   trialEndsAt: null,
   cancelAtPeriodEnd: false,
   cancelledAt: null,
   cancellationReason: null,
   seatCount: 5,
-  createdAt: '2026-03-01T00:00:00Z',
+  createdAt: toISODateString('2026-03-01T00:00:00Z'),
   modifiedAt: null,
   planPriceId: 'price-1',
 };

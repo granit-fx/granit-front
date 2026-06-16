@@ -1,4 +1,5 @@
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -50,8 +51,8 @@ const sampleUsage: UsageAggregateResponse = {
   id: 'agg-1',
   meterDefinitionId: 'meter-1',
   period: 'Daily',
-  periodStart: '2026-04-01T00:00:00Z',
-  periodEnd: '2026-04-02T00:00:00Z',
+  periodStart: toISODateString('2026-04-01T00:00:00Z'),
+  periodEnd: toISODateString('2026-04-02T00:00:00Z'),
   aggregatedValue: 150,
   eventCount: 30,
 };
@@ -214,8 +215,8 @@ describe('metering-api', () => {
       const client = createMockClient();
       const response = {
         meterDefinitionId: 'meter-1',
-        windowStart: '2026-04-01T00:00:00Z',
-        windowEnd: '2026-04-30T00:00:00Z',
+        windowStart: toISODateString('2026-04-01T00:00:00Z'),
+        windowEnd: toISODateString('2026-04-30T00:00:00Z'),
         eventsScanned: 1200,
         aggregatesRebuilt: 30,
         durationMilliseconds: 84,
@@ -246,8 +247,8 @@ describe('metering-api', () => {
       expect(client.get).toHaveBeenCalledWith('/metering/usage', {
         params: {
           meterId: 'meter-1',
-          periodStart: '2026-04-01T00:00:00Z',
-          periodEnd: '2026-05-01T00:00:00Z',
+          periodStart: toISODateString('2026-04-01T00:00:00Z'),
+          periodEnd: toISODateString('2026-05-01T00:00:00Z'),
         },
       });
       expect(result).toEqual(sampleUsage);
@@ -340,7 +341,7 @@ describe('metering-api', () => {
       const response = {
         eventId: 'evt-1',
         meterDefinitionId: 'meter-1',
-        deprecatedAt: '2026-04-04T12:00:00Z',
+        deprecatedAt: toISODateString('2026-04-04T12:00:00Z'),
         aggregatesRebuilt: 1,
       };
       vi.mocked(client.post).mockResolvedValue({ data: response });
@@ -377,7 +378,7 @@ const sampleMeterDefinition: MeterDefinition = {
   distinctProperty: null,
   lifecycleStatus: 'Published',
   productId: null,
-  createdAt: '2026-04-01T00:00:00Z' as ISODateString,
+  createdAt: toISODateString('2026-04-01T00:00:00Z') as ISODateString,
   createdBy: 'user-1',
   modifiedAt: null,
   modifiedBy: null,
@@ -388,8 +389,8 @@ const sampleUsageAggregate: UsageAggregate = {
   tenantId: 'tenant-1' as TenantId,
   meterDefinitionId: 'md-1',
   period: 'Daily',
-  periodStart: '2026-04-01T00:00:00Z' as ISODateString,
-  periodEnd: '2026-04-02T00:00:00Z' as ISODateString,
+  periodStart: toISODateString('2026-04-01T00:00:00Z') as ISODateString,
+  periodEnd: toISODateString('2026-04-02T00:00:00Z') as ISODateString,
   aggregatedValue: 150,
   eventCount: 30,
 };

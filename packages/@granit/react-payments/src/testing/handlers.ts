@@ -6,7 +6,7 @@ import {
 } from '@granit/query-engine';
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { created, noContent, notFound } from '@granit/testing/msw';
-import { toEntityId } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -259,7 +259,7 @@ export function createPaymentsHandlers(baseUrl = DEFAULT_BASE_PATH) {
         {
           sessionId: 'cs_mock_checkout',
           url: `https://checkout.example.com/pay?amount=${body.amount}`,
-          expiresAt: '2099-01-01T00:00:00Z',
+          expiresAt: toISODateString('2099-01-01T00:00:00Z'),
         },
         { status: 201 }
       );

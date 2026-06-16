@@ -1,4 +1,5 @@
 import { createMswServer } from '@granit/testing/msw-server';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it } from 'vitest';
 
 import { createSepaDirectDebitHandlers, mandateQueryMetadata } from '../testing/index';
@@ -45,7 +46,7 @@ describe('createSepaDirectDebitHandlers', () => {
     const response = await fetch(`${BASE}/mandates/mdt_01/confirm`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ signedAt: '2026-06-01T00:00:00Z' }),
+      body: JSON.stringify({ signedAt: toISODateString('2026-06-01T00:00:00Z') }),
     });
     expect(response.status).toBe(200);
     const body = (await response.json()) as { status: string };

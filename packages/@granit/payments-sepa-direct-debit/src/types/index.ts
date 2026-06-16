@@ -1,3 +1,5 @@
+import type { ISODateString } from '@granit/types';
+
 /** Lifecycle status of a SEPA Direct Debit mandate. */
 export type MandateStatus = 'Pending' | 'Active' | 'Suspended' | 'Cancelled' | 'Failed' | 'Expired';
 
@@ -36,7 +38,7 @@ export interface CreateMandateRequest {
 /** Confirm (activate) a pending mandate after the debtor's signature. */
 export interface ConfirmMandateRequest {
   /** When the debtor signed (ISO 8601). */
-  readonly signedAt: string;
+  readonly signedAt: ISODateString;
   /** Reference to the stored signed document, when activation is overridden. */
   readonly documentReference?: string | null;
 }
@@ -63,9 +65,9 @@ export interface MandateResponse {
   readonly creditorId: string;
   readonly providerName: string | null;
   readonly providerMandateId: string | null;
-  readonly signedAt: string | null;
-  readonly activatedAt: string | null;
-  readonly cancelledAt: string | null;
+  readonly signedAt: ISODateString | null;
+  readonly activatedAt: ISODateString | null;
+  readonly cancelledAt: ISODateString | null;
   readonly tenantId: string | null;
   readonly concurrencyStamp: string;
 }

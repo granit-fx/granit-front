@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -28,7 +29,7 @@ const sampleBalance: CustomerBalanceResponse = {
   currency: 'EUR',
   balance: 150.0,
   concurrencyStamp: 'stamp-1',
-  updatedAt: '2026-04-01T10:00:00Z',
+  updatedAt: toISODateString('2026-04-01T10:00:00Z'),
 };
 
 const sampleTransaction: BalanceTransactionResponse = {
@@ -39,8 +40,8 @@ const sampleTransaction: BalanceTransactionResponse = {
   reason: 'Welcome bonus',
   referenceId: null,
   referenceType: null,
-  expiresAt: '2026-12-31T23:59:59Z',
-  createdAt: '2026-04-01T10:00:00Z',
+  expiresAt: toISODateString('2026-12-31T23:59:59Z'),
+  createdAt: toISODateString('2026-04-01T10:00:00Z'),
 };
 
 function createWrapper(client: AxiosInstance, basePath?: string) {
@@ -157,7 +158,7 @@ describe('use-customer-balance', () => {
         currency: 'USD',
         source: 'ManualAdjustment',
         reason: 'Compensation',
-        expiresAt: '2026-12-31T23:59:59Z',
+        expiresAt: toISODateString('2026-12-31T23:59:59Z'),
       };
 
       const { result } = renderHook(() => useAddAdminCredit(), {

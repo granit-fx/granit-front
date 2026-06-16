@@ -555,6 +555,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/dashboards:
     devDependencies:
@@ -891,6 +894,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/payments-sepa-direct-debit:
     devDependencies:
@@ -900,6 +906,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/payments-sepa-transfer:
     devDependencies:
@@ -3341,6 +3350,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/taxonomy:
     devDependencies:

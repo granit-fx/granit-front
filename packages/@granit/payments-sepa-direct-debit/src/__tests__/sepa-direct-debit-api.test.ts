@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -31,8 +32,8 @@ const sampleMandate: MandateResponse = {
   creditorId: 'BE68ZZZ0123456789',
   providerName: 'GoCardless',
   providerMandateId: 'MD0001',
-  signedAt: '2026-05-01T10:00:00Z',
-  activatedAt: '2026-05-01T10:05:00Z',
+  signedAt: toISODateString('2026-05-01T10:00:00Z'),
+  activatedAt: toISODateString('2026-05-01T10:05:00Z'),
   cancelledAt: null,
   tenantId: null,
   concurrencyStamp: 'stamp-1',
@@ -103,7 +104,7 @@ describe('sepa-direct-debit-api', () => {
     it('should POST {basePath}/mandates/{id}/confirm with the signature payload', async () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValue(axiosResponse(sampleMandate));
-      const request: ConfirmMandateRequest = { signedAt: '2026-05-01T10:00:00Z' };
+      const request: ConfirmMandateRequest = { signedAt: toISODateString('2026-05-01T10:00:00Z') };
 
       const result = await confirmMandate(client, basePath, 'mdt-1', request);
 
@@ -119,7 +120,7 @@ describe('sepa-direct-debit-api', () => {
         axiosResponse({
           ...sampleMandate,
           status: 'Cancelled',
-          cancelledAt: '2026-06-01T00:00:00Z',
+          cancelledAt: toISODateString('2026-06-01T00:00:00Z'),
         })
       );
 

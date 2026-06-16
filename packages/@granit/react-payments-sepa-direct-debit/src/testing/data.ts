@@ -1,3 +1,5 @@
+import { toISODateString } from '@granit/types';
+
 import type {
   MandateResponse,
   SepaConfigurationResponse,
@@ -14,8 +16,8 @@ export const sampleMandates: MandateResponse[] = [
     creditorId: 'BE68ZZZ0123456789',
     providerName: 'GoCardless',
     providerMandateId: 'MD0000001',
-    signedAt: '2026-05-01T10:00:00Z',
-    activatedAt: '2026-05-01T10:05:00Z',
+    signedAt: toISODateString('2026-05-01T10:00:00Z'),
+    activatedAt: toISODateString('2026-05-01T10:05:00Z'),
     cancelledAt: null,
     tenantId: 'tenant_01',
     concurrencyStamp: 'stamp_01',

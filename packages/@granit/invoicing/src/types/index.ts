@@ -1,4 +1,4 @@
-import type { EntityId } from '@granit/types';
+import type { EntityId, ISODateString } from '@granit/types';
 
 /** Branded identifier for an invoice. */
 export type InvoiceId = EntityId<'Invoice'>;
@@ -25,9 +25,9 @@ export type BillingReason =
 /** Payload for finalizing a Draft invoice (Draft → Open). */
 export interface FinalizeInvoiceRequest {
   /** Timestamp at which the document is issued (ISO 8601). */
-  readonly issuedAt: string;
+  readonly issuedAt: ISODateString;
   /** Payment deadline — ignored for credit notes (ISO 8601). */
-  readonly dueAt: string | null;
+  readonly dueAt: ISODateString | null;
   /** Optional comment persisted on the workflow transition record (ISO 27001). */
   readonly comment?: string | null;
 }
@@ -53,8 +53,8 @@ export interface InvoiceCreateRequest {
   readonly billingReason: BillingReason;
   readonly parentInvoiceId: string | null;
   readonly creditNoteReason: string | null;
-  readonly periodStart: string | null;
-  readonly periodEnd: string | null;
+  readonly periodStart: ISODateString | null;
+  readonly periodEnd: ISODateString | null;
 }
 
 /** A single line item within an invoice. */
@@ -68,8 +68,8 @@ export interface InvoiceLineItemResponse {
   readonly taxAmount: number;
   readonly sourceType: string;
   readonly sourceId: string | null;
-  readonly periodStart: string | null;
-  readonly periodEnd: string | null;
+  readonly periodStart: ISODateString | null;
+  readonly periodEnd: ISODateString | null;
 }
 
 /** Full invoice response from the API. */
@@ -90,10 +90,10 @@ export interface InvoiceResponse {
   readonly amountRemaining: number;
   readonly parentInvoiceId: string | null;
   readonly creditNoteReason: string | null;
-  readonly issuedAt: string | null;
-  readonly dueAt: string | null;
-  readonly paidAt: string | null;
-  readonly periodStart: string | null;
-  readonly periodEnd: string | null;
+  readonly issuedAt: ISODateString | null;
+  readonly dueAt: ISODateString | null;
+  readonly paidAt: ISODateString | null;
+  readonly periodStart: ISODateString | null;
+  readonly periodEnd: ISODateString | null;
   readonly lineItems: readonly InvoiceLineItemResponse[];
 }

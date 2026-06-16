@@ -76,8 +76,8 @@ export interface UsageAggregateResponse {
   readonly id: string;
   readonly meterDefinitionId: string;
   readonly period: AggregationPeriod;
-  readonly periodStart: string;
-  readonly periodEnd: string;
+  readonly periodStart: ISODateString;
+  readonly periodEnd: ISODateString;
   readonly aggregatedValue: number;
   readonly eventCount: number;
 }
@@ -102,8 +102,8 @@ export interface RecomputeUsageRequest {
 
 export interface RecomputeUsageResponse {
   readonly meterDefinitionId: string;
-  readonly windowStart: string;
-  readonly windowEnd: string;
+  readonly windowStart: ISODateString;
+  readonly windowEnd: ISODateString;
   readonly eventsScanned: number;
   readonly aggregatesRebuilt: number;
   readonly durationMilliseconds: number;
@@ -123,7 +123,7 @@ export interface DeprecateEventRequest {
 export interface DeprecateEventResponse {
   readonly eventId: string;
   readonly meterDefinitionId: string;
-  readonly deprecatedAt: string;
+  readonly deprecatedAt: ISODateString;
   readonly aggregatesRebuilt: number;
 }
 

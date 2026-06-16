@@ -1,6 +1,7 @@
 import { DATE_OPERATORS, ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { created, notFound } from '@granit/testing/msw';
+import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -194,7 +195,7 @@ export function createSepaDirectDebitHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return HttpResponse.json({
         ...mandate,
         status: 'Cancelled',
-        cancelledAt: '2026-06-15T00:00:00Z',
+        cancelledAt: toISODateString('2026-06-15T00:00:00Z'),
       });
     }),
 

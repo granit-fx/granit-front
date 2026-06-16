@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -34,8 +35,8 @@ const sampleMandate: MandateResponse = {
   creditorId: 'BE68ZZZ0123456789',
   providerName: 'GoCardless',
   providerMandateId: 'MD0001',
-  signedAt: '2026-05-01T10:00:00Z',
-  activatedAt: '2026-05-01T10:05:00Z',
+  signedAt: toISODateString('2026-05-01T10:00:00Z'),
+  activatedAt: toISODateString('2026-05-01T10:05:00Z'),
   cancelledAt: null,
   tenantId: null,
   concurrencyStamp: 'stamp-1',
@@ -153,11 +154,11 @@ describe('use-sepa-direct-debit', () => {
 
       await result.current.mutateAsync({
         id: 'mdt-1',
-        request: { signedAt: '2026-05-01T10:00:00Z' },
+        request: { signedAt: toISODateString('2026-05-01T10:00:00Z') },
       });
 
       expect(client.post).toHaveBeenCalledWith('/api/v1/sepa-direct-debit/mandates/mdt-1/confirm', {
-        signedAt: '2026-05-01T10:00:00Z',
+        signedAt: toISODateString('2026-05-01T10:00:00Z'),
       });
     });
   });

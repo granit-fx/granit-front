@@ -1,4 +1,5 @@
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -23,8 +24,8 @@ const sampleLineItem = {
   taxAmount: 1029,
   sourceType: 'Subscription',
   sourceId: 'sub-1',
-  periodStart: '2026-03-01T00:00:00Z',
-  periodEnd: '2026-04-01T00:00:00Z',
+  periodStart: toISODateString('2026-03-01T00:00:00Z'),
+  periodEnd: toISODateString('2026-04-01T00:00:00Z'),
 } as const;
 
 const sampleInvoice: InvoiceResponse = {
@@ -44,11 +45,11 @@ const sampleInvoice: InvoiceResponse = {
   amountRemaining: 0,
   parentInvoiceId: null,
   creditNoteReason: null,
-  issuedAt: '2026-03-01T00:00:00Z',
-  dueAt: '2026-03-15T00:00:00Z',
-  paidAt: '2026-03-02T10:00:00Z',
-  periodStart: '2026-03-01T00:00:00Z',
-  periodEnd: '2026-04-01T00:00:00Z',
+  issuedAt: toISODateString('2026-03-01T00:00:00Z'),
+  dueAt: toISODateString('2026-03-15T00:00:00Z'),
+  paidAt: toISODateString('2026-03-02T10:00:00Z'),
+  periodStart: toISODateString('2026-03-01T00:00:00Z'),
+  periodEnd: toISODateString('2026-04-01T00:00:00Z'),
   lineItems: [sampleLineItem],
 };
 
@@ -139,8 +140,8 @@ describe('invoicing-api', () => {
         billingReason: 'SubscriptionCycle',
         parentInvoiceId: null,
         creditNoteReason: null,
-        periodStart: '2026-03-01T00:00:00Z',
-        periodEnd: '2026-04-01T00:00:00Z',
+        periodStart: toISODateString('2026-03-01T00:00:00Z'),
+        periodEnd: toISODateString('2026-04-01T00:00:00Z'),
       };
 
       const result = await createInvoice(client, '/invoicing', request);
@@ -186,8 +187,8 @@ describe('invoicing-api', () => {
       vi.mocked(client.post).mockResolvedValue({ data: sampleInvoice });
 
       const request: FinalizeInvoiceRequest = {
-        issuedAt: '2026-03-01T00:00:00Z',
-        dueAt: '2026-03-15T00:00:00Z',
+        issuedAt: toISODateString('2026-03-01T00:00:00Z'),
+        dueAt: toISODateString('2026-03-15T00:00:00Z'),
         comment: 'Issued by ops',
       };
 
@@ -202,13 +203,13 @@ describe('invoicing-api', () => {
       vi.mocked(client.post).mockResolvedValue({ data: sampleInvoice });
 
       await finalizeInvoice(client, '/invoicing', 'inv/special&id', {
-        issuedAt: '2026-03-01T00:00:00Z',
+        issuedAt: toISODateString('2026-03-01T00:00:00Z'),
         dueAt: null,
       });
 
       expect(client.post).toHaveBeenCalledWith(
         `/invoicing/invoices/${encodeURIComponent('inv/special&id')}/finalize`,
-        expect.objectContaining({ issuedAt: '2026-03-01T00:00:00Z', dueAt: null })
+        expect.objectContaining({ issuedAt: toISODateString('2026-03-01T00:00:00Z'), dueAt: null })
       );
     });
   });

@@ -1,4 +1,5 @@
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import { getTaxRateByCountry, getTaxRatesMeta, queryTaxRates, validateTaxId } from '../api/tax-api';
@@ -25,7 +26,7 @@ const mockValidateResponse: TaxValidateResponse = {
   companyName: 'Digital Dynamics SRL',
   companyAddress: 'Rue de la Loi 1, 1000 Bruxelles',
   requestIdentifier: 'req-abc-123',
-  validatedAt: '2026-04-04T10:00:00Z',
+  validatedAt: toISODateString('2026-04-04T10:00:00Z'),
   source: 'VIES',
 };
 
@@ -35,7 +36,7 @@ const mockBelgiumEntry: TaxRateEntry = {
   reducedRate: 6,
   superReducedRate: null,
   parkingRate: 12,
-  effectiveFrom: '2024-01-01T00:00:00Z',
+  effectiveFrom: toISODateString('2024-01-01T00:00:00Z'),
   effectiveTo: null,
 };
 
@@ -45,7 +46,7 @@ const mockLuxembourgEntry: TaxRateEntry = {
   reducedRate: 8,
   superReducedRate: 3,
   parkingRate: 14,
-  effectiveFrom: '2024-01-01T00:00:00Z',
+  effectiveFrom: toISODateString('2024-01-01T00:00:00Z'),
   effectiveTo: null,
 };
 
@@ -55,7 +56,7 @@ const mockBelgiumRate: TaxRateResponse = {
   reducedRate: 6,
   superReducedRate: null,
   parkingRate: 12,
-  effectiveFrom: '2024-01-01',
+  effectiveFrom: toISODateString('2024-01-01'),
   effectiveTo: null,
 };
 
@@ -65,7 +66,7 @@ const mockLuxembourgRate: TaxRateResponse = {
   reducedRate: 8,
   superReducedRate: 3,
   parkingRate: 14,
-  effectiveFrom: '2024-01-01',
+  effectiveFrom: toISODateString('2024-01-01'),
   effectiveTo: null,
 };
 
@@ -116,7 +117,7 @@ describe('validateTaxId', () => {
       companyName: null,
       companyAddress: null,
       requestIdentifier: 'req-def-456',
-      validatedAt: '2026-04-04T10:00:00Z',
+      validatedAt: toISODateString('2026-04-04T10:00:00Z'),
       source: 'VIES',
     };
     const client = createMockClient();

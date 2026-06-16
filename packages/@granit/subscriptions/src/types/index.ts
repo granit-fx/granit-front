@@ -1,4 +1,4 @@
-import type { EntityId } from '@granit/types';
+import type { EntityId, ISODateString } from '@granit/types';
 
 /** Branded identifier for a plan. */
 export type PlanId = EntityId<'Plan'>;
@@ -46,7 +46,7 @@ export interface SubscriptionCreateRequest {
   readonly partyId: string;
   readonly planId: string;
   readonly currency: string;
-  readonly trialEndsAt: string | null;
+  readonly trialEndsAt: ISODateString | null;
 }
 
 export interface SubscriptionCancelRequest {
@@ -90,10 +90,10 @@ export interface PlanPriceResponse {
   readonly amount: number;
   readonly currency: string;
   readonly interval: string;
-  readonly effectiveFrom: string;
+  readonly effectiveFrom: ISODateString;
   readonly isCurrent: boolean;
   readonly replacedByPriceId: string | null;
-  readonly replacedAt: string | null;
+  readonly replacedAt: ISODateString | null;
   readonly productId?: string | null;
 }
 
@@ -103,24 +103,24 @@ export interface SubscriptionResponse {
   readonly planId: string;
   readonly status: SubscriptionStatus;
   readonly currency: string;
-  readonly currentPeriodStart: string;
-  readonly currentPeriodEnd: string;
-  readonly trialEndsAt: string | null;
+  readonly currentPeriodStart: ISODateString;
+  readonly currentPeriodEnd: ISODateString;
+  readonly trialEndsAt: ISODateString | null;
   readonly cancelAtPeriodEnd: boolean;
-  readonly cancelledAt: string | null;
+  readonly cancelledAt: ISODateString | null;
   readonly cancellationReason: string | null;
   readonly seatCount: number;
   /** UTC instant the subscription was created (ISO 8601). Always present. */
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
   /** Last-modification timestamp; `null` until first modified (coalesce `?? createdAt`). */
-  readonly modifiedAt: string | null;
+  readonly modifiedAt: ISODateString | null;
   readonly planPriceId: string | null;
 }
 
 export interface SeatResponse {
   readonly id: string;
   readonly userId: string;
-  readonly assignedAt: string;
+  readonly assignedAt: ISODateString;
 }
 
 export interface BulkMigratePriceResponse {

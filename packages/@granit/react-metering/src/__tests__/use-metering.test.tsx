@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -58,8 +59,8 @@ const sampleUsage: UsageAggregateResponse = {
   id: 'agg-1',
   meterDefinitionId: 'meter-1',
   period: 'Daily',
-  periodStart: '2026-04-01T00:00:00Z',
-  periodEnd: '2026-04-02T00:00:00Z',
+  periodStart: toISODateString('2026-04-01T00:00:00Z'),
+  periodEnd: toISODateString('2026-04-02T00:00:00Z'),
   aggregatedValue: 150,
   eventCount: 30,
 };
@@ -142,8 +143,8 @@ describe('use-metering', () => {
         () =>
           useUsageForPeriod({
             meterId: 'meter-1',
-            periodStart: '2026-04-01T00:00:00Z',
-            periodEnd: '2026-05-01T00:00:00Z',
+            periodStart: toISODateString('2026-04-01T00:00:00Z'),
+            periodEnd: toISODateString('2026-05-01T00:00:00Z'),
           }),
         { wrapper: createWrapper(client) }
       );
@@ -152,8 +153,8 @@ describe('use-metering', () => {
       expect(client.get).toHaveBeenCalledWith('/api/v1/metering/usage', {
         params: {
           meterId: 'meter-1',
-          periodStart: '2026-04-01T00:00:00Z',
-          periodEnd: '2026-05-01T00:00:00Z',
+          periodStart: toISODateString('2026-04-01T00:00:00Z'),
+          periodEnd: toISODateString('2026-05-01T00:00:00Z'),
         },
       });
       expect(result.current.data).toEqual(sampleUsage);
