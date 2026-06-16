@@ -114,6 +114,7 @@ export const mockExportHistory: ExportJobResponse[] = [
     errorMessage: null,
     modifiedAt: null,
     modifiedBy: null,
+    concurrencyStamp: 'stamp-exp-001',
   },
   {
     id: 'exp-002',
@@ -127,6 +128,7 @@ export const mockExportHistory: ExportJobResponse[] = [
     errorMessage: null,
     modifiedAt: null,
     modifiedBy: null,
+    concurrencyStamp: 'stamp-exp-002',
   },
   {
     id: 'exp-003',
@@ -140,6 +142,7 @@ export const mockExportHistory: ExportJobResponse[] = [
     errorMessage: null,
     modifiedAt: null,
     modifiedBy: null,
+    concurrencyStamp: 'stamp-exp-003',
   },
   {
     id: 'exp-004',
@@ -153,6 +156,7 @@ export const mockExportHistory: ExportJobResponse[] = [
     errorMessage: 'Export definition "users" has no data source configured',
     modifiedAt: null,
     modifiedBy: null,
+    concurrencyStamp: 'stamp-exp-004',
   },
   {
     id: 'exp-005',
@@ -166,6 +170,7 @@ export const mockExportHistory: ExportJobResponse[] = [
     errorMessage: null,
     modifiedAt: null,
     modifiedBy: null,
+    concurrencyStamp: 'stamp-exp-005',
   },
   {
     id: 'exp-006',
@@ -179,5 +184,6 @@ export const mockExportHistory: ExportJobResponse[] = [
     errorMessage: null,
     modifiedAt: null,
     modifiedBy: null,
+    concurrencyStamp: 'stamp-exp-006',
   },
 ];

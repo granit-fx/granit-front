@@ -31,6 +31,7 @@ export interface ApiKeyResponse {
   readonly revokedAt: ISODateString | null;
   readonly cacheBehavior: CacheBehavior;
   readonly createdAt: ISODateString;
+  readonly modifiedAt: ISODateString | null;
 }
 
 /**

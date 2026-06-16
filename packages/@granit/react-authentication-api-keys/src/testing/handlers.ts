@@ -346,6 +346,7 @@ export function createApiKeyHandlers(baseUrl = `${DEFAULT_BASE_PATH}/api-keys`) 
         revokedAt: null,
         cacheBehavior: body.cacheBehavior ?? 'Normal',
         createdAt: toISODateString(now),
+        modifiedAt: null,
       };
       apiKeys.push(newKey);
 
@@ -388,6 +389,7 @@ export function createApiKeyHandlers(baseUrl = `${DEFAULT_BASE_PATH}/api-keys`) 
         revokedAt: null,
         lastUsedAt: null,
         createdAt: toISODateString(new Date().toISOString()),
+        modifiedAt: null,
       };
       apiKeys.push(newKey);
 

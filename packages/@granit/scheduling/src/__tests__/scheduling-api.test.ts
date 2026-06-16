@@ -41,6 +41,7 @@ const sampleAction: ScheduledActionResponse = {
   cancelledBy: null,
   failureReason: null,
   createdAt: toISODateString('2026-06-01T10:00:00Z'),
+  modifiedAt: null,
 };
 
 const pagedResult: PagedResult<ScheduledActionResponse> = {

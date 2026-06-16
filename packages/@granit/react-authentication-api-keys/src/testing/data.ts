@@ -17,6 +17,7 @@ export const mockApiKeys: ApiKeyResponse[] = [
     revokedAt: null,
     cacheBehavior: 'Normal',
     createdAt: toISODateString('2025-11-15T10:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'ApiKey'>('ak-2'),
@@ -32,6 +33,7 @@ export const mockApiKeys: ApiKeyResponse[] = [
     revokedAt: null,
     cacheBehavior: 'Normal',
     createdAt: toISODateString('2025-12-01T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'ApiKey'>('ak-3'),
@@ -47,6 +49,7 @@ export const mockApiKeys: ApiKeyResponse[] = [
     revokedAt: toISODateString('2026-01-15T09:00:00Z'),
     cacheBehavior: 'Normal',
     createdAt: toISODateString('2025-06-01T08:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'ApiKey'>('ak-4'),
@@ -62,6 +65,7 @@ export const mockApiKeys: ApiKeyResponse[] = [
     revokedAt: null,
     cacheBehavior: 'NoCache',
     createdAt: toISODateString('2026-01-10T11:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'ApiKey'>('ak-5'),
@@ -77,5 +81,6 @@ export const mockApiKeys: ApiKeyResponse[] = [
     revokedAt: null,
     cacheBehavior: 'NoCache',
     createdAt: toISODateString('2026-03-09T08:00:00Z'),
+    modifiedAt: null,
   },
 ];

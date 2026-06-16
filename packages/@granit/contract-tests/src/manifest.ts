@@ -109,13 +109,12 @@ export const CONTRACTS: readonly ModuleContract[] = [
   {
     slug: 'openiddict',
     package: 'openiddict-admin',
-    // TODO(contract): AdminOidcRotateSecretResponse (front newSecret vs backend
-    // displayName/newClientSecret) deferred — structural divergence to reconcile.
     types: [
       'AdminOidcApplicationResponse',
       'AdminOidcAuthorizationResponse',
       'AdminOidcCreateApplicationRequest',
       'AdminOidcUpdateApplicationRequest',
+      'AdminOidcRotateSecretResponse',
       'AdminOidcScopeResponse',
       'AdminOidcCreateScopeRequest',
       'AdminOidcUpdateScopeRequest',

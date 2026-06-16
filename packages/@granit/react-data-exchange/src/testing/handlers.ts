@@ -668,6 +668,9 @@ export function createDataExchangeHandlers(
         errorMessage: null,
         createdAt: new Date().toISOString(),
         completedAt: new Date().toISOString(),
+        modifiedAt: null,
+        modifiedBy: null,
+        concurrencyStamp: crypto.randomUUID(),
       };
       return HttpResponse.json(job);
     }),
@@ -684,6 +687,9 @@ export function createDataExchangeHandlers(
         errorMessage: null,
         createdAt: new Date().toISOString(),
         completedAt: new Date().toISOString(),
+        modifiedAt: null,
+        modifiedBy: null,
+        concurrencyStamp: 'mock-stamp',
       });
     }),
 

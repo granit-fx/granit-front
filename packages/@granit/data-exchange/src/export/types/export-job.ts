@@ -20,6 +20,7 @@ export interface ExportJobResponse {
   readonly completedAt: string | null;
   readonly modifiedAt: string | null;
   readonly modifiedBy: string | null;
+  readonly concurrencyStamp: string;
 }
 
 /**

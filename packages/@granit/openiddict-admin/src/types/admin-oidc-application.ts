@@ -54,6 +54,7 @@ export interface AdminOidcUpdateApplicationRequest {
 
 /** Response from `POST /oidc/applications/{clientId}/rotate-secret`. */
 export interface AdminOidcRotateSecretResponse {
-  readonly clientId: string;
-  readonly newSecret: string;
+  readonly clientId: string | null;
+  readonly displayName: string | null;
+  readonly newClientSecret: string;
 }

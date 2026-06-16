@@ -363,7 +363,7 @@
       "post": {
         "tags": ["Data Exchange"],
         "summary": "Dispatches the import job for asynchronous background execution.",
-        "description": "Enqueues the import job for background processing. Returns 202 Accepted — poll the status endpoint to track progress. The job must be in 'Mapped' status (mappings confirmed). Returns 400 if the job is in an invalid state, or 404 if not found.",
+        "description": "Enqueues the import job for background processing. Returns 202 Accepted \u2014 poll the status endpoint to track progress. The job must be in 'Mapped' status (mappings confirmed). Returns 400 if the job is in an invalid state, or 404 if not found.",
         "operationId": "ExecuteImportJob",
         "parameters": [
           {
@@ -1179,7 +1179,7 @@
       "get": {
         "tags": ["Data Exchange"],
         "summary": "Returns the available fields for a given export definition.",
-        "description": "Returns the list of selectable fields for the named export definition — each with its property name, display label, and data type. Use this to populate a field picker UI before creating an export job. Returns 404 if the definition name is not registered.",
+        "description": "Returns the list of selectable fields for the named export definition \u2014 each with its property name, display label, and data type. Use this to populate a field picker UI before creating an export job. Returns 404 if the definition name is not registered.",
         "operationId": "GetExportDefinitionFields",
         "parameters": [
           {
@@ -1580,7 +1580,8 @@
           "createdAt",
           "completedAt",
           "modifiedAt",
-          "modifiedBy"
+          "modifiedBy",
+          "concurrencyStamp"
         ],
         "type": "object",
         "properties": {
@@ -1621,6 +1622,9 @@
           },
           "modifiedBy": {
             "type": ["null", "string"]
+          },
+          "concurrencyStamp": {
+            "type": "string"
           }
         }
       },

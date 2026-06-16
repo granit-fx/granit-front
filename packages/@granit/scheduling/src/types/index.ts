@@ -28,6 +28,7 @@ export interface ScheduledActionResponse {
   readonly cancelledBy: string | null;
   readonly failureReason: string | null;
   readonly createdAt: ISODateString;
+  readonly modifiedAt: ISODateString | null;
 }
 
 /** Request body for rescheduling a pending action. */

@@ -294,6 +294,7 @@ export function createSchedulingHandlers(baseUrl = DEFAULT_BASE_PATH) {
       }
       const body = (await request.json()) as { newExecuteAt: string };
       action.executeAt = toISODateString(body.newExecuteAt);
+      action.modifiedAt = toISODateString(new Date().toISOString());
       return new HttpResponse(null, { status: 200 });
     }),
   ];

@@ -124,7 +124,8 @@ describe('admin-oidc-application-api', () => {
       const client = createMockClient();
       const response: AdminOidcRotateSecretResponse = {
         clientId: 'my-spa',
-        newSecret: 'new-secret-value',
+        displayName: 'My SPA',
+        newClientSecret: 'new-secret-value',
       };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
@@ -137,7 +138,7 @@ describe('admin-oidc-application-api', () => {
     it('encodes client ID with special characters', async () => {
       const client = createMockClient();
       vi.mocked(client.post).mockResolvedValueOnce({
-        data: { newSecret: 'secret' },
+        data: { clientId: null, displayName: null, newClientSecret: 'secret' },
       });
 
       await rotateApplicationSecret(client, BASE, 'id/slash');

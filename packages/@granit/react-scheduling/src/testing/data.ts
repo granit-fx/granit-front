@@ -15,6 +15,7 @@ export const mockScheduledActions: Mutable<ScheduledActionResponse>[] = [
     cancelledBy: null,
     failureReason: null,
     createdAt: toISODateString('2026-04-02T14:30:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'ScheduledAction'>('a1b2c3d4-0002-4000-8000-000000000002'),
@@ -26,6 +27,7 @@ export const mockScheduledActions: Mutable<ScheduledActionResponse>[] = [
     cancelledBy: null,
     failureReason: null,
     createdAt: toISODateString('2026-03-25T10:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'ScheduledAction'>('a1b2c3d4-0003-4000-8000-000000000003'),
@@ -37,6 +39,7 @@ export const mockScheduledActions: Mutable<ScheduledActionResponse>[] = [
     cancelledBy: 'admin@example.com',
     failureReason: null,
     createdAt: toISODateString('2026-03-20T16:45:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'ScheduledAction'>('a1b2c3d4-0004-4000-8000-000000000004'),
@@ -48,6 +51,7 @@ export const mockScheduledActions: Mutable<ScheduledActionResponse>[] = [
     cancelledBy: null,
     failureReason: 'Connection timeout after 30s',
     createdAt: toISODateString('2026-03-28T08:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'ScheduledAction'>('a1b2c3d4-0005-4000-8000-000000000005'),
@@ -59,6 +63,7 @@ export const mockScheduledActions: Mutable<ScheduledActionResponse>[] = [
     cancelledBy: null,
     failureReason: null,
     createdAt: toISODateString('2026-04-01T18:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'ScheduledAction'>('a1b2c3d4-0006-4000-8000-000000000006'),
@@ -70,5 +75,6 @@ export const mockScheduledActions: Mutable<ScheduledActionResponse>[] = [
     cancelledBy: null,
     failureReason: null,
     createdAt: toISODateString('2026-04-03T09:15:00Z'),
+    modifiedAt: null,
   },
 ];

@@ -214,7 +214,8 @@ describe('useUpdateOidcApplication', () => {
 describe('useRotateApplicationSecret', () => {
   const mockSecretResponse: AdminOidcRotateSecretResponse = {
     clientId: 'guava-front',
-    newSecret: 'generated-secret-value',
+    displayName: 'Guava Frontend',
+    newClientSecret: 'generated-secret-value',
   };
 
   it('should rotate application secret', async () => {

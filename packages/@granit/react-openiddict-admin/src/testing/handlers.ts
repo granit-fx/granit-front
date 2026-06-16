@@ -434,7 +434,8 @@ export function createOpenIddictAdminHandlers(
       if (!app) return notFound();
       return HttpResponse.json({
         clientId: String(params.clientId),
-        newSecret: `mock-secret-rotated`,
+        displayName: app.displayName,
+        newClientSecret: 'mock-secret-rotated',
       });
     }),
 

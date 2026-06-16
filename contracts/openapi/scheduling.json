@@ -690,7 +690,7 @@
       },
       "IIntegrationEvent": {
         "type": "object",
-        "description": "Marker interface for integration events (ETO — Event Transfer Object)."
+        "description": "Marker interface for integration events (ETO \u2014 Event Transfer Object)."
       },
       "LookupDescriptor": {
         "type": "object",
@@ -782,7 +782,7 @@
                   "type": ["null", "array"],
                   "items": {
                     "type": "object",
-                    "description": "Marker interface for integration events (ETO — Event Transfer Object)."
+                    "description": "Marker interface for integration events (ETO \u2014 Event Transfer Object)."
                   }
                 },
                 "createdAt": {
@@ -1077,6 +1077,10 @@
           },
           "createdAt": {
             "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["string", "null"],
             "format": "date-time"
           }
         }

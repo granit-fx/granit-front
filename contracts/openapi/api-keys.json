@@ -7,64 +7,104 @@
   "paths": {
     "/authentication/api-keys": {
       "get": {
-        "tags": [
-          "API Keys"
-        ],
-        "summary": "Returns a paginated list of API keys.",
-        "description": "Lists all API keys for the current tenant with optional filters on type, environment, search term, and revocation status. The raw secret is never returned — only the prefix and last four characters for identification.",
-        "operationId": "ListApiKeys",
+        "tags": ["API Keys"],
+        "summary": "Returns a paged, filterable list of ApiKeyListItemResponse from ApiKeyEntry.",
+        "description": "Executes a dynamic query against ApiKeyEntry using the Granit query engine and projects each row to ApiKeyListItemResponse. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult<ApiKeyListItemResponse> by default. When the groupBy query parameter is specified, returns a GroupedResult<ApiKeyListItemResponse> with the same projection applied to the items inside each group.",
+        "operationId": "QueryApiKeyEntry",
         "parameters": [
           {
-            "name": "Search",
+            "name": "page",
             "in": "query",
-            "description": "Free-text search query.",
+            "description": "1-based page index. Ignored when cursor is supplied.",
             "schema": {
-              "type": "string"
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
             }
           },
           {
-            "name": "Type",
+            "name": "pageSize",
             "in": "query",
-            "description": "Filter by type discriminator value.",
+            "description": "Number of items per page (1-500). Server-side cap applies.",
             "schema": {
-              "$ref": "#/components/schemas/ApiKeyType"
+              "maximum": 500,
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
             }
           },
           {
-            "name": "Environment",
+            "name": "cursor",
             "in": "query",
-            "description": "Filter by environment (e.g. 'production', 'staging', 'sandbox').",
+            "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
             "schema": {
-              "type": "string"
+              "type": ["null", "string"]
             }
           },
           {
-            "name": "IncludeRevoked",
+            "name": "search",
             "in": "query",
-            "description": "When true, include revoked items in the response.",
+            "description": "Free-text search across searchable columns declared in the query definition.",
             "schema": {
-              "type": "boolean",
-              "default": false
+              "type": ["null", "string"]
             }
           },
           {
-            "name": "Page",
+            "name": "sort",
             "in": "query",
-            "description": "1-based page index.",
+            "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
             "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
+              "type": ["null", "string"]
             }
           },
           {
-            "name": "PageSize",
+            "name": "groupBy",
             "in": "query",
-            "description": "Number of items per page.",
+            "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
             "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 20
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "quickFilters",
+            "in": "query",
+            "description": "Comma-separated quick-filter names (declared in the query definition).",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "skipTotalCount",
+            "in": "query",
+            "description": "Skip the total row count for faster pagination when the client doesn't need it.",
+            "schema": {
+              "type": ["null", "boolean"]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Bracketed filter expressions: 'filter[field.op]=value'. Example: 'filter[name.contains]=alice&filter[age.gt]=18'.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "presets",
+            "in": "query",
+            "description": "Bracketed preset selectors: 'presets[group]=name'. Applies preset filter groups declared in the query definition.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
             }
           }
         ],
@@ -74,7 +114,25 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfApiKeyResponse"
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/PagedResultOfApiKeyListItemResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GroupedResultOfApiKeyListItemResponse"
+                    }
+                  ],
+                  "description": "PagedResult when groupBy is absent; GroupedResult otherwise."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -112,11 +170,9 @@
         }
       },
       "post": {
-        "tags": [
-          "API Keys"
-        ],
+        "tags": ["API Keys"],
         "summary": "Creates a new API key. The raw secret is returned once.",
-        "description": "Generates a new API key with the specified type, environment, permissions, and optional CIDR restrictions. The caller must possess every permission being assigned (privilege escalation prevention). The response includes the full raw secret — this is the only time the secret is available. Store it securely; it cannot be retrieved later. The key is immediately active.",
+        "description": "Generates a new API key with the specified type, environment, permissions, and optional CIDR restrictions. The caller must possess every permission being assigned (privilege escalation prevention). The response includes the full raw secret \u2014 this is the only time the secret is available. Store it securely; it cannot be retrieved later. The key is immediately active.",
         "operationId": "CreateApiKey",
         "requestBody": {
           "content": {
@@ -182,11 +238,59 @@
         }
       }
     },
+    "/authentication/api-keys/meta": {
+      "get": {
+        "tags": ["API Keys"],
+        "summary": "Returns query metadata for ApiKeyEntry (columns, filters, sorts, presets).",
+        "description": "Returns the query definition metadata for ApiKeyEntry: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
+        "operationId": "GetApiKeyEntryMeta",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryMetadata"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/authentication/api-keys/{id}": {
       "get": {
-        "tags": [
-          "API Keys"
-        ],
+        "tags": ["API Keys"],
         "summary": "Returns a single API key by ID.",
         "description": "Returns the metadata of a single API key. The raw secret is never exposed after creation. Returns 404 if the key does not exist.",
         "operationId": "GetApiKeyById",
@@ -258,11 +362,9 @@
     },
     "/authentication/api-keys/{id}/revoke": {
       "post": {
-        "tags": [
-          "API Keys"
-        ],
+        "tags": ["API Keys"],
         "summary": "Revokes an API key. The key will no longer be accepted for authentication.",
-        "description": "Permanently revokes the API key. Any subsequent authentication attempt using this key will be rejected. This operation is irreversible — use rotate instead if you need a replacement key. Returns 404 if the key does not exist.",
+        "description": "Permanently revokes the API key. Any subsequent authentication attempt using this key will be rejected. This operation is irreversible \u2014 use rotate instead if you need a replacement key. Returns 404 if the key does not exist.",
         "operationId": "RevokeApiKey",
         "parameters": [
           {
@@ -325,9 +427,7 @@
     },
     "/authentication/api-keys/{id}/rotate": {
       "post": {
-        "tags": [
-          "API Keys"
-        ],
+        "tags": ["API Keys"],
         "summary": "Rotates an API key: revokes the current key and creates a replacement with the same settings.",
         "description": "Atomically revokes the existing key and creates a new one inheriting the same name, type, environment, permissions, CIDR restrictions, and expiration. The response contains the new raw secret (shown once) and both the old and new key IDs. Returns 404 if the key does not exist or is already revoked.",
         "operationId": "RotateApiKey",
@@ -399,9 +499,7 @@
     },
     "/authentication/api-keys/{id}/scopes": {
       "put": {
-        "tags": [
-          "API Keys"
-        ],
+        "tags": ["API Keys"],
         "summary": "Updates the permissions and allowed CIDR ranges for an API key.",
         "description": "Replaces the full list of permissions and allowed CIDR ranges for the specified key. The caller must possess every permission being assigned (privilege escalation prevention). Both fields are replaced entirely (not merged). Returns 404 if the key does not exist.",
         "operationId": "UpdateApiKeyScopes",
@@ -488,46 +586,38 @@
   "components": {
     "schemas": {
       "ApiKeyCreateRequest": {
-        "required": [
-          "name",
-          "type",
-          "environment"
-        ],
+        "required": ["name", "type", "environment"],
         "type": "object",
         "properties": {
           "name": {
+            "maxLength": 200,
             "type": "string"
           },
           "type": {
             "$ref": "#/components/schemas/ApiKeyType"
           },
           "environment": {
-            "type": "string"
+            "type": "string",
+            "x-granit-validator": "Validation:InvalidEnvironment"
           },
           "permissions": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": ["null", "array"],
             "items": {
               "type": "string"
-            }
+            },
+            "x-granit-validator": "Validation:MaxPermissions"
           },
           "allowedCidrs": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": ["null", "array"],
             "items": {
               "type": "string"
-            }
+            },
+            "x-granit-validator": "Validation:InvalidCidrNotation"
           },
           "expiresAt": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "format": "date-time"
+            "type": ["null", "string"],
+            "format": "date-time",
+            "x-granit-validator": "Validation:ExpirationMustBeFuture"
           },
           "cacheBehavior": {
             "$ref": "#/components/schemas/CacheBehavior"
@@ -570,10 +660,63 @@
             "type": "string"
           },
           "expiresAt": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
+            "format": "date-time"
+          }
+        }
+      },
+      "ApiKeyListItemResponse": {
+        "required": [
+          "id",
+          "name",
+          "type",
+          "environment",
+          "prefix",
+          "lastFourChars",
+          "expiresAt",
+          "lastUsedAt",
+          "revokedAt",
+          "cacheBehavior",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ApiKeyType"
+          },
+          "environment": {
+            "type": "string"
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "lastFourChars": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "lastUsedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "revokedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "cacheBehavior": {
+            "$ref": "#/components/schemas/CacheBehavior"
+          },
+          "createdAt": {
+            "type": "string",
             "format": "date-time"
           }
         }
@@ -628,24 +771,15 @@
             }
           },
           "expiresAt": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "format": "date-time"
           },
           "lastUsedAt": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "format": "date-time"
           },
           "revokedAt": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "format": "date-time"
           },
           "cacheBehavior": {
@@ -654,17 +788,15 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["string", "null"],
+            "format": "date-time"
           }
         }
       },
       "ApiKeyRotateResponse": {
-        "required": [
-          "newKeyId",
-          "rawSecret",
-          "prefix",
-          "lastFourChars",
-          "oldKeyId"
-        ],
+        "required": ["newKeyId", "rawSecret", "prefix", "lastFourChars", "oldKeyId"],
         "type": "object",
         "properties": {
           "newKeyId": {
@@ -687,69 +819,381 @@
         }
       },
       "ApiKeyType": {
-        "enum": [
-          "Secret",
-          "Publishable",
-          "Webhook",
-          "Ephemeral"
-        ]
+        "enum": ["Secret", "Publishable", "Webhook", "Ephemeral"]
       },
       "ApiKeyUpdateScopesRequest": {
-        "required": [
-          "permissions",
-          "allowedCidrs"
-        ],
+        "required": ["permissions", "allowedCidrs"],
         "type": "object",
         "properties": {
           "permissions": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "x-granit-validator": "Validation:MaxPermissions"
           },
           "allowedCidrs": {
             "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-granit-validator": "Validation:InvalidCidrNotation"
+          }
+        }
+      },
+      "CacheBehavior": {
+        "enum": ["Normal", "NoCache"]
+      },
+      "ColumnDefinition": {
+        "required": [
+          "name",
+          "label",
+          "type",
+          "order",
+          "isSortable",
+          "isFilterable",
+          "isVisible",
+          "format"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isSortable": {
+            "type": "boolean"
+          },
+          "isFilterable": {
+            "type": "boolean"
+          },
+          "isVisible": {
+            "type": "boolean"
+          },
+          "format": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "DateFilterMeta": {
+        "required": ["name", "defaultPeriod", "availablePeriods"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "defaultPeriod": {
+            "$ref": "#/components/schemas/DatePeriod"
+          },
+          "availablePeriods": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatePeriod"
+            }
+          }
+        }
+      },
+      "DatePeriod": {
+        "enum": ["Today", "ThisWeek", "ThisMonth", "LastMonth", "ThisQuarter", "ThisYear", "Custom"]
+      },
+      "FilterableField": {
+        "required": ["name", "type", "operators"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "operators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterOperator"
+            }
+          },
+          "enumValues": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "lookup": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LookupDescriptor"
+              }
+            ]
+          }
+        }
+      },
+      "FilterGroupMeta": {
+        "required": ["name", "label", "presets"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "presets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PresetMeta"
+            }
+          }
+        }
+      },
+      "FilterOperator": {
+        "enum": [
+          "Eq",
+          "Contains",
+          "StartsWith",
+          "EndsWith",
+          "Gt",
+          "Gte",
+          "Lt",
+          "Lte",
+          "In",
+          "Between"
+        ]
+      },
+      "GroupByField": {
+        "required": ["name", "type"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "GroupedResultOfApiKeyListItemResponse": {
+        "required": ["groups", "totalCount"],
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupEntryOfApiKeyListItemResponse"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GroupEntryOfApiKeyListItemResponse": {
+        "required": ["field", "value", "label", "count"],
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "value": {},
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "aggregates": {
+            "type": ["null", "object"]
+          },
+          "items": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/ApiKeyListItemResponse"
+            }
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "LookupDescriptor": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": ["null", "string"]
+          },
+          "endpoint": {
+            "type": ["null", "string"]
+          },
+          "kind": {
+            "$ref": "#/components/schemas/LookupKind"
+          },
+          "requiredPermission": {
+            "type": ["null", "string"]
+          },
+          "searchParam": {
+            "type": ["null", "string"],
+            "default": "search"
+          },
+          "scopeKeys": {
+            "type": ["null", "array"],
             "items": {
               "type": "string"
             }
           }
         }
       },
-      "CacheBehavior": {
-        "enum": [
-          "Normal",
-          "NoCache"
-        ]
+      "LookupKind": {
+        "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
+        "default": "QueryEngine"
       },
-      "PagedResultOfApiKeyResponse": {
-        "required": [
-          "items",
-          "totalCount",
-          "hasMore"
-        ],
+      "PagedResultOfApiKeyListItemResponse": {
+        "required": ["items", "totalCount", "hasMore"],
         "type": "object",
         "properties": {
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ApiKeyResponse"
+              "required": [
+                "id",
+                "name",
+                "type",
+                "environment",
+                "prefix",
+                "lastFourChars",
+                "expiresAt",
+                "lastUsedAt",
+                "revokedAt",
+                "cacheBehavior",
+                "createdAt"
+              ],
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "enum": ["Secret", "Publishable", "Webhook", "Ephemeral"]
+                },
+                "environment": {
+                  "type": "string"
+                },
+                "prefix": {
+                  "type": "string"
+                },
+                "lastFourChars": {
+                  "type": "string"
+                },
+                "expiresAt": {
+                  "type": ["null", "string"],
+                  "format": "date-time"
+                },
+                "lastUsedAt": {
+                  "type": ["null", "string"],
+                  "format": "date-time"
+                },
+                "revokedAt": {
+                  "type": ["null", "string"],
+                  "format": "date-time"
+                },
+                "cacheBehavior": {
+                  "enum": ["Normal", "NoCache"]
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
             }
           },
           "totalCount": {
-            "type": [
-              "null",
-              "integer"
-            ],
+            "type": ["null", "integer"],
             "format": "int32"
           },
           "hasMore": {
             "type": "boolean"
           },
           "nextCursor": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "PaginationMeta": {
+        "required": ["defaultPageSize", "maxPageSize", "maxStreamSize", "supportsCursor"],
+        "type": "object",
+        "properties": {
+          "defaultPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxStreamSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "supportsCursor": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PresetMeta": {
+        "required": ["name", "label", "isDefault"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
           }
         }
       },
@@ -775,6 +1219,93 @@
           "instance": {
             "type": "string",
             "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "QueryMetadata": {
+        "required": [
+          "columns",
+          "filterableFields",
+          "sortableFields",
+          "presetFilterGroups",
+          "quickFilters",
+          "dateFilters",
+          "groupByFields",
+          "pagination"
+        ],
+        "type": "object",
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ColumnDefinition"
+            }
+          },
+          "filterableFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterableField"
+            }
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortableField"
+            }
+          },
+          "presetFilterGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterGroupMeta"
+            }
+          },
+          "quickFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuickFilterMeta"
+            }
+          },
+          "dateFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DateFilterMeta"
+            }
+          },
+          "groupByFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupByField"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "defaultSort": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "QuickFilterMeta": {
+        "required": ["name", "label", "isDefault"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SortableField": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
           }
         }
       }
