@@ -1249,6 +1249,16 @@
               }
             }
           },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -1406,6 +1416,16 @@
           },
           "400": {
             "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -4263,7 +4283,7 @@
   "components": {
     "schemas": {
       "AddReleaseActionRequest": {
-        "required": ["contentType", "contentId", "culture", "type"],
+        "required": ["contentType", "contentId", "culture", "type", "concurrencyStamp"],
         "type": "object",
         "properties": {
           "contentType": {
@@ -4280,6 +4300,9 @@
           },
           "type": {
             "$ref": "#/components/schemas/ReleaseActionType"
+          },
+          "concurrencyStamp": {
+            "type": "string"
           }
         }
       },
@@ -5208,12 +5231,15 @@
         }
       },
       "MovePageRequest": {
-        "required": ["newParentId"],
+        "required": ["newParentId", "concurrencyStamp"],
         "type": "object",
         "properties": {
           "newParentId": {
             "type": "string",
             "format": "uuid"
+          },
+          "concurrencyStamp": {
+            "type": "string"
           }
         }
       },
@@ -6438,7 +6464,8 @@
           "kind",
           "isSiteRoot",
           "layoutKey",
-          "translations"
+          "translations",
+          "concurrencyStamp"
         ],
         "type": "object",
         "properties": {
@@ -6478,6 +6505,9 @@
             "items": {
               "$ref": "#/components/schemas/PageTranslationResponse"
             }
+          },
+          "concurrencyStamp": {
+            "type": "string"
           }
         }
       },
@@ -7072,22 +7102,28 @@
         "enum": ["Draft", "Ready", "Running", "Done", "Failed"]
       },
       "RenamePageRequest": {
-        "required": ["slugSegment"],
+        "required": ["slugSegment", "concurrencyStamp"],
         "type": "object",
         "properties": {
           "slugSegment": {
             "maxLength": 200,
             "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
             "type": "string"
+          },
+          "concurrencyStamp": {
+            "type": "string"
           }
         }
       },
       "RenameReleaseRequest": {
-        "required": ["name"],
+        "required": ["name", "concurrencyStamp"],
         "type": "object",
         "properties": {
           "name": {
             "maxLength": 200,
+            "type": "string"
+          },
+          "concurrencyStamp": {
             "type": "string"
           }
         }
@@ -7155,7 +7191,7 @@
         }
       },
       "ScheduleReleaseRequest": {
-        "required": ["localDateTime", "timeZoneId"],
+        "required": ["localDateTime", "timeZoneId", "concurrencyStamp"],
         "type": "object",
         "properties": {
           "localDateTime": {
@@ -7164,6 +7200,9 @@
           },
           "timeZoneId": {
             "maxLength": 64,
+            "type": "string"
+          },
+          "concurrencyStamp": {
             "type": "string"
           }
         }

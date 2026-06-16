@@ -46,6 +46,7 @@ const page: PageResponse = {
   isSiteRoot: true,
   layoutKey: null,
   translations: [{ culture: 'fr', urlSlug: 'accueil', title: 'Accueil', path: '/accueil' }],
+  concurrencyStamp: 'mock-stamp',
 };
 
 const version: PageVersionSummaryResponse = {
@@ -113,10 +114,14 @@ describe('updatePage', () => {
     const client = createMockClient();
     vi.mocked(client.put).mockResolvedValue(axiosResponse(page));
 
-    await updatePage(client, BASE, 'page-1', { slugSegment: 'new-home' });
+    await updatePage(client, BASE, 'page-1', {
+      slugSegment: 'new-home',
+      concurrencyStamp: 'stamp-1',
+    });
 
     expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1`, {
       slugSegment: 'new-home',
+      concurrencyStamp: 'stamp-1',
     });
   });
 });
@@ -143,10 +148,14 @@ describe('movePage', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValue({ status: 204, data: undefined });
 
-    await movePage(client, BASE, 'page-1', { newParentId: 'parent-1' });
+    await movePage(client, BASE, 'page-1', {
+      newParentId: 'parent-1',
+      concurrencyStamp: 'stamp-1',
+    });
 
     expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1/move`, {
       newParentId: 'parent-1',
+      concurrencyStamp: 'stamp-1',
     });
   });
 });

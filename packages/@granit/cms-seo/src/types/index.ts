@@ -158,6 +158,7 @@ export interface SeoMetadataRequest {
   readonly disableAutoJsonLd?: boolean;
   readonly alternateOverrides?: readonly Hreflang[] | null;
   readonly xDefaultCulture?: string | null;
+  readonly concurrencyStamp?: string;
 }
 
 /**
@@ -227,6 +228,7 @@ export interface SiteSeoDefaultsRequest {
   readonly robotsTxtExtra?: string | null;
   readonly manifest?: WebManifest | null;
   readonly enableAutomaticSeoGeneration?: boolean;
+  readonly concurrencyStamp?: string;
 }
 
 /** A site's SEO defaults. Maps `SiteSeoDefaultsResponse`. */
@@ -336,9 +338,9 @@ export interface SeoSuggestRequest {
   readonly siteId: string;
   readonly contentType: string;
   readonly contentId: string;
-  readonly culture: string | null;
+  readonly culture?: string | null;
   readonly contentTitle: string;
-  readonly contentBody: string | null;
+  readonly contentBody?: string | null;
   readonly scope: SuggestionScope;
 }
 

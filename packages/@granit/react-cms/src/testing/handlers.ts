@@ -126,6 +126,7 @@ export function createPagesHandlers(baseUrl = '/api/cms/pages'): RequestHandler[
     isSiteRoot: node.isSiteRoot,
     layoutKey: null,
     translations: [],
+    concurrencyStamp: 'mock-stamp',
   });
 
   return [

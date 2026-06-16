@@ -319,6 +319,16 @@
               }
             }
           },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -586,6 +596,16 @@
               "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -3151,6 +3171,10 @@
           "xDefaultCulture": {
             "maxLength": 20,
             "type": ["null", "string"]
+          },
+          "concurrencyStamp": {
+            "type": "string",
+            "default": ""
           }
         }
       },
@@ -3273,7 +3297,7 @@
         "type": "object",
         "properties": {
           "fields": {
-            "$ref": "#/components/schemas/SuggestionScope"
+            "$ref": "#/components/schemas/SuggestionScopes"
           }
         }
       },
@@ -3286,7 +3310,7 @@
             "format": "uuid"
           },
           "scope": {
-            "$ref": "#/components/schemas/SuggestionScope"
+            "$ref": "#/components/schemas/SuggestionScopes"
           },
           "fields": {
             "type": "array",
@@ -3331,7 +3355,6 @@
         }
       },
       "SeoSuggestionRejectRequest": {
-        "required": ["reason"],
         "type": "object",
         "properties": {
           "reason": {
@@ -3387,10 +3410,10 @@
             "$ref": "#/components/schemas/SuggestionStatus"
           },
           "scope": {
-            "$ref": "#/components/schemas/SuggestionScope"
+            "$ref": "#/components/schemas/SuggestionScopes"
           },
           "appliedFields": {
-            "$ref": "#/components/schemas/SuggestionScope"
+            "$ref": "#/components/schemas/SuggestionScopes"
           },
           "title": {
             "type": ["null", "string"]
@@ -3437,15 +3460,7 @@
         }
       },
       "SeoSuggestRequest": {
-        "required": [
-          "siteId",
-          "contentType",
-          "contentId",
-          "culture",
-          "contentTitle",
-          "contentBody",
-          "scope"
-        ],
+        "required": ["siteId", "contentType", "contentId", "contentTitle", "scope"],
         "type": "object",
         "properties": {
           "siteId": {
@@ -3460,20 +3475,20 @@
             "type": "string",
             "format": "uuid"
           },
-          "culture": {
-            "maxLength": 20,
-            "type": ["null", "string"]
-          },
           "contentTitle": {
             "maxLength": 300,
             "type": "string"
           },
+          "scope": {
+            "$ref": "#/components/schemas/SuggestionScopes"
+          },
+          "culture": {
+            "maxLength": 20,
+            "type": ["null", "string"]
+          },
           "contentBody": {
             "maxLength": 50000,
             "type": ["null", "string"]
-          },
-          "scope": {
-            "$ref": "#/components/schemas/SuggestionScope"
           }
         }
       },
@@ -3605,6 +3620,10 @@
           "enableAutomaticSeoGeneration": {
             "type": "boolean",
             "default": false
+          },
+          "concurrencyStamp": {
+            "type": "string",
+            "default": ""
           }
         }
       },
@@ -3726,7 +3745,7 @@
           }
         }
       },
-      "SuggestionScope": {
+      "SuggestionScopes": {
         "type": "string"
       },
       "SuggestionStatus": {

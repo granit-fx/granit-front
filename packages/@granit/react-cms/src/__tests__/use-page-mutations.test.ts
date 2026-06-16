@@ -56,6 +56,7 @@ const page: PageResponse = {
   isSiteRoot: true,
   layoutKey: null,
   translations: [],
+  concurrencyStamp: 'mock-stamp',
 };
 const version: PageVersionSummaryResponse = {
   versionId: 'v-1',
@@ -107,10 +108,16 @@ describe('useUpdatePage', () => {
     vi.mocked(updatePage).mockResolvedValue(page);
 
     const { result } = renderHook(() => useUpdatePage(), { wrapper: createWrapper(client) });
-    result.current.mutate({ id: 'page-1', request: { slugSegment: 'new-home' } });
+    result.current.mutate({
+      id: 'page-1',
+      request: { slugSegment: 'new-home', concurrencyStamp: 'stamp-1' },
+    });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(updatePage).toHaveBeenCalledWith(client, '', 'page-1', { slugSegment: 'new-home' });
+    expect(updatePage).toHaveBeenCalledWith(client, '', 'page-1', {
+      slugSegment: 'new-home',
+      concurrencyStamp: 'stamp-1',
+    });
   });
 });
 
@@ -150,10 +157,17 @@ describe('useMovePage', () => {
     vi.mocked(movePage).mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useMovePage(), { wrapper: createWrapper(client) });
-    result.current.mutate({ id: 'page-1', request: { newParentId: 'parent-1' }, siteId: 'site-1' });
+    result.current.mutate({
+      id: 'page-1',
+      request: { newParentId: 'parent-1', concurrencyStamp: 'stamp-1' },
+      siteId: 'site-1',
+    });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(movePage).toHaveBeenCalledWith(client, '', 'page-1', { newParentId: 'parent-1' });
+    expect(movePage).toHaveBeenCalledWith(client, '', 'page-1', {
+      newParentId: 'parent-1',
+      concurrencyStamp: 'stamp-1',
+    });
   });
 });
 

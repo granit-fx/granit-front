@@ -231,6 +231,7 @@ export interface PageResponse {
   readonly isSiteRoot: boolean;
   readonly layoutKey: string | null;
   readonly translations: readonly PageTranslation[];
+  readonly concurrencyStamp: string;
 }
 
 /** Summary of one page version. Returned by `GET /api/cms/pages/{id}/versions`. */
@@ -257,6 +258,7 @@ export interface CreatePageRequest {
 /** Request body for `PUT /api/cms/pages/{id}`. */
 export interface UpdatePageRequest {
   readonly slugSegment: string;
+  readonly concurrencyStamp: string;
 }
 
 /** Request body for `PUT /api/cms/pages/{id}/translations/{culture}`. */
@@ -268,6 +270,7 @@ export interface UpdatePageTranslationRequest {
 /** Request body for `POST /api/cms/pages/{id}/move` — reparents the page. */
 export interface MovePageRequest {
   readonly newParentId: string;
+  readonly concurrencyStamp: string;
 }
 
 /** Request body for `PUT /api/cms/pages/{id}/draft/{culture}`. */
@@ -383,6 +386,7 @@ export interface CreateReleaseRequest {
 /** Request body for `PUT /api/cms/releases/{id}`. */
 export interface UpdateReleaseRequest {
   readonly name: string;
+  readonly concurrencyStamp: string;
 }
 
 /** Request body for `POST /api/cms/releases/{id}/actions` (add action). */
@@ -391,6 +395,7 @@ export interface AddReleaseActionRequest {
   readonly contentId: string;
   readonly culture: string | null;
   readonly type: ReleaseActionType;
+  readonly concurrencyStamp: string;
 }
 
 /** Request body for `POST /api/cms/releases/{id}/schedule`. */
@@ -398,6 +403,7 @@ export interface ScheduleReleaseRequest {
   readonly localDateTime: string;
   /** IANA time-zone identifier (e.g. `"Europe/Brussels"`). */
   readonly timeZoneId: string;
+  readonly concurrencyStamp: string;
 }
 
 // ─── List params (admin) ─────────────────────────────────────────────────────

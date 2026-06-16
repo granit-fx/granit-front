@@ -88,10 +88,16 @@ describe('useUpdateRelease', () => {
     vi.mocked(updateRelease).mockResolvedValue(release);
 
     const { result } = renderHook(() => useUpdateRelease(), { wrapper: createWrapper(client) });
-    result.current.mutate({ id: 'rel-1', request: { name: 'Sprint 1 v2' } });
+    result.current.mutate({
+      id: 'rel-1',
+      request: { name: 'Sprint 1 v2', concurrencyStamp: 'stamp-1' },
+    });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(updateRelease).toHaveBeenCalledWith(client, '', 'rel-1', { name: 'Sprint 1 v2' });
+    expect(updateRelease).toHaveBeenCalledWith(client, '', 'rel-1', {
+      name: 'Sprint 1 v2',
+      concurrencyStamp: 'stamp-1',
+    });
   });
 });
 
@@ -109,6 +115,7 @@ describe('useAddReleaseAction', () => {
       contentId: 'page-1',
       culture: 'fr',
       type: 'Publish' as const,
+      concurrencyStamp: 'stamp-1',
     };
     const { result } = renderHook(() => useAddReleaseAction(), { wrapper: createWrapper(client) });
     result.current.mutate({ id: 'rel-1', request: req });
@@ -146,7 +153,11 @@ describe('useScheduleRelease', () => {
     const client = createMockClient();
     vi.mocked(scheduleRelease).mockResolvedValue({ ...release, status: 'Ready' });
 
-    const req = { localDateTime: '2026-07-01T09:00:00', timeZoneId: 'Europe/Brussels' };
+    const req = {
+      localDateTime: '2026-07-01T09:00:00',
+      timeZoneId: 'Europe/Brussels',
+      concurrencyStamp: 'stamp-1',
+    };
     const { result } = renderHook(() => useScheduleRelease(), { wrapper: createWrapper(client) });
     result.current.mutate({ id: 'rel-1', request: req });
 

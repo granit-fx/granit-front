@@ -40,6 +40,7 @@ const page: PageResponse = {
   isSiteRoot: true,
   layoutKey: null,
   translations: [],
+  concurrencyStamp: 'mock-stamp',
 };
 const version: PageVersionSummaryResponse = {
   versionId: 'v-1',

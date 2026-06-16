@@ -92,10 +92,14 @@ describe('updateRelease', () => {
     const updated = { ...release, name: 'Sprint 42 rev2' };
     vi.mocked(client.put).mockResolvedValue(axiosResponse(updated));
 
-    await updateRelease(client, BASE, 'rel-1', { name: 'Sprint 42 rev2' });
+    await updateRelease(client, BASE, 'rel-1', {
+      name: 'Sprint 42 rev2',
+      concurrencyStamp: 'stamp-1',
+    });
 
     expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/releases/rel-1`, {
       name: 'Sprint 42 rev2',
+      concurrencyStamp: 'stamp-1',
     });
   });
 });
@@ -110,6 +114,7 @@ describe('addReleaseAction', () => {
       contentId: 'page-1',
       culture: 'fr',
       type: 'Publish' as const,
+      concurrencyStamp: 'stamp-1',
     };
     const result = await addReleaseAction(client, BASE, 'rel-1', request);
 
@@ -136,7 +141,11 @@ describe('scheduleRelease', () => {
     const scheduled = { ...release, status: 'Ready' as const };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(scheduled));
 
-    const request = { localDateTime: '2026-07-01T09:00:00', timeZoneId: 'Europe/Brussels' };
+    const request = {
+      localDateTime: '2026-07-01T09:00:00',
+      timeZoneId: 'Europe/Brussels',
+      concurrencyStamp: 'stamp-1',
+    };
     const result = await scheduleRelease(client, BASE, 'rel-1', request);
 
     expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/releases/rel-1/schedule`, request);
