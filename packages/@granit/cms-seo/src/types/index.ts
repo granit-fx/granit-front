@@ -338,10 +338,10 @@ export interface SeoSuggestRequest {
   readonly siteId: string;
   readonly contentType: string;
   readonly contentId: string;
-  readonly culture?: string | null;
   readonly contentTitle: string;
-  readonly contentBody?: string | null;
   readonly scope: SuggestionScope;
+  readonly culture?: string | null;
+  readonly contentBody?: string | null;
 }
 
 /**
