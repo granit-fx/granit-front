@@ -1,4 +1,4 @@
-import type { EntityId, TenantId } from '@granit/types';
+import type { EntityId, ISODateString, TenantId } from '@granit/types';
 
 // ---------------------------------------------------------------------------
 // Webhook types — mirrors Granit.Webhooks .NET contract
@@ -55,9 +55,9 @@ export interface WebhookSubscriptionResponse {
   readonly eventType: string;
   readonly status: WebhookSubscriptionStatus;
   readonly consecutiveFailureCount: number;
-  readonly lastSuccessAt: string | null;
-  readonly createdAt: string;
-  readonly modifiedAt: string | null;
+  readonly lastSuccessAt: ISODateString | null;
+  readonly createdAt: ISODateString;
+  readonly modifiedAt: ISODateString | null;
   /**
    * Stripe-style masked preview of the active signing secret
    * (e.g. `whsec_b46a****************5182`) — a fixed 30-char hint
@@ -122,10 +122,10 @@ export const WebhookSigningKeyStatus = {
 export interface WebhookSigningKeyResponse {
   readonly id: WebhookSigningKeyId;
   readonly subscriptionId: WebhookSubscriptionId;
-  readonly createdAt: string;
-  readonly expiresAt: string | null;
-  readonly revokedAt: string | null;
-  readonly lastRotationNotificationAt: string | null;
+  readonly createdAt: ISODateString;
+  readonly expiresAt: ISODateString | null;
+  readonly revokedAt: ISODateString | null;
+  readonly lastRotationNotificationAt: ISODateString | null;
   readonly status: WebhookSigningKeyStatus;
 }
 
@@ -136,7 +136,7 @@ export interface WebhookSigningKeyResponse {
 export interface WebhookSigningKeyCreatedResponse {
   readonly id: WebhookSigningKeyId;
   readonly subscriptionId: WebhookSubscriptionId;
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
   readonly plainSecret: string;
 }
 
@@ -172,7 +172,7 @@ export interface WebhookDeliveryAttemptResponse {
   readonly targetUrl: string;
   readonly httpStatusCode: number | null;
   readonly payloadHash: string;
-  readonly occurredAt: string;
+  readonly occurredAt: ISODateString;
   readonly durationMs: number;
   readonly errorMessage: string | null;
   readonly isSuccess: boolean;

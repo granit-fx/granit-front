@@ -1,10 +1,12 @@
+import type { ISODateString } from '@granit/types';
+
 // ── Data Export (GDPR Art. 15/20) ────────────────────────────────────────────
 
 export type PrivacyExportStatus = 'Pending' | 'Completed' | 'PartiallyCompleted' | 'TimedOut';
 
 export type PrivacyExportRequestResponse = {
   readonly requestId: string;
-  readonly requestedAt: string;
+  readonly requestedAt: ISODateString;
 };
 
 export type PrivacyExportStatusResponse = {
@@ -13,10 +15,10 @@ export type PrivacyExportStatusResponse = {
   readonly subjectUserId: string;
   /** Who requested the export. Differs from {@link subjectUserId} in the on-behalf-of flow. */
   readonly callerUserId: string;
-  readonly requestedAt: string;
+  readonly requestedAt: ISODateString;
   readonly state: PrivacyExportStatus;
   readonly archiveBlobReferenceId: string | null;
-  readonly completedAt: string | null;
+  readonly completedAt: ISODateString | null;
   readonly missingProviders: readonly string[];
 };
 
@@ -32,7 +34,7 @@ export type PrivacyDeletionRequest = {
 /** Response from POST /privacy/deletions (202 Accepted). */
 export type PrivacyDeletionRequestResponse = {
   readonly requestId: string;
-  readonly scheduledDeletionAt: string;
+  readonly scheduledDeletionAt: ISODateString;
 };
 
 /** Shape of each entry from GET /privacy/deletions and GET /privacy/deletions/{id}. */
@@ -40,10 +42,10 @@ export type PrivacyDeletionStatusResponse = {
   readonly requestId: string;
   readonly state: DeletionState;
   readonly reason: string;
-  readonly requestedAt: string;
-  readonly scheduledDeletionAt: string;
-  readonly cancelledAt: string | null;
-  readonly executedAt: string | null;
+  readonly requestedAt: ISODateString;
+  readonly scheduledDeletionAt: ISODateString;
+  readonly cancelledAt: ISODateString | null;
+  readonly executedAt: ISODateString | null;
 };
 
 // ── Legal Agreements (GDPR Art. 7) ───────────────────────────────────────────
@@ -58,14 +60,14 @@ export type PrivacyConsentStatusResponse = {
   readonly documentId: string;
   readonly currentVersion: string;
   readonly hasAcceptedLatest: boolean;
-  readonly lastAcceptedAt: string | null;
+  readonly lastAcceptedAt: ISODateString | null;
 };
 
 export type PrivacyUserAgreementResponse = {
   readonly id: string;
   readonly documentId: string;
   readonly version: string;
-  readonly acceptedAt: string;
+  readonly acceptedAt: ISODateString;
   readonly isLatest: boolean;
 };
 
@@ -91,8 +93,8 @@ export type LegalDocumentDetailResponse = {
   readonly description: string | null;
   readonly templateName: string | null;
   readonly documentBlobId: string | null;
-  readonly createdAt: string;
-  readonly lastModifiedAt: string;
+  readonly createdAt: ISODateString;
+  readonly lastModifiedAt: ISODateString;
   readonly concurrencyStamp: string;
 };
 
@@ -138,7 +140,7 @@ export type PrivacyProcessingPurposeResponse = {
 
 export type PrivacyOptOutStatusResponse = {
   readonly isOptedOut: boolean;
-  readonly optedOutAt: string | null;
+  readonly optedOutAt: ISODateString | null;
   readonly regulation: string | null;
 };
 

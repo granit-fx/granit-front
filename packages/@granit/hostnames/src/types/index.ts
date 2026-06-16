@@ -1,3 +1,5 @@
+import type { ISODateString } from '@granit/types';
+
 // ---------------------------------------------------------------------------
 // Hostnames types — mirrors Granit.Hostnames .NET contract
 // ---------------------------------------------------------------------------
@@ -92,15 +94,15 @@ export interface ManagedHostnameResponse {
   readonly status: HostnameStatus;
   readonly verificationToken: string | null;
   readonly expectedDnsRecords: readonly ExpectedDnsRecord[];
-  readonly lastCheckedAt: string | null;
+  readonly lastCheckedAt: ISODateString | null;
   readonly conflicts: readonly DnsConflict[];
   readonly failedCheckCount: number;
-  readonly nextCheckAt: string | null;
+  readonly nextCheckAt: ISODateString | null;
   readonly certificateStatus: CertificateStatus;
-  readonly certExpiresAt: string | null;
-  readonly createdAt: string;
+  readonly certExpiresAt: ISODateString | null;
+  readonly createdAt: ISODateString;
   readonly createdBy: string;
-  readonly modifiedAt: string | null;
+  readonly modifiedAt: ISODateString | null;
   readonly modifiedBy: string | null;
   readonly concurrencyStamp: string;
 }

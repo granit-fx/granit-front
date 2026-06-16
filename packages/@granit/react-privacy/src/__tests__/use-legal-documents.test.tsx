@@ -7,6 +7,7 @@ import {
 } from '@granit/privacy';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -58,8 +59,8 @@ const mockDocument: LegalDocumentDetailResponse = {
   description: 'Initial draft',
   templateName: 'privacy-policy-template',
   documentBlobId: null,
-  createdAt: '2026-04-01T10:00:00Z',
-  lastModifiedAt: '2026-04-01T10:00:00Z',
+  createdAt: toISODateString('2026-04-01T10:00:00Z'),
+  lastModifiedAt: toISODateString('2026-04-01T10:00:00Z'),
   concurrencyStamp: 'stamp-ldv-001',
 };
 

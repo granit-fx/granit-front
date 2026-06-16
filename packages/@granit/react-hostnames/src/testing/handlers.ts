@@ -1,4 +1,5 @@
 import { created } from '@granit/testing/msw';
+import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -52,7 +53,7 @@ export function createHostnamesHandlers(
 
     http.post<never, CreateManagedHostnameRequest>(`${baseUrl}`, async ({ request }) => {
       const body = await request.json();
-      const now = new Date().toISOString();
+      const now = toISODateString(new Date().toISOString());
       const newHostname: ManagedHostnameResponse = {
         id: randomId(),
         host: body.host,
@@ -94,14 +95,22 @@ export function createHostnamesHandlers(
     http.post(`${baseUrl}/:id/primary`, ({ params }) => {
       const idx = store.findIndex((h) => h.id === params.id);
       if (idx === -1) return new HttpResponse(null, { status: 404 });
-      store[idx] = { ...store[idx]!, isPrimary: true, modifiedAt: new Date().toISOString() };
+      store[idx] = {
+        ...store[idx]!,
+        isPrimary: true,
+        modifiedAt: toISODateString(new Date().toISOString()),
+      };
       return new HttpResponse(null, { status: 204 });
     }),
 
     http.delete(`${baseUrl}/:id/primary`, ({ params }) => {
       const idx = store.findIndex((h) => h.id === params.id);
       if (idx === -1) return new HttpResponse(null, { status: 404 });
-      store[idx] = { ...store[idx]!, isPrimary: false, modifiedAt: new Date().toISOString() };
+      store[idx] = {
+        ...store[idx]!,
+        isPrimary: false,
+        modifiedAt: toISODateString(new Date().toISOString()),
+      };
       return new HttpResponse(null, { status: 204 });
     }),
 
@@ -118,7 +127,7 @@ export function createHostnamesHandlers(
       const updated: ManagedHostnameResponse = {
         ...hostname,
         status: 'Verifying',
-        modifiedAt: new Date().toISOString(),
+        modifiedAt: toISODateString(new Date().toISOString()),
       };
       return HttpResponse.json(updated, { status: 202 });
     }),

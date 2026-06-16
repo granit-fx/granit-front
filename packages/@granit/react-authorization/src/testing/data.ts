@@ -1,3 +1,5 @@
+import { toISODateString } from '@granit/types';
+
 import type {
   PermissionDefinitionResponse,
   PermissionGrant,
@@ -153,7 +155,7 @@ export const mockPermissionGrants: PermissionGrant[] = [
     providerName: 'R',
     providerKey: 'admin',
     tenantId: null,
-    createdAt: '2026-01-01T00:00:00Z',
+    createdAt: toISODateString('2026-01-01T00:00:00Z'),
     createdBy: 'system',
     modifiedAt: null,
     modifiedBy: null,
@@ -164,7 +166,7 @@ export const mockPermissionGrants: PermissionGrant[] = [
     providerName: 'R',
     providerKey: 'viewer',
     tenantId: null,
-    createdAt: '2026-01-01T00:00:00Z',
+    createdAt: toISODateString('2026-01-01T00:00:00Z'),
     createdBy: 'system',
     modifiedAt: null,
     modifiedBy: null,
@@ -184,7 +186,7 @@ export const mockRoleMetadata: RoleMetadata[] = [
     isOrphaned: false,
     orphanedAt: null,
     concurrencyStamp: 'stamp-admin',
-    createdAt: '2026-01-01T00:00:00Z',
+    createdAt: toISODateString('2026-01-01T00:00:00Z'),
     createdBy: 'system',
     modifiedAt: null,
     modifiedBy: null,
@@ -200,7 +202,7 @@ export const mockRoleMetadata: RoleMetadata[] = [
     isOrphaned: false,
     orphanedAt: null,
     concurrencyStamp: 'stamp-viewer',
-    createdAt: '2026-01-01T00:00:00Z',
+    createdAt: toISODateString('2026-01-01T00:00:00Z'),
     createdBy: 'system',
     modifiedAt: null,
     modifiedBy: null,

@@ -1,4 +1,5 @@
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -28,15 +29,15 @@ const mockHostname: ManagedHostnameResponse = {
   status: HostnameStatus.Active,
   verificationToken: null,
   expectedDnsRecords: [],
-  lastCheckedAt: '2026-06-01T10:00:00Z',
+  lastCheckedAt: toISODateString('2026-06-01T10:00:00Z'),
   conflicts: [],
   failedCheckCount: 0,
-  nextCheckAt: '2026-06-02T10:00:00Z',
+  nextCheckAt: toISODateString('2026-06-02T10:00:00Z'),
   certificateStatus: CertificateStatus.Secured,
-  certExpiresAt: '2027-06-01T10:00:00Z',
-  createdAt: '2026-01-01T00:00:00Z',
+  certExpiresAt: toISODateString('2027-06-01T10:00:00Z'),
+  createdAt: toISODateString('2026-01-01T00:00:00Z'),
   createdBy: 'user@example.com',
-  modifiedAt: '2026-06-01T10:00:00Z',
+  modifiedAt: toISODateString('2026-06-01T10:00:00Z'),
   modifiedBy: 'user@example.com',
   concurrencyStamp: 'stamp-abc',
 };
@@ -183,12 +184,12 @@ describe('hostnames-api', () => {
 
       await reportCertificateStatus(client, BASE, mockHostname.id, {
         status: CertificateStatus.Secured,
-        expiresAt: '2027-06-01T10:00:00Z',
+        expiresAt: toISODateString('2027-06-01T10:00:00Z'),
       });
 
       expect(client.post).toHaveBeenCalledWith(`${BASE}/${mockHostname.id}/certificate-status`, {
         status: CertificateStatus.Secured,
-        expiresAt: '2027-06-01T10:00:00Z',
+        expiresAt: toISODateString('2027-06-01T10:00:00Z'),
       });
     });
   });

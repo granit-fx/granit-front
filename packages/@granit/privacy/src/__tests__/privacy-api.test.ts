@@ -1,4 +1,5 @@
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -48,7 +49,7 @@ describe('privacy-api', () => {
   describe('requestExport', () => {
     it('sends POST to /exports without body when no request given', async () => {
       const client = createMockClient();
-      const response = { requestId: 'req-1', requestedAt: '2026-03-21T10:00:00Z' };
+      const response = { requestId: 'req-1', requestedAt: toISODateString('2026-03-21T10:00:00Z') };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
       const result = await requestExport(client, BASE);
@@ -59,7 +60,7 @@ describe('privacy-api', () => {
 
     it('sends POST to /exports with scopes when request given', async () => {
       const client = createMockClient();
-      const response = { requestId: 'req-2', requestedAt: '2026-03-21T10:01:00Z' };
+      const response = { requestId: 'req-2', requestedAt: toISODateString('2026-03-21T10:01:00Z') };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
       const result = await requestExport(client, BASE, { scopes: ['Granit.Auditing'] });
@@ -76,10 +77,10 @@ describe('privacy-api', () => {
         requestId: 'req-1',
         subjectUserId: '11111111-1111-1111-1111-111111111111',
         callerUserId: '11111111-1111-1111-1111-111111111111',
-        requestedAt: '2026-03-21T10:00:00Z',
+        requestedAt: toISODateString('2026-03-21T10:00:00Z'),
         state: 'Completed',
         archiveBlobReferenceId: 'blob-123',
-        completedAt: '2026-03-21T10:05:00Z',
+        completedAt: toISODateString('2026-03-21T10:05:00Z'),
         missingProviders: [],
       };
       vi.mocked(client.get).mockResolvedValueOnce({ data: response });
@@ -111,7 +112,7 @@ describe('privacy-api', () => {
       const client = createMockClient();
       const response: PrivacyDeletionRequestResponse = {
         requestId: 'del-1',
-        scheduledDeletionAt: '2026-03-22T10:00:01Z',
+        scheduledDeletionAt: toISODateString('2026-03-22T10:00:01Z'),
       };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
@@ -129,7 +130,7 @@ describe('privacy-api', () => {
       const client = createMockClient();
       const response: PrivacyDeletionRequestResponse = {
         requestId: 'del-2',
-        scheduledDeletionAt: '2026-04-21T10:00:00Z',
+        scheduledDeletionAt: toISODateString('2026-04-21T10:00:00Z'),
       };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
@@ -154,9 +155,9 @@ describe('privacy-api', () => {
           requestId: 'del-1',
           state: 'Deferred',
           reason: 'Closing account',
-          requestedAt: '2026-03-22T10:00:00Z',
+          requestedAt: toISODateString('2026-03-22T10:00:00Z'),
           executedAt: null,
-          scheduledDeletionAt: '2026-04-21T10:00:00Z',
+          scheduledDeletionAt: toISODateString('2026-04-21T10:00:00Z'),
           cancelledAt: null,
         },
       ];
@@ -176,9 +177,9 @@ describe('privacy-api', () => {
         requestId: 'del-1',
         state: 'Deferred',
         reason: 'Closing account',
-        requestedAt: '2026-03-22T10:00:00Z',
+        requestedAt: toISODateString('2026-03-22T10:00:00Z'),
         executedAt: null,
-        scheduledDeletionAt: '2026-04-21T10:00:00Z',
+        scheduledDeletionAt: toISODateString('2026-04-21T10:00:00Z'),
         cancelledAt: null,
       };
       vi.mocked(client.get).mockResolvedValueOnce({ data: response });
@@ -226,7 +227,7 @@ describe('privacy-api', () => {
           documentId: 'tos',
           currentVersion: '2.0',
           hasAcceptedLatest: false,
-          lastAcceptedAt: '2025-01-01T00:00:00Z',
+          lastAcceptedAt: toISODateString('2025-01-01T00:00:00Z'),
         },
       ];
       vi.mocked(client.get).mockResolvedValueOnce({ data: response });
@@ -246,7 +247,7 @@ describe('privacy-api', () => {
           id: 'h-1',
           documentId: 'tos',
           version: '1.0',
-          acceptedAt: '2024-06-01T00:00:00Z',
+          acceptedAt: toISODateString('2024-06-01T00:00:00Z'),
           isLatest: false,
         },
       ];
@@ -284,8 +285,8 @@ describe('privacy-api', () => {
     description: 'Initial draft',
     templateName: 'privacy-policy-template',
     documentBlobId: null,
-    createdAt: '2026-04-01T10:00:00Z',
-    lastModifiedAt: '2026-04-01T10:00:00Z',
+    createdAt: toISODateString('2026-04-01T10:00:00Z'),
+    lastModifiedAt: toISODateString('2026-04-01T10:00:00Z'),
     concurrencyStamp: 'stamp-ldv-001',
   };
 
@@ -482,7 +483,11 @@ describe('privacy-api', () => {
   describe('requestOptOut', () => {
     it('sends POST to /opt-out', async () => {
       const client = createMockClient();
-      const response = { isOptedOut: true, optedOutAt: '2026-06-07T10:00:00Z', regulation: 'CCPA' };
+      const response = {
+        isOptedOut: true,
+        optedOutAt: toISODateString('2026-06-07T10:00:00Z'),
+        regulation: 'CCPA',
+      };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
       const result = await requestOptOut(client, BASE);
@@ -533,7 +538,10 @@ describe('privacy-api', () => {
   describe('requestExportOnBehalfOf', () => {
     it('sends POST to /exports/on-behalf-of with subject user id', async () => {
       const client = createMockClient();
-      const response = { requestId: 'req-obo-1', requestedAt: '2026-06-07T10:00:00Z' };
+      const response = {
+        requestId: 'req-obo-1',
+        requestedAt: toISODateString('2026-06-07T10:00:00Z'),
+      };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
       const result = await requestExportOnBehalfOf(client, BASE, {
@@ -548,7 +556,10 @@ describe('privacy-api', () => {
 
     it('sends POST with scopes when provided', async () => {
       const client = createMockClient();
-      const response = { requestId: 'req-obo-2', requestedAt: '2026-06-07T10:01:00Z' };
+      const response = {
+        requestId: 'req-obo-2',
+        requestedAt: toISODateString('2026-06-07T10:01:00Z'),
+      };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
       const result = await requestExportOnBehalfOf(client, BASE, {

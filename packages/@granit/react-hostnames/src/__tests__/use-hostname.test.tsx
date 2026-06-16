@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -32,15 +33,15 @@ const mockHostname: ManagedHostnameResponse = {
   status: 'Active',
   verificationToken: null,
   expectedDnsRecords: [],
-  lastCheckedAt: '2026-06-01T08:00:00Z',
+  lastCheckedAt: toISODateString('2026-06-01T08:00:00Z'),
   conflicts: [],
   failedCheckCount: 0,
-  nextCheckAt: '2026-06-02T08:00:00Z',
+  nextCheckAt: toISODateString('2026-06-02T08:00:00Z'),
   certificateStatus: 'Secured',
-  certExpiresAt: '2027-06-01T08:00:00Z',
-  createdAt: '2026-01-01T00:00:00Z',
+  certExpiresAt: toISODateString('2027-06-01T08:00:00Z'),
+  createdAt: toISODateString('2026-01-01T00:00:00Z'),
   createdBy: 'admin@acme.com',
-  modifiedAt: '2026-06-01T08:00:00Z',
+  modifiedAt: toISODateString('2026-06-01T08:00:00Z'),
   modifiedBy: 'admin@acme.com',
   concurrencyStamp: 'stamp-0001',
 };

@@ -1,3 +1,5 @@
+import type { ISODateString } from '@granit/types';
+
 // ---------------------------------------------------------------------------
 // Permissions (GET {basePath}/permissions response DTO)
 // ---------------------------------------------------------------------------
@@ -67,9 +69,9 @@ export type PermissionGrant = {
   readonly providerName: string;
   readonly providerKey: string;
   readonly tenantId: string | null;
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
   readonly createdBy: string;
-  readonly modifiedAt: string | null;
+  readonly modifiedAt: ISODateString | null;
   readonly modifiedBy: string | null;
 };
 
@@ -84,10 +86,10 @@ export type RoleMetadata = {
   readonly description: string | null;
   readonly isSystem: boolean;
   readonly isOrphaned: boolean;
-  readonly orphanedAt: string | null;
+  readonly orphanedAt: ISODateString | null;
   readonly concurrencyStamp: string;
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
   readonly createdBy: string;
-  readonly modifiedAt: string | null;
+  readonly modifiedAt: ISODateString | null;
   readonly modifiedBy: string | null;
 };

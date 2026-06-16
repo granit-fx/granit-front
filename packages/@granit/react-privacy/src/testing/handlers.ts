@@ -1,6 +1,7 @@
 import { DATE_OPERATORS, ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { notFound } from '@granit/testing/msw';
+import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -365,7 +366,7 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
     http.post(`${baseUrl}/exports/on-behalf-of`, async ({ request }) => {
       const body = (await request.json()) as PrivacyExportOnBehalfOfRequest;
       const requestId = `exp-behalf-${body.subjectUserId.slice(0, 8)}`;
-      const requestedAt = new Date().toISOString();
+      const requestedAt = toISODateString(new Date().toISOString());
       return HttpResponse.json({ requestId, requestedAt }, { status: 202 });
     }),
 
@@ -378,7 +379,7 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
     http.post(`${baseUrl}/opt-out`, () => {
       optOutStatus = {
         isOptedOut: true,
-        optedOutAt: new Date().toISOString(),
+        optedOutAt: toISODateString(new Date().toISOString()),
         regulation: mockRegulationProfile.regulation,
       };
       return HttpResponse.json(optOutStatus, { status: 201 });
@@ -397,7 +398,7 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
     http.post(`${baseUrl}/exports`, () => {
       exportCounter++;
       const requestId = `exp-${String(exportCounter).padStart(3, '0')}`;
-      const requestedAt = new Date().toISOString();
+      const requestedAt = toISODateString(new Date().toISOString());
       const newExport: Mutable<PrivacyExportStatusResponse> = {
         requestId,
         subjectUserId: '11111111-1111-1111-1111-111111111111',
@@ -429,9 +430,9 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const body = (await request.json()) as { reason: string; defer?: boolean };
       deletionCounter++;
       const requestId = `del-${String(deletionCounter).padStart(3, '0')}`;
-      const now = new Date().toISOString();
+      const now = toISODateString(new Date().toISOString());
       const scheduledDeletionAt = body.defer
-        ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        ? toISODateString(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString())
         : now;
       const record: Mutable<PrivacyDeletionStatusResponse> = {
         requestId,
@@ -470,7 +471,7 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
         );
       }
       item.state = 'Cancelled';
-      item.cancelledAt = new Date().toISOString();
+      item.cancelledAt = toISODateString(new Date().toISOString());
       return new HttpResponse(null, { status: 200 });
     }),
 
@@ -498,7 +499,7 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       if (status) {
         status.currentVersion = version;
         status.hasAcceptedLatest = true;
-        status.lastAcceptedAt = new Date().toISOString();
+        status.lastAcceptedAt = toISODateString(new Date().toISOString());
       }
 
       history = history.map((h) => (h.documentId === documentId ? { ...h, isLatest: false } : h));
@@ -507,7 +508,7 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
         id: `ah-${Date.now()}`,
         documentId,
         version,
-        acceptedAt: new Date().toISOString(),
+        acceptedAt: toISODateString(new Date().toISOString()),
         isLatest: true,
       });
 
@@ -542,7 +543,7 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const body = (await request.json()) as LegalDocumentCreateRequest;
       legalIdCounter++;
       const id = `ld-${String(legalIdCounter).padStart(3, '0')}`;
-      const now = new Date().toISOString();
+      const now = toISODateString(new Date().toISOString());
       const newDoc: LegalDocumentDetailResponse = {
         id,
         documentId: body.documentId,
@@ -576,7 +577,7 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       doc.description = body.description ?? doc.description;
       doc.templateName = body.templateName ?? doc.templateName;
       doc.documentBlobId = body.documentBlobId ?? doc.documentBlobId;
-      doc.lastModifiedAt = new Date().toISOString();
+      doc.lastModifiedAt = toISODateString(new Date().toISOString());
       doc.concurrencyStamp = `stamp-${doc.id}-${doc.lastModifiedAt}`;
       return HttpResponse.json(doc);
     }),
@@ -600,7 +601,7 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       }
 
       doc.lifecycleStatus = 'Published';
-      doc.lastModifiedAt = new Date().toISOString();
+      doc.lastModifiedAt = toISODateString(new Date().toISOString());
       return HttpResponse.json(doc);
     }),
   ];

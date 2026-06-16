@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -115,7 +116,12 @@ describe('useAgreementDocuments', () => {
   it('should fetch legal documents', async () => {
     const client = createMockClient();
     const documents = [
-      { id: 'doc-1', title: 'Terms of Service', version: '1.0', publishedAt: '2025-01-01' },
+      {
+        id: 'doc-1',
+        title: 'Terms of Service',
+        version: '1.0',
+        publishedAt: toISODateString('2025-01-01'),
+      },
     ];
     vi.mocked(client.get).mockResolvedValue(axiosResponse(documents));
 
@@ -137,7 +143,9 @@ describe('useAgreementDocuments', () => {
 describe('useAgreementStatuses', () => {
   it('should fetch agreement statuses', async () => {
     const client = createMockClient();
-    const statuses = [{ documentId: 'doc-1', accepted: true, acceptedAt: '2025-01-02' }];
+    const statuses = [
+      { documentId: 'doc-1', accepted: true, acceptedAt: toISODateString('2025-01-02') },
+    ];
     vi.mocked(client.get).mockResolvedValue(axiosResponse(statuses));
 
     const { result } = renderHook(() => useAgreementStatuses(), {
@@ -158,7 +166,9 @@ describe('useAgreementStatuses', () => {
 describe('useAgreementHistory', () => {
   it('should fetch agreement history', async () => {
     const client = createMockClient();
-    const history = [{ documentId: 'doc-1', action: 'accepted', performedAt: '2025-01-02' }];
+    const history = [
+      { documentId: 'doc-1', action: 'accepted', performedAt: toISODateString('2025-01-02') },
+    ];
     vi.mocked(client.get).mockResolvedValue(axiosResponse(history));
 
     const { result } = renderHook(() => useAgreementHistory(), {
@@ -223,7 +233,7 @@ describe('useRequestDeletion', () => {
     const client = createMockClient();
     const response = {
       requestId: 'del-1',
-      scheduledDeletionAt: '2026-03-22T10:00:01Z',
+      scheduledDeletionAt: toISODateString('2026-03-22T10:00:01Z'),
     };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(response));
 
@@ -247,7 +257,7 @@ describe('useRequestDeletion', () => {
     const client = createMockClient();
     const response = {
       requestId: 'del-2',
-      scheduledDeletionAt: '2026-04-21T10:00:00Z',
+      scheduledDeletionAt: toISODateString('2026-04-21T10:00:00Z'),
     };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(response));
 
@@ -297,8 +307,8 @@ describe('useDeletionRequests', () => {
         requestId: 'del-1',
         state: 'Deferred',
         reason: 'Closing account',
-        requestedAt: '2026-03-22T10:00:00Z',
-        scheduledDeletionAt: '2026-04-21T10:00:00Z',
+        requestedAt: toISODateString('2026-03-22T10:00:00Z'),
+        scheduledDeletionAt: toISODateString('2026-04-21T10:00:00Z'),
         cancelledAt: null,
         executedAt: null,
       },
@@ -327,8 +337,8 @@ describe('useDeletionStatus', () => {
       requestId: 'del-1',
       state: 'Deferred',
       reason: 'Closing account',
-      requestedAt: '2026-03-22T10:00:00Z',
-      scheduledDeletionAt: '2026-04-21T10:00:00Z',
+      requestedAt: toISODateString('2026-03-22T10:00:00Z'),
+      scheduledDeletionAt: toISODateString('2026-04-21T10:00:00Z'),
       cancelledAt: null,
       executedAt: null,
     };
@@ -402,7 +412,9 @@ describe('useCancelDeletion', () => {
 describe('usePrivacyExports', () => {
   it('should fetch all export requests', async () => {
     const client = createMockClient();
-    const exports = [{ requestId: 'exp-1', status: 'completed', requestedAt: '2025-01-01' }];
+    const exports = [
+      { requestId: 'exp-1', status: 'completed', requestedAt: toISODateString('2025-01-01') },
+    ];
     vi.mocked(client.get).mockResolvedValue(axiosResponse(exports));
 
     const { result } = renderHook(() => usePrivacyExports(), {
@@ -423,7 +435,11 @@ describe('usePrivacyExports', () => {
 describe('usePrivacyExportStatus', () => {
   it('should fetch status for a specific export request', async () => {
     const client = createMockClient();
-    const status = { requestId: 'exp-1', status: 'processing', requestedAt: '2025-01-01' };
+    const status = {
+      requestId: 'exp-1',
+      status: 'processing',
+      requestedAt: toISODateString('2025-01-01'),
+    };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(status));
 
     const { result } = renderHook(() => usePrivacyExportStatus('exp-1'), {
@@ -455,7 +471,7 @@ describe('usePrivacyExportStatus', () => {
 describe('useRequestExport', () => {
   it('should request a new data export', async () => {
     const client = createMockClient();
-    const response = { requestId: 'exp-2', requestedAt: '2025-03-22' };
+    const response = { requestId: 'exp-2', requestedAt: toISODateString('2025-03-22') };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(response));
 
     const { result } = renderHook(() => useRequestExport(), {
