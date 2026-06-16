@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 import * as React from 'react';
@@ -37,7 +38,7 @@ const sampleDoc: DocumentResponse = {
   sizeBytes: 1024,
   contentType: 'application/pdf',
   status: 'Active',
-  createdAt: '2026-05-01T00:00:00Z',
+  createdAt: toISODateString('2026-05-01T00:00:00Z'),
   modifiedAt: null,
   trashedAt: null,
   permission: null,
@@ -52,7 +53,7 @@ const sampleVersion: DocumentVersionResponse = {
   contentType: 'application/pdf',
   contentHash: null,
   uploadedByUserId: 'user-1',
-  uploadedAt: '2026-05-01T00:00:00Z',
+  uploadedAt: toISODateString('2026-05-01T00:00:00Z'),
   commitMessage: null,
   isCurrent: true,
 };
@@ -61,7 +62,7 @@ const sampleTicket: UploadTicketResponse = {
   blobId: 'blob-1',
   uploadUrl: 'https://blob.example/upload',
   httpMethod: 'PUT',
-  expiresAt: '2026-05-01T01:00:00Z',
+  expiresAt: toISODateString('2026-05-01T01:00:00Z'),
   requiredHeaders: {},
 };
 

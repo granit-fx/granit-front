@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -41,7 +42,7 @@ const sampleDocument: DocumentResponse = {
   sizeBytes: 1024,
   contentType: 'application/pdf',
   status: 'Active',
-  createdAt: '2026-05-01T10:00:00Z',
+  createdAt: toISODateString('2026-05-01T10:00:00Z'),
   modifiedAt: null,
   concurrencyStamp: 'stamp-1',
   trashedAt: null,
@@ -57,7 +58,7 @@ const sampleVersion: DocumentVersionResponse = {
   contentType: 'application/pdf',
   contentHash: null,
   uploadedByUserId: 'user-1',
-  uploadedAt: '2026-05-01T10:00:00Z',
+  uploadedAt: toISODateString('2026-05-01T10:00:00Z'),
   commitMessage: null,
   isCurrent: true,
 };
@@ -74,7 +75,7 @@ describe('requestUploadTicket', () => {
       blobId: 'blob-1',
       uploadUrl: 'https://example.com/upload',
       httpMethod: 'PUT',
-      expiresAt: '2026-05-01T10:15:00Z',
+      expiresAt: toISODateString('2026-05-01T10:15:00Z'),
       requiredHeaders: { 'Content-Type': 'application/pdf' },
     };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(ticket));
@@ -223,7 +224,7 @@ describe('permanentlyDeleteDocument', () => {
 describe('requestDocumentDownloadUrl', () => {
   const url: DownloadUrlResponse = {
     url: 'https://example.com/download',
-    expiresAt: '2026-05-01T10:15:00Z',
+    expiresAt: toISODateString('2026-05-01T10:15:00Z'),
   };
 
   it('GETs /documents/{id}/download with no query when versionId is omitted', async () => {

@@ -1,6 +1,7 @@
 import { BlobStatus } from '@granit/blob-storage';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -35,8 +36,8 @@ const mockDescriptor: BlobDescriptorResponse = {
   status: BlobStatus.Valid,
   rejectionReason: null,
   deletionReason: null,
-  createdAt: '2026-03-20T10:00:00Z',
-  validatedAt: '2026-03-20T10:00:05Z',
+  createdAt: toISODateString('2026-03-20T10:00:00Z'),
+  validatedAt: toISODateString('2026-03-20T10:00:05Z'),
   deletedAt: null,
 };
 

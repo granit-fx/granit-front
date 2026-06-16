@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -76,7 +77,7 @@ describe('UploadButton', () => {
       blobId: 'blob-1',
       uploadUrl: 'https://blob.example/put',
       httpMethod: 'PUT',
-      expiresAt: '2026-05-12T00:00:00Z',
+      expiresAt: toISODateString('2026-05-12T00:00:00Z'),
       requiredHeaders: { 'x-ms-blob-type': 'BlockBlob' },
     };
     const documentResponse = {
@@ -132,7 +133,7 @@ describe('UploadButton', () => {
       blobId: 'blob-1',
       uploadUrl: 'https://blob.example/put',
       httpMethod: 'PUT',
-      expiresAt: '2026-05-12T00:00:00Z',
+      expiresAt: toISODateString('2026-05-12T00:00:00Z'),
       requiredHeaders: {},
     };
     vi.mocked(client.post).mockImplementation(((url: string) => {
@@ -196,7 +197,7 @@ describe('UploadButton', () => {
       blobId: 'blob-1',
       uploadUrl: 'https://blob.example/put',
       httpMethod: 'PUT',
-      expiresAt: '2026-05-12T00:00:00Z',
+      expiresAt: toISODateString('2026-05-12T00:00:00Z'),
       requiredHeaders: {},
     };
     vi.mocked(client.post).mockResolvedValue({ data: ticket });
@@ -230,7 +231,7 @@ describe('UploadButton', () => {
       blobId: 'blob-1',
       uploadUrl: 'https://blob.example/put',
       httpMethod: 'PUT',
-      expiresAt: '2026-05-12T00:00:00Z',
+      expiresAt: toISODateString('2026-05-12T00:00:00Z'),
       requiredHeaders: { 'x-h': 'v' },
     };
     vi.mocked(client.post).mockResolvedValue({ data: ticket });
@@ -273,7 +274,7 @@ describe('UploadButton', () => {
       blobId: 'blob-1',
       uploadUrl: 'https://blob.example/put',
       httpMethod: 'PUT',
-      expiresAt: '2026-05-12T00:00:00Z',
+      expiresAt: toISODateString('2026-05-12T00:00:00Z'),
       requiredHeaders: {},
     };
     const documentResponse = {

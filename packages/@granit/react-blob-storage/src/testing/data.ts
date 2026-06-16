@@ -1,4 +1,5 @@
 import { BlobStatus } from '@granit/blob-storage';
+import { toISODateString } from '@granit/types';
 
 import type { BlobDescriptorResponse } from '@granit/blob-storage';
 
@@ -17,8 +18,8 @@ export const mockBlobs: BlobDescriptorResponse[] = [
     status: S.Valid,
     rejectionReason: null,
     deletionReason: null,
-    createdAt: '2026-03-01T08:12:00Z',
-    validatedAt: '2026-03-01T08:12:05Z',
+    createdAt: toISODateString('2026-03-01T08:12:00Z'),
+    validatedAt: toISODateString('2026-03-01T08:12:05Z'),
     deletedAt: null,
   },
   {
@@ -32,8 +33,8 @@ export const mockBlobs: BlobDescriptorResponse[] = [
     status: S.Valid,
     rejectionReason: null,
     deletionReason: null,
-    createdAt: '2026-03-02T14:30:00Z',
-    validatedAt: '2026-03-02T14:30:03Z',
+    createdAt: toISODateString('2026-03-02T14:30:00Z'),
+    validatedAt: toISODateString('2026-03-02T14:30:03Z'),
     deletedAt: null,
   },
   {
@@ -47,8 +48,8 @@ export const mockBlobs: BlobDescriptorResponse[] = [
     status: S.Valid,
     rejectionReason: null,
     deletionReason: null,
-    createdAt: '2026-03-03T09:45:00Z',
-    validatedAt: '2026-03-03T09:45:02Z',
+    createdAt: toISODateString('2026-03-03T09:45:00Z'),
+    validatedAt: toISODateString('2026-03-03T09:45:02Z'),
     deletedAt: null,
   },
   {
@@ -62,8 +63,8 @@ export const mockBlobs: BlobDescriptorResponse[] = [
     status: S.Valid,
     rejectionReason: null,
     deletionReason: null,
-    createdAt: '2026-03-05T06:00:00Z',
-    validatedAt: '2026-03-05T06:00:12Z',
+    createdAt: toISODateString('2026-03-05T06:00:00Z'),
+    validatedAt: toISODateString('2026-03-05T06:00:12Z'),
     deletedAt: null,
   },
   {
@@ -77,8 +78,8 @@ export const mockBlobs: BlobDescriptorResponse[] = [
     status: S.Valid,
     rejectionReason: null,
     deletionReason: null,
-    createdAt: '2026-03-06T11:20:00Z',
-    validatedAt: '2026-03-06T11:20:18Z',
+    createdAt: toISODateString('2026-03-06T11:20:00Z'),
+    validatedAt: toISODateString('2026-03-06T11:20:18Z'),
     deletedAt: null,
   },
   {
@@ -92,8 +93,8 @@ export const mockBlobs: BlobDescriptorResponse[] = [
     status: S.Valid,
     rejectionReason: null,
     deletionReason: null,
-    createdAt: '2026-03-07T15:00:00Z',
-    validatedAt: '2026-03-07T15:00:04Z',
+    createdAt: toISODateString('2026-03-07T15:00:00Z'),
+    validatedAt: toISODateString('2026-03-07T15:00:04Z'),
     deletedAt: null,
   },
   {
@@ -107,7 +108,7 @@ export const mockBlobs: BlobDescriptorResponse[] = [
     status: S.Pending,
     rejectionReason: null,
     deletionReason: null,
-    createdAt: '2026-03-18T16:42:00Z',
+    createdAt: toISODateString('2026-03-18T16:42:00Z'),
     validatedAt: null,
     deletedAt: null,
   },
@@ -122,7 +123,7 @@ export const mockBlobs: BlobDescriptorResponse[] = [
     status: S.Uploading,
     rejectionReason: null,
     deletionReason: null,
-    createdAt: '2026-03-19T10:05:00Z',
+    createdAt: toISODateString('2026-03-19T10:05:00Z'),
     validatedAt: null,
     deletedAt: null,
   },
@@ -138,7 +139,7 @@ export const mockBlobs: BlobDescriptorResponse[] = [
     rejectionReason:
       'Content-type mismatch: declared application/pdf, detected application/x-dosexec',
     deletionReason: null,
-    createdAt: '2026-03-10T22:15:00Z',
+    createdAt: toISODateString('2026-03-10T22:15:00Z'),
     validatedAt: null,
     deletedAt: null,
   },
@@ -153,9 +154,9 @@ export const mockBlobs: BlobDescriptorResponse[] = [
     status: S.Deleted,
     rejectionReason: null,
     deletionReason: 'Retention policy — older than 60 days',
-    createdAt: '2026-01-15T07:00:00Z',
-    validatedAt: '2026-01-15T07:00:08Z',
-    deletedAt: '2026-03-16T02:00:00Z',
+    createdAt: toISODateString('2026-01-15T07:00:00Z'),
+    validatedAt: toISODateString('2026-01-15T07:00:08Z'),
+    deletedAt: toISODateString('2026-03-16T02:00:00Z'),
   },
   {
     id: '9a1b2c3d-0011-4000-a000-000000000011',
@@ -168,8 +169,8 @@ export const mockBlobs: BlobDescriptorResponse[] = [
     status: S.Valid,
     rejectionReason: null,
     deletionReason: null,
-    createdAt: '2026-03-12T13:10:00Z',
-    validatedAt: '2026-03-12T13:10:06Z',
+    createdAt: toISODateString('2026-03-12T13:10:00Z'),
+    validatedAt: toISODateString('2026-03-12T13:10:06Z'),
     deletedAt: null,
   },
   {
@@ -183,8 +184,8 @@ export const mockBlobs: BlobDescriptorResponse[] = [
     status: S.Valid,
     rejectionReason: null,
     deletionReason: null,
-    createdAt: '2026-03-14T17:30:00Z',
-    validatedAt: '2026-03-14T17:30:01Z',
+    createdAt: toISODateString('2026-03-14T17:30:00Z'),
+    validatedAt: toISODateString('2026-03-14T17:30:01Z'),
     deletedAt: null,
   },
   {
@@ -198,8 +199,8 @@ export const mockBlobs: BlobDescriptorResponse[] = [
     status: S.Valid,
     rejectionReason: null,
     deletionReason: null,
-    createdAt: '2026-03-08T10:00:00Z',
-    validatedAt: '2026-03-08T10:00:02Z',
+    createdAt: toISODateString('2026-03-08T10:00:00Z'),
+    validatedAt: toISODateString('2026-03-08T10:00:02Z'),
     deletedAt: null,
   },
   {
@@ -213,8 +214,8 @@ export const mockBlobs: BlobDescriptorResponse[] = [
     status: S.Valid,
     rejectionReason: null,
     deletionReason: null,
-    createdAt: '2026-03-17T09:30:00Z',
-    validatedAt: '2026-03-17T09:30:04Z',
+    createdAt: toISODateString('2026-03-17T09:30:00Z'),
+    validatedAt: toISODateString('2026-03-17T09:30:04Z'),
     deletedAt: null,
   },
   {
@@ -228,8 +229,8 @@ export const mockBlobs: BlobDescriptorResponse[] = [
     status: S.Valid,
     rejectionReason: null,
     deletionReason: null,
-    createdAt: '2026-03-19T18:00:00Z',
-    validatedAt: '2026-03-19T18:00:10Z',
+    createdAt: toISODateString('2026-03-19T18:00:00Z'),
+    validatedAt: toISODateString('2026-03-19T18:00:10Z'),
     deletedAt: null,
   },
 ];

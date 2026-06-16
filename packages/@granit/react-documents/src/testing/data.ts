@@ -1,3 +1,5 @@
+import { toISODateString, type ISODateString } from '@granit/types';
+
 import type {
   DocumentResponse,
   DocumentVersionResponse,
@@ -20,12 +22,12 @@ const OWNER_USER_ID = '00000000-0000-4000-8000-0000000000a1';
 const OTHER_USER_ID = '00000000-0000-4000-8000-0000000000a2';
 
 // Anchor every relative timestamp to the project's currentDate.
-const T0 = '2026-05-11T10:00:00Z';
-const T1 = '2026-05-11T09:00:00Z';
-const T2 = '2026-05-10T16:30:00Z';
-const T3 = '2026-05-09T11:00:00Z';
-const T4 = '2026-05-05T08:00:00Z';
-const T5 = '2026-04-28T12:00:00Z';
+const T0 = toISODateString('2026-05-11T10:00:00Z');
+const T1 = toISODateString('2026-05-11T09:00:00Z');
+const T2 = toISODateString('2026-05-10T16:30:00Z');
+const T3 = toISODateString('2026-05-09T11:00:00Z');
+const T4 = toISODateString('2026-05-05T08:00:00Z');
+const T5 = toISODateString('2026-04-28T12:00:00Z');
 
 // ---------------------------------------------------------------------------
 // Folders
@@ -43,7 +45,7 @@ export const mockFoldersData: Mutable<FolderResponse>[] = [
     name: 'Contracts',
     path: '/Contracts',
     depth: 1,
-    createdAt: '2026-05-01T10:00:00Z',
+    createdAt: toISODateString('2026-05-01T10:00:00Z'),
     modifiedAt: null,
     ownerId: OWNER_USER_ID,
     status: 'Active',
@@ -56,7 +58,7 @@ export const mockFoldersData: Mutable<FolderResponse>[] = [
     name: 'Invoices',
     path: '/Invoices',
     depth: 1,
-    createdAt: '2026-05-01T10:00:00Z',
+    createdAt: toISODateString('2026-05-01T10:00:00Z'),
     modifiedAt: null,
     ownerId: OWNER_USER_ID,
     status: 'Active',
@@ -69,7 +71,7 @@ export const mockFoldersData: Mutable<FolderResponse>[] = [
     name: '2025',
     path: '/Contracts/2025',
     depth: 2,
-    createdAt: '2026-05-01T10:00:00Z',
+    createdAt: toISODateString('2026-05-01T10:00:00Z'),
     modifiedAt: null,
     ownerId: OWNER_USER_ID,
     status: 'Active',
@@ -82,7 +84,7 @@ export const mockFoldersData: Mutable<FolderResponse>[] = [
     name: '2026',
     path: '/Contracts/2026',
     depth: 2,
-    createdAt: '2026-05-01T10:00:00Z',
+    createdAt: toISODateString('2026-05-01T10:00:00Z'),
     modifiedAt: null,
     ownerId: OWNER_USER_ID,
     status: 'Active',
@@ -225,7 +227,7 @@ export const mockDocumentsData: Mutable<DocumentResponse>[] = [
 function makeVersions(
   documentId: string,
   count: number,
-  baseTimes: readonly string[]
+  baseTimes: readonly ISODateString[]
 ): Mutable<DocumentVersionResponse>[] {
   const versions: Mutable<DocumentVersionResponse>[] = [];
   for (let n = 1; n <= count; n++) {

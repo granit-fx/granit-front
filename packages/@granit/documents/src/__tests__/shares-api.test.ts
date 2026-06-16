@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -23,7 +24,7 @@ const sampleFolderShare: ShareResponse = {
   permission: 'Read',
   isDefault: true,
   expiresAt: null,
-  createdAt: '2026-05-01T10:00:00Z',
+  createdAt: toISODateString('2026-05-01T10:00:00Z'),
   createdBy: 'user-1',
 };
 

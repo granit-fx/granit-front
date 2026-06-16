@@ -1,6 +1,7 @@
 import { BlobStatus } from '@granit/blob-storage';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -28,7 +29,7 @@ const mockTicket: BlobUploadInitiateResponse = {
   blobId: 'blob-456',
   uploadUrl: 'https://s3.example.com/presigned',
   httpMethod: 'PUT',
-  expiresAt: '2026-03-20T12:00:00Z',
+  expiresAt: toISODateString('2026-03-20T12:00:00Z'),
   requiredHeaders: { 'Content-Type': 'image/png', 'x-amz-meta-tenant': 'tenant-1' },
 };
 

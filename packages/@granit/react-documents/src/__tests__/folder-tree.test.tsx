@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -18,7 +19,7 @@ const root: FolderResponse = {
   name: 'Contracts',
   path: '/Contracts',
   depth: 1,
-  createdAt: '2026-05-01T10:00:00Z',
+  createdAt: toISODateString('2026-05-01T10:00:00Z'),
   modifiedAt: null,
   ownerId: 'user-1',
   status: 'Active',
@@ -32,7 +33,7 @@ const child: FolderResponse = {
   name: '2026',
   path: '/Contracts/2026',
   depth: 2,
-  createdAt: '2026-05-01T10:00:00Z',
+  createdAt: toISODateString('2026-05-01T10:00:00Z'),
   modifiedAt: null,
   ownerId: 'user-1',
   status: 'Active',

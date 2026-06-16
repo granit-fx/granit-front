@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -41,7 +42,7 @@ describe('QuotaBadge', () => {
       limitBytes: 10 * 1024 * 1024 * 1024,
       usageBytes: 5 * 1024 * 1024 * 1024 + Math.round(0.2 * 1024 * 1024 * 1024),
       percentUsed: 52,
-      updatedAt: '2026-05-01T08:00:00Z',
+      updatedAt: toISODateString('2026-05-01T08:00:00Z'),
     };
     vi.mocked(client.get).mockResolvedValue({ data: quota });
 

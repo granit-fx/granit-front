@@ -6,6 +6,7 @@ import {
   parseSort,
   sortItems,
 } from '@granit/testing/msw';
+import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -265,7 +266,7 @@ export function createBlobStorageHandlers(baseUrl = DEFAULT_BASE_PATH) {
         blobId,
         uploadUrl: `${baseUrl}/blobs/${encodeURIComponent(blobId)}/_mock-upload-target`,
         httpMethod: 'PUT',
-        expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+        expiresAt: toISODateString(new Date(Date.now() + 60 * 60 * 1000).toISOString()),
         requiredHeaders: {},
       };
       return HttpResponse.json(response);
@@ -296,7 +297,7 @@ export function createBlobStorageHandlers(baseUrl = DEFAULT_BASE_PATH) {
         // Stash the descriptor so subsequent `GET /blobs/:id` requests
         // (typically issued by `<BlobImage>` or the blob list page)
         // find the freshly-uploaded record.
-        const now = new Date().toISOString();
+        const now = toISODateString(new Date().toISOString());
         const descriptor: BlobDescriptorResponse = {
           id: blobId,
           containerName: tracked.containerName,

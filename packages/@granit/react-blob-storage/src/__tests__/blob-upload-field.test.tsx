@@ -1,5 +1,6 @@
 import { GranitClientProvider } from '@granit/react-api-client';
 import { createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import axios from 'axios';
@@ -62,7 +63,7 @@ function makeWrapper() {
           blobId: 'blob-uploaded-123',
           uploadUrl: 'https://s3.example.com/presigned',
           httpMethod: 'PUT',
-          expiresAt: '2026-12-31T00:00:00Z',
+          expiresAt: toISODateString('2026-12-31T00:00:00Z'),
           requiredHeaders: {},
         },
       } as unknown as Awaited<ReturnType<typeof apiClient.post>>;

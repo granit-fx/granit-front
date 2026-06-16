@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -22,7 +23,7 @@ const sampleDocument: DocumentResponse = {
   sizeBytes: 1024,
   contentType: 'application/pdf',
   status: 'Active',
-  createdAt: '2026-05-01T10:00:00Z',
+  createdAt: toISODateString('2026-05-01T10:00:00Z'),
   modifiedAt: null,
   trashedAt: null,
   permission: null,
@@ -48,7 +49,9 @@ function mockGet(client: AxiosInstance, document: DocumentResponse | null): void
       return Promise.resolve({ data: { versions: [], totalCount: 0, skip: 0, take: 1 } });
     }
     if (url.includes('/download')) {
-      return Promise.resolve({ data: { url: 'https://blob/x', expiresAt: '2026-05-12' } });
+      return Promise.resolve({
+        data: { url: 'https://blob/x', expiresAt: toISODateString('2026-05-12') },
+      });
     }
     return Promise.resolve({ data: document });
   }) as AxiosInstance['get']);

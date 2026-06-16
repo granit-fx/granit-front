@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import { getTenantStorageQuota } from '../api/quota-api';
@@ -14,7 +15,7 @@ describe('getTenantStorageQuota', () => {
       limitBytes: 10_000_000,
       usageBytes: 2_500_000,
       percentUsed: 25,
-      updatedAt: '2026-05-01T10:00:00Z',
+      updatedAt: toISODateString('2026-05-01T10:00:00Z'),
     };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(quota));
 

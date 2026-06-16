@@ -10,6 +10,7 @@
 
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { noContent, notFound, pagedResponse, parseFilters, parseSort } from '@granit/testing/msw';
+import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -202,7 +203,7 @@ export function createDocumentsHandlers(
         name: body.name,
         path: parent ? `${parent.path}/${body.name}` : `/${body.name}`,
         depth: (parent?.depth ?? 0) + 1,
-        createdAt: '2026-05-01T10:00:00Z',
+        createdAt: toISODateString('2026-05-01T10:00:00Z'),
         modifiedAt: null,
         ownerId: MOCK_OWNER_USER_ID,
         status: 'Active',
@@ -289,7 +290,7 @@ export function createDocumentsHandlers(
       const trashedFolder: FolderResponse = {
         ...folder,
         status: 'Trashed',
-        trashedAt: new Date().toISOString(),
+        trashedAt: toISODateString(new Date().toISOString()),
       };
       Object.assign(folder, trashedFolder);
       return HttpResponse.json(folder);
@@ -316,8 +317,8 @@ export function createDocumentsHandlers(
         granteeId: body.granteeId,
         permission: body.permission,
         isDefault: body.isDefault ?? true,
-        expiresAt: body.expiresAt ?? null,
-        createdAt: new Date().toISOString(),
+        expiresAt: body.expiresAt != null ? toISODateString(body.expiresAt) : null,
+        createdAt: toISODateString(new Date().toISOString()),
         createdBy: MOCK_OWNER_USER_ID,
       };
       shares.push(share);
@@ -332,7 +333,7 @@ export function createDocumentsHandlers(
         blobId,
         uploadUrl: `mock://upload/${blobId}?name=${encodeURIComponent(body.fileName)}`,
         httpMethod: 'PUT',
-        expiresAt: new Date(Date.now() + 15 * 60_000).toISOString(),
+        expiresAt: toISODateString(new Date(Date.now() + 15 * 60_000).toISOString()),
         requiredHeaders: {},
       };
       return HttpResponse.json(payload);
@@ -350,12 +351,12 @@ export function createDocumentsHandlers(
         contentType: 'application/octet-stream',
         contentHash: `sha256:${docId.slice(-6)}1`,
         uploadedByUserId: MOCK_OWNER_USER_ID,
-        uploadedAt: new Date().toISOString(),
+        uploadedAt: toISODateString(new Date().toISOString()),
         commitMessage: body.commitMessage ?? 'Initial upload',
         isCurrent: true,
       };
       versions.push(initialVersion);
-      const now = new Date().toISOString();
+      const now = toISODateString(new Date().toISOString());
       const created: DocumentResponse = {
         id: docId,
         folderId: body.folderId ?? '',
@@ -430,7 +431,7 @@ export function createDocumentsHandlers(
         contentType: 'application/octet-stream',
         contentHash: `sha256:${id.slice(-6)}${versionNumber}`,
         uploadedByUserId: MOCK_OWNER_USER_ID,
-        uploadedAt: new Date().toISOString(),
+        uploadedAt: toISODateString(new Date().toISOString()),
         commitMessage: body.commitMessage ?? null,
         isCurrent: true,
       };
@@ -453,7 +454,7 @@ export function createDocumentsHandlers(
       const versionId = url.searchParams.get('versionId');
       const body: DownloadUrlResponse = {
         url: `mock://download/${id}${versionId ? `?versionId=${versionId}` : ''}`,
-        expiresAt: new Date(Date.now() + 15 * 60_000).toISOString(),
+        expiresAt: toISODateString(new Date(Date.now() + 15 * 60_000).toISOString()),
       };
       return HttpResponse.json(body);
     }),
@@ -475,7 +476,7 @@ export function createDocumentsHandlers(
         tenantId: null,
         tagId,
         documentId,
-        assignedAt: new Date().toISOString(),
+        assignedAt: toISODateString(new Date().toISOString()),
         assignedByUserId: MOCK_OWNER_USER_ID,
       };
       return HttpResponse.json(assignment, { status: 201 });
@@ -508,8 +509,8 @@ export function createDocumentsHandlers(
         granteeId: body.granteeId,
         permission: body.permission,
         isDefault: false,
-        expiresAt: body.expiresAt ?? null,
-        createdAt: new Date().toISOString(),
+        expiresAt: body.expiresAt != null ? toISODateString(body.expiresAt) : null,
+        createdAt: toISODateString(new Date().toISOString()),
         createdBy: MOCK_OWNER_USER_ID,
       };
       shares.push(share);
@@ -597,7 +598,7 @@ export function createDocumentsHandlers(
       const id = params.id as string;
       const doc = findDocument(id);
       if (!doc) return notFound();
-      const trashedAt = new Date().toISOString();
+      const trashedAt = toISODateString(new Date().toISOString());
       Object.assign(doc, { ...doc, status: 'Trashed', trashedAt });
       trashed.push({
         id: doc.id,
@@ -727,7 +728,9 @@ export function createDocumentsHandlers(
       const body = (await request.json()) as CreatePublicLinkRequest;
       const id = newId('lk', shareCounter++);
       const token = `mock-token-${id.slice(-8)}`;
-      const expiresAt = new Date(Date.now() + body.ttlDays * 24 * 60 * 60 * 1000).toISOString();
+      const expiresAt = toISODateString(
+        new Date(Date.now() + body.ttlDays * 24 * 60 * 60 * 1000).toISOString()
+      );
       const created: CreatePublicLinkResponse = {
         id,
         documentId,
@@ -747,7 +750,7 @@ export function createDocumentsHandlers(
         currentUses: 0,
         revokedAt: null,
         revocationReason: null,
-        createdAt: new Date().toISOString(),
+        createdAt: toISODateString(new Date().toISOString()),
       });
       return HttpResponse.json(created, { status: 201 });
     }),
@@ -768,7 +771,7 @@ export function createDocumentsHandlers(
       if (link) {
         Object.assign(link, {
           ...link,
-          revokedAt: new Date().toISOString(),
+          revokedAt: toISODateString(new Date().toISOString()),
           revocationReason: body.reason,
         });
       }
@@ -798,7 +801,7 @@ export function createDocumentsHandlers(
       if (!findDocument(id)) return notFound();
       const body = {
         url: `mock://renditions/${id}/${type}`,
-        expiresAt: new Date(Date.now() + 15 * 60_000).toISOString(),
+        expiresAt: toISODateString(new Date(Date.now() + 15 * 60_000).toISOString()),
       };
       return HttpResponse.json(body);
     }),

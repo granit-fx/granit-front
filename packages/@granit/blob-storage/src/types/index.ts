@@ -2,6 +2,8 @@
 // Blob storage types — mirrors Granit.BlobStorage .NET contract
 // ---------------------------------------------------------------------------
 
+import type { ISODateString } from '@granit/types';
+
 /**
  * Blob lifecycle status.
  *
@@ -33,7 +35,7 @@ export interface BlobUploadInitiateResponse {
   readonly blobId: string;
   readonly uploadUrl: string;
   readonly httpMethod: string;
-  readonly expiresAt: string;
+  readonly expiresAt: ISODateString;
   readonly requiredHeaders: Readonly<Record<string, string>>;
 }
 
@@ -65,7 +67,7 @@ export interface BlobDownloadUrlRequest {
 /** Response from `POST /{id}/download-url`. */
 export interface BlobDownloadUrlResponse {
   readonly downloadUrl: string;
-  readonly expiresAt: string;
+  readonly expiresAt: ISODateString;
 }
 
 // ── Delete ───────────────────────────────────────────────────────────────────
@@ -105,9 +107,9 @@ export interface BlobDescriptorResponse {
   readonly status: BlobStatus;
   readonly rejectionReason: string | null;
   readonly deletionReason: string | null;
-  readonly createdAt: string;
-  readonly validatedAt: string | null;
-  readonly deletedAt: string | null;
+  readonly createdAt: ISODateString;
+  readonly validatedAt: ISODateString | null;
+  readonly deletedAt: ISODateString | null;
 }
 
 // ── Query / list row ──────────────────────────────────────────────────────────
@@ -135,10 +137,10 @@ export interface BlobDescriptorListItem {
   readonly status: BlobStatus;
   readonly rejectionReason: string | null;
   readonly deletionReason: string | null;
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
   readonly createdBy: string;
-  readonly validatedAt: string | null;
-  readonly deletedAt: string | null;
+  readonly validatedAt: ISODateString | null;
+  readonly deletedAt: ISODateString | null;
 }
 
 // ── Cleanup orphans ─────────────────────────────────────────────────────────

@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -21,7 +22,7 @@ const folderShare: ShareResponse = {
   permission: 'Read',
   isDefault: true,
   expiresAt: null,
-  createdAt: '2026-05-01T08:00:00Z',
+  createdAt: toISODateString('2026-05-01T08:00:00Z'),
   createdBy: 'admin',
 };
 

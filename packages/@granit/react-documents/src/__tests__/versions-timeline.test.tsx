@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -20,7 +21,7 @@ const version: DocumentVersionResponse = {
   contentType: 'application/pdf',
   contentHash: null,
   uploadedByUserId: 'user-1',
-  uploadedAt: '2026-05-01T08:00:00Z',
+  uploadedAt: toISODateString('2026-05-01T08:00:00Z'),
   commitMessage: 'Initial upload',
   isCurrent: true,
 };
@@ -115,7 +116,9 @@ describe('VersionsTimeline', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockImplementation(((url: string) => {
       if (url.includes('/download')) {
-        return Promise.resolve({ data: { url: 'https://blob.example/get', expiresAt: 'x' } });
+        return Promise.resolve({
+          data: { url: 'https://blob.example/get', expiresAt: toISODateString('x') },
+        });
       }
       return Promise.resolve({
         data: { versions: [version], totalCount: 1, skip: 0, take: 20 },

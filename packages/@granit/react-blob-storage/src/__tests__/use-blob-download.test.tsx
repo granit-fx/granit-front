@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -28,7 +29,7 @@ describe('useDownloadUrl', () => {
     const client = createMockClient();
     const response: BlobDownloadUrlResponse = {
       downloadUrl: 'https://s3.example.com/download',
-      expiresAt: '2026-03-20T12:05:00Z',
+      expiresAt: toISODateString('2026-03-20T12:05:00Z'),
     };
     vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 

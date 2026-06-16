@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 import { useState } from 'react';
 
 import {
@@ -81,7 +82,7 @@ const EMPTY_DRAFT: DraftShare = {
   granteeId: '',
   permission: 'Read',
   isDefault: true,
-  expiresAt: '',
+  expiresAt: toISODateString(''),
 };
 
 /**

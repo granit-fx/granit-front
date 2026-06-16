@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -14,7 +15,7 @@ const quota: TenantStorageQuotaResponse = {
   limitBytes: 10 * 1024 * 1024 * 1024,
   usageBytes: 5 * 1024 * 1024 * 1024,
   percentUsed: 50,
-  updatedAt: '2026-05-01T08:00:00Z',
+  updatedAt: toISODateString('2026-05-01T08:00:00Z'),
 };
 
 function createWrapper(client: AxiosInstance) {

@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -19,8 +20,8 @@ const sampleProperties: DocumentPropertiesResponse = {
   documentVersionId: 'ver-1',
   sourceContentType: 'application/pdf',
   status: 'Ready',
-  createdAt: '2026-06-01T00:00:00Z',
-  completedAt: '2026-06-01T00:01:00Z',
+  createdAt: toISODateString('2026-06-01T00:00:00Z'),
+  completedAt: toISODateString('2026-06-01T00:01:00Z'),
   failureReason: null,
   extractorCount: 2,
   width: null,

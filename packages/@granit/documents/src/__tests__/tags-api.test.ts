@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import { assignDocumentTag, listDocumentTags, unassignDocumentTag } from '../api/tags-api';
@@ -12,7 +13,7 @@ const sampleAssignment: DocumentTagAssignmentResponse = {
   tenantId: 'tenant-1',
   tagId: 'tag-1',
   documentId: 'doc-1',
-  assignedAt: '2026-05-01T10:00:00Z',
+  assignedAt: toISODateString('2026-05-01T10:00:00Z'),
   assignedByUserId: 'user-1',
 };
 

@@ -1,4 +1,5 @@
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -30,7 +31,7 @@ describe('blob-storage-api', () => {
         blobId: 'abc-123',
         uploadUrl: 'https://s3.example.com/presigned',
         httpMethod: 'PUT',
-        expiresAt: '2026-03-20T12:00:00Z',
+        expiresAt: toISODateString('2026-03-20T12:00:00Z'),
         requiredHeaders: { 'Content-Type': 'image/png' },
       };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
@@ -94,7 +95,7 @@ describe('blob-storage-api', () => {
       const client = createMockClient();
       const response: BlobDownloadUrlResponse = {
         downloadUrl: 'https://s3.example.com/download',
-        expiresAt: '2026-03-20T12:05:00Z',
+        expiresAt: toISODateString('2026-03-20T12:05:00Z'),
       };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
@@ -157,8 +158,8 @@ describe('blob-storage-api', () => {
         status: BlobStatus.Valid,
         rejectionReason: null,
         deletionReason: null,
-        createdAt: '2026-03-20T10:00:00Z',
-        validatedAt: '2026-03-20T10:00:05Z',
+        createdAt: toISODateString('2026-03-20T10:00:00Z'),
+        validatedAt: toISODateString('2026-03-20T10:00:05Z'),
         deletedAt: null,
       };
       vi.mocked(client.get).mockResolvedValueOnce({ data: descriptor });

@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -34,7 +35,7 @@ const sampleAssignment: DocumentTagAssignmentResponse = {
   tenantId: null,
   tagId: 'tag-1',
   documentId: 'doc-1',
-  assignedAt: '2026-05-02T00:00:00Z',
+  assignedAt: toISODateString('2026-05-02T00:00:00Z'),
   assignedByUserId: 'user-1',
 };
 

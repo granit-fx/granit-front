@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -18,13 +19,13 @@ const sampleLink: PublicLinkResponse = {
   id: 'lnk-1',
   documentId: 'doc-1',
   scope: 'Download',
-  expiresAt: '2026-07-01T00:00:00Z',
+  expiresAt: toISODateString('2026-07-01T00:00:00Z'),
   maxUses: null,
   concurrencyStamp: 'stamp-1',
   currentUses: 0,
   revokedAt: null,
   revocationReason: null,
-  createdAt: '2026-06-01T00:00:00Z',
+  createdAt: toISODateString('2026-06-01T00:00:00Z'),
 };
 
 const createResponse: CreatePublicLinkResponse = {
@@ -33,7 +34,7 @@ const createResponse: CreatePublicLinkResponse = {
   token: 'tok-abc',
   url: 'https://example.com/dl/tok-abc',
   scope: 'Download',
-  expiresAt: '2026-07-01T00:00:00Z',
+  expiresAt: toISODateString('2026-07-01T00:00:00Z'),
   maxUses: null,
 };
 

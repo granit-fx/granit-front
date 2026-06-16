@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -16,7 +17,7 @@ const trashed: TrashedDocumentResponse = {
   folderId: 'fld-1',
   name: 'Old.pdf',
   ownerId: 'user-1',
-  trashedAt: '2026-05-01T08:00:00Z',
+  trashedAt: toISODateString('2026-05-01T08:00:00Z'),
   daysUntilPermanentDeletion: 5,
 };
 

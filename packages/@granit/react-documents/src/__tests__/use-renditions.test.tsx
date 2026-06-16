@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -18,7 +19,7 @@ const sampleRenditions: ListRenditionsResponse = {
 
 const sampleDownloadUrl: RenditionDownloadUrlResponse = {
   url: 'https://cdn.example.com/rendition.webp',
-  expiresAt: '2026-06-06T01:00:00Z',
+  expiresAt: toISODateString('2026-06-06T01:00:00Z'),
 };
 
 function createWrapper(client: AxiosInstance) {

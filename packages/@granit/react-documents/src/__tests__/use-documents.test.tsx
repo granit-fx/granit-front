@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -33,7 +34,7 @@ const sampleDoc: DocumentResponse = {
   sizeBytes: 1024,
   contentType: 'application/pdf',
   status: 'Active',
-  createdAt: '2026-05-01T00:00:00Z',
+  createdAt: toISODateString('2026-05-01T00:00:00Z'),
   modifiedAt: null,
   trashedAt: null,
   permission: null,
@@ -48,7 +49,7 @@ const sampleVersion: DocumentVersionResponse = {
   contentType: 'application/pdf',
   contentHash: null,
   uploadedByUserId: 'user-1',
-  uploadedAt: '2026-05-01T00:00:00Z',
+  uploadedAt: toISODateString('2026-05-01T00:00:00Z'),
   commitMessage: null,
   isCurrent: true,
 };
@@ -65,7 +66,7 @@ const sampleTrashed: TrashedDocumentResponse = {
   folderId: 'fld-1',
   name: 'contract.pdf',
   ownerId: 'user-1',
-  trashedAt: '2026-05-01T00:00:00Z',
+  trashedAt: toISODateString('2026-05-01T00:00:00Z'),
   daysUntilPermanentDeletion: 29,
 };
 
@@ -78,7 +79,7 @@ const sampleTrashList: ListTrashedDocumentsResponse = {
 
 const sampleDownload: DownloadUrlResponse = {
   url: 'https://blob.example/signed',
-  expiresAt: '2026-05-01T01:00:00Z',
+  expiresAt: toISODateString('2026-05-01T01:00:00Z'),
 };
 
 function createWrapper(client: AxiosInstance) {

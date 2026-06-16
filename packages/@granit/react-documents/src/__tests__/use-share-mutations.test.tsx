@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 import * as React from 'react';
@@ -26,7 +27,7 @@ const sampleShare: ShareResponse = {
   permission: 'Read',
   isDefault: true,
   expiresAt: null,
-  createdAt: '2026-05-01T00:00:00Z',
+  createdAt: toISODateString('2026-05-01T00:00:00Z'),
   createdBy: 'user-1',
 };
 

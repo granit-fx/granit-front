@@ -5,6 +5,8 @@
  * are ISO 8601 UTC strings (round-tripped from .NET `DateTimeOffset`).
  */
 
+import type { ISODateString } from '@granit/types';
+
 // ─── Enums (string unions) ──────────────────────────────────────────────────
 
 /** Lifecycle status of a {@link FolderResponse}. */
@@ -47,11 +49,11 @@ export interface FolderResponse {
   readonly ownerId: string;
   readonly status: FolderStatus;
   /** UTC instant the folder was created (ISO 8601). Always present. */
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
   /** UTC instant of the last change; `null` if never modified since creation. */
-  readonly modifiedAt: string | null;
+  readonly modifiedAt: ISODateString | null;
   /** UTC instant the folder was trashed; `null` while active. */
-  readonly trashedAt: string | null;
+  readonly trashedAt: ISODateString | null;
   /** Effective permission resolved via F6.5b; `null` when not requested. */
   readonly permission: EffectivePermissionLevel | null;
 }
@@ -112,12 +114,12 @@ export interface DocumentResponse {
   readonly contentType: string | null;
   readonly status: DocumentStatus;
   /** UTC instant the document was created (ISO 8601). Always present. */
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
   /** UTC instant of the last content/metadata change; `null` if never modified since creation. */
-  readonly modifiedAt: string | null;
+  readonly modifiedAt: ISODateString | null;
   /** Optimistic-concurrency token; echo back on edit to detect conflicts (409). */
   readonly concurrencyStamp: string;
-  readonly trashedAt: string | null;
+  readonly trashedAt: ISODateString | null;
   /** Effective permission resolved via F6.5; `null` when not requested. */
   readonly permission: EffectivePermissionLevel | null;
 }
@@ -140,7 +142,7 @@ export interface UploadTicketResponse {
   readonly uploadUrl: string;
   /** Always `"PUT"` for S3-compatible providers. */
   readonly httpMethod: string;
-  readonly expiresAt: string;
+  readonly expiresAt: ISODateString;
   readonly requiredHeaders: Readonly<Record<string, string>>;
 }
 
@@ -191,7 +193,7 @@ export interface TransferOwnerRequest {
 /** Response payload for `GET /documents/{id}/download`. */
 export interface DownloadUrlResponse {
   readonly url: string;
-  readonly expiresAt: string;
+  readonly expiresAt: ISODateString;
 }
 
 export interface DocumentVersionResponse {
@@ -207,7 +209,7 @@ export interface DocumentVersionResponse {
   readonly contentType: string;
   readonly contentHash: string | null;
   readonly uploadedByUserId: string;
-  readonly uploadedAt: string;
+  readonly uploadedAt: ISODateString;
   readonly commitMessage: string | null;
   /** `true` when this version matches the parent document's `currentVersionId`. */
   readonly isCurrent: boolean;
@@ -226,7 +228,7 @@ export interface TrashedDocumentResponse {
   readonly folderId: string;
   readonly name: string;
   readonly ownerId: string;
-  readonly trashedAt: string;
+  readonly trashedAt: ISODateString;
   /**
    * Days remaining before the empty-trash background job permanently deletes
    * the row. Clamped at zero for past-due rows awaiting the next cleanup run.
@@ -269,7 +271,7 @@ export interface DocumentTagAssignmentResponse {
   readonly tenantId: string | null;
   readonly tagId: string;
   readonly documentId: string;
-  readonly assignedAt: string;
+  readonly assignedAt: ISODateString;
   readonly assignedByUserId: string;
 }
 
@@ -290,8 +292,8 @@ export interface ShareResponse {
   readonly permission: SharePermissionLevel;
   /** Folder-share inheritance flag; ignored for document shares. */
   readonly isDefault: boolean;
-  readonly expiresAt: string | null;
-  readonly createdAt: string;
+  readonly expiresAt: ISODateString | null;
+  readonly createdAt: ISODateString;
   readonly createdBy: string;
 }
 
@@ -324,7 +326,7 @@ export interface TenantStorageQuotaResponse {
   readonly usageBytes: number;
   /** `usageBytes / limitBytes * 100`, clamped at 100 and rounded to two decimals. */
   readonly percentUsed: number;
-  readonly updatedAt: string;
+  readonly updatedAt: ISODateString;
 }
 
 // ─── Document properties (extracted metadata) ───────────────────────────────
@@ -343,8 +345,8 @@ export interface DocumentPropertiesResponse {
   readonly documentVersionId: string;
   readonly sourceContentType: string;
   readonly status: DocumentPropertiesStatus;
-  readonly createdAt: string;
-  readonly completedAt: string | null;
+  readonly createdAt: ISODateString;
+  readonly completedAt: ISODateString | null;
   readonly failureReason: string | null;
   readonly extractorCount: number;
   // Image / photo
@@ -356,7 +358,7 @@ export interface DocumentPropertiesResponse {
   readonly iso: number | null;
   readonly fNumber: number | null;
   readonly exposureTimeMs: number | null;
-  readonly takenAt: string | null;
+  readonly takenAt: ISODateString | null;
   readonly gpsLatitude: number | null;
   readonly gpsLongitude: number | null;
   readonly gpsAltitude: number | null;
@@ -402,7 +404,7 @@ export interface CreatePublicLinkResponse {
   readonly token: string;
   readonly url: string;
   readonly scope: PublicLinkScope;
-  readonly expiresAt: string;
+  readonly expiresAt: ISODateString;
   readonly maxUses: number | null;
 }
 
@@ -411,12 +413,12 @@ export interface PublicLinkResponse {
   readonly id: string;
   readonly documentId: string;
   readonly scope: PublicLinkScope;
-  readonly expiresAt: string;
+  readonly expiresAt: ISODateString;
   readonly maxUses: number | null;
   readonly currentUses: number;
-  readonly revokedAt: string | null;
+  readonly revokedAt: ISODateString | null;
   readonly revocationReason: string | null;
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
   /** Optimistic-concurrency token; echo back on edit to detect conflicts (409). */
   readonly concurrencyStamp: string;
 }
@@ -446,8 +448,8 @@ export interface RenditionResponse {
   readonly sizeBytes: number | null;
   readonly width: number | null;
   readonly height: number | null;
-  readonly createdAt: string;
-  readonly completedAt: string | null;
+  readonly createdAt: ISODateString;
+  readonly completedAt: ISODateString | null;
   readonly failureReason: string | null;
 }
 
@@ -461,7 +463,7 @@ export interface ListRenditionsResponse {
 /** Response for `GET /documents/{id}/renditions/{type}/download`. */
 export interface RenditionDownloadUrlResponse {
   readonly url: string;
-  readonly expiresAt: string;
+  readonly expiresAt: ISODateString;
 }
 
 // ─── Document resolution ─────────────────────────────────────────────────────

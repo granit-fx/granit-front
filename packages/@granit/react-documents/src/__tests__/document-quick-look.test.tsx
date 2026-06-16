@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -32,7 +33,7 @@ function makeDocument(id: string, name: string): DocumentResponse {
     concurrencyStamp: 'stamp-1',
     sizeBytes: 1024,
     contentType: 'application/pdf',
-    createdAt: '2026-05-01T10:00:00Z',
+    createdAt: toISODateString('2026-05-01T10:00:00Z'),
     modifiedAt: null,
     description: null,
     trashedAt: null,

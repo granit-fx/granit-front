@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -20,7 +21,7 @@ const sampleFolder: FolderResponse = {
   name: 'Contracts',
   path: '/Contracts',
   depth: 1,
-  createdAt: '2026-05-01T10:00:00Z',
+  createdAt: toISODateString('2026-05-01T10:00:00Z'),
   modifiedAt: null,
   ownerId: 'user-1',
   status: 'Active',

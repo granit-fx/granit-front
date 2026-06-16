@@ -1,3 +1,5 @@
+import { toISODateString } from '@granit/types';
+
 import { useTenantStorageQuota } from '../hooks/use-quota';
 
 import { formatBytes } from './format-bytes';
@@ -23,7 +25,7 @@ const DEFAULT_LABELS: Required<QuotaPanelLabels> = {
   used: 'Used',
   limit: 'Limit',
   percentUsed: '% used',
-  updatedAt: 'Updated',
+  updatedAt: toISODateString('Updated'),
   loading: 'Loading quota…',
 };
 
