@@ -1,6 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { axiosResponse, createMockClient } from '@granit/testing';
-import { toEntityId } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import i18next from 'i18next';
@@ -33,7 +33,7 @@ const candidateBuilder = (
   tier: 'Blocking',
   signals: [],
   dismissedAt: null,
-  createdAt: '2026-04-26T08:00:00Z',
+  createdAt: toISODateString('2026-04-26T08:00:00Z'),
   updatedAt: null,
   ...overrides,
 });
@@ -131,7 +131,7 @@ describe('PartyDuplicatesBadge', () => {
   it('hides dismissed-only rows', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
-      axiosResponse([candidateBuilder({ dismissedAt: '2026-04-26T10:00:00Z' })])
+      axiosResponse([candidateBuilder({ dismissedAt: toISODateString('2026-04-26T10:00:00Z') })])
     );
 
     const { container } = renderBadge(client);

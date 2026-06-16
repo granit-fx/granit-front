@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 // ---------------------------------------------------------------------------
 // @granit/react-cms-seo/testing — mock fixtures
 // ---------------------------------------------------------------------------
@@ -84,7 +85,7 @@ export const mockSeoSuggestions: SeoSuggestionResponse[] = [
     structuredDataJson: null,
     modelId: 'gpt-4o-mini',
     promptTemplateVersion: 'v1',
-    createdAt: '2026-06-01T10:00:00.000Z',
+    createdAt: toISODateString('2026-06-01T10:00:00.000Z'),
     reviewedBy: null,
     reviewedAt: null,
     failureReason: null,

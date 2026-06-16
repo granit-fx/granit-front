@@ -5,6 +5,7 @@ import {
   getTenant,
   updateTenant,
 } from '@granit/multi-tenancy';
+import { toISODateString } from '@granit/types';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -57,7 +58,7 @@ const SAMPLE_TENANT: TenantResponse = {
   contactEmail: 'admin@tenant-1.test',
   activated: true,
   jurisdiction: 'BE',
-  createdAt: '2026-01-01T00:00:00.000Z',
+  createdAt: toISODateString('2026-01-01T00:00:00.000Z'),
   concurrencyStamp: 'stamp-1',
 } as unknown as TenantResponse;
 

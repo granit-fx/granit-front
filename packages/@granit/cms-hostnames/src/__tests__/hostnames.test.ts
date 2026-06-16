@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -21,7 +22,7 @@ const hostname: SiteHostnameResponse = {
   status: 'Active',
   isPrimary: true,
   expectedDnsRecords: [{ recordType: 'Cname', name: 'www', value: 'edge.granit.app' }],
-  lastCheckedAt: '2026-06-01T10:00:00Z',
+  lastCheckedAt: toISODateString('2026-06-01T10:00:00Z'),
   certificateStatus: 'Secured',
 };
 

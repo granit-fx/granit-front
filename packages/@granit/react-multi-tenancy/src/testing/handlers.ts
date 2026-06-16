@@ -6,6 +6,7 @@ import {
 } from '@granit/query-engine';
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { noContent, notFound, pagedResponse } from '@granit/testing/msw';
+import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -146,7 +147,7 @@ export function createTenantHandlers(baseUrl = DEFAULT_BASE_PATH) {
         contactEmail: body.contactEmail ?? null,
         activated: true,
         jurisdiction: body.jurisdiction ?? null,
-        createdAt: new Date().toISOString(),
+        createdAt: toISODateString(new Date().toISOString()),
         concurrencyStamp: `stamp-${Date.now()}`,
       };
       mockTenants.push(newTenant);

@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -16,7 +17,7 @@ const apiBase = '/api/v1';
 const sampleResponse: WorkspaceCustomizationResponse = {
   workspaceName: 'sales',
   deltas: [{ $type: 'hide', fieldName: 'pipelineForecast' }],
-  updatedAt: '2026-05-06T10:00:00Z',
+  updatedAt: toISODateString('2026-05-06T10:00:00Z'),
   updatedByUserId: 'user-1',
 };
 

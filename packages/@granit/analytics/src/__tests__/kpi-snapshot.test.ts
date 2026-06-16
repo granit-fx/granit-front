@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 import { describe, expect, it } from 'vitest';
 
 import { isKpiSnapshotEnvelope } from '../widgets';
@@ -27,7 +28,7 @@ const KPI_SNAPSHOT_FIXTURE: KpiSnapshotEnvelope = {
     },
   },
   sequence: 1,
-  emittedAt: '2026-04-29T12:34:56.789Z',
+  emittedAt: toISODateString('2026-04-29T12:34:56.789Z'),
   refreshHint: 'Dynamic',
   reasonLocalizationKey: null,
 };
@@ -37,7 +38,7 @@ const KPI_UNAVAILABLE_FIXTURE: KpiSnapshotEnvelope = {
   widgetType: 'Kpi',
   snapshot: null,
   sequence: 1,
-  emittedAt: '2026-04-29T12:34:56.789Z',
+  emittedAt: toISODateString('2026-04-29T12:34:56.789Z'),
   refreshHint: 'Static',
   reasonLocalizationKey: 'Widget:Unavailable.QueryAggregateNotImplemented',
 };
@@ -58,7 +59,7 @@ const KPI_QUERY_AGGREGATE_CURRENCY_FIXTURE: KpiSnapshotEnvelope = {
     previous: null,
   },
   sequence: 1,
-  emittedAt: '2026-04-29T12:34:56.789Z',
+  emittedAt: toISODateString('2026-04-29T12:34:56.789Z'),
   refreshHint: 'Dynamic',
   reasonLocalizationKey: null,
 };

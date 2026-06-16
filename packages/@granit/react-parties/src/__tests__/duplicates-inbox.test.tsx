@@ -1,6 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { axiosResponse, createMockClient } from '@granit/testing';
-import { toEntityId } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import i18next from 'i18next';
@@ -35,8 +35,8 @@ const rows: PartyDuplicateCandidateResponse[] = [
     tier: 'Deterministic',
     signals: [],
     dismissedAt: null,
-    createdAt: '2026-04-25T08:00:00Z',
-    updatedAt: '2026-04-26T02:00:00Z',
+    createdAt: toISODateString('2026-04-25T08:00:00Z'),
+    updatedAt: toISODateString('2026-04-26T02:00:00Z'),
   },
   {
     id: dupId2,
@@ -46,7 +46,7 @@ const rows: PartyDuplicateCandidateResponse[] = [
     tier: 'Fuzzy',
     signals: [],
     dismissedAt: null,
-    createdAt: '2026-04-26T14:00:00Z',
+    createdAt: toISODateString('2026-04-26T14:00:00Z'),
     updatedAt: null,
   },
 ];

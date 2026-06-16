@@ -29,6 +29,7 @@ export type Trend = 'up' | 'down' | 'flat';
 // clean. Re-exported here for source-level back-compat.
 export type { RefreshHint } from '@granit/dashboards';
 import type { RefreshHint } from '@granit/dashboards';
+import type { ISODateString } from '@granit/types';
 
 /**
  * Calendar-aware period token. Backend (`Granit.Analytics.Metrics.PeriodSpec`)
@@ -52,7 +53,7 @@ export type CompareToken = 'previous_period' | (string & {});
 
 export type PeriodSpec =
   | { readonly token: PeriodToken }
-  | { readonly from: string; readonly to: string };
+  | { readonly from: ISODateString; readonly to: ISODateString };
 
 export type CompareSpec = { readonly token: CompareToken };
 
@@ -86,6 +87,6 @@ export interface MetricResponse {
   /** Monotonic counter — future-proofs streaming transport (P2.4). */
   readonly sequence: number;
   /** ISO 8601 UTC timestamp the backend emitted the snapshot. */
-  readonly emittedAt: string;
+  readonly emittedAt: ISODateString;
   readonly refreshHint: RefreshHint;
 }

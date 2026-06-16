@@ -191,6 +191,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/ai:
     dependencies:
@@ -243,6 +246,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/api-client:
     dependencies:
@@ -463,6 +469,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/cms-hostnames:
     devDependencies:
@@ -472,6 +481,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/cms-redirects:
     devDependencies:
@@ -484,6 +496,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/cms-seo:
     devDependencies:
@@ -496,6 +511,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/contract-tests:
     devDependencies:
@@ -600,6 +618,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/documents:
     devDependencies:
@@ -634,6 +655,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/entities-views:
     devDependencies:
@@ -816,6 +840,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/notifications-signalr:
     devDependencies:
@@ -1022,6 +1049,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       msw:
         specifier: ^2.14.6
         version: 2.14.6(@types/node@25.9.3)(typescript@6.0.3)
@@ -1176,6 +1206,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       msw:
         specifier: ^2.14.6
         version: 2.14.6(@types/node@25.9.3)(typescript@6.0.3)
@@ -1660,6 +1693,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       '@granit/utils':
         specifier: workspace:*
         version: link:../utils
@@ -1694,6 +1730,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       '@tanstack/react-query':
         specifier: 5.101.0
         version: 5.101.0(react@19.2.7)
@@ -1725,6 +1764,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       '@tanstack/react-query':
         specifier: 5.101.0
         version: 5.101.0(react@19.2.7)
@@ -1753,6 +1795,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       '@tanstack/react-query':
         specifier: 5.101.0
         version: 5.101.0(react@19.2.7)
@@ -1967,6 +2012,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-documents:
     dependencies:
@@ -2081,6 +2129,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-entities-views:
     dependencies:
@@ -2451,6 +2502,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-notifications:
     dependencies:
@@ -2513,6 +2567,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/react-notifications-web-push:
     dependencies:
@@ -3023,6 +3080,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       msw:
         specifier: ^2.14.6
         version: 2.14.6(@types/node@25.9.3)(typescript@6.0.3)
@@ -3362,6 +3422,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/@granit/templating:
     devDependencies:

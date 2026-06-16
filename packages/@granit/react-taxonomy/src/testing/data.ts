@@ -1,3 +1,5 @@
+import { toISODateString } from '@granit/types';
+
 import type {
   CategoryAssignmentResponse,
   CategoryResponse,
@@ -17,7 +19,7 @@ export interface TaxonomyStore {
   categoryAssignments: CategoryAssignmentResponse[];
 }
 
-const now = () => new Date().toISOString();
+const now = () => toISODateString(new Date().toISOString());
 
 export function createTaxonomyStore(): TaxonomyStore {
   return {
@@ -90,7 +92,7 @@ export function createTaxonomyStore(): TaxonomyStore {
         iconName: null,
         hideOnEntityCard: false,
         hasChildren: true,
-        createdAt: '2026-05-01T08:00:00Z',
+        createdAt: toISODateString('2026-05-01T08:00:00Z'),
         modifiedAt: null,
         concurrencyStamp: 'stamp-1',
       },
@@ -105,7 +107,7 @@ export function createTaxonomyStore(): TaxonomyStore {
         iconName: null,
         hideOnEntityCard: false,
         hasChildren: false,
-        createdAt: '2026-05-01T08:00:00Z',
+        createdAt: toISODateString('2026-05-01T08:00:00Z'),
         modifiedAt: null,
         concurrencyStamp: 'stamp-1',
       },
@@ -120,7 +122,7 @@ export function createTaxonomyStore(): TaxonomyStore {
         iconName: null,
         hideOnEntityCard: false,
         hasChildren: false,
-        createdAt: '2026-05-01T08:00:00Z',
+        createdAt: toISODateString('2026-05-01T08:00:00Z'),
         modifiedAt: null,
         concurrencyStamp: 'stamp-1',
       },

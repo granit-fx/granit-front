@@ -1,3 +1,4 @@
+import { toISODateString, type ISODateString } from '@granit/types';
 // ---------------------------------------------------------------------------
 // @granit/react-activities/testing — mock data
 // ---------------------------------------------------------------------------
@@ -10,7 +11,8 @@ const COLLEAGUE = 'b1e22a44-1234-5678-9abc-def012345678';
 const ENTITY_TYPE = 'Granit.Parties.Party';
 
 const now = Date.now();
-const iso = (offsetDays: number): string => new Date(now + offsetDays * DAY).toISOString();
+const iso = (offsetDays: number): ISODateString =>
+  toISODateString(new Date(now + offsetDays * DAY).toISOString());
 
 /**
  * Mock activities spanning the three lifecycle states the backend ships

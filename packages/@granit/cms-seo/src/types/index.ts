@@ -1,3 +1,6 @@
+import type { PagedResult, QueryRequest } from '@granit/query-engine';
+import type { ISODateString } from '@granit/types';
+
 /**
  * SEO wire-contract types for the Granit CMS API.
  *
@@ -8,8 +11,6 @@
  * value possibly `null`); only parameters with a C# default are genuinely
  * optional (`?`). Guid / DateTimeOffset are serialized as `string`.
  */
-
-import type { PagedResult, QueryRequest } from '@granit/query-engine';
 
 // ─── Shared ──────────────────────────────────────────────────────────────────
 
@@ -183,7 +184,7 @@ export interface SeoMetadataResponse {
   readonly alternateOverrides: readonly Hreflang[];
   readonly xDefaultCulture: string | null;
   readonly statusAtLastReview: SeoReviewStatus;
-  readonly lastReviewedAt: string | null;
+  readonly lastReviewedAt: ISODateString | null;
   readonly concurrencyStamp: string;
 }
 
@@ -311,9 +312,9 @@ export interface SeoSuggestionResponse {
   readonly structuredDataJson: string | null;
   readonly modelId: string;
   readonly promptTemplateVersion: string;
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
   readonly reviewedBy: string | null;
-  readonly reviewedAt: string | null;
+  readonly reviewedAt: ISODateString | null;
   readonly failureReason: string | null;
   readonly rejectionReason: string | null;
 }

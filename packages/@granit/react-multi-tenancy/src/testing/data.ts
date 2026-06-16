@@ -1,3 +1,5 @@
+import { toISODateString } from '@granit/types';
+
 import type { TenantResponse } from '@granit/multi-tenancy';
 import type { Mutable } from '@granit/testing';
 
@@ -9,7 +11,7 @@ export const mockTenants: Mutable<TenantResponse>[] = [
     contactEmail: 'admin@acme.example',
     activated: true,
     jurisdiction: 'BE',
-    createdAt: '2025-09-01T00:00:00Z',
+    createdAt: toISODateString('2025-09-01T00:00:00Z'),
     concurrencyStamp: 'stamp-acme-0001',
   },
   {
@@ -19,7 +21,7 @@ export const mockTenants: Mutable<TenantResponse>[] = [
     contactEmail: 'it@globex.example',
     activated: true,
     jurisdiction: 'FR',
-    createdAt: '2025-11-15T00:00:00Z',
+    createdAt: toISODateString('2025-11-15T00:00:00Z'),
     concurrencyStamp: 'stamp-globex-0001',
   },
   {
@@ -29,7 +31,7 @@ export const mockTenants: Mutable<TenantResponse>[] = [
     contactEmail: null,
     activated: false,
     jurisdiction: null,
-    createdAt: '2026-01-20T00:00:00Z',
+    createdAt: toISODateString('2026-01-20T00:00:00Z'),
     concurrencyStamp: 'stamp-initech-0001',
   },
 ];

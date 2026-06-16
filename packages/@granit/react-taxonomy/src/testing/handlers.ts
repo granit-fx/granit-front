@@ -1,4 +1,5 @@
 import { created } from '@granit/testing/msw';
+import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -20,7 +21,7 @@ import type {
 
 const store: TaxonomyStore = createTaxonomyStore();
 
-const now = () => new Date().toISOString();
+const now = () => toISODateString(new Date().toISOString());
 const newId = (prefix: string) => `${prefix}-${crypto.randomUUID().slice(0, 8)}`;
 
 function wouldCreateCategoryCycle(nodeId: string, newParentId: string): boolean {
@@ -201,7 +202,7 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
         iconName: body.iconName,
         hideOnEntityCard: body.hideOnEntityCard ?? false,
         hasChildren: false,
-        createdAt: '2026-05-01T08:00:00Z',
+        createdAt: toISODateString('2026-05-01T08:00:00Z'),
         modifiedAt: null,
         concurrencyStamp: 'stamp-1',
       };

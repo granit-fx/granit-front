@@ -1,5 +1,5 @@
 import type { FieldConflict, MergeRequest, MergeResult, WinnerSide } from '@granit/entity-merge';
-import type { EntityId, TenantId, UserId } from '@granit/types';
+import type { EntityId, TenantId, UserId, ISODateString } from '@granit/types';
 
 /** Branded identifier for a Party (Tier / Business Partner). */
 export type PartyId = EntityId<'Party'>;
@@ -132,9 +132,9 @@ export interface PartyResponse {
   /** Admin-only free-form notes (max 8 000 chars). NEVER store PII. */
   readonly internalNotes: string | null;
   /** UTC instant the party was created (ISO 8601). Always present. */
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
   /** Last-modification timestamp; `null` until first modified (coalesce `?? createdAt`). */
-  readonly modifiedAt: string | null;
+  readonly modifiedAt: ISODateString | null;
 }
 
 /** Lightweight summary used by list endpoints. */
@@ -352,11 +352,11 @@ export interface PartyDuplicateCandidateResponse {
   /** Per-signal contributions, sorted by score descending. */
   readonly signals: readonly DuplicateMatchSignalResponse[];
   /** When an admin marked the pair as "not a duplicate"; `null` while pending. */
-  readonly dismissedAt: string | null;
+  readonly dismissedAt: ISODateString | null;
   /** When the pair was first detected. */
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
   /** When the pair was last refreshed by a re-scan; `null` on initial detection. */
-  readonly updatedAt: string | null;
+  readonly updatedAt: ISODateString | null;
 }
 
 /**

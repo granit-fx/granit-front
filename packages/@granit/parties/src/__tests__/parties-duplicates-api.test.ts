@@ -1,5 +1,5 @@
 import { createMockClient } from '@granit/testing';
-import { toEntityId } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -29,8 +29,8 @@ const sampleCandidate: PartyDuplicateCandidateResponse = {
   tier: 'Deterministic',
   signals: [{ kind: 'TaxIdEqual', score: 1.0 }],
   dismissedAt: null,
-  createdAt: '2026-04-26T08:00:00Z',
-  updatedAt: '2026-04-27T02:00:00Z',
+  createdAt: toISODateString('2026-04-26T08:00:00Z'),
+  updatedAt: toISODateString('2026-04-27T02:00:00Z'),
 };
 
 describe('parties-duplicates-api', () => {

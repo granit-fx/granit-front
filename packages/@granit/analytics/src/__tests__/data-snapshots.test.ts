@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -38,7 +39,7 @@ const TABLE_FIXTURE: TableSnapshotEnvelope = {
     totalRowCount: 27,
   },
   sequence: 1,
-  emittedAt: '2026-04-29T12:34:56.789Z',
+  emittedAt: toISODateString('2026-04-29T12:34:56.789Z'),
   refreshHint: 'Dynamic',
   reasonLocalizationKey: null,
 };
@@ -60,7 +61,7 @@ const CHART_FIXTURE: ChartSnapshotEnvelope = {
     currency: 'EUR',
   },
   sequence: 1,
-  emittedAt: '2026-04-29T12:34:56.789Z',
+  emittedAt: toISODateString('2026-04-29T12:34:56.789Z'),
   refreshHint: 'Dynamic',
   reasonLocalizationKey: null,
 };
@@ -82,7 +83,7 @@ const PIVOT_FIXTURE: PivotSnapshotEnvelope = {
     currency: 'EUR',
   },
   sequence: 1,
-  emittedAt: '2026-04-29T12:34:56.789Z',
+  emittedAt: toISODateString('2026-04-29T12:34:56.789Z'),
   refreshHint: 'Dynamic',
   reasonLocalizationKey: null,
 };

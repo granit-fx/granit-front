@@ -1,4 +1,5 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
@@ -17,8 +18,8 @@ const tag: TagResponse = {
   name: 'Urgent',
   color: '#FF0000',
   hideOnEntityCard: false,
-  createdAt: '2026-05-01T08:00:00Z',
-  modifiedAt: '2026-05-01T08:00:00Z',
+  createdAt: toISODateString('2026-05-01T08:00:00Z'),
+  modifiedAt: toISODateString('2026-05-01T08:00:00Z'),
   concurrencyStamp: 'stamp-1',
 };
 

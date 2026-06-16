@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -47,7 +48,7 @@ const MAP_FIXTURE: MapSnapshotEnvelope = {
     defaultLayerKind: 'Satellite',
   },
   sequence: 1,
-  emittedAt: '2026-04-29T12:34:56.789Z',
+  emittedAt: toISODateString('2026-04-29T12:34:56.789Z'),
   refreshHint: 'Dynamic',
   reasonLocalizationKey: null,
 };

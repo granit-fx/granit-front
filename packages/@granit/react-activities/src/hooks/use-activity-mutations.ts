@@ -154,7 +154,7 @@ export function useReassignActivity(): UseMutationResult<
  * @example
  * ```tsx
  * const reschedule = useRescheduleActivity();
- * await reschedule.mutateAsync({ id: 'act-1', request: { newDueAt: '...' } });
+ * await reschedule.mutateAsync({ id: 'act-1', request: { newDueAt: toISODateString('...') } });
  * ```
  */
 export function useRescheduleActivity(): UseMutationResult<

@@ -1,4 +1,4 @@
-import { toEntityId } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 
 import type {
   PartyAddressId,
@@ -106,7 +106,7 @@ export const sampleParty: Mutable<PartyResponse> = {
   },
   metadata: { segment: 'enterprise', region: 'EU', tier: 'gold' },
   internalNotes: 'Strategic account — escalate billing issues to AM team.',
-  createdAt: '2026-01-01T00:00:00Z',
+  createdAt: toISODateString('2026-01-01T00:00:00Z'),
   modifiedAt: null,
 };
 
@@ -141,7 +141,7 @@ const aliceMartin: Mutable<PartyResponse> = {
   taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
   metadata: { source: 'website-form' },
   internalNotes: null,
-  createdAt: '2026-01-01T00:00:00Z',
+  createdAt: toISODateString('2026-01-01T00:00:00Z'),
   modifiedAt: null,
 };
 
@@ -198,7 +198,7 @@ const globex: Mutable<PartyResponse> = {
   taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
   metadata: { segment: 'mid-market' },
   internalNotes: 'Suspended 2026-03-12 — 90+ days overdue on INV-2026-0042.',
-  createdAt: '2026-01-01T00:00:00Z',
+  createdAt: toISODateString('2026-01-01T00:00:00Z'),
   modifiedAt: null,
 };
 
@@ -252,7 +252,7 @@ const initech: Mutable<PartyResponse> = {
   },
   metadata: {},
   internalNotes: null,
-  createdAt: '2026-01-01T00:00:00Z',
+  createdAt: toISODateString('2026-01-01T00:00:00Z'),
   modifiedAt: null,
 };
 
@@ -287,7 +287,7 @@ const starkRD: Mutable<PartyResponse> = {
   taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
   metadata: { 'cost-center': 'RD-401' },
   internalNotes: null,
-  createdAt: '2026-01-01T00:00:00Z',
+  createdAt: toISODateString('2026-01-01T00:00:00Z'),
   modifiedAt: null,
 };
 
@@ -322,7 +322,7 @@ const bobDupont: Mutable<PartyResponse> = {
   taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
   metadata: {},
   internalNotes: 'Left the company 2025-09-30. Kept for legal retention.',
-  createdAt: '2026-01-01T00:00:00Z',
+  createdAt: toISODateString('2026-01-01T00:00:00Z'),
   modifiedAt: null,
 };
 
@@ -371,7 +371,7 @@ const ngoHelpers: Mutable<PartyResponse> = {
   taxStatus: { isExempt: true, reverseCharge: false, vatin: null, evidenceBlobId: null },
   metadata: { segment: 'non-profit' },
   internalNotes: 'VAT exemption certificate on file (BE-NGO-2024-1142).',
-  createdAt: '2026-01-01T00:00:00Z',
+  createdAt: toISODateString('2026-01-01T00:00:00Z'),
   modifiedAt: null,
 };
 
@@ -417,8 +417,8 @@ export const sampleDuplicates: Mutable<PartyDuplicateCandidateResponse>[] = [
       { kind: 'NameTrigram', score: 0.74 },
     ],
     dismissedAt: null,
-    createdAt: '2026-04-25T08:30:00Z',
-    updatedAt: '2026-04-27T02:00:00Z',
+    createdAt: toISODateString('2026-04-25T08:30:00Z'),
+    updatedAt: toISODateString('2026-04-27T02:00:00Z'),
   },
   {
     id: duplicateId('002'),
@@ -431,7 +431,7 @@ export const sampleDuplicates: Mutable<PartyDuplicateCandidateResponse>[] = [
       { kind: 'NameTrigram', score: 0.78 },
     ],
     dismissedAt: null,
-    createdAt: '2026-04-26T14:15:00Z',
+    createdAt: toISODateString('2026-04-26T14:15:00Z'),
     updatedAt: null,
   },
   {
@@ -445,7 +445,7 @@ export const sampleDuplicates: Mutable<PartyDuplicateCandidateResponse>[] = [
       { kind: 'CountryEqual', score: 1.0 },
     ],
     dismissedAt: null,
-    createdAt: '2026-04-27T03:00:00Z',
+    createdAt: toISODateString('2026-04-27T03:00:00Z'),
     updatedAt: null,
   },
 ];

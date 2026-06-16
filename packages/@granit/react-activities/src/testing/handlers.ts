@@ -4,6 +4,7 @@
 // ---------------------------------------------------------------------------
 
 import { created, notFound } from '@granit/testing/msw';
+import { toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -65,7 +66,7 @@ export function createActivitiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
         status: 'Open',
         completedAt: null,
         completedByUserId: null,
-        createdAt: new Date().toISOString(),
+        createdAt: toISODateString(new Date().toISOString()),
       };
       activities.unshift({ ...newActivity });
       return created(newActivity);
@@ -75,7 +76,7 @@ export function createActivitiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const activity = find(params.id);
       if (!activity) return notFound();
       activity.status = 'Done';
-      activity.completedAt = new Date().toISOString();
+      activity.completedAt = toISODateString(new Date().toISOString());
       activity.completedByUserId = MOCK_ACTOR;
       return HttpResponse.json(activity);
     }),
@@ -99,7 +100,7 @@ export function createActivitiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const activity = find(params.id);
       if (!activity) return notFound();
       const body = (await request.json()) as { newDueAt: string };
-      activity.dueAt = body.newDueAt;
+      activity.dueAt = toISODateString(body.newDueAt);
       return HttpResponse.json(activity);
     }),
   ];

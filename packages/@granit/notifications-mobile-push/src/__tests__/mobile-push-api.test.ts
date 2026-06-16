@@ -1,4 +1,5 @@
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -45,8 +46,16 @@ describe('mobile-push-api', () => {
   it('should fetch all device tokens', async () => {
     const client = createMockClient();
     const tokens = [
-      { deviceToken: 'token-1', platform: 'android' as const, createdAt: '2026-03-17T10:00:00Z' },
-      { deviceToken: 'token-2', platform: 'ios' as const, createdAt: '2026-03-17T11:00:00Z' },
+      {
+        deviceToken: 'token-1',
+        platform: 'android' as const,
+        createdAt: toISODateString('2026-03-17T10:00:00Z'),
+      },
+      {
+        deviceToken: 'token-2',
+        platform: 'ios' as const,
+        createdAt: toISODateString('2026-03-17T11:00:00Z'),
+      },
     ];
     vi.mocked(client.get).mockResolvedValueOnce({ data: tokens });
 

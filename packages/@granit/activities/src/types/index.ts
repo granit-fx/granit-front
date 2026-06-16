@@ -1,3 +1,5 @@
+import type { ISODateString } from '@granit/types';
+
 /**
  * Lifecycle status of an activity. Mirrors `Granit.Activities.Domain.ActivityStatus`
  * (string-serialized verbatim). Three terminal states only — `Overdue` is a
@@ -22,12 +24,12 @@ export interface ActivityResponse {
   readonly type: string;
   readonly assignedToUserId: string;
   readonly createdByUserId: string | null;
-  readonly dueAt: string;
+  readonly dueAt: ISODateString;
   readonly description: string | null;
   readonly status: ActivityStatus;
-  readonly completedAt: string | null;
+  readonly completedAt: ISODateString | null;
   readonly completedByUserId: string | null;
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
 }
 
 export interface ActivityListResponse {
@@ -55,7 +57,7 @@ export interface CreateActivityRequest {
   readonly entityId: string;
   readonly type: string;
   readonly assignedToUserId: string;
-  readonly dueAt: string;
+  readonly dueAt: ISODateString;
   readonly description?: string | null;
 }
 
@@ -77,13 +79,13 @@ export interface ReassignActivityRequest {
 }
 
 export interface RescheduleActivityRequest {
-  readonly newDueAt: string;
+  readonly newDueAt: ISODateString;
 }
 
 export interface ActivityCalendarItemResponse {
   readonly id: string;
-  readonly start: string;
-  readonly end: string | null;
+  readonly start: ISODateString;
+  readonly end: ISODateString | null;
   readonly title: string;
   readonly color: ActivityCalendarColor;
   readonly type: string;
@@ -94,8 +96,8 @@ export interface ActivityCalendarItemResponse {
 }
 
 export interface ActivityCalendarFilter {
-  readonly from: string;
-  readonly to: string;
+  readonly from: ISODateString;
+  readonly to: ISODateString;
   /** Either the literal `'me'` or a user GUID. */
   readonly assignee?: string;
   readonly entityType?: string;

@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -34,7 +35,7 @@ const sampleRoot: CategoryResponse = {
   iconName: null,
   hideOnEntityCard: false,
   hasChildren: true,
-  createdAt: '2026-05-01T08:00:00Z',
+  createdAt: toISODateString('2026-05-01T08:00:00Z'),
   modifiedAt: null,
   concurrencyStamp: 'stamp-1',
 };
@@ -50,7 +51,7 @@ const sampleChild: CategoryResponse = {
   iconName: null,
   hideOnEntityCard: false,
   hasChildren: false,
-  createdAt: '2026-05-01T08:00:00Z',
+  createdAt: toISODateString('2026-05-01T08:00:00Z'),
   modifiedAt: null,
   concurrencyStamp: 'stamp-1',
 };
@@ -66,7 +67,7 @@ const sampleAssignment: CategoryAssignmentResponse = {
   categoryId: 'cat-2',
   targetType: 'Granit.Documents.Domain.Document',
   targetId: 'doc-1',
-  assignedAt: '2026-05-02T12:00:00Z',
+  assignedAt: toISODateString('2026-05-02T12:00:00Z'),
   assignedByUserId: 'user-1',
 };
 

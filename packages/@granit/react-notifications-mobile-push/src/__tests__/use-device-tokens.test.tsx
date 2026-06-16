@@ -1,6 +1,7 @@
 import { listDeviceTokens } from '@granit/notifications-mobile-push';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
@@ -20,12 +21,12 @@ const mockTokens: readonly MobilePushTokenResponse[] = [
   {
     deviceToken: 'token-abc-123',
     platform: 'android',
-    createdAt: '2026-03-17T10:00:00Z',
+    createdAt: toISODateString('2026-03-17T10:00:00Z'),
   },
   {
     deviceToken: 'token-def-456',
     platform: 'ios',
-    createdAt: '2026-03-17T09:00:00Z',
+    createdAt: toISODateString('2026-03-17T09:00:00Z'),
   },
 ];
 

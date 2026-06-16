@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 import { useMemo, useState, type ReactNode } from 'react';
 
 import { useActivitiesCalendar } from '../hooks/use-activities';
@@ -68,8 +69,8 @@ export function ActivityCalendar({
 
   const query = useActivitiesCalendar({
     ...filter,
-    from: window.from.toISOString(),
-    to: window.to.toISOString(),
+    from: toISODateString(window.from.toISOString()),
+    to: toISODateString(window.to.toISOString()),
   });
 
   const days = useMemo(() => groupByDay(query.data ?? [], window), [query.data, window]);

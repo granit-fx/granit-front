@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -33,12 +34,12 @@ const sampleActivity: ActivityResponse = {
   type: 'FollowUp',
   assignedToUserId: 'user-1',
   createdByUserId: 'user-2',
-  dueAt: '2026-05-10T10:00:00Z',
+  dueAt: toISODateString('2026-05-10T10:00:00Z'),
   description: 'Call back the client',
   status: 'Open',
   completedAt: null,
   completedByUserId: null,
-  createdAt: '2026-05-01T08:00:00Z',
+  createdAt: toISODateString('2026-05-01T08:00:00Z'),
 };
 
 const sampleListResponse: ActivityListResponse = {
@@ -50,7 +51,7 @@ const sampleListResponse: ActivityListResponse = {
 
 const sampleCalendarItem: ActivityCalendarItemResponse = {
   id: 'act-1',
-  start: '2026-05-10T10:00:00Z',
+  start: toISODateString('2026-05-10T10:00:00Z'),
   end: null,
   title: 'Quote · FollowUp',
   color: 'open',
@@ -126,7 +127,7 @@ describe('createActivity', () => {
       entityId: 'quote-1',
       type: 'FollowUp',
       assignedToUserId: 'user-1',
-      dueAt: '2026-05-10T10:00:00Z',
+      dueAt: toISODateString('2026-05-10T10:00:00Z'),
       description: null,
     };
 
@@ -143,7 +144,7 @@ describe('completeActivity', () => {
     const completed: ActivityResponse = {
       ...sampleActivity,
       status: 'Done',
-      completedAt: '2026-05-09T15:00:00Z',
+      completedAt: toISODateString('2026-05-09T15:00:00Z'),
       completedByUserId: 'user-1',
     };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(completed));
@@ -200,7 +201,9 @@ describe('rescheduleActivity', () => {
   it('PUTs to {id}/due-date', async () => {
     const client = createMockClient();
     vi.mocked(client.put).mockResolvedValue(axiosResponse(sampleActivity));
-    const request: RescheduleActivityRequest = { newDueAt: '2026-05-15T10:00:00Z' };
+    const request: RescheduleActivityRequest = {
+      newDueAt: toISODateString('2026-05-15T10:00:00Z'),
+    };
 
     await rescheduleActivity(client, basePath, 'act-1', request);
 
@@ -213,8 +216,8 @@ describe('getActivitiesCalendar', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleCalendarItem]));
     const filter: ActivityCalendarFilter = {
-      from: '2026-05-01T00:00:00Z',
-      to: '2026-05-31T23:59:59Z',
+      from: toISODateString('2026-05-01T00:00:00Z'),
+      to: toISODateString('2026-05-31T23:59:59Z'),
       assignee: 'me',
       status: 'OpenOrOverdue',
     };
@@ -223,8 +226,8 @@ describe('getActivitiesCalendar', () => {
 
     expect(client.get).toHaveBeenCalledWith(`${basePath}/calendar`, {
       params: {
-        from: '2026-05-01T00:00:00Z',
-        to: '2026-05-31T23:59:59Z',
+        from: toISODateString('2026-05-01T00:00:00Z'),
+        to: toISODateString('2026-05-31T23:59:59Z'),
         assignee: 'me',
         status: 'OpenOrOverdue',
       },
@@ -237,12 +240,15 @@ describe('getActivitiesCalendar', () => {
     vi.mocked(client.get).mockResolvedValue(axiosResponse([]));
 
     await getActivitiesCalendar(client, basePath, {
-      from: '2026-05-01T00:00:00Z',
-      to: '2026-05-31T23:59:59Z',
+      from: toISODateString('2026-05-01T00:00:00Z'),
+      to: toISODateString('2026-05-31T23:59:59Z'),
     });
 
     expect(client.get).toHaveBeenCalledWith(`${basePath}/calendar`, {
-      params: { from: '2026-05-01T00:00:00Z', to: '2026-05-31T23:59:59Z' },
+      params: {
+        from: toISODateString('2026-05-01T00:00:00Z'),
+        to: toISODateString('2026-05-31T23:59:59Z'),
+      },
     });
   });
 
@@ -252,8 +258,8 @@ describe('getActivitiesCalendar', () => {
 
     await expect(
       getActivitiesCalendar(client, basePath, {
-        from: '2026-05-01T00:00:00Z',
-        to: '2026-05-31T23:59:59Z',
+        from: toISODateString('2026-05-01T00:00:00Z'),
+        to: toISODateString('2026-05-31T23:59:59Z'),
       })
     ).rejects.toThrow(/401/);
   });

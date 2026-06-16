@@ -15,7 +15,8 @@
   },
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
-    "@granit/dashboards": "workspace:*"
+    "@granit/dashboards": "workspace:*",
+    "@granit/types": "workspace:*"
   },
   "publishConfig": {
     "exports": {
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "@granit/dashboards": "workspace:*",
-    "@granit/testing": "workspace:*"
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*"
   }
 }

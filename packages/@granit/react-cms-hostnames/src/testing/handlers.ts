@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------------------
 
 import { created } from '@granit/testing/msw';
+import { toISODateString } from '@granit/types';
 import { http, HttpResponse, type RequestHandler } from 'msw';
 
 import { mockHostnames } from './data';
@@ -59,7 +60,7 @@ export function createCmsHostnamesHandlers(baseUrl = '/api/cms'): RequestHandler
       const updated: SiteHostnameResponse = {
         ...existing,
         status: 'Verifying',
-        lastCheckedAt: '2026-06-04T00:00:00Z',
+        lastCheckedAt: toISODateString('2026-06-04T00:00:00Z'),
       };
       hostnames[hostnames.indexOf(existing)] = updated;
       return HttpResponse.json(updated, { status: 202 });

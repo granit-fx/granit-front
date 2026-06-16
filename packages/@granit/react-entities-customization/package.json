@@ -17,6 +17,7 @@
     "@granit/api-client": "workspace:*",
     "@granit/entities-customization": "workspace:*",
     "@granit/react-api-client": "workspace:*",
+    "@granit/types": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "react": "^19.0.0"
   },
@@ -34,6 +35,7 @@
     "@granit/entities-customization": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
-    "@granit/testing": "workspace:*"
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*"
   }
 }

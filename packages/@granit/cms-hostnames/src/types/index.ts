@@ -1,3 +1,5 @@
+import type { ISODateString } from '@granit/types';
+
 // ---------------------------------------------------------------------------
 // @granit/cms-hostnames — site-scoped hostname DTOs
 //
@@ -46,7 +48,7 @@ export interface SiteHostnameResponse {
   /** DNS records the owner must configure (empty until verification starts). */
   readonly expectedDnsRecords: readonly SiteHostnameDnsRecordResponse[];
   /** When the last DNS check ran; `null` before any check (DateTimeOffset). */
-  readonly lastCheckedAt: string | null;
+  readonly lastCheckedAt: ISODateString | null;
   /** Edge-reported TLS certificate state. */
   readonly certificateStatus: string;
 }

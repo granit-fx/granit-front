@@ -1,3 +1,5 @@
+import type { ISODateString } from '@granit/types';
+
 /**
  * 7-character hexadecimal color in `#RRGGBB` form. The backend rejects any
  * other shape, so the front carries the same constraint at the type level.
@@ -31,13 +33,13 @@ export interface TagResponse {
   readonly name: string;
   readonly color: HexColor;
   readonly hideOnEntityCard: boolean;
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
   /**
    * Last-modification timestamp; `null` until the tag is first modified
    * (framework audit convention). For a non-null "updated at", coalesce
    * `modifiedAt ?? createdAt` at the call site.
    */
-  readonly modifiedAt: string | null;
+  readonly modifiedAt: ISODateString | null;
   /** Optimistic-concurrency token; echo back on edit to detect conflicts (409). */
   readonly concurrencyStamp: string;
 }
@@ -75,7 +77,7 @@ export interface TagAssignmentResponse {
   readonly tagId: string;
   readonly targetType: string;
   readonly targetId: string;
-  readonly assignedAt: string;
+  readonly assignedAt: ISODateString;
   readonly assignedByUserId: string;
 }
 
@@ -98,9 +100,9 @@ export interface CategoryResponse {
   readonly hideOnEntityCard: boolean;
   /** `true` when at least one child exists — drives tree lazy-load. */
   readonly hasChildren: boolean;
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
   /** Last-modification timestamp; `null` until first modified (coalesce `?? createdAt`). */
-  readonly modifiedAt: string | null;
+  readonly modifiedAt: ISODateString | null;
   /** Optimistic-concurrency token; echo back on edit to detect conflicts (409). */
   readonly concurrencyStamp: string;
 }
@@ -158,7 +160,7 @@ export interface CategoryAssignmentResponse {
   readonly categoryId: string;
   readonly targetType: string;
   readonly targetId: string;
-  readonly assignedAt: string;
+  readonly assignedAt: ISODateString;
   readonly assignedByUserId: string;
 }
 

@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 // ---------------------------------------------------------------------------
 // @granit/react-cms-hostnames/testing — mock fixtures
 // ---------------------------------------------------------------------------
@@ -18,7 +19,7 @@ export const mockHostnames: SiteHostnameResponse[] = [
     status: 'Active',
     isPrimary: true,
     expectedDnsRecords: [{ recordType: 'Cname', name: 'www', value: 'edge.granit.app' }],
-    lastCheckedAt: '2026-06-01T08:00:00Z',
+    lastCheckedAt: toISODateString('2026-06-01T08:00:00Z'),
     certificateStatus: 'Secured',
   },
   {

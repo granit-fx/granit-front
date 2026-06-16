@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 // ---------------------------------------------------------------------------
 // @granit/react-cms-redirects/testing — mock fixtures
 // ---------------------------------------------------------------------------
@@ -20,7 +21,7 @@ export const mockRedirects: RedirectResponse[] = [
     culture: null,
     origin: 'Manual',
     hitCount: 12,
-    lastHitAt: '2026-05-01T09:30:00+00:00',
+    lastHitAt: toISODateString('2026-05-01T09:30:00+00:00'),
   },
   {
     id: '50000000-0000-4000-8000-000000000002',

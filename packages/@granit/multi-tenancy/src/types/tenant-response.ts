@@ -1,4 +1,4 @@
-import type { TenantId } from '@granit/types';
+import type { TenantId, ISODateString } from '@granit/types';
 
 /**
  * Tenant admin response.
@@ -11,7 +11,7 @@ export interface TenantResponse {
   readonly contactEmail: string | null;
   readonly activated: boolean;
   readonly jurisdiction: string | null;
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
   /**
    * Opaque optimistic-concurrency token. Echo it back in
    * {@link UpdateTenantRequest} to detect concurrent modifications (HTTP 409).

@@ -1,10 +1,11 @@
+import { toISODateString } from '@granit/types';
 // ---------------------------------------------------------------------------
 // @granit/react-analytics/testing — mock data
 // ---------------------------------------------------------------------------
 
 import type { MetricResponse } from '@granit/analytics';
 
-const emittedAt = new Date().toISOString();
+const emittedAt = toISODateString(new Date().toISOString());
 
 /** Mock metric envelopes keyed by metric name, served by `POST /metrics/{name}`. */
 export const mockMetricResponses: Readonly<Record<string, MetricResponse>> = {

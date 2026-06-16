@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -18,8 +19,8 @@ const sampleTag: TagResponse = {
   name: 'Urgent',
   color: '#FF0000',
   hideOnEntityCard: false,
-  createdAt: '2026-05-01T08:00:00Z',
-  modifiedAt: '2026-05-01T08:00:00Z',
+  createdAt: toISODateString('2026-05-01T08:00:00Z'),
+  modifiedAt: toISODateString('2026-05-01T08:00:00Z'),
   concurrencyStamp: 'stamp-1',
 };
 

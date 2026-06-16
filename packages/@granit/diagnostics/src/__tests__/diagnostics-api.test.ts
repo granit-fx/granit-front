@@ -1,4 +1,5 @@
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_DIAGNOSTICS_BASE_PATH, getMonitoringHealth } from '../api/diagnostics-api';
@@ -18,7 +19,7 @@ const mockResponse: MonitoringHealthResponse = {
       tags: ['readiness', 'startup'],
     },
   ],
-  checkedAt: '2026-03-20T12:00:00+00:00',
+  checkedAt: toISODateString('2026-03-20T12:00:00+00:00'),
 };
 
 describe('getMonitoringHealth', () => {
@@ -52,7 +53,7 @@ describe('getMonitoringHealth', () => {
           tags: ['readiness'],
         },
       ],
-      checkedAt: '2026-03-20T12:00:00+00:00',
+      checkedAt: toISODateString('2026-03-20T12:00:00+00:00'),
     };
     vi.mocked(client.get).mockResolvedValueOnce({ data: multiService });
 

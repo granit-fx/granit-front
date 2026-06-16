@@ -1,5 +1,5 @@
 import { createMockClient } from '@granit/testing';
-import { toEntityId } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -85,7 +85,7 @@ const sampleParty: PartyResponse = {
   taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
   metadata: {},
   internalNotes: null,
-  createdAt: '2026-01-01T00:00:00Z',
+  createdAt: toISODateString('2026-01-01T00:00:00Z'),
   modifiedAt: null,
 };
 

@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 import { render } from '@testing-library/react';
 import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
@@ -35,7 +36,7 @@ const ENVELOPE_BASE = {
   id: '8c6b1e10-0000-0000-0000-000000000001',
   status: 'Snapshot' as const,
   sequence: 1,
-  emittedAt: '2026-04-29T12:34:56.789Z',
+  emittedAt: toISODateString('2026-04-29T12:34:56.789Z'),
   refreshHint: 'Dynamic' as const,
   reasonLocalizationKey: null,
 };

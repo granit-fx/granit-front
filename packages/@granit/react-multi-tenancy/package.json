@@ -20,6 +20,7 @@
     "@granit/query-engine": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-query-engine": "workspace:*",
+    "@granit/types": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "msw": "^2.12.0",
     "react": "^19.0.0"
@@ -51,6 +52,7 @@
   "devDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/react-api-client": "workspace:*",
-    "@granit/testing": "workspace:*"
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*"
   }
 }

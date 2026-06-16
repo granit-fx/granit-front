@@ -1,3 +1,5 @@
+import { toISODateString } from '@granit/types';
+
 import type { MonitoringHealthResponse } from '@granit/diagnostics';
 
 export const mockDiagnosticsHealth: MonitoringHealthResponse = {
@@ -59,5 +61,5 @@ export const mockDiagnosticsHealth: MonitoringHealthResponse = {
       tags: ['readiness'],
     },
   ],
-  checkedAt: '2026-03-12T10:00:00Z',
+  checkedAt: toISODateString('2026-03-12T10:00:00Z'),
 };

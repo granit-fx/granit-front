@@ -1,3 +1,5 @@
+import type { ISODateString } from '@granit/types';
+
 /** Health status of an individual service check. */
 export type ServiceStatus = 'healthy' | 'degraded' | 'down';
 
@@ -15,5 +17,5 @@ export interface ServiceHealthResponse {
 export interface MonitoringHealthResponse {
   readonly services: readonly ServiceHealthResponse[];
   /** ISO 8601 timestamp of when the health check was performed. */
-  readonly checkedAt: string;
+  readonly checkedAt: ISODateString;
 }

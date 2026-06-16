@@ -1,3 +1,5 @@
+import type { ISODateString } from '@granit/types';
+
 /**
  * Redirect wire-contract types for the Granit CMS API.
  * Mirrors `Granit.Cms.Redirects.Endpoints.Dtos.*` and the domain enums under
@@ -45,7 +47,7 @@ export interface RedirectResponse {
   readonly culture: string | null;
   readonly origin: RedirectOrigin;
   readonly hitCount: number;
-  readonly lastHitAt: string | null;
+  readonly lastHitAt: ISODateString | null;
 }
 
 /**

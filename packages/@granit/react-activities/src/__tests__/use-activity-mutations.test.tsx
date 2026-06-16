@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -26,12 +27,12 @@ const sampleActivity: ActivityResponse = {
   type: 'FollowUp',
   assignedToUserId: 'user-1',
   createdByUserId: 'user-2',
-  dueAt: '2026-05-10T10:00:00Z',
+  dueAt: toISODateString('2026-05-10T10:00:00Z'),
   description: null,
   status: 'Open',
   completedAt: null,
   completedByUserId: null,
-  createdAt: '2026-05-01T08:00:00Z',
+  createdAt: toISODateString('2026-05-01T08:00:00Z'),
 };
 
 interface Harness {
@@ -68,7 +69,7 @@ describe('useCreateActivity', () => {
       entityId: 'quote-1',
       type: 'FollowUp',
       assignedToUserId: 'user-1',
-      dueAt: '2026-05-10T10:00:00Z',
+      dueAt: toISODateString('2026-05-10T10:00:00Z'),
       description: null,
     });
 
@@ -92,7 +93,7 @@ describe('useCreateActivity', () => {
         entityId: 'quote-1',
         type: 'FollowUp',
         assignedToUserId: 'user-1',
-        dueAt: '2026-05-10T10:00:00Z',
+        dueAt: toISODateString('2026-05-10T10:00:00Z'),
         description: null,
       })
     ).rejects.toThrow(/boom/);
@@ -201,11 +202,11 @@ describe('useRescheduleActivity', () => {
     const { result } = renderHook(() => useRescheduleActivity(), { wrapper });
     await result.current.mutateAsync({
       id: 'act-1',
-      request: { newDueAt: '2026-05-15T10:00:00Z' },
+      request: { newDueAt: toISODateString('2026-05-15T10:00:00Z') },
     });
 
     expect(client.put).toHaveBeenCalledWith('/api/v1/activities/act-1/due-date', {
-      newDueAt: '2026-05-15T10:00:00Z',
+      newDueAt: toISODateString('2026-05-15T10:00:00Z'),
     });
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
     expect(keys).toEqual([

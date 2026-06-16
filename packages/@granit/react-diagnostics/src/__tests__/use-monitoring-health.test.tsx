@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -31,7 +32,7 @@ const mockResponse: MonitoringHealthResponse = {
       tags: ['readiness', 'startup'],
     },
   ],
-  checkedAt: '2026-03-20T12:00:00+00:00',
+  checkedAt: toISODateString('2026-03-20T12:00:00+00:00'),
 };
 
 describe('buildDiagnosticsQueryKey', () => {

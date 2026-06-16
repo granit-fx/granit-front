@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import { getPageByPath, mintPreviewToken, resolvePreview } from '../api/pages';
@@ -81,7 +82,7 @@ describe('mintPreviewToken', () => {
     const req: MintPreviewTokenRequest = { culture: 'fr', lifetimeSeconds: 300 };
     const resp: MintPreviewTokenResponse = {
       token: 'tok_abc',
-      expiresAt: '2026-06-01T12:05:00Z',
+      expiresAt: toISODateString('2026-06-01T12:05:00Z'),
     };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(resp));
 

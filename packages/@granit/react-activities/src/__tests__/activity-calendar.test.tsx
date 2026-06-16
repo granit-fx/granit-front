@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import * as React from 'react';
@@ -14,7 +15,7 @@ import type { ReactNode } from 'react';
 
 const monday: ActivityCalendarItemResponse = {
   id: 'a1',
-  start: '2026-05-04T10:00:00Z',
+  start: toISODateString('2026-05-04T10:00:00Z'),
   end: null,
   title: 'Monday item',
   color: 'open',
@@ -27,7 +28,7 @@ const monday: ActivityCalendarItemResponse = {
 
 const overdueWed: ActivityCalendarItemResponse = {
   id: 'a2',
-  start: '2026-05-06T08:00:00Z',
+  start: toISODateString('2026-05-06T08:00:00Z'),
   end: null,
   title: 'Overdue Wed',
   color: 'overdue',
@@ -66,7 +67,10 @@ describe('<ActivityCalendar>', () => {
 
     await waitFor(() => expect(client.get).toHaveBeenCalled());
     expect(client.get).toHaveBeenCalledWith('/api/v1/activities/calendar', {
-      params: { from: '2026-05-04T00:00:00.000Z', to: '2026-05-11T00:00:00.000Z' },
+      params: {
+        from: toISODateString('2026-05-04T00:00:00.000Z'),
+        to: toISODateString('2026-05-11T00:00:00.000Z'),
+      },
     });
   });
 
@@ -81,7 +85,10 @@ describe('<ActivityCalendar>', () => {
 
     await waitFor(() => expect(client.get).toHaveBeenCalled());
     expect(client.get).toHaveBeenCalledWith('/api/v1/activities/calendar', {
-      params: { from: '2026-05-06T00:00:00.000Z', to: '2026-05-07T00:00:00.000Z' },
+      params: {
+        from: toISODateString('2026-05-06T00:00:00.000Z'),
+        to: toISODateString('2026-05-07T00:00:00.000Z'),
+      },
     });
   });
 
@@ -96,7 +103,10 @@ describe('<ActivityCalendar>', () => {
 
     await waitFor(() => expect(client.get).toHaveBeenCalled());
     expect(client.get).toHaveBeenCalledWith('/api/v1/activities/calendar', {
-      params: { from: '2026-05-01T00:00:00.000Z', to: '2026-06-01T00:00:00.000Z' },
+      params: {
+        from: toISODateString('2026-05-01T00:00:00.000Z'),
+        to: toISODateString('2026-06-01T00:00:00.000Z'),
+      },
     });
   });
 
@@ -116,8 +126,8 @@ describe('<ActivityCalendar>', () => {
     await waitFor(() => expect(client.get).toHaveBeenCalled());
     expect(client.get).toHaveBeenCalledWith('/api/v1/activities/calendar', {
       params: {
-        from: '2026-05-06T00:00:00.000Z',
-        to: '2026-05-07T00:00:00.000Z',
+        from: toISODateString('2026-05-06T00:00:00.000Z'),
+        to: toISODateString('2026-05-07T00:00:00.000Z'),
         assignee: 'me',
         status: 'OpenOrOverdue',
         entityType: 'Quote',
@@ -162,7 +172,10 @@ describe('<ActivityCalendar>', () => {
 
     await waitFor(() => {
       expect(client.get).toHaveBeenLastCalledWith('/api/v1/activities/calendar', {
-        params: { from: '2026-05-11T00:00:00.000Z', to: '2026-05-18T00:00:00.000Z' },
+        params: {
+          from: toISODateString('2026-05-11T00:00:00.000Z'),
+          to: toISODateString('2026-05-18T00:00:00.000Z'),
+        },
       });
     });
   });
@@ -182,7 +195,10 @@ describe('<ActivityCalendar>', () => {
 
     await waitFor(() => {
       expect(client.get).toHaveBeenLastCalledWith('/api/v1/activities/calendar', {
-        params: { from: '2026-05-06T00:00:00.000Z', to: '2026-05-07T00:00:00.000Z' },
+        params: {
+          from: toISODateString('2026-05-06T00:00:00.000Z'),
+          to: toISODateString('2026-05-07T00:00:00.000Z'),
+        },
       });
     });
   });

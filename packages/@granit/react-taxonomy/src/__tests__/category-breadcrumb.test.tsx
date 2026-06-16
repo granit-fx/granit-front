@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
@@ -17,7 +18,7 @@ const root: CategoryResponse = {
   iconName: null,
   hideOnEntityCard: false,
   hasChildren: true,
-  createdAt: '2026-05-01T08:00:00Z',
+  createdAt: toISODateString('2026-05-01T08:00:00Z'),
   modifiedAt: null,
   concurrencyStamp: 'stamp-1',
 };
@@ -33,7 +34,7 @@ const leaf: CategoryResponse = {
   iconName: null,
   hideOnEntityCard: false,
   hasChildren: false,
-  createdAt: '2026-05-01T08:00:00Z',
+  createdAt: toISODateString('2026-05-01T08:00:00Z'),
   modifiedAt: null,
   concurrencyStamp: 'stamp-1',
 };

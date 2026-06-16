@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
@@ -13,8 +14,8 @@ const sampleTag: TagResponse = {
   name: 'Urgent',
   color: '#FF0000',
   hideOnEntityCard: false,
-  createdAt: '2026-05-01T08:00:00Z',
-  modifiedAt: '2026-05-01T08:00:00Z',
+  createdAt: toISODateString('2026-05-01T08:00:00Z'),
+  modifiedAt: toISODateString('2026-05-01T08:00:00Z'),
   concurrencyStamp: 'stamp-1',
 };
 

@@ -1,4 +1,5 @@
 import { isKpiSnapshotEnvelope } from '@granit/analytics';
+import { toISODateString } from '@granit/types';
 import { useTranslation } from 'react-i18next';
 
 import { KpiTileView } from './kpi-tile-view';
@@ -31,7 +32,7 @@ export function KpiSnapshotTile({ widget }: { readonly widget: DashboardRendered
         name: widget.id,
         snapshot: widget.snapshot,
         sequence: Number(widget.sequence),
-        emittedAt: widget.emittedAt,
+        emittedAt: toISODateString(widget.emittedAt),
         refreshHint: widget.refreshHint,
       }}
       isLoading={false}

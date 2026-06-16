@@ -8,6 +8,7 @@ import {
 } from '@granit/cms-seo';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -58,7 +59,7 @@ const suggestion: SeoSuggestionResponse = {
   structuredDataJson: null,
   modelId: 'gpt-4o-mini',
   promptTemplateVersion: 'v1',
-  createdAt: '2026-06-01T10:00:00.000Z',
+  createdAt: toISODateString('2026-06-01T10:00:00.000Z'),
   reviewedBy: null,
   reviewedAt: null,
   failureReason: null,

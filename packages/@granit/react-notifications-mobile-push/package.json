@@ -18,6 +18,7 @@
     "@granit/api-client": "workspace:*",
     "@granit/notifications-mobile-push": "workspace:*",
     "@granit/react-api-client": "workspace:*",
+    "@granit/types": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "react": "^19.0.0"
   },
@@ -26,7 +27,8 @@
     "@granit/api-client": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
-    "@granit/testing": "workspace:*"
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*"
   },
   "publishConfig": {
     "exports": {

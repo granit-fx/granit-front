@@ -1,4 +1,5 @@
 import type { LayoutDelta } from './delta';
+import type { ISODateString } from '@granit/types';
 
 /**
  * Layout kind — the surface of an entity layout being customized. Mirrors
@@ -28,6 +29,6 @@ export interface WorkspaceCustomizationRequest {
 export interface WorkspaceCustomizationResponse {
   readonly workspaceName: string;
   readonly deltas: readonly LayoutDelta[];
-  readonly updatedAt: string | null;
+  readonly updatedAt: ISODateString | null;
   readonly updatedByUserId: string | null;
 }

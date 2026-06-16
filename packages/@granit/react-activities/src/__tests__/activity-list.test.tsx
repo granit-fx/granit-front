@@ -1,5 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -19,12 +20,12 @@ const open: ActivityResponse = {
   type: 'FollowUp',
   assignedToUserId: 'u1',
   createdByUserId: 'u2',
-  dueAt: '2026-05-10T10:00:00Z',
+  dueAt: toISODateString('2026-05-10T10:00:00Z'),
   description: null,
   status: 'Open',
   completedAt: null,
   completedByUserId: null,
-  createdAt: '2026-05-01T08:00:00Z',
+  createdAt: toISODateString('2026-05-01T08:00:00Z'),
 };
 
 const completed: ActivityResponse = { ...open, id: 'a2', status: 'Done' };

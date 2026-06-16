@@ -57,8 +57,8 @@ export function useActivity(id: string): UseQueryResult<ActivityResponse> {
  * @example
  * ```tsx
  * const { data } = useActivitiesCalendar({
- *   from: '2026-05-01T00:00:00Z',
- *   to: '2026-05-31T23:59:59Z',
+ *   from: toISODateString('2026-05-01T00:00:00Z'),
+ *   to: toISODateString('2026-05-31T23:59:59Z'),
  *   assignee: 'me',
  *   status: 'OpenOrOverdue',
  * });

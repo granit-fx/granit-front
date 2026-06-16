@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -9,7 +10,7 @@ function makeResponse(overrides: Partial<MetricResponse['snapshot']> = {}): Metr
   return {
     name: 'Test.Metric',
     sequence: 1,
-    emittedAt: '2026-04-28T12:00:00Z',
+    emittedAt: toISODateString('2026-04-28T12:00:00Z'),
     refreshHint: 'Dynamic',
     snapshot: {
       value: 12,

@@ -1,3 +1,4 @@
+import { toISODateString } from '@granit/types';
 import { describe, expect, it } from 'vitest';
 
 import { normalizeMetricRequest } from '../hooks/use-metric';
@@ -12,10 +13,16 @@ describe('normalizeMetricRequest', () => {
 
   it('keeps a custom range intact', () => {
     const input: MetricRequest = {
-      period: { from: '2026-04-01T00:00:00Z', to: '2026-04-28T00:00:00Z' },
+      period: {
+        from: toISODateString('2026-04-01T00:00:00Z'),
+        to: toISODateString('2026-04-28T00:00:00Z'),
+      },
     };
     expect(normalizeMetricRequest(input)).toEqual({
-      period: { from: '2026-04-01T00:00:00Z', to: '2026-04-28T00:00:00Z' },
+      period: {
+        from: toISODateString('2026-04-01T00:00:00Z'),
+        to: toISODateString('2026-04-28T00:00:00Z'),
+      },
     });
   });
 

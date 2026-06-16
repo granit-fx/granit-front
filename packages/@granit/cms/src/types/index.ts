@@ -1,3 +1,6 @@
+import type { QueryRequest } from '@granit/query-engine';
+import type { ISODateString } from '@granit/types';
+
 /**
  * Wire-contract types for the Granit CMS API. Every shape mirrors the
  * corresponding .NET record/enum in `Granit.Cms.*.Endpoints/Dtos/` and the
@@ -6,8 +9,6 @@
  *
  * Source of truth: the running backend's OpenAPI spec.
  */
-
-import type { QueryRequest } from '@granit/query-engine';
 
 // ─── Block Catalog ──────────────────────────────────────────────────────────
 
@@ -130,7 +131,7 @@ export interface MintPreviewTokenRequest {
 export interface MintPreviewTokenResponse {
   readonly token: string;
   /** UTC ISO 8601 expiry instant. */
-  readonly expiresAt: string;
+  readonly expiresAt: ISODateString;
 }
 
 // ─── Menus ──────────────────────────────────────────────────────────────────
@@ -238,7 +239,7 @@ export interface PageVersionSummaryResponse {
   readonly version: number;
   readonly lifecycleStatus: string;
   readonly isPublished: boolean;
-  readonly publishedAt: string | null;
+  readonly publishedAt: ISODateString | null;
 }
 
 /**
@@ -472,7 +473,7 @@ export interface PageSearchParams {
 export interface PageEditingPresenceEntryResponse {
   readonly userId: string;
   /** UTC ISO 8601 instant the participant was last seen. */
-  readonly lastSeenAt: string;
+  readonly lastSeenAt: ISODateString;
 }
 
 /** Active participants for `GET /api/cms/pages/{id}/editing`. */

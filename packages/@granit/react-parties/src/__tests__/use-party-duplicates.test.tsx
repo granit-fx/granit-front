@@ -1,6 +1,6 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { axiosResponse, createMockClient } from '@granit/testing';
-import { toEntityId } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -36,7 +36,7 @@ const candidate: PartyDuplicateCandidateResponse = {
   tier: 'Deterministic',
   signals: [{ kind: 'TaxIdEqual', score: 1.0 }],
   dismissedAt: null,
-  createdAt: '2026-04-26T08:00:00Z',
+  createdAt: toISODateString('2026-04-26T08:00:00Z'),
   updatedAt: null,
 };
 

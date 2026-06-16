@@ -1,7 +1,7 @@
 import { ENUM_OPERATORS, STRING_OPERATORS } from '@granit/query-engine';
 import { createQueryMetaHandler } from '@granit/react-query-engine/testing';
 import { created, pagedResponse } from '@granit/testing/msw';
-import { toEntityId } from '@granit/types';
+import { toEntityId, toISODateString } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -228,7 +228,7 @@ export function createPartiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
     http.post(`${baseUrl}/duplicates/:id/dismiss`, ({ params }) => {
       const row = sampleDuplicates.find((d) => d.id === params.id);
       if (!row) return notFound();
-      row.dismissedAt = new Date().toISOString();
+      row.dismissedAt = toISODateString(new Date().toISOString());
       return new HttpResponse(null, { status: 204 });
     }),
 
@@ -257,7 +257,7 @@ export function createPartiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
       // Reuse the same merge response shape — apply minimal demo mutations
       // so the inbox refresh + party detail refresh both observe the change.
       loser.status = 'Archived';
-      row.dismissedAt = new Date().toISOString();
+      row.dismissedAt = toISODateString(new Date().toISOString());
 
       const response: PartyMergeResponse = {
         survivorId: survivor.id,
@@ -332,7 +332,7 @@ export function createPartiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
         taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
         metadata: {},
         internalNotes: body.internalNotes ?? null,
-        createdAt: '2026-01-01T00:00:00Z',
+        createdAt: toISODateString('2026-01-01T00:00:00Z'),
         modifiedAt: null,
       };
       sampleParties.push(newParty);

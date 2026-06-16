@@ -1,3 +1,5 @@
+import type { ISODateString } from '@granit/types';
+
 export type MobilePlatform = 'android' | 'ios';
 
 export interface DeviceTokenDto {
@@ -9,5 +11,5 @@ export interface DeviceTokenDto {
 export interface MobilePushTokenResponse {
   readonly deviceToken: string;
   readonly platform: MobilePlatform;
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
 }
