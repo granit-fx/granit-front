@@ -90,9 +90,9 @@ export interface CategoryResponse {
   readonly scope: string;
   /** `null` when the node is a scope root. */
   readonly parentId: string | null;
+  readonly name: string;
   /** Materialised path, root-anchored, e.g. `"/legal/contracts/2026"`. */
   readonly path: string;
-  readonly name: string;
   /** 0 for scope roots; one greater than the parent's depth otherwise. */
   readonly depth: number;
   /** `null` when no icon is assigned. */
@@ -127,9 +127,9 @@ export interface CategoryListFilter {
 
 export interface CreateCategoryRequest {
   readonly scope: string;
+  readonly name: string;
   /** `null` to create a scope root. */
   readonly parentId: string | null;
-  readonly name: string;
   /** `null` to create without an icon. */
   readonly iconName: string | null;
   /** `null` lets the backend apply its default (false). */

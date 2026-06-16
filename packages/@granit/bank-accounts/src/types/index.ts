@@ -83,8 +83,6 @@ export interface BankAccountResponse {
  * is effectively never populated through this surface.
  */
 export interface BankAccount {
-  readonly id: string;
-  readonly tenantId: TenantId | null;
   readonly partyId: string;
   readonly scheme: BankAccountScheme;
   readonly accountIdentifier: string;
@@ -100,10 +98,12 @@ export interface BankAccount {
   readonly status: BankAccountStatus;
   readonly verified: boolean;
   readonly trusted: boolean;
-  readonly createdAt: ISODateString;
-  readonly createdBy: string;
+  readonly tenantId: TenantId | null;
   readonly modifiedAt: ISODateString | null;
   readonly modifiedBy: string | null;
+  readonly createdAt: ISODateString;
+  readonly createdBy: string;
+  readonly id: string;
 }
 
 /** Paginated page of {@link BankAccount} entities (QueryEngine admin grid). */

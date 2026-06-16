@@ -443,5 +443,20 @@ export function checkSchemaConformance(opts: CheckSchemaOptions): ConformanceVio
     }
   }
 
+  // Field order — compare the relative order of shared fields only (missing /
+  // orphan fields are already reported above; they must not skew the position
+  // check). A mismatch here means a C# record parameter was reordered without
+  // updating the TS interface, or a field was inserted in the wrong place.
+  const sharedInSpec = [...backend.keys()].filter((k) => front.has(k));
+  const sharedInFront = [...front.keys()].filter((k) => backend.has(k));
+  if (sharedInSpec.join('\0') !== sharedInFront.join('\0')) {
+    out.push({
+      rule: 'field-order',
+      schema: opts.schemaName,
+      field: '*',
+      message: `field order differs — spec: [${sharedInSpec.join(', ')}], front: [${sharedInFront.join(', ')}]`,
+    });
+  }
+
   return out;
 }

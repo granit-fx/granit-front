@@ -48,12 +48,12 @@ export interface FolderResponse {
   readonly depth: number;
   readonly ownerId: string;
   readonly status: FolderStatus;
+  /** UTC instant the folder was trashed; `null` while active. */
+  readonly trashedAt: ISODateString | null;
   /** UTC instant the folder was created (ISO 8601). Always present. */
   readonly createdAt: ISODateString;
   /** UTC instant of the last change; `null` if never modified since creation. */
   readonly modifiedAt: ISODateString | null;
-  /** UTC instant the folder was trashed; `null` while active. */
-  readonly trashedAt: ISODateString | null;
   /** Effective permission resolved via F6.5b; `null` when not requested. */
   readonly permission: EffectivePermissionLevel | null;
 }
@@ -70,9 +70,9 @@ export interface FolderBreadcrumbResponse {
 
 /** PUT-like create payload for `POST /folders`. */
 export interface CreateFolderRequest {
+  readonly name: string;
   /** `null` creates the folder directly under the invisible tenant root. */
   readonly parentFolderId: string | null;
-  readonly name: string;
 }
 
 /** PATCH payload for `PATCH /folders/{id}`. */
@@ -104,6 +104,8 @@ export interface DocumentResponse {
   readonly ownerId: string;
   /** Identifier of the active version; `null` until the first version is uploaded. */
   readonly currentVersionId: string | null;
+  readonly status: DocumentStatus;
+  readonly trashedAt: ISODateString | null;
   /**
    * Size in bytes of the current version (.NET `long`; see
    * {@link DocumentVersionResponse.sizeBytes}). `null` until the first version
@@ -112,14 +114,12 @@ export interface DocumentResponse {
   readonly sizeBytes: number | null;
   /** Content type of the current version; `null` until the first version is uploaded. */
   readonly contentType: string | null;
-  readonly status: DocumentStatus;
   /** UTC instant the document was created (ISO 8601). Always present. */
   readonly createdAt: ISODateString;
   /** UTC instant of the last content/metadata change; `null` if never modified since creation. */
   readonly modifiedAt: ISODateString | null;
   /** Optimistic-concurrency token; echo back on edit to detect conflicts (409). */
   readonly concurrencyStamp: string;
-  readonly trashedAt: ISODateString | null;
   /** Effective permission resolved via F6.5; `null` when not requested. */
   readonly permission: EffectivePermissionLevel | null;
 }
@@ -149,9 +149,9 @@ export interface UploadTicketResponse {
 /** Request payload for `POST /documents/finalize`. */
 export interface FinalizeUploadRequest {
   readonly blobId: string;
+  readonly name: string;
   /** `null` drops the document directly under the tenant root. */
   readonly folderId: string | null;
-  readonly name: string;
   readonly description: string | null;
   readonly commitMessage: string | null;
 }

@@ -25,8 +25,8 @@ export interface AdminOidcApplicationResponse {
 /** Request body for `POST /oidc/applications`. */
 export interface AdminOidcCreateApplicationRequest {
   readonly clientId: string;
-  readonly clientSecret?: string;
   readonly displayName?: string;
+  readonly clientSecret?: string;
   readonly type?: string;
   readonly permissions?: string[];
   readonly redirectUris?: string[];

@@ -101,9 +101,9 @@ export type TemplateDetail = {
 // ── Save ──────────────────────────────────────────────────────────────────────
 
 export type SaveTemplateRequest = {
+  readonly content: string;
   readonly name?: string | null;
   readonly culture?: string | null;
-  readonly content: string;
   readonly mimeType?: string;
   readonly layoutName?: string | null;
   /** Optimistic concurrency stamp from the current draft revision. Pass when updating. */

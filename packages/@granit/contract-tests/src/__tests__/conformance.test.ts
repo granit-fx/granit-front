@@ -93,6 +93,65 @@ describe('conformance oracle — positive & negative controls', () => {
     );
   });
 
+  it('passes when optional spec fields are absent from the front (no order false-positive)', () => {
+    // spec: id, count, when, flag, note — front omits optional `note`
+    const specWithOptional: OpenApiDocument = {
+      components: {
+        schemas: {
+          Sample: {
+            type: 'object',
+            required: ['id', 'count', 'when', 'flag'],
+            properties: {
+              id: { type: 'string' },
+              count: { type: 'integer' },
+              when: { type: 'string' },
+              flag: { type: 'boolean' },
+              note: { type: 'string' }, // optional — front may omit it
+            },
+          },
+        },
+      },
+    };
+    const src = `export interface Sample {
+      readonly id: string;
+      readonly count: number;
+      readonly when: string;
+      readonly flag: boolean;
+    }`;
+    const violations = checkSchemaConformance({
+      spec: specWithOptional,
+      schemaName: 'Sample',
+      sourceText: src,
+      fileName: file,
+    });
+    expect(violations.some((v) => v.rule === 'field-order')).toBe(false);
+  });
+
+  it('flags field-order drift', () => {
+    const src = `export interface Sample {
+      readonly id: string;
+      readonly count: number;
+      readonly flag: boolean;   // swapped with when
+      readonly when: string | null;
+      readonly note: string | null;
+    }`;
+    expect(check(src)).toContainEqual(expect.objectContaining({ rule: 'field-order', field: '*' }));
+  });
+
+  it('field-order message shows spec order vs front order', () => {
+    const src = `export interface Sample {
+      readonly count: number;
+      readonly id: string;
+      readonly when: string | null;
+      readonly flag: boolean;
+      readonly note: string | null;
+    }`;
+    const violations = check(src);
+    const v = violations.find((x) => x.rule === 'field-order');
+    expect(v?.message).toContain('spec: [id, count');
+    expect(v?.message).toContain('front: [count, id');
+  });
+
   // The codebase keeps each string-union enum in its own file. A field typed as
   // an imported enum must follow the import to resolve to `string`, not default
   // an unresolved reference to `object` (which produced false type-family drift).

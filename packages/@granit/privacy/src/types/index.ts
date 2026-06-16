@@ -15,10 +15,10 @@ export type PrivacyExportStatusResponse = {
   readonly subjectUserId: string;
   /** Who requested the export. Differs from {@link subjectUserId} in the on-behalf-of flow. */
   readonly callerUserId: string;
-  readonly requestedAt: ISODateString;
   readonly state: PrivacyExportStatus;
-  readonly archiveBlobReferenceId: string | null;
+  readonly requestedAt: ISODateString;
   readonly completedAt: ISODateString | null;
+  readonly archiveBlobReferenceId: string | null;
   readonly missingProviders: readonly string[];
 };
 

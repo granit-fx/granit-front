@@ -32,21 +32,13 @@ export interface TimelineAttachmentInfoResponse {
 
 export interface TimelineStreamEntryResponse {
   readonly id: TimelineEntryId;
+  readonly occurredAt: ISODateString;
   readonly entryType: TimelineEntryType;
-  readonly body: string;
   readonly authorId: UserId | null;
   readonly authorName: string | null;
-  readonly parentEntryId: TimelineEntryId | null;
-  readonly occurredAt: ISODateString;
+  readonly body: string;
   readonly attachments: readonly TimelineAttachmentInfoResponse[];
-  /**
-   * Aggregated reactions on this entry — dict keyed by the canonical emoji
-   * glyph, carrying only emojis with at least one reactor. The backend
-   * serializes `null` and omits the field interchangeably when there are zero
-   * reactions; both resolve to "no reactions" on the frontend. Mirrors
-   * `type: ["null", "object"]` in the OpenAPI schema.
-   */
-  readonly reactions?: ReactionMap | null;
+  readonly parentEntryId: TimelineEntryId | null;
   /**
    * Where this entry originates. `'Native'` for rows stored directly
    * in the timeline; `'External'` for entries projected from a
@@ -70,6 +62,14 @@ export interface TimelineStreamEntryResponse {
    * field.
    */
   readonly editedAt?: ISODateString | null;
+  /**
+   * Aggregated reactions on this entry — dict keyed by the canonical emoji
+   * glyph, carrying only emojis with at least one reactor. The backend
+   * serializes `null` and omits the field interchangeably when there are zero
+   * reactions; both resolve to "no reactions" on the frontend. Mirrors
+   * `type: ["null", "object"]` in the OpenAPI schema.
+   */
+  readonly reactions?: ReactionMap | null;
 }
 
 export type TimelineEntryPage = PagedResult<TimelineStreamEntryResponse>;

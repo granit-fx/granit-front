@@ -36,17 +36,17 @@ export type LocalizationOverrideId = EntityId<'LocalizationOverride'>;
  * `AuditedEntity`), not `lastModified*`.
  */
 export interface LocalizationOverride {
-  readonly id: LocalizationOverrideId;
   /** Tenant scope. `null` = host-level override (applies to all tenants). */
   readonly tenantId: string | null;
   readonly resourceName: string;
   readonly cultureName: string;
   readonly key: string;
   readonly value: string;
-  readonly createdAt: ISODateString;
-  readonly createdBy: string;
   readonly modifiedAt: ISODateString | null;
   readonly modifiedBy: string | null;
+  readonly createdAt: ISODateString;
+  readonly createdBy: string;
+  readonly id: LocalizationOverrideId;
 }
 
 export interface LocalizationConfig {

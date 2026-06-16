@@ -8,10 +8,10 @@ export interface EntityViewCreateBodyRequest {
   /** View kind inherited from `basedOn`. */
   readonly kind: string;
   readonly name: string;
-  readonly description: string | null;
-  readonly icon: string | null;
   /** JSON delta payload. */
   readonly state: Readonly<Record<string, unknown>>;
+  readonly description: string | null;
+  readonly icon: string | null;
 }
 
 /**
@@ -23,9 +23,10 @@ export interface EntityViewCreateBodyRequest {
  */
 export interface EntityViewUpdateBodyRequest {
   readonly name: string;
+  /** JSON delta payload. */
+  readonly state: Readonly<Record<string, unknown>>;
   readonly description: string | null;
   readonly icon: string | null;
-  readonly state: Readonly<Record<string, unknown>>;
 }
 
 /**

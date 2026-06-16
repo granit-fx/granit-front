@@ -55,8 +55,8 @@ export interface ProductCreateRequest {
 /** Request to update editable fields of a Draft product. */
 export interface ProductUpdateRequest {
   readonly name: string;
-  readonly description: string | null;
   readonly unit: string;
+  readonly description: string | null;
 }
 
 /**

@@ -22,17 +22,17 @@ export type SubscriptionStatus =
 
 export interface PlanCreateRequest {
   readonly name: string;
-  readonly description: string | null;
   readonly pricingModel: PricingModel;
   readonly defaultInterval: BillingInterval;
+  readonly description: string | null;
   readonly trialDays?: number | null;
   readonly seatLimit?: number | null;
 }
 
 export interface PlanUpdateRequest {
   readonly name: string;
-  readonly description: string | null;
   readonly sortOrder: number;
+  readonly description: string | null;
 }
 
 export interface CreatePriceVersionRequest {

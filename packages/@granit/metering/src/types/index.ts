@@ -140,8 +140,6 @@ export interface DeprecateEventResponse {
  * projection applied by the CRUD endpoints.
  */
 export interface MeterDefinition {
-  readonly id: string;
-  readonly tenantId: TenantId | null;
   readonly name: string;
   readonly unit: string;
   readonly description: string | null;
@@ -149,10 +147,12 @@ export interface MeterDefinition {
   readonly distinctProperty: string | null;
   readonly lifecycleStatus: MeterLifecycleStatus;
   readonly productId: string | null;
-  readonly createdAt: ISODateString;
-  readonly createdBy: string;
+  readonly tenantId: TenantId | null;
   readonly modifiedAt: ISODateString | null;
   readonly modifiedBy: string | null;
+  readonly createdAt: ISODateString;
+  readonly createdBy: string;
+  readonly id: string;
 }
 
 /**
@@ -163,14 +163,14 @@ export interface MeterDefinition {
  * audited entity — no `createdAt` / `modifiedAt`.
  */
 export interface UsageAggregate {
-  readonly id: string;
-  readonly tenantId: TenantId | null;
   readonly meterDefinitionId: string;
   readonly period: AggregationPeriod;
   readonly periodStart: ISODateString;
   readonly periodEnd: ISODateString;
   readonly aggregatedValue: number;
   readonly eventCount: number;
+  readonly tenantId: TenantId | null;
+  readonly id: string;
 }
 
 /** Paginated page of {@link MeterDefinition} entities. */
