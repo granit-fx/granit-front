@@ -12,9 +12,9 @@ export interface AdminOidcAuthorizationListParams {
 export interface AdminOidcAuthorizationResponse {
   readonly id: string;
   readonly clientId: string | null;
-  readonly subject: string;
-  readonly status: string;
-  readonly type: string;
+  readonly subject: string | null;
+  readonly status: string | null;
+  readonly type: string | null;
   readonly scopes: readonly string[];
 }
 

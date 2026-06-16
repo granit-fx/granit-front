@@ -58,6 +58,7 @@ const mockApp: AdminOidcApplicationResponse = {
   postLogoutRedirectUris: ['https://guava.local/signout-callback'],
   consentType: 'implicit',
   clientSide: 3,
+  deviceKind: null,
   hasSigningKey: false,
 };
 

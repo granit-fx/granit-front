@@ -29,6 +29,7 @@ const sampleLineItem = {
 
 const sampleInvoice: InvoiceResponse = {
   id: 'inv-1',
+  partyId: 'party-1',
   documentType: 'Invoice',
   invoiceNumber: 'INV-2026-0001',
   status: 'Paid',

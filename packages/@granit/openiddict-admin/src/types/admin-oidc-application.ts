@@ -14,6 +14,11 @@ export interface AdminOidcApplicationResponse {
   readonly consentType: string | null;
   /** MultiTenancySides flags: 0=None 1=Host 2=Tenant 3=Both */
   readonly clientSide: number | null;
+  /**
+   * Device-flow client kind (`Browser`, `MobileApp`, …); `null` for
+   * non-device clients. Mirrors the backend `DeviceKind` enum.
+   */
+  readonly deviceKind: string | null;
   readonly hasSigningKey: boolean;
 }
 

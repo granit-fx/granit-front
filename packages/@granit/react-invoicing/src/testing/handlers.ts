@@ -240,6 +240,7 @@ export function createInvoicingHandlers(baseUrl = DEFAULT_BASE_PATH) {
 
       const newInvoice = {
         id: toEntityId<'Invoice'>(`inv_${String(sampleInvoices.length + 1).padStart(3, '0')}`),
+        partyId: body.partyId,
         invoiceNumber: `INV-2026-${String(sampleInvoices.length + 1).padStart(4, '0')}`,
         status: 'Draft' as const,
         documentType: body.documentType ?? 'Invoice',

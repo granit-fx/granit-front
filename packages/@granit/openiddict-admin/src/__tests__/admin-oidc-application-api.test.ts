@@ -23,6 +23,7 @@ const mockApplication: AdminOidcApplicationResponse = {
   postLogoutRedirectUris: ['https://example.com/signout-callback'],
   consentType: 'implicit',
   clientSide: 3,
+  deviceKind: null,
   hasSigningKey: false,
 };
 

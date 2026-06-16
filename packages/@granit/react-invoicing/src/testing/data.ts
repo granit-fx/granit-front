@@ -35,6 +35,7 @@ export const sampleInvoiceLineItems: Mutable<InvoiceLineItemResponse>[] = [
 export const sampleInvoices: Mutable<InvoiceResponse>[] = [
   {
     id: toEntityId<'Invoice'>('inv_001'),
+    partyId: 'party_001',
     invoiceNumber: 'INV-2026-0001',
     status: 'Paid',
     documentType: 'Invoice',
@@ -58,6 +59,7 @@ export const sampleInvoices: Mutable<InvoiceResponse>[] = [
   },
   {
     id: toEntityId<'Invoice'>('inv_002'),
+    partyId: 'party_002',
     invoiceNumber: 'INV-2026-0002',
     status: 'Open',
     documentType: 'Invoice',
@@ -81,6 +83,7 @@ export const sampleInvoices: Mutable<InvoiceResponse>[] = [
   },
   {
     id: toEntityId<'Invoice'>('inv_003'),
+    partyId: 'party_003',
     invoiceNumber: 'INV-2026-0003',
     status: 'Draft',
     documentType: 'Invoice',
@@ -104,6 +107,7 @@ export const sampleInvoices: Mutable<InvoiceResponse>[] = [
   },
   {
     id: toEntityId<'Invoice'>('inv_004'),
+    partyId: 'party_001',
     invoiceNumber: 'CN-2026-0001',
     status: 'Cancelled',
     documentType: 'CreditNote',

@@ -75,6 +75,7 @@ export interface InvoiceLineItemResponse {
 /** Full invoice response from the API. */
 export interface InvoiceResponse {
   readonly id: string;
+  readonly partyId: string;
   readonly documentType: string;
   readonly invoiceNumber: string | null;
   readonly status: string;

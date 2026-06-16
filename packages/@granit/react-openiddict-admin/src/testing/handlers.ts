@@ -393,6 +393,7 @@ export function createOpenIddictAdminHandlers(
         postLogoutRedirectUris: body.postLogoutRedirectUris ?? [],
         consentType: body.consentType ?? null,
         clientSide: body.clientSide ?? null,
+        deviceKind: body.deviceKind ?? null,
         hasSigningKey: false,
       };
       mockOidcApplications.push(newApp);
@@ -407,6 +408,7 @@ export function createOpenIddictAdminHandlers(
       const updated: (typeof mockOidcApplications)[number] = {
         clientId: existing.clientId,
         tenantId: existing.tenantId,
+        deviceKind: existing.deviceKind,
         hasSigningKey: existing.hasSigningKey,
         displayName: 'displayName' in body ? (body.displayName ?? null) : existing.displayName,
         type: 'type' in body ? (body.type ?? null) : existing.type,

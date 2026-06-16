@@ -21,7 +21,7 @@ export interface ImportColumnMapping {
 export interface ImportFieldMetadata {
   readonly propertyPath: string;
   readonly clrTypeName: string;
-  readonly displayName: string;
+  readonly displayName: string | null;
   readonly description: string | null;
   readonly isRequired: boolean;
 }

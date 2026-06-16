@@ -55,6 +55,7 @@ export const mockOidcApplications: Mutable<AdminOidcApplicationResponse>[] = [
     postLogoutRedirectUris: ['https://showcase.granit-fx.dev/signout-callback'],
     consentType: 'implicit',
     clientSide: 3,
+    deviceKind: null,
     hasSigningKey: false,
   },
   {
@@ -67,6 +68,7 @@ export const mockOidcApplications: Mutable<AdminOidcApplicationResponse>[] = [
     postLogoutRedirectUris: [],
     consentType: null,
     clientSide: 1,
+    deviceKind: null,
     hasSigningKey: false,
   },
 ];

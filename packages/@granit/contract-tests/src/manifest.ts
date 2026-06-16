@@ -107,11 +107,11 @@ export const CONTRACTS: readonly ModuleContract[] = [
   {
     slug: 'openiddict',
     package: 'openiddict-admin',
-    // TODO(contract): AdminOidcApplicationResponse (missing `deviceKind`),
-    // AdminOidcRotateSecretResponse (front newSecret vs backend displayName/
-    // newClientSecret) and AdminOidcAuthorizationResponse (subject/status/type
-    // nullability) deferred — real field drift to reconcile.
+    // TODO(contract): AdminOidcRotateSecretResponse (front newSecret vs backend
+    // displayName/newClientSecret) deferred — structural divergence to reconcile.
     types: [
+      'AdminOidcApplicationResponse',
+      'AdminOidcAuthorizationResponse',
       'AdminOidcCreateApplicationRequest',
       'AdminOidcUpdateApplicationRequest',
       'AdminOidcScopeResponse',
@@ -389,8 +389,9 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'BulkActionFailure',
     ],
     // TODO(contract): EntityFormFieldManifest deferred — front carries a `lookup`
-    // field absent from the backend schema. BulkActionRequest deferred — `payload`
-    // is nullable backend-side but not front-side.
+    // field absent from the backend schema. BulkActionRequest deferred — its
+    // `payload` is `unknown` front-side (which subsumes null) but the oracle
+    // reads a bare `unknown` as non-nullable; an oracle limitation, not a drift.
   },
   {
     slug: 'entities-customization',
@@ -479,9 +480,8 @@ export const CONTRACTS: readonly ModuleContract[] = [
   {
     slug: 'invoicing',
     package: 'invoicing',
-    // TODO(contract): InvoiceResponse deferred — backend `partyId` (required) is
-    // missing from the front type.
     types: [
+      'InvoiceResponse',
       'InvoiceLineItemResponse',
       'InvoiceCreateRequest',
       'FinalizeInvoiceRequest',
@@ -863,8 +863,8 @@ export const CONTRACTS: readonly ModuleContract[] = [
   {
     slug: 'data-exchange',
     package: 'data-exchange',
-    // TODO(contract): ImportReportResponse (`finalStatus` string-vs-object) and
-    // ImportFieldMetadata (`displayName` nullability) deferred — real field drift.
+    // TODO(contract): ImportReportResponse (`finalStatus` string-vs-object)
+    // deferred — real field drift.
     types: [
       'ExportDefinitionResponse',
       'ExportFieldResponse',
@@ -874,6 +874,7 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'SaveExportPresetRequest',
       'ImportJobResponse',
       'ImportPreviewResponse',
+      'ImportFieldMetadata',
       'ImportRowError',
       'ImportColumnMapping',
       'ConfirmMappingsRequest',
