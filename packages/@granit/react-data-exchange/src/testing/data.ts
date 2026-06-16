@@ -10,6 +10,9 @@ export const mockImportHistory: ImportJobResponse[] = [
     status: 'Completed',
     createdAt: '2026-03-07T09:15:00Z',
     completedAt: '2026-03-07T09:15:12Z',
+    entityTypeName: 'Country',
+    modifiedAt: null,
+    modifiedBy: null,
     concurrencyStamp: 'stamp-imp-001',
   },
   {
@@ -21,6 +24,9 @@ export const mockImportHistory: ImportJobResponse[] = [
     status: 'PartiallyCompleted',
     createdAt: '2026-03-06T14:30:00Z',
     completedAt: '2026-03-06T14:30:08Z',
+    entityTypeName: 'Country',
+    modifiedAt: null,
+    modifiedBy: null,
     concurrencyStamp: 'stamp-imp-002',
   },
   {
@@ -32,6 +38,9 @@ export const mockImportHistory: ImportJobResponse[] = [
     status: 'Failed',
     createdAt: '2026-03-05T11:00:00Z',
     completedAt: '2026-03-05T11:00:03Z',
+    entityTypeName: 'Country',
+    modifiedAt: null,
+    modifiedBy: null,
     concurrencyStamp: 'stamp-imp-003',
   },
   {
@@ -43,6 +52,9 @@ export const mockImportHistory: ImportJobResponse[] = [
     status: 'Completed',
     createdAt: '2026-03-04T16:45:00Z',
     completedAt: '2026-03-04T16:45:06Z',
+    entityTypeName: 'Country',
+    modifiedAt: null,
+    modifiedBy: null,
     concurrencyStamp: 'stamp-imp-004',
   },
   {
@@ -54,6 +66,9 @@ export const mockImportHistory: ImportJobResponse[] = [
     status: 'Cancelled',
     createdAt: '2026-03-03T08:20:00Z',
     completedAt: null,
+    entityTypeName: 'Country',
+    modifiedAt: null,
+    modifiedBy: null,
     concurrencyStamp: 'stamp-imp-005',
   },
   {
@@ -65,6 +80,9 @@ export const mockImportHistory: ImportJobResponse[] = [
     status: 'Completed',
     createdAt: '2026-02-28T10:00:00Z',
     completedAt: '2026-02-28T10:00:22Z',
+    entityTypeName: 'Country',
+    modifiedAt: null,
+    modifiedBy: null,
     concurrencyStamp: 'stamp-imp-006',
   },
   {
@@ -76,6 +94,9 @@ export const mockImportHistory: ImportJobResponse[] = [
     status: 'PartiallyCompleted',
     createdAt: '2026-02-25T13:15:00Z',
     completedAt: '2026-02-25T13:15:14Z',
+    entityTypeName: 'Country',
+    modifiedAt: null,
+    modifiedBy: null,
     concurrencyStamp: 'stamp-imp-007',
   },
 ];
@@ -91,6 +112,8 @@ export const mockExportHistory: ExportJobResponse[] = [
     createdAt: '2026-03-07T10:00:00Z',
     completedAt: '2026-03-07T10:00:05Z',
     errorMessage: null,
+    modifiedAt: null,
+    modifiedBy: null,
   },
   {
     id: 'exp-002',
@@ -102,6 +125,8 @@ export const mockExportHistory: ExportJobResponse[] = [
     createdAt: '2026-03-06T16:00:00Z',
     completedAt: '2026-03-06T16:00:18Z',
     errorMessage: null,
+    modifiedAt: null,
+    modifiedBy: null,
   },
   {
     id: 'exp-003',
@@ -113,6 +138,8 @@ export const mockExportHistory: ExportJobResponse[] = [
     createdAt: '2026-03-05T09:30:00Z',
     completedAt: '2026-03-05T09:30:08Z',
     errorMessage: null,
+    modifiedAt: null,
+    modifiedBy: null,
   },
   {
     id: 'exp-004',
@@ -124,6 +151,8 @@ export const mockExportHistory: ExportJobResponse[] = [
     createdAt: '2026-03-04T14:00:00Z',
     completedAt: '2026-03-04T14:00:02Z',
     errorMessage: 'Export definition "users" has no data source configured',
+    modifiedAt: null,
+    modifiedBy: null,
   },
   {
     id: 'exp-005',
@@ -135,6 +164,8 @@ export const mockExportHistory: ExportJobResponse[] = [
     createdAt: '2026-02-28T11:45:00Z',
     completedAt: '2026-02-28T11:45:12Z',
     errorMessage: null,
+    modifiedAt: null,
+    modifiedBy: null,
   },
   {
     id: 'exp-006',
@@ -146,5 +177,7 @@ export const mockExportHistory: ExportJobResponse[] = [
     createdAt: '2026-02-20T08:00:00Z',
     completedAt: '2026-02-20T08:00:04Z',
     errorMessage: null,
+    modifiedAt: null,
+    modifiedBy: null,
   },
 ];

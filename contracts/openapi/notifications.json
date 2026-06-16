@@ -921,7 +921,15 @@
         }
       },
       "NotificationPreferenceResponse": {
-        "required": ["id", "userId", "notificationTypeName", "channelName", "isEnabled"],
+        "required": [
+          "id",
+          "userId",
+          "notificationTypeName",
+          "channelName",
+          "isEnabled",
+          "createdAt",
+          "modifiedAt"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -939,6 +947,14 @@
           },
           "isEnabled": {
             "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
           }
         }
       },
@@ -963,7 +979,7 @@
         "enum": ["Info", "Success", "Warning", "Error", "Fatal"]
       },
       "NotificationSubscriptionResponse": {
-        "required": ["id", "userId", "notificationTypeName", "entityType", "entityId"],
+        "required": ["id", "userId", "notificationTypeName", "entityType", "entityId", "createdAt"],
         "type": "object",
         "properties": {
           "id": {
@@ -981,6 +997,10 @@
           },
           "entityId": {
             "type": ["null", "string"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },

@@ -7,7 +7,7 @@ import { NotificationProvider } from '../providers/notification-provider';
 
 import { axiosResponse, createMockClient } from './test-utils';
 
-import type { NotificationConfig, NotificationPreference } from '@granit/notifications';
+import type { NotificationConfig, NotificationPreferenceResponse } from '@granit/notifications';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -39,7 +39,7 @@ function createWrapperWithoutBasePath(client: AxiosInstance) {
   };
 }
 
-const MOCK_PREFS: NotificationPreference[] = [
+const MOCK_PREFS: NotificationPreferenceResponse[] = [
   {
     id: 'pref-1',
     userId: 'u-1',
@@ -61,7 +61,7 @@ const MOCK_PREFS: NotificationPreference[] = [
     channelName: 'InApp',
     isEnabled: true,
   },
-] as unknown as NotificationPreference[];
+] as unknown as NotificationPreferenceResponse[];
 
 describe('useNotificationPreferences', () => {
   it('should fetch preferences on mount', async () => {
@@ -195,9 +195,9 @@ describe('useNotificationPreferences', () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
-    const updatedPrefs: NotificationPreference[] = [
+    const updatedPrefs: NotificationPreferenceResponse[] = [
       { ...MOCK_PREFS[0]!, isEnabled: false },
-    ] as unknown as NotificationPreference[];
+    ] as unknown as NotificationPreferenceResponse[];
     vi.mocked(client.get).mockResolvedValue(axiosResponse(updatedPrefs));
 
     act(() => {

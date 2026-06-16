@@ -43,6 +43,7 @@ describe('useAuditLogEntry', () => {
       userName: 'admin',
       category: AuditCategory.DataMutation,
       ipAddress: null,
+      userAgent: null,
       tenantId: null,
       correlationId: null,
       entityChanges: [],

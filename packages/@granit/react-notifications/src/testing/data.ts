@@ -2,7 +2,7 @@ import { toEntityId, toISODateString } from '@granit/types';
 
 import type {
   NotificationDefinition,
-  NotificationPreference,
+  NotificationPreferenceResponse,
   NotificationSubscriptionResponse,
   UserNotification,
 } from '@granit/notifications';
@@ -361,13 +361,15 @@ export const mockNotificationDefinitions: NotificationDefinition[] = [
   },
 ];
 
-export const mockNotificationPreferences: NotificationPreference[] = [
+export const mockNotificationPreferences: NotificationPreferenceResponse[] = [
   {
     id: toEntityId<'NotificationPreference'>('pref-001'),
     userId: adminUserId,
     notificationTypeName: 'user_registered',
     channelName: 'InApp',
     isEnabled: true,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-002'),
@@ -375,6 +377,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'user_registered',
     channelName: 'Email',
     isEnabled: true,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-003'),
@@ -382,6 +386,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'user_registered',
     channelName: 'Push',
     isEnabled: false,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-004'),
@@ -389,6 +395,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'user_role_changed',
     channelName: 'InApp',
     isEnabled: true,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-005'),
@@ -396,6 +404,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'user_role_changed',
     channelName: 'Email',
     isEnabled: false,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-006'),
@@ -403,6 +413,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'user_role_changed',
     channelName: 'Push',
     isEnabled: false,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-007'),
@@ -410,6 +422,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'country_updated',
     channelName: 'InApp',
     isEnabled: true,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-008'),
@@ -417,6 +431,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'country_updated',
     channelName: 'Email',
     isEnabled: false,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-009'),
@@ -424,6 +440,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'country_updated',
     channelName: 'Push',
     isEnabled: false,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-010'),
@@ -431,6 +449,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'config_changed',
     channelName: 'InApp',
     isEnabled: true,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-011'),
@@ -438,6 +458,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'config_changed',
     channelName: 'Email',
     isEnabled: true,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-012'),
@@ -445,6 +467,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'config_changed',
     channelName: 'Push',
     isEnabled: true,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-013'),
@@ -452,6 +476,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'security_alert',
     channelName: 'InApp',
     isEnabled: true,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-014'),
@@ -459,6 +485,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'security_alert',
     channelName: 'Email',
     isEnabled: true,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-015'),
@@ -466,6 +494,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'security_alert',
     channelName: 'Push',
     isEnabled: true,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-016'),
@@ -473,6 +503,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'service_health',
     channelName: 'InApp',
     isEnabled: true,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-017'),
@@ -480,6 +512,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'service_health',
     channelName: 'Email',
     isEnabled: true,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-018'),
@@ -487,6 +521,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'service_health',
     channelName: 'Push',
     isEnabled: false,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-019'),
@@ -494,6 +530,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'audit_export',
     channelName: 'InApp',
     isEnabled: true,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-020'),
@@ -501,6 +539,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'audit_export',
     channelName: 'Email',
     isEnabled: true,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-021'),
@@ -508,6 +548,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'audit_export',
     channelName: 'Push',
     isEnabled: false,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-022'),
@@ -515,6 +557,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'rgpd_request',
     channelName: 'InApp',
     isEnabled: true,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-023'),
@@ -522,6 +566,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'rgpd_request',
     channelName: 'Email',
     isEnabled: true,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: toEntityId<'NotificationPreference'>('pref-024'),
@@ -529,6 +575,8 @@ export const mockNotificationPreferences: NotificationPreference[] = [
     notificationTypeName: 'rgpd_request',
     channelName: 'Push',
     isEnabled: true,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
+    modifiedAt: null,
   },
 ];
 
@@ -540,6 +588,7 @@ export const mockSubscriptions: NotificationSubscriptionResponse[] = [
     notificationTypeName: 'user_registered',
     entityType: null,
     entityId: null,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
   },
   {
     id: toEntityId<'NotificationSubscription'>('sub-002'),
@@ -547,6 +596,7 @@ export const mockSubscriptions: NotificationSubscriptionResponse[] = [
     notificationTypeName: 'security_alert',
     entityType: null,
     entityId: null,
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
   },
 ];
 
@@ -558,5 +608,6 @@ export const mockEntityFollowers: NotificationSubscriptionResponse[] = [
     notificationTypeName: 'country_updated',
     entityType: 'Country',
     entityId: 'BE',
+    createdAt: toISODateString('2026-03-12T09:00:00Z'),
   },
 ];

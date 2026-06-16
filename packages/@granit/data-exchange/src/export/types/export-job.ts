@@ -18,6 +18,8 @@ export interface ExportJobResponse {
   readonly errorMessage: string | null;
   readonly createdAt: string;
   readonly completedAt: string | null;
+  readonly modifiedAt: string | null;
+  readonly modifiedBy: string | null;
 }
 
 /**

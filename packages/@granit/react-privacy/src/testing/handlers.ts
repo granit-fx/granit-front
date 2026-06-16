@@ -400,6 +400,8 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const requestedAt = new Date().toISOString();
       const newExport: Mutable<PrivacyExportStatusResponse> = {
         requestId,
+        subjectUserId: '11111111-1111-1111-1111-111111111111',
+        callerUserId: '11111111-1111-1111-1111-111111111111',
         requestedAt,
         state: 'Pending',
         archiveBlobReferenceId: null,

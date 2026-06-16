@@ -24,6 +24,7 @@ describe('audit-log-api', () => {
         userName: 'admin',
         category: AuditCategory.DataMutation,
         ipAddress: '127.0.0.1',
+        userAgent: 'Mozilla/5.0',
         tenantId: null,
         correlationId: null,
         entityChanges: [],

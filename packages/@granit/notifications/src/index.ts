@@ -5,7 +5,7 @@ export type {
   NotificationConfig,
   NotificationDefinition,
   NotificationId,
-  NotificationPreference,
+  NotificationPreferenceResponse,
   NotificationPreferenceId,
   NotificationPreferenceUpdateRequest,
   NotificationSeverity,

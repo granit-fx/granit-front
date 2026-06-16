@@ -15,7 +15,7 @@ import {
 } from './data';
 
 import type {
-  NotificationPreference,
+  NotificationPreferenceResponse,
   NotificationPreferenceUpdateRequest,
   NotificationSubscriptionResponse,
   UserNotification,
@@ -169,7 +169,7 @@ export const notificationQueryMetadata: QueryMetadata = {
  */
 export function createNotificationsHandlers(baseUrl = API_BASE_PATH) {
   let notifications: Mutable<UserNotification>[] = [...mockNotifications];
-  let preferences: Mutable<NotificationPreference>[] = [...mockNotificationPreferences];
+  let preferences: Mutable<NotificationPreferenceResponse>[] = [...mockNotificationPreferences];
   let subscriptions: Mutable<NotificationSubscriptionResponse>[] = [...mockSubscriptions];
   let entityFollowers: Mutable<NotificationSubscriptionResponse>[] = [...mockEntityFollowers];
 
@@ -283,6 +283,7 @@ export function createNotificationsHandlers(baseUrl = API_BASE_PATH) {
             notificationTypeName: '',
             entityType,
             entityId,
+            createdAt: toISODateString('2026-03-12T09:00:00Z'),
           },
         ];
       }
@@ -336,6 +337,8 @@ export function createNotificationsHandlers(baseUrl = API_BASE_PATH) {
             notificationTypeName: body.notificationTypeName,
             channelName: body.channelName,
             isEnabled: body.isEnabled,
+            createdAt: toISODateString('2026-03-12T09:00:00Z'),
+            modifiedAt: null,
           },
         ];
       } else {
@@ -367,6 +370,7 @@ export function createNotificationsHandlers(baseUrl = API_BASE_PATH) {
             notificationTypeName: typeName,
             entityType: null,
             entityId: null,
+            createdAt: toISODateString('2026-03-12T09:00:00Z'),
           },
         ];
       }

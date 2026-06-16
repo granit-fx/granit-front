@@ -202,6 +202,7 @@ function toDetail(entry: AuditEntryResponse): AuditEntryDetailResponse {
     userName: entry.userName,
     category: entry.category,
     ipAddress: entry.ipAddress,
+    userAgent: 'Mozilla/5.0',
     tenantId: entry.tenantId,
     correlationId: entry.correlationId,
     entityChanges: [

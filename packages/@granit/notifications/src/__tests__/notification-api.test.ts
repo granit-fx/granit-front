@@ -13,7 +13,7 @@ import {
 
 import type {
   UserNotificationPage,
-  NotificationPreference,
+  NotificationPreferenceResponse,
   NotificationPreferenceUpdateRequest,
 } from '../types/index';
 
@@ -98,7 +98,7 @@ describe('notification-api', () => {
   // getPreferences
   // -----------------------------------------------------------------------
   it('should send GET for preferences (getPreferences)', async () => {
-    const prefs: NotificationPreference[] = [];
+    const prefs: NotificationPreferenceResponse[] = [];
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse(prefs));
 

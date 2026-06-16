@@ -2037,6 +2037,8 @@
       "PrivacyExportStatusResponse": {
         "required": [
           "requestId",
+          "subjectUserId",
+          "callerUserId",
           "state",
           "requestedAt",
           "completedAt",
@@ -2046,6 +2048,14 @@
         "type": "object",
         "properties": {
           "requestId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subjectUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "callerUserId": {
             "type": "string",
             "format": "uuid"
           },

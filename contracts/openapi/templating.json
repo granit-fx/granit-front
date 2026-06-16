@@ -2352,6 +2352,7 @@
           "content",
           "mimeType",
           "status",
+          "version",
           "createdAt",
           "createdBy",
           "publishedAt",
@@ -2373,6 +2374,10 @@
           },
           "status": {
             "$ref": "#/components/schemas/WorkflowLifecycleStatus"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
           },
           "createdAt": {
             "type": "string",

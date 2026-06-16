@@ -74,6 +74,8 @@ describe('privacy-api', () => {
       const client = createMockClient();
       const response: PrivacyExportStatusResponse = {
         requestId: 'req-1',
+        subjectUserId: '11111111-1111-1111-1111-111111111111',
+        callerUserId: '11111111-1111-1111-1111-111111111111',
         requestedAt: '2026-03-21T10:00:00Z',
         state: 'Completed',
         archiveBlobReferenceId: 'blob-123',

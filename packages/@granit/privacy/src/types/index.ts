@@ -9,6 +9,10 @@ export type PrivacyExportRequestResponse = {
 
 export type PrivacyExportStatusResponse = {
   readonly requestId: string;
+  /** Whose data is exported. Differs from {@link callerUserId} in the on-behalf-of flow. */
+  readonly subjectUserId: string;
+  /** Who requested the export. Differs from {@link subjectUserId} in the on-behalf-of flow. */
+  readonly callerUserId: string;
   readonly requestedAt: string;
   readonly state: PrivacyExportStatus;
   readonly archiveBlobReferenceId: string | null;

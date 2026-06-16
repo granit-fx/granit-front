@@ -1578,7 +1578,9 @@
           "fileName",
           "errorMessage",
           "createdAt",
-          "completedAt"
+          "completedAt",
+          "modifiedAt",
+          "modifiedBy"
         ],
         "type": "object",
         "properties": {
@@ -1612,6 +1614,13 @@
           "completedAt": {
             "type": ["null", "string"],
             "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": ["null", "string"]
           }
         }
       },
@@ -1692,12 +1701,15 @@
         "required": [
           "id",
           "definitionName",
+          "entityTypeName",
           "originalFileName",
           "mimeType",
           "fileSizeBytes",
           "status",
           "createdAt",
           "completedAt",
+          "modifiedAt",
+          "modifiedBy",
           "concurrencyStamp"
         ],
         "type": "object",
@@ -1707,6 +1719,9 @@
             "format": "uuid"
           },
           "definitionName": {
+            "type": "string"
+          },
+          "entityTypeName": {
             "type": "string"
           },
           "originalFileName": {
@@ -1730,6 +1745,13 @@
           "completedAt": {
             "type": ["null", "string"],
             "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": ["null", "string"]
           },
           "concurrencyStamp": {
             "type": "string"

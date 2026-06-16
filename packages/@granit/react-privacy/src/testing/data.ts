@@ -14,6 +14,8 @@ import type {
 export const mockExports: PrivacyExportStatusResponse[] = [
   {
     requestId: 'exp-001',
+    subjectUserId: '11111111-1111-1111-1111-111111111111',
+    callerUserId: '11111111-1111-1111-1111-111111111111',
     requestedAt: '2026-03-10T08:00:00Z',
     state: 'Completed',
     archiveBlobReferenceId: 'blob-archive-001',
@@ -22,6 +24,8 @@ export const mockExports: PrivacyExportStatusResponse[] = [
   },
   {
     requestId: 'exp-002',
+    subjectUserId: '11111111-1111-1111-1111-111111111111',
+    callerUserId: '11111111-1111-1111-1111-111111111111',
     requestedAt: '2026-03-15T14:30:00Z',
     state: 'Pending',
     archiveBlobReferenceId: null,
@@ -30,6 +34,8 @@ export const mockExports: PrivacyExportStatusResponse[] = [
   },
   {
     requestId: 'exp-003',
+    subjectUserId: '11111111-1111-1111-1111-111111111111',
+    callerUserId: '11111111-1111-1111-1111-111111111111',
     requestedAt: '2026-02-20T09:00:00Z',
     state: 'TimedOut',
     archiveBlobReferenceId: null,

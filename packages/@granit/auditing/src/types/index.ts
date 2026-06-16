@@ -68,6 +68,8 @@ export type AuditEntryDetailResponse = {
   readonly userName: string | null;
   readonly category: AuditCategoryValue;
   readonly ipAddress: string | null;
+  /** Client user-agent captured with the entry; `null` when unavailable (parity with {@link ipAddress}). */
+  readonly userAgent: string | null;
   readonly tenantId: TenantId | null;
   readonly correlationId: CorrelationId | null;
   readonly entityChanges: readonly AuditEntityChangeResponse[];

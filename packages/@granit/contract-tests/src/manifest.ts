@@ -98,13 +98,11 @@ export const CONTRACTS: readonly ModuleContract[] = [
   {
     slug: 'timeline',
     package: 'timeline',
-    // TODO(contract): TimelineStreamEntryResponse deferred — front enriches the
-    // backend schema with origin/sourceKey/sourceId/editedAt for external-source
-    // projection (front-only, intentional).
     types: [
       'ReactionAggregateResponse',
       'ReactionToggleResponse',
       'TimelineAttachmentInfoResponse',
+      'TimelineStreamEntryResponse',
       'PostTimelineEntryRequest',
     ],
   },
@@ -237,6 +235,7 @@ export const CONTRACTS: readonly ModuleContract[] = [
     types: [
       'NotificationDefinition',
       'NotificationSubscriptionResponse',
+      'NotificationPreferenceResponse',
       'NotificationPreferenceUpdateRequest',
     ],
   },

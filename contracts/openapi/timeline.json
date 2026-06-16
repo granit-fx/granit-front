@@ -956,6 +956,9 @@
           }
         }
       },
+      "TimelineEntryOrigin": {
+        "enum": ["Native", "External"]
+      },
       "TimelineEntryType": {
         "enum": ["Comment", "SystemLog", "InternalNote"]
       },
@@ -968,7 +971,11 @@
           "authorName",
           "body",
           "attachments",
-          "parentEntryId"
+          "parentEntryId",
+          "origin",
+          "sourceKey",
+          "sourceId",
+          "editedAt"
         ],
         "type": "object",
         "properties": {
@@ -1001,6 +1008,19 @@
           "parentEntryId": {
             "type": ["null", "string"],
             "format": "uuid"
+          },
+          "origin": {
+            "$ref": "#/components/schemas/TimelineEntryOrigin"
+          },
+          "sourceKey": {
+            "type": "string"
+          },
+          "sourceId": {
+            "type": ["null", "string"]
+          },
+          "editedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
           },
           "reactions": {
             "type": ["null", "object"],

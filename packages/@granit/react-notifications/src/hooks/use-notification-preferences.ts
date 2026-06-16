@@ -6,12 +6,12 @@ import { API_BASE_PATH } from '../constants';
 import { useNotificationConfig } from '../providers/notification-provider';
 
 import type {
-  NotificationPreference,
+  NotificationPreferenceResponse,
   NotificationPreferenceUpdateRequest,
 } from '@granit/notifications';
 
 export interface UseNotificationPreferencesReturn {
-  preferences: readonly NotificationPreference[];
+  preferences: readonly NotificationPreferenceResponse[];
   loading: boolean;
   error: Error | null;
   saving: boolean;
@@ -60,9 +60,11 @@ export function useNotificationPreferences(): UseNotificationPreferencesReturn {
     },
     onMutate: async ({ preferenceId, enabled }) => {
       await queryClient.cancelQueries({ queryKey: PREFERENCES_KEY });
-      const previous = queryClient.getQueryData<readonly NotificationPreference[]>(PREFERENCES_KEY);
-      queryClient.setQueryData<readonly NotificationPreference[]>(PREFERENCES_KEY, (old = []) =>
-        old.map((p) => (p.id === preferenceId ? { ...p, isEnabled: enabled } : p))
+      const previous =
+        queryClient.getQueryData<readonly NotificationPreferenceResponse[]>(PREFERENCES_KEY);
+      queryClient.setQueryData<readonly NotificationPreferenceResponse[]>(
+        PREFERENCES_KEY,
+        (old = []) => old.map((p) => (p.id === preferenceId ? { ...p, isEnabled: enabled } : p))
       );
       return { previous };
     },
@@ -79,7 +81,7 @@ export function useNotificationPreferences(): UseNotificationPreferencesReturn {
   const togglePreference = useCallback(
     (preferenceId: string, enabled: boolean) => {
       const pref = (
-        queryClient.getQueryData<readonly NotificationPreference[]>(PREFERENCES_KEY) ?? []
+        queryClient.getQueryData<readonly NotificationPreferenceResponse[]>(PREFERENCES_KEY) ?? []
       ).find((p) => p.id === preferenceId);
       if (!pref) return;
       mutation.mutate({

@@ -6197,7 +6197,7 @@
             {
               "name": "preferences",
               "kind": "property",
-              "signature": "preferences: readonly NotificationPreference[]"
+              "signature": "preferences: readonly NotificationPreferenceResponse[]"
             },
             {
               "name": "loading",

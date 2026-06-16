@@ -93,12 +93,16 @@ export const NotificationChannels = {
 /** Branded notification preference identifier. */
 export type NotificationPreferenceId = EntityId<'NotificationPreference'>;
 
-export interface NotificationPreference {
+export interface NotificationPreferenceResponse {
   readonly id: NotificationPreferenceId;
   readonly userId: UserId;
   readonly notificationTypeName: string;
   readonly channelName: string;
   readonly isEnabled: boolean;
+  /** When the preference was created. */
+  readonly createdAt: ISODateString;
+  /** When the preference was last changed; `null` if never modified. */
+  readonly modifiedAt: ISODateString | null;
 }
 
 /** Write DTO for upsert. Mirrors `NotificationPreferenceUpdateRequest` from .NET. */
@@ -152,6 +156,8 @@ export interface NotificationSubscriptionResponse {
   readonly entityType: string | null;
   /** Entity id for follower subscriptions (null for type-level subscriptions). */
   readonly entityId: string | null;
+  /** When the subscription was created. */
+  readonly createdAt: ISODateString;
 }
 
 // ---------------------------------------------------------------------------
