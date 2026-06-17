@@ -45,5 +45,8 @@
     "msw": {
       "optional": true
     }
+  },
+  "dependencies": {
+    "isomorphic-dompurify": "^3.17.0"
   }
 }

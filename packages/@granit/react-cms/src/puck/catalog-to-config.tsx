@@ -190,6 +190,9 @@ function descriptorToField(
       return { type: 'select', options: opts };
     }
 
+    case 'RichText':
+      return { type: 'richtext' };
+
     case 'DocumentReference':
       return buildDocumentReferenceField(fetchDocuments);
 
@@ -209,7 +212,12 @@ function descriptorToField(
 
     case 'Slot':
       // A composable drop target: Puck holds an ordered list of child blocks inline in this prop.
-      return { type: 'slot' };
+      // `allow`/`disallow` restrict which block types may be dropped in.
+      return {
+        type: 'slot',
+        ...(descriptor.allow ? { allow: [...descriptor.allow] } : {}),
+        ...(descriptor.disallow ? { disallow: [...descriptor.disallow] } : {}),
+      };
 
     default:
       return { type: 'text' };
@@ -249,6 +257,8 @@ function buildDefaultProps(
 function defaultForKind(kind: BlockFieldKind): unknown {
   switch (kind) {
     case 'Text':
+      return '';
+    case 'RichText':
       return '';
     case 'Number':
       return 0;

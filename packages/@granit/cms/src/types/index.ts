@@ -30,7 +30,8 @@ export type BlockFieldKind =
   | 'DocumentReference'
   | 'List'
   | 'Nested'
-  | 'Slot';
+  | 'Slot'
+  | 'RichText';
 
 /** One allowed value of a {@link BlockFieldKind} `Choice` field. */
 export interface BlockFieldOption {
@@ -48,6 +49,10 @@ export interface BlockFieldDescriptor {
   readonly options?: readonly BlockFieldOption[];
   readonly itemFields?: Readonly<Record<string, BlockFieldDescriptor>>;
   readonly fields?: Readonly<Record<string, BlockFieldDescriptor>>;
+  /** For `Slot`: block names the slot accepts (allow-list). */
+  readonly allow?: readonly string[];
+  /** For `Slot`: block names the slot rejects (deny-list). */
+  readonly disallow?: readonly string[];
 }
 
 /**

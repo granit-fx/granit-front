@@ -36,6 +36,8 @@ const catalog: BlockCatalogResponse = {
               fields: { title: { kind: 'Text' } },
             },
             body: { kind: 'Slot' },
+            actions: { kind: 'Slot', allow: ['button'], disallow: ['columns'] },
+            richBody: { kind: 'RichText' },
           },
         },
       ],
@@ -134,6 +136,23 @@ describe('catalogToConfig', () => {
     const hero = config.components['hero'];
     expect(hero?.fields?.['body']).toEqual({ type: 'slot' });
     expect(hero?.defaultProps?.['body']).toEqual([]);
+  });
+
+  it('maps Slot allow/disallow onto the slot field', () => {
+    const config = catalogToConfig(catalog);
+    const hero = config.components['hero'];
+    expect(hero?.fields?.['actions']).toEqual({
+      type: 'slot',
+      allow: ['button'],
+      disallow: ['columns'],
+    });
+  });
+
+  it('maps RichText → richtext field with empty-string default', () => {
+    const config = catalogToConfig(catalog);
+    const hero = config.components['hero'];
+    expect(hero?.fields?.['richBody']).toEqual({ type: 'richtext' });
+    expect(hero?.defaultProps?.['richBody']).toBe('');
   });
 
   it('creates default props for each field', () => {

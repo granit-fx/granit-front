@@ -4,7 +4,7 @@ This file lists the third-party libraries used by the **granit-front** project
 along with their respective licenses. It is updated whenever an external
 dependency is added or modified.
 
-Last updated: 2026-06-02
+Last updated: 2026-06-18
 
 ---
 
@@ -12,8 +12,8 @@ Last updated: 2026-06-02
 
 | License      | Package count |
 | ------------ | ------------- |
-| MIT          | 43            |
-| Apache-2.0   | 14            |
+| MIT          | 44            |
+| Apache-2.0   | 15            |
 | BSD-3-Clause | 1             |
 
 ---
@@ -54,6 +54,7 @@ Last updated: 2026-06-02
 | eslint-plugin-import-x          | 4.16.2   | eslint-plugin-import-x Contributors        |
 | husky                           | 9.1.7    | Copyright (c) typicode                     |
 | i18next                         | 26.3.0   | Copyright (c) i18next Contributors         |
+| isomorphic-dompurify            | 2.x      | Copyright (c) Andrew Karpów                |
 | jsdom                           | 29.1.1   | Copyright (c) jsdom Contributors           |
 | lint-staged                     | 17.0.7   | Copyright (c) Andrey Okonetchnikov         |
 | lucide-react                    | 1.17.0   | Copyright (c) Lucide Contributors          |
@@ -86,6 +87,7 @@ Last updated: 2026-06-02
 | @opentelemetry/resources                        | 2.7.1   | Copyright The OpenTelemetry Authors |
 | @opentelemetry/sdk-trace-web                    | 2.7.1   | Copyright The OpenTelemetry Authors |
 | @opentelemetry/semantic-conventions             | 1.41.1  | Copyright The OpenTelemetry Authors |
+| dompurify                                       | 3.x     | Copyright (c) Cure53                |
 | echarts                                         | 6.1.0   | Copyright Apache ECharts Authors    |
 | firebase                                        | 12.x    | Copyright Google LLC                |
 | keycloak-js                                     | 26.2.4  | Copyright Red Hat, Inc.             |

@@ -177,3 +177,123 @@ export interface MapBlockProps {
   readonly zoom?: number;
   readonly label?: string;
 }
+
+// ─── Primitive layout/content catalog ────────────────────────────────────────
+// Each enum string union mirrors the C# enum member names (the projected Choice `value`).
+
+export type SectionBackground = 'Primary' | 'White' | 'Gray' | 'Dark';
+export type SectionPadding = 'None' | 'Small' | 'Medium' | 'Large';
+
+export interface SectionBlockProps {
+  readonly backgroundColor?: SectionBackground;
+  readonly paddingY?: SectionPadding;
+  readonly content: SlotComponent;
+}
+
+export type ContainerMaxWidth = 'Sm' | 'Md' | 'Lg' | 'Xl' | 'Xl2' | 'Full';
+
+export interface ContainerBlockProps {
+  readonly maxWidth?: ContainerMaxWidth;
+  readonly content: SlotComponent;
+}
+
+export type CardShadow = 'None' | 'Sm' | 'Md';
+
+export interface CardBlockProps {
+  readonly shadow?: CardShadow;
+  readonly content: SlotComponent;
+}
+
+export type HeadingLevel = 'H1' | 'H2' | 'H3' | 'H4';
+export type HeadingSize = 'Default' | 'Lg' | 'Xl' | 'Xl2';
+
+export interface HeadingBlockProps {
+  readonly text: string;
+  readonly level?: HeadingLevel;
+  readonly size?: HeadingSize;
+  readonly align?: BlockAlignment;
+}
+
+export type TextSize = 'Sm' | 'Base' | 'Lg';
+export type TextColor = 'Muted' | 'Default' | 'Primary';
+
+export interface TextBlockProps {
+  /** Rich-text HTML produced by the editor's WYSIWYG control. */
+  readonly content: string;
+  readonly size?: TextSize;
+  readonly color?: TextColor;
+}
+
+export type ButtonVariant = 'Primary' | 'Secondary' | 'Outline' | 'Ghost';
+export type ButtonSize = 'Sm' | 'Default' | 'Lg';
+export type LinkTarget = 'Self' | 'Blank';
+
+export interface ButtonBlockProps {
+  readonly label: string;
+  readonly href: string;
+  readonly variant?: ButtonVariant;
+  readonly size?: ButtonSize;
+  readonly target?: LinkTarget;
+}
+
+export interface ButtonGroupBlockProps {
+  readonly alignment?: BlockAlignment;
+  readonly buttons: SlotComponent;
+}
+
+export type ImageAspectRatio = 'Auto' | 'SixteenNine' | 'FourThree' | 'OneOne';
+export type ImageObjectFit = 'Cover' | 'Contain';
+
+export interface ImageBlockProps {
+  readonly imageId?: string | null;
+  readonly _resolved_imageId?: ResolvedAsset;
+  readonly alt?: string;
+  readonly aspectRatio?: ImageAspectRatio;
+  readonly objectFit?: ImageObjectFit;
+}
+
+export type IconName =
+  | 'Check'
+  | 'ArrowRight'
+  | 'Star'
+  | 'Shield'
+  | 'Zap'
+  | 'Users'
+  | 'Settings'
+  | 'Mail'
+  | 'Phone'
+  | 'Globe'
+  | 'Lock'
+  | 'Heart'
+  | 'TrendingUp'
+  | 'Award'
+  | 'Clock'
+  | 'Briefcase';
+export type IconSize = 'Sm' | 'Md' | 'Lg';
+export type IconColor = 'Primary' | 'Muted' | 'Success' | 'Warning';
+
+export interface IconBlockProps {
+  readonly name?: IconName;
+  readonly size?: IconSize;
+  readonly color?: IconColor;
+}
+
+export type AlertIntent = 'Info' | 'Success' | 'Warning' | 'Error';
+
+export interface AlertBlockProps {
+  readonly intent?: AlertIntent;
+  readonly title?: string;
+  readonly content: SlotComponent;
+}
+
+export type SpacerSize = 'Px16' | 'Px32' | 'Px64' | 'Px128';
+
+export interface SpacerBlockProps {
+  readonly size?: SpacerSize;
+}
+
+export type DividerMargins = 'None' | 'Sm' | 'Md' | 'Lg';
+
+export interface DividerBlockProps {
+  readonly margins?: DividerMargins;
+}
