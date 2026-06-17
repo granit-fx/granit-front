@@ -29,6 +29,7 @@ export {
   scanAnonymousDefaultExports,
   scanWallClockInApi,
   scanUseFormResolver,
+  scanEmptyCatch,
 } from './scanners/patterns';
 
 export { scanReadmePresence, scanSharedDepVersions } from './scanners/uniformity';

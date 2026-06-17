@@ -102,3 +102,42 @@ export function scanUseFormResolver(opts: AllowlistedScanContext): Violation[] {
   }
   return out;
 }
+
+// An empty `try { … } catch { }` swallows the error with no log, no rethrow,
+// and no fallback — the canonical "silent failure" anti-pattern. A catch block
+// must DO something: log via createLogger, rethrow, return a fallback, or set
+// an error state. Comments are stripped first, so `catch { /* ignore */ }`
+// counts as empty too — "ignoring" must be a deliberate, visible decision.
+//
+// Promise `.catch(() => …)` handlers are intentionally OUT of scope: the
+// framework uses `.catch(() => undefined)` as an accepted fire-and-forget idiom
+// for non-critical work (e.g. React-Query cache invalidation after a mutation
+// that already succeeded).
+const EMPTY_CATCH_RE = /\bcatch\s*(?:\([^)]*\))?\s*\{\s*\}/g;
+
+export function scanEmptyCatch(opts: AllowlistedScanContext): Violation[] {
+  const out: Violation[] = [];
+  const allowedModules = new Set(opts.allowedModules ?? []);
+  const allowedFiles = opts.allowedFiles ?? [];
+  for (const m of opts.modules) {
+    if (allowedModules.has(m.name)) continue;
+    for (const f of walkSourceFiles(m.srcDir, (file) => !isTestFile(file) && !isTestingDir(file))) {
+      const relPath = rel(f, opts.repoRoot);
+      if (allowedFiles.some((needle) => relPath.includes(needle))) continue;
+      // stripComments collapses block comments (shifting line numbers), so we
+      // report at file granularity — the message points the dev to the fix.
+      const src = stripComments(readFile(f));
+      if (EMPTY_CATCH_RE.test(src)) {
+        out.push({
+          rule: 'no-empty-catch',
+          module: m.name,
+          file: relPath,
+          message:
+            'empty catch swallows the error silently — log it via createLogger from @granit/logger, rethrow, return a fallback, or set an error state',
+        });
+      }
+      EMPTY_CATCH_RE.lastIndex = 0;
+    }
+  }
+  return out;
+}

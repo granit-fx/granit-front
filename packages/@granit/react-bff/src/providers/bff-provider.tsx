@@ -63,9 +63,12 @@ function setLoginPending(pending: boolean): void {
     } else {
       globalThis.sessionStorage?.removeItem(LOGIN_PENDING_KEY);
     }
-  } catch {
+  } catch (error) {
     // sessionStorage unavailable (SSR / privacy mode) — the backoff simply
     // never engages, which degrades gracefully to the previous behaviour.
+    fallbackLogger.debug('login-pending flag not persisted (sessionStorage unavailable)', {
+      error: String(error),
+    });
   }
 }
 
