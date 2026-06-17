@@ -166,7 +166,10 @@ describe('gated exporter', () => {
       expect(callback).toHaveBeenCalledWith({ code: 0 });
     });
 
-    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('OTLP collector unavailable'));
+    // The warn is emitted with `%c`-styled prefix args, so match across all call arguments.
+    expect(
+      warnSpy.mock.calls.some((args) => args.join(' ').includes('OTLP collector unavailable'))
+    ).toBe(true);
 
     // Subsequent exports should short-circuit with success
     const callback2 = vi.fn();
@@ -190,7 +193,10 @@ describe('gated exporter', () => {
       expect(callback).toHaveBeenCalledWith({ code: 0 });
     });
 
-    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('OTLP collector unreachable'));
+    // The warn is emitted with `%c`-styled prefix args, so match across all call arguments.
+    expect(
+      warnSpy.mock.calls.some((args) => args.join(' ').includes('OTLP collector unreachable'))
+    ).toBe(true);
 
     vi.unstubAllGlobals();
   });
