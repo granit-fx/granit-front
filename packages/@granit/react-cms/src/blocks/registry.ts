@@ -1,3 +1,4 @@
+import { ColumnsBlock } from './columns-block';
 import { CtaBlock } from './cta-block';
 import { FeaturesBlock } from './features-block';
 import { HeroBlock } from './hero-block';
@@ -20,6 +21,7 @@ import type { ComponentType } from 'react';
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const BLOCK_COMPONENTS: Record<string, ComponentType<any>> = {
+  columns: ColumnsBlock,
   hero: HeroBlock,
   pricing: PricingBlock,
   cta: CtaBlock,

@@ -29,7 +29,8 @@ export type BlockFieldKind =
   | 'Choice'
   | 'DocumentReference'
   | 'List'
-  | 'Nested';
+  | 'Nested'
+  | 'Slot';
 
 /** One allowed value of a {@link BlockFieldKind} `Choice` field. */
 export interface BlockFieldOption {

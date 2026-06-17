@@ -45,7 +45,7 @@ export async function resolveDocumentReferencesInData(
   for (const component of data?.content ?? []) {
     const blockSchema = schema.get(component?.type as string);
     if (!blockSchema) continue;
-    collectGuids(component?.props as Record<string, unknown>, blockSchema, guids);
+    collectGuids(component?.props as Record<string, unknown>, blockSchema, guids, schema);
   }
 
   if (guids.size === 0) return data;
@@ -61,7 +61,8 @@ export async function resolveDocumentReferencesInData(
       props: injectResolved(
         (component as { props?: Record<string, unknown> }).props ?? {},
         blockSchema,
-        resolved
+        resolved,
+        schema
       ),
     };
   });
@@ -104,7 +105,8 @@ function extractGuid(value: unknown): string | null {
 function collectGuids(
   props: Record<string, unknown>,
   fieldSchema: Map<string, BlockFieldDescriptor>,
-  out: Set<string>
+  out: Set<string>,
+  schema: Map<string, Map<string, BlockFieldDescriptor>>
 ): void {
   for (const [key, descriptor] of fieldSchema) {
     const value = props[key];
@@ -114,7 +116,7 @@ function collectGuids(
     } else if (descriptor.kind === 'List' && Array.isArray(value) && descriptor.itemFields) {
       const itemSchema = new Map(Object.entries(descriptor.itemFields));
       for (const item of value as Record<string, unknown>[]) {
-        collectGuids(item, itemSchema, out);
+        collectGuids(item, itemSchema, out, schema);
       }
     } else if (
       descriptor.kind === 'Nested' &&
@@ -123,7 +125,14 @@ function collectGuids(
       descriptor.fields
     ) {
       const nestedSchema = new Map(Object.entries(descriptor.fields));
-      collectGuids(value as Record<string, unknown>, nestedSchema, out);
+      collectGuids(value as Record<string, unknown>, nestedSchema, out, schema);
+    } else if (descriptor.kind === 'Slot' && Array.isArray(value)) {
+      // A slot holds child blocks ({ type, props }), each resolved against its own schema —
+      // so references in a block dropped into a column (and any deeper nesting) are collected too.
+      for (const child of value as { type?: string; props?: Record<string, unknown> }[]) {
+        const childSchema = schema.get(child?.type ?? '');
+        if (childSchema) collectGuids(child.props ?? {}, childSchema, out, schema);
+      }
     }
   }
 }
@@ -131,7 +140,8 @@ function collectGuids(
 function injectResolved(
   props: Record<string, unknown>,
   fieldSchema: Map<string, BlockFieldDescriptor>,
-  resolved: Map<string, ResolvedDocumentAsset>
+  resolved: Map<string, ResolvedDocumentAsset>,
+  schema: Map<string, Map<string, BlockFieldDescriptor>>
 ): Record<string, unknown> {
   const next: Record<string, unknown> = { ...props };
 
@@ -146,7 +156,7 @@ function injectResolved(
     } else if (descriptor.kind === 'List' && Array.isArray(value) && descriptor.itemFields) {
       const itemSchema = new Map(Object.entries(descriptor.itemFields));
       next[key] = (value as Record<string, unknown>[]).map((item) =>
-        injectResolved(item, itemSchema, resolved)
+        injectResolved(item, itemSchema, resolved, schema)
       );
     } else if (
       descriptor.kind === 'Nested' &&
@@ -155,7 +165,16 @@ function injectResolved(
       descriptor.fields
     ) {
       const nestedSchema = new Map(Object.entries(descriptor.fields));
-      next[key] = injectResolved(value as Record<string, unknown>, nestedSchema, resolved);
+      next[key] = injectResolved(value as Record<string, unknown>, nestedSchema, resolved, schema);
+    } else if (descriptor.kind === 'Slot' && Array.isArray(value)) {
+      // Recurse into each child block of the slot, resolved against its own schema. Puck metadata
+      // (`type`, `id`, empty slots) is preserved; only the child's `props` are rewritten.
+      next[key] = (value as { type?: string; props?: Record<string, unknown> }[]).map((child) => {
+        const childSchema = schema.get(child?.type ?? '');
+        return childSchema
+          ? { ...child, props: injectResolved(child.props ?? {}, childSchema, resolved, schema) }
+          : child;
+      });
     }
   }
 

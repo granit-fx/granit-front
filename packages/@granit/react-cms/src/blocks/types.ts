@@ -11,6 +11,8 @@
  * these types must therefore track the schemas, not an idealised shape.
  */
 
+import type { SlotComponent } from '@puckeditor/core';
+
 export interface ResolvedAsset {
   readonly url: string;
   readonly width?: number | null;
@@ -30,6 +32,25 @@ export interface AssetRef {
 
 /** Mirrors the C# `BlockAlignment` enum projected as a `Choice`. */
 export type BlockAlignment = 'Left' | 'Center' | 'Right';
+
+/** Mirrors the C# `ColumnsLayout` enum projected as a `Choice` (value = member name). */
+export type ColumnsLayout = 'HalfHalf' | 'OneThirdTwoThirds' | 'TwoThirdsOneThird';
+
+/** Mirrors the C# `ColumnsGap` enum projected as a `Choice`. */
+export type ColumnsGap = 'Small' | 'Medium' | 'Large';
+
+/**
+ * The `columns` layout block. `leftCol`/`rightCol` are `Slot` fields: at render time Puck passes
+ * each as a `SlotComponent` the block renders as `<LeftCol />`. The render-prop type
+ * (`SlotComponent`) differs from the stored data type (an array of child blocks); the block only
+ * ever sees the former.
+ */
+export interface ColumnsBlockProps {
+  readonly layout?: ColumnsLayout;
+  readonly gap?: ColumnsGap;
+  readonly leftCol: SlotComponent;
+  readonly rightCol: SlotComponent;
+}
 
 /** Mirrors the C# `CtaStyle` enum projected as a `Choice`. */
 export type CtaStyle = 'Primary' | 'Secondary' | 'Outline';

@@ -35,6 +35,7 @@ const catalog: BlockCatalogResponse = {
               kind: 'Nested',
               fields: { title: { kind: 'Text' } },
             },
+            body: { kind: 'Slot' },
           },
         },
       ],
@@ -126,6 +127,13 @@ describe('catalogToConfig', () => {
     const hero = config.components['hero'];
     const fields = hero?.fields ?? {};
     expect(fields['meta']).toMatchObject({ type: 'object' });
+  });
+
+  it('maps Slot → slot field with [] default', () => {
+    const config = catalogToConfig(catalog);
+    const hero = config.components['hero'];
+    expect(hero?.fields?.['body']).toEqual({ type: 'slot' });
+    expect(hero?.defaultProps?.['body']).toEqual([]);
   });
 
   it('creates default props for each field', () => {

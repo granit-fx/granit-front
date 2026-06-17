@@ -207,6 +207,10 @@ function descriptorToField(
       return { type: 'object', objectFields };
     }
 
+    case 'Slot':
+      // A composable drop target: Puck holds an ordered list of child blocks inline in this prop.
+      return { type: 'slot' };
+
     default:
       return { type: 'text' };
   }
@@ -258,6 +262,8 @@ function defaultForKind(kind: BlockFieldKind): unknown {
       return [];
     case 'Nested':
       return {};
+    case 'Slot':
+      return [];
     default:
       return null;
   }

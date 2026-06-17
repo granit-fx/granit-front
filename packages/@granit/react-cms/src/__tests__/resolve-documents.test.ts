@@ -37,6 +37,15 @@ const catalog: BlockCatalogResponse = {
             },
           },
         },
+        {
+          name: 'Layout',
+          version: '1.0.0',
+          sourceModule: 'Granit.Cms.Blocks',
+          renderSide: 'Server',
+          dataSourceKey: null,
+          subscribedContentTypes: [],
+          fields: { cell: { kind: 'Slot' } },
+        },
       ],
     },
   ],
@@ -128,6 +137,26 @@ describe('resolveDocumentReferencesInData', () => {
     expect((items[0] as Record<string, unknown>)['_resolved_itemDoc']).toEqual(asset1);
 
     expect((items[1] as Record<string, unknown>)['_resolved_itemDoc']).toEqual(asset2);
+  });
+
+  it('resolves a DocumentReference inside a block dropped into a slot', async () => {
+    const resolveFn: ResolveDocumentsFn = vi.fn().mockResolvedValue(new Map([['guid-1', asset1]]));
+    const data = {
+      content: [
+        {
+          type: 'Layout',
+          props: {
+            cell: [{ type: 'Hero', props: { headline: 'In a slot', imageId: 'guid-1' } }],
+          },
+        },
+      ],
+    };
+
+    const result = await resolveDocumentReferencesInData(data, catalog, resolveFn);
+
+    expect(result.content[0].props.cell[0].props._resolved_imageId).toEqual(asset1);
+    expect(result.content[0].props.cell[0].type).toBe('Hero'); // child metadata preserved
+    expect(resolveFn).toHaveBeenCalledWith(['guid-1']);
   });
 
   it('passes through components not present in the catalog unchanged', async () => {
