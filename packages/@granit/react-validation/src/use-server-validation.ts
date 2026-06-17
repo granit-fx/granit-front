@@ -1,9 +1,12 @@
+import { createLogger } from '@granit/logger';
 import { isEmptyFieldValue, validateField, validateFieldServer } from '@granit/validation';
 import { useEffect, useRef, useState } from 'react';
 
 import type { TranslateFunction } from './create-constraints-resolver';
 import type { AxiosInstance } from '@granit/api-client';
 import type { FieldConstraint } from '@granit/validation';
+
+const logger = createLogger('react-validation');
 
 export interface ServerValidationState {
   readonly status: 'idle' | 'validating' | 'valid' | 'invalid' | 'error';
@@ -96,6 +99,7 @@ export function useServerValidation(options: UseServerValidationOptions): Server
         })
         .catch((err: unknown) => {
           if (controller.signal.aborted) return;
+          logger.warn('Server field validation request failed', { validatorKey, err });
           setState({
             status: 'error',
             message: err instanceof Error ? err.message : String(err),

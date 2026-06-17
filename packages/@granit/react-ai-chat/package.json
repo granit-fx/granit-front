@@ -17,6 +17,7 @@
   "peerDependencies": {
     "@granit/ai-chat": "workspace:*",
     "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/types": "workspace:*",
     "@granit/utils": "workspace:*",
@@ -46,6 +47,7 @@
   "devDependencies": {
     "@granit/ai-chat": "workspace:*",
     "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",

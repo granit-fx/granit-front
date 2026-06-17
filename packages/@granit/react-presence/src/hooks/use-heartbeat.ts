@@ -1,3 +1,4 @@
+import { createLogger } from '@granit/logger';
 import { pollMyPresence } from '@granit/presence';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
@@ -8,6 +9,8 @@ import { buildPresenceQueryKey, usePresenceConfig } from '../providers/presence-
 import { presenceKeys } from './query-keys';
 
 import type { PresenceResponse } from '@granit/presence';
+
+const logger = createLogger('react-presence');
 
 export interface UseHeartbeatOptions {
   /** Polling interval in ms while the tab is visible. Default: 30 000. */
@@ -83,6 +86,7 @@ export function useHeartbeat(options: UseHeartbeatOptions = {}): void {
         }
       } catch {
         // Heartbeat failures are non-critical — keep polling.
+        logger.warn('Presence heartbeat poll failed; will retry on next tick');
       } finally {
         inFlightRef.current = false;
       }

@@ -14,10 +14,12 @@
     "build": "tsup"
   },
   "peerDependencies": {
-    "@granit/api-client": "workspace:*"
+    "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*"
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/testing": "workspace:*"
   },
   "publishConfig": {

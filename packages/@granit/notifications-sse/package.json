@@ -14,6 +14,7 @@
     "build": "tsup"
   },
   "peerDependencies": {
+    "@granit/logger": "workspace:*",
     "@granit/notifications": "workspace:*",
     "@microsoft/fetch-event-source": ">=2.0.0"
   },
@@ -27,6 +28,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
+    "@granit/logger": "workspace:*",
     "@granit/notifications": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/types": "workspace:*",

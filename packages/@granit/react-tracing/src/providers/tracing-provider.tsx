@@ -1,3 +1,4 @@
+import { createLogger } from '@granit/logger';
 import { type Tracer, trace } from '@opentelemetry/api';
 import { ZoneContextManager } from '@opentelemetry/context-zone';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
@@ -21,6 +22,8 @@ import type { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-web';
 
 // ExportResultCode.SUCCESS = 0 (from @opentelemetry/core, not a direct dependency)
 const EXPORT_SUCCESS = { code: 0 as const };
+
+const logger = createLogger('react-tracing');
 
 function createGatedExporter(exporterConfig: TracingExporterConfig): SpanExporter {
   let delegate: OTLPTraceExporter | null = null;
@@ -52,19 +55,19 @@ function createGatedExporter(exporterConfig: TracingExporterConfig): SpanExporte
               delegate.export(spans, resultCallback);
             } else {
               disabled = true;
-              // eslint-disable-next-line no-console
-              console.warn(
-                `[@granit/tracing] OTLP collector unavailable at ${exporterConfig.url} (HTTP ${String(res.status)}). Trace export disabled for this session.`
-              );
+              logger.warn('OTLP collector unavailable; trace export disabled for this session', {
+                url: exporterConfig.url,
+                status: res.status,
+              });
               resultCallback(EXPORT_SUCCESS);
             }
           })
-          .catch(() => {
+          .catch((err: unknown) => {
             disabled = true;
-            // eslint-disable-next-line no-console
-            console.warn(
-              `[@granit/tracing] OTLP collector unreachable at ${exporterConfig.url}. Trace export disabled for this session.`
-            );
+            logger.warn('OTLP collector unreachable; trace export disabled for this session', {
+              url: exporterConfig.url,
+              err,
+            });
             resultCallback(EXPORT_SUCCESS);
           });
         return;

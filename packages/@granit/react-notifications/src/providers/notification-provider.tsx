@@ -1,3 +1,4 @@
+import { createLogger } from '@granit/logger';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import type {
@@ -20,6 +21,8 @@ interface NotificationContextValue {
 }
 
 const NotificationContext = createContext<NotificationContextValue | null>(null);
+
+const logger = createLogger('react-notifications');
 
 // ---------------------------------------------------------------------------
 // Hook
@@ -67,14 +70,21 @@ export function NotificationProvider({
 
     setConnectionState('connecting');
     transport.connect().then(
-      () => setConnectionState('connected'),
-      () => setConnectionState('disconnected')
+      () => {
+        logger.info('Notification real-time transport connected');
+        setConnectionState('connected');
+      },
+      () => {
+        logger.warn('Notification real-time transport failed to connect; REST polling only');
+        setConnectionState('disconnected');
+      }
     );
 
     return () => {
       unsubNotification();
       unsubState();
       transport.disconnect();
+      logger.info('Notification real-time transport disconnected');
     };
   }, [transport]);
 

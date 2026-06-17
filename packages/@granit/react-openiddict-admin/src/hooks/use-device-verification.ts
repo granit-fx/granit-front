@@ -1,6 +1,9 @@
+import { createLogger } from '@granit/logger';
 import { useState } from 'react';
 
 import { useAdminConfig } from '../providers/openiddict-admin-provider';
+
+const logger = createLogger('react-openiddict-admin');
 
 export type DeviceVerificationStatus = 'idle' | 'pending' | 'success' | 'error';
 
@@ -35,7 +38,11 @@ export function useDeviceVerification(verifyEndpoint = '/connect/verify'): Devic
       setStatus('success');
     } catch (error: unknown) {
       const data = (error as { response?: { data?: { error?: string } } })?.response?.data;
-      setErrorCode(data?.error ?? 'unknown_error');
+      const code = data?.error ?? 'unknown_error';
+      // Log only the OAuth error code — the submitted user_code is a credential
+      // and must never be logged (it can travel inside the raw error/request).
+      logger.warn('Device verification failed', { errorCode: code });
+      setErrorCode(code);
       setStatus('error');
     }
   };

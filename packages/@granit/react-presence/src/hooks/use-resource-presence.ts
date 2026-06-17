@@ -1,3 +1,4 @@
+import { createLogger } from '@granit/logger';
 import { joinResourceRoom, leaveResourceRoom } from '@granit/presence';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -8,6 +9,8 @@ import {
 import { usePresenceConfig } from '../providers/presence-provider';
 
 import type { ResourcePresenceParticipantResponse, ResourceRoomResponse } from '@granit/presence';
+
+const logger = createLogger('react-presence');
 
 export interface UseResourcePresenceOptions {
   /** Heartbeat cadence ms. Default: 15 000. */
@@ -228,7 +231,9 @@ export function useResourcePresence(
       stopTimer();
       document.removeEventListener('visibilitychange', onVisibilityChange);
       // Best-effort leave — no retry, no await (component may already be destroyed).
-      void leaveResourceRoom(config.client, config.basePath, kind, id).catch(() => {});
+      void leaveResourceRoom(config.client, config.basePath, kind, id).catch(() => {
+        logger.warn('Best-effort leave of resource presence room failed on unmount');
+      });
     };
   }, [config, enabled, heartbeatIntervalMs, id, kind]);
 

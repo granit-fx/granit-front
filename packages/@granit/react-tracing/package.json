@@ -14,6 +14,7 @@
     "build": "tsup"
   },
   "peerDependencies": {
+    "@granit/logger": "workspace:*",
     "@granit/tracing": "workspace:*",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/context-zone": "^2.6.0",
@@ -26,6 +27,9 @@
     "@opentelemetry/sdk-trace-web": "^2.6.0",
     "@opentelemetry/semantic-conventions": "^1.40.0",
     "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@granit/logger": "workspace:*"
   },
   "publishConfig": {
     "exports": {

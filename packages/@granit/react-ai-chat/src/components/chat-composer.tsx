@@ -1,4 +1,5 @@
 import { SEND_MESSAGE_LIMITS } from '@granit/ai-chat';
+import { createLogger } from '@granit/logger';
 import { cn } from '@granit/utils';
 import { Paperclip, Send, Square } from 'lucide-react';
 import { useCallback, useId, useMemo, useRef, useState } from 'react';
@@ -21,6 +22,8 @@ import type { ActiveTrigger } from './detect-trigger';
 import type { ChatTranslations } from '../locales/index';
 import type { SendMessageRequest } from '@granit/ai-chat';
 import type { ChangeEvent, KeyboardEvent } from 'react';
+
+const logger = createLogger('react-ai-chat');
 
 export interface ChatComposerProps {
   /** Builds and submits a {@link SendMessageRequest} for the turn. */
@@ -105,7 +108,8 @@ export function ChatComposer({
             setMentionLoading(false);
           }
         })
-        .catch(() => {
+        .catch((err: unknown) => {
+          logger.warn('Mention search failed; cleared results', { err });
           if (seq === searchSeq.current) {
             setMentionResults([]);
             setMentionLoading(false);
@@ -262,7 +266,12 @@ export function ChatComposer({
               current.map((a) => (a.id === id ? { ...a, ...uploaded, status: 'ready' } : a))
             );
           })
-          .catch(() => {
+          .catch((err: unknown) => {
+            logger.warn('Composer attachment upload failed', {
+              fileName: file.name,
+              sizeBytes: file.size,
+              err,
+            });
             setAttachments((current) =>
               current.map((a) => (a.id === id ? { ...a, status: 'error' } : a))
             );

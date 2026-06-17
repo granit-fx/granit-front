@@ -1,5 +1,9 @@
+import { createLogger } from '@granit/logger';
+
 import type { ApplicationLocalizationResponse } from './types/index';
 import type { i18n } from 'i18next';
+
+const logger = createLogger('localization');
 
 /**
  * Apply backend localization response to the i18next instance.
@@ -27,6 +31,13 @@ export function applyTranslations(instance: i18n, data: ApplicationLocalizationR
   instance.addResourceBundle(data.cultureName, 'translation', merged, true, true);
 
   if (instance.language !== data.cultureName) {
-    instance.changeLanguage(data.cultureName).catch(() => undefined);
+    instance.changeLanguage(data.cultureName).catch((err: unknown) => {
+      // Resources were merged, but the active language did not switch — the UI
+      // keeps rendering the previous locale until the next attempt.
+      logger.warn('Failed to switch active language after applying translations', {
+        cultureName: data.cultureName,
+        err,
+      });
+    });
   }
 }

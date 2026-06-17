@@ -1,7 +1,10 @@
+import { createLogger } from '@granit/logger';
 import { enUS } from 'date-fns/locale';
 import { useEffect, useState } from 'react';
 
 import type { Locale } from 'date-fns/locale';
+
+const logger = createLogger('react-localization');
 
 /** Alias for i18n codes that don't have a matching date-fns locale file. */
 const LOCALE_ALIAS: Record<string, string> = {
@@ -89,7 +92,8 @@ async function loadLocale(code: string): Promise<Locale> {
     if (!locale) throw new Error(`No locale found for ${dateFnsCode}`);
     cache.set(code, locale);
     return locale;
-  } catch {
+  } catch (err: unknown) {
+    logger.warn('Failed to load date-fns locale; falling back to default', { code, err });
     cache.set(code, DEFAULT_LOCALE);
     return DEFAULT_LOCALE;
   }

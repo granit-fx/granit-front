@@ -16,6 +16,7 @@
   "peerDependencies": {
     "@capacitor/push-notifications": ">=6.0.0",
     "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/notifications-mobile-push": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/types": "workspace:*",
@@ -25,6 +26,7 @@
   "devDependencies": {
     "@capacitor/push-notifications": "^8.1.1",
     "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",

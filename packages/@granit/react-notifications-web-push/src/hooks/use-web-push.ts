@@ -1,3 +1,4 @@
+import { createLogger } from '@granit/logger';
 import {
   registerPushSubscription,
   unregisterPushSubscription,
@@ -6,6 +7,8 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useWebPushConfig } from '../providers/web-push-provider';
+
+const logger = createLogger('react-notifications-web-push');
 
 export interface UseWebPushReturn {
   /** Whether the browser supports Web Push. */
@@ -105,10 +108,12 @@ export function useWebPush(): UseWebPushReturn {
 
       await registerPushSubscription(config.apiClient, basePath, subscription.toJSON());
 
+      logger.info('Web push subscription registered');
       if (mountedRef.current) {
         setIsSubscribed(true);
       }
     } catch (err) {
+      logger.error('Web push subscribe failed', err);
       if (mountedRef.current) {
         setError(err instanceof Error ? err : new Error(String(err)));
       }
@@ -130,12 +135,14 @@ export function useWebPush(): UseWebPushReturn {
       if (subscription) {
         await unregisterPushSubscription(config.apiClient, basePath, subscription.endpoint);
         await subscription.unsubscribe();
+        logger.info('Web push subscription unregistered');
       }
 
       if (mountedRef.current) {
         setIsSubscribed(false);
       }
     } catch (err) {
+      logger.error('Web push unsubscribe failed', err);
       if (mountedRef.current) {
         setError(err instanceof Error ? err : new Error(String(err)));
       }

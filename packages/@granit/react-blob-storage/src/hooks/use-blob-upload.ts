@@ -1,4 +1,5 @@
 import { cancelPendingUpload, confirmUpload, initiateUpload } from '@granit/blob-storage';
+import { createLogger } from '@granit/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useRef, useState } from 'react';
 
@@ -7,6 +8,8 @@ import { useBlobStorageConfig } from '../providers/blob-storage-provider';
 import { blobListQueryKey, blobStorageKeys } from './query-keys';
 
 import type { BlobConfirmUploadResponse } from '@granit/blob-storage';
+
+const logger = createLogger('react-blob-storage');
 
 /** Upload progress phase. */
 export type BlobUploadPhase =
@@ -187,9 +190,13 @@ export function useBlobUpload(): UseBlobUploadReturn {
           await cancelPendingUpload(client, `${basePath}/blobs`, ticket.blobId, {
             containerName,
             reason: `Pre-signed PUT failed: ${reason}`.slice(0, 512),
-          }).catch(() => {
+          }).catch((cancelError: unknown) => {
             // Best-effort: orphan cleanup is the backstop if the cancel call
             // itself fails (offline, already left Pending, …).
+            logger.warn('Best-effort cancel of pending upload failed', {
+              blobId: ticket.blobId,
+              err: cancelError,
+            });
           });
           throw putError;
         }
@@ -217,6 +224,7 @@ export function useBlobUpload(): UseBlobUploadReturn {
         return confirmation;
       } catch (err) {
         const error = err instanceof Error ? err : new Error(String(err));
+        logger.error('Blob upload failed', error, { containerName, fileName: file.name });
         setState((prev) => ({ ...prev, phase: 'error', error }));
         throw error;
       }

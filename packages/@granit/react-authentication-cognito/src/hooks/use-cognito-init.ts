@@ -1,4 +1,5 @@
 import { setTokenGetter, setOnUnauthorized } from '@granit/api-client';
+import { createLogger } from '@granit/logger';
 import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import * as React from 'react';
 
@@ -12,6 +13,8 @@ import {
 import type { LoginOptions, LogoutOptions, OidcUserInfo } from '@granit/authentication';
 import type { CognitoAuthContextType, CognitoCoreConfig } from '@granit/authentication-cognito';
 import type { ICognitoStorage } from 'amazon-cognito-identity-js';
+
+const logger = createLogger('react-authentication-cognito');
 
 /**
  * In-memory implementation of the Cognito SDK storage contract. Tokens live
@@ -83,6 +86,7 @@ function createTokenRefresher(
     new Promise((resolve) => {
       cognitoUser.getSession((err, session) => {
         if (err || !session?.isValid()) {
+          logger.warn('Cognito token refresh failed; request will proceed unauthenticated');
           onTokenRefreshError?.();
           resolve(undefined);
           return;
@@ -127,11 +131,13 @@ export function useCognitoInit(config: CognitoCoreConfig): CognitoCoreResult {
 
     cognitoUser.getSession((err: Error | null, session: CognitoSessionLike | null) => {
       if (err || !session?.isValid()) {
+        logger.warn('Cognito session restore failed or expired; user is unauthenticated');
         setLoading(false);
         config.onSessionExpired?.();
         return;
       }
 
+      logger.info('Cognito session restored');
       setAuthenticated(true);
 
       cognitoUser.getUserAttributes((attrErr, attributes) => {
@@ -141,6 +147,8 @@ export function useCognitoInit(config: CognitoCoreConfig): CognitoCoreResult {
             attrMap[attr.Name] = attr.Value;
           }
           setUser(extractUser(attrMap));
+        } else if (attrErr) {
+          logger.warn('Failed to load Cognito user attributes; continuing without profile claims');
         }
         setLoading(false);
       });
@@ -196,6 +204,7 @@ export function useCognitoInit(config: CognitoCoreConfig): CognitoCoreResult {
     if (cognitoUser) {
       cognitoUser.signOut();
     }
+    logger.info('Cognito user signed out');
     setAuthenticated(false);
     setUser(null);
     if (options?.redirectUri) {

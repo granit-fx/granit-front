@@ -1,7 +1,10 @@
+import { createLogger } from '@granit/logger';
 import { createTransportListeners } from '@granit/notifications';
 import { EventStreamContentType, fetchEventSource } from '@microsoft/fetch-event-source';
 
 import type { NotificationTransportMessage, NotificationTransport } from '@granit/notifications';
+
+const logger = createLogger('notifications-sse');
 
 export interface SseTransportConfig {
   /** SSE endpoint URL, e.g. '/api/v1/notifications/stream'. */
@@ -76,6 +79,7 @@ export function createSseTransport(config: SseTransportConfig): NotificationTran
         async onopen(response) {
           const contentType = response.headers.get('content-type') ?? '';
           if (response.ok && contentType.includes(EventStreamContentType)) {
+            logger.info('SSE stream connected');
             setState('connected');
             return;
           }
@@ -91,20 +95,28 @@ export function createSseTransport(config: SseTransportConfig): NotificationTran
           try {
             const message = JSON.parse(event.data) as NotificationTransportMessage;
             listeners.emit(message);
-          } catch {
-            // Malformed events are silently skipped.
+          } catch (err) {
+            // Skip the malformed frame rather than tearing down the stream;
+            // the raw payload is omitted to avoid logging untrusted server data.
+            logger.warn('Skipped malformed SSE notification frame', {
+              eventType: event.event,
+              err,
+            });
           }
         },
 
         onclose() {
+          logger.info('SSE stream closed by server');
           setState('disconnected');
         },
 
         onerror(err) {
           if (err instanceof FatalError) {
+            logger.error('SSE stream failed fatally; not reconnecting', err);
             setState('disconnected');
             throw err;
           }
+          logger.warn('SSE stream error; reconnecting', { err });
           setState('reconnecting');
         },
 

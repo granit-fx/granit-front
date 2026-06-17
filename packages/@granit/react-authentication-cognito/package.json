@@ -17,6 +17,7 @@
     "@granit/api-client": "workspace:*",
     "@granit/authentication": "workspace:*",
     "@granit/authentication-cognito": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/react-authentication": "workspace:*",
     "amazon-cognito-identity-js": ">=6.0.0",
     "react": "^19.0.0"
@@ -31,6 +32,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
-    "@granit/api-client": "workspace:*"
+    "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*"
   }
 }

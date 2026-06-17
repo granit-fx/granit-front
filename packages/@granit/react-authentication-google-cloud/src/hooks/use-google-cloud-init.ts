@@ -1,4 +1,5 @@
 import { setTokenGetter, setOnUnauthorized } from '@granit/api-client';
+import { createLogger } from '@granit/logger';
 import { initializeApp } from 'firebase/app';
 import {
   initializeAuth,
@@ -18,6 +19,8 @@ import type {
   GoogleCloudCoreConfig,
 } from '@granit/authentication-google-cloud';
 import type { Auth, Persistence, User } from 'firebase/auth';
+
+const logger = createLogger('react-authentication-google-cloud');
 
 /** Resolve the Firebase persistence from the configured posture (default: memory). */
 function resolvePersistence(tokenStorage: GoogleCloudCoreConfig['tokenStorage']): Persistence {
@@ -78,6 +81,7 @@ export function useGoogleCloudInit(config: GoogleCloudCoreConfig): GoogleCloudCo
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
+        logger.info('Firebase auth state: signed in');
         setAuthenticated(true);
         setUser(extractUser(firebaseUser));
 
@@ -85,6 +89,7 @@ export function useGoogleCloudInit(config: GoogleCloudCoreConfig): GoogleCloudCo
           try {
             return await firebaseUser.getIdToken();
           } catch {
+            logger.warn('Firebase ID token refresh failed; request will proceed unauthenticated');
             config.onTokenRefreshError?.();
             return undefined;
           }
@@ -94,6 +99,7 @@ export function useGoogleCloudInit(config: GoogleCloudCoreConfig): GoogleCloudCo
           signOut(auth);
         });
       } else {
+        logger.info('Firebase auth state: signed out');
         setAuthenticated(false);
         setUser(null);
         config.onSessionExpired?.();

@@ -3,6 +3,8 @@
 // Mirrors Granit.AI.Endpoints chat endpoints (sync + SSE stream).
 // ---------------------------------------------------------------------------
 
+import { createLogger } from '@granit/logger';
+
 import { AI_STREAM_DONE_MARKER } from '../types/index';
 
 import type {
@@ -13,6 +15,8 @@ import type {
   ChatStreamEvent,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
+
+const logger = createLogger('ai');
 
 /**
  * Send a chat completion request and return the full response.
@@ -58,7 +62,11 @@ function parseSseLine(line: string, currentEventType: string | null): ParsedLine
     }
     const parsed = JSON.parse(data) as AIChatStreamChunk;
     return { kind: 'chunk', content: parsed.content };
-  } catch {
+  } catch (err) {
+    // Partial/malformed frame mid-stream; skip it. Debug (not warn) because a
+    // truncated tail frame is expected, and the raw data is untrusted server
+    // content kept out of the log.
+    logger.debug('Skipped unparseable AI chat SSE frame', { currentEventType, err });
     return { kind: 'skip' };
   }
 }

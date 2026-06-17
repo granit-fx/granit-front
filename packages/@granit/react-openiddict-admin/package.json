@@ -16,6 +16,7 @@
   },
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/openiddict-admin": "workspace:*",
     "@granit/query-engine": "workspace:*",
     "@granit/react-api-client": "workspace:*",
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*"

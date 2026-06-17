@@ -21,9 +21,13 @@
 // shaped against the persistence view. This module is the round-trip
 // bridge between the two — pure data transformation, no React deps.
 
+import { createLogger } from '@granit/logger';
+
 import type { DashboardDetailResponse } from './dashboard-detail-response';
 import type { AddWidgetRequest, UpdateWidgetRequest, WidgetInstanceResponse } from './index';
 import type { DashboardDefinition, WidgetDefinition, WidgetDefinitionBase } from '../types/index';
+
+const logger = createLogger('dashboards');
 
 /**
  * The five structural fields that live outside `configJson` because the
@@ -140,7 +144,10 @@ function configJsonToWidgetFields(configJson: string): Readonly<Record<string, u
     const parsed = JSON.parse(configJson) as unknown;
     if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
     return parsed as Readonly<Record<string, unknown>>;
-  } catch {
+  } catch (err) {
+    // Malformed persisted config — the caller degrades the widget to a
+    // placeholder shape rather than crashing the editor.
+    logger.warn('Malformed widget configJson; falling back to placeholder', { err });
     return null;
   }
 }

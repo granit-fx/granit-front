@@ -7,7 +7,11 @@
 // auto-injects it on mutation methods.
 // ---------------------------------------------------------------------------
 
+import { createLogger } from '@granit/logger';
+
 import type { BffCsrfTokenResponse } from '../types/index';
+
+const logger = createLogger('bff');
 
 const MUTATION_METHODS = new Set(['POST', 'PUT', 'DELETE', 'PATCH']);
 
@@ -85,7 +89,12 @@ export class CsrfManager {
    */
   private async ensureToken(): Promise<string | null> {
     if (this.token) return this.token;
-    this.pendingFetch ??= this.fetchToken().catch(() => null);
+    this.pendingFetch ??= this.fetchToken().catch((err: unknown) => {
+      // Degraded path: the caller falls back to a header-less mutation the BFF
+      // will reject. Surface why the token could not be refreshed.
+      logger.warn('CSRF token refresh failed; falling back to header-less request', { err });
+      return null;
+    });
     try {
       return await this.pendingFetch;
     } finally {

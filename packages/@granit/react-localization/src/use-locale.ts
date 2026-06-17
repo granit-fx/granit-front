@@ -1,7 +1,10 @@
 import { LOCALE_STORAGE_KEY } from '@granit/localization';
+import { createLogger } from '@granit/logger';
 import { createStorage } from '@granit/storage';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+
+const logger = createLogger('react-localization');
 
 export interface UseLocaleOptions {
   /** Called after locale is changed — use to persist to backend (e.g. settings API). */
@@ -37,7 +40,9 @@ export function useLocale(options?: UseLocaleOptions): {
   const setLocale = useCallback(
     (nextLocale: string) => {
       storage.set(nextLocale);
-      i18n.changeLanguage(nextLocale).catch(() => undefined);
+      i18n.changeLanguage(nextLocale).catch((err: unknown) => {
+        logger.warn('Failed to change i18next language', { locale: nextLocale, err });
+      });
       onLocaleChange?.(nextLocale);
     },
     [i18n, storage, onLocaleChange]

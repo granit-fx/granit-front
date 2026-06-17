@@ -1,3 +1,4 @@
+import { createLogger } from '@granit/logger';
 import { useEffect } from 'react';
 
 import { useDashboardsConfig } from '../providers/dashboards-provider';
@@ -7,6 +8,8 @@ import type {
   RefreshHint,
   WidgetSnapshotStatus,
 } from '@granit/dashboards';
+
+const logger = createLogger('react-dashboards');
 
 /**
  * Wire shape of an `event: snapshot` frame on the dashboard SSE
@@ -126,10 +129,11 @@ export function useDashboardStream(
       try {
         const payload = JSON.parse(event.data) as DashboardStreamSnapshot;
         onSnapshot?.(payload);
-      } catch {
-        // Malformed JSON — drop the frame silently. The server is
-        // authoritative; bad frames are a server bug, not something
-        // the hook should retry around.
+      } catch (err: unknown) {
+        // Malformed JSON — drop the frame. The server is authoritative;
+        // bad frames are a server bug, not something the hook retries
+        // around, but they're worth surfacing for diagnostics.
+        logger.warn('Dropped malformed dashboard snapshot frame', { dashboardId, err });
       }
     };
     const handleResumeFailed = () => {

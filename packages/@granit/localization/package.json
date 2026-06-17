@@ -15,12 +15,14 @@
   },
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/storage": "workspace:*",
     "@granit/types": "workspace:*",
     "i18next": "^26.0.0"
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/storage": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/types": "workspace:*"

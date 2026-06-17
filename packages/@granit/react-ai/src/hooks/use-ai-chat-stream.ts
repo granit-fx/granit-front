@@ -1,9 +1,12 @@
 import { chatStream } from '@granit/ai';
+import { createLogger } from '@granit/logger';
 import { useCallback, useRef, useState } from 'react';
 
 import { useAIConfig } from '../providers/ai-provider';
 
 import type { AIChatRequest, AIChatStreamUsage } from '@granit/ai';
+
+const logger = createLogger('react-ai');
 
 export interface UseAIChatStreamReturn {
   /**
@@ -95,6 +98,7 @@ export function useAIChatStream(): UseAIChatStreamReturn {
           }
         } catch (err) {
           if (err instanceof DOMException && err.name === 'AbortError') return;
+          logger.error('AI chat stream failed', err, { workspaceName });
           setError(err instanceof Error ? err : new Error(String(err)));
         } finally {
           setIsStreaming(false);

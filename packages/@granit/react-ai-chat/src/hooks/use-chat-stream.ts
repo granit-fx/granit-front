@@ -1,10 +1,13 @@
 import { CHAT_STREAM_EVENT_TYPES, streamConversationMessage } from '@granit/ai-chat';
+import { createLogger } from '@granit/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useRef, useState } from 'react';
 
 import { useAIChatConfig } from '../providers/ai-chat-provider';
 
 import { conversationKeys } from './query-keys';
+
+const logger = createLogger('react-ai-chat');
 
 import type {
   ChatStreamEvent,
@@ -141,6 +144,7 @@ export function useChatStream(): UseChatStreamReturn {
           }
         } catch (err) {
           if (err instanceof DOMException && err.name === 'AbortError') return;
+          logger.error('Chat stream turn failed', err, { conversationId: resolvedId });
           setError(err instanceof Error ? err : new Error(String(err)));
         } finally {
           setIsStreaming(false);

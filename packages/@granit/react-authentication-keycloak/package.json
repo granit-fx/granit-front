@@ -19,6 +19,7 @@
     "@granit/authentication": "workspace:*",
     "@granit/authentication-keycloak": "workspace:*",
     "@granit/csp": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/react-authentication": "workspace:*",
     "keycloak-js": "^26.0.0",
     "react": "^19.0.0"
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
-    "@granit/csp": "workspace:*"
+    "@granit/csp": "workspace:*",
+    "@granit/logger": "workspace:*"
   }
 }

@@ -1,10 +1,13 @@
 import { PushNotifications } from '@capacitor/push-notifications';
+import { createLogger } from '@granit/logger';
 import { registerDeviceToken, unregisterDeviceToken } from '@granit/notifications-mobile-push';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useMobilePushConfig } from '../providers/mobile-push-provider';
 
 import type { MobilePlatform } from '@granit/notifications-mobile-push';
+
+const logger = createLogger('react-notifications-mobile-push');
 
 /**
  * Returns a promise that resolves with the device token once Capacitor
@@ -90,7 +93,11 @@ export function useMobilePush(options: MobilePushHookOptions): UseMobilePushRetu
           token: token.value,
           platform: options.platform,
         });
+        logger.info('Mobile push device token refreshed', { platform: options.platform });
       } catch (err) {
+        logger.error('Mobile push token refresh sync failed', err, {
+          platform: options.platform,
+        });
         if (mountedRef.current) {
           setError(err instanceof Error ? err : new Error(String(err)));
         }
@@ -127,10 +134,12 @@ export function useMobilePush(options: MobilePushHookOptions): UseMobilePushRetu
         platform: options.platform,
       });
 
+      logger.info('Mobile push device token registered', { platform: options.platform });
       if (mountedRef.current) {
         setIsRegistered(true);
       }
     } catch (err) {
+      logger.error('Mobile push register failed', err, { platform: options.platform });
       if (mountedRef.current) {
         setError(err instanceof Error ? err : new Error(String(err)));
       }
@@ -147,12 +156,14 @@ export function useMobilePush(options: MobilePushHookOptions): UseMobilePushRetu
       if (tokenRef.current) {
         await unregisterDeviceToken(apiClient, basePath, tokenRef.current);
         tokenRef.current = null;
+        logger.info('Mobile push device token unregistered');
       }
 
       if (mountedRef.current) {
         setIsRegistered(false);
       }
     } catch (err) {
+      logger.error('Mobile push unregister failed', err);
       if (mountedRef.current) {
         setError(err instanceof Error ? err : new Error(String(err)));
       }

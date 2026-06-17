@@ -16,6 +16,7 @@
   },
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/presence": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/presence": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",

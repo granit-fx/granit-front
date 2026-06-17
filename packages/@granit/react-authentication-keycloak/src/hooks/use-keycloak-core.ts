@@ -1,4 +1,5 @@
 import { setTokenGetter, setOnUnauthorized } from '@granit/api-client';
+import { createLogger } from '@granit/logger';
 import Keycloak from 'keycloak-js';
 import * as React from 'react';
 
@@ -34,6 +35,8 @@ export interface KeycloakCoreResult extends KeycloakAuthContextType {
   tokenParsed: Record<string, unknown> | undefined;
 }
 
+const logger = createLogger('react-authentication-keycloak');
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -43,6 +46,7 @@ function startTokenRefresh(keycloak: Keycloak): ReturnType<typeof setInterval> {
   return setInterval(() => {
     keycloak.updateToken(70).catch(() => {
       // Token refresh failed — app will handle re-login via onAuthRefreshError
+      logger.warn('Proactive token refresh failed; re-login handled via onAuthRefreshError');
     });
   }, 60_000);
 }
@@ -116,6 +120,7 @@ export function useKeycloakInit(config: KeycloakCoreConfig): KeycloakCoreResult 
         keycloak.onAuthLogout = () => {
           setAuthenticated(false);
           setUser(null);
+          logger.info('Keycloak session logged out');
           config.onAuthLogout?.();
           config.onEvent?.('onAuthLogout');
         };
@@ -127,7 +132,10 @@ export function useKeycloakInit(config: KeycloakCoreConfig): KeycloakCoreResult 
           }
         };
 
-        keycloak.onAuthSuccess = () => config.onEvent?.('onAuthSuccess');
+        keycloak.onAuthSuccess = () => {
+          logger.info('Keycloak authentication succeeded');
+          config.onEvent?.('onAuthSuccess');
+        };
         keycloak.onAuthError = (err) => config.onEvent?.('onAuthError', err);
         keycloak.onReady = () => config.onEvent?.('onReady');
 
@@ -159,6 +167,7 @@ export function useKeycloakInit(config: KeycloakCoreConfig): KeycloakCoreResult 
               setUser(userInfo as KeycloakUserInfo);
             } catch {
               // User info load failed — non-fatal
+              logger.warn('Failed to load Keycloak user info; continuing without profile claims');
             }
           }
 
@@ -168,6 +177,7 @@ export function useKeycloakInit(config: KeycloakCoreConfig): KeycloakCoreResult 
                 await keycloakRef.current.updateToken(5);
                 return keycloakRef.current.token;
               } catch {
+                logger.warn('Token refresh on demand failed; request will proceed unauthenticated');
                 return undefined;
               }
             }
@@ -178,8 +188,9 @@ export function useKeycloakInit(config: KeycloakCoreConfig): KeycloakCoreResult 
             keycloakRef.current?.logout();
           });
         }
-      } catch {
+      } catch (err) {
         // Keycloak init failed — stay unauthenticated
+        logger.error('Keycloak initialization failed; staying unauthenticated', err);
       } finally {
         setLoading(false);
       }

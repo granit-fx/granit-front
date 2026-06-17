@@ -1307,6 +1307,75 @@
           "name": "defaultConsentState",
           "kind": "function",
           "signature": "function defaultConsentState(): ConsentState"
+        },
+        {
+          "name": "getCookie",
+          "kind": "function",
+          "signature": "function getCookie(name: string): string | null"
+        },
+        {
+          "name": "setConsentedCookie",
+          "kind": "function",
+          "signature": "function setConsentedCookie( name: string, value: string, options: ConsentedCookieOptions ): boolean"
+        },
+        {
+          "name": "removeCookie",
+          "kind": "function",
+          "signature": "function removeCookie( name: string, attributes: Omit<CookieAttributes, 'maxAge' | 'expires'> ="
+        },
+        {
+          "name": "CookieAttributes",
+          "kind": "interface",
+          "signature": "interface CookieAttributes",
+          "members": [
+            {
+              "name": "path",
+              "kind": "property",
+              "signature": "path?: string"
+            },
+            {
+              "name": "domain",
+              "kind": "property",
+              "signature": "domain?: string"
+            },
+            {
+              "name": "maxAge",
+              "kind": "property",
+              "signature": "maxAge?: number"
+            },
+            {
+              "name": "expires",
+              "kind": "property",
+              "signature": "expires?: Date"
+            },
+            {
+              "name": "secure",
+              "kind": "property",
+              "signature": "secure?: boolean"
+            },
+            {
+              "name": "sameSite",
+              "kind": "property",
+              "signature": "sameSite?: 'strict' | 'lax' | 'none'"
+            }
+          ]
+        },
+        {
+          "name": "ConsentedCookieOptions",
+          "kind": "interface",
+          "signature": "interface ConsentedCookieOptions extends CookieAttributes",
+          "members": [
+            {
+              "name": "category",
+              "kind": "property",
+              "signature": "category: CookieCategory"
+            },
+            {
+              "name": "consents",
+              "kind": "property",
+              "signature": "consents: ConsentState"
+            }
+          ]
         }
       ]
     },
@@ -4187,6 +4256,33 @@
           "name": "useCookieConsent",
           "kind": "function",
           "signature": "function useCookieConsent(): CookieConsentContextValue"
+        },
+        {
+          "name": "useConsentedCookie",
+          "kind": "function",
+          "signature": "function useConsentedCookie(name: string, category: CookieCategory): ConsentedCookie"
+        },
+        {
+          "name": "ConsentedCookie",
+          "kind": "interface",
+          "signature": "interface ConsentedCookie",
+          "members": [
+            {
+              "name": "get",
+              "kind": "method",
+              "signature": "get(): string | null"
+            },
+            {
+              "name": "set",
+              "kind": "method",
+              "signature": "set(value: string, attributes?: CookieAttributes): boolean"
+            },
+            {
+              "name": "remove",
+              "kind": "method",
+              "signature": "remove(attributes?: Omit<CookieAttributes, 'maxAge' | 'expires'>): void"
+            }
+          ]
         },
         {
           "name": "CookieConsentContextValue",

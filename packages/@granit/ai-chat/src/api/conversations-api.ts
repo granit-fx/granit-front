@@ -4,6 +4,8 @@
 // stream. Routes are relative to `basePath` (the `/conversations` prefix).
 // ---------------------------------------------------------------------------
 
+import { createLogger } from '@granit/logger';
+
 import type {
   ChatStreamEvent,
   ChatWorkspacesResponse,
@@ -15,6 +17,8 @@ import type {
   SendMessageRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
+
+const logger = createLogger('ai-chat');
 
 /**
  * List the current user's conversations, newest first, without their messages.
@@ -106,8 +110,11 @@ function parseEventLine(line: string): ChatStreamEvent | null {
   if (data === '') return null;
   try {
     return JSON.parse(data) as ChatStreamEvent;
-  } catch {
+  } catch (err) {
     // A malformed or partial frame — skip it rather than aborting the stream.
+    // Debug (not warn): a truncated tail frame is expected; raw data omitted as
+    // it is untrusted server content.
+    logger.debug('Skipped unparseable chat SSE frame', { err });
     return null;
   }
 }
