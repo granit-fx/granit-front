@@ -40,4 +40,21 @@ describe('resolveRedirect', () => {
 
     expect(result).toBeNull();
   });
+
+  it('forwards fetchOptions to the fetch adapter when provided', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ status: 204, data: null });
+
+    await resolveRedirect(
+      client,
+      basePath,
+      { siteId: 'site-1', path: '/old-path' },
+      { cache: 'force-cache' }
+    );
+
+    expect(client.get).toHaveBeenCalledWith(
+      `${basePath}/api/cms/redirects/resolve`,
+      expect.objectContaining({ fetchOptions: { cache: 'force-cache' } })
+    );
+  });
 });

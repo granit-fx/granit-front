@@ -1,5 +1,5 @@
 import type { ResolvedMenu } from '../types/index';
-import type { AxiosInstance } from '@granit/api-client';
+import type { AxiosInstance, RequestFetchOptions } from '@granit/api-client';
 
 /**
  * Resolves a menu into a render-ready tree (anonymous).
@@ -7,16 +7,20 @@ import type { AxiosInstance } from '@granit/api-client';
  * + `X-Granit-Site: {siteId}` header (the backend scopes by site via the header).
  *
  * Returns `null` when no menu with the given key exists.
+ *
+ * `fetchOptions` is forwarded verbatim to the fetch adapter (SSR caching hints).
  */
 export async function resolveMenu(
   client: AxiosInstance,
   basePath: string,
-  params: { siteId: string; key: string; culture: string }
+  params: { siteId: string; key: string; culture: string },
+  fetchOptions?: RequestFetchOptions
 ): Promise<ResolvedMenu | null> {
   try {
     const response = await client.get<ResolvedMenu>(`${basePath}/api/cms/menus/resolve`, {
       params: { key: params.key, culture: params.culture },
       headers: { 'X-Granit-Site': params.siteId },
+      ...(fetchOptions ? { fetchOptions } : {}),
     });
     return response.data;
   } catch (err: unknown) {

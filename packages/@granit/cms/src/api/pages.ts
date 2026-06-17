@@ -4,7 +4,7 @@ import type {
   MintPreviewTokenResponse,
   PublishedPageResponse,
 } from '../types/index';
-import type { AxiosInstance } from '@granit/api-client';
+import type { AxiosInstance, RequestFetchOptions } from '@granit/api-client';
 
 /**
  * Resolves a published page by per-culture path.
@@ -12,16 +12,20 @@ import type { AxiosInstance } from '@granit/api-client';
  * + `X-Granit-Site: {siteId}` header.
  *
  * Returns `null` on 404 (draft, archived, or unknown path).
+ *
+ * `fetchOptions` is forwarded verbatim to the fetch adapter (SSR caching hints).
  */
 export async function getPageByPath(
   client: AxiosInstance,
   basePath: string,
-  params: { siteId: string; culture: string; path: string }
+  params: { siteId: string; culture: string; path: string },
+  fetchOptions?: RequestFetchOptions
 ): Promise<PublishedPageResponse | null> {
   try {
     const response = await client.get<PublishedPageResponse>(`${basePath}/api/cms/pages/by-path`, {
       params: { culture: params.culture, path: params.path },
       headers: { 'X-Granit-Site': params.siteId },
+      ...(fetchOptions ? { fetchOptions } : {}),
     });
     return response.data;
   } catch (err: unknown) {
@@ -52,16 +56,20 @@ export async function mintPreviewToken(
  * `GET {basePath}/api/cms/preview/resolve?token={token}`
  *
  * Returns `null` on 401 (invalid/expired token) or 404.
+ *
+ * `fetchOptions` is forwarded verbatim to the fetch adapter (typically
+ * `{ cache: 'no-store' }` so previews are never cached).
  */
 export async function resolvePreview(
   client: AxiosInstance,
   basePath: string,
-  token: string
+  token: string,
+  fetchOptions?: RequestFetchOptions
 ): Promise<DraftPagePreviewResponse | null> {
   try {
     const response = await client.get<DraftPagePreviewResponse>(
       `${basePath}/api/cms/preview/resolve`,
-      { params: { token } }
+      { params: { token }, ...(fetchOptions ? { fetchOptions } : {}) }
     );
     return response.data;
   } catch (err: unknown) {

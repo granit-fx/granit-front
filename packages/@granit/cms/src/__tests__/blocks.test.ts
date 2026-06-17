@@ -52,29 +52,54 @@ describe('getPublicBlockCatalog', () => {
 
     const result = await getPublicBlockCatalog(client, basePath);
 
-    expect(client.get).toHaveBeenCalledWith(`${basePath}/api/cms/blocks/public`);
+    expect(client.get).toHaveBeenCalledWith(`${basePath}/api/cms/blocks/public`, undefined);
     expect(result).toEqual(catalog);
+  });
+
+  it('forwards fetchOptions to the fetch adapter when provided', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(catalog));
+
+    // `cache` is a real RequestInit field; the Next-only `next` field is exercised
+    // by the renderer (which augments RequestInit). The forwarding mechanism is identical.
+    await getPublicBlockCatalog(client, basePath, { cache: 'force-cache' });
+
+    expect(client.get).toHaveBeenCalledWith(`${basePath}/api/cms/blocks/public`, {
+      fetchOptions: { cache: 'force-cache' },
+    });
   });
 });
 
 describe('resolveBlockData', () => {
+  const req: BlockDataResolveRequest = {
+    dataSourceKey: 'blog-latest',
+    query: null,
+    siteId: 'site-1',
+    culture: 'fr',
+  };
+  const resp: BlockDataResponse = {
+    data: { posts: [] },
+    consumedContentKeys: ['blog:post:1', 'blog:post:2'],
+  };
+
   it('posts the request and returns block data', async () => {
     const client = createMockClient();
-    const req: BlockDataResolveRequest = {
-      dataSourceKey: 'blog-latest',
-      query: null,
-      siteId: 'site-1',
-      culture: 'fr',
-    };
-    const resp: BlockDataResponse = {
-      data: { posts: [] },
-      consumedContentKeys: ['blog:post:1', 'blog:post:2'],
-    };
     vi.mocked(client.post).mockResolvedValue(axiosResponse(resp));
 
     const result = await resolveBlockData(client, basePath, req);
 
-    expect(client.post).toHaveBeenCalledWith(`${basePath}/api/cms/blocks/data`, req);
+    expect(client.post).toHaveBeenCalledWith(`${basePath}/api/cms/blocks/data`, req, undefined);
     expect(result).toEqual(resp);
+  });
+
+  it('forwards fetchOptions to the fetch adapter when provided', async () => {
+    const client = createMockClient();
+    vi.mocked(client.post).mockResolvedValue(axiosResponse(resp));
+
+    await resolveBlockData(client, basePath, req, { cache: 'no-store' });
+
+    expect(client.post).toHaveBeenCalledWith(`${basePath}/api/cms/blocks/data`, req, {
+      fetchOptions: { cache: 'no-store' },
+    });
   });
 });

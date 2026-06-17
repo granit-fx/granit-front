@@ -177,6 +177,16 @@
           "signature": "type ApiClientMode = 'bearer' | 'bff'"
         },
         {
+          "name": "ApiClientTransport",
+          "kind": "type",
+          "signature": "type ApiClientTransport = 'xhr' | 'fetch'"
+        },
+        {
+          "name": "RequestFetchOptions",
+          "kind": "type",
+          "signature": "type RequestFetchOptions = Omit<RequestInit, 'method' | 'body'>"
+        },
+        {
           "name": "CsrfTokenGetter",
           "kind": "type",
           "signature": "type CsrfTokenGetter = () => string | null"
@@ -200,6 +210,11 @@
               "name": "mode",
               "kind": "property",
               "signature": "mode?: ApiClientMode"
+            },
+            {
+              "name": "transport",
+              "kind": "property",
+              "signature": "transport?: ApiClientTransport"
             },
             {
               "name": "csrfTokenGetter",
@@ -1032,7 +1047,7 @@
         {
           "name": "resolvePreview",
           "kind": "function",
-          "signature": "async function resolvePreview( client: AxiosInstance, basePath: string, token: string ): Promise<DraftPagePreviewResponse | null>"
+          "signature": "async function resolvePreview( client: AxiosInstance, basePath: string, token: string, fetchOptions?: RequestFetchOptions ): Promise<DraftPagePreviewResponse | null>"
         },
         {
           "name": "getBlockCatalog",
@@ -1042,12 +1057,12 @@
         {
           "name": "getPublicBlockCatalog",
           "kind": "function",
-          "signature": "async function getPublicBlockCatalog( client: AxiosInstance, basePath: string ): Promise<BlockCatalogResponse>"
+          "signature": "async function getPublicBlockCatalog( client: AxiosInstance, basePath: string, fetchOptions?: RequestFetchOptions ): Promise<BlockCatalogResponse>"
         },
         {
           "name": "resolveBlockData",
           "kind": "function",
-          "signature": "async function resolveBlockData( client: AxiosInstance, basePath: string, request: BlockDataResolveRequest ): Promise<BlockDataResponse>"
+          "signature": "async function resolveBlockData( client: AxiosInstance, basePath: string, request: BlockDataResolveRequest, fetchOptions?: RequestFetchOptions ): Promise<BlockDataResponse>"
         },
         {
           "name": "resolveMenu",
@@ -1144,22 +1159,34 @@
         {
           "name": "getManifest",
           "kind": "function",
-          "signature": "async function getManifest( client: AxiosInstance, basePath: string, siteId: string ): Promise<string | null>"
+          "signature": "async function getManifest( client: AxiosInstance, basePath: string, siteId: string, opts?: RawDocumentOptions ): Promise<RawDocumentResult>"
         },
         {
           "name": "getRobotsTxt",
           "kind": "function",
-          "signature": "async function getRobotsTxt( client: AxiosInstance, basePath: string, siteId: string ): Promise<string>"
+          "signature": "async function getRobotsTxt( client: AxiosInstance, basePath: string, siteId: string, opts?: RawDocumentOptions ): Promise<RawDocumentResult>"
         },
         {
           "name": "getSitemap",
           "kind": "function",
-          "signature": "async function getSitemap( client: AxiosInstance, basePath: string, siteId: string ): Promise<string>"
+          "signature": "async function getSitemap( client: AxiosInstance, basePath: string, siteId: string, opts?: RawDocumentOptions ): Promise<RawDocumentResult>"
         },
         {
           "name": "getSitemapFile",
           "kind": "function",
-          "signature": "async function getSitemapFile( client: AxiosInstance, basePath: string, siteId: string, file: string ): Promise<string | null>"
+          "signature": "async function getSitemapFile( client: AxiosInstance, basePath: string, siteId: string, file: string, opts?: RawDocumentOptions ): Promise<RawDocumentResult>"
+        },
+        {
+          "name": "RawDocumentOptions",
+          "kind": "interface",
+          "signature": "interface RawDocumentOptions",
+          "members": []
+        },
+        {
+          "name": "RawDocumentResult",
+          "kind": "interface",
+          "signature": "interface RawDocumentResult",
+          "members": []
         }
       ]
     },
@@ -1493,6 +1520,12 @@
           "signature": "const DocumentsPermissions"
         },
         {
+          "name": "QueryDocumentsParams",
+          "kind": "interface",
+          "signature": "interface QueryDocumentsParams",
+          "members": []
+        },
+        {
           "name": "assignDocumentTag",
           "kind": "function",
           "signature": "async function assignDocumentTag( client: AxiosInstance, basePath: string, documentId: string, tagId: string ): Promise<DocumentTagAssignmentResponse>"
@@ -1535,7 +1568,7 @@
         {
           "name": "batchResolveDocumentAssets",
           "kind": "function",
-          "signature": "async function batchResolveDocumentAssets( client: AxiosInstance, basePath: string, request: BatchResolveRequest ): Promise<readonly ResolvedDocumentResponse[]>"
+          "signature": "async function batchResolveDocumentAssets( client: AxiosInstance, basePath: string, request: BatchResolveRequest, fetchOptions?: RequestFetchOptions ): Promise<readonly ResolvedDocumentResponse[]>"
         }
       ]
     },

@@ -85,6 +85,17 @@ describe('createApiClient', () => {
     const client = mod.createApiClient({ baseURL: 'https://api.example.com' });
     expect(client.defaults.headers['Content-Type']).toBe('application/json');
   });
+
+  it('should leave the adapter at axios default when transport is omitted (back-compat)', () => {
+    const client = mod.createApiClient({ baseURL: 'https://api.example.com' });
+    // axios' untouched default is the priority array, never the pinned 'fetch' string.
+    expect(client.defaults.adapter).not.toBe('fetch');
+  });
+
+  it("should select the fetch adapter when transport is 'fetch'", () => {
+    const client = mod.createApiClient({ baseURL: 'https://api.example.com', transport: 'fetch' });
+    expect(client.defaults.adapter).toBe('fetch');
+  });
 });
 
 describe('token interceptor', () => {

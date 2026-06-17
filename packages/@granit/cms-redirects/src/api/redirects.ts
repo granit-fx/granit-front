@@ -1,5 +1,5 @@
 import type { ResolveResponse } from '../types/index';
-import type { AxiosInstance } from '@granit/api-client';
+import type { AxiosInstance, RequestFetchOptions } from '@granit/api-client';
 
 /**
  * Resolves a request path to its redirect target (public, anonymous).
@@ -9,11 +9,14 @@ import type { AxiosInstance } from '@granit/api-client';
  *
  * Returns the redirect target + status code, or `null` when no redirect matches
  * (the endpoint returns 204 in that case).
+ *
+ * `fetchOptions` is forwarded verbatim to the fetch adapter (SSR caching hints).
  */
 export async function resolveRedirect(
   client: AxiosInstance,
   basePath: string,
-  params: { siteId: string; path: string; culture?: string }
+  params: { siteId: string; path: string; culture?: string },
+  fetchOptions?: RequestFetchOptions
 ): Promise<ResolveResponse | null> {
   const response = await client.get<ResolveResponse | null>(
     `${basePath}/api/cms/redirects/resolve`,
@@ -21,6 +24,7 @@ export async function resolveRedirect(
       params: { path: params.path, culture: params.culture },
       headers: { 'X-Granit-Site': params.siteId },
       validateStatus: (s) => s === 200 || s === 204,
+      ...(fetchOptions ? { fetchOptions } : {}),
     }
   );
   return response.status === 204 ? null : (response.data ?? null);

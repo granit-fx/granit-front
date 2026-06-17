@@ -76,6 +76,36 @@ export function isConcurrencyConflict(error: unknown): boolean {
 }
 
 /**
+ * Did the transport fail WITHOUT producing an HTTP response — i.e. the request
+ * never reached a responding server (connection refused, DNS failure, TLS error,
+ * or a client-side timeout/abort)? This is distinct from an HTTP error (4xx/5xx),
+ * which always carries a `response`.
+ *
+ * Works on the raw `AxiosError` propagated by the api-client (the client does not
+ * remap transport errors) under both the `xhr` and `fetch` adapters: a network /
+ * DNS / timeout failure yields an `AxiosError` with no `response`, whereas any
+ * HTTP status — including 5xx — populates `response`. Lets SSR consumers separate
+ * "backend unreachable → maintenance" from "transient 5xx → page-level error".
+ */
+export function isBackendUnavailable(error: unknown): boolean {
+  if (error === null || typeof error !== 'object') return false;
+  const e = error as { isAxiosError?: boolean; response?: unknown };
+  return e.isAxiosError === true && e.response == null;
+}
+
+/**
+ * HTTP status code if the error carries an HTTP response, otherwise `undefined`.
+ * `undefined` means the transport failed before any response (see
+ * {@link isBackendUnavailable}). Reads the raw Axios error shape so it works
+ * whether the caller mapped the error or let the bare Axios error propagate.
+ */
+export function getHttpStatus(error: unknown): number | undefined {
+  if (error === null || typeof error !== 'object') return undefined;
+  const response = (error as { response?: { status?: number } }).response;
+  return typeof response?.status === 'number' ? response.status : undefined;
+}
+
+/**
  * Validation error for client-side or server-returned validation failures.
  *
  * Used by `@granit/query-engine` (filter syntax) and `@granit/data-exchange` (import mapping).

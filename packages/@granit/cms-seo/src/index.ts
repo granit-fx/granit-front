@@ -45,6 +45,7 @@ export type {
 
 // ─── API — Public renderer & anonymous documents ─────────────────────────────
 export { getEffectiveSeo, getManifest, getRobotsTxt, getSitemap, getSitemapFile } from './api/seo';
+export type { RawDocumentOptions, RawDocumentResult } from './api/seo';
 
 // ─── API — SEO admin ─────────────────────────────────────────────────────────
 export {

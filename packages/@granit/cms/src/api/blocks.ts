@@ -3,7 +3,7 @@ import type {
   BlockDataResolveRequest,
   BlockDataResponse,
 } from '../types/index';
-import type { AxiosInstance } from '@granit/api-client';
+import type { AxiosInstance, RequestFetchOptions } from '@granit/api-client';
 
 /**
  * Fetches the editor-agnostic block catalog.
@@ -24,12 +24,19 @@ export async function getBlockCatalog(
  * Same `BlockCatalogResponse` shape as {@link getBlockCatalog}, but served by an
  * `AllowAnonymous` route so the public renderer can build its render config
  * without a bearer token. Use {@link getBlockCatalog} for the admin editor.
+ *
+ * `fetchOptions` is forwarded verbatim to the fetch adapter (SSR caching hints,
+ * e.g. `{ next: { tags: ['cms-catalog'] } }`).
  */
 export async function getPublicBlockCatalog(
   client: AxiosInstance,
-  basePath: string
+  basePath: string,
+  fetchOptions?: RequestFetchOptions
 ): Promise<BlockCatalogResponse> {
-  const response = await client.get<BlockCatalogResponse>(`${basePath}/api/cms/blocks/public`);
+  const response = await client.get<BlockCatalogResponse>(
+    `${basePath}/api/cms/blocks/public`,
+    fetchOptions ? { fetchOptions } : undefined
+  );
   return response.data;
 }
 
@@ -39,12 +46,20 @@ export async function getPublicBlockCatalog(
  *
  * The `consumedContentKeys` in the response should be added as ISR cache tags
  * so a backend publish of any consumed content invalidates the page.
+ *
+ * `fetchOptions` is forwarded verbatim to the fetch adapter (SSR caching hints,
+ * e.g. `{ next: { tags: [`block-data:${siteId}:${key}`] } }`).
  */
 export async function resolveBlockData(
   client: AxiosInstance,
   basePath: string,
-  request: BlockDataResolveRequest
+  request: BlockDataResolveRequest,
+  fetchOptions?: RequestFetchOptions
 ): Promise<BlockDataResponse> {
-  const response = await client.post<BlockDataResponse>(`${basePath}/api/cms/blocks/data`, request);
+  const response = await client.post<BlockDataResponse>(
+    `${basePath}/api/cms/blocks/data`,
+    request,
+    fetchOptions ? { fetchOptions } : undefined
+  );
   return response.data;
 }

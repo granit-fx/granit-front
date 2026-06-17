@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import {
   ConcurrencyConflictError,
+  getHttpStatus,
   HttpError,
+  isBackendUnavailable,
   isConcurrencyConflict,
   TimeoutError,
   ValidationError,
@@ -92,5 +94,40 @@ describe('TimeoutError', () => {
     expect(error.name).toBe('TimeoutError');
     expect(error.message).toBe('Request timed out');
     expect(error.timeoutMs).toBe(5000);
+  });
+});
+
+describe('isBackendUnavailable', () => {
+  it('is true for an Axios transport error with no response (network/DNS)', () => {
+    expect(isBackendUnavailable({ isAxiosError: true, code: 'ERR_NETWORK' })).toBe(true);
+  });
+
+  it('is true for a client-side timeout (no response)', () => {
+    expect(isBackendUnavailable({ isAxiosError: true, code: 'ECONNABORTED' })).toBe(true);
+  });
+
+  it('is false for an HTTP error that carries a response (even 5xx)', () => {
+    expect(isBackendUnavailable({ isAxiosError: true, response: { status: 503 } })).toBe(false);
+  });
+
+  it('is false for non-Axios values', () => {
+    expect(isBackendUnavailable(new Error('boom'))).toBe(false);
+    expect(isBackendUnavailable(null)).toBe(false);
+    expect(isBackendUnavailable('nope')).toBe(false);
+  });
+});
+
+describe('getHttpStatus', () => {
+  it('returns the status when an HTTP response exists', () => {
+    expect(getHttpStatus({ response: { status: 500 } })).toBe(500);
+  });
+
+  it('returns undefined for a transport error with no response', () => {
+    expect(getHttpStatus({ isAxiosError: true, code: 'ERR_NETWORK' })).toBeUndefined();
+  });
+
+  it('returns undefined for non-error values', () => {
+    expect(getHttpStatus(null)).toBeUndefined();
+    expect(getHttpStatus(42)).toBeUndefined();
   });
 });

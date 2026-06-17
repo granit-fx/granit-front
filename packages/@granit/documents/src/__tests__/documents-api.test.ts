@@ -10,6 +10,7 @@ import {
   listTrashedDocuments,
   moveDocument,
   permanentlyDeleteDocument,
+  queryDocuments,
   renameDocument,
   getDocumentDownloadUrl,
   requestUploadTicket,
@@ -29,6 +30,7 @@ import type {
   UploadTicketRequest,
   UploadTicketResponse,
 } from '../types/index';
+import type { PagedResult } from '@granit/query-engine';
 
 const basePath = '/api/v1/documents';
 
@@ -324,5 +326,57 @@ describe('listTrashedDocuments', () => {
     await listTrashedDocuments(client, basePath);
 
     expect(client.get).toHaveBeenCalledWith(`${basePath}/documents/trash`, { params: {} });
+  });
+});
+
+describe('queryDocuments', () => {
+  const paged: PagedResult<DocumentResponse> = {
+    items: [sampleDocument],
+    totalCount: 1,
+    hasMore: false,
+  };
+
+  it('hits the nested documents QueryEngine path with no query when no params are given', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(paged));
+
+    const result = await queryDocuments(client, basePath);
+
+    expect(client.get).toHaveBeenCalledWith(`${basePath}/documents`, undefined);
+    expect(result).toEqual(paged);
+  });
+
+  it('serializes search/status/sort/page/pageSize via the QueryEngine serializer', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(paged));
+
+    await queryDocuments(client, basePath, {
+      search: 'report',
+      status: 'Active',
+      sort: '-name',
+      page: 2,
+      pageSize: 20,
+    });
+
+    const calledUrl = vi.mocked(client.get).mock.calls[0]![0] as string;
+    expect(calledUrl.startsWith(`${basePath}/documents?`)).toBe(true);
+    // status is emitted as a `filter[status.Eq]` entry (URL-encoded brackets),
+    // proving reuse of the shared serializer rather than a hand-rolled query.
+    expect(calledUrl).toContain('filter%5Bstatus.Eq%5D=Active');
+    expect(calledUrl).toContain('search=report');
+    expect(calledUrl).toContain('sort=-name');
+    expect(calledUrl).toContain('page=2');
+    expect(calledUrl).toContain('pageSize=20');
+  });
+
+  it('forwards fetchOptions to the fetch adapter when provided', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(paged));
+
+    await queryDocuments(client, basePath, undefined, { cache: 'force-cache' });
+
+    expect(client.get).toHaveBeenCalledWith(`${basePath}/documents`, {
+      fetchOptions: { cache: 'force-cache' },
+    });
   });
 });

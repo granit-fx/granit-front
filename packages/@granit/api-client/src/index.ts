@@ -9,6 +9,21 @@ import axios, {
 /** Authentication mode for the API client. */
 export type ApiClientMode = 'bearer' | 'bff';
 
+/** HTTP transport adapter for the API client. */
+export type ApiClientTransport = 'xhr' | 'fetch';
+
+/**
+ * Per-request options forwarded verbatim into the fetch adapter's `RequestInit`
+ * (no-op unless the client is created with `transport: 'fetch'`). Stays neutral
+ * vis-à-vis the consuming framework: SSR caching hints such as Next.js' `next`
+ * field (`{ next: { revalidate, tags } }`) only materialise in apps that augment
+ * the global `RequestInit` (via `next-env.d.ts`) — this package never declares
+ * them. `method` and `body` are omitted on purpose: axios' fetch adapter spreads
+ * `fetchOptions` last into the request init, so allowing them would let a caller
+ * silently clobber the request axios already built.
+ */
+export type RequestFetchOptions = Omit<RequestInit, 'method' | 'body'>;
+
 // Fallback logger for the rare paths where no app logger is wired. Warnings
 // route through the @granit/logger façade (console transport in dev) rather
 // than the raw global console — keeps the no-console arch rule honest.
@@ -29,6 +44,16 @@ export interface ApiClientConfig {
    *   No Authorization header is sent (the BFF YARP proxy adds it server-side).
    */
   mode?: ApiClientMode;
+  /**
+   * HTTP transport adapter. Default: `'xhr'` (axios' default — unchanged behaviour).
+   *
+   * - `'xhr'` — XMLHttpRequest in the browser, http(s) module under Node.
+   * - `'fetch'` — routes through the global `fetch`, letting per-request
+   *   `fetchOptions` (see {@link RequestFetchOptions}) reach the runtime's fetch.
+   *   Required for SSR consumers (e.g. Next.js) that rely on a patched global
+   *   `fetch` for caching / revalidation.
+   */
+  transport?: ApiClientTransport;
   /**
    * CSRF token getter for BFF mode. Required when `mode` is `'bff'`.
    * Typically obtained from `CsrfManager.getToken` in `@granit/bff`.
@@ -183,6 +208,9 @@ export function createApiClient(config: ApiClientConfig): AxiosInstance {
     baseURL: config.baseURL,
     timeout: config.timeout ?? 10_000,
     withCredentials: isBff,
+    // Opt-in fetch adapter: required for SSR consumers that depend on a patched
+    // global fetch (per-request `fetchOptions` only take effect with this adapter).
+    ...(config.transport === 'fetch' ? { adapter: 'fetch' as const } : {}),
     headers: {
       'Content-Type': 'application/json',
     },
@@ -285,7 +313,9 @@ export function buildApiUrl(basePath: string, ...segments: string[]): string {
 
 export {
   ConcurrencyConflictError,
+  getHttpStatus,
   HttpError,
+  isBackendUnavailable,
   isConcurrencyConflict,
   TimeoutError,
   ValidationError,

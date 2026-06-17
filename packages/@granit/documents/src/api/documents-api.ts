@@ -1,6 +1,9 @@
+import { serializeQueryRequest } from '@granit/query-engine';
+
 import type {
   AppendVersionRequest,
   DocumentResponse,
+  DocumentStatus,
   DocumentVersionResponse,
   DownloadUrlResponse,
   FinalizeUploadRequest,
@@ -13,7 +16,8 @@ import type {
   UploadTicketRequest,
   UploadTicketResponse,
 } from '../types/index';
-import type { AxiosInstance } from '@granit/api-client';
+import type { AxiosInstance, RequestFetchOptions } from '@granit/api-client';
+import type { PagedResult, QueryRequest, SortEntry } from '@granit/query-engine';
 
 /**
  * Issue a presigned upload ticket. The client PUTs the bytes directly to the
@@ -259,5 +263,60 @@ export async function listTrashedDocuments(
   const response = await client.get<ListTrashedDocumentsResponse>(`${basePath}/documents/trash`, {
     params,
   });
+  return response.data;
+}
+
+/** Parameters accepted by {@link queryDocuments}. */
+export interface QueryDocumentsParams {
+  /** Free-text search (backend GlobalSearch over Name + Description). */
+  readonly search?: string;
+  /** Status filter, emitted as `filter[status.Eq]=<status>`. */
+  readonly status?: DocumentStatus;
+  /** Sort field; prefix with `-` for descending (e.g. `-name`). Backend defaults to `name`. */
+  readonly sort?: string;
+  /** One-based page number. */
+  readonly page?: number;
+  /** Items per page (backend clamps to 1..500). */
+  readonly pageSize?: number;
+}
+
+function parseDocumentSort(sort: string): SortEntry {
+  return sort.startsWith('-')
+    ? { field: sort.slice(1), direction: 'desc' }
+    : { field: sort, direction: 'asc' };
+}
+
+/**
+ * Query the documents grid via the QueryEngine listing endpoint
+ * (`GET /` on the nested `documents` sub-group). Filterable / sortable / paged.
+ * Used by the CMS renderer's document picker.
+ *
+ * `GET {basePath}/documents?search=…&filter[status.Eq]=Active&sort=-name&page=1&pageSize=20`
+ *
+ * Query params are built through `serializeQueryRequest` from `@granit/query-engine`
+ * so the operator casing and `filter[...]` encoding stay consistent with every
+ * other Granit grid. `fetchOptions` is forwarded verbatim to the fetch adapter.
+ */
+export async function queryDocuments(
+  client: AxiosInstance,
+  basePath: string,
+  params?: QueryDocumentsParams,
+  fetchOptions?: RequestFetchOptions
+): Promise<PagedResult<DocumentResponse>> {
+  const request: QueryRequest = {
+    page: params?.page,
+    pageSize: params?.pageSize,
+    search: params?.search,
+    filters: params?.status
+      ? [{ field: 'status', operator: 'Eq', value: params.status }]
+      : undefined,
+    sort: params?.sort ? [parseDocumentSort(params.sort)] : undefined,
+  };
+  const qs = serializeQueryRequest(request);
+  const url = qs ? `${basePath}/documents?${qs}` : `${basePath}/documents`;
+  const response = await client.get<PagedResult<DocumentResponse>>(
+    url,
+    fetchOptions ? { fetchOptions } : undefined
+  );
   return response.data;
 }

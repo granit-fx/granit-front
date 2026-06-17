@@ -67,23 +67,69 @@ describe('getEffectiveSeo', () => {
 });
 
 describe('getSitemap', () => {
-  it('GETs the raw sitemap.xml as text', async () => {
+  it('returns body + ETag/Last-Modified/Content-Type on 200', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse('<urlset/>'));
+    vi.mocked(client.get).mockResolvedValue({
+      status: 200,
+      data: '<urlset/>',
+      headers: {
+        etag: '"v1"',
+        'last-modified': 'Wed, 01 Jan 2026 00:00:00 GMT',
+        'content-type': 'application/xml',
+      },
+    });
 
     const result = await getSitemap(client, basePath, 'site-1');
 
-    expect(client.get).toHaveBeenCalledWith(`${basePath}/api/cms/seo/sites/site-1/sitemap.xml`, {
-      responseType: 'text',
+    expect(client.get).toHaveBeenCalledWith(
+      `${basePath}/api/cms/seo/sites/site-1/sitemap.xml`,
+      expect.objectContaining({ responseType: 'text' })
+    );
+    expect(result).toEqual({
+      status: 200,
+      body: '<urlset/>',
+      contentType: 'application/xml',
+      etag: '"v1"',
+      lastModified: 'Wed, 01 Jan 2026 00:00:00 GMT',
     });
-    expect(result).toBe('<urlset/>');
+  });
+
+  it('sends If-None-Match and yields a 304 with null body', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({
+      status: 304,
+      data: '',
+      headers: { etag: '"v1"' },
+    });
+
+    const result = await getSitemap(client, basePath, 'site-1', { ifNoneMatch: '"v1"' });
+
+    expect(client.get).toHaveBeenCalledWith(
+      `${basePath}/api/cms/seo/sites/site-1/sitemap.xml`,
+      expect.objectContaining({ headers: { 'If-None-Match': '"v1"' } })
+    );
+    expect(result.status).toBe(304);
+    expect(result.body).toBeNull();
+    expect(result.etag).toBe('"v1"');
+  });
+
+  it('forwards fetchOptions to the fetch adapter when provided', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ status: 200, data: '<urlset/>', headers: {} });
+
+    await getSitemap(client, basePath, 'site-1', { fetchOptions: { cache: 'force-cache' } });
+
+    expect(client.get).toHaveBeenCalledWith(
+      `${basePath}/api/cms/seo/sites/site-1/sitemap.xml`,
+      expect.objectContaining({ fetchOptions: { cache: 'force-cache' } })
+    );
   });
 });
 
 describe('getSitemapFile', () => {
   it('returns the child file body on 200', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue({ status: 200, data: '<urlset/>' });
+    vi.mocked(client.get).mockResolvedValue({ status: 200, data: '<urlset/>', headers: {} });
 
     const result = await getSitemapFile(client, basePath, 'site-1', 'sitemap-1.xml');
 
@@ -91,45 +137,71 @@ describe('getSitemapFile', () => {
       `${basePath}/api/cms/seo/sites/site-1/sitemap/sitemap-1.xml`,
       expect.objectContaining({ responseType: 'text' })
     );
-    expect(result).toBe('<urlset/>');
+    expect(result.status).toBe(200);
+    expect(result.body).toBe('<urlset/>');
   });
 
-  it('returns null on 404', async () => {
+  it('returns status 404 with a null body when the file is missing', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue({ status: 404, data: '' });
+    vi.mocked(client.get).mockResolvedValue({ status: 404, data: '', headers: {} });
 
-    expect(await getSitemapFile(client, basePath, 'site-1', 'missing.xml')).toBeNull();
+    const result = await getSitemapFile(client, basePath, 'site-1', 'missing.xml');
+
+    expect(result.status).toBe(404);
+    expect(result.body).toBeNull();
   });
 });
 
 describe('getRobotsTxt', () => {
   it('GETs robots.txt as text', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse('User-agent: *\nAllow: /'));
+    vi.mocked(client.get).mockResolvedValue({
+      status: 200,
+      data: 'User-agent: *\nAllow: /',
+      headers: { 'content-type': 'text/plain' },
+    });
 
     const result = await getRobotsTxt(client, basePath, 'site-1');
 
-    expect(client.get).toHaveBeenCalledWith(`${basePath}/api/cms/seo/sites/site-1/robots.txt`, {
-      responseType: 'text',
-    });
-    expect(result).toContain('User-agent');
+    expect(client.get).toHaveBeenCalledWith(
+      `${basePath}/api/cms/seo/sites/site-1/robots.txt`,
+      expect.objectContaining({ responseType: 'text' })
+    );
+    expect(result.body).toContain('User-agent');
+    expect(result.contentType).toBe('text/plain');
+  });
+
+  it('forwards fetchOptions to the fetch adapter when provided', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue({ status: 200, data: 'User-agent: *', headers: {} });
+
+    await getRobotsTxt(client, basePath, 'site-1', { fetchOptions: { cache: 'force-cache' } });
+
+    expect(client.get).toHaveBeenCalledWith(
+      `${basePath}/api/cms/seo/sites/site-1/robots.txt`,
+      expect.objectContaining({ fetchOptions: { cache: 'force-cache' } })
+    );
   });
 });
 
 describe('getManifest', () => {
   it('returns the manifest body on 200', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue({ status: 200, data: '{"name":"App"}' });
+    vi.mocked(client.get).mockResolvedValue({ status: 200, data: '{"name":"App"}', headers: {} });
 
     const result = await getManifest(client, basePath, 'site-1');
 
-    expect(result).toBe('{"name":"App"}');
+    expect(result.status).toBe(200);
+    expect(result.body).toBe('{"name":"App"}');
   });
 
-  it('returns null on 404', async () => {
+  it('returns status 404 with a null body when no manifest is set', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue({ status: 404, data: '' });
+    vi.mocked(client.get).mockResolvedValue({ status: 404, data: '', headers: {} });
 
-    expect(await getManifest(client, basePath, 'site-1')).toBeNull();
+    const result = await getManifest(client, basePath, 'site-1');
+
+    expect(result.status).toBe(404);
+    expect(result.body).toBeNull();
   });
 });

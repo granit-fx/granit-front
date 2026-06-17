@@ -51,6 +51,10 @@ export type {
   UploadTicketResponse,
 } from './types/index';
 
+// Shared QueryEngine result type, re-exported so consumers of queryDocuments
+// don't reach into @granit/query-engine directly.
+export type { PagedResult } from '@granit/query-engine';
+
 // Permissions
 export { DocumentsPermissions } from './permissions';
 
@@ -76,6 +80,7 @@ export {
   listTrashedDocuments,
   moveDocument,
   permanentlyDeleteDocument,
+  queryDocuments,
   renameDocument,
   getDocumentDownloadUrl,
   requestUploadTicket,
@@ -83,6 +88,7 @@ export {
   transferDocumentOwner,
   trashDocument,
 } from './api/documents-api';
+export type { QueryDocumentsParams } from './api/documents-api';
 
 // API — Shares
 export {
