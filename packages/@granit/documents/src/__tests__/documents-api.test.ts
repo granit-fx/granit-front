@@ -11,7 +11,7 @@ import {
   moveDocument,
   permanentlyDeleteDocument,
   renameDocument,
-  requestDocumentDownloadUrl,
+  getDocumentDownloadUrl,
   requestUploadTicket,
   restoreDocument,
   transferDocumentOwner,
@@ -221,7 +221,7 @@ describe('permanentlyDeleteDocument', () => {
   });
 });
 
-describe('requestDocumentDownloadUrl', () => {
+describe('getDocumentDownloadUrl', () => {
   const url: DownloadUrlResponse = {
     url: 'https://example.com/download',
     expiresAt: toISODateString('2026-05-01T10:15:00Z'),
@@ -231,7 +231,7 @@ describe('requestDocumentDownloadUrl', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse(url));
 
-    await requestDocumentDownloadUrl(client, basePath, 'doc-1');
+    await getDocumentDownloadUrl(client, basePath, 'doc-1');
 
     expect(client.get).toHaveBeenCalledWith(`${basePath}/documents/doc-1/download`, {
       params: {},
@@ -242,7 +242,7 @@ describe('requestDocumentDownloadUrl', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse(url));
 
-    await requestDocumentDownloadUrl(client, basePath, 'doc-1', 'ver-2');
+    await getDocumentDownloadUrl(client, basePath, 'doc-1', 'ver-2');
 
     expect(client.get).toHaveBeenCalledWith(`${basePath}/documents/doc-1/download`, {
       params: { versionId: 'ver-2' },

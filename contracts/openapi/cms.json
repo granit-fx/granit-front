@@ -4218,6 +4218,37 @@
         }
       }
     },
+    "/api/cms/blocks/public": {
+      "get": {
+        "tags": ["CMS - Blocks"],
+        "summary": "Public SSR contract: lists the available blocks and their field model.",
+        "description": "Anonymous, read-only projection of the runtime block registry — the same payload as the admin catalog, exposed for the public SSR renderer to build its render config without authentication. Published/runtime registry only; no admin-only fields.",
+        "operationId": "GetCmsPublicBlockCatalog",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlockCatalogResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    },
     "/api/cms/blocks/data": {
       "post": {
         "tags": ["CMS - Blocks"],
@@ -5160,7 +5191,7 @@
         }
       },
       "MenuResponse": {
-        "required": ["id", "siteId", "key", "title", "items"],
+        "required": ["id", "siteId", "key", "title", "items", "createdAt", "modifiedAt"],
         "type": "object",
         "properties": {
           "id": {
@@ -5182,6 +5213,14 @@
             "items": {
               "$ref": "#/components/schemas/MenuItemResponse"
             }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
           }
         }
       },
@@ -6465,6 +6504,8 @@
           "isSiteRoot",
           "layoutKey",
           "translations",
+          "createdAt",
+          "modifiedAt",
           "concurrencyStamp"
         ],
         "type": "object",
@@ -6505,6 +6546,14 @@
             "items": {
               "$ref": "#/components/schemas/PageTranslationResponse"
             }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
           },
           "concurrencyStamp": {
             "type": "string"
@@ -7022,6 +7071,8 @@
           "schedule",
           "tenantId",
           "actions",
+          "createdAt",
+          "modifiedAt",
           "concurrencyStamp"
         ],
         "type": "object",
@@ -7059,6 +7110,14 @@
             "items": {
               "$ref": "#/components/schemas/ReleaseActionResponse"
             }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
           },
           "concurrencyStamp": {
             "type": "string"
@@ -7332,7 +7391,9 @@
           "activated",
           "tenantId",
           "displayNames",
-          "homePageId"
+          "homePageId",
+          "createdAt",
+          "modifiedAt"
         ],
         "type": "object",
         "properties": {
@@ -7377,6 +7438,14 @@
           "homePageId": {
             "type": ["null", "string"],
             "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
           }
         }
       },

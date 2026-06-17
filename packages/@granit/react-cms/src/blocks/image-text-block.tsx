@@ -3,23 +3,26 @@
 import type { ImageTextBlockProps } from './types';
 
 export function ImageTextBlock({
-  title,
+  heading,
   body,
-  imagePosition = 'left',
+  imagePosition = 'Left',
   _resolved_imageId,
 }: ImageTextBlockProps) {
   return (
-    <section data-block="image-text" data-image-position={imagePosition}>
+    <section
+      data-block="image-text"
+      data-image-position={imagePosition === 'Right' ? 'right' : 'left'}
+    >
       {_resolved_imageId && (
         <img
           src={_resolved_imageId.url}
           width={_resolved_imageId.width ?? undefined}
           height={_resolved_imageId.height ?? undefined}
-          alt={title}
+          alt={heading}
         />
       )}
       <div>
-        <h2>{title}</h2>
+        <h2>{heading}</h2>
         {body && <p>{body}</p>}
       </div>
     </section>

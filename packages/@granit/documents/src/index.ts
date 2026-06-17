@@ -77,7 +77,7 @@ export {
   moveDocument,
   permanentlyDeleteDocument,
   renameDocument,
-  requestDocumentDownloadUrl,
+  getDocumentDownloadUrl,
   requestUploadTicket,
   restoreDocument,
   transferDocumentOwner,
@@ -110,7 +110,7 @@ export {
 } from './api/public-links-api';
 
 // API — Renditions
-export { listDocumentRenditions, requestRenditionDownloadUrl } from './api/renditions-api';
+export { listDocumentRenditions, getRenditionDownloadUrl } from './api/renditions-api';
 
 // API — Resolution
 export { batchResolveDocumentAssets } from './api/resolution-api';

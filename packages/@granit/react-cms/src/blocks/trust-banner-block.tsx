@@ -2,22 +2,20 @@
 
 import type { TrustBannerBlockProps } from './types';
 
-export function TrustBannerBlock({ title, logos }: TrustBannerBlockProps) {
+export function TrustBannerBlock({ heading, logoIds = [] }: TrustBannerBlockProps) {
   return (
     <section data-block="trust-banner">
-      {title && <p>{title}</p>}
+      {heading && <p>{heading}</p>}
       <ul>
-        {logos.map((logo) => (
-          <li key={`${String(logo.imageId)}-${logo.alt ?? ''}`}>
-            {logo._resolved_imageId ? (
+        {logoIds.map((logo, i) => (
+          <li key={i}>
+            {logo._resolved_value && (
               <img
-                src={logo._resolved_imageId.url}
-                width={logo._resolved_imageId.width ?? undefined}
-                height={logo._resolved_imageId.height ?? undefined}
-                alt={logo.alt ?? ''}
+                src={logo._resolved_value.url}
+                width={logo._resolved_value.width ?? undefined}
+                height={logo._resolved_value.height ?? undefined}
+                alt=""
               />
-            ) : (
-              <span aria-label={logo.alt} />
             )}
           </li>
         ))}

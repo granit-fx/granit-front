@@ -2,7 +2,7 @@ import {
   getDocument,
   listDocumentVersions,
   listTrashedDocuments,
-  requestDocumentDownloadUrl,
+  getDocumentDownloadUrl,
 } from '@granit/documents';
 import { useQuery } from '@tanstack/react-query';
 
@@ -74,7 +74,7 @@ export function useDocumentDownloadUrl(
   const config = useDocumentsConfig();
   return useQuery({
     queryKey: buildDocumentsQueryKey(config, 'documents', id, 'download', versionId ?? null),
-    queryFn: () => requestDocumentDownloadUrl(config.client, config.basePath, id, versionId),
+    queryFn: () => getDocumentDownloadUrl(config.client, config.basePath, id, versionId),
     enabled: (options?.enabled ?? true) && id.length > 0,
     staleTime: Infinity,
     refetchOnWindowFocus: false,

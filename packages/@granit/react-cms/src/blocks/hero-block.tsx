@@ -6,14 +6,18 @@ import type { HeroBlockProps } from './types';
 
 export function HeroBlock({
   headline,
-  subline,
-  ctaLabel,
-  ctaHref,
+  subheadline,
+  primaryCtaLabel,
+  primaryCtaHref,
+  secondaryCtaLabel,
+  secondaryCtaHref,
+  alignment = 'Center',
   _resolved_imageId,
 }: HeroBlockProps) {
-  const ctaSafeHref = safeLinkHref(ctaHref);
+  const primaryHref = safeLinkHref(primaryCtaHref);
+  const secondaryHref = safeLinkHref(secondaryCtaHref);
   return (
-    <section data-block="hero">
+    <section data-block="hero" data-alignment={(alignment ?? 'Center').toLowerCase()}>
       {_resolved_imageId && (
         <img
           src={_resolved_imageId.url}
@@ -23,8 +27,9 @@ export function HeroBlock({
         />
       )}
       <h1>{headline}</h1>
-      {subline && <p>{subline}</p>}
-      {ctaLabel && ctaSafeHref && <a href={ctaSafeHref}>{ctaLabel}</a>}
+      {subheadline && <p>{subheadline}</p>}
+      {primaryCtaLabel && primaryHref && <a href={primaryHref}>{primaryCtaLabel}</a>}
+      {secondaryCtaLabel && secondaryHref && <a href={secondaryHref}>{secondaryCtaLabel}</a>}
     </section>
   );
 }

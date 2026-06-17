@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -26,6 +27,8 @@ const release: ReleaseResponse = {
   schedule: null,
   tenantId: null,
   actions: [],
+  createdAt: toISODateString('2026-01-01T00:00:00Z'),
+  modifiedAt: null,
   concurrencyStamp: 'stamp-1',
 };
 

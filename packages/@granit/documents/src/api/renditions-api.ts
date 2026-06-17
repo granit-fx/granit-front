@@ -29,7 +29,7 @@ export async function listDocumentRenditions(
  *
  * `GET {basePath}/documents/{id}/renditions/{type}/download`
  */
-export async function requestRenditionDownloadUrl(
+export async function getRenditionDownloadUrl(
   client: AxiosInstance,
   basePath: string,
   id: string,

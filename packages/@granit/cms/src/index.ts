@@ -73,7 +73,7 @@ export type {
 export { getPageByPath, mintPreviewToken, resolvePreview } from './api/pages';
 
 // Blocks
-export { getBlockCatalog, resolveBlockData } from './api/blocks';
+export { getBlockCatalog, getPublicBlockCatalog, resolveBlockData } from './api/blocks';
 
 // Menus
 export { resolveMenu } from './api/menus';

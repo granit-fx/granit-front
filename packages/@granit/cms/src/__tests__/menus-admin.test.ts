@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import { createMenu, deleteMenu, getMenu, listMenus, updateMenu } from '../api/menus-admin';
@@ -14,6 +15,8 @@ const menu: MenuResponse = {
   key: 'main',
   title: 'Main navigation',
   items: [],
+  createdAt: toISODateString('2026-01-01T00:00:00Z'),
+  modifiedAt: null,
 };
 
 describe('listMenus', () => {

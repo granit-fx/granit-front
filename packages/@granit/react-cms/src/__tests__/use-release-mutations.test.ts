@@ -9,6 +9,7 @@ import {
 } from '@granit/cms';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -47,6 +48,8 @@ const release: ReleaseResponse = {
   schedule: null,
   tenantId: null,
   actions: [],
+  createdAt: toISODateString('2026-01-01T00:00:00Z'),
+  modifiedAt: null,
   concurrencyStamp: 'stamp-1',
 };
 

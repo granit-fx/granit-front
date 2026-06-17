@@ -10,7 +10,7 @@ const catalog: BlockCatalogResponse = {
       category: 'hero',
       blocks: [
         {
-          name: 'Hero',
+          name: 'hero',
           version: '1.0.0',
           sourceModule: 'Granit.Cms.Blocks',
           renderSide: 'Server',
@@ -60,8 +60,8 @@ describe('catalogToConfig', () => {
   it('maps known blocks to Puck component configs', () => {
     const config = catalogToConfig(catalog);
 
-    expect(config.components).toHaveProperty('Hero');
-    expect(config.components['Hero']?.label).toBe('Hero');
+    expect(config.components).toHaveProperty('hero');
+    expect(config.components['hero']?.label).toBe('hero');
   });
 
   it('skips blocks with no matching registry entry', () => {
@@ -76,21 +76,21 @@ describe('catalogToConfig', () => {
 
   it('maps Text → textarea', () => {
     const config = catalogToConfig(catalog);
-    const hero = config.components['Hero'];
+    const hero = config.components['hero'];
     const fields = hero?.fields ?? {};
     expect(fields['headline']).toEqual({ type: 'textarea' });
   });
 
   it('maps DocumentReference → external field', () => {
     const config = catalogToConfig(catalog);
-    const hero = config.components['Hero'];
+    const hero = config.components['hero'];
     const fields = hero?.fields ?? {};
     expect(fields['imageId']).toMatchObject({ type: 'external' });
   });
 
   it('maps Boolean → radio with true/false options', () => {
     const config = catalogToConfig(catalog);
-    const hero = config.components['Hero'];
+    const hero = config.components['hero'];
     const fields = hero?.fields ?? {};
     expect(fields['highlighted']).toEqual({
       type: 'radio',
@@ -103,7 +103,7 @@ describe('catalogToConfig', () => {
 
   it('maps Choice → select with backend options', () => {
     const config = catalogToConfig(catalog);
-    const hero = config.components['Hero'];
+    const hero = config.components['hero'];
     const fields = hero?.fields ?? {};
     expect(fields['layout']).toEqual({
       type: 'select',
@@ -116,21 +116,21 @@ describe('catalogToConfig', () => {
 
   it('maps List → array with nested arrayFields', () => {
     const config = catalogToConfig(catalog);
-    const hero = config.components['Hero'];
+    const hero = config.components['hero'];
     const fields = hero?.fields ?? {};
     expect(fields['items']).toMatchObject({ type: 'array' });
   });
 
   it('maps Nested → object with objectFields', () => {
     const config = catalogToConfig(catalog);
-    const hero = config.components['Hero'];
+    const hero = config.components['hero'];
     const fields = hero?.fields ?? {};
     expect(fields['meta']).toMatchObject({ type: 'object' });
   });
 
   it('creates default props for each field', () => {
     const config = catalogToConfig(catalog);
-    const hero = config.components['Hero'];
+    const hero = config.components['hero'];
     const defaults = hero?.defaultProps ?? {};
     expect(defaults['headline']).toBe('');
     expect(defaults['imageId']).toBeNull();
@@ -146,7 +146,7 @@ describe('catalogToConfig', () => {
           category: 'pricing',
           blocks: [
             {
-              name: 'Pricing',
+              name: 'pricing',
               version: '1.0.0',
               sourceModule: 'Granit.Cms.Blocks',
               renderSide: 'Server',
@@ -160,7 +160,7 @@ describe('catalogToConfig', () => {
     };
 
     const config = catalogToConfig(numericCatalog);
-    const pricing = config.components['Pricing'];
+    const pricing = config.components['pricing'];
     expect(pricing?.fields?.['price']).toEqual({ type: 'number' });
     expect(pricing?.defaultProps?.['price']).toBe(0);
   });
@@ -173,7 +173,7 @@ describe('catalogToConfig with resolveBlockData', () => {
         category: 'pricing',
         blocks: [
           {
-            name: 'Pricing',
+            name: 'pricing',
             version: '1.0.0',
             sourceModule: 'Granit.Cms.Blocks',
             renderSide: 'Client',
@@ -193,12 +193,12 @@ describe('catalogToConfig with resolveBlockData', () => {
       siteId: 'site-1',
       culture: 'fr',
     });
-    expect(config.components['Pricing']?.resolveData).toBeDefined();
+    expect(config.components['pricing']?.resolveData).toBeDefined();
   });
 
   it('does not set resolveData when resolveBlockData is omitted', () => {
     const config = catalogToConfig(dataBoundCatalog);
-    expect(config.components['Pricing']?.resolveData).toBeUndefined();
+    expect(config.components['pricing']?.resolveData).toBeUndefined();
   });
 
   it('resolveData calls resolveFn with query string from props', async () => {
@@ -209,7 +209,7 @@ describe('catalogToConfig with resolveBlockData', () => {
       culture: 'fr',
     });
 
-    const resolveData = config.components['Pricing']?.resolveData as any;
+    const resolveData = config.components['pricing']?.resolveData as any;
 
     await resolveData({ props: { query: 'premium' } });
 
@@ -229,7 +229,7 @@ describe('catalogToConfig with resolveBlockData', () => {
       culture: 'fr',
     });
 
-    const resolveData = config.components['Pricing']?.resolveData as any;
+    const resolveData = config.components['pricing']?.resolveData as any;
 
     await resolveData({ props: { price: 99 } });
 
@@ -244,7 +244,7 @@ describe('catalogToConfig with resolveBlockData', () => {
       culture: 'fr',
     });
 
-    const resolveData = config.components['Pricing']?.resolveData as any;
+    const resolveData = config.components['pricing']?.resolveData as any;
 
     const result = await resolveData({ props: { price: 99 } });
 
@@ -262,7 +262,7 @@ describe('catalogToConfig with resolveBlockData', () => {
       culture: 'fr',
     });
 
-    const resolveData = config.components['Pricing']?.resolveData as any;
+    const resolveData = config.components['pricing']?.resolveData as any;
 
     const result = await resolveData({ props: {} });
 

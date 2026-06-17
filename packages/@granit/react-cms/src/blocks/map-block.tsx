@@ -2,13 +2,17 @@
 
 import type { MapBlockProps } from './types';
 
-export function MapBlock({ title, address, lat, lng }: MapBlockProps) {
+export function MapBlock({ latitude, longitude, zoom = 12, label }: MapBlockProps) {
   return (
     <section data-block="map">
-      {title && <h2>{title}</h2>}
-      {address && <address>{address}</address>}
-      {lat !== undefined && lng !== undefined && (
-        <figure data-lat={lat} data-lng={lng} aria-label={address ?? 'Map'} />
+      {label && <h2>{label}</h2>}
+      {latitude !== undefined && longitude !== undefined && (
+        <figure
+          data-lat={latitude}
+          data-lng={longitude}
+          data-zoom={zoom}
+          aria-label={label ?? 'Map'}
+        />
       )}
     </section>
   );

@@ -1,4 +1,4 @@
-import { listDocumentRenditions, requestRenditionDownloadUrl } from '@granit/documents';
+import { listDocumentRenditions, getRenditionDownloadUrl } from '@granit/documents';
 import { useQuery } from '@tanstack/react-query';
 
 import { buildDocumentsQueryKey, useDocumentsConfig } from '../providers/documents-provider';
@@ -39,7 +39,7 @@ export function useRenditionDownloadUrl(
   const config = useDocumentsConfig();
   return useQuery({
     queryKey: buildDocumentsQueryKey(config, 'documents', id, 'renditions', type, 'download'),
-    queryFn: () => requestRenditionDownloadUrl(config.client, config.basePath, id, type),
+    queryFn: () => getRenditionDownloadUrl(config.client, config.basePath, id, type),
     enabled: (options?.enabled ?? true) && id.length > 0,
     staleTime: Infinity,
     refetchOnWindowFocus: false,

@@ -58,6 +58,15 @@ export function createCmsRedirectsHandlers(baseUrl = '/api/cms/redirects'): Requ
 
     http.post(`${baseUrl}/sites/:siteId/redirects`, async ({ params, request }) => {
       const dto = (await request.json()) as RedirectCreateRequest;
+      const duplicate = redirects.find(
+        (r) => r.siteId === String(params.siteId) && r.source === dto.source
+      );
+      if (duplicate) {
+        return HttpResponse.json(
+          { title: 'A redirect with this source path already exists for this site.', status: 409 },
+          { status: 409 }
+        );
+      }
       const type = dto.type ?? 'MovedPermanently';
       const redirect: RedirectResponse = {
         id: crypto.randomUUID(),

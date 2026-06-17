@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import { createSite, deleteSite, getSite, listSites, updateSite } from '../api/sites';
@@ -19,6 +20,8 @@ const site: SiteResponse = {
   tenantId: null,
   displayNames: { fr: 'ACME', en: 'ACME' },
   homePageId: null,
+  createdAt: toISODateString('2026-01-01T00:00:00Z'),
+  modifiedAt: null,
 };
 
 describe('listSites', () => {

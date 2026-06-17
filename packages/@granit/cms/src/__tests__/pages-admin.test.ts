@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -46,6 +47,8 @@ const page: PageResponse = {
   isSiteRoot: true,
   layoutKey: null,
   translations: [{ culture: 'fr', urlSlug: 'accueil', title: 'Accueil', path: '/accueil' }],
+  createdAt: toISODateString('2026-01-01T00:00:00Z'),
+  modifiedAt: null,
   concurrencyStamp: 'mock-stamp',
 };
 

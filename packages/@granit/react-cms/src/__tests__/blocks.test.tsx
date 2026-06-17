@@ -17,13 +17,13 @@ import { VideoBlock } from '../blocks/video-block';
 
 describe('CtaBlock', () => {
   it('renders with required props only', () => {
-    const { container } = render(<CtaBlock title="Sign up" />);
+    const { container } = render(<CtaBlock headline="Sign up" />);
     expect(container.querySelector('[data-block="cta"]')).not.toBeNull();
   });
 
-  it('renders optional description and button', () => {
+  it('renders optional body and button', () => {
     const { container } = render(
-      <CtaBlock title="Sign up" description="Join us" buttonLabel="Go" buttonHref="/go" />
+      <CtaBlock headline="Sign up" body="Join us" buttonLabel="Go" buttonHref="/go" />
     );
     expect(container.querySelector('p')).not.toBeNull();
     expect(container.querySelector('a')).not.toBeNull();
@@ -36,14 +36,14 @@ describe('HeroBlock', () => {
     expect(container.querySelector('[data-block="hero"]')).not.toBeNull();
   });
 
-  it('renders optional subline, image and CTA', () => {
+  it('renders optional subheadline, image and CTA', () => {
     const { container } = render(
       <HeroBlock
         headline="Welcome"
-        subline="Subtitle"
+        subheadline="Subtitle"
         _resolved_imageId={{ url: 'https://img.example.com/hero.png', width: 1200, height: 600 }}
-        ctaLabel="Get started"
-        ctaHref="/start"
+        primaryCtaLabel="Get started"
+        primaryCtaHref="/start"
       />
     );
     expect(container.querySelector('img')).not.toBeNull();
@@ -53,16 +53,16 @@ describe('HeroBlock', () => {
 });
 
 describe('FeaturesBlock', () => {
-  it('renders with empty features list', () => {
-    const { container } = render(<FeaturesBlock features={[]} />);
+  it('renders with empty items list', () => {
+    const { container } = render(<FeaturesBlock items={[]} />);
     expect(container.querySelector('[data-block="features"]')).not.toBeNull();
   });
 
-  it('renders features with optional body', () => {
+  it('renders features with optional description', () => {
     const { container } = render(
       <FeaturesBlock
         title="Features"
-        features={[{ heading: 'Fast', body: 'Very fast' }, { heading: 'Secure' }]}
+        items={[{ title: 'Fast', description: 'Very fast' }, { title: 'Secure' }]}
       />
     );
     expect(container.querySelector('h2')).not.toBeNull();
@@ -72,13 +72,13 @@ describe('FeaturesBlock', () => {
 
 describe('StatsBlock', () => {
   it('renders with required props only', () => {
-    const { container } = render(<StatsBlock stats={[{ label: 'Users', value: '1000' }]} />);
+    const { container } = render(<StatsBlock items={[{ label: 'Users', value: '1000' }]} />);
     expect(container.querySelector('[data-block="stats"]')).not.toBeNull();
   });
 
   it('renders optional title', () => {
     const { container } = render(
-      <StatsBlock title="Our Numbers" stats={[{ label: 'Users', value: '1000' }]} />
+      <StatsBlock title="Our Numbers" items={[{ label: 'Users', value: '1000' }]} />
     );
     expect(container.querySelector('h2')).not.toBeNull();
   });
@@ -86,21 +86,17 @@ describe('StatsBlock', () => {
 
 describe('TrustBannerBlock', () => {
   it('renders with empty logos list', () => {
-    const { container } = render(<TrustBannerBlock logos={[]} />);
+    const { container } = render(<TrustBannerBlock logoIds={[]} />);
     expect(container.querySelector('[data-block="trust-banner"]')).not.toBeNull();
   });
 
-  it('renders optional title and resolved logo images', () => {
+  it('renders optional heading and resolved logo images', () => {
     const { container } = render(
       <TrustBannerBlock
-        title="Trusted by"
-        logos={[
-          {
-            imageId: 'id-1',
-            alt: 'ACME',
-            _resolved_imageId: { url: 'https://cdn.example.com/acme.png' },
-          },
-          { imageId: null },
+        heading="Trusted by"
+        logoIds={[
+          { value: 'id-1', _resolved_value: { url: 'https://cdn.example.com/acme.png' } },
+          { value: null },
         ]}
       />
     );
@@ -109,16 +105,19 @@ describe('TrustBannerBlock', () => {
 });
 
 describe('TimelineBlock', () => {
-  it('renders with empty items', () => {
-    const { container } = render(<TimelineBlock items={[]} />);
+  it('renders with empty events', () => {
+    const { container } = render(<TimelineBlock events={[]} />);
     expect(container.querySelector('[data-block="timeline"]')).not.toBeNull();
   });
 
-  it('renders items with optional date and body', () => {
+  it('renders events with optional date and description', () => {
     const { container } = render(
       <TimelineBlock
         title="History"
-        items={[{ heading: 'Founded', date: '2020', body: 'We started' }, { heading: 'Launched' }]}
+        events={[
+          { title: 'Founded', date: '2020', description: 'We started' },
+          { title: 'Launched', date: '2021' },
+        ]}
       />
     );
     expect(container.querySelector('time')).not.toBeNull();
@@ -127,8 +126,8 @@ describe('TimelineBlock', () => {
 });
 
 describe('TestimonialsBlock', () => {
-  it('renders with empty testimonials', () => {
-    const { container } = render(<TestimonialsBlock testimonials={[]} />);
+  it('renders with empty items', () => {
+    const { container } = render(<TestimonialsBlock items={[]} />);
     expect(container.querySelector('[data-block="testimonials"]')).not.toBeNull();
   });
 
@@ -136,7 +135,10 @@ describe('TestimonialsBlock', () => {
     const { container } = render(
       <TestimonialsBlock
         title="What they say"
-        testimonials={[{ quote: 'Great!', author: 'Jane', role: 'CEO' }, { quote: 'Awesome!' }]}
+        items={[
+          { quote: 'Great!', author: 'Jane', role: 'CEO' },
+          { quote: 'Awesome!', author: '' },
+        ]}
       />
     );
     expect(container.querySelector('h2')).not.toBeNull();
@@ -145,7 +147,7 @@ describe('TestimonialsBlock', () => {
 
 describe('LogosBlock', () => {
   it('renders with empty logos', () => {
-    const { container } = render(<LogosBlock logos={[]} />);
+    const { container } = render(<LogosBlock logoIds={[]} />);
     expect(container.querySelector('[data-block="logos"]')).not.toBeNull();
   });
 
@@ -153,13 +155,7 @@ describe('LogosBlock', () => {
     const { container } = render(
       <LogosBlock
         title="Partners"
-        logos={[
-          {
-            imageId: 'id-1',
-            alt: 'Partner',
-            _resolved_imageId: { url: 'https://cdn.example.com/p.png' },
-          },
-        ]}
+        logoIds={[{ value: 'id-1', _resolved_value: { url: 'https://cdn.example.com/p.png' } }]}
       />
     );
     expect(container.querySelector('img')).not.toBeNull();
@@ -168,15 +164,18 @@ describe('LogosBlock', () => {
 
 describe('StepsBlock', () => {
   it('renders with empty steps', () => {
-    const { container } = render(<StepsBlock steps={[]} />);
+    const { container } = render(<StepsBlock items={[]} />);
     expect(container.querySelector('[data-block="steps"]')).not.toBeNull();
   });
 
-  it('renders steps with optional body', () => {
+  it('renders steps with optional description', () => {
     const { container } = render(
       <StepsBlock
         title="How it works"
-        steps={[{ heading: 'Step 1', body: 'Do this' }, { heading: 'Step 2' }]}
+        items={[
+          { number: '1', title: 'Step 1', description: 'Do this' },
+          { number: '2', title: 'Step 2' },
+        ]}
       />
     );
     expect(container.querySelector('h2')).not.toBeNull();
@@ -186,38 +185,35 @@ describe('StepsBlock', () => {
 
 describe('ImageTextBlock', () => {
   it('renders with required props only', () => {
-    const { container } = render(<ImageTextBlock title="About" />);
+    const { container } = render(<ImageTextBlock heading="About" />);
     expect(container.querySelector('[data-block="image-text"]')).not.toBeNull();
   });
 
   it('renders optional body and resolved image', () => {
     const { container } = render(
       <ImageTextBlock
-        title="About"
+        heading="About"
         body="Our story"
         imageId="id-1"
         _resolved_imageId={{ url: 'https://cdn.example.com/about.png' }}
-        imagePosition="right"
+        imagePosition="Right"
       />
     );
     expect(container.querySelector('img')).not.toBeNull();
     expect(container.querySelector('p')).not.toBeNull();
+    expect(container.querySelector('[data-image-position="right"]')).not.toBeNull();
   });
 });
 
 describe('VideoBlock', () => {
   it('renders with required props only', () => {
-    const { container } = render(<VideoBlock videoUrl="https://youtube.com/watch?v=123" />);
+    const { container } = render(<VideoBlock url="https://cdn.example.com/v.mp4" />);
     expect(container.querySelector('[data-block="video"]')).not.toBeNull();
   });
 
-  it('renders optional title and thumbnail as video poster', () => {
+  it('renders optional caption and video element', () => {
     const { container } = render(
-      <VideoBlock
-        title="Our Demo"
-        videoUrl="https://youtube.com/watch?v=123"
-        _resolved_thumbnailId={{ url: 'https://cdn.example.com/thumb.png' }}
-      />
+      <VideoBlock caption="Our Demo" url="https://cdn.example.com/v.mp4" />
     );
     expect(container.querySelector('h2')).not.toBeNull();
     expect(container.querySelector('video')).not.toBeNull();
@@ -234,19 +230,21 @@ describe('block link/media XSS hardening (VULN-100/101/204)', () => {
   ];
 
   it.each(UNSAFE_HREFS)('HeroBlock drops unsafe CTA href %s', (href) => {
-    const { container } = render(<HeroBlock headline="Welcome" ctaLabel="Go" ctaHref={href} />);
+    const { container } = render(
+      <HeroBlock headline="Welcome" primaryCtaLabel="Go" primaryCtaHref={href} />
+    );
     expect(container.querySelector('a')).toBeNull();
   });
 
   it('HeroBlock keeps a safe CTA href', () => {
     const { container } = render(
-      <HeroBlock headline="Welcome" ctaLabel="Go" ctaHref="https://example.com" />
+      <HeroBlock headline="Welcome" primaryCtaLabel="Go" primaryCtaHref="https://example.com" />
     );
     expect(container.querySelector('a')?.getAttribute('href')).toBe('https://example.com');
   });
 
   it.each(UNSAFE_HREFS)('CtaBlock drops unsafe button href %s', (href) => {
-    const { container } = render(<CtaBlock title="T" buttonLabel="Go" buttonHref={href} />);
+    const { container } = render(<CtaBlock headline="T" buttonLabel="Go" buttonHref={href} />);
     expect(container.querySelector('a')).toBeNull();
   });
 
@@ -263,13 +261,13 @@ describe('block link/media XSS hardening (VULN-100/101/204)', () => {
   it.each(['javascript:alert(1)', 'data:text/html,x', '/\\evil.com'])(
     'VideoBlock drops unsafe video src %s',
     (src) => {
-      const { container } = render(<VideoBlock videoUrl={src} />);
+      const { container } = render(<VideoBlock url={src} />);
       expect(container.querySelector('video')).toBeNull();
     }
   );
 
   it('VideoBlock keeps a safe https video src', () => {
-    const { container } = render(<VideoBlock videoUrl="https://cdn.example.com/v.mp4" />);
+    const { container } = render(<VideoBlock url="https://cdn.example.com/v.mp4" />);
     expect(container.querySelector('video')?.getAttribute('src')).toBe(
       'https://cdn.example.com/v.mp4'
     );
@@ -282,12 +280,9 @@ describe('MapBlock', () => {
     expect(container.querySelector('[data-block="map"]')).not.toBeNull();
   });
 
-  it('renders optional title, address and coordinates', () => {
-    const { container } = render(
-      <MapBlock title="Find us" address="1 Main St" lat={50.85} lng={4.35} />
-    );
+  it('renders optional label and coordinates', () => {
+    const { container } = render(<MapBlock label="Find us" latitude={50.85} longitude={4.35} />);
     expect(container.querySelector('h2')).not.toBeNull();
-    expect(container.querySelector('address')).not.toBeNull();
     expect(container.querySelector('figure')).not.toBeNull();
   });
 });
@@ -306,8 +301,8 @@ describe('PricingBlock', () => {
           {
             name: 'Pro',
             price: '€99',
-            description: 'Best plan',
-            features: ['Feature A'],
+            period: 'per month',
+            features: [{ value: 'Feature A' }],
             ctaLabel: 'Buy',
             ctaHref: '/buy',
             highlighted: true,

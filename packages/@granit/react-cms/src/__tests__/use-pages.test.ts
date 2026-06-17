@@ -1,6 +1,7 @@
 import { getPage, getPageTree, listPageVersions, listPages } from '@granit/cms';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
@@ -40,6 +41,8 @@ const page: PageResponse = {
   isSiteRoot: true,
   layoutKey: null,
   translations: [],
+  createdAt: toISODateString('2026-01-01T00:00:00Z'),
+  modifiedAt: null,
   concurrencyStamp: 'mock-stamp',
 };
 const version: PageVersionSummaryResponse = {

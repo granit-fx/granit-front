@@ -2,6 +2,8 @@
 // @granit/react-cms/testing — mock fixtures
 // ---------------------------------------------------------------------------
 
+import { toISODateString } from '@granit/types';
+
 import type {
   MenuResponse,
   PageTreeNodeResponse,
@@ -32,6 +34,8 @@ export const mockSites: SiteResponse[] = [
       'nl-BE': 'Bedrijfswebsite',
     },
     homePageId: null,
+    createdAt: toISODateString('2026-01-01T00:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: 'c2e1d4b5-2e3f-4a6b-9c7d-2b3c4d5e6f70',
@@ -47,6 +51,8 @@ export const mockSites: SiteResponse[] = [
       'fr-FR': 'Portail de support',
     },
     homePageId: null,
+    createdAt: toISODateString('2026-01-01T00:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: 'd3f2e5c6-3f40-4b7c-ad8e-3c4d5e6f7081',
@@ -61,6 +67,8 @@ export const mockSites: SiteResponse[] = [
       'fr-FR': 'Campagne 2026',
     },
     homePageId: null,
+    createdAt: toISODateString('2026-01-01T00:00:00Z'),
+    modifiedAt: null,
   },
 ];
 
@@ -134,6 +142,8 @@ export const mockMenus: MenuResponse[] = [
         children: [],
       },
     ],
+    createdAt: toISODateString('2026-01-01T00:00:00Z'),
+    modifiedAt: null,
   },
   {
     id: '20000000-0000-4000-8000-000000000002',
@@ -153,6 +163,8 @@ export const mockMenus: MenuResponse[] = [
         children: [],
       },
     ],
+    createdAt: toISODateString('2026-01-01T00:00:00Z'),
+    modifiedAt: null,
   },
 ];
 
@@ -176,6 +188,8 @@ export const mockReleases: ReleaseResponse[] = [
         error: null,
       },
     ],
+    createdAt: toISODateString('2026-01-01T00:00:00Z'),
+    modifiedAt: null,
     concurrencyStamp: 'stamp-release-1',
   },
   {
@@ -200,6 +214,8 @@ export const mockReleases: ReleaseResponse[] = [
         error: null,
       },
     ],
+    createdAt: toISODateString('2026-01-01T00:00:00Z'),
+    modifiedAt: null,
     concurrencyStamp: 'stamp-release-2',
   },
 ];

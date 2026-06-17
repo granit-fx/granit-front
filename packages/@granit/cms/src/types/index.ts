@@ -179,6 +179,8 @@ export interface SiteResponse {
   readonly displayNames: Readonly<Record<string, string>>;
   /** Page designated at `/` (the site home page); `null` when none is set. */
   readonly homePageId: string | null;
+  readonly createdAt: ISODateString;
+  readonly modifiedAt: ISODateString | null;
 }
 
 /** Request body for `POST /api/cms/sites`. */
@@ -231,6 +233,8 @@ export interface PageResponse {
   readonly isSiteRoot: boolean;
   readonly layoutKey: string | null;
   readonly translations: readonly PageTranslation[];
+  readonly createdAt: ISODateString;
+  readonly modifiedAt: ISODateString | null;
   readonly concurrencyStamp: string;
 }
 
@@ -307,6 +311,8 @@ export interface MenuResponse {
   readonly key: string;
   readonly title: string;
   readonly items: readonly MenuItemResponse[];
+  readonly createdAt: ISODateString;
+  readonly modifiedAt: ISODateString | null;
 }
 
 /** Writable menu item for create / update requests. */
@@ -374,6 +380,8 @@ export interface ReleaseResponse {
   readonly schedule: ReleaseSchedule | null;
   readonly tenantId: string | null;
   readonly actions: readonly ReleaseActionResponse[];
+  readonly createdAt: ISODateString;
+  readonly modifiedAt: ISODateString | null;
   readonly concurrencyStamp: string;
 }
 

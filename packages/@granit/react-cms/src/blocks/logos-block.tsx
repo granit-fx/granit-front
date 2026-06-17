@@ -2,22 +2,20 @@
 
 import type { LogosBlockProps } from './types';
 
-export function LogosBlock({ title, logos }: LogosBlockProps) {
+export function LogosBlock({ title, logoIds = [] }: LogosBlockProps) {
   return (
     <section data-block="logos">
       {title && <p>{title}</p>}
       <ul>
-        {logos.map((logo) => (
-          <li key={`${String(logo.imageId)}-${logo.alt ?? ''}`}>
-            {logo._resolved_imageId ? (
+        {logoIds.map((logo, i) => (
+          <li key={i}>
+            {logo._resolved_value && (
               <img
-                src={logo._resolved_imageId.url}
-                width={logo._resolved_imageId.width ?? undefined}
-                height={logo._resolved_imageId.height ?? undefined}
-                alt={logo.alt ?? ''}
+                src={logo._resolved_value.url}
+                width={logo._resolved_value.width ?? undefined}
+                height={logo._resolved_value.height ?? undefined}
+                alt=""
               />
-            ) : (
-              <span aria-label={logo.alt} />
             )}
           </li>
         ))}

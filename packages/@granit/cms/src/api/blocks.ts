@@ -18,6 +18,22 @@ export async function getBlockCatalog(
 }
 
 /**
+ * Fetches the anonymous, read-only block catalog for the public SSR renderer.
+ * `GET {basePath}/api/cms/blocks/public`
+ *
+ * Same `BlockCatalogResponse` shape as {@link getBlockCatalog}, but served by an
+ * `AllowAnonymous` route so the public renderer can build its render config
+ * without a bearer token. Use {@link getBlockCatalog} for the admin editor.
+ */
+export async function getPublicBlockCatalog(
+  client: AxiosInstance,
+  basePath: string
+): Promise<BlockCatalogResponse> {
+  const response = await client.get<BlockCatalogResponse>(`${basePath}/api/cms/blocks/public`);
+  return response.data;
+}
+
+/**
  * Resolves live data for a data-bound block at SSR time.
  * `POST {basePath}/api/cms/blocks/data`
  *

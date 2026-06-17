@@ -184,7 +184,7 @@ export async function permanentlyDeleteDocument(
  *
  * `GET {basePath}/documents/{id}/download`
  */
-export async function requestDocumentDownloadUrl(
+export async function getDocumentDownloadUrl(
   client: AxiosInstance,
   basePath: string,
   id: string,

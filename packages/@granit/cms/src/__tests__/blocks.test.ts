@@ -1,7 +1,7 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getBlockCatalog, resolveBlockData } from '../api/blocks';
+import { getBlockCatalog, getPublicBlockCatalog, resolveBlockData } from '../api/blocks';
 
 import type {
   BlockCatalogResponse,
@@ -41,6 +41,18 @@ describe('getBlockCatalog', () => {
     const result = await getBlockCatalog(client, basePath);
 
     expect(client.get).toHaveBeenCalledWith(`${basePath}/api/cms/blocks`);
+    expect(result).toEqual(catalog);
+  });
+});
+
+describe('getPublicBlockCatalog', () => {
+  it('returns the catalog from the anonymous public route', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(catalog));
+
+    const result = await getPublicBlockCatalog(client, basePath);
+
+    expect(client.get).toHaveBeenCalledWith(`${basePath}/api/cms/blocks/public`);
     expect(result).toEqual(catalog);
   });
 });

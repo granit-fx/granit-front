@@ -4,13 +4,13 @@ import { safeMediaSrc } from '../lib/safe-href';
 
 import type { VideoBlockProps } from './types';
 
-export function VideoBlock({ title, videoUrl, _resolved_thumbnailId }: VideoBlockProps) {
-  const safeSrc = safeMediaSrc(videoUrl);
+export function VideoBlock({ url, caption, autoplay = false, loop = false }: VideoBlockProps) {
+  const safeSrc = safeMediaSrc(url);
   return (
     <section data-block="video">
-      {title && <h2>{title}</h2>}
+      {caption && <h2>{caption}</h2>}
       {safeSrc && (
-        <video src={safeSrc} controls poster={_resolved_thumbnailId?.url ?? undefined}>
+        <video src={safeSrc} controls autoPlay={autoplay} loop={loop} muted={autoplay}>
           <track kind="captions" />
         </video>
       )}

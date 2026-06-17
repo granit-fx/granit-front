@@ -1040,6 +1040,11 @@
           "signature": "async function getBlockCatalog( client: AxiosInstance, basePath: string ): Promise<BlockCatalogResponse>"
         },
         {
+          "name": "getPublicBlockCatalog",
+          "kind": "function",
+          "signature": "async function getPublicBlockCatalog( client: AxiosInstance, basePath: string ): Promise<BlockCatalogResponse>"
+        },
+        {
           "name": "resolveBlockData",
           "kind": "function",
           "signature": "async function resolveBlockData( client: AxiosInstance, basePath: string, request: BlockDataResolveRequest ): Promise<BlockDataResponse>"
@@ -1523,9 +1528,9 @@
           "signature": "async function listDocumentRenditions( client: AxiosInstance, basePath: string, id: string ): Promise<ListRenditionsResponse>"
         },
         {
-          "name": "requestRenditionDownloadUrl",
+          "name": "getRenditionDownloadUrl",
           "kind": "function",
-          "signature": "async function requestRenditionDownloadUrl( client: AxiosInstance, basePath: string, id: string, type: RenditionType ): Promise<RenditionDownloadUrlResponse>"
+          "signature": "async function getRenditionDownloadUrl( client: AxiosInstance, basePath: string, id: string, type: RenditionType ): Promise<RenditionDownloadUrlResponse>"
         },
         {
           "name": "batchResolveDocumentAssets",

@@ -10,6 +10,8 @@ import type {
 } from '@granit/cms-seo';
 
 const CORPORATE_SITE_ID = 'b1f0c3a4-1d2e-4f5a-8b6c-1a2b3c4d5e6f';
+// Showcase seed site id (ShowcaseCmsIds.AcmeSiteId)
+const ACME_SITE_ID = '30000000-0000-0000-0000-000000000001';
 
 const defaultRobots = {
   index: true,
@@ -22,6 +24,25 @@ const defaultRobots = {
 
 /** Default SEO settings keyed by site id, returned by `useSeoDefaults`. */
 export const mockSeoDefaults: Record<string, SiteSeoDefaultsResponse> = {
+  [ACME_SITE_ID]: {
+    id: 'c0ffee00-0000-4000-8000-000000000002',
+    siteId: ACME_SITE_ID,
+    titleTemplate: '{title} | Acme',
+    siteName: 'Acme',
+    defaultDescription: null,
+    defaultRobots,
+    canonicalHost: null,
+    sitemapMaxUrlsPerFile: 45000,
+    inheritFromParentPage: false,
+    defaultOpenGraph: null,
+    defaultTwitterCard: null,
+    defaultOgImage: null,
+    robotsTxtRules: [],
+    robotsTxtExtra: null,
+    manifest: null,
+    enableAutomaticSeoGeneration: false,
+    concurrencyStamp: 'stamp-acme',
+  },
   [CORPORATE_SITE_ID]: {
     id: 'c0ffee00-0000-4000-8000-000000000001',
     siteId: CORPORATE_SITE_ID,

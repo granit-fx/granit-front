@@ -6,6 +6,7 @@
 // `createSitesHandlers(`${apiUrl}/api/cms/sites`)`.
 // ---------------------------------------------------------------------------
 
+import { toISODateString } from '@granit/types';
 import { http, HttpResponse, type RequestHandler } from 'msw';
 
 import { CORPORATE_SITE_ID, mockMenus, mockPageTree, mockReleases, mockSites } from './data';
@@ -78,6 +79,8 @@ export function createSitesHandlers(baseUrl = '/api/cms/sites'): RequestHandler[
         tenantId: null,
         displayNames: { [dto.defaultCulture]: dto.slug },
         homePageId: null,
+        createdAt: toISODateString('2026-01-01T00:00:00Z'),
+        modifiedAt: null,
       };
       sites.push(site);
       return HttpResponse.json(site, { status: 201 });
@@ -126,6 +129,8 @@ export function createPagesHandlers(baseUrl = '/api/cms/pages'): RequestHandler[
     isSiteRoot: node.isSiteRoot,
     layoutKey: null,
     translations: [],
+    createdAt: toISODateString('2026-01-01T00:00:00Z'),
+    modifiedAt: null,
     concurrencyStamp: 'mock-stamp',
   });
 
@@ -222,6 +227,8 @@ export function createMenusHandlers(baseUrl = '/api/cms/menus'): RequestHandler[
         key: dto.key,
         title: dto.title,
         items: toMenuItems(dto.items),
+        createdAt: toISODateString('2026-01-01T00:00:00Z'),
+        modifiedAt: null,
       };
       menus.push(menu);
       return HttpResponse.json(menu, { status: 201 });
@@ -278,6 +285,8 @@ export function createReleasesHandlers(baseUrl = '/api/cms/releases'): RequestHa
         schedule: null,
         tenantId: null,
         actions: [],
+        createdAt: toISODateString('2026-01-01T00:00:00Z'),
+        modifiedAt: null,
         concurrencyStamp: crypto.randomUUID(),
       };
       releases.push(release);
