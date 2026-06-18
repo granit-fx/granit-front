@@ -1,0 +1,273 @@
+import { cn } from '@granit/utils';
+import { ChevronDown, Search } from 'lucide-react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+
+import type { WorkspaceOption } from './composer-types';
+import type { KeyboardEvent, ReactNode } from 'react';
+
+/** Below this option count the search field is hidden — the list is short enough. */
+const SEARCH_THRESHOLD = 5;
+
+export interface WorkspaceSelectorProps {
+  /** Options to choose from (already brand-decorated by the host). */
+  readonly options: readonly WorkspaceOption[];
+  /** Currently selected value; defaults to the first option. */
+  readonly value?: string;
+  readonly onChange: (value: string) => void;
+  /** Accessible name for the trigger and listbox (e.g. "Workspace"). */
+  readonly label: string;
+  /** Placeholder for the search field (shown only for long lists). */
+  readonly searchPlaceholder?: string;
+  /** Shown when a search yields nothing. */
+  readonly emptyLabel: string;
+  /** Leading glyph used when the selected option has no `icon` of its own. */
+  readonly fallbackIcon?: ReactNode;
+  readonly disabled?: boolean;
+  readonly className?: string;
+}
+
+/**
+ * The workspace/model picker: a discreet chip trigger that opens a popover
+ * listbox of options, each with an optional leading mark and trailing
+ * capability glyphs, grouped by provider and optionally searchable. Headless of
+ * any brand — every glyph is supplied by the host via {@link WorkspaceOption}.
+ */
+export function WorkspaceSelector({
+  options,
+  value,
+  onChange,
+  label,
+  searchPlaceholder,
+  emptyLabel,
+  fallbackIcon,
+  disabled = false,
+  className,
+}: Readonly<WorkspaceSelectorProps>) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  const baseId = useId();
+  const listboxId = `${baseId}-ws-listbox`;
+  const getOptionId = useCallback((index: number) => `${baseId}-ws-opt-${index}`, [baseId]);
+
+  const selected = useMemo(
+    () => options.find((o) => o.value === value) ?? options[0],
+    [options, value]
+  );
+
+  const filtered = useMemo<readonly WorkspaceOption[]>(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return options;
+    return options.filter((o) => (o.label ?? o.value).toLowerCase().includes(q));
+  }, [options, query]);
+
+  const showSearch = options.length > SEARCH_THRESHOLD;
+
+  const close = useCallback(() => {
+    setOpen(false);
+    setQuery('');
+  }, []);
+
+  const commit = useCallback(
+    (option: WorkspaceOption | undefined) => {
+      if (!option || option.disabled) return;
+      onChange(option.value);
+      close();
+    },
+    [onChange, close]
+  );
+
+  // Move the active highlight, skipping disabled rows.
+  const moveActive = useCallback(
+    (delta: number) => {
+      if (filtered.length === 0) return;
+      setActiveIndex((current) => {
+        let next = current;
+        for (let step = 0; step < filtered.length; step++) {
+          next = (next + delta + filtered.length) % filtered.length;
+          if (!filtered[next]?.disabled) return next;
+        }
+        return current;
+      });
+    },
+    [filtered]
+  );
+
+  // Reset the highlight to the first selectable row whenever the list changes.
+  useEffect(() => {
+    if (!open) return;
+    const firstEnabled = filtered.findIndex((o) => !o.disabled);
+    setActiveIndex(firstEnabled === -1 ? 0 : firstEnabled);
+  }, [open, filtered]);
+
+  // Focus the search field (or the popover) on open.
+  useEffect(() => {
+    if (!open) return;
+    if (showSearch) searchRef.current?.focus();
+    else popoverRef.current?.focus();
+  }, [open, showSearch]);
+
+  // Close on outside pointer or focus loss.
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (event: PointerEvent) => {
+      if (!containerRef.current?.contains(event.target as Node)) close();
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [open, close]);
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        close();
+        return;
+      }
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        moveActive(1);
+        return;
+      }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        moveActive(-1);
+        return;
+      }
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        commit(filtered[activeIndex]);
+      }
+    },
+    [close, moveActive, commit, filtered, activeIndex]
+  );
+
+  const selectedLabel = selected ? (selected.label ?? selected.value) : label;
+
+  // Render the filtered list with a provider heading inserted whenever the
+  // group changes. Indices stay aligned with `filtered` for keyboard nav.
+  let lastGroup: string | undefined;
+  const rows: ReactNode[] = filtered.map((option, index) => {
+    const heading = option.group && option.group !== lastGroup ? option.group : null;
+    lastGroup = option.group;
+    const isActive = index === activeIndex;
+    return (
+      <li key={option.value} role="presentation">
+        {heading ? (
+          <p
+            data-slot="workspace-group"
+            className="text-muted-foreground px-2 pt-2 pb-1 text-xs font-medium"
+          >
+            {heading}
+          </p>
+        ) : null}
+        <div
+          id={getOptionId(index)}
+          role="option"
+          aria-selected={option.value === selected?.value}
+          aria-disabled={option.disabled}
+          data-slot="workspace-option"
+          data-disabled={option.disabled}
+          onMouseEnter={() => {
+            if (!option.disabled) setActiveIndex(index);
+          }}
+          onMouseDown={(event) => {
+            event.preventDefault();
+            commit(option);
+          }}
+          className={cn(
+            'flex items-center gap-2 rounded-md px-2 py-1.5 text-sm',
+            option.disabled
+              ? 'text-muted-foreground cursor-not-allowed opacity-60'
+              : 'cursor-pointer',
+            isActive && !option.disabled ? 'bg-accent text-accent-foreground' : ''
+          )}
+        >
+          <span className="flex size-4 shrink-0 items-center justify-center">{option.icon}</span>
+          <span className="flex-1 truncate">{option.label ?? option.value}</span>
+          {option.capabilities && option.capabilities.length > 0 ? (
+            <span
+              data-slot="workspace-capabilities"
+              className="text-muted-foreground flex shrink-0 items-center gap-1.5"
+            >
+              {option.capabilities.map((cap, capIndex) => (
+                <span key={capIndex} className="inline-flex">
+                  {cap}
+                </span>
+              ))}
+            </span>
+          ) : null}
+        </div>
+      </li>
+    );
+  });
+
+  return (
+    <div ref={containerRef} className={cn('relative', className)}>
+      <button
+        type="button"
+        data-slot="composer-workspace"
+        aria-label={label}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={open ? listboxId : undefined}
+        disabled={disabled}
+        onClick={() => setOpen((v) => !v)}
+        className="text-muted-foreground hover:bg-accent hover:text-foreground inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs transition-colors disabled:opacity-50"
+      >
+        <span className="flex size-3.5 shrink-0 items-center justify-center">
+          {selected?.icon ?? fallbackIcon}
+        </span>
+        <span className="max-w-40 truncate">{selectedLabel}</span>
+        <ChevronDown className="size-3.5 shrink-0" aria-hidden />
+      </button>
+
+      {open ? (
+        <div
+          ref={popoverRef}
+          data-slot="workspace-popover"
+          tabIndex={-1}
+          onKeyDown={handleKeyDown}
+          className="border-border bg-popover absolute bottom-full z-20 mb-1 min-w-64 overflow-hidden rounded-xl border shadow-md outline-none"
+        >
+          {showSearch ? (
+            <div className="border-border flex items-center gap-2 border-b px-2.5 py-2">
+              <Search className="text-muted-foreground size-4 shrink-0" aria-hidden />
+              <input
+                ref={searchRef}
+                type="text"
+                value={query}
+                aria-label={searchPlaceholder ?? label}
+                placeholder={searchPlaceholder}
+                onChange={(event) => {
+                  setQuery(event.target.value);
+                }}
+                className="placeholder:text-muted-foreground w-full bg-transparent text-sm outline-none"
+              />
+            </div>
+          ) : null}
+
+          {filtered.length === 0 ? (
+            <p data-slot="workspace-empty" className="text-muted-foreground px-2 py-2 text-sm">
+              {emptyLabel}
+            </p>
+          ) : (
+            <ul
+              role="listbox"
+              id={listboxId}
+              aria-label={label}
+              className="max-h-72 overflow-auto p-1"
+            >
+              {rows}
+            </ul>
+          )}
+        </div>
+      ) : null}
+    </div>
+  );
+}

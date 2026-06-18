@@ -12,6 +12,8 @@ export interface ChatTranslations {
     readonly Stop: string;
     readonly Attach: string;
     readonly Workspace: string;
+    /** Placeholder for the workspace picker's search field. */
+    readonly SearchWorkspaces?: string;
     readonly RemoveAttachment: string;
     readonly RemovePrompt: string;
   };
@@ -59,6 +61,7 @@ export const aiChatTranslationsEn: ChatTranslations = {
     Stop: 'Stop',
     Attach: 'Attach a file',
     Workspace: 'Workspace',
+    SearchWorkspaces: 'Search models…',
     RemoveAttachment: 'Remove attachment',
     RemovePrompt: 'Remove prompt',
   },

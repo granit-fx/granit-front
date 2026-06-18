@@ -57,6 +57,8 @@ export type {
 } from './components/attachment-chips';
 export { ChatComposer } from './components/chat-composer';
 export type { ChatComposerProps } from './components/chat-composer';
+export { WorkspaceSelector } from './components/workspace-selector';
+export type { WorkspaceSelectorProps } from './components/workspace-selector';
 export { ComposerSuggestions } from './components/composer-suggestions';
 export type { ComposerSuggestionsProps } from './components/composer-suggestions';
 export { detectTrigger } from './components/detect-trigger';
@@ -67,6 +69,7 @@ export type {
   SearchMentions,
   StagedMention,
   UploadAttachment,
+  WorkspaceOption,
 } from './components/composer-types';
 
 // i18n

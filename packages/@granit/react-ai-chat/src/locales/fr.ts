@@ -13,6 +13,7 @@ export const aiChatTranslationsFr: ChatTranslations = {
     Stop: 'Arrêter',
     Attach: 'Joindre un fichier',
     Workspace: 'Espace de travail',
+    SearchWorkspaces: 'Rechercher un modèle…',
     RemoveAttachment: 'Supprimer la pièce jointe',
     RemovePrompt: 'Supprimer le prompt',
   },

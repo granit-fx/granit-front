@@ -1,4 +1,26 @@
 import type { MentionRequest, PromptId } from '@granit/ai-chat';
+import type { ReactNode } from 'react';
+
+/**
+ * Rich metadata for a workspace/model option, used to render the workspace
+ * selector as a model picker (leading mark, capability glyphs, provider
+ * grouping). Brand-agnostic: the host supplies every glyph ({@link icon},
+ * {@link capabilities}) — the framework never hardcodes a provider mark.
+ */
+export interface WorkspaceOption {
+  /** Value submitted to the backend; matches an entry in `workspaces`. */
+  readonly value: string;
+  /** Display label; defaults to {@link value}. */
+  readonly label?: string;
+  /** Leading glyph identifying the model/provider. */
+  readonly icon?: ReactNode;
+  /** Trailing capability glyphs (e.g. vision, tools, reasoning). */
+  readonly capabilities?: readonly ReactNode[];
+  /** Provider/section heading this option is grouped under. */
+  readonly group?: string;
+  /** Render the option as locked/unavailable — listed but not selectable. */
+  readonly disabled?: boolean;
+}
 
 /** A `/` prompt-badge option shown in the prompt picker. */
 export interface PromptOption {

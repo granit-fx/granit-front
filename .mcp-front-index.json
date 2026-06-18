@@ -2993,6 +2993,17 @@
           "members": []
         },
         {
+          "name": "WorkspaceSelector",
+          "kind": "function",
+          "signature": "function WorkspaceSelector("
+        },
+        {
+          "name": "WorkspaceSelectorProps",
+          "kind": "interface",
+          "signature": "interface WorkspaceSelectorProps",
+          "members": []
+        },
+        {
           "name": "ComposerSuggestions",
           "kind": "function",
           "signature": "function ComposerSuggestions<T>("

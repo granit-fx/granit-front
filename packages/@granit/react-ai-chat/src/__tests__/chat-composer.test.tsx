@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -99,7 +99,7 @@ describe('ChatComposer', () => {
     expect(send.querySelector('svg')).toBeInTheDocument();
   });
 
-  it('renders an optional workspace icon slot ahead of the selector', () => {
+  it('renders the workspace picker as a chip trigger with the fallback icon', () => {
     render(
       <ChatComposer
         onSubmit={vi.fn()}
@@ -107,8 +107,76 @@ describe('ChatComposer', () => {
         workspaceIcon={<span data-testid="ws-icon" />}
       />
     );
+    const trigger = screen.getByRole('button', { name: /workspace/i });
+    expect(trigger).toHaveAttribute('aria-haspopup', 'listbox');
     expect(screen.getByTestId('ws-icon')).toBeInTheDocument();
-    expect(screen.getByRole('combobox', { name: /workspace/i })).toBeInTheDocument();
+  });
+
+  it('opens the model picker, shows capabilities/groups, and selects an option', async () => {
+    const onWorkspaceChange = vi.fn();
+    render(
+      <ChatComposer
+        onSubmit={vi.fn()}
+        workspace="auto"
+        onWorkspaceChange={onWorkspaceChange}
+        workspaceOptions={[
+          {
+            value: 'auto',
+            label: 'DeepSeek V3.2',
+            icon: <span data-testid="opt-icon" />,
+            group: 'Available',
+            capabilities: [<span key="t" data-testid="cap-tools" />],
+          },
+          { value: 'kimi', label: 'Kimi K2.5', group: 'Available' },
+          { value: 'qwen', label: 'Qwen3-14B', group: 'Alibaba', disabled: true },
+        ]}
+      />
+    );
+
+    // Trigger reflects the selected option's own icon + label.
+    const trigger = screen.getByRole('button', { name: /workspace/i });
+    expect(trigger).toHaveTextContent('DeepSeek V3.2');
+
+    await userEvent.click(trigger);
+
+    // Listbox with provider group headings and capability glyphs.
+    expect(screen.getByRole('listbox', { name: /workspace/i })).toBeInTheDocument();
+    expect(screen.getByText('Available')).toBeInTheDocument();
+    expect(screen.getByText('Alibaba')).toBeInTheDocument();
+    expect(screen.getByTestId('cap-tools')).toBeInTheDocument();
+
+    // Disabled option is announced as such and does not select.
+    const locked = screen.getByText('Qwen3-14B').closest('[role="option"]');
+    expect(locked).toHaveAttribute('aria-disabled', 'true');
+    await userEvent.click(locked!);
+    expect(onWorkspaceChange).not.toHaveBeenCalled();
+
+    // A selectable option commits its value.
+    await userEvent.click(screen.getByText('Kimi K2.5'));
+    expect(onWorkspaceChange).toHaveBeenCalledWith('kimi');
+  });
+
+  it('filters the model picker via its search field for long lists', async () => {
+    render(
+      <ChatComposer
+        onSubmit={vi.fn()}
+        workspace="m1"
+        onWorkspaceChange={vi.fn()}
+        workspaceOptions={Array.from({ length: 7 }, (_, i) => ({
+          value: `m${i + 1}`,
+          label: `Model ${i + 1}`,
+        }))}
+      />
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: /workspace/i }));
+    const search = screen.getByRole('textbox', { name: /search models/i });
+    await userEvent.type(search, 'Model 5');
+
+    // Scope to the listbox — the trigger keeps showing the selected label.
+    const listbox = screen.getByRole('listbox', { name: /workspace/i });
+    expect(within(listbox).getByText('Model 5')).toBeInTheDocument();
+    expect(within(listbox).queryByText('Model 1')).not.toBeInTheDocument();
   });
 
   it('uploads attachments via the adapter and includes the reference on submit', async () => {

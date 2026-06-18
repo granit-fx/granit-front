@@ -9,6 +9,7 @@ import { defaultChatLabels } from '../locales/index';
 import { AttachmentChips } from './attachment-chips';
 import { ComposerSuggestions } from './composer-suggestions';
 import { detectTrigger } from './detect-trigger';
+import { WorkspaceSelector } from './workspace-selector';
 
 import type { ComposerAttachment } from './attachment-chips';
 import type {
@@ -17,6 +18,7 @@ import type {
   SearchMentions,
   StagedMention,
   UploadAttachment,
+  WorkspaceOption,
 } from './composer-types';
 import type { ActiveTrigger } from './detect-trigger';
 import type { ChatTranslations } from '../locales/index';
@@ -40,12 +42,18 @@ export interface ChatComposerProps {
   readonly uploadAttachment?: UploadAttachment;
   /** Selectable workspaces (`Auto` first); omit to hide the selector. */
   readonly workspaces?: readonly string[];
+  /**
+   * Rich workspace/model options (leading mark, capability glyphs, provider
+   * grouping). When supplied, drives the picker instead of {@link workspaces};
+   * brand-agnostic — the host owns every glyph.
+   */
+  readonly workspaceOptions?: readonly WorkspaceOption[];
   readonly workspace?: string;
   readonly onWorkspaceChange?: (workspace: string) => void;
   /**
-   * Optional leading glyph for the workspace chip. Defaults to a generic
-   * `Sparkles` icon — the framework stays brand-agnostic; apps may inject their
-   * own model/provider mark here.
+   * Optional leading glyph for the workspace chip when the selected option has
+   * no `icon` of its own. Defaults to a generic `Sparkles` icon — the framework
+   * stays brand-agnostic; apps may inject their own model/provider mark here.
    */
   readonly workspaceIcon?: ReactNode;
   readonly labels?: ChatTranslations['Composer'];
@@ -68,6 +76,7 @@ export function ChatComposer({
   searchMentions,
   uploadAttachment,
   workspaces,
+  workspaceOptions,
   workspace,
   onWorkspaceChange,
   workspaceIcon,
@@ -185,6 +194,12 @@ export function ChatComposer({
 
   const hasUploading = attachments.some((a) => a.status === 'uploading');
   const canSend = text.trim().length > 0 && !hasUploading && !disabled;
+
+  // Rich options win; otherwise derive plain options from the workspace names.
+  const resolvedWorkspaceOptions = useMemo<readonly WorkspaceOption[]>(() => {
+    if (workspaceOptions && workspaceOptions.length > 0) return workspaceOptions;
+    return (workspaces ?? []).map((ws) => ({ value: ws }));
+  }, [workspaceOptions, workspaces]);
 
   const submit = useCallback(() => {
     if (!canSend) return;
@@ -416,26 +431,17 @@ export function ChatComposer({
               </label>
             ) : null}
 
-            {workspaces && workspaces.length > 0 ? (
-              <div className="text-muted-foreground hover:bg-accent hover:text-foreground relative inline-flex items-center rounded-full transition-colors">
-                <span className="pointer-events-none absolute left-2.5 inline-flex">
-                  {workspaceIcon ?? <Sparkles className="size-3.5" aria-hidden />}
-                </span>
-                <select
-                  data-slot="composer-workspace"
-                  aria-label={labels.Workspace}
-                  value={workspace ?? workspaces[0]}
-                  disabled={disabled}
-                  onChange={(event) => onWorkspaceChange?.(event.target.value)}
-                  className="cursor-pointer appearance-none rounded-full bg-transparent py-1 pr-2.5 pl-7 text-xs outline-none"
-                >
-                  {workspaces.map((ws) => (
-                    <option key={ws} value={ws}>
-                      {ws}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            {resolvedWorkspaceOptions.length > 0 ? (
+              <WorkspaceSelector
+                options={resolvedWorkspaceOptions}
+                value={workspace}
+                onChange={(next) => onWorkspaceChange?.(next)}
+                label={labels.Workspace}
+                searchPlaceholder={labels.SearchWorkspaces}
+                emptyLabel={pickerLabels.NoResults}
+                fallbackIcon={workspaceIcon ?? <Sparkles className="size-3.5" aria-hidden />}
+                disabled={disabled}
+              />
             ) : null}
           </div>
 
