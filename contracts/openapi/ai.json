@@ -1293,6 +1293,10 @@
           "duration": {
             "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
             "type": ["null", "string"]
+          },
+          "conversationId": {
+            "type": ["null", "string"],
+            "format": "uuid"
           }
         }
       },
