@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
 import { AttachmentChips } from '../components/attachment-chips';
+import { ChatMessage } from '../components/chat-message';
 import { ClarificationPrompt } from '../components/clarification-prompt';
 import { ConversationThread } from '../components/conversation-thread';
 import { SuggestedActions } from '../components/suggested-actions';
@@ -61,6 +62,49 @@ describe('ConversationThread', () => {
     expect(screen.getByText('Searching data…')).toBeInTheDocument();
     expect(container.querySelector('[data-slot="tool-activity"]')).toBeInTheDocument();
     expect(container.querySelector('[data-slot="thread-typing"]')).not.toBeInTheDocument();
+  });
+
+  it('invokes renderMessageActions once per persisted message with its index', () => {
+    const renderMessageActions = vi.fn((message: MessageResponse) => (
+      <button type="button">act {message.id}</button>
+    ));
+    render(<ConversationThread messages={messages} renderMessageActions={renderMessageActions} />);
+
+    expect(renderMessageActions).toHaveBeenCalledTimes(messages.length);
+    expect(renderMessageActions).toHaveBeenNthCalledWith(1, messages[0], 0);
+    expect(renderMessageActions).toHaveBeenNthCalledWith(2, messages[1], 1);
+    expect(screen.getByRole('button', { name: 'act m1' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'act m2' })).toBeInTheDocument();
+  });
+
+  it('does not invoke renderMessageActions for the streaming bubble', () => {
+    const renderMessageActions = vi.fn(() => <button type="button">act</button>);
+    render(
+      <ConversationThread
+        messages={[]}
+        streamingContent="Streaming…"
+        isStreaming
+        renderMessageActions={renderMessageActions}
+      />
+    );
+
+    expect(screen.getByText('Streaming…')).toBeInTheDocument();
+    expect(renderMessageActions).not.toHaveBeenCalled();
+  });
+});
+
+describe('ChatMessage', () => {
+  it('renders the actions slot when actions are provided', () => {
+    const { container } = render(
+      <ChatMessage role="assistant" content="Hi" actions={<button type="button">Copy</button>} />
+    );
+    expect(container.querySelector('[data-slot="chat-message-actions"]')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Copy' })).toBeInTheDocument();
+  });
+
+  it('renders no actions container when actions are absent', () => {
+    const { container } = render(<ChatMessage role="assistant" content="Hi" />);
+    expect(container.querySelector('[data-slot="chat-message-actions"]')).not.toBeInTheDocument();
   });
 });
 

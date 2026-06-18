@@ -8,6 +8,7 @@ import { ToolActivity } from './tool-activity';
 import type { ToolCallActivity } from '../hooks/use-chat-stream';
 import type { ChatTranslations } from '../locales/index';
 import type { MessageResponse } from '@granit/ai-chat';
+import type { ReactNode } from 'react';
 
 export interface ConversationThreadProps {
   /** Persisted messages, oldest first. */
@@ -25,6 +26,13 @@ export interface ConversationThreadProps {
   readonly isThinking?: boolean;
   /** Map a backend tool name to its display label (passed to {@link ToolActivity}). */
   readonly resolveToolLabel?: (toolName: string) => string;
+  /**
+   * Render a generic action slot for each persisted message (e.g. copy /
+   * regenerate / report). The returned node is passed to {@link ChatMessage}'s
+   * `actions` slot. Not invoked for the in-flight streaming bubble or the typing
+   * indicator, whose content is not yet finalised.
+   */
+  readonly renderMessageActions?: (message: MessageResponse, index: number) => ReactNode;
   readonly labels?: ChatTranslations['Thread'];
   readonly toolLabels?: ChatTranslations['Tools'];
   readonly className?: string;
@@ -44,6 +52,7 @@ export function ConversationThread({
   toolCalls = [],
   isThinking = false,
   resolveToolLabel,
+  renderMessageActions,
   labels = defaultChatLabels.Thread,
   toolLabels = defaultChatLabels.Tools,
   className,
@@ -65,12 +74,13 @@ export function ConversationThread({
         </p>
       ) : null}
 
-      {messages.map((message) => (
+      {messages.map((message, index) => (
         <ChatMessage
           key={message.id}
           role={message.role}
           content={message.content}
           authorLabel={message.role === 'user' ? labels.You : labels.Assistant}
+          actions={renderMessageActions?.(message, index)}
         />
       ))}
 
