@@ -1,5 +1,6 @@
 // Types & Constants
 export type {
+  AIChatCompletionEvent,
   AIChatMessageRequest,
   AIChatMessageRole,
   AIChatRequest,

@@ -8,11 +8,11 @@ import { createLogger } from '@granit/logger';
 import { AI_STREAM_DONE_MARKER } from '../types/index';
 
 import type {
+  AIChatCompletionEvent,
   AIChatRequest,
   AIChatResponse,
   AIChatStreamChunk,
   AIChatStreamUsage,
-  ChatStreamEvent,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
@@ -76,7 +76,7 @@ function parseSseLine(line: string, currentEventType: string | null): ParsedLine
  *
  * Uses `adapter: 'fetch'` with `responseType: 'stream'` so the request goes
  * through the full Axios interceptor pipeline (CSRF, auth, tenant headers).
- * Yields {@link ChatStreamEvent} items as they arrive: content chunks and a
+ * Yields {@link AIChatCompletionEvent} items as they arrive: content chunks and a
  * final usage summary. The stream ends when the server sends `data: [DONE]`
  * or closes the connection.
  *
@@ -98,7 +98,7 @@ export async function* chatStream(
   workspaceName: string,
   request: AIChatRequest,
   signal?: AbortSignal
-): AsyncGenerator<ChatStreamEvent, void, undefined> {
+): AsyncGenerator<AIChatCompletionEvent, void, undefined> {
   const url = `${basePath}/chat/${encodeURIComponent(workspaceName)}/stream`;
 
   const response = await client.post(url, request, {
