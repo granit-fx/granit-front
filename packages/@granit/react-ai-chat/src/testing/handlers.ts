@@ -5,6 +5,7 @@ import { DEFAULT_BASE_PATH } from '../constants';
 import {
   mockChatWorkspaces,
   mockConversation,
+  mockConversationMessages,
   mockConversationSummaries,
   mockLongConversationId,
   mockLongConversationMessages,
@@ -52,7 +53,7 @@ export function createAIChatHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const id = params.id as string;
       // Source fixture is ascending (oldest-first).
       const all: readonly MessageResponse[] =
-        id === mockLongConversationId ? mockLongConversationMessages : mockConversation.messages;
+        id === mockLongConversationId ? mockLongConversationMessages : mockConversationMessages;
 
       const url = new URL(request.url);
       const pageSize = Math.min(Math.max(Number(url.searchParams.get('pageSize')) || 30, 1), 100);
@@ -93,7 +94,6 @@ export function createAIChatHandlers(baseUrl = DEFAULT_BASE_PATH) {
         ...mockConversation,
         id: mockConversation.id,
         title: body.title,
-        messages: [],
       };
       summaries = [
         {

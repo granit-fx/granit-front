@@ -63,9 +63,8 @@ export interface UseConversationMessagesResult {
  * `messages` is reversed to oldest-first for natural top-to-bottom rendering.
  *
  * This is the thread's source of truth — `useConversation` is left for
- * conversation METADATA (title, favorite, dates). `getConversation` still
- * returns its `messages` for backward compatibility, but the thread no longer
- * relies on them.
+ * conversation METADATA (title, favorite, dates); `getConversation` no longer
+ * embeds the message thread.
  *
  * @param id - the conversation id, or `null` to disable the query (e.g. before
  *   the first turn of a brand-new conversation resolves an id).

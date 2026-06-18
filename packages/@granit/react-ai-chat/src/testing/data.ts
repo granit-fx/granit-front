@@ -10,7 +10,7 @@ const OWNER = toEntityId<'User'>('b2222222-2222-2222-2222-222222222222');
 
 const CONVERSATION_ID = toEntityId<'Conversation'>('a1111111-1111-1111-1111-111111111111');
 
-/** A full conversation with two messages, returned by `GET /conversations/{id}`. */
+/** Conversation metadata returned by `GET /conversations/{id}` (no embedded thread). */
 export const mockConversation: ConversationResponse = {
   id: CONVERSATION_ID,
   title: 'Invoice questions',
@@ -18,21 +18,27 @@ export const mockConversation: ConversationResponse = {
   isFavorite: false,
   createdAt: toISODateString('2026-06-15T09:00:00.000Z'),
   modifiedAt: toISODateString('2026-06-15T09:05:00.000Z'),
-  messages: [
-    {
-      id: toEntityId<'Message'>('c3333333-3333-3333-3333-333333333331'),
-      role: 'user',
-      content: 'What changed on invoice 42 last week?',
-      createdAt: toISODateString('2026-06-15T09:00:00.000Z'),
-    },
-    {
-      id: toEntityId<'Message'>('c3333333-3333-3333-3333-333333333332'),
-      role: 'assistant',
-      content: 'The total was revised from €1,200 to €1,350 and the due date moved to June 30.',
-      createdAt: toISODateString('2026-06-15T09:00:08.000Z'),
-    },
-  ] satisfies MessageResponse[],
 };
+
+/**
+ * The {@link mockConversation} thread (oldest-first), served by the paginated
+ * `GET /conversations/{id}/messages` handler — the thread is no longer embedded
+ * in the conversation detail response.
+ */
+export const mockConversationMessages: readonly MessageResponse[] = [
+  {
+    id: toEntityId<'Message'>('c3333333-3333-3333-3333-333333333331'),
+    role: 'user',
+    content: 'What changed on invoice 42 last week?',
+    createdAt: toISODateString('2026-06-15T09:00:00.000Z'),
+  },
+  {
+    id: toEntityId<'Message'>('c3333333-3333-3333-3333-333333333332'),
+    role: 'assistant',
+    content: 'The total was revised from €1,200 to €1,350 and the due date moved to June 30.',
+    createdAt: toISODateString('2026-06-15T09:00:08.000Z'),
+  },
+];
 
 /** A long conversation used to exercise reverse (keyset) message pagination. */
 export const mockLongConversationId = toEntityId<'Conversation'>(

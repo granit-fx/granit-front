@@ -237,7 +237,11 @@ export interface MessageResponse {
   readonly createdAt: ISODateString;
 }
 
-/** A conversation with its messages. */
+/**
+ * A conversation's metadata (title, favorite, timestamps). The message thread is
+ * NOT embedded — page it separately via {@link getConversationMessages}
+ * (`GET /{id}/messages`), so opening a conversation never loads its whole history.
+ */
 export interface ConversationResponse {
   readonly id: ConversationId;
   readonly title: string;
@@ -245,7 +249,6 @@ export interface ConversationResponse {
   readonly isFavorite: boolean;
   readonly createdAt: ISODateString;
   readonly modifiedAt: ISODateString | null;
-  readonly messages: readonly MessageResponse[];
 }
 
 /** A conversation list item, without its messages. */

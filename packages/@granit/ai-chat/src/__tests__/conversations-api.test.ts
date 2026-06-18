@@ -33,7 +33,6 @@ const CONVERSATION: ConversationResponse = {
   isFavorite: false,
   createdAt: '2026-06-15T10:00:00Z' as ConversationResponse['createdAt'],
   modifiedAt: null,
-  messages: [],
 };
 
 describe('conversations-api', () => {
