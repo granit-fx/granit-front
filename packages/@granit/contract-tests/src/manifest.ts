@@ -199,11 +199,6 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'ChatWorkspacesResponse',
     ],
     checkEndpoints: true,
-    // GET /{id}/messages — reverse keyset pagination for the thread. The front
-    // primitive (getConversationMessages / useConversationMessages) ships ahead
-    // of the backend cursor endpoint; remove this ignore once granit-dotnet
-    // exposes it and the spec is re-synced.
-    endpointIgnore: ['/{}/messages'],
   },
   {
     slug: 'ai-prompts',

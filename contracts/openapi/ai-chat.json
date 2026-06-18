@@ -271,6 +271,115 @@
         }
       }
     },
+    "/conversations/{id}/messages": {
+      "get": {
+        "tags": ["AI - Conversations"],
+        "summary": "Returns a page of a conversation's messages, newest first (keyset pagination).",
+        "description": "Returns the newest page when no cursor is given, then older pages via the returned nextCursor (an opaque keyset over createdAt+id; null at the start of history). Scoped to the caller: another user's conversation is reported as not found.",
+        "operationId": "GetConversationMessages",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque keyset cursor for the next older page; omit for the newest page.",
+            "required": false,
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Messages per page (default 30, max 100).",
+            "required": false,
+            "schema": {
+              "type": ["null", "integer"],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/MessageResponse"
+                      }
+                    },
+                    "totalCount": {
+                      "type": ["null", "integer"],
+                      "format": "int32"
+                    },
+                    "hasMore": {
+                      "type": "boolean"
+                    },
+                    "nextCursor": {
+                      "type": ["null", "string"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/conversations/{id}/title": {
       "put": {
         "tags": ["AI - Conversations"],
