@@ -205,4 +205,65 @@ describe('useChatStream', () => {
     expect(result.current.error?.message).toContain('403');
     expect(result.current.isStreaming).toBe(false);
   });
+
+  it('classifies a 429 pre-stream failure as rate-limit', async () => {
+    const client = createMockClient();
+    vi.spyOn(client, 'post').mockRejectedValue(
+      Object.assign(new Error('Too Many Requests'), { response: { status: 429 } })
+    );
+
+    const { result } = renderHook(() => useChatStream(), { wrapper: createWrapper(client) });
+    act(() => {
+      result.current.send({ message: 'Hi' });
+    });
+
+    await waitFor(() => expect(result.current.errorKind).toBe('rate-limit'));
+  });
+
+  it('classifies a response-less failure as a network error', async () => {
+    const client = createMockClient();
+    vi.spyOn(client, 'post').mockRejectedValue(new Error('Network Error'));
+
+    const { result } = renderHook(() => useChatStream(), { wrapper: createWrapper(client) });
+    act(() => {
+      result.current.send({ message: 'Hi' });
+    });
+
+    await waitFor(() => expect(result.current.errorKind).toBe('network'));
+  });
+
+  it('surfaces a terminal mid-stream error frame and keeps the partial answer', async () => {
+    const client = createMockClient();
+    const stream = createSSEStream([
+      `data: {"type":"conversation","conversationId":"${CONV_ID}"}\n\n`,
+      'data: {"type":"delta","content":"Partial"}\n\n',
+      'data: {"type":"error","code":"rate_limit"}\n\n',
+    ]);
+    vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
+
+    const { result } = renderHook(() => useChatStream(), { wrapper: createWrapper(client) });
+    act(() => {
+      result.current.send({ message: 'Hi' });
+    });
+
+    await waitFor(() => expect(result.current.isStreaming).toBe(false));
+    expect(result.current.errorKind).toBe('rate-limit');
+    expect(result.current.error).not.toBeNull();
+    // The answer streamed before the failure stays rendered.
+    expect(result.current.content).toBe('Partial');
+    expect(result.current.isThinking).toBe(false);
+  });
+
+  it('maps a provider_unavailable error frame to the server kind', async () => {
+    const client = createMockClient();
+    const stream = createSSEStream(['data: {"type":"error","code":"provider_unavailable"}\n\n']);
+    vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
+
+    const { result } = renderHook(() => useChatStream(), { wrapper: createWrapper(client) });
+    act(() => {
+      result.current.send({ message: 'Hi' });
+    });
+
+    await waitFor(() => expect(result.current.errorKind).toBe('server'));
+  });
 });

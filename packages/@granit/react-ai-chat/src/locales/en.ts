@@ -46,7 +46,29 @@ export interface ChatTranslations {
     readonly NoResults: string;
     readonly Loading: string;
   };
+  /** User-facing messages for a failed turn, keyed by {@link ChatErrorKind}. */
+  readonly Errors?: {
+    readonly RateLimit: string;
+    readonly Server: string;
+    readonly Network: string;
+    readonly Unknown: string;
+    /** Label for the retry affordance. */
+    readonly Retry: string;
+  };
 }
+
+/**
+ * English error copy, also the guaranteed fallback when an app supplies its own
+ * (optional) `Errors` translations but omits a key — `SystemMessage` rendering
+ * always has a message to show.
+ */
+export const defaultErrorLabels = {
+  RateLimit: 'You’ve reached the rate limit. Please wait a moment and try again.',
+  Server: 'The assistant ran into a problem. Please try again.',
+  Network: 'Connection lost. Check your network and try again.',
+  Unknown: 'Something went wrong. Please try again.',
+  Retry: 'Retry',
+} as const;
 
 export const aiChatTranslationsEn: ChatTranslations = {
   Thread: {
@@ -89,4 +111,5 @@ export const aiChatTranslationsEn: ChatTranslations = {
     NoResults: 'No results',
     Loading: 'Searching…',
   },
+  Errors: defaultErrorLabels,
 };

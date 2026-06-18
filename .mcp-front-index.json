@@ -2944,6 +2944,22 @@
           "members": []
         },
         {
+          "name": "SystemMessage",
+          "kind": "function",
+          "signature": "function SystemMessage("
+        },
+        {
+          "name": "SystemMessageProps",
+          "kind": "interface",
+          "signature": "interface SystemMessageProps",
+          "members": []
+        },
+        {
+          "name": "SystemMessageVariant",
+          "kind": "type",
+          "signature": "type SystemMessageVariant = 'error' | 'info'"
+        },
+        {
           "name": "SuggestedActions",
           "kind": "function",
           "signature": "function SuggestedActions("

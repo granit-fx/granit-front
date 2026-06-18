@@ -1,4 +1,8 @@
-import { CHAT_STREAM_EVENT_TYPES, streamConversationMessage } from '@granit/ai-chat';
+import {
+  CHAT_STREAM_ERROR_CODES,
+  CHAT_STREAM_EVENT_TYPES,
+  streamConversationMessage,
+} from '@granit/ai-chat';
 import { createLogger } from '@granit/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -21,6 +25,45 @@ import type {
 export interface ChatStreamUsage {
   readonly inputTokens: number;
   readonly outputTokens: number;
+}
+
+/**
+ * The kind of a failed turn, for picking a user-facing message:
+ * - `rate-limit` — quota / rate limit hit (HTTP 429 or an `error` frame with
+ *   `rate_limit`); typically "try again shortly".
+ * - `server` — a server/provider failure (HTTP 5xx, or an `error` frame with
+ *   `provider_unavailable` / `server_error`).
+ * - `network` — the request never reached the server (offline, transport fault).
+ * - `unknown` — anything else.
+ */
+export type ChatErrorKind = 'rate-limit' | 'server' | 'network' | 'unknown';
+
+/** Map an `error`-frame {@link CHAT_STREAM_ERROR_CODES} code to a {@link ChatErrorKind}. */
+function codeToErrorKind(code: string | null | undefined): ChatErrorKind {
+  switch (code) {
+    case CHAT_STREAM_ERROR_CODES.RATE_LIMIT:
+      return 'rate-limit';
+    case CHAT_STREAM_ERROR_CODES.PROVIDER_UNAVAILABLE:
+    case CHAT_STREAM_ERROR_CODES.SERVER_ERROR:
+      return 'server';
+    default:
+      return 'unknown';
+  }
+}
+
+/**
+ * Classify a thrown stream error (pre-stream HTTP problem or transport fault)
+ * without an Axios import: read the HTTP status when present, else treat the
+ * absence of a response as a network failure.
+ */
+function classifyThrownError(err: unknown): ChatErrorKind {
+  const status = (err as { response?: { status?: number } })?.response?.status;
+  if (typeof status === 'number') {
+    if (status === 429) return 'rate-limit';
+    if (status >= 500) return 'server';
+    return 'unknown';
+  }
+  return 'network';
 }
 
 /** Lifecycle of a single tool invocation within a turn. */
@@ -76,6 +119,12 @@ export interface UseChatStreamReturn {
   readonly isStreaming: boolean;
   /** Error from the last stream attempt, or `null`. */
   readonly error: Error | null;
+  /**
+   * Classified kind of the last error, or `null`. Covers both a pre-stream HTTP
+   * problem / transport fault and a terminal mid-stream `error` frame. Use it to
+   * pick a user-facing message (e.g. via `ConversationThread`'s `errorKind`).
+   */
+  readonly errorKind: ChatErrorKind | null;
   /** Start a new turn. Aborts any in-progress stream first. */
   readonly send: (request: SendMessageRequest) => void;
   /** Abort the current stream (stop button / unmount). */
@@ -112,6 +161,7 @@ export function useChatStream(): UseChatStreamReturn {
   const [usage, setUsage] = useState<ChatStreamUsage | null>(null);
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const [errorKind, setErrorKind] = useState<ChatErrorKind | null>(null);
 
   const abortRef = useRef<AbortController | null>(null);
 
@@ -137,12 +187,19 @@ export function useChatStream(): UseChatStreamReturn {
       setIsThinking(false);
       setUsage(null);
       setError(null);
+      setErrorKind(null);
       setIsStreaming(true);
 
       const controller = new AbortController();
       abortRef.current = controller;
 
-      const turn: TurnState = { accumulated: '', tools: [], thinking: false, resolvedId: null };
+      const turn: TurnState = {
+        accumulated: '',
+        tools: [],
+        thinking: false,
+        resolvedId: null,
+        errorCode: null,
+      };
       const sinks = createEventSinks(turn, {
         setContent,
         setConversationId,
@@ -151,6 +208,8 @@ export function useChatStream(): UseChatStreamReturn {
         setUsage,
         setToolCalls,
         setIsThinking,
+        setError,
+        setErrorKind,
       });
 
       void (async () => {
@@ -178,6 +237,7 @@ export function useChatStream(): UseChatStreamReturn {
           if (err instanceof DOMException && err.name === 'AbortError') return;
           logger.error('Chat stream turn failed', err, { conversationId: turn.resolvedId });
           setError(err instanceof Error ? err : new Error(String(err)));
+          setErrorKind(classifyThrownError(err));
         } finally {
           setIsStreaming(false);
           abortRef.current = null;
@@ -197,6 +257,7 @@ export function useChatStream(): UseChatStreamReturn {
     usage,
     isStreaming,
     error,
+    errorKind,
     send,
     abort,
   };
@@ -212,6 +273,7 @@ interface EventSinks {
   readonly startToolCall: (toolCallId: string, toolName: string) => void;
   readonly resolveToolCall: (toolCallId: string, succeeded: boolean) => void;
   readonly setThinking: (thinking: boolean) => void;
+  readonly fail: (code: string | null | undefined) => void;
 }
 
 /** Mutable accumulators for a single streaming turn, threaded through {@link createEventSinks}. */
@@ -220,6 +282,7 @@ interface TurnState {
   tools: readonly ToolCallActivity[];
   thinking: boolean;
   resolvedId: ConversationId | null;
+  errorCode: string | null;
 }
 
 /** React state setters the sinks dispatch to. */
@@ -231,6 +294,8 @@ interface EventSinkSetters {
   readonly setUsage: (usage: ChatStreamUsage) => void;
   readonly setToolCalls: (tools: readonly ToolCallActivity[]) => void;
   readonly setIsThinking: (thinking: boolean) => void;
+  readonly setError: (error: Error | null) => void;
+  readonly setErrorKind: (kind: ChatErrorKind | null) => void;
 }
 
 /**
@@ -267,6 +332,11 @@ function createEventSinks(turn: TurnState, setters: EventSinkSetters): EventSink
         turn.thinking = next;
         setters.setIsThinking(next);
       }
+    },
+    fail: (code) => {
+      turn.errorCode = code ?? CHAT_STREAM_ERROR_CODES.SERVER_ERROR;
+      setters.setError(new Error(`Chat stream failed: ${turn.errorCode}`));
+      setters.setErrorKind(codeToErrorKind(turn.errorCode));
     },
   };
 }
@@ -305,6 +375,13 @@ function applyEvent(event: ChatStreamEvent, sinks: EventSinks): void {
         inputTokens: event.inputTokens ?? 0,
         outputTokens: event.outputTokens ?? 0,
       });
+      break;
+    case CHAT_STREAM_EVENT_TYPES.ERROR:
+      // Terminal failure after the stream committed — record it; the answer so
+      // far stays rendered as a partial bubble. Resolving "thinking" avoids a
+      // dangling indicator if the agent failed between steps.
+      sinks.setThinking(false);
+      sinks.fail(event.code);
       break;
   }
 }

@@ -2,6 +2,7 @@
 export type {
   AttachmentRequest,
   ChatMessageRole,
+  ChatStreamErrorCode,
   ChatStreamEvent,
   ChatStreamEventType,
   ChatWorkspacesResponse,
@@ -25,6 +26,7 @@ export type {
 // Constants
 export {
   AUTO_WORKSPACE,
+  CHAT_STREAM_ERROR_CODES,
   CHAT_STREAM_EVENT_TYPES,
   CONVERSATION_TITLE_MAX_LENGTH,
   MESSAGE_REPORT_CATEGORIES,

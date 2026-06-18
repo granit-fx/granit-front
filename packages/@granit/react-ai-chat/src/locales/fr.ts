@@ -41,4 +41,11 @@ export const aiChatTranslationsFr: ChatTranslations = {
     NoResults: 'Aucun résultat',
     Loading: 'Recherche…',
   },
+  Errors: {
+    RateLimit: 'Vous avez atteint la limite de requêtes. Patientez un instant puis réessayez.',
+    Server: 'L’assistant a rencontré un problème. Veuillez réessayer.',
+    Network: 'Connexion perdue. Vérifiez votre réseau puis réessayez.',
+    Unknown: 'Une erreur est survenue. Veuillez réessayer.',
+    Retry: 'Réessayer',
+  },
 };

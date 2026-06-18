@@ -50,11 +50,36 @@ export const CHAT_STREAM_EVENT_TYPES = {
   SUGGESTIONS: 'suggestions',
   /** The turn is blocked on a clarifying question. */
   CLARIFICATION: 'clarification',
+  /**
+   * Terminal failure frame — the agent failed *after* the stream was committed
+   * (pre-stream failures still come back as an HTTP problem, never this frame).
+   * Carries a machine `code` (see {@link CHAT_STREAM_ERROR_CODES}); the answer so
+   * far may be partial. A client-cancelled turn emits no error frame.
+   */
+  ERROR: 'error',
 } as const;
 
 /** Discriminator union for {@link ChatStreamEvent.type}. */
 export type ChatStreamEventType =
   (typeof CHAT_STREAM_EVENT_TYPES)[keyof typeof CHAT_STREAM_EVENT_TYPES];
+
+/**
+ * Stable machine codes carried by an `error` {@link ChatStreamEvent}. Map these
+ * to a localized message front-side — never display the backend text (none is
+ * sent). The set is closed and mirrors `ChatSendEndpoints` on the backend.
+ */
+export const CHAT_STREAM_ERROR_CODES = {
+  /** Quota / rate limit exhausted (provider or denial-of-wallet guard). */
+  RATE_LIMIT: 'rate_limit',
+  /** Provider unreachable — a 5xx, a timeout, or a transport fault. */
+  PROVIDER_UNAVAILABLE: 'provider_unavailable',
+  /** Any other unclassified server-side failure. */
+  SERVER_ERROR: 'server_error',
+} as const;
+
+/** A code value carried by an `error` frame. @see CHAT_STREAM_ERROR_CODES */
+export type ChatStreamErrorCode =
+  (typeof CHAT_STREAM_ERROR_CODES)[keyof typeof CHAT_STREAM_ERROR_CODES];
 
 /** Role of a persisted chat message. */
 export type ChatMessageRole = 'user' | 'assistant' | 'system';
@@ -181,6 +206,11 @@ export interface ChatStreamEvent {
   readonly toolCallId?: string | null;
   /** Whether the tool succeeded. Present only on `tool_result` frames. */
   readonly succeeded?: boolean | null;
+  /**
+   * Machine error code. Present only on the terminal `error` frame; one of
+   * {@link CHAT_STREAM_ERROR_CODES}. Carries no human text — localize from it.
+   */
+  readonly code?: string | null;
 }
 
 // -- Conversation CRUD -------------------------------------------------------

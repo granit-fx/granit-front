@@ -1,4 +1,4 @@
-export { aiChatTranslationsEn } from './en';
+export { aiChatTranslationsEn, defaultErrorLabels } from './en';
 export { aiChatTranslationsFr } from './fr';
 export type { ChatTranslations } from './en';
 

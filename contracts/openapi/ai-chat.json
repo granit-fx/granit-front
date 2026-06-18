@@ -670,6 +670,9 @@
           },
           "succeeded": {
             "type": ["null", "boolean"]
+          },
+          "code": {
+            "type": ["null", "string"]
           }
         }
       },

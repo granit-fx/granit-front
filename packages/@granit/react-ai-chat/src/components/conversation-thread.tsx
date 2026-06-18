@@ -1,14 +1,30 @@
 import { cn } from '@granit/utils';
 
-import { defaultChatLabels } from '../locales/index';
+import { defaultChatLabels, defaultErrorLabels } from '../locales/index';
 
 import { ChatMessage } from './chat-message';
+import { SystemMessage } from './system-message';
 import { ToolActivity } from './tool-activity';
 
-import type { ToolCallActivity } from '../hooks/use-chat-stream';
+import type { ChatErrorKind, ToolCallActivity } from '../hooks/use-chat-stream';
 import type { ChatTranslations } from '../locales/index';
 import type { MessageResponse } from '@granit/ai-chat';
 import type { ReactNode } from 'react';
+
+/** Resolve the user-facing message for an error kind, falling back to English. */
+function errorMessage(kind: ChatErrorKind, labels: ChatTranslations['Errors']): string {
+  const e = labels ?? defaultErrorLabels;
+  switch (kind) {
+    case 'rate-limit':
+      return e.RateLimit;
+    case 'server':
+      return e.Server;
+    case 'network':
+      return e.Network;
+    default:
+      return e.Unknown;
+  }
+}
 
 export interface ConversationThreadProps {
   /** Persisted messages, oldest first. */
@@ -33,8 +49,18 @@ export interface ConversationThreadProps {
    * indicator, whose content is not yet finalised.
    */
   readonly renderMessageActions?: (message: MessageResponse, index: number) => ReactNode;
+  /**
+   * The classified failure of the current turn (`useChatStream().errorKind`).
+   * When set, a {@link SystemMessage} is rendered after the messages with a
+   * localized message and, if {@link onRetry} is given, a retry button.
+   */
+  readonly errorKind?: ChatErrorKind | null;
+  /** Invoked by the error notice's retry button; omit to hide it. */
+  readonly onRetry?: () => void;
   readonly labels?: ChatTranslations['Thread'];
   readonly toolLabels?: ChatTranslations['Tools'];
+  /** Localized error copy; defaults to the bundled English strings. */
+  readonly errorLabels?: ChatTranslations['Errors'];
   readonly className?: string;
 }
 
@@ -53,11 +79,14 @@ export function ConversationThread({
   isThinking = false,
   resolveToolLabel,
   renderMessageActions,
+  errorKind,
+  onRetry,
   labels = defaultChatLabels.Thread,
   toolLabels = defaultChatLabels.Tools,
+  errorLabels = defaultChatLabels.Errors,
   className,
 }: Readonly<ConversationThreadProps>) {
-  const isEmpty = messages.length === 0 && !streamingContent && !isStreaming;
+  const isEmpty = messages.length === 0 && !streamingContent && !isStreaming && !errorKind;
   const hasToolActivity = toolCalls.length > 0 || isThinking;
 
   return (
@@ -113,6 +142,26 @@ export function ConversationThread({
             aria-hidden
           />
         </div>
+      ) : null}
+
+      {errorKind ? (
+        <SystemMessage
+          variant="error"
+          action={
+            onRetry ? (
+              <button
+                type="button"
+                data-slot="thread-retry"
+                onClick={onRetry}
+                className="hover:bg-destructive/10 rounded-md px-2 py-1 text-xs font-medium underline-offset-2 hover:underline"
+              >
+                {errorLabels?.Retry ?? defaultErrorLabels.Retry}
+              </button>
+            ) : null
+          }
+        >
+          {errorMessage(errorKind, errorLabels)}
+        </SystemMessage>
       ) : null}
     </div>
   );
