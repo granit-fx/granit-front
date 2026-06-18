@@ -42,10 +42,10 @@ export function ChatMessage({
       <div
         data-slot="chat-bubble"
         className={cn(
-          'max-w-[80%] rounded-lg px-3 py-2 text-sm whitespace-pre-wrap',
+          'max-w-[80%] rounded-2xl px-3 py-2 text-sm whitespace-pre-wrap',
           isUser
-            ? 'bg-primary text-primary-foreground rounded-br-sm'
-            : 'bg-muted/50 text-foreground rounded-bl-sm'
+            ? 'bg-primary text-primary-foreground rounded-br-none'
+            : 'bg-muted/50 text-foreground rounded-bl-none'
         )}
       >
         {content}

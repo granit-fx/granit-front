@@ -113,12 +113,12 @@ describe('ChatMessage', () => {
     expect(assistantBubble).toBeInTheDocument();
     // Assistant bubble uses the lightened neutral surface and the left tail.
     expect(assistantBubble?.className).toContain('bg-muted/50');
-    expect(assistantBubble?.className).toContain('rounded-bl-sm');
+    expect(assistantBubble?.className).toContain('rounded-bl-none');
 
     const user = render(<ChatMessage role="user" content="Hi" />);
     const userBubble = user.container.querySelector('[data-slot="chat-bubble"]');
     expect(userBubble?.className).toContain('bg-primary');
-    expect(userBubble?.className).toContain('rounded-br-sm');
+    expect(userBubble?.className).toContain('rounded-br-none');
   });
 });
 
