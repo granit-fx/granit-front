@@ -104,7 +104,9 @@ export function BffProvider({ config, children }: BffProviderProps) {
     // authenticated user back into a login loop. The CsrfManager / api-client
     // interceptor refreshes on demand later.
     const prefetchCsrf = () => {
-      void csrfManager.fetchToken().catch((error: unknown) => {
+      // Fire-and-forget: the `.catch` below fully settles the promise, so it is
+      // never floating — no `void` operator needed.
+      csrfManager.fetchToken().catch((error: unknown) => {
         (configRef.current.logger ?? fallbackLogger).warn(
           '[@granit/react-bff] CSRF token prefetch failed; will refresh on demand',
           { error: String(error) }
