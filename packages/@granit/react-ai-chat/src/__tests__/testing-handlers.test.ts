@@ -58,6 +58,16 @@ describe('createAIChatHandlers', () => {
     expect(list[0]?.title).toBe('Fresh');
   });
 
+  it('accepts a message report with 202', async () => {
+    server.use(...createAIChatHandlers(BASE));
+    const response = await fetch(`${BASE}/messages/c3333333-3333-3333-3333-333333333333/report`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reason: 'Inaccurate answer', category: 'Inaccurate' }),
+    });
+    expect(response.status).toBe(202);
+  });
+
   it('streams flat ChatStreamEvent frames ending without a [DONE] sentinel', async () => {
     server.use(...createAIChatHandlers(BASE));
     const response = await fetch(`${BASE}/messages`, {

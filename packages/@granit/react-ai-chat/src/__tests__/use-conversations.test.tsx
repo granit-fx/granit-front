@@ -6,11 +6,12 @@ import { useChatWorkspaces } from '../hooks/use-chat-workspaces';
 import { useConversations } from '../hooks/use-conversations';
 import { useCreateConversation } from '../hooks/use-create-conversation';
 import { useDeleteConversation } from '../hooks/use-delete-conversation';
+import { useReportMessage } from '../hooks/use-report-message';
 import { mockConversation, mockConversationSummaries } from '../testing/data';
 
 import { createWrapper, TEST_BASE_PATH } from './test-utils';
 
-import type { ConversationId } from '@granit/ai-chat';
+import type { ConversationId, MessageId } from '@granit/ai-chat';
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -72,5 +73,28 @@ describe('conversation hooks', () => {
     });
 
     expect(client.delete).toHaveBeenCalledWith(`${TEST_BASE_PATH}/${id}`);
+  });
+
+  it('useReportMessage POSTs the reason and category to the message report endpoint', async () => {
+    const client = createMockClient();
+    vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
+
+    const { result } = renderHook(() => useReportMessage(), {
+      wrapper: createWrapper(client),
+    });
+
+    const messageId = 'c3333333-3333-3333-3333-333333333333' as MessageId;
+    await act(async () => {
+      await result.current.reportAsync({
+        messageId,
+        reason: 'Inaccurate answer',
+        category: 'Inaccurate',
+      });
+    });
+
+    expect(client.post).toHaveBeenCalledWith(`${TEST_BASE_PATH}/messages/${messageId}/report`, {
+      reason: 'Inaccurate answer',
+      category: 'Inaccurate',
+    });
   });
 });

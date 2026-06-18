@@ -13,9 +13,11 @@ export type {
   CreateConversationRequest,
   MentionRequest,
   MessageId,
+  MessageReportCategory,
   MessageResponse,
   PromptId,
   RenameConversationRequest,
+  ReportMessageRequest,
   SendMessageRequest,
   SuggestedActionResponse,
 } from './types/index';
@@ -25,6 +27,8 @@ export {
   AUTO_WORKSPACE,
   CHAT_STREAM_EVENT_TYPES,
   CONVERSATION_TITLE_MAX_LENGTH,
+  MESSAGE_REPORT_CATEGORIES,
+  REPORT_REASON_MAX_LENGTH,
   SEND_MESSAGE_LIMITS,
 } from './types/index';
 
@@ -36,6 +40,7 @@ export {
   listChatWorkspaces,
   listConversations,
   renameConversation,
+  reportConversationMessage,
   streamConversationMessage,
 } from './api/conversations-api';
 

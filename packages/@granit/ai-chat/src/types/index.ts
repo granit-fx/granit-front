@@ -74,6 +74,27 @@ export const SEND_MESSAGE_LIMITS = {
 /** `title` maximum length for create/rename conversation requests. */
 export const CONVERSATION_TITLE_MAX_LENGTH = 500;
 
+/** `reason` maximum length for a {@link ReportMessageRequest}. */
+export const REPORT_REASON_MAX_LENGTH = 2000;
+
+/**
+ * The closed set of categories a user may attach to a message report. Mirrors
+ * `Granit.AI.Chat.Domain.MessageReportCategory`; the values are the PascalCase
+ * enum names the backend's default `JsonStringEnumConverter` accepts.
+ */
+export const MESSAGE_REPORT_CATEGORIES = {
+  /** The answer is factually wrong or misleading. */
+  INACCURATE: 'Inaccurate',
+  /** The content is harmful, unsafe, or offensive. */
+  HARMFUL: 'Harmful',
+  /** Any other reason; the free-text reason carries the detail. */
+  OTHER: 'Other',
+} as const;
+
+/** A report category value. @see MESSAGE_REPORT_CATEGORIES */
+export type MessageReportCategory =
+  (typeof MESSAGE_REPORT_CATEGORIES)[keyof typeof MESSAGE_REPORT_CATEGORIES];
+
 // -- Composer inputs ---------------------------------------------------------
 
 /** An `@` mention the server resolves to grounded, untrusted context. */
@@ -198,6 +219,17 @@ export interface CreateConversationRequest {
 /** Body of `PUT /conversations/{id}/title`. */
 export interface RenameConversationRequest {
   readonly title: string;
+}
+
+/**
+ * Body of `POST /conversations/messages/{messageId}/report`.
+ *
+ * Per ADR-071 a report carries only the user-entered reason and an optional
+ * category — never the message content or its tool activity.
+ */
+export interface ReportMessageRequest {
+  readonly reason: string;
+  readonly category?: MessageReportCategory | null;
 }
 
 /** The workspaces a user may set as their default chat workspace. */

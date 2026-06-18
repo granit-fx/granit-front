@@ -87,6 +87,12 @@ export function createAIChatHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return new HttpResponse(null, { status: 204 });
     }),
 
+    // POST /conversations/messages/:messageId/report — flag a message (ADR-071), 202.
+    http.post(
+      `${baseUrl}/messages/:messageId/report`,
+      () => new HttpResponse(null, { status: 202 })
+    ),
+
     // POST /conversations/messages — SSE stream (no [DONE] sentinel).
     http.post(`${baseUrl}/messages`, async ({ request }) => {
       const body = (await request.json()) as { message: string; conversationId?: string | null };

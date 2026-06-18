@@ -13,7 +13,9 @@ import type {
   ConversationResponse,
   ConversationSummaryResponse,
   CreateConversationRequest,
+  MessageId,
   RenameConversationRequest,
+  ReportMessageRequest,
   SendMessageRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
@@ -86,6 +88,25 @@ export async function deleteConversation(
   id: ConversationId
 ): Promise<void> {
   await client.delete(`${basePath}/${encodeURIComponent(id)}`);
+}
+
+/**
+ * Report (flag) a message in one of the current user's conversations for review.
+ *
+ * Per ADR-071 only the `messageId` and the user-entered reason/category travel
+ * over the wire — never the message content or its tool activity. The server
+ * responds `202 Accepted` with no body; a message outside the caller's own
+ * conversations is reported as `404`.
+ *
+ * `POST {basePath}/messages/{messageId}/report`
+ */
+export async function reportConversationMessage(
+  client: AxiosInstance,
+  basePath: string,
+  messageId: MessageId,
+  request: ReportMessageRequest
+): Promise<void> {
+  await client.post(`${basePath}/messages/${encodeURIComponent(messageId)}/report`, request);
 }
 
 /**

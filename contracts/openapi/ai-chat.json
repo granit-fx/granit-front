@@ -165,8 +165,8 @@
               }
             }
           },
-          "404": {
-            "description": "Not Found",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -175,8 +175,8 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -228,8 +228,8 @@
           "204": {
             "description": "No Content"
           },
-          "404": {
-            "description": "Not Found",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -238,8 +238,8 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -313,8 +313,8 @@
               }
             }
           },
-          "404": {
-            "description": "Not Found",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -323,8 +323,8 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -370,7 +370,7 @@
       "post": {
         "tags": ["AI - Conversations"],
         "summary": "Sends a message and streams a tool-grounded answer over SSE.",
-        "description": "Runs the agentic loop within the caller's permissions, persists the user and assistant messages, and streams the answer as Server-Sent Events: a 'conversation' frame with the (possibly new) conversation id, incremental 'delta' content frames, then a 'usage' frame. Rejects a non-chat-capable workspace before streaming.",
+        "description": "Runs the agentic loop within the caller's permissions, persists the user and assistant messages, and streams the answer as Server-Sent Events: a 'conversation' frame with the (possibly new) conversation id (flushed immediately), then live 'tool_call'/'tool_result' frames as the agent uses tools and incremental 'delta' content frames as the model writes, then a 'usage' frame (and 'suggestions' / 'clarification' when applicable). Rejects a non-chat-capable workspace before streaming.",
         "operationId": "SendChatMessage",
         "requestBody": {
           "content": {
@@ -405,6 +405,111 @@
           },
           "401": {
             "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/conversations/messages/{messageId}/report": {
+      "post": {
+        "tags": ["AI - Conversations"],
+        "summary": "Reports a message in one of the current user's conversations.",
+        "description": "Records a user report flagging the message for review and raises a domain event the application can route. Scoped to the caller: a message outside the caller's own conversations is reported as not found. The report stores identifiers plus the user-entered reason — never the message content (ADR-071).",
+        "operationId": "ReportChatMessage",
+        "parameters": [
+          {
+            "name": "messageId",
+            "in": "path",
+            "description": "Unique identifier of the message.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportMessageRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -714,6 +819,9 @@
           }
         }
       },
+      "MessageReportCategory": {
+        "enum": ["Inaccurate", "Harmful", "Other", null]
+      },
       "MessageResponse": {
         "required": ["id", "role", "content", "createdAt"],
         "type": "object",
@@ -766,6 +874,26 @@
           "title": {
             "maxLength": 500,
             "type": "string"
+          }
+        }
+      },
+      "ReportMessageRequest": {
+        "required": ["reason"],
+        "type": "object",
+        "properties": {
+          "reason": {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "category": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MessageReportCategory"
+              }
+            ]
           }
         }
       },

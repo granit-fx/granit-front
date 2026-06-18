@@ -22,6 +22,12 @@ export type {
 } from './hooks/use-rename-conversation';
 export { useDeleteConversation } from './hooks/use-delete-conversation';
 export type { UseDeleteConversationReturn } from './hooks/use-delete-conversation';
+export { useReportMessage } from './hooks/use-report-message';
+export type { ReportMessageVariables, UseReportMessageReturn } from './hooks/use-report-message';
+
+// Re-exports from @granit/ai-chat — the report contract the showcase dialog needs.
+export { MESSAGE_REPORT_CATEGORIES } from '@granit/ai-chat';
+export type { MessageReportCategory, ReportMessageRequest } from '@granit/ai-chat';
 
 // Hooks — streaming
 export { useChatStream } from './hooks/use-chat-stream';

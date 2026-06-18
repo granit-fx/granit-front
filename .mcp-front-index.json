@@ -2900,6 +2900,23 @@
           "members": []
         },
         {
+          "name": "useReportMessage",
+          "kind": "function",
+          "signature": "function useReportMessage(): UseReportMessageReturn"
+        },
+        {
+          "name": "ReportMessageVariables",
+          "kind": "interface",
+          "signature": "interface ReportMessageVariables",
+          "members": []
+        },
+        {
+          "name": "UseReportMessageReturn",
+          "kind": "interface",
+          "signature": "interface UseReportMessageReturn",
+          "members": []
+        },
+        {
           "name": "useChatStream",
           "kind": "function",
           "signature": "function useChatStream(): UseChatStreamReturn"

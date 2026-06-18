@@ -15,5 +15,7 @@ export const AIChatPermissions = {
     Manage: 'AIChat.Conversations.Manage',
     /** Delete a conversation. */
     Delete: 'AIChat.Conversations.Delete',
+    /** Report (flag) a message in one's own conversations for review. */
+    Report: 'AIChat.Conversations.Report',
   },
 } as const;
