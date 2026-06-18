@@ -106,6 +106,20 @@ describe('ChatMessage', () => {
     const { container } = render(<ChatMessage role="assistant" content="Hi" />);
     expect(container.querySelector('[data-slot="chat-message-actions"]')).not.toBeInTheDocument();
   });
+
+  it('exposes a data-slot="chat-bubble" for app-level theming on both roles', () => {
+    const assistant = render(<ChatMessage role="assistant" content="Hi" />);
+    const assistantBubble = assistant.container.querySelector('[data-slot="chat-bubble"]');
+    expect(assistantBubble).toBeInTheDocument();
+    // Assistant bubble uses the lightened neutral surface and the left tail.
+    expect(assistantBubble?.className).toContain('bg-muted/50');
+    expect(assistantBubble?.className).toContain('rounded-bl-sm');
+
+    const user = render(<ChatMessage role="user" content="Hi" />);
+    const userBubble = user.container.querySelector('[data-slot="chat-bubble"]');
+    expect(userBubble?.className).toContain('bg-primary');
+    expect(userBubble?.className).toContain('rounded-br-sm');
+  });
 });
 
 describe('ToolActivity', () => {

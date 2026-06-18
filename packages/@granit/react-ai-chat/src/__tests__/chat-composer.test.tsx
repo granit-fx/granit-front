@@ -89,6 +89,28 @@ describe('ChatComposer', () => {
     expect(onStop).toHaveBeenCalled();
   });
 
+  it('renders the send action as a circular icon button with an accessible label', () => {
+    render(<ChatComposer onSubmit={vi.fn()} />);
+    const send = screen.getByRole('button', { name: /send/i });
+    expect(send).toHaveAttribute('data-slot', 'composer-send');
+    // Circular icon-only button (ArrowUp), no visible text caption.
+    expect(send.className).toContain('rounded-full');
+    expect(send).toHaveTextContent('');
+    expect(send.querySelector('svg')).toBeInTheDocument();
+  });
+
+  it('renders an optional workspace icon slot ahead of the selector', () => {
+    render(
+      <ChatComposer
+        onSubmit={vi.fn()}
+        workspaces={['Auto', 'support']}
+        workspaceIcon={<span data-testid="ws-icon" />}
+      />
+    );
+    expect(screen.getByTestId('ws-icon')).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /workspace/i })).toBeInTheDocument();
+  });
+
   it('uploads attachments via the adapter and includes the reference on submit', async () => {
     const uploadAttachment = vi.fn(async (file: File) => ({
       reference: 'blob://xyz',

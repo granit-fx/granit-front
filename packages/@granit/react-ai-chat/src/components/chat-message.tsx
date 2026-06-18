@@ -40,9 +40,12 @@ export function ChatMessage({
         <span className="text-muted-foreground text-xs font-medium">{authorLabel}</span>
       ) : null}
       <div
+        data-slot="chat-bubble"
         className={cn(
           'max-w-[80%] rounded-lg px-3 py-2 text-sm whitespace-pre-wrap',
-          isUser ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground'
+          isUser
+            ? 'bg-primary text-primary-foreground rounded-br-sm'
+            : 'bg-muted/50 text-foreground rounded-bl-sm'
         )}
       >
         {content}
