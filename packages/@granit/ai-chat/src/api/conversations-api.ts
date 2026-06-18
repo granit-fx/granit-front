@@ -150,6 +150,10 @@ export async function* streamConversationMessage(
     adapter: 'fetch',
     responseType: 'stream',
     headers: { Accept: 'text/event-stream' },
+    // Disable the client's default timeout: an SSE stream is long-lived and the
+    // agent may take far longer than 10s to produce its answer. Aborts come from
+    // the caller's `signal` (unmount / stop button), not a request timeout.
+    timeout: 0,
     signal,
   });
 

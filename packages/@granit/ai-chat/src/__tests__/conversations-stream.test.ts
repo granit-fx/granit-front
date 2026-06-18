@@ -113,6 +113,7 @@ describe('streamConversationMessage', () => {
         adapter: 'fetch',
         responseType: 'stream',
         headers: { Accept: 'text/event-stream' },
+        timeout: 0,
       })
     );
   });

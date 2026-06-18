@@ -105,6 +105,11 @@ export async function* chatStream(
     adapter: 'fetch',
     responseType: 'stream',
     headers: { Accept: 'text/event-stream' },
+    // Disable the client's default timeout: with the fetch adapter the timeout
+    // applies until response headers arrive, so a slow agent start-up (high
+    // time-to-first-byte) would abort an otherwise healthy stream. Cancellation
+    // comes from the caller's `signal`, never a request timeout.
+    timeout: 0,
     signal,
   });
 
