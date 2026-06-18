@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest';
 
 import { createAIChatHandlers } from '../testing/index';
 
-import type { ChatStreamEvent, ConversationSummaryResponse } from '@granit/ai-chat';
+import type { ChatStreamEvent, ConversationSummaryResponse, MessagePage } from '@granit/ai-chat';
+
+const LONG_ID = 'a1111111-1111-1111-1111-1111111110ff';
 
 const BASE = 'http://api.test/api/v1/conversations';
 const server = createMswServer();
@@ -94,6 +96,40 @@ describe('createAIChatHandlers', () => {
       body: JSON.stringify({ reason: 'Inaccurate answer', category: 'Inaccurate' }),
     });
     expect(response.status).toBe(202);
+  });
+
+  it('paginates messages backwards: newest page first, then older via before', async () => {
+    server.use(...createAIChatHandlers(BASE));
+
+    // Newest page (no before): the last `limit` messages, ascending within page.
+    const first = (await (
+      await fetch(`${BASE}/${LONG_ID}/messages?limit=30`)
+    ).json()) as MessagePage;
+    expect(first.items).toHaveLength(30);
+    expect(first.items.at(-1)?.content).toBe('Answer 40'); // 80 msgs → newest is #79
+    expect(first.nextCursor).not.toBeNull();
+
+    // Older page: the 30 messages immediately before the cursor — no overlap.
+    const second = (await (
+      await fetch(`${BASE}/${LONG_ID}/messages?limit=30&before=${first.nextCursor}`)
+    ).json()) as MessagePage;
+    expect(second.items).toHaveLength(30);
+    expect(second.items[0]?.content).toBe('Question 11'); // index 20
+    expect(second.items.at(-1)?.content).toBe('Answer 25'); // index 49 (first page starts at 50)
+  });
+
+  it('returns nextCursor=null once the oldest message is reached', async () => {
+    server.use(...createAIChatHandlers(BASE));
+    // 80 messages, 30 per page → third page has the remaining 20 and ends history.
+    const p1 = (await (await fetch(`${BASE}/${LONG_ID}/messages?limit=30`)).json()) as MessagePage;
+    const p2 = (await (
+      await fetch(`${BASE}/${LONG_ID}/messages?limit=30&before=${p1.nextCursor}`)
+    ).json()) as MessagePage;
+    const p3 = (await (
+      await fetch(`${BASE}/${LONG_ID}/messages?limit=30&before=${p2.nextCursor}`)
+    ).json()) as MessagePage;
+    expect(p3.items).toHaveLength(20);
+    expect(p3.nextCursor).toBeNull();
   });
 
   it('streams flat ChatStreamEvent frames ending without a [DONE] sentinel', async () => {

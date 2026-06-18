@@ -14,6 +14,7 @@ import type {
   ConversationSummaryResponse,
   CreateConversationRequest,
   MessageId,
+  MessagePage,
   RenameConversationRequest,
   ReportMessageRequest,
   SendMessageRequest,
@@ -46,6 +47,36 @@ export async function getConversation(
   id: ConversationId
 ): Promise<ConversationResponse> {
   const response = await client.get<ConversationResponse>(`${basePath}/${encodeURIComponent(id)}`);
+  return response.data;
+}
+
+/**
+ * Fetch one page of a conversation's messages for reverse (keyset) pagination.
+ *
+ * - No `before` → the newest `limit` messages.
+ * - `before` → the `limit` messages immediately OLDER than that opaque cursor.
+ *
+ * `limit` defaults to 30 server-side and is capped at 100. The returned
+ * {@link MessagePage.items} are ascending (oldest-first) within the page; use
+ * {@link MessagePage.nextCursor} as the next `before` to walk further back, until
+ * it comes back `null`. The cursor is opaque — never parse it. A conversation
+ * outside the caller's own is reported as `404`.
+ *
+ * `GET {basePath}/{id}/messages?limit={N}&before={cursor}`
+ */
+export async function getConversationMessages(
+  client: AxiosInstance,
+  basePath: string,
+  id: ConversationId,
+  params: { limit?: number; before?: string } = {},
+  signal?: AbortSignal
+): Promise<MessagePage> {
+  const query: string[] = [];
+  if (params.limit != null) query.push(`limit=${encodeURIComponent(params.limit)}`);
+  if (params.before != null) query.push(`before=${encodeURIComponent(params.before)}`);
+  const suffix = query.length > 0 ? `?${query.join('&')}` : '';
+  const url = `${basePath}/${encodeURIComponent(id)}/messages${suffix}`;
+  const response = await client.get<MessagePage>(url, signal ? { signal } : undefined);
   return response.data;
 }
 

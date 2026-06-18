@@ -234,6 +234,27 @@ export interface ConversationResponse {
   readonly messages: readonly MessageResponse[];
 }
 
+/**
+ * One page of a conversation's messages for reverse (keyset) pagination,
+ * returned by `GET {basePath}/{id}/messages`.
+ *
+ * Deliberately distinct from `@granit/query-engine`'s `PagedResult<T>`, which is
+ * offset-based (`{ items, totalCount }`). A conversation is an append-only,
+ * potentially unbounded history scrolled **backwards** (newest first, then older
+ * on scroll-up), so it uses an **opaque keyset cursor** rather than a total
+ * count: the server encodes a `createdAt`+`id` keyset into {@link nextCursor},
+ * the client treats it as opaque.
+ *
+ * `items` are **ascending (oldest-first) within the page**. To fetch the next
+ * OLDER page, pass `before = nextCursor`. {@link nextCursor} is `null` once the
+ * oldest message has been reached.
+ */
+export interface MessagePage {
+  readonly items: readonly MessageResponse[];
+  /** Opaque cursor for the next OLDER page, or `null` at the start of history. */
+  readonly nextCursor: string | null;
+}
+
 /** A conversation list item, without its messages. */
 export interface ConversationSummaryResponse {
   readonly id: ConversationId;

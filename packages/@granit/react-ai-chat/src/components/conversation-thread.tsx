@@ -1,4 +1,5 @@
 import { cn } from '@granit/utils';
+import { Loader2 } from 'lucide-react';
 
 import { defaultChatLabels, defaultErrorLabels } from '../locales/index';
 
@@ -9,7 +10,7 @@ import { ToolActivity } from './tool-activity';
 import type { ChatErrorKind, ToolCallActivity } from '../hooks/use-chat-stream';
 import type { ChatTranslations } from '../locales/index';
 import type { MessageResponse } from '@granit/ai-chat';
-import type { ReactNode } from 'react';
+import type { ReactNode, Ref } from 'react';
 
 /** Resolve the user-facing message for an error kind, falling back to English. */
 function errorMessage(kind: ChatErrorKind, labels: ChatTranslations['Errors']): string {
@@ -50,6 +51,18 @@ export interface ConversationThreadProps {
    */
   readonly renderMessageActions?: (message: MessageResponse, index: number) => ReactNode;
   /**
+   * Reverse infinite scroll — a forwarded ref to the zero-height top sentinel
+   * rendered above the messages. Pass the same ref to {@link useReverseInfiniteScroll}'s
+   * `topSentinelRef` so it can observe scroll-up and load older messages. When
+   * omitted (and {@link hasMoreOlder}/{@link isLoadingOlder} unset), the thread
+   * behaves exactly as before — no sentinel, no spinner.
+   */
+  readonly topSentinelRef?: Ref<HTMLDivElement>;
+  /** Whether older messages remain to load — renders the sentinel when `true`. */
+  readonly hasMoreOlder?: boolean;
+  /** Whether an older page is loading — renders a spinner row at the top. */
+  readonly isLoadingOlder?: boolean;
+  /**
    * The classified failure of the current turn (`useChatStream().errorKind`).
    * When set, a {@link SystemMessage} is rendered after the messages with a
    * localized message and, if {@link onRetry} is given, a retry button.
@@ -79,6 +92,9 @@ export function ConversationThread({
   isThinking = false,
   resolveToolLabel,
   renderMessageActions,
+  topSentinelRef,
+  hasMoreOlder,
+  isLoadingOlder = false,
   errorKind,
   onRetry,
   labels = defaultChatLabels.Thread,
@@ -88,6 +104,8 @@ export function ConversationThread({
 }: Readonly<ConversationThreadProps>) {
   const isEmpty = messages.length === 0 && !streamingContent && !isStreaming && !errorKind;
   const hasToolActivity = toolCalls.length > 0 || isThinking;
+  // Render the scroll-up paging affordances only when the host opted in.
+  const isPaged = topSentinelRef !== undefined || hasMoreOlder !== undefined;
 
   return (
     <div
@@ -97,6 +115,21 @@ export function ConversationThread({
       aria-relevant="additions text"
       className={cn('flex flex-col gap-3', className)}
     >
+      {isPaged ? (
+        <div ref={topSentinelRef} data-slot="thread-top-sentinel" aria-hidden className="h-px" />
+      ) : null}
+
+      {isLoadingOlder ? (
+        <div
+          data-slot="thread-loading-older"
+          className="text-muted-foreground flex items-center justify-center gap-1.5 py-1 text-xs"
+          aria-label={labels.LoadingOlder ?? defaultChatLabels.Thread.LoadingOlder}
+        >
+          <Loader2 className="size-3.5 animate-spin" aria-hidden />
+          {labels.LoadingOlder ?? defaultChatLabels.Thread.LoadingOlder}
+        </div>
+      ) : null}
+
       {isEmpty ? (
         <p data-slot="thread-empty" className="text-muted-foreground py-8 text-center text-sm">
           {labels.Empty}

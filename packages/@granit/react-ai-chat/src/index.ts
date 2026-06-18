@@ -12,6 +12,12 @@ export { conversationKeys } from './hooks/query-keys';
 // Hooks — conversations
 export { useConversations } from './hooks/use-conversations';
 export { useConversation } from './hooks/use-conversation';
+export { useConversationMessages } from './hooks/use-conversation-messages';
+export type {
+  MessagesPageParam,
+  UseConversationMessagesOptions,
+  UseConversationMessagesResult,
+} from './hooks/use-conversation-messages';
 export { useChatWorkspaces } from './hooks/use-chat-workspaces';
 export { useCreateConversation } from './hooks/use-create-conversation';
 export type { UseCreateConversationReturn } from './hooks/use-create-conversation';
@@ -47,6 +53,8 @@ export type {
 // Hooks — scrolling
 export { useStickToBottom } from './hooks/use-stick-to-bottom';
 export type { UseStickToBottomOptions, UseStickToBottomReturn } from './hooks/use-stick-to-bottom';
+export { useReverseInfiniteScroll } from './hooks/use-reverse-infinite-scroll';
+export type { UseReverseInfiniteScrollParams } from './hooks/use-reverse-infinite-scroll';
 
 // Components
 export { ChatMessage } from './components/chat-message';

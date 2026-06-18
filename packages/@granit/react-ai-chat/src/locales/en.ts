@@ -7,6 +7,8 @@ export interface ChatTranslations {
     readonly AssistantTyping: string;
     /** Accessible label for the scroll-to-latest button. */
     readonly ScrollToLatest?: string;
+    /** Accessible label for the "loading older messages" row at the top of the thread. */
+    readonly LoadingOlder?: string;
   };
   readonly Composer: {
     readonly Placeholder: string;
@@ -79,6 +81,7 @@ export const aiChatTranslationsEn: ChatTranslations = {
     Assistant: 'Assistant',
     AssistantTyping: 'Assistant is typing…',
     ScrollToLatest: 'Scroll to latest',
+    LoadingOlder: 'Loading older messages…',
   },
   Composer: {
     Placeholder: 'Ask your app… ( / for prompts, @ to mention )',

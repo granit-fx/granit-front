@@ -2,12 +2,20 @@ import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-import { mockChatWorkspaces, mockConversation, mockConversationSummaries } from './data';
+import {
+  mockChatWorkspaces,
+  mockConversation,
+  mockConversationSummaries,
+  mockLongConversationId,
+  mockLongConversationMessages,
+} from './data';
 
 import type {
   ConversationResponse,
   ConversationSummaryResponse,
   CreateConversationRequest,
+  MessagePage,
+  MessageResponse,
   RenameConversationRequest,
   SetConversationFavoriteRequest,
 } from '@granit/ai-chat';
@@ -35,6 +43,30 @@ export function createAIChatHandlers(baseUrl = DEFAULT_BASE_PATH) {
 
     // GET /conversations — list summaries, newest first.
     http.get(baseUrl, () => HttpResponse.json(summaries)),
+
+    // GET /conversations/:id/messages — one reverse-pagination page.
+    // Ascending (oldest-first) within the page; `nextCursor` walks OLDER. The
+    // cursor here is simply the id of the page's oldest item (opaque to clients).
+    // Declared before `/:id` so it is not shadowed.
+    http.get(`${baseUrl}/:id/messages`, ({ params, request }) => {
+      const id = params.id as string;
+      const all: readonly MessageResponse[] =
+        id === mockLongConversationId ? mockLongConversationMessages : mockConversation.messages;
+
+      const url = new URL(request.url);
+      const limit = Math.min(Math.max(Number(url.searchParams.get('limit')) || 30, 1), 100);
+      const before = url.searchParams.get('before');
+
+      let end = all.length;
+      if (before) {
+        const idx = all.findIndex((m) => m.id === before);
+        if (idx !== -1) end = idx;
+      }
+      const start = Math.max(0, end - limit);
+      const items = all.slice(start, end);
+      const nextCursor = start > 0 ? (items[0]?.id ?? null) : null;
+      return HttpResponse.json<MessagePage>({ items, nextCursor });
+    }),
 
     // GET /conversations/:id — full conversation.
     http.get(`${baseUrl}/:id`, ({ params }) => {

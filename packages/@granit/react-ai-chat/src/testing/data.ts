@@ -34,6 +34,30 @@ export const mockConversation: ConversationResponse = {
   ] satisfies MessageResponse[],
 };
 
+/** A long conversation used to exercise reverse (keyset) message pagination. */
+export const mockLongConversationId = toEntityId<'Conversation'>(
+  'a1111111-1111-1111-1111-1111111110ff'
+);
+
+/**
+ * 80 alternating user/assistant messages, ascending (oldest-first). Timestamps
+ * are one minute apart so a keyset over `createdAt`+`id` is well-ordered.
+ */
+export const mockLongConversationMessages: readonly MessageResponse[] = Array.from(
+  { length: 80 },
+  (_, i): MessageResponse => {
+    const isUser = i % 2 === 0;
+    return {
+      id: toEntityId<'Message'>(`d4444444-4444-4444-4444-${String(i).padStart(12, '0')}`),
+      role: isUser ? 'user' : 'assistant',
+      content: isUser ? `Question ${Math.floor(i / 2) + 1}` : `Answer ${Math.floor(i / 2) + 1}`,
+      createdAt: toISODateString(
+        new Date(Date.parse('2026-06-10T08:00:00.000Z') + i * 60_000).toISOString()
+      ),
+    };
+  }
+);
+
 /** Conversation summaries returned by `GET /conversations`, newest first. */
 export const mockConversationSummaries: ConversationSummaryResponse[] = [
   {

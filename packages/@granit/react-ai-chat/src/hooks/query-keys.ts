@@ -9,12 +9,25 @@ export const conversationKeys = {
   all: (prefix: readonly string[]): readonly unknown[] => [...prefix],
   /** The conversation list. */
   list: (prefix: readonly string[]): readonly unknown[] => [...prefix, 'conversations', 'list'],
-  /** A single conversation and its messages. */
+  /** A single conversation's metadata (title, favorite, dates). */
   detail: (prefix: readonly string[], id: ConversationId): readonly unknown[] => [
     ...prefix,
     'conversations',
     'detail',
     id,
+  ],
+  /**
+   * The conversation's paginated message thread (reverse infinite query). Nested
+   * under `detail` so a prefix invalidation of the conversation also covers its
+   * messages — but stream-completion uses `detail` with `exact: true` to refresh
+   * metadata WITHOUT triggering a full re-fetch of every loaded message page.
+   */
+  messages: (prefix: readonly string[], id: ConversationId): readonly unknown[] => [
+    ...prefix,
+    'conversations',
+    'detail',
+    id,
+    'messages',
   ],
   /** The selectable default workspaces. */
   workspaces: (prefix: readonly string[]): readonly unknown[] => [

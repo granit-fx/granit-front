@@ -4,6 +4,7 @@ import {
   streamConversationMessage,
 } from '@granit/ai-chat';
 import { createLogger } from '@granit/logger';
+import { toEntityId, toISODateString } from '@granit/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -13,13 +14,17 @@ import { conversationKeys } from './query-keys';
 
 const logger = createLogger('react-ai-chat');
 
+import type { MessagesPageParam } from './use-conversation-messages';
 import type {
   ChatStreamEvent,
   ClarificationResponse,
   ConversationId,
+  MessagePage,
+  MessageResponse,
   SendMessageRequest,
   SuggestedActionResponse,
 } from '@granit/ai-chat';
+import type { InfiniteData, QueryClient } from '@tanstack/react-query';
 
 /** Token usage reported near the end of a turn. */
 export interface ChatStreamUsage {
@@ -148,6 +153,42 @@ export interface UseChatStreamReturn {
  * <p aria-live="polite">{content}</p>
  * ```
  */
+/**
+ * Append a finished turn (the user message + the assistant's accumulated answer)
+ * to the NEWEST page of the messages infinite query, in place. No-op when the
+ * query isn't loaded — the next mount fetches the turn from the server instead.
+ *
+ * ⚠️ The SSE contract carries no persisted message ids, so the appended rows get
+ * client-synthesized ids/timestamps for instant display. They are replaced by the
+ * authoritative server rows on the next full load of the messages query. A
+ * backend follow-up emitting final ids on the stream would let this append real
+ * ids (and make the freshly-streamed message reportable immediately).
+ */
+function appendTurnToMessages(
+  queryClient: QueryClient,
+  key: readonly unknown[],
+  userMessage: string,
+  assistantContent: string
+): void {
+  queryClient.setQueryData<InfiniteData<MessagePage, MessagesPageParam>>(key, (prev) => {
+    const newest = prev?.pages[0];
+    if (!prev || !newest) return prev;
+    const now = toISODateString(new Date().toISOString());
+    const synth = (role: MessageResponse['role'], content: string): MessageResponse => ({
+      id: toEntityId<'Message'>(crypto.randomUUID()),
+      role,
+      content,
+      createdAt: now,
+    });
+    const appended: MessageResponse[] = [synth('user', userMessage)];
+    if (assistantContent) appended.push(synth('assistant', assistantContent));
+    // pages[0] is the initial (newest) page; its items are ascending, so the
+    // new turn goes at the end of that page.
+    const updatedNewest: MessagePage = { ...newest, items: [...newest.items, ...appended] };
+    return { ...prev, pages: [updatedNewest, ...prev.pages.slice(1)] };
+  });
+}
+
 export function useChatStream(): UseChatStreamReturn {
   const config = useAIChatConfig();
   const queryClient = useQueryClient();
@@ -223,16 +264,30 @@ export function useChatStream(): UseChatStreamReturn {
             applyEvent(event, sinks);
           }
 
-          queryClient
-            .invalidateQueries({ queryKey: conversationKeys.list(config.queryKeyPrefix) })
-            .catch(() => undefined);
           if (turn.resolvedId) {
+            // Optimistically push the finished turn onto the newest page of the
+            // messages infinite query, so it appears without a refetch and
+            // without resetting any older pages the user has loaded.
+            appendTurnToMessages(
+              queryClient,
+              conversationKeys.messages(config.queryKeyPrefix, turn.resolvedId),
+              request.message,
+              turn.accumulated
+            );
+            // Refresh conversation metadata (title may have been auto-generated)
+            // — `exact` so the nested `messages` key is NOT invalidated, which
+            // would otherwise re-fetch every loaded page and undo the append.
             queryClient
               .invalidateQueries({
                 queryKey: conversationKeys.detail(config.queryKeyPrefix, turn.resolvedId),
+                exact: true,
               })
               .catch(() => undefined);
           }
+          // Sidebar ordering / titles.
+          queryClient
+            .invalidateQueries({ queryKey: conversationKeys.list(config.queryKeyPrefix) })
+            .catch(() => undefined);
         } catch (err) {
           if (err instanceof DOMException && err.name === 'AbortError') return;
           logger.error('Chat stream turn failed', err, { conversationId: turn.resolvedId });

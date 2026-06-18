@@ -5,6 +5,7 @@ import {
   createConversation,
   deleteConversation,
   getConversation,
+  getConversationMessages,
   listChatWorkspaces,
   listConversations,
   renameConversation,
@@ -13,7 +14,7 @@ import {
 } from '../api/conversations-api';
 import { MESSAGE_REPORT_CATEGORIES } from '../types/index';
 
-import type { ConversationId, ConversationResponse, MessageId } from '../types/index';
+import type { ConversationId, ConversationResponse, MessageId, MessagePage } from '../types/index';
 
 const BASE = '/api/v1/conversations';
 const ID = 'a1111111-1111-1111-1111-111111111111' as ConversationId;
@@ -51,6 +52,37 @@ describe('conversations-api', () => {
 
     expect(client.get).toHaveBeenCalledWith(`${BASE}/${ID}`);
     expect(result).toEqual(CONVERSATION);
+  });
+
+  it('getConversationMessages GETs the newest page with no query when no params', async () => {
+    const client = createMockClient();
+    const page: MessagePage = { items: [], nextCursor: null };
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(page));
+
+    const result = await getConversationMessages(client, BASE, ID);
+
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/${ID}/messages`, undefined);
+    expect(result).toEqual(page);
+  });
+
+  it('getConversationMessages builds limit + url-encoded before, and threads the signal', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse<MessagePage>({ items: [], nextCursor: null })
+    );
+    const controller = new AbortController();
+
+    await getConversationMessages(
+      client,
+      BASE,
+      ID,
+      { limit: 50, before: 'a+b/c=' },
+      controller.signal
+    );
+
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/${ID}/messages?limit=50&before=a%2Bb%2Fc%3D`, {
+      signal: controller.signal,
+    });
   });
 
   it('createConversation POSTs to the base path with the title body', async () => {

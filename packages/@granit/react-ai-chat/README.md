@@ -29,11 +29,27 @@ import { AIChatProvider } from '@granit/react-ai-chat';
   Accumulates `delta` content, captures the conversation id, suggested actions,
   a clarification, and token usage. `send(request)` resets per-turn state and
   cancels any in-progress stream; `abort()` stops it.
-- `useConversations()` / `useConversation(id)` — list / read (owner-private).
+- `useConversations()` — list (owner-private).
+- `useConversation(id)` — conversation **metadata** (title, favorite, dates).
+  No longer the source for the thread — use `useConversationMessages` for that.
+- `useConversationMessages(id)` — reverse (keyset) infinite query over the
+  thread (`GET /conversations/{id}/messages`). Loads the newest page first, then
+  OLDER pages via `loadOlder()`. Returns `messages` flattened **oldest-first**,
+  `hasMoreOlder`, `isLoadingOlder`.
+- `useReverseInfiniteScroll({ scrollContainerRef, topSentinelRef, itemCount, … })`
+  — loads older messages as the user scrolls up and keeps the viewport anchored
+  on prepend. Pair it with `useStickToBottom` (share the same `scrollRef`) so new
+  /streamed messages still stick to the bottom.
 - `useChatWorkspaces()` — selectable default workspaces (`Auto` first).
 - `useCreateConversation()` / `useRenameConversation()` / `useDeleteConversation()`
   — mutations that invalidate the affected queries.
 - `conversationKeys` — the query-key factory (namespaced by the provider prefix).
+  `messages` is nested under `detail`; on turn completion `useChatStream`
+  optimistically appends the new turn to the newest message page (no refetch).
+
+Wire the thread for paging by passing `topSentinelRef` / `hasMoreOlder` /
+`isLoadingOlder` to `ConversationThread`; with none of these it behaves exactly
+as before.
 
 > ⚠️ `useChatStream().content` is **untrusted** model output. Render it as plain
 > text, or sanitize it (and scheme-allowlist links) before rendering as
@@ -43,5 +59,7 @@ import { AIChatProvider } from '@granit/react-ai-chat';
 ## Testing
 
 `@granit/react-ai-chat/testing` exports `createAIChatHandlers(baseUrl)` (stateful
-MSW handlers, including the SSE stream) plus `mockConversation`,
-`mockConversationSummaries`, and `mockChatWorkspaces`.
+MSW handlers, including the SSE stream and the paginated `GET /{id}/messages`)
+plus `mockConversation`, `mockConversationSummaries`, `mockChatWorkspaces`, and
+`mockLongConversationId` / `mockLongConversationMessages` (an 80-message thread
+for exercising reverse pagination).
