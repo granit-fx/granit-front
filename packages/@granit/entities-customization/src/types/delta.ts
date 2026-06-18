@@ -15,16 +15,16 @@ export type LayoutDeltaKind = 'reorder' | 'regroup' | 'hide';
  */
 export interface ReorderDelta {
   readonly $type: 'reorder';
-  readonly fieldName: string;
   readonly beforeFieldName: string | null;
   readonly afterFieldName: string | null;
+  readonly fieldName: string;
 }
 
 /** Move a field into a group (created on the fly if it doesn't exist yet). */
 export interface RegroupDelta {
   readonly $type: 'regroup';
-  readonly fieldName: string;
   readonly groupKey: string;
+  readonly fieldName: string;
 }
 
 /** Hide a field from the current layout; backend keeps it in the schema. */

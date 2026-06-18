@@ -398,9 +398,9 @@ export const CONTRACTS: readonly ModuleContract[] = [
   {
     slug: 'entities-customization',
     package: 'entities-customization',
-    // LayoutDelta stays unregistered — it is a discriminated union
-    // (Reorder|Regroup|Hide), which the field-by-field oracle cannot verify.
-    types: ['EntityCustomizationResponse', 'EntityCustomizationRequest'],
+    // LayoutDelta is a discriminated union (reorder|regroup|hide), verified
+    // branch-by-branch against the spec's anyOf + discriminator mapping.
+    types: ['EntityCustomizationResponse', 'EntityCustomizationRequest', 'LayoutDelta'],
   },
   {
     slug: 'entities-views',

@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 
 import { checkSchemaConformance } from '../conformance';
 
-import type { OpenApiDocument } from '../conformance';
+import type { OpenApiDocument, OpenApiSchema } from '../conformance';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 
@@ -236,5 +236,119 @@ describe('conformance oracle — positive & negative controls', () => {
         expect.objectContaining({ rule: 'type-family', field: 'ownerId' })
       );
     });
+  });
+});
+
+// A spec `anyOf` + discriminator (System.Text.Json polymorphism) verified
+// branch-by-branch against a front `type X = A | B` union, paired by tag value.
+describe('conformance oracle — discriminated unions', () => {
+  const unionFile = '/virtual/union.ts';
+  const unionSource = `
+    export interface MoveDelta {
+      readonly kind: 'move';
+      readonly from: string;
+      readonly to: string;
+    }
+    export interface DropDelta {
+      readonly kind: 'drop';
+      readonly target: string;
+    }
+    export type Delta = MoveDelta | DropDelta;
+  `;
+
+  const variant = (tag: string, props: Record<string, OpenApiSchema>, required: string[]) => ({
+    type: 'object',
+    required,
+    properties: { kind: { enum: [tag], type: 'string' }, ...props },
+  });
+
+  /** A union spec with the given discriminator mapping (defaults to move+drop). */
+  const unionSpec = (
+    schemas: Record<string, OpenApiSchema>,
+    mapping: Record<string, string>
+  ): OpenApiDocument => ({
+    components: {
+      schemas: {
+        Delta: {
+          type: 'object',
+          required: ['kind'],
+          anyOf: Object.values(mapping).map(($ref) => ({ $ref })),
+          discriminator: { propertyName: 'kind', mapping },
+        },
+        ...schemas,
+      },
+    },
+  });
+
+  const MOVE = '#/components/schemas/DeltaMove';
+  const DROP = '#/components/schemas/DeltaDrop';
+  const checkUnion = (spec: OpenApiDocument, typeName = 'Delta') =>
+    checkSchemaConformance({
+      spec,
+      schemaName: 'Delta',
+      sourceText: unionSource,
+      fileName: unionFile,
+      typeName,
+    });
+
+  const moveDrop = (from: OpenApiSchema = { type: 'string' }) =>
+    unionSpec(
+      {
+        DeltaMove: variant('move', { from, to: { type: 'string' } }, ['from', 'to']),
+        DeltaDrop: variant('drop', { target: { type: 'string' } }, ['target']),
+      },
+      { move: MOVE, drop: DROP }
+    );
+
+  it('passes when every branch is paired by tag and mirrors its variant schema', () => {
+    expect(checkUnion(moveDrop())).toEqual([]);
+  });
+
+  it('reports a field drift inside a single branch, scoped to that variant', () => {
+    // `from` is `integer` backend-side but `string` front-side, only in the move branch.
+    expect(checkUnion(moveDrop({ type: 'integer' }))).toContainEqual(
+      expect.objectContaining({ rule: 'type-family', schema: 'Delta#move', field: 'from' })
+    );
+  });
+
+  it('flags a spec variant with no matching front union member', () => {
+    const spec = unionSpec(
+      {
+        DeltaMove: variant('move', { from: { type: 'string' }, to: { type: 'string' } }, [
+          'from',
+          'to',
+        ]),
+        DeltaDrop: variant('drop', { target: { type: 'string' } }, ['target']),
+        DeltaRename: variant('rename', { name: { type: 'string' } }, ['name']),
+      },
+      { move: MOVE, drop: DROP, rename: '#/components/schemas/DeltaRename' }
+    );
+    expect(checkUnion(spec)).toContainEqual(
+      expect.objectContaining({
+        rule: 'missing-variant',
+        message: expect.stringContaining('rename'),
+      })
+    );
+  });
+
+  it('flags a front union member with no matching spec variant', () => {
+    const spec = unionSpec(
+      {
+        DeltaMove: variant('move', { from: { type: 'string' }, to: { type: 'string' } }, [
+          'from',
+          'to',
+        ]),
+      },
+      { move: MOVE } // front still has `drop`
+    );
+    expect(checkUnion(spec)).toContainEqual(
+      expect.objectContaining({ rule: 'orphan-variant', message: expect.stringContaining('drop') })
+    );
+  });
+
+  it('reports type-missing when the front type is not a union', () => {
+    expect(checkUnion(moveDrop(), 'MoveDelta')).toContainEqual(
+      expect.objectContaining({ rule: 'type-missing' })
+    );
   });
 });
