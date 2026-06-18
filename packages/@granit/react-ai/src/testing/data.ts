@@ -178,6 +178,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-20T09:15:00Z'),
     duration: '00:00:02.340',
+    conversationId: toEntityId<'Conversation'>('c0000000-0001-0001-0001-000000000001'),
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000002'),
@@ -192,6 +193,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-20T10:30:00Z'),
     duration: '00:00:01.870',
+    conversationId: null,
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000003'),
@@ -206,6 +208,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-20T11:45:00Z'),
     duration: '00:00:03.120',
+    conversationId: toEntityId<'Conversation'>('c0000000-0001-0001-0001-000000000003'),
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000004'),
@@ -220,6 +223,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-19T14:20:00Z'),
     duration: '00:00:05.450',
+    conversationId: toEntityId<'Conversation'>('c0000000-0001-0001-0001-000000000004'),
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000005'),
@@ -234,6 +238,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-19T16:00:00Z'),
     duration: '00:00:01.200',
+    conversationId: null,
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000006'),
@@ -248,6 +253,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-18T08:10:00Z'),
     duration: '00:00:01.540',
+    conversationId: toEntityId<'Conversation'>('c0000000-0001-0001-0001-000000000006'),
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000007'),
@@ -262,6 +268,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-18T13:30:00Z'),
     duration: '00:00:04.010',
+    conversationId: toEntityId<'Conversation'>('c0000000-0001-0001-0001-000000000007'),
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000008'),
@@ -276,6 +283,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: null,
     timestamp: toISODateString('2026-03-17T10:00:00Z'),
     duration: '00:00:06.780',
+    conversationId: null,
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000009'),
@@ -290,6 +298,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-21T08:05:00Z'),
     duration: '00:00:02.810',
+    conversationId: toEntityId<'Conversation'>('c0000000-0001-0001-0001-000000000009'),
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000010'),
@@ -304,6 +313,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-21T09:30:00Z'),
     duration: '00:00:07.120',
+    conversationId: toEntityId<'Conversation'>('c0000000-0001-0001-0001-000000000010'),
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000011'),
@@ -318,6 +328,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-21T10:15:00Z'),
     duration: '00:00:03.450',
+    conversationId: null,
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000012'),
@@ -332,6 +343,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-21T11:00:00Z'),
     duration: '00:00:01.670',
+    conversationId: toEntityId<'Conversation'>('c0000000-0001-0001-0001-000000000012'),
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000013'),
@@ -346,6 +358,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-21T13:20:00Z'),
     duration: '00:00:09.300',
+    conversationId: toEntityId<'Conversation'>('c0000000-0001-0001-0001-000000000013'),
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000014'),
@@ -360,6 +373,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-20T15:45:00Z'),
     duration: '00:00:02.560',
+    conversationId: null,
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000015'),
@@ -374,6 +388,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-20T16:30:00Z'),
     duration: '00:00:02.100',
+    conversationId: toEntityId<'Conversation'>('c0000000-0001-0001-0001-000000000015'),
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000016'),
@@ -388,6 +403,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: null,
     timestamp: toISODateString('2026-03-19T09:00:00Z'),
     duration: '00:00:08.900',
+    conversationId: null,
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000017'),
@@ -402,6 +418,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-19T11:30:00Z'),
     duration: '00:00:05.600',
+    conversationId: toEntityId<'Conversation'>('c0000000-0001-0001-0001-000000000017'),
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000018'),
@@ -416,6 +433,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-18T14:00:00Z'),
     duration: '00:00:06.340',
+    conversationId: toEntityId<'Conversation'>('c0000000-0001-0001-0001-000000000018'),
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000019'),
@@ -430,6 +448,7 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-18T15:20:00Z'),
     duration: '00:00:01.280',
+    conversationId: null,
   },
   {
     id: toEntityId<'AIUsageRecord'>('a1b2c3d4-0001-0001-0001-000000000020'),
@@ -444,5 +463,6 @@ export const mockUsageRecords: AIUsageRecord[] = [
     costCurrency: 'USD',
     timestamp: toISODateString('2026-03-17T16:45:00Z'),
     duration: '00:00:04.200',
+    conversationId: toEntityId<'Conversation'>('c0000000-0001-0001-0001-000000000020'),
   },
 ];

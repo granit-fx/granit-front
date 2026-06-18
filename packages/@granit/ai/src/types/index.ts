@@ -186,6 +186,14 @@ export interface AIProviderModelResponse {
 /** Branded AI usage record identifier. */
 export type AIUsageRecordId = EntityId<'AIUsageRecord'>;
 
+/**
+ * Branded chat conversation identifier. Defined locally rather than imported
+ * from `@granit/ai-chat`: that package depends on `@granit/ai`, so importing
+ * back would create a dependency cycle. Brand matches `EntityId<'Conversation'>`
+ * used by `@granit/ai-chat`.
+ */
+export type ConversationId = EntityId<'Conversation'>;
+
 /** AI usage record for querying. Mirrors `Granit.AI.AIUsageRecord`. */
 export interface AIUsageRecord {
   readonly id: AIUsageRecordId;
@@ -200,4 +208,5 @@ export interface AIUsageRecord {
   readonly costCurrency: string | null;
   readonly timestamp: ISODateString;
   readonly duration: string | null;
+  readonly conversationId: ConversationId | null;
 }

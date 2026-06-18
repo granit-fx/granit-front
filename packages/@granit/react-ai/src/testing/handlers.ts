@@ -142,6 +142,7 @@ function addUsageRecord(
     costCurrency,
     timestamp: toISODateString(new Date().toISOString()),
     duration,
+    conversationId: null,
   });
 }
 
@@ -233,6 +234,15 @@ function buildUsageMeta(): QueryMetadata {
         isFilterable: false,
         isVisible: true,
       },
+      {
+        name: 'conversationId',
+        label: 'Conversation',
+        type: 'String',
+        order: 10,
+        isSortable: false,
+        isFilterable: true,
+        isVisible: true,
+      },
     ],
     filterableFields: [
       { name: 'workspaceName', type: 'String', operators: ['Eq', 'Contains', 'In'] },
@@ -240,6 +250,7 @@ function buildUsageMeta(): QueryMetadata {
       { name: 'model', type: 'String', operators: ['Eq', 'In'] },
       { name: 'costCurrency', type: 'String', operators: ['Eq', 'In'] },
       { name: 'timestamp', type: 'DateTime', operators: ['Gte', 'Lte'] },
+      { name: 'conversationId', type: 'String', operators: ['Eq', 'In'] },
     ],
     sortableFields: [
       { name: 'timestamp' },
@@ -264,6 +275,7 @@ function buildUsageMeta(): QueryMetadata {
       { name: 'workspaceName', type: 'String' },
       { name: 'provider', type: 'String' },
       { name: 'model', type: 'String' },
+      { name: 'conversationId', type: 'String' },
     ],
     pagination: {
       defaultPageSize: 20,
