@@ -14,12 +14,13 @@ import type {
   ConversationSummaryResponse,
   CreateConversationRequest,
   MessageId,
-  MessagePage,
+  MessageResponse,
   RenameConversationRequest,
   ReportMessageRequest,
   SendMessageRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
+import type { PagedResult } from '@granit/query-engine';
 
 const logger = createLogger('ai-chat');
 
@@ -51,32 +52,37 @@ export async function getConversation(
 }
 
 /**
- * Fetch one page of a conversation's messages for reverse (keyset) pagination.
+ * Fetch one page of a conversation's messages, reusing the framework's generic
+ * **keyset (cursor) pagination** — the same `PagedResult` + opaque `cursor`
+ * contract the query-engine exposes (no bespoke shape). The server sorts newest
+ * first (`-createdAt`), so:
  *
- * - No `before` → the newest `limit` messages.
- * - `before` → the `limit` messages immediately OLDER than that opaque cursor.
+ * - No `cursor` → the newest `pageSize` messages.
+ * - `cursor` → the `pageSize` messages immediately OLDER than that opaque cursor.
  *
- * `limit` defaults to 30 server-side and is capped at 100. The returned
- * {@link MessagePage.items} are ascending (oldest-first) within the page; use
- * {@link MessagePage.nextCursor} as the next `before` to walk further back, until
- * it comes back `null`. The cursor is opaque — never parse it. A conversation
- * outside the caller's own is reported as `404`.
+ * Walk further back with {@link PagedResult.nextCursor} until it comes back
+ * `null`. `pageSize` defaults to 30 server-side and is capped at 100. The cursor
+ * is opaque — never parse it. `totalCount` is `null` in cursor mode. A
+ * conversation outside the caller's own is reported as `404`.
  *
- * `GET {basePath}/{id}/messages?limit={N}&before={cursor}`
+ * `GET {basePath}/{id}/messages?cursor={opaque}&pageSize={N}`
  */
 export async function getConversationMessages(
   client: AxiosInstance,
   basePath: string,
   id: ConversationId,
-  params: { limit?: number; before?: string } = {},
+  params: { cursor?: string; pageSize?: number } = {},
   signal?: AbortSignal
-): Promise<MessagePage> {
+): Promise<PagedResult<MessageResponse>> {
   const query: string[] = [];
-  if (params.limit != null) query.push(`limit=${encodeURIComponent(params.limit)}`);
-  if (params.before != null) query.push(`before=${encodeURIComponent(params.before)}`);
+  if (params.pageSize != null) query.push(`pageSize=${encodeURIComponent(params.pageSize)}`);
+  if (params.cursor != null) query.push(`cursor=${encodeURIComponent(params.cursor)}`);
   const suffix = query.length > 0 ? `?${query.join('&')}` : '';
   const url = `${basePath}/${encodeURIComponent(id)}/messages${suffix}`;
-  const response = await client.get<MessagePage>(url, signal ? { signal } : undefined);
+  const response = await client.get<PagedResult<MessageResponse>>(
+    url,
+    signal ? { signal } : undefined
+  );
   return response.data;
 }
 

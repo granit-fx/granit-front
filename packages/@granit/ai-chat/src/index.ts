@@ -14,7 +14,6 @@ export type {
   CreateConversationRequest,
   MentionRequest,
   MessageId,
-  MessagePage,
   MessageReportCategory,
   MessageResponse,
   PromptId,

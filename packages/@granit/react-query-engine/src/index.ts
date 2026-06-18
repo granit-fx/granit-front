@@ -21,6 +21,12 @@ export type {
   UsePaginationOptions,
   UsePaginationReturn,
 } from './hooks/use-pagination';
+export { usePagedInfiniteQuery } from './hooks/use-paged-infinite-query';
+export type {
+  InfinitePageResult,
+  UsePagedInfiniteQueryOptions,
+  UsePagedInfiniteQueryReturn,
+} from './hooks/use-paged-infinite-query';
 
 // Hooks
 export { useQueryEndpoint } from './hooks/use-query-endpoint';

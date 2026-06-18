@@ -6902,6 +6902,11 @@
           "signature": "function usePagination<T, P extends PaginationPage<T> = PaginationPage<T>>( options: UsePaginationOptions<T, P> ): UsePaginationReturn<T>"
         },
         {
+          "name": "usePagedInfiniteQuery",
+          "kind": "function",
+          "signature": "function usePagedInfiniteQuery<T, TPage extends InfinitePageResult<T>, TPageParam>( options: UsePagedInfiniteQueryOptions<T, TPage, TPageParam> ): UsePagedInfiniteQueryReturn<T>"
+        },
+        {
           "name": "useQueryEndpoint",
           "kind": "function",
           "signature": "function useQueryEndpoint<T>(options?: UseQueryEndpointOptions): UseQueryEndpointReturn<T>"

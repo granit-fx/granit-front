@@ -6,7 +6,8 @@ import { useConversationMessages } from '../hooks/use-conversation-messages';
 
 import { createWrapper } from './test-utils';
 
-import type { ConversationId, MessagePage, MessageResponse } from '@granit/ai-chat';
+import type { ConversationId, MessageResponse } from '@granit/ai-chat';
+import type { PagedResult } from '@granit/query-engine';
 
 const ID = 'a1111111-1111-1111-1111-111111111111' as ConversationId;
 
@@ -24,13 +25,19 @@ afterEach(() => {
 });
 
 describe('useConversationMessages', () => {
-  it('flattens pages oldest-first and walks older pages until nextCursor is null', async () => {
+  it('reverses newest-first pages to oldest-first and walks older until nextCursor is null', async () => {
     const client = createMockClient();
-    const newest: MessagePage = {
-      items: [msg(2, 'user'), msg(3, 'assistant')],
+    // Server sorts -createdAt → pages are newest-first within and across.
+    const newest: PagedResult<MessageResponse> = {
+      items: [msg(3, 'assistant'), msg(2, 'user')],
+      totalCount: null,
       nextCursor: 'cur-older',
     };
-    const older: MessagePage = { items: [msg(0, 'user'), msg(1, 'assistant')], nextCursor: null };
+    const older: PagedResult<MessageResponse> = {
+      items: [msg(1, 'assistant'), msg(0, 'user')],
+      totalCount: null,
+      nextCursor: null,
+    };
     vi.spyOn(client, 'get')
       .mockResolvedValueOnce({ data: newest })
       .mockResolvedValueOnce({ data: older });
@@ -39,7 +46,7 @@ describe('useConversationMessages', () => {
       wrapper: createWrapper(client),
     });
 
-    // Newest page first, ascending within the page.
+    // Newest page, reversed to oldest-first for display.
     await waitFor(() => expect(result.current.messages).toHaveLength(2));
     expect(result.current.messages.map((m) => m.content)).toEqual(['m2', 'm3']);
     expect(result.current.hasMoreOlder).toBe(true);
@@ -54,26 +61,30 @@ describe('useConversationMessages', () => {
     expect(result.current.hasMoreOlder).toBe(false);
   });
 
-  it('requests the newest page with no cursor, then the older page with before=nextCursor', async () => {
+  it('requests the newest page with no cursor, then the older page with cursor=nextCursor', async () => {
     const client = createMockClient();
     const get = vi
       .spyOn(client, 'get')
-      .mockResolvedValueOnce({ data: { items: [msg(2, 'user')], nextCursor: 'cur-older' } })
-      .mockResolvedValueOnce({ data: { items: [msg(0, 'user')], nextCursor: null } });
+      .mockResolvedValueOnce({
+        data: { items: [msg(2, 'user')], totalCount: null, nextCursor: 'cur-older' },
+      })
+      .mockResolvedValueOnce({
+        data: { items: [msg(0, 'user')], totalCount: null, nextCursor: null },
+      });
 
-    const { result } = renderHook(() => useConversationMessages(ID, { limit: 1 }), {
+    const { result } = renderHook(() => useConversationMessages(ID, { pageSize: 1 }), {
       wrapper: createWrapper(client),
     });
 
     await waitFor(() => expect(result.current.messages).toHaveLength(1));
-    expect(get.mock.calls[0]?.[0]).toBe(`/api/v1/conversations/${ID}/messages?limit=1`);
+    expect(get.mock.calls[0]?.[0]).toBe(`/api/v1/conversations/${ID}/messages?pageSize=1`);
 
     act(() => {
       result.current.loadOlder();
     });
     await waitFor(() => expect(result.current.messages).toHaveLength(2));
     expect(get.mock.calls[1]?.[0]).toBe(
-      `/api/v1/conversations/${ID}/messages?limit=1&before=cur-older`
+      `/api/v1/conversations/${ID}/messages?pageSize=1&cursor=cur-older`
     );
   });
 
@@ -81,7 +92,7 @@ describe('useConversationMessages', () => {
     const client = createMockClient();
     const get = vi
       .spyOn(client, 'get')
-      .mockResolvedValue({ data: { items: [], nextCursor: null } });
+      .mockResolvedValue({ data: { items: [], totalCount: null, nextCursor: null } });
 
     renderHook(() => useConversationMessages(null), { wrapper: createWrapper(client) });
 

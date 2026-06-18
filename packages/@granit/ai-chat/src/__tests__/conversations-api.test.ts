@@ -14,7 +14,13 @@ import {
 } from '../api/conversations-api';
 import { MESSAGE_REPORT_CATEGORIES } from '../types/index';
 
-import type { ConversationId, ConversationResponse, MessageId, MessagePage } from '../types/index';
+import type {
+  ConversationId,
+  ConversationResponse,
+  MessageId,
+  MessageResponse,
+} from '../types/index';
+import type { PagedResult } from '@granit/query-engine';
 
 const BASE = '/api/v1/conversations';
 const ID = 'a1111111-1111-1111-1111-111111111111' as ConversationId;
@@ -56,7 +62,7 @@ describe('conversations-api', () => {
 
   it('getConversationMessages GETs the newest page with no query when no params', async () => {
     const client = createMockClient();
-    const page: MessagePage = { items: [], nextCursor: null };
+    const page: PagedResult<MessageResponse> = { items: [], totalCount: null, nextCursor: null };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(page));
 
     const result = await getConversationMessages(client, BASE, ID);
@@ -65,10 +71,10 @@ describe('conversations-api', () => {
     expect(result).toEqual(page);
   });
 
-  it('getConversationMessages builds limit + url-encoded before, and threads the signal', async () => {
+  it('getConversationMessages builds pageSize + url-encoded cursor, and threads the signal', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
-      axiosResponse<MessagePage>({ items: [], nextCursor: null })
+      axiosResponse<PagedResult<MessageResponse>>({ items: [], totalCount: null, nextCursor: null })
     );
     const controller = new AbortController();
 
@@ -76,13 +82,14 @@ describe('conversations-api', () => {
       client,
       BASE,
       ID,
-      { limit: 50, before: 'a+b/c=' },
+      { pageSize: 50, cursor: 'a+b/c=' },
       controller.signal
     );
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/${ID}/messages?limit=50&before=a%2Bb%2Fc%3D`, {
-      signal: controller.signal,
-    });
+    expect(client.get).toHaveBeenCalledWith(
+      `${BASE}/${ID}/messages?pageSize=50&cursor=a%2Bb%2Fc%3D`,
+      { signal: controller.signal }
+    );
   });
 
   it('createConversation POSTs to the base path with the title body', async () => {

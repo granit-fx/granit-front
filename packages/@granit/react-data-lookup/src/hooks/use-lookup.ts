@@ -1,8 +1,7 @@
 'use client';
 
 import { findMissingScopeKey, searchLookup } from '@granit/data-lookup';
-import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
+import { usePagedInfiniteQuery } from '@granit/react-query-engine';
 
 import { useOptionalDataLookupConfig } from '../providers/data-lookup-provider';
 
@@ -15,7 +14,6 @@ import type {
   LookupItemResponse,
   LookupResultResponse,
 } from '@granit/data-lookup';
-import type { InfiniteData } from '@tanstack/react-query';
 
 /** Default page size when the caller does not specify one. */
 const DEFAULT_PAGE_SIZE = 25;
@@ -126,19 +124,15 @@ export function useLookup(
   const scopeSatisfied = missingScopeKey === null;
   const effectiveEnabled = options.enabled === false ? false : scopeSatisfied;
 
-  const query = useInfiniteQuery<
-    LookupResultResponse,
-    unknown,
-    InfiniteData<LookupResultResponse, LookupPageParam>,
-    readonly unknown[],
-    LookupPageParam
-  >({
+  // Offset vs. keyset is decided entirely by nextLookupPageParam; the generic
+  // hook owns the useInfiniteQuery wiring, flatten, and fetch-next guard.
+  const paged = usePagedInfiniteQuery<LookupItemResponse, LookupResultResponse, LookupPageParam>({
     queryKey: buildLookupQueryKey(
       descriptor,
       { search: debouncedSearch, pageSize, scope },
       culture
     ),
-    queryFn: ({ pageParam, signal }) =>
+    fetchPage: ({ pageParam, signal }) =>
       searchLookup(
         descriptor,
         { search: debouncedSearch, pageSize, scope, ...pageParam },
@@ -148,41 +142,10 @@ export function useLookup(
     getNextPageParam: nextLookupPageParam,
     enabled: effectiveEnabled,
     staleTime,
-    placeholderData: keepPreviousData,
+    keepPreviousData: true,
   });
 
-  const items = useMemo<readonly LookupItemResponse[]>(
-    () => query.data?.pages.flatMap((p) => p.items) ?? [],
-    [query.data]
-  );
-
-  const totalCount = query.data?.pages.at(-1)?.totalCount ?? null;
-
-  const fetchNextPage = useCallback(() => {
-    if (query.hasNextPage && !query.isFetchingNextPage) {
-      query.fetchNextPage();
-    }
-  }, [query]);
-
-  const refetch = useCallback(() => {
-    query.refetch();
-  }, [query]);
-
-  return {
-    items,
-    totalCount,
-    isLoading: query.isLoading,
-    isFetching: query.isFetching,
-    isFetchingNextPage: query.isFetchingNextPage,
-    isSuccess: query.isSuccess,
-    isError: query.isError,
-    error: query.error,
-    hasNextPage: query.hasNextPage,
-    fetchStatus: query.fetchStatus,
-    fetchNextPage,
-    refetch,
-    missingScopeKey,
-  };
+  return { ...paged, missingScopeKey };
 }
 
 /**

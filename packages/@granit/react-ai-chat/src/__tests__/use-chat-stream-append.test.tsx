@@ -12,7 +12,8 @@ import { AIChatProvider } from '../providers/ai-chat-provider';
 import { createSSEStream, TEST_BASE_PATH } from './test-utils';
 
 import type { MessagesPageParam } from '../hooks/use-conversation-messages';
-import type { ConversationId, MessagePage, MessageResponse } from '@granit/ai-chat';
+import type { ConversationId, MessageResponse } from '@granit/ai-chat';
+import type { PagedResult } from '@granit/query-engine';
 import type { InfiniteData } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 
@@ -41,10 +42,13 @@ describe('useChatStream — optimistic message append', () => {
 
     const queryClient = createTestQueryClient();
     const messagesKey = conversationKeys.messages(DEFAULT_QUERY_KEY_PREFIX, CONV_ID);
-    queryClient.setQueryData<InfiniteData<MessagePage, MessagesPageParam>>(messagesKey, {
-      pages: [{ items: [seed], nextCursor: null }],
-      pageParams: [{ before: undefined }],
-    });
+    queryClient.setQueryData<InfiniteData<PagedResult<MessageResponse>, MessagesPageParam>>(
+      messagesKey,
+      {
+        pages: [{ items: [seed], totalCount: null, nextCursor: null }],
+        pageParams: [undefined],
+      }
+    );
 
     function wrapper({ children }: { readonly children: ReactNode }) {
       return (
@@ -63,11 +67,14 @@ describe('useChatStream — optimistic message append', () => {
     await waitFor(() => expect(result.current.isStreaming).toBe(false));
 
     const data =
-      queryClient.getQueryData<InfiniteData<MessagePage, MessagesPageParam>>(messagesKey);
+      queryClient.getQueryData<InfiniteData<PagedResult<MessageResponse>, MessagesPageParam>>(
+        messagesKey
+      );
     expect(data?.pages).toHaveLength(1);
     const items = data?.pages[0]?.items ?? [];
-    // Seed preserved, then the user + assistant turn appended in order.
-    expect(items.map((m) => m.content)).toEqual(['earlier reply', 'Hello', 'Hi there']);
+    // Newest page is stored newest-first: the new turn (assistant, then user) is
+    // prepended ahead of the seed. The display hook reverses this to oldest-first.
+    expect(items.map((m) => m.content)).toEqual(['Hi there', 'Hello', 'earlier reply']);
     expect(items.map((m) => m.role)).toEqual(['assistant', 'user', 'assistant']);
   });
 

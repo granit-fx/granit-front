@@ -1,26 +1,27 @@
 import { getConversationMessages } from '@granit/ai-chat';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { usePagedInfiniteQuery } from '@granit/react-query-engine';
 import { useMemo } from 'react';
 
 import { useAIChatConfig } from '../providers/ai-chat-provider';
 
 import { conversationKeys } from './query-keys';
 
-import type { ConversationId, MessagePage, MessageResponse } from '@granit/ai-chat';
-import type { InfiniteData } from '@tanstack/react-query';
+import type { ConversationId, MessageResponse } from '@granit/ai-chat';
+import type { PagedResult } from '@granit/query-engine';
 
 /** Default page size; mirrors the endpoint's server-side default. */
-const DEFAULT_LIMIT = 30;
+const DEFAULT_PAGE_SIZE = 30;
 
-/** Page cursor threaded through the infinite query. `before: undefined` = newest page. */
-export interface MessagesPageParam {
-  readonly before?: string;
-}
+/**
+ * Page cursor threaded through the infinite query: an opaque keyset string, or
+ * `undefined` for the first (newest) page.
+ */
+export type MessagesPageParam = string | undefined;
 
 /** Options for {@link useConversationMessages}. */
 export interface UseConversationMessagesOptions {
   /** Messages per page (server caps at 100). Default `30`. */
-  readonly limit?: number;
+  readonly pageSize?: number;
   /** Force-disable the query (composes with the automatic `id !== null` gate). */
   readonly enabled?: boolean;
 }
@@ -52,13 +53,17 @@ export interface UseConversationMessagesResult {
 }
 
 /**
- * Reverse (keyset) infinite query for a conversation's messages, backed by
- * `GET {basePath}/{id}/messages`. Loads the newest page first, then OLDER pages
- * on demand (scroll-up). Pair it with {@link useReverseInfiniteScroll} to keep
- * the viewport anchored when an older page is prepended.
+ * Reverse (keyset) infinite query for a conversation's messages. Loads the
+ * newest page first, then OLDER pages on demand (scroll-up), over the
+ * framework's generic {@link usePagedInfiniteQuery} + `PagedResult` cursor
+ * contract — the same machinery `useLookup` rides. Pair it with
+ * {@link useReverseInfiniteScroll} to keep the viewport anchored on prepend.
+ *
+ * The server sorts newest-first (`-createdAt`), so pages arrive newest → older;
+ * `messages` is reversed to oldest-first for natural top-to-bottom rendering.
  *
  * This is the thread's source of truth — `useConversation` is left for
- * conversation METADATA (title, favorite, dates) only. `getConversation` still
+ * conversation METADATA (title, favorite, dates). `getConversation` still
  * returns its `messages` for backward compatibility, but the thread no longer
  * relies on them.
  *
@@ -70,50 +75,43 @@ export function useConversationMessages(
   options: UseConversationMessagesOptions = {}
 ): UseConversationMessagesResult {
   const config = useAIChatConfig();
-  const limit = options.limit ?? DEFAULT_LIMIT;
+  const pageSize = options.pageSize ?? DEFAULT_PAGE_SIZE;
 
-  const query = useInfiniteQuery<
-    MessagePage,
-    unknown,
-    InfiniteData<MessagePage, MessagesPageParam>,
-    readonly unknown[],
+  const paged = usePagedInfiniteQuery<
+    MessageResponse,
+    PagedResult<MessageResponse>,
     MessagesPageParam
   >({
     queryKey: conversationKeys.messages(config.queryKeyPrefix, id ?? ('' as ConversationId)),
-    queryFn: ({ pageParam, signal }) =>
+    fetchPage: ({ pageParam, signal }) =>
       getConversationMessages(
         config.client,
         config.basePath,
         id as ConversationId,
-        { limit, before: pageParam.before },
+        { cursor: pageParam, pageSize },
         signal
       ),
-    initialPageParam: { before: undefined },
-    getNextPageParam: (lastPage) =>
-      lastPage.nextCursor != null ? { before: lastPage.nextCursor } : undefined,
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     enabled: (options.enabled ?? true) && id !== null,
   });
 
-  // Pages arrive newest-block → older-block, ascending within each block, so the
-  // display order is the pages reversed and then flattened.
+  // Pages arrive newest-first (server sorts `-createdAt`); reverse the flattened
+  // accumulation so the oldest message renders at the top.
   const messages = useMemo<readonly MessageResponse[]>(
-    () => (query.data ? [...query.data.pages].reverse().flatMap((page) => page.items) : []),
-    [query.data]
+    () => [...paged.items].reverse(),
+    [paged.items]
   );
 
   return {
     messages,
-    hasMoreOlder: query.hasNextPage,
-    loadOlder: () => {
-      if (query.hasNextPage && !query.isFetchingNextPage) query.fetchNextPage();
-    },
-    isLoadingOlder: query.isFetchingNextPage,
-    isLoading: query.isLoading,
-    isFetching: query.isFetching,
-    isError: query.isError,
-    error: query.error,
-    refetch: () => {
-      query.refetch();
-    },
+    hasMoreOlder: paged.hasNextPage,
+    loadOlder: paged.fetchNextPage,
+    isLoadingOlder: paged.isFetchingNextPage,
+    isLoading: paged.isLoading,
+    isFetching: paged.isFetching,
+    isError: paged.isError,
+    error: paged.error,
+    refetch: paged.refetch,
   };
 }

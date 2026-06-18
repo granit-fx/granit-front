@@ -33,9 +33,11 @@ import { AIChatProvider } from '@granit/react-ai-chat';
 - `useConversation(id)` — conversation **metadata** (title, favorite, dates).
   No longer the source for the thread — use `useConversationMessages` for that.
 - `useConversationMessages(id)` — reverse (keyset) infinite query over the
-  thread (`GET /conversations/{id}/messages`). Loads the newest page first, then
-  OLDER pages via `loadOlder()`. Returns `messages` flattened **oldest-first**,
-  `hasMoreOlder`, `isLoadingOlder`.
+  thread (`GET /conversations/{id}/messages?cursor=&pageSize=`), built on the
+  framework's generic `usePagedInfiniteQuery` (`@granit/react-query-engine`) +
+  the shared `PagedResult` cursor contract — the same machinery `useLookup`
+  rides. Loads the newest page first, then OLDER pages via `loadOlder()`. Returns
+  `messages` flattened **oldest-first**, `hasMoreOlder`, `isLoadingOlder`.
 - `useReverseInfiniteScroll({ scrollContainerRef, topSentinelRef, itemCount, … })`
   — loads older messages as the user scrolls up and keeps the viewport anchored
   on prepend. Pair it with `useStickToBottom` (share the same `scrollRef`) so new

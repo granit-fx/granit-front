@@ -14,11 +14,11 @@ import type {
   ConversationResponse,
   ConversationSummaryResponse,
   CreateConversationRequest,
-  MessagePage,
   MessageResponse,
   RenameConversationRequest,
   SetConversationFavoriteRequest,
 } from '@granit/ai-chat';
+import type { PagedResult } from '@granit/query-engine';
 import type { Mutable } from '@granit/testing';
 
 /** One SSE frame line for the conversations stream (flat ChatStreamEvent JSON). */
@@ -44,28 +44,33 @@ export function createAIChatHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // GET /conversations — list summaries, newest first.
     http.get(baseUrl, () => HttpResponse.json(summaries)),
 
-    // GET /conversations/:id/messages — one reverse-pagination page.
-    // Ascending (oldest-first) within the page; `nextCursor` walks OLDER. The
-    // cursor here is simply the id of the page's oldest item (opaque to clients).
-    // Declared before `/:id` so it is not shadowed.
+    // GET /conversations/:id/messages — one keyset page (generic PagedResult +
+    // cursor contract). Server sorts -createdAt → items returned newest-first;
+    // `nextCursor` (the opaque id of the page's oldest item) walks OLDER, null at
+    // the start of history. Declared before `/:id` so it is not shadowed.
     http.get(`${baseUrl}/:id/messages`, ({ params, request }) => {
       const id = params.id as string;
+      // Source fixture is ascending (oldest-first).
       const all: readonly MessageResponse[] =
         id === mockLongConversationId ? mockLongConversationMessages : mockConversation.messages;
 
       const url = new URL(request.url);
-      const limit = Math.min(Math.max(Number(url.searchParams.get('limit')) || 30, 1), 100);
-      const before = url.searchParams.get('before');
+      const pageSize = Math.min(Math.max(Number(url.searchParams.get('pageSize')) || 30, 1), 100);
+      const cursor = url.searchParams.get('cursor');
 
       let end = all.length;
-      if (before) {
-        const idx = all.findIndex((m) => m.id === before);
+      if (cursor) {
+        const idx = all.findIndex((m) => m.id === cursor);
         if (idx !== -1) end = idx;
       }
-      const start = Math.max(0, end - limit);
-      const items = all.slice(start, end);
-      const nextCursor = start > 0 ? (items[0]?.id ?? null) : null;
-      return HttpResponse.json<MessagePage>({ items, nextCursor });
+      const start = Math.max(0, end - pageSize);
+      const items = [...all.slice(start, end)].reverse(); // newest-first
+      const nextCursor = start > 0 ? (all[start]?.id ?? null) : null;
+      return HttpResponse.json<PagedResult<MessageResponse>>({
+        items,
+        totalCount: null,
+        nextCursor,
+      });
     }),
 
     // GET /conversations/:id — full conversation.

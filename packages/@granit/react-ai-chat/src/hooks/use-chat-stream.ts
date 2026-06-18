@@ -19,11 +19,11 @@ import type {
   ChatStreamEvent,
   ClarificationResponse,
   ConversationId,
-  MessagePage,
   MessageResponse,
   SendMessageRequest,
   SuggestedActionResponse,
 } from '@granit/ai-chat';
+import type { PagedResult } from '@granit/query-engine';
 import type { InfiniteData, QueryClient } from '@tanstack/react-query';
 
 /** Token usage reported near the end of a turn. */
@@ -170,23 +170,30 @@ function appendTurnToMessages(
   userMessage: string,
   assistantContent: string
 ): void {
-  queryClient.setQueryData<InfiniteData<MessagePage, MessagesPageParam>>(key, (prev) => {
-    const newest = prev?.pages[0];
-    if (!prev || !newest) return prev;
-    const now = toISODateString(new Date().toISOString());
-    const synth = (role: MessageResponse['role'], content: string): MessageResponse => ({
-      id: toEntityId<'Message'>(crypto.randomUUID()),
-      role,
-      content,
-      createdAt: now,
-    });
-    const appended: MessageResponse[] = [synth('user', userMessage)];
-    if (assistantContent) appended.push(synth('assistant', assistantContent));
-    // pages[0] is the initial (newest) page; its items are ascending, so the
-    // new turn goes at the end of that page.
-    const updatedNewest: MessagePage = { ...newest, items: [...newest.items, ...appended] };
-    return { ...prev, pages: [updatedNewest, ...prev.pages.slice(1)] };
-  });
+  queryClient.setQueryData<InfiniteData<PagedResult<MessageResponse>, MessagesPageParam>>(
+    key,
+    (prev) => {
+      const newest = prev?.pages[0];
+      if (!prev || !newest) return prev;
+      const now = toISODateString(new Date().toISOString());
+      const synth = (role: MessageResponse['role'], content: string): MessageResponse => ({
+        id: toEntityId<'Message'>(crypto.randomUUID()),
+        role,
+        content,
+        createdAt: now,
+      });
+      // Pages are newest-first (server sorts `-createdAt`); the assistant reply is
+      // the newest item, then the user turn. Prepend both to the newest page.
+      const appended: MessageResponse[] = [];
+      if (assistantContent) appended.push(synth('assistant', assistantContent));
+      appended.push(synth('user', userMessage));
+      const updatedNewest: PagedResult<MessageResponse> = {
+        ...newest,
+        items: [...appended, ...newest.items],
+      };
+      return { ...prev, pages: [updatedNewest, ...prev.pages.slice(1)] };
+    }
+  );
 }
 
 export function useChatStream(): UseChatStreamReturn {
