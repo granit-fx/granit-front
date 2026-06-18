@@ -393,14 +393,14 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'BulkActionFailure',
       'EntityFormFieldManifest',
     ],
-    // TODO(contract): BulkActionRequest deferred — its `payload` is `unknown`
+    // BulkActionRequest stays unregistered — its `payload` is `unknown`
     // front-side (which subsumes null) but the oracle reads a bare `unknown` as
     // non-nullable; an oracle limitation, not a drift.
   },
   {
     slug: 'entities-customization',
     package: 'entities-customization',
-    // TODO(contract): LayoutDelta deferred — it is a discriminated union
+    // LayoutDelta stays unregistered — it is a discriminated union
     // (Reorder|Regroup|Hide), which the field-by-field oracle cannot verify.
     types: ['EntityCustomizationResponse', 'EntityCustomizationRequest'],
   },
@@ -479,8 +479,8 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'PartyDuplicateCandidateResponse',
       'PartyDuplicateMergeRequest',
     ],
-    // TODO(contract): FieldConflictResponse / PartyMergeRequest / PartyMergeResponse
-    // deferred — declared as aliases to shared/generic types (FieldConflict,
+    // FieldConflictResponse / PartyMergeRequest / PartyMergeResponse stay
+    // unregistered — declared as aliases to shared/generic types (FieldConflict,
     // MergeRequest<PartyId>, MergeResult<PartyId>), which the oracle cannot resolve.
   },
   {
@@ -875,8 +875,6 @@ export const CONTRACTS: readonly ModuleContract[] = [
   {
     slug: 'data-exchange',
     package: 'data-exchange',
-    // TODO(contract): ImportReportResponse (`finalStatus` string-vs-object)
-    // deferred — real field drift.
     types: [
       'ExportDefinitionResponse',
       'ExportFieldResponse',
