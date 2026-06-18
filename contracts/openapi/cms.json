@@ -4456,11 +4456,33 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/BlockFieldDescriptor"
             }
+          },
+          "allow": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "disallow": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
       "BlockFieldKind": {
-        "enum": ["Text", "Number", "Boolean", "Choice", "DocumentReference", "List", "Nested"]
+        "enum": [
+          "Text",
+          "Number",
+          "Boolean",
+          "Choice",
+          "DocumentReference",
+          "List",
+          "Nested",
+          "Slot",
+          "RichText"
+        ]
       },
       "BlockFieldOption": {
         "required": ["label", "value"],

@@ -34,10 +34,6 @@ export type {
 // Block registry
 export { BLOCK_COMPONENTS } from './blocks/registry';
 
-// Document resolution
-export { resolveDocumentReferencesInData } from './blocks/resolve-documents';
-export type { ResolvedDocumentAsset, ResolveDocumentsFn } from './blocks/resolve-documents';
-
 // Puck config generator
 export { catalogToConfig } from './puck/catalog-to-config';
 export type {

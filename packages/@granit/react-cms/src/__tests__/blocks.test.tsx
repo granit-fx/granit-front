@@ -36,6 +36,13 @@ describe('HeroBlock', () => {
     expect(container.querySelector('[data-block="hero"]')).not.toBeNull();
   });
 
+  it('renders no image when the reference is cleared (no _resolved_imageId)', () => {
+    // A cleared DocumentReference carries the GUID but no publish-time
+    // `_resolved_` sibling — the block must render nothing for the image.
+    const { container } = render(<HeroBlock headline="Welcome" imageId="guid-1" />);
+    expect(container.querySelector('img')).toBeNull();
+  });
+
   it('renders optional subheadline, image and CTA', () => {
     const { container } = render(
       <HeroBlock

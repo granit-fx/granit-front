@@ -21,8 +21,8 @@ export type ResolveBlockDataFn = (params: {
 /**
  * A document item returned by the editor-side document picker.
  * Stored as the prop value for `DocumentReference` fields when the editor
- * uses the picker. `resolve-documents.ts` accepts this shape alongside plain
- * GUID strings so both paths resolve transparently.
+ * uses the picker. At publish time the backend resolves the reference and
+ * injects a `_resolved_<field>` sibling carrying the render-ready asset.
  */
 export interface DocumentPickerItem {
   readonly id: string;

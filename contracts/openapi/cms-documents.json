@@ -1,0 +1,99 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "cms-documents",
+    "version": "1"
+  },
+  "paths": {
+    "/api/cms/assets/{siteId}/{documentId}": {
+      "get": {
+        "tags": ["CMS - Documents"],
+        "summary": "Redirects to a published document asset by site and document id.",
+        "description": "Anonymous SSR contract: 302-redirects to the current public-link URL of a document embedded in the published content of the given site. The URL is resolved at publish time and kept fresh by a renewal job, so the renderer never resolves documents at runtime. A document not present in the site's published content returns 404 — no link is ever minted on this path.",
+        "operationId": "GetCmsPublishedAsset",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "documentId",
+            "in": "path",
+            "description": "Unique identifier of the document.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "CMS - Documents"
+    }
+  ]
+}

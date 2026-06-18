@@ -3,9 +3,9 @@
  * Only exports safe to import from React Server Components.
  */
 
-// Document resolution (pure async function, no browser APIs)
-export { resolveDocumentReferencesInData } from './blocks/resolve-documents';
-export type { ResolvedDocumentAsset, ResolveDocumentsFn } from './blocks/resolve-documents';
+// Resolved document asset descriptor (pure type — the shape blocks read from
+// the publish-time `_resolved_<field>` siblings).
+export type { ResolvedAsset } from './blocks/types';
 
 // Puck config generator (pure function, no browser APIs)
 export { catalogToConfig } from './puck/catalog-to-config';

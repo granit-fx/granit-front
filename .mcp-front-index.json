@@ -4047,22 +4047,6 @@
           "signature": "const BLOCK_COMPONENTS: Record<string, ComponentType<any>>"
         },
         {
-          "name": "resolveDocumentReferencesInData",
-          "kind": "function",
-          "signature": "async function resolveDocumentReferencesInData( // eslint-disable-next-line @typescript-eslint/no-explicit-any data: any, catalog: BlockCatalogResponse, resolveFn: ResolveDocumentsFn // eslint-disable-next-line @typescript-eslint/no-explicit-any ): Promise<any>"
-        },
-        {
-          "name": "ResolvedDocumentAsset",
-          "kind": "interface",
-          "signature": "interface ResolvedDocumentAsset",
-          "members": []
-        },
-        {
-          "name": "ResolveDocumentsFn",
-          "kind": "type",
-          "signature": "type ResolveDocumentsFn = (ids: string[]) => Promise<Map<string, ResolvedDocumentAsset>>"
-        },
-        {
           "name": "catalogToConfig",
           "kind": "function",
           "signature": "function catalogToConfig( catalog: BlockCatalogResponse, options: CatalogConfigOptions ="
