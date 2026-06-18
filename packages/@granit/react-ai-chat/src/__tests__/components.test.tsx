@@ -112,17 +112,15 @@ describe('ChatMessage', () => {
     const assistantBubble = assistant.container.querySelector('[data-slot="chat-bubble"]');
     expect(assistantBubble).toBeInTheDocument();
     // Assistant bubble uses the lightened neutral surface and the left tail.
-    // Assistant tail = square bottom-left: every corner rounded except bl.
+    // Assistant tail = square bottom-left (inline style, purge-proof).
     expect(assistantBubble?.className).toContain('bg-muted/50');
-    expect(assistantBubble?.className).toContain('rounded-br-2xl');
-    expect(assistantBubble?.className).not.toContain('rounded-bl-2xl');
+    expect(assistantBubble).toHaveStyle({ borderBottomLeftRadius: '0px' });
 
-    // User tail = square bottom-right: every corner rounded except br.
+    // User tail = square bottom-right.
     const user = render(<ChatMessage role="user" content="Hi" />);
     const userBubble = user.container.querySelector('[data-slot="chat-bubble"]');
     expect(userBubble?.className).toContain('bg-primary');
-    expect(userBubble?.className).toContain('rounded-bl-2xl');
-    expect(userBubble?.className).not.toContain('rounded-br-2xl');
+    expect(userBubble).toHaveStyle({ borderBottomRightRadius: '0px' });
   });
 });
 
