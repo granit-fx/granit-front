@@ -38,11 +38,19 @@ export type {
   UseChatStreamReturn,
 } from './hooks/use-chat-stream';
 
+// Hooks — scrolling
+export { useStickToBottom } from './hooks/use-stick-to-bottom';
+export type { UseStickToBottomOptions, UseStickToBottomReturn } from './hooks/use-stick-to-bottom';
+
 // Components
 export { ChatMessage } from './components/chat-message';
 export type { ChatMessageProps } from './components/chat-message';
 export { ConversationThread } from './components/conversation-thread';
 export type { ConversationThreadProps } from './components/conversation-thread';
+export { ConversationScrollArea } from './components/conversation-scroll-area';
+export type { ConversationScrollAreaProps } from './components/conversation-scroll-area';
+export { ScrollToBottomButton } from './components/scroll-to-bottom-button';
+export type { ScrollToBottomButtonProps } from './components/scroll-to-bottom-button';
 export { SuggestedActions } from './components/suggested-actions';
 export type { SuggestedActionsProps } from './components/suggested-actions';
 export { ClarificationPrompt } from './components/clarification-prompt';
