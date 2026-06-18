@@ -93,74 +93,83 @@ export function BffProvider({ config, children }: BffProviderProps) {
   useEffect(() => {
     let cancelled = false;
 
+    const markUnauthenticated = () => {
+      setLoginPending(false);
+      setUser(null);
+      configRef.current.onUnauthenticated?.();
+    };
+
+    // The CSRF token is required for mutations, NOT for the authenticated state.
+    // Fetch it best-effort: a transient CSRF failure must not bounce a genuinely
+    // authenticated user back into a login loop. The CsrfManager / api-client
+    // interceptor refreshes on demand later.
+    const prefetchCsrf = () => {
+      void csrfManager.fetchToken().catch((error: unknown) => {
+        (configRef.current.logger ?? fallbackLogger).warn(
+          '[@granit/react-bff] CSRF token prefetch failed; will refresh on demand',
+          { error: String(error) }
+        );
+      });
+    };
+
+    // One round-trip to `/bff/user`. Returns 'retry' to attempt again after a
+    // backoff, or 'stop' once the auth state for this turn is settled.
+    const runSessionAttempt = async (attempt: number): Promise<'retry' | 'stop'> => {
+      const response = await fetch(`${configRef.current.pathPrefix}/bff/user`, {
+        credentials: 'include',
+      });
+      if (cancelled) return 'stop';
+
+      // Validate transport-level success and content-type before parsing —
+      // captive portals, proxy error pages and HTML redirects can otherwise
+      // flow attacker-influenced fields into the auth context.
+      if (!response.ok) {
+        markUnauthenticated();
+        return 'stop';
+      }
+      // JSON.parse will throw on HTML captive-portal responses; the
+      // discriminated-union parser below enforces the granit-dotnet contract
+      // (IsHost ⇔ tenantId absent), so attacker-influenced or malformed
+      // payloads cannot flow into the auth context — see VULN-205.
+      const raw = (await response.json()) as unknown;
+      if (cancelled) return 'stop';
+
+      const parsed = parseBffSessionResponse(raw);
+      if (!parsed.success) {
+        (configRef.current.logger ?? fallbackLogger).warn(
+          '[@granit/react-bff] Malformed /bff/user response — treating as unauthenticated',
+          { issues: parsed.issues }
+        );
+        markUnauthenticated();
+        return 'stop';
+      }
+
+      if (parsed.data.authenticated) {
+        setLoginPending(false);
+        setUser(parsed.data);
+        prefetchCsrf();
+        return 'stop';
+      }
+
+      // authenticated:false. Right after a login/callback round-trip the
+      // session cookie can momentarily lag — re-check with a short backoff
+      // before forcing another login flow, but only while a login is
+      // pending (a cold anonymous load must redirect immediately, no delay).
+      if (readLoginPending() && attempt < LOGIN_RECHECK_BACKOFF_MS.length) {
+        await delay(LOGIN_RECHECK_BACKOFF_MS[attempt]!);
+        return cancelled ? 'stop' : 'retry';
+      }
+
+      markUnauthenticated();
+      return 'stop';
+    };
+
     const checkSession = async () => {
       try {
         // Single try/finally around the whole retry loop so `isLoading` flips
         // to false exactly once, at the end — not between backoff attempts.
         for (let attempt = 0; ; attempt++) {
-          const response = await fetch(`${configRef.current.pathPrefix}/bff/user`, {
-            credentials: 'include',
-          });
-          if (cancelled) return;
-
-          // Validate transport-level success and content-type before parsing —
-          // captive portals, proxy error pages and HTML redirects can otherwise
-          // flow attacker-influenced fields into the auth context.
-          if (!response.ok) {
-            setLoginPending(false);
-            setUser(null);
-            configRef.current.onUnauthenticated?.();
-            return;
-          }
-          // JSON.parse will throw on HTML captive-portal responses; the
-          // discriminated-union parser below enforces the granit-dotnet contract
-          // (IsHost ⇔ tenantId absent), so attacker-influenced or malformed
-          // payloads cannot flow into the auth context — see VULN-205.
-          const raw = (await response.json()) as unknown;
-          if (cancelled) return;
-
-          const parsed = parseBffSessionResponse(raw);
-          if (!parsed.success) {
-            (configRef.current.logger ?? fallbackLogger).warn(
-              '[@granit/react-bff] Malformed /bff/user response — treating as unauthenticated',
-              { issues: parsed.issues }
-            );
-            setLoginPending(false);
-            setUser(null);
-            configRef.current.onUnauthenticated?.();
-            return;
-          }
-
-          if (parsed.data.authenticated) {
-            setLoginPending(false);
-            setUser(parsed.data);
-            // The CSRF token is required for mutations, NOT for the authenticated
-            // state. Fetch it best-effort: a transient CSRF failure must not bounce
-            // a genuinely authenticated user back into a login loop. The
-            // CsrfManager / api-client interceptor refreshes on demand later.
-            void csrfManager.fetchToken().catch((error: unknown) => {
-              (configRef.current.logger ?? fallbackLogger).warn(
-                '[@granit/react-bff] CSRF token prefetch failed; will refresh on demand',
-                { error: String(error) }
-              );
-            });
-            return;
-          }
-
-          // authenticated:false. Right after a login/callback round-trip the
-          // session cookie can momentarily lag — re-check with a short backoff
-          // before forcing another login flow, but only while a login is
-          // pending (a cold anonymous load must redirect immediately, no delay).
-          if (readLoginPending() && attempt < LOGIN_RECHECK_BACKOFF_MS.length) {
-            await delay(LOGIN_RECHECK_BACKOFF_MS[attempt]!);
-            if (cancelled) return;
-            continue;
-          }
-
-          setLoginPending(false);
-          setUser(null);
-          configRef.current.onUnauthenticated?.();
-          return;
+          if ((await runSessionAttempt(attempt)) === 'stop') return;
         }
       } catch (error) {
         if (cancelled) return;

@@ -94,11 +94,11 @@ export function IconPicker({
             colorValid ? 'border-input' : 'border-destructive'
           )}
         />
-        {!colorValid ? (
+        {!colorValid && (
           <span data-slot="icon-color-error" className="text-destructive text-xs">
             {labels.ColorInvalid}
           </span>
-        ) : null}
+        )}
       </div>
     </div>
   );

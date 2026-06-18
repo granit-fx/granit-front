@@ -282,27 +282,42 @@ function resolveModuleFile(spec: string, fromFile: string): string | undefined {
  * import to resolve to its real family instead of defaulting to `object`.
  * Local aliases win; cycles and depth are bounded.
  */
+interface ImportFrame {
+  file: string;
+  text: string;
+  depth: number;
+}
+
+/** Resolve and enqueue the `import type` targets of one file, skipping cycles and unreadable modules. */
+function enqueueImports(
+  info: FileInfo,
+  file: string,
+  depth: number,
+  visited: ReadonlySet<string>,
+  stack: ImportFrame[]
+): void {
+  for (const spec of info.imports) {
+    const target = resolveModuleFile(spec, file);
+    if (!target || visited.has(target)) continue;
+    try {
+      stack.push({ file: target, text: readFileSync(target, 'utf8'), depth: depth + 1 });
+    } catch {
+      // unreadable (generated / out-of-tree) — skip silently
+    }
+  }
+}
+
 function collectAliases(fileName: string, sourceText: string): AliasMap {
   const merged = new Map<string, ts.TypeNode>();
   const visited = new Set<string>();
-  const stack: { file: string; text: string; depth: number }[] = [
-    { file: fileName, text: sourceText, depth: 0 },
-  ];
+  const stack: ImportFrame[] = [{ file: fileName, text: sourceText, depth: 0 }];
   while (stack.length) {
     const { file, text, depth } = stack.pop()!;
     if (visited.has(file) || depth > MAX_IMPORT_DEPTH) continue;
     visited.add(file);
     const info = parseFileInfo(file, text);
     for (const [name, node] of info.aliases) if (!merged.has(name)) merged.set(name, node);
-    for (const spec of info.imports) {
-      const target = resolveModuleFile(spec, file);
-      if (!target || visited.has(target)) continue;
-      try {
-        stack.push({ file: target, text: readFileSync(target, 'utf8'), depth: depth + 1 });
-      } catch {
-        // unreadable (generated / out-of-tree) — skip silently
-      }
-    }
+    enqueueImports(info, file, depth, visited, stack);
   }
   return merged;
 }

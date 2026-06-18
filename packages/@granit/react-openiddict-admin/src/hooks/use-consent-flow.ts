@@ -32,7 +32,7 @@ export function useConsentFlow(returnUrl: string | null, subject: string | null)
     try {
       const url = new URL(
         returnUrl,
-        typeof globalThis.window === 'undefined' ? 'http://localhost' : globalThis.location.origin
+        globalThis.window === undefined ? 'http://localhost' : globalThis.location.origin
       );
       return {
         clientId: url.searchParams.get('client_id'),

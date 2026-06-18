@@ -86,7 +86,8 @@ export function PromptCatalogue({
 
               <div className="flex shrink-0 items-center gap-1">
                 {prompt.isSystem ? (
-                  canManage && onCustomise ? (
+                  canManage &&
+                  onCustomise && (
                     <button
                       type="button"
                       data-slot="prompt-customise"
@@ -99,7 +100,7 @@ export function PromptCatalogue({
                       <Copy className="size-3.5" aria-hidden />
                       {labels.Customise}
                     </button>
-                  ) : null
+                  )
                 ) : (
                   <>
                     {canManage && onEdit ? (

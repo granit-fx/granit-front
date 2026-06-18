@@ -239,6 +239,10 @@ export function ChatComposer({
     [showSuggestions, suggestionItems.length, selectActive, submit]
   );
 
+  const patchAttachment = useCallback((id: string, patch: Partial<ComposerAttachment>) => {
+    setAttachments((current) => current.map((a) => (a.id === id ? { ...a, ...patch } : a)));
+  }, []);
+
   const handleFiles = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(event.target.files ?? []);
@@ -261,25 +265,27 @@ export function ChatComposer({
           ];
         });
         uploadAttachment(file)
-          .then((uploaded) => {
-            setAttachments((current) =>
-              current.map((a) => (a.id === id ? { ...a, ...uploaded, status: 'ready' } : a))
-            );
-          })
+          .then((uploaded) => patchAttachment(id, { ...uploaded, status: 'ready' }))
           .catch((err: unknown) => {
             logger.warn('Composer attachment upload failed', {
               fileName: file.name,
               sizeBytes: file.size,
               err,
             });
-            setAttachments((current) =>
-              current.map((a) => (a.id === id ? { ...a, status: 'error' } : a))
-            );
+            patchAttachment(id, { status: 'error' });
           });
       }
     },
-    [uploadAttachment]
+    [uploadAttachment, patchAttachment]
   );
+
+  const removePromptBadge = useCallback((id: string) => {
+    setPromptBadges((current) => current.filter((p) => p.id !== id));
+  }, []);
+
+  const removeAttachment = useCallback((id: string) => {
+    setAttachments((current) => current.filter((a) => a.id !== id));
+  }, []);
 
   return (
     <div data-slot="chat-composer" className={cn('flex flex-col gap-2', className)}>
@@ -296,7 +302,7 @@ export function ChatComposer({
                 type="button"
                 aria-label={`${labels.RemovePrompt} ${badge.name}`}
                 onClick={() => {
-                  setPromptBadges((current) => current.filter((p) => p.id !== badge.id));
+                  removePromptBadge(badge.id);
                 }}
                 className="hover:text-primary/70"
               >
@@ -307,13 +313,7 @@ export function ChatComposer({
         </ul>
       ) : null}
 
-      <AttachmentChips
-        attachments={attachments}
-        labels={labels}
-        onRemove={(id) => {
-          setAttachments((current) => current.filter((a) => a.id !== id));
-        }}
-      />
+      <AttachmentChips attachments={attachments} labels={labels} onRemove={removeAttachment} />
 
       <div className="relative">
         {showSuggestions && trigger?.kind === '/' ? (

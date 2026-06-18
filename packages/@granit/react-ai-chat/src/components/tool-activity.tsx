@@ -52,6 +52,12 @@ export function ToolActivity({
   const labelFor = (toolName: string): string =>
     resolveToolLabel?.(toolName) ?? labels.Names[toolName] ?? labels.Fallback;
 
+  const statusWordFor = (status: ToolCallStatus): string | null => {
+    if (status === 'succeeded') return labels.Succeeded;
+    if (status === 'failed') return labels.Failed;
+    return null;
+  };
+
   return (
     <div data-slot="tool-activity" className={cn('flex flex-col gap-1.5', className)}>
       {toolCalls.length > 0 ? (
@@ -59,12 +65,7 @@ export function ToolActivity({
           {toolCalls.map((tool) => {
             const Icon = STATUS_ICON[tool.status];
             const label = labelFor(tool.toolName);
-            const statusWord =
-              tool.status === 'succeeded'
-                ? labels.Succeeded
-                : tool.status === 'failed'
-                  ? labels.Failed
-                  : null;
+            const statusWord = statusWordFor(tool.status);
             return (
               <li key={tool.toolCallId}>
                 <span

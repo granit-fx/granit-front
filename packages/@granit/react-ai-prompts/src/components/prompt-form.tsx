@@ -85,9 +85,7 @@ export function PromptForm({
           }}
           className="border-input rounded-md border px-2.5 py-1.5"
         />
-        {!nameValid ? (
-          <span className="text-destructive text-xs">{labels.NameRequired}</span>
-        ) : null}
+        {!nameValid && <span className="text-destructive text-xs">{labels.NameRequired}</span>}
       </label>
 
       <label className="flex flex-col gap-1 text-sm">
@@ -118,9 +116,9 @@ export function PromptForm({
           }}
           className="border-input resize-y rounded-md border px-2.5 py-1.5"
         />
-        {!contentValid ? (
+        {!contentValid && (
           <span className="text-destructive text-xs">{labels.ContentRequired}</span>
-        ) : null}
+        )}
       </label>
 
       <fieldset className="flex flex-col gap-1 text-sm">

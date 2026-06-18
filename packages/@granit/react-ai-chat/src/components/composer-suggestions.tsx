@@ -41,6 +41,48 @@ export function ComposerSuggestions<T>({
   getOptionId,
   className,
 }: Readonly<ComposerSuggestionsProps<T>>) {
+  let body: ReactNode;
+  if (loading) {
+    body = (
+      <p data-slot="suggestions-loading" className="text-muted-foreground px-2 py-2 text-sm">
+        {loadingLabel}
+      </p>
+    );
+  } else if (items.length === 0) {
+    body = (
+      <p data-slot="suggestions-empty" className="text-muted-foreground px-2 py-2 text-sm">
+        {emptyLabel}
+      </p>
+    );
+  } else {
+    body = (
+      <ul role="listbox" id={listboxId} aria-label={title}>
+        {items.map((item, index) => (
+          <li
+            key={getKey(item, index)}
+            id={getOptionId(index)}
+            role="option"
+            aria-selected={index === activeIndex}
+            onMouseEnter={() => {
+              onHover(index);
+            }}
+            onMouseDown={(event) => {
+              // Keep textarea focus; select on mousedown before blur.
+              event.preventDefault();
+              onSelect(item);
+            }}
+            className={cn(
+              'cursor-pointer px-2 py-1.5 text-sm',
+              index === activeIndex ? 'bg-accent text-accent-foreground' : ''
+            )}
+          >
+            {renderItem(item)}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
   return (
     <div
       data-slot="composer-suggestions"
@@ -50,40 +92,7 @@ export function ComposerSuggestions<T>({
       )}
     >
       <p className="text-muted-foreground px-2 pt-2 pb-1 text-xs font-medium">{title}</p>
-      {loading ? (
-        <p data-slot="suggestions-loading" className="text-muted-foreground px-2 py-2 text-sm">
-          {loadingLabel}
-        </p>
-      ) : items.length === 0 ? (
-        <p data-slot="suggestions-empty" className="text-muted-foreground px-2 py-2 text-sm">
-          {emptyLabel}
-        </p>
-      ) : (
-        <ul role="listbox" id={listboxId} aria-label={title}>
-          {items.map((item, index) => (
-            <li
-              key={getKey(item, index)}
-              id={getOptionId(index)}
-              role="option"
-              aria-selected={index === activeIndex}
-              onMouseEnter={() => {
-                onHover(index);
-              }}
-              onMouseDown={(event) => {
-                // Keep textarea focus; select on mousedown before blur.
-                event.preventDefault();
-                onSelect(item);
-              }}
-              className={cn(
-                'cursor-pointer px-2 py-1.5 text-sm',
-                index === activeIndex ? 'bg-accent text-accent-foreground' : ''
-              )}
-            >
-              {renderItem(item)}
-            </li>
-          ))}
-        </ul>
-      )}
+      {body}
     </div>
   );
 }

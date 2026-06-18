@@ -7,8 +7,8 @@ export function StepsBlock({ title, items = [] }: StepsBlockProps) {
     <section data-block="steps">
       {title && <h2>{title}</h2>}
       <ol>
-        {items.map((step, i) => (
-          <li key={i}>
+        {items.map((step) => (
+          <li key={`${step.number}-${step.title}`}>
             {step.number && <span data-step-number>{step.number}</span>}
             <strong>{step.title}</strong>
             {step.description && <p>{step.description}</p>}

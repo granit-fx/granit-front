@@ -7,8 +7,8 @@ export function LogosBlock({ title, logoIds = [] }: LogosBlockProps) {
     <section data-block="logos">
       {title && <p>{title}</p>}
       <ul>
-        {logoIds.map((logo, i) => (
-          <li key={i}>
+        {logoIds.map((logo) => (
+          <li key={logo.value ?? logo._resolved_value?.url}>
             {logo._resolved_value && (
               <img
                 src={logo._resolved_value.url}

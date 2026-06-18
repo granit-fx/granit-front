@@ -142,64 +142,41 @@ export function useChatStream(): UseChatStreamReturn {
       const controller = new AbortController();
       abortRef.current = controller;
 
+      const turn: TurnState = { accumulated: '', tools: [], thinking: false, resolvedId: null };
+      const sinks = createEventSinks(turn, {
+        setContent,
+        setConversationId,
+        setSuggestedActions,
+        setClarification,
+        setUsage,
+        setToolCalls,
+        setIsThinking,
+      });
+
       void (async () => {
-        let resolvedId: ConversationId | null = null;
         try {
-          let accumulated = '';
-          let tools: readonly ToolCallActivity[] = [];
-          let thinking = false;
           for await (const event of streamConversationMessage(
             config.client,
             config.basePath,
             request,
             controller.signal
           )) {
-            applyEvent(event, {
-              appendContent: (chunk) => {
-                accumulated += chunk;
-                setContent(accumulated);
-              },
-              setConversationId: (id) => {
-                resolvedId = id;
-                setConversationId(id);
-              },
-              setSuggestedActions,
-              setClarification,
-              setUsage,
-              startToolCall: (toolCallId, toolName) => {
-                tools = [...tools, { toolCallId, toolName, status: 'running' }];
-                setToolCalls(tools);
-              },
-              resolveToolCall: (toolCallId, succeeded) => {
-                tools = tools.map((tool) =>
-                  tool.toolCallId === toolCallId
-                    ? { ...tool, status: succeeded ? 'succeeded' : 'failed' }
-                    : tool
-                );
-                setToolCalls(tools);
-              },
-              setThinking: (next) => {
-                if (next !== thinking) {
-                  thinking = next;
-                  setIsThinking(next);
-                }
-              },
-            });
+            applyEvent(event, sinks);
           }
 
           queryClient
             .invalidateQueries({ queryKey: conversationKeys.list(config.queryKeyPrefix) })
             .catch(() => undefined);
-          if (resolvedId) {
+          if (turn.resolvedId) {
             queryClient
               .invalidateQueries({
-                queryKey: conversationKeys.detail(config.queryKeyPrefix, resolvedId),
+                queryKey: conversationKeys.detail(config.queryKeyPrefix, turn.resolvedId),
               })
               .catch(() => undefined);
           }
         } catch (err) {
           if (err instanceof DOMException && err.name === 'AbortError') return;
-          logger.error('Chat stream turn failed', err, { conversationId: resolvedId });
+          logger.error('Chat stream turn failed', err, { conversationId: turn.resolvedId });
           setError(err instanceof Error ? err : new Error(String(err)));
         } finally {
           setIsStreaming(false);
@@ -235,6 +212,63 @@ interface EventSinks {
   readonly startToolCall: (toolCallId: string, toolName: string) => void;
   readonly resolveToolCall: (toolCallId: string, succeeded: boolean) => void;
   readonly setThinking: (thinking: boolean) => void;
+}
+
+/** Mutable accumulators for a single streaming turn, threaded through {@link createEventSinks}. */
+interface TurnState {
+  accumulated: string;
+  tools: readonly ToolCallActivity[];
+  thinking: boolean;
+  resolvedId: ConversationId | null;
+}
+
+/** React state setters the sinks dispatch to. */
+interface EventSinkSetters {
+  readonly setContent: (value: string) => void;
+  readonly setConversationId: (id: ConversationId | null) => void;
+  readonly setSuggestedActions: (actions: readonly SuggestedActionResponse[]) => void;
+  readonly setClarification: (clarification: ClarificationResponse | null) => void;
+  readonly setUsage: (usage: ChatStreamUsage) => void;
+  readonly setToolCalls: (tools: readonly ToolCallActivity[]) => void;
+  readonly setIsThinking: (thinking: boolean) => void;
+}
+
+/**
+ * Build the per-frame {@link EventSinks} bound to a single turn's mutable state —
+ * kept out of the hook body so the handlers don't nest under the streaming IIFE.
+ */
+function createEventSinks(turn: TurnState, setters: EventSinkSetters): EventSinks {
+  return {
+    appendContent: (chunk) => {
+      turn.accumulated += chunk;
+      setters.setContent(turn.accumulated);
+    },
+    setConversationId: (id) => {
+      turn.resolvedId = id;
+      setters.setConversationId(id);
+    },
+    setSuggestedActions: setters.setSuggestedActions,
+    setClarification: setters.setClarification,
+    setUsage: setters.setUsage,
+    startToolCall: (toolCallId, toolName) => {
+      turn.tools = [...turn.tools, { toolCallId, toolName, status: 'running' }];
+      setters.setToolCalls(turn.tools);
+    },
+    resolveToolCall: (toolCallId, succeeded) => {
+      turn.tools = turn.tools.map((tool) =>
+        tool.toolCallId === toolCallId
+          ? { ...tool, status: succeeded ? 'succeeded' : 'failed' }
+          : tool
+      );
+      setters.setToolCalls(turn.tools);
+    },
+    setThinking: (next) => {
+      if (next !== turn.thinking) {
+        turn.thinking = next;
+        setters.setIsThinking(next);
+      }
+    },
+  };
 }
 
 /** Dispatch a single {@link ChatStreamEvent} to the matching state updater. */

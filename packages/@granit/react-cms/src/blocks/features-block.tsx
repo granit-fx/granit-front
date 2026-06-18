@@ -7,8 +7,8 @@ export function FeaturesBlock({ title, items = [] }: FeaturesBlockProps) {
     <section data-block="features">
       {title && <h2>{title}</h2>}
       <ul>
-        {items.map((feature, i) => (
-          <li key={i}>
+        {items.map((feature) => (
+          <li key={feature.title}>
             <strong>{feature.title}</strong>
             {feature.description && <p>{feature.description}</p>}
           </li>

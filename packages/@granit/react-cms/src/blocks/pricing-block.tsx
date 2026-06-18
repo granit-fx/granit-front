@@ -9,16 +9,16 @@ export function PricingBlock({ title, plans = [] }: PricingBlockProps) {
     <section data-block="pricing">
       {title && <h2>{title}</h2>}
       <ul>
-        {plans.map((plan, i) => {
+        {plans.map((plan) => {
           const ctaSafeHref = safeLinkHref(plan.ctaHref);
           return (
-            <li key={i} data-highlighted={plan.highlighted ? 'true' : undefined}>
+            <li key={plan.name} data-highlighted={plan.highlighted ? 'true' : undefined}>
               <strong>{plan.name}</strong>
               <span>{plan.price}</span>
               {plan.period && <p>{plan.period}</p>}
               <ul>
-                {(plan.features ?? []).map((f, fi) => (
-                  <li key={fi}>{f.value}</li>
+                {(plan.features ?? []).map((f) => (
+                  <li key={f.value}>{f.value}</li>
                 ))}
               </ul>
               {plan.ctaLabel && ctaSafeHref && <a href={ctaSafeHref}>{plan.ctaLabel}</a>}

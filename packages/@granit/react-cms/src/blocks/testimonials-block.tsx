@@ -7,8 +7,8 @@ export function TestimonialsBlock({ title, items = [] }: TestimonialsBlockProps)
     <section data-block="testimonials">
       {title && <h2>{title}</h2>}
       <ul>
-        {items.map((t, i) => (
-          <li key={i}>
+        {items.map((t) => (
+          <li key={`${t.author}-${t.quote}`}>
             <blockquote>{t.quote}</blockquote>
             {t.author && (
               <cite>

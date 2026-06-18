@@ -43,6 +43,12 @@ function isCategoryGranted(category: CookieCategory, consents: ConsentState): bo
   return category === 'strictly_necessary' || consents[category] === true;
 }
 
+const SAME_SITE_LABEL: Record<NonNullable<CookieAttributes['sameSite']>, string> = {
+  strict: 'Strict',
+  lax: 'Lax',
+  none: 'None',
+};
+
 function serializeAttributes(attributes: CookieAttributes): string {
   const { path = '/', domain, maxAge, expires, secure = true, sameSite = 'lax' } = attributes;
 
@@ -50,7 +56,7 @@ function serializeAttributes(attributes: CookieAttributes): string {
   if (domain !== undefined) parts.push(`Domain=${domain}`);
   if (maxAge !== undefined) parts.push(`Max-Age=${maxAge}`);
   if (expires !== undefined) parts.push(`Expires=${expires.toUTCString()}`);
-  parts.push(`SameSite=${sameSite === 'strict' ? 'Strict' : sameSite === 'none' ? 'None' : 'Lax'}`);
+  parts.push(`SameSite=${SAME_SITE_LABEL[sameSite]}`);
   // `SameSite=None` is only valid alongside `Secure`; default-secure keeps it consistent.
   if (secure || sameSite === 'none') parts.push('Secure');
 
