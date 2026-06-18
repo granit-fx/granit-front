@@ -9,6 +9,7 @@ import type {
   ConversationSummaryResponse,
   CreateConversationRequest,
   RenameConversationRequest,
+  SetConversationFavoriteRequest,
 } from '@granit/ai-chat';
 import type { Mutable } from '@granit/testing';
 
@@ -44,6 +45,7 @@ export function createAIChatHandlers(baseUrl = DEFAULT_BASE_PATH) {
         ...mockConversation,
         id: summary.id,
         title: summary.title,
+        isFavorite: summary.isFavorite,
       });
     }),
 
@@ -60,6 +62,7 @@ export function createAIChatHandlers(baseUrl = DEFAULT_BASE_PATH) {
         {
           id: created.id,
           title: created.title,
+          isFavorite: created.isFavorite,
           createdAt: created.createdAt,
           modifiedAt: created.modifiedAt,
         },
@@ -75,6 +78,16 @@ export function createAIChatHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const index = summaries.findIndex((c) => c.id === id);
       if (index === -1) return new HttpResponse(null, { status: 404 });
       summaries = summaries.map((c) => (c.id === id ? { ...c, title: body.title } : c));
+      return new HttpResponse(null, { status: 204 });
+    }),
+
+    // PUT /conversations/:id/favorite — set the favorite flag (idempotent).
+    http.put(`${baseUrl}/:id/favorite`, async ({ params, request }) => {
+      const id = params.id as string;
+      const body = (await request.json()) as SetConversationFavoriteRequest;
+      const index = summaries.findIndex((c) => c.id === id);
+      if (index === -1) return new HttpResponse(null, { status: 404 });
+      summaries = summaries.map((c) => (c.id === id ? { ...c, isFavorite: body.isFavorite } : c));
       return new HttpResponse(null, { status: 204 });
     }),
 

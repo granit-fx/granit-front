@@ -58,6 +58,34 @@ describe('createAIChatHandlers', () => {
     expect(list[0]?.title).toBe('Fresh');
   });
 
+  it('sets the favorite flag (204) and reflects it on the next read', async () => {
+    server.use(...createAIChatHandlers(BASE));
+    const id = 'a1111111-1111-1111-1111-111111111111';
+
+    const put = await fetch(`${BASE}/${id}/favorite`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isFavorite: true }),
+    });
+    expect(put.status).toBe(204);
+
+    const detail = (await (await fetch(`${BASE}/${id}`)).json()) as { isFavorite: boolean };
+    expect(detail.isFavorite).toBe(true);
+
+    const list = (await (await fetch(BASE)).json()) as ConversationSummaryResponse[];
+    expect(list.find((c) => c.id === id)?.isFavorite).toBe(true);
+  });
+
+  it('returns 404 when favoriting an unknown conversation', async () => {
+    server.use(...createAIChatHandlers(BASE));
+    const response = await fetch(`${BASE}/00000000-0000-0000-0000-000000000000/favorite`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isFavorite: true }),
+    });
+    expect(response.status).toBe(404);
+  });
+
   it('accepts a message report with 202', async () => {
     server.use(...createAIChatHandlers(BASE));
     const response = await fetch(`${BASE}/messages/c3333333-3333-3333-3333-333333333333/report`, {

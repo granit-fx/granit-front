@@ -2900,6 +2900,11 @@
           "members": []
         },
         {
+          "name": "useSetConversationFavorite",
+          "kind": "function",
+          "signature": "function useSetConversationFavorite(): UseSetConversationFavoriteReturn"
+        },
+        {
           "name": "useReportMessage",
           "kind": "function",
           "signature": "function useReportMessage(): UseReportMessageReturn"

@@ -15,6 +15,7 @@ export const mockConversation: ConversationResponse = {
   id: CONVERSATION_ID,
   title: 'Invoice questions',
   ownerId: OWNER,
+  isFavorite: false,
   createdAt: toISODateString('2026-06-15T09:00:00.000Z'),
   modifiedAt: toISODateString('2026-06-15T09:05:00.000Z'),
   messages: [
@@ -38,12 +39,14 @@ export const mockConversationSummaries: ConversationSummaryResponse[] = [
   {
     id: CONVERSATION_ID,
     title: 'Invoice questions',
+    isFavorite: false,
     createdAt: toISODateString('2026-06-15T09:00:00.000Z'),
     modifiedAt: toISODateString('2026-06-15T09:05:00.000Z'),
   },
   {
     id: toEntityId<'Conversation'>('a1111111-1111-1111-1111-111111111112'),
     title: 'Daily brief',
+    isFavorite: true,
     createdAt: toISODateString('2026-06-14T07:30:00.000Z'),
     modifiedAt: null,
   },

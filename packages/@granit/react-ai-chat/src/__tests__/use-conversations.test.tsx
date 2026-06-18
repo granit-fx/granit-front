@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { useQueryClient } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -7,6 +8,7 @@ import { useConversations } from '../hooks/use-conversations';
 import { useCreateConversation } from '../hooks/use-create-conversation';
 import { useDeleteConversation } from '../hooks/use-delete-conversation';
 import { useReportMessage } from '../hooks/use-report-message';
+import { useSetConversationFavorite } from '../hooks/use-set-conversation-favorite';
 import { mockConversation, mockConversationSummaries } from '../testing/data';
 
 import { createWrapper, TEST_BASE_PATH } from './test-utils';
@@ -73,6 +75,33 @@ describe('conversation hooks', () => {
     });
 
     expect(client.delete).toHaveBeenCalledWith(`${TEST_BASE_PATH}/${id}`);
+  });
+
+  it('useSetConversationFavorite PUTs {id, isFavorite} and invalidates list + detail', async () => {
+    const client = createMockClient();
+    vi.mocked(client.put).mockResolvedValue(axiosResponse(undefined));
+
+    const wrapper = createWrapper(client);
+    const { result } = renderHook(
+      () => {
+        const queryClient = useQueryClient();
+        return { favorite: useSetConversationFavorite(), queryClient };
+      },
+      { wrapper }
+    );
+    const invalidateSpy = vi.spyOn(result.current.queryClient, 'invalidateQueries');
+
+    const id = mockConversation.id as ConversationId;
+    await act(async () => {
+      await result.current.favorite.setFavoriteAsync({ id, isFavorite: true });
+    });
+
+    expect(client.put).toHaveBeenCalledWith(`${TEST_BASE_PATH}/${id}/favorite`, {
+      isFavorite: true,
+    });
+    const invalidatedKeys = invalidateSpy.mock.calls.map(([arg]) => arg?.queryKey);
+    expect(invalidatedKeys).toContainEqual(expect.arrayContaining(['conversations', 'list']));
+    expect(invalidatedKeys).toContainEqual(expect.arrayContaining(['conversations', 'detail', id]));
   });
 
   it('useReportMessage POSTs the reason and category to the message report endpoint', async () => {

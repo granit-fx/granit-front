@@ -78,6 +78,22 @@ export async function renameConversation(
 }
 
 /**
+ * Set the favorite flag on one of the current user's conversations to an
+ * explicit state (idempotent, not a toggle). The server responds `204`; a
+ * conversation outside the caller's own is reported as `404`.
+ *
+ * `PUT {basePath}/{id}/favorite`
+ */
+export async function setConversationFavorite(
+  client: AxiosInstance,
+  basePath: string,
+  id: ConversationId,
+  isFavorite: boolean
+): Promise<void> {
+  await client.put(`${basePath}/${encodeURIComponent(id)}/favorite`, { isFavorite });
+}
+
+/**
  * Delete one of the current user's conversations.
  *
  * `DELETE {basePath}/{id}`

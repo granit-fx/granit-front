@@ -22,6 +22,11 @@ export type {
 } from './hooks/use-rename-conversation';
 export { useDeleteConversation } from './hooks/use-delete-conversation';
 export type { UseDeleteConversationReturn } from './hooks/use-delete-conversation';
+export { useSetConversationFavorite } from './hooks/use-set-conversation-favorite';
+export type {
+  SetConversationFavoriteVariables,
+  UseSetConversationFavoriteReturn,
+} from './hooks/use-set-conversation-favorite';
 export { useReportMessage } from './hooks/use-report-message';
 export type { ReportMessageVariables, UseReportMessageReturn } from './hooks/use-report-message';
 
