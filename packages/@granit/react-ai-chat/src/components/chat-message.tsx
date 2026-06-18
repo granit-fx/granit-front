@@ -42,10 +42,13 @@ export function ChatMessage({
       <div
         data-slot="chat-bubble"
         className={cn(
-          'max-w-[80%] rounded-2xl px-3 py-2 text-sm whitespace-pre-wrap',
+          // Per-corner radii only — mixing the `rounded-2xl` shorthand with a
+          // single-corner override lets the shorthand reset the tail corner.
+          // The emitter-side bottom corner is left at the default 0 (the tail).
+          'max-w-[80%] rounded-tl-2xl rounded-tr-2xl px-3 py-2 text-sm whitespace-pre-wrap',
           isUser
-            ? 'bg-primary text-primary-foreground rounded-br-none'
-            : 'bg-muted/50 text-foreground rounded-bl-none'
+            ? 'bg-primary text-primary-foreground rounded-bl-2xl'
+            : 'bg-muted/50 text-foreground rounded-br-2xl'
         )}
       >
         {content}
