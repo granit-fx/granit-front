@@ -1,5 +1,9 @@
 // Provider
-export { AIChatProvider, useAIChatConfig } from './providers/ai-chat-provider';
+export {
+  AIChatProvider,
+  useAIChatConfig,
+  useOptionalAIChatConfig,
+} from './providers/ai-chat-provider';
 export type {
   AIChatConfig,
   AIChatProviderProps,
@@ -45,6 +49,7 @@ export { useChatStream } from './hooks/use-chat-stream';
 export type {
   ChatErrorKind,
   ChatStreamUsage,
+  ChatTurnMetrics,
   ToolCallActivity,
   ToolCallStatus,
   UseChatStreamReturn,
@@ -59,6 +64,8 @@ export type { UseReverseInfiniteScrollParams } from './hooks/use-reverse-infinit
 // Components
 export { ChatMessage } from './components/chat-message';
 export type { ChatMessageProps } from './components/chat-message';
+export { MessageMetrics } from './components/message-metrics';
+export type { MessageMetricsProps } from './components/message-metrics';
 export { ConversationThread } from './components/conversation-thread';
 export type { ConversationThreadProps } from './components/conversation-thread';
 export { ConversationScrollArea } from './components/conversation-scroll-area';

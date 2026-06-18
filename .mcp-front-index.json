@@ -2843,16 +2843,6 @@
       "description": "React bindings for @granit/ai-chat — AIChatProvider, useChatStream (SSE), conversation CRUD hooks, and headless chat UI (thread, composer with / and @ pickers, attachments, suggested actions, clarifications)",
       "exports": [
         {
-          "name": "AIChatProvider",
-          "kind": "function",
-          "signature": "function AIChatProvider("
-        },
-        {
-          "name": "useAIChatConfig",
-          "kind": "function",
-          "signature": "function useAIChatConfig(): ResolvedAIChatConfig"
-        },
-        {
           "name": "conversationKeys",
           "kind": "const",
           "signature": "const conversationKeys"
@@ -2968,6 +2958,17 @@
           "name": "ChatMessageProps",
           "kind": "interface",
           "signature": "interface ChatMessageProps",
+          "members": []
+        },
+        {
+          "name": "MessageMetrics",
+          "kind": "function",
+          "signature": "function MessageMetrics("
+        },
+        {
+          "name": "MessageMetricsProps",
+          "kind": "interface",
+          "signature": "interface MessageMetricsProps",
           "members": []
         },
         {
