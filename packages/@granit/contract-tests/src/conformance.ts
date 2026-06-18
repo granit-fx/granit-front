@@ -127,6 +127,15 @@ function isNullish(node: ts.TypeNode): boolean {
   );
 }
 
+/**
+ * `unknown` / `any` subsume `null | undefined`, so a field of that type already
+ * tolerates a nullable backend value — reading it as non-nullable would flag a
+ * phantom drift on opaque payloads (e.g. a JsonElement mirrored as `unknown`).
+ */
+function isUnknownLike(node: ts.TypeNode): boolean {
+  return node.kind === ts.SyntaxKind.UnknownKeyword || node.kind === ts.SyntaxKind.AnyKeyword;
+}
+
 function familyOfLiteralType(node: ts.LiteralTypeNode): Family {
   const lit = node.literal.kind;
   if (lit === ts.SyntaxKind.StringLiteral) return 'string';
@@ -199,7 +208,7 @@ function familyOf(
 
 function tsFamily(typeNode: ts.TypeNode, aliases: AliasMap): PropShape {
   if (!ts.isUnionTypeNode(typeNode))
-    return { family: familyOf(typeNode, aliases), nullable: false };
+    return { family: familyOf(typeNode, aliases), nullable: isUnknownLike(typeNode) };
   let nullable = false;
   const bases: ts.TypeNode[] = [];
   for (const member of typeNode.types) {
@@ -211,10 +220,29 @@ function tsFamily(typeNode: ts.TypeNode, aliases: AliasMap): PropShape {
 }
 
 interface ParsedSource {
-  /** DTO members — from an `interface X {}` or a `type X = {…}` object-literal alias. */
+  /**
+   * DTO members — from an `interface X {}`, a `type X = {…}` object-literal
+   * alias, or a `type X = Y<…>` alias resolved to its (possibly cross-package,
+   * possibly generic) target.
+   */
   members?: readonly ts.TypeElement[];
   aliases: AliasMap;
 }
+
+/**
+ * A named type declaration the oracle can flatten to a member list — an
+ * `interface`, an object-literal `type` alias, or a `type X = Y<…>` alias that
+ * forwards to one (possibly generic, possibly cross-package). `typeParams` lets
+ * a generic instantiation bind its arguments by position.
+ */
+interface SymbolDecl {
+  readonly typeParams: readonly string[];
+  /** Present for an interface or an object-literal alias. */
+  readonly members?: readonly ts.TypeElement[];
+  /** Present for an alias that forwards to another named type. */
+  readonly aliasTarget?: ts.TypeNode;
+}
+type DeclMap = ReadonlyMap<string, SymbolDecl>;
 
 /**
  * Per-file local type aliases + the module specifiers it imports / re-exports.
@@ -223,21 +251,33 @@ interface ParsedSource {
  */
 interface FileInfo {
   aliases: ReadonlyMap<string, ts.TypeNode>;
+  decls: ReadonlyMap<string, SymbolDecl>;
   imports: readonly string[];
 }
 const fileInfoCache = new Map<string, FileInfo>();
 const MAX_IMPORT_DEPTH = 8;
 const RESOLVE_EXTS = ['.ts', '.tsx'] as const;
 
-function parseFileInfo(fileName: string, sourceText: string): FileInfo {
-  const cached = fileInfoCache.get(fileName);
-  if (cached) return cached;
+function parseInfo(fileName: string, sourceText: string): FileInfo {
   const sf = ts.createSourceFile(fileName, sourceText, ts.ScriptTarget.Latest, true);
   const aliases = new Map<string, ts.TypeNode>();
+  const decls = new Map<string, SymbolDecl>();
   const imports: string[] = [];
   sf.forEachChild((node) => {
     if (ts.isTypeAliasDeclaration(node)) {
       aliases.set(node.name.text, node.type);
+      const typeParams = node.typeParameters?.map((p) => p.name.text) ?? [];
+      decls.set(
+        node.name.text,
+        ts.isTypeLiteralNode(node.type)
+          ? { typeParams, members: node.type.members }
+          : { typeParams, aliasTarget: node.type }
+      );
+    } else if (ts.isInterfaceDeclaration(node)) {
+      decls.set(node.name.text, {
+        typeParams: node.typeParameters?.map((p) => p.name.text) ?? [],
+        members: node.members,
+      });
     } else if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
       imports.push(node.moduleSpecifier.text);
     } else if (
@@ -248,7 +288,19 @@ function parseFileInfo(fileName: string, sourceText: string): FileInfo {
       imports.push(node.moduleSpecifier.text);
     }
   });
-  const info: FileInfo = { aliases, imports };
+  return { aliases, decls, imports };
+}
+
+/**
+ * Cached per-file parse — keyed by path, so an imported file is parsed once
+ * across the whole suite. Only safe for files read from disk (stable content);
+ * the entry file is parsed fresh by {@link collectSymbols} since its source text
+ * is supplied per call and may differ from any cached version.
+ */
+function parseFileInfo(fileName: string, sourceText: string): FileInfo {
+  const cached = fileInfoCache.get(fileName);
+  if (cached) return cached;
+  const info = parseInfo(fileName, sourceText);
   fileInfoCache.set(fileName, info);
   return info;
 }
@@ -307,36 +359,68 @@ function enqueueImports(
   }
 }
 
-function collectAliases(fileName: string, sourceText: string): AliasMap {
-  const merged = new Map<string, ts.TypeNode>();
+function collectSymbols(
+  fileName: string,
+  sourceText: string
+): { aliases: AliasMap; decls: DeclMap } {
+  const aliases = new Map<string, ts.TypeNode>();
+  const decls = new Map<string, SymbolDecl>();
   const visited = new Set<string>();
   const stack: ImportFrame[] = [{ file: fileName, text: sourceText, depth: 0 }];
   while (stack.length) {
     const { file, text, depth } = stack.pop()!;
     if (visited.has(file) || depth > MAX_IMPORT_DEPTH) continue;
     visited.add(file);
-    const info = parseFileInfo(file, text);
-    for (const [name, node] of info.aliases) if (!merged.has(name)) merged.set(name, node);
+    // The entry file (depth 0) carries caller-supplied source text that may
+    // differ from any cached parse — parse it fresh; cache only imports.
+    const info = depth === 0 ? parseInfo(file, text) : parseFileInfo(file, text);
+    for (const [name, node] of info.aliases) if (!aliases.has(name)) aliases.set(name, node);
+    for (const [name, decl] of info.decls) if (!decls.has(name)) decls.set(name, decl);
     enqueueImports(info, file, depth, visited, stack);
   }
-  return merged;
+  return { aliases, decls };
+}
+
+/**
+ * Resolve a (possibly generic, possibly cross-package) type name to its member
+ * list, binding each type parameter to its positional argument. The bindings
+ * are injected into the alias map so a field typed as a bare type parameter
+ * (`loserId: TId`) resolves through to the concrete argument's family
+ * (`PartyId` → branded string). Returns `undefined` for shapes the oracle still
+ * cannot flatten field-by-field (unions, mapped types, unresolved externals).
+ */
+function resolveDeclMembers(
+  name: string,
+  typeArgs: readonly ts.TypeNode[],
+  decls: DeclMap,
+  aliases: AliasMap,
+  depth = 0
+): { members: readonly ts.TypeElement[]; aliases: AliasMap } | undefined {
+  if (depth > MAX_IMPORT_DEPTH) return undefined;
+  const decl = decls.get(name);
+  if (!decl) return undefined;
+  const bound = new Map(aliases);
+  decl.typeParams.forEach((param, i) => {
+    const arg = typeArgs[i];
+    if (arg) bound.set(param, arg);
+  });
+  if (decl.members) return { members: decl.members, aliases: bound };
+  if (decl.aliasTarget && ts.isTypeReferenceNode(decl.aliasTarget)) {
+    return resolveDeclMembers(
+      decl.aliasTarget.typeName.getText(),
+      decl.aliasTarget.typeArguments ?? [],
+      decls,
+      bound,
+      depth + 1
+    );
+  }
+  return undefined;
 }
 
 function parseSource(sourceText: string, fileName: string, typeName: string): ParsedSource {
-  const sf = ts.createSourceFile(fileName, sourceText, ts.ScriptTarget.Latest, true);
-  let members: readonly ts.TypeElement[] | undefined;
-  sf.forEachChild((node) => {
-    if (
-      ts.isTypeAliasDeclaration(node) &&
-      node.name.text === typeName &&
-      ts.isTypeLiteralNode(node.type)
-    ) {
-      members = node.type.members;
-    } else if (ts.isInterfaceDeclaration(node) && node.name.text === typeName) {
-      members = node.members;
-    }
-  });
-  return { members, aliases: collectAliases(fileName, sourceText) };
+  const { aliases, decls } = collectSymbols(fileName, sourceText);
+  const resolved = resolveDeclMembers(typeName, [], decls, aliases);
+  return { members: resolved?.members, aliases: resolved?.aliases ?? aliases };
 }
 
 function tsProps(members: readonly ts.TypeElement[], aliases: AliasMap): Map<string, PropShape> {

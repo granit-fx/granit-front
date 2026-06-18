@@ -71,6 +71,17 @@ describe('conformance oracle — positive & negative controls', () => {
     );
   });
 
+  it('treats an `unknown` front field as nullable (opaque payload, no phantom drift)', () => {
+    // `note` is nullable backend-side; `unknown` subsumes null, so mirroring an
+    // opaque JsonElement as `unknown` must not raise a nullability violation.
+    const src = `export interface Sample {
+      readonly id: string; readonly count: number;
+      readonly when: string | null; readonly flag: boolean;
+      readonly note: unknown;
+    }`;
+    expect(check(src)).toEqual([]);
+  });
+
   it('flags a type-family mismatch', () => {
     const src = `export interface Sample {
       readonly id: number;              // backend string, front number
@@ -172,5 +183,58 @@ describe('conformance oracle — positive & negative controls', () => {
       fileName: dtoFile,
     });
     expect(violations).toEqual([]);
+  });
+
+  // Merge/DTO aliases (`type PartyMergeRequest = MergeRequest<PartyId>`) forward
+  // to a shared generic in another package. The oracle must follow the import,
+  // flatten the generic's members, and bind the type parameter to the branded
+  // argument so a field typed as the bare parameter resolves to its family.
+  describe('cross-package generic-alias resolution', () => {
+    const dtoFile = path.join(here, '__fixtures__/generic-alias/dto.ts');
+    const checkAlias = (envelopeSpec: OpenApiDocument) =>
+      checkSchemaConformance({
+        spec: envelopeSpec,
+        schemaName: 'OwnerEnvelopeResponse',
+        sourceText: readFileSync(dtoFile, 'utf8'),
+        fileName: dtoFile,
+      });
+
+    it('flattens a generic specialisation and binds the branded type argument', () => {
+      const spec: OpenApiDocument = {
+        components: {
+          schemas: {
+            OwnerEnvelopeResponse: {
+              type: 'object',
+              required: ['ownerId'],
+              properties: {
+                ownerId: { type: 'string' }, // satisfied by the bound branded `OwnerId`
+                note: { type: ['null', 'string'] },
+              },
+            },
+          },
+        },
+      };
+      expect(checkAlias(spec)).toEqual([]);
+    });
+
+    it('still reports a real drift through the resolved generic', () => {
+      const spec: OpenApiDocument = {
+        components: {
+          schemas: {
+            OwnerEnvelopeResponse: {
+              type: 'object',
+              required: ['ownerId'],
+              properties: {
+                ownerId: { type: 'integer' }, // backend number vs front branded string
+                note: { type: ['null', 'string'] },
+              },
+            },
+          },
+        },
+      };
+      expect(checkAlias(spec)).toContainEqual(
+        expect.objectContaining({ rule: 'type-family', field: 'ownerId' })
+      );
+    });
   });
 });

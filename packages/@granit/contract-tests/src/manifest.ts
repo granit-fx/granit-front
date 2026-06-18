@@ -392,10 +392,8 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'BulkActionResponse',
       'BulkActionFailure',
       'EntityFormFieldManifest',
+      'BulkActionRequest',
     ],
-    // BulkActionRequest stays unregistered — its `payload` is `unknown`
-    // front-side (which subsumes null) but the oracle reads a bare `unknown` as
-    // non-nullable; an oracle limitation, not a drift.
   },
   {
     slug: 'entities-customization',
@@ -478,10 +476,13 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'DuplicateMatchSignalResponse',
       'PartyDuplicateCandidateResponse',
       'PartyDuplicateMergeRequest',
+      // Aliases to shared generics in @granit/entity-merge (FieldConflict,
+      // MergeRequest<PartyId>, MergeResult<PartyId>) — resolved by the oracle's
+      // cross-package generic-instantiation pass.
+      'FieldConflictResponse',
+      'PartyMergeRequest',
+      'PartyMergeResponse',
     ],
-    // FieldConflictResponse / PartyMergeRequest / PartyMergeResponse stay
-    // unregistered — declared as aliases to shared/generic types (FieldConflict,
-    // MergeRequest<PartyId>, MergeResult<PartyId>), which the oracle cannot resolve.
   },
   {
     slug: 'invoicing',
