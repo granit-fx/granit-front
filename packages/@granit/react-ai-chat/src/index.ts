@@ -25,7 +25,12 @@ export type { UseDeleteConversationReturn } from './hooks/use-delete-conversatio
 
 // Hooks — streaming
 export { useChatStream } from './hooks/use-chat-stream';
-export type { ChatStreamUsage, UseChatStreamReturn } from './hooks/use-chat-stream';
+export type {
+  ChatStreamUsage,
+  ToolCallActivity,
+  ToolCallStatus,
+  UseChatStreamReturn,
+} from './hooks/use-chat-stream';
 
 // Components
 export { ChatMessage } from './components/chat-message';
@@ -36,6 +41,8 @@ export { SuggestedActions } from './components/suggested-actions';
 export type { SuggestedActionsProps } from './components/suggested-actions';
 export { ClarificationPrompt } from './components/clarification-prompt';
 export type { ClarificationPromptProps } from './components/clarification-prompt';
+export { ToolActivity } from './components/tool-activity';
+export type { ToolActivityProps } from './components/tool-activity';
 export { AttachmentChips } from './components/attachment-chips';
 export type {
   AttachmentChipsProps,

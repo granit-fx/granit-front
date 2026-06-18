@@ -6,8 +6,10 @@ import { AttachmentChips } from '../components/attachment-chips';
 import { ClarificationPrompt } from '../components/clarification-prompt';
 import { ConversationThread } from '../components/conversation-thread';
 import { SuggestedActions } from '../components/suggested-actions';
+import { ToolActivity } from '../components/tool-activity';
 
 import type { ComposerAttachment } from '../components/attachment-chips';
+import type { ToolCallActivity } from '../hooks/use-chat-stream';
 import type {
   ClarificationResponse,
   MessageResponse,
@@ -47,6 +49,63 @@ describe('ConversationThread', () => {
   it('renders streaming content as a live assistant bubble', () => {
     render(<ConversationThread messages={messages} streamingContent="Streaming…" isStreaming />);
     expect(screen.getByText('Streaming…')).toBeInTheDocument();
+  });
+
+  it('renders tool activity and suppresses the typing dots while a tool runs', () => {
+    const toolCalls: ToolCallActivity[] = [
+      { toolCallId: 'c1', toolName: 'query_data', status: 'running' },
+    ];
+    const { container } = render(
+      <ConversationThread messages={messages} isStreaming toolCalls={toolCalls} />
+    );
+    expect(screen.getByText('Searching data…')).toBeInTheDocument();
+    expect(container.querySelector('[data-slot="tool-activity"]')).toBeInTheDocument();
+    expect(container.querySelector('[data-slot="thread-typing"]')).not.toBeInTheDocument();
+  });
+});
+
+describe('ToolActivity', () => {
+  it('renders a running chip with a spinner', () => {
+    const toolCalls: ToolCallActivity[] = [
+      { toolCallId: 'c1', toolName: 'query_data', status: 'running' },
+    ];
+    const { container } = render(<ToolActivity toolCalls={toolCalls} />);
+    const chip = container.querySelector('[data-slot="tool-chip"]');
+    expect(chip).toHaveAttribute('data-status', 'running');
+    expect(screen.getByText('Searching data…')).toBeInTheDocument();
+  });
+
+  it('resolves chips to succeeded/failed and labels their status', () => {
+    const toolCalls: ToolCallActivity[] = [
+      { toolCallId: 'c1', toolName: 'query_data', status: 'succeeded' },
+      { toolCallId: 'c2', toolName: 'search', status: 'failed' },
+    ];
+    const { container } = render(<ToolActivity toolCalls={toolCalls} />);
+    const chips = container.querySelectorAll('[data-slot="tool-chip"]');
+    expect(chips[0]).toHaveAttribute('data-status', 'succeeded');
+    expect(chips[0]).toHaveAttribute('aria-label', 'Searching data… — done');
+    expect(chips[1]).toHaveAttribute('data-status', 'failed');
+    expect(chips[1]).toHaveAttribute('aria-label', 'Searching… — failed');
+  });
+
+  it('falls back for an unknown tool name and honours resolveToolLabel', () => {
+    const toolCalls: ToolCallActivity[] = [
+      { toolCallId: 'c1', toolName: 'mystery_tool', status: 'running' },
+    ];
+    const { rerender } = render(<ToolActivity toolCalls={toolCalls} />);
+    expect(screen.getByText('Working…')).toBeInTheDocument();
+
+    rerender(<ToolActivity toolCalls={toolCalls} resolveToolLabel={(name) => `Custom ${name}`} />);
+    expect(screen.getByText('Custom mystery_tool')).toBeInTheDocument();
+  });
+
+  it('shows the thinking indicator and renders nothing when idle', () => {
+    const { container, rerender } = render(<ToolActivity toolCalls={[]} isThinking />);
+    expect(screen.getByText('Thinking…')).toBeInTheDocument();
+    expect(container.querySelector('[data-slot="tool-thinking"]')).toBeInTheDocument();
+
+    rerender(<ToolActivity toolCalls={[]} />);
+    expect(container).toBeEmptyDOMElement();
   });
 });
 

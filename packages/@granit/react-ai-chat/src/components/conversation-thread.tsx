@@ -3,7 +3,9 @@ import { cn } from '@granit/utils';
 import { defaultChatLabels } from '../locales/index';
 
 import { ChatMessage } from './chat-message';
+import { ToolActivity } from './tool-activity';
 
+import type { ToolCallActivity } from '../hooks/use-chat-stream';
 import type { ChatTranslations } from '../locales/index';
 import type { MessageResponse } from '@granit/ai-chat';
 
@@ -17,7 +19,14 @@ export interface ConversationThreadProps {
   readonly streamingContent?: string;
   /** Whether a turn is currently streaming (drives the typing indicator). */
   readonly isStreaming?: boolean;
+  /** Live tool activity for the in-flight turn (from `useChatStream().toolCalls`). */
+  readonly toolCalls?: readonly ToolCallActivity[];
+  /** Derived "thinking" indicator for the in-flight turn (`useChatStream().isThinking`). */
+  readonly isThinking?: boolean;
+  /** Map a backend tool name to its display label (passed to {@link ToolActivity}). */
+  readonly resolveToolLabel?: (toolName: string) => string;
   readonly labels?: ChatTranslations['Thread'];
+  readonly toolLabels?: ChatTranslations['Tools'];
   readonly className?: string;
 }
 
@@ -32,10 +41,15 @@ export function ConversationThread({
   messages,
   streamingContent,
   isStreaming = false,
+  toolCalls = [],
+  isThinking = false,
+  resolveToolLabel,
   labels = defaultChatLabels.Thread,
+  toolLabels = defaultChatLabels.Tools,
   className,
 }: Readonly<ConversationThreadProps>) {
   const isEmpty = messages.length === 0 && !streamingContent && !isStreaming;
+  const hasToolActivity = toolCalls.length > 0 || isThinking;
 
   return (
     <div
@@ -60,11 +74,20 @@ export function ConversationThread({
         />
       ))}
 
+      {hasToolActivity ? (
+        <ToolActivity
+          toolCalls={toolCalls}
+          isThinking={isThinking}
+          labels={toolLabels}
+          resolveToolLabel={resolveToolLabel}
+        />
+      ) : null}
+
       {streamingContent ? (
         <ChatMessage role="assistant" content={streamingContent} authorLabel={labels.Assistant} />
       ) : null}
 
-      {isStreaming && !streamingContent ? (
+      {isStreaming && !streamingContent && !hasToolActivity ? (
         <div
           data-slot="thread-typing"
           className="text-muted-foreground flex items-center gap-1 text-sm"

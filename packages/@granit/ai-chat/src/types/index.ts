@@ -34,6 +34,16 @@ export const CHAT_STREAM_EVENT_TYPES = {
   CONVERSATION: 'conversation',
   /** Incremental answer chunk — append `content` in order. */
   DELTA: 'delta',
+  /**
+   * A tool started — carries `toolName` + `toolCallId`. Render a "running" chip
+   * keyed by `toolCallId`. Emitted once per call; correlate with `tool_result`.
+   */
+  TOOL_CALL: 'tool_call',
+  /**
+   * A tool finished — same `toolName` + `toolCallId`, plus `succeeded`. Resolve
+   * the matching chip to ✓/✗. Emitted once per call.
+   */
+  TOOL_RESULT: 'tool_result',
   /** Token counts, near the end of the stream. */
   USAGE: 'usage',
   /** Suggested deep-link actions to render — never auto-invoked. */
@@ -136,6 +146,20 @@ export interface ChatStreamEvent {
   readonly outputTokens?: number | null;
   readonly suggestedActions?: readonly SuggestedActionResponse[] | null;
   readonly clarification?: ClarificationResponse | null;
+  /**
+   * Tool identity on `tool_call`/`tool_result` frames. The model-facing name
+   * (`snake_case`, e.g. `query_data`); map it to a localized label. The wire
+   * carries **neither the arguments nor the raw result** (privacy) — never
+   * derive UI from anything but the name and {@link succeeded}.
+   */
+  readonly toolName?: string | null;
+  /**
+   * Correlation id shared by a `tool_call` and its `tool_result`. Key tool
+   * chips by this — order between concurrent tools is not guaranteed.
+   */
+  readonly toolCallId?: string | null;
+  /** Whether the tool succeeded. Present only on `tool_result` frames. */
+  readonly succeeded?: boolean | null;
 }
 
 // -- Conversation CRUD -------------------------------------------------------

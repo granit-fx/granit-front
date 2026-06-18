@@ -86,6 +86,24 @@ describe('streamConversationMessage', () => {
     expect(events[1]?.clarification?.question).toBe('Which one?');
   });
 
+  it('yields tool_call then tool_result frames correlated by toolCallId', async () => {
+    const client = createMockClient();
+    const stream = createSSEStream([
+      'data: {"type":"tool_call","toolName":"query_data","toolCallId":"call-1"}\n\n',
+      'data: {"type":"tool_result","toolName":"query_data","toolCallId":"call-1","succeeded":true}\n\n',
+      'data: {"type":"delta","content":"Done"}\n\n',
+    ]);
+    vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
+
+    const events = await collect(streamConversationMessage(client, '', REQUEST));
+
+    expect(events).toEqual([
+      { type: 'tool_call', toolName: 'query_data', toolCallId: 'call-1' },
+      { type: 'tool_result', toolName: 'query_data', toolCallId: 'call-1', succeeded: true },
+      { type: 'delta', content: 'Done' },
+    ]);
+  });
+
   it('skips malformed frames without aborting the stream', async () => {
     const client = createMockClient();
     const stream = createSSEStream([

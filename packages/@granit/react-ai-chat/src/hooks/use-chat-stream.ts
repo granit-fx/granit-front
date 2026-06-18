@@ -23,6 +23,21 @@ export interface ChatStreamUsage {
   readonly outputTokens: number;
 }
 
+/** Lifecycle of a single tool invocation within a turn. */
+export type ToolCallStatus = 'running' | 'succeeded' | 'failed';
+
+/**
+ * The live state of one tool the agent invoked this turn, keyed by
+ * `toolCallId`. Starts `running` on the `tool_call` frame and resolves to
+ * `succeeded`/`failed` on the matching `tool_result`. Carries only the tool's
+ * name (never its arguments or result) — map `toolName` to a localized label.
+ */
+export interface ToolCallActivity {
+  readonly toolCallId: string;
+  readonly toolName: string;
+  readonly status: ToolCallStatus;
+}
+
 export interface UseChatStreamReturn {
   /**
    * Accumulated assistant answer for the current turn (delta frames appended
@@ -43,6 +58,18 @@ export interface UseChatStreamReturn {
    * its options; the chosen `value ?? label` becomes the next `send()` message.
    */
   readonly clarification: ClarificationResponse | null;
+  /**
+   * Tools the agent invoked this turn, in the order they started, each keyed by
+   * `toolCallId`. Render as chips (spinner while `running`, ✓/✗ once resolved).
+   * Reset on each `send()`.
+   */
+  readonly toolCalls: readonly ToolCallActivity[];
+  /**
+   * Derived "thinking" indicator: `true` once a `tool_result` has arrived but no
+   * `delta` has followed yet (the agent is deciding its next step). Cleared by
+   * the next `delta` or `tool_call`. There is no `thinking` frame on the wire.
+   */
+  readonly isThinking: boolean;
   /** Token usage for the turn, or `null` until the `usage` frame arrives. */
   readonly usage: ChatStreamUsage | null;
   /** Whether a stream is currently active. */
@@ -80,6 +107,8 @@ export function useChatStream(): UseChatStreamReturn {
   const [conversationId, setConversationId] = useState<ConversationId | null>(null);
   const [suggestedActions, setSuggestedActions] = useState<readonly SuggestedActionResponse[]>([]);
   const [clarification, setClarification] = useState<ClarificationResponse | null>(null);
+  const [toolCalls, setToolCalls] = useState<readonly ToolCallActivity[]>([]);
+  const [isThinking, setIsThinking] = useState(false);
   const [usage, setUsage] = useState<ChatStreamUsage | null>(null);
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -100,6 +129,8 @@ export function useChatStream(): UseChatStreamReturn {
       setConversationId(null);
       setSuggestedActions([]);
       setClarification(null);
+      setToolCalls([]);
+      setIsThinking(false);
       setUsage(null);
       setError(null);
       setIsStreaming(true);
@@ -111,6 +142,8 @@ export function useChatStream(): UseChatStreamReturn {
         let resolvedId: ConversationId | null = null;
         try {
           let accumulated = '';
+          let tools: readonly ToolCallActivity[] = [];
+          let thinking = false;
           for await (const event of streamConversationMessage(
             config.client,
             config.basePath,
@@ -129,6 +162,24 @@ export function useChatStream(): UseChatStreamReturn {
               setSuggestedActions,
               setClarification,
               setUsage,
+              startToolCall: (toolCallId, toolName) => {
+                tools = [...tools, { toolCallId, toolName, status: 'running' }];
+                setToolCalls(tools);
+              },
+              resolveToolCall: (toolCallId, succeeded) => {
+                tools = tools.map((tool) =>
+                  tool.toolCallId === toolCallId
+                    ? { ...tool, status: succeeded ? 'succeeded' : 'failed' }
+                    : tool
+                );
+                setToolCalls(tools);
+              },
+              setThinking: (next) => {
+                if (next !== thinking) {
+                  thinking = next;
+                  setIsThinking(next);
+                }
+              },
             });
           }
 
@@ -160,6 +211,8 @@ export function useChatStream(): UseChatStreamReturn {
     conversationId,
     suggestedActions,
     clarification,
+    toolCalls,
+    isThinking,
     usage,
     isStreaming,
     error,
@@ -175,6 +228,9 @@ interface EventSinks {
   readonly setSuggestedActions: (actions: readonly SuggestedActionResponse[]) => void;
   readonly setClarification: (clarification: ClarificationResponse) => void;
   readonly setUsage: (usage: ChatStreamUsage) => void;
+  readonly startToolCall: (toolCallId: string, toolName: string) => void;
+  readonly resolveToolCall: (toolCallId: string, succeeded: boolean) => void;
+  readonly setThinking: (thinking: boolean) => void;
 }
 
 /** Dispatch a single {@link ChatStreamEvent} to the matching state updater. */
@@ -182,9 +238,23 @@ function applyEvent(event: ChatStreamEvent, sinks: EventSinks): void {
   switch (event.type) {
     case CHAT_STREAM_EVENT_TYPES.DELTA:
       if (event.content) sinks.appendContent(event.content);
+      // Streamed text resumed — the agent is no longer between steps.
+      sinks.setThinking(false);
       break;
     case CHAT_STREAM_EVENT_TYPES.CONVERSATION:
       if (event.conversationId) sinks.setConversationId(event.conversationId);
+      break;
+    case CHAT_STREAM_EVENT_TYPES.TOOL_CALL:
+      if (event.toolCallId && event.toolName) {
+        sinks.startToolCall(event.toolCallId, event.toolName);
+      }
+      // A tool is now running; its chip carries the activity, not "thinking".
+      sinks.setThinking(false);
+      break;
+    case CHAT_STREAM_EVENT_TYPES.TOOL_RESULT:
+      if (event.toolCallId) sinks.resolveToolCall(event.toolCallId, event.succeeded === true);
+      // Result in, next step undecided — show "thinking" until a delta/tool follows.
+      sinks.setThinking(true);
       break;
     case CHAT_STREAM_EVENT_TYPES.SUGGESTIONS:
       if (event.suggestedActions) sinks.setSuggestedActions(event.suggestedActions);

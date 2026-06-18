@@ -556,6 +556,15 @@
                 "$ref": "#/components/schemas/ClarificationResponse"
               }
             ]
+          },
+          "toolName": {
+            "type": ["null", "string"]
+          },
+          "toolCallId": {
+            "type": ["null", "string"]
+          },
+          "succeeded": {
+            "type": ["null", "boolean"]
           }
         }
       },

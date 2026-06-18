@@ -78,6 +78,74 @@ describe('useChatStream', () => {
     expect(result.current.clarification?.options[0]?.value).toBe('42');
   });
 
+  it('tracks tool calls keyed by toolCallId and resolves them', async () => {
+    const client = createMockClient();
+    const stream = createSSEStream([
+      'data: {"type":"tool_call","toolName":"query_data","toolCallId":"c1"}\n\n',
+      'data: {"type":"tool_call","toolName":"search","toolCallId":"c2"}\n\n',
+      'data: {"type":"tool_result","toolName":"query_data","toolCallId":"c1","succeeded":true}\n\n',
+      'data: {"type":"tool_result","toolName":"search","toolCallId":"c2","succeeded":false}\n\n',
+      'data: {"type":"delta","content":"Answer"}\n\n',
+    ]);
+    vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
+
+    const { result } = renderHook(() => useChatStream(), { wrapper: createWrapper(client) });
+
+    act(() => {
+      result.current.send({ message: 'Find it' });
+    });
+
+    await waitFor(() => expect(result.current.isStreaming).toBe(false));
+
+    expect(result.current.toolCalls).toEqual([
+      { toolCallId: 'c1', toolName: 'query_data', status: 'succeeded' },
+      { toolCallId: 'c2', toolName: 'search', status: 'failed' },
+    ]);
+    expect(result.current.content).toBe('Answer');
+  });
+
+  it('derives isThinking after a tool_result until the next delta arrives', async () => {
+    const client = createMockClient();
+    // Hold the stream open after the tool_result so we can observe the thinking
+    // state before any delta is emitted.
+    let resolveDelta!: () => void;
+    const gate = new Promise<void>((r) => {
+      resolveDelta = r;
+    });
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream<Uint8Array>({
+      async start(controller) {
+        controller.enqueue(
+          encoder.encode('data: {"type":"tool_call","toolName":"query_data","toolCallId":"c1"}\n\n')
+        );
+        controller.enqueue(
+          encoder.encode(
+            'data: {"type":"tool_result","toolName":"query_data","toolCallId":"c1","succeeded":true}\n\n'
+          )
+        );
+        await gate;
+        controller.enqueue(encoder.encode('data: {"type":"delta","content":"Now answering"}\n\n'));
+        controller.close();
+      },
+    });
+    vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
+
+    const { result } = renderHook(() => useChatStream(), { wrapper: createWrapper(client) });
+
+    act(() => {
+      result.current.send({ message: 'Go' });
+    });
+
+    await waitFor(() => expect(result.current.isThinking).toBe(true));
+
+    act(() => {
+      resolveDelta();
+    });
+
+    await waitFor(() => expect(result.current.content).toBe('Now answering'));
+    expect(result.current.isThinking).toBe(false);
+  });
+
   it('resets per-turn state on a new send()', async () => {
     const client = createMockClient();
     const first = createSSEStream(['data: {"type":"delta","content":"First"}\n\n']);

@@ -16,6 +16,16 @@ export const aiChatTranslationsFr: ChatTranslations = {
     RemoveAttachment: 'Supprimer la pièce jointe',
     RemovePrompt: 'Supprimer le prompt',
   },
+  Tools: {
+    Names: {
+      query_data: 'Recherche de données…',
+      search: 'Recherche…',
+    },
+    Fallback: 'Traitement…',
+    Thinking: 'Réflexion…',
+    Succeeded: 'terminé',
+    Failed: 'échec',
+  },
   Suggestions: {
     Title: 'Actions suggérées',
   },

@@ -15,6 +15,21 @@ export interface ChatTranslations {
     readonly RemoveAttachment: string;
     readonly RemovePrompt: string;
   };
+  readonly Tools: {
+    /**
+     * In-progress labels keyed by the backend tool name (`snake_case`). Apps
+     * extend this map with their own tools; unmapped names fall back to
+     * {@link Fallback}.
+     */
+    readonly Names: Readonly<Record<string, string>>;
+    /** Shown for a tool whose name has no entry in {@link Names}. */
+    readonly Fallback: string;
+    /** Derived "thinking" indicator: a tool finished, the next step is pending. */
+    readonly Thinking: string;
+    /** Accessible status appended to a resolved chip's label. */
+    readonly Succeeded: string;
+    readonly Failed: string;
+  };
   readonly Suggestions: {
     readonly Title: string;
   };
@@ -46,6 +61,16 @@ export const aiChatTranslationsEn: ChatTranslations = {
     Workspace: 'Workspace',
     RemoveAttachment: 'Remove attachment',
     RemovePrompt: 'Remove prompt',
+  },
+  Tools: {
+    Names: {
+      query_data: 'Searching data…',
+      search: 'Searching…',
+    },
+    Fallback: 'Working…',
+    Thinking: 'Thinking…',
+    Succeeded: 'done',
+    Failed: 'failed',
   },
   Suggestions: {
     Title: 'Suggested actions',

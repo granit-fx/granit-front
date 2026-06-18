@@ -2905,18 +2905,6 @@
           "signature": "function useChatStream(): UseChatStreamReturn"
         },
         {
-          "name": "ChatStreamUsage",
-          "kind": "interface",
-          "signature": "interface ChatStreamUsage",
-          "members": []
-        },
-        {
-          "name": "UseChatStreamReturn",
-          "kind": "interface",
-          "signature": "interface UseChatStreamReturn",
-          "members": []
-        },
-        {
           "name": "ChatMessage",
           "kind": "function",
           "signature": "function ChatMessage("
@@ -2958,6 +2946,17 @@
           "name": "ClarificationPromptProps",
           "kind": "interface",
           "signature": "interface ClarificationPromptProps",
+          "members": []
+        },
+        {
+          "name": "ToolActivity",
+          "kind": "function",
+          "signature": "function ToolActivity("
+        },
+        {
+          "name": "ToolActivityProps",
+          "kind": "interface",
+          "signature": "interface ToolActivityProps",
           "members": []
         },
         {
