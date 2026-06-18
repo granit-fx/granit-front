@@ -113,7 +113,11 @@ export function scanUseFormResolver(opts: AllowlistedScanContext): Violation[] {
 // framework uses `.catch(() => undefined)` as an accepted fire-and-forget idiom
 // for non-critical work (e.g. React-Query cache invalidation after a mutation
 // that already succeeded).
-const EMPTY_CATCH_RE = /\bcatch\s*(?:\([^)]*\))?\s*\{\s*\}/g;
+// The trailing `\s*` lives INSIDE the optional group so the pattern never has
+// two adjacent `\s*` (each is bounded by a non-space literal `(`, `{` or `}`).
+// That keeps matching linear — no super-linear backtracking on `catch` followed
+// by a long whitespace run with no braces.
+const EMPTY_CATCH_RE = /\bcatch\s*(?:\([^)]*\)\s*)?\{\s*\}/g;
 
 export function scanEmptyCatch(opts: AllowlistedScanContext): Violation[] {
   const out: Violation[] = [];
