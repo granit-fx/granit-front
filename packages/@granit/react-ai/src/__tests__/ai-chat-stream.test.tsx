@@ -9,7 +9,7 @@ import { useAIChatStream } from '../hooks/use-ai-chat-stream';
 import { AIProvider } from '../providers/ai-provider';
 
 import type { AIConfig } from '../providers/ai-provider';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
 
 function createSSEStream(chunks: string[]): ReadableStream<Uint8Array> {

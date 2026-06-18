@@ -1,7 +1,7 @@
 import { CHAT_STREAM_EVENT_TYPES, streamConversationMessage } from '@granit/ai-chat';
 import { createLogger } from '@granit/logger';
 import { useQueryClient } from '@tanstack/react-query';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useAIChatConfig } from '../providers/ai-chat-provider';
 
@@ -121,6 +121,10 @@ export function useChatStream(): UseChatStreamReturn {
       abortRef.current = null;
     }
   }, []);
+
+  // Abort any in-flight stream when the consumer unmounts, so the SSE request is
+  // released instead of running to completion against a gone component.
+  useEffect(() => abort, [abort]);
 
   const send = useCallback(
     (request: SendMessageRequest) => {

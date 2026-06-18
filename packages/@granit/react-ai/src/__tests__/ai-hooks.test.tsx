@@ -16,7 +16,7 @@ import { useUpdateAIWorkspace } from '../hooks/use-update-ai-workspace';
 import { AIProvider } from '../providers/ai-provider';
 
 import type { AIConfig } from '../providers/ai-provider';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
 
 function createWrapper(client: AxiosInstance, basePath?: string) {

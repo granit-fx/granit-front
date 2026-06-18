@@ -1,6 +1,6 @@
 import { chatStream } from '@granit/ai';
 import { createLogger } from '@granit/logger';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useAIConfig } from '../providers/ai-provider';
 
@@ -67,6 +67,10 @@ export function useAIChatStream(): UseAIChatStreamReturn {
       abortRef.current = null;
     }
   }, []);
+
+  // Abort any in-flight stream when the consumer unmounts, so the SSE request is
+  // released instead of running to completion against a gone component.
+  useEffect(() => abort, [abort]);
 
   const send = useCallback(
     (workspaceName: string, request: AIChatRequest) => {

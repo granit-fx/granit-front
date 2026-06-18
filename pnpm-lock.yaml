@@ -1079,9 +1079,6 @@ importers:
 
   packages/@granit/react-ai:
     dependencies:
-      '@granit/ai':
-        specifier: workspace:*
-        version: link:../ai
       '@granit/react-query-engine':
         specifier: workspace:*
         version: link:../react-query-engine
@@ -1095,6 +1092,9 @@ importers:
         specifier: 19.2.7
         version: 19.2.7
     devDependencies:
+      '@granit/ai':
+        specifier: workspace:*
+        version: link:../ai
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client

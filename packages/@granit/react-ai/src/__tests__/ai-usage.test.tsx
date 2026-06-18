@@ -8,7 +8,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { AIUsageProvider } from '../usage/ai-usage-provider';
 import { useAIUsage } from '../usage/use-ai-usage';
 
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
 
 function createWrapper(client: AxiosInstance) {

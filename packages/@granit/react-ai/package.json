@@ -56,6 +56,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
+    "@granit/ai": "workspace:*",
     "@granit/api-client": "workspace:*",
     "@granit/logger": "workspace:*",
     "@granit/query-engine": "workspace:*",

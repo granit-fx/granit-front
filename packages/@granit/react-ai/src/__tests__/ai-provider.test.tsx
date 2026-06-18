@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { AIProvider, useAIConfig } from '../providers/ai-provider';
 
 import type { AIConfig } from '../providers/ai-provider';
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
 
 const fakeClient = {} as AxiosInstance;
