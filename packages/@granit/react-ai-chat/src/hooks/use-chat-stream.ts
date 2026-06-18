@@ -154,46 +154,50 @@ export interface UseChatStreamReturn {
  * ```
  */
 /**
- * Append a finished turn (the user message + the assistant's accumulated answer)
- * to the NEWEST page of the messages infinite query, in place. No-op when the
- * query isn't loaded — the next mount fetches the turn from the server instead.
- *
- * ⚠️ The SSE contract carries no persisted message ids, so the appended rows get
- * client-synthesized ids/timestamps for instant display. They are replaced by the
- * authoritative server rows on the next full load of the messages query. A
- * backend follow-up emitting final ids on the stream would let this append real
- * ids (and make the freshly-streamed message reportable immediately).
+ * Prepend a finished turn's messages (oldest-first) to the NEWEST page of the
+ * messages infinite query, in place. No-op when the query isn't loaded — the
+ * next mount fetches the turn from the server instead. The newest page is stored
+ * newest-first (server sorts `-createdAt`), so the rows are reversed on the way in.
  */
 function appendTurnToMessages(
   queryClient: QueryClient,
   key: readonly unknown[],
-  userMessage: string,
-  assistantContent: string
+  rows: readonly MessageResponse[]
 ): void {
+  if (rows.length === 0) return;
   queryClient.setQueryData<InfiniteData<PagedResult<MessageResponse>, MessagesPageParam>>(
     key,
     (prev) => {
       const newest = prev?.pages[0];
       if (!prev || !newest) return prev;
-      const now = toISODateString(new Date().toISOString());
-      const synth = (role: MessageResponse['role'], content: string): MessageResponse => ({
-        id: toEntityId<'Message'>(crypto.randomUUID()),
-        role,
-        content,
-        createdAt: now,
-      });
-      // Pages are newest-first (server sorts `-createdAt`); the assistant reply is
-      // the newest item, then the user turn. Prepend both to the newest page.
-      const appended: MessageResponse[] = [];
-      if (assistantContent) appended.push(synth('assistant', assistantContent));
-      appended.push(synth('user', userMessage));
       const updatedNewest: PagedResult<MessageResponse> = {
         ...newest,
-        items: [...appended, ...newest.items],
+        items: [...[...rows].reverse(), ...newest.items],
       };
       return { ...prev, pages: [updatedNewest, ...prev.pages.slice(1)] };
     }
   );
+}
+
+/**
+ * Synthesize a finished turn's rows (oldest-first) for older backends that do
+ * not emit the `persisted` frame.
+ *
+ * ⚠️ Client-generated ids/timestamps — the freshly-streamed message is not
+ * reportable until the next full load. When the backend sends `persisted`, its
+ * authoritative rows (real ids + server `createdAt`) are used instead.
+ */
+function synthesizeTurnRows(userMessage: string, assistantContent: string): MessageResponse[] {
+  const now = toISODateString(new Date().toISOString());
+  const synth = (role: MessageResponse['role'], content: string): MessageResponse => ({
+    id: toEntityId<'Message'>(crypto.randomUUID()),
+    role,
+    content,
+    createdAt: now,
+  });
+  const rows: MessageResponse[] = [synth('user', userMessage)];
+  if (assistantContent) rows.push(synth('assistant', assistantContent));
+  return rows;
 }
 
 export function useChatStream(): UseChatStreamReturn {
@@ -247,6 +251,7 @@ export function useChatStream(): UseChatStreamReturn {
         thinking: false,
         resolvedId: null,
         errorCode: null,
+        persistedMessages: null,
       };
       const sinks = createEventSinks(turn, {
         setContent,
@@ -272,14 +277,20 @@ export function useChatStream(): UseChatStreamReturn {
           }
 
           if (turn.resolvedId) {
-            // Optimistically push the finished turn onto the newest page of the
-            // messages infinite query, so it appears without a refetch and
-            // without resetting any older pages the user has loaded.
+            // Push the finished turn onto the newest page of the messages infinite
+            // query, so it appears without a refetch and without resetting any
+            // older pages the user has loaded. Prefer the backend's authoritative
+            // rows (real ids + server `createdAt`, from the `persisted` frame) so
+            // the just-streamed message is immediately reportable; fall back to
+            // synthesized rows for older backends that omit the frame.
+            const rows =
+              turn.persistedMessages && turn.persistedMessages.length > 0
+                ? turn.persistedMessages
+                : synthesizeTurnRows(request.message, turn.accumulated);
             appendTurnToMessages(
               queryClient,
               conversationKeys.messages(config.queryKeyPrefix, turn.resolvedId),
-              request.message,
-              turn.accumulated
+              rows
             );
             // Refresh conversation metadata (title may have been auto-generated)
             // — `exact` so the nested `messages` key is NOT invalidated, which
@@ -336,6 +347,7 @@ interface EventSinks {
   readonly resolveToolCall: (toolCallId: string, succeeded: boolean) => void;
   readonly setThinking: (thinking: boolean) => void;
   readonly fail: (code: string | null | undefined) => void;
+  readonly recordPersisted: (messages: readonly MessageResponse[]) => void;
 }
 
 /** Mutable accumulators for a single streaming turn, threaded through {@link createEventSinks}. */
@@ -345,6 +357,8 @@ interface TurnState {
   thinking: boolean;
   resolvedId: ConversationId | null;
   errorCode: string | null;
+  /** The turn's persisted rows from the `persisted` frame, or `null` if absent. */
+  persistedMessages: readonly MessageResponse[] | null;
 }
 
 /** React state setters the sinks dispatch to. */
@@ -400,6 +414,9 @@ function createEventSinks(turn: TurnState, setters: EventSinkSetters): EventSink
       setters.setError(new Error(`Chat stream failed: ${turn.errorCode}`));
       setters.setErrorKind(codeToErrorKind(turn.errorCode));
     },
+    recordPersisted: (messages) => {
+      turn.persistedMessages = messages;
+    },
   };
 }
 
@@ -444,6 +461,11 @@ function applyEvent(event: ChatStreamEvent, sinks: EventSinks): void {
       // dangling indicator if the agent failed between steps.
       sinks.setThinking(false);
       sinks.fail(event.code);
+      break;
+    case CHAT_STREAM_EVENT_TYPES.PERSISTED:
+      // The turn's authoritative rows (real ids + server createdAt). Captured
+      // for the completion append so the freshly-streamed message is reportable.
+      if (event.messages && event.messages.length > 0) sinks.recordPersisted(event.messages);
       break;
   }
 }

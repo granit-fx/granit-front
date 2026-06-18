@@ -57,6 +57,14 @@ export const CHAT_STREAM_EVENT_TYPES = {
    * far may be partial. A client-cancelled turn emits no error frame.
    */
   ERROR: 'error',
+  /**
+   * The turn's newly-persisted messages (user + assistant), emitted once on a
+   * successful turn just before `usage`. Carries `messages` (their real ids +
+   * server `createdAt`) so the client can render the authoritative rows instead
+   * of client-synthesized ones. Absent on a clarification-only turn, the `error`
+   * frame, or a client-cancelled turn.
+   */
+  PERSISTED: 'persisted',
 } as const;
 
 /** Discriminator union for {@link ChatStreamEvent.type}. */
@@ -211,6 +219,12 @@ export interface ChatStreamEvent {
    * {@link CHAT_STREAM_ERROR_CODES}. Carries no human text — localize from it.
    */
   readonly code?: string | null;
+  /**
+   * The turn's newly-persisted messages (user + assistant, oldest-first), present
+   * only on the `persisted` frame. Real ids + server `createdAt` — append these
+   * verbatim rather than synthesizing client-side rows.
+   */
+  readonly messages?: readonly MessageResponse[] | null;
 }
 
 // -- Conversation CRUD -------------------------------------------------------

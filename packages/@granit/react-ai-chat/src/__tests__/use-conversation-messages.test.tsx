@@ -77,15 +77,17 @@ describe('useConversationMessages', () => {
     });
 
     await waitFor(() => expect(result.current.messages).toHaveLength(1));
-    expect(get.mock.calls[0]?.[0]).toBe(`/api/v1/conversations/${ID}/messages?pageSize=1`);
+    expect(get.mock.calls[0]?.[0]).toBe(`/api/v1/conversations/${ID}/messages`);
+    expect((get.mock.calls[0]?.[1] as { params?: unknown }).params).toEqual({ pageSize: 1 });
 
     act(() => {
       result.current.loadOlder();
     });
     await waitFor(() => expect(result.current.messages).toHaveLength(2));
-    expect(get.mock.calls[1]?.[0]).toBe(
-      `/api/v1/conversations/${ID}/messages?pageSize=1&cursor=cur-older`
-    );
+    expect((get.mock.calls[1]?.[1] as { params?: unknown }).params).toEqual({
+      pageSize: 1,
+      cursor: 'cur-older',
+    });
   });
 
   it('issues no request while id is null', () => {

@@ -768,6 +768,12 @@
           },
           "code": {
             "type": ["null", "string"]
+          },
+          "messages": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/MessageResponse"
+            }
           }
         }
       },

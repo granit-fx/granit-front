@@ -74,14 +74,12 @@ export async function getConversationMessages(
   params: { cursor?: string; pageSize?: number } = {},
   signal?: AbortSignal
 ): Promise<PagedResult<MessageResponse>> {
-  const query: string[] = [];
-  if (params.pageSize != null) query.push(`pageSize=${encodeURIComponent(params.pageSize)}`);
-  if (params.cursor != null) query.push(`cursor=${encodeURIComponent(params.cursor)}`);
-  const suffix = query.length > 0 ? `?${query.join('&')}` : '';
-  const url = `${basePath}/${encodeURIComponent(id)}/messages${suffix}`;
+  const query: Record<string, string | number> = {};
+  if (params.pageSize != null) query.pageSize = params.pageSize;
+  if (params.cursor != null) query.cursor = params.cursor;
   const response = await client.get<PagedResult<MessageResponse>>(
-    url,
-    signal ? { signal } : undefined
+    `${basePath}/${encodeURIComponent(id)}/messages`,
+    { params: query, signal }
   );
   return response.data;
 }

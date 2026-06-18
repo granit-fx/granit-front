@@ -60,18 +60,21 @@ describe('conversations-api', () => {
     expect(result).toEqual(CONVERSATION);
   });
 
-  it('getConversationMessages GETs the newest page with no query when no params', async () => {
+  it('getConversationMessages GETs the messages route with empty params when none given', async () => {
     const client = createMockClient();
     const page: PagedResult<MessageResponse> = { items: [], totalCount: null, nextCursor: null };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(page));
 
     const result = await getConversationMessages(client, BASE, ID);
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/${ID}/messages`, undefined);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/${ID}/messages`, {
+      params: {},
+      signal: undefined,
+    });
     expect(result).toEqual(page);
   });
 
-  it('getConversationMessages builds pageSize + url-encoded cursor, and threads the signal', async () => {
+  it('getConversationMessages passes pageSize + cursor as axios params, and threads the signal', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
       axiosResponse<PagedResult<MessageResponse>>({ items: [], totalCount: null, nextCursor: null })
@@ -86,10 +89,10 @@ describe('conversations-api', () => {
       controller.signal
     );
 
-    expect(client.get).toHaveBeenCalledWith(
-      `${BASE}/${ID}/messages?pageSize=50&cursor=a%2Bb%2Fc%3D`,
-      { signal: controller.signal }
-    );
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/${ID}/messages`, {
+      params: { pageSize: 50, cursor: 'a+b/c=' },
+      signal: controller.signal,
+    });
   });
 
   it('createConversation POSTs to the base path with the title body', async () => {

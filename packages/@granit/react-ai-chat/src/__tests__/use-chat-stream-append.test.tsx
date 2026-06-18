@@ -78,6 +78,49 @@ describe('useChatStream — optimistic message append', () => {
     expect(items.map((m) => m.role)).toEqual(['assistant', 'user', 'assistant']);
   });
 
+  it('appends the real persisted rows (ids + createdAt) when the persisted frame arrives', async () => {
+    const userId = 'd1111111-1111-1111-1111-111111111111';
+    const assistantId = 'd2222222-2222-2222-2222-222222222222';
+    const client = createMockClient();
+    const stream = createSSEStream([
+      `data: {"type":"conversation","conversationId":"${CONV_ID}"}\n\n`,
+      'data: {"type":"delta","content":"Hi there"}\n\n',
+      `data: {"type":"persisted","messages":[{"id":"${userId}","role":"user","content":"Hello","createdAt":"2026-06-18T10:00:00.000Z"},{"id":"${assistantId}","role":"assistant","content":"Hi there","createdAt":"2026-06-18T10:00:01.000Z"}]}\n\n`,
+      'data: {"type":"usage","inputTokens":3,"outputTokens":2}\n\n',
+    ]);
+    vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
+
+    const queryClient = createTestQueryClient();
+    const messagesKey = conversationKeys.messages(DEFAULT_QUERY_KEY_PREFIX, CONV_ID);
+    queryClient.setQueryData<InfiniteData<PagedResult<MessageResponse>, MessagesPageParam>>(
+      messagesKey,
+      { pages: [{ items: [seed], totalCount: null, nextCursor: null }], pageParams: [undefined] }
+    );
+
+    function wrapper({ children }: { readonly children: ReactNode }) {
+      return (
+        <QueryClientProvider client={queryClient}>
+          <AIChatProvider config={{ client, basePath: TEST_BASE_PATH }}>{children}</AIChatProvider>
+        </QueryClientProvider>
+      );
+    }
+
+    const { result } = renderHook(() => useChatStream(), { wrapper });
+    act(() => {
+      result.current.send({ message: 'Hello', conversationId: CONV_ID });
+    });
+    await waitFor(() => expect(result.current.isStreaming).toBe(false));
+
+    const data =
+      queryClient.getQueryData<InfiniteData<PagedResult<MessageResponse>, MessagesPageParam>>(
+        messagesKey
+      );
+    const items = data?.pages[0]?.items ?? [];
+    // Real backend ids (not synthesized) → the just-streamed message is reportable.
+    expect(items.map((m) => m.id)).toEqual([assistantId, userId, seed.id]);
+    expect(items[0]?.createdAt).toBe('2026-06-18T10:00:01.000Z');
+  });
+
   it('no-ops when the messages query is not loaded', async () => {
     const client = createMockClient();
     const stream = createSSEStream([
