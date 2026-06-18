@@ -9,6 +9,7 @@ import {
   listConversations,
   renameConversation,
   reportConversationMessage,
+  setConversationFavorite,
 } from '../api/conversations-api';
 import { MESSAGE_REPORT_CATEGORIES } from '../types/index';
 
@@ -22,6 +23,7 @@ const CONVERSATION: ConversationResponse = {
   id: ID,
   title: 'Untitled',
   ownerId: 'b2222222-2222-2222-2222-222222222222' as ConversationResponse['ownerId'],
+  isFavorite: false,
   createdAt: '2026-06-15T10:00:00Z' as ConversationResponse['createdAt'],
   modifiedAt: null,
   messages: [],
@@ -67,6 +69,15 @@ describe('conversations-api', () => {
     await renameConversation(client, BASE, ID, { title: 'Renamed' });
 
     expect(client.put).toHaveBeenCalledWith(`${BASE}/${ID}/title`, { title: 'Renamed' });
+  });
+
+  it('setConversationFavorite PUTs {basePath}/{id}/favorite with the flag body', async () => {
+    const client = createMockClient();
+    vi.mocked(client.put).mockResolvedValue(axiosResponse(undefined));
+
+    await setConversationFavorite(client, BASE, ID, true);
+
+    expect(client.put).toHaveBeenCalledWith(`${BASE}/${ID}/favorite`, { isFavorite: true });
   });
 
   it('deleteConversation DELETEs {basePath}/{id}', async () => {

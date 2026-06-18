@@ -228,6 +228,7 @@ export interface ConversationResponse {
   readonly id: ConversationId;
   readonly title: string;
   readonly ownerId: UserId;
+  readonly isFavorite: boolean;
   readonly createdAt: ISODateString;
   readonly modifiedAt: ISODateString | null;
   readonly messages: readonly MessageResponse[];
@@ -237,6 +238,7 @@ export interface ConversationResponse {
 export interface ConversationSummaryResponse {
   readonly id: ConversationId;
   readonly title: string;
+  readonly isFavorite: boolean;
   readonly createdAt: ISODateString;
   readonly modifiedAt: ISODateString | null;
 }
@@ -249,6 +251,14 @@ export interface CreateConversationRequest {
 /** Body of `PUT /conversations/{id}/title`. */
 export interface RenameConversationRequest {
   readonly title: string;
+}
+
+/**
+ * Body of `PUT /conversations/{id}/favorite`. Sets the flag to an explicit
+ * state — idempotent, not a toggle.
+ */
+export interface SetConversationFavoriteRequest {
+  readonly isFavorite: boolean;
 }
 
 /**

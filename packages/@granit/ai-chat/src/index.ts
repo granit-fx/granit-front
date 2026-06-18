@@ -20,6 +20,7 @@ export type {
   RenameConversationRequest,
   ReportMessageRequest,
   SendMessageRequest,
+  SetConversationFavoriteRequest,
   SuggestedActionResponse,
 } from './types/index';
 
@@ -43,6 +44,7 @@ export {
   listConversations,
   renameConversation,
   reportConversationMessage,
+  setConversationFavorite,
   streamConversationMessage,
 } from './api/conversations-api';
 

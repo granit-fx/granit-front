@@ -2900,6 +2900,11 @@
           "members": []
         },
         {
+          "name": "useSetConversationFavorite",
+          "kind": "function",
+          "signature": "function useSetConversationFavorite(): UseSetConversationFavoriteReturn"
+        },
+        {
           "name": "useReportMessage",
           "kind": "function",
           "signature": "function useReportMessage(): UseReportMessageReturn"
@@ -2922,6 +2927,23 @@
           "signature": "function useChatStream(): UseChatStreamReturn"
         },
         {
+          "name": "useStickToBottom",
+          "kind": "function",
+          "signature": "function useStickToBottom< S extends HTMLElement = HTMLDivElement, C extends HTMLElement = HTMLDivElement, >("
+        },
+        {
+          "name": "UseStickToBottomOptions",
+          "kind": "interface",
+          "signature": "interface UseStickToBottomOptions",
+          "members": []
+        },
+        {
+          "name": "UseStickToBottomReturn",
+          "kind": "interface",
+          "signature": "interface UseStickToBottomReturn<S extends HTMLElement, C extends HTMLElement>",
+          "members": []
+        },
+        {
           "name": "ChatMessage",
           "kind": "function",
           "signature": "function ChatMessage("
@@ -2941,6 +2963,28 @@
           "name": "ConversationThreadProps",
           "kind": "interface",
           "signature": "interface ConversationThreadProps",
+          "members": []
+        },
+        {
+          "name": "ConversationScrollArea",
+          "kind": "function",
+          "signature": "function ConversationScrollArea("
+        },
+        {
+          "name": "ConversationScrollAreaProps",
+          "kind": "interface",
+          "signature": "interface ConversationScrollAreaProps",
+          "members": []
+        },
+        {
+          "name": "ScrollToBottomButton",
+          "kind": "function",
+          "signature": "function ScrollToBottomButton("
+        },
+        {
+          "name": "ScrollToBottomButtonProps",
+          "kind": "interface",
+          "signature": "interface ScrollToBottomButtonProps",
           "members": []
         },
         {

@@ -6,6 +6,7 @@ export const aiChatTranslationsFr: ChatTranslations = {
     You: 'Vous',
     Assistant: 'Assistant',
     AssistantTyping: 'L’assistant écrit…',
+    ScrollToLatest: 'Aller au dernier message',
   },
   Composer: {
     Placeholder: 'Interrogez votre application… ( / pour les prompts, @ pour mentionner )',

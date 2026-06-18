@@ -22,6 +22,11 @@ export type {
 } from './hooks/use-rename-conversation';
 export { useDeleteConversation } from './hooks/use-delete-conversation';
 export type { UseDeleteConversationReturn } from './hooks/use-delete-conversation';
+export { useSetConversationFavorite } from './hooks/use-set-conversation-favorite';
+export type {
+  SetConversationFavoriteVariables,
+  UseSetConversationFavoriteReturn,
+} from './hooks/use-set-conversation-favorite';
 export { useReportMessage } from './hooks/use-report-message';
 export type { ReportMessageVariables, UseReportMessageReturn } from './hooks/use-report-message';
 
@@ -39,11 +44,19 @@ export type {
   UseChatStreamReturn,
 } from './hooks/use-chat-stream';
 
+// Hooks — scrolling
+export { useStickToBottom } from './hooks/use-stick-to-bottom';
+export type { UseStickToBottomOptions, UseStickToBottomReturn } from './hooks/use-stick-to-bottom';
+
 // Components
 export { ChatMessage } from './components/chat-message';
 export type { ChatMessageProps } from './components/chat-message';
 export { ConversationThread } from './components/conversation-thread';
 export type { ConversationThreadProps } from './components/conversation-thread';
+export { ConversationScrollArea } from './components/conversation-scroll-area';
+export type { ConversationScrollAreaProps } from './components/conversation-scroll-area';
+export { ScrollToBottomButton } from './components/scroll-to-bottom-button';
+export type { ScrollToBottomButtonProps } from './components/scroll-to-bottom-button';
 export { SystemMessage } from './components/system-message';
 export type { SystemMessageProps, SystemMessageVariant } from './components/system-message';
 export { SuggestedActions } from './components/suggested-actions';

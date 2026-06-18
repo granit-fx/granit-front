@@ -366,11 +366,106 @@
         }
       }
     },
+    "/conversations/{id}/favorite": {
+      "put": {
+        "tags": ["AI - Conversations"],
+        "summary": "Sets the favorite flag on one of the current user's conversations.",
+        "description": "Sets the conversation's favorite flag to the requested state (idempotent, not a toggle). Scoped to the caller: another user's conversation is reported as not found.",
+        "operationId": "SetConversationFavorite",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetConversationFavoriteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/conversations/messages": {
       "post": {
         "tags": ["AI - Conversations"],
         "summary": "Sends a message and streams a tool-grounded answer over SSE.",
-        "description": "Runs the agentic loop within the caller's permissions, persists the user and assistant messages, and streams the answer as Server-Sent Events: a 'conversation' frame with the (possibly new) conversation id (flushed immediately), then live 'tool_call'/'tool_result' frames as the agent uses tools and incremental 'delta' content frames as the model writes, then a 'usage' frame (and 'suggestions' / 'clarification' when applicable). Rejects a non-chat-capable workspace before streaming.",
+        "description": "Runs the agentic loop within the caller's permissions, persists the user and assistant messages, and streams the answer as Server-Sent Events: a 'conversation' frame with the (possibly new) conversation id (flushed immediately), then live 'tool_call'/'tool_result' frames as the agent uses tools and incremental 'delta' content frames as the model writes, then a 'usage' frame (and 'suggestions' / 'clarification' when applicable). Rejects a non-chat-capable workspace before streaming. If the agent fails after the stream is committed (provider quota exhausted, a provider 5xx/timeout, or any other fault), the stream ends with a terminal 'error' frame carrying a machine 'code' (rate_limit / provider_unavailable / server_error) — a frame within the 200 response, not an HTTP status. A client-cancelled request emits no 'error' frame.",
         "operationId": "SendChatMessage",
         "requestBody": {
           "content": {
@@ -719,7 +814,7 @@
         }
       },
       "ConversationResponse": {
-        "required": ["id", "title", "ownerId", "createdAt", "modifiedAt", "messages"],
+        "required": ["id", "title", "ownerId", "isFavorite", "createdAt", "modifiedAt", "messages"],
         "type": "object",
         "properties": {
           "id": {
@@ -732,6 +827,9 @@
           "ownerId": {
             "type": "string",
             "format": "uuid"
+          },
+          "isFavorite": {
+            "type": "boolean"
           },
           "createdAt": {
             "type": "string",
@@ -750,7 +848,7 @@
         }
       },
       "ConversationSummaryResponse": {
-        "required": ["id", "title", "createdAt", "modifiedAt"],
+        "required": ["id", "title", "isFavorite", "createdAt", "modifiedAt"],
         "type": "object",
         "properties": {
           "id": {
@@ -759,6 +857,9 @@
           },
           "title": {
             "type": "string"
+          },
+          "isFavorite": {
+            "type": "boolean"
           },
           "createdAt": {
             "type": "string",
@@ -933,6 +1034,15 @@
               "type": "string",
               "format": "uuid"
             }
+          }
+        }
+      },
+      "SetConversationFavoriteRequest": {
+        "required": ["isFavorite"],
+        "type": "object",
+        "properties": {
+          "isFavorite": {
+            "type": "boolean"
           }
         }
       },

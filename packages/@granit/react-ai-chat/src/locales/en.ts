@@ -5,6 +5,8 @@ export interface ChatTranslations {
     readonly You: string;
     readonly Assistant: string;
     readonly AssistantTyping: string;
+    /** Accessible label for the scroll-to-latest button. */
+    readonly ScrollToLatest?: string;
   };
   readonly Composer: {
     readonly Placeholder: string;
@@ -76,6 +78,7 @@ export const aiChatTranslationsEn: ChatTranslations = {
     You: 'You',
     Assistant: 'Assistant',
     AssistantTyping: 'Assistant is typing…',
+    ScrollToLatest: 'Scroll to latest',
   },
   Composer: {
     Placeholder: 'Ask your app… ( / for prompts, @ to mention )',

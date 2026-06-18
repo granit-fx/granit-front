@@ -187,6 +187,7 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'MessageResponse',
       'CreateConversationRequest',
       'RenameConversationRequest',
+      'SetConversationFavoriteRequest',
       'ReportMessageRequest',
       'SendMessageRequest',
       'MentionRequest',
