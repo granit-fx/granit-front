@@ -1166,6 +1166,28 @@ importers:
         specifier: workspace:*
         version: link:../utils
 
+  packages/@granit/react-ai-chat-blob-storage:
+    dependencies:
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+    devDependencies:
+      '@granit/blob-storage':
+        specifier: workspace:*
+        version: link:../blob-storage
+      '@granit/react-ai-chat':
+        specifier: workspace:*
+        version: link:../react-ai-chat
+      '@granit/react-blob-storage':
+        specifier: workspace:*
+        version: link:../react-blob-storage
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/react-ai-prompts:
     dependencies:
       '@tanstack/react-query':

@@ -78,21 +78,6 @@
       "description": "AI workspace management, chat completion, embedding generation, and usage tracking types and API functions — mirrors Granit.AI.Endpoints .NET",
       "exports": [
         {
-          "name": "AI_CAPABILITY_EXTENSIONS",
-          "kind": "const",
-          "signature": "const AI_CAPABILITY_EXTENSIONS"
-        },
-        {
-          "name": "AI_STREAM_DONE_MARKER",
-          "kind": "const",
-          "signature": "const AI_STREAM_DONE_MARKER"
-        },
-        {
-          "name": "AI_WORKSPACE_KINDS",
-          "kind": "const",
-          "signature": "const AI_WORKSPACE_KINDS"
-        },
-        {
           "name": "listAIProviderModels",
           "kind": "function",
           "signature": "async function listAIProviderModels( client: AxiosInstance, basePath: string, providerName: string ): Promise<readonly AIProviderModelResponse[]>"
@@ -3099,6 +3084,23 @@
           "name": "ActiveTrigger",
           "kind": "interface",
           "signature": "interface ActiveTrigger",
+          "members": []
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ai-chat-blob-storage",
+      "description": "Glue: UploadAttachment adapter for ChatComposer backed by @granit/react-blob-storage",
+      "exports": [
+        {
+          "name": "useAIChatBlobUpload",
+          "kind": "function",
+          "signature": "function useAIChatBlobUpload( containerName: string, options?: UseAIChatBlobUploadOptions, ): UploadAttachment"
+        },
+        {
+          "name": "UseAIChatBlobUploadOptions",
+          "kind": "interface",
+          "signature": "interface UseAIChatBlobUploadOptions",
           "members": []
         }
       ]

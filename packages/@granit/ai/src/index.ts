@@ -24,7 +24,12 @@ export type {
   ChatStreamEvent,
   ConversationId,
 } from './types/index';
-export { AI_CAPABILITY_EXTENSIONS, AI_STREAM_DONE_MARKER, AI_WORKSPACE_KINDS } from './types/index';
+export {
+  AI_CAPABILITY_EXTENSIONS,
+  AI_STREAM_DONE_MARKER,
+  AI_WORKSPACE_KINDS,
+  AI_WORKSPACE_LIMITS,
+} from './types/index';
 
 // API — Providers
 export { listAIProviderModels, listAIProviders } from './api/ai-providers-api';

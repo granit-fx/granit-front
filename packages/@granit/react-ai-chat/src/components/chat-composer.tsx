@@ -40,6 +40,8 @@ export interface ChatComposerProps {
   readonly searchMentions?: SearchMentions;
   /** App-specific attachment upload. Omit to hide the attach button. */
   readonly uploadAttachment?: UploadAttachment;
+  /** Comma-separated MIME types for the file picker `accept` attribute (e.g. from `CHAT_ATTACHMENT_ACCEPT`). */
+  readonly attachAccept?: string;
   /** Selectable workspaces (`Auto` first); omit to hide the selector. */
   readonly workspaces?: readonly string[];
   /**
@@ -75,6 +77,7 @@ export function ChatComposer({
   prompts = [],
   searchMentions,
   uploadAttachment,
+  attachAccept,
   workspaces,
   workspaceOptions,
   workspace,
@@ -424,6 +427,7 @@ export function ChatComposer({
                 <input
                   type="file"
                   multiple
+                  accept={attachAccept}
                   className="hidden"
                   disabled={disabled}
                   onChange={handleFiles}

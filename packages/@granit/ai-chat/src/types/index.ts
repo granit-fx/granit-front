@@ -234,6 +234,8 @@ export interface MessageResponse {
   readonly id: MessageId;
   readonly role: ChatMessageRole;
   readonly content: string;
+  /** Workspace used to process this message (null for pre-workspace messages). */
+  readonly workspaceKey: string | null;
   readonly createdAt: ISODateString;
 }
 
@@ -245,7 +247,8 @@ export interface ConversationResponse {
   readonly isFavorite: boolean;
   readonly createdAt: ISODateString;
   readonly modifiedAt: ISODateString | null;
-  readonly messages: readonly MessageResponse[];
+  /** Workspace key frozen at creation (null for pre-workspace conversations). */
+  readonly workspaceKey: string | null;
 }
 
 /** A conversation list item, without its messages. */
@@ -255,6 +258,8 @@ export interface ConversationSummaryResponse {
   readonly isFavorite: boolean;
   readonly createdAt: ISODateString;
   readonly modifiedAt: ISODateString | null;
+  /** Workspace key frozen at creation (null for pre-workspace conversations). */
+  readonly workspaceKey: string | null;
 }
 
 /** Body of `POST /conversations`. */

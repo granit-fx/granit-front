@@ -128,6 +128,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     kind: 'System',
     activated: true,
     capabilities: gpt4oCaps,
+    workspaceModelName: 'GPT-4o',
   },
   {
     name: 'code-review',
@@ -139,6 +140,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     kind: 'Dynamic',
     activated: true,
     capabilities: basicChatCaps,
+    workspaceModelName: null,
   },
   {
     name: 'translation',
@@ -150,6 +152,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     kind: 'Dynamic',
     activated: true,
     capabilities: gpt4oCaps,
+    workspaceModelName: null,
   },
   {
     name: 'summarizer',
@@ -161,6 +164,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     kind: 'Dynamic',
     activated: false,
     capabilities: ollamaCaps,
+    workspaceModelName: null,
   },
 ];
 

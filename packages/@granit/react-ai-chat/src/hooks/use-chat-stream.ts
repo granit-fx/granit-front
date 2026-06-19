@@ -170,9 +170,14 @@ function appendTurnToMessages(
     (prev) => {
       const newest = prev?.pages[0];
       if (!prev || !newest) return prev;
+      // Skip rows already present anywhere in the loaded pages (e.g. a background
+      // refetch ran between the persisted frame and stream completion).
+      const existingIds = new Set(prev.pages.flatMap((p) => p.items.map((m) => m.id)));
+      const fresh = [...rows].reverse().filter((m) => !existingIds.has(m.id));
+      if (fresh.length === 0) return prev;
       const updatedNewest: PagedResult<MessageResponse> = {
         ...newest,
-        items: [...[...rows].reverse(), ...newest.items],
+        items: [...fresh, ...newest.items],
       };
       return { ...prev, pages: [updatedNewest, ...prev.pages.slice(1)] };
     }
@@ -187,12 +192,17 @@ function appendTurnToMessages(
  * reportable until the next full load. When the backend sends `persisted`, its
  * authoritative rows (real ids + server `createdAt`) are used instead.
  */
-function synthesizeTurnRows(userMessage: string, assistantContent: string): MessageResponse[] {
+function synthesizeTurnRows(
+  userMessage: string,
+  assistantContent: string,
+  workspaceKey: string | null
+): MessageResponse[] {
   const now = toISODateString(new Date().toISOString());
   const synth = (role: MessageResponse['role'], content: string): MessageResponse => ({
     id: toEntityId<'Message'>(crypto.randomUUID()),
     role,
     content,
+    workspaceKey,
     createdAt: now,
   });
   const rows: MessageResponse[] = [synth('user', userMessage)];
@@ -286,7 +296,11 @@ export function useChatStream(): UseChatStreamReturn {
             const rows =
               turn.persistedMessages && turn.persistedMessages.length > 0
                 ? turn.persistedMessages
-                : synthesizeTurnRows(request.message, turn.accumulated);
+                : synthesizeTurnRows(
+                    request.message,
+                    turn.accumulated,
+                    request.workspaceName ?? null
+                  );
             appendTurnToMessages(
               queryClient,
               conversationKeys.messages(config.queryKeyPrefix, turn.resolvedId),

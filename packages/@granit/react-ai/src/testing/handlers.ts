@@ -365,6 +365,7 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
         kind: 'Dynamic',
         activated: true,
         capabilities: model?.capabilities ?? null,
+        workspaceModelName: body.workspaceModelName ?? null,
       };
 
       workspaces = [...workspaces, created];

@@ -27,6 +27,16 @@ export const AI_CAPABILITY_EXTENSIONS = {
 /** SSE stream termination marker. */
 export const AI_STREAM_DONE_MARKER = '[DONE]';
 
+/** Server-enforced limits for workspace fields. */
+export const AI_WORKSPACE_LIMITS = {
+  /** `name` maximum length. Pattern: `^[a-z0-9][a-z0-9-]*$`. */
+  NAME_MAX_LENGTH: 128,
+  /** Slug pattern for workspace names (lowercase alphanumeric + hyphens, no leading hyphen). */
+  NAME_PATTERN: /^[a-z0-9][a-z0-9-]*$/,
+  /** `workspaceModelName` maximum length (display label). */
+  MODEL_NAME_MAX_LENGTH: 64,
+} as const;
+
 // -- Workspace ---------------------------------------------------------------
 
 /** Workspace kind. Mirrors `Granit.AI.Workspaces.AIWorkspaceKind`. */
@@ -43,6 +53,8 @@ export interface AIWorkspaceResponse {
   readonly kind: AIWorkspaceKind;
   readonly activated: boolean;
   readonly capabilities: AIModelCapabilities | null;
+  /** Human-readable model label (e.g. "GPT-4o"); null if not set. */
+  readonly workspaceModelName: string | null;
 }
 
 /** List response wrapper. Mirrors `AIWorkspaceListResponse`. */
@@ -59,6 +71,7 @@ export interface AIWorkspaceCreateRequest {
   readonly systemPrompt?: string | null;
   readonly temperature?: number | null;
   readonly maxOutputTokens?: number | null;
+  readonly workspaceModelName?: string | null;
 }
 
 /** Update workspace request. Mirrors `AIWorkspaceUpdateRequest`. */
@@ -69,6 +82,8 @@ export interface AIWorkspaceUpdateRequest {
   readonly temperature?: number | null;
   readonly maxOutputTokens?: number | null;
   readonly activated: boolean;
+  /** Pass null to clear the label. */
+  readonly workspaceModelName?: string | null;
 }
 
 // -- Chat completion ---------------------------------------------------------
