@@ -1,0 +1,13 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "compilerOptions": {
+    "paths": {
+      "@granit/blob-storage": ["../blob-storage/src/index.ts"],
+      "@granit/react-ai-chat": ["../react-ai-chat/src/index.ts"],
+      "@granit/react-blob-storage": ["../react-blob-storage/src/index.ts"],
+      "@granit/testing": ["../testing/src/index.ts"],
+      "@granit/react-testing": ["../react-testing/src/index.ts"]
+    }
+  }
+}

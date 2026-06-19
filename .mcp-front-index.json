@@ -3095,7 +3095,7 @@
         {
           "name": "useAIChatBlobUpload",
           "kind": "function",
-          "signature": "function useAIChatBlobUpload( containerName: string, options?: UseAIChatBlobUploadOptions, ): UploadAttachment"
+          "signature": "function useAIChatBlobUpload( containerName: string, options?: UseAIChatBlobUploadOptions ): UploadAttachment"
         },
         {
           "name": "UseAIChatBlobUploadOptions",

@@ -1,0 +1,38 @@
+{
+  "name": "@granit/react-ai-chat-blob-storage",
+  "description": "Glue: UploadAttachment adapter for ChatComposer backed by @granit/react-blob-storage",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/blob-storage": "workspace:*",
+    "@granit/react-ai-chat": "workspace:*",
+    "@granit/react-blob-storage": "workspace:*",
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@granit/blob-storage": "workspace:*",
+    "@granit/react-ai-chat": "workspace:*",
+    "@granit/react-blob-storage": "workspace:*",
+    "@granit/react-testing": "workspace:*",
+    "@granit/testing": "workspace:*"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  }
+}
