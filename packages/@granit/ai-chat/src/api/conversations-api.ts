@@ -38,7 +38,9 @@ export async function listConversations(
 }
 
 /**
- * Get one of the current user's conversations and its messages.
+ * Get one of the current user's conversations (metadata only — title, favorite,
+ * timestamps). The message thread is paged separately via
+ * {@link getConversationMessages}.
  *
  * `GET {basePath}/{id}`
  */

@@ -5,6 +5,7 @@
 export {
   mockChatWorkspaces,
   mockConversation,
+  mockConversationMessages,
   mockConversationSummaries,
   mockLongConversationId,
   mockLongConversationMessages,

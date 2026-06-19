@@ -2,12 +2,14 @@ import { cn } from '@granit/utils';
 import { Loader2 } from 'lucide-react';
 
 import { defaultChatLabels, defaultErrorLabels } from '../locales/index';
+import { useOptionalAIChatConfig } from '../providers/ai-chat-provider';
 
 import { ChatMessage } from './chat-message';
+import { MessageMetrics } from './message-metrics';
 import { SystemMessage } from './system-message';
 import { ToolActivity } from './tool-activity';
 
-import type { ChatErrorKind, ToolCallActivity } from '../hooks/use-chat-stream';
+import type { ChatErrorKind, ChatTurnMetrics, ToolCallActivity } from '../hooks/use-chat-stream';
 import type { ChatTranslations } from '../locales/index';
 import type { MessageResponse } from '@granit/ai-chat';
 import type { ReactNode, Ref } from 'react';
@@ -70,10 +72,17 @@ export interface ConversationThreadProps {
   readonly errorKind?: ChatErrorKind | null;
   /** Invoked by the error notice's retry button; omit to hide it. */
   readonly onRetry?: () => void;
+  /**
+   * Client-side timing for the last completed turn (from `useChatStream().metrics`).
+   * Shown as a chip under the latest assistant message only when the provider's
+   * `showMessageMetrics` is enabled; ignored otherwise.
+   */
+  readonly metrics?: ChatTurnMetrics | null;
   readonly labels?: ChatTranslations['Thread'];
   readonly toolLabels?: ChatTranslations['Tools'];
   /** Localized error copy; defaults to the bundled English strings. */
   readonly errorLabels?: ChatTranslations['Errors'];
+  readonly metricsLabels?: ChatTranslations['Metrics'];
   readonly className?: string;
 }
 
@@ -97,15 +106,25 @@ export function ConversationThread({
   isLoadingOlder = false,
   errorKind,
   onRetry,
+  metrics,
   labels = defaultChatLabels.Thread,
   toolLabels = defaultChatLabels.Tools,
   errorLabels = defaultChatLabels.Errors,
+  metricsLabels = defaultChatLabels.Metrics,
   className,
 }: Readonly<ConversationThreadProps>) {
   const isEmpty = messages.length === 0 && !streamingContent && !isStreaming && !errorKind;
   const hasToolActivity = toolCalls.length > 0 || isThinking;
   // Render the scroll-up paging affordances only when the host opted in.
   const isPaged = topSentinelRef !== undefined || hasMoreOlder !== undefined;
+
+  // Per-message metrics are an opt-in (provider flag) and only meaningful once a
+  // turn has finished streaming. Attach the chip to the most recent assistant
+  // reply — the one the current `metrics` describes.
+  const showMetrics = (useOptionalAIChatConfig()?.showMessageMetrics ?? false) && metrics != null;
+  const lastAssistantIndex = showMetrics
+    ? messages.findLastIndex((message) => message.role === 'assistant')
+    : -1;
 
   return (
     <div
@@ -136,15 +155,29 @@ export function ConversationThread({
         </p>
       ) : null}
 
-      {messages.map((message, index) => (
-        <ChatMessage
-          key={message.id}
-          role={message.role}
-          content={message.content}
-          authorLabel={message.role === 'user' ? labels.You : labels.Assistant}
-          actions={renderMessageActions?.(message, index)}
-        />
-      ))}
+      {messages.map((message, index) => {
+        const hostActions = renderMessageActions?.(message, index);
+        const metricsChip =
+          showMetrics && metrics && index === lastAssistantIndex ? (
+            <MessageMetrics metrics={metrics} labels={metricsLabels} />
+          ) : null;
+        const actions =
+          hostActions || metricsChip ? (
+            <>
+              {hostActions}
+              {metricsChip}
+            </>
+          ) : undefined;
+        return (
+          <ChatMessage
+            key={message.id}
+            role={message.role}
+            content={message.content}
+            authorLabel={message.role === 'user' ? labels.You : labels.Assistant}
+            actions={actions}
+          />
+        );
+      })}
 
       {hasToolActivity ? (
         <ToolActivity

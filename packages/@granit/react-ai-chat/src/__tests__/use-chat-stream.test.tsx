@@ -266,4 +266,100 @@ describe('useChatStream', () => {
 
     await waitFor(() => expect(result.current.errorKind).toBe('server'));
   });
+
+  it('captures timing metrics for a turn that streams text', async () => {
+    // Monotonic clock so first-token < completion regardless of incidental
+    // performance.now() calls, keeping the derived rate strictly positive.
+    let clock = 0;
+    vi.spyOn(performance, 'now').mockImplementation(() => (clock += 50));
+    const client = createMockClient();
+    const stream = createSSEStream([
+      'data: {"type":"delta","content":"Hel"}\n\n',
+      'data: {"type":"delta","content":"lo"}\n\n',
+      'data: {"type":"usage","inputTokens":12,"outputTokens":8}\n\n',
+    ]);
+    vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
+
+    const { result } = renderHook(() => useChatStream(), { wrapper: createWrapper(client) });
+
+    act(() => {
+      result.current.send({ message: 'Hi' });
+    });
+
+    await waitFor(() => expect(result.current.metrics).not.toBeNull());
+
+    expect(result.current.metrics?.chunkCount).toBe(2);
+    expect(result.current.metrics?.firstTokenMs ?? 0).toBeGreaterThan(0);
+    expect(result.current.metrics?.totalMs ?? 0).toBeGreaterThan(
+      result.current.metrics?.firstTokenMs ?? 0
+    );
+    expect(result.current.metrics?.tokensPerSecond ?? 0).toBeGreaterThan(0);
+    expect(Number.isFinite(result.current.metrics?.tokensPerSecond)).toBe(true);
+  });
+
+  it('reports no tokens/sec when the turn has no usage frame', async () => {
+    let clock = 0;
+    vi.spyOn(performance, 'now').mockImplementation(() => (clock += 50));
+    const client = createMockClient();
+    const stream = createSSEStream(['data: {"type":"delta","content":"Hi"}\n\n']);
+    vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
+
+    const { result } = renderHook(() => useChatStream(), { wrapper: createWrapper(client) });
+
+    act(() => {
+      result.current.send({ message: 'Hi' });
+    });
+
+    await waitFor(() => expect(result.current.metrics).not.toBeNull());
+    expect(result.current.metrics?.chunkCount).toBe(1);
+    expect(result.current.metrics?.tokensPerSecond).toBeNull();
+  });
+
+  it('produces no metrics for a turn that streamed no text', async () => {
+    const client = createMockClient();
+    const stream = createSSEStream([
+      'data: {"type":"clarification","clarification":{"question":"Which one?","options":[{"label":"A","value":"a"}],"allowOther":false}}\n\n',
+    ]);
+    vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
+
+    const { result } = renderHook(() => useChatStream(), { wrapper: createWrapper(client) });
+
+    act(() => {
+      result.current.send({ message: 'x' });
+    });
+
+    await waitFor(() => expect(result.current.isStreaming).toBe(false));
+    expect(result.current.clarification).not.toBeNull();
+    expect(result.current.metrics).toBeNull();
+  });
+
+  it('resets metrics on a new send()', async () => {
+    let clock = 0;
+    vi.spyOn(performance, 'now').mockImplementation(() => (clock += 50));
+    const client = createMockClient();
+    const first = createSSEStream([
+      'data: {"type":"delta","content":"A"}\n\n',
+      'data: {"type":"usage","inputTokens":1,"outputTokens":4}\n\n',
+    ]);
+    const second = createSSEStream(['data: {"type":"delta","content":"B"}\n\n']);
+    vi.spyOn(client, 'post')
+      .mockResolvedValueOnce({ data: first })
+      .mockResolvedValueOnce({ data: second });
+
+    const { result } = renderHook(() => useChatStream(), { wrapper: createWrapper(client) });
+
+    act(() => {
+      result.current.send({ message: 'A' });
+    });
+    await waitFor(() => expect(result.current.metrics?.tokensPerSecond ?? 0).toBeGreaterThan(0));
+
+    act(() => {
+      result.current.send({ message: 'B' });
+    });
+    await waitFor(() => expect(result.current.isStreaming).toBe(false));
+    // The second turn carries no usage frame, so its metrics replace the first
+    // turn's rather than lingering.
+    expect(result.current.metrics?.chunkCount).toBe(1);
+    expect(result.current.metrics?.tokensPerSecond).toBeNull();
+  });
 });

@@ -19,6 +19,13 @@ export interface AIChatConfig {
   readonly basePath?: string;
   /** React Query key prefix (default: `['ai-chat']`). */
   readonly queryKeyPrefix?: readonly string[];
+  /**
+   * Show per-message timing metrics (time-to-first-token, total, tokens/sec,
+   * chunk count) under the latest assistant reply. Off by default — a
+   * dev/debug aid the app opts into centrally (e.g. `import.meta.env.DEV`).
+   * Rendered by `ConversationThread` from `useChatStream().metrics`.
+   */
+  readonly showMessageMetrics?: boolean;
 }
 
 /** {@link AIChatConfig} after the provider has resolved `client` and defaults. */
@@ -26,6 +33,7 @@ export interface ResolvedAIChatConfig extends AIChatConfig {
   readonly client: AxiosInstance;
   readonly basePath: string;
   readonly queryKeyPrefix: readonly string[];
+  readonly showMessageMetrics: boolean;
 }
 
 export interface AIChatProviderProps {
@@ -50,6 +58,7 @@ export function AIChatProvider({ config, children }: Readonly<AIChatProviderProp
       client,
       basePath: config.basePath ?? DEFAULT_BASE_PATH,
       queryKeyPrefix: config.queryKeyPrefix ?? DEFAULT_QUERY_KEY_PREFIX,
+      showMessageMetrics: config.showMessageMetrics ?? false,
     };
   }, [config, contextClient]);
   return <AIChatConfigContext value={value}>{children}</AIChatConfigContext>;
@@ -62,4 +71,13 @@ export function useAIChatConfig(): ResolvedAIChatConfig {
     throw new Error('useAIChatConfig must be used within an AIChatProvider');
   }
   return ctx;
+}
+
+/**
+ * Like {@link useAIChatConfig} but returns `null` outside a provider instead of
+ * throwing — for presentational components (e.g. `ConversationThread`) that
+ * read an optional flag yet must still render standalone in tests/Storybook.
+ */
+export function useOptionalAIChatConfig(): ResolvedAIChatConfig | null {
+  return useContext(AIChatConfigContext);
 }

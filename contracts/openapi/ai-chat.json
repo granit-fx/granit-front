@@ -140,7 +140,7 @@
       "get": {
         "tags": ["AI - Conversations"],
         "summary": "Returns one of the current user's conversations by ID.",
-        "description": "Returns the conversation and its messages. Scoped to the caller: another user's conversation is reported as not found.",
+        "description": "Returns the conversation's metadata (title, favorite, timestamps); its messages are paged separately via GET /{id}/messages. Scoped to the caller: another user's conversation is reported as not found.",
         "operationId": "GetConversation",
         "parameters": [
           {
@@ -929,7 +929,7 @@
         }
       },
       "ConversationResponse": {
-        "required": ["id", "title", "ownerId", "isFavorite", "createdAt", "modifiedAt", "messages"],
+        "required": ["id", "title", "ownerId", "isFavorite", "createdAt", "modifiedAt"],
         "type": "object",
         "properties": {
           "id": {
@@ -953,12 +953,6 @@
           "modifiedAt": {
             "type": ["null", "string"],
             "format": "date-time"
-          },
-          "messages": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MessageResponse"
-            }
           }
         }
       },

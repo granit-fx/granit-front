@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { chatStream } from '../api/ai-chat-api';
 
-import type { ChatStreamEvent } from '../types/index';
+import type { AIChatCompletionEvent } from '../types/index';
 
 function createSSEStream(chunks: string[]): ReadableStream<Uint8Array> {
   const encoder = new TextEncoder();
@@ -31,7 +31,7 @@ describe('chatStream', () => {
     ]);
     vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
-    const events: ChatStreamEvent[] = [];
+    const events: AIChatCompletionEvent[] = [];
     for await (const event of chatStream(client, '', 'default', {
       messages: [{ role: 'user', content: 'Hi' }],
     })) {
@@ -49,7 +49,7 @@ describe('chatStream', () => {
     const stream = createSSEStream(['data: {"cont', 'ent":"split"}\n\ndata: [DONE]\n\n']);
     vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
-    const events: ChatStreamEvent[] = [];
+    const events: AIChatCompletionEvent[] = [];
     for await (const event of chatStream(client, '', 'default', {
       messages: [{ role: 'user', content: 'Hi' }],
     })) {
@@ -79,7 +79,7 @@ describe('chatStream', () => {
     ]);
     vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
-    const events: ChatStreamEvent[] = [];
+    const events: AIChatCompletionEvent[] = [];
     for await (const event of chatStream(client, '', 'default', {
       messages: [{ role: 'user', content: 'Hi' }],
     })) {
@@ -115,7 +115,7 @@ describe('chatStream', () => {
     const client = createMockClient();
     vi.spyOn(client, 'post').mockResolvedValue({ data: null });
 
-    const events: ChatStreamEvent[] = [];
+    const events: AIChatCompletionEvent[] = [];
     for await (const event of chatStream(client, '', 'default', {
       messages: [{ role: 'user', content: 'Hi' }],
     })) {
@@ -135,7 +135,7 @@ describe('chatStream', () => {
     ]);
     vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
-    const events: ChatStreamEvent[] = [];
+    const events: AIChatCompletionEvent[] = [];
     for await (const event of chatStream(client, '', 'default', {
       messages: [{ role: 'user', content: 'Hi' }],
     })) {
@@ -156,7 +156,7 @@ describe('chatStream', () => {
     ]);
     vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
-    const events: ChatStreamEvent[] = [];
+    const events: AIChatCompletionEvent[] = [];
     for await (const event of chatStream(client, '', 'default', {
       messages: [{ role: 'user', content: 'Hi' }],
     })) {

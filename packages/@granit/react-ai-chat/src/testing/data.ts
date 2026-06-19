@@ -10,7 +10,7 @@ const OWNER = toEntityId<'User'>('b2222222-2222-2222-2222-222222222222');
 
 const CONVERSATION_ID = toEntityId<'Conversation'>('a1111111-1111-1111-1111-111111111111');
 
-/** A full conversation with two messages, returned by `GET /conversations/{id}`. */
+/** Conversation metadata returned by `GET /conversations/{id}` (no embedded thread). */
 export const mockConversation: ConversationResponse = {
   id: CONVERSATION_ID,
   title: 'Invoice questions',

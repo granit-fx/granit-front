@@ -1,3 +1,4 @@
+import { createMockClient } from '@granit/testing';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
@@ -6,16 +7,32 @@ import { AttachmentChips } from '../components/attachment-chips';
 import { ChatMessage } from '../components/chat-message';
 import { ClarificationPrompt } from '../components/clarification-prompt';
 import { ConversationThread } from '../components/conversation-thread';
+import { MessageMetrics } from '../components/message-metrics';
 import { SuggestedActions } from '../components/suggested-actions';
 import { ToolActivity } from '../components/tool-activity';
+import { AIChatProvider } from '../providers/ai-chat-provider';
 
 import type { ComposerAttachment } from '../components/attachment-chips';
-import type { ToolCallActivity } from '../hooks/use-chat-stream';
+import type { ChatTurnMetrics, ToolCallActivity } from '../hooks/use-chat-stream';
 import type {
   ClarificationResponse,
   MessageResponse,
   SuggestedActionResponse,
 } from '@granit/ai-chat';
+import type { ReactNode } from 'react';
+
+const turnMetrics: ChatTurnMetrics = {
+  firstTokenMs: 40,
+  totalMs: 293,
+  tokensPerSecond: 177.5,
+  chunkCount: 51,
+};
+
+/** Render under an {@link AIChatProvider} with the metrics flag toggled. */
+function renderWithMetricsFlag(ui: ReactNode, showMessageMetrics: boolean) {
+  const client = createMockClient();
+  return render(<AIChatProvider config={{ client, showMessageMetrics }}>{ui}</AIChatProvider>);
+}
 
 const messages: MessageResponse[] = [
   {
@@ -234,5 +251,40 @@ describe('AttachmentChips', () => {
     expect(screen.getByText('2.0 KB')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: /remove attachment report\.pdf/i }));
     expect(onRemove).toHaveBeenCalledWith('a1');
+  });
+});
+
+describe('MessageMetrics', () => {
+  it('shows the total on the chip and the full breakdown in the popover', () => {
+    render(<MessageMetrics metrics={turnMetrics} />);
+    expect(screen.getByRole('button', { name: 'Response timing' })).toHaveTextContent('293ms');
+    expect(screen.getByText('First token')).toBeInTheDocument();
+    expect(screen.getByText('40ms')).toBeInTheDocument();
+    expect(screen.getByText('177.5 tok/s')).toBeInTheDocument();
+    expect(screen.getByText('51')).toBeInTheDocument();
+  });
+
+  it('renders a placeholder when tokens/sec is not derivable', () => {
+    render(<MessageMetrics metrics={{ ...turnMetrics, tokensPerSecond: null }} />);
+    expect(screen.getByText('—')).toBeInTheDocument();
+  });
+});
+
+describe('ConversationThread — metrics chip', () => {
+  it('renders the chip on the latest assistant message when the flag is on', () => {
+    renderWithMetricsFlag(<ConversationThread messages={messages} metrics={turnMetrics} />, true);
+    const chips = screen.getAllByRole('button', { name: 'Response timing' });
+    expect(chips).toHaveLength(1);
+    expect(chips[0]).toHaveTextContent('293ms');
+  });
+
+  it('hides the chip when the provider flag is off', () => {
+    renderWithMetricsFlag(<ConversationThread messages={messages} metrics={turnMetrics} />, false);
+    expect(screen.queryByRole('button', { name: 'Response timing' })).not.toBeInTheDocument();
+  });
+
+  it('renders no chip when there are no metrics, even with the flag on', () => {
+    renderWithMetricsFlag(<ConversationThread messages={messages} />, true);
+    expect(screen.queryByRole('button', { name: 'Response timing' })).not.toBeInTheDocument();
   });
 });

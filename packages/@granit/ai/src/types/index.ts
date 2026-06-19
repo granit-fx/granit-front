@@ -136,9 +136,16 @@ export interface AIChatStreamUsage {
 }
 
 /** Discriminated union yielded by {@link chatStream}. */
-export type ChatStreamEvent =
+export type AIChatCompletionEvent =
   | { readonly type: 'chunk'; readonly content: string }
   | { readonly type: 'usage'; readonly usage: AIChatStreamUsage };
+
+/**
+ * @deprecated Renamed to {@link AIChatCompletionEvent} to avoid the name
+ * collision with `@granit/ai-chat`'s agentic `ChatStreamEvent` (a different
+ * shape). Import the new name; this alias will be removed in a future major.
+ */
+export type ChatStreamEvent = AIChatCompletionEvent;
 
 // -- Embeddings --------------------------------------------------------------
 

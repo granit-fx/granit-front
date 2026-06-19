@@ -71,6 +71,28 @@ function classifyThrownError(err: unknown): ChatErrorKind {
   return 'network';
 }
 
+/**
+ * Timing metrics for a completed turn, measured client-side from the stream.
+ * Transient — held only for the most recent turn and reset on each `send()`,
+ * never persisted with the message. Produced once a turn that streamed at least
+ * one `delta` frame completes; `null` before that (and for turns that ended
+ * with only a clarification, an error, or no text).
+ */
+export interface ChatTurnMetrics {
+  /** Time to first token (ms): from `send()` to the first content `delta`. */
+  readonly firstTokenMs: number;
+  /** Total turn duration (ms): from `send()` to stream completion. */
+  readonly totalMs: number;
+  /**
+   * Output tokens per second over the generation window (`total − firstToken`,
+   * so the wait for the first token is excluded). `null` when the backend sent
+   * no usage frame or the window is too small to derive a rate.
+   */
+  readonly tokensPerSecond: number | null;
+  /** Number of streamed content `delta` frames. */
+  readonly chunkCount: number;
+}
+
 /** Lifecycle of a single tool invocation within a turn. */
 export type ToolCallStatus = 'running' | 'succeeded' | 'failed';
 
@@ -120,6 +142,11 @@ export interface UseChatStreamReturn {
   readonly isThinking: boolean;
   /** Token usage for the turn, or `null` until the `usage` frame arrives. */
   readonly usage: ChatStreamUsage | null;
+  /**
+   * Client-side timing for the last completed turn, or `null` until a turn that
+   * streamed text finishes. Transient — reset on each `send()`, never persisted.
+   */
+  readonly metrics: ChatTurnMetrics | null;
   /** Whether a stream is currently active. */
   readonly isStreaming: boolean;
   /** Error from the last stream attempt, or `null`. */
@@ -221,6 +248,7 @@ export function useChatStream(): UseChatStreamReturn {
   const [toolCalls, setToolCalls] = useState<readonly ToolCallActivity[]>([]);
   const [isThinking, setIsThinking] = useState(false);
   const [usage, setUsage] = useState<ChatStreamUsage | null>(null);
+  const [metrics, setMetrics] = useState<ChatTurnMetrics | null>(null);
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [errorKind, setErrorKind] = useState<ChatErrorKind | null>(null);
@@ -248,6 +276,7 @@ export function useChatStream(): UseChatStreamReturn {
       setToolCalls([]);
       setIsThinking(false);
       setUsage(null);
+      setMetrics(null);
       setError(null);
       setErrorKind(null);
       setIsStreaming(true);
@@ -262,6 +291,10 @@ export function useChatStream(): UseChatStreamReturn {
         resolvedId: null,
         errorCode: null,
         persistedMessages: null,
+        startedAt: performance.now(),
+        firstTokenAt: null,
+        chunkCount: 0,
+        outputTokens: null,
       };
       const sinks = createEventSinks(turn, {
         setContent,
@@ -284,6 +317,12 @@ export function useChatStream(): UseChatStreamReturn {
             controller.signal
           )) {
             applyEvent(event, sinks);
+          }
+
+          // Derive timing for the completed turn. Only when text actually
+          // streamed — clarification/tool-only turns carry no meaningful rate.
+          if (turn.firstTokenAt !== null) {
+            setMetrics(computeTurnMetrics(turn, performance.now()));
           }
 
           if (turn.resolvedId) {
@@ -342,6 +381,7 @@ export function useChatStream(): UseChatStreamReturn {
     toolCalls,
     isThinking,
     usage,
+    metrics,
     isStreaming,
     error,
     errorKind,
@@ -353,6 +393,8 @@ export function useChatStream(): UseChatStreamReturn {
 /** Per-frame state updaters, kept out of the hook body for readability. */
 interface EventSinks {
   readonly appendContent: (chunk: string) => void;
+  /** Record a content `delta`: stamps first-token time once, counts the chunk. */
+  readonly recordChunk: () => void;
   readonly setConversationId: (id: ConversationId) => void;
   readonly setSuggestedActions: (actions: readonly SuggestedActionResponse[]) => void;
   readonly setClarification: (clarification: ClarificationResponse) => void;
@@ -373,6 +415,26 @@ interface TurnState {
   errorCode: string | null;
   /** The turn's persisted rows from the `persisted` frame, or `null` if absent. */
   persistedMessages: readonly MessageResponse[] | null;
+  /** `performance.now()` captured at `send()` — the timing origin for the turn. */
+  startedAt: number;
+  /** `performance.now()` of the first content `delta`, or `null` before it. */
+  firstTokenAt: number | null;
+  /** Count of content `delta` frames seen this turn. */
+  chunkCount: number;
+  /** Output tokens from the `usage` frame, or `null` if none arrived. */
+  outputTokens: number | null;
+}
+
+/** Build {@link ChatTurnMetrics} from a turn's accumulators and its end time. */
+function computeTurnMetrics(turn: TurnState, completedAt: number): ChatTurnMetrics {
+  const firstTokenMs = (turn.firstTokenAt ?? completedAt) - turn.startedAt;
+  const totalMs = completedAt - turn.startedAt;
+  const generationMs = totalMs - firstTokenMs;
+  const tokensPerSecond =
+    turn.outputTokens && turn.outputTokens > 0 && generationMs > 0
+      ? turn.outputTokens / (generationMs / 1000)
+      : null;
+  return { firstTokenMs, totalMs, tokensPerSecond, chunkCount: turn.chunkCount };
 }
 
 /** React state setters the sinks dispatch to. */
@@ -398,13 +460,20 @@ function createEventSinks(turn: TurnState, setters: EventSinkSetters): EventSink
       turn.accumulated += chunk;
       setters.setContent(turn.accumulated);
     },
+    recordChunk: () => {
+      turn.firstTokenAt ??= performance.now();
+      turn.chunkCount += 1;
+    },
     setConversationId: (id) => {
       turn.resolvedId = id;
       setters.setConversationId(id);
     },
     setSuggestedActions: setters.setSuggestedActions,
     setClarification: setters.setClarification,
-    setUsage: setters.setUsage,
+    setUsage: (next) => {
+      turn.outputTokens = next.outputTokens;
+      setters.setUsage(next);
+    },
     startToolCall: (toolCallId, toolName) => {
       turn.tools = [...turn.tools, { toolCallId, toolName, status: 'running' }];
       setters.setToolCalls(turn.tools);
@@ -438,7 +507,10 @@ function createEventSinks(turn: TurnState, setters: EventSinkSetters): EventSink
 function applyEvent(event: ChatStreamEvent, sinks: EventSinks): void {
   switch (event.type) {
     case CHAT_STREAM_EVENT_TYPES.DELTA:
-      if (event.content) sinks.appendContent(event.content);
+      if (event.content) {
+        sinks.appendContent(event.content);
+        sinks.recordChunk();
+      }
       // Streamed text resumed — the agent is no longer between steps.
       sinks.setThinking(false);
       break;

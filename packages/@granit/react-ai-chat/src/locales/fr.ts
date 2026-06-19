@@ -50,4 +50,11 @@ export const aiChatTranslationsFr: ChatTranslations = {
     Unknown: 'Une erreur est survenue. Veuillez réessayer.',
     Retry: 'Réessayer',
   },
+  Metrics: {
+    Label: 'Durée de la réponse',
+    FirstToken: 'Premier token',
+    Total: 'Total',
+    Speed: 'Vitesse',
+    Chunks: 'Chunks',
+  },
 };

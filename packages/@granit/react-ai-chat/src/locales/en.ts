@@ -59,6 +59,14 @@ export interface ChatTranslations {
     /** Label for the retry affordance. */
     readonly Retry: string;
   };
+  readonly Metrics: {
+    /** Accessible label for the timing chip that opens the details popover. */
+    readonly Label: string;
+    readonly FirstToken: string;
+    readonly Total: string;
+    readonly Speed: string;
+    readonly Chunks: string;
+  };
 }
 
 /**
@@ -118,4 +126,11 @@ export const aiChatTranslationsEn: ChatTranslations = {
     Loading: 'Searching…',
   },
   Errors: defaultErrorLabels,
+  Metrics: {
+    Label: 'Response timing',
+    FirstToken: 'First token',
+    Total: 'Total',
+    Speed: 'Speed',
+    Chunks: 'Chunks',
+  },
 };
