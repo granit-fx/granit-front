@@ -727,7 +727,7 @@
           {
             "name": "workspaceName",
             "in": "path",
-            "description": "Workspace identifier — isolates configuration and routing per AI workspace.",
+            "description": "Workspace identifier \u2014 isolates configuration and routing per AI workspace.",
             "required": true,
             "schema": {
               "type": "string"
@@ -828,7 +828,7 @@
           {
             "name": "workspaceName",
             "in": "path",
-            "description": "Workspace identifier — isolates configuration and routing per AI workspace.",
+            "description": "Workspace identifier \u2014 isolates configuration and routing per AI workspace.",
             "required": true,
             "schema": {
               "type": "string"
@@ -939,7 +939,7 @@
           {
             "name": "workspaceName",
             "in": "path",
-            "description": "Workspace identifier — isolates configuration and routing per AI workspace.",
+            "description": "Workspace identifier \u2014 isolates configuration and routing per AI workspace.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1324,6 +1324,9 @@
           "maxOutputTokens": {
             "type": ["null", "integer"],
             "format": "int32"
+          },
+          "workspaceModelName": {
+            "type": ["null", "string"]
           }
         }
       },
@@ -1356,7 +1359,8 @@
           "maxOutputTokens",
           "kind",
           "activated",
-          "capabilities"
+          "capabilities",
+          "workspaceModelName"
         ],
         "type": "object",
         "properties": {
@@ -1396,6 +1400,9 @@
                 "$ref": "#/components/schemas/AIModelCapabilities"
               }
             ]
+          },
+          "workspaceModelName": {
+            "type": ["null", "string"]
           }
         }
       },
@@ -1424,6 +1431,9 @@
           "activated": {
             "type": "boolean",
             "default": false
+          },
+          "workspaceModelName": {
+            "type": ["null", "string"]
           }
         }
       },
