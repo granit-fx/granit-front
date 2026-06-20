@@ -8,3 +8,9 @@ export const DEFAULT_BASE_PATH = `/api/${API_VERSION}/${MODULE}`;
 
 /** Default React Query key prefix for chat queries. */
 export const DEFAULT_QUERY_KEY_PREFIX = ['ai-chat'] as const;
+
+/** Default `@`-mention suggestions the composer requests per query (server cap: 25). */
+export const DEFAULT_MENTION_SEARCH_LIMIT = 8;
+
+/** Debounce applied to `@`-mention search before hitting the network, in ms. */
+export const MENTION_SEARCH_DEBOUNCE_MS = 200;

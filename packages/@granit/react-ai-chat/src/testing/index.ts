@@ -9,5 +9,6 @@ export {
   mockConversationSummaries,
   mockLongConversationId,
   mockLongConversationMessages,
+  mockMentionSuggestions,
 } from './data';
 export { createAIChatHandlers } from './handlers';

@@ -32,7 +32,11 @@ export interface PromptOption {
   readonly iconColor?: string | null;
 }
 
-/** An `@` mention option resolved by the app-specific `searchMentions` adapter. */
+/**
+ * An `@` mention option resolved by `searchMentions` — the provider-backed
+ * generic search by default, or a host-supplied adapter. Mirrors the backend's
+ * `MentionSuggestionResponse` 1:1.
+ */
 export interface MentionOption {
   readonly type: string;
   readonly id: string;
@@ -46,8 +50,10 @@ export interface StagedMention extends MentionRequest {
 }
 
 /**
- * App-specific search for `@` mention candidates. There is no generic
- * mention-search endpoint — the host implements this against its entity APIs.
+ * Search for `@` mention candidates. The composer defaults to the unified,
+ * ACL-bound `GET /conversations/mentions` endpoint (via `useDefaultMentionSearch`);
+ * a host may pass its own adapter to override it (e.g. to scope or decorate
+ * results). Empty `query` should return the top default suggestions.
  */
 export type SearchMentions = (query: string) => Promise<readonly MentionOption[]>;
 

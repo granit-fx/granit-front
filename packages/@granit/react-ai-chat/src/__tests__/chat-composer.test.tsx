@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -6,7 +6,7 @@ import { ChatComposer } from '../components/chat-composer';
 import { createChipElement } from '../components/composer-content';
 
 import type { ChipSpec } from '../components/composer-content';
-import type { PromptOption } from '../components/composer-types';
+import type { MentionOption, PromptOption } from '../components/composer-types';
 import type { PromptId, SendMessageRequest } from '@granit/ai-chat';
 
 const PROMPTS: PromptOption[] = [
@@ -67,6 +67,31 @@ describe('ChatComposer', () => {
     // The picker is open and filtered to the matching prompt.
     expect(await screen.findByText('Summarize')).toBeInTheDocument();
     expect(screen.queryByText('Daily brief')).not.toBeInTheDocument();
+  });
+
+  it('renders the resolved @ mention suggestions in the picker', async () => {
+    const searchMentions = vi.fn<(query: string) => Promise<MentionOption[]>>(async () => [
+      { type: 'contact', id: 'c-42', label: 'Acme Corp', description: 'Customer' },
+    ]);
+    render(<ChatComposer onSubmit={vi.fn()} searchMentions={searchMentions} />);
+
+    await userEvent.type(getEditor(), '@ac');
+
+    expect(await screen.findByText('Acme Corp')).toBeInTheDocument();
+    expect(screen.getByText('Customer')).toBeInTheDocument();
+    expect(searchMentions).toHaveBeenLastCalledWith('ac');
+  });
+
+  it('coalesces fast @ typing into a single debounced search for the final query', async () => {
+    const searchMentions = vi.fn<(query: string) => Promise<MentionOption[]>>(async () => []);
+    render(<ChatComposer onSubmit={vi.fn()} searchMentions={searchMentions} />);
+
+    // Five keystrokes land well within the 200 ms window, so the debounce fires
+    // exactly once — for the final query, not each intermediate prefix.
+    await userEvent.type(getEditor(), '@acme');
+
+    await waitFor(() => expect(searchMentions).toHaveBeenCalledTimes(1));
+    expect(searchMentions).toHaveBeenLastCalledWith('acme');
   });
 
   it('submits on Enter and stays put on Shift+Enter', async () => {

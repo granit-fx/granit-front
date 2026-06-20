@@ -9,12 +9,14 @@ import {
   mockConversationSummaries,
   mockLongConversationId,
   mockLongConversationMessages,
+  mockMentionSuggestions,
 } from './data';
 
 import type {
   ConversationResponse,
   ConversationSummaryResponse,
   CreateConversationRequest,
+  MentionSuggestionResponse,
   MessageResponse,
   RenameConversationRequest,
   SetConversationFavoriteRequest,
@@ -41,6 +43,21 @@ export function createAIChatHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
     // GET /conversations/workspaces — before /:id so it is not swallowed.
     http.get(`${baseUrl}/workspaces`, () => HttpResponse.json({ workspaces: mockChatWorkspaces })),
+
+    // GET /conversations/mentions — unified @-mention search. Filters the fixture
+    // by `q` (label, case-insensitive) and optional `type`, capped by `limit`
+    // (default 8). Declared before /:id so it is not shadowed.
+    http.get(`${baseUrl}/mentions`, ({ request }) => {
+      const url = new URL(request.url);
+      const q = (url.searchParams.get('q') ?? '').trim().toLowerCase();
+      const type = url.searchParams.get('type');
+      const limit = Math.min(Math.max(Number(url.searchParams.get('limit')) || 8, 1), 25);
+      const items: MentionSuggestionResponse[] = mockMentionSuggestions
+        .filter((item) => (type ? item.type === type : true))
+        .filter((item) => (q ? item.label.toLowerCase().includes(q) : true))
+        .slice(0, limit);
+      return HttpResponse.json({ items });
+    }),
 
     // GET /conversations — list summaries, newest first.
     http.get(baseUrl, () => HttpResponse.json(summaries)),

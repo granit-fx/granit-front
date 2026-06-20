@@ -40,6 +40,9 @@ export type {
 export { useReportMessage } from './hooks/use-report-message';
 export type { ReportMessageVariables, UseReportMessageReturn } from './hooks/use-report-message';
 
+// Hooks — mentions
+export { useDefaultMentionSearch } from './hooks/use-default-mention-search';
+
 // Re-exports from @granit/ai-chat — the report contract the showcase dialog needs.
 export { MESSAGE_REPORT_CATEGORIES } from '@granit/ai-chat';
 export type { MessageReportCategory, ReportMessageRequest } from '@granit/ai-chat';

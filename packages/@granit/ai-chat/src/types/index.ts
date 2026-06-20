@@ -137,6 +137,22 @@ export interface MentionRequest {
 }
 
 /**
+ * One `@` mention candidate from the unified picker
+ * (`GET /conversations/mentions`). Maps 1:1 onto the composer's `MentionOption`;
+ * the selected suggestion's `{ type, id }` becomes the {@link MentionRequest}
+ * sent with the turn.
+ */
+export interface MentionSuggestionResponse {
+  /** Resolver discriminator (e.g. `contact`, `invoice`) — opaque to the front. */
+  readonly type: string;
+  readonly id: string;
+  /** Display label shown in the picker and the inserted chip. */
+  readonly label: string;
+  /** Optional secondary line in the picker; `null` when the entity has none. */
+  readonly description: string | null;
+}
+
+/**
  * An app-uploaded attachment. The front uploads the blob to the app's own
  * store, then sends this opaque reference; the backend reads the bytes back.
  */

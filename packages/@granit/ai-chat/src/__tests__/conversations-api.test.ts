@@ -10,6 +10,7 @@ import {
   listConversations,
   renameConversation,
   reportConversationMessage,
+  searchConversationMentions,
   setConversationFavorite,
 } from '../api/conversations-api';
 import { MESSAGE_REPORT_CATEGORIES } from '../types/index';
@@ -143,6 +144,33 @@ describe('conversations-api', () => {
     expect(client.post).toHaveBeenCalledWith(`${BASE}/messages/${MESSAGE_ID}/report`, {
       reason: 'Inaccurate answer',
       category: 'Inaccurate',
+    });
+  });
+
+  it('searchConversationMentions GETs {basePath}/mentions with q + limit and returns the items', async () => {
+    const client = createMockClient();
+    const items = [
+      { type: 'contact', id: 'c-42', label: 'Acme Corp', description: 'Customer' },
+      { type: 'invoice', id: 'inv-1', label: 'Invoice #1', description: null },
+    ];
+    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items }));
+
+    const result = await searchConversationMentions(client, BASE, 'ac', { limit: 8 });
+
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/mentions`, {
+      params: { q: 'ac', limit: 8 },
+    });
+    expect(result).toEqual(items);
+  });
+
+  it('searchConversationMentions forwards the type filter and sends an empty q verbatim', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [] }));
+
+    await searchConversationMentions(client, BASE, '', { type: 'invoice' });
+
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/mentions`, {
+      params: { q: '', type: 'invoice' },
     });
   });
 

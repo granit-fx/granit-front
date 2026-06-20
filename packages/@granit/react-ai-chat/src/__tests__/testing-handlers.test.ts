@@ -48,6 +48,22 @@ describe('createAIChatHandlers', () => {
     expect(body.workspaces[0]).toBe('Auto');
   });
 
+  it('searches mentions by query and filters by type (not swallowed by /:id)', async () => {
+    server.use(...createAIChatHandlers(BASE));
+
+    const byQuery = (await (await fetch(`${BASE}/mentions?q=acme&limit=8`)).json()) as {
+      items: { label: string }[];
+    };
+    expect(byQuery.items).toHaveLength(1);
+    expect(byQuery.items[0]?.label).toBe('Acme Corp');
+
+    const byType = (await (await fetch(`${BASE}/mentions?q=&type=invoice`)).json()) as {
+      items: { type: string }[];
+    };
+    expect(byType.items.length).toBeGreaterThan(0);
+    expect(byType.items.every((item) => item.type === 'invoice')).toBe(true);
+  });
+
   it('create then list reflects the new conversation', async () => {
     server.use(...createAIChatHandlers(BASE));
     const created = await fetch(BASE, {

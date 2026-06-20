@@ -13,6 +13,7 @@ export type {
   ConversationSummaryResponse,
   CreateConversationRequest,
   MentionRequest,
+  MentionSuggestionResponse,
   MessageId,
   MessageReportCategory,
   MessageResponse,
@@ -45,6 +46,7 @@ export {
   listConversations,
   renameConversation,
   reportConversationMessage,
+  searchConversationMentions,
   setConversationFavorite,
   streamConversationMessage,
 } from './api/conversations-api';

@@ -13,6 +13,7 @@ import type {
   ConversationResponse,
   ConversationSummaryResponse,
   CreateConversationRequest,
+  MentionSuggestionResponse,
   MessageId,
   MessageResponse,
   RenameConversationRequest,
@@ -174,6 +175,34 @@ export async function listChatWorkspaces(
 ): Promise<ChatWorkspacesResponse> {
   const response = await client.get<ChatWorkspacesResponse>(`${basePath}/workspaces`);
   return response.data;
+}
+
+/**
+ * Search `@` mention candidates across the entities the caller may reference,
+ * via the unified, ACL-bound picker endpoint (one route for every entity type —
+ * there is no per-entity mention endpoint). Empty `q` returns the backend's top
+ * default set; `options.type` narrows to a single resolver; `options.limit`
+ * caps the result count (server default 8, hard cap 25).
+ *
+ * Requires the `AIChat.Conversations.Send` permission — the same gate as sending
+ * a message, so the picker never surfaces entities the user could not mention.
+ *
+ * `GET {basePath}/mentions?q={query}&type={type}&limit={n}`
+ */
+export async function searchConversationMentions(
+  client: AxiosInstance,
+  basePath: string,
+  query: string,
+  options: { limit?: number; type?: string } = {}
+): Promise<readonly MentionSuggestionResponse[]> {
+  const params: Record<string, string | number> = { q: query };
+  if (options.type != null) params.type = options.type;
+  if (options.limit != null) params.limit = options.limit;
+  const response = await client.get<{ items: readonly MentionSuggestionResponse[] }>(
+    `${basePath}/mentions`,
+    { params }
+  );
+  return response.data.items;
 }
 
 /** Parse one raw SSE line into a {@link ChatStreamEvent}, or `null` to skip it. */

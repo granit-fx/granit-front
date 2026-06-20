@@ -2,8 +2,10 @@ import { SEND_MESSAGE_LIMITS } from '@granit/ai-chat';
 import { createLogger } from '@granit/logger';
 import { cn } from '@granit/utils';
 import { ArrowUp, Paperclip, Sparkles, Square } from 'lucide-react';
-import { useCallback, useId, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 
+import { MENTION_SEARCH_DEBOUNCE_MS } from '../constants';
+import { useDefaultMentionSearch } from '../hooks/use-default-mention-search';
 import { defaultChatLabels } from '../locales/index';
 
 import { AttachmentChips } from './attachment-chips';
@@ -47,7 +49,11 @@ export interface ChatComposerProps {
   readonly onStop?: () => void;
   /** Prompt options for the `/` picker (filtered client-side by the query). */
   readonly prompts?: readonly PromptOption[];
-  /** App-specific `@` mention search. Omit to disable the mention picker. */
+  /**
+   * Override the `@` mention search. Defaults to the provider-backed generic
+   * search (`GET /conversations/mentions`) when rendered inside an
+   * `AIChatProvider`; omit it outside a provider to disable the mention picker.
+   */
   readonly searchMentions?: SearchMentions;
   /** App-specific attachment upload. Omit to hide the attach button. */
   readonly uploadAttachment?: UploadAttachment;
@@ -110,11 +116,19 @@ export function ChatComposer({
   const [mentionResults, setMentionResults] = useState<readonly MentionOption[]>([]);
   const [mentionLoading, setMentionLoading] = useState(false);
 
+  // The picker resolves mentions through the host's adapter when supplied, else
+  // the provider-backed generic search (`GET /conversations/mentions`); `null`
+  // outside a provider keeps the picker disabled.
+  const defaultSearchMentions = useDefaultMentionSearch();
+  const effectiveSearchMentions = searchMentions ?? defaultSearchMentions;
+
   const editorRef = useRef<HTMLDivElement>(null);
   // The trigger token's location, captured so a picked chip can replace it even
   // after the picker click moved focus out of the editor.
   const triggerLocRef = useRef<{ node: Text; start: number; end: number } | null>(null);
   const searchSeq = useRef(0);
+  // Pending debounce timer for the `@` mention search, cleared on every re-eval.
+  const mentionDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const attachmentSeq = useRef(0);
 
   const baseId = useId();
@@ -129,30 +143,50 @@ export function ChatComposer({
 
   const suggestionItems = trigger?.kind === '@' ? mentionResults : promptMatches;
   const showSuggestions =
-    trigger !== null && (trigger.kind === '/' || searchMentions !== undefined);
+    trigger !== null && (trigger.kind === '/' || effectiveSearchMentions !== undefined);
 
+  /** Cancel any pending debounced mention search. */
+  const clearMentionDebounce = useCallback(() => {
+    if (mentionDebounceRef.current !== null) {
+      clearTimeout(mentionDebounceRef.current);
+      mentionDebounceRef.current = null;
+    }
+  }, []);
+
+  /**
+   * Resolve `@` mention candidates for the live query, debounced so fast typing
+   * fires a single request. The picker shows its loading state immediately;
+   * stale responses are dropped via the bumped {@link searchSeq}.
+   */
   const runMentionSearch = useCallback(
     (query: string) => {
-      if (!searchMentions) return;
+      if (!effectiveSearchMentions) return;
+      clearMentionDebounce();
       const seq = ++searchSeq.current;
       setMentionLoading(true);
-      searchMentions(query)
-        .then((results) => {
-          if (seq === searchSeq.current) {
-            setMentionResults(results);
-            setMentionLoading(false);
-          }
-        })
-        .catch((err: unknown) => {
-          logger.warn('Mention search failed; cleared results', { err });
-          if (seq === searchSeq.current) {
-            setMentionResults([]);
-            setMentionLoading(false);
-          }
-        });
+      mentionDebounceRef.current = setTimeout(() => {
+        mentionDebounceRef.current = null;
+        effectiveSearchMentions(query)
+          .then((results) => {
+            if (seq === searchSeq.current) {
+              setMentionResults(results);
+              setMentionLoading(false);
+            }
+          })
+          .catch((err: unknown) => {
+            logger.warn('Mention search failed; cleared results', { err });
+            if (seq === searchSeq.current) {
+              setMentionResults([]);
+              setMentionLoading(false);
+            }
+          });
+      }, MENTION_SEARCH_DEBOUNCE_MS);
     },
-    [searchMentions]
+    [effectiveSearchMentions, clearMentionDebounce]
   );
+
+  // Drop a pending search if the composer unmounts mid-debounce.
+  useEffect(() => clearMentionDebounce, [clearMentionDebounce]);
 
   /**
    * Re-evaluate the `/` `@` trigger from the live caret. A trigger is only valid
@@ -161,6 +195,9 @@ export function ChatComposer({
    * span for {@link insertChip}.
    */
   const refreshTrigger = useCallback(() => {
+    // Any re-evaluation supersedes a pending search; the @-branch below schedules
+    // a fresh one when the caret is still inside a mention token.
+    clearMentionDebounce();
     const editor = editorRef.current;
     const selection = typeof window !== 'undefined' ? window.getSelection() : null;
     const node = selection?.anchorNode ?? null;
@@ -187,7 +224,7 @@ export function ChatComposer({
     setActiveIndex(0);
     if (active.kind === '@') runMentionSearch(active.query);
     else setMentionResults([]);
-  }, [runMentionSearch]);
+  }, [runMentionSearch, clearMentionDebounce]);
 
   const handleInput = useCallback(
     (event: FormEvent<HTMLDivElement>) => {
@@ -215,37 +252,41 @@ export function ChatComposer({
   }, []);
 
   /** Replace the active trigger token with a chip + trailing space; re-focus. */
-  const insertChip = useCallback((spec: ChipSpec, iconColor?: string | null) => {
-    const editor = editorRef.current;
-    const loc = triggerLocRef.current;
-    if (!editor || !loc) return;
-    const doc = editor.ownerDocument;
-    const length = loc.node.textContent?.length ?? 0;
-    const range = doc.createRange();
-    range.setStart(loc.node, Math.min(loc.start, length));
-    range.setEnd(loc.node, Math.min(loc.end, length));
-    range.deleteContents();
+  const insertChip = useCallback(
+    (spec: ChipSpec, iconColor?: string | null) => {
+      const editor = editorRef.current;
+      const loc = triggerLocRef.current;
+      if (!editor || !loc) return;
+      const doc = editor.ownerDocument;
+      const length = loc.node.textContent?.length ?? 0;
+      const range = doc.createRange();
+      range.setStart(loc.node, Math.min(loc.start, length));
+      range.setEnd(loc.node, Math.min(loc.end, length));
+      range.deleteContents();
 
-    const chip = createChipElement(doc, spec, iconColor);
-    range.insertNode(chip);
-    // A non-breaking space keeps the caret off the non-editable chip and gives a
-    // visible gap; serialization collapses it back to a normal space.
-    const spacer = doc.createTextNode(' ');
-    chip.after(spacer);
+      const chip = createChipElement(doc, spec, iconColor);
+      range.insertNode(chip);
+      // A non-breaking space keeps the caret off the non-editable chip and gives a
+      // visible gap; serialization collapses it back to a normal space.
+      const spacer = doc.createTextNode(' ');
+      chip.after(spacer);
 
-    editor.focus();
-    const after = doc.createRange();
-    after.setStartAfter(spacer);
-    after.collapse(true);
-    const selection = doc.defaultView?.getSelection();
-    selection?.removeAllRanges();
-    selection?.addRange(after);
+      editor.focus();
+      const after = doc.createRange();
+      after.setStartAfter(spacer);
+      after.collapse(true);
+      const selection = doc.defaultView?.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(after);
 
-    triggerLocRef.current = null;
-    setTrigger(null);
-    setMentionResults([]);
-    setIsEmpty(isEditorEmpty(editor));
-  }, []);
+      triggerLocRef.current = null;
+      setTrigger(null);
+      setMentionResults([]);
+      clearMentionDebounce();
+      setIsEmpty(isEditorEmpty(editor));
+    },
+    [clearMentionDebounce]
+  );
 
   const selectPrompt = useCallback(
     (option: PromptOption) => {
@@ -315,7 +356,8 @@ export function ChatComposer({
     setAttachments([]);
     setTrigger(null);
     setMentionResults([]);
-  }, [hasUploading, disabled, workspace, attachments, onSubmit]);
+    clearMentionDebounce();
+  }, [hasUploading, disabled, workspace, attachments, onSubmit, clearMentionDebounce]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {

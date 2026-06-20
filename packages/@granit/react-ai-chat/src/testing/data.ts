@@ -3,6 +3,7 @@ import { toEntityId, toISODateString } from '@granit/types';
 import type {
   ConversationResponse,
   ConversationSummaryResponse,
+  MentionSuggestionResponse,
   MessageResponse,
 } from '@granit/ai-chat';
 
@@ -90,3 +91,15 @@ export const mockConversationSummaries: ConversationSummaryResponse[] = [
 
 /** Selectable default workspaces returned by `GET /conversations/workspaces`. */
 export const mockChatWorkspaces: readonly string[] = ['Auto', 'default', 'support'];
+
+/**
+ * `@`-mention candidates returned by `GET /conversations/mentions`. A mix of
+ * resolver types so the unified picker can be exercised (and the `type` filter
+ * validated). One entry carries a `null` description to cover that branch.
+ */
+export const mockMentionSuggestions: readonly MentionSuggestionResponse[] = [
+  { type: 'contact', id: 'c-42', label: 'Acme Corp', description: 'Customer' },
+  { type: 'contact', id: 'c-43', label: 'Globex', description: 'Customer' },
+  { type: 'invoice', id: 'inv-1001', label: 'Invoice #1001', description: '€1,350 · due Jun 30' },
+  { type: 'document', id: 'doc-7', label: 'Q2 Contract.pdf', description: null },
+];
