@@ -1,9 +1,0 @@
-{
-  "extends": "../../../tsconfig.base.json",
-  "compilerOptions": {
-    "paths": {
-      "@granit/cookies": ["../cookies/src/index.ts"]
-    }
-  },
-  "include": ["src/**/*.ts"]
-}

@@ -157,10 +157,6 @@ export default defineConfig({
         'packages/@granit/authorization/src/index.ts'
       ),
       '@granit/cookies': path.resolve(__dirname, 'packages/@granit/cookies/src/index.ts'),
-      '@granit/cookies-klaro': path.resolve(
-        __dirname,
-        'packages/@granit/cookies-klaro/src/index.ts'
-      ),
       '@granit/cookies-cookieconsent': path.resolve(
         __dirname,
         'packages/@granit/cookies-cookieconsent/src/index.ts'

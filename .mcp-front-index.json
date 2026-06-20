@@ -1415,17 +1415,6 @@
       ]
     },
     {
-      "name": "@granit/cookies-klaro",
-      "description": "Klaro CMP adapter for @granit/cookies — DEPRECATED: migrate to @granit/cookies-cookieconsent",
-      "exports": [
-        {
-          "name": "createKlaroCookieConsentProvider",
-          "kind": "function",
-          "signature": "function createKlaroCookieConsentProvider( options: CreateKlaroCookieConsentProviderOptions ): CookieConsentAdapter"
-        }
-      ]
-    },
-    {
       "name": "@granit/csp",
       "description": "Content Security Policy + Trusted Types helpers for Granit apps. Idempotent installers for the core `granit` policy plus a per-package registry, and helpers to build the `trusted-types` directive from the policies the app actually installs.",
       "exports": [

@@ -2,8 +2,6 @@
 
 `vanilla-cookieconsent` (cc_cookie) adapter for [`@granit/cookies`](../cookies/README.md).
 
-Replaces the deprecated [`@granit/cookies-klaro`](../cookies-klaro/README.md) adapter.
-
 ## Installation
 
 ```bash
