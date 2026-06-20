@@ -128,16 +128,56 @@ describe('ChatMessage', () => {
     const assistant = render(<ChatMessage role="assistant" content="Hi" />);
     const assistantBubble = assistant.container.querySelector('[data-slot="chat-bubble"]');
     expect(assistantBubble).toBeInTheDocument();
-    // Assistant bubble uses the lightened neutral surface and the left tail.
-    // Assistant tail = square bottom-left (inline style, purge-proof).
-    expect(assistantBubble?.className).toContain('bg-muted/50');
-    expect(assistantBubble).toHaveStyle({ borderBottomLeftRadius: '0px' });
+    // Assistant bubble uses the lightened neutral `bg-muted` surface and the
+    // left tail. Assert the surface family, not a specific opacity step, so the
+    // bubble's exact tint can change without breaking the theming contract.
+    // Assistant tail = square top-left (inline style, purge-proof).
+    expect(assistantBubble?.className).toContain('bg-muted');
+    expect(assistantBubble).toHaveStyle({ borderTopLeftRadius: '0px' });
 
-    // User tail = square bottom-right.
+    // User tail = square top-right.
     const user = render(<ChatMessage role="user" content="Hi" />);
     const userBubble = user.container.querySelector('[data-slot="chat-bubble"]');
     expect(userBubble?.className).toContain('bg-primary');
-    expect(userBubble).toHaveStyle({ borderBottomRightRadius: '0px' });
+    expect(userBubble).toHaveStyle({ borderTopRightRadius: '0px' });
+  });
+});
+
+describe('ChatMessage — Markdown rendering', () => {
+  it('renders assistant Markdown to formatted elements, not literal syntax', () => {
+    const { container } = render(<ChatMessage role="assistant" content={'**bold** and `code`'} />);
+    expect(container.querySelector('strong')).toHaveTextContent('bold');
+    expect(container.querySelector('code')).toHaveTextContent('code');
+    expect(container.textContent).not.toContain('**');
+  });
+
+  it('renders a Markdown list as a real <ul><li> tree', () => {
+    const { container } = render(<ChatMessage role="assistant" content={'- a\n- b'} />);
+    expect(container.querySelector('ul')).toBeInTheDocument();
+    expect(container.querySelectorAll('li')).toHaveLength(2);
+  });
+
+  it('keeps user messages as verbatim plain text (no Markdown)', () => {
+    const { container } = render(<ChatMessage role="user" content="**raw**" />);
+    expect(container.querySelector('strong')).not.toBeInTheDocument();
+    expect(screen.getByText('**raw**')).toBeInTheDocument();
+  });
+
+  it('opens Markdown links out-of-document with a safe rel', () => {
+    const { container } = render(
+      <ChatMessage role="assistant" content="[link](https://example.com)" />
+    );
+    const link = container.querySelector('a');
+    expect(link).toHaveAttribute('href', 'https://example.com');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer nofollow');
+  });
+
+  it('escapes raw HTML instead of emitting a live DOM sink', () => {
+    const { container } = render(
+      <ChatMessage role="assistant" content={'<img src=x onerror=alert(1)>'} />
+    );
+    expect(container.querySelector('img')).not.toBeInTheDocument();
   });
 });
 
@@ -267,6 +307,13 @@ describe('MessageMetrics', () => {
   it('renders a placeholder when tokens/sec is not derivable', () => {
     render(<MessageMetrics metrics={{ ...turnMetrics, tokensPerSecond: null }} />);
     expect(screen.getByText('—')).toBeInTheDocument();
+  });
+
+  it('formats durations over a second in seconds rather than milliseconds', () => {
+    render(<MessageMetrics metrics={{ ...turnMetrics, firstTokenMs: 2400, totalMs: 25909 }} />);
+    // ≥10s rounds to whole seconds; <10s keeps one decimal.
+    expect(screen.getByRole('button', { name: 'Response timing' })).toHaveTextContent('26s');
+    expect(screen.getByText('2.4s')).toBeInTheDocument();
   });
 });
 

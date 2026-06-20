@@ -1,13 +1,40 @@
 import { cn } from '@granit/utils';
 
+import { ChatMarkdown } from './chat-markdown';
+import { tokenizeMessageContent } from './composer-content';
+
 import type { ChatMessageRole } from '@granit/ai-chat';
 import type { CSSProperties, ReactNode } from 'react';
+
+/**
+ * Render a user message, turning the chip markers the composer left in the text
+ * (bold `@…`/slash-`…` runs like `**@United Airlines**`) back into inline pills.
+ * Plain runs stay verbatim; nothing here is an HTML sink (text + spans only).
+ */
+function UserContent({ content }: { readonly content: string }): ReactNode {
+  return tokenizeMessageContent(content).map((segment, index) =>
+    segment.type === 'text' ? (
+      <span key={`t${index}`}>{segment.value}</span>
+    ) : (
+      <span
+        key={`c${index}`}
+        data-slot="message-chip"
+        data-kind={segment.kind}
+        className="bg-primary-foreground/15 mx-0.5 inline-flex items-center rounded-md px-1.5 py-0.5 align-baseline font-medium"
+      >
+        {segment.label}
+      </span>
+    )
+  );
+}
 
 export interface ChatMessageProps {
   readonly role: ChatMessageRole;
   /**
-   * Message text. ⚠️ **Untrusted** for assistant messages — rendered here as a
-   * plain text node (React escapes it). Never replace this with an HTML sink.
+   * Message text. ⚠️ **Untrusted** for assistant messages — rendered via
+   * {@link ChatMarkdown} as an escaped React element tree (`react-markdown`, no
+   * `rehype-raw`), so it stays Markdown-formatted without becoming an HTML sink.
+   * User messages stay verbatim plain text. Never replace this with an HTML sink.
    */
   readonly content: string;
   /** Localised author label (e.g. "You" / "Assistant"). */
@@ -30,13 +57,13 @@ export function ChatMessage({
   className,
 }: Readonly<ChatMessageProps>) {
   const isUser = role === 'user';
-  // Flatten the emitter-side bottom corner into a speech-bubble tail. Done
+  // Flatten the emitter-side top corner into a speech-bubble tail. Done
   // inline rather than with per-corner Tailwind utilities: those classes are
   // novel here and get purged by the consuming app's Tailwind scan, whereas an
   // inline style always renders and reliably wins over the `rounded-2xl` base.
   const tailStyle: CSSProperties = isUser
-    ? { borderBottomRightRadius: 0 }
-    : { borderBottomLeftRadius: 0 };
+    ? { borderTopRightRadius: 0 }
+    : { borderTopLeftRadius: 0 };
   return (
     <div
       data-slot="chat-message"
@@ -50,11 +77,15 @@ export function ChatMessage({
         data-slot="chat-bubble"
         style={tailStyle}
         className={cn(
-          'max-w-[80%] rounded-2xl px-3 py-2 text-sm whitespace-pre-wrap',
-          isUser ? 'bg-primary text-primary-foreground' : 'bg-muted/50 text-foreground'
+          'max-w-[80%] rounded-2xl px-3 py-2 text-sm',
+          // Preserve authored whitespace only for the verbatim user branch; the
+          // assistant branch is laid out by ChatMarkdown's block elements.
+          isUser
+            ? 'bg-primary text-primary-foreground whitespace-pre-wrap'
+            : 'bg-muted/20 text-foreground'
         )}
       >
-        {content}
+        {isUser ? <UserContent content={content} /> : <ChatMarkdown content={content} />}
       </div>
       {actions ? (
         <div

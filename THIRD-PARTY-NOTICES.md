@@ -12,7 +12,7 @@ Last updated: 2026-06-20
 
 | License    | Package count |
 | ---------- | ------------- |
-| MIT        | 44            |
+| MIT        | 46            |
 | Apache-2.0 | 15            |
 
 ---
@@ -64,6 +64,8 @@ Last updated: 2026-06-20
 | react-dom                       | 19.2.7  | Copyright (c) Meta Platforms, Inc.         |
 | react-hook-form                 | 7.80.0  | Copyright (c) react-hook-form Contributors |
 | react-i18next                   | 17.0.8  | Copyright (c) i18next Contributors         |
+| react-markdown                  | 9.1.0   | Copyright (c) Espen Hovlandsdal            |
+| remark-gfm                      | 4.0.1   | Copyright (c) Titus Wormer                 |
 | tailwind-merge                  | 3.6.0   | Copyright (c) Dany Castillo                |
 | tsup                            | 8.5.1   | Copyright (c) EGOIST                       |
 | typescript-eslint               | 8.61.1  | typescript-eslint Contributors             |

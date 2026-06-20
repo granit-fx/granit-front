@@ -1,10 +1,12 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ChatComposer } from '../components/chat-composer';
+import { createChipElement } from '../components/composer-content';
 
-import type { MentionOption, PromptOption } from '../components/composer-types';
+import type { ChipSpec } from '../components/composer-content';
+import type { PromptOption } from '../components/composer-types';
 import type { PromptId, SendMessageRequest } from '@granit/ai-chat';
 
 const PROMPTS: PromptOption[] = [
@@ -12,60 +14,72 @@ const PROMPTS: PromptOption[] = [
   { id: 'p2' as PromptId, name: 'Daily brief', shortDescription: 'Your day' },
 ];
 
+/** The contenteditable message input. */
+const getEditor = () => screen.getByRole('textbox', { name: /ask your app/i });
+
+/**
+ * Build the editor content from interleaved text + chip specs (as the editor
+ * holds it after picks) and fire the input event the component listens on.
+ */
+const setEditorContent = (...segments: ReadonlyArray<string | ChipSpec>) => {
+  const editor = getEditor();
+  editor.replaceChildren();
+  for (const segment of segments) {
+    editor.appendChild(
+      typeof segment === 'string'
+        ? document.createTextNode(segment)
+        : createChipElement(document, segment)
+    );
+  }
+  fireEvent.input(editor);
+  return editor;
+};
+
 describe('ChatComposer', () => {
-  it('inserts a prompt badge from the / picker and keeps it out of the message text', async () => {
+  it('serializes chips into the message and the structured prompt/mention refs', async () => {
     const onSubmit = vi.fn<(r: SendMessageRequest) => void>();
     render(<ChatComposer onSubmit={onSubmit} prompts={PROMPTS} />);
 
-    const input = screen.getByRole('combobox');
-    await userEvent.type(input, '/Sum');
-    await userEvent.click(await screen.findByText('Summarize'));
-
-    // Badge present, textarea cleared of the /token.
-    expect(screen.getByText('/Summarize')).toBeInTheDocument();
-    expect((input as HTMLTextAreaElement).value).toBe('');
-
-    await userEvent.type(input, 'do it');
+    setEditorContent(
+      'Fait moi un ',
+      { kind: 'prompt', id: 'p1', label: 'Daily brief' },
+      ' sur ',
+      { kind: 'mention', id: 'ua1', type: 'account', label: 'United Airlines' },
+      ' de manière précise.'
+    );
     await userEvent.click(screen.getByRole('button', { name: /send/i }));
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
     const request = onSubmit.mock.calls[0]![0];
-    expect(request.message).toBe('do it');
-    expect(request.promptRefs).toEqual(['p1']);
-  });
-
-  it('resolves @ mentions via the injected adapter and includes them in the request', async () => {
-    const searchMentions = vi.fn(
-      async (query: string): Promise<readonly MentionOption[]> => [
-        { type: 'contact', id: 'c42', label: `Customer ${query}`, description: 'A contact' },
-      ]
+    // Each chip leaves a bold marker inline so the sent message re-renders it.
+    expect(request.message).toBe(
+      'Fait moi un **/Daily brief** sur **@United Airlines** de manière précise.'
     );
-    const onSubmit = vi.fn<(r: SendMessageRequest) => void>();
-    render(<ChatComposer onSubmit={onSubmit} searchMentions={searchMentions} />);
-
-    const input = screen.getByRole('combobox');
-    await userEvent.type(input, 'hi @ali');
-
-    await waitFor(() => expect(searchMentions).toHaveBeenCalledWith('ali'));
-    await userEvent.click(await screen.findByText('Customer ali'));
-
-    await userEvent.click(screen.getByRole('button', { name: /send/i }));
-    const request = onSubmit.mock.calls[0]![0];
-    expect(request.mentions).toEqual([{ type: 'contact', id: 'c42' }]);
-    expect(request.message).toContain('@Customer ali');
+    expect(request.promptRefs).toEqual(['p1']);
+    expect(request.mentions).toEqual([{ type: 'account', id: 'ua1' }]);
   });
 
-  it('submits on Enter and inserts a newline on Shift+Enter', async () => {
+  it('opens the / prompt picker as the query is typed', async () => {
+    render(<ChatComposer onSubmit={vi.fn()} prompts={PROMPTS} />);
+
+    await userEvent.type(getEditor(), '/Sum');
+
+    // The picker is open and filtered to the matching prompt.
+    expect(await screen.findByText('Summarize')).toBeInTheDocument();
+    expect(screen.queryByText('Daily brief')).not.toBeInTheDocument();
+  });
+
+  it('submits on Enter and stays put on Shift+Enter', async () => {
     const onSubmit = vi.fn();
     render(<ChatComposer onSubmit={onSubmit} />);
-    const input = screen.getByRole('combobox');
+    const editor = setEditorContent('hello');
 
-    await userEvent.type(input, 'line one{Shift>}{Enter}{/Shift}line two');
+    fireEvent.keyDown(editor, { key: 'Enter', shiftKey: true });
     expect(onSubmit).not.toHaveBeenCalled();
-    expect((input as HTMLTextAreaElement).value).toBe('line one\nline two');
 
-    await userEvent.type(input, '{Enter}');
+    fireEvent.keyDown(editor, { key: 'Enter' });
     expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(onSubmit.mock.calls[0]![0].message).toBe('hello');
   });
 
   it('passes the selected workspace and disables send on an empty message', async () => {
@@ -76,10 +90,19 @@ describe('ChatComposer', () => {
 
     expect(screen.getByRole('button', { name: /send/i })).toBeDisabled();
 
-    await userEvent.type(screen.getByRole('combobox', { name: /ask your app/i }), 'hello');
+    setEditorContent('hello');
+    expect(screen.getByRole('button', { name: /send/i })).toBeEnabled();
     await userEvent.click(screen.getByRole('button', { name: /send/i }));
 
     expect(onSubmit.mock.calls[0]![0].workspaceName).toBe('support');
+  });
+
+  it('shows the placeholder only while the editor is empty', () => {
+    render(<ChatComposer onSubmit={vi.fn()} />);
+    expect(screen.getByText(/ask your app/i)).toHaveAttribute('data-slot', 'composer-placeholder');
+
+    setEditorContent('typed');
+    expect(screen.queryByText((_, el) => el?.dataset?.slot === 'composer-placeholder')).toBeNull();
   });
 
   it('shows a Stop button while streaming', async () => {
@@ -193,9 +216,9 @@ describe('ChatComposer', () => {
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
     await userEvent.upload(fileInput, file);
 
-    await waitFor(() => expect(screen.getByText('note.txt')).toBeInTheDocument());
+    await screen.findByText('note.txt');
 
-    await userEvent.type(screen.getByRole('combobox'), 'see attached');
+    setEditorContent('see attached');
     await userEvent.click(screen.getByRole('button', { name: /send/i }));
 
     const request = onSubmit.mock.calls[0]![0];

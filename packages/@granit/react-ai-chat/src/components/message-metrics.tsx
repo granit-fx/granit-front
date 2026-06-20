@@ -12,7 +12,16 @@ export interface MessageMetricsProps {
   readonly className?: string;
 }
 
-const formatMs = (ms: number): string => `${Math.round(ms)}ms`;
+/**
+ * Render a duration in the most readable unit: milliseconds below a second,
+ * then seconds (one decimal under 10s, whole seconds above) so a slow turn reads
+ * `25.9s` / `26s` instead of `25909ms`.
+ */
+const formatMs = (ms: number): string => {
+  if (ms < 1000) return `${Math.round(ms)}ms`;
+  const seconds = ms / 1000;
+  return `${seconds < 10 ? seconds.toFixed(1) : Math.round(seconds)}s`;
+};
 
 const PLACEHOLDER = '—';
 
@@ -42,7 +51,7 @@ export function MessageMetrics({
   return (
     <span
       data-slot="message-metrics"
-      className={cn('group/metrics relative inline-flex', className)}
+      className={cn('group/metrics relative inline-flex self-center', className)}
     >
       <button
         type="button"
