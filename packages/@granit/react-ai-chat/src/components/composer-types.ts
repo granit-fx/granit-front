@@ -73,5 +73,5 @@ export type UploadAttachment = (file: File) => Promise<{
   readonly reference: string;
   readonly fileName: string;
   readonly contentType: string;
-  readonly sizeBytes: number | string;
+  readonly sizeBytes: number;
 }>;

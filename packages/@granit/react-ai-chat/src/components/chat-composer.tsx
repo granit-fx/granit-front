@@ -51,7 +51,7 @@ export interface ChatComposerProps {
   readonly prompts?: readonly PromptOption[];
   /**
    * Override the `@` mention search. Defaults to the provider-backed generic
-   * search (`GET /conversations/mentions`) when rendered inside an
+   * search (`GET /lookups/mentions`) when rendered inside an
    * `AIChatProvider`; omit it outside a provider to disable the mention picker.
    */
   readonly searchMentions?: SearchMentions;
@@ -117,7 +117,7 @@ export function ChatComposer({
   const [mentionLoading, setMentionLoading] = useState(false);
 
   // The picker resolves mentions through the host's adapter when supplied, else
-  // the provider-backed generic search (`GET /conversations/mentions`); `null`
+  // the provider-backed generic search (`GET /lookups/mentions`); `null`
   // outside a provider keeps the picker disabled.
   const defaultSearchMentions = useDefaultMentionSearch();
   const effectiveSearchMentions = searchMentions ?? defaultSearchMentions;

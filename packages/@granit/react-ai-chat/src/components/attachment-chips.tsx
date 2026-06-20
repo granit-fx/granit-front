@@ -25,9 +25,9 @@ export interface AttachmentChipsProps {
 
 const UNITS = ['B', 'KB', 'MB', 'GB'] as const;
 
-/** Human-readable byte size; accepts the int64 `number | string` shape. */
-function formatBytes(sizeBytes: number | string): string {
-  let size = typeof sizeBytes === 'string' ? Number(sizeBytes) : sizeBytes;
+/** Human-readable byte size. */
+function formatBytes(sizeBytes: number): string {
+  let size = sizeBytes;
   if (!Number.isFinite(size) || size <= 0) return '0 B';
   let unit = 0;
   while (size >= 1024 && unit < UNITS.length - 1) {

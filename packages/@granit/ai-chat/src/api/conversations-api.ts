@@ -18,6 +18,7 @@ import type {
   RenameConversationRequest,
   ReportMessageRequest,
   SendMessageRequest,
+  SetConversationFavoriteRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult } from '@granit/query-engine';
@@ -127,7 +128,8 @@ export async function setConversationFavorite(
   id: ConversationId,
   isFavorite: boolean
 ): Promise<void> {
-  await client.put(`${basePath}/${encodeURIComponent(id)}/favorite`, { isFavorite });
+  const body: SetConversationFavoriteRequest = { isFavorite };
+  await client.put(`${basePath}/${encodeURIComponent(id)}/favorite`, body);
 }
 
 /**

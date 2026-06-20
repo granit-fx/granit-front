@@ -89,7 +89,15 @@ export const CHAT_STREAM_ERROR_CODES = {
 export type ChatStreamErrorCode =
   (typeof CHAT_STREAM_ERROR_CODES)[keyof typeof CHAT_STREAM_ERROR_CODES];
 
-/** Role of a persisted chat message. */
+/**
+ * Role of a persisted chat message. The conversation thread
+ * (`GET /{id}/messages`) only ever carries `user`/`assistant` rows — the backend
+ * never persists `system` or `tool` messages (system prompts are composed
+ * per-turn by the orchestrator; tool activity stays in the stream as
+ * `tool_call`/`tool_result` frames). `'system'` is kept for forward
+ * compatibility; `'tool'` is intentionally excluded as unreachable on this
+ * contract.
+ */
 export type ChatMessageRole = 'user' | 'assistant' | 'system';
 
 /** Server-enforced limits for a single `SendMessageRequest` turn. */
@@ -148,8 +156,11 @@ export interface AttachmentRequest {
   readonly reference: string;
   readonly fileName: string;
   readonly contentType: string;
-  /** int64 — surfaces as `number | string` in generated clients. */
-  readonly sizeBytes: number | string;
+  /**
+   * Byte size of the uploaded blob (.NET `long`, serialized as a JSON number).
+   * Attachments are capped server-side well within the JS safe-integer range.
+   */
+  readonly sizeBytes: number;
 }
 
 /** Body of `POST /conversations/messages`. */

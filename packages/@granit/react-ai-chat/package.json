@@ -21,6 +21,7 @@
   "peerDependencies": {
     "@granit/ai-chat": "workspace:*",
     "@granit/api-client": "workspace:*",
+    "@granit/data-lookup": "workspace:*",
     "@granit/logger": "workspace:*",
     "@granit/mentions": "workspace:*",
     "@granit/query-engine": "workspace:*",
@@ -34,6 +35,9 @@
     "react": "^19.0.0"
   },
   "peerDependenciesMeta": {
+    "@granit/data-lookup": {
+      "optional": true
+    },
     "msw": {
       "optional": true
     }
