@@ -64,6 +64,8 @@ export type { UseReverseInfiniteScrollParams } from './hooks/use-reverse-infinit
 // Components
 export { ChatMessage } from './components/chat-message';
 export type { ChatMessageProps } from './components/chat-message';
+export { ChatMarkdown } from './components/chat-markdown';
+export type { ChatMarkdownProps } from './components/chat-markdown';
 export { MessageMetrics } from './components/message-metrics';
 export type { MessageMetricsProps } from './components/message-metrics';
 export { ConversationThread } from './components/conversation-thread';

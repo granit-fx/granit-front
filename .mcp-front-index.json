@@ -2946,6 +2946,17 @@
           "members": []
         },
         {
+          "name": "ChatMarkdown",
+          "kind": "function",
+          "signature": "function ChatMarkdown("
+        },
+        {
+          "name": "ChatMarkdownProps",
+          "kind": "interface",
+          "signature": "interface ChatMarkdownProps",
+          "members": []
+        },
+        {
           "name": "MessageMetrics",
           "kind": "function",
           "signature": "function MessageMetrics("

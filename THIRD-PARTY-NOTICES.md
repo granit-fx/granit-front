@@ -4,7 +4,7 @@ This file lists the third-party libraries used by the **granit-front** project
 along with their respective licenses. It is updated whenever an external
 dependency is added or modified.
 
-Last updated: 2026-06-18
+Last updated: 2026-06-20
 
 ---
 
@@ -12,7 +12,7 @@ Last updated: 2026-06-18
 
 | License      | Package count |
 | ------------ | ------------- |
-| MIT          | 44            |
+| MIT          | 46            |
 | Apache-2.0   | 15            |
 | BSD-3-Clause | 1             |
 
@@ -65,6 +65,8 @@ Last updated: 2026-06-18
 | react-dom                       | 19.2.7   | Copyright (c) Meta Platforms, Inc.         |
 | react-hook-form                 | 7.77.0   | Copyright (c) react-hook-form Contributors |
 | react-i18next                   | 17.0.8   | Copyright (c) i18next Contributors         |
+| react-markdown                  | 9.1.0    | Copyright (c) Espen Hovlandsdal            |
+| remark-gfm                      | 4.0.1    | Copyright (c) Titus Wormer                 |
 | tailwind-merge                  | 3.6.0    | Copyright (c) Dany Castillo                |
 | tsup                            | 8.5.1    | Copyright (c) EGOIST                       |
 | typescript-eslint               | 8.61.0   | typescript-eslint Contributors             |

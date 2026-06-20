@@ -7,25 +7,36 @@ import { useCallback, useId, useMemo, useRef, useState } from 'react';
 import { defaultChatLabels } from '../locales/index';
 
 import { AttachmentChips } from './attachment-chips';
+import { CHIP_SLOT, createChipElement, isEditorEmpty, serializeEditor } from './composer-content';
 import { ComposerSuggestions } from './composer-suggestions';
 import { detectTrigger } from './detect-trigger';
 import { WorkspaceSelector } from './workspace-selector';
 
 import type { ComposerAttachment } from './attachment-chips';
+import type { ChipSpec } from './composer-content';
 import type {
   MentionOption,
   PromptOption,
   SearchMentions,
-  StagedMention,
   UploadAttachment,
   WorkspaceOption,
 } from './composer-types';
 import type { ActiveTrigger } from './detect-trigger';
 import type { ChatTranslations } from '../locales/index';
 import type { SendMessageRequest } from '@granit/ai-chat';
-import type { ChangeEvent, KeyboardEvent, ReactNode } from 'react';
+import type {
+  ChangeEvent,
+  ClipboardEvent,
+  FormEvent,
+  KeyboardEvent,
+  MouseEvent,
+  ReactNode,
+} from 'react';
 
 const logger = createLogger('react-ai-chat');
+
+/** Caret-moving keys that should re-evaluate the `/` `@` trigger on key-up. */
+const CARET_KEYS = new Set(['ArrowLeft', 'ArrowRight', 'Home', 'End']);
 
 export interface ChatComposerProps {
   /** Builds and submits a {@link SendMessageRequest} for the turn. */
@@ -65,10 +76,12 @@ export interface ChatComposerProps {
 }
 
 /**
- * The streaming chat composer: a textarea with `/` prompt and `@` mention
- * autocomplete, attachment chips, an optional workspace selector, and a
- * Send/Stop button. App-specific concerns (mention search, blob upload) are
- * injected as adapters; everything else is headless and framework-agnostic.
+ * The streaming chat composer: a `contenteditable` rich input where `/` prompts
+ * and `@` mentions resolve to inline chips in the text flow, plus attachment
+ * chips, an optional workspace selector, and a Send/Stop button. Selected chips
+ * contribute their label to the message and populate the request's structured
+ * `promptRefs`/`mentions`. App-specific concerns (mention search, blob upload)
+ * are injected as adapters; everything else is headless and framework-agnostic.
  */
 export function ChatComposer({
   onSubmit,
@@ -88,16 +101,19 @@ export function ChatComposer({
   disabled = false,
   className,
 }: Readonly<ChatComposerProps>) {
-  const [text, setText] = useState('');
-  const [promptBadges, setPromptBadges] = useState<readonly PromptOption[]>([]);
-  const [mentions, setMentions] = useState<readonly StagedMention[]>([]);
+  // The editor DOM is the single source of truth for the message + its chips;
+  // `isEmpty` is the only mirrored bit, driving the placeholder and Send state.
+  const [isEmpty, setIsEmpty] = useState(true);
   const [attachments, setAttachments] = useState<readonly ComposerAttachment[]>([]);
   const [trigger, setTrigger] = useState<ActiveTrigger | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [mentionResults, setMentionResults] = useState<readonly MentionOption[]>([]);
   const [mentionLoading, setMentionLoading] = useState(false);
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
+  // The trigger token's location, captured so a picked chip can replace it even
+  // after the picker click moved focus out of the editor.
+  const triggerLocRef = useRef<{ node: Text; start: number; end: number } | null>(null);
   const searchSeq = useRef(0);
   const attachmentSeq = useRef(0);
 
@@ -138,54 +154,119 @@ export function ChatComposer({
     [searchMentions]
   );
 
-  const handleChange = useCallback(
-    (event: ChangeEvent<HTMLTextAreaElement>) => {
-      const next = event.target.value;
-      setText(next);
-      const caret = event.target.selectionStart ?? next.length;
-      const active = detectTrigger(next, caret);
-      setTrigger(active);
-      setActiveIndex(0);
-      if (active?.kind === '@') runMentionSearch(active.query);
-      else setMentionResults([]);
-    },
-    [runMentionSearch]
-  );
-
-  const replaceTriggerToken = useCallback(
-    (replacement: string) => {
-      if (!trigger) return;
-      const caret = textareaRef.current?.selectionStart ?? text.length;
-      setText((current) => current.slice(0, trigger.start) + replacement + current.slice(caret));
+  /**
+   * Re-evaluate the `/` `@` trigger from the live caret. A trigger is only valid
+   * inside a single text node (chips are node boundaries), so we run the shared
+   * {@link detectTrigger} against the caret's text node and remember the token's
+   * span for {@link insertChip}.
+   */
+  const refreshTrigger = useCallback(() => {
+    const editor = editorRef.current;
+    const selection = typeof window !== 'undefined' ? window.getSelection() : null;
+    const node = selection?.anchorNode ?? null;
+    if (!editor || !selection || !selection.isCollapsed || !node || node.nodeType !== 3) {
+      triggerLocRef.current = null;
+      setTrigger(null);
+      return;
+    }
+    if (!editor.contains(node)) {
+      triggerLocRef.current = null;
+      setTrigger(null);
+      return;
+    }
+    const caret = selection.anchorOffset;
+    const active = detectTrigger(node.textContent ?? '', caret);
+    if (!active) {
+      triggerLocRef.current = null;
       setTrigger(null);
       setMentionResults([]);
+      return;
+    }
+    triggerLocRef.current = { node: node as Text, start: active.start, end: caret };
+    setTrigger(active);
+    setActiveIndex(0);
+    if (active.kind === '@') runMentionSearch(active.query);
+    else setMentionResults([]);
+  }, [runMentionSearch]);
+
+  const handleInput = useCallback(
+    (event: FormEvent<HTMLDivElement>) => {
+      setIsEmpty(isEditorEmpty(event.currentTarget));
+      refreshTrigger();
     },
-    [trigger, text.length]
+    [refreshTrigger]
   );
+
+  const handleKeyUp = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (CARET_KEYS.has(event.key)) refreshTrigger();
+    },
+    [refreshTrigger]
+  );
+
+  const handleMouseUp = useCallback(() => refreshTrigger(), [refreshTrigger]);
+
+  /** Count the chips of a kind already placed, to honour the per-turn limits. */
+  const chipCount = useCallback((kind: ChipSpec['kind']) => {
+    return (
+      editorRef.current?.querySelectorAll(`[data-slot="${CHIP_SLOT}"][data-kind="${kind}"]`)
+        .length ?? 0
+    );
+  }, []);
+
+  /** Replace the active trigger token with a chip + trailing space; re-focus. */
+  const insertChip = useCallback((spec: ChipSpec, iconColor?: string | null) => {
+    const editor = editorRef.current;
+    const loc = triggerLocRef.current;
+    if (!editor || !loc) return;
+    const doc = editor.ownerDocument;
+    const length = loc.node.textContent?.length ?? 0;
+    const range = doc.createRange();
+    range.setStart(loc.node, Math.min(loc.start, length));
+    range.setEnd(loc.node, Math.min(loc.end, length));
+    range.deleteContents();
+
+    const chip = createChipElement(doc, spec, iconColor);
+    range.insertNode(chip);
+    // A non-breaking space keeps the caret off the non-editable chip and gives a
+    // visible gap; serialization collapses it back to a normal space.
+    const spacer = doc.createTextNode(' ');
+    chip.after(spacer);
+
+    editor.focus();
+    const after = doc.createRange();
+    after.setStartAfter(spacer);
+    after.collapse(true);
+    const selection = doc.defaultView?.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(after);
+
+    triggerLocRef.current = null;
+    setTrigger(null);
+    setMentionResults([]);
+    setIsEmpty(isEditorEmpty(editor));
+  }, []);
 
   const selectPrompt = useCallback(
     (option: PromptOption) => {
-      setPromptBadges((current) => {
-        if (current.some((p) => p.id === option.id)) return current;
-        if (current.length >= SEND_MESSAGE_LIMITS.PROMPT_REFS_MAX) return current;
-        return [...current, option];
-      });
-      replaceTriggerToken('');
-      textareaRef.current?.focus();
+      if (chipCount('prompt') >= SEND_MESSAGE_LIMITS.PROMPT_REFS_MAX) {
+        setTrigger(null);
+        return;
+      }
+      insertChip({ kind: 'prompt', id: option.id, label: option.name }, option.iconColor);
     },
-    [replaceTriggerToken]
+    [chipCount, insertChip]
   );
 
   const selectMention = useCallback(
     (option: MentionOption) => {
-      setMentions((current) => {
-        if (current.length >= SEND_MESSAGE_LIMITS.MENTIONS_MAX) return current;
-        return [...current, { type: option.type, id: option.id, label: option.label }];
-      });
-      replaceTriggerToken(`@${option.label} `);
-      textareaRef.current?.focus();
+      if (chipCount('mention') >= SEND_MESSAGE_LIMITS.MENTIONS_MAX) {
+        setTrigger(null);
+        return;
+      }
+      insertChip({ kind: 'mention', id: option.id, type: option.type, label: option.label });
     },
-    [replaceTriggerToken]
+    [chipCount, insertChip]
   );
 
   const selectActive = useCallback(() => {
@@ -196,7 +277,7 @@ export function ChatComposer({
   }, [suggestionItems, activeIndex, trigger, selectPrompt, selectMention]);
 
   const hasUploading = attachments.some((a) => a.status === 'uploading');
-  const canSend = text.trim().length > 0 && !hasUploading && !disabled;
+  const canSend = !isEmpty && !hasUploading && !disabled;
 
   // Rich options win; otherwise derive plain options from the workspace names.
   const resolvedWorkspaceOptions = useMemo<readonly WorkspaceOption[]>(() => {
@@ -205,11 +286,15 @@ export function ChatComposer({
   }, [workspaceOptions, workspaces]);
 
   const submit = useCallback(() => {
-    if (!canSend) return;
+    const editor = editorRef.current;
+    if (!editor || hasUploading || disabled) return;
+    const { message, mentions, promptRefs } = serializeEditor(editor);
+    if (message.length === 0) return;
+
     const request: SendMessageRequest = {
-      message: text.trim(),
+      message,
       ...(workspace ? { workspaceName: workspace } : {}),
-      ...(promptBadges.length > 0 ? { promptRefs: promptBadges.map((p) => p.id) } : {}),
+      ...(promptRefs.length > 0 ? { promptRefs: [...promptRefs] } : {}),
       ...(mentions.length > 0 ? { mentions: mentions.map(({ type, id }) => ({ type, id })) } : {}),
       ...(attachments.length > 0
         ? {
@@ -225,15 +310,15 @@ export function ChatComposer({
         : {}),
     };
     onSubmit(request);
-    setText('');
-    setPromptBadges([]);
-    setMentions([]);
+    editor.replaceChildren();
+    setIsEmpty(true);
     setAttachments([]);
     setTrigger(null);
-  }, [canSend, text, workspace, promptBadges, mentions, attachments, onSubmit]);
+    setMentionResults([]);
+  }, [hasUploading, disabled, workspace, attachments, onSubmit]);
 
   const handleKeyDown = useCallback(
-    (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    (event: KeyboardEvent<HTMLDivElement>) => {
       if (showSuggestions && suggestionItems.length > 0) {
         if (event.key === 'ArrowDown') {
           event.preventDefault();
@@ -262,6 +347,40 @@ export function ChatComposer({
       }
     },
     [showSuggestions, suggestionItems.length, selectActive, submit]
+  );
+
+  /** Keep the message within the wire limit by blocking inserts past it. */
+  const handleBeforeInput = useCallback((event: FormEvent<HTMLDivElement>) => {
+    const inputType = (event.nativeEvent as InputEvent).inputType ?? '';
+    if (!inputType.startsWith('insert') || inputType === 'insertParagraph') return;
+    const length = event.currentTarget.textContent?.length ?? 0;
+    if (length >= SEND_MESSAGE_LIMITS.MESSAGE_MAX_LENGTH) event.preventDefault();
+  }, []);
+
+  /** Paste as plain text so foreign markup never enters the editor. */
+  const handlePaste = useCallback(
+    (event: ClipboardEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      const editor = editorRef.current;
+      const pasted = event.clipboardData.getData('text/plain');
+      if (!editor || !pasted) return;
+      const remaining = SEND_MESSAGE_LIMITS.MESSAGE_MAX_LENGTH - (editor.textContent?.length ?? 0);
+      const text = pasted.slice(0, Math.max(0, remaining));
+      if (!text) return;
+      const selection = editor.ownerDocument.defaultView?.getSelection();
+      if (!selection || selection.rangeCount === 0) return;
+      const range = selection.getRangeAt(0);
+      range.deleteContents();
+      const node = editor.ownerDocument.createTextNode(text);
+      range.insertNode(node);
+      range.setStartAfter(node);
+      range.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      setIsEmpty(isEditorEmpty(editor));
+      refreshTrigger();
+    },
+    [refreshTrigger]
   );
 
   const patchAttachment = useCallback((id: string, patch: Partial<ComposerAttachment>) => {
@@ -304,40 +423,18 @@ export function ChatComposer({
     [uploadAttachment, patchAttachment]
   );
 
-  const removePromptBadge = useCallback((id: string) => {
-    setPromptBadges((current) => current.filter((p) => p.id !== id));
-  }, []);
-
   const removeAttachment = useCallback((id: string) => {
     setAttachments((current) => current.filter((a) => a.id !== id));
   }, []);
 
+  const onSuggestionMouseDown = useCallback((event: MouseEvent) => {
+    // Keep the editor selection alive through the click so insertChip can replace
+    // the trigger token (the chip's location is captured, but focus matters).
+    event.preventDefault();
+  }, []);
+
   return (
     <div data-slot="chat-composer" className={cn('flex flex-col gap-2', className)}>
-      {promptBadges.length > 0 ? (
-        <ul data-slot="prompt-badges" className="flex flex-wrap gap-2">
-          {promptBadges.map((badge) => (
-            <li
-              key={badge.id}
-              data-slot="prompt-badge"
-              className="bg-primary/10 text-primary inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium"
-            >
-              <span>/{badge.name}</span>
-              <button
-                type="button"
-                aria-label={`${labels.RemovePrompt} ${badge.name}`}
-                onClick={() => {
-                  removePromptBadge(badge.id);
-                }}
-                className="hover:text-primary/70"
-              >
-                ×
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : null}
-
       <AttachmentChips attachments={attachments} labels={labels} onRemove={removeAttachment} />
 
       <div
@@ -348,71 +445,92 @@ export function ChatComposer({
         )}
       >
         {showSuggestions && trigger?.kind === '/' ? (
-          <ComposerSuggestions<PromptOption>
-            title={pickerLabels.Prompts}
-            items={promptMatches}
-            activeIndex={activeIndex}
-            loadingLabel={pickerLabels.Loading}
-            emptyLabel={pickerLabels.NoResults}
-            listboxId={listboxId}
-            getOptionId={getOptionId}
-            getKey={(item) => item.id}
-            onHover={setActiveIndex}
-            onSelect={selectPrompt}
-            renderItem={(item) => (
-              <div className="flex flex-col">
-                <span className="font-medium">{item.name}</span>
-                {item.shortDescription ? (
-                  <span className="text-muted-foreground text-xs">{item.shortDescription}</span>
-                ) : null}
-              </div>
-            )}
-          />
+          <div onMouseDown={onSuggestionMouseDown}>
+            <ComposerSuggestions<PromptOption>
+              title={pickerLabels.Prompts}
+              items={promptMatches}
+              activeIndex={activeIndex}
+              loadingLabel={pickerLabels.Loading}
+              emptyLabel={pickerLabels.NoResults}
+              listboxId={listboxId}
+              getOptionId={getOptionId}
+              getKey={(item) => item.id}
+              onHover={setActiveIndex}
+              onSelect={selectPrompt}
+              renderItem={(item) => (
+                <div className="flex flex-col">
+                  <span className="font-medium">{item.name}</span>
+                  {item.shortDescription ? (
+                    <span className="text-muted-foreground text-xs">{item.shortDescription}</span>
+                  ) : null}
+                </div>
+              )}
+            />
+          </div>
         ) : null}
 
         {showSuggestions && trigger?.kind === '@' ? (
-          <ComposerSuggestions<MentionOption>
-            title={pickerLabels.Mentions}
-            items={mentionResults}
-            activeIndex={activeIndex}
-            loading={mentionLoading}
-            loadingLabel={pickerLabels.Loading}
-            emptyLabel={pickerLabels.NoResults}
-            listboxId={listboxId}
-            getOptionId={getOptionId}
-            getKey={(item) => `${item.type}:${item.id}`}
-            onHover={setActiveIndex}
-            onSelect={selectMention}
-            renderItem={(item) => (
-              <div className="flex flex-col">
-                <span className="font-medium">{item.label}</span>
-                {item.description ? (
-                  <span className="text-muted-foreground text-xs">{item.description}</span>
-                ) : null}
-              </div>
-            )}
-          />
+          <div onMouseDown={onSuggestionMouseDown}>
+            <ComposerSuggestions<MentionOption>
+              title={pickerLabels.Mentions}
+              items={mentionResults}
+              activeIndex={activeIndex}
+              loading={mentionLoading}
+              loadingLabel={pickerLabels.Loading}
+              emptyLabel={pickerLabels.NoResults}
+              listboxId={listboxId}
+              getOptionId={getOptionId}
+              getKey={(item) => `${item.type}:${item.id}`}
+              onHover={setActiveIndex}
+              onSelect={selectMention}
+              renderItem={(item) => (
+                <div className="flex flex-col">
+                  <span className="font-medium">{item.label}</span>
+                  {item.description ? (
+                    <span className="text-muted-foreground text-xs">{item.description}</span>
+                  ) : null}
+                </div>
+              )}
+            />
+          </div>
         ) : null}
 
-        <textarea
-          ref={textareaRef}
-          data-slot="composer-input"
-          value={text}
-          disabled={disabled}
-          rows={2}
-          maxLength={SEND_MESSAGE_LIMITS.MESSAGE_MAX_LENGTH}
-          placeholder={labels.Placeholder}
-          aria-label={labels.Placeholder}
-          role="combobox"
-          aria-expanded={showSuggestions}
-          aria-controls={showSuggestions ? listboxId : undefined}
-          aria-activedescendant={
-            showSuggestions && suggestionItems.length > 0 ? getOptionId(activeIndex) : undefined
-          }
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          className="placeholder:text-muted-foreground w-full resize-none bg-transparent px-1 text-sm outline-none disabled:opacity-50"
-        />
+        <div className="relative">
+          {isEmpty ? (
+            <p
+              data-slot="composer-placeholder"
+              aria-hidden
+              className="text-muted-foreground pointer-events-none absolute inset-x-1 top-1 text-sm"
+            >
+              {labels.Placeholder}
+            </p>
+          ) : null}
+          <div
+            ref={editorRef}
+            data-slot="composer-input"
+            contentEditable={!disabled}
+            suppressContentEditableWarning
+            role="textbox"
+            aria-multiline="true"
+            aria-label={labels.Placeholder}
+            aria-autocomplete="list"
+            aria-expanded={showSuggestions}
+            aria-controls={showSuggestions ? listboxId : undefined}
+            aria-activedescendant={
+              showSuggestions && suggestionItems.length > 0 ? getOptionId(activeIndex) : undefined
+            }
+            onInput={handleInput}
+            onBeforeInput={handleBeforeInput}
+            onKeyDown={handleKeyDown}
+            onKeyUp={handleKeyUp}
+            onMouseUp={handleMouseUp}
+            onPaste={handlePaste}
+            className={cn(
+              'min-h-[3rem] w-full px-1 py-1 text-sm break-words whitespace-pre-wrap outline-none',
+              disabled && 'opacity-50'
+            )}
+          />
+        </div>
 
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1">
