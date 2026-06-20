@@ -130,26 +130,14 @@ export type MessageReportCategory =
 
 // -- Composer inputs ---------------------------------------------------------
 
-/** An `@` mention the server resolves to grounded, untrusted context. */
+/**
+ * An `@` mention the server resolves to grounded, untrusted context. The picker
+ * candidates come from `@granit/mentions` (`GET /lookups/mentions`); the selected
+ * item's `{ type, id }` becomes this request, sent with the turn.
+ */
 export interface MentionRequest {
   readonly type: string;
   readonly id: string;
-}
-
-/**
- * One `@` mention candidate from the unified picker
- * (`GET /conversations/mentions`). Maps 1:1 onto the composer's `MentionOption`;
- * the selected suggestion's `{ type, id }` becomes the {@link MentionRequest}
- * sent with the turn.
- */
-export interface MentionSuggestionResponse {
-  /** Resolver discriminator (e.g. `contact`, `invoice`) — opaque to the front. */
-  readonly type: string;
-  readonly id: string;
-  /** Display label shown in the picker and the inserted chip. */
-  readonly label: string;
-  /** Optional secondary line in the picker; `null` when the entity has none. */
-  readonly description: string | null;
 }
 
 /**
@@ -265,10 +253,10 @@ export interface ConversationResponse {
   readonly title: string;
   readonly ownerId: UserId;
   readonly isFavorite: boolean;
-  readonly createdAt: ISODateString;
-  readonly modifiedAt: ISODateString | null;
   /** Workspace key frozen at creation (null for pre-workspace conversations). */
   readonly workspaceKey: string | null;
+  readonly createdAt: ISODateString;
+  readonly modifiedAt: ISODateString | null;
 }
 
 /** A conversation list item, without its messages. */
@@ -276,10 +264,10 @@ export interface ConversationSummaryResponse {
   readonly id: ConversationId;
   readonly title: string;
   readonly isFavorite: boolean;
-  readonly createdAt: ISODateString;
-  readonly modifiedAt: ISODateString | null;
   /** Workspace key frozen at creation (null for pre-workspace conversations). */
   readonly workspaceKey: string | null;
+  readonly createdAt: ISODateString;
+  readonly modifiedAt: ISODateString | null;
 }
 
 /** Body of `POST /conversations`. */

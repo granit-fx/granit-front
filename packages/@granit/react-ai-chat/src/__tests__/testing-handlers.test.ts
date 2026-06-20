@@ -1,7 +1,7 @@
 import { createMswServer } from '@granit/testing/msw-server';
 import { describe, expect, it } from 'vitest';
 
-import { createAIChatHandlers } from '../testing/index';
+import { createAIChatHandlers, createMentionLookupHandlers } from '../testing/index';
 
 import type { ChatStreamEvent, ConversationSummaryResponse } from '@granit/ai-chat';
 import type { PagedResult } from '@granit/query-engine';
@@ -9,6 +9,7 @@ import type { PagedResult } from '@granit/query-engine';
 const LONG_ID = 'a1111111-1111-1111-1111-1111111110ff';
 
 const BASE = 'http://api.test/api/v1/conversations';
+const LOOKUP_BASE = 'http://api.test/lookups';
 const server = createMswServer();
 
 /** Read an SSE response body into parsed ChatStreamEvent frames. */
@@ -46,22 +47,6 @@ describe('createAIChatHandlers', () => {
     const response = await fetch(`${BASE}/workspaces`);
     const body = (await response.json()) as { workspaces: string[] };
     expect(body.workspaces[0]).toBe('Auto');
-  });
-
-  it('searches mentions by query and filters by type (not swallowed by /:id)', async () => {
-    server.use(...createAIChatHandlers(BASE));
-
-    const byQuery = (await (await fetch(`${BASE}/mentions?q=acme&limit=8`)).json()) as {
-      items: { label: string }[];
-    };
-    expect(byQuery.items).toHaveLength(1);
-    expect(byQuery.items[0]?.label).toBe('Acme Corp');
-
-    const byType = (await (await fetch(`${BASE}/mentions?q=&type=invoice`)).json()) as {
-      items: { type: string }[];
-    };
-    expect(byType.items.length).toBeGreaterThan(0);
-    expect(byType.items.every((item) => item.type === 'invoice')).toBe(true);
   });
 
   it('create then list reflects the new conversation', async () => {
@@ -164,5 +149,39 @@ describe('createAIChatHandlers', () => {
     const events = await readEvents(response.body);
     expect(events.map((e) => e.type)).toEqual(['conversation', 'delta', 'delta', 'usage']);
     expect(events.at(-1)).toMatchObject({ type: 'usage', inputTokens: 12, outputTokens: 8 });
+  });
+});
+
+describe('createMentionLookupHandlers', () => {
+  it('searches /lookups/mentions by query', async () => {
+    server.use(...createMentionLookupHandlers(LOOKUP_BASE));
+
+    const byQuery = (await (await fetch(`${LOOKUP_BASE}/mentions?search=ada`)).json()) as {
+      items: { label: string }[];
+    };
+    expect(byQuery.items).toHaveLength(1);
+    expect(byQuery.items[0]?.label).toBe('Ada Lovelace');
+  });
+
+  it('filters by scope.type', async () => {
+    server.use(...createMentionLookupHandlers(LOOKUP_BASE));
+
+    const byType = (await (await fetch(`${LOOKUP_BASE}/mentions?scope.type=invoice`)).json()) as {
+      items: { value: string }[];
+    };
+    expect(byType.items.length).toBeGreaterThan(0);
+    expect(byType.items.every((item) => item.value.startsWith('invoice:'))).toBe(true);
+  });
+
+  it('resolves a composite value, and returns null for an unknown one', async () => {
+    server.use(...createMentionLookupHandlers(LOOKUP_BASE));
+
+    const resolved = (await (
+      await fetch(`${LOOKUP_BASE}/mentions/resolve?value=user:u-42`)
+    ).json()) as { label: string } | null;
+    expect(resolved?.label).toBe('Ada Lovelace');
+
+    const missing = await (await fetch(`${LOOKUP_BASE}/mentions/resolve?value=user:nope`)).json();
+    expect(missing).toBeNull();
   });
 });

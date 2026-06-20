@@ -1,3 +1,4 @@
+import { DEFAULT_LOOKUP_BASE_PATH } from '@granit/data-lookup';
 import { http, HttpResponse } from 'msw';
 
 import { DEFAULT_BASE_PATH } from '../constants';
@@ -9,18 +10,18 @@ import {
   mockConversationSummaries,
   mockLongConversationId,
   mockLongConversationMessages,
-  mockMentionSuggestions,
+  mockMentionLookupItems,
 } from './data';
 
 import type {
   ConversationResponse,
   ConversationSummaryResponse,
   CreateConversationRequest,
-  MentionSuggestionResponse,
   MessageResponse,
   RenameConversationRequest,
   SetConversationFavoriteRequest,
 } from '@granit/ai-chat';
+import type { LookupItemResponse, LookupResultResponse } from '@granit/data-lookup';
 import type { PagedResult } from '@granit/query-engine';
 import type { Mutable } from '@granit/testing';
 
@@ -43,21 +44,6 @@ export function createAIChatHandlers(baseUrl = DEFAULT_BASE_PATH) {
   return [
     // GET /conversations/workspaces — before /:id so it is not swallowed.
     http.get(`${baseUrl}/workspaces`, () => HttpResponse.json({ workspaces: mockChatWorkspaces })),
-
-    // GET /conversations/mentions — unified @-mention search. Filters the fixture
-    // by `q` (label, case-insensitive) and optional `type`, capped by `limit`
-    // (default 8). Declared before /:id so it is not shadowed.
-    http.get(`${baseUrl}/mentions`, ({ request }) => {
-      const url = new URL(request.url);
-      const q = (url.searchParams.get('q') ?? '').trim().toLowerCase();
-      const type = url.searchParams.get('type');
-      const limit = Math.min(Math.max(Number(url.searchParams.get('limit')) || 8, 1), 25);
-      const items: MentionSuggestionResponse[] = mockMentionSuggestions
-        .filter((item) => (type ? item.type === type : true))
-        .filter((item) => (q ? item.label.toLowerCase().includes(q) : true))
-        .slice(0, limit);
-      return HttpResponse.json({ items });
-    }),
 
     // GET /conversations — list summaries, newest first.
     http.get(baseUrl, () => HttpResponse.json(summaries)),
@@ -181,6 +167,52 @@ export function createAIChatHandlers(baseUrl = DEFAULT_BASE_PATH) {
       });
 
       return new HttpResponse(stream, { headers: { 'Content-Type': 'text/event-stream' } });
+    }),
+  ];
+}
+
+/**
+ * MSW handlers for the unified `@`-mention picker, served by `Granit.DataLookup`'s
+ * `mentions` facade source (NOT the conversations base path). Mirrors the live
+ * contract:
+ *   - `GET {baseUrl}/mentions?search=&scope.type=` — multi-type typeahead over the
+ *     fixture (filters by `label`/`value`, case-insensitive; optional `scope.type`).
+ *   - `GET {baseUrl}/mentions/resolve?value=<type>:<id>` — single-item rehydration,
+ *     or `null` when unknown.
+ *
+ * Compose alongside {@link createAIChatHandlers} when exercising the composer picker.
+ *
+ * @param baseUrl - Lookup base path (default: `/lookups`).
+ * @param items - Fixture served by the source (default: {@link mockMentionLookupItems}).
+ */
+export function createMentionLookupHandlers(
+  baseUrl: string = DEFAULT_LOOKUP_BASE_PATH,
+  items: readonly LookupItemResponse[] = mockMentionLookupItems
+) {
+  return [
+    http.get(`${baseUrl}/mentions/resolve`, ({ request }) => {
+      const value = new URL(request.url).searchParams.get('value') ?? '';
+      const item = items.find((i) => String(i.value) === value) ?? null;
+      return HttpResponse.json(item);
+    }),
+
+    http.get(`${baseUrl}/mentions`, ({ request }) => {
+      const url = new URL(request.url);
+      const search = (url.searchParams.get('search') ?? '').trim().toLowerCase();
+      const type = url.searchParams.get('scope.type');
+      const matched = items
+        .filter((i) => (type ? i.extra?.type === type : true))
+        .filter((i) =>
+          search
+            ? i.label.toLowerCase().includes(search) ||
+              String(i.value).toLowerCase().includes(search)
+            : true
+        );
+      return HttpResponse.json<LookupResultResponse>({
+        items: matched,
+        totalCount: null,
+        continuationToken: null,
+      });
     }),
   ];
 }

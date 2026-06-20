@@ -4,50 +4,59 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { useDefaultMentionSearch } from '../hooks/use-default-mention-search';
 
-import { createWrapper, TEST_BASE_PATH } from './test-utils';
+import { createWrapper } from './test-utils';
+
+import type { LookupResultResponse } from '@granit/data-lookup';
+
+function lookupResult(items: LookupResultResponse['items']): LookupResultResponse {
+  return { items, totalCount: null, continuationToken: null };
+}
 
 afterEach(() => {
   vi.restoreAllMocks();
 });
 
 describe('useDefaultMentionSearch', () => {
-  it('searches /mentions and maps the response 1:1 to MentionOption (description preserved, null kept)', async () => {
+  it('searches /lookups/mentions and maps items onto MentionOption (email→description, null otherwise)', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
-      axiosResponse({
-        items: [
-          { type: 'contact', id: 'c-42', label: 'Acme Corp', description: 'Customer' },
-          { type: 'document', id: 'doc-7', label: 'Q2 Contract.pdf', description: null },
-        ],
-      })
+      axiosResponse(
+        lookupResult([
+          { value: 'user:u-42', label: 'Ada Lovelace', extra: { type: 'user', email: 'ada@x.io' } },
+          { value: 'invoice:inv-1', label: 'Invoice #1', extra: { type: 'invoice' } },
+        ])
+      )
     );
 
     const { result } = renderHook(() => useDefaultMentionSearch(), {
       wrapper: createWrapper(client),
     });
 
-    const options = await result.current!('ac');
+    const options = await result.current!('ad');
 
-    expect(client.get).toHaveBeenCalledWith(`${TEST_BASE_PATH}/mentions`, {
-      params: { q: 'ac', limit: 8 },
+    // The picker hits the unified lookup base path, not the conversations base path.
+    expect(client.get).toHaveBeenCalledWith('/lookups/mentions', {
+      params: { search: 'ad' },
+      signal: undefined,
     });
     expect(options).toEqual([
-      { type: 'contact', id: 'c-42', label: 'Acme Corp', description: 'Customer' },
-      { type: 'document', id: 'doc-7', label: 'Q2 Contract.pdf', description: null },
+      { type: 'user', id: 'u-42', label: 'Ada Lovelace', description: 'ada@x.io' },
+      { type: 'invoice', id: 'inv-1', label: 'Invoice #1', description: null },
     ]);
   });
 
-  it('honours a custom limit', async () => {
+  it('forwards an empty query verbatim (omitted by the lookup query builder) for the default set', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [] }));
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(lookupResult([])));
 
-    const { result } = renderHook(() => useDefaultMentionSearch(3), {
+    const { result } = renderHook(() => useDefaultMentionSearch(), {
       wrapper: createWrapper(client),
     });
     await result.current!('');
 
-    expect(client.get).toHaveBeenCalledWith(`${TEST_BASE_PATH}/mentions`, {
-      params: { q: '', limit: 3 },
+    expect(client.get).toHaveBeenCalledWith('/lookups/mentions', {
+      params: {},
+      signal: undefined,
     });
   });
 

@@ -42,6 +42,7 @@ export type { ReportMessageVariables, UseReportMessageReturn } from './hooks/use
 
 // Hooks — mentions
 export { useDefaultMentionSearch } from './hooks/use-default-mention-search';
+export { useDefaultMentionResolve } from './hooks/use-default-mention-resolve';
 
 // Re-exports from @granit/ai-chat — the report contract the showcase dialog needs.
 export { MESSAGE_REPORT_CATEGORIES } from '@granit/ai-chat';
@@ -102,6 +103,7 @@ export type { ActiveTrigger } from './components/detect-trigger';
 export type {
   MentionOption,
   PromptOption,
+  ResolveMention,
   SearchMentions,
   StagedMention,
   UploadAttachment,

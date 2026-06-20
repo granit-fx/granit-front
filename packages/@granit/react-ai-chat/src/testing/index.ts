@@ -9,6 +9,6 @@ export {
   mockConversationSummaries,
   mockLongConversationId,
   mockLongConversationMessages,
-  mockMentionSuggestions,
+  mockMentionLookupItems,
 } from './data';
-export { createAIChatHandlers } from './handlers';
+export { createAIChatHandlers, createMentionLookupHandlers } from './handlers';

@@ -803,6 +803,18 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/mentions:
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/data-lookup':
+        specifier: workspace:*
+        version: link:../data-lookup
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/metering:
     devDependencies:
       '@granit/api-client':
@@ -1139,9 +1151,15 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/data-lookup':
+        specifier: workspace:*
+        version: link:../data-lookup
       '@granit/logger':
         specifier: workspace:*
         version: link:../logger
+      '@granit/mentions':
+        specifier: workspace:*
+        version: link:../mentions
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine

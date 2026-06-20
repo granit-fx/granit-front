@@ -165,8 +165,8 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -175,8 +175,8 @@
               }
             }
           },
-          "404": {
-            "description": "Not Found",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -228,16 +228,6 @@
           "204": {
             "description": "No Content"
           },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -248,107 +238,8 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/conversations/{id}/messages": {
-      "get": {
-        "tags": ["AI - Conversations"],
-        "summary": "Returns a page of a conversation's messages, newest first (keyset pagination).",
-        "description": "Returns the newest page when no cursor is given, then older pages via the returned nextCursor (an opaque keyset over createdAt+id; null at the start of history). Scoped to the caller: another user's conversation is reported as not found.",
-        "operationId": "GetConversationMessages",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Resource identifier (UUID).",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "description": "Opaque keyset cursor for the next older page; omit for the newest page.",
-            "required": false,
-            "schema": {
-              "type": ["null", "string"]
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "description": "Messages per page (default 30, max 100).",
-            "required": false,
-            "schema": {
-              "type": ["null", "integer"],
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "items": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/MessageResponse"
-                      }
-                    },
-                    "totalCount": {
-                      "type": ["null", "integer"],
-                      "format": "int32"
-                    },
-                    "hasMore": {
-                      "type": "boolean"
-                    },
-                    "nextCursor": {
-                      "type": ["null", "string"]
-                    }
-                  }
-                }
-              }
-            }
-          },
           "401": {
             "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -422,8 +313,8 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -432,8 +323,8 @@
               }
             }
           },
-          "404": {
-            "description": "Not Found",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -517,8 +408,8 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -527,8 +418,8 @@
               }
             }
           },
-          "404": {
-            "description": "Not Found",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -570,11 +461,100 @@
         }
       }
     },
+    "/conversations/{id}/messages": {
+      "get": {
+        "tags": ["AI - Conversations"],
+        "summary": "Returns a backwards-paginated page of a conversation's messages.",
+        "description": "Returns the newest page of messages first, sorted newest-first. Pass the returned nextCursor to load the page of older messages; nextCursor is null at the start of history. Scoped to the caller: another user's conversation is reported as not found.",
+        "operationId": "GetConversationMessages",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfMessageResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/conversations/messages": {
       "post": {
         "tags": ["AI - Conversations"],
         "summary": "Sends a message and streams a tool-grounded answer over SSE.",
-        "description": "Runs the agentic loop within the caller's permissions, persists the user and assistant messages, and streams the answer as Server-Sent Events: a 'conversation' frame with the (possibly new) conversation id (flushed immediately), then live 'tool_call'/'tool_result' frames as the agent uses tools and incremental 'delta' content frames as the model writes, then a 'usage' frame (and 'suggestions' / 'clarification' when applicable). Rejects a non-chat-capable workspace before streaming. If the agent fails after the stream is committed (provider quota exhausted, a provider 5xx/timeout, or any other fault), the stream ends with a terminal 'error' frame carrying a machine 'code' (rate_limit / provider_unavailable / server_error) — a frame within the 200 response, not an HTTP status. A client-cancelled request emits no 'error' frame.",
+        "description": "Runs the agentic loop within the caller's permissions, persists the user and assistant messages, and streams the answer as Server-Sent Events: a 'conversation' frame with the (possibly new) conversation id (flushed immediately), then live 'tool_call'/'tool_result' frames as the agent uses tools and incremental 'delta' content frames as the model writes, then (on a successful turn) a 'persisted' frame carrying the turn's saved user and assistant messages with their real ids and server timestamps, then a 'usage' frame (and 'suggestions' / 'clarification' when applicable). Rejects a non-chat-capable workspace before streaming. If the agent fails after the stream is committed (provider quota exhausted, a provider 5xx/timeout, or any other fault), the stream ends with a terminal 'error' frame carrying a machine 'code' (rate_limit / provider_unavailable / server_error) — a frame within the 200 response, not an HTTP status. A client-cancelled request emits no 'error' frame.",
         "operationId": "SendChatMessage",
         "requestBody": {
           "content": {
@@ -617,6 +597,16 @@
               }
             }
           },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "403": {
             "description": "Forbidden",
             "content": {
@@ -629,16 +619,6 @@
           },
           "422": {
             "description": "Unprocessable Entity",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Too Many Requests",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -702,8 +682,8 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -712,8 +692,8 @@
               }
             }
           },
-          "404": {
-            "description": "Not Found",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -734,81 +714,6 @@
           },
           "422": {
             "description": "Unprocessable Entity",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/conversations/mentions": {
-      "get": {
-        "tags": ["AI - Conversations"],
-        "summary": "Searches mentionable entities for the @ picker.",
-        "description": "Returns the entities the caller may @-mention that match the query, resolved under the caller's ACLs across the application's opted-in mention resolvers. Optionally narrowed to a single type. Entities the caller cannot see never appear.",
-        "operationId": "SearchChatMentions",
-        "parameters": [
-          {
-            "name": "q",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "type",
-            "in": "query",
-            "description": "Filter by type discriminator value.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MentionSearchResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1009,9 +914,9 @@
           "title",
           "ownerId",
           "isFavorite",
+          "workspaceKey",
           "createdAt",
-          "modifiedAt",
-          "workspaceKey"
+          "modifiedAt"
         ],
         "type": "object",
         "properties": {
@@ -1029,6 +934,9 @@
           "isFavorite": {
             "type": "boolean"
           },
+          "workspaceKey": {
+            "type": ["null", "string"]
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -1036,14 +944,11 @@
           "modifiedAt": {
             "type": ["null", "string"],
             "format": "date-time"
-          },
-          "workspaceKey": {
-            "type": ["null", "string"]
           }
         }
       },
       "ConversationSummaryResponse": {
-        "required": ["id", "title", "isFavorite", "createdAt", "modifiedAt", "workspaceKey"],
+        "required": ["id", "title", "isFavorite", "workspaceKey", "createdAt", "modifiedAt"],
         "type": "object",
         "properties": {
           "id": {
@@ -1056,6 +961,9 @@
           "isFavorite": {
             "type": "boolean"
           },
+          "workspaceKey": {
+            "type": ["null", "string"]
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -1063,9 +971,6 @@
           "modifiedAt": {
             "type": ["null", "string"],
             "format": "date-time"
-          },
-          "workspaceKey": {
-            "type": ["null", "string"]
           }
         }
       },
@@ -1121,41 +1026,11 @@
           }
         }
       },
-      "MentionSearchResponse": {
-        "required": ["items"],
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MentionSuggestionResponse"
-            }
-          }
-        }
-      },
-      "MentionSuggestionResponse": {
-        "required": ["type", "id", "label", "description"],
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "label": {
-            "type": "string"
-          },
-          "description": {
-            "type": ["null", "string"]
-          }
-        }
-      },
       "MessageReportCategory": {
         "enum": ["Inaccurate", "Harmful", "Other", null]
       },
       "MessageResponse": {
-        "required": ["id", "role", "content", "createdAt", "workspaceKey"],
+        "required": ["id", "role", "content", "workspaceKey", "createdAt"],
         "type": "object",
         "properties": {
           "id": {
@@ -1174,6 +1049,28 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "PagedResultOfMessageResponse": {
+        "required": ["items", "totalCount", "hasMore"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MessageResponse"
+            }
+          },
+          "totalCount": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": ["null", "string"]
           }
         }
       },

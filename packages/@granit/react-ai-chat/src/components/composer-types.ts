@@ -34,8 +34,8 @@ export interface PromptOption {
 
 /**
  * An `@` mention option resolved by `searchMentions` — the provider-backed
- * generic search by default, or a host-supplied adapter. Mirrors the backend's
- * `MentionSuggestionResponse` 1:1.
+ * generic search by default, or a host-supplied adapter. Projected from a
+ * `@granit/mentions` `MentionItem` (`GET /lookups/mentions`).
  */
 export interface MentionOption {
   readonly type: string;
@@ -51,11 +51,18 @@ export interface StagedMention extends MentionRequest {
 
 /**
  * Search for `@` mention candidates. The composer defaults to the unified,
- * ACL-bound `GET /conversations/mentions` endpoint (via `useDefaultMentionSearch`);
+ * ACL-bound `GET /lookups/mentions` picker (via `useDefaultMentionSearch`);
  * a host may pass its own adapter to override it (e.g. to scope or decorate
  * results). Empty `query` should return the top default suggestions.
  */
 export type SearchMentions = (query: string) => Promise<readonly MentionOption[]>;
+
+/**
+ * Rehydrate a composite mention value (`"<type>:<id>"`) into a {@link MentionOption},
+ * or `null` when the value is unknown. Backed by `GET /lookups/mentions/resolve`
+ * via `useDefaultMentionResolve`.
+ */
+export type ResolveMention = (value: string) => Promise<MentionOption | null>;
 
 /**
  * App-specific attachment upload: push the file to the app's blob store and

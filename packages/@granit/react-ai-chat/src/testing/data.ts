@@ -3,9 +3,9 @@ import { toEntityId, toISODateString } from '@granit/types';
 import type {
   ConversationResponse,
   ConversationSummaryResponse,
-  MentionSuggestionResponse,
   MessageResponse,
 } from '@granit/ai-chat';
+import type { LookupItemResponse } from '@granit/data-lookup';
 
 const OWNER = toEntityId<'User'>('b2222222-2222-2222-2222-222222222222');
 
@@ -93,13 +93,14 @@ export const mockConversationSummaries: ConversationSummaryResponse[] = [
 export const mockChatWorkspaces: readonly string[] = ['Auto', 'default', 'support'];
 
 /**
- * `@`-mention candidates returned by `GET /conversations/mentions`. A mix of
- * resolver types so the unified picker can be exercised (and the `type` filter
- * validated). One entry carries a `null` description to cover that branch.
+ * `@`-mention candidates returned by the unified picker (`GET /lookups/mentions`),
+ * in the raw `Granit.DataLookup` item shape (`{ value: "<type>:<id>", label, extra }`).
+ * A mix of types so multi-type search and the `scope.type` filter can be exercised;
+ * the non-`user` entries carry no `email`, covering the `description: null` branch.
  */
-export const mockMentionSuggestions: readonly MentionSuggestionResponse[] = [
-  { type: 'contact', id: 'c-42', label: 'Acme Corp', description: 'Customer' },
-  { type: 'contact', id: 'c-43', label: 'Globex', description: 'Customer' },
-  { type: 'invoice', id: 'inv-1001', label: 'Invoice #1001', description: '€1,350 · due Jun 30' },
-  { type: 'document', id: 'doc-7', label: 'Q2 Contract.pdf', description: null },
+export const mockMentionLookupItems: readonly LookupItemResponse[] = [
+  { value: 'user:u-42', label: 'Ada Lovelace', extra: { type: 'user', email: 'ada@x.io' } },
+  { value: 'user:u-43', label: 'Grace Hopper', extra: { type: 'user', email: 'grace@x.io' } },
+  { value: 'invoice:inv-1001', label: 'Invoice #1001', extra: { type: 'invoice' } },
+  { value: 'document:doc-7', label: 'Q2 Contract.pdf', extra: { type: 'document' } },
 ];

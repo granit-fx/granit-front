@@ -191,7 +191,6 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'ReportMessageRequest',
       'SendMessageRequest',
       'MentionRequest',
-      'MentionSuggestionResponse',
       'AttachmentRequest',
       'ChatStreamEvent',
       'SuggestedActionResponse',

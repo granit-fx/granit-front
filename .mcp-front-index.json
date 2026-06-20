@@ -2010,6 +2010,18 @@
       ]
     },
     {
+      "name": "@granit/mentions",
+      "description": "Framework-agnostic client for the Granit @-mention picker — a thin facade over @granit/data-lookup binding the 'mentions' source (GET /lookups/mentions) and the composite type:id value convention",
+      "exports": [
+        {
+          "name": "MentionItem",
+          "kind": "interface",
+          "signature": "interface MentionItem",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/metering",
       "description": "Usage metering — meter definitions, events, and quota types and API functions",
       "exports": [
@@ -2893,7 +2905,12 @@
         {
           "name": "useDefaultMentionSearch",
           "kind": "function",
-          "signature": "function useDefaultMentionSearch( limit: number = DEFAULT_MENTION_SEARCH_LIMIT ): SearchMentions | undefined"
+          "signature": "function useDefaultMentionSearch(): SearchMentions | undefined"
+        },
+        {
+          "name": "useDefaultMentionResolve",
+          "kind": "function",
+          "signature": "function useDefaultMentionResolve(): ResolveMention | undefined"
         },
         {
           "name": "useChatStream",
