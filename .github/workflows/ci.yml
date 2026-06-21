@@ -121,15 +121,27 @@ jobs:
           HUSKY: "0"
 
       - name: Test (shard ${{ matrix.shard }}/4)
-        # `dot` keeps the log compact while still printing failing-test details;
-        # `blob` alone suppresses them. `blob` is the merge source for `coverage`.
+        # Reporters: `dot` (compact console) + `github-actions` (inline PR failure
+        # annotations) + `junit` (downloadable test-results artifact) + `blob`
+        # (opaque merge source for the `coverage` job — never read by a human).
+        # The blob alone would hide failures, hence the human-facing reporters.
         run: >-
-          pnpm exec vitest run --coverage --reporter=dot --reporter=blob
+          pnpm exec vitest run --coverage
+          --reporter=dot --reporter=github-actions --reporter=junit --reporter=blob
+          --outputFile.junit=test-results/junit-${{ matrix.shard }}.xml
           --shard=${{ matrix.shard }}/4
           --coverage.thresholds.lines=0
           --coverage.thresholds.functions=0
           --coverage.thresholds.branches=0
           --coverage.thresholds.statements=0
+
+      - name: Upload test results (JUnit)
+        if: always() # publish even when the shard fails — that is when it is needed
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: test-results-${{ matrix.shard }}
+          path: test-results/
+          retention-days: 7
 
       - name: Upload coverage blob
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
