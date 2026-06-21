@@ -503,6 +503,15 @@ function createEventSinks(turn: TurnState, setters: EventSinkSetters): EventSink
   };
 }
 
+/** Apply a `tool_call` frame: register the running tool and clear "thinking". */
+function applyToolCall(event: ChatStreamEvent, sinks: EventSinks): void {
+  if (event.toolCallId && event.toolName) {
+    sinks.startToolCall(event.toolCallId, event.toolName);
+  }
+  // A tool is now running; its chip carries the activity, not "thinking".
+  sinks.setThinking(false);
+}
+
 /** Dispatch a single {@link ChatStreamEvent} to the matching state updater. */
 function applyEvent(event: ChatStreamEvent, sinks: EventSinks): void {
   switch (event.type) {
@@ -518,11 +527,7 @@ function applyEvent(event: ChatStreamEvent, sinks: EventSinks): void {
       if (event.conversationId) sinks.setConversationId(event.conversationId);
       break;
     case CHAT_STREAM_EVENT_TYPES.TOOL_CALL:
-      if (event.toolCallId && event.toolName) {
-        sinks.startToolCall(event.toolCallId, event.toolName);
-      }
-      // A tool is now running; its chip carries the activity, not "thinking".
-      sinks.setThinking(false);
+      applyToolCall(event, sinks);
       break;
     case CHAT_STREAM_EVENT_TYPES.TOOL_RESULT:
       if (event.toolCallId) sinks.resolveToolCall(event.toolCallId, event.succeeded === true);

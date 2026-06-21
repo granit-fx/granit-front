@@ -22,7 +22,6 @@ export type {
   AIWorkspaceListResponse,
   AIWorkspaceResponse,
   AIWorkspaceUpdateRequest,
-  ChatStreamEvent,
   ConversationId,
 } from './types/index';
 export {

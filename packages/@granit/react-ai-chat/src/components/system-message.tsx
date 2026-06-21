@@ -30,11 +30,14 @@ export function SystemMessage({
   className,
 }: Readonly<SystemMessageProps>) {
   const Icon = VARIANT_ICON[variant];
+  // `error` is an assertive `alert`; `info` uses a native `<output>`, whose
+  // implicit `status` role announces politely without a hand-written role.
+  const Tag = variant === 'error' ? 'div' : 'output';
   return (
-    <div
+    <Tag
       data-slot="system-message"
       data-variant={variant}
-      role={variant === 'error' ? 'alert' : 'status'}
+      role={variant === 'error' ? 'alert' : undefined}
       className={cn(
         'flex items-center gap-2 rounded-lg border px-3 py-2 text-sm',
         variant === 'error'
@@ -46,6 +49,6 @@ export function SystemMessage({
       <Icon className="size-4 shrink-0" aria-hidden />
       <span className="flex-1">{children}</span>
       {action ? <span className="shrink-0">{action}</span> : null}
-    </div>
+    </Tag>
   );
 }

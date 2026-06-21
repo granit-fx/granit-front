@@ -12,20 +12,27 @@ import type { CSSProperties, ReactNode } from 'react';
  * Plain runs stay verbatim; nothing here is an HTML sink (text + spans only).
  */
 function UserContent({ content }: { readonly content: string }): ReactNode {
-  return tokenizeMessageContent(content).map((segment, index) =>
-    segment.type === 'text' ? (
-      <span key={`t${index}`}>{segment.value}</span>
+  // Key each segment by its start offset in the source string — stable across
+  // re-renders and unique without leaning on the array index. The `+ 1` keeps
+  // consecutive zero-length runs distinct.
+  let offset = 0;
+  return tokenizeMessageContent(content).map((segment) => {
+    const start = offset;
+    const text = segment.type === 'text' ? segment.value : segment.label;
+    offset += text.length + 1;
+    return segment.type === 'text' ? (
+      <span key={`t${start}`}>{segment.value}</span>
     ) : (
       <span
-        key={`c${index}`}
+        key={`c${start}`}
         data-slot="message-chip"
         data-kind={segment.kind}
         className="bg-primary-foreground/15 mx-0.5 inline-flex items-center rounded-md px-1.5 py-0.5 align-baseline font-medium"
       >
         {segment.label}
       </span>
-    )
-  );
+    );
+  });
 }
 
 export interface ChatMessageProps {

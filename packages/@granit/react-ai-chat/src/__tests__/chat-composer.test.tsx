@@ -14,8 +14,8 @@ const PROMPTS: PromptOption[] = [
   { id: 'p2' as PromptId, name: 'Daily brief', shortDescription: 'Your day' },
 ];
 
-/** The contenteditable message input. */
-const getEditor = () => screen.getByRole('textbox', { name: /ask your app/i });
+/** The contenteditable message input (an editable `combobox` driving the pickers). */
+const getEditor = () => screen.getByRole('combobox', { name: /ask your app/i });
 
 /**
  * Build the editor content from interleaved text + chip specs (as the editor

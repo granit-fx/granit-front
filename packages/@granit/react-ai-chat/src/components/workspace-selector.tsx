@@ -8,6 +8,28 @@ import type { KeyboardEvent, ReactNode } from 'react';
 /** Below this option count the search field is hidden — the list is short enough. */
 const SEARCH_THRESHOLD = 5;
 
+/**
+ * Render an option's trailing capability glyphs. The glyphs are opaque,
+ * host-supplied nodes with no identity of their own, so each is keyed by its
+ * position via a local counter rather than the map index.
+ */
+function renderCapabilities(option: WorkspaceOption): ReactNode {
+  if (!option.capabilities || option.capabilities.length === 0) return null;
+  let slot = 0;
+  return (
+    <span
+      data-slot="workspace-capabilities"
+      className="text-muted-foreground flex shrink-0 items-center gap-1.5"
+    >
+      {option.capabilities.map((cap) => (
+        <span key={`${option.value}-cap-${slot++}`} className="inline-flex">
+          {cap}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 export interface WorkspaceSelectorProps {
   /** Options to choose from (already brand-decorated by the host). */
   readonly options: readonly WorkspaceOption[];
@@ -49,7 +71,7 @@ export function WorkspaceSelector({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-  const popoverRef = useRef<HTMLDivElement>(null);
+  const listboxRef = useRef<HTMLUListElement>(null);
 
   const baseId = useId();
   const listboxId = `${baseId}-ws-listbox`;
@@ -85,14 +107,16 @@ export function WorkspaceSelector({
   // Move the active highlight, skipping disabled rows.
   const moveActive = useCallback(
     (delta: number) => {
-      if (filtered.length === 0) return;
+      const count = filtered.length;
+      if (count === 0) return;
       setActiveIndex((current) => {
-        let next = current;
-        for (let step = 0; step < filtered.length; step++) {
-          next = (next + delta + filtered.length) % filtered.length;
-          if (!filtered[next]?.disabled) return next;
-        }
-        return current;
+        // Walk the candidate indices in `delta` order (wrapping) and stop at the
+        // first selectable row; fall back to the current row if all are disabled.
+        const next = Array.from(
+          { length: count },
+          (_, step) => (((current + delta * (step + 1)) % count) + count) % count
+        ).find((index) => !filtered[index]?.disabled);
+        return next ?? current;
       });
     },
     [filtered]
@@ -105,18 +129,19 @@ export function WorkspaceSelector({
     setActiveIndex(firstEnabled === -1 ? 0 : firstEnabled);
   }, [open, filtered]);
 
-  // Focus the search field (or the popover) on open.
+  // Focus the search field (or the listbox itself) on open so keyboard nav works.
   useEffect(() => {
     if (!open) return;
     if (showSearch) searchRef.current?.focus();
-    else popoverRef.current?.focus();
+    else listboxRef.current?.focus();
   }, [open, showSearch]);
 
   // Close on outside pointer or focus loss.
   useEffect(() => {
     if (!open) return;
     const onPointerDown = (event: PointerEvent) => {
-      if (!containerRef.current?.contains(event.target as Node)) close();
+      const target = event.target instanceof Node ? event.target : null;
+      if (!containerRef.current?.contains(target)) close();
     };
     document.addEventListener('pointerdown', onPointerDown);
     return () => document.removeEventListener('pointerdown', onPointerDown);
@@ -169,6 +194,10 @@ export function WorkspaceSelector({
         <div
           id={getOptionId(index)}
           role="option"
+          // Arrow-key navigation is handled at the popover level (it owns the
+          // active highlight), so each option is only programmatically focusable
+          // (-1) — never in the tab order.
+          tabIndex={-1}
           aria-selected={option.value === selected?.value}
           aria-disabled={option.disabled}
           data-slot="workspace-option"
@@ -190,18 +219,7 @@ export function WorkspaceSelector({
         >
           <span className="flex size-4 shrink-0 items-center justify-center">{option.icon}</span>
           <span className="flex-1 truncate">{option.label ?? option.value}</span>
-          {option.capabilities && option.capabilities.length > 0 ? (
-            <span
-              data-slot="workspace-capabilities"
-              className="text-muted-foreground flex shrink-0 items-center gap-1.5"
-            >
-              {option.capabilities.map((cap, capIndex) => (
-                <span key={capIndex} className="inline-flex">
-                  {cap}
-                </span>
-              ))}
-            </span>
-          ) : null}
+          {renderCapabilities(option)}
         </div>
       </li>
     );
@@ -229,10 +247,7 @@ export function WorkspaceSelector({
 
       {open ? (
         <div
-          ref={popoverRef}
           data-slot="workspace-popover"
-          tabIndex={-1}
-          onKeyDown={handleKeyDown}
           className="border-border bg-popover absolute bottom-full z-20 mb-1 min-w-64 overflow-hidden rounded-xl border shadow-md outline-none"
         >
           {showSearch ? (
@@ -247,6 +262,7 @@ export function WorkspaceSelector({
                 onChange={(event) => {
                   setQuery(event.target.value);
                 }}
+                onKeyDown={handleKeyDown}
                 className="placeholder:text-muted-foreground w-full bg-transparent text-sm outline-none"
               />
             </div>
@@ -258,10 +274,15 @@ export function WorkspaceSelector({
             </p>
           ) : (
             <ul
+              ref={listboxRef}
               role="listbox"
               id={listboxId}
               aria-label={label}
-              className="max-h-72 overflow-auto p-1"
+              // Focusable so arrow-key nav works when no search field is shown;
+              // the listbox owns the keyboard interaction (not the wrapper div).
+              tabIndex={-1}
+              onKeyDown={handleKeyDown}
+              className="max-h-72 overflow-auto p-1 outline-none"
             >
               {rows}
             </ul>

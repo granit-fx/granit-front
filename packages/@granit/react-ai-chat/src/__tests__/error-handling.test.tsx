@@ -31,10 +31,11 @@ describe('SystemMessage', () => {
   });
 
   it('renders info as a polite status', () => {
-    const { container } = render(<SystemMessage>Heads up.</SystemMessage>);
-    const notice = container.querySelector('[data-slot="system-message"]');
+    render(<SystemMessage>Heads up.</SystemMessage>);
+    // A native <output> carries the implicit `status` role — no hand-written role.
+    const notice = screen.getByRole('status');
     expect(notice).toHaveAttribute('data-variant', 'info');
-    expect(notice).toHaveAttribute('role', 'status');
+    expect(notice.tagName).toBe('OUTPUT');
   });
 });
 
