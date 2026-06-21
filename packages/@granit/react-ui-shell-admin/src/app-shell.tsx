@@ -52,7 +52,7 @@ export function AppShell({
   // grid gets breathing room; the sidebar stays mounted and re-expandable.
   useEffect(() => {
     if (collapsedPaths.includes(location.pathname)) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync sidebar to route change
+      // Sync the sidebar to the route change.
       setSidebarOpen(false);
     } else if (globalThis.innerWidth > SIDEBAR_COLLAPSE_BREAKPOINT) {
       setSidebarOpen(true);

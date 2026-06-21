@@ -1,7 +1,6 @@
-import type { useQueryEndpoint } from '@granit/react-query-engine';
-
 import { QueryDataTable } from './query-data-table/query-data-table';
 
+import type { useQueryEndpoint } from '@granit/react-query-engine';
 import type { ColumnDef } from '@tanstack/react-table';
 
 type QueryEndpoint<T> = ReturnType<typeof useQueryEndpoint<T>>;

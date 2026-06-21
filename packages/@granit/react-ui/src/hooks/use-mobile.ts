@@ -11,7 +11,7 @@ export function useIsMobile() {
       setIsMobile(globalThis.innerWidth < MOBILE_BREAKPOINT);
     };
     mql.addEventListener('change', onChange);
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- initialize from window width on mount
+    // Initialize from the window width on mount.
     setIsMobile(globalThis.innerWidth < MOBILE_BREAKPOINT);
     return () => mql.removeEventListener('change', onChange);
   }, []);

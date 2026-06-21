@@ -3676,6 +3676,9 @@ importers:
 
   packages/@granit/shell-core:
     devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@granit/idempotency':
         specifier: workspace:*
         version: link:../idempotency

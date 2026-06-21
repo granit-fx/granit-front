@@ -1,7 +1,6 @@
+import { cn } from '@granit/utils';
 import { Popover as PopoverPrimitive } from 'radix-ui';
 import * as React from 'react';
-
-import { cn } from '@granit/utils';
 
 function Popover({ ...props }: React.ComponentProps<typeof PopoverPrimitive.Root>) {
   return <PopoverPrimitive.Root data-slot="popover" {...props} />;

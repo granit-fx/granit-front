@@ -2,10 +2,11 @@
 // SuggestionList — cmdk command list for filter suggestions
 // ---------------------------------------------------------------------------
 
-import type { FilterSuggestion } from '@granit/query-engine';
 import { Command } from 'cmdk';
 import { CheckIcon, SearchIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+
+import type { FilterSuggestion } from '@granit/query-engine';
 
 export interface SuggestionListProps {
   readonly suggestions: readonly FilterSuggestion[];

@@ -2,9 +2,6 @@
 // QueryDataTable — TanStack Table + @granit/ui Table (Story #55)
 // ---------------------------------------------------------------------------
 
-import { useState } from 'react';
-
-import type { GroupEntry, SortEntry } from '@granit/query-engine';
 import {
   Skeleton,
   Table,
@@ -14,15 +11,16 @@ import {
   TableHeader,
   TableRow,
 } from '@granit/react-ui';
+import { cn } from '@granit/utils';
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { ChevronDownIcon, ChevronRightIcon } from 'lucide-react';
-
-import { cn } from '@granit/utils';
+import { useState } from 'react';
 
 import { EmptyState } from './empty-state.js';
 import { SortableHeader } from './sortable-header.js';
 import { TablePagination } from './table-pagination.js';
 
+import type { GroupEntry, SortEntry } from '@granit/query-engine';
 import type { ColumnDef, Row } from '@tanstack/react-table';
 
 export interface QueryDataTableProps<T> {
@@ -98,7 +96,7 @@ export function QueryDataTable<T>({
   // When grouped, flatten all group items for the table model
   const flatData = groups ? groups.flatMap((g) => g.items ?? []) : data;
 
-  // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Table API is inherently non-memoizable
+  // TanStack Table API is inherently non-memoizable.
   const table = useReactTable({
     data: flatData as T[],
     columns: columns as ColumnDef<T, unknown>[],

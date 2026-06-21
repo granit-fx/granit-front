@@ -1,7 +1,6 @@
+import { cn } from '@granit/utils';
 import { Switch as SwitchPrimitive } from 'radix-ui';
 import * as React from 'react';
-
-import { cn } from '@granit/utils';
 
 function Switch({
   className,

@@ -1,17 +1,11 @@
 'use client';
 
-import * as React from 'react';
+import { cn } from '@granit/utils';
 import { Command as CommandPrimitive } from 'cmdk';
 import { SearchIcon } from 'lucide-react';
+import * as React from 'react';
 
-import { cn } from '@granit/utils';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from './dialog.js';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './dialog.js';
 
 function Command({ className, ...props }: React.ComponentProps<typeof CommandPrimitive>) {
   return (

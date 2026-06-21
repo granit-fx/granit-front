@@ -2,22 +2,21 @@
 // SmartFilterBar — cmdk-powered omnibox for filters (Story #52)
 // ---------------------------------------------------------------------------
 
-import { useCallback, useRef, useState } from 'react';
-import type { KeyboardEvent } from 'react';
-
 import { QUERY_LIMITS } from '@granit/query-engine';
-import type { FilterSuggestion, SmartFilterPhase } from '@granit/query-engine';
 import { useTranslation } from '@granit/react-localization';
-import type { UseSmartFilterReturn } from '@granit/react-query-engine';
 import { Popover, PopoverAnchor, PopoverContent } from '@granit/react-ui';
+import { cn } from '@granit/utils';
 import { Command } from 'cmdk';
 import { SearchIcon, XCircleIcon } from 'lucide-react';
-
-import { cn } from '@granit/utils';
+import { useCallback, useRef, useState } from 'react';
 
 import { FacetBadge } from './facet-badge.js';
 import { LookupSuggestionList } from './lookup-suggestion-list.js';
 import { SuggestionList } from './suggestion-list.js';
+
+import type { FilterSuggestion, SmartFilterPhase } from '@granit/query-engine';
+import type { UseSmartFilterReturn } from '@granit/react-query-engine';
+import type { KeyboardEvent } from 'react';
 
 function getInputMode(isInteger: boolean, isNumeric: boolean) {
   if (isInteger) return 'numeric' as const;

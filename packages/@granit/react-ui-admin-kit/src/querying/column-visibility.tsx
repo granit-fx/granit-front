@@ -2,7 +2,6 @@
 // ColumnVisibility — toggle column visibility (Story #57)
 // ---------------------------------------------------------------------------
 
-import type { ColumnDefinition } from '@granit/query-engine';
 import { useTranslation } from '@granit/react-localization';
 import {
   Button,
@@ -14,6 +13,8 @@ import {
   DropdownMenuTrigger,
 } from '@granit/react-ui';
 import { ColumnsIcon } from 'lucide-react';
+
+import type { ColumnDefinition } from '@granit/query-engine';
 
 export interface ColumnVisibilityProps {
   /** Column definitions from metadata. */

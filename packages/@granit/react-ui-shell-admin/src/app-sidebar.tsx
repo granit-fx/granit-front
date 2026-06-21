@@ -1,5 +1,5 @@
-import { useTranslation } from '@granit/react-localization';
 import { usePermissions } from '@granit/react-authorization';
+import { useTranslation } from '@granit/react-localization';
 import {
   Collapsible,
   CollapsibleContent,
@@ -23,8 +23,8 @@ import { filterNavByPermission } from '@granit/shell-core';
 import { ChevronRight } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 
-import { useActiveWorkspace } from './use-active-workspace';
 import { useShellChrome, type ShellNavItem } from './shell-chrome-context';
+import { useActiveWorkspace } from './use-active-workspace';
 import { WorkspaceContentNav } from './workspace-content-nav';
 import { WorkspaceSwitcherMenu } from './workspace-switcher-menu';
 

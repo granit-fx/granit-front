@@ -51,7 +51,6 @@ export function RightSidebarProvider({ children }: { readonly children: React.Re
 }
 
 // Co-locating the provider + hook keeps the context private to this module.
-// eslint-disable-next-line react-refresh/only-export-components
 export function useRightSidebar() {
   const ctx = React.useContext(RightSidebarContext);
   if (!ctx) {

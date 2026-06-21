@@ -2,11 +2,11 @@
 // GroupByRows — expandable group rows for grouped results (Story #58)
 // ---------------------------------------------------------------------------
 
+import { Badge, TableCell, TableRow } from '@granit/react-ui';
+import { ChevronDownIcon, ChevronRightIcon } from 'lucide-react';
 import { useCallback, useState } from 'react';
 
 import type { GroupEntry } from '@granit/query-engine';
-import { Badge, TableCell, TableRow } from '@granit/react-ui';
-import { ChevronDownIcon, ChevronRightIcon } from 'lucide-react';
 
 export interface GroupByRowsProps<T> {
   /** Groups to render. */

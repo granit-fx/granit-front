@@ -1,8 +1,7 @@
+import { type ColorThemeState } from '@granit/shell-core';
 import { createContext, useContext, type ReactNode } from 'react';
 import { useStore } from 'zustand';
 import { type StoreApi } from 'zustand/vanilla';
-
-import { type ColorThemeState } from '@granit/shell-core';
 
 const ColorThemeStoreContext = createContext<StoreApi<ColorThemeState> | null>(null);
 
@@ -17,7 +16,9 @@ export interface ColorThemeStoreProviderProps {
  * module singleton) so multiple apps on one page keep independent theme state.
  */
 export function ColorThemeStoreProvider({ store, children }: ColorThemeStoreProviderProps) {
-  return <ColorThemeStoreContext.Provider value={store}>{children}</ColorThemeStoreContext.Provider>;
+  return (
+    <ColorThemeStoreContext.Provider value={store}>{children}</ColorThemeStoreContext.Provider>
+  );
 }
 
 /** Read from the colour-theme store with a selector. */

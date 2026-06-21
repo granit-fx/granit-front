@@ -1,20 +1,14 @@
-import * as React from 'react';
+import { cn } from '@granit/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { PanelLeftIcon } from 'lucide-react';
 import { Slot } from 'radix-ui';
+import * as React from 'react';
 
-import { useIsMobile } from './hooks/use-mobile.js';
-import { cn } from '@granit/utils';
 import { Button } from './button.js';
+import { useIsMobile } from './hooks/use-mobile.js';
 import { Input } from './input.js';
 import { Separator } from './separator.js';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from './sheet.js';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from './sheet.js';
 import { Skeleton } from './skeleton.js';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip.js';
 
@@ -581,12 +575,10 @@ function SidebarMenuSkeleton({
 }: React.ComponentProps<'div'> & {
   showIcon?: boolean;
 }) {
-  // Random width between 50 to 90%.
-  /* eslint-disable react-hooks/purity -- shadcn skeleton: intentional random width */
+  // Random width between 50 to 90% (shadcn skeleton: intentional random width).
   const width = React.useMemo(() => {
     return `${Math.floor(Math.random() * 40) + 50}%`;
   }, []);
-  /* eslint-enable react-hooks/purity */
 
   return (
     <div

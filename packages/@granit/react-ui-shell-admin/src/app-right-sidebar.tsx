@@ -1,5 +1,4 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@granit/react-ui';
-
 import { cn } from '@granit/utils';
 
 import { useRightSidebar } from './right-sidebar-context';

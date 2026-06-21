@@ -1,11 +1,10 @@
-import type { ReactNode } from 'react';
-
-import type { QueryMetadata } from '@granit/query-engine';
-import type { useQueryEndpoint } from '@granit/react-query-engine';
-
 import { FilterPresets } from './filter-presets';
 import { GroupBySelector } from './group-by-selector';
 import { SortSelector } from './sort-selector';
+
+import type { QueryMetadata } from '@granit/query-engine';
+import type { useQueryEndpoint } from '@granit/react-query-engine';
+import type { ReactNode } from 'react';
 
 type QueryEndpoint<T> = ReturnType<typeof useQueryEndpoint<T>>;
 

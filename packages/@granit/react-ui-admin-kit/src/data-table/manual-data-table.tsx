@@ -54,7 +54,6 @@ export function ManualDataTable<TData>({
   const { t } = useTranslation();
   const totalPages = Math.ceil(totalCount / pageSize);
 
-  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: data as TData[],
     columns,

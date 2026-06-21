@@ -2,7 +2,6 @@
 // SortSelector — dropdown for selecting sort field and direction
 // ---------------------------------------------------------------------------
 
-import type { ColumnDefinition, SortEntry } from '@granit/query-engine';
 import {
   Button,
   DropdownMenu,
@@ -14,6 +13,8 @@ import {
 } from '@granit/react-ui';
 import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon, ChevronDownIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+
+import type { ColumnDefinition, SortEntry } from '@granit/query-engine';
 
 export interface SortSelectorProps {
   /** Column definitions (only isSortable columns are shown). */

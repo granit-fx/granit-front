@@ -2,7 +2,6 @@
 // GroupBySelector — dropdown for selecting group-by field (Story #54)
 // ---------------------------------------------------------------------------
 
-import type { ColumnDefinition, GroupByField } from '@granit/query-engine';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +13,8 @@ import {
 } from '@granit/react-ui';
 import { ChevronDownIcon, GroupIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+
+import type { ColumnDefinition, GroupByField } from '@granit/query-engine';
 
 export interface GroupBySelectorProps {
   /** Available group-by fields from metadata. */

@@ -2,9 +2,10 @@
 // DatePeriodPicker — period selector for date filters (Story #54)
 // ---------------------------------------------------------------------------
 
-import type { DateFilterMeta, DatePeriod } from '@granit/query-engine';
 import { useTranslation } from '@granit/react-localization';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@granit/react-ui';
+
+import type { DateFilterMeta, DatePeriod } from '@granit/query-engine';
 
 export interface DatePeriodPickerProps {
   /** Date filter metadata. */

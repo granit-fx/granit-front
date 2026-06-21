@@ -2,8 +2,9 @@
 // FilterPresets — toggle buttons for preset filter groups (Story #53)
 // ---------------------------------------------------------------------------
 
-import type { FilterGroupMeta } from '@granit/query-engine';
 import { Button, Separator, Tooltip, TooltipContent, TooltipTrigger } from '@granit/react-ui';
+
+import type { FilterGroupMeta } from '@granit/query-engine';
 
 export interface FilterPresetsProps {
   /** Preset groups from metadata. */

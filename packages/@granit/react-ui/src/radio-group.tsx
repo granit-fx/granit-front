@@ -1,8 +1,7 @@
-import * as React from 'react';
+import { cn } from '@granit/utils';
 import { CircleIcon } from 'lucide-react';
 import { RadioGroup as RadioGroupPrimitive } from 'radix-ui';
-
-import { cn } from '@granit/utils';
+import * as React from 'react';
 
 function RadioGroup({
   className,

@@ -3,6 +3,7 @@
 //   descendant on each parent render (upstream allocates a fresh object inline).
 // Preserve this on any future `shadcn add form` overwrite.
 
+import { cn } from '@granit/utils';
 import { Slot } from 'radix-ui';
 import * as React from 'react';
 import {
@@ -15,7 +16,6 @@ import {
   type FieldValues,
 } from 'react-hook-form';
 
-import { cn } from '@granit/utils';
 import { Label } from './label.js';
 
 import type { Label as LabelPrimitive } from 'radix-ui';

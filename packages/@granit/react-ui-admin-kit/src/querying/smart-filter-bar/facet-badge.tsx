@@ -2,9 +2,10 @@
 // FacetBadge — displays a filter token as a removable badge
 // ---------------------------------------------------------------------------
 
-import type { FilterToken } from '@granit/query-engine';
 import { Badge } from '@granit/react-ui';
 import { XIcon } from 'lucide-react';
+
+import type { FilterToken } from '@granit/query-engine';
 
 export interface FacetBadgeProps {
   readonly token: FilterToken;

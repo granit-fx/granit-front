@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-
 import { useTranslation } from '@granit/react-localization';
 import {
   CommandDialog,
@@ -12,6 +10,7 @@ import {
 } from '@granit/react-ui';
 import { useFeatureRouteTable, useWorkspaces } from '@granit/react-workspaces';
 import { buildWorkspaceUrl, type WorkspaceItemResponse } from '@granit/workspaces';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { OPEN_COMMAND_PALETTE_EVENT } from './command-palette-events';

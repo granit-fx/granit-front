@@ -4,11 +4,10 @@
 //   `text-primary` so spinners pick up the brand color via design tokens.
 // Preserve this on any future `shadcn add spinner` overwrite.
 
+import { cn } from '@granit/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Loader2Icon } from 'lucide-react';
 import * as React from 'react';
-
-import { cn } from '@granit/utils';
 
 const spinnerVariants = cva('animate-spin text-primary', {
   variants: {

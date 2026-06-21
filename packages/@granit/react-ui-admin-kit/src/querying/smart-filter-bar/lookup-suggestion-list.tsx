@@ -7,16 +7,16 @@
 // debounced against the current input value, and honors the Empty Scope Trap
 // via `missingScopeKey` when the descriptor declares `scopeKeys`.
 
-import { useMemo } from 'react';
-
-import type { LookupDescriptor } from '@granit/data-lookup';
-import type { FilterToken } from '@granit/query-engine';
 import { useGranitClient } from '@granit/react-api-client';
 import { useLookup } from '@granit/react-data-lookup';
 import { useLocale } from '@granit/react-localization';
 import { Command } from 'cmdk';
 import { CheckIcon } from 'lucide-react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import type { LookupDescriptor } from '@granit/data-lookup';
+import type { FilterToken } from '@granit/query-engine';
 
 export interface LookupSuggestionListProps {
   readonly descriptor: LookupDescriptor;

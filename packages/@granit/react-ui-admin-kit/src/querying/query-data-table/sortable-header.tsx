@@ -2,9 +2,10 @@
 // SortableHeader — column header with sort indicator
 // ---------------------------------------------------------------------------
 
-import type { SortDirection } from '@granit/query-engine';
 import { Button } from '@granit/react-ui';
 import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon } from 'lucide-react';
+
+import type { SortDirection } from '@granit/query-engine';
 
 const SORT_ICONS: Record<string, typeof ArrowUpIcon> = {
   asc: ArrowUpIcon,

@@ -1,8 +1,8 @@
-import { Component, useCallback } from 'react';
-import type { ReactNode } from 'react';
-
 import { Square } from 'lucide-react';
 import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
+import { Component, useCallback } from 'react';
+
+import type { ReactNode } from 'react';
 
 // Error boundary that catches lucide DynamicIcon's "Name not found" throw and
 // renders the fallback element instead. Class component required by React's API.

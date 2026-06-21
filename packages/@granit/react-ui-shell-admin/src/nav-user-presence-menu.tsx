@@ -1,4 +1,3 @@
-import type { ManualPresenceStatus, PresenceStatus } from '@granit/presence';
 import { useTranslation } from '@granit/react-localization';
 import {
   PresenceDot,
@@ -14,8 +13,10 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from '@granit/react-ui';
-import type { ISODateString } from '@granit/types';
 import { Clock, RotateCcw } from 'lucide-react';
+
+import type { ManualPresenceStatus, PresenceStatus } from '@granit/presence';
+import type { ISODateString } from '@granit/types';
 
 // Labels come from the framework's `presence` namespace bundle so this menu
 // works in any locale without depending on the backend localization table

@@ -2,10 +2,10 @@
 // BulkActions — selection toolbar for batch operations (Story #56)
 // ---------------------------------------------------------------------------
 
-import type { ReactNode } from 'react';
-
 import { useTranslation } from '@granit/react-localization';
 import { Button, Checkbox } from '@granit/react-ui';
+
+import type { ReactNode } from 'react';
 
 export interface BulkAction {
   readonly id: string;

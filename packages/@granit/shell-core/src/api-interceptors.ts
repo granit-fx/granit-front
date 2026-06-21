@@ -1,4 +1,4 @@
-import axios, { type AxiosInstance } from 'axios';
+import { isAxiosError, type AxiosInstance } from '@granit/api-client';
 
 export interface ForbiddenRedirectOptions {
   /**
@@ -29,7 +29,7 @@ export function installForbiddenRedirectInterceptor(
   client.interceptors.response.use(
     (response) => response,
     async (error: unknown) => {
-      if (axios.isAxiosError(error) && error.response?.status === 403) {
+      if (isAxiosError(error) && error.response?.status === 403) {
         const requestUrl = error.config?.url;
         if (suppressPatterns.some((re) => re.test(requestUrl ?? ''))) {
           logger?.warn(

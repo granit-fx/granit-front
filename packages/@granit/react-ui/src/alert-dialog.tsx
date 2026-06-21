@@ -4,10 +4,10 @@
 //   focus/disabled styling across the app.
 // Preserve these on any future `shadcn add alert-dialog` overwrite.
 
-import * as React from 'react';
-import { AlertDialog as AlertDialogPrimitive } from 'radix-ui';
-
 import { cn } from '@granit/utils';
+import { AlertDialog as AlertDialogPrimitive } from 'radix-ui';
+import * as React from 'react';
+
 import { Button } from './button.js';
 
 function AlertDialog({ ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Root>) {

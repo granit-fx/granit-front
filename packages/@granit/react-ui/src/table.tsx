@@ -1,8 +1,7 @@
 'use client';
 
-import * as React from 'react';
-
 import { cn } from '@granit/utils';
+import * as React from 'react';
 
 function Table({ className, children, ...props }: React.ComponentProps<'table'>) {
   return (

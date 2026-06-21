@@ -1,5 +1,3 @@
-import type { ReactNode } from 'react';
-
 import { useTranslation } from '@granit/react-localization';
 import {
   Button,
@@ -12,6 +10,7 @@ import {
   Form,
 } from '@granit/react-ui';
 
+import type { ReactNode } from 'react';
 import type { FieldValues, UseFormReturn } from 'react-hook-form';
 
 export interface FormDialogProps<TValues extends FieldValues> {

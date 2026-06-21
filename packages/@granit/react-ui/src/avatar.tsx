@@ -1,7 +1,6 @@
+import { cn } from '@granit/utils';
 import { Avatar as AvatarPrimitive } from 'radix-ui';
 import * as React from 'react';
-
-import { cn } from '@granit/utils';
 
 function Avatar({
   className,
