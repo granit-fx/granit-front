@@ -1,0 +1,10 @@
+@import 'tailwindcss';
+@import '@granit/ui-theme/base.css';
+
+/* granit-front packages aren't symlinked, but pin the content sources explicitly
+   so utility classes used only inside package components are always emitted,
+   regardless of Vite's module-graph detection. Paths are relative to this file. */
+@source '../packages/@granit/react-ui/src/**/*.{ts,tsx}';
+@source '../packages/@granit/react-ui-admin-kit/src/**/*.{ts,tsx}';
+@source '../packages/@granit/react-ui-shell-admin/src/**/*.{ts,tsx}';
+@source '../packages/@granit/react-*/src/**/*.{ts,tsx}';
