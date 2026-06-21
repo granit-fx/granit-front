@@ -7731,6 +7731,11 @@
       ]
     },
     {
+      "name": "@granit/react-ui",
+      "description": "Granit admin React UI primitives — shadcn/ui components (Button, Input, Dialog, Table, Select, Sidebar, …) styled with the @granit/ui-theme token contract. Presentational only: no data fetching, no business logic.",
+      "exports": []
+    },
+    {
       "name": "@granit/react-validation",
       "description": "React hooks for @granit/validation — resolver factory for react-hook-form, useFieldProps",
       "exports": [

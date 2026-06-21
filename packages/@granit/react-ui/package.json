@@ -1,0 +1,43 @@
+{
+  "name": "@granit/react-ui",
+  "description": "Granit admin React UI primitives — shadcn/ui components (Button, Input, Dialog, Table, Select, Sidebar, …) styled with the @granit/ui-theme token contract. Presentational only: no data fetching, no business logic.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/utils": "workspace:*",
+    "class-variance-authority": "^0.7.1",
+    "cmdk": "^1.1.1",
+    "lucide-react": "^1.21.0",
+    "radix-ui": "^1.6.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.80.0",
+    "sonner": "^2.0.7"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/utils": "workspace:*",
+    "class-variance-authority": "^0.7.1",
+    "cmdk": "^1.1.1",
+    "radix-ui": "^1.6.0",
+    "sonner": "^2.0.7"
+  }
+}
