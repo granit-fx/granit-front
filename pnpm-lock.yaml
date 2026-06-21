@@ -3612,6 +3612,15 @@ importers:
 
   packages/@granit/shell-core:
     devDependencies:
+      '@granit/idempotency':
+        specifier: workspace:*
+        version: link:../idempotency
+      '@tanstack/react-query':
+        specifier: 5.101.0
+        version: 5.101.0(react@19.2.7)
+      axios:
+        specifier: 1.18.0
+        version: 1.18.0
       zustand:
         specifier: ^5.0.14
         version: 5.0.14(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
