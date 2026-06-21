@@ -1,0 +1,31 @@
+{
+  "name": "@granit/shell-core",
+  "description": "Framework-agnostic substrate shared by every Granit app shell (admin, mobile, site) and any UI framework. Headless logic only: colour-theme store, navigation model + permission filtering, API client / query-client factory config. No React.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "zustand": "^5.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "zustand": "^5.0.14"
+  }
+}

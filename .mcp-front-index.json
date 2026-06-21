@@ -7167,6 +7167,11 @@
       ]
     },
     {
+      "name": "@granit/react-shell-core",
+      "description": "React bindings for @granit/shell-core — the shell-agnostic substrate (colour-theme store provider/hook, theme provider, navigation model, auth context, router helpers) shared by every Granit React app shell (admin, mobile, site).",
+      "exports": []
+    },
+    {
       "name": "@granit/react-storage",
       "description": "React bindings for @granit/storage — hooks for synchronized browser storage",
       "exports": [
@@ -8018,6 +8023,11 @@
           "signature": "const SettingsPermissions"
         }
       ]
+    },
+    {
+      "name": "@granit/shell-core",
+      "description": "Framework-agnostic substrate shared by every Granit app shell (admin, mobile, site) and any UI framework. Headless logic only: colour-theme store, navigation model + permission filtering, API client / query-client factory config. No React.",
+      "exports": []
     },
     {
       "name": "@granit/storage",

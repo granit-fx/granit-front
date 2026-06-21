@@ -1,0 +1,37 @@
+{
+  "name": "@granit/react-shell-core",
+  "description": "React bindings for @granit/shell-core — the shell-agnostic substrate (colour-theme store provider/hook, theme provider, navigation model, auth context, router helpers) shared by every Granit React app shell (admin, mobile, site).",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/shell-core": "workspace:*",
+    "next-themes": "^0.4.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zustand": "^5.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/shell-core": "workspace:*",
+    "next-themes": "^0.4.6",
+    "zustand": "^5.0.14"
+  }
+}
