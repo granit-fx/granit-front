@@ -7804,6 +7804,34 @@
       ]
     },
     {
+      "name": "@granit/react-ui-settings",
+      "description": "Granit admin UI for the Settings module — the application-settings edit page and dynamic settings panel (typed fields, encrypted-secret handling, bulk save). Composes @granit/react-settings (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "AppSettingsEditPage",
+          "kind": "function",
+          "signature": "function AppSettingsEditPage("
+        },
+        {
+          "name": "AppSettingsEditPageProps",
+          "kind": "interface",
+          "signature": "interface AppSettingsEditPageProps",
+          "members": []
+        },
+        {
+          "name": "AppSettingsPanel",
+          "kind": "function",
+          "signature": "function AppSettingsPanel("
+        },
+        {
+          "name": "AppSettingsPanelProps",
+          "kind": "interface",
+          "signature": "interface AppSettingsPanelProps",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-shell-admin",
       "description": "Granit admin app shell (chrome): the AppShell layout (sidebar + topbar + content + right rail), AppSidebar with workspace-driven navigation, user menu, command palette and header. App-specific data (auth, navigation, languages, logger) is injected via ShellChromeProvider; feature widgets are passed as header slots.",
       "exports": []
