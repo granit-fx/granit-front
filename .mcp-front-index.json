@@ -7746,6 +7746,64 @@
       "exports": []
     },
     {
+      "name": "@granit/react-ui-auditing",
+      "description": "Granit admin UI for the Auditing module — audit log list/detail pages, columns, category/change-type badges and entity-change cards. Composes @granit/react-auditing (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "AuditListPage",
+          "kind": "function",
+          "signature": "function AuditListPage("
+        },
+        {
+          "name": "AuditListPageProps",
+          "kind": "interface",
+          "signature": "interface AuditListPageProps",
+          "members": []
+        },
+        {
+          "name": "AuditDetailPage",
+          "kind": "function",
+          "signature": "function AuditDetailPage("
+        },
+        {
+          "name": "AuditDetailPageProps",
+          "kind": "interface",
+          "signature": "interface AuditDetailPageProps",
+          "members": []
+        },
+        {
+          "name": "AuditCategoryBadge",
+          "kind": "function",
+          "signature": "function AuditCategoryBadge("
+        },
+        {
+          "name": "AuditChangeTypeBadge",
+          "kind": "function",
+          "signature": "function AuditChangeTypeBadge("
+        },
+        {
+          "name": "AuditEntityChangeCard",
+          "kind": "function",
+          "signature": "function AuditEntityChangeCard("
+        },
+        {
+          "name": "createAuditColumns",
+          "kind": "function",
+          "signature": "function createAuditColumns("
+        },
+        {
+          "name": "DEFAULT_AUDIT_BASE_PATH",
+          "kind": "const",
+          "signature": "const DEFAULT_AUDIT_BASE_PATH"
+        },
+        {
+          "name": "DEFAULT_AUDIT_ROUTE_BASE",
+          "kind": "const",
+          "signature": "const DEFAULT_AUDIT_ROUTE_BASE"
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-shell-admin",
       "description": "Granit admin app shell (chrome): the AppShell layout (sidebar + topbar + content + right rail), AppSidebar with workspace-driven navigation, user menu, command palette and header. App-specific data (auth, navigation, languages, logger) is injected via ShellChromeProvider; feature widgets are passed as header slots.",
       "exports": []

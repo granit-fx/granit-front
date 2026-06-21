@@ -1,0 +1,49 @@
+{
+  "name": "@granit/react-ui-auditing",
+  "description": "Granit admin UI for the Auditing module — audit log list/detail pages, columns, category/change-type badges and entity-change cards. Composes @granit/react-auditing (headless) with the foundation UI packages.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/auditing": "workspace:*",
+    "@granit/react-auditing": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-ui-admin-kit": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@tanstack/react-table": "^8.21.3",
+    "i18next": "^26.0.0",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.18.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/auditing": "workspace:*",
+    "@granit/react-auditing": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-ui-admin-kit": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@storybook/react-vite": "^10.4.6",
+    "@tanstack/react-table": "^8.21.3"
+  }
+}

@@ -1,0 +1,53 @@
+// @granit/react-ui-auditing — i18next resource bundle (flat keys, "translation" ns).
+// Register in the host app:
+//   import { auditingTranslationsEn } from "@granit/react-ui-auditing";
+//   i18n.addResourceBundle("en", "translation", auditingTranslationsEn, true, true);
+
+export const auditingTranslationsEn = {
+  'Audit.Categories.AccessDenied': 'Access denied',
+  'Audit.Categories.ConfigurationChange': 'Configuration change',
+  'Audit.Categories.DataAccess': 'Data access',
+  'Audit.Categories.DataMutation': 'Data mutation',
+  'Audit.Categories.PrivilegedAccess': 'Privileged access',
+  'Audit.ChangeTypes.Created': 'Created',
+  'Audit.ChangeTypes.Deleted': 'Deleted',
+  'Audit.ChangeTypes.Modified': 'Modified',
+  'Audit.ChangeTypes.SoftDeleted': 'Soft deleted',
+  'Audit.Columns.Category': 'Category',
+  'Audit.Columns.Changes': 'Changes',
+  'Audit.Columns.CorrelationId': 'Correlation ID',
+  'Audit.Columns.EntityId': 'Entity ID',
+  'Audit.Columns.EntityType': 'Entity Type',
+  'Audit.Columns.IpAddress': 'IP Address',
+  'Audit.Columns.Operation': 'Operation',
+  'Audit.Columns.TenantId': 'Tenant',
+  'Audit.Columns.Timestamp': 'Timestamp',
+  'Audit.Columns.UserAgent': 'User Agent',
+  'Audit.Columns.UserEmail': 'User',
+  'Audit.Columns.UserName': 'User Name',
+  'Audit.Detail': 'Audit entry detail',
+  'Audit.EntityChanges': 'Entity changes',
+  'Audit.ExportCsv': 'Export CSV',
+  'Audit.FilterByCategory': 'Filter by category',
+  'Audit.Filters.AllOperations': 'All operations',
+  'Audit.Filters.EndDate': 'End date',
+  'Audit.Filters.Operation': 'Filter by operation',
+  'Audit.Filters.StartDate': 'Start date',
+  'Audit.Filters.UserEmail': 'Filter by user',
+  'Audit.NoEntityChanges': 'No entity changes recorded for this entry',
+  'Audit.NoLogs': 'No audit logs found for the selected filters',
+  'Audit.NotFound': 'Audit entry not found',
+  'Audit.Operations.Create': 'Create',
+  'Audit.Operations.Delete': 'Delete',
+  'Audit.Operations.SoftDelete': 'Soft Delete',
+  'Audit.Operations.Update': 'Update',
+  'Audit.PropertyChanges.NewValue': 'New value',
+  'Audit.PropertyChanges.OriginalValue': 'Original value',
+  'Audit.PropertyChanges.Property': 'Property',
+  'Audit.Subtitle': 'Track all administrative actions and system events',
+  'Audit.System': 'System',
+  'Audit.Title': 'Audit Logs',
+  'Audit.ViewDetail': 'View detail',
+} as const;
+
+export type AuditingTranslations = typeof auditingTranslationsEn;

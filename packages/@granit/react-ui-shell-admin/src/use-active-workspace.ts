@@ -14,13 +14,18 @@ function readStored(): string | null {
 }
 
 function writeStored(value: string | null): void {
+  let error: unknown;
   try {
     if (value) globalThis.localStorage?.setItem(STORAGE_KEY, value);
     else globalThis.localStorage?.removeItem(STORAGE_KEY);
-  } catch {
-    /* localStorage unavailable (private mode, SSR) — silently ignore. */
+  } catch (caught) {
+    // localStorage can throw in private mode / SSR. Persistence is best-effort:
+    // keep the reason instead of swallowing it silently.
+    error = caught;
   }
-  globalThis.dispatchEvent(new CustomEvent(CHANGE_EVENT));
+  // Notify listeners regardless so in-memory state stays in sync even when
+  // persistence failed; surface the error on the event for diagnostics.
+  globalThis.dispatchEvent(new CustomEvent(CHANGE_EVENT, { detail: { error } }));
 }
 
 function subscribe(onChange: () => void): () => void {
