@@ -7840,6 +7840,42 @@
       ]
     },
     {
+      "name": "@granit/react-ui-hostnames",
+      "description": "Granit admin UI for the managed Hostnames module — owner-scoped hostname list, DNS details, status/certificate badges, row actions and add-hostname dialog. Composes @granit/react-hostnames (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "HostnamesPage",
+          "kind": "function",
+          "signature": "function HostnamesPage()"
+        },
+        {
+          "name": "HostnameStatusBadge",
+          "kind": "function",
+          "signature": "function HostnameStatusBadge("
+        },
+        {
+          "name": "CertStatusBadge",
+          "kind": "function",
+          "signature": "function CertStatusBadge("
+        },
+        {
+          "name": "DnsDetails",
+          "kind": "function",
+          "signature": "function DnsDetails("
+        },
+        {
+          "name": "RowActions",
+          "kind": "function",
+          "signature": "function RowActions("
+        },
+        {
+          "name": "AddHostnameDialog",
+          "kind": "function",
+          "signature": "function AddHostnameDialog("
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-settings",
       "description": "Granit admin UI for the Settings module — the application-settings edit page and dynamic settings panel (typed fields, encrypted-secret handling, bulk save). Composes @granit/react-settings (headless) with the foundation UI packages.",
       "exports": [
