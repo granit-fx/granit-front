@@ -7736,6 +7736,11 @@
       "exports": []
     },
     {
+      "name": "@granit/react-ui-admin-kit",
+      "description": "Granit admin React building blocks — cross-cutting data-grid, querying (smart filter bar, sort/group-by/column-visibility, server-paginated tables), form dialogs and view switcher. Composes @granit/react-ui with @granit/react-query-engine; not tied to any single domain.",
+      "exports": []
+    },
+    {
       "name": "@granit/react-validation",
       "description": "React hooks for @granit/validation — resolver factory for react-hook-form, useFieldProps",
       "exports": [
