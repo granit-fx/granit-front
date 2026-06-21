@@ -1,0 +1,17 @@
+{
+  "name": "@granit/ui-theme",
+  "description": "Granit admin design tokens — CSS custom properties for colour palettes, dark mode, per-app colour themes, typography, shadows and sidebar variables. Import the base stylesheet and override the CSS variables to re-brand any consuming app.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./base.css": "./src/base.css"
+  },
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}

@@ -1,0 +1,256 @@
+/* @granit/ui-theme — Granit admin design tokens.
+ *
+ * Foundation layer shared by every Granit admin app. Import AFTER
+ * `@import 'tailwindcss'` so Tailwind v4 inlines this file and processes its
+ * `@theme` / `@custom-variant` / `@layer` directives:
+ *
+ *   @import 'tailwindcss';
+ *   @import '@granit/ui-theme/base.css';
+ *
+ * Re-brand a consuming app by redefining the CSS variables below in your own
+ * global stylesheet (e.g. `--color-primary`) — the change cascades to every
+ * component (including @granit/react-* domain components) because they all
+ * consume the same semantic tokens.
+ *
+ * Contains tokens / palettes / dark mode / per-app colour themes / sidebar
+ * variables only. App- and feature-specific CSS (fonts, flag-icons, the
+ * `data-granit-*` entity/gallery component styles, the reaction-bar glyphs,
+ * the scrollbar utility) stays in the consuming app's own stylesheet. */
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  /* Admin accent palette — Blue (enterprise/SaaS panel aesthetic) */
+  --color-admin-50: #eff6ff;
+  --color-admin-100: #dbeafe;
+  --color-admin-200: #bfdbfe;
+  --color-admin-300: #93c5fd;
+  --color-admin-400: #60a5fa;
+  --color-admin-500: #3b82f6;
+  --color-admin-600: #2563eb;
+  --color-admin-700: #1d4ed8;
+  --color-admin-800: #1e40af;
+  --color-admin-900: #1e3a8a;
+  --color-admin-950: #172554;
+
+  /* Alert palette — Red */
+  --color-alert-50: #fef2f2;
+  --color-alert-100: #fee2e2;
+  --color-alert-500: #ef4444;
+  --color-alert-600: #dc2626;
+  --color-alert-700: #b91c1c;
+
+  /* Success palette — Emerald */
+  --color-success-50: #ecfdf5;
+  --color-success-100: #d1fae5;
+  --color-success-500: #10b981;
+  --color-success-600: #059669;
+
+  /* Warning palette — Amber */
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+
+  /* shadcn/ui semantic tokens — admin blue theme */
+  --color-primary: #1e40af; /* blue-800 */
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f1f5f9; /* slate-100 */
+  --color-secondary-foreground: #020617; /* slate-950 */
+  --color-background: #f8fafc; /* slate-50 — slightly off-white for admin */
+  --color-foreground: #0f172a; /* slate-900 */
+  --color-card: #ffffff;
+  --color-card-foreground: #0f172a; /* slate-900 */
+  --color-popover: #ffffff;
+  --color-popover-foreground: #0f172a; /* slate-900 */
+  --color-accent: #f1f5f9; /* slate-100 */
+  --color-accent-foreground: #0f172a;
+  --color-destructive: #ef4444; /* red-500 */
+  --color-destructive-foreground: #ffffff;
+  --color-muted: #94a3b8; /* slate-400 */
+  --color-muted-foreground: #64748b; /* slate-500 */
+  --color-border: #e2e8f0; /* slate-200 */
+  --color-input: #e2e8f0; /* slate-200 */
+  --color-ring: #1e40af; /* blue-800 */
+
+  /* Typography — Inter for admin (more neutral than DM Sans) */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+  --shadow-card-hover: 0 4px 12px -1px rgb(30 64 175 / 0.1), 0 2px 4px -2px rgb(30 64 175 / 0.06);
+  --shadow-header: 0 1px 3px 0 rgb(0 0 0 / 0.04);
+
+  /* Border radius */
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Tailwind CSS v4 removed cursor: pointer from interactive elements */
+  button,
+  [role='button'],
+  a,
+  select,
+  summary,
+  [type='button'],
+  [type='submit'],
+  [type='reset'] {
+    cursor: pointer;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  /* ── Dark mode (all color themes) ─────────────────────────────── */
+  .dark {
+    --color-background: #09090b; /* zinc-950 — neutral near-black */
+    --color-foreground: #e2e8f0; /* slate-200 — softer than pure white */
+    --color-card: #0c0c0f; /* neutral dark grey — lifted layer */
+    --color-card-foreground: #e2e8f0; /* slate-200 */
+    --color-popover: #18181b; /* zinc-900 — top layer */
+    --color-popover-foreground: #f1f5f9; /* slate-100 */
+    --color-secondary: #18181b; /* zinc-900 */
+    --color-secondary-foreground: #e2e8f0;
+    --color-accent: #1e293b; /* slate-800 — visible hover bg */
+    --color-accent-foreground: #f1f5f9;
+    --color-destructive: #f87171; /* red-400 */
+    --color-destructive-foreground: #450a0a;
+    --color-muted: #1e293b; /* slate-800 */
+    --color-muted-foreground: #94a3b8; /* slate-400 */
+    --color-input: #1e293b; /* slate-800 — visible button borders */
+    --color-border: #1e293b; /* slate-800 — visible borders */
+    --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+    --shadow-card-hover:
+      0 4px 12px -1px rgb(255 255 255 / 0.08), 0 2px 4px -2px rgb(255 255 255 / 0.05);
+    --shadow-header: 0 1px 3px 0 rgb(0 0 0 / 0.3);
+  }
+}
+
+/* ── Color themes (outside @layer to override @theme tokens) ─── */
+
+/* Blue dark (light uses @theme defaults) */
+.dark[data-theme='blue'],
+.dark:not([data-theme]) {
+  --color-primary: #2563eb; /* blue-600 */
+  --color-primary-foreground: #eff6ff; /* blue-50 */
+  --color-ring: #2563eb;
+  --shadow-card-hover: 0 4px 12px -1px rgb(37 99 235 / 0.2), 0 2px 4px -2px rgb(37 99 235 / 0.12);
+}
+
+/* Teal */
+[data-theme='teal'] {
+  --color-primary: #115e59; /* teal-800 */
+  --color-primary-foreground: #ffffff;
+  --color-ring: #115e59; /* teal-800 */
+}
+
+.dark[data-theme='teal'] {
+  --color-primary: #0d9488; /* teal-600 */
+  --color-primary-foreground: #f0fdfa; /* teal-50 */
+  --color-ring: #0d9488;
+  --shadow-card-hover: 0 4px 12px -1px rgb(13 148 136 / 0.2), 0 2px 4px -2px rgb(13 148 136 / 0.12);
+}
+
+/* Rose */
+[data-theme='rose'] {
+  --color-primary: #9f1239; /* rose-800 */
+  --color-primary-foreground: #ffffff;
+  --color-ring: #9f1239; /* rose-800 */
+}
+
+.dark[data-theme='rose'] {
+  --color-primary: #e11d48; /* rose-600 */
+  --color-primary-foreground: #fff1f2; /* rose-50 */
+  --color-ring: #e11d48;
+  --shadow-card-hover: 0 4px 12px -1px rgb(225 29 72 / 0.2), 0 2px 4px -2px rgb(225 29 72 / 0.12);
+}
+
+/* Amber */
+[data-theme='amber'] {
+  --color-primary: #92400e; /* amber-800 */
+  --color-primary-foreground: #ffffff;
+  --color-ring: #92400e; /* amber-800 */
+}
+
+.dark[data-theme='amber'] {
+  --color-primary: #d97706; /* amber-600 */
+  --color-primary-foreground: #fffbeb; /* amber-50 */
+  --color-ring: #d97706;
+  --shadow-card-hover: 0 4px 12px -1px rgb(217 119 6 / 0.2), 0 2px 4px -2px rgb(217 119 6 / 0.12);
+}
+
+/* Slate (neutral) */
+[data-theme='slate'] {
+  --color-primary: #1e293b; /* slate-800 */
+  --color-primary-foreground: #ffffff;
+  --color-ring: #1e293b; /* slate-800 */
+}
+
+.dark[data-theme='slate'] {
+  --color-primary: #475569; /* slate-600 */
+  --color-primary-foreground: #f8fafc; /* slate-50 */
+  --color-ring: #475569;
+  --shadow-card-hover: 0 4px 12px -1px rgb(71 85 105 / 0.2), 0 2px 4px -2px rgb(71 85 105 / 0.12);
+}
+
+@layer utilities {
+  .card-shadow {
+    box-shadow: var(--shadow-card);
+  }
+
+  .card-shadow-hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .header-shadow {
+    box-shadow: var(--shadow-header);
+  }
+}
+
+:root {
+  --sidebar: #f8fafc; /* slate-50 */
+  --sidebar-foreground: #334155; /* slate-700 */
+  --sidebar-primary: var(--color-primary); /* follows active color theme */
+  --sidebar-primary-foreground: var(--color-primary-foreground);
+  --sidebar-accent: #f1f5f9; /* slate-100 */
+  --sidebar-accent-foreground: #0f172a; /* slate-900 */
+  --sidebar-border: #e2e8f0; /* slate-200 */
+  --sidebar-ring: var(--color-ring); /* follows active color theme */
+}
+
+.dark {
+  --sidebar: #0a0a0c; /* neutral near-black — distinct from card */
+  --sidebar-foreground: #cbd5e1; /* slate-300 */
+  --sidebar-primary: var(--color-primary); /* follows active color theme */
+  --sidebar-primary-foreground: var(--color-primary-foreground);
+  --sidebar-accent: #141416; /* neutral dark grey */
+  --sidebar-accent-foreground: #e2e8f0; /* slate-200 */
+  --sidebar-border: #18181b; /* zinc-900 */
+  --sidebar-ring: var(--color-ring); /* follows active color theme */
+}
+
+@theme inline {
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}

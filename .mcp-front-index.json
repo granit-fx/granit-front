@@ -8325,6 +8325,27 @@
       ]
     },
     {
+      "name": "@granit/ui-theme",
+      "description": "Granit admin design tokens — CSS custom properties for colour palettes, dark mode, per-app colour themes, typography, shadows and sidebar variables. Import the base stylesheet and override the CSS variables to re-brand any consuming app.",
+      "exports": [
+        {
+          "name": "COLOR_THEMES",
+          "kind": "const",
+          "signature": "const COLOR_THEMES"
+        },
+        {
+          "name": "ColorTheme",
+          "kind": "type",
+          "signature": "type ColorTheme = (typeof COLOR_THEMES)[number]"
+        },
+        {
+          "name": "DEFAULT_COLOR_THEME",
+          "kind": "const",
+          "signature": "const DEFAULT_COLOR_THEME: ColorTheme"
+        }
+      ]
+    },
+    {
       "name": "@granit/utils",
       "description": "Shared utilities (cn, formatDate, formatNumber, ...)",
       "exports": [
