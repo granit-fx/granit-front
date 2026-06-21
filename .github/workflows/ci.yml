@@ -1,9 +1,14 @@
 # =============================================================================
 # GitHub Actions CI/CD - granit-front
 # =============================================================================
-# Pipeline: quality+test → security → analysis → build → publish
+# Pipeline: lint ∥ typecheck ∥ test (4 shards) → coverage merge → security/analysis/build/publish
 #
-# Single quality job (lint + typecheck + test) to avoid node_modules transfer.
+# lint, typecheck and the test suite run as independent parallel jobs so tsc no
+# longer taxes the test budget. The Vitest suite is split into 4 mechanical
+# shards (`--shard=i/4`); each emits a partial coverage blob. A downstream
+# `coverage` job merges the blobs and enforces the 80% thresholds ONCE on the
+# combined report (per-shard coverage is partial, so thresholds are disabled
+# inside the shards). Bump the matrix to add shards as the suite grows.
 #
 # Optional secrets:
 #   SONAR_TOKEN — SonarCloud authentication token
@@ -28,9 +33,9 @@ env:
 
 jobs:
   # ---------------------------------------------------------------------------
-  # BUILD + TEST (single job — avoids node_modules artifact transfer)
+  # LINT
   # ---------------------------------------------------------------------------
-  build-and-test:
+  lint:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -55,11 +60,119 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+  # ---------------------------------------------------------------------------
+  # TYPECHECK
+  # ---------------------------------------------------------------------------
+  typecheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@5b4374b04084dc1f9032b52464284b769ac5059e # v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        env:
+          HUSKY: "0"
+
       - name: Typecheck
         run: pnpm tsc
 
-      - name: Test with coverage
-        run: pnpm test:coverage --run
+  # ---------------------------------------------------------------------------
+  # TEST — 4 parallel shards, each emitting a partial coverage blob.
+  # Thresholds are disabled per-shard (partial coverage) and enforced on the
+  # merged report in the `coverage` job.
+  # ---------------------------------------------------------------------------
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    name: test (shard ${{ matrix.shard }}/4)
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@5b4374b04084dc1f9032b52464284b769ac5059e # v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        env:
+          HUSKY: "0"
+
+      - name: Test (shard ${{ matrix.shard }}/4)
+        run: >-
+          pnpm exec vitest run --coverage --reporter=blob
+          --shard=${{ matrix.shard }}/4
+          --coverage.thresholds.lines=0
+          --coverage.thresholds.functions=0
+          --coverage.thresholds.branches=0
+          --coverage.thresholds.statements=0
+
+      - name: Upload coverage blob
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: blob-${{ matrix.shard }}
+          path: .vitest-reports/
+          include-hidden-files: true
+          retention-days: 1
+
+  # ---------------------------------------------------------------------------
+  # COVERAGE — merge the shard blobs and enforce the 80% thresholds once on the
+  # combined report; publish lcov for SonarCloud.
+  # ---------------------------------------------------------------------------
+  coverage:
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@5b4374b04084dc1f9032b52464284b769ac5059e # v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        env:
+          HUSKY: "0"
+
+      - name: Download shard coverage blobs
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          pattern: blob-*
+          path: .vitest-reports
+          merge-multiple: true
+
+      - name: Merge coverage + enforce thresholds
+        run: pnpm exec vitest run --merge-reports --coverage
 
       - name: Upload coverage
         if: always()
@@ -105,7 +218,7 @@ jobs:
   # ANALYSIS
   # ---------------------------------------------------------------------------
   sonarcloud:
-    needs: build-and-test
+    needs: coverage
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     continue-on-error: true
@@ -137,7 +250,7 @@ jobs:
   # This job fails the CI if someone forgot to regenerate after changing exports.
   # ---------------------------------------------------------------------------
   front-index:
-    needs: build-and-test
+    needs: [lint, typecheck, test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -158,7 +271,7 @@ jobs:
   # BUILD (tsup — develop/main/tags only)
   # ---------------------------------------------------------------------------
   pack:
-    needs: build-and-test
+    needs: [lint, typecheck, coverage]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
     steps:
