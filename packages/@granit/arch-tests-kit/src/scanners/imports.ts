@@ -2,7 +2,13 @@ import { isTestFile, isTestingDir, readFile, rel, stripComments, walkSourceFiles
 
 import type { AllowlistedScanContext, ScanContext, Violation } from '../types';
 
-const IMPORT_RE = /from\s+['"]([^'"\n]+)['"]/g;
+// Anchored to a real `import`/`export … from '<spec>'` statement. The leading
+// `\b(?:import|export)\b[^;'"]*?` requirement keeps a `from "…"` substring that
+// merely lives inside a string literal (e.g. an i18n message
+// `'Delete from "{{path}}"'`) from being miscounted as a dependency — the
+// quote-excluding run can't bridge the keyword to such a `from`.
+// NOSONAR: bounded developer source files only — no user input, no ReDoS risk.
+const IMPORT_RE = /\b(?:import|export)\b[^;'"]*?\bfrom\s+['"]([^'"\n]+)['"]/g;
 
 export function collectImports(file: string): string[] {
   // Strip comments first — JSDoc examples often quote `import … from '@granit/x'`

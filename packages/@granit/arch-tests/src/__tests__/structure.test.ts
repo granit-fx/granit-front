@@ -1,9 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { scanForbiddenStructure } from '@granit/arch-tests-kit';
 import { describe, expect, it } from 'vitest';
 
-import { listPackages } from './helpers';
+import { REPO_ROOT, listPackages, toModules } from './helpers';
 
 const packages = listPackages();
 
@@ -29,22 +30,13 @@ describe('structure: no endpoints/ directory', () => {
   });
 });
 
-describe('structure: core packages do not contain React-only directories', () => {
-  const cores = packages.filter((p) => !p.isReact);
-  it.each(cores.map((p) => [p.name, p]))('%s has no hooks/ components/ providers/', (_n, pkg) => {
-    for (const dir of ['hooks', 'components', 'providers', 'field-components']) {
-      expect(
-        fs.existsSync(path.join(pkg.srcDir, dir)),
-        `core package ${pkg.name} must not contain src/${dir}/`
-      ).toBe(false);
-    }
-  });
-});
-
-describe('structure: react packages do not contain server-only api/ dir', () => {
-  const reacts = packages.filter((p) => p.isReact);
-  it.each(reacts.map((p) => [p.name, p]))('%s has no src/api/ (use hooks/)', (_n, pkg) => {
-    expect(fs.existsSync(path.join(pkg.srcDir, 'api'))).toBe(false);
+describe('structure: core/react layering seam (delegated to kit)', () => {
+  it('core packages carry no React dirs; react packages carry no api/', () => {
+    // scanForbiddenStructure reads the seam from Module.isReact: core →
+    // no hooks/components/providers/field-components, react → no api/.
+    expect(scanForbiddenStructure({ modules: toModules(packages), repoRoot: REPO_ROOT })).toEqual(
+      []
+    );
   });
 });
 

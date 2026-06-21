@@ -42,3 +42,6 @@ export { scanUndeclaredDeps } from './scanners/deps';
 export type { UndeclaredDepsOptions } from './scanners/deps';
 
 export { scanUseClientDirective } from './scanners/react';
+
+export { scanForbiddenStructure } from './scanners/structure';
+export type { ForbiddenStructureOptions } from './scanners/structure';

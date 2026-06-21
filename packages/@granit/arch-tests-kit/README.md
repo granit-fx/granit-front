@@ -26,7 +26,12 @@ app's `package.json`:
 }
 ```
 
-Add a TypeScript path mapping in your test `tsconfig`:
+Vite-based apps with the `@granit/*` auto-alias plugin (or a root Vitest alias)
+pick the `link:` symlink up for free — `moduleResolution: bundler` resolves the
+package's `exports` to `src/index.ts`, so no extra TypeScript config is needed.
+
+Only if your test `tsconfig` runs without that alias (plain `tsc`, no bundler
+resolution), add a path mapping:
 
 ```jsonc
 {
@@ -39,8 +44,6 @@ Add a TypeScript path mapping in your test `tsconfig`:
   },
 }
 ```
-
-Vite-based apps with the `@granit/*` auto-alias plugin pick it up for free.
 
 ## Quick start
 
@@ -112,24 +115,33 @@ A complete reference setup lives in
 
 ## Available scanners
 
-| Scanner                    | Rule                                                                                     |
-| -------------------------- | ---------------------------------------------------------------------------------------- |
-| `scanKebabCase`            | Source files use kebab-case (allows `.stories.tsx`, `.d.ts`)                             |
-| `scanHookNaming`           | Every `hooks/use-*.ts` exports a `useXxx` symbol                                         |
-| `scanComponentNaming`      | Every `components/*.tsx` exports a PascalCase / `createX` / `useX` symbol                |
-| `scanFetchVerbInApi`       | `api/` functions never use the `fetch*` verb                                             |
-| `scanConsole`              | No `console.*` in runtime code                                                           |
-| `scanFetch`                | No native `fetch()` calls                                                                |
-| `scanAxiosImports`         | No direct `axios` imports                                                                |
-| `scanOnlySkip`             | No committed `.only` / `.skip` in tests                                                  |
-| `scanBarrelDefaultExports` | No `export default` in module barrels                                                    |
-| `scanLeakedInternals`      | No underscore-prefixed exports leaked from barrels                                       |
-| `scanLocaleParity`         | `locales/` ships `en.ts` + `fr.ts` + `index.ts` + matching `TranslationsEn/Fr` constants |
-| `scanDomScriptSinks`       | Any package writing to a DOM-script sink ships a `<pkg>/csp` subpath (Trusted Types)     |
-| `scanUndeclaredDeps`       | Every bare import is declared in the package's own `package.json` (no phantom deps)      |
-| `scanUseClientDirective`   | RSC-consumed modules mark every client-hook file with `'use client'` (opt-in)            |
+| Scanner                       | Rule                                                                                     |
+| ----------------------------- | ---------------------------------------------------------------------------------------- |
+| `scanKebabCase`               | Source files use kebab-case (allows `.stories.tsx`, `.d.ts`)                             |
+| `scanHookNaming`              | Every `hooks/use-*.ts` exports a `useXxx` symbol                                         |
+| `scanComponentNaming`         | Every `components/*.tsx` exports a PascalCase / `createX` / `useX` symbol                |
+| `scanFetchVerbInApi`          | `api/` functions never use the `fetch*` verb                                             |
+| `scanConsole`                 | No `console.*` in runtime code                                                           |
+| `scanFetch`                   | No native `fetch()` calls                                                                |
+| `scanAxiosImports`            | No direct `axios` imports                                                                |
+| `scanOnlySkip`                | No committed `.only` / `.skip` in tests                                                  |
+| `scanBarrelDefaultExports`    | No `export default` in module barrels                                                    |
+| `scanLeakedInternals`         | No underscore-prefixed exports leaked from barrels                                       |
+| `scanLocaleParity`            | `locales/` ships `en.ts` + `fr.ts` + `index.ts` + matching `TranslationsEn/Fr` constants |
+| `scanDomScriptSinks`          | Any package writing to a DOM-script sink ships a `<pkg>/csp` subpath (Trusted Types)     |
+| `scanUndeclaredDeps`          | Every bare import is declared in the package's own `package.json` (no phantom deps)      |
+| `scanUseClientDirective`      | RSC-consumed modules mark every client-hook file with `'use client'` (opt-in)            |
+| `scanForbiddenStructure`      | Core modules carry no `hooks/components/providers/`; React modules carry no `api/`       |
+| `scanAnonymousDefaultExports` | No anonymous `export default` (breaks DevTools labels & stack traces)                    |
+| `scanWallClockInApi`          | `api/` helpers never read the wall clock (`Date.now()` / `new Date()`)                   |
+| `scanUseFormResolver`         | Every `useForm()` call pairs with a `resolver:` (no silent validation skips)             |
+| `scanEmptyCatch`              | No empty `catch {}` blocks (errors must be logged, rethrown, or handled)                 |
+| `scanReadmePresence`          | Every module ships a `README.md` whose H1 matches the module name                        |
+| `scanSharedDepVersions`       | Curated shared deps use one version constraint across every package                      |
 
 All scanners return `Violation[]`. Empty array means the rule passes.
+`collectImports` (specifier extraction) and `hasBannedConsole` (pure predicate)
+are also exported for building custom checks.
 
 ## Customizing
 

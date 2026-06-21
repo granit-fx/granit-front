@@ -520,6 +520,28 @@
           "name": "scanUseClientDirective",
           "kind": "function",
           "signature": "function scanUseClientDirective(opts: AllowlistedScanContext): Violation[]"
+        },
+        {
+          "name": "scanForbiddenStructure",
+          "kind": "function",
+          "signature": "function scanForbiddenStructure(opts: ForbiddenStructureOptions): Violation[]"
+        },
+        {
+          "name": "ForbiddenStructureOptions",
+          "kind": "interface",
+          "signature": "interface ForbiddenStructureOptions extends ScanContext",
+          "members": [
+            {
+              "name": "coreForbidden",
+              "kind": "property",
+              "signature": "coreForbidden?: ReadonlyArray<string>"
+            },
+            {
+              "name": "reactForbidden",
+              "kind": "property",
+              "signature": "reactForbidden?: ReadonlyArray<string>"
+            }
+          ]
         }
       ]
     },
