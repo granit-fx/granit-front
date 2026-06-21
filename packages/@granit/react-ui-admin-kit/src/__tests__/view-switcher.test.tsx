@@ -2,6 +2,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { ViewSwitcher } from '../view-switcher/view-switcher';
+
 import { renderWithI18n, setupI18n } from './test-utils';
 
 beforeAll(setupI18n);

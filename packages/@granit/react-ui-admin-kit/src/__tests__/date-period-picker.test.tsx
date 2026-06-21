@@ -1,10 +1,11 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import type { DateFilterMeta } from '@granit/query-engine';
-
 import { DatePeriodPicker } from '../querying/date-period-picker';
+
 import { renderWithI18n, setupI18n } from './test-utils';
+
+import type { DateFilterMeta } from '@granit/query-engine';
 
 const dateFilter: DateFilterMeta = {
   name: 'createdAt',
@@ -18,9 +19,7 @@ describe('DatePeriodPicker', () => {
   it('falls back to the default period when no value is given', () => {
     renderWithI18n(<DatePeriodPicker dateFilter={dateFilter} onValueChange={vi.fn()} />);
     // ThisMonth resolves to its i18n key (no resources loaded).
-    expect(
-      screen.getByText('Components.Querying.DatePeriod.ThisMonth')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Components.Querying.DatePeriod.ThisMonth')).toBeInTheDocument();
   });
 
   it('shows the controlled value over the default', () => {

@@ -1,6 +1,6 @@
-import type { FeatureRouteTable, WorkspaceItemResponse } from '@granit/workspaces';
-
 import { resolveItemHref, resolveItemLabel, resolveLabel } from '../workspace-utils';
+
+import type { FeatureRouteTable, WorkspaceItemResponse } from '@granit/workspaces';
 
 function item(partial: Partial<WorkspaceItemResponse>): WorkspaceItemResponse {
   return {
@@ -42,7 +42,9 @@ describe('resolveLabel', () => {
 
 describe('resolveItemHref', () => {
   it('returns the raw url for a Link', () => {
-    expect(resolveItemHref(item({ kind: 'Link', linkUrl: 'https://x.test' }))).toBe('https://x.test');
+    expect(resolveItemHref(item({ kind: 'Link', linkUrl: 'https://x.test' }))).toBe(
+      'https://x.test'
+    );
   });
 
   it('builds a workspace url for a SubWorkspace', () => {

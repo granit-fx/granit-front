@@ -1,16 +1,12 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import type {
-  GroupedResult,
-  PagedResult,
-  QueryMetadata,
-  QueryRequest,
-} from '@granit/query-engine';
-import type { UseQueryEndpointReturn } from '@granit/react-query-engine';
-
 import { QueryControlBar } from '../querying/query-control-bar';
+
 import { renderWithI18n, setupI18n } from './test-utils';
+
+import type { GroupedResult, PagedResult, QueryMetadata, QueryRequest } from '@granit/query-engine';
+import type { UseQueryEndpointReturn } from '@granit/react-query-engine';
 
 interface Patient {
   readonly id: number;
@@ -49,7 +45,12 @@ const baseMeta: QueryMetadata = {
   quickFilters: [],
   dateFilters: [],
   groupByFields: [{ name: 'status', type: 'String' }],
-  pagination: { defaultPageSize: 20, maxPageSize: 100, maxStreamSize: 10000, supportsCursor: false },
+  pagination: {
+    defaultPageSize: 20,
+    maxPageSize: 100,
+    maxStreamSize: 10000,
+    supportsCursor: false,
+  },
 };
 
 interface EndpointOverrides {

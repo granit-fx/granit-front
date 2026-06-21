@@ -2,6 +2,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { ColumnVisibility } from '../querying/column-visibility';
+
 import { renderWithI18n, setupI18n } from './test-utils';
 
 import type { ColumnDefinition } from '@granit/query-engine';
@@ -32,14 +33,22 @@ const columns: ColumnDefinition[] = [
 describe('ColumnVisibility', () => {
   it('renders the trigger button', () => {
     renderWithI18n(
-      <ColumnVisibility columns={columns} visibleColumns={['firstName']} onVisibilityChange={vi.fn()} />
+      <ColumnVisibility
+        columns={columns}
+        visibleColumns={['firstName']}
+        onVisibilityChange={vi.fn()}
+      />
     );
     expect(screen.getByText('Components.Querying.Columns.Label')).toBeInTheDocument();
   });
 
   it('lists every column with its visibility state when opened', async () => {
     renderWithI18n(
-      <ColumnVisibility columns={columns} visibleColumns={['firstName']} onVisibilityChange={vi.fn()} />
+      <ColumnVisibility
+        columns={columns}
+        visibleColumns={['firstName']}
+        onVisibilityChange={vi.fn()}
+      />
     );
     await userEvent.click(screen.getByText('Components.Querying.Columns.Label'));
 

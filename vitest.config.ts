@@ -431,6 +431,10 @@ export default defineConfig({
         '**/*.test.ts',
         '**/*.test.tsx',
         '**/*.spec.ts',
+        // Storybook stories are dev-time documentation, not runtime code under
+        // test — exclude them so they don't dilute package coverage.
+        '**/*.stories.ts',
+        '**/*.stories.tsx',
         '**/types/**',
         '**/src/index.ts',
         '**/__tests__/setup.ts',

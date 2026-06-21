@@ -1,7 +1,8 @@
-import type { AxiosInstance } from '@granit/api-client';
 import { createMockClient } from '@granit/testing';
 
 import { installForbiddenRedirectInterceptor } from '../api-interceptors';
+
+import type { AxiosInstance } from '@granit/api-client';
 
 type RejectionHandler = (error: unknown) => Promise<unknown>;
 

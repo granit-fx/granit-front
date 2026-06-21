@@ -7804,6 +7804,42 @@
       ]
     },
     {
+      "name": "@granit/react-ui-customer-balance",
+      "description": "Granit admin UI for the Customer Balance module — balance page, summary card, transaction table and admin credit/debit dialogs. Composes @granit/react-customer-balance (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "CustomerBalancePage",
+          "kind": "function",
+          "signature": "function CustomerBalancePage()"
+        },
+        {
+          "name": "BalanceSummaryCard",
+          "kind": "function",
+          "signature": "function BalanceSummaryCard("
+        },
+        {
+          "name": "AddCreditDialog",
+          "kind": "function",
+          "signature": "function AddCreditDialog("
+        },
+        {
+          "name": "ApplyDebitDialog",
+          "kind": "function",
+          "signature": "function ApplyDebitDialog("
+        },
+        {
+          "name": "createTransactionColumns",
+          "kind": "function",
+          "signature": "function createTransactionColumns("
+        },
+        {
+          "name": "formatCurrency",
+          "kind": "function",
+          "signature": "function formatCurrency(amount: number, currency: string, locale?: string): string"
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-settings",
       "description": "Granit admin UI for the Settings module — the application-settings edit page and dynamic settings panel (typed fields, encrypted-secret handling, bulk save). Composes @granit/react-settings (headless) with the foundation UI packages.",
       "exports": [

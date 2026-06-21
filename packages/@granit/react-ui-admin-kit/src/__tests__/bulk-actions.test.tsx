@@ -2,6 +2,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { BulkActions, type BulkAction } from '../querying/bulk-actions';
+
 import { renderWithI18n, setupI18n } from './test-utils';
 
 beforeAll(setupI18n);
@@ -38,9 +39,7 @@ describe('BulkActions', () => {
       />
     );
     expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument();
-    expect(
-      screen.getByText('Components.Querying.BulkActions.SelectedCount')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Components.Querying.BulkActions.SelectedCount')).toBeInTheDocument();
   });
 
   it('invokes the action callback with the selected ids', async () => {

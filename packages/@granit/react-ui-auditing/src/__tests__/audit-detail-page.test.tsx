@@ -90,4 +90,44 @@ describe('AuditDetailPage', () => {
     renderAudit(<AuditDetailPage />, { route: '/auditing/audit-001' });
     expect(document.querySelector('[data-slot="audit-detail-page"]')).toBeInTheDocument();
   });
+
+  it('falls back to System and a dash for a null user name and IP', () => {
+    mockUseAuditLogEntry.mockReturnValue({
+      data: { ...mockEntry, userName: null, ipAddress: null },
+      isLoading: false,
+    });
+    renderAudit(<AuditDetailPage />, { route: '/auditing/audit-001' });
+    expect(screen.getByText('System')).toBeInTheDocument();
+    expect(screen.queryByText('Marie Dupont')).toBeNull();
+    expect(screen.getAllByText('-').length).toBeGreaterThan(0);
+  });
+
+  it('renders dashes for null property values and a placeholder for changes without properties', () => {
+    mockUseAuditLogEntry.mockReturnValue({
+      data: {
+        ...mockEntry,
+        entityChanges: [
+          {
+            entityType: 'User',
+            entityId: 'user-001',
+            changeType: 'Modified',
+            propertyChanges: [{ propertyName: 'email', originalValue: null, newValue: null }],
+          },
+          {
+            entityType: 'Role',
+            entityId: 'role-001',
+            changeType: 'Added',
+            propertyChanges: [],
+          },
+        ],
+      },
+      isLoading: false,
+    });
+    renderAudit(<AuditDetailPage />, { route: '/auditing/audit-001' });
+    expect(screen.getByText('email')).toBeInTheDocument();
+    // null originalValue + newValue both render as a dash
+    expect(screen.getAllByText('-').length).toBeGreaterThanOrEqual(2);
+    // the change with no property diffs shows the empty placeholder
+    expect(screen.getByText('Common.NoResults')).toBeInTheDocument();
+  });
 });

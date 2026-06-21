@@ -1,10 +1,11 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import type { FilterGroupMeta } from '@granit/query-engine';
-
 import { FilterPresets } from '../querying/filter-presets';
+
 import { renderWithI18n, setupI18n } from './test-utils';
+
+import type { FilterGroupMeta } from '@granit/query-engine';
 
 const groups: FilterGroupMeta[] = [
   {
@@ -43,16 +44,9 @@ describe('FilterPresets', () => {
 
   it('marks the active preset and uses default variant', () => {
     renderWithI18n(
-      <FilterPresets
-        groups={groups}
-        activePresets={{ status: ['active'] }}
-        onToggle={vi.fn()}
-      />
+      <FilterPresets groups={groups} activePresets={{ status: ['active'] }} onToggle={vi.fn()} />
     );
-    expect(screen.getByRole('button', { name: 'Active' })).toHaveAttribute(
-      'data-active',
-      'true'
-    );
+    expect(screen.getByRole('button', { name: 'Active' })).toHaveAttribute('data-active', 'true');
     expect(screen.getByRole('button', { name: 'Archived' })).toHaveAttribute(
       'data-active',
       'false'
@@ -69,11 +63,7 @@ describe('FilterPresets', () => {
   it('clears an active preset by emitting an empty list', async () => {
     const onToggle = vi.fn();
     renderWithI18n(
-      <FilterPresets
-        groups={groups}
-        activePresets={{ status: ['active'] }}
-        onToggle={onToggle}
-      />
+      <FilterPresets groups={groups} activePresets={{ status: ['active'] }} onToggle={onToggle} />
     );
     await userEvent.click(screen.getByRole('button', { name: 'Active' }));
     expect(onToggle).toHaveBeenCalledWith('status', []);

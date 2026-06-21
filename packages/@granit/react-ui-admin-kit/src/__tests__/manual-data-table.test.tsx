@@ -1,19 +1,18 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import type { ColumnDef } from '@tanstack/react-table';
-
 import { ManualDataTable } from '../data-table/manual-data-table';
+
 import { renderWithI18n, setupI18n } from './test-utils';
+
+import type { ColumnDef } from '@tanstack/react-table';
 
 interface Row {
   id: number;
   name: string;
 }
 
-const columns: ColumnDef<Row, unknown>[] = [
-  { accessorKey: 'name', header: 'Name' },
-];
+const columns: ColumnDef<Row, unknown>[] = [{ accessorKey: 'name', header: 'Name' }];
 
 function setup(overrides: Partial<Parameters<typeof ManualDataTable<Row>>[0]> = {}) {
   const props = {

@@ -2,6 +2,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { GroupBySelector } from '../querying/group-by-selector';
+
 import { renderWithI18n, setupI18n } from './test-utils';
 
 import type { ColumnDefinition, GroupByField } from '@granit/query-engine';
@@ -51,7 +52,9 @@ describe('GroupBySelector', () => {
 
   it('invokes onValueChange with the field name when an item is clicked', async () => {
     const onValueChange = vi.fn();
-    renderWithI18n(<GroupBySelector fields={fields} columns={columns} onValueChange={onValueChange} />);
+    renderWithI18n(
+      <GroupBySelector fields={fields} columns={columns} onValueChange={onValueChange} />
+    );
     await userEvent.click(screen.getByRole('button'));
     await userEvent.click(await screen.findByRole('menuitem', { name: 'Status' }));
     expect(onValueChange).toHaveBeenCalledWith('status');

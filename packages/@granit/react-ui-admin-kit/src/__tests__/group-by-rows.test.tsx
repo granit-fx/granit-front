@@ -2,11 +2,12 @@ import { Table, TableBody } from '@granit/react-ui';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { GroupByRows } from '../querying/group-by-rows';
+
+import { renderWithI18n, setupI18n } from './test-utils';
+
 import type { GroupEntry } from '@granit/query-engine';
 import type { ReactElement } from 'react';
-
-import { GroupByRows } from '../querying/group-by-rows';
-import { renderWithI18n, setupI18n } from './test-utils';
 
 interface Patient {
   readonly id: number;

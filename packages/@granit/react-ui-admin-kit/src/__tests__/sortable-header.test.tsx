@@ -2,6 +2,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { SortableHeader } from '../querying/query-data-table/sortable-header';
+
 import { renderWithI18n, setupI18n } from './test-utils';
 
 beforeAll(setupI18n);

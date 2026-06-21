@@ -2,6 +2,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { TablePagination } from '../querying/query-data-table/table-pagination';
+
 import { renderWithI18n, setupI18n } from './test-utils';
 
 function setup(overrides: Partial<Parameters<typeof TablePagination>[0]> = {}) {

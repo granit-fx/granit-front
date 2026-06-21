@@ -1,6 +1,6 @@
-import type { QueryClient } from '@tanstack/react-query';
-
 import { createAppQueryClient } from '../query-client';
+
+import type { QueryClient } from '@tanstack/react-query';
 
 function mutationRetry(client: QueryClient) {
   const retry = client.getDefaultOptions().mutations?.retry;

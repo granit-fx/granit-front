@@ -2,6 +2,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { FacetBadge } from '../querying/smart-filter-bar/facet-badge';
+
 import { renderWithI18n, setupI18n } from './test-utils';
 
 import type { FilterToken } from '@granit/query-engine';

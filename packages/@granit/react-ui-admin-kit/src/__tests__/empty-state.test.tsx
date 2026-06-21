@@ -1,6 +1,7 @@
 import { screen } from '@testing-library/react';
 
 import { EmptyState } from '../querying/query-data-table/empty-state';
+
 import { renderWithI18n, setupI18n } from './test-utils';
 
 beforeAll(setupI18n);

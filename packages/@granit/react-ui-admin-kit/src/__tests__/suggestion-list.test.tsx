@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { Command } from 'cmdk';
 
 import { SuggestionList } from '../querying/smart-filter-bar/suggestion-list';
+
 import { renderWithI18n, setupI18n } from './test-utils';
 
 import type { FilterSuggestion } from '@granit/query-engine';

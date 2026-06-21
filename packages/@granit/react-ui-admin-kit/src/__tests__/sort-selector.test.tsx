@@ -2,6 +2,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { SortSelector } from '../querying/sort-selector';
+
 import { renderWithI18n, setupI18n } from './test-utils';
 
 import type { ColumnDefinition, SortEntry } from '@granit/query-engine';
@@ -24,7 +25,9 @@ describe('SortSelector', () => {
   it('renders nothing when there are no sortable columns', () => {
     const { container } = renderWithI18n(
       <SortSelector
-        columns={[{ name: 'internal', label: 'Internal', order: 0, isSortable: false, ...baseColumn }]}
+        columns={[
+          { name: 'internal', label: 'Internal', order: 0, isSortable: false, ...baseColumn },
+        ]}
         onToggleSort={vi.fn()}
       />
     );

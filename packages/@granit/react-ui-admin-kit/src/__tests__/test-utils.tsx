@@ -1,8 +1,8 @@
 import { TooltipProvider } from '@granit/react-ui';
 import { render, type RenderOptions, type RenderResult } from '@testing-library/react';
 import i18next from 'i18next';
-import { initReactI18next, I18nextProvider } from 'react-i18next';
 import { type ReactElement, type ReactNode } from 'react';
+import { initReactI18next, I18nextProvider } from 'react-i18next';
 
 // Shared render helper for @granit/react-ui-admin-kit component tests. The kit's
 // components call `useTranslation()` from @granit/react-localization, so they
