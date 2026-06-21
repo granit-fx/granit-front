@@ -7804,6 +7804,49 @@
       ]
     },
     {
+      "name": "@granit/react-ui-authorization",
+      "description": "Granit admin UI for the Authorization module — role/permission management panel, permission-grant and role-metadata discovery tables, and the permission-side badge. Composes @granit/react-authorization (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "PermissionListPage",
+          "kind": "function",
+          "signature": "function PermissionListPage("
+        },
+        {
+          "name": "PermissionListPageProps",
+          "kind": "interface",
+          "signature": "interface PermissionListPageProps",
+          "members": []
+        },
+        {
+          "name": "PermissionGrantsPage",
+          "kind": "function",
+          "signature": "function PermissionGrantsPage()"
+        },
+        {
+          "name": "RoleMetadataPage",
+          "kind": "function",
+          "signature": "function RoleMetadataPage()"
+        },
+        {
+          "name": "RolePermissionsPanel",
+          "kind": "function",
+          "signature": "function RolePermissionsPanel("
+        },
+        {
+          "name": "RolePermissionsPanelProps",
+          "kind": "interface",
+          "signature": "interface RolePermissionsPanelProps",
+          "members": []
+        },
+        {
+          "name": "PermissionSideBadge",
+          "kind": "function",
+          "signature": "function PermissionSideBadge("
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-customer-balance",
       "description": "Granit admin UI for the Customer Balance module — balance page, summary card, transaction table and admin credit/debit dialogs. Composes @granit/react-customer-balance (headless) with the foundation UI packages.",
       "exports": [
