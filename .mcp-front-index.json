@@ -7746,6 +7746,11 @@
       "exports": []
     },
     {
+      "name": "@granit/react-ui-shell-admin",
+      "description": "Granit admin app shell (chrome): the AppShell layout (sidebar + topbar + content + right rail), AppSidebar with workspace-driven navigation, user menu, command palette and header. App-specific data (auth, navigation, languages, logger) is injected via ShellChromeProvider; feature widgets are passed as header slots.",
+      "exports": []
+    },
+    {
       "name": "@granit/react-validation",
       "description": "React hooks for @granit/validation — resolver factory for react-hook-form, useFieldProps",
       "exports": [

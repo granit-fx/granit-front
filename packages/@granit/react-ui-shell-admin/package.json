@@ -1,0 +1,66 @@
+{
+  "name": "@granit/react-ui-shell-admin",
+  "description": "Granit admin app shell (chrome): the AppShell layout (sidebar + topbar + content + right rail), AppSidebar with workspace-driven navigation, user menu, command palette and header. App-specific data (auth, navigation, languages, logger) is injected via ShellChromeProvider; feature widgets are passed as header slots.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/localization": "workspace:*",
+    "@granit/react-account": "workspace:*",
+    "@granit/react-authorization": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-presence": "workspace:*",
+    "@granit/react-settings": "workspace:*",
+    "@granit/react-shell-core": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-workspaces": "workspace:*",
+    "@granit/presence": "workspace:*",
+    "@granit/shell-core": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/ui-theme": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@granit/workspaces": "workspace:*",
+    "lucide-react": "^1.21.0",
+    "next-themes": "^0.4.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.18.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/localization": "workspace:*",
+    "@granit/react-account": "workspace:*",
+    "@granit/react-authorization": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-presence": "workspace:*",
+    "@granit/react-settings": "workspace:*",
+    "@granit/react-shell-core": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-workspaces": "workspace:*",
+    "@granit/presence": "workspace:*",
+    "@granit/shell-core": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/ui-theme": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@granit/workspaces": "workspace:*",
+    "next-themes": "^0.4.6",
+    "react-router-dom": "^7.18.0"
+  }
+}
