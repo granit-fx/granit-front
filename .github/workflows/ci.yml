@@ -121,8 +121,10 @@ jobs:
           HUSKY: "0"
 
       - name: Test (shard ${{ matrix.shard }}/4)
+        # `dot` keeps the log compact while still printing failing-test details;
+        # `blob` alone suppresses them. `blob` is the merge source for `coverage`.
         run: >-
-          pnpm exec vitest run --coverage --reporter=blob
+          pnpm exec vitest run --coverage --reporter=dot --reporter=blob
           --shard=${{ matrix.shard }}/4
           --coverage.thresholds.lines=0
           --coverage.thresholds.functions=0
