@@ -35,6 +35,30 @@ const TARGETS = [
     exportName: 'hostnamesConstraints',
     schemaPattern: /Request$/,
   },
+  {
+    spec: 'cms.json',
+    pkg: 'cms',
+    exportName: 'cmsConstraints',
+    schemaPattern: /Request$/,
+  },
+  {
+    spec: 'cms-redirects.json',
+    pkg: 'cms-redirects',
+    exportName: 'cmsRedirectsConstraints',
+    schemaPattern: /Request$/,
+  },
+  {
+    spec: 'cms-seo.json',
+    pkg: 'cms-seo',
+    exportName: 'cmsSeoConstraints',
+    schemaPattern: /Request$/,
+  },
+  {
+    spec: 'cms-hostnames.json',
+    pkg: 'cms-hostnames',
+    exportName: 'cmsHostnamesConstraints',
+    schemaPattern: /Request$/,
+  },
 ];
 
 const MAX_REF_DEPTH = 10;

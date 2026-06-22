@@ -70,3 +70,6 @@ export {
   suggestSeo,
   triggerBulkSeoAudit,
 } from './api/seo-ai';
+
+// Validation constraints (generated from contracts/openapi/cms-seo.json)
+export { cmsSeoConstraints } from './constraints';

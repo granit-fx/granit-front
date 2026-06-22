@@ -11,11 +11,13 @@
     "@granit/api-client": "workspace:*",
     "@granit/query-engine": "workspace:*",
     "@granit/testing": "workspace:*",
-    "@granit/types": "workspace:*"
+    "@granit/types": "workspace:*",
+    "@granit/validation": "workspace:*"
   },
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/query-engine": "workspace:*",
-    "@granit/types": "workspace:*"
+    "@granit/types": "workspace:*",
+    "@granit/validation": "workspace:*"
   }
 }

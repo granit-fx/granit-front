@@ -31,3 +31,6 @@ export {
   updateRedirect,
   updateRedirectSettings,
 } from './api/redirects-admin';
+
+// Validation constraints (generated from contracts/openapi/cms-redirects.json)
+export { cmsRedirectsConstraints } from './constraints';

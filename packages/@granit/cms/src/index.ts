@@ -125,3 +125,6 @@ export {
   scheduleRelease,
   updateRelease,
 } from './api/releases';
+
+// Validation constraints (generated from contracts/openapi/cms.json)
+export { cmsConstraints } from './constraints';

@@ -1135,13 +1135,24 @@
           "name": "updateMenu",
           "kind": "function",
           "signature": "async function updateMenu( client: AxiosInstance, basePath: string, id: string, request: UpdateMenuRequest ): Promise<MenuResponse>"
+        },
+        {
+          "name": "cmsConstraints",
+          "kind": "const",
+          "signature": "const cmsConstraints"
         }
       ]
     },
     {
       "name": "@granit/cms-hostnames",
       "description": "Granit CMS — site-scoped hostname management for /api/cms/sites/{siteId}/hostnames",
-      "exports": []
+      "exports": [
+        {
+          "name": "cmsHostnamesConstraints",
+          "kind": "const",
+          "signature": "const cmsHostnamesConstraints"
+        }
+      ]
     },
     {
       "name": "@granit/cms-redirects",
@@ -1151,6 +1162,11 @@
           "name": "resolveRedirect",
           "kind": "function",
           "signature": "async function resolveRedirect( client: AxiosInstance, basePath: string, params:"
+        },
+        {
+          "name": "cmsRedirectsConstraints",
+          "kind": "const",
+          "signature": "const cmsRedirectsConstraints"
         }
       ]
     },
@@ -1194,6 +1210,11 @@
           "kind": "interface",
           "signature": "interface RawDocumentResult",
           "members": []
+        },
+        {
+          "name": "cmsSeoConstraints",
+          "kind": "const",
+          "signature": "const cmsSeoConstraints"
         }
       ]
     },
@@ -7894,6 +7915,135 @@
           "name": "loadCronstrueLocale",
           "kind": "function",
           "signature": "async function loadCronstrueLocale(language: string): Promise<void>"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-cms-hostnames",
+      "description": "Granit admin UI for the CMS site-scoped Hostnames module — the per-site hostname list, add-hostname form (spec-driven validation), status badge, verify and remove actions. Composes @granit/react-cms-hostnames (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "HostnamesPage",
+          "kind": "function",
+          "signature": "function HostnamesPage()"
+        },
+        {
+          "name": "CmsHostnameAddForm",
+          "kind": "function",
+          "signature": "function CmsHostnameAddForm("
+        },
+        {
+          "name": "CmsHostnameAddFormProps",
+          "kind": "interface",
+          "signature": "interface CmsHostnameAddFormProps",
+          "members": []
+        },
+        {
+          "name": "CmsHostnameStatusBadge",
+          "kind": "function",
+          "signature": "function CmsHostnameStatusBadge("
+        },
+        {
+          "name": "CmsHostnameStatusBadgeProps",
+          "kind": "interface",
+          "signature": "interface CmsHostnameStatusBadgeProps",
+          "members": []
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-cms-menus",
+      "description": "Granit admin UI for CMS site menus — site-scoped menu list with delete confirmation and a spec-driven create/edit form (key, title, items-as-JSON). Composes @granit/react-cms (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "MenusListPage",
+          "kind": "function",
+          "signature": "function MenusListPage()"
+        },
+        {
+          "name": "MenuFormPage",
+          "kind": "function",
+          "signature": "function MenuFormPage()"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-cms-pages",
+      "description": "Granit admin UI for the CMS Pages module — the page-structure tree (slug + parent + depth) and the create/rename page form, with a spec-driven validation resolver and an \"Edit content\" link-out to the CMS renderer. Composes @granit/react-cms (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "PageTreePage",
+          "kind": "function",
+          "signature": "function PageTreePage()"
+        },
+        {
+          "name": "PageFormPage",
+          "kind": "function",
+          "signature": "function PageFormPage()"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-cms-redirects",
+      "description": "Granit admin UI for the CMS Redirects module — the per-site redirect list page with create/edit dialog, toggle and delete actions. Composes @granit/react-cms-redirects (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "RedirectsListPage",
+          "kind": "function",
+          "signature": "function RedirectsListPage()"
+        },
+        {
+          "name": "RedirectFormDialog",
+          "kind": "function",
+          "signature": "function RedirectFormDialog("
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-cms-releases",
+      "description": "Granit admin UI for the CMS Releases module — the releases list, release detail with scheduling/cancel, status badges and the create-release dialog. Composes @granit/react-cms (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "ReleasesListPage",
+          "kind": "function",
+          "signature": "function ReleasesListPage()"
+        },
+        {
+          "name": "ReleaseDetailPage",
+          "kind": "function",
+          "signature": "function ReleaseDetailPage()"
+        },
+        {
+          "name": "ReleaseFormDialog",
+          "kind": "function",
+          "signature": "function ReleaseFormDialog("
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-cms-seo",
+      "description": "Granit admin UI for the CMS SEO module — the per-site SEO dashboard (defaults form, metadata audit table, AI-suggestion inbox). Composes @granit/react-cms-seo (headless) with the foundation UI packages and spec-driven validation.",
+      "exports": [
+        {
+          "name": "SeoDashboardPage",
+          "kind": "function",
+          "signature": "function SeoDashboardPage()"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-cms-sites",
+      "description": "Granit admin UI for the CMS Sites module — the sites list (with per-site navigation actions and delete confirmation) and the spec-validated site create/edit form. Composes @granit/react-cms (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "SitesListPage",
+          "kind": "function",
+          "signature": "function SitesListPage()"
+        },
+        {
+          "name": "SiteFormPage",
+          "kind": "function",
+          "signature": "function SiteFormPage()"
         }
       ]
     },
