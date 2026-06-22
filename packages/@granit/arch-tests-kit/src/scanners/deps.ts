@@ -20,7 +20,7 @@ export interface UndeclaredDepsOptions extends ScanContext {
   ignore?: ReadonlyArray<string>;
 }
 
-type DepSection = Record<string, string> | undefined;
+type DepSection = Record<string, string>;
 interface PkgJson {
   name?: string;
   dependencies?: DepSection;

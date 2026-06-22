@@ -27,7 +27,7 @@ type Story = StoryObj<typeof meta>;
 export const Pending: Story = { args: { status: HostnameStatus.Pending } };
 export const Verifying: Story = { args: { status: HostnameStatus.Verifying } };
 export const Active: Story = { args: { status: HostnameStatus.Active } };
-export const Error: Story = { args: { status: HostnameStatus.Error } };
+export const ErrorState: Story = { name: 'Error', args: { status: HostnameStatus.Error } };
 
 export const All: Story = {
   render: () => (

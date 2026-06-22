@@ -6,7 +6,7 @@ import { rel } from '../fs';
 import type { AllowlistedScanContext, ScanContext, Violation } from '../types';
 
 // NOSONAR: these regexes run only on bounded developer source files — no user input, no ReDoS risk
-const H1_RE = /^#\s+(.*\S)\s*$/m;
+const H1_RE = /^#\s+(\S.*)$/m;
 
 /**
  * Every module ships a `README.md` introducing it. The H1 (first `#` heading,
@@ -56,12 +56,13 @@ export function scanReadmePresence(opts: ReadmePresenceOptions): Violation[] {
       continue;
     }
     const expected = heading(m.name);
-    if (match[1] !== expected) {
+    const h1 = (match[1] ?? '').trimEnd();
+    if (h1 !== expected) {
       out.push({
         rule: 'readme-h1',
         module: m.name,
         file: relPath,
-        message: `README.md H1 is "${match[1]}", expected "${expected}"`,
+        message: `README.md H1 is "${h1}", expected "${expected}"`,
       });
     }
   }

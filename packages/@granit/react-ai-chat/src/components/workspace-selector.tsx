@@ -182,7 +182,8 @@ export function WorkspaceSelector({
     lastGroup = option.group;
     const isActive = index === activeIndex;
     return (
-      <li key={option.value} role="presentation">
+      // ARIA listbox pattern — a presentational <li> wraps the role="option" row.
+      <li key={option.value} role="presentation" /* NOSONAR */>
         {heading ? (
           <p
             data-slot="workspace-group"
@@ -193,7 +194,7 @@ export function WorkspaceSelector({
         ) : null}
         <div
           id={getOptionId(index)}
-          role="option"
+          role="option" /* NOSONAR: custom listbox option — no native <option> equivalent for this rich row */
           // Arrow-key navigation is handled at the popover level (it owns the
           // active highlight), so each option is only programmatically focusable
           // (-1) — never in the tab order.
@@ -275,7 +276,7 @@ export function WorkspaceSelector({
           ) : (
             <ul
               ref={listboxRef}
-              role="listbox"
+              role="listbox" /* NOSONAR: custom popover listbox — a native <select> cannot render grouped, icon-rich options */
               id={listboxId}
               aria-label={label}
               // Focusable so arrow-key nav works when no search field is shown;

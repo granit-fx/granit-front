@@ -81,7 +81,7 @@ export interface ConversationThreadProps {
   readonly labels?: ChatTranslations['Thread'];
   readonly toolLabels?: ChatTranslations['Tools'];
   /** Localized error copy; defaults to the bundled English strings. */
-  readonly errorLabels?: ChatTranslations['Errors'];
+  readonly errorLabels?: NonNullable<ChatTranslations['Errors']>;
   readonly metricsLabels?: ChatTranslations['Metrics'];
   readonly className?: string;
 }

@@ -108,8 +108,8 @@ export function useDocumentBookmarks(
 
   const toggleFavorite = useCallback((entry: Omit<DocumentBookmark, 'recordedAt'>) => {
     setFavorites((prev) => {
-      const existing = prev.find((f) => f.id === entry.id);
-      if (existing) return prev.filter((f) => f.id !== entry.id);
+      const exists = prev.some((f) => f.id === entry.id);
+      if (exists) return prev.filter((f) => f.id !== entry.id);
       const bookmark: DocumentBookmark = { ...entry, recordedAt: Date.now() };
       return [bookmark, ...prev];
     });

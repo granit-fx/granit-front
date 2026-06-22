@@ -9,7 +9,7 @@ import type { AllowlistedScanContext, Violation } from '../types';
 const CLIENT_API_RE = // NOSONAR S5852: bounded developer source files only — no user input
   /\buse(?:State|Effect|LayoutEffect|InsertionEffect|Reducer|Ref|Context|Memo|Callback|Id|SyncExternalStore|Transition|DeferredValue|ImperativeHandle)\s*\(|\bcreateContext\s*\(/;
 
-const USE_CLIENT_RE = /^\s*['"]use client['"]\s*;?\s*$/;
+const USE_CLIENT_RE = /^\s*['"]use client['"]\s*(?:;\s*)?$/;
 
 /** True when `'use client'` appears as one of the file's first statements. */
 function hasUseClientDirective(src: string): boolean {

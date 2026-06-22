@@ -89,8 +89,8 @@ export function TagAutocomplete({
   }, [tagsQuery.data, value]);
 
   const trimmed = query.trim();
-  const exactMatch = candidates.find((tag) => tag.name.toLowerCase() === trimmed.toLowerCase());
-  const showCreate = allowInlineCreate && canManage && trimmed.length > 0 && !exactMatch;
+  const hasExactMatch = candidates.some((tag) => tag.name.toLowerCase() === trimmed.toLowerCase());
+  const showCreate = allowInlineCreate && canManage && trimmed.length > 0 && !hasExactMatch;
 
   function handleKeyDown(event: KeyboardEvent<HTMLInputElement>): void {
     if (event.key === 'ArrowDown') {

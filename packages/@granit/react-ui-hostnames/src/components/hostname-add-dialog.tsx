@@ -73,7 +73,12 @@ export function AddHostnameDialog({
     options: { fields: Record<string, { name: string }> }
   ) => {
     const result = await baseResolver(values, context, options);
-    if (!result.errors.host && values.host && !FQDN_RE.test(String(values.host))) {
+    if (
+      !result.errors.host &&
+      typeof values.host === 'string' &&
+      values.host &&
+      !FQDN_RE.test(values.host)
+    ) {
       result.errors.host = { type: 'fqdn', message: t('Hostnames.AddDialog.InvalidHost') };
     }
     return result;

@@ -81,6 +81,96 @@ export interface ChatComposerProps {
   readonly className?: string;
 }
 
+interface ComposerSuggestionPickerProps {
+  readonly show: boolean;
+  readonly trigger: ActiveTrigger | null;
+  readonly pickerLabels: ChatTranslations['Pickers'];
+  readonly promptMatches: readonly PromptOption[];
+  readonly mentionResults: readonly MentionOption[];
+  readonly mentionLoading: boolean;
+  readonly activeIndex: number;
+  readonly listboxId: string;
+  readonly getOptionId: (index: number) => string;
+  readonly onHover: (index: number) => void;
+  readonly onSelectPrompt: (option: PromptOption) => void;
+  readonly onSelectMention: (option: MentionOption) => void;
+  readonly onMouseDown: (event: MouseEvent) => void;
+}
+
+/** The `/` prompt / `@` mention popup that floats above the editor. */
+function ComposerSuggestionPicker({
+  show,
+  trigger,
+  pickerLabels,
+  promptMatches,
+  mentionResults,
+  mentionLoading,
+  activeIndex,
+  listboxId,
+  getOptionId,
+  onHover,
+  onSelectPrompt,
+  onSelectMention,
+  onMouseDown,
+}: ComposerSuggestionPickerProps) {
+  if (!show) return null;
+  return (
+    // The wrapper only swallows the picker's mousedown so the editor keeps its
+    // selection through the click; it's presentational, not a control.
+    <div
+      role="presentation"
+      /* NOSONAR: presentational wrapper, intentionally not a semantic element */ onMouseDown={
+        onMouseDown
+      }
+    >
+      {trigger?.kind === '/' ? (
+        <ComposerSuggestions<PromptOption>
+          title={pickerLabels.Prompts}
+          items={promptMatches}
+          activeIndex={activeIndex}
+          loadingLabel={pickerLabels.Loading}
+          emptyLabel={pickerLabels.NoResults}
+          listboxId={listboxId}
+          getOptionId={getOptionId}
+          getKey={(item) => item.id}
+          onHover={onHover}
+          onSelect={onSelectPrompt}
+          renderItem={(item) => (
+            <div className="flex flex-col">
+              <span className="font-medium">{item.name}</span>
+              {item.shortDescription ? (
+                <span className="text-muted-foreground text-xs">{item.shortDescription}</span>
+              ) : null}
+            </div>
+          )}
+        />
+      ) : (
+        <ComposerSuggestions<MentionOption>
+          title={pickerLabels.Mentions}
+          items={mentionResults}
+          activeIndex={activeIndex}
+          loading={mentionLoading}
+          loadingLabel={pickerLabels.Loading}
+          emptyLabel={pickerLabels.NoResults}
+          listboxId={listboxId}
+          getOptionId={getOptionId}
+          getKey={(item) => `${item.type}:${item.id}`}
+          onHover={onHover}
+          onSelect={onSelectMention}
+          renderItem={(item) => (
+            <div className="flex flex-col">
+              <span className="font-medium">{item.label}</span>
+              {item.description ? (
+                <span className="text-muted-foreground text-xs">{item.description}</span>
+              ) : null}
+            </div>
+          )}
+        />
+      )}
+    </div>
+  );
+}
+
 /**
  * The streaming chat composer: a `contenteditable` rich input where `/` prompts
  * and `@` mentions resolve to inline chips in the text flow, plus attachment
@@ -322,7 +412,7 @@ export function ChatComposer({
 
   // Rich options win; otherwise derive plain options from the workspace names.
   const resolvedWorkspaceOptions = useMemo<readonly WorkspaceOption[]>(() => {
-    if (workspaceOptions && workspaceOptions.length > 0) return workspaceOptions;
+    if (workspaceOptions?.length) return workspaceOptions;
     return (workspaces ?? []).map((ws) => ({ value: ws }));
   }, [workspaceOptions, workspaces]);
 
@@ -486,56 +576,21 @@ export function ChatComposer({
           'focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]'
         )}
       >
-        {showSuggestions ? (
-          // The wrapper only swallows the picker's mousedown so the editor keeps
-          // its selection through the click; it's presentational, not a control.
-          <div role="presentation" onMouseDown={onSuggestionMouseDown}>
-            {trigger?.kind === '/' ? (
-              <ComposerSuggestions<PromptOption>
-                title={pickerLabels.Prompts}
-                items={promptMatches}
-                activeIndex={activeIndex}
-                loadingLabel={pickerLabels.Loading}
-                emptyLabel={pickerLabels.NoResults}
-                listboxId={listboxId}
-                getOptionId={getOptionId}
-                getKey={(item) => item.id}
-                onHover={setActiveIndex}
-                onSelect={selectPrompt}
-                renderItem={(item) => (
-                  <div className="flex flex-col">
-                    <span className="font-medium">{item.name}</span>
-                    {item.shortDescription ? (
-                      <span className="text-muted-foreground text-xs">{item.shortDescription}</span>
-                    ) : null}
-                  </div>
-                )}
-              />
-            ) : (
-              <ComposerSuggestions<MentionOption>
-                title={pickerLabels.Mentions}
-                items={mentionResults}
-                activeIndex={activeIndex}
-                loading={mentionLoading}
-                loadingLabel={pickerLabels.Loading}
-                emptyLabel={pickerLabels.NoResults}
-                listboxId={listboxId}
-                getOptionId={getOptionId}
-                getKey={(item) => `${item.type}:${item.id}`}
-                onHover={setActiveIndex}
-                onSelect={selectMention}
-                renderItem={(item) => (
-                  <div className="flex flex-col">
-                    <span className="font-medium">{item.label}</span>
-                    {item.description ? (
-                      <span className="text-muted-foreground text-xs">{item.description}</span>
-                    ) : null}
-                  </div>
-                )}
-              />
-            )}
-          </div>
-        ) : null}
+        <ComposerSuggestionPicker
+          show={showSuggestions}
+          trigger={trigger}
+          pickerLabels={pickerLabels}
+          promptMatches={promptMatches}
+          mentionResults={mentionResults}
+          mentionLoading={mentionLoading}
+          activeIndex={activeIndex}
+          listboxId={listboxId}
+          getOptionId={getOptionId}
+          onHover={setActiveIndex}
+          onSelectPrompt={selectPrompt}
+          onSelectMention={selectMention}
+          onMouseDown={onSuggestionMouseDown}
+        />
 
         <div className="relative">
           {isEmpty ? (
@@ -556,7 +611,7 @@ export function ChatComposer({
             // `/` `@` pickers expose the popup listbox. `combobox` (unlike
             // `textbox`) supports aria-expanded/-controls/-activedescendant; the
             // explicit tabIndex keeps it focusable when contentEditable is off.
-            role="combobox"
+            role="combobox" /* NOSONAR: editable contenteditable combobox — no native form element fits */
             tabIndex={disabled ? -1 : 0}
             aria-label={labels.Placeholder}
             aria-autocomplete="list"

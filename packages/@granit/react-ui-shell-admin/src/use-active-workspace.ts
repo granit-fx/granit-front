@@ -18,10 +18,10 @@ function writeStored(value: string | null): void {
   try {
     if (value) globalThis.localStorage?.setItem(STORAGE_KEY, value);
     else globalThis.localStorage?.removeItem(STORAGE_KEY);
-  } catch (caught) {
+  } catch (error_) {
     // localStorage can throw in private mode / SSR. Persistence is best-effort:
     // keep the reason instead of swallowing it silently.
-    error = caught;
+    error = error_;
   }
   // Notify listeners regardless so in-memory state stays in sync even when
   // persistence failed; surface the error on the event for diagnostics.

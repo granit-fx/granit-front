@@ -9,13 +9,13 @@ export interface ActivitiesSidePanelContributionOptions {
    * action wiring must come from this opt-in factory rather than per-render
    * props. Omit a callback to hide the matching button (permission gating).
    */
-  readonly onSelect?: Parameters<typeof ActivitiesSidePanel>[0]['onSelect'];
-  readonly onComplete?: Parameters<typeof ActivitiesSidePanel>[0]['onComplete'];
-  readonly onCancel?: Parameters<typeof ActivitiesSidePanel>[0]['onCancel'];
-  readonly onReassign?: Parameters<typeof ActivitiesSidePanel>[0]['onReassign'];
-  readonly onReschedule?: Parameters<typeof ActivitiesSidePanel>[0]['onReschedule'];
-  readonly onCreate?: Parameters<typeof ActivitiesSidePanel>[0]['onCreate'];
-  readonly actionLabels?: Parameters<typeof ActivitiesSidePanel>[0]['actionLabels'];
+  readonly onSelect?: NonNullable<Parameters<typeof ActivitiesSidePanel>[0]['onSelect']>;
+  readonly onComplete?: NonNullable<Parameters<typeof ActivitiesSidePanel>[0]['onComplete']>;
+  readonly onCancel?: NonNullable<Parameters<typeof ActivitiesSidePanel>[0]['onCancel']>;
+  readonly onReassign?: NonNullable<Parameters<typeof ActivitiesSidePanel>[0]['onReassign']>;
+  readonly onReschedule?: NonNullable<Parameters<typeof ActivitiesSidePanel>[0]['onReschedule']>;
+  readonly onCreate?: NonNullable<Parameters<typeof ActivitiesSidePanel>[0]['onCreate']>;
+  readonly actionLabels?: NonNullable<Parameters<typeof ActivitiesSidePanel>[0]['actionLabels']>;
   readonly pageSize?: number;
   readonly className?: string;
 }

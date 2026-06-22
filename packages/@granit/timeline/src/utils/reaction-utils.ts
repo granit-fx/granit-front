@@ -21,7 +21,7 @@ const EMOJI_SEQUENCE = new RegExp(
   '^' +
     '(?:' +
     // Keycap
-    String.raw`[0-9#*]️?⃣` +
+    '[0-9#*]️?⃣' +
     '|' +
     // Regional Indicator pair (flag)
     String.raw`\p{Regional_Indicator}\p{Regional_Indicator}` +

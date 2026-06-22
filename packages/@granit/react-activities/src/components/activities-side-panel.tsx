@@ -14,7 +14,7 @@ export interface ActivitiesSidePanelProps {
    * Action callbacks. When `undefined`, the matching button is not rendered
    * — apps use this to gate by permission.
    */
-  readonly onSelect?: ActivityListProps['onSelect'];
+  readonly onSelect?: NonNullable<ActivityListProps['onSelect']>;
   readonly onComplete?: (activity: ActivityResponse) => void;
   readonly onCancel?: (activity: ActivityResponse) => void;
   readonly onReassign?: (activity: ActivityResponse) => void;
