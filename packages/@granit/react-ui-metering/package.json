@@ -1,0 +1,62 @@
+{
+  "name": "@granit/react-ui-metering",
+  "description": "Granit admin UI for the Metering module — the meter catalog list, meter detail (usage / quota / publish / archive / record-events) and the cross-tenant usage aggregates explorer. Composes @granit/react-metering (headless) with the foundation UI packages.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/metering": "workspace:*",
+    "@granit/query-engine": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-metering": "workspace:*",
+    "@granit/react-query-engine": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-ui-admin-kit": "workspace:*",
+    "@granit/react-validation": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@tanstack/react-table": "^8.21.3",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.80.0",
+    "react-router-dom": "^7.18.0",
+    "sonner": "^2.0.7"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/metering": "workspace:*",
+    "@granit/query-engine": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-metering": "workspace:*",
+    "@granit/react-query-engine": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-ui-admin-kit": "workspace:*",
+    "@granit/react-validation": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@storybook/react-vite": "^10.4.6",
+    "@tanstack/react-query": "^5.0.0",
+    "@tanstack/react-table": "^8.21.3",
+    "storybook": "^10.4.6"
+  }
+}
