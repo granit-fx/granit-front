@@ -7852,6 +7852,47 @@
       ]
     },
     {
+      "name": "@granit/react-ui-background-jobs",
+      "description": "Granit admin UI for the Background Jobs module — the recurring-jobs monitoring page (list + kanban), status badge, per-job actions and cron-expression rendering. Composes @granit/react-background-jobs (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "BackgroundJobListPage",
+          "kind": "function",
+          "signature": "function BackgroundJobListPage()"
+        },
+        {
+          "name": "JobCard",
+          "kind": "function",
+          "signature": "function JobCard("
+        },
+        {
+          "name": "JobActions",
+          "kind": "function",
+          "signature": "function JobActions("
+        },
+        {
+          "name": "JobStatusBadge",
+          "kind": "function",
+          "signature": "function JobStatusBadge("
+        },
+        {
+          "name": "createBackgroundJobColumns",
+          "kind": "function",
+          "signature": "function createBackgroundJobColumns("
+        },
+        {
+          "name": "getCronstrueLocale",
+          "kind": "function",
+          "signature": "function getCronstrueLocale(language: string): string"
+        },
+        {
+          "name": "loadCronstrueLocale",
+          "kind": "function",
+          "signature": "async function loadCronstrueLocale(language: string): Promise<void>"
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-customer-balance",
       "description": "Granit admin UI for the Customer Balance module — balance page, summary card, transaction table and admin credit/debit dialogs. Composes @granit/react-customer-balance (headless) with the foundation UI packages.",
       "exports": [

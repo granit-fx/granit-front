@@ -1,0 +1,55 @@
+{
+  "name": "@granit/react-ui-background-jobs",
+  "description": "Granit admin UI for the Background Jobs module — the recurring-jobs monitoring page (list + kanban), status badge, per-job actions and cron-expression rendering. Composes @granit/react-background-jobs (headless) with the foundation UI packages.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/background-jobs": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-background-jobs": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-ui-admin-kit": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@tanstack/react-table": "^8.21.3",
+    "cronstrue": "^3.20.0",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/background-jobs": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-background-jobs": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-ui-admin-kit": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@storybook/react-vite": "^10.4.6",
+    "@tanstack/react-query": "^5.0.0",
+    "@tanstack/react-table": "^8.21.3",
+    "cronstrue": "^3.20.0",
+    "storybook": "^10.4.6"
+  }
+}
