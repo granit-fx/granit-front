@@ -21,4 +21,5 @@ export * from './querying/smart-filter-bar/lookup-suggestion-list';
 export * from './querying/smart-filter-bar/smart-filter-bar';
 export * from './querying/smart-filter-bar/suggestion-list';
 export * from './querying/sort-selector';
+export * from './timezone-picker/timezone-picker';
 export * from './view-switcher/view-switcher';
