@@ -1,0 +1,60 @@
+// @granit/react-ui-cms-releases — i18next resource bundle (flat keys, "translation" ns).
+// Keys keep the literal "cms:" prefix used by the showcase fixtures — the host app
+// i18n is configured with nsSeparator/keySeparator = false, so this prefix is part of
+// the flat key, not an i18next namespace. Register in the host app:
+//   import { cmsReleasesTranslationsEn } from "@granit/react-ui-cms-releases";
+//   i18n.addResourceBundle("en", "translation", cmsReleasesTranslationsEn, true, true);
+
+export const cmsReleasesTranslationsEn = {
+  'cms:Releases.ActionColumns.ContentId': 'Content ID',
+  'cms:Releases.ActionColumns.ContentType': 'Content type',
+  'cms:Releases.ActionColumns.Culture': 'Culture',
+  'cms:Releases.ActionColumns.Status': 'Status',
+  'cms:Releases.ActionColumns.Type': 'Type',
+  'cms:Releases.ActionStatus.Failed': 'Failed',
+  'cms:Releases.ActionStatus.Pending': 'Pending',
+  'cms:Releases.ActionStatus.Succeeded': 'Succeeded',
+  'cms:Releases.Actions': 'Actions',
+  'cms:Releases.Actions.Publish': 'Publish',
+  'cms:Releases.Actions.View': 'View',
+  'cms:Releases.Columns.Actions': 'Actions',
+  'cms:Releases.Columns.Name': 'Name',
+  'cms:Releases.Columns.Schedule': 'Schedule',
+  'cms:Releases.Columns.Status': 'Status',
+  'cms:Releases.CreateDescription': 'Group content changes into a release.',
+  'cms:Releases.CreateSuccess': 'Release created.',
+  'cms:Releases.CreateTitle': 'New release',
+  'cms:Releases.DeleteConfirm.Description': 'Delete release "{{name}}"?',
+  'cms:Releases.DeleteConfirm.Title': 'Delete release?',
+  'cms:Releases.DeleteError': 'Failed to delete release "{{name}}".',
+  'cms:Releases.DeleteSuccess': 'Release deleted.',
+  'cms:Releases.Empty': 'No releases found.',
+  'cms:Releases.Fields.Name': 'Name',
+  'cms:Releases.Fields.NamePlaceholder': 'e.g. Spring relaunch',
+  'cms:Releases.Fields.ScheduleAt': 'Schedule at',
+  'cms:Releases.Fields.ScheduleHint': 'Optional — leave empty to keep as draft.',
+  'cms:Releases.Fields.Timezone': 'Timezone',
+  'cms:Releases.LoadError': 'Failed to load release.',
+  'cms:Releases.Loading': 'Loading releases…',
+  'cms:Releases.NewRelease': 'New release',
+  'cms:Releases.NoActions': 'No actions in this release.',
+  'cms:Releases.PublishError': 'Failed to publish release "{{name}}".',
+  'cms:Releases.PublishSuccess': 'Release "{{name}}" published.',
+  'cms:Releases.Schedule.Cancel': 'Cancel schedule',
+  'cms:Releases.Schedule.CancelSuccess': 'Schedule cancelled.',
+  'cms:Releases.Schedule.None': 'Not scheduled.',
+  'cms:Releases.Schedule.Reschedule': 'Reschedule',
+  'cms:Releases.Schedule.Submit': 'Schedule',
+  'cms:Releases.Schedule.Success': 'Release scheduled.',
+  'cms:Releases.Schedule.Title': 'Scheduling',
+  'cms:Releases.ScheduledAt': 'Scheduled at',
+  'cms:Releases.Status.Done': 'Done',
+  'cms:Releases.Status.Draft': 'Draft',
+  'cms:Releases.Status.Executed': 'Executed',
+  'cms:Releases.Status.Failed': 'Failed',
+  'cms:Releases.Status.Ready': 'Ready',
+  'cms:Releases.Status.Running': 'Running',
+  'cms:Releases.Title': 'Releases',
+} as const;
+
+export type CmsReleasesTranslations = typeof cmsReleasesTranslationsEn;
