@@ -7980,6 +7980,21 @@
           "name": "PageFormPage",
           "kind": "function",
           "signature": "function PageFormPage()"
+        },
+        {
+          "name": "CMS_RENDERER_URL",
+          "kind": "const",
+          "signature": "const CMS_RENDERER_URL"
+        },
+        {
+          "name": "isCmsRendererConfigured",
+          "kind": "const",
+          "signature": "const isCmsRendererConfigured"
+        },
+        {
+          "name": "buildPageEditorUrl",
+          "kind": "function",
+          "signature": "function buildPageEditorUrl(pageId: string, locale: string): string | null"
         }
       ]
     },
