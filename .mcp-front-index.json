@@ -7934,6 +7934,109 @@
       ]
     },
     {
+      "name": "@granit/react-ui-dashboards",
+      "description": "Granit admin UI for the Dashboards module — the dashboard catalogue/list, the rich per-dashboard composer (editor), the demo render page, status/drift badges and lifecycle dialogs. Composes @granit/react-dashboards + @granit/react-dashboard-editor (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "DashboardListPage",
+          "kind": "function",
+          "signature": "function DashboardListPage()"
+        },
+        {
+          "name": "DashboardEditPage",
+          "kind": "function",
+          "signature": "function DashboardEditPage()"
+        },
+        {
+          "name": "DashboardPage",
+          "kind": "function",
+          "signature": "function DashboardPage()"
+        },
+        {
+          "name": "StatusBadge",
+          "kind": "function",
+          "signature": "function StatusBadge("
+        },
+        {
+          "name": "DriftBadge",
+          "kind": "function",
+          "signature": "function DriftBadge("
+        },
+        {
+          "name": "LifecycleConfirmDialog",
+          "kind": "function",
+          "signature": "function LifecycleConfirmDialog("
+        },
+        {
+          "name": "DashboardImportFromCatalog",
+          "kind": "function",
+          "signature": "function DashboardImportFromCatalog("
+        },
+        {
+          "name": "LifecycleAction",
+          "kind": "type",
+          "signature": "type LifecycleAction = 'publish' | 'archive' | 'restore' | 'resync'"
+        },
+        {
+          "name": "PendingLifecycle",
+          "kind": "interface",
+          "signature": "interface PendingLifecycle",
+          "members": []
+        },
+        {
+          "name": "sampleFinanceDashboard",
+          "kind": "const",
+          "signature": "const sampleFinanceDashboard: DashboardDefinition"
+        },
+        {
+          "name": "sampleWelcomeDashboard",
+          "kind": "const",
+          "signature": "const sampleWelcomeDashboard: DashboardDefinition"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-data-exchange",
+      "description": "Granit admin UI for the Data Exchange module — the import/export history pages, shared history column factories, status badge, history filters and the import-report dialog. Composes @granit/react-data-exchange (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "ExportListPage",
+          "kind": "function",
+          "signature": "function ExportListPage()"
+        },
+        {
+          "name": "ImportListPage",
+          "kind": "function",
+          "signature": "function ImportListPage()"
+        },
+        {
+          "name": "HistoryFilters",
+          "kind": "function",
+          "signature": "function HistoryFilters("
+        },
+        {
+          "name": "ImportReportDialog",
+          "kind": "function",
+          "signature": "function ImportReportDialog("
+        },
+        {
+          "name": "JobStatusBadge",
+          "kind": "function",
+          "signature": "function JobStatusBadge("
+        },
+        {
+          "name": "createExportHistoryColumns",
+          "kind": "function",
+          "signature": "function createExportHistoryColumns("
+        },
+        {
+          "name": "createImportHistoryColumns",
+          "kind": "function",
+          "signature": "function createImportHistoryColumns("
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-diagnostics",
       "description": "Granit admin UI for the Diagnostics module — the monitoring/health page, service-health cards and auto-refresh indicator. Composes @granit/react-diagnostics (headless) with the foundation UI packages.",
       "exports": [
@@ -7951,6 +8054,37 @@
           "name": "AutoRefreshIndicator",
           "kind": "function",
           "signature": "function AutoRefreshIndicator("
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-features",
+      "description": "Granit admin UI for the Features module — the feature-flag listing (grouped, collapsible), value badges, the per-feature detail page and the set/remove-override dialog. Composes @granit/react-features (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "FeatureListPage",
+          "kind": "function",
+          "signature": "function FeatureListPage()"
+        },
+        {
+          "name": "FeatureDetailPage",
+          "kind": "function",
+          "signature": "function FeatureDetailPage()"
+        },
+        {
+          "name": "FeatureGroupCard",
+          "kind": "function",
+          "signature": "function FeatureGroupCard("
+        },
+        {
+          "name": "FeatureValueBadge",
+          "kind": "function",
+          "signature": "function FeatureValueBadge("
+        },
+        {
+          "name": "SetOverrideDialog",
+          "kind": "function",
+          "signature": "function SetOverrideDialog("
         }
       ]
     },
@@ -7987,6 +8121,100 @@
           "name": "AddHostnameDialog",
           "kind": "function",
           "signature": "function AddHostnameDialog("
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-notifications",
+      "description": "Granit admin UI for the Notifications module — the inbox page, notification bell, preferences panel, web-push manager, real-time toast handler and the notification-view rendering registry. Composes @granit/react-notifications (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "NotificationListPage",
+          "kind": "function",
+          "signature": "function NotificationListPage()"
+        },
+        {
+          "name": "NotificationPreferencesPage",
+          "kind": "function",
+          "signature": "function NotificationPreferencesPage("
+        },
+        {
+          "name": "NotificationPreferencesPageProps",
+          "kind": "type",
+          "signature": "type NotificationPreferencesPageProps = PushNotificationManagerProps"
+        },
+        {
+          "name": "NotificationBell",
+          "kind": "function",
+          "signature": "function NotificationBell()"
+        },
+        {
+          "name": "NotificationInbox",
+          "kind": "function",
+          "signature": "function NotificationInbox()"
+        },
+        {
+          "name": "NotificationAction",
+          "kind": "function",
+          "signature": "function NotificationAction("
+        },
+        {
+          "name": "NotificationActionProps",
+          "kind": "interface",
+          "signature": "interface NotificationActionProps",
+          "members": []
+        },
+        {
+          "name": "NotificationPreferencesPanel",
+          "kind": "function",
+          "signature": "function NotificationPreferencesPanel()"
+        },
+        {
+          "name": "NotificationToastHandler",
+          "kind": "function",
+          "signature": "function NotificationToastHandler()"
+        },
+        {
+          "name": "PushNotificationManager",
+          "kind": "function",
+          "signature": "function PushNotificationManager("
+        },
+        {
+          "name": "PushNotificationManagerProps",
+          "kind": "interface",
+          "signature": "interface PushNotificationManagerProps",
+          "members": []
+        },
+        {
+          "name": "BELL_PREVIEW_SIZE",
+          "kind": "const",
+          "signature": "const BELL_PREVIEW_SIZE"
+        },
+        {
+          "name": "INBOX_PAGE_SIZE",
+          "kind": "const",
+          "signature": "const INBOX_PAGE_SIZE"
+        },
+        {
+          "name": "UNREAD_POLL_INTERVAL",
+          "kind": "const",
+          "signature": "const UNREAD_POLL_INTERVAL"
+        },
+        {
+          "name": "SHOWCASE_TEST_NOTIFICATION",
+          "kind": "const",
+          "signature": "const SHOWCASE_TEST_NOTIFICATION"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-presence",
+      "description": "Granit admin UI for the Presence module — the live-presence demo page (your presence, status picker, DnD banner, team batch lookup, resource room). Composes @granit/react-presence (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "PresenceDemoPage",
+          "kind": "function",
+          "signature": "function PresenceDemoPage()"
         }
       ]
     },
