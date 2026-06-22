@@ -1,3 +1,5 @@
+/// <reference path="./cronstrue-locales.d.ts" />
+
 /**
  * Maps BCP 47 language tags to cronstrue locale file names.
  * cronstrue uses underscores for regional variants (pt_BR, zh_CN, zh_TW).
