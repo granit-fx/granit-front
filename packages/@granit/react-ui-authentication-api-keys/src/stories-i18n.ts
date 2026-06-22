@@ -1,0 +1,31 @@
+import i18next from 'i18next';
+import { initReactI18next } from 'react-i18next';
+
+import { apiKeysTranslationsEn } from './locales';
+
+// Shared i18next instance for Storybook stories. Mirrors the runtime flat-key
+// setup (separators disabled) and bundles the host-owned Common.* keys these
+// components reference alongside the package's own ApiKeys.* bundle.
+const Common = {
+  'Common.Add': 'Add',
+  'Common.All': 'All',
+  'Common.Cancel': 'Cancel',
+  'Common.Details': 'Details',
+  'Common.Edit': 'Edit',
+  'Common.Next': 'Next',
+  'Common.Previous': 'Previous',
+  'Common.Save': 'Save',
+  'Common.SearchPlaceholder': 'Search or filter...',
+} as const;
+
+export const storyI18n = i18next.createInstance();
+void storyI18n.use(initReactI18next).init({
+  lng: 'en',
+  fallbackLng: 'en',
+  ns: ['translation'],
+  defaultNS: 'translation',
+  nsSeparator: false,
+  keySeparator: false,
+  resources: { en: { translation: { ...apiKeysTranslationsEn, ...Common } } },
+  interpolation: { escapeValue: false },
+});

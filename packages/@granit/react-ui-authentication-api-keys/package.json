@@ -1,0 +1,61 @@
+{
+  "name": "@granit/react-ui-authentication-api-keys",
+  "description": "Granit admin UI for the Authentication API keys module — the api-key list (search, type/environment filters, revoke + rotate), the spec-validated create form, and the detail page (scopes editing). Composes the headless @granit/react-authentication-api-keys with the foundation UI packages.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/authentication-api-keys": "workspace:*",
+    "@granit/query-engine": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-authentication-api-keys": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-validation": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "class-variance-authority": "^0.7.1",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.80.0",
+    "react-router-dom": "^7.18.0",
+    "sonner": "^2.0.7"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/authentication-api-keys": "workspace:*",
+    "@granit/query-engine": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-authentication-api-keys": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-validation": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@storybook/react-vite": "^10.4.6",
+    "@tanstack/react-query": "^5.0.0",
+    "i18next": "^26.0.0",
+    "react-i18next": "^17.0.0",
+    "storybook": "^10.4.6"
+  }
+}
