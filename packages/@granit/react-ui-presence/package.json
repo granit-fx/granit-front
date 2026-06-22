@@ -1,0 +1,50 @@
+{
+  "name": "@granit/react-ui-presence",
+  "description": "Granit admin UI for the Presence module — the live-presence demo page (your presence, status picker, DnD banner, team batch lookup, resource room). Composes @granit/react-presence (headless) with the foundation UI packages.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/identity": "workspace:*",
+    "@granit/presence": "workspace:*",
+    "@granit/react-identity": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-presence": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/types": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/identity": "workspace:*",
+    "@granit/presence": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-identity": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-presence": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@storybook/react-vite": "^10.4.6",
+    "@tanstack/react-query": "^5.0.0",
+    "storybook": "^10.4.6"
+  }
+}
