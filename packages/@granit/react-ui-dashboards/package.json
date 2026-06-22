@@ -1,0 +1,57 @@
+{
+  "name": "@granit/react-ui-dashboards",
+  "description": "Granit admin UI for the Dashboards module — the dashboard catalogue/list, the rich per-dashboard composer (editor), the demo render page, status/drift badges and lifecycle dialogs. Composes @granit/react-dashboards + @granit/react-dashboard-editor (headless) with the foundation UI packages.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/analytics": "workspace:*",
+    "@granit/dashboards": "workspace:*",
+    "@granit/logger": "workspace:*",
+    "@granit/react-analytics": "workspace:*",
+    "@granit/react-dashboard-editor": "workspace:*",
+    "@granit/react-dashboards": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-map": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.18.0",
+    "sonner": "^2.0.7"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/analytics": "workspace:*",
+    "@granit/api-client": "workspace:*",
+    "@granit/dashboards": "workspace:*",
+    "@granit/logger": "workspace:*",
+    "@granit/react-analytics": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-dashboard-editor": "workspace:*",
+    "@granit/react-dashboards": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-map": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@storybook/react-vite": "^10.4.6",
+    "@tanstack/react-query": "^5.0.0",
+    "storybook": "^10.4.6"
+  }
+}
