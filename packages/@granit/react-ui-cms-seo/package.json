@@ -1,0 +1,55 @@
+{
+  "name": "@granit/react-ui-cms-seo",
+  "description": "Granit admin UI for the CMS SEO module — the per-site SEO dashboard (defaults form, metadata audit table, AI-suggestion inbox). Composes @granit/react-cms-seo (headless) with the foundation UI packages and spec-driven validation.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/cms-seo": "workspace:*",
+    "@granit/react-cms-seo": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-validation": "workspace:*",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.80.0",
+    "react-router-dom": "^7.18.0",
+    "sonner": "^2.0.7"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/cms-seo": "workspace:*",
+    "@granit/react-cms-seo": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-validation": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@storybook/react-vite": "^10.4.6",
+    "@tanstack/react-query": "^5.0.0",
+    "i18next": "^26.0.0",
+    "react-hook-form": "^7.80.0",
+    "react-router-dom": "^7.18.0",
+    "sonner": "^2.0.7",
+    "storybook": "^10.4.6"
+  }
+}
