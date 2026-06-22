@@ -59,6 +59,36 @@ const TARGETS = [
     exportName: 'cmsHostnamesConstraints',
     schemaPattern: /Request$/,
   },
+  {
+    spec: 'payments.json',
+    pkg: 'payments',
+    exportName: 'paymentsConstraints',
+    schemaPattern: /Request$/,
+  },
+  {
+    spec: 'api-keys.json',
+    pkg: 'authentication-api-keys',
+    exportName: 'apiKeysConstraints',
+    schemaPattern: /Request$/,
+  },
+  {
+    spec: 'tax.json',
+    pkg: 'tax',
+    exportName: 'taxConstraints',
+    schemaPattern: /Request$/,
+  },
+  {
+    spec: 'metering.json',
+    pkg: 'metering',
+    exportName: 'meteringConstraints',
+    schemaPattern: /Request$/,
+  },
+  {
+    spec: 'catalog.json',
+    pkg: 'catalog',
+    exportName: 'catalogConstraints',
+    schemaPattern: /Request$/,
+  },
 ];
 
 const MAX_REF_DEPTH = 10;

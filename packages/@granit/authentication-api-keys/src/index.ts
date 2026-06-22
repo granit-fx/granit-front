@@ -23,3 +23,6 @@ export {
   rotateApiKey,
   updateApiKeyScopes,
 } from './api/api-keys-api';
+
+// Validation constraints (generated from contracts/openapi/api-keys.json)
+export { apiKeysConstraints } from './constraints';

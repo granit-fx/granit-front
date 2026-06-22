@@ -30,3 +30,6 @@ export {
 } from './api/products-api';
 
 export { CatalogPermissions } from './permissions';
+
+// Validation constraints (generated from contracts/openapi/catalog.json)
+export { catalogConstraints } from './constraints';

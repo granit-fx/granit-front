@@ -46,3 +46,6 @@ export {
   recordUsageEvents,
   updateMeterDefinition,
 } from './api/metering-api';
+
+// Validation constraints (generated from contracts/openapi/metering.json)
+export { meteringConstraints } from './constraints';

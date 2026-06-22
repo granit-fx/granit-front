@@ -723,6 +723,11 @@
           "name": "ApiKeyPermissions",
           "kind": "const",
           "signature": "const ApiKeyPermissions"
+        },
+        {
+          "name": "apiKeysConstraints",
+          "kind": "const",
+          "signature": "const apiKeysConstraints"
         }
       ]
     },
@@ -1005,6 +1010,11 @@
           "name": "CatalogPermissions",
           "kind": "const",
           "signature": "const CatalogPermissions"
+        },
+        {
+          "name": "catalogConstraints",
+          "kind": "const",
+          "signature": "const catalogConstraints"
         }
       ]
     },
@@ -2082,6 +2092,11 @@
           "name": "MeteringPermissions",
           "kind": "const",
           "signature": "const MeteringPermissions"
+        },
+        {
+          "name": "meteringConstraints",
+          "kind": "const",
+          "signature": "const meteringConstraints"
         }
       ]
     },
@@ -2333,6 +2348,11 @@
           "name": "PaymentsPermissions",
           "kind": "const",
           "signature": "const PaymentsPermissions"
+        },
+        {
+          "name": "paymentsConstraints",
+          "kind": "const",
+          "signature": "const paymentsConstraints"
         }
       ]
     },
@@ -7835,6 +7855,77 @@
       ]
     },
     {
+      "name": "@granit/react-ui-authentication-api-keys",
+      "description": "Granit admin UI for the Authentication API keys module — the api-key list (search, type/environment filters, revoke + rotate), the spec-validated create form, and the detail page (scopes editing). Composes the headless @granit/react-authentication-api-keys with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "ApiKeyListPage",
+          "kind": "function",
+          "signature": "function ApiKeyListPage()"
+        },
+        {
+          "name": "ApiKeyCreatePage",
+          "kind": "function",
+          "signature": "function ApiKeyCreatePage()"
+        },
+        {
+          "name": "ApiKeyDetailPage",
+          "kind": "function",
+          "signature": "function ApiKeyDetailPage()"
+        },
+        {
+          "name": "ApiKeyTable",
+          "kind": "function",
+          "signature": "function ApiKeyTable("
+        },
+        {
+          "name": "ApiKeyScopesForm",
+          "kind": "function",
+          "signature": "function ApiKeyScopesForm("
+        },
+        {
+          "name": "ApiKeyTypeBadge",
+          "kind": "function",
+          "signature": "function ApiKeyTypeBadge("
+        },
+        {
+          "name": "ApiKeyEnvironmentBadge",
+          "kind": "function",
+          "signature": "function ApiKeyEnvironmentBadge("
+        },
+        {
+          "name": "ApiKeyStatusBadge",
+          "kind": "function",
+          "signature": "function ApiKeyStatusBadge("
+        },
+        {
+          "name": "ApiKeyRevokeDialog",
+          "kind": "function",
+          "signature": "function ApiKeyRevokeDialog("
+        },
+        {
+          "name": "ApiKeyRotateDialog",
+          "kind": "function",
+          "signature": "function ApiKeyRotateDialog("
+        },
+        {
+          "name": "ApiKeySecretDialog",
+          "kind": "function",
+          "signature": "function ApiKeySecretDialog("
+        },
+        {
+          "name": "getApiKeyStatus",
+          "kind": "function",
+          "signature": "function getApiKeyStatus(revokedAt: string | null, expiresAt: string | null): ApiKeyStatus"
+        },
+        {
+          "name": "ApiKeyStatus",
+          "kind": "type",
+          "signature": "type ApiKeyStatus = 'active' | 'revoked' | 'expired'"
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-authorization",
       "description": "Granit admin UI for the Authorization module — role/permission management panel, permission-grant and role-metadata discovery tables, and the permission-side badge. Composes @granit/react-authorization (headless) with the foundation UI packages.",
       "exports": [
@@ -7915,6 +8006,57 @@
           "name": "loadCronstrueLocale",
           "kind": "function",
           "signature": "async function loadCronstrueLocale(language: string): Promise<void>"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-catalog",
+      "description": "Granit admin UI for the Catalog module — the products list (smart-filtered query grid), the spec-validated create/edit product forms, and the product detail page (lifecycle transitions, metadata editor, external mappings). Composes @granit/react-catalog (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "CatalogListPage",
+          "kind": "function",
+          "signature": "function CatalogListPage()"
+        },
+        {
+          "name": "CatalogDetailPage",
+          "kind": "function",
+          "signature": "function CatalogDetailPage()"
+        },
+        {
+          "name": "CatalogCreatePage",
+          "kind": "function",
+          "signature": "function CatalogCreatePage()"
+        },
+        {
+          "name": "CatalogEditPage",
+          "kind": "function",
+          "signature": "function CatalogEditPage()"
+        },
+        {
+          "name": "ExternalMappingsManager",
+          "kind": "function",
+          "signature": "function ExternalMappingsManager("
+        },
+        {
+          "name": "LifecycleActions",
+          "kind": "function",
+          "signature": "function LifecycleActions("
+        },
+        {
+          "name": "LifecycleStatusBadge",
+          "kind": "function",
+          "signature": "function LifecycleStatusBadge("
+        },
+        {
+          "name": "MetadataEditor",
+          "kind": "function",
+          "signature": "function MetadataEditor("
+        },
+        {
+          "name": "createProductColumns",
+          "kind": "function",
+          "signature": "function createProductColumns("
         }
       ]
     },
@@ -8290,6 +8432,84 @@
       ]
     },
     {
+      "name": "@granit/react-ui-metering",
+      "description": "Granit admin UI for the Metering module — the meter catalog list, meter detail (usage / quota / publish / archive / record-events) and the cross-tenant usage aggregates explorer. Composes @granit/react-metering (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "MeterListPage",
+          "kind": "function",
+          "signature": "function MeterListPage()"
+        },
+        {
+          "name": "MeterDetailPage",
+          "kind": "function",
+          "signature": "function MeterDetailPage()"
+        },
+        {
+          "name": "MeteringUsagePage",
+          "kind": "function",
+          "signature": "function MeteringUsagePage()"
+        },
+        {
+          "name": "MeterForm",
+          "kind": "function",
+          "signature": "function MeterForm(props: Readonly<MeterFormProps>)"
+        },
+        {
+          "name": "MeterFormValues",
+          "kind": "interface",
+          "signature": "interface MeterFormValues",
+          "members": [
+            {
+              "name": "name",
+              "kind": "property",
+              "signature": "name: string"
+            },
+            {
+              "name": "description",
+              "kind": "property",
+              "signature": "description: string"
+            },
+            {
+              "name": "aggregationType",
+              "kind": "property",
+              "signature": "aggregationType: string"
+            },
+            {
+              "name": "unit",
+              "kind": "property",
+              "signature": "unit: string"
+            }
+          ]
+        },
+        {
+          "name": "createMeterColumns",
+          "kind": "function",
+          "signature": "function createMeterColumns("
+        },
+        {
+          "name": "ArchiveMeterDialog",
+          "kind": "function",
+          "signature": "function ArchiveMeterDialog("
+        },
+        {
+          "name": "RecordEventsDialog",
+          "kind": "function",
+          "signature": "function RecordEventsDialog("
+        },
+        {
+          "name": "QuotaStatusCard",
+          "kind": "function",
+          "signature": "function QuotaStatusCard("
+        },
+        {
+          "name": "UsageSummaryCard",
+          "kind": "function",
+          "signature": "function UsageSummaryCard("
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-notifications",
       "description": "Granit admin UI for the Notifications module — the inbox page, notification bell, preferences panel, web-push manager, real-time toast handler and the notification-view rendering registry. Composes @granit/react-notifications (headless) with the foundation UI packages.",
       "exports": [
@@ -8373,6 +8593,97 @@
       ]
     },
     {
+      "name": "@granit/react-ui-payments",
+      "description": "Granit admin UI for the Payments module — the transaction list and detail (refunds/disputes), the host payment-method configuration panel, the tenant saved-methods page, and the spec-validated charge/refund dialogs. Composes @granit/react-payments (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "TransactionListPage",
+          "kind": "function",
+          "signature": "function TransactionListPage()"
+        },
+        {
+          "name": "TransactionDetailPage",
+          "kind": "function",
+          "signature": "function TransactionDetailPage()"
+        },
+        {
+          "name": "PaymentMethodsPage",
+          "kind": "function",
+          "signature": "function PaymentMethodsPage()"
+        },
+        {
+          "name": "TenantPaymentMethodsPage",
+          "kind": "function",
+          "signature": "function TenantPaymentMethodsPage()"
+        },
+        {
+          "name": "ChargeDialog",
+          "kind": "function",
+          "signature": "function ChargeDialog("
+        },
+        {
+          "name": "RefundDialog",
+          "kind": "function",
+          "signature": "function RefundDialog("
+        },
+        {
+          "name": "AttachMethodDialog",
+          "kind": "function",
+          "signature": "function AttachMethodDialog("
+        },
+        {
+          "name": "DetachMethodDialog",
+          "kind": "function",
+          "signature": "function DetachMethodDialog("
+        },
+        {
+          "name": "PaymentConfigurationSection",
+          "kind": "function",
+          "signature": "function PaymentConfigurationSection()"
+        },
+        {
+          "name": "PaymentMethodCard",
+          "kind": "function",
+          "signature": "function PaymentMethodCard("
+        },
+        {
+          "name": "TransactionStatusBadge",
+          "kind": "function",
+          "signature": "function TransactionStatusBadge("
+        },
+        {
+          "name": "CapabilityBadges",
+          "kind": "function",
+          "signature": "function CapabilityBadges("
+        },
+        {
+          "name": "PendingSnapshotBadge",
+          "kind": "function",
+          "signature": "function PendingSnapshotBadge()"
+        },
+        {
+          "name": "createTransactionColumns",
+          "kind": "function",
+          "signature": "function createTransactionColumns("
+        },
+        {
+          "name": "createRefundColumns",
+          "kind": "function",
+          "signature": "function createRefundColumns( options: RefundColumnOptions ): ColumnDef<PaymentRefundResponse, unknown>[]"
+        },
+        {
+          "name": "createDisputeColumns",
+          "kind": "function",
+          "signature": "function createDisputeColumns( options: DisputeColumnOptions ): ColumnDef<PaymentDisputeResponse, unknown>[]"
+        },
+        {
+          "name": "createPaymentHistoryColumns",
+          "kind": "function",
+          "signature": "function createPaymentHistoryColumns< TRow extends PaymentHistoryRow, TStatus extends string, >("
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-presence",
       "description": "Granit admin UI for the Presence module — the live-presence demo page (your presence, status picker, DnD banner, team batch lookup, resource room). Composes @granit/react-presence (headless) with the foundation UI packages.",
       "exports": [
@@ -8415,6 +8726,59 @@
       "name": "@granit/react-ui-shell-admin",
       "description": "Granit admin app shell (chrome): the AppShell layout (sidebar + topbar + content + right rail), AppSidebar with workspace-driven navigation, user menu, command palette and header. App-specific data (auth, navigation, languages, logger) is injected via ShellChromeProvider; feature widgets are passed as header slots.",
       "exports": []
+    },
+    {
+      "name": "@granit/react-ui-tax",
+      "description": "Granit admin UI for the Tax module — the query-driven tax rates list page (with detail card) and the tax ID validation page. Composes @granit/react-tax (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "TaxRatesPage",
+          "kind": "function",
+          "signature": "function TaxRatesPage()"
+        },
+        {
+          "name": "TaxValidatePage",
+          "kind": "function",
+          "signature": "function TaxValidatePage()"
+        },
+        {
+          "name": "createTaxRateColumns",
+          "kind": "function",
+          "signature": "function createTaxRateColumns("
+        },
+        {
+          "name": "TaxRateDetailCard",
+          "kind": "function",
+          "signature": "function TaxRateDetailCard("
+        },
+        {
+          "name": "ValidateTaxForm",
+          "kind": "function",
+          "signature": "function ValidateTaxForm("
+        },
+        {
+          "name": "TaxValidateFormValues",
+          "kind": "interface",
+          "signature": "interface TaxValidateFormValues",
+          "members": [
+            {
+              "name": "taxId",
+              "kind": "property",
+              "signature": "taxId: string"
+            },
+            {
+              "name": "countryCode",
+              "kind": "property",
+              "signature": "countryCode: string"
+            }
+          ]
+        },
+        {
+          "name": "ValidationResultCard",
+          "kind": "function",
+          "signature": "function ValidationResultCard("
+        }
+      ]
     },
     {
       "name": "@granit/react-validation",
@@ -8809,6 +9173,11 @@
           "name": "validateTaxId",
           "kind": "function",
           "signature": "async function validateTaxId( client: AxiosInstance, basePath: string, request: TaxValidateRequest ): Promise<TaxValidateResponse>"
+        },
+        {
+          "name": "taxConstraints",
+          "kind": "const",
+          "signature": "const taxConstraints"
         }
       ]
     },

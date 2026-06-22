@@ -11,3 +11,6 @@ export { TaxPermissions } from './permissions';
 
 // API
 export { getTaxRateByCountry, getTaxRatesMeta, queryTaxRates, validateTaxId } from './api/tax-api';
+
+// Validation constraints (generated from contracts/openapi/tax.json)
+export { taxConstraints } from './constraints';

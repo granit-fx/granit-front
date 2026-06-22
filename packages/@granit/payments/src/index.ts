@@ -46,3 +46,6 @@ export {
   requestPaymentRefund,
   resyncPaymentMethodConfiguration,
 } from './api/payments-api';
+
+// Validation constraints (generated from contracts/openapi/payments.json)
+export { paymentsConstraints } from './constraints';
