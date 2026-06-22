@@ -1,0 +1,55 @@
+{
+  "name": "@granit/react-ui-notifications",
+  "description": "Granit admin UI for the Notifications module — the inbox page, notification bell, preferences panel, web-push manager, real-time toast handler and the notification-view rendering registry. Composes @granit/react-notifications (headless) with the foundation UI packages.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/notifications": "workspace:*",
+    "@granit/react-activities": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-notifications": "workspace:*",
+    "@granit/react-notifications-web-push": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.18.0",
+    "sonner": "^2.0.7",
+    "zod": "^4.4.3"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/notifications": "workspace:*",
+    "@granit/react-activities": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-notifications": "workspace:*",
+    "@granit/react-notifications-web-push": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@storybook/react-vite": "^10.4.6",
+    "@tanstack/react-query": "^5.0.0",
+    "storybook": "^10.4.6"
+  }
+}
