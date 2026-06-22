@@ -1748,6 +1748,11 @@
           "signature": "type HostnameStatus = 'Pending' | 'Verifying' | 'Active' | 'Error'"
         },
         {
+          "name": "hostnamesConstraints",
+          "kind": "const",
+          "signature": "const hostnamesConstraints"
+        },
+        {
           "name": "HostnamesPermissions",
           "kind": "const",
           "signature": "const HostnamesPermissions"

@@ -25,5 +25,8 @@ export {
   verifyNow,
 } from './api/hostnames-api';
 
+// Validation constraints (generated from contracts/openapi/hostnames.json)
+export { hostnamesConstraints } from './constraints';
+
 // Permissions
 export { HostnamesPermissions } from './permissions';

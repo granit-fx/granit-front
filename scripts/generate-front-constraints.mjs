@@ -29,6 +29,12 @@ const TARGETS = [
     exportName: 'customerBalanceConstraints',
     schemaPattern: /Request$/,
   },
+  {
+    spec: 'hostnames.json',
+    pkg: 'hostnames',
+    exportName: 'hostnamesConstraints',
+    schemaPattern: /Request$/,
+  },
 ];
 
 const MAX_REF_DEPTH = 10;
