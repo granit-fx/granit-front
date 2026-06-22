@@ -7,6 +7,9 @@ export type {
   ListBalanceTransactionsParams,
 } from './types/index';
 
+// Validation constraints (generated from contracts/openapi/customer-balance.json)
+export { customerBalanceConstraints } from './constraints';
+
 // Permissions
 export { CustomerBalancePermissions } from './permissions';
 

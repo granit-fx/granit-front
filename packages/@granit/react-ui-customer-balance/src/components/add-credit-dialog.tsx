@@ -1,3 +1,4 @@
+import { customerBalanceConstraints } from '@granit/customer-balance';
 import { useAddAdminCredit } from '@granit/react-customer-balance';
 import { useTranslation } from '@granit/react-localization';
 import {
@@ -15,8 +16,9 @@ import {
   Textarea,
 } from '@granit/react-ui';
 import { FormDialog } from '@granit/react-ui-admin-kit';
+import { createConstraintsResolver } from '@granit/react-validation';
 import { toISODateString } from '@granit/types';
-import { useForm } from 'react-hook-form';
+import { useForm, type Resolver } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import type { AdminCreditRequest } from '@granit/customer-balance';
@@ -42,7 +44,25 @@ export function AddCreditDialog({
   const { t } = useTranslation();
   const mutation = useAddAdminCredit();
 
+  // Field labels feed the `{PropertyName}` placeholder of the shared
+  // `Validation:Builtin:*` messages — owned by the backend `Granit.Validation`
+  // package (namespace `Validation`), which the host app must load via the
+  // Localization API. The front never redefines these keys.
+  const fieldLabels: Record<string, string> = {
+    partyId: t('CustomerBalance.Fields.PartyId'),
+    amount: t('CustomerBalance.Fields.Amount'),
+    currency: t('CustomerBalance.Fields.Currency'),
+    source: t('CustomerBalance.Fields.Source'),
+    reason: t('CustomerBalance.Fields.Reason'),
+    expiresAt: t('CustomerBalance.Fields.ExpiresAt'),
+  };
+
   const form = useForm<AddCreditFormValues>({
+    // Cast: the structural resolver from @granit/react-validation has no
+    // react-hook-form peer dep, so its type needs widening to RHF's Resolver.
+    resolver: createConstraintsResolver(customerBalanceConstraints.AdminCreditRequest, t, {
+      labelResolver: (field) => fieldLabels[field] ?? field,
+    }) as unknown as Resolver<AddCreditFormValues>,
     defaultValues: {
       partyId: '',
       amount: 0,
@@ -60,21 +80,25 @@ export function AddCreditDialog({
     onOpenChange(next);
   };
 
-  async function onSubmit(values: AddCreditFormValues) {
-    try {
-      await mutation.mutateAsync({
+  function onSubmit(values: AddCreditFormValues) {
+    // `mutate` (not `mutateAsync`) routes failures to the global
+    // MutationCache.onError toast — no local catch needed.
+    mutation.mutate(
+      {
         partyId: values.partyId,
         amount: values.amount,
         currency: values.currency as CurrencyCode,
         source: values.source,
         reason: values.reason,
         expiresAt: values.expiresAt ? toISODateString(values.expiresAt) : null,
-      });
-      toast.success(t('CustomerBalance.CreditSuccess'));
-      handleOpenChange(false);
-    } catch {
-      // API errors are surfaced by the global MutationCache.onError toast.
-    }
+      },
+      {
+        onSuccess: () => {
+          toast.success(t('CustomerBalance.CreditSuccess'));
+          handleOpenChange(false);
+        },
+      }
+    );
   }
 
   return (
@@ -94,10 +118,6 @@ export function AddCreditDialog({
       <FormField
         control={form.control}
         name="partyId"
-        rules={{
-          required: true,
-          pattern: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
-        }}
         render={({ field }) => (
           <FormItem>
             <FormLabel>{t('CustomerBalance.Fields.PartyId')}</FormLabel>
@@ -112,7 +132,6 @@ export function AddCreditDialog({
       <FormField
         control={form.control}
         name="amount"
-        rules={{ required: true, min: 1 }}
         render={({ field }) => (
           <FormItem>
             <FormLabel>{t('CustomerBalance.Fields.Amount')}</FormLabel>
@@ -135,7 +154,6 @@ export function AddCreditDialog({
       <FormField
         control={form.control}
         name="currency"
-        rules={{ required: true }}
         render={({ field }) => (
           <FormItem>
             <FormLabel>{t('CustomerBalance.Fields.Currency')}</FormLabel>
@@ -150,7 +168,6 @@ export function AddCreditDialog({
       <FormField
         control={form.control}
         name="source"
-        rules={{ required: true }}
         render={({ field }) => (
           <FormItem>
             <FormLabel>{t('CustomerBalance.Fields.Source')}</FormLabel>
@@ -177,7 +194,6 @@ export function AddCreditDialog({
       <FormField
         control={form.control}
         name="reason"
-        rules={{ required: true }}
         render={({ field }) => (
           <FormItem>
             <FormLabel>{t('CustomerBalance.Fields.Reason')}</FormLabel>

@@ -1,3 +1,4 @@
+import { customerBalanceConstraints } from '@granit/customer-balance';
 import { useApplyAdminDebit } from '@granit/react-customer-balance';
 import { useTranslation } from '@granit/react-localization';
 import {
@@ -10,7 +11,8 @@ import {
   Textarea,
 } from '@granit/react-ui';
 import { FormDialog } from '@granit/react-ui-admin-kit';
-import { useForm } from 'react-hook-form';
+import { createConstraintsResolver } from '@granit/react-validation';
+import { useForm, type Resolver } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import type { AdminDebitRequest } from '@granit/customer-balance';
@@ -37,7 +39,25 @@ export function ApplyDebitDialog({
   const { t } = useTranslation();
   const mutation = useApplyAdminDebit();
 
+  // Field labels feed the `{PropertyName}` placeholder of the shared
+  // `Validation:Builtin:*` messages — owned by the backend `Granit.Validation`
+  // package (namespace `Validation`), which the host app must load via the
+  // Localization API. The front never redefines these keys.
+  const fieldLabels: Record<string, string> = {
+    partyId: t('CustomerBalance.Fields.PartyId'),
+    amount: t('CustomerBalance.Fields.Amount'),
+    currency: t('CustomerBalance.Fields.Currency'),
+    reason: t('CustomerBalance.Fields.Reason'),
+    referenceId: t('CustomerBalance.Fields.ReferenceId'),
+    referenceType: t('CustomerBalance.Fields.ReferenceType'),
+  };
+
   const form = useForm<ApplyDebitFormValues>({
+    // Cast: the structural resolver from @granit/react-validation has no
+    // react-hook-form peer dep, so its type needs widening to RHF's Resolver.
+    resolver: createConstraintsResolver(customerBalanceConstraints.AdminDebitRequest, t, {
+      labelResolver: (field) => fieldLabels[field] ?? field,
+    }) as unknown as Resolver<ApplyDebitFormValues>,
     defaultValues: {
       partyId: '',
       amount: 0,
@@ -55,21 +75,25 @@ export function ApplyDebitDialog({
     onOpenChange(next);
   };
 
-  async function onSubmit(values: ApplyDebitFormValues) {
-    try {
-      await mutation.mutateAsync({
+  function onSubmit(values: ApplyDebitFormValues) {
+    // `mutate` (not `mutateAsync`) routes failures to the global
+    // MutationCache.onError toast — no local catch needed.
+    mutation.mutate(
+      {
         partyId: values.partyId,
         amount: values.amount,
         currency: values.currency as CurrencyCode,
         reason: values.reason,
         referenceId: values.referenceId || null,
         referenceType: values.referenceType || null,
-      });
-      toast.success(t('CustomerBalance.DebitSuccess'));
-      handleOpenChange(false);
-    } catch {
-      // API errors are surfaced by the global MutationCache.onError toast.
-    }
+      },
+      {
+        onSuccess: () => {
+          toast.success(t('CustomerBalance.DebitSuccess'));
+          handleOpenChange(false);
+        },
+      }
+    );
   }
 
   return (
@@ -90,10 +114,6 @@ export function ApplyDebitDialog({
       <FormField
         control={form.control}
         name="partyId"
-        rules={{
-          required: true,
-          pattern: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
-        }}
         render={({ field }) => (
           <FormItem>
             <FormLabel>{t('CustomerBalance.Fields.PartyId')}</FormLabel>
@@ -108,7 +128,6 @@ export function ApplyDebitDialog({
       <FormField
         control={form.control}
         name="amount"
-        rules={{ required: true, min: 1 }}
         render={({ field }) => (
           <FormItem>
             <FormLabel>{t('CustomerBalance.Fields.Amount')}</FormLabel>
@@ -131,7 +150,6 @@ export function ApplyDebitDialog({
       <FormField
         control={form.control}
         name="currency"
-        rules={{ required: true }}
         render={({ field }) => (
           <FormItem>
             <FormLabel>{t('CustomerBalance.Fields.Currency')}</FormLabel>
@@ -146,7 +164,6 @@ export function ApplyDebitDialog({
       <FormField
         control={form.control}
         name="reason"
-        rules={{ required: true }}
         render={({ field }) => (
           <FormItem>
             <FormLabel>{t('CustomerBalance.Fields.Reason')}</FormLabel>

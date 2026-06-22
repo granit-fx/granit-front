@@ -15,8 +15,8 @@ const { mockUseCustomerBalance, mockUseBalanceTransactions } = vi.hoisted(() => 
 vi.mock('@granit/react-customer-balance', () => ({
   useCustomerBalance: () => mockUseCustomerBalance(),
   useBalanceTransactions: () => mockUseBalanceTransactions(),
-  useAddAdminCredit: () => ({ mutateAsync: vi.fn(), isPending: false }),
-  useApplyAdminDebit: () => ({ mutateAsync: vi.fn(), isPending: false }),
+  useAddAdminCredit: () => ({ mutate: vi.fn(), isPending: false }),
+  useApplyAdminDebit: () => ({ mutate: vi.fn(), isPending: false }),
 }));
 
 const mockBalance: CustomerBalanceResponse = {

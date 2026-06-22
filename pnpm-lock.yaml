@@ -619,6 +619,9 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
+      '@granit/validation':
+        specifier: workspace:*
+        version: link:../validation
 
   packages/@granit/dashboards:
     devDependencies:
@@ -3632,6 +3635,9 @@ importers:
       '@granit/react-ui-admin-kit':
         specifier: workspace:*
         version: link:../react-ui-admin-kit
+      '@granit/react-validation':
+        specifier: workspace:*
+        version: link:../react-validation
       '@granit/types':
         specifier: workspace:*
         version: link:../types

@@ -11,8 +11,13 @@ import type {
   BulkUpdateSettingsResponse,
 } from '@granit/settings';
 
-const mockSaveAsync =
-  vi.fn<(entries: readonly BulkSettingEntry[]) => Promise<BulkUpdateSettingsResponse>>();
+let saveResponse: BulkUpdateSettingsResponse;
+const mockSave = vi.fn<
+  (
+    entries: readonly BulkSettingEntry[],
+    opts?: { onSuccess?: (response: BulkUpdateSettingsResponse) => void }
+  ) => void
+>((_entries, opts) => opts?.onSuccess?.(saveResponse));
 
 const mockSettings: AdminAppSettingResponse[] = [
   {
@@ -59,7 +64,7 @@ const mockSettings: AdminAppSettingResponse[] = [
 
 vi.mock('@granit/react-settings', () => ({
   useAdminAppSettings: () => ({ data: mockSettings, isLoading: false }),
-  useBulkUpdateSettings: () => ({ mutateAsync: mockSaveAsync, isPending: false }),
+  useBulkUpdateSettings: () => ({ mutate: mockSave, isPending: false }),
   useSettings: () => ({ data: {}, isLoading: false }),
   useUpdateSetting: () => ({
     update: vi.fn(),
@@ -79,9 +84,9 @@ vi.mock('sonner', () => ({
 
 beforeEach(() => {
   vi.clearAllMocks();
-  mockSaveAsync.mockResolvedValue({
+  saveResponse = {
     results: mockSettings.map((s) => ({ key: s.key, outcome: 'Updated', errorCode: null })),
-  });
+  };
 });
 
 describe('AppSettingsPanel', () => {
@@ -144,14 +149,17 @@ describe('AppSettingsPanel', () => {
 
     await user.click(screen.getByRole('button', { name: /save/i }));
 
-    await waitFor(() => expect(mockSaveAsync).toHaveBeenCalled());
-    expect(mockSaveAsync).toHaveBeenCalledWith([{ key: 'audit.retention_days', value: '2000' }]);
+    await waitFor(() => expect(mockSave).toHaveBeenCalled());
+    expect(mockSave).toHaveBeenCalledWith(
+      [{ key: 'audit.retention_days', value: '2000' }],
+      expect.anything()
+    );
     expect(toast.success).toHaveBeenCalled();
     expect(toast.error).not.toHaveBeenCalled();
   });
 
   it('should surface per-row errors when outcome !== Updated', async () => {
-    mockSaveAsync.mockResolvedValue({
+    saveResponse = {
       results: [
         {
           key: 'audit.retention_days',
@@ -159,7 +167,7 @@ describe('AppSettingsPanel', () => {
           errorCode: 'Granit:Settings:ValidationFailed',
         },
       ],
-    });
+    };
 
     const { user } = renderSettings(<AppSettingsPanel />);
     await waitFor(() => expect(screen.getByDisplayValue('1095')).toBeInTheDocument());
@@ -181,7 +189,7 @@ describe('AppSettingsPanel', () => {
     await user.click(screen.getByRole('button', { name: /save/i }));
 
     await waitFor(() => expect(toast.info).toHaveBeenCalled());
-    expect(mockSaveAsync).not.toHaveBeenCalled();
+    expect(mockSave).not.toHaveBeenCalled();
   });
 
   it('should reset form to original values', async () => {

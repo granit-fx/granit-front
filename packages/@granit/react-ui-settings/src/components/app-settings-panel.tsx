@@ -109,7 +109,7 @@ export function AppSettingsPanel({ scope = 'global' }: AppSettingsPanelProps = {
     }
   };
 
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!settings) return;
 
@@ -119,13 +119,14 @@ export function AppSettingsPanel({ scope = 'global' }: AppSettingsPanelProps = {
       return;
     }
 
-    try {
-      const response = await saveMutation.mutateAsync(changed);
-      const failures = response.results.filter((r) => r.outcome !== 'Updated');
-      reportSaveOutcome(failures);
-    } catch {
-      // API errors are surfaced by the global MutationCache.onError toast.
-    }
+    // `mutate` (not `mutateAsync`) routes failures to the global
+    // MutationCache.onError toast — no local catch needed.
+    saveMutation.mutate(changed, {
+      onSuccess: (response) => {
+        const failures = response.results.filter((r) => r.outcome !== 'Updated');
+        reportSaveOutcome(failures);
+      },
+    });
   };
 
   return (

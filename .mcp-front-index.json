@@ -1504,6 +1504,11 @@
       "description": "Customer balance and credits — types and API functions",
       "exports": [
         {
+          "name": "customerBalanceConstraints",
+          "kind": "const",
+          "signature": "const customerBalanceConstraints"
+        },
+        {
           "name": "CustomerBalancePermissions",
           "kind": "const",
           "signature": "const CustomerBalancePermissions"
