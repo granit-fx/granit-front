@@ -1,0 +1,52 @@
+{
+  "name": "@granit/react-ui-cms-sites",
+  "description": "Granit admin UI for the CMS Sites module — the sites list (with per-site navigation actions and delete confirmation) and the spec-validated site create/edit form. Composes @granit/react-cms (headless) with the foundation UI packages.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/cms": "workspace:*",
+    "@granit/react-cms": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-validation": "workspace:*",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.80.0",
+    "react-router-dom": "^7.18.0",
+    "sonner": "^2.0.7"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/cms": "workspace:*",
+    "@granit/react-cms": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-validation": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@storybook/react-vite": "^10.4.6",
+    "@tanstack/react-query": "^5.0.0",
+    "i18next": "^26.0.0",
+    "react-i18next": "^17.0.0",
+    "storybook": "^10.4.6"
+  }
+}
