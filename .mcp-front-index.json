@@ -7883,6 +7883,27 @@
       ]
     },
     {
+      "name": "@granit/react-ui-diagnostics",
+      "description": "Granit admin UI for the Diagnostics module — the monitoring/health page, service-health cards and auto-refresh indicator. Composes @granit/react-diagnostics (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "DiagnosticListPage",
+          "kind": "function",
+          "signature": "function DiagnosticListPage()"
+        },
+        {
+          "name": "ServiceHealthCard",
+          "kind": "function",
+          "signature": "function ServiceHealthCard("
+        },
+        {
+          "name": "AutoRefreshIndicator",
+          "kind": "function",
+          "signature": "function AutoRefreshIndicator("
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-hostnames",
       "description": "Granit admin UI for the managed Hostnames module — owner-scoped hostname list, DNS details, status/certificate badges, row actions and add-hostname dialog. Composes @granit/react-hostnames (headless) with the foundation UI packages.",
       "exports": [

@@ -1,0 +1,47 @@
+{
+  "name": "@granit/react-ui-diagnostics",
+  "description": "Granit admin UI for the Diagnostics module — the monitoring/health page, service-health cards and auto-refresh indicator. Composes @granit/react-diagnostics (headless) with the foundation UI packages.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/diagnostics": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-diagnostics": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/diagnostics": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-diagnostics": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@storybook/react-vite": "^10.4.6",
+    "storybook": "^10.4.6"
+  }
+}
