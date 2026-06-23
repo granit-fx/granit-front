@@ -17,6 +17,7 @@
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/documents": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/query-engine": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-query-engine": "workspace:*",
@@ -47,6 +48,7 @@
   "devDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/documents": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/query-engine": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-query-engine": "workspace:*",

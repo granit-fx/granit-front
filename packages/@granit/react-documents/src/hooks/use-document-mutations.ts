@@ -11,6 +11,7 @@ import {
 } from '@granit/documents';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { logger } from '../logger';
 import { buildDocumentsQueryKey, useDocumentsConfig } from '../providers/documents-provider';
 
 import type { ResolvedDocumentsConfig } from '../providers/documents-provider';
@@ -110,7 +111,8 @@ export function useFinalizeUpload(): UseMutationResult<
   return useMutation({
     mutationFn: (request: FinalizeUploadRequest) =>
       finalizeUpload(config.client, config.basePath, request),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      logger.debug('Document upload finalized', { id: data.id });
       invalidateAllFolders(queryClient, config);
       invalidateQuota(queryClient, config);
     },
@@ -129,7 +131,8 @@ export function useRenameDocument(): UseMutationResult<
   return useMutation({
     mutationFn: ({ id, request }: DocumentIdMutationArgs<RenameDocumentRequest>) =>
       renameDocument(config.client, config.basePath, id, request),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      logger.debug('Document renamed', { id: data.id });
       invalidateAllDocuments(queryClient, config);
     },
   });
@@ -147,7 +150,8 @@ export function useMoveDocument(): UseMutationResult<
   return useMutation({
     mutationFn: ({ id, request }: DocumentIdMutationArgs<MoveDocumentRequest>) =>
       moveDocument(config.client, config.basePath, id, request),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      logger.debug('Document moved', { id: data.id });
       invalidateAllDocuments(queryClient, config);
     },
   });
@@ -169,7 +173,8 @@ export function useTransferDocumentOwner(): UseMutationResult<
   return useMutation({
     mutationFn: ({ id, request }: DocumentIdMutationArgs<TransferOwnerRequest>) =>
       transferDocumentOwner(config.client, config.basePath, id, request),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      logger.debug('Document owner transferred', { id: data.id });
       invalidateAllDocuments(queryClient, config);
     },
   });
@@ -182,7 +187,8 @@ export function useTrashDocument(): UseMutationResult<DocumentResponse, Error, s
 
   return useMutation({
     mutationFn: (id: string) => trashDocument(config.client, config.basePath, id),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      logger.debug('Document trashed', { id: data.id });
       invalidateAllDocuments(queryClient, config);
       invalidateTrashedDocuments(queryClient, config);
       invalidateQuota(queryClient, config);
@@ -197,7 +203,8 @@ export function useRestoreDocument(): UseMutationResult<DocumentResponse, Error,
 
   return useMutation({
     mutationFn: (id: string) => restoreDocument(config.client, config.basePath, id),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      logger.debug('Document restored', { id: data.id });
       invalidateAllDocuments(queryClient, config);
       invalidateTrashedDocuments(queryClient, config);
       invalidateQuota(queryClient, config);
@@ -212,7 +219,8 @@ export function usePermanentlyDeleteDocument(): UseMutationResult<void, Error, s
 
   return useMutation({
     mutationFn: (id: string) => permanentlyDeleteDocument(config.client, config.basePath, id),
-    onSuccess: () => {
+    onSuccess: (_data, id) => {
+      logger.debug('Document permanently deleted', { id });
       invalidateAllDocuments(queryClient, config);
       invalidateTrashedDocuments(queryClient, config);
       invalidateQuota(queryClient, config);
@@ -236,6 +244,7 @@ export function useAppendDocumentVersion(): UseMutationResult<
     mutationFn: ({ id, request }: DocumentIdMutationArgs<AppendVersionRequest>) =>
       appendDocumentVersion(config.client, config.basePath, id, request),
     onSuccess: (_data, { id }) => {
+      logger.debug('Document version appended', { id });
       invalidateDocumentVersions(queryClient, config, id);
       invalidateDocumentDetail(queryClient, config, id);
       invalidateQuota(queryClient, config);

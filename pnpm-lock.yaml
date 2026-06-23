@@ -2223,6 +2223,9 @@ importers:
       '@granit/documents':
         specifier: workspace:*
         version: link:../documents
+      '@granit/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
