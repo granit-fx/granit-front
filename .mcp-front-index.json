@@ -7990,6 +7990,16 @@
           "signature": "function PublicLayout("
         },
         {
+          "name": "TokenConfirmationResult",
+          "kind": "function",
+          "signature": "function TokenConfirmationResult("
+        },
+        {
+          "name": "ConfirmationStatus",
+          "kind": "type",
+          "signature": "type ConfirmationStatus = 'loading' | 'success' | 'error'"
+        },
+        {
           "name": "TwoFactorForm",
           "kind": "function",
           "signature": "function TwoFactorForm("
