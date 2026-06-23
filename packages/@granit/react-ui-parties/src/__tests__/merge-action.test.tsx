@@ -113,4 +113,34 @@ describe('MergeAction', () => {
       expect(mockNavigate).toHaveBeenCalledWith('/parties/s1');
     });
   });
+
+  it('returns to idle when the wizard is cancelled', async () => {
+    mockUsePartiesQuery.mockReturnValue({ data: [loserCandidate], isLoading: false });
+    const { user } = renderWithProviders(
+      <MergeAction survivorId={survivorId} survivorName="Acme" />
+    );
+
+    await user.click(screen.getByRole('button', { name: /Merge with/i }));
+    await user.click(screen.getByRole('button', { name: /Globex Inc/ }));
+    await user.click(await screen.findByRole('button', { name: 'wizard-cancel' }));
+
+    await waitFor(() => {
+      expect(screen.queryByText(/wizard for/)).not.toBeInTheDocument();
+    });
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it('closes the picker without selecting via cancel', async () => {
+    mockUsePartiesQuery.mockReturnValue({ data: [loserCandidate], isLoading: false });
+    const { user } = renderWithProviders(
+      <MergeAction survivorId={survivorId} survivorName="Acme" />
+    );
+
+    await user.click(screen.getByRole('button', { name: /Merge with/i }));
+    await user.click(await screen.findByRole('button', { name: 'Cancel' }));
+
+    await waitFor(() => {
+      expect(screen.queryByText('Pick a party to merge into this one')).not.toBeInTheDocument();
+    });
+  });
 });

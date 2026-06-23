@@ -59,6 +59,32 @@ describe('PartyCreateForm', () => {
     expect(values.defaultCurrency).toBe('EUR');
   });
 
+  it('submits the optional website, language and notes fields', async () => {
+    const onSubmit = vi.fn();
+    const { user } = renderWithProviders(
+      <PartyCreateForm onSubmit={onSubmit} onCancel={vi.fn()} isPending={false} />
+    );
+
+    await user.type(screen.getByLabelText('Name'), 'Acme Corp');
+    await user.type(screen.getByLabelText('Website'), 'https://acme.example');
+    await user.type(screen.getByLabelText('Language'), 'fr-BE');
+    await user.type(screen.getByLabelText('Internal notes'), 'VIP account');
+    await user.click(screen.getByRole('button', { name: 'Create party' }));
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+    });
+    const [values] = onSubmit.mock.calls[0];
+    expect(values.website).toBe('https://acme.example');
+    expect(values.language).toBe('fr-BE');
+    expect(values.internalNotes).toBe('VIP account');
+  });
+
+  it('renders the loading label while pending', () => {
+    renderWithProviders(<PartyCreateForm onSubmit={vi.fn()} onCancel={vi.fn()} isPending />);
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
+  });
+
   it('calls onCancel when the cancel button is clicked', async () => {
     const onCancel = vi.fn();
     const { user } = renderWithProviders(

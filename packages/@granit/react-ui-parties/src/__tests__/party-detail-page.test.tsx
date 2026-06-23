@@ -41,10 +41,13 @@ const mockParty: PartyResponse = {
 // Mocks
 // ---------------------------------------------------------------------------
 
-const { mockUseParams } = vi.hoisted(() => ({ mockUseParams: vi.fn() }));
+const { mockUseParams, mockNavigate } = vi.hoisted(() => ({
+  mockUseParams: vi.fn(),
+  mockNavigate: vi.fn(),
+}));
 vi.mock('react-router-dom', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
-  return { ...actual, useParams: mockUseParams, useNavigate: () => vi.fn() };
+  return { ...actual, useParams: mockUseParams, useNavigate: () => mockNavigate };
 });
 
 const { mockUsePartyQuery } = vi.hoisted(() => ({ mockUsePartyQuery: vi.fn() }));
@@ -130,5 +133,19 @@ describe('PartyDetailPage', () => {
     mockUsePartyQuery.mockReturnValue({ data: mockParty, isLoading: false });
     renderWithProviders(<PartyDetailPage />, { route: '/parties/party-1' });
     expect(document.querySelector('[data-slot="party-detail-page"]')).toBeInTheDocument();
+  });
+
+  it('navigates back to the list from the not-found state', async () => {
+    mockUsePartyQuery.mockReturnValue({ data: undefined, isLoading: false });
+    const { user } = renderWithProviders(<PartyDetailPage />, { route: '/parties/party-1' });
+    await user.click(screen.getByRole('button', { name: 'Back to parties' }));
+    expect(mockNavigate).toHaveBeenCalledWith('/parties');
+  });
+
+  it('navigates back to the list from the detail header', async () => {
+    mockUsePartyQuery.mockReturnValue({ data: mockParty, isLoading: false });
+    const { user } = renderWithProviders(<PartyDetailPage />, { route: '/parties/party-1' });
+    await user.click(screen.getByRole('button', { name: 'Back to parties' }));
+    expect(mockNavigate).toHaveBeenCalledWith('/parties');
   });
 });

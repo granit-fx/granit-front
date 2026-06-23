@@ -136,4 +136,70 @@ describe('CreateConflictDialog', () => {
 
     expect(await screen.findByText(/wizard for existing-1 ← new-id/)).toBeInTheDocument();
   });
+
+  it('navigates to the survivor after a successful merge', async () => {
+    const onCreateAnyway = vi.fn().mockResolvedValue('new-id' as PartyId);
+    const onClose = vi.fn();
+    const { user } = renderWithProviders(
+      <CreateConflictDialog conflict={conflict} onCreateAnyway={onCreateAnyway} onClose={onClose} />
+    );
+
+    await user.click(screen.getByRole('button', { name: /Merge into this one/i }));
+    await user.click(await screen.findByRole('button', { name: 'wizard-success' }));
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/parties/existing-1');
+    });
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  it('stays on the choose phase when force-create returns null', async () => {
+    const onCreateAnyway = vi.fn().mockResolvedValue(null);
+    const { user } = renderWithProviders(
+      <CreateConflictDialog conflict={conflict} onCreateAnyway={onCreateAnyway} onClose={vi.fn()} />
+    );
+
+    await user.click(screen.getByRole('button', { name: /Create anyway/i }));
+
+    await waitFor(() => {
+      expect(onCreateAnyway).toHaveBeenCalled();
+    });
+    expect(mockNavigate).not.toHaveBeenCalled();
+    expect(screen.getByText('Potential duplicate detected')).toBeInTheDocument();
+  });
+
+  it('recovers when force-create rejects', async () => {
+    const onCreateAnyway = vi.fn().mockRejectedValue(new Error('boom'));
+    const { user } = renderWithProviders(
+      <CreateConflictDialog conflict={conflict} onCreateAnyway={onCreateAnyway} onClose={vi.fn()} />
+    );
+
+    await user.click(screen.getByRole('button', { name: /Create anyway/i }));
+
+    await waitFor(() => {
+      expect(onCreateAnyway).toHaveBeenCalled();
+    });
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it('does not open the merge wizard when force-create returns null', async () => {
+    const onCreateAnyway = vi.fn().mockResolvedValue(null);
+    const { user } = renderWithProviders(
+      <CreateConflictDialog conflict={conflict} onCreateAnyway={onCreateAnyway} onClose={vi.fn()} />
+    );
+
+    await user.click(screen.getByRole('button', { name: /Merge into this one/i }));
+
+    await waitFor(() => {
+      expect(onCreateAnyway).toHaveBeenCalled();
+    });
+    expect(screen.queryByText(/wizard for/)).not.toBeInTheDocument();
+  });
+
+  it('renders nothing actionable when there is no conflict', () => {
+    renderWithProviders(
+      <CreateConflictDialog conflict={null} onCreateAnyway={vi.fn()} onClose={vi.fn()} />
+    );
+    expect(screen.queryByText('Potential duplicate detected')).not.toBeInTheDocument();
+  });
 });

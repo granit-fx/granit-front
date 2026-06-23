@@ -100,4 +100,14 @@ describe('MergeFromCandidate', () => {
       expect(mockNavigate).toHaveBeenCalledWith('/parties/p-a');
     });
   });
+
+  it('closes from the survivor picker via cancel', async () => {
+    const onClose = vi.fn();
+    const { user } = renderWithProviders(
+      <MergeFromCandidate candidate={candidate} onClose={onClose} />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(onClose).toHaveBeenCalled();
+  });
 });
