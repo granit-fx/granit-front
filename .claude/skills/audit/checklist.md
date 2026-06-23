@@ -511,6 +511,40 @@ foundation. Verify against the established patterns in `@granit/react-ui-parties
       is an INCONSISTENCY (`Fix: add aria-label / DialogTitle`). Audit statically —
       flag only clear omissions, not subjective contrast/landmark judgements.
 
+### 7g. Framework-agnostic seam — multi-platform readiness (--scope layers)
+
+The core/adapter split — framework-agnostic core `@granit/{module}` (types + api +
+permissions, NO framework runtime) + a thin `react-{module}` adapter — is what would
+let a future non-React adapter (`@granit/angular-{module}`, `@granit/{module}-native`)
+sit on the SAME core. Precedents already follow it: `validation` / `react-validation`,
+`query-engine` / `react-query-engine`, `entity-merge` / `react-entity-merge`. Do NOT
+build other adapters now (YAGNI) — just keep the seam clean so a port stays cheap.
+
+- [ ] **R1 — no React ecosystem in an agnostic core**: a package WITHOUT the
+      `react-` prefix must not import `react`, `react-dom`, or `@tanstack/react-query`.
+      The framework-neutral query core is `@tanstack/query-core` (React/Angular/Vue
+      layer their own adapters on top of it). Enforced by the `imports` arch-test
+      (`framework-agnostic packages do not import the React ecosystem`); current
+      allowlisted debt: `@granit/shell-core` (`src/query-client.ts` imports
+      `@tanstack/react-query` — migrate to `@tanstack/query-core`). BREAKING.
+- [ ] **R2 — no platform globals in a portable core**: a *domain* core that should be
+      portable avoids direct `window` / `document` / `localStorage` / `sessionStorage`
+      / `navigator` access; platform concerns (persistence, navigation, redirect) go
+      behind an injected port (web → `localStorage`, RN → `AsyncStorage`). **Audit
+      manually — there is no arch-test**: a regex can't separate runtime use from
+      JSDoc/string mentions without an AST, and several cores are *legitimately* web
+      platform abstractions, NOT violations — `@granit/cookies` (`document.cookie`),
+      WebAuthn passkeys (`navigator.credentials`), OAuth redirect (`window.location`).
+      Flag only a domain core reaching for a global it could have injected.
+      INCONSISTENCY.
+- [ ] **R3 — UI does not hard-bind a web router**: a `react-ui-{module}` page should
+      receive navigation via a thin port/props, not `import … from 'react-router-dom'`
+      / `'react-router'` directly, so React Native (react-navigation) or Angular Router
+      can substitute. Enforced as a **ratchet** by the `imports` arch-test (`react-ui
+      packages do not add NEW direct web-router imports`): the current offenders are
+      baselined (`UI_ROUTER_BASELINE`); no NEW `react-ui-*` may add a direct router
+      import, and the baseline should SHRINK as pages migrate. INCONSISTENCY.
+
 ---
 
 ## Suppressions — DO NOT flag

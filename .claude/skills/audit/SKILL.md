@@ -222,7 +222,8 @@ HTTP-client conformity and endpoint drift), hooks, dependencies, cross-cutting
 concerns (including test data & mocks reuse, checklist 5e), module decomposition
 (backend bounded-context alignment), and finally the 3-tier layer separation
 (checklist 7 — core / headless / react-ui, including shadcn/ui UI-tier
-confinement, checklist 7e, and admin-UI composition, checklist 7f).
+confinement, checklist 7e, admin-UI composition, checklist 7f, and the
+framework-agnostic seam / multi-platform readiness, checklist 7g).
 
 For each finding, classify it:
 
@@ -446,6 +447,23 @@ When auditing all packages, perform these additional checks:
     # story coverage gap: component files vs stories per package
     for d in packages/@granit/react-ui-*; do c=$(find "$d/src" -name '*.tsx' ! -name '*.test.tsx' ! -name '*.stories.tsx' | wc -l); s=$(find "$d/src" -name '*.stories.tsx' | wc -l); echo "$(basename "$d"): $s stories / $c components"; done
     ```
+
+14. **Framework-agnostic seam (checklist 7g)**: keep the core portable so a future
+    non-React adapter can reuse it. R1/R3 are enforced by the `imports` arch-test;
+    R2 is a manual audit. Quick scans:
+
+    ```bash
+    # R1 — React ecosystem imported by a non-react (agnostic) package
+    for p in packages/@granit/*/package.json; do d=$(dirname "$p"); case "$d" in */react-*) continue;; esac
+      grep -rlnE "from 'react'|from 'react-dom'|from '@tanstack/react-query'" "$d/src" 2>/dev/null | grep -vE "/__tests__/|\.test\."
+    done
+    # R3 — react-ui pages importing a web router directly (ratchet baseline)
+    for f in $(grep -rlE "from 'react-router" packages/@granit/react-ui-*/src 2>/dev/null); do case "$f" in *test*|*stories*) continue;; esac; echo "$f"; done | sed -E 's|.*/(react-ui-[^/]+)/.*|@granit/\1|' | sort -u
+    # R2 — manual: a DOMAIN core touching a platform global it could inject
+    #   (skip the legitimate web abstractions: cookies, webauthn, oauth-redirect)
+    ```
+
+    Verify with `pnpm exec vitest run packages/@granit/arch-tests/src/__tests__/imports.test.ts`.
 
 ---
 
