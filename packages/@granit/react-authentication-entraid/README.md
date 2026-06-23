@@ -108,7 +108,7 @@ import { EntraIdAuthProvider } from '@granit/react-ui-authentication-entraid';
   (`sub` falls back to the `oid` claim, `email` to the MSAL `username`).
 - `login(options?: LoginOptions)` / `logout(options?: LogoutOptions)` — trigger
   the MSAL redirect; `login` forwards `loginHint` / `prompt` / `redirectUri`,
-  `logout` forwards `postLogoutRedirectUri`.
+  `logout` forwards `redirectUri` (mapped to MSAL's `postLogoutRedirectUri`).
 - `msalInstance` / `msalRef` — the live `PublicClientApplication` (null before
   init completes); the ref is the escape hatch for advanced MSAL calls.
 

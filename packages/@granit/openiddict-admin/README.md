@@ -83,7 +83,7 @@ OpenIddictPermissions.Applications.Rotate; // 'OpenIddict.Applications.Rotate'
 
 | Symbol                                | Kind  | Purpose                                                           |
 | ------------------------------------- | ----- | ----------------------------------------------------------------- |
-| `AdminUser`                           | type  | Admin user descriptor (`userId`, name, `enabled`, `metadata`)     |
+| `AdminUser`                           | type  | Admin user descriptor (`userId`, `username`, `email`, `enabled`)  |
 | `AdminUserListParams`                 | type  | `GET {basePath}/users` query (`search`, `page`, `pageSize`)       |
 | `AdminUserPage`                       | type  | `PagedResult<AdminUser>` — paginated user listing                 |
 | `AdminImpersonationResult`            | type  | `{ accessToken, refreshToken, expiresIn }` from impersonation     |

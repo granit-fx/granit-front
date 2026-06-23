@@ -58,13 +58,12 @@ import {
   SnapshotWidgetRegistryProvider,
   defaultWidgetRegistry,
   defaultSnapshotWidgetRegistry,
-  composeRegistries,
 } from '@granit/react-dashboards';
 
 export function DashboardsRoot({ children }: { children: React.ReactNode }) {
   return (
     <WidgetRegistryProvider
-      registry={composeRegistries(defaultWidgetRegistry, defaultAnalyticsWidgetRegistry)}
+      registries={[defaultWidgetRegistry, defaultAnalyticsWidgetRegistry]}
     >
       <SnapshotWidgetRegistryProvider
         registries={[defaultSnapshotWidgetRegistry, defaultAnalyticsSnapshotWidgetRegistry]}
