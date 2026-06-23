@@ -1,8 +1,7 @@
-import { useState, type ComponentType, type ReactNode } from 'react';
-
 import { useTranslation } from '@granit/react-localization';
 import { Button } from '@granit/react-ui';
 import { AlertTriangle, Check, Copy } from 'lucide-react';
+import { useState, type ComponentType, type ReactNode } from 'react';
 
 export interface ErrorFallbackProps {
   error: Error;

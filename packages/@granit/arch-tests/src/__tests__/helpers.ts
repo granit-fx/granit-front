@@ -115,6 +115,7 @@ export const UI_ROUTER_BASELINE: ReadonlyArray<string> = [
   '@granit/react-ui-cms-sites',
   '@granit/react-ui-dashboards',
   '@granit/react-ui-documents',
+  '@granit/react-ui-error-boundary',
   '@granit/react-ui-features',
   '@granit/react-ui-hostnames',
   '@granit/react-ui-identity',

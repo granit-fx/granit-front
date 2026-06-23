@@ -1,6 +1,7 @@
 import { screen } from '@testing-library/react';
 
 import { ErrorFallback } from '../error-fallback';
+
 import { renderWithI18n } from './test-utils';
 
 import type { ReactNode } from 'react';

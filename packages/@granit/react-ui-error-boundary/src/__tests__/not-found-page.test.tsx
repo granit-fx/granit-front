@@ -3,6 +3,7 @@ import { I18nextProvider } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
 
 import { NotFoundPage } from '../not-found-page';
+
 import { testI18n } from './test-utils';
 
 describe('NotFoundPage', () => {

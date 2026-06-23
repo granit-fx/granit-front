@@ -1,8 +1,7 @@
-import { useEffect, useState, type ComponentType, type ReactNode } from 'react';
-
 import { useTranslation } from '@granit/react-localization';
 import { Button } from '@granit/react-ui';
 import { AlertTriangle, Check, Copy, ServerCrash } from 'lucide-react';
+import { useEffect, useState, type ComponentType, type ReactNode } from 'react';
 import { isRouteErrorResponse, Link, useRouteError } from 'react-router-dom';
 
 export interface ErrorPageProps {

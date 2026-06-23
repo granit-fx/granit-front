@@ -3,6 +3,7 @@ import { I18nextProvider } from 'react-i18next';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 import { ErrorPage } from '../error-page';
+
 import { testI18n } from './test-utils';
 
 import type { ReactElement } from 'react';
