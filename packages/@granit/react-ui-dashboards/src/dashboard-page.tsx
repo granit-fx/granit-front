@@ -1,5 +1,4 @@
 import { Dashboard, DashboardViewSwitcher, RenderedDashboard } from '@granit/react-dashboards';
-import { SAMPLE_FINANCE_DASHBOARD_ID } from '@granit/react-dashboards/testing';
 import { useTranslation } from '@granit/react-localization';
 import { Button } from '@granit/react-ui';
 import { Pencil } from 'lucide-react';
@@ -44,6 +43,11 @@ const DEMO_VIEWS: readonly DashboardView[] = [
   { name: 'overview', widgets: [], displayNameLocalizationKey: 'Dashboards.Demo.Views.Overview' },
   { name: 'details', widgets: [], displayNameLocalizationKey: 'Dashboards.Demo.Views.Details' },
 ];
+
+// Mirrors the MSW seed `SAMPLE_FINANCE_DASHBOARD_ID` in
+// `@granit/react-dashboards/testing`. Inlined here so this shipped demo page
+// does not import the test-only `/testing` barrel into the bundle.
+const SAMPLE_FINANCE_DASHBOARD_ID = '8c6b1e10-0000-4000-8000-000000000001';
 
 export function DashboardPage() {
   const { t } = useTranslation();
