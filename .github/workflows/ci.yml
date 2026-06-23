@@ -186,7 +186,19 @@ jobs:
           merge-multiple: true
 
       - name: Merge coverage + enforce thresholds
-        run: pnpm exec vitest run --merge-reports --coverage
+        # Thresholds are blocking only when targeting main (push to main or a PR
+        # into main). On develop coverage is still merged and reported, but the
+        # thresholds are relaxed to 0 so they never fail the pipeline.
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ] || [ "${{ github.base_ref }}" = "main" ]; then
+            pnpm exec vitest run --merge-reports --coverage
+          else
+            pnpm exec vitest run --merge-reports --coverage \
+              --coverage.thresholds.lines=0 \
+              --coverage.thresholds.functions=0 \
+              --coverage.thresholds.branches=0 \
+              --coverage.thresholds.statements=0
+          fi
 
       - name: Upload coverage
         if: always()
