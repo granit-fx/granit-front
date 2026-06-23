@@ -465,6 +465,23 @@ When auditing all packages, perform these additional checks:
 
     Verify with `pnpm exec vitest run packages/@granit/arch-tests/src/__tests__/imports.test.ts`.
 
+15. **Logging hygiene (checklist 5d)**: one logger instance per package, and enough
+    dev-time observability. Scans:
+
+    ```bash
+    # packages with >1 createLogger() call site (duplicate instances — centralize in logger.ts)
+    for p in $(grep -rl "createLogger(" packages/@granit/*/src 2>/dev/null | sed -E 's|/src/.*||' | sort -u); do
+      n=$(grep -rhoE "createLogger\(" "$p/src" | wc -l); [ "$n" -gt 1 ] && echo "$n  $p"
+    done
+    # logging packages that emit ONLY warn/error (no debug/info → poor dev observability)
+    for p in $(grep -rl "from '@granit/logger'" packages/@granit/*/src 2>/dev/null | sed -E 's|/src/.*||' | sort -u); do
+      di=$(grep -rhoE "\.(debug|info)\(" "$p/src" | wc -l); [ "$di" -eq 0 ] && echo "ONLY warn/error: $p"
+    done
+    ```
+
+    The `>1 createLogger` rule is enforced by an arch-test; the debug/info coverage is
+    a GAP heuristic (don't over-log, no PII).
+
 ---
 
 ## PR Mode (`/audit pr`)

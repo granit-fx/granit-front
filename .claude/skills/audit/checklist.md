@@ -282,6 +282,23 @@ the rule — extend the arch-test rather than duplicating an ad-hoc check.
 
 - [ ] **Logging façade**: runtime code uses `@granit/logger` (`createLogger`),
       never `console.*`
+- [ ] **One logger per package**: a package creates its logger ONCE, in a dedicated
+      `src/logger.ts` (`export const logger = createLogger('<pkg-name>')`), and every
+      other file imports that instance — like `@granit/react-ui-bff`. Repeating
+      `const logger = createLogger('<pkg>')` inline in several files builds duplicate
+      instances of the same prefix; flag as INCONSISTENCY (`Fix: move to src/logger.ts
+      and import it`). Use `logger.child('Feature')` for sub-scopes instead of a manual
+      `'[Feature] …'` string prefix. Enforced by the `>1 createLogger` arch-test.
+- [ ] **Dev observability (debug/info)**: the default log level is `DEBUG` in dev
+      and `WARN` in prod (`resolveLogLevelName`), so `debug`/`info` are free to a
+      developer and silent in production. Key flows SHOULD emit them, not just
+      `warn`/`error`: `info` on provider init and successful mutations (`X created
+      id=…`); `debug` on API calls in hooks (`fetching X` / `X loaded {count}`),
+      query-key invalidations, and gating/branching decisions. A domain
+      `react-{module}` whose only logs are `error`/`warn` (no `debug`/`info` on its
+      hooks/providers) is a GAP — a developer running the app sees nothing of the
+      module's behaviour. Do NOT over-log (no per-render spam, no PII — use the
+      `redact*` helpers); judge by whether the logs would help diagnose a flow in dev.
 - [ ] **CSP / Trusted Types**: any package that writes to a DOM script sink
       (`.innerHTML`, `.outerHTML`, `.insertAdjacentHTML`, direct `.src =` or
       `setAttribute('src', …)` on `iframe`/`script`) MUST expose a `<pkg>/csp`
