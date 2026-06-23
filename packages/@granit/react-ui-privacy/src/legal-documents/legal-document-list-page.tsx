@@ -138,7 +138,7 @@ export function LegalDocumentListPage() {
         <LegalDocumentPublishDialog
           documentId={publishTarget.id}
           displayName={publishTarget.displayName}
-          open={publishTarget !== null}
+          open={true}
           onOpenChange={(open) => {
             if (!open) setPublishTarget(null);
           }}
