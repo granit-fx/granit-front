@@ -1,5 +1,4 @@
 import { CsrfManager, parseBffSessionResponse } from '@granit/bff';
-import { createLogger } from '@granit/logger';
 import {
   createContext,
   useCallback,
@@ -9,6 +8,8 @@ import {
   useRef,
   useState,
 } from 'react';
+
+import { logger as fallbackLogger } from '../logger';
 
 import type { BffConfig, BffUser } from '@granit/bff';
 import type { ReactNode } from 'react';
@@ -32,10 +33,6 @@ export interface BffContextType {
 }
 
 const BffContext = createContext<BffContextType | null>(null);
-
-// Fallback logger when the app wires no `config.logger`. Routes through the
-// @granit/logger façade (console transport in dev) instead of the raw console.
-const fallbackLogger = createLogger('react-bff');
 
 // Marks that a login redirect is in flight. Survives the full-page navigation
 // to the BFF/IdP and back (same-origin sessionStorage), so the first session

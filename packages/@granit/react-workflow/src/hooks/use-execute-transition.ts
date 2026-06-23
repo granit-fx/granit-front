@@ -1,15 +1,15 @@
-import { createLogger } from '@granit/logger';
 import { executeStateMachineTransition } from '@granit/workflow';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
+import { logger as workflowLogger } from '../logger';
 import { useWorkflowConfig } from '../providers/workflow-provider';
 
 import { buildWorkflowQueryKey } from './query-keys';
 
 import type { WorkflowTransitionResult } from '@granit/workflow';
 
-const logger = createLogger('workflow:execute-transition');
+const logger = workflowLogger.child('execute-transition');
 
 export interface UseExecuteTransitionOptions {
   onSuccess?: (result: WorkflowTransitionResult) => void;

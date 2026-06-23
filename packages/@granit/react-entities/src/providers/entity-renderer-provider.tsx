@@ -1,7 +1,10 @@
-import { createLogger, type Logger } from '@granit/logger';
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
 
+import { logger as consoleLogger } from '../logger';
+
 import { EMPTY_COMPONENT_CATALOG, type EntityComponentCatalog } from './component-catalog';
+
+import type { Logger } from '@granit/logger';
 
 /**
  * Resolves an i18n key (as carried by the manifest) into a localised
@@ -24,12 +27,6 @@ export interface EntityRendererContextValue {
    */
   readonly logger: Logger;
 }
-
-// Default logger used when no `@granit/logger` instance is wired into the
-// provider. Routes through the createLogger façade (console transport in dev)
-// so action failures still surface; production apps should wire a redacting
-// logger via `<EntityRendererProvider logger={…}>`.
-const consoleLogger: Logger = createLogger('react-entities');
 
 const EntityRendererContext = createContext<EntityRendererContextValue | null>(null);
 

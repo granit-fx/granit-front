@@ -1,10 +1,14 @@
-import { createLogger, type Logger } from '@granit/logger';
 import axios, {
   type AxiosError,
   type AxiosInstance,
   type AxiosRequestConfig,
   type InternalAxiosRequestConfig,
 } from 'axios';
+
+import { logger as fallbackLogger } from './logger';
+
+import type { Logger } from '@granit/logger';
+
 
 /** Authentication mode for the API client. */
 export type ApiClientMode = 'bearer' | 'bff';
@@ -23,11 +27,6 @@ export type ApiClientTransport = 'xhr' | 'fetch';
  * silently clobber the request axios already built.
  */
 export type RequestFetchOptions = Omit<RequestInit, 'method' | 'body'>;
-
-// Fallback logger for the rare paths where no app logger is wired. Warnings
-// route through the @granit/logger façade (console transport in dev) rather
-// than the raw global console — keeps the no-console arch rule honest.
-const fallbackLogger = createLogger('api-client');
 
 /** Getter that returns the current CSRF token, or null if unavailable. */
 export type CsrfTokenGetter = () => string | null;
