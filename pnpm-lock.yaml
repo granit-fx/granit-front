@@ -3647,6 +3647,85 @@ importers:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
 
+  packages/@granit/react-ui-authentication-local:
+    dependencies:
+      lucide-react:
+        specifier: ^1.21.0
+        version: 1.21.0(react@19.2.7)
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+      react-dom:
+        specifier: 19.2.7
+        version: 19.2.7(react@19.2.7)
+      react-hook-form:
+        specifier: ^7.80.0
+        version: 7.80.0(react@19.2.7)
+      react-router-dom:
+        specifier: ^7.18.0
+        version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      sonner:
+        specifier: ^2.0.7
+        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+    devDependencies:
+      '@granit/account':
+        specifier: workspace:*
+        version: link:../account
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/authentication-local':
+        specifier: workspace:*
+        version: link:../authentication-local
+      '@granit/logger':
+        specifier: workspace:*
+        version: link:../logger
+      '@granit/react-account':
+        specifier: workspace:*
+        version: link:../react-account
+      '@granit/react-authentication-local':
+        specifier: workspace:*
+        version: link:../react-authentication-local
+      '@granit/react-localization':
+        specifier: workspace:*
+        version: link:../react-localization
+      '@granit/react-ui':
+        specifier: workspace:*
+        version: link:../react-ui
+      '@granit/react-validation':
+        specifier: workspace:*
+        version: link:../react-validation
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
+      '@granit/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@granit/validation':
+        specifier: workspace:*
+        version: link:../validation
+      '@storybook/react-vite':
+        specifier: ^10.4.6
+        version: 10.4.6(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rollup@4.62.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)(vite@8.0.16(@types/node@26.0.0)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
+      '@tanstack/react-query':
+        specifier: 5.101.0
+        version: 5.101.0(react@19.2.7)
+      axios:
+        specifier: 1.18.0
+        version: 1.18.0
+      i18next:
+        specifier: ^26.0.0
+        version: 26.3.1(typescript@6.0.3)
+      react-i18next:
+        specifier: ^17.0.0
+        version: 17.0.8(i18next@26.3.1(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+      storybook:
+        specifier: ^10.4.6
+        version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+
   packages/@granit/react-ui-authorization:
     dependencies:
       lucide-react:
@@ -4541,6 +4620,79 @@ importers:
       '@tanstack/react-query':
         specifier: 5.101.0
         version: 5.101.0(react@19.2.7)
+      storybook:
+        specifier: ^10.4.6
+        version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+
+  packages/@granit/react-ui-identity:
+    dependencies:
+      lucide-react:
+        specifier: ^1.21.0
+        version: 1.21.0(react@19.2.7)
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+      react-dom:
+        specifier: 19.2.7
+        version: 19.2.7(react@19.2.7)
+      react-router-dom:
+        specifier: ^7.18.0
+        version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      sonner:
+        specifier: ^2.0.7
+        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/identity':
+        specifier: workspace:*
+        version: link:../identity
+      '@granit/logger':
+        specifier: workspace:*
+        version: link:../logger
+      '@granit/react-authorization':
+        specifier: workspace:*
+        version: link:../react-authorization
+      '@granit/react-data-exchange':
+        specifier: workspace:*
+        version: link:../react-data-exchange
+      '@granit/react-identity':
+        specifier: workspace:*
+        version: link:../react-identity
+      '@granit/react-localization':
+        specifier: workspace:*
+        version: link:../react-localization
+      '@granit/react-ui':
+        specifier: workspace:*
+        version: link:../react-ui
+      '@granit/react-ui-admin-kit':
+        specifier: workspace:*
+        version: link:../react-ui-admin-kit
+      '@granit/react-ui-data-exchange':
+        specifier: workspace:*
+        version: link:../react-ui-data-exchange
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
+      '@granit/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@storybook/react-vite':
+        specifier: ^10.4.6
+        version: 10.4.6(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rollup@4.62.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)(vite@8.0.16(@types/node@26.0.0)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
+      '@tanstack/react-query':
+        specifier: 5.101.0
+        version: 5.101.0(react@19.2.7)
+      i18next:
+        specifier: ^26.0.0
+        version: 26.3.1(typescript@6.0.3)
+      react-i18next:
+        specifier: ^17.0.0
+        version: 17.0.8(i18next@26.3.1(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)

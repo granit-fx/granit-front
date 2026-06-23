@@ -7926,6 +7926,77 @@
       ]
     },
     {
+      "name": "@granit/react-ui-authentication-local",
+      "description": "Granit end-user authentication UI for the local (OpenIddict) provider — login (credentials, passkey, two-factor), registration, forgot/reset password, email confirmation and change-email pages. Composes the headless @granit/react-authentication-local and @granit/react-account data layers with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "ChangeEmailPage",
+          "kind": "function",
+          "signature": "function ChangeEmailPage()"
+        },
+        {
+          "name": "ConfirmEmailChangePage",
+          "kind": "function",
+          "signature": "function ConfirmEmailChangePage()"
+        },
+        {
+          "name": "ConfirmEmailPage",
+          "kind": "function",
+          "signature": "function ConfirmEmailPage()"
+        },
+        {
+          "name": "ForgotPasswordPage",
+          "kind": "function",
+          "signature": "function ForgotPasswordPage()"
+        },
+        {
+          "name": "LocalLoginPage",
+          "kind": "function",
+          "signature": "function LocalLoginPage(_props: LocalLoginPageProps)"
+        },
+        {
+          "name": "RegisterPage",
+          "kind": "function",
+          "signature": "function RegisterPage()"
+        },
+        {
+          "name": "ResetPasswordPage",
+          "kind": "function",
+          "signature": "function ResetPasswordPage()"
+        },
+        {
+          "name": "CredentialForm",
+          "kind": "function",
+          "signature": "function CredentialForm("
+        },
+        {
+          "name": "ExternalLoginButtons",
+          "kind": "function",
+          "signature": "function ExternalLoginButtons("
+        },
+        {
+          "name": "ExternalProviderIcon",
+          "kind": "function",
+          "signature": "function ExternalProviderIcon("
+        },
+        {
+          "name": "HeadlessLoginForm",
+          "kind": "function",
+          "signature": "function HeadlessLoginForm()"
+        },
+        {
+          "name": "PublicLayout",
+          "kind": "function",
+          "signature": "function PublicLayout("
+        },
+        {
+          "name": "TwoFactorForm",
+          "kind": "function",
+          "signature": "function TwoFactorForm("
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-authorization",
       "description": "Granit admin UI for the Authorization module — role/permission management panel, permission-grant and role-metadata discovery tables, and the permission-side badge. Composes @granit/react-authorization (headless) with the foundation UI packages.",
       "exports": [
@@ -8332,6 +8403,51 @@
           "signature": "function JobStatusBadge("
         },
         {
+          "name": "ExportButton",
+          "kind": "function",
+          "signature": "function ExportButton("
+        },
+        {
+          "name": "ExportDialog",
+          "kind": "function",
+          "signature": "function ExportDialog("
+        },
+        {
+          "name": "ImportButton",
+          "kind": "function",
+          "signature": "function ImportButton("
+        },
+        {
+          "name": "ImportDialog",
+          "kind": "function",
+          "signature": "function ImportDialog("
+        },
+        {
+          "name": "ColumnMappingTable",
+          "kind": "function",
+          "signature": "function ColumnMappingTable("
+        },
+        {
+          "name": "FileDropZone",
+          "kind": "function",
+          "signature": "function FileDropZone("
+        },
+        {
+          "name": "ImportRowErrors",
+          "kind": "function",
+          "signature": "function ImportRowErrors("
+        },
+        {
+          "name": "ImportReportSummary",
+          "kind": "function",
+          "signature": "function ImportReportSummary("
+        },
+        {
+          "name": "MappingConfidenceBadge",
+          "kind": "function",
+          "signature": "function MappingConfidenceBadge("
+        },
+        {
           "name": "createExportHistoryColumns",
           "kind": "function",
           "signature": "function createExportHistoryColumns("
@@ -8428,6 +8544,154 @@
           "name": "AddHostnameDialog",
           "kind": "function",
           "signature": "function AddHostnameDialog("
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-identity",
+      "description": "Granit admin UI for the Identity module — users (list, detail, create, password, groups, sessions, devices, attributes), roles, groups, and the identity cache. Composes @granit/react-identity (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "UserListPage",
+          "kind": "function",
+          "signature": "function UserListPage()"
+        },
+        {
+          "name": "UserDetailPage",
+          "kind": "function",
+          "signature": "function UserDetailPage("
+        },
+        {
+          "name": "UserDetailPageProps",
+          "kind": "interface",
+          "signature": "interface UserDetailPageProps",
+          "members": []
+        },
+        {
+          "name": "AdminUser",
+          "kind": "type",
+          "signature": "type AdminUser = { readonly userId: string; readonly email: string; readonly firstName: string; readonly lastName: string; readonly username: string; readonly enabled: boolean; }"
+        },
+        {
+          "name": "RoleListPage",
+          "kind": "function",
+          "signature": "function RoleListPage()"
+        },
+        {
+          "name": "RoleDetailPage",
+          "kind": "function",
+          "signature": "function RoleDetailPage()"
+        },
+        {
+          "name": "GroupListPage",
+          "kind": "function",
+          "signature": "function GroupListPage()"
+        },
+        {
+          "name": "GroupDetailPage",
+          "kind": "function",
+          "signature": "function GroupDetailPage()"
+        },
+        {
+          "name": "IdentityCachePage",
+          "kind": "function",
+          "signature": "function IdentityCachePage()"
+        },
+        {
+          "name": "UserSearchCombobox",
+          "kind": "function",
+          "signature": "function UserSearchCombobox("
+        },
+        {
+          "name": "DevicesCard",
+          "kind": "function",
+          "signature": "function DevicesCard("
+        },
+        {
+          "name": "DevicesCardLabels",
+          "kind": "interface",
+          "signature": "interface DevicesCardLabels",
+          "members": []
+        },
+        {
+          "name": "DevicesCardProps",
+          "kind": "interface",
+          "signature": "interface DevicesCardProps",
+          "members": []
+        },
+        {
+          "name": "SessionsCard",
+          "kind": "function",
+          "signature": "function SessionsCard("
+        },
+        {
+          "name": "SessionsCardLabels",
+          "kind": "interface",
+          "signature": "interface SessionsCardLabels",
+          "members": []
+        },
+        {
+          "name": "SessionsCardProps",
+          "kind": "interface",
+          "signature": "interface SessionsCardProps",
+          "members": []
+        },
+        {
+          "name": "SessionRiskIndicator",
+          "kind": "function",
+          "signature": "function SessionRiskIndicator("
+        },
+        {
+          "name": "SessionRiskIndicatorProps",
+          "kind": "interface",
+          "signature": "interface SessionRiskIndicatorProps",
+          "members": []
+        },
+        {
+          "name": "useDevicesCardLabels",
+          "kind": "function",
+          "signature": "function useDevicesCardLabels(scope: DevicesScope): DevicesCardLabels"
+        },
+        {
+          "name": "DevicesScope",
+          "kind": "type",
+          "signature": "type DevicesScope = 'self' | 'admin'"
+        },
+        {
+          "name": "useSessionsCardLabels",
+          "kind": "function",
+          "signature": "function useSessionsCardLabels(scope: SessionsScope): SessionsCardLabels"
+        },
+        {
+          "name": "SessionsScope",
+          "kind": "type",
+          "signature": "type SessionsScope = 'self' | 'admin'"
+        },
+        {
+          "name": "useDeviceLabelStrings",
+          "kind": "function",
+          "signature": "function useDeviceLabelStrings(): DeviceLabelStrings"
+        },
+        {
+          "name": "useRiskLabelStrings",
+          "kind": "function",
+          "signature": "function useRiskLabelStrings(): RiskLabelStrings"
+        },
+        {
+          "name": "RiskLabelStrings",
+          "kind": "interface",
+          "signature": "interface RiskLabelStrings",
+          "members": []
+        },
+        {
+          "name": "isHandheldUserAgent",
+          "kind": "function",
+          "signature": "function isHandheldUserAgent(parsed: ParsedUserAgent | null): boolean"
+        },
+        {
+          "name": "parseUserAgent",
+          "kind": "function",
+          "signature": "function parseUserAgent(userAgent: string | null | undefined): ParsedUserAgent | null"
         }
       ]
     },

@@ -9,6 +9,16 @@ export { ImportListPage } from './import-list-page';
 export { HistoryFilters } from './components/history-filters';
 export { ImportReportDialog } from './components/import-report-dialog';
 export { JobStatusBadge } from './components/job-status-badge';
+
+export { ExportButton } from './components/export/export-button';
+export { ExportDialog } from './components/export/export-dialog';
+export { ImportButton } from './components/import/import-button';
+export { ImportDialog } from './components/import/import-dialog';
+export { ColumnMappingTable } from './components/import/column-mapping-table';
+export { FileDropZone } from './components/import/file-drop-zone';
+export { ImportRowErrors } from './components/import/import-row-errors';
+export { ImportReportSummary } from './components/import/import-report-summary';
+export { MappingConfidenceBadge } from './components/import/mapping-confidence-badge';
 export { createExportHistoryColumns } from './components/export-history-columns';
 export { createImportHistoryColumns } from './components/import-history-columns';
 export {
