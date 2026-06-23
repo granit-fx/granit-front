@@ -7792,9 +7792,86 @@
       "exports": []
     },
     {
+      "name": "@granit/react-ui-account",
+      "description": "Granit self-service account UI — profile, account deletion, password, two-factor (authenticator app + email OTP), passkeys, external logins, the anonymous \"was this you?\" sign-in review, and the caller's own sessions/devices cards. Composes @granit/react-account and @granit/react-identity (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "ProfilePage",
+          "kind": "function",
+          "signature": "function ProfilePage()"
+        },
+        {
+          "name": "DeleteAccountPage",
+          "kind": "function",
+          "signature": "function DeleteAccountPage("
+        },
+        {
+          "name": "SessionsPage",
+          "kind": "function",
+          "signature": "function SessionsPage("
+        },
+        {
+          "name": "PasswordPage",
+          "kind": "function",
+          "signature": "function PasswordPage()"
+        },
+        {
+          "name": "TwoFactorPage",
+          "kind": "function",
+          "signature": "function TwoFactorPage()"
+        },
+        {
+          "name": "PasskeysPage",
+          "kind": "function",
+          "signature": "function PasskeysPage()"
+        },
+        {
+          "name": "ExternalLoginsPage",
+          "kind": "function",
+          "signature": "function ExternalLoginsPage()"
+        },
+        {
+          "name": "SecurityReviewPage",
+          "kind": "function",
+          "signature": "function SecurityReviewPage("
+        },
+        {
+          "name": "MySessionsCard",
+          "kind": "function",
+          "signature": "function MySessionsCard("
+        },
+        {
+          "name": "MyDevicesCard",
+          "kind": "function",
+          "signature": "function MyDevicesCard("
+        },
+        {
+          "name": "ExternalLoginButtons",
+          "kind": "function",
+          "signature": "function ExternalLoginButtons("
+        },
+        {
+          "name": "ExternalProviderIcon",
+          "kind": "function",
+          "signature": "function ExternalProviderIcon("
+        },
+        {
+          "name": "getDefaultPasskeyName",
+          "kind": "function",
+          "signature": "function getDefaultPasskeyName(): string"
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-admin-kit",
       "description": "Granit admin React building blocks — cross-cutting data-grid, querying (smart filter bar, sort/group-by/column-visibility, server-paginated tables), form dialogs and view switcher. Composes @granit/react-ui with @granit/react-query-engine; not tied to any single domain.",
-      "exports": []
+      "exports": [
+        {
+          "name": "formatPhoneInternational",
+          "kind": "function",
+          "signature": "function formatPhoneInternational(value: string | null | undefined): string"
+        }
+      ]
     },
     {
       "name": "@granit/react-ui-ai",
@@ -9246,6 +9323,219 @@
           "name": "SHOWCASE_TEST_NOTIFICATION",
           "kind": "const",
           "signature": "const SHOWCASE_TEST_NOTIFICATION"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-openiddict-admin",
+      "description": "Granit admin UI for the OpenIddict module — OIDC applications, scopes and authorizations admin CRUD (zod-validated dialog forms) plus the public OIDC flow pages (consent prompt and RFC 8628 device verification). Composes @granit/react-openiddict-admin (headless) with the foundation UI packages; host layout and current user are injected.",
+      "exports": [
+        {
+          "name": "OidcApplicationsPage",
+          "kind": "function",
+          "signature": "function OidcApplicationsPage()"
+        },
+        {
+          "name": "OidcScopesPage",
+          "kind": "function",
+          "signature": "function OidcScopesPage()"
+        },
+        {
+          "name": "OidcAuthorizationsPage",
+          "kind": "function",
+          "signature": "function OidcAuthorizationsPage()"
+        },
+        {
+          "name": "ConsentPage",
+          "kind": "function",
+          "signature": "function ConsentPage("
+        },
+        {
+          "name": "ConsentPageProps",
+          "kind": "type",
+          "signature": "type ConsentPageProps = { /** * Host layout wrapper (e.g. the app's public auth shell). Defaults to a * passthrough so the page renders standalone in tests / stories. */ readonly layout?: ComponentType<{ readonly children: ReactNode }>; /** The authenticated user; only `sub` is read to bind the consent grant. */ readonly currentUser?: ConsentCurrentUser; }"
+        },
+        {
+          "name": "ConsentCurrentUser",
+          "kind": "type",
+          "signature": "type ConsentCurrentUser = { readonly sub?: string; }"
+        },
+        {
+          "name": "DevicePage",
+          "kind": "function",
+          "signature": "function DevicePage("
+        },
+        {
+          "name": "DevicePageProps",
+          "kind": "type",
+          "signature": "type DevicePageProps = { /** * Host layout wrapper (e.g. the app's public auth shell). Defaults to a * passthrough so the page renders standalone in tests / stories. */ readonly layout?: ComponentType<{ readonly children: ReactNode }>; }"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-parties",
+      "description": "Granit admin UI for the Parties module — party list (role / status filters), create (with deterministic-duplicate conflict resolution), and a tabbed detail view (identity, addresses, emails, phones, external mappings, roles, metadata, tax status) plus lifecycle actions, vCard download, duplicate merge wizard, taxonomy tags/categories and the duplicates inbox. Composes @granit/react-parties (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "PartiesListPage",
+          "kind": "function",
+          "signature": "function PartiesListPage()"
+        },
+        {
+          "name": "PartyCreatePage",
+          "kind": "function",
+          "signature": "function PartyCreatePage()"
+        },
+        {
+          "name": "PartyDetailPage",
+          "kind": "function",
+          "signature": "function PartyDetailPage()"
+        },
+        {
+          "name": "DuplicatesInboxPage",
+          "kind": "function",
+          "signature": "function DuplicatesInboxPage()"
+        },
+        {
+          "name": "createPartyColumns",
+          "kind": "function",
+          "signature": "function createPartyColumns("
+        },
+        {
+          "name": "PartyStatusBadge",
+          "kind": "function",
+          "signature": "function PartyStatusBadge("
+        },
+        {
+          "name": "PartyRolesBadges",
+          "kind": "function",
+          "signature": "function PartyRolesBadges("
+        },
+        {
+          "name": "PartyCreateForm",
+          "kind": "function",
+          "signature": "function PartyCreateForm("
+        },
+        {
+          "name": "PartyIdentityForm",
+          "kind": "function",
+          "signature": "function PartyIdentityForm("
+        },
+        {
+          "name": "DownloadVCardButton",
+          "kind": "function",
+          "signature": "function DownloadVCardButton("
+        },
+        {
+          "name": "LifecycleActions",
+          "kind": "function",
+          "signature": "function LifecycleActions("
+        },
+        {
+          "name": "MergeAction",
+          "kind": "function",
+          "signature": "function MergeAction("
+        },
+        {
+          "name": "MergeFromCandidate",
+          "kind": "function",
+          "signature": "function MergeFromCandidate("
+        },
+        {
+          "name": "CreateConflictDialog",
+          "kind": "function",
+          "signature": "function CreateConflictDialog("
+        },
+        {
+          "name": "PartyPickerDialog",
+          "kind": "function",
+          "signature": "function PartyPickerDialog("
+        },
+        {
+          "name": "AddressesTab",
+          "kind": "function",
+          "signature": "function AddressesTab("
+        },
+        {
+          "name": "EmailsTab",
+          "kind": "function",
+          "signature": "function EmailsTab("
+        },
+        {
+          "name": "PhonesTab",
+          "kind": "function",
+          "signature": "function PhonesTab("
+        },
+        {
+          "name": "ExternalMappingsTab",
+          "kind": "function",
+          "signature": "function ExternalMappingsTab("
+        },
+        {
+          "name": "RolesTab",
+          "kind": "function",
+          "signature": "function RolesTab("
+        },
+        {
+          "name": "MetadataTab",
+          "kind": "function",
+          "signature": "function MetadataTab("
+        },
+        {
+          "name": "TaxStatusCard",
+          "kind": "function",
+          "signature": "function TaxStatusCard("
+        },
+        {
+          "name": "EditTaxStatusDialog",
+          "kind": "function",
+          "signature": "function EditTaxStatusDialog("
+        },
+        {
+          "name": "PartyAddDialog",
+          "kind": "function",
+          "signature": "function PartyAddDialog<TValues extends FieldValues>("
+        },
+        {
+          "name": "PartyAddDialogProps",
+          "kind": "interface",
+          "signature": "interface PartyAddDialogProps<TValues extends FieldValues>",
+          "members": []
+        },
+        {
+          "name": "AddAddressDialog",
+          "kind": "function",
+          "signature": "function AddAddressDialog("
+        },
+        {
+          "name": "AddEmailDialog",
+          "kind": "function",
+          "signature": "function AddEmailDialog("
+        },
+        {
+          "name": "AddPhoneDialog",
+          "kind": "function",
+          "signature": "function AddPhoneDialog("
+        },
+        {
+          "name": "AddExternalMappingDialog",
+          "kind": "function",
+          "signature": "function AddExternalMappingDialog("
+        },
+        {
+          "name": "AddRoleDialog",
+          "kind": "function",
+          "signature": "function AddRoleDialog("
+        },
+        {
+          "name": "PartyListRoleFilter",
+          "kind": "type",
+          "signature": "type PartyListRoleFilter = (typeof PARTY_LIST_ROLE_FILTERS)[number]"
+        },
+        {
+          "name": "PartyListStatusFilter",
+          "kind": "type",
+          "signature": "type PartyListStatusFilter = (typeof PARTY_LIST_STATUS_FILTERS)[number]"
         }
       ]
     },

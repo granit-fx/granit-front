@@ -31,3 +31,6 @@ export * from './table.js';
 export * from './tabs.js';
 export * from './textarea.js';
 export * from './tooltip.js';
+export * from './checkbox-field.js';
+export * from './select-field.js';
+export * from './text-field.js';
