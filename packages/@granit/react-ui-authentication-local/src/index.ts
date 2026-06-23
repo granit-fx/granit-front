@@ -46,3 +46,6 @@ export {
 // for the end-user local authentication flow.
 export { authLocalTranslationsEn, authLocalTranslationsFr } from './locales/index';
 export type { AuthLocalTranslations } from './locales/index';
+
+// WebAuthn base64url helpers (used by the host passkeys UI).
+export { fromBase64Url, toBase64Url } from './login-helpers';

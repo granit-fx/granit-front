@@ -8003,6 +8003,16 @@
           "name": "TwoFactorForm",
           "kind": "function",
           "signature": "function TwoFactorForm("
+        },
+        {
+          "name": "fromBase64Url",
+          "kind": "function",
+          "signature": "function fromBase64Url(base64url: string): Uint8Array<ArrayBuffer>"
+        },
+        {
+          "name": "toBase64Url",
+          "kind": "function",
+          "signature": "function toBase64Url(buffer: ArrayBuffer): string"
         }
       ]
     },
