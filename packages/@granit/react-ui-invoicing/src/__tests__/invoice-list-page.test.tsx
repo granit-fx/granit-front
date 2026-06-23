@@ -1,3 +1,4 @@
+import { sampleInvoices } from '@granit/react-invoicing/testing';
 import { screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
@@ -5,62 +6,12 @@ import { InvoiceListPage } from '../invoice-list-page';
 
 import { renderWithProviders } from './test-utils';
 
-import type { InvoiceResponse } from '@granit/invoicing';
-
 // ---------------------------------------------------------------------------
-// Mock data — amounts in minor units, ISO 8601 dates
+// Shared fixtures from @granit/react-invoicing/testing — sampleInvoices[0] is
+// INV-2026-0001 (Paid), [1] is INV-2026-0002 (Open).
 // ---------------------------------------------------------------------------
 
-const mockInvoices: InvoiceResponse[] = [
-  {
-    id: '11111111-1111-1111-1111-111111111111',
-    partyId: '99999999-9999-9999-9999-999999999999',
-    documentType: 'Invoice',
-    invoiceNumber: 'INV-2026-0001',
-    status: 'Open',
-    collectionMethod: 'SendInvoice',
-    billingReason: 'Manual',
-    currency: 'EUR',
-    subtotal: 10000,
-    taxTotal: 2100,
-    total: 12100,
-    amountPaid: 0,
-    amountCredited: 0,
-    amountRemaining: 12100,
-    parentInvoiceId: null,
-    creditNoteReason: null,
-    issuedAt: '2026-01-15T10:00:00.000Z',
-    dueAt: '2026-02-15T00:00:00.000Z',
-    paidAt: null,
-    periodStart: null,
-    periodEnd: null,
-    lineItems: [],
-  },
-  {
-    id: '22222222-2222-2222-2222-222222222222',
-    partyId: '99999999-9999-9999-9999-999999999999',
-    documentType: 'Invoice',
-    invoiceNumber: 'INV-2026-0002',
-    status: 'Paid',
-    collectionMethod: 'ChargeAutomatically',
-    billingReason: 'SubscriptionCycle',
-    currency: 'USD',
-    subtotal: 5000,
-    taxTotal: 0,
-    total: 5000,
-    amountPaid: 5000,
-    amountCredited: 0,
-    amountRemaining: 0,
-    parentInvoiceId: null,
-    creditNoteReason: null,
-    issuedAt: '2026-03-01T08:30:00.000Z',
-    dueAt: '2026-03-31T00:00:00.000Z',
-    paidAt: '2026-03-10T12:00:00.000Z',
-    periodStart: null,
-    periodEnd: null,
-    lineItems: [],
-  },
-];
+const mockInvoices = sampleInvoices;
 
 // ---------------------------------------------------------------------------
 // Mocks

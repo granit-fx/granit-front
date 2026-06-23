@@ -1,5 +1,4 @@
-import { TemplateLifecycleStatus } from '@granit/templating';
-import { toISODateString } from '@granit/types';
+import { mockTemplatesData, toTemplateListItem } from '@granit/react-templating/testing';
 import { screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
@@ -10,33 +9,11 @@ import { renderWithProviders } from './test-utils';
 import type { TemplateListItem } from '@granit/templating';
 
 // ---------------------------------------------------------------------------
-// Mock data
+// Mock data — shared fixtures (Email.Welcome / Email.ResetPassword /
+// Document.Invoice) converted to the TemplateListItem wire shape.
 // ---------------------------------------------------------------------------
 
-const mockTemplates: TemplateListItem[] = [
-  {
-    name: 'welcome-email',
-    culture: null,
-    category: 'Onboarding',
-    layoutName: null,
-    currentStatus: TemplateLifecycleStatus.Published,
-    mimeType: 'text/html',
-    lastModifiedAt: toISODateString('2026-06-01T10:00:00Z'),
-    lastModifiedBy: 'admin',
-    hasPublishedVersion: true,
-  },
-  {
-    name: 'invoice-letter',
-    culture: 'fr',
-    category: 'Billing',
-    layoutName: 'default',
-    currentStatus: TemplateLifecycleStatus.Draft,
-    mimeType: 'text/html',
-    lastModifiedAt: toISODateString('2026-06-02T10:00:00Z'),
-    lastModifiedBy: 'admin',
-    hasPublishedVersion: false,
-  },
-];
+const mockTemplates: TemplateListItem[] = mockTemplatesData.map(toTemplateListItem);
 
 const mockMeta = {
   columns: [
@@ -160,9 +137,9 @@ describe('TemplateListPage', () => {
   it('should render the template rows', async () => {
     renderWithProviders(<TemplateListPage />);
     await waitFor(() => {
-      expect(screen.getByText('welcome-email')).toBeInTheDocument();
+      expect(screen.getByText('Email.Welcome')).toBeInTheDocument();
     });
-    expect(screen.getByText('invoice-letter')).toBeInTheDocument();
+    expect(screen.getByText('Document.Invoice')).toBeInTheDocument();
   });
 
   it('should render the Name column header', async () => {
@@ -178,6 +155,6 @@ describe('TemplateListPage', () => {
     await waitFor(() => {
       expect(document.querySelector('[data-slot="template-list-page"]')).toBeInTheDocument();
     });
-    expect(screen.queryByText('welcome-email')).not.toBeInTheDocument();
+    expect(screen.queryByText('Email.Welcome')).not.toBeInTheDocument();
   });
 });

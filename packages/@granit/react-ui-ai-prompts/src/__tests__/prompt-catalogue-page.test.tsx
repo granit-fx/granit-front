@@ -1,3 +1,8 @@
+import {
+  mockPromptSummaries,
+  mockSystemPrompt,
+  mockUserPrompt,
+} from '@granit/react-ai-prompts/testing';
 import { screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
@@ -5,32 +10,11 @@ import { PromptCataloguePage } from '../prompt-catalogue-page';
 
 import { renderWithProviders } from './test-utils';
 
-import type { PromptSummaryResponse } from '@granit/ai-prompts';
-
 // ---------------------------------------------------------------------------
-// Mock data — a minimal valid PromptSummaryResponse list
+// Mock data — shared catalogue fixtures (system 'Summarize' + user 'Daily brief')
 // ---------------------------------------------------------------------------
 
-const mockPrompts: PromptSummaryResponse[] = [
-  {
-    id: 'prompt-1' as PromptSummaryResponse['id'],
-    name: 'Summarise',
-    shortDescription: 'Summarise the conversation',
-    icon: null,
-    iconColor: null,
-    isSystem: true,
-    categoryIds: [],
-  },
-  {
-    id: 'prompt-2' as PromptSummaryResponse['id'],
-    name: 'Translate',
-    shortDescription: 'Translate text',
-    icon: null,
-    iconColor: null,
-    isSystem: false,
-    categoryIds: [],
-  },
-];
+const mockPrompts = mockPromptSummaries;
 
 // ---------------------------------------------------------------------------
 // Mocks
@@ -111,8 +95,8 @@ describe('PromptCataloguePage', () => {
 
   it('should list the prompts from usePrompts', () => {
     renderWithProviders(<PromptCataloguePage />);
-    expect(screen.getByText('Summarise')).toBeInTheDocument();
-    expect(screen.getByText('Translate')).toBeInTheDocument();
+    expect(screen.getByText(mockSystemPrompt.name)).toBeInTheDocument();
+    expect(screen.getByText(mockUserPrompt.name)).toBeInTheDocument();
   });
 
   it('should show the New prompt affordance when the user can manage', () => {
@@ -130,7 +114,7 @@ describe('PromptCataloguePage', () => {
   it('should open the delete confirmation dialog and delete on confirm', async () => {
     const { user } = renderWithProviders(<PromptCataloguePage />);
 
-    await user.click(screen.getByRole('button', { name: 'delete Summarise' }));
+    await user.click(screen.getByRole('button', { name: `delete ${mockSystemPrompt.name}` }));
 
     await waitFor(() => {
       expect(screen.getByText('Delete this prompt?')).toBeInTheDocument();
@@ -139,13 +123,13 @@ describe('PromptCataloguePage', () => {
 
     await user.click(screen.getByRole('button', { name: 'Delete' }));
 
-    expect(mockRemove).toHaveBeenCalledWith('prompt-1');
+    expect(mockRemove).toHaveBeenCalledWith(mockSystemPrompt.id);
   });
 
   it('should render an empty catalogue when there are no prompts', () => {
     mockUsePrompts.mockReturnValue({ data: [] });
     renderWithProviders(<PromptCataloguePage />);
-    expect(screen.queryByText('Summarise')).not.toBeInTheDocument();
+    expect(screen.queryByText(mockSystemPrompt.name)).not.toBeInTheDocument();
     expect(document.querySelector('[data-slot="prompt-catalogue-stub"]')).toBeInTheDocument();
   });
 });
