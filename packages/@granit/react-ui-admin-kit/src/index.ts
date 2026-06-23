@@ -5,6 +5,7 @@
 export * from './data-table/manual-data-table';
 export * from './form-dialog/form-dialog';
 export * from './hooks/use-operator-labels';
+export * from './layout/detail-aside-layout';
 export * from './hooks/use-smart-filter-sync';
 export * from './querying/bulk-actions';
 export * from './querying/column-visibility';
