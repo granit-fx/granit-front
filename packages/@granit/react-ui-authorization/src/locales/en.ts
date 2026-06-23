@@ -4,6 +4,11 @@
 //   i18n.addResourceBundle("en", "translation", authorizationTranslationsEn, true, true);
 
 export const authorizationTranslationsEn = {
+  'Auth.AccessDenied.ConnectedAs': 'Connected as',
+  'Auth.AccessDenied.Title': 'Access Denied',
+  'Auth.AccessDeniedContact': 'Please contact your system administrator to request access.',
+  'Auth.AccessDeniedMessage': 'You do not have the required permissions to access this page.',
+  'Auth.SwitchAccount': 'Switch account',
   'PermissionGrants.Columns.Created': 'Created',
   'PermissionGrants.Columns.Permission': 'Permission',
   'PermissionGrants.Columns.Provider': 'Provider',
