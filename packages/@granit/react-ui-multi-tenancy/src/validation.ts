@@ -1,22 +1,19 @@
-import { z } from 'zod';
+// Form-value shapes for the tenant create/edit forms. Validation itself is
+// spec-driven — derived from contracts/openapi/multi-tenancy.json via
+// `multiTenancyConstraints` (@granit/multi-tenancy) and applied with
+// `createConstraintsResolver` in tenant-form.tsx. These types only describe the
+// always-present string inputs the form binds to (empty string when cleared);
+// the create/edit pages coerce the nullable DTO fields on submit.
 
-export const createTenantSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(256),
-  identifier: z
-    .string()
-    .min(1, 'Identifier is required')
-    .max(64)
-    .regex(/^[a-z0-9-]+$/, 'Must be a lowercase slug (e.g. acme-corp)'),
-  contactEmail: z.string().email().optional().or(z.literal('')),
-  jurisdiction: z.string().max(16).optional().or(z.literal('')),
-});
+export interface CreateTenantFormValues {
+  name: string;
+  identifier: string;
+  contactEmail: string;
+  jurisdiction: string;
+}
 
-export type CreateTenantFormValues = z.infer<typeof createTenantSchema>;
-
-export const editTenantSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(256),
-  contactEmail: z.string().email().optional().or(z.literal('')),
-  jurisdiction: z.string().max(16).optional().or(z.literal('')),
-});
-
-export type EditTenantFormValues = z.infer<typeof editTenantSchema>;
+export interface EditTenantFormValues {
+  name: string;
+  contactEmail: string;
+  jurisdiction: string;
+}

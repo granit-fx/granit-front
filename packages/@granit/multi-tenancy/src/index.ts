@@ -9,6 +9,9 @@ export type {
 // Constants
 export { DEFAULT_MULTI_TENANCY_OPTIONS } from './types/index';
 
+// Validation constraints (generated from contracts/openapi/multi-tenancy.json)
+export { multiTenancyConstraints } from './constraints';
+
 // Permissions
 export { MultiTenancyPermissions } from './permissions';
 

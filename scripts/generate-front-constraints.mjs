@@ -89,6 +89,18 @@ const TARGETS = [
     exportName: 'catalogConstraints',
     schemaPattern: /Request$/,
   },
+  {
+    spec: 'multi-tenancy.json',
+    pkg: 'multi-tenancy',
+    exportName: 'multiTenancyConstraints',
+    schemaPattern: /Request$/,
+  },
+  {
+    spec: 'invoicing.json',
+    pkg: 'invoicing',
+    exportName: 'invoicingConstraints',
+    schemaPattern: /Request$/,
+  },
 ];
 
 const MAX_REF_DEPTH = 10;

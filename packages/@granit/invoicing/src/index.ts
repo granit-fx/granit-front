@@ -1,3 +1,6 @@
+// Validation constraints (generated from contracts/openapi/invoicing.json)
+export { invoicingConstraints } from './constraints';
+
 // Types
 export type {
   BillingReason,

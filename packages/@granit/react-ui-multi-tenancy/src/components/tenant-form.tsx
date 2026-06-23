@@ -1,3 +1,4 @@
+import { multiTenancyConstraints } from '@granit/multi-tenancy';
 import { useTranslation } from '@granit/react-localization';
 import {
   Button,
@@ -14,11 +15,9 @@ import {
   FormMessage,
   Input,
 } from '@granit/react-ui';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { createConstraintsResolver } from '@granit/react-validation';
 import { useEffect, useRef } from 'react';
-import { useForm } from 'react-hook-form';
-
-import { createTenantSchema, editTenantSchema } from '../validation';
+import { useForm, type Resolver } from 'react-hook-form';
 
 import type { CreateTenantFormValues, EditTenantFormValues } from '../validation';
 
@@ -52,8 +51,32 @@ export function TenantForm(props: TenantFormProps) {
   const { mode, onCancel, isSubmitting } = props;
   const identifierTouched = useRef(false);
 
+  // Field labels feed the `{PropertyName}` placeholder of the shared
+  // `Validation:Builtin:*` messages owned by the backend Granit.Validation package.
+  const fieldLabels: Record<string, string> = {
+    name: t('Tenants.Form.Name'),
+    identifier: t('Tenants.Form.Identifier'),
+    contactEmail: t('Tenants.Form.ContactEmail'),
+    jurisdiction: t('Tenants.Form.Jurisdiction'),
+  };
+
+  // Edit validates only the form-owned fields; `concurrencyStamp` is required by
+  // UpdateTenantRequest but supplied by the page, not the form.
+  const constraints =
+    mode === 'create'
+      ? multiTenancyConstraints.CreateTenantRequest
+      : {
+          name: multiTenancyConstraints.UpdateTenantRequest.name,
+          contactEmail: multiTenancyConstraints.UpdateTenantRequest.contactEmail,
+          jurisdiction: multiTenancyConstraints.UpdateTenantRequest.jurisdiction,
+        };
+
   const form = useForm<CreateTenantFormValues | EditTenantFormValues>({
-    resolver: zodResolver(mode === 'create' ? createTenantSchema : editTenantSchema),
+    // Cast: the structural resolver from @granit/react-validation has no
+    // react-hook-form peer dep, so its type needs widening to RHF's Resolver.
+    resolver: createConstraintsResolver(constraints, t, {
+      labelResolver: (field) => fieldLabels[field] ?? field,
+    }) as unknown as Resolver<CreateTenantFormValues | EditTenantFormValues>,
     defaultValues:
       mode === 'edit'
         ? props.defaultValues

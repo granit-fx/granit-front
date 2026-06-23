@@ -1897,6 +1897,11 @@
       "description": "Invoice lifecycle — types and API functions for invoices and credit notes",
       "exports": [
         {
+          "name": "invoicingConstraints",
+          "kind": "const",
+          "signature": "const invoicingConstraints"
+        },
+        {
           "name": "InvoicingPermissions",
           "kind": "const",
           "signature": "const InvoicingPermissions"
@@ -2126,6 +2131,11 @@
           "name": "DEFAULT_MULTI_TENANCY_OPTIONS",
           "kind": "const",
           "signature": "const DEFAULT_MULTI_TENANCY_OPTIONS: Required<MultiTenancyOptions>"
+        },
+        {
+          "name": "multiTenancyConstraints",
+          "kind": "const",
+          "signature": "const multiTenancyConstraints"
         },
         {
           "name": "MultiTenancyPermissions",
@@ -9599,6 +9609,55 @@
           "name": "createTenantColumns",
           "kind": "function",
           "signature": "function createTenantColumns("
+        },
+        {
+          "name": "CreateTenantFormValues",
+          "kind": "interface",
+          "signature": "interface CreateTenantFormValues",
+          "members": [
+            {
+              "name": "name",
+              "kind": "property",
+              "signature": "name: string"
+            },
+            {
+              "name": "identifier",
+              "kind": "property",
+              "signature": "identifier: string"
+            },
+            {
+              "name": "contactEmail",
+              "kind": "property",
+              "signature": "contactEmail: string"
+            },
+            {
+              "name": "jurisdiction",
+              "kind": "property",
+              "signature": "jurisdiction: string"
+            }
+          ]
+        },
+        {
+          "name": "EditTenantFormValues",
+          "kind": "interface",
+          "signature": "interface EditTenantFormValues",
+          "members": [
+            {
+              "name": "name",
+              "kind": "property",
+              "signature": "name: string"
+            },
+            {
+              "name": "contactEmail",
+              "kind": "property",
+              "signature": "contactEmail: string"
+            },
+            {
+              "name": "jurisdiction",
+              "kind": "property",
+              "signature": "jurisdiction: string"
+            }
+          ]
         },
         {
           "name": "TenantQueryItem",

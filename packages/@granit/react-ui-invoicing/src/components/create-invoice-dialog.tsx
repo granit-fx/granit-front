@@ -1,3 +1,4 @@
+import { invoicingConstraints } from '@granit/invoicing';
 import { useCreateInvoice } from '@granit/react-invoicing';
 import { useTranslation } from '@granit/react-localization';
 import {
@@ -22,30 +23,28 @@ import {
   SelectValue,
   toast,
 } from '@granit/react-ui';
+import { createConstraintsResolver } from '@granit/react-validation';
 import { toISODateString } from '@granit/types';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { useForm, type Resolver } from 'react-hook-form';
 
 import { logger } from '../logger';
 
 import type { BillingReason } from '@granit/invoicing';
 import type { CurrencyCode } from '@granit/types';
 
-// The create-invoice form validates required identifiers up-front; the enum
-// fields are constrained to the backend's accepted literals (they also carry
-// sensible defaults). Period bounds are optional ISO datetime-local strings.
-const createInvoiceFormSchema = z.object({
-  partyId: z.string().min(1),
-  currency: z.string().min(1),
-  documentType: z.enum(['Invoice', 'CreditNote']),
-  collectionMethod: z.enum(['ChargeAutomatically', 'SendInvoice']),
-  billingReason: z.string().min(1),
-  periodStart: z.string(),
-  periodEnd: z.string(),
-});
-
-type CreateInvoiceFormValues = z.infer<typeof createInvoiceFormSchema>;
+// The create-invoice form validates the required identifiers up-front; the enum
+// fields are Select-bound to the backend's accepted literals (and carry sensible
+// defaults). Period bounds are optional datetime-local strings. Validation is
+// spec-driven via invoicingConstraints.InvoiceCreateRequest.
+interface CreateInvoiceFormValues {
+  partyId: string;
+  currency: string;
+  documentType: 'Invoice' | 'CreditNote';
+  collectionMethod: 'ChargeAutomatically' | 'SendInvoice';
+  billingReason: string;
+  periodStart: string;
+  periodEnd: string;
+}
 
 interface CreateInvoiceDialogProps {
   readonly open: boolean;
@@ -56,8 +55,20 @@ export function CreateInvoiceDialog({ open, onOpenChange }: CreateInvoiceDialogP
   const { t } = useTranslation();
   const mutation = useCreateInvoice();
 
+  const fieldLabels: Record<string, string> = {
+    partyId: t('Invoicing.Fields.PartyId'),
+    currency: t('Invoicing.Fields.Currency'),
+    documentType: t('Invoicing.Fields.DocumentType'),
+    collectionMethod: t('Invoicing.Fields.CollectionMethod'),
+    billingReason: t('Invoicing.Fields.BillingReason'),
+  };
+
   const form = useForm<CreateInvoiceFormValues>({
-    resolver: zodResolver(createInvoiceFormSchema),
+    // Cast: the structural resolver from @granit/react-validation has no
+    // react-hook-form peer dep, so its type needs widening to RHF's Resolver.
+    resolver: createConstraintsResolver(invoicingConstraints.InvoiceCreateRequest, t, {
+      labelResolver: (field) => fieldLabels[field] ?? field,
+    }) as unknown as Resolver<CreateInvoiceFormValues>,
     defaultValues: {
       partyId: '',
       currency: 'EUR',
