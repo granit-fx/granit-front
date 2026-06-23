@@ -8101,6 +8101,27 @@
       ]
     },
     {
+      "name": "@granit/react-ui-blob-storage",
+      "description": "Granit admin UI for the Blob Storage module — the blobs list (query-driven grid with status pills, size formatting and per-row download/delete actions) plus the orphan-cleanup and crypto-shred delete dialogs. Composes @granit/react-blob-storage (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "BlobListPage",
+          "kind": "function",
+          "signature": "function BlobListPage()"
+        },
+        {
+          "name": "BlobCleanupOrphansButton",
+          "kind": "function",
+          "signature": "function BlobCleanupOrphansButton()"
+        },
+        {
+          "name": "BlobDeleteDialog",
+          "kind": "function",
+          "signature": "function BlobDeleteDialog("
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-catalog",
       "description": "Granit admin UI for the Catalog module — the products list (smart-filtered query grid), the spec-validated create/edit product forms, and the product detail page (lifecycle transitions, metadata editor, external mappings). Composes @granit/react-catalog (headless) with the foundation UI packages.",
       "exports": [
@@ -8716,6 +8737,57 @@
       ]
     },
     {
+      "name": "@granit/react-ui-localization",
+      "description": "Granit admin UI for the Localization module — the available-languages list (read-only, sourced from the LanguagesContext) and the translation-overrides grid (query-driven table with module/culture badges, create/edit/delete dialogs and data-exchange import/export). Composes @granit/react-localization (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "LanguageListPage",
+          "kind": "function",
+          "signature": "function LanguageListPage()"
+        },
+        {
+          "name": "LocalizationOverrideListPage",
+          "kind": "function",
+          "signature": "function LocalizationOverrideListPage()"
+        },
+        {
+          "name": "LanguageList",
+          "kind": "function",
+          "signature": "function LanguageList()"
+        },
+        {
+          "name": "createLocalizationColumns",
+          "kind": "function",
+          "signature": "function createLocalizationColumns("
+        },
+        {
+          "name": "TranslationCreateDialog",
+          "kind": "function",
+          "signature": "function TranslationCreateDialog("
+        },
+        {
+          "name": "TranslationEditDialog",
+          "kind": "function",
+          "signature": "function TranslationEditDialog("
+        },
+        {
+          "name": "TranslationDeleteDialog",
+          "kind": "function",
+          "signature": "function TranslationDeleteDialog("
+        },
+        {
+          "name": "LanguagesContext",
+          "kind": "const",
+          "signature": "const LanguagesContext"
+        },
+        {
+          "name": "useLanguages",
+          "kind": "function",
+          "signature": "function useLanguages(): LanguageInfo[]"
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-metering",
       "description": "Granit admin UI for the Metering module — the meter catalog list, meter detail (usage / quota / publish / archive / record-events) and the cross-tenant usage aggregates explorer. Composes @granit/react-metering (headless) with the foundation UI packages.",
       "exports": [
@@ -8979,6 +9051,113 @@
       ]
     },
     {
+      "name": "@granit/react-ui-privacy",
+      "description": "Granit admin UI for the Privacy module — data export, account deletion, legal-agreement acceptance, regulation profile, CCPA opt-out, admin DSR (export on behalf of) and the legal-document admin CRUD (list / create / edit / publish with zod-validated forms). Composes @granit/react-privacy (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "PrivacyExportPage",
+          "kind": "function",
+          "signature": "function PrivacyExportPage()"
+        },
+        {
+          "name": "PrivacyDeletionPage",
+          "kind": "function",
+          "signature": "function PrivacyDeletionPage()"
+        },
+        {
+          "name": "PrivacyAgreementsPage",
+          "kind": "function",
+          "signature": "function PrivacyAgreementsPage()"
+        },
+        {
+          "name": "PrivacyRegulationPage",
+          "kind": "function",
+          "signature": "function PrivacyRegulationPage()"
+        },
+        {
+          "name": "PrivacyOptOutPage",
+          "kind": "function",
+          "signature": "function PrivacyOptOutPage()"
+        },
+        {
+          "name": "PrivacyAdminDsrPage",
+          "kind": "function",
+          "signature": "function PrivacyAdminDsrPage()"
+        },
+        {
+          "name": "LegalDocumentListPage",
+          "kind": "function",
+          "signature": "function LegalDocumentListPage()"
+        },
+        {
+          "name": "LegalDocumentCreatePage",
+          "kind": "function",
+          "signature": "function LegalDocumentCreatePage()"
+        },
+        {
+          "name": "LegalDocumentEditPage",
+          "kind": "function",
+          "signature": "function LegalDocumentEditPage()"
+        },
+        {
+          "name": "DeletionRequestTable",
+          "kind": "function",
+          "signature": "function DeletionRequestTable()"
+        },
+        {
+          "name": "DeletionStatusBadge",
+          "kind": "function",
+          "signature": "function DeletionStatusBadge("
+        },
+        {
+          "name": "LegalDocumentForm",
+          "kind": "function",
+          "signature": "function LegalDocumentForm(props: LegalDocumentFormProps)"
+        },
+        {
+          "name": "LegalDocumentPublishDialog",
+          "kind": "function",
+          "signature": "function LegalDocumentPublishDialog("
+        },
+        {
+          "name": "LegalDocumentStatusBadge",
+          "kind": "function",
+          "signature": "function LegalDocumentStatusBadge("
+        },
+        {
+          "name": "useLegalDocumentColumns",
+          "kind": "function",
+          "signature": "function useLegalDocumentColumns( actions: ColumnActions ): ColumnDef<LegalDocumentDetailResponse>[]"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-scheduling",
+      "description": "Granit admin UI for the Scheduling module — the scheduled-actions list (query-driven grid with status badges, smart filters and per-row cancel/reschedule actions) plus the action detail view with cancel and reschedule dialogs. Composes @granit/react-scheduling (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "SchedulingDetailPage",
+          "kind": "function",
+          "signature": "function SchedulingDetailPage()"
+        },
+        {
+          "name": "SchedulingListPage",
+          "kind": "function",
+          "signature": "function SchedulingListPage()"
+        },
+        {
+          "name": "SchedulingStatusBadge",
+          "kind": "function",
+          "signature": "function SchedulingStatusBadge("
+        },
+        {
+          "name": "createSchedulingColumns",
+          "kind": "function",
+          "signature": "function createSchedulingColumns("
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-settings",
       "description": "Granit admin UI for the Settings module — the application-settings edit page and dynamic settings panel (typed fields, encrypted-secret handling, bulk save). Composes @granit/react-settings (headless) with the foundation UI packages.",
       "exports": [
@@ -9009,6 +9188,11 @@
     {
       "name": "@granit/react-ui-shell-admin",
       "description": "Granit admin app shell (chrome): the AppShell layout (sidebar + topbar + content + right rail), AppSidebar with workspace-driven navigation, user menu, command palette and header. App-specific data (auth, navigation, languages, logger) is injected via ShellChromeProvider; feature widgets are passed as header slots.",
+      "exports": []
+    },
+    {
+      "name": "@granit/react-ui-subscriptions",
+      "description": "Granit admin UI for the Subscriptions module — the plans catalogue (list/detail, price history, publish/archive/edit and price-version dialogs), the subscriptions list/detail (create, change-plan, cancel, migrate-price, bulk-migrate) and per-subscription seat assignment. Composes @granit/react-subscriptions (headless) with the foundation UI packages.",
       "exports": []
     },
     {
@@ -9061,6 +9245,102 @@
           "name": "ValidationResultCard",
           "kind": "function",
           "signature": "function ValidationResultCard("
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-webhooks",
+      "description": "Granit admin UI for the Webhooks module — the subscriptions list, the create wizard (with the one-time signing-secret reveal) and the per-subscription detail view (lifecycle actions, delivery history, signing-key rotation, test ping and live stats dashboard). Composes @granit/react-webhooks (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "WebhookCreatePage",
+          "kind": "function",
+          "signature": "function WebhookCreatePage()"
+        },
+        {
+          "name": "WebhookDetailPage",
+          "kind": "function",
+          "signature": "function WebhookDetailPage()"
+        },
+        {
+          "name": "WebhookListPage",
+          "kind": "function",
+          "signature": "function WebhookListPage()"
+        },
+        {
+          "name": "WebhookDashboard",
+          "kind": "function",
+          "signature": "function WebhookDashboard("
+        },
+        {
+          "name": "WebhookDeliveryActions",
+          "kind": "function",
+          "signature": "function WebhookDeliveryActions("
+        },
+        {
+          "name": "WebhookDeliveryStatusBadge",
+          "kind": "function",
+          "signature": "function WebhookDeliveryStatusBadge("
+        },
+        {
+          "name": "WebhookDeliveryTable",
+          "kind": "function",
+          "signature": "function WebhookDeliveryTable("
+        },
+        {
+          "name": "WebhookKeyStatusBadge",
+          "kind": "function",
+          "signature": "function WebhookKeyStatusBadge("
+        },
+        {
+          "name": "WebhookLifecycleActions",
+          "kind": "function",
+          "signature": "function WebhookLifecycleActions("
+        },
+        {
+          "name": "WebhookPayloadViewer",
+          "kind": "function",
+          "signature": "function WebhookPayloadViewer("
+        },
+        {
+          "name": "WebhookSecretDisplay",
+          "kind": "function",
+          "signature": "function WebhookSecretDisplay("
+        },
+        {
+          "name": "WebhookSigningKeys",
+          "kind": "function",
+          "signature": "function WebhookSigningKeys("
+        },
+        {
+          "name": "WebhookStatusBadge",
+          "kind": "function",
+          "signature": "function WebhookStatusBadge("
+        },
+        {
+          "name": "WebhookSubscriptionForm",
+          "kind": "function",
+          "signature": "function WebhookSubscriptionForm("
+        },
+        {
+          "name": "WebhookSubscriptionTable",
+          "kind": "function",
+          "signature": "function WebhookSubscriptionTable()"
+        },
+        {
+          "name": "WebhookTestButton",
+          "kind": "function",
+          "signature": "function WebhookTestButton("
+        },
+        {
+          "name": "createDeliveryColumns",
+          "kind": "function",
+          "signature": "function createDeliveryColumns("
+        },
+        {
+          "name": "createSubscriptionColumns",
+          "kind": "function",
+          "signature": "function createSubscriptionColumns("
         }
       ]
     },
