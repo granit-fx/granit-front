@@ -1,2 +1,2 @@
-export { workflowTranslationsEn } from './en';
-export { workflowTranslationsFr } from './fr';
+export { workflowAdminTranslationsEn } from './en';
+export { workflowAdminTranslationsFr } from './fr';

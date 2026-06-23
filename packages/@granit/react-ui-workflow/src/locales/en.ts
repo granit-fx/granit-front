@@ -3,7 +3,7 @@
  * keys in the `translation` namespace (the host registers them with separators
  * disabled, so the dotted keys are looked up verbatim).
  */
-export const workflowTranslationsEn = {
+export const workflowAdminTranslationsEn = {
   'Components.Workflow.Actions': 'Workflow actions',
   'Components.Workflow.RequestApproval': 'Request approval',
   'Workflow.ApprovalDialogDescription':

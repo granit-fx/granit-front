@@ -4,7 +4,7 @@ import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { EntityWorkflow } from '../entity-workflow';
-import { workflowTranslationsEn } from '../locales';
+import { workflowAdminTranslationsEn } from '../locales';
 
 import type { ReactElement, ReactNode } from 'react';
 
@@ -70,7 +70,7 @@ void testI18n.use(initReactI18next).init({
   defaultNS: 'translation',
   nsSeparator: false,
   keySeparator: false,
-  resources: { en: { translation: { ...workflowTranslationsEn } } },
+  resources: { en: { translation: { ...workflowAdminTranslationsEn } } },
   interpolation: { escapeValue: false },
 });
 

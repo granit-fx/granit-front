@@ -1,7 +1,7 @@
 /**
- * French strings for the workflow UI. See {@link workflowTranslationsEn}.
+ * French strings for the workflow UI. See {@link workflowAdminTranslationsEn}.
  */
-export const workflowTranslationsFr = {
+export const workflowAdminTranslationsFr = {
   'Components.Workflow.Actions': 'Actions du workflow',
   'Components.Workflow.RequestApproval': "Demander l'approbation",
   'Workflow.ApprovalDialogDescription':
