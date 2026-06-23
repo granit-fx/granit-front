@@ -94,7 +94,7 @@ function getAvatarTintClass(authorId: string | null | undefined): string {
   return AVATAR_PALETTE[Math.abs(hash) % AVATAR_PALETTE.length]!;
 }
 
-export function TimelineStreamEntryResponse({
+export function TimelineEntry({
   entry,
   entityType,
   entityId,
@@ -230,7 +230,7 @@ export function TimelineStreamEntryResponse({
 
 // Sub-component that owns the `useToggleReaction` hook (and thus the
 // `useMutation` → `useQueryClient` chain). Mounting it conditionally
-// keeps the parent `<TimelineStreamEntryResponse>` mountable without a
+// keeps the parent `<TimelineEntry>` mountable without a
 // `<QueryClientProvider>` for any non-reacting scenario (read-only
 // users, unit tests, stories without auth wiring).
 interface InteractiveReactionBarProps {

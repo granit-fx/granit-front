@@ -6,9 +6,7 @@ import { toEntityId, toISODateString } from '@granit/types';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fn } from 'storybook/test';
 
-
-
-import { TimelineStreamEntryResponse as TimelineEntryComponent } from './timeline-entry';
+import { TimelineEntry as TimelineEntryComponent } from './timeline-entry';
 
 import type { ReactionEmoji, TimelineStreamEntryResponse } from '@granit/timeline';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -17,7 +15,10 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
 });
 
-const storyTimelineConfig = { client: createApiClient({ baseURL: '' }), basePath: '/api/v1/timeline' };
+const storyTimelineConfig = {
+  client: createApiClient({ baseURL: '' }),
+  basePath: '/api/v1/timeline',
+};
 
 const commentEntry: TimelineStreamEntryResponse = {
   id: toEntityId<'TimelineStreamEntryResponse'>('tl-1'),

@@ -3,7 +3,7 @@ import { Button, Spinner } from '@granit/react-ui';
 import { cn } from '@granit/utils';
 import { useCallback, useMemo } from 'react';
 
-import { TimelineStreamEntryResponse } from './timeline-entry.js';
+import { TimelineEntry } from './timeline-entry.js';
 
 import type { TimelineEntryProps } from './timeline-entry.js';
 import type {
@@ -15,13 +15,13 @@ import type {
 export interface TimelineStreamProps {
   entries: readonly TimelineEntryType[];
   /**
-   * Stream's entity context — threaded into each `<TimelineStreamEntryResponse>` so
+   * Stream's entity context — threaded into each `<TimelineEntry>` so
    * reactions (`useToggleReaction`) can scope their cache patches by
    * stream.
    */
   entityType?: string;
   entityId?: string;
-  /** Forwarded to each `<TimelineStreamEntryResponse>` — gates the reaction bar's interactive mode. */
+  /** Forwarded to each `<TimelineEntry>` — gates the reaction bar's interactive mode. */
   canReact?: boolean;
   loading?: boolean;
   loadingMore?: boolean;
@@ -155,7 +155,7 @@ export function TimelineStream({
         return renderEntry ? (
           <div key={entry.id}>{renderEntry(entryProps)}</div>
         ) : (
-          <TimelineStreamEntryResponse key={entry.id} {...entryProps} />
+          <TimelineEntry key={entry.id} {...entryProps} />
         );
       })}
 

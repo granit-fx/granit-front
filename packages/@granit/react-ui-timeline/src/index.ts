@@ -1,6 +1,6 @@
 export { EntityTimeline, type EntityTimelineProps } from './entity-timeline';
 export { TimelineStream, type TimelineStreamProps } from './timeline-stream';
-export { TimelineStreamEntryResponse, type TimelineEntryProps } from './timeline-entry';
+export { TimelineEntry, type TimelineEntryProps } from './timeline-entry';
 export { TimelineComposer, type TimelineComposerProps } from './timeline-composer';
 export { ReactionStrip, type ReactionStripProps } from './reaction-strip';
 export { MentionEditor, type MentionEditorProps } from './mention-editor';

@@ -185,7 +185,7 @@ export interface EntityTimelineProps {
   /** Number of entries per page. Default: 20 */
   pageSize?: number;
   /**
-   * Forwarded to each `<TimelineStreamEntryResponse>`'s reaction bar. Hosts compute it
+   * Forwarded to each `<TimelineEntry>`'s reaction bar. Hosts compute it
    * via `usePermissions().hasPermission('Timeline.Reactions.React')` at the call
    * site so this component stays QueryClient-free for stories / tests
    * that don't need the auth stack mounted. Default: `false`.
