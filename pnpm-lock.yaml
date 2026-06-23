@@ -2858,6 +2858,9 @@ importers:
       '@granit/entity-merge':
         specifier: workspace:*
         version: link:../entity-merge
+      '@granit/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client

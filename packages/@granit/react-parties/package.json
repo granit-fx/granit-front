@@ -17,6 +17,7 @@
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/entity-merge": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/parties": "workspace:*",
     "@granit/query-engine": "workspace:*",
     "@granit/react-api-client": "workspace:*",
@@ -55,6 +56,7 @@
   "devDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/entity-merge": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-entity-merge": "workspace:*",
     "@granit/react-testing": "workspace:*",

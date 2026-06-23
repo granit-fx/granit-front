@@ -22,6 +22,7 @@ import {
 } from '@granit/parties';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { logger } from '../logger';
 import { buildPartiesQueryKey, usePartiesConfig } from '../providers/parties-provider';
 
 import type {
@@ -138,7 +139,10 @@ export function useCreatePartyMutation(): UseMutationResult<
   return useMutation({
     mutationFn: ({ request, options }: CreatePartyMutationVariables) =>
       createParty(config.client, basePath, request, options),
-    onSuccess: () => invalidateList(),
+    onSuccess: (data) => {
+      logger.debug('Party created', { id: data.id });
+      invalidateList();
+    },
   });
 }
 
@@ -154,7 +158,10 @@ export function useUpdatePartyMutation(): UseMutationResult<
 
   return useMutation({
     mutationFn: ({ id, request }) => updateParty(config.client, basePath, id, request),
-    onSuccess: (_data, { id }) => invalidateAll(id),
+    onSuccess: (_data, { id }) => {
+      logger.debug('Party updated', { id });
+      invalidateAll(id);
+    },
   });
 }
 
@@ -172,7 +179,10 @@ export function useSuspendPartyMutation(): UseMutationResult<
 
   return useMutation({
     mutationFn: ({ id, request }) => suspendParty(config.client, basePath, id, request),
-    onSuccess: (_data, { id }) => invalidateAll(id),
+    onSuccess: (_data, { id }) => {
+      logger.debug('Party suspended', { id });
+      invalidateAll(id);
+    },
   });
 }
 
@@ -184,7 +194,10 @@ export function useActivatePartyMutation(): UseMutationResult<void, Error, Party
 
   return useMutation({
     mutationFn: (id: PartyId) => activateParty(config.client, basePath, id),
-    onSuccess: (_data, id) => invalidateAll(id),
+    onSuccess: (_data, id) => {
+      logger.debug('Party activated', { id });
+      invalidateAll(id);
+    },
   });
 }
 
@@ -196,7 +209,10 @@ export function useArchivePartyMutation(): UseMutationResult<void, Error, PartyI
 
   return useMutation({
     mutationFn: (id: PartyId) => archiveParty(config.client, basePath, id),
-    onSuccess: (_data, id) => invalidateAll(id),
+    onSuccess: (_data, id) => {
+      logger.debug('Party archived', { id });
+      invalidateAll(id);
+    },
   });
 }
 

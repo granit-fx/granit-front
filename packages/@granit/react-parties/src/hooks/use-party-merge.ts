@@ -2,6 +2,7 @@ import { generateMergeIdempotencyKey } from '@granit/entity-merge';
 import { mergeParty, previewPartyMerge } from '@granit/parties';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { logger } from '../logger';
 import { buildPartiesQueryKey, usePartiesConfig } from '../providers/parties-provider';
 
 import type { PartyId, PartyMergeRequest, PartyMergeResponse } from '@granit/parties';
@@ -79,6 +80,7 @@ export function useMergePartyMutation(
       // Live merges only — dry-runs never commit so don't invalidate caches.
       if (request.dryRun) return;
 
+      logger.debug('Party merged', { survivorId, loserId: request.loserId });
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: buildPartiesQueryKey(config, 'list'),
