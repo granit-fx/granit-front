@@ -1,0 +1,74 @@
+{
+  "name": "@granit/react-ui-invoicing",
+  "description": "Granit admin UI for the Invoicing module — the invoice list (KPI tiles plus a query-driven grid with status badges and per-row detail navigation), the create-invoice dialog, and the invoice detail view (information, amounts, dates, line items, PDF download) with a host-injected workflow slot. Composes @granit/react-invoicing (headless) with the foundation UI packages.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/analytics": "workspace:*",
+    "@granit/dashboards": "workspace:*",
+    "@granit/invoicing": "workspace:*",
+    "@granit/logger": "workspace:*",
+    "@granit/react-analytics": "workspace:*",
+    "@granit/react-invoicing": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@hookform/resolvers": "^5.4.0",
+    "@tanstack/react-table": "^8.21.3",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.80.0",
+    "react-router-dom": "^7.18.0",
+    "sonner": "^2.0.7",
+    "zod": "^4.4.3"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/analytics": "workspace:*",
+    "@granit/api-client": "workspace:*",
+    "@granit/dashboards": "workspace:*",
+    "@granit/invoicing": "workspace:*",
+    "@granit/logger": "workspace:*",
+    "@granit/react-analytics": "workspace:*",
+    "@granit/react-invoicing": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@hookform/resolvers": "^5.4.0",
+    "@storybook/react-vite": "^10.4.6",
+    "@tanstack/react-query": "^5.0.0",
+    "@tanstack/react-table": "^8.21.3",
+    "i18next": "^26.0.0",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.80.0",
+    "react-i18next": "^17.0.0",
+    "react-router-dom": "^7.18.0",
+    "sonner": "^2.0.7",
+    "storybook": "^10.4.6",
+    "zod": "^4.4.3"
+  }
+}
