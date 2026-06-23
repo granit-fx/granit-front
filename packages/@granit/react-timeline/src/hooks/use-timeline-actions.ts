@@ -1,12 +1,12 @@
-import { createLogger } from '@granit/logger';
 import { createEntry, deleteEntry } from '@granit/timeline';
 import { useCallback, useState } from 'react';
 
+import { logger as timelineLogger } from '../logger';
 import { useTimelineConfig } from '../providers/timeline-provider';
 
 import type { PostTimelineEntryRequest, TimelineStreamEntryResponse } from '@granit/timeline';
 
-const logger = createLogger('timeline:actions');
+const logger = timelineLogger.child('actions');
 
 export interface UseTimelineActionsOptions {
   entityType: string;

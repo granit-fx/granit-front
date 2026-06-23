@@ -1,10 +1,10 @@
-import { createLogger } from '@granit/logger';
 import { getFollowers, followEntity, unfollowEntity } from '@granit/timeline';
 import { useCallback, useEffect, useState } from 'react';
 
+import { logger as timelineLogger } from '../logger';
 import { useTimelineConfig } from '../providers/timeline-provider';
 
-const logger = createLogger('timeline:followers');
+const logger = timelineLogger.child('followers');
 
 export interface UseTimelineFollowersOptions {
   entityType: string;

@@ -1,10 +1,9 @@
 import { LOCALE_STORAGE_KEY } from '@granit/localization';
-import { createLogger } from '@granit/logger';
 import { createStorage } from '@granit/storage';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-const logger = createLogger('react-localization');
+import { logger } from './logger';
 
 export interface UseLocaleOptions {
   /** Called after locale is changed — use to persist to backend (e.g. settings API). */

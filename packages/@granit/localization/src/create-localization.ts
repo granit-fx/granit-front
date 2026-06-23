@@ -1,10 +1,9 @@
-import { createLogger } from '@granit/logger';
 import { createInstance } from 'i18next';
+
+import { logger } from './logger';
 
 import type { LocalizationConfig } from './types/index';
 import type { i18n } from 'i18next';
-
-const logger = createLogger('localization');
 
 /**
  * Create an isolated i18next instance with Digital Dynamics defaults.

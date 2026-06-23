@@ -1,5 +1,4 @@
 import { SEND_MESSAGE_LIMITS } from '@granit/ai-chat';
-import { createLogger } from '@granit/logger';
 import { cn } from '@granit/utils';
 import { ArrowUp, Paperclip, Sparkles, Square } from 'lucide-react';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
@@ -7,6 +6,7 @@ import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { MENTION_SEARCH_DEBOUNCE_MS } from '../constants';
 import { useDefaultMentionSearch } from '../hooks/use-default-mention-search';
 import { defaultChatLabels } from '../locales/index';
+import { logger } from '../logger';
 
 import { AttachmentChips } from './attachment-chips';
 import { CHIP_SLOT, createChipElement, isEditorEmpty, serializeEditor } from './composer-content';
@@ -34,8 +34,6 @@ import type {
   MouseEvent,
   ReactNode,
 } from 'react';
-
-const logger = createLogger('react-ai-chat');
 
 /** Caret-moving keys that should re-evaluate the `/` `@` trigger on key-up. */
 const CARET_KEYS = new Set(['ArrowLeft', 'ArrowRight', 'Home', 'End']);

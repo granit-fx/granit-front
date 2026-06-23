@@ -1,13 +1,12 @@
-import { createLogger } from '@granit/logger';
 import { isEmptyFieldValue, validateField, validateFieldsBatch } from '@granit/validation';
 import { useEffect, useRef, useState } from 'react';
+
+import { logger } from './logger';
 
 import type { TranslateFunction } from './create-constraints-resolver';
 import type { ServerValidationState } from './use-server-validation';
 import type { AxiosInstance } from '@granit/api-client';
 import type { FieldConstraint } from '@granit/validation';
-
-const logger = createLogger('react-validation');
 
 export interface BatchFieldSpec {
   readonly name: string;

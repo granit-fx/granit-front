@@ -1,11 +1,9 @@
-import { createLogger } from '@granit/logger';
 import { getUnreadCount } from '@granit/notifications';
 import { useCallback, useEffect, useRef } from 'react';
 
 import { API_BASE_PATH } from '../constants';
+import { logger } from '../logger';
 import { useNotificationConfig } from '../providers/notification-provider';
-
-const logger = createLogger('react-notifications');
 
 export interface UseUnreadCountOptions {
   /** Polling interval in ms. Set to 0 to disable polling. Default: 60 000 */

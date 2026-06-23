@@ -1,5 +1,6 @@
-import { createLogger } from '@granit/logger';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+
+import { logger } from '../logger';
 
 import type {
   ConnectionState,
@@ -21,8 +22,6 @@ interface NotificationContextValue {
 }
 
 const NotificationContext = createContext<NotificationContextValue | null>(null);
-
-const logger = createLogger('react-notifications');
 
 // ---------------------------------------------------------------------------
 // Hook

@@ -1,10 +1,9 @@
-import { createLogger } from '@granit/logger';
 import { enUS } from 'date-fns/locale';
 import { useEffect, useState } from 'react';
 
-import type { Locale } from 'date-fns/locale';
+import { logger } from './logger';
 
-const logger = createLogger('react-localization');
+import type { Locale } from 'date-fns/locale';
 
 /** Alias for i18n codes that don't have a matching date-fns locale file. */
 const LOCALE_ALIAS: Record<string, string> = {

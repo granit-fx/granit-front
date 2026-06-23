@@ -3,16 +3,14 @@ import {
   CHAT_STREAM_EVENT_TYPES,
   streamConversationMessage,
 } from '@granit/ai-chat';
-import { createLogger } from '@granit/logger';
 import { toEntityId, toISODateString } from '@granit/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { logger } from '../logger';
 import { useAIChatConfig } from '../providers/ai-chat-provider';
 
 import { conversationKeys } from './query-keys';
-
-const logger = createLogger('react-ai-chat');
 
 import type { MessagesPageParam } from './use-conversation-messages';
 import type {

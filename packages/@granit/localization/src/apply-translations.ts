@@ -1,9 +1,7 @@
-import { createLogger } from '@granit/logger';
+import { logger } from './logger';
 
 import type { ApplicationLocalizationResponse } from './types/index';
 import type { i18n } from 'i18next';
-
-const logger = createLogger('localization');
 
 /**
  * Apply backend localization response to the i18next instance.
