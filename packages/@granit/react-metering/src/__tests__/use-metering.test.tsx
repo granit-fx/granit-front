@@ -6,6 +6,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { sampleMeters, sampleQuota, sampleUsage } from '@granit/react-metering/testing';
+
 import {
   useActiveMeters,
   useArchiveMeterDefinition,
@@ -20,11 +22,6 @@ import {
 import { MeteringProvider } from '../providers/metering-provider';
 
 import type { MeteringConfig } from '../providers/metering-provider';
-import type {
-  MeterDefinitionResponse,
-  MeteringQuotaStatusResponse,
-  UsageAggregateResponse,
-} from '@granit/metering';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -44,34 +41,7 @@ function createWrapper(client: AxiosInstance, basePath?: string) {
   };
 }
 
-const sampleMeter: MeterDefinitionResponse = {
-  id: 'meter-1',
-  name: 'API Calls',
-  unit: 'calls',
-  description: 'Number of API calls',
-  aggregationType: 'Sum',
-  productId: null,
-  lifecycleStatus: 'Published',
-  distinctProperty: null,
-};
-
-const sampleUsage: UsageAggregateResponse = {
-  id: 'agg-1',
-  meterDefinitionId: 'meter-1',
-  period: 'Daily',
-  periodStart: toISODateString('2026-04-01T00:00:00Z'),
-  periodEnd: toISODateString('2026-04-02T00:00:00Z'),
-  aggregatedValue: 150,
-  eventCount: 30,
-};
-
-const sampleQuota: MeteringQuotaStatusResponse = {
-  meterName: 'API Calls',
-  currentUsage: 150,
-  limit: 1000,
-  percentUsed: 15,
-  isExceeded: false,
-};
+const sampleMeter = sampleMeters[0]!;
 
 // ---------------------------------------------------------------------------
 // Tests

@@ -5,6 +5,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockAccountSettings } from '@granit/react-account/testing';
+
 import { useAccountSettings } from '../hooks/use-account-settings';
 import { AccountProvider } from '../providers/account-provider';
 
@@ -42,11 +44,7 @@ afterEach(() => {
 describe('useAccountSettings', () => {
   it('should fetch account settings with default basePath', async () => {
     const client = createMockClient();
-    const response: AccountSettingsResponse = {
-      allowSelfRegistration: true,
-      externalProviders: [],
-    };
-    vi.mocked(getAccountSettings).mockResolvedValue(response);
+    vi.mocked(getAccountSettings).mockResolvedValue(mockAccountSettings);
 
     const { result } = renderHook(() => useAccountSettings(), {
       wrapper: createWrapper(client),
@@ -55,14 +53,14 @@ describe('useAccountSettings', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(getAccountSettings).toHaveBeenCalledWith(client, '/api/v1/account');
-    expect(result.current.data).toEqual({ allowSelfRegistration: true, externalProviders: [] });
+    expect(result.current.data).toEqual(mockAccountSettings);
   });
 
   it('should return allowSelfRegistration false when endpoint returns false', async () => {
     const client = createMockClient();
     const response: AccountSettingsResponse = {
+      ...mockAccountSettings,
       allowSelfRegistration: false,
-      externalProviders: [],
     };
     vi.mocked(getAccountSettings).mockResolvedValue(response);
 

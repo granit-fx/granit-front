@@ -1,10 +1,11 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toEntityId } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { mockProducts } from '@granit/react-catalog/testing';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 import {
@@ -21,51 +22,17 @@ import {
 
 import type { CatalogConfig } from '../providers/catalog-provider';
 import type { AxiosInstance } from '@granit/api-client';
-import type {
-  ProductCreateRequest,
-  ProductExternalMappingId,
-  ProductExternalMappingResponse,
-  ProductId,
-  ProductResponse,
-} from '@granit/catalog';
+import type { ProductCreateRequest } from '@granit/catalog';
 import type { ReactNode } from 'react';
 
 // ---------------------------------------------------------------------------
 // Fixtures
 // ---------------------------------------------------------------------------
 
-const PRODUCT_ID = toEntityId<'Product'>('prod-001') as ProductId;
-const MAPPING_ID = toEntityId<'ProductExternalMapping'>('map-001') as ProductExternalMappingId;
+const sampleProduct = mockProducts[0]!;
+const PRODUCT_ID = sampleProduct.id;
 
-const sampleMapping: ProductExternalMappingResponse = {
-  id: MAPPING_ID,
-  providerName: 'Stripe',
-  externalId: 'price_abc123',
-};
-
-const sampleProduct: ProductResponse = {
-  id: PRODUCT_ID,
-  sku: 'SKU-001',
-  name: 'Widget Pro',
-  description: 'A professional widget',
-  type: 'Physical',
-  unit: 'each',
-  lifecycleStatus: 'Published',
-  metadata: { category: 'hardware' },
-  externalMappings: [sampleMapping],
-};
-
-const sampleDraftProduct: ProductResponse = {
-  id: toEntityId<'Product'>('prod-002') as ProductId,
-  sku: 'SKU-002',
-  name: 'Widget Lite',
-  description: null,
-  type: 'Physical',
-  unit: 'each',
-  lifecycleStatus: 'Draft',
-  metadata: {},
-  externalMappings: [],
-};
+const sampleDraftProduct = mockProducts[2]!;
 
 const createRequest: ProductCreateRequest = {
   sku: 'SKU-NEW',
@@ -276,13 +243,13 @@ describe('useProductBySku', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: sampleDraftProduct });
 
-    const { result } = renderHook(() => useProductBySku('SKU-002'), {
+    const { result } = renderHook(() => useProductBySku(sampleDraftProduct.sku), {
       wrapper: createWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(client.get).toHaveBeenCalledWith(
-      `${DEFAULT_BASE_PATH}/products/by-sku/${encodeURIComponent('SKU-002')}`
+      `${DEFAULT_BASE_PATH}/products/by-sku/${encodeURIComponent(sampleDraftProduct.sku)}`
     );
     expect(result.current.data).toEqual(sampleDraftProduct);
   });

@@ -1,11 +1,12 @@
 import { getRelease, listReleases } from '@granit/cms';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { mockReleases } from '@granit/react-cms/testing';
 
 import { useRelease, useReleases } from '../hooks/use-releases';
 import { CmsProvider } from '../providers/cms-provider';
@@ -20,18 +21,7 @@ vi.mock('@granit/cms', () => ({
   getRelease: vi.fn(),
 }));
 
-const release: ReleaseResponse = {
-  id: 'rel-1',
-  siteId: 'site-1',
-  name: 'Sprint 1',
-  status: 'Draft',
-  schedule: null,
-  tenantId: null,
-  actions: [],
-  createdAt: toISODateString('2026-01-01T00:00:00Z'),
-  modifiedAt: null,
-  concurrencyStamp: 'stamp-1',
-};
+const release = mockReleases[0]!;
 
 function createWrapper(client: AxiosInstance) {
   return function Wrapper({ children }: { children: ReactNode }) {
@@ -82,10 +72,10 @@ describe('useRelease', () => {
     const client = createMockClient();
     vi.mocked(getRelease).mockResolvedValue(release);
 
-    const { result } = renderHook(() => useRelease('rel-1'), { wrapper: createWrapper(client) });
+    const { result } = renderHook(() => useRelease(release.id), { wrapper: createWrapper(client) });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getRelease).toHaveBeenCalledWith(client, '', 'rel-1');
+    expect(getRelease).toHaveBeenCalledWith(client, '', release.id);
   });
 
   it('is disabled when id is empty', () => {

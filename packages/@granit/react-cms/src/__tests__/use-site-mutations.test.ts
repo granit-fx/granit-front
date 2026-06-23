@@ -1,16 +1,16 @@
 import { createSite, deleteSite, updateSite } from '@granit/cms';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockSites } from '@granit/react-cms/testing';
+
 import { useCreateSite, useDeleteSite, useUpdateSite } from '../hooks/use-site-mutations';
 import { CmsProvider } from '../providers/cms-provider';
 
-import type { SiteResponse } from '@granit/cms';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -20,20 +20,7 @@ vi.mock('@granit/cms', () => ({
   deleteSite: vi.fn(),
 }));
 
-const site: SiteResponse = {
-  id: 'site-1',
-  slug: 'acme',
-  defaultCulture: 'fr',
-  allowedCultures: ['fr'],
-  domains: [],
-  defaultTheme: 'default',
-  activated: true,
-  tenantId: null,
-  displayNames: {},
-  homePageId: null,
-  createdAt: toISODateString('2026-01-01T00:00:00Z'),
-  modifiedAt: null,
-};
+const site = mockSites[0]!;
 
 function createWrapper(client: AxiosInstance) {
   return function Wrapper({ children }: { children: ReactNode }) {
@@ -84,10 +71,10 @@ describe('useUpdateSite', () => {
       activated: true,
     };
     const { result } = renderHook(() => useUpdateSite(), { wrapper: createWrapper(client) });
-    result.current.mutate({ id: 'site-1', request });
+    result.current.mutate({ id: site.id, request });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(updateSite).toHaveBeenCalledWith(client, '', 'site-1', request);
+    expect(updateSite).toHaveBeenCalledWith(client, '', site.id, request);
   });
 });
 
@@ -101,9 +88,9 @@ describe('useDeleteSite', () => {
     vi.mocked(deleteSite).mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useDeleteSite(), { wrapper: createWrapper(client) });
-    result.current.mutate('site-1');
+    result.current.mutate(site.id);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(deleteSite).toHaveBeenCalledWith(client, '', 'site-1');
+    expect(deleteSite).toHaveBeenCalledWith(client, '', site.id);
   });
 });

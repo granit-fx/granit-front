@@ -6,47 +6,13 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
+import { mockWorkspaceTree } from '@granit/react-workspaces/testing';
+
 import { useWorkspaces, workspaceTreeQueryKey } from '../hooks/use-workspaces';
 
-import type { WorkspaceTreeResponse } from '@granit/workspaces';
 import type { ReactNode } from 'react';
 
-const TREE: WorkspaceTreeResponse = {
-  schemaVersion: 1,
-  workspaces: [
-    {
-      name: 'Granit.Showcase.CRM',
-      displayKey: 'Granit.Showcase.CRM.DisplayName',
-      icon: 'briefcase',
-      order: 100,
-      isShell: false,
-      sections: [
-        {
-          key: 'parties',
-          displayKey: 'Granit.Showcase.CRM.Parties',
-          order: 0,
-          collapsedByDefault: false,
-          items: [
-            {
-              kind: 'Entity',
-              order: 0,
-              displayKey: null,
-              icon: null,
-              entityName: 'Granit.Parties.Party',
-              entityViewName: null,
-              entityPresetOverlay: null,
-              dashboardName: null,
-              linkUrl: null,
-              subWorkspaceName: null,
-              featureName: null,
-              routeName: null,
-            },
-          ],
-        },
-      ],
-    },
-  ],
-};
+const TREE = mockWorkspaceTree;
 
 let getCalls = 0;
 

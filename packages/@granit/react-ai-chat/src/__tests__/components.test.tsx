@@ -11,6 +11,7 @@ import { MessageMetrics } from '../components/message-metrics';
 import { SuggestedActions } from '../components/suggested-actions';
 import { ToolActivity } from '../components/tool-activity';
 import { AIChatProvider } from '../providers/ai-chat-provider';
+import { mockConversationMessages } from '../testing/data';
 
 import type { ComposerAttachment } from '../components/attachment-chips';
 import type { ChatTurnMetrics, ToolCallActivity } from '../hooks/use-chat-stream';
@@ -34,26 +35,14 @@ function renderWithMetricsFlag(ui: ReactNode, showMessageMetrics: boolean) {
   return render(<AIChatProvider config={{ client, showMessageMetrics }}>{ui}</AIChatProvider>);
 }
 
-const messages: MessageResponse[] = [
-  {
-    id: 'm1' as MessageResponse['id'],
-    role: 'user',
-    content: 'Hello',
-    createdAt: '2026-06-15T09:00:00Z' as MessageResponse['createdAt'],
-  },
-  {
-    id: 'm2' as MessageResponse['id'],
-    role: 'assistant',
-    content: 'Hi there',
-    createdAt: '2026-06-15T09:00:02Z' as MessageResponse['createdAt'],
-  },
-];
+const messages: readonly MessageResponse[] = mockConversationMessages;
+const [userMessage, assistantMessage] = messages;
 
 describe('ConversationThread', () => {
   it('renders messages inside an ARIA live log region', () => {
     const { container } = render(<ConversationThread messages={messages} />);
-    expect(screen.getByText('Hello')).toBeInTheDocument();
-    expect(screen.getByText('Hi there')).toBeInTheDocument();
+    expect(screen.getByText(userMessage!.content)).toBeInTheDocument();
+    expect(screen.getByText(assistantMessage!.content)).toBeInTheDocument();
     const log = container.querySelector('[data-slot="conversation-thread"]');
     expect(log).toHaveAttribute('role', 'log');
     expect(log).toHaveAttribute('aria-live', 'polite');
@@ -90,8 +79,8 @@ describe('ConversationThread', () => {
     expect(renderMessageActions).toHaveBeenCalledTimes(messages.length);
     expect(renderMessageActions).toHaveBeenNthCalledWith(1, messages[0], 0);
     expect(renderMessageActions).toHaveBeenNthCalledWith(2, messages[1], 1);
-    expect(screen.getByRole('button', { name: 'act m1' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'act m2' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: `act ${userMessage!.id}` })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: `act ${assistantMessage!.id}` })).toBeInTheDocument();
   });
 
   it('does not invoke renderMessageActions for the streaming bubble', () => {

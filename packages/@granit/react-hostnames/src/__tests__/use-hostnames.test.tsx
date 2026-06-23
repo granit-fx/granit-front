@@ -1,10 +1,11 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
+
+import { mockHostnames } from '@granit/react-hostnames/testing';
 
 import { useHostnames } from '../hooks/use-hostnames';
 import { HostnamesProvider } from '../providers/hostnames-provider';
@@ -24,30 +25,7 @@ function createWrapper(client: AxiosInstance) {
   };
 }
 
-const mockList: readonly ManagedHostnameResponse[] = [
-  {
-    id: '11111111-0001-4000-a000-000000000001',
-    host: 'app.acme.com',
-    ownerType: 'cms.site',
-    ownerId: 'aaaaaaaa-0001-4000-a000-000000000001',
-    tenantId: 'tttttttt-0001-4000-a000-000000000001',
-    isPrimary: true,
-    status: 'Active',
-    verificationToken: null,
-    expectedDnsRecords: [],
-    lastCheckedAt: toISODateString('2026-06-01T08:00:00Z'),
-    conflicts: [],
-    failedCheckCount: 0,
-    nextCheckAt: toISODateString('2026-06-02T08:00:00Z'),
-    certificateStatus: 'Secured',
-    certExpiresAt: toISODateString('2027-06-01T08:00:00Z'),
-    createdAt: toISODateString('2026-01-01T00:00:00Z'),
-    createdBy: 'admin@acme.com',
-    modifiedAt: toISODateString('2026-06-01T08:00:00Z'),
-    modifiedBy: 'admin@acme.com',
-    concurrencyStamp: 'stamp-0001',
-  },
-];
+const mockList: readonly ManagedHostnameResponse[] = [mockHostnames[0]!];
 
 describe('useHostnames', () => {
   it('fetches the list with required owner params', async () => {

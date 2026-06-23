@@ -1,4 +1,4 @@
-import { toISODateString } from '@granit/types';
+import { mockBackgroundJobs } from '@granit/react-background-jobs/testing';
 import { screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -12,14 +12,7 @@ import type { ReactElement } from 'react';
 
 function makeJob(overrides: Partial<BackgroundJobStatus> = {}): BackgroundJobStatus {
   return {
-    jobName: 'SampleJob',
-    cronExpression: '0 0 * * * ?',
-    isEnabled: true,
-    lastExecutedAt: toISODateString('2026-04-02T12:00:00Z'),
-    nextExecutionAt: toISODateString('2026-04-02T13:00:00Z'),
-    consecutiveFailures: 0,
-    deadLetterCount: 0,
-    lastError: null,
+    ...mockBackgroundJobs[0],
     ...overrides,
   };
 }

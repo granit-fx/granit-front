@@ -1,15 +1,14 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { mockDiagnosticsHealth } from '@granit/react-diagnostics/testing';
+
 import { buildDiagnosticsQueryKey } from '../hooks/query-keys';
 import { useMonitoringHealth } from '../hooks/use-monitoring-health';
-
-import type { MonitoringHealthResponse } from '@granit/diagnostics';
 
 function createWrapper() {
   const queryClient = createTestQueryClient();
@@ -21,19 +20,7 @@ function createWrapper() {
   };
 }
 
-const mockResponse: MonitoringHealthResponse = {
-  services: [
-    {
-      id: 'postgresql',
-      name: 'Postgresql',
-      status: 'healthy',
-      responseTimeMs: 5.2,
-      description: 'Primary database cluster',
-      tags: ['readiness', 'startup'],
-    },
-  ],
-  checkedAt: toISODateString('2026-03-20T12:00:00+00:00'),
-};
+const mockResponse = mockDiagnosticsHealth;
 
 describe('buildDiagnosticsQueryKey', () => {
   it('should use default prefix when no queryKeyPrefix is provided', () => {
@@ -88,9 +75,9 @@ describe('useMonitoringHealth', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(result.current.data?.services).toHaveLength(1);
-    expect(result.current.data?.services[0].id).toBe('postgresql');
-    expect(result.current.data?.checkedAt).toBe('2026-03-20T12:00:00+00:00');
+    expect(result.current.data?.services).toHaveLength(mockDiagnosticsHealth.services.length);
+    expect(result.current.data?.services[0].id).toBe('api-gateway');
+    expect(result.current.data?.checkedAt).toBe('2026-03-12T10:00:00Z');
   });
 
   it('should handle fetch error', async () => {

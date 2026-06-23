@@ -1,3 +1,4 @@
+import { mockAppSettings } from '@granit/react-settings/testing';
 import { screen, waitFor } from '@testing-library/react';
 import { toast } from 'sonner';
 
@@ -5,11 +6,7 @@ import { AppSettingsPanel } from '../components/app-settings-panel';
 
 import { renderSettings } from './test-utils';
 
-import type {
-  AdminAppSettingResponse,
-  BulkSettingEntry,
-  BulkUpdateSettingsResponse,
-} from '@granit/settings';
+import type { BulkSettingEntry, BulkUpdateSettingsResponse } from '@granit/settings';
 
 let saveResponse: BulkUpdateSettingsResponse;
 const mockSave = vi.fn<
@@ -19,51 +16,8 @@ const mockSave = vi.fn<
   ) => void
 >((_entries, opts) => opts?.onSuccess?.(saveResponse));
 
-const mockSettings: AdminAppSettingResponse[] = [
-  {
-    key: 'audit.retention_days',
-    label: 'Audit Log Retention',
-    description: 'Days to retain audit logs',
-    defaultValue: '365',
-    value: '1095',
-    valueKind: 'Int',
-    allowedValues: null,
-    isEncrypted: false,
-  },
-  {
-    key: 'notifications.email_enabled',
-    label: 'Email Notifications',
-    description: null,
-    defaultValue: 'false',
-    value: 'true',
-    valueKind: 'Bool',
-    allowedValues: null,
-    isEncrypted: false,
-  },
-  {
-    key: 'ui.theme',
-    label: 'Theme',
-    description: null,
-    defaultValue: 'system',
-    value: 'light',
-    valueKind: 'String',
-    allowedValues: ['light', 'dark', 'system'],
-    isEncrypted: false,
-  },
-  {
-    key: 'integrations.stripe_secret_key',
-    label: 'Stripe Secret',
-    description: null,
-    defaultValue: null,
-    value: '***',
-    valueKind: 'String',
-    allowedValues: null,
-    isEncrypted: true,
-  },
-];
-
 vi.mock('@granit/react-settings', () => ({
-  useAdminAppSettings: () => ({ data: mockSettings, isLoading: false }),
+  useAdminAppSettings: () => ({ data: mockAppSettings, isLoading: false }),
   useBulkUpdateSettings: () => ({ mutate: mockSave, isPending: false }),
   useSettings: () => ({ data: {}, isLoading: false }),
   useUpdateSetting: () => ({
@@ -85,7 +39,7 @@ vi.mock('sonner', () => ({
 beforeEach(() => {
   vi.clearAllMocks();
   saveResponse = {
-    results: mockSettings.map((s) => ({ key: s.key, outcome: 'Updated', errorCode: null })),
+    results: mockAppSettings.map((s) => ({ key: s.key, outcome: 'Updated', errorCode: null })),
   };
 });
 
@@ -103,7 +57,7 @@ describe('AppSettingsPanel', () => {
     });
     expect(screen.getByText('Email Notifications')).toBeInTheDocument();
     expect(screen.getByText('Theme')).toBeInTheDocument();
-    expect(screen.getByText('Stripe Secret')).toBeInTheDocument();
+    expect(screen.getByText('Stripe Secret Key')).toBeInTheDocument();
   });
 
   it('should render a number input for Int kind', async () => {
@@ -116,21 +70,24 @@ describe('AppSettingsPanel', () => {
     renderSettings(<AppSettingsPanel />);
     await waitFor(() => expect(screen.getByText('Email Notifications')).toBeInTheDocument());
     const switches = screen.getAllByRole('switch');
-    expect(switches).toHaveLength(1);
+    expect(switches).toHaveLength(2);
     expect(switches[0]).toHaveAttribute('data-state', 'checked');
+    expect(switches[1]).toHaveAttribute('data-state', 'unchecked');
   });
 
   it('should render a dropdown when allowedValues is present', async () => {
     renderSettings(<AppSettingsPanel />);
     await waitFor(() => expect(screen.getByText('Theme')).toBeInTheDocument());
-    const combobox = screen.getByRole('combobox');
-    expect(combobox).toBeInTheDocument();
-    expect(combobox).toHaveTextContent('light');
+    // Two rows expose allowedValues (ui.default_page_size, ui.theme), so both
+    // render as comboboxes. Target the Theme dropdown via its trigger id.
+    const themeCombobox = screen.getByRole('combobox', { name: 'Theme' });
+    expect(themeCombobox).toBeInTheDocument();
+    expect(themeCombobox).toHaveTextContent('light');
   });
 
   it('should mask encrypted fields until Change is clicked', async () => {
     const { user } = renderSettings(<AppSettingsPanel />);
-    await waitFor(() => expect(screen.getByText('Stripe Secret')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Stripe Secret Key')).toBeInTheDocument());
 
     const masked = screen.getByDisplayValue('••••••••');
     expect(masked).toBeDisabled();

@@ -1,4 +1,4 @@
-import { toISODateString } from '@granit/types';
+import { mockBackgroundJobs } from '@granit/react-background-jobs/testing';
 import { within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -21,14 +21,7 @@ vi.mock('@granit/react-background-jobs', () => ({
 
 function makeJob(overrides: Partial<BackgroundJobStatus> = {}): BackgroundJobStatus {
   return {
-    jobName: 'SampleJob',
-    cronExpression: '0 0 * * * ?',
-    isEnabled: true,
-    lastExecutedAt: toISODateString('2026-04-02T12:00:00Z'),
-    nextExecutionAt: toISODateString('2026-04-02T13:00:00Z'),
-    consecutiveFailures: 0,
-    deadLetterCount: 0,
-    lastError: null,
+    ...mockBackgroundJobs[0],
     ...overrides,
   };
 }
@@ -49,7 +42,7 @@ describe('JobActions', () => {
     const buttons = within(container).getAllByRole('button');
     // First button is pause (enabled), second is trigger.
     await user.click(buttons[0]);
-    expect(pauseMutate).toHaveBeenCalledWith('SampleJob');
+    expect(pauseMutate).toHaveBeenCalledWith('vault-credential-renewal');
     expect(resumeMutate).not.toHaveBeenCalled();
   });
 
@@ -58,7 +51,7 @@ describe('JobActions', () => {
     const container = document.querySelector('[data-slot="job-actions"]') as HTMLElement;
     const buttons = within(container).getAllByRole('button');
     await user.click(buttons[0]);
-    expect(resumeMutate).toHaveBeenCalledWith('SampleJob');
+    expect(resumeMutate).toHaveBeenCalledWith('vault-credential-renewal');
     expect(pauseMutate).not.toHaveBeenCalled();
   });
 
@@ -67,7 +60,7 @@ describe('JobActions', () => {
     const container = document.querySelector('[data-slot="job-actions"]') as HTMLElement;
     const buttons = within(container).getAllByRole('button');
     await user.click(buttons[1]);
-    expect(triggerMutate).toHaveBeenCalledWith('SampleJob');
+    expect(triggerMutate).toHaveBeenCalledWith('vault-credential-renewal');
   });
 
   it('disables the trigger button for a disabled job', () => {

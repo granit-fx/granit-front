@@ -7,6 +7,11 @@ import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  sampleConfiguration,
+  sampleMandates,
+} from '@granit/react-payments-sepa-direct-debit/testing';
+
+import {
   useCancelMandate,
   useConfirmMandate,
   useCreateMandate,
@@ -17,49 +22,17 @@ import {
 import { SepaDirectDebitProvider } from '../providers/sepa-direct-debit-provider';
 
 import type { SepaDirectDebitConfig } from '../providers/sepa-direct-debit-provider';
-import type {
-  MandateResponse,
-  MandateSetupResponse,
-  SepaConfigurationResponse,
-} from '@granit/payments-sepa-direct-debit';
+import type { MandateSetupResponse } from '@granit/payments-sepa-direct-debit';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
-const sampleMandate: MandateResponse = {
-  id: 'mdt-1',
-  mandateReference: 'RUM-0001',
-  status: 'Active',
-  scheme: 'Core',
-  debtorName: 'Alice Martin',
-  debtorIbanMasked: 'BE** **** **** 1234',
-  creditorId: 'BE68ZZZ0123456789',
-  providerName: 'GoCardless',
-  providerMandateId: 'MD0001',
-  signedAt: toISODateString('2026-05-01T10:00:00Z'),
-  activatedAt: toISODateString('2026-05-01T10:05:00Z'),
-  cancelledAt: null,
-  tenantId: null,
-  concurrencyStamp: 'stamp-1',
-};
+const sampleMandate = sampleMandates[0]!;
 
 const sampleSetup: MandateSetupResponse = {
   id: 'mdt-1',
   mandateReference: 'RUM-0001',
   status: 'Pending',
   redirectUrl: null,
-};
-
-const sampleConfiguration: SepaConfigurationResponse = {
-  creditorId: 'BE68ZZZ0123456789',
-  creditorName: 'Acme NV',
-  defaultScheme: 'Core',
-  defaultProviderName: 'GoCardless',
-  isActive: true,
-  companyPartyId: null,
-  creditorIbanMasked: 'BE** **** **** 9999',
-  creditorBic: 'GEBABEBB',
-  tenantId: null,
-  concurrencyStamp: 'stamp-cfg',
 };
 
 function createWrapper(client: AxiosInstance, basePath?: string) {

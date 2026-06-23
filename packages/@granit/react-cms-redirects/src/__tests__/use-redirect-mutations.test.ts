@@ -11,6 +11,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockRedirects } from '@granit/react-cms-redirects/testing';
+
 import {
   useCreateRedirect,
   useDeleteRedirect,
@@ -19,11 +21,7 @@ import {
 } from '../hooks/use-redirect-mutations';
 import { CmsRedirectsProvider } from '../providers/cms-redirects-provider';
 
-import type {
-  RedirectMutationResult,
-  RedirectResponse,
-  SiteRedirectSettingsResponse,
-} from '@granit/cms-redirects';
+import type { RedirectMutationResult, SiteRedirectSettingsResponse } from '@granit/cms-redirects';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -34,20 +32,7 @@ vi.mock('@granit/cms-redirects', () => ({
   updateRedirectSettings: vi.fn(),
 }));
 
-const redirect: RedirectResponse = {
-  id: 'r-1',
-  siteId: 'site-1',
-  source: '/old',
-  matchType: 'Exact',
-  target: '/new',
-  type: 'MovedPermanently',
-  statusCode: 301,
-  isActive: true,
-  culture: null,
-  origin: 'Manual',
-  hitCount: 0,
-  lastHitAt: null,
-};
+const redirect = mockRedirects[0]!;
 
 const mutationResult: RedirectMutationResult = { redirect, conflictWarning: null };
 
@@ -102,10 +87,10 @@ describe('useUpdateRedirect', () => {
 
     const request = { target: '/new-v2' };
     const { result } = renderHook(() => useUpdateRedirect(), { wrapper: createWrapper(client) });
-    result.current.mutate({ id: 'r-1', request });
+    result.current.mutate({ id: redirect.id, request });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(updateRedirect).toHaveBeenCalledWith(client, '', 'r-1', request);
+    expect(updateRedirect).toHaveBeenCalledWith(client, '', redirect.id, request);
   });
 });
 
@@ -117,10 +102,10 @@ describe('useDeleteRedirect', () => {
     vi.mocked(deleteRedirect).mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useDeleteRedirect(), { wrapper: createWrapper(client) });
-    result.current.mutate({ id: 'r-1', siteId: 'site-1' });
+    result.current.mutate({ id: redirect.id, siteId: redirect.siteId });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(deleteRedirect).toHaveBeenCalledWith(client, '', 'r-1');
+    expect(deleteRedirect).toHaveBeenCalledWith(client, '', redirect.id);
   });
 });
 

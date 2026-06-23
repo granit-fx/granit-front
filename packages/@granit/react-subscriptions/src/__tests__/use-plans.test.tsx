@@ -1,10 +1,11 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { mockPlans } from '@granit/react-subscriptions/testing';
 
 import {
   useActivePlans,
@@ -19,33 +20,12 @@ import {
 import { SubscriptionsProvider } from '../providers/subscriptions-provider';
 
 import type { SubscriptionsConfig } from '../providers/subscriptions-provider';
-import type { PlanPriceResponse, PlanResponse } from '@granit/subscriptions';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
-const samplePlan: PlanResponse = {
-  id: 'plan-1',
-  name: 'Pro',
-  description: 'Professional plan',
-  pricingModel: 'PerSeat',
-  defaultInterval: 'Monthly',
-  trialDays: 14,
-  seatLimit: 50,
-  sortOrder: 1,
-  lifecycleStatus: 'Draft',
-  prices: [],
-};
+const samplePlan = mockPlans[0]!;
 
-const samplePrice: PlanPriceResponse = {
-  id: 'price-1',
-  amount: 29.99,
-  currency: 'EUR',
-  interval: 'Monthly',
-  effectiveFrom: toISODateString('2026-01-01T00:00:00Z'),
-  isCurrent: true,
-  replacedByPriceId: null,
-  replacedAt: null,
-};
+const samplePrice = mockPlans[1]!.prices[2]!;
 
 function createWrapper(client: AxiosInstance, basePath?: string) {
   return function Wrapper({ children }: { children: ReactNode }) {

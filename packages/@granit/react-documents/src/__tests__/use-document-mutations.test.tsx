@@ -5,6 +5,8 @@ import { renderHook } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockDocumentsData, mockVersionsData } from '@granit/react-documents/testing';
+
 import {
   useAppendDocumentVersion,
   useFinalizeUpload,
@@ -19,44 +21,14 @@ import {
 import { DocumentsProvider } from '../providers/documents-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type {
-  DocumentResponse,
-  DocumentVersionResponse,
-  UploadTicketResponse,
-} from '@granit/documents';
+import type { UploadTicketResponse } from '@granit/documents';
 import type { QueryClient } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 
-const sampleDoc: DocumentResponse = {
-  id: 'doc-1',
-  folderId: 'fld-1',
-  name: 'contract.pdf',
-  description: null,
-  ownerId: 'user-1',
-  currentVersionId: 'ver-1',
-  concurrencyStamp: 'stamp-1',
-  sizeBytes: 1024,
-  contentType: 'application/pdf',
-  status: 'Active',
-  createdAt: toISODateString('2026-05-01T00:00:00Z'),
-  modifiedAt: null,
-  trashedAt: null,
-  permission: null,
-};
+const sampleDoc = mockDocumentsData[0]!;
+const docId = sampleDoc.id;
 
-const sampleVersion: DocumentVersionResponse = {
-  id: 'ver-1',
-  documentId: 'doc-1',
-  versionNumber: 1,
-  blobDescriptorId: 'blob-1',
-  sizeBytes: 1024,
-  contentType: 'application/pdf',
-  contentHash: null,
-  uploadedByUserId: 'user-1',
-  uploadedAt: toISODateString('2026-05-01T00:00:00Z'),
-  commitMessage: null,
-  isCurrent: true,
-};
+const sampleVersion = mockVersionsData[0]!;
 
 const sampleTicket: UploadTicketResponse = {
   blobId: 'blob-1',
@@ -145,11 +117,11 @@ describe('useRenameDocument', () => {
 
     const { result } = renderHook(() => useRenameDocument(), { wrapper });
     await result.current.mutateAsync({
-      id: 'doc-1',
+      id: docId,
       request: { name: 'renamed.pdf', description: null },
     });
 
-    expect(client.patch).toHaveBeenCalledWith('/api/v1/documents/documents/doc-1', {
+    expect(client.patch).toHaveBeenCalledWith(`/api/v1/documents/documents/${docId}`, {
       name: 'renamed.pdf',
       description: null,
     });
@@ -167,9 +139,9 @@ describe('useMoveDocument', () => {
     const invalidate = vi.spyOn(queryClient, 'invalidateQueries');
 
     const { result } = renderHook(() => useMoveDocument(), { wrapper });
-    await result.current.mutateAsync({ id: 'doc-1', request: { newFolderId: 'fld-9' } });
+    await result.current.mutateAsync({ id: docId, request: { newFolderId: 'fld-9' } });
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/documents/documents/doc-1/move', {
+    expect(client.post).toHaveBeenCalledWith(`/api/v1/documents/documents/${docId}/move`, {
       newFolderId: 'fld-9',
     });
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
@@ -187,9 +159,9 @@ describe('useTransferDocumentOwner', () => {
     const invalidate = vi.spyOn(queryClient, 'invalidateQueries');
 
     const { result } = renderHook(() => useTransferDocumentOwner(), { wrapper });
-    await result.current.mutateAsync({ id: 'doc-1', request: { newOwnerId: newOwner } });
+    await result.current.mutateAsync({ id: docId, request: { newOwnerId: newOwner } });
 
-    expect(client.put).toHaveBeenCalledWith('/api/v1/documents/documents/doc-1/owner', {
+    expect(client.put).toHaveBeenCalledWith(`/api/v1/documents/documents/${docId}/owner`, {
       newOwnerId: newOwner,
     });
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
@@ -206,9 +178,9 @@ describe('useTrashDocument', () => {
     const invalidate = vi.spyOn(queryClient, 'invalidateQueries');
 
     const { result } = renderHook(() => useTrashDocument(), { wrapper });
-    await result.current.mutateAsync('doc-1');
+    await result.current.mutateAsync(docId);
 
-    expect(client.delete).toHaveBeenCalledWith('/api/v1/documents/documents/doc-1');
+    expect(client.delete).toHaveBeenCalledWith(`/api/v1/documents/documents/${docId}`);
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
     expect(keys).toEqual([
       ['documents', 'documents'],
@@ -227,9 +199,9 @@ describe('useRestoreDocument', () => {
     const invalidate = vi.spyOn(queryClient, 'invalidateQueries');
 
     const { result } = renderHook(() => useRestoreDocument(), { wrapper });
-    await result.current.mutateAsync('doc-1');
+    await result.current.mutateAsync(docId);
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/documents/documents/doc-1/restore');
+    expect(client.post).toHaveBeenCalledWith(`/api/v1/documents/documents/${docId}/restore`);
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
     expect(keys).toEqual([
       ['documents', 'documents'],
@@ -248,9 +220,9 @@ describe('usePermanentlyDeleteDocument', () => {
     const invalidate = vi.spyOn(queryClient, 'invalidateQueries');
 
     const { result } = renderHook(() => usePermanentlyDeleteDocument(), { wrapper });
-    await result.current.mutateAsync('doc-1');
+    await result.current.mutateAsync(docId);
 
-    expect(client.delete).toHaveBeenCalledWith('/api/v1/documents/documents/doc-1/permanent');
+    expect(client.delete).toHaveBeenCalledWith(`/api/v1/documents/documents/${docId}/permanent`);
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
     expect(keys).toEqual([
       ['documents', 'documents'],
@@ -270,18 +242,18 @@ describe('useAppendDocumentVersion', () => {
 
     const { result } = renderHook(() => useAppendDocumentVersion(), { wrapper });
     await result.current.mutateAsync({
-      id: 'doc-1',
+      id: docId,
       request: { blobId: 'blob-2', commitMessage: null },
     });
 
-    expect(client.post).toHaveBeenCalledWith('/api/v1/documents/documents/doc-1/versions', {
+    expect(client.post).toHaveBeenCalledWith(`/api/v1/documents/documents/${docId}/versions`, {
       blobId: 'blob-2',
       commitMessage: null,
     });
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
     expect(keys).toEqual([
-      ['documents', 'documents', 'doc-1', 'versions'],
-      ['documents', 'documents', 'doc-1'],
+      ['documents', 'documents', docId, 'versions'],
+      ['documents', 'documents', docId],
       ['documents', 'quota'],
     ]);
   });

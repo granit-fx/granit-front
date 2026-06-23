@@ -1,11 +1,9 @@
-import { toISODateString } from '@granit/types';
+import { samplePaymentMethods } from '@granit/react-payments/testing';
 import { screen, waitFor } from '@testing-library/react';
 
 import { TenantPaymentMethodsPage } from '../tenant-payment-methods-page';
 
 import { renderWithProviders } from './test-utils';
-
-import type { PaymentMethodResponse } from '@granit/payments';
 
 // ---------------------------------------------------------------------------
 // Mocks — stub the saved-methods query hook so the page renders both the
@@ -27,28 +25,7 @@ vi.mock('@granit/react-payments', async (importOriginal) => {
   };
 });
 
-const sampleMethods: PaymentMethodResponse[] = [
-  {
-    id: 'pm_visa_4242',
-    type: 'Card',
-    providerName: 'Stripe',
-    providerMethodId: 'pm_stripe_visa_4242',
-    displayLabel: 'Visa ending in 4242',
-    isDefault: true,
-    expiresAt: toISODateString('2028-12-31T23:59:59Z'),
-    tenantId: 'tenant_01',
-  },
-  {
-    id: 'pm_sepa_6789',
-    type: 'BankTransfer',
-    providerName: 'Stripe',
-    providerMethodId: 'pm_stripe_sepa_6789',
-    displayLabel: 'SEPA ending in 6789',
-    isDefault: false,
-    expiresAt: null,
-    tenantId: 'tenant_01',
-  },
-];
+const sampleMethods = samplePaymentMethods;
 
 describe('TenantPaymentMethodsPage', () => {
   afterEach(() => vi.clearAllMocks());
@@ -71,8 +48,9 @@ describe('TenantPaymentMethodsPage', () => {
     mockUsePaymentMethods.mockReturnValue({ data: sampleMethods, isLoading: false });
     renderWithProviders(<TenantPaymentMethodsPage />);
     const cards = document.querySelectorAll('[data-slot="payment-method-card"]');
-    expect(cards).toHaveLength(2);
+    expect(cards).toHaveLength(3);
     expect(screen.getByText('Visa ending in 4242')).toBeInTheDocument();
+    expect(screen.getByText('Mastercard ending in 5555')).toBeInTheDocument();
     expect(screen.getByText('SEPA ending in 6789')).toBeInTheDocument();
   });
 

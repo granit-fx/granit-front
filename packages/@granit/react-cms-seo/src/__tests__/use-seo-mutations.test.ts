@@ -11,6 +11,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockSeoDefaults } from '@granit/react-cms-seo/testing';
+
 import {
   useDeleteSeoMetadata,
   useInvalidateSitemap,
@@ -19,13 +21,11 @@ import {
 } from '../hooks/use-seo-mutations';
 import { CmsSeoProvider } from '../providers/cms-seo-provider';
 
-import type {
-  RobotsDirective,
-  SeoMetadataResponse,
-  SiteSeoDefaultsResponse,
-} from '@granit/cms-seo';
+import type { RobotsDirective, SeoMetadataResponse } from '@granit/cms-seo';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
+
+const CORPORATE_SITE_ID = 'b1f0c3a4-1d2e-4f5a-8b6c-1a2b3c4d5e6f';
 
 vi.mock('@granit/cms-seo', () => ({
   upsertSeoMetadata: vi.fn(),
@@ -120,25 +120,7 @@ describe('useUpdateSeoDefaults', () => {
 
   it('calls updateSeoDefaults', async () => {
     const client = createMockClient();
-    const updated: SiteSeoDefaultsResponse = {
-      id: 'd-1',
-      siteId: 'site-1',
-      titleTemplate: null,
-      siteName: 'ACME',
-      defaultDescription: null,
-      defaultRobots: robots,
-      canonicalHost: null,
-      sitemapMaxUrlsPerFile: 45000,
-      inheritFromParentPage: false,
-      defaultOpenGraph: null,
-      defaultTwitterCard: null,
-      defaultOgImage: null,
-      robotsTxtRules: [],
-      robotsTxtExtra: null,
-      manifest: null,
-      enableAutomaticSeoGeneration: false,
-      concurrencyStamp: 'stamp-1',
-    };
+    const updated = mockSeoDefaults[CORPORATE_SITE_ID]!;
     vi.mocked(updateSeoDefaults).mockResolvedValue(updated);
 
     const { result } = renderHook(() => useUpdateSeoDefaults(), { wrapper: createWrapper(client) });

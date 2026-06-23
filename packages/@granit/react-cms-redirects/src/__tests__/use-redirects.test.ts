@@ -12,6 +12,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockRedirects } from '@granit/react-cms-redirects/testing';
+
 import {
   useRedirect,
   useRedirectPreview,
@@ -38,20 +40,7 @@ vi.mock('@granit/cms-redirects', () => ({
   previewRedirect: vi.fn(),
 }));
 
-const redirect: RedirectResponse = {
-  id: 'r-1',
-  siteId: 'site-1',
-  source: '/old',
-  matchType: 'Exact',
-  target: '/new',
-  type: 'MovedPermanently',
-  statusCode: 301,
-  isActive: true,
-  culture: null,
-  origin: 'Manual',
-  hitCount: 0,
-  lastHitAt: null,
-};
+const redirect = mockRedirects[0]!;
 
 function createWrapper(client: AxiosInstance) {
   return function Wrapper({ children }: { children: ReactNode }) {
@@ -99,10 +88,12 @@ describe('useRedirect', () => {
     const client = createMockClient();
     vi.mocked(getRedirect).mockResolvedValue(redirect);
 
-    const { result } = renderHook(() => useRedirect('r-1'), { wrapper: createWrapper(client) });
+    const { result } = renderHook(() => useRedirect(redirect.id), {
+      wrapper: createWrapper(client),
+    });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getRedirect).toHaveBeenCalledWith(client, '', 'r-1');
+    expect(getRedirect).toHaveBeenCalledWith(client, '', redirect.id);
   });
 });
 

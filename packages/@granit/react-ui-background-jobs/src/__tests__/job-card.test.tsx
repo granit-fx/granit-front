@@ -1,4 +1,4 @@
-import { toISODateString } from '@granit/types';
+import { mockBackgroundJobs } from '@granit/react-background-jobs/testing';
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -18,14 +18,7 @@ vi.mock('@granit/react-background-jobs', () => ({
 
 function makeJob(overrides: Partial<BackgroundJobStatus> = {}): BackgroundJobStatus {
   return {
-    jobName: 'NotificationDigestJob',
-    cronExpression: '0 */5 * * * ?',
-    isEnabled: true,
-    lastExecutedAt: toISODateString('2026-04-02T12:00:00Z'),
-    nextExecutionAt: toISODateString('2026-04-02T12:05:00Z'),
-    consecutiveFailures: 0,
-    deadLetterCount: 0,
-    lastError: null,
+    ...mockBackgroundJobs[0],
     ...overrides,
   };
 }
@@ -33,7 +26,7 @@ function makeJob(overrides: Partial<BackgroundJobStatus> = {}): BackgroundJobSta
 describe('JobCard', () => {
   it('renders the job name and a humanised cron expression', () => {
     renderBackgroundJobs(<JobCard job={makeJob()} />);
-    expect(screen.getByText('NotificationDigestJob')).toBeInTheDocument();
+    expect(screen.getByText('vault-credential-renewal')).toBeInTheDocument();
     expect(document.querySelector('[data-slot="job-card"]')).toBeInTheDocument();
   });
 

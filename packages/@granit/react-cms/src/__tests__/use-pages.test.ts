@@ -7,10 +7,12 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockPageTree } from '@granit/react-cms/testing';
+
 import { usePage, usePageTree, usePageVersions, usePages } from '../hooks/use-pages';
 import { CmsProvider } from '../providers/cms-provider';
 
-import type { PageResponse, PageTreeNodeResponse, PageVersionSummaryResponse } from '@granit/cms';
+import type { PageResponse, PageVersionSummaryResponse } from '@granit/cms';
 import type { PagedResult } from '@granit/query-engine';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
@@ -22,14 +24,7 @@ vi.mock('@granit/cms', () => ({
   listPageVersions: vi.fn(),
 }));
 
-const treeNode: PageTreeNodeResponse = {
-  id: 'page-1',
-  parentId: null,
-  slugSegment: 'home',
-  structurePath: '/home',
-  depth: 0,
-  isSiteRoot: true,
-};
+const treeNode = mockPageTree[0]!;
 const page: PageResponse = {
   id: 'page-1',
   siteId: 'site-1',

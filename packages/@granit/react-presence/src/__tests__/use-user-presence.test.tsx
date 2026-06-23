@@ -1,13 +1,13 @@
 import { createMockClient } from '@granit/react-testing';
-import { toEntityId, toISODateString } from '@granit/types';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { mockOtherPresences, mockUsers } from '@granit/react-presence/testing';
 
 import { useUserPresence } from '../hooks/use-user-presence';
 
 import { createPresenceTestHarness } from './test-utils';
 
-import type { PresenceResponse } from '@granit/presence';
 import type { UserId } from '@granit/types';
 
 vi.mock('@granit/presence', async (importOriginal) => {
@@ -17,15 +17,8 @@ vi.mock('@granit/presence', async (importOriginal) => {
 
 const { getUserPresence } = await import('@granit/presence');
 
-const USER_ID = toEntityId<'User'>('user-1') as UserId;
-
-const MOCK_PRESENCE: PresenceResponse = {
-  userId: USER_ID,
-  effectiveStatus: 'Online',
-  manualOverride: null,
-  overrideUntilUtc: null,
-  lastSeenUtc: toISODateString('2026-06-06T12:00:00Z'),
-};
+const USER_ID = mockUsers[1]!.id;
+const MOCK_PRESENCE = mockOtherPresences[USER_ID]!;
 
 afterEach(() => vi.clearAllMocks());
 

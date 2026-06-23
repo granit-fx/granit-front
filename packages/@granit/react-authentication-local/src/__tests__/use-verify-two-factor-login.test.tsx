@@ -5,11 +5,12 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockLoginSuccess } from '@granit/react-authentication-local/testing';
+
 import { useVerifyTwoFactorLogin } from '../hooks/use-verify-two-factor-login';
 import { LocalAuthProvider } from '../providers/local-auth-provider';
 
 import type { LocalAuthConfig } from '../providers/local-auth-provider';
-import type { AccountLoginResponse } from '@granit/authentication-local';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -42,13 +43,7 @@ afterEach(() => {
 describe('useVerifyTwoFactorLogin', () => {
   it('should call verifyTwoFactorLogin with TOTP code', async () => {
     const client = createMockClient();
-    const response: AccountLoginResponse = {
-      succeeded: true,
-      requiresTwoFactor: false,
-      isLockedOut: false,
-      isNotAllowed: false,
-    };
-    vi.mocked(verifyTwoFactorLogin).mockResolvedValue(response);
+    vi.mocked(verifyTwoFactorLogin).mockResolvedValue(mockLoginSuccess);
 
     const { result } = renderHook(() => useVerifyTwoFactorLogin(), {
       wrapper: createWrapper(client),
@@ -61,18 +56,12 @@ describe('useVerifyTwoFactorLogin', () => {
     expect(verifyTwoFactorLogin).toHaveBeenCalledWith(client, '/api/v1/account', {
       code: '123456',
     });
-    expect(result.current.data).toEqual(response);
+    expect(result.current.data).toEqual(mockLoginSuccess);
   });
 
   it('should call verifyTwoFactorLogin with recovery code', async () => {
     const client = createMockClient();
-    const response: AccountLoginResponse = {
-      succeeded: true,
-      requiresTwoFactor: false,
-      isLockedOut: false,
-      isNotAllowed: false,
-    };
-    vi.mocked(verifyTwoFactorLogin).mockResolvedValue(response);
+    vi.mocked(verifyTwoFactorLogin).mockResolvedValue(mockLoginSuccess);
 
     const { result } = renderHook(() => useVerifyTwoFactorLogin(), {
       wrapper: createWrapper(client),
@@ -90,13 +79,7 @@ describe('useVerifyTwoFactorLogin', () => {
 
   it('should call verifyTwoFactorLogin with an emailed code', async () => {
     const client = createMockClient();
-    const response: AccountLoginResponse = {
-      succeeded: true,
-      requiresTwoFactor: false,
-      isLockedOut: false,
-      isNotAllowed: false,
-    };
-    vi.mocked(verifyTwoFactorLogin).mockResolvedValue(response);
+    vi.mocked(verifyTwoFactorLogin).mockResolvedValue(mockLoginSuccess);
 
     const { result } = renderHook(() => useVerifyTwoFactorLogin(), {
       wrapper: createWrapper(client),

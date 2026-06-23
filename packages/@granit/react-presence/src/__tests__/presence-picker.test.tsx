@@ -1,15 +1,16 @@
 import { createMockClient } from '@granit/react-testing';
-import { toEntityId, toISODateString } from '@granit/types';
+import { toISODateString } from '@granit/types';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { mockMyPresence, mockOtherPresences, mockUsers } from '@granit/react-presence/testing';
 
 import { PresencePicker } from '../components/presence-picker';
 
 import { createPresenceTestHarness } from './test-utils';
 
-import type { PresenceResponse, SetPresenceRequest } from '@granit/presence';
-import type { UserId } from '@granit/types';
+import type { SetPresenceRequest } from '@granit/presence';
 
 vi.mock('@granit/presence', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
@@ -23,15 +24,7 @@ vi.mock('@granit/presence', async (importOriginal) => {
 
 const { getMyPresence, setMyPresence, clearMyPresenceOverride } = await import('@granit/presence');
 
-const userId = toEntityId<'User'>('user-1') as UserId;
-
-const baseSnapshot: PresenceResponse = {
-  userId,
-  effectiveStatus: 'Online',
-  manualOverride: null,
-  overrideUntilUtc: null,
-  lastSeenUtc: toISODateString('2026-05-22T10:00:00Z'),
-};
+const baseSnapshot = mockMyPresence;
 
 beforeEach(() => {
   vi.mocked(getMyPresence).mockResolvedValue(baseSnapshot);
@@ -44,12 +37,7 @@ afterEach(() => {
 describe('PresencePicker', () => {
   it('submits the selected status with the 1h preset by default', async () => {
     const client = createMockClient();
-    const dnd: PresenceResponse = {
-      ...baseSnapshot,
-      effectiveStatus: 'DoNotDisturb',
-      manualOverride: 'DoNotDisturb',
-      overrideUntilUtc: toISODateString('2026-05-22T11:00:00Z'),
-    };
+    const dnd = mockOtherPresences[mockUsers[3]!.id]!;
     vi.mocked(setMyPresence).mockResolvedValue(dnd);
     const { wrapper } = createPresenceTestHarness(client);
 

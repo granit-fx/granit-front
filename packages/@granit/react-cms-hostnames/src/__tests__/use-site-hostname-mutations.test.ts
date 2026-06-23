@@ -6,6 +6,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockHostnames } from '@granit/react-cms-hostnames/testing';
+
 import {
   useAddSiteHostname,
   useRemoveSiteHostname,
@@ -13,7 +15,6 @@ import {
 } from '../hooks/use-site-hostname-mutations';
 import { CmsHostnamesProvider } from '../providers/cms-hostnames-provider';
 
-import type { SiteHostnameResponse } from '@granit/cms-hostnames';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -23,15 +24,7 @@ vi.mock('@granit/cms-hostnames', () => ({
   verifySiteHostname: vi.fn(),
 }));
 
-const hostname: SiteHostnameResponse = {
-  id: 'h-1',
-  host: 'example.com',
-  status: 'Active',
-  isPrimary: true,
-  expectedDnsRecords: [],
-  lastCheckedAt: null,
-  certificateStatus: 'Unprovisioned',
-};
+const hostname = mockHostnames[0]!;
 
 function createWrapper(client: AxiosInstance) {
   return function Wrapper({ children }: { children: ReactNode }) {
@@ -78,10 +71,10 @@ describe('useRemoveSiteHostname', () => {
     const { result } = renderHook(() => useRemoveSiteHostname('site-1'), {
       wrapper: createWrapper(client),
     });
-    result.current.mutate('h-1');
+    result.current.mutate(hostname.id);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(removeSiteHostname).toHaveBeenCalledWith(client, '', 'site-1', 'h-1');
+    expect(removeSiteHostname).toHaveBeenCalledWith(client, '', 'site-1', hostname.id);
   });
 });
 
@@ -97,10 +90,10 @@ describe('useVerifySiteHostname', () => {
     const { result } = renderHook(() => useVerifySiteHostname('site-1'), {
       wrapper: createWrapper(client),
     });
-    result.current.mutate('h-1');
+    result.current.mutate(hostname.id);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(verifySiteHostname).toHaveBeenCalledWith(client, '', 'site-1', 'h-1');
+    expect(verifySiteHostname).toHaveBeenCalledWith(client, '', 'site-1', hostname.id);
     expect(result.current.data).toEqual(hostname);
   });
 });

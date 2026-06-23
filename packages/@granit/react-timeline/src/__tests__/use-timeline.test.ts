@@ -1,7 +1,8 @@
-import { TimelineEntryType } from '@granit/timeline';
-import { toEntityId, toISODateString } from '@granit/types';
+import { toEntityId } from '@granit/types';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+
+import { mockTimelineEntries } from '@granit/react-timeline/testing';
 
 import { useTimeline } from '../hooks/use-timeline';
 
@@ -13,14 +14,7 @@ function makeEntry(
   overrides: Partial<TimelineStreamEntryResponse> = {}
 ): TimelineStreamEntryResponse {
   return {
-    id: toEntityId<'TimelineStreamEntryResponse'>('e-1'),
-    entryType: TimelineEntryType.Comment,
-    body: 'Test comment',
-    authorId: toEntityId<'User'>('u-1'),
-    authorName: 'Dr. Martin',
-    parentEntryId: null,
-    occurredAt: toISODateString('2026-01-01T00:00:00Z'),
-    attachments: [],
+    ...mockTimelineEntries[0]!,
     ...overrides,
   };
 }
@@ -44,7 +38,7 @@ describe('useTimeline', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     expect(result.current.entries).toHaveLength(1);
-    expect(result.current.entries[0]!.body).toBe('Test comment');
+    expect(result.current.entries[0]!.body).toBe(mockTimelineEntries[0]!.body);
     expect(result.current.totalCount).toBe(1);
     expect(result.current.hasMore).toBe(false);
   });

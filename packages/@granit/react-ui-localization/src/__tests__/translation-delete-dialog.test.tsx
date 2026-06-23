@@ -1,22 +1,11 @@
+import { mockLocalizationOverrides } from '@granit/react-localization/testing';
 import { screen } from '@testing-library/react';
 
 import { TranslationDeleteDialog } from '../components/translation-delete-dialog';
 
 import { renderWithProviders } from './test-utils';
 
-import type { LocalizationOverride } from '@granit/localization';
-
-const mockOverride: LocalizationOverride = {
-  id: '1',
-  resourceName: 'Showcase',
-  cultureName: 'fr',
-  key: 'common.save',
-  value: 'Sauvegarder',
-  createdAt: '2026-01-01T00:00:00Z',
-  createdBy: 'admin@granit-showcase.dev',
-  modifiedAt: '2026-01-01T00:00:00Z',
-  modifiedBy: 'admin@granit-showcase.dev',
-};
+const mockOverride = mockLocalizationOverrides[0];
 
 describe('TranslationDeleteDialog', () => {
   it('should render the dialog when open', () => {

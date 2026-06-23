@@ -1,12 +1,14 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { axiosResponse, createMockClient } from '@granit/testing';
-import { toEntityId, toISODateString } from '@granit/types';
+import { toEntityId } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import i18next from 'i18next';
 import * as React from 'react';
 import { initReactI18next, I18nextProvider } from 'react-i18next';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+
+import { sampleParty } from '@granit/react-parties/testing';
 
 import { MergeWizard } from '../components/merge-wizard';
 import { partiesTranslationsEn } from '../locales/en';
@@ -348,21 +350,9 @@ function makeParty(
     : [];
 
   return {
+    ...sampleParty,
     id,
-    tenantId: null,
-    kind: 'Company',
     name: override.name,
-    defaultCurrency: 'EUR',
-    timezone: 'UTC',
-    language: null,
-    website: null,
-    taxId: null,
-    registrationNumber: null,
-    parentPartyId: null,
-    userId: null,
-    avatar: null,
-    roles: 'Customer',
-    status: 'Active',
     addresses: [],
     emails,
     phones: [],
@@ -375,7 +365,5 @@ function makeParty(
     },
     metadata: {},
     internalNotes: null,
-    createdAt: toISODateString('2026-01-01T00:00:00Z'),
-    modifiedAt: null,
   };
 }

@@ -6,10 +6,12 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockHostnames } from '@granit/react-cms-hostnames/testing';
+
 import { useSiteHostnameAvailability, useSiteHostnames } from '../hooks/use-site-hostnames';
 import { CmsHostnamesProvider } from '../providers/cms-hostnames-provider';
 
-import type { SiteHostnameAvailabilityResponse, SiteHostnameResponse } from '@granit/cms-hostnames';
+import type { SiteHostnameAvailabilityResponse } from '@granit/cms-hostnames';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -18,15 +20,7 @@ vi.mock('@granit/cms-hostnames', () => ({
   checkSiteHostnameAvailability: vi.fn(),
 }));
 
-const hostname: SiteHostnameResponse = {
-  id: 'h-1',
-  host: 'example.com',
-  status: 'Active',
-  isPrimary: true,
-  expectedDnsRecords: [],
-  lastCheckedAt: null,
-  certificateStatus: 'Unprovisioned',
-};
+const hostname = mockHostnames[0]!;
 
 function createWrapper(client: AxiosInstance) {
   return function Wrapper({ children }: { children: ReactNode }) {

@@ -2,6 +2,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { mockNotificationPreferences } from '@granit/react-notifications/testing';
+
 import { useNotificationPreferences } from '../hooks/use-notification-preferences';
 import { NotificationProvider } from '../providers/notification-provider';
 
@@ -39,29 +41,10 @@ function createWrapperWithoutBasePath(client: AxiosInstance) {
   };
 }
 
-const MOCK_PREFS: NotificationPreferenceResponse[] = [
-  {
-    id: 'pref-1',
-    userId: 'u-1',
-    notificationTypeName: 'AppointmentReminder',
-    channelName: 'InApp',
-    isEnabled: true,
-  },
-  {
-    id: 'pref-2',
-    userId: 'u-1',
-    notificationTypeName: 'AppointmentReminder',
-    channelName: 'Email',
-    isEnabled: true,
-  },
-  {
-    id: 'pref-3',
-    userId: 'u-1',
-    notificationTypeName: 'SystemAlert',
-    channelName: 'InApp',
-    isEnabled: true,
-  },
-] as unknown as NotificationPreferenceResponse[];
+// First three shared preference rows: all three target the same type across
+// channels, with `togglePreference` exercised on the second (index 1).
+const MOCK_PREFS: NotificationPreferenceResponse[] = mockNotificationPreferences.slice(0, 3);
+const TOGGLE_ID = MOCK_PREFS[1]!.id;
 
 describe('useNotificationPreferences', () => {
   it('should fetch preferences on mount', async () => {
@@ -75,7 +58,9 @@ describe('useNotificationPreferences', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     expect(result.current.preferences).toHaveLength(3);
-    expect(result.current.preferences[0]!.notificationTypeName).toBe('AppointmentReminder');
+    expect(result.current.preferences[0]!.notificationTypeName).toBe(
+      MOCK_PREFS[0]!.notificationTypeName
+    );
   });
 
   it('should update preference optimistically via togglePreference', async () => {
@@ -96,7 +81,7 @@ describe('useNotificationPreferences', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     act(() => {
-      result.current.togglePreference('pref-2', false);
+      result.current.togglePreference(TOGGLE_ID, false);
     });
 
     await waitFor(() => expect(result.current.preferences[1]!.isEnabled).toBe(false));
@@ -118,7 +103,7 @@ describe('useNotificationPreferences', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     act(() => {
-      result.current.togglePreference('pref-2', false);
+      result.current.togglePreference(TOGGLE_ID, false);
     });
 
     await waitFor(() => expect(result.current.preferences[1]!.isEnabled).toBe(true));
@@ -174,7 +159,7 @@ describe('useNotificationPreferences', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     act(() => {
-      result.current.togglePreference('pref-2', false);
+      result.current.togglePreference(TOGGLE_ID, false);
     });
 
     await waitFor(() => expect(result.current.saving).toBe(true));
@@ -197,7 +182,7 @@ describe('useNotificationPreferences', () => {
 
     const updatedPrefs: NotificationPreferenceResponse[] = [
       { ...MOCK_PREFS[0]!, isEnabled: false },
-    ] as unknown as NotificationPreferenceResponse[];
+    ];
     vi.mocked(client.get).mockResolvedValue(axiosResponse(updatedPrefs));
 
     act(() => {

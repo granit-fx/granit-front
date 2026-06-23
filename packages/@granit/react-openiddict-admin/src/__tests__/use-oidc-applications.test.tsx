@@ -12,6 +12,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { mockOidcApplications } from '@granit/react-openiddict-admin/testing';
+
 import {
   useCreateOidcApplication,
   useDeleteOidcApplication,
@@ -48,21 +50,11 @@ function createWrapper() {
   };
 }
 
-const mockApp: AdminOidcApplicationResponse = {
-  clientId: 'guava-front',
-  displayName: 'Guava Frontend',
-  type: 'confidential',
-  tenantId: null,
-  permissions: ['ept:token', 'gt:authorization_code'],
-  redirectUris: ['https://guava.local/callback'],
-  postLogoutRedirectUris: ['https://guava.local/signout-callback'],
-  consentType: 'implicit',
-  clientSide: 3,
-  deviceKind: null,
-  hasSigningKey: false,
-};
+const mockApp: AdminOidcApplicationResponse = mockOidcApplications[0]!;
+const clientId = mockApp.clientId!;
+const displayName = mockApp.displayName!;
 
-const mockApps: readonly AdminOidcApplicationResponse[] = [mockApp];
+const mockApps: readonly AdminOidcApplicationResponse[] = mockOidcApplications;
 
 describe('useOidcApplications', () => {
   it('should fetch all OIDC applications', async () => {
@@ -99,15 +91,15 @@ describe('useCreateOidcApplication', () => {
     const { result } = renderHook(() => useCreateOidcApplication(), { wrapper });
 
     result.current.mutate({
-      clientId: 'guava-front',
-      displayName: 'Guava Frontend',
+      clientId,
+      displayName,
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(createApplication).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', {
-      clientId: 'guava-front',
-      displayName: 'Guava Frontend',
+      clientId,
+      displayName,
     });
     expect(result.current.data).toEqual(mockApp);
     expect(invalidateSpy).toHaveBeenCalledWith({
@@ -138,15 +130,11 @@ describe('useDeleteOidcApplication', () => {
 
     const { result } = renderHook(() => useDeleteOidcApplication(), { wrapper });
 
-    result.current.mutate('guava-front');
+    result.current.mutate(clientId);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(deleteApplication).toHaveBeenCalledWith(
-      expect.anything(),
-      '/api/v1/admin',
-      'guava-front'
-    );
+    expect(deleteApplication).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', clientId);
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'oidc', 'applications'],
     });
@@ -177,20 +165,15 @@ describe('useUpdateOidcApplication', () => {
     const { result } = renderHook(() => useUpdateOidcApplication(), { wrapper });
 
     result.current.mutate({
-      clientId: 'guava-front',
+      clientId,
       request: { displayName: 'Guava Frontend v2' },
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(updateApplication).toHaveBeenCalledWith(
-      expect.anything(),
-      '/api/v1/admin',
-      'guava-front',
-      {
-        displayName: 'Guava Frontend v2',
-      }
-    );
+    expect(updateApplication).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', clientId, {
+      displayName: 'Guava Frontend v2',
+    });
     expect(result.current.data).toEqual(updated);
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['openiddict-admin', 'oidc', 'applications'],
@@ -213,8 +196,8 @@ describe('useUpdateOidcApplication', () => {
 
 describe('useRotateApplicationSecret', () => {
   const mockSecretResponse: AdminOidcRotateSecretResponse = {
-    clientId: 'guava-front',
-    displayName: 'Guava Frontend',
+    clientId,
+    displayName,
     newClientSecret: 'generated-secret-value',
   };
 
@@ -224,14 +207,14 @@ describe('useRotateApplicationSecret', () => {
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useRotateApplicationSecret(), { wrapper });
 
-    result.current.mutate('guava-front');
+    result.current.mutate(clientId);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(rotateApplicationSecret).toHaveBeenCalledWith(
       expect.anything(),
       '/api/v1/admin',
-      'guava-front'
+      clientId
     );
     expect(result.current.data).toEqual(mockSecretResponse);
   });

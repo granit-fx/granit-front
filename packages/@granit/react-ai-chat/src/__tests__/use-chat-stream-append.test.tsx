@@ -8,6 +8,7 @@ import { DEFAULT_QUERY_KEY_PREFIX } from '../constants';
 import { conversationKeys } from '../hooks/query-keys';
 import { useChatStream } from '../hooks/use-chat-stream';
 import { AIChatProvider } from '../providers/ai-chat-provider';
+import { mockConversationMessages } from '../testing/data';
 
 import { createSSEStream, TEST_BASE_PATH } from './test-utils';
 
@@ -19,12 +20,8 @@ import type { ReactNode } from 'react';
 
 const CONV_ID = '11111111-1111-1111-1111-111111111111' as ConversationId;
 
-const seed: MessageResponse = {
-  id: 'c0000000-0000-0000-0000-000000000000' as MessageResponse['id'],
-  role: 'assistant',
-  content: 'earlier reply',
-  createdAt: '2026-06-15T08:59:00.000Z' as MessageResponse['createdAt'],
-};
+// Reuse the shared assistant turn as the already-loaded "earlier" message.
+const seed: MessageResponse = mockConversationMessages[1]!;
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -74,7 +71,7 @@ describe('useChatStream — optimistic message append', () => {
     const items = data?.pages[0]?.items ?? [];
     // Newest page is stored newest-first: the new turn (assistant, then user) is
     // prepended ahead of the seed. The display hook reverses this to oldest-first.
-    expect(items.map((m) => m.content)).toEqual(['Hi there', 'Hello', 'earlier reply']);
+    expect(items.map((m) => m.content)).toEqual(['Hi there', 'Hello', seed.content]);
     expect(items.map((m) => m.role)).toEqual(['assistant', 'user', 'assistant']);
   });
 

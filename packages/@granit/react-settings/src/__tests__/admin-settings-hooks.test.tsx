@@ -4,10 +4,12 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockAppSettings } from '@granit/react-settings/testing';
+
 import { useAdminAppSettings, useBulkUpdateSettings } from '../hooks/use-admin-app-settings';
 import { SettingsProvider } from '../providers/settings-provider';
 
-import type { AdminAppSettingResponse, BulkUpdateSettingsResponse } from '@granit/settings';
+import type { BulkUpdateSettingsResponse } from '@granit/settings';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -38,23 +40,10 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-const mockSettings: AdminAppSettingResponse[] = [
-  {
-    key: 'ui.theme',
-    label: 'Theme',
-    description: 'Default theme',
-    defaultValue: 'system',
-    value: 'light',
-    valueKind: 'String',
-    allowedValues: ['light', 'dark', 'system'],
-    isEncrypted: false,
-  },
-];
-
 describe('useAdminAppSettings', () => {
   it('should fetch admin settings for the given scope', async () => {
     const client = createMockClient();
-    vi.mocked(getAdminAppSettings).mockResolvedValue(mockSettings);
+    vi.mocked(getAdminAppSettings).mockResolvedValue(mockAppSettings);
 
     const { wrapper } = createWrapper(client, '/api');
     const { result } = renderHook(() => useAdminAppSettings('global'), { wrapper });
@@ -62,7 +51,7 @@ describe('useAdminAppSettings', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(getAdminAppSettings).toHaveBeenCalledWith(client, '/api', 'global');
-    expect(result.current.data).toEqual(mockSettings);
+    expect(result.current.data).toEqual(mockAppSettings);
   });
 
   it('should respect enabled option', () => {

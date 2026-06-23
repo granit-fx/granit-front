@@ -1,11 +1,12 @@
 import { getSite, listSites } from '@granit/cms';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { mockSites } from '@granit/react-cms/testing';
 
 import { useSite, useSites } from '../hooks/use-sites';
 import { CmsProvider } from '../providers/cms-provider';
@@ -20,20 +21,7 @@ vi.mock('@granit/cms', () => ({
   getSite: vi.fn(),
 }));
 
-const site: SiteResponse = {
-  id: 'site-1',
-  slug: 'acme',
-  defaultCulture: 'fr',
-  allowedCultures: ['fr'],
-  domains: [],
-  defaultTheme: 'default',
-  activated: true,
-  tenantId: null,
-  displayNames: {},
-  homePageId: null,
-  createdAt: toISODateString('2026-01-01T00:00:00Z'),
-  modifiedAt: null,
-};
+const site = mockSites[0]!;
 
 function createWrapper(client: AxiosInstance) {
   return function Wrapper({ children }: { children: ReactNode }) {
@@ -105,10 +93,10 @@ describe('useSite', () => {
     const client = createMockClient();
     vi.mocked(getSite).mockResolvedValue(site);
 
-    const { result } = renderHook(() => useSite('site-1'), { wrapper: createWrapper(client) });
+    const { result } = renderHook(() => useSite(site.id), { wrapper: createWrapper(client) });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getSite).toHaveBeenCalledWith(client, '', 'site-1');
+    expect(getSite).toHaveBeenCalledWith(client, '', site.id);
     expect(result.current.data).toEqual(site);
   });
 

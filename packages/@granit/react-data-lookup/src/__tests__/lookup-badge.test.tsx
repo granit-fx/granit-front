@@ -3,21 +3,24 @@ import { axiosResponse, createMockClient } from '@granit/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { LookupBadge } from '../components/lookup-badge';
+import { mockCountries } from '@granit/react-data-lookup/testing';
 
-import type { LookupItemResponse } from '@granit/data-lookup';
+import { LookupBadge } from '../components/lookup-badge';
 
 describe('<LookupBadge>', () => {
   it('renders resolved label in a default span', async () => {
     const client = createMockClient();
-    const item: LookupItemResponse = { value: 'BE', label: 'Belgique', extra: null };
+    const item = mockCountries[0]!;
     vi.mocked(client.get).mockResolvedValue(axiosResponse(item));
 
-    render(<LookupBadge descriptor={{ name: 'ref-country' }} value="BE" client={client} />, {
-      wrapper: createQueryWrapper(),
-    });
+    render(
+      <LookupBadge descriptor={{ name: 'ref-country' }} value={item.value} client={client} />,
+      {
+        wrapper: createQueryWrapper(),
+      }
+    );
 
-    await waitFor(() => expect(screen.queryByText('Belgique')).not.toBeNull());
+    await waitFor(() => expect(screen.queryByText('Belgium')).not.toBeNull());
   });
 
   it('falls back to fallback prop while loading / on miss', () => {
@@ -60,13 +63,13 @@ describe('<LookupBadge>', () => {
 
   it('uses custom render prop when provided', async () => {
     const client = createMockClient();
-    const item: LookupItemResponse = { value: 'BE', label: 'Belgique', extra: null };
+    const item = mockCountries[0]!;
     vi.mocked(client.get).mockResolvedValue(axiosResponse(item));
 
     render(
       <LookupBadge
         descriptor={{ name: 'ref-country' }}
-        value="BE"
+        value={item.value}
         client={client}
         render={({ label, isLoading }) => (
           <span data-testid="custom">{isLoading ? 'loading' : label.toUpperCase()}</span>
@@ -75,7 +78,7 @@ describe('<LookupBadge>', () => {
       { wrapper: createQueryWrapper() }
     );
 
-    await waitFor(() => expect(screen.getByTestId('custom').textContent).toBe('BELGIQUE'));
+    await waitFor(() => expect(screen.getByTestId('custom').textContent).toBe('BELGIUM'));
   });
 
   it('renders empty string when value is null without fallback', () => {

@@ -5,11 +5,12 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockLoginSuccess } from '@granit/react-authentication-local/testing';
+
 import { useLogin } from '../hooks/use-login';
 import { LocalAuthProvider } from '../providers/local-auth-provider';
 
 import type { LocalAuthConfig } from '../providers/local-auth-provider';
-import type { AccountLoginResponse } from '@granit/authentication-local';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -42,13 +43,7 @@ afterEach(() => {
 describe('useLogin', () => {
   it('should call loginAccount with correct arguments', async () => {
     const client = createMockClient();
-    const response: AccountLoginResponse = {
-      succeeded: true,
-      requiresTwoFactor: false,
-      isLockedOut: false,
-      isNotAllowed: false,
-    };
-    vi.mocked(loginAccount).mockResolvedValue(response);
+    vi.mocked(loginAccount).mockResolvedValue(mockLoginSuccess);
 
     const { result } = renderHook(() => useLogin(), {
       wrapper: createWrapper(client),
@@ -65,7 +60,7 @@ describe('useLogin', () => {
       login: 'user@example.com',
       password: 'P@ssw0rd!',
     });
-    expect(result.current.data).toEqual(response);
+    expect(result.current.data).toEqual(mockLoginSuccess);
   });
 
   it('should handle login error', async () => {

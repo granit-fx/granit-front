@@ -1,3 +1,4 @@
+import { mockExportHistory, mockImportHistory } from '@granit/react-data-exchange/testing';
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -26,35 +27,20 @@ function renderCell<TRow>(column: ColumnDef<TRow, unknown>, original: TRow): Rea
   return cell({ row: { original } } as never) as ReactNode;
 }
 
-const exportJob: ExportJobResponse = {
-  id: 'e1',
-  definitionName: 'Admin.UserExport',
-  status: 'Completed',
-  format: 'csv',
-  rowCount: 1234,
-  createdAt: '2026-01-01T00:00:00Z',
-  fileName: 'export.csv',
-} as ExportJobResponse;
-
-const importJob: ImportJobResponse = {
-  id: 'i1',
-  definitionName: 'Admin.UserImport',
-  status: 'Completed',
-  originalFileName: 'import.csv',
-  createdAt: '2026-01-01T00:00:00Z',
-} as ImportJobResponse;
+const exportJob: ExportJobResponse = mockExportHistory[0];
+const importJob: ImportJobResponse = mockImportHistory[0];
 
 describe('job-history-columns shared factories', () => {
   it('should render the date column cell using formatDateTime', () => {
     const column = createJobDateColumn<ExportJobResponse>(t, formatDateTime);
     renderDataExchange(<>{renderCell(column, exportJob)}</>);
-    expect(screen.getByText('formatted:2026-01-01T00:00:00Z')).toBeInTheDocument();
+    expect(screen.getByText('formatted:2026-03-07T10:00:00Z')).toBeInTheDocument();
   });
 
   it('should render the entity column cell', () => {
     const column = createJobEntityColumn<ExportJobResponse>(t);
     renderDataExchange(<>{renderCell(column, exportJob)}</>);
-    expect(screen.getByText('Admin.UserExport')).toBeInTheDocument();
+    expect(screen.getByText('countries')).toBeInTheDocument();
   });
 
   it('should render the status column cell as a badge', () => {
@@ -100,7 +86,7 @@ describe('createExportHistoryColumns', () => {
       </>
     );
     expect(screen.getByText('csv')).toBeInTheDocument();
-    expect(screen.getByText('1,234')).toBeInTheDocument();
+    expect(screen.getByText('195')).toBeInTheDocument();
   });
 
   it('should render an em-dash when rowCount is missing', () => {
@@ -151,7 +137,7 @@ describe('createImportHistoryColumns', () => {
     renderDataExchange(
       <>{renderCell(fileColumn as ColumnDef<ImportJobResponse, unknown>, importJob)}</>
     );
-    expect(screen.getByText('import.csv')).toBeInTheDocument();
+    expect(screen.getByText('countries-2026-03.csv')).toBeInTheDocument();
   });
 
   it('should render the view-report action and call onViewReport', async () => {

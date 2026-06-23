@@ -1,11 +1,12 @@
-import { toISODateString } from '@granit/types';
+import {
+  sampleBalance as mockBalance,
+  sampleTransactions as mockTransactions,
+} from '@granit/react-customer-balance/testing';
 import { screen, waitFor } from '@testing-library/react';
 
 import { CustomerBalancePage } from '../customer-balance-page';
 
 import { renderCustomerBalance } from './test-utils';
-
-import type { BalanceTransactionResponse, CustomerBalanceResponse } from '@granit/customer-balance';
 
 const { mockUseCustomerBalance, mockUseBalanceTransactions } = vi.hoisted(() => ({
   mockUseCustomerBalance: vi.fn(),
@@ -19,43 +20,10 @@ vi.mock('@granit/react-customer-balance', () => ({
   useApplyAdminDebit: () => ({ mutate: vi.fn(), isPending: false }),
 }));
 
-const mockBalance: CustomerBalanceResponse = {
-  balanceAccountId: 'acct-1',
-  currency: 'EUR',
-  balance: 1250.5,
-  concurrencyStamp: 'stamp-1',
-  updatedAt: toISODateString('2026-06-01T10:00:00Z'),
-};
-
-const mockTransactions: BalanceTransactionResponse[] = [
-  {
-    id: 'txn-1',
-    type: 'Credit',
-    amount: 500,
-    source: 'Promotional',
-    reason: 'Welcome bonus',
-    referenceId: null,
-    referenceType: null,
-    expiresAt: null,
-    createdAt: toISODateString('2026-06-01T10:00:00Z'),
-  },
-  {
-    id: 'txn-2',
-    type: 'Debit',
-    amount: 100,
-    source: 'ManualAdjustment',
-    reason: 'Correction',
-    referenceId: 'ref-99',
-    referenceType: 'Order',
-    expiresAt: null,
-    createdAt: toISODateString('2026-06-02T10:00:00Z'),
-  },
-];
-
 function setData() {
   mockUseCustomerBalance.mockReturnValue({ data: mockBalance, isLoading: false });
   mockUseBalanceTransactions.mockReturnValue({
-    data: { items: mockTransactions, totalCount: 2, hasMore: false },
+    data: { items: mockTransactions, totalCount: mockTransactions.length, hasMore: false },
     isLoading: false,
   });
 }
@@ -109,9 +77,9 @@ describe('CustomerBalancePage', () => {
     setData();
     renderCustomerBalance(<CustomerBalancePage />);
     await waitFor(() => {
-      expect(screen.getByText('Welcome bonus')).toBeInTheDocument();
+      expect(screen.getByText('Admin credit - Welcome bonus')).toBeInTheDocument();
     });
-    expect(screen.getByText('Correction')).toBeInTheDocument();
+    expect(screen.getByText('Invoice INV-2026-001 payment')).toBeInTheDocument();
   });
 
   it('should render the empty state when there are no transactions', async () => {

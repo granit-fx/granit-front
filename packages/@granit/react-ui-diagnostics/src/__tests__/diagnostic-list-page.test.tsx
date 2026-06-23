@@ -1,10 +1,9 @@
+import { mockDiagnosticsHealth } from '@granit/react-diagnostics/testing';
 import { screen } from '@testing-library/react';
 
 import { DiagnosticListPage } from '../diagnostic-list-page';
 
 import { renderDiagnostics } from './test-utils';
-
-import type { ServiceHealthResponse } from '@granit/diagnostics';
 
 const { mockUseMonitoringHealth } = vi.hoisted(() => ({ mockUseMonitoringHealth: vi.fn() }));
 
@@ -12,36 +11,11 @@ vi.mock('@granit/react-diagnostics', () => ({
   useMonitoringHealth: () => mockUseMonitoringHealth(),
 }));
 
-const services: ServiceHealthResponse[] = [
-  {
-    id: 'api',
-    name: 'API Gateway',
-    description: null,
-    status: 'healthy',
-    responseTimeMs: 42,
-    tags: [],
-  },
-  {
-    id: 'iam',
-    name: 'Keycloak (IAM)',
-    description: null,
-    status: 'degraded',
-    responseTimeMs: 850,
-    tags: [],
-  },
-  {
-    id: 'fhir',
-    name: 'FHIR Server',
-    description: null,
-    status: 'down',
-    responseTimeMs: null,
-    tags: [],
-  },
-];
+const { services, checkedAt } = mockDiagnosticsHealth;
 
 beforeEach(() => {
   mockUseMonitoringHealth.mockReturnValue({
-    data: { services, checkedAt: '2026-06-01T10:00:00Z' },
+    data: { services, checkedAt },
     isLoading: false,
     isFetching: false,
     refetch: vi.fn(),

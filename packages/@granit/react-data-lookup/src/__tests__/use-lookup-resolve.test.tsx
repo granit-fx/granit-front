@@ -3,18 +3,18 @@ import { axiosResponse, createMockClient } from '@granit/testing';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useLookupResolve } from '../hooks/use-lookup-resolve';
+import { mockCountries } from '@granit/react-data-lookup/testing';
 
-import type { LookupItemResponse } from '@granit/data-lookup';
+import { useLookupResolve } from '../hooks/use-lookup-resolve';
 
 describe('useLookupResolve', () => {
   it('fetches the item when value is defined', async () => {
     const client = createMockClient();
-    const item: LookupItemResponse = { value: 'BE', label: 'Belgium', extra: null };
+    const item = mockCountries[0]!;
     vi.mocked(client.get).mockResolvedValue(axiosResponse(item));
 
     const { result } = renderHook(
-      () => useLookupResolve({ name: 'ref-country' }, 'BE', { client }),
+      () => useLookupResolve({ name: 'ref-country' }, item.value, { client }),
       { wrapper: createQueryWrapper() }
     );
 

@@ -14,6 +14,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockSeoDefaults, mockSeoMetadataAudit } from '@granit/react-cms-seo/testing';
+
 import {
   useEffectiveSeo,
   useJsonLdPreview,
@@ -33,7 +35,6 @@ import type {
   SeoMetadataListItem,
   SeoMetadataResponse,
   SerpPreviewResponse,
-  SiteSeoDefaultsResponse,
 } from '@granit/cms-seo';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
@@ -82,25 +83,8 @@ const metadata: SeoMetadataResponse = {
   concurrencyStamp: 'stamp-1',
 };
 
-const defaults: SiteSeoDefaultsResponse = {
-  id: 'd-1',
-  siteId: 'site-1',
-  titleTemplate: null,
-  siteName: 'ACME',
-  defaultDescription: null,
-  defaultRobots: robots,
-  canonicalHost: null,
-  sitemapMaxUrlsPerFile: 45000,
-  inheritFromParentPage: false,
-  defaultOpenGraph: null,
-  defaultTwitterCard: null,
-  defaultOgImage: null,
-  robotsTxtRules: [],
-  robotsTxtExtra: null,
-  manifest: null,
-  enableAutomaticSeoGeneration: false,
-  concurrencyStamp: 'stamp-1',
-};
+const CORPORATE_SITE_ID = 'b1f0c3a4-1d2e-4f5a-8b6c-1a2b3c4d5e6f';
+const defaults = mockSeoDefaults[CORPORATE_SITE_ID]!;
 
 function createWrapper(client: AxiosInstance) {
   return function Wrapper({ children }: { children: ReactNode }) {
@@ -217,16 +201,7 @@ describe('useSeoMetadataAudit', () => {
 
   it('fetches the audit grid page', async () => {
     const client = createMockClient();
-    const item: SeoMetadataListItem = {
-      id: 'm-1',
-      siteId: 'site-1',
-      contentType: 'page',
-      contentId: 'p-1',
-      culture: 'fr',
-      title: null,
-      description: null,
-      canonicalUrl: null,
-    };
+    const item = mockSeoMetadataAudit[0]!;
     const paged: PagedResult<SeoMetadataListItem> = {
       items: [item],
       totalCount: 1,

@@ -5,11 +5,15 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import {
+  mockLoginRequiresTwoFactor,
+  mockLoginSuccess,
+} from '@granit/react-authentication-local/testing';
+
 import { useLoginWithRedirect } from '../hooks/use-login-with-redirect';
 import { LocalAuthProvider } from '../providers/local-auth-provider';
 
 import type { LocalAuthConfig } from '../providers/local-auth-provider';
-import type { AccountLoginResponse } from '@granit/authentication-local';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -35,20 +39,6 @@ function createWrapper(client: AxiosInstance) {
   };
 }
 
-const succeededResponse: AccountLoginResponse = {
-  succeeded: true,
-  requiresTwoFactor: false,
-  isLockedOut: false,
-  isNotAllowed: false,
-};
-
-const twoFactorResponse: AccountLoginResponse = {
-  succeeded: false,
-  requiresTwoFactor: true,
-  isLockedOut: false,
-  isNotAllowed: false,
-};
-
 let locationMock: { href: string; search: string };
 
 afterEach(() => {
@@ -65,7 +55,7 @@ describe('useLoginWithRedirect', () => {
   it('redirects to returnUrl on success', async () => {
     stubLocation();
     const client = createMockClient();
-    vi.mocked(loginAccount).mockResolvedValue(succeededResponse);
+    vi.mocked(loginAccount).mockResolvedValue(mockLoginSuccess);
 
     const { result } = renderHook(
       () =>
@@ -88,7 +78,7 @@ describe('useLoginWithRedirect', () => {
   it('redirects to fallbackUrl when returnUrl is absent', async () => {
     stubLocation();
     const client = createMockClient();
-    vi.mocked(loginAccount).mockResolvedValue(succeededResponse);
+    vi.mocked(loginAccount).mockResolvedValue(mockLoginSuccess);
 
     const { result } = renderHook(
       () => useLoginWithRedirect({ search: '', fallbackUrl: '/dashboard' }),
@@ -108,7 +98,7 @@ describe('useLoginWithRedirect', () => {
   it('redirects to "/" when no returnUrl and no fallbackUrl', async () => {
     stubLocation();
     const client = createMockClient();
-    vi.mocked(loginAccount).mockResolvedValue(succeededResponse);
+    vi.mocked(loginAccount).mockResolvedValue(mockLoginSuccess);
 
     const { result } = renderHook(() => useLoginWithRedirect({ search: '' }), {
       wrapper: createWrapper(client),
@@ -126,7 +116,7 @@ describe('useLoginWithRedirect', () => {
 
   it('calls onTwoFactorRequired when 2FA is needed', async () => {
     const client = createMockClient();
-    vi.mocked(loginAccount).mockResolvedValue(twoFactorResponse);
+    vi.mocked(loginAccount).mockResolvedValue(mockLoginRequiresTwoFactor);
     const onTwoFactorRequired = vi.fn();
 
     const { result } = renderHook(() => useLoginWithRedirect({ search: '', onTwoFactorRequired }), {

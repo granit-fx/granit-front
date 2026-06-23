@@ -6,6 +6,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { sampleTaxRates, sampleValidation } from '@granit/react-tax/testing';
+
 import {
   useTaxRateByCountry,
   useTaxRates,
@@ -16,7 +18,7 @@ import { TaxProvider } from '../providers/tax-provider';
 
 import type { TaxConfig } from '../providers/tax-provider';
 import type { PagedResult, QueryMetadata } from '@granit/query-engine';
-import type { TaxRateEntry, TaxRateResponse, TaxValidateResponse } from '@granit/tax';
+import type { TaxRateEntry, TaxRateResponse } from '@granit/tax';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -36,24 +38,9 @@ function createWrapper(client: AxiosInstance, basePath?: string) {
   };
 }
 
-const mockValidateResponse: TaxValidateResponse = {
-  isValid: true,
-  companyName: 'Digital Dynamics SRL',
-  companyAddress: 'Rue de la Loi 1, 1000 Bruxelles',
-  requestIdentifier: 'req-abc-123',
-  validatedAt: toISODateString('2026-04-04T10:00:00Z'),
-  source: 'VIES',
-};
+const mockValidateResponse = sampleValidation;
 
-const mockBelgiumEntry: TaxRateEntry = {
-  countryCode: 'BE',
-  standardRate: 21,
-  reducedRate: 6,
-  superReducedRate: null,
-  parkingRate: 12,
-  effectiveFrom: toISODateString('2024-01-01'),
-  effectiveTo: null,
-};
+const mockBelgiumEntry = sampleTaxRates[0]!;
 
 const mockLuxembourgEntry: TaxRateEntry = {
   countryCode: 'LU',

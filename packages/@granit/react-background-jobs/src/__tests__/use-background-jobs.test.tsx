@@ -1,10 +1,11 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
+
+import { mockBackgroundJobs } from '@granit/react-background-jobs/testing';
 
 import {
   backgroundJobKeys,
@@ -33,16 +34,7 @@ function createWrapper(client: AxiosInstance, basePath?: string) {
   };
 }
 
-const mockJob: BackgroundJobStatus = {
-  jobName: 'InvoiceSync',
-  cronExpression: '0 */1 * * *',
-  isEnabled: true,
-  lastExecutedAt: toISODateString('2026-03-12T10:00:00Z'),
-  nextExecutionAt: toISODateString('2026-03-12T11:00:00Z'),
-  consecutiveFailures: 0,
-  deadLetterCount: 0,
-  lastError: null,
-};
+const mockJob = mockBackgroundJobs[0];
 
 const mockPage: PagedResult<BackgroundJobStatus> = {
   items: [mockJob],

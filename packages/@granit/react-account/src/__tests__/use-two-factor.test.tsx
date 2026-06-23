@@ -5,6 +5,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockTwoFactorStatus } from '@granit/react-account/testing';
+
 import {
   useAuthenticatorKey,
   useDisableTwoFactor,
@@ -22,7 +24,6 @@ import type {
   AccountAuthenticatorKeyResponse,
   AccountRecoveryCodesResponse,
   AccountTwoFactorEnableResponse,
-  AccountTwoFactorStatusResponse,
 } from '@granit/account';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
@@ -79,13 +80,6 @@ function createWrapperWithQueryClient(client: AxiosInstance) {
   };
 }
 
-const mockStatus: AccountTwoFactorStatusResponse = {
-  isEnabled: false,
-  hasAuthenticatorApp: false,
-  hasEmailOtp: false,
-  recoveryCodesLeft: 0,
-};
-
 afterEach(() => {
   vi.clearAllMocks();
 });
@@ -93,7 +87,7 @@ afterEach(() => {
 describe('useTwoFactorStatus', () => {
   it('should fetch two-factor status', async () => {
     const client = createMockClient();
-    vi.mocked(getTwoFactorStatus).mockResolvedValue(mockStatus);
+    vi.mocked(getTwoFactorStatus).mockResolvedValue(mockTwoFactorStatus);
 
     const { result } = renderHook(() => useTwoFactorStatus(), {
       wrapper: createWrapper(client),
@@ -102,7 +96,7 @@ describe('useTwoFactorStatus', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(getTwoFactorStatus).toHaveBeenCalledWith(client, '/api/v1/account');
-    expect(result.current.data).toEqual(mockStatus);
+    expect(result.current.data).toEqual(mockTwoFactorStatus);
   });
 
   it('should handle fetch error', async () => {

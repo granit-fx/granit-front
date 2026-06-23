@@ -1,4 +1,4 @@
-import { toISODateString } from '@granit/types';
+import { mockBackgroundJobs } from '@granit/react-background-jobs/testing';
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -7,24 +7,11 @@ import { BackgroundJobListPage } from '../background-job-list-page';
 
 import { renderBackgroundJobs } from './test-utils';
 
-import type { BackgroundJobStatus } from '@granit/background-jobs';
-
 // ---------------------------------------------------------------------------
 // Mock data
 // ---------------------------------------------------------------------------
 
-const mockJobs: BackgroundJobStatus[] = [
-  {
-    jobName: 'NotificationDigestJob',
-    cronExpression: '0 */5 * * * ?',
-    isEnabled: true,
-    lastExecutedAt: toISODateString('2026-04-02T12:00:00Z'),
-    nextExecutionAt: toISODateString('2026-04-02T12:05:00Z'),
-    consecutiveFailures: 0,
-    deadLetterCount: 0,
-    lastError: null,
-  },
-];
+const mockJobs = mockBackgroundJobs;
 
 // ---------------------------------------------------------------------------
 // Mocks — the page consumes the @granit/react-background-jobs hooks directly

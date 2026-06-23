@@ -1,3 +1,4 @@
+import { mockExportHistory } from '@granit/react-data-exchange/testing';
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -42,15 +43,7 @@ vi.mock('@granit/data-exchange', async (importOriginal) => {
   };
 });
 
-const completedJob: ExportJobResponse = {
-  id: 'e1',
-  definitionName: 'Admin.UserExport',
-  status: 'Completed',
-  format: 'csv',
-  rowCount: 12,
-  createdAt: '2026-01-01T00:00:00Z',
-  fileName: 'export.csv',
-} as ExportJobResponse;
+const completedJob: ExportJobResponse = mockExportHistory[0];
 
 describe('ExportListPage', () => {
   beforeEach(() => {

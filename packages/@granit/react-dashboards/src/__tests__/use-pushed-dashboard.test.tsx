@@ -6,6 +6,11 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import {
+  SAMPLE_FINANCE_BUNDLE,
+  SAMPLE_FINANCE_DASHBOARD_ID,
+} from '@granit/react-dashboards/testing';
+
 import { dashboardRenderQueryKey, dashboardWidgetQueryKey } from '../hooks/use-dashboard-render';
 import { applyStreamSnapshot, type DashboardStreamSnapshot } from '../hooks/use-dashboard-stream';
 import { usePushedDashboard } from '../hooks/use-pushed-dashboard';
@@ -14,62 +19,20 @@ import { DashboardsProvider } from '../providers/dashboards-provider';
 import type { DashboardRenderedWidget, DashboardRenderResponse } from '@granit/dashboards';
 import type { ReactNode } from 'react';
 
-const DASHBOARD_ID = '8c6b1e10-0000-4000-8000-000000000000';
-const KPI_ID = '8c6b1e10-0000-0000-0000-000000000001';
-const BANNER_ID = '8c6b1e10-0000-0000-0000-000000000002';
+const DASHBOARD_ID = SAMPLE_FINANCE_DASHBOARD_ID;
 
-const KPI_WIDGET: DashboardRenderedWidget = {
-  id: KPI_ID,
-  widgetType: 'Kpi',
-  slug: 'UnpaidCount',
-  position: 0,
-  width: 3,
-  height: 2,
-  titleLocalizationKey: 'Widget:Test.UnpaidCount',
-  actions: null,
-  requiredPermission: null,
-  status: 'Snapshot',
-  sequence: 1,
-  emittedAt: '2026-04-29T12:34:56.789Z',
-  refreshHint: 'Realtime',
-  snapshot: { value: 12, valueKind: 'Count' },
-  reasonLocalizationKey: null,
-  transport: 'Push',
-};
+const KPI_WIDGET = SAMPLE_FINANCE_BUNDLE.widgets.find(
+  (w) => w.widgetType === 'Kpi' && w.transport === 'Push'
+)!;
+const KPI_ID = KPI_WIDGET.id;
 
-const BANNER_WIDGET: DashboardRenderedWidget = {
-  id: BANNER_ID,
-  widgetType: 'Markdown',
-  slug: 'Banner',
-  position: 1,
-  width: 12,
-  height: 1,
-  titleLocalizationKey: 'Widget:Test.Banner',
-  actions: null,
-  requiredPermission: null,
-  status: 'Snapshot',
-  sequence: 1,
-  emittedAt: '2026-04-29T12:34:56.789Z',
-  refreshHint: 'Static',
-  snapshot: { contentLocalizationKey: 'Widget:Test.Banner.Content' },
-  reasonLocalizationKey: null,
-  transport: 'Pull',
-};
-
-const PUSH_BUNDLE: DashboardRenderResponse = {
-  dashboardId: DASHBOARD_ID,
-  renderedAt: '2026-04-29T12:34:56.789Z',
-  period: null,
-  activeViewName: null,
-  driftStatus: 'Aligned',
-  sourceDefinitionVersion: '1.0.0',
-  registeredVersion: '1.0.0',
-  widgets: [KPI_WIDGET, BANNER_WIDGET],
-};
+const PUSH_BUNDLE = SAMPLE_FINANCE_BUNDLE;
 
 const PULL_ONLY_BUNDLE: DashboardRenderResponse = {
   ...PUSH_BUNDLE,
-  widgets: [BANNER_WIDGET, { ...KPI_WIDGET, transport: 'Pull' }],
+  widgets: PUSH_BUNDLE.widgets.map((w) =>
+    w.transport === 'Push' ? { ...w, transport: 'Pull' as const } : w
+  ),
 };
 
 // ---------------------------------------------------------------------------
@@ -179,11 +142,11 @@ describe('applyStreamSnapshot', () => {
   it('merges dynamic fields and preserves structural fields', () => {
     const merged = applyStreamSnapshot(KPI_WIDGET, event);
     expect(merged).toMatchObject({
-      slug: 'UnpaidCount',
-      position: 0,
-      width: 3,
-      height: 2,
-      titleLocalizationKey: 'Widget:Test.UnpaidCount',
+      slug: KPI_WIDGET.slug,
+      position: KPI_WIDGET.position,
+      width: KPI_WIDGET.width,
+      height: KPI_WIDGET.height,
+      titleLocalizationKey: KPI_WIDGET.titleLocalizationKey,
       transport: 'Push',
       sequence: 5,
       snapshot: { value: 99, valueKind: 'Count' },

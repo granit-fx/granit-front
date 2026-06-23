@@ -1,11 +1,12 @@
 import { getMenu, listMenus } from '@granit/cms';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { mockMenus } from '@granit/react-cms/testing';
 
 import { useMenu, useMenus } from '../hooks/use-menus-admin';
 import { CmsProvider } from '../providers/cms-provider';
@@ -20,15 +21,7 @@ vi.mock('@granit/cms', () => ({
   getMenu: vi.fn(),
 }));
 
-const menu: MenuResponse = {
-  id: 'menu-1',
-  siteId: 'site-1',
-  key: 'main',
-  title: 'Main navigation',
-  items: [],
-  createdAt: toISODateString('2026-01-01T00:00:00Z'),
-  modifiedAt: null,
-};
+const menu = mockMenus[0]!;
 
 function createWrapper(client: AxiosInstance) {
   return function Wrapper({ children }: { children: ReactNode }) {
@@ -79,10 +72,10 @@ describe('useMenu', () => {
     const client = createMockClient();
     vi.mocked(getMenu).mockResolvedValue(menu);
 
-    const { result } = renderHook(() => useMenu('menu-1'), { wrapper: createWrapper(client) });
+    const { result } = renderHook(() => useMenu(menu.id), { wrapper: createWrapper(client) });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getMenu).toHaveBeenCalledWith(client, '', 'menu-1');
+    expect(getMenu).toHaveBeenCalledWith(client, '', menu.id);
   });
 
   it('is disabled when id is empty', () => {

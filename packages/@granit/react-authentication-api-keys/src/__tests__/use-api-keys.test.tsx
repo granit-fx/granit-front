@@ -1,20 +1,17 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockApiKeys } from '@granit/react-authentication-api-keys/testing';
+
 import { buildApiKeyQueryKey } from '../hooks/query-keys';
 import { useApiKey } from '../hooks/use-api-key';
 import { useApiKeys, useApiKeysQueryMeta } from '../hooks/use-api-keys';
 
-import type {
-  ApiKeyListItemResponse,
-  ApiKeyListPage,
-  ApiKeyResponse,
-} from '@granit/authentication-api-keys';
+import type { ApiKeyListItemResponse, ApiKeyListPage } from '@granit/authentication-api-keys';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -30,34 +27,20 @@ function createWrapper() {
   };
 }
 
-const mockApiKey: ApiKeyResponse = {
-  id: 'key-1',
-  name: 'Test Key',
-  type: 'Secret',
-  environment: 'production',
-  prefix: 'test',
-  lastFourChars: 'xYzW',
-  permissions: ['Invoices.Read'],
-  allowedCidrs: ['10.0.0.0/8'],
-  expiresAt: null,
-  lastUsedAt: null,
-  revokedAt: null,
-  cacheBehavior: 'Normal',
-  createdAt: toISODateString('2026-01-01T00:00:00Z'),
-};
+const mockApiKey = mockApiKeys[0]!;
 
 const mockListItem: ApiKeyListItemResponse = {
-  id: 'key-1',
-  name: 'Test Key',
-  type: 'Secret',
-  environment: 'production',
-  prefix: 'test',
-  lastFourChars: 'xYzW',
-  expiresAt: null,
-  lastUsedAt: null,
-  revokedAt: null,
-  cacheBehavior: 'Normal',
-  createdAt: toISODateString('2026-01-01T00:00:00Z'),
+  id: mockApiKey.id,
+  name: mockApiKey.name,
+  type: mockApiKey.type,
+  environment: mockApiKey.environment,
+  prefix: mockApiKey.prefix,
+  lastFourChars: mockApiKey.lastFourChars,
+  expiresAt: mockApiKey.expiresAt,
+  lastUsedAt: mockApiKey.lastUsedAt,
+  revokedAt: mockApiKey.revokedAt,
+  cacheBehavior: mockApiKey.cacheBehavior,
+  createdAt: mockApiKey.createdAt,
 };
 
 const emptyPage: ApiKeyListPage = {
@@ -118,7 +101,7 @@ describe('useApiKeys', () => {
 
     expect(calledUrl(client)).toBe('/api/v1/authentication/api-keys');
     expect(result.current.data?.items).toHaveLength(1);
-    expect(result.current.data?.items[0].id).toBe('key-1');
+    expect(result.current.data?.items[0].id).toBe('ak-1');
     expect(result.current.data?.totalCount).toBe(1);
   });
 
@@ -309,8 +292,8 @@ describe('useApiKey', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(client.get).toHaveBeenCalledWith('/api/v1/authentication/api-keys/key-1');
-    expect(result.current.data?.id).toBe('key-1');
-    expect(result.current.data?.name).toBe('Test Key');
+    expect(result.current.data?.id).toBe('ak-1');
+    expect(result.current.data?.name).toBe('Patient Sync Service');
   });
 
   it('should use custom basePath when provided', async () => {

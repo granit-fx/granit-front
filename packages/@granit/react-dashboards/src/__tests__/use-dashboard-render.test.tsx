@@ -11,6 +11,11 @@ import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import {
+  SAMPLE_FINANCE_BUNDLE,
+  SAMPLE_FINANCE_DASHBOARD_ID,
+} from '@granit/react-dashboards/testing';
+
+import {
   dashboardRenderQueryKey,
   dashboardWidgetQueryKey,
   normalizeDashboardRenderRequest,
@@ -20,52 +25,16 @@ import {
 import { useDashboardWidget } from '../hooks/use-dashboard-widget';
 import { DashboardsProvider } from '../providers/dashboards-provider';
 
-import type {
-  DashboardRenderedWidget,
-  DashboardRenderRequest,
-  DashboardRenderResponse,
-} from '@granit/dashboards';
+import type { DashboardRenderedWidget, DashboardRenderRequest } from '@granit/dashboards';
 import type { ReactNode } from 'react';
 
-const DASHBOARD_ID = '8c6b1e10-0000-4000-8000-000000000000';
-const KPI_ID = '8c6b1e10-0000-0000-0000-000000000001';
-const MARKDOWN_ID = '8c6b1e10-0000-0000-0000-000000000002';
+const DASHBOARD_ID = SAMPLE_FINANCE_DASHBOARD_ID;
+const BUNDLE = SAMPLE_FINANCE_BUNDLE;
 
-const KPI_WIDGET: DashboardRenderedWidget = {
-  id: KPI_ID,
-  widgetType: 'Kpi',
-  status: 'Snapshot',
-  sequence: 1,
-  emittedAt: '2026-04-29T12:34:56.789Z',
-  refreshHint: 'Dynamic',
-  snapshot: {
-    value: 12,
-    valueKind: 'Count',
-    currency: null,
-    isHigherBetter: false,
-    noData: false,
-    previous: null,
-  },
-  reasonLocalizationKey: null,
-};
-
-const MARKDOWN_WIDGET: DashboardRenderedWidget = {
-  id: MARKDOWN_ID,
-  widgetType: 'Markdown',
-  status: 'Snapshot',
-  sequence: 1,
-  emittedAt: '2026-04-29T12:34:56.789Z',
-  refreshHint: 'Static',
-  snapshot: { contentLocalizationKey: 'Widget:Test.Banner' },
-  reasonLocalizationKey: null,
-};
-
-const BUNDLE: DashboardRenderResponse = {
-  dashboardId: DASHBOARD_ID,
-  renderedAt: '2026-04-29T12:34:56.789Z',
-  period: null,
-  widgets: [MARKDOWN_WIDGET, KPI_WIDGET],
-};
+const KPI_WIDGET = BUNDLE.widgets.find((w) => w.widgetType === 'Kpi')!;
+const MARKDOWN_WIDGET = BUNDLE.widgets.find((w) => w.widgetType === 'Markdown')!;
+const KPI_ID = KPI_WIDGET.id;
+const MARKDOWN_ID = MARKDOWN_WIDGET.id;
 
 const server = setupServer(
   http.post(`http://localhost/api/v1/dashboards/${DASHBOARD_ID}/render`, async () =>
@@ -159,7 +128,7 @@ describe('useDashboardRender — bundle fetch + per-widget cache split (ADR-039 
     const { wrapper } = makeWrapper();
     const { result } = renderHook(() => useDashboardRender(DASHBOARD_ID), { wrapper });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data?.widgets).toHaveLength(2);
+    expect(result.current.data?.widgets).toHaveLength(BUNDLE.widgets.length);
   });
 
   it('populates one TanStack entry per widget', async () => {

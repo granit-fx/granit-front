@@ -6,11 +6,13 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockUsers } from '@granit/react-identity/testing';
+
 import { useIdentityUser, useIdentityUsers } from '../hooks/use-identity-users';
 import { IdentityProvider } from '../providers/identity-provider';
 
 import type { IdentityProviderProps } from '../providers/identity-provider';
-import type { IdentityUser, IdentityUserPage } from '@granit/identity';
+import type { IdentityUserPage } from '@granit/identity';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -30,15 +32,7 @@ function createWrapper(client: AxiosInstance, basePath?: string) {
   };
 }
 
-const mockUser: IdentityUser = {
-  userId: toEntityId<'User'>('user-1'),
-  username: 'jdoe',
-  email: 'jdoe@example.com',
-  firstName: 'John',
-  lastName: 'Doe',
-  enabled: true,
-  metadata: {},
-};
+const mockUser = mockUsers[0]!;
 
 const mockPage: IdentityUserPage = {
   items: [mockUser],

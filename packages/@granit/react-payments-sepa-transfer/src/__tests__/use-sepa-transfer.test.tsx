@@ -5,6 +5,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { sampleConfiguration } from '@granit/react-payments-sepa-transfer/testing';
+
 import {
   useSepaTransferConfiguration,
   useUpsertSepaTransferConfiguration,
@@ -12,19 +14,8 @@ import {
 import { SepaTransferProvider } from '../providers/sepa-transfer-provider';
 
 import type { SepaTransferConfig } from '../providers/sepa-transfer-provider';
-import type { SepaTransferConfigurationResponse } from '@granit/payments-sepa-transfer';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
-
-const sampleConfiguration: SepaTransferConfigurationResponse = {
-  beneficiaryName: 'Acme NV',
-  isActive: true,
-  companyPartyId: 'party-1',
-  beneficiaryIbanMasked: 'BE** **** **** 9999',
-  beneficiaryBic: 'GEBABEBB',
-  tenantId: null,
-  concurrencyStamp: 'stamp-1',
-};
 
 function createWrapper(client: AxiosInstance, basePath?: string) {
   return function Wrapper({ children }: { children: ReactNode }) {

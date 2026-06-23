@@ -1,10 +1,12 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toEntityId, toISODateString } from '@granit/types';
+import { toEntityId } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { sampleParty, samplePartyId } from '@granit/react-parties/testing';
 
 import {
   useActivatePartyMutation,
@@ -43,14 +45,13 @@ import type {
   PartyMetadataRequest,
   PartyPhoneId,
   PartyPhoneRequest,
-  PartyResponse,
   PartyTaxStatusRequest,
   PartyUpdateRequest,
 } from '@granit/parties';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
-const partyId: PartyId = toEntityId<'Party'>('00000000-0000-0000-0000-000000000001');
+const partyId: PartyId = samplePartyId;
 
 const sampleListItem: PartyListItemResponse = {
   id: partyId,
@@ -62,33 +63,6 @@ const sampleListItem: PartyListItemResponse = {
   defaultCurrency: 'EUR',
   primaryEmail: 'billing@acme.example',
   primaryPhone: null,
-};
-
-const sampleParty: PartyResponse = {
-  id: partyId,
-  tenantId: null,
-  kind: 'Company',
-  name: 'Acme Corp',
-  defaultCurrency: 'EUR',
-  timezone: 'UTC',
-  language: null,
-  website: null,
-  taxId: null,
-  registrationNumber: null,
-  parentPartyId: null,
-  userId: null,
-  avatar: null,
-  roles: 'Customer',
-  status: 'Active',
-  addresses: [],
-  emails: [],
-  phones: [],
-  externalMappings: [],
-  taxStatus: { isExempt: false, reverseCharge: false, vatin: null, evidenceBlobId: null },
-  metadata: {},
-  internalNotes: null,
-  createdAt: toISODateString('2026-01-01T00:00:00Z'),
-  modifiedAt: null,
 };
 
 function createWrapper(client: AxiosInstance, basePath?: string) {

@@ -5,6 +5,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { sampleBankAccounts } from '@granit/react-bank-accounts/testing';
+
 import {
   useArchiveBankAccount,
   useBankAccount,
@@ -15,7 +17,6 @@ import {
 import { BankAccountsProvider } from '../providers/bank-accounts-provider';
 
 import type { BankAccountsConfig } from '../providers/bank-accounts-provider';
-import type { BankAccountResponse } from '@granit/bank-accounts';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -31,24 +32,7 @@ function createWrapper(client: AxiosInstance, basePath?: string) {
   };
 }
 
-const sampleAccount: BankAccountResponse = {
-  id: 'acc-1',
-  partyId: 'party-1',
-  scheme: 'Iban',
-  accountType: 'Checking',
-  accountIdentifierMasked: '**** 7034',
-  routingCode: null,
-  bic: 'GEBABEBB',
-  holderName: 'Alice Doe',
-  countryCode: 'BE',
-  bankName: 'BNP Paribas Fortis',
-  bankAddress: null,
-  intermediaryBic: null,
-  status: 'Active',
-  verified: false,
-  trusted: false,
-  tenantId: null,
-};
+const sampleAccount = sampleBankAccounts[0]!;
 
 describe('use-bank-accounts', () => {
   afterEach(() => {

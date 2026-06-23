@@ -6,10 +6,12 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { mockAdminUsers } from '@granit/react-openiddict-admin/testing';
+
 import { useAdminUsers, useImpersonateUser } from '../hooks/use-admin-users';
 import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider';
 
-import type { AdminImpersonationResult, AdminUser, AdminUserPage } from '@granit/openiddict-admin';
+import type { AdminImpersonationResult, AdminUserPage } from '@granit/openiddict-admin';
 
 vi.mock('@granit/openiddict-admin', () => ({
   listUsers: vi.fn(),
@@ -34,19 +36,9 @@ function createWrapper() {
   };
 }
 
-const mockUser: AdminUser = {
-  userId: 'usr-001',
-  username: 'admin',
-  email: 'admin@example.com',
-  firstName: 'Admin',
-  lastName: 'User',
-  enabled: true,
-  metadata: {},
-};
-
 const mockPage: AdminUserPage = {
-  items: [mockUser],
-  totalCount: 1,
+  items: mockAdminUsers,
+  totalCount: mockAdminUsers.length,
 };
 
 describe('useAdminUsers', () => {
@@ -104,11 +96,15 @@ describe('useImpersonateUser', () => {
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useImpersonateUser(), { wrapper });
 
-    result.current.mutate('usr-001');
+    result.current.mutate(mockAdminUsers[0]!.userId);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(impersonateUser).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', 'usr-001');
+    expect(impersonateUser).toHaveBeenCalledWith(
+      expect.anything(),
+      '/api/v1/admin',
+      mockAdminUsers[0]!.userId
+    );
     expect(result.current.data).toEqual(mockImpersonation);
   });
 

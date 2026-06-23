@@ -3,32 +3,14 @@ import { createMockClient } from '@granit/testing';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { mockPermissionGroups } from '@granit/react-authorization/testing';
+
 import { usePermissionDefinitions } from '../hooks/use-permission-definitions';
-
-import type { PermissionGroupResponse } from '@granit/authorization';
-
-const MOCK_GROUPS: PermissionGroupResponse[] = [
-  {
-    name: 'Invoices',
-    displayName: 'Facturation',
-    permissions: [
-      { name: 'Invoices.Create', displayName: 'Créer une facture', multiTenancySides: 'Tenant' },
-      { name: 'Invoices.Delete', displayName: null, multiTenancySides: 'Tenant' },
-    ],
-  },
-  {
-    name: 'Users',
-    displayName: null,
-    permissions: [
-      { name: 'Users.View', displayName: 'Voir les utilisateurs', multiTenancySides: 'Both' },
-    ],
-  },
-];
 
 describe('usePermissionDefinitions', () => {
   it('should fetch and return permission groups', async () => {
     const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValueOnce({ data: MOCK_GROUPS });
+    vi.mocked(client.get).mockResolvedValueOnce({ data: mockPermissionGroups });
 
     const { result } = renderHook(() => usePermissionDefinitions({ client }), {
       wrapper: createQueryWrapper(),
@@ -36,7 +18,7 @@ describe('usePermissionDefinitions', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(result.current.data).toEqual(MOCK_GROUPS);
+    expect(result.current.data).toEqual(mockPermissionGroups);
     expect(client.get).toHaveBeenCalledWith('/api/v1/authorization/permissions/definitions');
   });
 

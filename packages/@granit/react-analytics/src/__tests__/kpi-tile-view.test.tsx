@@ -1,17 +1,17 @@
-import { toISODateString } from '@granit/types';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+
+import { buildMockMetric } from '@granit/react-analytics/testing';
 
 import { KpiTileView } from '../components/kpi-tile-view';
 
 import type { MetricResponse } from '@granit/analytics';
 
 function makeResponse(overrides: Partial<MetricResponse['snapshot']> = {}): MetricResponse {
+  // Reuse the shared envelope (name/sequence/emittedAt/refreshHint) and supply a
+  // concrete-value snapshot the KPI tile can format.
   return {
-    name: 'Test.Metric',
-    sequence: 1,
-    emittedAt: toISODateString('2026-04-28T12:00:00Z'),
-    refreshHint: 'Dynamic',
+    ...buildMockMetric('Test.Metric'),
     snapshot: {
       value: 12,
       valueKind: 'Count',

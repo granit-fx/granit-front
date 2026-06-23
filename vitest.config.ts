@@ -55,6 +55,10 @@ export default defineConfig({
         __dirname,
         'packages/@granit/react-data-exchange/src/testing/index.ts'
       ),
+      '@granit/react-data-lookup/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-data-lookup/src/testing/index.ts'
+      ),
       '@granit/react-diagnostics/testing': path.resolve(
         __dirname,
         'packages/@granit/react-diagnostics/src/testing/index.ts'

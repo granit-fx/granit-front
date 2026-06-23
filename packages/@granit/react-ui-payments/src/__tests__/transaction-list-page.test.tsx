@@ -1,11 +1,9 @@
-import { toISODateString } from '@granit/types';
+import { sampleTransactions } from '@granit/react-payments/testing';
 import { screen, waitFor } from '@testing-library/react';
 
 import { TransactionListPage } from '../transaction-list-page';
 
 import { renderWithProviders } from './test-utils';
-
-import type { PaymentTransactionResponse } from '@granit/payments';
 
 // ---------------------------------------------------------------------------
 // Mocks — stub the paginated transactions query hook (usePaymentTransactions
@@ -24,45 +22,6 @@ vi.mock('@granit/react-payments', async (importOriginal) => {
     useInitiatePaymentCharge: () => ({ mutate: vi.fn(), isPending: false }),
   };
 });
-
-const sampleTransactions: PaymentTransactionResponse[] = [
-  {
-    id: 'txn_4kLm8nPqRs',
-    invoiceId: 'inv_001',
-    amount: 24900,
-    currency: 'EUR',
-    status: 'Succeeded',
-    providerName: 'Stripe',
-    providerTransactionId: 'pi_stripe_001',
-    paymentMethodId: 'pm_visa_4242',
-    actionUrl: null,
-    idempotencyKey: 'idem_001',
-    failureCode: null,
-    succeededAt: toISODateString('2026-03-28T14:22:00Z'),
-    canceledAt: null,
-    refunds: [],
-    disputes: [],
-    tenantId: 'tenant_01',
-  },
-  {
-    id: 'txn_2gHiJkLmNo',
-    invoiceId: 'inv_003',
-    amount: 12000,
-    currency: 'USD',
-    status: 'Failed',
-    providerName: 'Stripe',
-    providerTransactionId: 'pi_stripe_003',
-    paymentMethodId: 'pm_visa_1234',
-    actionUrl: null,
-    idempotencyKey: 'idem_003',
-    failureCode: 'card_declined',
-    succeededAt: null,
-    canceledAt: null,
-    refunds: [],
-    disputes: [],
-    tenantId: 'tenant_01',
-  },
-];
 
 const pagedResult = {
   items: sampleTransactions,

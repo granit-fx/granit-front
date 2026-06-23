@@ -7,6 +7,13 @@ import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  sampleAvailableMethods,
+  samplePaymentMethods,
+  sampleRefunds,
+  sampleTransactions,
+} from '@granit/react-payments/testing';
+
+import {
   useActivatePaymentMethod,
   useAttachPaymentMethod,
   useAvailablePaymentMethods,
@@ -26,15 +33,11 @@ import { PaymentsProvider } from '../providers/payments-provider';
 
 import type { PaymentsConfig } from '../providers/payments-provider';
 import type {
-  PaymentAvailableMethodResponse,
   PaymentCheckoutSessionResponse,
   PaymentMethodCapabilityResponse,
   PaymentMethodConfigurationItemResponse,
-  PaymentMethodResponse,
   PaymentProviderCatalogResponse,
   PaymentProviderConfigurationResponse,
-  PaymentRefundResponse,
-  PaymentTransactionResponse,
 } from '@granit/payments';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
@@ -43,35 +46,9 @@ import type { ReactNode } from 'react';
 // Fixtures
 // ---------------------------------------------------------------------------
 
-const sampleTransaction: PaymentTransactionResponse = {
-  id: 'txn-1',
-  invoiceId: 'inv-1',
-  amount: 5000,
-  currency: 'EUR',
-  status: 'Succeeded',
-  providerName: 'Stripe',
-  providerTransactionId: 'pi_abc123',
-  paymentMethodId: 'pm-1',
-  actionUrl: null,
-  idempotencyKey: 'key-1',
-  failureCode: null,
-  succeededAt: toISODateString('2026-04-01T10:00:00Z'),
-  canceledAt: null,
-  refunds: [],
-  disputes: [],
-  tenantId: null,
-};
+const sampleTransaction = sampleTransactions[0]!;
 
-const sampleRefund: PaymentRefundResponse = {
-  id: 'ref-1',
-  amount: 2000,
-  currency: 'EUR',
-  status: 'Succeeded',
-  providerRefundId: 're_abc123',
-  reason: 'Customer request',
-  createdAt: toISODateString('2026-04-02T10:00:00Z'),
-  completedAt: toISODateString('2026-04-02T10:05:00Z'),
-};
+const sampleRefund = sampleRefunds[0]!;
 
 const sampleCheckoutSession: PaymentCheckoutSessionResponse = {
   url: 'https://checkout.stripe.com/session/abc123',
@@ -79,16 +56,7 @@ const sampleCheckoutSession: PaymentCheckoutSessionResponse = {
   expiresAt: toISODateString('2026-04-01T11:00:00Z'),
 };
 
-const sampleMethod: PaymentMethodResponse = {
-  id: 'pm-1',
-  type: 'card',
-  providerName: 'Stripe',
-  providerMethodId: 'pm_abc123',
-  displayLabel: 'Visa •••• 4242',
-  isDefault: true,
-  expiresAt: toISODateString('2028-12-01T00:00:00Z'),
-  tenantId: null,
-};
+const sampleMethod = samplePaymentMethods[0]!;
 
 const sampleCapability: PaymentMethodCapabilityResponse = {
   supportedCountries: ['BE'],
@@ -97,13 +65,7 @@ const sampleCapability: PaymentMethodCapabilityResponse = {
   amountBounds: [{ currencyCode: 'EUR', minAmount: 1, maxAmount: 1000000 }],
 };
 
-const sampleAvailableMethod: PaymentAvailableMethodResponse = {
-  methodType: 'card',
-  category: 'Card',
-  providerName: 'Stripe',
-  displayLabel: 'Credit / Debit Card',
-  capability: sampleCapability,
-};
+const sampleAvailableMethod = sampleAvailableMethods[0]!;
 
 const sampleConfigurationItem: PaymentMethodConfigurationItemResponse = {
   methodType: 'bancontact',

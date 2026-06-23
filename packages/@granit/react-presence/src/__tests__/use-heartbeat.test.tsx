@@ -1,7 +1,8 @@
 import { createMockClient } from '@granit/react-testing';
-import { toEntityId, toISODateString } from '@granit/types';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { mockMyPresence, mockOtherPresences, mockUsers } from '@granit/react-presence/testing';
 
 import { presenceKeys } from '../hooks/query-keys';
 import { useHeartbeat } from '../hooks/use-heartbeat';
@@ -10,7 +11,6 @@ import { useMyPresence } from '../hooks/use-my-presence';
 import { createPresenceTestHarness } from './test-utils';
 
 import type { PresenceResponse } from '@granit/presence';
-import type { UserId } from '@granit/types';
 
 vi.mock('@granit/presence', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
@@ -19,13 +19,7 @@ vi.mock('@granit/presence', async (importOriginal) => {
 
 const { pollMyPresence, getMyPresence } = await import('@granit/presence');
 
-const snapshot: PresenceResponse = {
-  userId: toEntityId<'User'>('user-1') as UserId,
-  effectiveStatus: 'Online',
-  manualOverride: null,
-  overrideUntilUtc: null,
-  lastSeenUtc: toISODateString('2026-05-22T10:00:00Z'),
-};
+const snapshot = mockMyPresence;
 
 function setVisibility(state: DocumentVisibilityState) {
   Object.defineProperty(document, 'visibilityState', {
@@ -91,7 +85,7 @@ describe('useHeartbeat', () => {
     const client = createMockClient();
     const { wrapper, queryClient } = createPresenceTestHarness(client);
 
-    const offlineSnapshot: PresenceResponse = { ...snapshot, effectiveStatus: 'Offline' };
+    const offlineSnapshot = mockOtherPresences[mockUsers[4]!.id]!;
     let resolveGet: (value: PresenceResponse) => void = () => {};
     vi.mocked(getMyPresence).mockReturnValue(
       new Promise<PresenceResponse>((resolve) => {

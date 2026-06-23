@@ -3,12 +3,14 @@ import { axiosResponse, createMockClient } from '@granit/testing';
 import { render, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { mockCountries } from '@granit/react-data-lookup/testing';
+
 import { LookupBadge } from '../components/lookup-badge';
 import { useLookup } from '../hooks/use-lookup';
 import { DataLookupProvider, useDataLookupConfig } from '../providers/data-lookup-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { LookupItemResponse, LookupResultResponse } from '@granit/data-lookup';
+import type { LookupResultResponse } from '@granit/data-lookup';
 import type { ReactNode } from 'react';
 
 /** Wraps children in a QueryClient + DataLookupProvider with the given client. */
@@ -74,15 +76,18 @@ describe('DataLookupProvider', () => {
 
   it('lets a component resolve the client from the provider (no client prop)', async () => {
     const client = createMockClient();
-    const item: LookupItemResponse = { value: 'BE', label: 'Belgique', extra: null };
+    const item = mockCountries[0]!;
     vi.mocked(client.get).mockResolvedValue(axiosResponse(item));
 
-    const { container } = render(<LookupBadge descriptor={{ name: 'ref-country' }} value="BE" />, {
-      wrapper: createLookupWrapper(client),
-    });
+    const { container } = render(
+      <LookupBadge descriptor={{ name: 'ref-country' }} value={item.value} />,
+      {
+        wrapper: createLookupWrapper(client),
+      }
+    );
 
     await waitFor(() =>
-      expect(container.querySelector('[data-lookup-badge]')?.textContent).toBe('Belgique')
+      expect(container.querySelector('[data-lookup-badge]')?.textContent).toBe('Belgium')
     );
   });
 });

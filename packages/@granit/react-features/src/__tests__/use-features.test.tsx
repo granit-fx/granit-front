@@ -6,6 +6,12 @@ import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  mockFeatureDefinitions,
+  mockFeatureGroups,
+  mockFeatureValues,
+} from '@granit/react-features/testing';
+
+import {
   useDeleteFeatureOverride,
   useFeatureDefinitions,
   useFeatureValue,
@@ -15,7 +21,7 @@ import {
 import { FeaturesProvider } from '../providers/features-provider';
 
 import type { FeaturesConfig } from '../providers/features-provider';
-import type { FeatureGroupResponse, FeatureValueResponse } from '@granit/features';
+import type { FeatureValueResponse } from '@granit/features';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -23,25 +29,14 @@ import type { ReactNode } from 'react';
 // Fixtures
 // ---------------------------------------------------------------------------
 
-const sampleGroup: FeatureGroupResponse = {
-  name: 'ui',
-  displayName: 'User Interface',
-  features: [
-    {
-      name: 'ui.dark-mode',
-      defaultValue: 'false',
-      valueType: 'Toggle',
-      numericConstraint: null,
-      selectionValues: null,
-      displayName: 'Dark Mode',
-      description: null,
-    },
-  ],
-};
+const sampleGroups = mockFeatureGroups;
+
+/** A single feature name resolved from the shared definitions fixture. */
+const sampleFeatureName = mockFeatureDefinitions[0]!.name;
 
 const sampleValue: FeatureValueResponse = {
-  name: 'ui.dark-mode',
-  value: 'true',
+  name: sampleFeatureName,
+  value: mockFeatureValues[sampleFeatureName]!,
 };
 
 // ---------------------------------------------------------------------------
@@ -72,7 +67,7 @@ describe('use-features', () => {
   describe('useFeatureDefinitions', () => {
     it('fetches definitions with default basePath', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [sampleGroup] });
+      vi.mocked(client.get).mockResolvedValue({ data: sampleGroups });
 
       const { result } = renderHook(() => useFeatureDefinitions(), {
         wrapper: createWrapper(client),
@@ -80,12 +75,12 @@ describe('use-features', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.get).toHaveBeenCalledWith('/api/v1/features/definitions');
-      expect(result.current.data).toEqual([sampleGroup]);
+      expect(result.current.data).toEqual(sampleGroups);
     });
 
     it('fetches definitions with custom basePath', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValue({ data: [sampleGroup] });
+      vi.mocked(client.get).mockResolvedValue({ data: sampleGroups });
 
       const { result } = renderHook(() => useFeatureDefinitions(), {
         wrapper: createWrapper(client, '/custom/features'),
@@ -99,7 +94,7 @@ describe('use-features', () => {
   describe('useFeatureValues', () => {
     it('fetches all feature values as a dictionary', async () => {
       const client = createMockClient();
-      const values = { 'ui.dark-mode': 'true' };
+      const values = mockFeatureValues;
       vi.mocked(client.get).mockResolvedValue({ data: values });
 
       const { result } = renderHook(() => useFeatureValues(), {
@@ -117,12 +112,12 @@ describe('use-features', () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: sampleValue });
 
-      const { result } = renderHook(() => useFeatureValue('ui.dark-mode'), {
+      const { result } = renderHook(() => useFeatureValue(sampleFeatureName), {
         wrapper: createWrapper(client),
       });
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
-      expect(client.get).toHaveBeenCalledWith('/api/v1/features/values/ui.dark-mode');
+      expect(client.get).toHaveBeenCalledWith(`/api/v1/features/values/${sampleFeatureName}`);
       expect(result.current.data).toEqual(sampleValue);
     });
 

@@ -6,6 +6,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockActivities, mockActivityCalendarItems } from '@granit/react-activities/testing';
+
 import { useActivities, useActivitiesCalendar, useActivity } from '../hooks/use-activities';
 import { ActivitiesProvider } from '../providers/activities-provider';
 
@@ -17,20 +19,7 @@ import type {
 import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
 
-const sampleActivity: ActivityResponse = {
-  id: 'act-1',
-  entityType: 'Quote',
-  entityId: 'quote-1',
-  type: 'FollowUp',
-  assignedToUserId: 'user-1',
-  createdByUserId: 'user-2',
-  dueAt: toISODateString('2026-05-10T10:00:00Z'),
-  description: null,
-  status: 'Open',
-  completedAt: null,
-  completedByUserId: null,
-  createdAt: toISODateString('2026-05-01T08:00:00Z'),
-};
+const sampleActivity: ActivityResponse = mockActivities[0]!;
 
 const sampleListResponse: ActivityListResponse = {
   items: [sampleActivity],
@@ -39,18 +28,7 @@ const sampleListResponse: ActivityListResponse = {
   pageSize: 20,
 };
 
-const sampleCalendarItem: ActivityCalendarItemResponse = {
-  id: 'act-1',
-  start: toISODateString('2026-05-10T10:00:00Z'),
-  end: null,
-  title: 'Quote · FollowUp',
-  color: 'open',
-  type: 'FollowUp',
-  status: 'Open',
-  entityType: 'Quote',
-  entityId: 'quote-1',
-  assignedToUserId: 'user-1',
-};
+const sampleCalendarItem: ActivityCalendarItemResponse = mockActivityCalendarItems[0]!;
 
 function createWrapper(client: AxiosInstance, basePath?: string) {
   return function Wrapper({ children }: { children: ReactNode }) {
@@ -129,12 +107,12 @@ describe('useActivity', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: sampleActivity });
 
-    const { result } = renderHook(() => useActivity('act-1'), {
+    const { result } = renderHook(() => useActivity(sampleActivity.id), {
       wrapper: createWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/api/v1/activities/act-1');
+    expect(client.get).toHaveBeenCalledWith(`/api/v1/activities/${sampleActivity.id}`);
     expect(result.current.data).toEqual(sampleActivity);
   });
 

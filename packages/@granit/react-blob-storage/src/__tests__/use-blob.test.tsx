@@ -1,17 +1,16 @@
-import { BlobStatus } from '@granit/blob-storage';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { mockBlobs } from '@granit/react-blob-storage/testing';
+
 import { useBlob } from '../hooks/use-blob';
 import { BlobStorageProvider } from '../providers/blob-storage-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { BlobDescriptorResponse } from '@granit/blob-storage';
 
 function createWrapper(client: AxiosInstance, basePath?: string) {
   const queryClient = createTestQueryClient();
@@ -25,21 +24,7 @@ function createWrapper(client: AxiosInstance, basePath?: string) {
   };
 }
 
-const mockDescriptor: BlobDescriptorResponse = {
-  id: 'abc-123',
-  containerName: 'medical-images',
-  originalFileName: 'scan.png',
-  declaredContentType: 'image/png',
-  verifiedContentType: 'image/png',
-  declaredSizeBytes: 1024,
-  actualSizeBytes: 1020,
-  status: BlobStatus.Valid,
-  rejectionReason: null,
-  deletionReason: null,
-  createdAt: toISODateString('2026-03-20T10:00:00Z'),
-  validatedAt: toISODateString('2026-03-20T10:00:05Z'),
-  deletedAt: null,
-};
+const mockDescriptor = mockBlobs[0];
 
 describe('useBlob', () => {
   it('should fetch blob descriptor with default basePath', async () => {

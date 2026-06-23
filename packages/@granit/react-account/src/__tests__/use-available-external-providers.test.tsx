@@ -5,6 +5,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockAccountSettings } from '@granit/react-account/testing';
+
 import { useAvailableExternalProviders } from '../hooks/use-available-external-providers';
 import { AccountProvider } from '../providers/account-provider';
 
@@ -42,14 +44,7 @@ afterEach(() => {
 describe('useAvailableExternalProviders', () => {
   it('derives the providers list from the account config', async () => {
     const client = createMockClient();
-    const response: AccountSettingsResponse = {
-      allowSelfRegistration: true,
-      externalProviders: [
-        { name: 'Google', type: 'Google', displayName: 'Google' },
-        { name: 'corp-sso', type: 'Oidc', displayName: 'Corporate SSO' },
-      ],
-    };
-    vi.mocked(getAccountSettings).mockResolvedValue(response);
+    vi.mocked(getAccountSettings).mockResolvedValue(mockAccountSettings);
 
     const { result } = renderHook(() => useAvailableExternalProviders(), {
       wrapper: createWrapper(client),
@@ -57,7 +52,7 @@ describe('useAvailableExternalProviders', () => {
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    expect(result.current.providers).toEqual(response.externalProviders);
+    expect(result.current.providers).toEqual(mockAccountSettings.externalProviders);
   });
 
   it('returns an empty list while loading', () => {

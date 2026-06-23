@@ -1,11 +1,9 @@
-import { toISODateString } from '@granit/types';
+import { sampleTransactions } from '@granit/react-payments/testing';
 import { screen, waitFor } from '@testing-library/react';
 
 import { TransactionDetailPage } from '../transaction-detail-page';
 
 import { renderWithProviders } from './test-utils';
-
-import type { PaymentTransactionResponse } from '@granit/payments';
 
 // ---------------------------------------------------------------------------
 // Mocks — useParams (route id) + the single-transaction fetch hook.
@@ -36,24 +34,7 @@ vi.mock('@granit/react-payments', async (importOriginal) => {
   };
 });
 
-const mockTransaction: PaymentTransactionResponse = {
-  id: 'txn_4kLm8nPqRs',
-  invoiceId: 'inv_001',
-  amount: 24900,
-  currency: 'EUR',
-  status: 'Succeeded',
-  providerName: 'Stripe',
-  providerTransactionId: 'pi_stripe_001',
-  paymentMethodId: 'pm_visa_4242',
-  actionUrl: null,
-  idempotencyKey: 'idem_001',
-  failureCode: null,
-  succeededAt: toISODateString('2026-03-28T14:22:00Z'),
-  canceledAt: null,
-  refunds: [],
-  disputes: [],
-  tenantId: 'tenant_01',
-};
+const mockTransaction = sampleTransactions[0]!;
 
 describe('TransactionDetailPage', () => {
   beforeEach(() => {

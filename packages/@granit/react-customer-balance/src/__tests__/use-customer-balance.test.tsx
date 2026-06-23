@@ -6,6 +6,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { sampleBalance, sampleTransactions } from '@granit/react-customer-balance/testing';
+
 import {
   useAddAdminCredit,
   useApplyAdminDebit,
@@ -15,34 +17,11 @@ import {
 import { CustomerBalanceProvider } from '../providers/customer-balance-provider';
 
 import type { CustomerBalanceConfig } from '../providers/customer-balance-provider';
-import type {
-  AdminCreditRequest,
-  AdminDebitRequest,
-  BalanceTransactionResponse,
-  CustomerBalanceResponse,
-} from '@granit/customer-balance';
+import type { AdminCreditRequest, AdminDebitRequest } from '@granit/customer-balance';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
-const sampleBalance: CustomerBalanceResponse = {
-  balanceAccountId: 'ba-001',
-  currency: 'EUR',
-  balance: 150.0,
-  concurrencyStamp: 'stamp-1',
-  updatedAt: toISODateString('2026-04-01T10:00:00Z'),
-};
-
-const sampleTransaction: BalanceTransactionResponse = {
-  id: 'tx-001',
-  type: 'Credit',
-  amount: 50.0,
-  source: 'Promotional',
-  reason: 'Welcome bonus',
-  referenceId: null,
-  referenceType: null,
-  expiresAt: toISODateString('2026-12-31T23:59:59Z'),
-  createdAt: toISODateString('2026-04-01T10:00:00Z'),
-};
+const sampleTransaction = sampleTransactions[0]!;
 
 function createWrapper(client: AxiosInstance, basePath?: string) {
   return function Wrapper({ children }: { children: ReactNode }) {

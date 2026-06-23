@@ -1,7 +1,9 @@
 import { createMockClient } from '@granit/react-testing';
-import { toEntityId, toISODateString } from '@granit/types';
+import { toEntityId } from '@granit/types';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { mockOtherPresences, mockUsers } from '@granit/react-presence/testing';
 
 import { useBatchPresence } from '../hooks/use-batch-presence';
 
@@ -18,13 +20,7 @@ vi.mock('@granit/presence', async (importOriginal) => {
 const { getBatchPresence } = await import('@granit/presence');
 
 function makeSnapshot(id: string): PresenceResponse {
-  return {
-    userId: toEntityId<'User'>(id) as UserId,
-    effectiveStatus: 'Online',
-    manualOverride: null,
-    overrideUntilUtc: null,
-    lastSeenUtc: toISODateString('2026-05-22T10:00:00Z'),
-  };
+  return { ...mockOtherPresences[mockUsers[1]!.id]!, userId: toEntityId<'User'>(id) as UserId };
 }
 
 afterEach(() => {

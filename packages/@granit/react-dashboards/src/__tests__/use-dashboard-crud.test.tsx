@@ -6,6 +6,8 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
+import { CATALOG, SAMPLE_FINANCE_DASHBOARD_ID } from '@granit/react-dashboards/testing';
+
 import { dashboardCatalogQueryKey, useDashboardCatalog } from '../hooks/use-dashboard-catalog';
 import { dashboardDetailQueryKey, useDashboardDetail } from '../hooks/use-dashboard-detail';
 import { useDashboardList } from '../hooks/use-dashboard-list';
@@ -21,7 +23,6 @@ import { useAddWidget, useRemoveWidget, useUpdateWidget } from '../hooks/use-wid
 import { DashboardsProvider } from '../providers/dashboards-provider';
 
 import type {
-  DashboardCatalogEntryResponse,
   DashboardDetailResponse,
   DashboardImportResponse,
   DashboardSummaryResponse,
@@ -30,20 +31,10 @@ import type {
 } from '@granit/dashboards';
 import type { ReactNode } from 'react';
 
-const ID = '8c6b1e10-0000-4000-8000-000000000001';
+const ID = SAMPLE_FINANCE_DASHBOARD_ID;
 const WIDGET_ID = '8c6b1e10-0000-0000-0000-000000000010';
-const DEFINITION_NAME = 'Granit.Showcase.InvoicingOverview';
-
-const CATALOG_ENTRY: DashboardCatalogEntryResponse = {
-  name: DEFINITION_NAME,
-  category: 'Finance',
-  isSystem: false,
-  version: '1.0.0',
-  widgetCount: 4,
-  hasViews: false,
-  hasAliases: false,
-  hasFilters: false,
-};
+const CATALOG_ENTRY = CATALOG[0];
+const DEFINITION_NAME = CATALOG_ENTRY.name;
 
 const SUMMARY: DashboardSummaryResponse = {
   id: ID,

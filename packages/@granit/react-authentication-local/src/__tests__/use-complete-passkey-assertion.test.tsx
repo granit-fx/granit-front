@@ -5,11 +5,12 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockLoginSuccess } from '@granit/react-authentication-local/testing';
+
 import { useCompletePasskeyAssertion } from '../hooks/use-complete-passkey-assertion';
 import { LocalAuthProvider } from '../providers/local-auth-provider';
 
 import type { LocalAuthConfig } from '../providers/local-auth-provider';
-import type { AccountLoginResponse } from '@granit/authentication-local';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -42,13 +43,7 @@ afterEach(() => {
 describe('useCompletePasskeyAssertion', () => {
   it('should call completePasskeyAssertion with credential JSON', async () => {
     const client = createMockClient();
-    const response: AccountLoginResponse = {
-      succeeded: true,
-      requiresTwoFactor: false,
-      isLockedOut: false,
-      isNotAllowed: false,
-    };
-    vi.mocked(completePasskeyAssertion).mockResolvedValue(response);
+    vi.mocked(completePasskeyAssertion).mockResolvedValue(mockLoginSuccess);
 
     const { result } = renderHook(() => useCompletePasskeyAssertion(), {
       wrapper: createWrapper(client),
@@ -63,7 +58,7 @@ describe('useCompletePasskeyAssertion', () => {
     expect(completePasskeyAssertion).toHaveBeenCalledWith(client, '/api/v1/account', {
       credentialJson: '{"id":"cred-1","response":{"authenticatorData":"..."}}',
     });
-    expect(result.current.data).toEqual(response);
+    expect(result.current.data).toEqual(mockLoginSuccess);
   });
 
   it('should handle assertion failure', async () => {

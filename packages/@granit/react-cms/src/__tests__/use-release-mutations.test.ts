@@ -9,11 +9,12 @@ import {
 } from '@granit/cms';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { mockReleases } from '@granit/react-cms/testing';
 
 import {
   useAddReleaseAction,
@@ -26,7 +27,6 @@ import {
 } from '../hooks/use-release-mutations';
 import { CmsProvider } from '../providers/cms-provider';
 
-import type { ReleaseResponse } from '@granit/cms';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -40,18 +40,8 @@ vi.mock('@granit/cms', () => ({
   publishRelease: vi.fn(),
 }));
 
-const release: ReleaseResponse = {
-  id: 'rel-1',
-  siteId: 'site-1',
-  name: 'Sprint 1',
-  status: 'Draft',
-  schedule: null,
-  tenantId: null,
-  actions: [],
-  createdAt: toISODateString('2026-01-01T00:00:00Z'),
-  modifiedAt: null,
-  concurrencyStamp: 'stamp-1',
-};
+const release = mockReleases[0]!;
+const stamp = release.concurrencyStamp;
 
 function createWrapper(client: AxiosInstance) {
   return function Wrapper({ children }: { children: ReactNode }) {
@@ -92,14 +82,14 @@ describe('useUpdateRelease', () => {
 
     const { result } = renderHook(() => useUpdateRelease(), { wrapper: createWrapper(client) });
     result.current.mutate({
-      id: 'rel-1',
-      request: { name: 'Sprint 1 v2', concurrencyStamp: 'stamp-1' },
+      id: release.id,
+      request: { name: 'Sprint 1 v2', concurrencyStamp: stamp },
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(updateRelease).toHaveBeenCalledWith(client, '', 'rel-1', {
+    expect(updateRelease).toHaveBeenCalledWith(client, '', release.id, {
       name: 'Sprint 1 v2',
-      concurrencyStamp: 'stamp-1',
+      concurrencyStamp: stamp,
     });
   });
 });
@@ -118,13 +108,13 @@ describe('useAddReleaseAction', () => {
       contentId: 'page-1',
       culture: 'fr',
       type: 'Publish' as const,
-      concurrencyStamp: 'stamp-1',
+      concurrencyStamp: stamp,
     };
     const { result } = renderHook(() => useAddReleaseAction(), { wrapper: createWrapper(client) });
-    result.current.mutate({ id: 'rel-1', request: req });
+    result.current.mutate({ id: release.id, request: req });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(addReleaseAction).toHaveBeenCalledWith(client, '', 'rel-1', req);
+    expect(addReleaseAction).toHaveBeenCalledWith(client, '', release.id, req);
   });
 });
 
@@ -140,10 +130,10 @@ describe('useRemoveReleaseAction', () => {
     const { result } = renderHook(() => useRemoveReleaseAction(), {
       wrapper: createWrapper(client),
     });
-    result.current.mutate({ id: 'rel-1', actionId: 'action-1' });
+    result.current.mutate({ id: release.id, actionId: 'action-1' });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(removeReleaseAction).toHaveBeenCalledWith(client, '', 'rel-1', 'action-1');
+    expect(removeReleaseAction).toHaveBeenCalledWith(client, '', release.id, 'action-1');
   });
 });
 
@@ -159,13 +149,13 @@ describe('useScheduleRelease', () => {
     const req = {
       localDateTime: '2026-07-01T09:00:00',
       timeZoneId: 'Europe/Brussels',
-      concurrencyStamp: 'stamp-1',
+      concurrencyStamp: stamp,
     };
     const { result } = renderHook(() => useScheduleRelease(), { wrapper: createWrapper(client) });
-    result.current.mutate({ id: 'rel-1', request: req });
+    result.current.mutate({ id: release.id, request: req });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(scheduleRelease).toHaveBeenCalledWith(client, '', 'rel-1', req);
+    expect(scheduleRelease).toHaveBeenCalledWith(client, '', release.id, req);
   });
 });
 
@@ -179,10 +169,10 @@ describe('useCancelRelease', () => {
     vi.mocked(cancelRelease).mockResolvedValue({ ...release, status: 'Draft' });
 
     const { result } = renderHook(() => useCancelRelease(), { wrapper: createWrapper(client) });
-    result.current.mutate('rel-1');
+    result.current.mutate(release.id);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(cancelRelease).toHaveBeenCalledWith(client, '', 'rel-1');
+    expect(cancelRelease).toHaveBeenCalledWith(client, '', release.id);
   });
 });
 
@@ -196,9 +186,9 @@ describe('usePublishRelease', () => {
     vi.mocked(publishRelease).mockResolvedValue({ ...release, status: 'Done' });
 
     const { result } = renderHook(() => usePublishRelease(), { wrapper: createWrapper(client) });
-    result.current.mutate('rel-1');
+    result.current.mutate(release.id);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(publishRelease).toHaveBeenCalledWith(client, '', 'rel-1');
+    expect(publishRelease).toHaveBeenCalledWith(client, '', release.id);
   });
 });

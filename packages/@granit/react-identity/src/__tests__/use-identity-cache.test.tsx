@@ -6,11 +6,13 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockUsers } from '@granit/react-identity/testing';
+
 import { useBatchResolveUsers, useIdentityCacheStats } from '../hooks/use-identity-cache';
 import { IdentityProvider } from '../providers/identity-provider';
 
 import type { IdentityProviderProps } from '../providers/identity-provider';
-import type { IdentityUser, IdentityUserCacheStats } from '@granit/identity';
+import type { IdentityUserCacheStats } from '@granit/identity';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -36,18 +38,6 @@ const mockStats: IdentityUserCacheStats = {
   oldestSyncAt: toISODateString('2026-01-01T00:00:00Z'),
   newestSyncAt: toISODateString('2026-03-17T00:00:00Z'),
 };
-
-const mockUsers: IdentityUser[] = [
-  {
-    userId: toEntityId<'User'>('user-1'),
-    username: 'jdoe',
-    email: 'jdoe@example.com',
-    firstName: 'John',
-    lastName: 'Doe',
-    enabled: true,
-    metadata: {},
-  },
-];
 
 // ---------------------------------------------------------------------------
 // Tests — useIdentityCacheStats

@@ -1,33 +1,18 @@
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
-import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { mockFoldersData } from '@granit/react-documents/testing';
 
 import { useFolder, useFolderBreadcrumb, useFolders } from '../hooks/use-folders';
 import { DocumentsProvider } from '../providers/documents-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type {
-  FolderBreadcrumbResponse,
-  FolderResponse,
-  ListFoldersResponse,
-} from '@granit/documents';
+import type { FolderBreadcrumbResponse, ListFoldersResponse } from '@granit/documents';
 import type { ReactNode } from 'react';
 
-const sampleFolder: FolderResponse = {
-  id: 'fld-1',
-  parentFolderId: null,
-  name: 'Contracts',
-  path: '/Contracts',
-  depth: 1,
-  createdAt: toISODateString('2026-05-01T10:00:00Z'),
-  modifiedAt: null,
-  ownerId: 'user-1',
-  status: 'Active',
-  trashedAt: null,
-  permission: null,
-};
+const sampleFolder = mockFoldersData[0]!;
 
 const sampleList: ListFoldersResponse = { folders: [sampleFolder] };
 const sampleBreadcrumb: FolderBreadcrumbResponse = { folders: [sampleFolder] };
@@ -95,10 +80,12 @@ describe('useFolder', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: sampleFolder });
 
-    const { result } = renderHook(() => useFolder('fld-1'), { wrapper: createWrapper(client) });
+    const { result } = renderHook(() => useFolder(sampleFolder.id), {
+      wrapper: createWrapper(client),
+    });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/api/v1/documents/folders/fld-1');
+    expect(client.get).toHaveBeenCalledWith(`/api/v1/documents/folders/${sampleFolder.id}`);
   });
 
   it('does not fire when id is empty', () => {
@@ -118,12 +105,14 @@ describe('useFolderBreadcrumb', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: sampleBreadcrumb });
 
-    const { result } = renderHook(() => useFolderBreadcrumb('fld-1'), {
+    const { result } = renderHook(() => useFolderBreadcrumb(sampleFolder.id), {
       wrapper: createWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/api/v1/documents/folders/fld-1/breadcrumb');
+    expect(client.get).toHaveBeenCalledWith(
+      `/api/v1/documents/folders/${sampleFolder.id}/breadcrumb`
+    );
     expect(result.current.data).toEqual(sampleBreadcrumb);
   });
 

@@ -5,6 +5,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mockScheduledActions } from '@granit/react-scheduling/testing';
+
 import {
   buildSchedulingQueryKey,
   useCancelScheduledAction,
@@ -24,17 +26,7 @@ import type { ReactNode } from 'react';
 // Fixtures
 // ---------------------------------------------------------------------------
 
-const sampleAction: ScheduledActionResponse = {
-  id: 'action-1',
-  payloadType: 'SendEmail',
-  executeAt: '2026-04-05T09:00:00Z',
-  correlationId: null,
-  status: 'Pending',
-  executedAt: null,
-  cancelledBy: null,
-  failureReason: null,
-  createdAt: '2026-04-02T14:30:00Z',
-};
+const sampleAction: ScheduledActionResponse = mockScheduledActions[0]!;
 
 const samplePagedResult: PagedResult<ScheduledActionResponse> = {
   items: [sampleAction],

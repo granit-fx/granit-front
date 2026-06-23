@@ -1,10 +1,11 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { mockSubscriptions } from '@granit/react-subscriptions/testing';
 
 import {
   useActiveSubscription,
@@ -24,23 +25,7 @@ import type { BulkMigratePriceResponse, SubscriptionResponse } from '@granit/sub
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
-const sampleSubscription: SubscriptionResponse = {
-  id: 'sub-1',
-  partyId: 'party-1',
-  planId: 'plan-1',
-  status: 'Active',
-  currency: 'EUR',
-  currentPeriodStart: toISODateString('2026-01-01T00:00:00Z'),
-  currentPeriodEnd: toISODateString('2026-02-01T00:00:00Z'),
-  trialEndsAt: null,
-  cancelAtPeriodEnd: false,
-  cancelledAt: null,
-  cancellationReason: null,
-  seatCount: 5,
-  createdAt: toISODateString('2026-03-01T00:00:00Z'),
-  modifiedAt: null,
-  planPriceId: 'price-1',
-};
+const sampleSubscription = mockSubscriptions[0]!;
 
 function createWrapper(client: AxiosInstance, basePath?: string) {
   return function Wrapper({ children }: { children: ReactNode }) {

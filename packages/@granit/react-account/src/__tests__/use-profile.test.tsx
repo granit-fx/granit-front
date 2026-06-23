@@ -1,10 +1,11 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toEntityId } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { mockProfile } from '@granit/react-account/testing';
 
 import { useProfile, useUpdateProfile } from '../hooks/use-profile';
 import { AccountProvider } from '../providers/account-provider';
@@ -50,17 +51,6 @@ function createWrapperWithQueryClient(client: AxiosInstance) {
     queryClient,
   };
 }
-
-const mockProfile: AccountProfileResponse = {
-  userId: toEntityId<'User'>('user-1'),
-  email: 'user@example.com',
-  emailConfirmed: true,
-  firstName: 'John',
-  lastName: 'Doe',
-  twoFactorEnabled: false,
-  hasPassword: true,
-  externalLogins: [],
-};
 
 afterEach(() => {
   vi.clearAllMocks();
