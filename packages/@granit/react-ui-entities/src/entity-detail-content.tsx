@@ -7,7 +7,7 @@ import {
 } from '@granit/react-entities';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { resolveLabel } from '@granit/react-localization';
-import { Skeleton, Spinner } from '@granit/react-ui';
+import { Skeleton } from '@granit/react-ui';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -248,20 +248,16 @@ export function EntityDetailContent({
         )}
       </header>
 
-      {isEntityLoading ? (
-        <Spinner />
-      ) : (
-        <EntityDetail
-          variant={detailVariant}
-          values={values}
-          formVariants={manifest.forms ?? undefined}
-          propertyComponents={propertyComponents}
-          entityName={manifest.identity?.name ?? entityName}
-          entityId={entityId}
-          relations={manifest.relations ?? undefined}
-          onRelationClick={handleRelationClick}
-        />
-      )}
+      <EntityDetail
+        variant={detailVariant}
+        values={values}
+        formVariants={manifest.forms ?? undefined}
+        propertyComponents={propertyComponents}
+        entityName={manifest.identity?.name ?? entityName}
+        entityId={entityId}
+        relations={manifest.relations ?? undefined}
+        onRelationClick={handleRelationClick}
+      />
 
       {sortedCollectionSections.map((section) => (
         <CollectionSectionCard

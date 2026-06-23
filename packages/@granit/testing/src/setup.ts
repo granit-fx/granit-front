@@ -44,6 +44,9 @@ if (typeof globalThis.window !== 'undefined') {
     root = null;
     rootMargin = '';
     thresholds = [];
+    constructor(_callback?: unknown, options?: { rootMargin?: string }) {
+      this.rootMargin = options?.rootMargin ?? '';
+    }
     observe() {}
     unobserve() {}
     disconnect() {}
