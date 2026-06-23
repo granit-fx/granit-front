@@ -79,10 +79,10 @@ export function ExportDialog({
   const { t } = useTranslation();
 
   const STATUS_LABELS: Record<ExportJobStatus, string> = {
-    Queued: t('Components.DataExchange.Export.StatusQueued'),
-    Exporting: t('Components.DataExchange.Export.StatusExporting'),
-    Completed: t('Components.DataExchange.Export.StatusCompleted'),
-    Failed: t('Components.DataExchange.Export.StatusFailed'),
+    Queued: t('DataExchange.Export.StatusQueued'),
+    Exporting: t('DataExchange.Export.StatusExporting'),
+    Completed: t('DataExchange.Export.StatusCompleted'),
+    Failed: t('DataExchange.Export.StatusFailed'),
   };
 
   const definitionsQuery = useExportDefinitions();
@@ -238,8 +238,8 @@ export function ExportDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent data-slot="export-dialog" className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>{t('Components.DataExchange.Export.Title')}</DialogTitle>
-          <DialogDescription>{t('Components.DataExchange.Export.Description')}</DialogDescription>
+          <DialogTitle>{t('DataExchange.Export.Label')}</DialogTitle>
+          <DialogDescription>{t('DataExchange.Export.Description')}</DialogDescription>
         </DialogHeader>
 
         {fieldsQuery.isLoading ? (
@@ -251,9 +251,7 @@ export function ExportDialog({
             {/* Presets */}
             {exportPresets.presets.data && exportPresets.presets.data.length > 0 && (
               <div data-slot="export-presets" className="space-y-2">
-                <Label className="text-sm font-medium">
-                  {t('Components.DataExchange.Export.Presets')}
-                </Label>
+                <Label className="text-sm font-medium">{t('DataExchange.Export.Presets')}</Label>
                 <div className="flex flex-wrap gap-2">
                   {exportPresets.presets.data.map((preset) => (
                     <div key={preset.presetName} className="flex items-center gap-1">
@@ -267,9 +265,7 @@ export function ExportDialog({
                         onClick={() => exportPresets.remove.mutate(preset.presetName)}
                       >
                         <Trash2 className="h-3 w-3" aria-hidden="true" />
-                        <span className="sr-only">
-                          {t('Components.DataExchange.Export.DeletePreset')}
-                        </span>
+                        <span className="sr-only">{t('DataExchange.Export.DeletePreset')}</span>
                       </Button>
                     </div>
                   ))}
@@ -279,7 +275,7 @@ export function ExportDialog({
 
             {/* Format selection */}
             <div data-slot="export-format" className="space-y-2">
-              <Label htmlFor="export-format">{t('Components.DataExchange.Export.Format')}</Label>
+              <Label htmlFor="export-format">{t('DataExchange.Export.Format')}</Label>
               <Select value={format} onValueChange={setFormat}>
                 <SelectTrigger id="export-format">
                   <SelectValue />
@@ -296,9 +292,7 @@ export function ExportDialog({
 
             {/* Roundtrip toggle */}
             <div data-slot="export-roundtrip" className="flex items-center justify-between">
-              <Label htmlFor="export-roundtrip">
-                {t('Components.DataExchange.Export.IncludeId')}
-              </Label>
+              <Label htmlFor="export-roundtrip">{t('DataExchange.Export.IncludeId')}</Label>
               <Switch
                 id="export-roundtrip"
                 checked={includeIdForImport}
@@ -312,15 +306,15 @@ export function ExportDialog({
             <div data-slot="export-fields" className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label className="text-sm font-medium">
-                  {t('Components.DataExchange.Export.Columns', {
+                  {t('DataExchange.Export.Columns', {
                     selected: selectedCount,
                     total: selectedFields.length,
                   })}
                 </Label>
                 <Button variant="ghost" size="sm" onClick={toggleAll}>
                   {allSelected
-                    ? t('Components.DataExchange.Export.DeselectAll')
-                    : t('Components.DataExchange.Export.SelectAll')}
+                    ? t('DataExchange.Export.DeselectAll')
+                    : t('DataExchange.Export.SelectAll')}
                 </Button>
               </div>
               <div className="max-h-60 space-y-1 overflow-y-auto rounded-md border p-2">
@@ -360,9 +354,7 @@ export function ExportDialog({
                           onClick={() => moveField(index, 'up')}
                         >
                           <ArrowUp className="h-3 w-3" aria-hidden="true" />
-                          <span className="sr-only">
-                            {t('Components.DataExchange.Export.MoveUp')}
-                          </span>
+                          <span className="sr-only">{t('DataExchange.Export.MoveUp')}</span>
                         </Button>
                         <Button
                           variant="ghost"
@@ -372,9 +364,7 @@ export function ExportDialog({
                           onClick={() => moveField(index, 'down')}
                         >
                           <ArrowDown className="h-3 w-3" aria-hidden="true" />
-                          <span className="sr-only">
-                            {t('Components.DataExchange.Export.MoveDown')}
-                          </span>
+                          <span className="sr-only">{t('DataExchange.Export.MoveDown')}</span>
                         </Button>
                       </div>
                     </div>
@@ -424,7 +414,7 @@ export function ExportDialog({
               <Input
                 value={presetName}
                 onChange={(e) => setPresetName(e.target.value)}
-                placeholder={t('Components.DataExchange.Export.PresetNamePlaceholder')}
+                placeholder={t('DataExchange.Export.PresetNamePlaceholder')}
                 className="h-8"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') handleSavePreset();
@@ -452,7 +442,7 @@ export function ExportDialog({
               disabled={selectedCount === 0}
             >
               <Save className="mr-1 h-3 w-3" aria-hidden="true" />
-              {t('Components.DataExchange.Export.SavePreset')}
+              {t('DataExchange.Export.SavePreset')}
             </Button>
           )}
 
@@ -466,7 +456,7 @@ export function ExportDialog({
               ) : (
                 <Download className="mr-2 h-4 w-4" aria-hidden="true" />
               )}
-              {t('Components.DataExchange.Export.Title')}
+              {t('DataExchange.Export.Label')}
             </Button>
           </div>
         </DialogFooter>

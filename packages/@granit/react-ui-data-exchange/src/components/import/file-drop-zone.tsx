@@ -85,12 +85,10 @@ export function FileDropZone({
       onClick={handleClick}
     >
       <Upload className="h-8 w-8 text-muted-foreground" aria-hidden="true" />
-      <p className="text-sm text-muted-foreground">
-        {t('Components.DataExchange.Import.DropZone')}
-      </p>
+      <p className="text-sm text-muted-foreground">{t('DataExchange.Import.DropZone')}</p>
       {accept && (
         <p className="text-xs text-muted-foreground/70">
-          {t('Components.DataExchange.Import.Accepted', { formats: accept.join(', ') })}
+          {t('DataExchange.Import.Accepted', { formats: accept.join(', ') })}
         </p>
       )}
       <input

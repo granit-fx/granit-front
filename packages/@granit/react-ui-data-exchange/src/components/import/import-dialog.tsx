@@ -59,10 +59,10 @@ export function ImportDialog({
   const { t } = useTranslation();
 
   const STEP_LABELS: Record<ImportStep, string> = {
-    upload: t('Components.DataExchange.Import.StepUpload'),
-    map: t('Components.DataExchange.Import.StepMap'),
-    execute: t('Components.DataExchange.Import.StepExecute'),
-    report: t('Components.DataExchange.Import.StepReport'),
+    upload: t('DataExchange.Import.StepUpload'),
+    map: t('DataExchange.Import.StepMap'),
+    execute: t('DataExchange.Import.StepExecute'),
+    report: t('DataExchange.Import.StepReport'),
   };
 
   const importJob = useImportJob();
@@ -143,7 +143,7 @@ export function ImportDialog({
         className="max-h-[85vh] overflow-y-auto sm:max-w-2xl"
       >
         <DialogHeader>
-          <DialogTitle>{t('Components.DataExchange.Import.Title')}</DialogTitle>
+          <DialogTitle>{t('DataExchange.Import.Label')}</DialogTitle>
           <DialogDescription>
             {STEP_LABELS[step]}
             {importJob.job && (
@@ -176,7 +176,7 @@ export function ImportDialog({
               {isUploading && (
                 <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                   <Spinner />
-                  <span>{t('Components.DataExchange.Import.Uploading')}</span>
+                  <span>{t('DataExchange.Import.Uploading')}</span>
                 </div>
               )}
             </>
@@ -212,7 +212,7 @@ export function ImportDialog({
                 <>
                   <Loader2 className="h-8 w-8 animate-spin text-primary" aria-hidden="true" />
                   <p className="text-sm text-muted-foreground">
-                    {t('Components.DataExchange.Import.InProgress')}
+                    {t('DataExchange.Import.InProgress')}
                   </p>
                 </>
               )}
@@ -222,7 +222,7 @@ export function ImportDialog({
                     className="h-8 w-8 text-success-600 dark:text-success-500"
                     aria-hidden="true"
                   />
-                  <p className="text-sm">{t('Components.DataExchange.Import.MappingsConfirmed')}</p>
+                  <p className="text-sm">{t('DataExchange.Import.MappingsConfirmed')}</p>
                 </>
               )}
               {!importJob.isExecuting && importJob.job?.status !== 'Mapped' && (
@@ -272,7 +272,7 @@ export function ImportDialog({
             <div className="flex items-center justify-center gap-2 py-8">
               <Spinner />
               <span className="text-sm text-muted-foreground">
-                {t('Components.DataExchange.Import.LoadingReport')}
+                {t('DataExchange.Import.LoadingReport')}
               </span>
             </div>
           )}
@@ -303,10 +303,10 @@ export function ImportDialog({
                   ) : (
                     <AlertTriangle className="mr-2 h-4 w-4" aria-hidden="true" />
                   )}
-                  {t('Components.DataExchange.Import.DryRun')}
+                  {t('DataExchange.Import.DryRun')}
                 </Button>
                 <Button onClick={handleConfirmMappings} disabled={importJob.isConfirming}>
-                  {t('Components.DataExchange.Import.ConfirmMappings')}
+                  {t('DataExchange.Import.ConfirmMappings')}
                 </Button>
               </>
             )}
@@ -318,7 +318,7 @@ export function ImportDialog({
                 ) : (
                   <Play className="mr-2 h-4 w-4" aria-hidden="true" />
                 )}
-                {t('Components.DataExchange.Import.ExecuteImport')}
+                {t('DataExchange.Import.ExecuteImport')}
               </Button>
             )}
 

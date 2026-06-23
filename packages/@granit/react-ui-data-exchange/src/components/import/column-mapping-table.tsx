@@ -58,10 +58,10 @@ export function ColumnMappingTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{t('Components.DataExchange.Import.SourceColumn')}</TableHead>
-            <TableHead>{t('Components.DataExchange.Import.Preview')}</TableHead>
-            <TableHead>{t('Components.DataExchange.Import.TargetProperty')}</TableHead>
-            <TableHead>{t('Components.DataExchange.Import.Confidence')}</TableHead>
+            <TableHead>{t('DataExchange.Import.SourceColumn')}</TableHead>
+            <TableHead>{t('DataExchange.Import.Preview')}</TableHead>
+            <TableHead>{t('DataExchange.Import.TargetProperty')}</TableHead>
+            <TableHead>{t('DataExchange.Import.Confidence')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -84,12 +84,12 @@ export function ColumnMappingTable({
                     disabled={disabled}
                   >
                     <SelectTrigger className="w-56">
-                      <SelectValue placeholder={t('Components.DataExchange.Import.NotMapped')} />
+                      <SelectValue placeholder={t('DataExchange.Import.NotMapped')} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value={UNMAPPED_VALUE}>
                         <span className="text-muted-foreground">
-                          {t('Components.DataExchange.Import.NotMapped')}
+                          {t('DataExchange.Import.NotMapped')}
                         </span>
                       </SelectItem>
                       {fieldMetadata.map((field) => {
