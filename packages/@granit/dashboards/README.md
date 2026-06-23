@@ -115,6 +115,8 @@ async function loadAndRender(client: AxiosInstance) {
 | Symbol | Kind | Purpose |
 | --- | --- | --- |
 | `DashboardDefinition` | type | Top-level declarative catalog entry shipped by a module |
+| `DashboardDefinitionDescriptor` | type | Type-erased view of a definition exposed by the registry (full declarative content) |
+| `DashboardDefinitionRegistry` | type | Host plug-in contract — `list()` / `get(name)` for a host's preferred definition-fetching strategy |
 | `WidgetDefinition` | type | Open union: `FrameworkWidgetDefinition \| WidgetDefinitionBase` |
 | `WidgetDefinitionBase` | type | Common base every widget shares (`slug` / `type` / `position` / …) |
 | `FrameworkWidgetDefinition` | type | Closed union of built-in kinds (markdown / image / text) |
@@ -163,6 +165,7 @@ async function loadAndRender(client: AxiosInstance) {
 | Symbol | Kind | Purpose |
 | --- | --- | --- |
 | `DashboardRenderRequest` · `DashboardRenderResponse` · `DashboardRenderPeriod` | type | `POST .../render` request / response / echoed period |
+| `ResolvedPeriod` | type | Absolute `[from, to)` UTC window after named-token expansion (mirrors `Granit.Analytics.ResolvedPeriod`) |
 | `DashboardRenderedWidget` | type | One widget's slot in the render bundle |
 | `WidgetSnapshotEnvelope` · `WidgetSnapshotEnvelopeOf<K, S>` | type | Per-widget envelope; generic narrowing helper for downstream kinds |
 | `WidgetSnapshotStatus` · `WidgetTransport` · `DashboardDriftStatus` | type | Runtime outcome; effective transport; bundle-level drift status |
