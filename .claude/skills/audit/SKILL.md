@@ -30,6 +30,14 @@ audit without the checklist — it contains the full verification matrix.
    UI `@granit/react-ui-{module}` (components, NO data access / NO api-client)
 8. Tests reuse shared `@granit/react-{module}/testing` fixtures — no duplicated
    inline DTO data; every module with endpoints ships `/testing` mocks
+9. shadcn/ui stays in the UI tier only: primitives are vendored once in the
+   foundation `@granit/react-ui`; domain `react-ui-*` packages COMPOSE them (never
+   re-vendor). No shadcn stack (`@granit/react-ui`, `radix-ui`, `cmdk`, `sonner`,
+   `class-variance-authority`, Tailwind/`cn`) in core or headless packages
+10. Forms are spec-driven, NOT zod: `createConstraintsResolver` from
+    `@granit/react-validation` fed by the generated `constraints.ts` (regenerated
+    from `contracts/openapi/*.json` by pre-commit). `zodResolver` / hand zod for a
+    backend DTO is legacy drift (PR #727 dropped zod framework-wide)
 
 ---
 
@@ -53,6 +61,7 @@ audit without the checklist — it contains the full verification matrix.
 | `--scope deps`    | Only check dependencies and peer deps            |
 | `--scope tests`   | Only check test data/mocks reuse + coverage      |
 | `--scope layers`  | Only check 3-tier layer separation               |
+| `--scope ui`      | Only check shadcn/ui usage (UI tier confinement) |
 | `--scope all`     | Full audit (default)                             |
 | `--base <branch>` | Base branch for `pr` mode (default: `develop`)   |
 
@@ -82,6 +91,7 @@ FLAGS
                       deps    Dependencies and peer deps
                       tests   Test data/mocks reuse + coverage (no duplication)
                       layers  3-tier layer separation (core/headless/react-ui)
+                      ui      shadcn/ui usage confined to the UI tier
                       all     Everything (default)
   --base <branch>   Base branch for pr mode (default: develop)
 
@@ -95,6 +105,7 @@ EXAMPLES
   /audit notifications --scope api   Only check API coverage for notifications
   /audit all --scope tests      Check mocks exist + no duplicated test data
   /audit invoicing --scope layers    Check core/headless/react-ui separation
+  /audit parties --scope ui          Check shadcn/ui usage in react-ui-parties
 
 SEVERITY LEVELS
   BREAKING        Type mismatch causing runtime errors — must fix
@@ -210,7 +221,8 @@ Work through the checklist **in order** — type conformity first, then API (inc
 HTTP-client conformity and endpoint drift), hooks, dependencies, cross-cutting
 concerns (including test data & mocks reuse, checklist 5e), module decomposition
 (backend bounded-context alignment), and finally the 3-tier layer separation
-(checklist 7 — core / headless / react-ui).
+(checklist 7 — core / headless / react-ui, including shadcn/ui UI-tier
+confinement, checklist 7e, and admin-UI composition, checklist 7f).
 
 For each finding, classify it:
 
@@ -394,6 +406,47 @@ When auditing all packages, perform these additional checks:
     grep -rlE "from 'react'|from \"react\"" packages/@granit/*/src 2>/dev/null | grep -vE "/react-|/react-ui-" | head
     ```
 
+12. **shadcn/ui confinement (checklist 7e)**: the shadcn primitive/styling stack
+    must stay in the UI tier (the `@granit/react-ui` foundation,
+    `react-ui-admin-kit`, and the `react-ui-*` packages). Flag any leak into core
+    or headless packages, and any domain `react-ui-*` re-vendoring a primitive
+    instead of composing the foundation.
+
+    ```bash
+    # shadcn stack leaking into core / headless (everything NOT react-ui*)
+    for p in packages/@granit/*/package.json; do
+      case "$p" in */react-ui*) continue;; esac
+      grep -lE '"(@granit/react-ui|radix-ui|@radix-ui/[a-z-]+|cmdk|sonner|class-variance-authority)"' "$p"
+    done
+    # domain react-ui-* importing radix-ui directly (compose the foundation instead)
+    grep -rlE "from 'radix-ui'|from \"radix-ui\"|from 'cmdk'" packages/@granit/react-ui-*/src 2>/dev/null
+    # re-vendored primitives the foundation already exports
+    find packages/@granit/react-ui-*/src -maxdepth 3 \( -name 'button.tsx' -o -name 'dialog.tsx' -o -name 'select.tsx' -o -name 'table.tsx' \) 2>/dev/null
+    ```
+
+    `@granit/react-ui-admin-kit`'s direct `radix-ui` use for low-level
+    compositions (smart-filter-bar) is the documented exception — verify, don't
+    flag. A domain `react-ui-{module}` rebuilding a wrapped primitive is an
+    INCONSISTENCY.
+
+13. **Admin UI composition & structure (checklist 7f)**: domain `react-ui-*`
+    forms are spec-driven (no zod); grids compose the `@granit/react-ui-admin-kit`
+    data-table family rather than raw `@tanstack/react-table`; components live under
+    `src/components/`; non-trivial components ship `*.stories.tsx`; a11y baseline holds.
+
+    ```bash
+    # legacy zod validation (should be createConstraintsResolver, PR #727 dropped zod)
+    grep -rlE "zodResolver|@hookform/resolvers" packages/@granit/react-ui-*/src packages/@granit/react-ui-*/package.json 2>/dev/null
+    # hand-edited generated constraints (must come from the pre-commit generator)
+    git diff --name-only -- 'packages/@granit/*/src/constraints.ts' 2>/dev/null
+    # domain pages rebuilding tables with raw react-table (should use admin-kit)
+    grep -rlE "useReactTable|flexRender" packages/@granit/react-ui-*/src 2>/dev/null | grep -v "react-ui-admin-kit/"
+    # components loose at src/ root instead of src/components/ (page/dialog .tsx)
+    find packages/@granit/react-ui-*/src -maxdepth 1 -name '*-page.tsx' -o -maxdepth 1 -name '*-dialog.tsx' 2>/dev/null
+    # story coverage gap: component files vs stories per package
+    for d in packages/@granit/react-ui-*; do c=$(find "$d/src" -name '*.tsx' ! -name '*.test.tsx' ! -name '*.stories.tsx' | wc -l); s=$(find "$d/src" -name '*.stories.tsx' | wc -l); echo "$(basename "$d"): $s stories / $c components"; done
+    ```
+
 ---
 
 ## PR Mode (`/audit pr`)
@@ -533,6 +586,51 @@ git diff origin/develop...HEAD -- "packages/@granit/react-ui-{pkg}/src/" | grep 
   `@granit/react-{module}` peer dep (logic inlined) is an **INCONSISTENCY**
 - **No back-edges**: a core `@granit/{module}` importing React, or a
   `react-{module}` importing a `react-ui-*`, is **BREAKING** (checklist 7d)
+
+#### shadcn/ui usage (checklist 7e)
+
+For changed core / headless packages, flag any newly-added shadcn-stack dep or
+import as a leak below the UI tier:
+
+```bash
+# shadcn stack added to a NON-react-ui package in this branch
+git diff origin/develop...HEAD -- "packages/@granit/{pkg}/package.json" | grep -nE "^\+.*\"(@granit/react-ui|radix-ui|@radix-ui/[a-z-]+|cmdk|sonner|class-variance-authority)\""
+git diff origin/develop...HEAD -- "packages/@granit/{pkg}/src/" | grep -nE "^\+.*from '(radix-ui|cmdk|sonner|class-variance-authority|@granit/react-ui)'"
+```
+
+- A shadcn import/dep added to a **core** package is **BREAKING**; to a
+  **headless** `react-{module}` it is an **INCONSISTENCY** (`Fix: move the styled
+  component to react-ui-{module}`) — a `@granit/react-ui` peerDep on a headless
+  package is **BREAKING** (wrong-direction dep)
+- For a changed `react-ui-{module}`: a new direct `radix-ui` / `cmdk` import, or a
+  new local `button.tsx`/`dialog.tsx`/`select.tsx`/`table.tsx` that re-vendors a
+  foundation primitive, is an **INCONSISTENCY** (`Fix: import from @granit/react-ui`).
+  Direct `radix-ui` is allowed only for a composition the foundation does not wrap
+
+#### Admin UI composition & structure (checklist 7f)
+
+For a changed `react-ui-{module}`:
+
+```bash
+git diff origin/develop...HEAD -- "packages/@granit/react-ui-{pkg}/" | grep -nE "^\+.*(zodResolver|@hookform/resolvers|useReactTable|flexRender)"
+git diff origin/develop...HEAD --name-only -- "packages/@granit/react-ui-{pkg}/src/" | grep -E "(-page|-dialog)\.tsx$"
+```
+
+- **Spec-driven forms**: a new `zodResolver` / `@hookform/resolvers` / hand-rolled
+  zod schema for a backend DTO is an **INCONSISTENCY** (`Fix`: use
+  `createConstraintsResolver` with the generated `constraints.ts`, PR #727); inline
+  `rules` with no resolver fail the `use-form-needs-resolver` arch-test; a
+  hand-edited generated `constraints.ts` is **BREAKING** (regenerate via the
+  pre-commit generator)
+- **Grid via admin-kit**: a new `useReactTable` / `flexRender` for a paginated
+  list is an **INCONSISTENCY** (`Fix: compose QueryEndpointDataTable from
+  @granit/react-ui-admin-kit`); a raw `ColumnDef<T>` type import is fine
+- **Placement**: a new `*-page.tsx` / `*-dialog.tsx` at `src/` root (not under
+  `src/components/`) is an **INCONSISTENCY**
+- **Storybook**: a new presentational component without a co-located
+  `*.stories.tsx` is a **GAP**
+- **A11y**: a new icon-only `Button` without `aria-label`/`sr-only`, or an overlay
+  without a title, is an **INCONSISTENCY**
 
 ### PR Step 3 — Verification gate
 
