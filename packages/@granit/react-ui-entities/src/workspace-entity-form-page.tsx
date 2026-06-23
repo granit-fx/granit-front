@@ -7,11 +7,10 @@ import {
 } from '@granit/react-entities';
 import { useTranslation } from '@granit/react-localization';
 import { resolveLabel } from '@granit/react-localization';
-import { Button, Skeleton } from '@granit/react-ui';
+import { Button, Skeleton, toast } from '@granit/react-ui';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { CollectionSectionCard } from './collection-section-card';
 import { EntityPageLayout } from './entity-page-layout';

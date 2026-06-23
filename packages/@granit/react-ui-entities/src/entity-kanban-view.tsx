@@ -4,7 +4,7 @@ import { useEntityActionDispatcher, type EntityActionHandlers } from '@granit/re
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { resolveLabel } from '@granit/react-localization';
 import { useQueryConfig } from '@granit/react-query-engine';
-import { Button } from '@granit/react-ui';
+import { Button, toast } from '@granit/react-ui';
 import { cn } from '@granit/utils';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -18,7 +18,6 @@ import {
   Trash2,
 } from 'lucide-react';
 import { useCallback, useMemo, useState, type DragEvent } from 'react';
-import { toast } from 'sonner';
 
 import { logger } from './logger';
 

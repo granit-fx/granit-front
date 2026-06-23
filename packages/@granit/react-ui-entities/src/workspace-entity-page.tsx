@@ -31,6 +31,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   Checkbox,
+  toast,
 } from '@granit/react-ui';
 import {
   FilterPresets,
@@ -45,7 +46,6 @@ import { useSidePeek } from '@granit/react-workspaces';
 import { ChevronRight, Pencil, Plus } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { recapParentRefs } from './bulk-recap';
 import { useEntityActionScope } from './entity-action-scope';
