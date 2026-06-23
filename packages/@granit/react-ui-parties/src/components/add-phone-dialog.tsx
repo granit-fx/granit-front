@@ -11,11 +11,10 @@ import {
   TextField,
 } from '@granit/react-ui';
 import { PhoneInput } from '@granit/react-ui-admin-kit';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { PHONE_KINDS } from '../constants';
-import { partyPhoneSchema, type PartyPhoneFormValues } from '../validation';
+import { createPartyPhoneResolver, type PartyPhoneFormValues } from '../validation';
 
 import { PartyAddDialog } from './party-add-dialog';
 
@@ -32,7 +31,7 @@ export function AddPhoneDialog({ partyId, open, onOpenChange }: AddPhoneDialogPr
   const mutation = useAddPartyPhoneMutation();
 
   const form = useForm<PartyPhoneFormValues>({
-    resolver: zodResolver(partyPhoneSchema(t)),
+    resolver: createPartyPhoneResolver(t),
     defaultValues: { kind: 'Work', number: '', label: null, isPrimary: false },
   });
 

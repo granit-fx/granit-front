@@ -17,13 +17,13 @@ import {
   FormMessage,
   Textarea,
 } from '@granit/react-ui';
-import { WebhookSubscriptionStatus } from '@granit/webhooks';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { createConstraintsResolver } from '@granit/react-validation';
+import { WebhookSubscriptionStatus, webhooksConstraints } from '@granit/webhooks';
 import { Loader2 } from 'lucide-react';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useMemo, useState } from 'react';
+import { useForm, type Resolver } from 'react-hook-form';
 
-import { webhookDeactivationSchema, type WebhookDeactivationFormValues } from '../validation';
+import type { WebhookDeactivationFormValues } from '../validation';
 
 type DialogType = 'activate' | 'suspend' | 'deactivate' | 'delete' | null;
 
@@ -53,8 +53,19 @@ export function WebhookLifecycleActions({
   const { t } = useTranslation();
   const [openDialog, setOpenDialog] = useState<DialogType>(null);
 
+  // Spec-derived validation for the deactivation reason (required, maxLength 1000
+  // from WebhookSubscriptionDeactivateRequest). No client-only rule — the former
+  // zod schema only required a non-empty reason, which the spec already covers.
+  const formResolver = useMemo<Resolver<WebhookDeactivationFormValues>>(
+    () =>
+      createConstraintsResolver(webhooksConstraints.WebhookSubscriptionDeactivateRequest, t, {
+        labelResolver: () => t('Webhooks.Confirm.DeactivateReason'),
+      }) as unknown as Resolver<WebhookDeactivationFormValues>,
+    [t]
+  );
+
   const deactivationForm = useForm<WebhookDeactivationFormValues>({
-    resolver: zodResolver(webhookDeactivationSchema),
+    resolver: formResolver,
     defaultValues: { reason: '' },
   });
 

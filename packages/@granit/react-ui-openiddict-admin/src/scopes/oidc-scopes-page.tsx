@@ -1,4 +1,4 @@
-import { OpenIddictPermissions } from '@granit/openiddict-admin';
+import { openiddictConstraints, OpenIddictPermissions } from '@granit/openiddict-admin';
 import { usePermissions } from '@granit/react-authorization';
 import { useTranslation } from '@granit/react-localization';
 import {
@@ -26,32 +26,37 @@ import {
   Textarea,
   toast,
 } from '@granit/react-ui';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { createConstraintsResolver } from '@granit/react-validation';
 import { Layers, Loader2, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { useForm, type Resolver } from 'react-hook-form';
 
 import { logger } from '../logger';
 
 import type { AxiosError } from '@granit/api-client';
 import type { AdminOidcScopeResponse } from '@granit/openiddict-admin';
 
-const createSchema = z.object({
-  name: z.string().min(1).max(200),
-  displayName: z.string().max(200).optional(),
-  description: z.string().max(1000).optional(),
-  resources: z.array(z.string()).optional(),
-});
+// Spec-driven validation: constraints (required/maxLength) are derived from
+// contracts/openapi/openiddict.json. The scope forms carry no client-only rule —
+// `resources` is an array with no per-item check — so the bare baseResolver is used.
+interface CreateFormValues {
+  readonly name: string;
+  readonly displayName?: string;
+  readonly description?: string;
+  readonly resources?: string[];
+}
 
-const editSchema = z.object({
-  displayName: z.string().max(200).nullable().optional(),
-  description: z.string().max(1000).nullable().optional(),
-  resources: z.array(z.string()).nullable().optional(),
-});
+interface EditFormValues {
+  readonly displayName?: string | null;
+  readonly description?: string | null;
+  readonly resources?: string[] | null;
+}
 
-type CreateFormValues = z.infer<typeof createSchema>;
-type EditFormValues = z.infer<typeof editSchema>;
+// The constraints expose camelCase field names; the i18n label keys are
+// PascalCase (`OpenIddict.Scopes.Fields.Name`). This bridges the two.
+function scopeLabel(field: string): string {
+  return field.charAt(0).toUpperCase() + field.slice(1);
+}
 
 export function OidcScopesPage() {
   const { t } = useTranslation();
@@ -67,13 +72,25 @@ export function OidcScopesPage() {
   const [editTarget, setEditTarget] = useState<AdminOidcScopeResponse | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<AdminOidcScopeResponse | null>(null);
 
+  const createResolver = createConstraintsResolver(
+    openiddictConstraints.AdminOidcCreateScopeRequest,
+    t,
+    { labelResolver: (field) => t(`OpenIddict.Scopes.Fields.${scopeLabel(field)}`, field) }
+  ) as unknown as Resolver<CreateFormValues>;
+
+  const editResolver = createConstraintsResolver(
+    openiddictConstraints.AdminOidcUpdateScopeRequest,
+    t,
+    { labelResolver: (field) => t(`OpenIddict.Scopes.Fields.${scopeLabel(field)}`, field) }
+  ) as unknown as Resolver<EditFormValues>;
+
   const createForm = useForm<CreateFormValues>({
-    resolver: zodResolver(createSchema),
+    resolver: createResolver,
     defaultValues: { name: '', displayName: '', description: '', resources: [] },
   });
 
   const editForm = useForm<EditFormValues>({
-    resolver: zodResolver(editSchema),
+    resolver: editResolver,
     defaultValues: { displayName: '', description: '', resources: [] },
   });
 

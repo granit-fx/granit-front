@@ -76,7 +76,10 @@ export const webhooksTranslationsEn = {
   'Webhooks.Form.EventTypePlaceholder': 'Select an event type',
   'Webhooks.Form.TargetUrl': 'Target URL',
   'Webhooks.Form.TargetUrlHelp': 'HTTPS required. Local and private addresses are not allowed.',
+  'Webhooks.Form.TargetUrlHttps': 'Must use HTTPS',
+  'Webhooks.Form.TargetUrlInvalid': 'Must be a valid URL',
   'Webhooks.Form.TargetUrlPlaceholder': 'https://example.com/webhook',
+  'Webhooks.Form.TargetUrlPrivate': 'Private/local URLs are not allowed',
   'Webhooks.Form.UrlChangeWarning':
     'Changing the URL will redirect future deliveries to this new address.',
   'Webhooks.Keys.Columns.Actions': 'Actions',

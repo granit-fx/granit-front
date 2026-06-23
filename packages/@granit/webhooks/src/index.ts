@@ -38,3 +38,6 @@ export {
   updateSubscription,
 } from './api/webhooks-api';
 export { WebhooksPermissions } from './permissions';
+
+// Validation constraints (generated from contracts/openapi/webhooks.json)
+export { webhooksConstraints } from './constraints';

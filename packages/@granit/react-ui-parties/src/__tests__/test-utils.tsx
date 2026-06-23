@@ -31,6 +31,15 @@ const HOST_KEYS = {
   'Common.Save': 'Save',
   'Validation.InvalidUrl': 'Enter a valid URL',
   'Validation.Required': 'This field is required',
+  // Builtin codes the spec-driven resolver (createConstraintsResolver) emits.
+  // In production these are provided by the host app's @granit/validation bundle.
+  'Validation:Builtin:NotEmpty': "'{{PropertyName}}' must not be empty.",
+  'Validation:Builtin:MaximumLength':
+    "'{{PropertyName}}' must be {{maxLength}} characters or fewer.",
+  'Validation:Builtin:MinimumLength':
+    "'{{PropertyName}}' must be at least {{minLength}} characters.",
+  'Validation:Builtin:RegularExpression': "'{{PropertyName}}' is not in the correct format.",
+  'Validation:Builtin:Email': "'{{PropertyName}}' is not a valid email address.",
 } as const;
 
 const testI18n = i18next.createInstance();

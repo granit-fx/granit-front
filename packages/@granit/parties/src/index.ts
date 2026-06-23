@@ -78,3 +78,6 @@ export {
   listDuplicatesForParty,
   mergePartyFromDuplicate,
 } from './api/parties-duplicates-api';
+
+// Validation constraints (generated from contracts/openapi/parties.json)
+export { partiesConstraints } from './constraints';

@@ -1,4 +1,4 @@
-import { OpenIddictPermissions } from '@granit/openiddict-admin';
+import { openiddictConstraints, OpenIddictPermissions } from '@granit/openiddict-admin';
 import { usePermissions } from '@granit/react-authorization';
 import { useTranslation } from '@granit/react-localization';
 import {
@@ -24,23 +24,29 @@ import {
   Spinner,
   toast,
 } from '@granit/react-ui';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { createConstraintsResolver } from '@granit/react-validation';
 import { KeyRound, Loader2, Plus, ShieldOff } from 'lucide-react';
 import { useCallback, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { useForm, type Resolver } from 'react-hook-form';
 
 import { logger } from '../logger';
 
 import type { AxiosError } from '@granit/api-client';
 
-const grantSchema = z.object({
-  subject: z.string().min(1),
-  clientId: z.string().min(1),
-  scopes: z.array(z.string()),
-});
+// Spec-driven validation: `subject`/`clientId` are required (+maxLength) and
+// `scopes` is required, all derived from contracts/openapi/openiddict.json. The
+// grant form carries no client-only rule, so the bare baseResolver is used.
+interface GrantFormValues {
+  readonly subject: string;
+  readonly clientId: string;
+  readonly scopes: string[];
+}
 
-type GrantFormValues = z.infer<typeof grantSchema>;
+// The constraints expose camelCase field names; the i18n label keys are
+// PascalCase (`OpenIddict.Authorizations.Fields.Subject`). This bridges the two.
+function authorizationLabel(field: string): string {
+  return field.charAt(0).toUpperCase() + field.slice(1);
+}
 
 /** Drop a single scope chip from the list. Module-level to keep the render prop flat. */
 const removeScope = (scopes: readonly string[], scope: string): string[] =>
@@ -62,8 +68,17 @@ export function OidcAuthorizationsPage() {
   const [revokeUserTarget, setRevokeUserTarget] = useState<string | null>(null);
   const [scopeInput, setScopeInput] = useState('');
 
+  const grantResolver = createConstraintsResolver(
+    openiddictConstraints.AdminOidcCreateAuthorizationRequest,
+    t,
+    {
+      labelResolver: (field) =>
+        t(`OpenIddict.Authorizations.Fields.${authorizationLabel(field)}`, field),
+    }
+  ) as unknown as Resolver<GrantFormValues>;
+
   const grantForm = useForm<GrantFormValues>({
-    resolver: zodResolver(grantSchema),
+    resolver: grantResolver,
     defaultValues: { subject: '', clientId: '', scopes: [] },
   });
 

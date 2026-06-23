@@ -24,8 +24,7 @@ export { createTemplateColumns } from './components/template-columns';
 // Hooks
 export { useTestDataStore } from './hooks/use-test-data-store';
 
-// Validation
-export { templateFormSchema } from './validation';
+// Form values
 export type { TemplateFormValues } from './validation';
 
 // Constants

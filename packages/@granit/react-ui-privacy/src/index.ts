@@ -19,8 +19,7 @@ export { LegalDocumentPublishDialog } from './legal-documents/components/legal-d
 export { LegalDocumentStatusBadge } from './legal-documents/components/legal-document-status-badge';
 export { useLegalDocumentColumns } from './legal-documents/components/legal-document-columns';
 
-// Validation
-export { createLegalDocumentSchema, editLegalDocumentSchema } from './legal-documents/validation';
+// Form value types
 export type {
   CreateLegalDocumentFormValues,
   EditLegalDocumentFormValues,

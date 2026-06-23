@@ -101,6 +101,42 @@ const TARGETS = [
     exportName: 'invoicingConstraints',
     schemaPattern: /Request$/,
   },
+  {
+    spec: 'ai.json',
+    pkg: 'ai',
+    exportName: 'aiConstraints',
+    schemaPattern: /Request$/,
+  },
+  {
+    spec: 'parties.json',
+    pkg: 'parties',
+    exportName: 'partiesConstraints',
+    schemaPattern: /Request$/,
+  },
+  {
+    spec: 'webhooks.json',
+    pkg: 'webhooks',
+    exportName: 'webhooksConstraints',
+    schemaPattern: /Request$/,
+  },
+  {
+    spec: 'templating.json',
+    pkg: 'templating',
+    exportName: 'templatingConstraints',
+    schemaPattern: /Request$/,
+  },
+  {
+    spec: 'privacy.json',
+    pkg: 'privacy',
+    exportName: 'privacyConstraints',
+    schemaPattern: /Request$/,
+  },
+  {
+    spec: 'openiddict.json',
+    pkg: 'openiddict-admin',
+    exportName: 'openiddictConstraints',
+    schemaPattern: /Request$/,
+  },
 ];
 
 const MAX_REF_DEPTH = 10;

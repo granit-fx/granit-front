@@ -49,3 +49,6 @@ export { chatComplete, chatStream } from './api/ai-chat-api';
 // API — Embeddings
 export { generateEmbeddings } from './api/ai-embeddings-api';
 export { AIPermissions } from './permissions';
+
+// Validation constraints (generated from contracts/openapi/ai.json)
+export { aiConstraints } from './constraints';

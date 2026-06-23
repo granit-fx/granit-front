@@ -53,3 +53,6 @@ export {
   updateDraft,
 } from './api/templates-api';
 export { TemplatingPermissions } from './permissions';
+
+// Validation constraints (generated from contracts/openapi/templating.json)
+export { templatingConstraints } from './constraints';

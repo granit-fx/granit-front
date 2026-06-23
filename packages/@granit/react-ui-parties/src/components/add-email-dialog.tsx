@@ -1,10 +1,9 @@
 import { useTranslation } from '@granit/react-localization';
 import { useAddPartyEmailMutation } from '@granit/react-parties';
 import { CheckboxField, TextField } from '@granit/react-ui';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-import { partyEmailSchema, type PartyEmailFormValues } from '../validation';
+import { createPartyEmailResolver, type PartyEmailFormValues } from '../validation';
 
 import { PartyAddDialog } from './party-add-dialog';
 
@@ -21,7 +20,7 @@ export function AddEmailDialog({ partyId, open, onOpenChange }: AddEmailDialogPr
   const mutation = useAddPartyEmailMutation();
 
   const form = useForm<PartyEmailFormValues>({
-    resolver: zodResolver(partyEmailSchema(t)),
+    resolver: createPartyEmailResolver(t),
     defaultValues: { address: '', label: null, isPrimary: false },
   });
 

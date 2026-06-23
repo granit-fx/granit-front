@@ -1,3 +1,4 @@
+import { privacyConstraints } from '@granit/privacy';
 import { useTranslation } from '@granit/react-localization';
 import {
   Button,
@@ -15,12 +16,26 @@ import {
   Input,
   Textarea,
 } from '@granit/react-ui';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-
-import { createLegalDocumentSchema, editLegalDocumentSchema } from '../validation';
+import { createConstraintsResolver } from '@granit/react-validation';
+import { useForm, type Resolver } from 'react-hook-form';
 
 import type { CreateLegalDocumentFormValues, EditLegalDocumentFormValues } from '../validation';
+
+// Client-only UX guard for the `documentId` slug. The privacy contract carries only
+// `required` + `maxLength` on `documentId` (the .NET endpoint owns the authoritative
+// shape), so this regex is a front augmentation layered ON TOP of the spec-derived
+// constraints — drop it once the backend exposes the pattern in
+// contracts/openapi/privacy.json.
+const DOCUMENT_ID_SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+// The constraints expose camelCase field names (`documentId`); the i18n label keys are
+// PascalCase (`Privacy.LegalDocuments.Form.DocumentId`). This local helper bridges the
+// two for the labelResolver.
+function capitalize(value: string): string {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+type LegalDocumentFormValues = CreateLegalDocumentFormValues | EditLegalDocumentFormValues;
 
 interface CreateFormProps {
   readonly mode: 'create';
@@ -43,8 +58,45 @@ export function LegalDocumentForm(props: LegalDocumentFormProps) {
   const { t } = useTranslation();
   const { mode, onCancel, isSubmitting } = props;
 
-  const form = useForm<CreateLegalDocumentFormValues | EditLegalDocumentFormValues>({
-    resolver: zodResolver(mode === 'create' ? createLegalDocumentSchema : editLegalDocumentSchema),
+  // Spec-driven validation: required / maxLength / uuid format come from the privacy
+  // OpenAPI contract via createConstraintsResolver. `Validation:Builtin:*` messages are
+  // owned by the backend `Granit.Validation` package (loaded by the host app). Field
+  // names already match the DTO property names, so no remapping beyond the label key.
+  const labelResolver = (field: string) =>
+    t(`Privacy.LegalDocuments.Form.${capitalize(field)}`, field);
+  const baseResolver = createConstraintsResolver(
+    mode === 'create'
+      ? privacyConstraints.LegalDocumentCreateRequest
+      : privacyConstraints.LegalDocumentUpdateRequest,
+    t,
+    { labelResolver }
+  );
+  // Augment the create resolver with the client-only `documentId` slug check (see
+  // DOCUMENT_ID_SLUG_RE above). The edit form has no `documentId` field, so the base
+  // spec resolver is used as-is.
+  const formResolver = (async (
+    values: Record<string, unknown>,
+    context: unknown,
+    options: { fields: Record<string, { name: string }> }
+  ) => {
+    const result = await baseResolver(values, context, options);
+    if (
+      mode === 'create' &&
+      !result.errors.documentId &&
+      typeof values.documentId === 'string' &&
+      values.documentId &&
+      !DOCUMENT_ID_SLUG_RE.test(values.documentId)
+    ) {
+      result.errors.documentId = {
+        type: 'slug',
+        message: t('Privacy.LegalDocuments.Form.DocumentIdSlugError'),
+      };
+    }
+    return result;
+  }) as unknown as Resolver<LegalDocumentFormValues>;
+
+  const form = useForm<LegalDocumentFormValues>({
+    resolver: formResolver,
     defaultValues:
       mode === 'edit'
         ? props.defaultValues

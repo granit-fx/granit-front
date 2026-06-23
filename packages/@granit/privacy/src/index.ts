@@ -77,3 +77,6 @@ export { getOptOutStatus, requestOptOut } from './api/privacy-api';
 export { PrivacyPermissions } from './permissions';
 export { PRIVACY_REGULATIONS } from './regulations';
 export type { PrivacyRegulationCode } from './regulations';
+
+// Validation constraints (generated from contracts/openapi/privacy.json)
+export { privacyConstraints } from './constraints';

@@ -16,11 +16,10 @@ import {
   Textarea,
 } from '@granit/react-ui';
 import { TimezonePicker, UrlInput } from '@granit/react-ui-admin-kit';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { PARTY_ASSIGNABLE_ROLES, PARTY_KINDS } from '../constants';
-import { partyCreateSchema, type PartyCreateFormValues } from '../validation';
+import { createPartyCreateResolver, type PartyCreateFormValues } from '../validation';
 
 interface PartyCreateFormProps {
   readonly onSubmit: (values: PartyCreateFormValues) => void | Promise<void>;
@@ -31,7 +30,7 @@ interface PartyCreateFormProps {
 export function PartyCreateForm({ onSubmit, onCancel, isPending }: PartyCreateFormProps) {
   const { t } = useTranslation();
   const form = useForm<PartyCreateFormValues>({
-    resolver: zodResolver(partyCreateSchema(t)),
+    resolver: createPartyCreateResolver(t),
     defaultValues: {
       kind: 'Company',
       name: '',

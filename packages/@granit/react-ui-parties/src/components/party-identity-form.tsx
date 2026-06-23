@@ -13,12 +13,11 @@ import {
   toast,
 } from '@granit/react-ui';
 import { TimezonePicker, UrlInput } from '@granit/react-ui-admin-kit';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { logger } from '../logger';
-import { partyIdentitySchema, type PartyIdentityFormValues } from '../validation';
+import { createPartyIdentityResolver, type PartyIdentityFormValues } from '../validation';
 
 import type { PartyResponse } from '@granit/parties';
 
@@ -31,7 +30,7 @@ export function PartyIdentityForm({ party }: PartyIdentityFormProps) {
   const mutation = useUpdatePartyMutation();
 
   const form = useForm<PartyIdentityFormValues>({
-    resolver: zodResolver(partyIdentitySchema(t)),
+    resolver: createPartyIdentityResolver(t),
     defaultValues: {
       name: party.name,
       website: party.website ?? null,

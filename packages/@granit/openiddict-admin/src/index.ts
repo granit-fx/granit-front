@@ -43,3 +43,6 @@ export {
   revokeUserAuthorizations,
 } from './api/admin-oidc-authorization-api';
 export { OpenIddictPermissions } from './permissions';
+
+// Validation constraints (generated from contracts/openapi/openiddict.json)
+export { openiddictConstraints } from './constraints';

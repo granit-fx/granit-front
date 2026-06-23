@@ -1,6 +1,6 @@
 {
   "name": "@granit/react-ui-privacy",
-  "description": "Granit admin UI for the Privacy module — data export, account deletion, legal-agreement acceptance, regulation profile, CCPA opt-out, admin DSR (export on behalf of) and the legal-document admin CRUD (list / create / edit / publish with zod-validated forms). Composes @granit/react-privacy (headless) with the foundation UI packages.",
+  "description": "Granit admin UI for the Privacy module — data export, account deletion, legal-agreement acceptance, regulation profile, CCPA opt-out, admin DSR (export on behalf of) and the legal-document admin CRUD (list / create / edit / publish with spec-driven validated forms). Composes @granit/react-privacy (headless) with the foundation UI packages.",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -20,15 +20,14 @@
     "@granit/react-localization": "workspace:*",
     "@granit/react-privacy": "workspace:*",
     "@granit/react-ui": "workspace:*",
+    "@granit/react-validation": "workspace:*",
     "@granit/utils": "workspace:*",
-    "@hookform/resolvers": "^5.4.0",
     "@tanstack/react-table": "^8.21.3",
     "lucide-react": "^1.21.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.80.0",
-    "react-router-dom": "^7.18.0",
-    "zod": "^4.4.3"
+    "react-router-dom": "^7.18.0"
   },
   "publishConfig": {
     "exports": {
@@ -47,9 +46,9 @@
     "@granit/react-localization": "workspace:*",
     "@granit/react-privacy": "workspace:*",
     "@granit/react-ui": "workspace:*",
+    "@granit/react-validation": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/utils": "workspace:*",
-    "@hookform/resolvers": "^5.4.0",
     "@storybook/react-vite": "^10.4.6",
     "@tanstack/react-query": "^5.0.0",
     "@tanstack/react-table": "^8.21.3",
@@ -61,7 +60,6 @@
     "react-hook-form": "^7.80.0",
     "react-i18next": "^17.0.0",
     "react-router-dom": "^7.18.0",
-    "storybook": "^10.4.6",
-    "zod": "^4.4.3"
+    "storybook": "^10.4.6"
   }
 }

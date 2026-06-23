@@ -75,7 +75,10 @@ export const webhooksTranslationsFr = {
   'Webhooks.Form.TargetUrl': 'URL cible',
   'Webhooks.Form.TargetUrlHelp':
     'HTTPS obligatoire. Les adresses locales et privées sont interdites.',
+  'Webhooks.Form.TargetUrlHttps': 'HTTPS obligatoire',
+  'Webhooks.Form.TargetUrlInvalid': 'URL invalide',
   'Webhooks.Form.TargetUrlPlaceholder': 'https://example.com/webhook',
+  'Webhooks.Form.TargetUrlPrivate': 'Les URL privées ou locales sont interdites',
   'Webhooks.Form.UrlChangeWarning':
     "Modifier l'URL redirigera les futures livraisons vers cette nouvelle adresse.",
   'Webhooks.Keys.Columns.Actions': 'Actions',

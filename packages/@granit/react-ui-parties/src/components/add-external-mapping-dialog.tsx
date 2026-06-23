@@ -1,10 +1,12 @@
 import { useTranslation } from '@granit/react-localization';
 import { useAddPartyExternalMappingMutation } from '@granit/react-parties';
 import { TextField } from '@granit/react-ui';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-import { partyExternalMappingSchema, type PartyExternalMappingFormValues } from '../validation';
+import {
+  createPartyExternalMappingResolver,
+  type PartyExternalMappingFormValues,
+} from '../validation';
 
 import { PartyAddDialog } from './party-add-dialog';
 
@@ -25,7 +27,7 @@ export function AddExternalMappingDialog({
   const mutation = useAddPartyExternalMappingMutation();
 
   const form = useForm<PartyExternalMappingFormValues>({
-    resolver: zodResolver(partyExternalMappingSchema(t)),
+    resolver: createPartyExternalMappingResolver(t),
     defaultValues: { providerName: '', externalId: '' },
   });
 

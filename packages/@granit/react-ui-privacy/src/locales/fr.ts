@@ -124,6 +124,8 @@ export const privacyTranslationsFr = {
   'Privacy.LegalDocuments.Form.DocumentBlobIdHint': 'Référence au fichier du document stocké',
   'Privacy.LegalDocuments.Form.DocumentId': 'ID du document',
   'Privacy.LegalDocuments.Form.DocumentIdHint': 'Identifiant unique du document',
+  'Privacy.LegalDocuments.Form.DocumentIdSlugError':
+    'Doit être un slug en minuscules (par ex. privacy-policy)',
   'Privacy.LegalDocuments.Form.TemplateName': 'Nom du template',
   'Privacy.LegalDocuments.Form.TemplateNameHint': 'Nom du template à utiliser pour le rendu',
   'Privacy.LegalDocuments.NewDocument': 'Nouveau document',

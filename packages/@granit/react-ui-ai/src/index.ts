@@ -15,10 +15,10 @@ export { WorkspaceTestPanel } from './components/workspace-test-panel';
 
 // Validation
 export {
-  createWorkspaceSchema,
-  editWorkspaceSchema,
+  createWorkspaceResolver,
   type CreateWorkspaceFormValues,
   type EditWorkspaceFormValues,
+  type WorkspaceFormValues,
 } from './validation';
 
 // i18n

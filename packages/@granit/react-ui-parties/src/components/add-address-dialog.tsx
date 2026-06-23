@@ -1,11 +1,10 @@
 import { useTranslation } from '@granit/react-localization';
 import { useAddPartyAddressMutation } from '@granit/react-parties';
 import { CheckboxField, SelectField, TextField } from '@granit/react-ui';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { ADDRESS_KINDS } from '../constants';
-import { partyAddressSchema, type PartyAddressFormValues } from '../validation';
+import { createPartyAddressResolver, type PartyAddressFormValues } from '../validation';
 
 import { PartyAddDialog } from './party-add-dialog';
 
@@ -22,7 +21,7 @@ export function AddAddressDialog({ partyId, open, onOpenChange }: AddAddressDial
   const mutation = useAddPartyAddressMutation();
 
   const form = useForm<PartyAddressFormValues>({
-    resolver: zodResolver(partyAddressSchema(t)),
+    resolver: createPartyAddressResolver(t),
     defaultValues: {
       kind: 'Billing',
       line1: '',

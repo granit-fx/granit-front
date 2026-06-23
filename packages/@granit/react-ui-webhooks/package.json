@@ -20,18 +20,17 @@
     "@granit/react-query-engine": "workspace:*",
     "@granit/react-ui": "workspace:*",
     "@granit/react-ui-admin-kit": "workspace:*",
+    "@granit/react-validation": "workspace:*",
     "@granit/react-webhooks": "workspace:*",
     "@granit/utils": "workspace:*",
     "@granit/webhooks": "workspace:*",
-    "@hookform/resolvers": "^5.4.0",
     "@tanstack/react-table": "^8.21.3",
     "class-variance-authority": "^0.7.1",
     "lucide-react": "^1.21.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.80.0",
-    "react-router-dom": "^7.18.0",
-    "zod": "^4.4.3"
+    "react-router-dom": "^7.18.0"
   },
   "publishConfig": {
     "exports": {
@@ -50,11 +49,11 @@
     "@granit/react-query-engine": "workspace:*",
     "@granit/react-ui": "workspace:*",
     "@granit/react-ui-admin-kit": "workspace:*",
+    "@granit/react-validation": "workspace:*",
     "@granit/react-webhooks": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/utils": "workspace:*",
     "@granit/webhooks": "workspace:*",
-    "@hookform/resolvers": "^5.4.0",
     "@storybook/react-vite": "^10.4.6",
     "@tanstack/react-query": "^5.0.0",
     "@tanstack/react-table": "^8.21.3",
@@ -67,7 +66,6 @@
     "react-hook-form": "^7.80.0",
     "react-i18next": "^17.0.0",
     "react-router-dom": "^7.18.0",
-    "storybook": "^10.4.6",
-    "zod": "^4.4.3"
+    "storybook": "^10.4.6"
   }
 }

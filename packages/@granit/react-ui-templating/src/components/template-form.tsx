@@ -20,15 +20,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@granit/react-ui';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { createConstraintsResolver } from '@granit/react-validation';
+import { templatingConstraints } from '@granit/templating';
 import { useEffect } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
-
-import { templateFormSchema } from '../validation';
+import { useForm, useWatch, type Resolver } from 'react-hook-form';
 
 import { TemplateEditor } from './template-editor';
 
 import type { TemplateFormValues } from '../validation';
+
+// Client-only UX guards layered ON TOP of the spec-derived constraints. The
+// `SaveTemplateRequest` contract only carries `maxLength` + a case-insensitive
+// `pattern` on `name` (the .NET endpoint owns the authoritative key rules), so
+// these two rules are front augmentations:
+//  1. minimum length of 3 (no `minLength` on `name` in the contract);
+//  2. PascalCase enforcement — each dotted segment must start with an UPPERCASE
+//     letter, stricter than the contract pattern which allows any letter case.
+// Drop them once the backend tightens contracts/openapi/templating.json.
+const NAME_MIN_LENGTH = 3;
+const NAME_PASCAL_RE = /^[A-Z][a-zA-Z0-9]*(\.[A-Z][a-zA-Z0-9]*)+$/;
+// Error code the spec resolver emits for a `maxLength` violation (mirrors
+// `VALIDATION_ERROR_CODES.maxLength` from @granit/validation). The client `name`
+// augmentation must not clobber this distinct, stronger spec error.
+const MAX_LENGTH_CODE = 'Validation:Builtin:MaximumLength';
+
+// The constraints expose lowercase field names (`name`, `content`); the i18n
+// labels live under flat `Templates.Form.*` keys. This maps each constrained
+// field to the label the form already renders so validation messages match.
+const FIELD_LABEL_KEYS: Record<string, string> = {
+  name: 'Templates.Form.Name',
+  culture: 'Templates.Form.Culture',
+  layoutName: 'Templates.Form.Layout',
+  content: 'Templates.Form.Content',
+  mimeType: 'Templates.Form.MimeType',
+};
 
 const MIME_TYPES = [
   { value: 'text/html', label: 'HTML' },
@@ -65,8 +90,48 @@ export function TemplateForm({
   const { t } = useTranslation();
   const { data: layouts } = useTemplateLayouts();
 
+  // `name`/`content`/`culture`/`mimeType` validation = spec constraints
+  // (required, maxLength, pattern). `Validation:Builtin:*` messages are owned by
+  // the host app's `Granit.Validation` bundle. The two client-only `name` rules
+  // (min length + PascalCase) are added by wrapping the spec resolver below.
+  const baseResolver = createConstraintsResolver(templatingConstraints.SaveTemplateRequest, t, {
+    labelResolver: (field) => t(FIELD_LABEL_KEYS[field] ?? field),
+  });
+  const formResolver = (async (
+    values: Record<string, unknown>,
+    context: unknown,
+    options: { fields: Record<string, { name: string }> }
+  ) => {
+    const result = await baseResolver(values, context, options);
+    // The two client `name` rules are strictly stronger than the spec ones
+    // (min length 3 vs none; the PascalCase regex is a subset of the spec's
+    // case-insensitive pattern). So a name failing a client rule is always
+    // invalid, and its precise message overrides the spec's generic pattern
+    // error. Conversely, a name passing both client rules always satisfies the
+    // spec pattern — leaving only the spec `maxLength` error (a check the client
+    // does not duplicate), which is preserved untouched.
+    if (typeof values.name === 'string' && values.name) {
+      if (values.name.length < NAME_MIN_LENGTH) {
+        result.errors.name = {
+          type: 'minLength',
+          message: t('Templates.Form.NameTooShort'),
+        };
+      } else if (!NAME_PASCAL_RE.test(values.name)) {
+        result.errors.name = {
+          type: 'pattern',
+          message: t('Templates.Form.NameInvalidFormat'),
+        };
+      } else if (result.errors.name && result.errors.name.type !== MAX_LENGTH_CODE) {
+        // Client rules satisfied but the spec flagged its (weaker) pattern —
+        // defer to the client verdict: the name is valid.
+        delete result.errors.name;
+      }
+    }
+    return result;
+  }) as unknown as Resolver<TemplateFormValues>;
+
   const form = useForm<TemplateFormValues>({
-    resolver: zodResolver(templateFormSchema),
+    resolver: formResolver,
     defaultValues: {
       name: '',
       culture: null,

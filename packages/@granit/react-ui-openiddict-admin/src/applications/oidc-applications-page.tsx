@@ -1,4 +1,4 @@
-import { OpenIddictPermissions } from '@granit/openiddict-admin';
+import { openiddictConstraints, OpenIddictPermissions } from '@granit/openiddict-admin';
 import { usePermissions } from '@granit/react-authorization';
 import { useTranslation } from '@granit/react-localization';
 import {
@@ -31,11 +31,14 @@ import {
   Textarea,
   toast,
 } from '@granit/react-ui';
-import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  createConstraintsResolver,
+  type ConstraintsResolver,
+  type TranslateFunction,
+} from '@granit/react-validation';
 import { CheckCircle2, Loader2, Pencil, Plus, Shield, Trash2, XCircle } from 'lucide-react';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { useForm, type FieldValues, type Resolver } from 'react-hook-form';
 
 import { logger } from '../logger';
 
@@ -51,32 +54,84 @@ const CLIENT_SIDES = [
   { value: 3, label: 'Both' },
 ] as const;
 
-const createSchema = z.object({
-  clientId: z.string().min(1).max(200),
-  clientSecret: z.string().optional(),
-  displayName: z.string().max(200).optional(),
-  type: z.string().nullable().optional(),
-  permissions: z.array(z.string()).optional(),
-  redirectUris: z.array(z.string().url()).optional(),
-  postLogoutRedirectUris: z.array(z.string().url()).optional(),
-  consentType: z.string().nullable().optional(),
-  signingKeyJwk: z.string().optional(),
-  clientSide: z.number().nullable().optional(),
-});
+// Spec-driven validation: required/maxLength constraints come from
+// contracts/openapi/openiddict.json. The URI lists carry only the server-only
+// `Validation:Format:AbsoluteUri` marker, which validateField intentionally
+// skips — so the client-only per-item absolute-URI check (was `z.string().url()`)
+// is reinstated below as an augmentation wrapping the spec baseResolver.
+const URI_LIST_FIELDS = ['redirectUris', 'postLogoutRedirectUris'] as const;
 
-const editSchema = z.object({
-  displayName: z.string().max(200).nullable().optional(),
-  type: z.string().nullable().optional(),
-  permissions: z.array(z.string()).nullable().optional(),
-  redirectUris: z.array(z.string().url()).nullable().optional(),
-  postLogoutRedirectUris: z.array(z.string().url()).nullable().optional(),
-  consentType: z.string().nullable().optional(),
-  signingKeyJwk: z.string().nullable().optional(),
-  clientSide: z.number().nullable().optional(),
-});
+/** Mirrors the old `z.string().url()` per-item guard: every entry must parse as an absolute URI. */
+function isAbsoluteUri(value: string): boolean {
+  try {
+    new URL(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
-type CreateFormValues = z.infer<typeof createSchema>;
-type EditFormValues = z.infer<typeof editSchema>;
+interface CreateFormValues {
+  readonly clientId: string;
+  readonly clientSecret?: string;
+  readonly displayName?: string;
+  readonly type?: string | null;
+  readonly permissions?: string[];
+  readonly redirectUris?: string[];
+  readonly postLogoutRedirectUris?: string[];
+  readonly consentType?: string | null;
+  readonly signingKeyJwk?: string;
+  readonly clientSide?: number | null;
+}
+
+interface EditFormValues {
+  readonly displayName?: string | null;
+  readonly type?: string | null;
+  readonly permissions?: string[] | null;
+  readonly redirectUris?: string[] | null;
+  readonly postLogoutRedirectUris?: string[] | null;
+  readonly consentType?: string | null;
+  readonly signingKeyJwk?: string | null;
+  readonly clientSide?: number | null;
+}
+
+// The constraints expose camelCase field names; the i18n label keys are
+// PascalCase (`OpenIddict.Applications.Fields.ClientId`). This bridges the two.
+function applicationLabel(field: string): string {
+  return field.charAt(0).toUpperCase() + field.slice(1);
+}
+
+/**
+ * Wraps a spec-derived constraints resolver, re-adding the client-only per-item
+ * absolute-URI check on the URI-list fields (lost when zod was dropped — the spec
+ * carries only the server-side `Validation:Format:AbsoluteUri` marker).
+ */
+function withUriListValidation<TValues extends FieldValues>(
+  baseResolver: Resolver<TValues>,
+  t: TranslateFunction
+): Resolver<TValues> {
+  return (async (
+    values: Record<string, unknown>,
+    context: unknown,
+    options: { fields: Record<string, { name: string }> }
+  ) => {
+    const result = await (baseResolver as unknown as ConstraintsResolver)(values, context, options);
+    for (const fieldName of URI_LIST_FIELDS) {
+      if (result.errors[fieldName]) continue;
+      const list = values[fieldName];
+      if (
+        Array.isArray(list) &&
+        list.some((uri) => typeof uri === 'string' && !isAbsoluteUri(uri))
+      ) {
+        result.errors[fieldName] = {
+          type: 'url',
+          message: t('OpenIddict.Applications.Fields.InvalidUri'),
+        };
+      }
+    }
+    return result;
+  }) as unknown as Resolver<TValues>;
+}
 
 function parseLines(raw: string): string[] {
   return raw
@@ -103,8 +158,24 @@ export function OidcApplicationsPage() {
   const [editTarget, setEditTarget] = useState<AdminOidcApplicationResponse | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<AdminOidcApplicationResponse | null>(null);
 
+  const createResolver = withUriListValidation(
+    createConstraintsResolver(openiddictConstraints.AdminOidcCreateApplicationRequest, t, {
+      labelResolver: (field) =>
+        t(`OpenIddict.Applications.Fields.${applicationLabel(field)}`, field),
+    }) as unknown as Resolver<CreateFormValues>,
+    t
+  );
+
+  const editResolver = withUriListValidation(
+    createConstraintsResolver(openiddictConstraints.AdminOidcUpdateApplicationRequest, t, {
+      labelResolver: (field) =>
+        t(`OpenIddict.Applications.Fields.${applicationLabel(field)}`, field),
+    }) as unknown as Resolver<EditFormValues>,
+    t
+  );
+
   const createForm = useForm<CreateFormValues>({
-    resolver: zodResolver(createSchema),
+    resolver: createResolver,
     defaultValues: {
       clientId: '',
       clientSecret: '',
@@ -120,7 +191,7 @@ export function OidcApplicationsPage() {
   });
 
   const editForm = useForm<EditFormValues>({
-    resolver: zodResolver(editSchema),
+    resolver: editResolver,
     defaultValues: {
       displayName: '',
       type: '',

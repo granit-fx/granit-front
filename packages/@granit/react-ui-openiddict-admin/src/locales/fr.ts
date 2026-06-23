@@ -37,6 +37,7 @@ export const openIddictAdminTranslationsFr = {
   'OpenIddict.Applications.Fields.ClientSide': 'Côté client',
   'OpenIddict.Applications.Fields.ConsentType': 'Type de consentement',
   'OpenIddict.Applications.Fields.DisplayName': "Nom d'affichage",
+  'OpenIddict.Applications.Fields.InvalidUri': 'Chaque entrée doit être une URI absolue',
   'OpenIddict.Applications.Fields.Permissions': 'Permissions',
   'OpenIddict.Applications.Fields.PermissionsHint': 'Une permission par ligne (ex. ept:token)',
   'OpenIddict.Applications.Fields.PermissionsPlaceholder': 'ept:token\ngt:authorization_code',

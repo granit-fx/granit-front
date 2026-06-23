@@ -22,20 +22,17 @@ import {
   Switch,
   Textarea,
 } from '@granit/react-ui';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo, useRef } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 
 import {
-  createWorkspaceSchema,
-  editWorkspaceSchema,
+  createWorkspaceResolver,
   type CreateWorkspaceFormValues,
   type EditWorkspaceFormValues,
+  type WorkspaceFormValues,
 } from '../validation';
 
 import { WorkspaceCapabilities } from './workspace-capabilities';
-
-import type { Resolver } from 'react-hook-form';
 
 /**
  * Derive a workspace key slug (`^[a-z0-9][a-z0-9-]*$`) from a free-text label:
@@ -71,19 +68,15 @@ interface EditWorkspaceFormProps extends WorkspaceFormBaseProps {
 
 type WorkspaceFormProps = CreateWorkspaceFormProps | EditWorkspaceFormProps;
 
-type WorkspaceFormValues = CreateWorkspaceFormValues | EditWorkspaceFormValues;
-
 export function WorkspaceForm(props: Readonly<WorkspaceFormProps>) {
   const { mode, onCancel, isPending = false } = props;
   const { t } = useTranslation();
   const isCreate = mode === 'create';
 
-  const schema = useMemo(
-    () => (isCreate ? createWorkspaceSchema(t) : editWorkspaceSchema(t)),
+  const formResolver = useMemo(
+    () => createWorkspaceResolver(isCreate ? 'create' : 'edit', t),
     [isCreate, t]
   );
-
-  const formResolver = zodResolver(schema) as unknown as Resolver<WorkspaceFormValues>;
 
   const form = useForm<WorkspaceFormValues>({
     resolver: formResolver,

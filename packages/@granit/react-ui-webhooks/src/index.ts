@@ -27,11 +27,6 @@ export {
   WEBHOOK_CONFIG_PATH,
   WEBHOOK_STATS_PATH,
 } from './constants';
-export {
-  webhookDeactivationSchema,
-  webhookSubscriptionFormSchema,
-  type WebhookDeactivationFormValues,
-  type WebhookSubscriptionFormValues,
-} from './validation';
+export type { WebhookDeactivationFormValues, WebhookSubscriptionFormValues } from './validation';
 
 export { webhooksTranslationsEn, webhooksTranslationsFr } from './locales';

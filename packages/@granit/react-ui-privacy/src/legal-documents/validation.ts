@@ -1,23 +1,19 @@
-import { z } from 'zod';
+// Form value types for the legal-document admin forms. Validation is now
+// spec-driven via createConstraintsResolver(privacyConstraints.*) in
+// legal-document-form.tsx — these interfaces mirror the LegalDocumentCreateRequest /
+// LegalDocumentUpdateRequest DTO shapes the forms collect.
 
-export const createLegalDocumentSchema = z.object({
-  documentId: z
-    .string()
-    .min(1, 'Document ID is required')
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Must be a lowercase slug (e.g. privacy-policy)'),
-  displayName: z.string().min(1, 'Display name is required'),
-  description: z.string().optional(),
-  templateName: z.string().optional(),
-});
+export interface CreateLegalDocumentFormValues {
+  readonly documentId: string;
+  readonly displayName: string;
+  readonly description?: string;
+  readonly templateName?: string;
+}
 
-export type CreateLegalDocumentFormValues = z.infer<typeof createLegalDocumentSchema>;
-
-export const editLegalDocumentSchema = z.object({
-  displayName: z.string().min(1, 'Display name is required'),
-  description: z.string().optional(),
-  templateName: z.string().optional(),
-  documentBlobId: z.string().optional(),
-  concurrencyStamp: z.string(),
-});
-
-export type EditLegalDocumentFormValues = z.infer<typeof editLegalDocumentSchema>;
+export interface EditLegalDocumentFormValues {
+  readonly displayName: string;
+  readonly description?: string;
+  readonly templateName?: string;
+  readonly documentBlobId?: string;
+  readonly concurrencyStamp: string;
+}

@@ -101,6 +101,11 @@
           "name": "AIPermissions",
           "kind": "const",
           "signature": "const AIPermissions"
+        },
+        {
+          "name": "aiConstraints",
+          "kind": "const",
+          "signature": "const aiConstraints"
         }
       ]
     },
@@ -2336,6 +2341,11 @@
           "name": "OpenIddictPermissions",
           "kind": "const",
           "signature": "const OpenIddictPermissions"
+        },
+        {
+          "name": "openiddictConstraints",
+          "kind": "const",
+          "signature": "const openiddictConstraints"
         }
       ]
     },
@@ -2347,6 +2357,11 @@
           "name": "PartiesPermissions",
           "kind": "const",
           "signature": "const PartiesPermissions"
+        },
+        {
+          "name": "partiesConstraints",
+          "kind": "const",
+          "signature": "const partiesConstraints"
         }
       ]
     },
@@ -2477,6 +2492,11 @@
           "name": "PrivacyRegulationCode",
           "kind": "type",
           "signature": "type PrivacyRegulationCode = (typeof PRIVACY_REGULATIONS)[number]['code']"
+        },
+        {
+          "name": "privacyConstraints",
+          "kind": "const",
+          "signature": "const privacyConstraints"
         }
       ]
     },
@@ -9752,7 +9772,7 @@
     },
     {
       "name": "@granit/react-ui-openiddict-admin",
-      "description": "Granit admin UI for the OpenIddict module — OIDC applications, scopes and authorizations admin CRUD (zod-validated dialog forms) plus the public OIDC flow pages (consent prompt and RFC 8628 device verification). Composes @granit/react-openiddict-admin (headless) with the foundation UI packages; host layout and current user are injected.",
+      "description": "Granit admin UI for the OpenIddict module — OIDC applications, scopes and authorizations admin CRUD (spec-driven validated dialog forms) plus the public OIDC flow pages (consent prompt and RFC 8628 device verification). Composes @granit/react-openiddict-admin (headless) with the foundation UI packages; host layout and current user are injected.",
       "exports": [
         {
           "name": "OidcApplicationsPage",
@@ -10067,7 +10087,7 @@
     },
     {
       "name": "@granit/react-ui-privacy",
-      "description": "Granit admin UI for the Privacy module — data export, account deletion, legal-agreement acceptance, regulation profile, CCPA opt-out, admin DSR (export on behalf of) and the legal-document admin CRUD (list / create / edit / publish with zod-validated forms). Composes @granit/react-privacy (headless) with the foundation UI packages.",
+      "description": "Granit admin UI for the Privacy module — data export, account deletion, legal-agreement acceptance, regulation profile, CCPA opt-out, admin DSR (export on behalf of) and the legal-document admin CRUD (list / create / edit / publish with spec-driven validated forms). Composes @granit/react-privacy (headless) with the foundation UI packages.",
       "exports": [
         {
           "name": "PrivacyExportPage",
@@ -10143,16 +10163,6 @@
           "name": "useLegalDocumentColumns",
           "kind": "function",
           "signature": "function useLegalDocumentColumns( actions: ColumnActions ): ColumnDef<LegalDocumentDetailResponse>[]"
-        },
-        {
-          "name": "createLegalDocumentSchema",
-          "kind": "const",
-          "signature": "const createLegalDocumentSchema"
-        },
-        {
-          "name": "editLegalDocumentSchema",
-          "kind": "const",
-          "signature": "const editLegalDocumentSchema"
         }
       ]
     },
@@ -10384,7 +10394,7 @@
     },
     {
       "name": "@granit/react-ui-templating",
-      "description": "Granit admin UI for the Templating module — the Scriban template list (query-driven grid with status badges, smart filters, data-exchange import/export and a stats dashboard) plus the create / edit workspace (zod-validated metadata form, dual WYSIWYG/code editor with variable & filter insertion, live HTML/PDF/Excel preview with test-data sets, lifecycle publish/unpublish, revision history and diff) and the category manager. Composes @granit/react-templating (headless) with the foundation UI packages.",
+      "description": "Granit admin UI for the Templating module — the Scriban template list (query-driven grid with status badges, smart filters, data-exchange import/export and a stats dashboard) plus the create / edit workspace (spec-validated metadata form, dual WYSIWYG/code editor with variable & filter insertion, live HTML/PDF/Excel preview with test-data sets, lifecycle publish/unpublish, revision history and diff) and the category manager. Composes @granit/react-templating (headless) with the foundation UI packages.",
       "exports": [
         {
           "name": "TemplateCreatePage",
@@ -10474,14 +10484,10 @@
           "signature": "function useTestDataStore(templateName: string)"
         },
         {
-          "name": "templateFormSchema",
-          "kind": "const",
-          "signature": "const templateFormSchema"
-        },
-        {
           "name": "TemplateFormValues",
-          "kind": "type",
-          "signature": "type TemplateFormValues = z.infer<typeof templateFormSchema>"
+          "kind": "interface",
+          "signature": "interface TemplateFormValues",
+          "members": []
         },
         {
           "name": "DEFAULT_PAGE_SIZE",
@@ -10956,6 +10962,18 @@
           "name": "createSubscriptionColumns",
           "kind": "function",
           "signature": "function createSubscriptionColumns("
+        },
+        {
+          "name": "WebhookDeactivationFormValues",
+          "kind": "interface",
+          "signature": "interface WebhookDeactivationFormValues",
+          "members": []
+        },
+        {
+          "name": "WebhookSubscriptionFormValues",
+          "kind": "interface",
+          "signature": "interface WebhookSubscriptionFormValues",
+          "members": []
         }
       ]
     },
@@ -11570,6 +11588,11 @@
           "name": "TemplatingPermissions",
           "kind": "const",
           "signature": "const TemplatingPermissions"
+        },
+        {
+          "name": "templatingConstraints",
+          "kind": "const",
+          "signature": "const templatingConstraints"
         }
       ]
     },
@@ -11845,6 +11868,11 @@
           "name": "WebhooksPermissions",
           "kind": "const",
           "signature": "const WebhooksPermissions"
+        },
+        {
+          "name": "webhooksConstraints",
+          "kind": "const",
+          "signature": "const webhooksConstraints"
         }
       ]
     },

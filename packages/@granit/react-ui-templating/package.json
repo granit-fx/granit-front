@@ -1,6 +1,6 @@
 {
   "name": "@granit/react-ui-templating",
-  "description": "Granit admin UI for the Templating module — the Scriban template list (query-driven grid with status badges, smart filters, data-exchange import/export and a stats dashboard) plus the create / edit workspace (zod-validated metadata form, dual WYSIWYG/code editor with variable & filter insertion, live HTML/PDF/Excel preview with test-data sets, lifecycle publish/unpublish, revision history and diff) and the category manager. Composes @granit/react-templating (headless) with the foundation UI packages.",
+  "description": "Granit admin UI for the Templating module — the Scriban template list (query-driven grid with status badges, smart filters, data-exchange import/export and a stats dashboard) plus the create / edit workspace (spec-validated metadata form, dual WYSIWYG/code editor with variable & filter insertion, live HTML/PDF/Excel preview with test-data sets, lifecycle publish/unpublish, revision history and diff) and the category manager. Composes @granit/react-templating (headless) with the foundation UI packages.",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -26,9 +26,9 @@
     "@granit/react-ui": "workspace:*",
     "@granit/react-ui-admin-kit": "workspace:*",
     "@granit/react-ui-data-exchange": "workspace:*",
+    "@granit/react-validation": "workspace:*",
     "@granit/templating": "workspace:*",
     "@granit/utils": "workspace:*",
-    "@hookform/resolvers": "^5.4.0",
     "@tanstack/react-table": "^8.21.3",
     "@tiptap/extension-placeholder": "^3.27.1",
     "@tiptap/extension-task-item": "^3.27.1",
@@ -44,8 +44,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.80.0",
-    "react-router-dom": "^7.18.0",
-    "zod": "^4.4.3"
+    "react-router-dom": "^7.18.0"
   },
   "publishConfig": {
     "exports": {
@@ -70,11 +69,11 @@
     "@granit/react-ui": "workspace:*",
     "@granit/react-ui-admin-kit": "workspace:*",
     "@granit/react-ui-data-exchange": "workspace:*",
+    "@granit/react-validation": "workspace:*",
     "@granit/templating": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/types": "workspace:*",
     "@granit/utils": "workspace:*",
-    "@hookform/resolvers": "^5.4.0",
     "@storybook/react-vite": "^10.4.6",
     "@tanstack/react-query": "^5.0.0",
     "@tanstack/react-table": "^8.21.3",
@@ -95,7 +94,6 @@
     "react-hook-form": "^7.80.0",
     "react-i18next": "^17.0.0",
     "react-router-dom": "^7.18.0",
-    "storybook": "^10.4.6",
-    "zod": "^4.4.3"
+    "storybook": "^10.4.6"
   }
 }

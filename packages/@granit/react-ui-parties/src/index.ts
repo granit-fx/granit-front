@@ -49,18 +49,17 @@ export {
 } from './constants';
 export type { PartyListRoleFilter, PartyListStatusFilter } from './constants';
 
-// Validation — schemas, form-value types, limits
+// Validation — spec-driven resolver factories, form-value types, limits
 export {
-  metadataEntrySchema,
+  createPartyAddressResolver,
+  createPartyCreateResolver,
+  createPartyEmailResolver,
+  createPartyExternalMappingResolver,
+  createPartyIdentityResolver,
+  createPartyPhoneResolver,
+  createPartyTaxStatusResolver,
   metadataLimits,
-  partyAddressSchema,
-  partyCreateSchema,
-  partyEmailSchema,
-  partyExternalMappingSchema,
-  partyIdentitySchema,
   partyLimits,
-  partyPhoneSchema,
-  partyTaxStatusSchema,
 } from './validation';
 export type {
   PartyAddressFormValues,

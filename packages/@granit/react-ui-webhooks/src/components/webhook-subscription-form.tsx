@@ -24,14 +24,15 @@ import {
   SelectValue,
   Skeleton,
 } from '@granit/react-ui';
+import { createConstraintsResolver } from '@granit/react-validation';
 import { useEventTypes } from '@granit/react-webhooks';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { webhooksConstraints } from '@granit/webhooks';
 import { AlertTriangle } from 'lucide-react';
-import { useEffect } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useEffect, useMemo } from 'react';
+import { useForm, useWatch, type Resolver } from 'react-hook-form';
 import { useBeforeUnload } from 'react-router-dom';
 
-import { webhookSubscriptionFormSchema, type WebhookSubscriptionFormValues } from '../validation';
+import { validateTargetUrl, type WebhookSubscriptionFormValues } from '../validation';
 
 interface WebhookSubscriptionFormProps {
   mode: 'create' | 'edit';
@@ -61,8 +62,62 @@ export function WebhookSubscriptionForm({
     {}
   );
 
+  // Spec-derived validation. Create validates `targetUrl` + `eventType`; the
+  // Update DTO only carries `targetUrl` (the event type is immutable after
+  // creation), so in edit mode the resolver leaves `eventType` to the client-only
+  // "select one" guard below. Field names already match the request DTO property
+  // names, so no label remapping beyond the i18n keys is needed.
+  const formResolver = useMemo<Resolver<WebhookSubscriptionFormValues>>(() => {
+    const baseResolver = createConstraintsResolver(
+      mode === 'create'
+        ? webhooksConstraints.WebhookSubscriptionCreateRequest
+        : webhooksConstraints.WebhookSubscriptionUpdateRequest,
+      t,
+      {
+        labelResolver: (field) =>
+          field === 'eventType' ? t('Webhooks.Form.EventType') : t('Webhooks.Form.TargetUrl'),
+      }
+    );
+
+    return (async (
+      values: Record<string, unknown>,
+      context: unknown,
+      options: { fields: Record<string, { name: string }> }
+    ) => {
+      const result = await baseResolver(values, context, options);
+
+      // Client-only SSRF guards on `targetUrl` (URL format, HTTPS, private/local
+      // host) — not expressed by the scalar spec constraints. Layered ON TOP, and
+      // only when the spec resolver did not already flag the field.
+      if (!result.errors.targetUrl && typeof values.targetUrl === 'string') {
+        const urlError = validateTargetUrl(values.targetUrl, t);
+        if (urlError) {
+          result.errors.targetUrl = { type: 'targetUrl', message: urlError };
+        }
+      }
+
+      // Client-only "an event type must be selected" guard. The Update DTO does
+      // not constrain `eventType`, so this preserves the original always-required
+      // behavior in both modes for the multiselect-style Select field.
+      if (!result.errors.eventType && !values.eventType) {
+        // 'Validation:Builtin:NotEmpty' is the shared required-field key owned by
+        // the backend Granit.Validation package (same key the spec resolver emits
+        // for a missing field), so the message matches across both modes.
+        result.errors.eventType = {
+          type: 'required',
+          message: t('Validation:Builtin:NotEmpty', {
+            PropertyName: t('Webhooks.Form.EventType'),
+            nsSeparator: false,
+          } as Record<string, unknown>),
+        };
+      }
+
+      return result;
+    }) as unknown as Resolver<WebhookSubscriptionFormValues>;
+  }, [mode, t]);
+
   const form = useForm<WebhookSubscriptionFormValues>({
-    resolver: zodResolver(webhookSubscriptionFormSchema),
+    resolver: formResolver,
     defaultValues: {
       targetUrl: '',
       eventType: '',

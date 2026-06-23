@@ -16,6 +16,33 @@ vi.mock('@granit/ai', () => ({
     KEY_PATTERN: /^[a-z0-9][a-z0-9-]*$/,
     DISPLAY_NAME_MAX_LENGTH: 64,
   },
+  // Mirrors the generated aiConstraints used by createWorkspaceResolver.
+  aiConstraints: {
+    AIWorkspaceCreateRequest: {
+      key: { required: true, maxLength: 128, pattern: '^[a-z0-9][a-z0-9-]*$' },
+      provider: { required: true },
+      model: { required: true },
+      displayName: {},
+      systemPrompt: {},
+      temperature: {
+        pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+        format: 'float',
+      },
+      maxOutputTokens: { format: 'int32' },
+    },
+    AIWorkspaceUpdateRequest: {
+      provider: { required: true },
+      model: { required: true },
+      displayName: {},
+      systemPrompt: {},
+      temperature: {
+        pattern: '^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$',
+        format: 'float',
+      },
+      maxOutputTokens: { format: 'int32' },
+      activated: {},
+    },
+  },
 }));
 
 vi.mock('@granit/react-ai', () => ({
