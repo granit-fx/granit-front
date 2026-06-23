@@ -46,6 +46,9 @@ export function renderDataExchange(ui: ReactElement) {
         </I18nextProvider>
       ),
     }),
-    user: userEvent.setup(),
+    // `delay: null` removes userEvent's inter-keystroke real-timer waits, which
+    // otherwise compound under instrumented (coverage) runs and trip the 5s
+    // per-test timeout on contended machines.
+    user: userEvent.setup({ delay: null }),
   };
 }

@@ -61,4 +61,19 @@ describe('ManualDataTable', () => {
     setup({ totalCount: 5, pageSize: 10, hidePaginationOnSinglePage: true });
     expect(screen.queryByRole('button', { name: /next/i })).toBeNull();
   });
+
+  it('navigates to the previous page when Previous is clicked', async () => {
+    const { onPageChange } = setup({ page: 2, totalCount: 30, pageSize: 10 });
+    const prev = screen.getByRole('button', { name: /previous/i });
+    expect(prev).toBeEnabled();
+    await userEvent.click(prev);
+    expect(onPageChange).toHaveBeenCalledWith(1);
+  });
+
+  it('emits the new page size via the rows-per-page selector', async () => {
+    const { onPageSizeChange } = setup({ pageSizes: [10, 25] });
+    await userEvent.click(screen.getByRole('combobox'));
+    await userEvent.click(await screen.findByRole('option', { name: '25' }));
+    expect(onPageSizeChange).toHaveBeenCalledWith(25);
+  });
 });

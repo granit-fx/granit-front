@@ -8,7 +8,7 @@ import { TokenConfirmationResult } from './token-confirmation-result';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const storyI18n = i18next.createInstance();
-void storyI18n.use(initReactI18next).init({
+await storyI18n.use(initReactI18next).init({
   lng: 'en',
   fallbackLng: 'en',
   ns: ['translation'],
@@ -62,7 +62,10 @@ export const Loading: Story = { args: { status: 'loading' } };
 export const Success: Story = { args: { status: 'success' } };
 
 /** Token rejected but the link itself was well-formed (e.g. expired). */
-export const Error: Story = { args: { status: 'error', isLinkValid: true } };
+export const ErrorState: Story = {
+  name: 'Error',
+  args: { status: 'error', isLinkValid: true },
+};
 
 /** Malformed link — shows the "invalid link" copy instead. */
 export const InvalidLink: Story = { args: { status: 'error', isLinkValid: false } };

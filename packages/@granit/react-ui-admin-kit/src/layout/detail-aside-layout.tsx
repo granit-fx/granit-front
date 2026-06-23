@@ -8,8 +8,12 @@ const DESKTOP_MEDIA_QUERY = '(min-width: 1024px)';
 const STORAGE_KEY_DEFAULT = 'granit:detail-aside-open';
 
 function getMatchMedia(): ((query: string) => MediaQueryList) | undefined {
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return undefined;
-  return window.matchMedia.bind(window);
+  if (
+    typeof globalThis.window === 'undefined' ||
+    typeof globalThis.window.matchMedia !== 'function'
+  )
+    return undefined;
+  return globalThis.window.matchMedia.bind(globalThis.window);
 }
 
 function useMatchesMedia(query: string) {

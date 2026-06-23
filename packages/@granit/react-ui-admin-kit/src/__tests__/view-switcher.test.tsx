@@ -22,4 +22,14 @@ describe('ViewSwitcher', () => {
     await userEvent.click(kanban);
     expect(onViewChange).toHaveBeenCalledWith('kanban');
   });
+
+  it('emits "list" when the list button is clicked from the kanban view', async () => {
+    const onViewChange = vi.fn();
+    renderWithI18n(<ViewSwitcher view="kanban" onViewChange={onViewChange} />);
+    const [list, kanban] = screen.getAllByRole('button');
+    expect(kanban).toHaveAttribute('aria-pressed', 'true');
+    expect(list).toHaveAttribute('aria-pressed', 'false');
+    await userEvent.click(list);
+    expect(onViewChange).toHaveBeenCalledWith('list');
+  });
 });

@@ -14,12 +14,15 @@ vi.mock('@granit/react-account', () => ({
   useResetPassword: () => ({ mutateAsync: mockMutateAsync, isPending: false }),
 }));
 
+const hrefSpy = vi.fn();
+
 beforeEach(() => {
   vi.clearAllMocks();
   Object.defineProperty(window, 'location', {
     value: { search: '?userId=abc&token=xyz', href: '' },
     writable: true,
   });
+  Object.defineProperty(window.location, 'href', { set: hrefSpy, get: () => '' });
 });
 
 function renderPage(search?: string) {
@@ -81,5 +84,38 @@ describe('ResetPasswordPage', () => {
     await waitFor(() => {
       expect(screen.getByText(/expired or already been used/i)).toBeInTheDocument();
     });
+  });
+
+  it('should show a generic error on an unexpected (500) failure', async () => {
+    mockMutateAsync.mockRejectedValueOnce({
+      isAxiosError: true,
+      response: { status: 500 },
+    });
+    const { user } = renderPage();
+
+    await user.type(screen.getByLabelText(/new password/i), 'NewPass123!');
+    await user.type(screen.getByLabelText(/confirm password/i), 'NewPass123!');
+    await user.click(screen.getByRole('button', { name: /reset password/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/an unexpected error occurred/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should redirect to a safe returnUrl after a successful reset', async () => {
+    mockMutateAsync.mockResolvedValueOnce(undefined);
+    const { user } = renderPage('?userId=abc&token=xyz&returnUrl=/connect/authorize');
+    Object.defineProperty(window.location, 'href', { set: hrefSpy, get: () => '' });
+
+    await user.type(screen.getByLabelText(/new password/i), 'NewPass123!');
+    await user.type(screen.getByLabelText(/confirm password/i), 'NewPass123!');
+    await user.click(screen.getByRole('button', { name: /reset password/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/password reset$/i)).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: /sign in with your new password/i }));
+    expect(hrefSpy).toHaveBeenCalledWith('/connect/authorize');
   });
 });

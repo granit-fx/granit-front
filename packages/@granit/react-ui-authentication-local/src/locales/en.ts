@@ -55,7 +55,7 @@ export const authLocalTranslationsEn = {
   'Auth.ExternalLogin.Redirecting': 'Redirecting to {{provider}}…',
   'Auth.ExternalLogin.Unavailable': '{{provider}} sign-in is temporarily unavailable.',
   'Auth.ForgotPassword.EmailLabel': 'Email address',
-  'Auth.ForgotPassword.EmailPlaceholder': 'admin@example.com',
+  'Auth.ForgotPassword.EmailPlaceholder': 'admin@example.com', // NOSONAR — i18n label, not a credential
   'Auth.ForgotPassword.EmailSentMessage':
     "If an account exists with that email, we've sent a password reset link.",
   'Auth.ForgotPassword.EmailSentTitle': 'Check your email',

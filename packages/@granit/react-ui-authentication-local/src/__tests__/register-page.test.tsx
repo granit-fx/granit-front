@@ -99,6 +99,61 @@ describe('RegisterPage', () => {
     });
   });
 
+  it('should show a validation error on a 400 response', async () => {
+    mockMutateAsync.mockRejectedValueOnce({
+      isAxiosError: true,
+      response: { status: 400 },
+    });
+    const { user } = renderPage();
+
+    await user.type(screen.getByLabelText(/email address/i), 'test@test.com');
+    await user.type(screen.getByLabelText(/^password$/i), 'Password1!');
+    await user.type(screen.getByLabelText(/confirm password/i), 'Password1!');
+    await user.click(screen.getByRole('button', { name: /create account/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/check your input/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should show a generic error on an unexpected (500) response', async () => {
+    mockMutateAsync.mockRejectedValueOnce({
+      isAxiosError: true,
+      response: { status: 500 },
+    });
+    const { user } = renderPage();
+
+    await user.type(screen.getByLabelText(/email address/i), 'test@test.com');
+    await user.type(screen.getByLabelText(/^password$/i), 'Password1!');
+    await user.type(screen.getByLabelText(/confirm password/i), 'Password1!');
+    await user.click(screen.getByRole('button', { name: /create account/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/an unexpected error occurred/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should submit optional first and last names when provided', async () => {
+    mockMutateAsync.mockResolvedValueOnce({ userId: 'x', requiresEmailConfirmation: true });
+    const { user } = renderPage();
+
+    await user.type(screen.getByLabelText(/first name/i), 'Marie');
+    await user.type(screen.getByLabelText(/last name/i), 'Dupont');
+    await user.type(screen.getByLabelText(/email address/i), 'new@test.com');
+    await user.type(screen.getByLabelText(/^password$/i), 'Password1!');
+    await user.type(screen.getByLabelText(/confirm password/i), 'Password1!');
+    await user.click(screen.getByRole('button', { name: /create account/i }));
+
+    await waitFor(() => {
+      expect(mockMutateAsync).toHaveBeenCalledWith({
+        email: 'new@test.com',
+        password: 'Password1!',
+        firstName: 'Marie',
+        lastName: 'Dupont',
+      });
+    });
+  });
+
   it('should have an "already have account" link', () => {
     renderPage();
     expect(screen.getByText(/already have an account/i)).toBeInTheDocument();

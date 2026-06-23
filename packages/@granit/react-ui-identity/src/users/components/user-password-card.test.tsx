@@ -68,4 +68,91 @@ describe('UserPasswordCard', () => {
       expect(screen.getByLabelText('Confirm temporary password')).toBeInTheDocument();
     });
   });
+
+  it('shows the loading label and disables the reset button while the reset is pending', () => {
+    mockSendReset.isPending = true;
+    renderWithProviders(<UserPasswordCard userId="user-1" />);
+    expect(screen.getByRole('button', { name: 'Loading...' })).toBeDisabled();
+    mockSendReset.isPending = false;
+  });
+
+  it('shows the temporary-password-set success message after a successful set', () => {
+    mockSetTempPassword.isSuccess = true;
+    renderWithProviders(<UserPasswordCard userId="user-1" />);
+    expect(screen.getByText('Temporary password set successfully')).toBeInTheDocument();
+    mockSetTempPassword.isSuccess = false;
+  });
+
+  it('keeps the confirm button disabled until a valid, matching password is entered', async () => {
+    const { user } = renderWithProviders(<UserPasswordCard userId="user-1" />);
+    await user.click(screen.getByText('Set temporary password'));
+
+    const confirm = await screen.findByRole('button', { name: 'Confirm' });
+    expect(confirm).toBeDisabled();
+
+    // Too short → still disabled, no mismatch warning yet (confirm empty).
+    await user.type(screen.getByLabelText('Temporary password'), 'short');
+    expect(confirm).toBeDisabled();
+  });
+
+  it('shows the mismatch warning and keeps confirm disabled when passwords differ', async () => {
+    const { user } = renderWithProviders(<UserPasswordCard userId="user-1" />);
+    await user.click(screen.getByText('Set temporary password'));
+
+    await user.type(screen.getByLabelText('Temporary password'), 'longenough1');
+    await user.type(screen.getByLabelText('Confirm temporary password'), 'different1');
+
+    expect(await screen.findByText('Passwords do not match')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Confirm' })).toBeDisabled();
+  });
+
+  it('submits a valid matching password and closes the dialog', async () => {
+    const mutateAsync = vi.fn().mockResolvedValue({});
+    mockSetTempPassword.mutateAsync = mutateAsync;
+    const { user } = renderWithProviders(<UserPasswordCard userId="user-1" />);
+    await user.click(screen.getByText('Set temporary password'));
+
+    await user.type(screen.getByLabelText('Temporary password'), 'longenough1');
+    await user.type(screen.getByLabelText('Confirm temporary password'), 'longenough1');
+    await user.click(screen.getByRole('button', { name: 'Confirm' }));
+
+    await waitFor(() => {
+      expect(mutateAsync).toHaveBeenCalledWith({ userId: 'user-1', password: 'longenough1' });
+    });
+  });
+
+  it('keeps the dialog open when the set-temporary mutation rejects', async () => {
+    const mutateAsync = vi.fn().mockRejectedValue(new Error('boom'));
+    mockSetTempPassword.mutateAsync = mutateAsync;
+    const { user } = renderWithProviders(<UserPasswordCard userId="user-1" />);
+    await user.click(screen.getByText('Set temporary password'));
+
+    await user.type(screen.getByLabelText('Temporary password'), 'longenough1');
+    await user.type(screen.getByLabelText('Confirm temporary password'), 'longenough1');
+    await user.click(screen.getByRole('button', { name: 'Confirm' }));
+
+    await waitFor(() => expect(mutateAsync).toHaveBeenCalled());
+    // The dialog stays open: its inputs remain mounted.
+    expect(screen.getByLabelText('Temporary password')).toBeInTheDocument();
+  });
+
+  it('renders the set error message when the mutation is in an error state', async () => {
+    mockSetTempPassword.isError = true;
+    const { user } = renderWithProviders(<UserPasswordCard userId="user-1" />);
+    await user.click(screen.getByText('Set temporary password'));
+
+    expect(await screen.findByText('Failed to set password')).toBeInTheDocument();
+    mockSetTempPassword.isError = false;
+  });
+
+  it('closes the dialog via the cancel button', async () => {
+    const { user } = renderWithProviders(<UserPasswordCard userId="user-1" />);
+    await user.click(screen.getByText('Set temporary password'));
+    await screen.findByLabelText('Temporary password');
+
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
+    await waitFor(() => {
+      expect(screen.queryByLabelText('Temporary password')).not.toBeInTheDocument();
+    });
+  });
 });

@@ -109,6 +109,24 @@ describe('QueryControlBar', () => {
     expect(screen.getByText(/3 patients/)).toBeInTheDocument();
   });
 
+  it('falls back to a zero count when the paged query has no data yet', () => {
+    const endpoint = makeEndpoint();
+    (endpoint as { query: { data: unknown } }).query = { data: undefined };
+    renderWithI18n(
+      <QueryControlBar meta={baseMeta} queryEndpoint={endpoint} recordLabel="patients" />
+    );
+    expect(screen.getByText(/0 patients/)).toBeInTheDocument();
+  });
+
+  it('falls back to a zero count when the grouped query has no data yet', () => {
+    const endpoint = makeEndpoint({ isGrouped: true });
+    (endpoint as { groupedQuery: { data: unknown } }).groupedQuery = { data: undefined };
+    renderWithI18n(
+      <QueryControlBar meta={baseMeta} queryEndpoint={endpoint} recordLabel="patients" />
+    );
+    expect(screen.getByText(/0 patients/)).toBeInTheDocument();
+  });
+
   it('renders leading content', () => {
     renderWithI18n(
       <QueryControlBar

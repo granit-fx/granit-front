@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { SortSelector } from '../querying/sort-selector';
@@ -51,6 +51,24 @@ describe('SortSelector', () => {
     const items = await screen.findAllByRole('menuitem');
     expect(items).toHaveLength(2);
     expect(screen.queryByRole('menuitem', { name: 'Internal' })).toBeNull();
+  });
+
+  it('falls back to the raw field name when the sorted field has no matching column', () => {
+    const sort: SortEntry[] = [{ field: 'unknownField', direction: 'desc' }];
+    renderWithI18n(<SortSelector columns={columns} sort={sort} onToggleSort={vi.fn()} />);
+    expect(screen.getByRole('button', { name: /unknownField/ })).toBeInTheDocument();
+  });
+
+  it('marks the active option with a descending arrow in the menu', async () => {
+    const sort: SortEntry[] = [{ field: 'firstName', direction: 'desc' }];
+    renderWithI18n(<SortSelector columns={columns} sort={sort} onToggleSort={vi.fn()} />);
+    await userEvent.click(screen.getByRole('button'));
+    const active = await waitFor(() => {
+      const el = document.querySelector('[data-slot="sort-option"][data-active="true"]');
+      if (!el) throw new Error('active sort option not rendered');
+      return el;
+    });
+    expect(active).toBeInTheDocument();
   });
 
   it('invokes onToggleSort with the field name when an item is clicked', async () => {

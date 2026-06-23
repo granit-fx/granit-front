@@ -54,7 +54,7 @@ export const authLocalTranslationsFr: Record<keyof AuthLocalTranslations, string
   'Auth.ExternalLogin.Redirecting': 'Redirection vers {{provider}}…',
   'Auth.ExternalLogin.Unavailable': 'La connexion {{provider}} est temporairement indisponible.',
   'Auth.ForgotPassword.EmailLabel': 'Adresse email',
-  'Auth.ForgotPassword.EmailPlaceholder': 'admin@exemple.com',
+  'Auth.ForgotPassword.EmailPlaceholder': 'admin@exemple.com', // NOSONAR — i18n label, not a credential
   'Auth.ForgotPassword.EmailSentMessage':
     'Si un compte existe avec cette adresse, nous avons envoyé un lien de réinitialisation.',
   'Auth.ForgotPassword.EmailSentTitle': 'Vérifiez vos emails',
@@ -150,8 +150,8 @@ export const authLocalTranslationsFr: Record<keyof AuthLocalTranslations, string
   'Auth.ResetPassword.InvalidToken': 'Ce lien a expiré ou a déjà été utilisé.',
   'Auth.ResetPassword.NewPasswordLabel': 'Nouveau mot de passe',
   'Auth.ResetPassword.NewPasswordPlaceholder': 'Au moins 8 caractères',
-  'Auth.ResetPassword.Submit': 'Réinitialiser',
-  'Auth.ResetPassword.Submitting': 'Réinitialisation…',
+  'Auth.ResetPassword.Submit': 'Réinitialiser', // NOSONAR — i18n label, not a credential
+  'Auth.ResetPassword.Submitting': 'Réinitialisation…', // NOSONAR — i18n label, not a credential
   'Auth.ResetPassword.Subtitle': 'Choisissez un nouveau mot de passe pour votre compte.',
   'Auth.ResetPassword.SuccessMessage': 'Votre mot de passe a été réinitialisé avec succès.',
   'Auth.ResetPassword.SuccessTitle': 'Mot de passe réinitialisé',

@@ -80,6 +80,18 @@ export function renderWithProviders(ui: ReactElement, { route = '/' }: { route?:
         </I18nextProvider>
       ),
     }),
-    user: userEvent.setup(),
+    // `delay: null` removes userEvent's inter-event real-timer waits, which
+    // otherwise compound under v8 coverage instrumentation and intermittently
+    // trip waitFor timeouts on the pagination flows.
+    user: userEvent.setup({ delay: null }),
   };
+}
+
+/**
+ * Provider wrapper for `renderHook`: the same i18n bundle as the page tests, so
+ * label-string hooks resolve the package's flat keys (and their humanized
+ * fallbacks for unknown codes) without a full DOM render.
+ */
+export function HookProviders({ children }: { readonly children: ReactNode }) {
+  return <I18nextProvider i18n={testI18n}>{children}</I18nextProvider>;
 }

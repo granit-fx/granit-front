@@ -111,7 +111,7 @@ export function GroupDetailPage() {
     );
   }
 
-  if (error || (!isLoading && !group)) {
+  if (error || !group) {
     return (
       <div data-slot="group-detail-page" className="space-y-6">
         <Button variant="ghost" size="icon" onClick={() => navigate('/identity/groups')}>

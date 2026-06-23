@@ -8,15 +8,12 @@ import { renderWithI18n, setupI18n } from './test-utils';
 import type { GroupEntry, SortEntry } from '@granit/query-engine';
 import type { ColumnDef } from '@tanstack/react-table';
 
-
 interface Row {
   readonly id: number;
   readonly name: string;
 }
 
-const columns: ColumnDef<Row, unknown>[] = [
-  { accessorKey: 'name', header: 'Name', id: 'name' },
-];
+const columns: ColumnDef<Row, unknown>[] = [{ accessorKey: 'name', header: 'Name', id: 'name' }];
 
 const data: Row[] = [
   { id: 1, name: 'Alice' },
@@ -34,12 +31,7 @@ describe('QueryDataTable', () => {
 
   it('shows the empty state when there are no rows', () => {
     renderWithI18n(
-      <QueryDataTable<Row>
-        columns={columns}
-        data={[]}
-        totalCount={0}
-        emptyMessage="Nothing here"
-      />
+      <QueryDataTable<Row> columns={columns} data={[]} totalCount={0} emptyMessage="Nothing here" />
     );
     expect(screen.getByText('Nothing here')).toBeInTheDocument();
     expect(screen.queryByText('Alice')).toBeNull();
@@ -141,6 +133,20 @@ describe('QueryDataTable', () => {
     expect(screen.getByText('Alice')).toBeInTheDocument();
     await userEvent.click(container.querySelector('[data-slot="group-header"]') as HTMLElement);
     expect(screen.queryByText('Alice')).toBeNull();
+  });
+
+  it('re-expands a collapsed group on a second header click', async () => {
+    const groups: GroupEntry<Row>[] = [
+      { field: 'status', value: 'active', label: 'Active', count: 2, items: data },
+    ];
+    const { container } = renderWithI18n(
+      <QueryDataTable<Row> columns={columns} data={[]} groups={groups} totalCount={2} />
+    );
+    const header = () => container.querySelector('[data-slot="group-header"]') as HTMLElement;
+    await userEvent.click(header());
+    expect(screen.queryByText('Alice')).toBeNull();
+    await userEvent.click(header());
+    expect(screen.getByText('Alice')).toBeInTheDocument();
   });
 
   it('shows the empty state when grouped data has no groups', () => {

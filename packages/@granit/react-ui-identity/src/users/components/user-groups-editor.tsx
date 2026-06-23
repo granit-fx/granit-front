@@ -38,13 +38,8 @@ export function UserGroupsEditor({ userId }: Readonly<UserGroupsEditorProps>) {
   }
   const userGroupIds = new Set(Array.isArray(userGroups) ? userGroups.map((g) => g.id) : []);
 
-  const handleToggle = (groupId: string, checked: boolean) => {
-    if (checked) {
-      addToGroup.mutate({ userId, groupId });
-    } else {
-      removeFromGroup.mutate({ userId, groupId });
-    }
-  };
+  const handleAdd = (groupId: string) => addToGroup.mutate({ userId, groupId });
+  const handleRemove = (groupId: string) => removeFromGroup.mutate({ userId, groupId });
 
   return (
     <Card>
@@ -71,7 +66,9 @@ export function UserGroupsEditor({ userId }: Readonly<UserGroupsEditorProps>) {
                 <Checkbox
                   id={`group-${group.id}`}
                   checked={userGroupIds.has(group.id)}
-                  onCheckedChange={(checked) => handleToggle(group.id, checked === true)}
+                  onCheckedChange={(checked) =>
+                    checked === true ? handleAdd(group.id) : handleRemove(group.id)
+                  }
                   disabled={isMutating}
                 />
                 <Label htmlFor={`group-${group.id}`} className="cursor-pointer text-sm">

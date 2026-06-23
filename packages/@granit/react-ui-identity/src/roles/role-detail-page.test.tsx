@@ -123,4 +123,20 @@ describe('RoleDetailPage', () => {
     renderWithProviders(<RoleDetailPage />, { route: '/identity/roles/admin' });
     expect(screen.getByText('An error occurred')).toBeInTheDocument();
   });
+
+  it('opens the remove confirmation and removes the member on confirm', async () => {
+    mockRemove.mutate.mockImplementation((_vars, opts) => opts?.onSuccess?.());
+    mockUseRoleMembers.mockReturnValue({ data: mockMembers, isLoading: false, error: null });
+    const { user } = renderWithProviders(<RoleDetailPage />, { route: '/identity/roles/admin' });
+
+    // The per-row remove button carries the "Remove" accessible name.
+    await user.click(screen.getByRole('button', { name: 'Remove' }));
+    const confirm = await screen.findByRole('button', { name: 'Remove' });
+    await user.click(confirm);
+
+    expect(mockRemove.mutate).toHaveBeenCalledWith(
+      { userId: 'user-1', roleName: 'admin' },
+      expect.any(Object)
+    );
+  });
 });

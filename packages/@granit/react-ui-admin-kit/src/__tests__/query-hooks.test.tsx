@@ -59,6 +59,74 @@ describe('useSmartFilterSync', () => {
     expect(endpoint.setQuickFilters).toHaveBeenCalledWith(['active']);
   });
 
+  it('defaults search to an empty string when smartFilter.search is nullish', () => {
+    const endpoint = makeEndpoint();
+    const smartFilter = {
+      filters: [],
+      search: null,
+      presets: {},
+      quickFilters: [],
+      tokens: [],
+      removeToken: vi.fn(),
+      addPresetToken: vi.fn(),
+    };
+    renderHook(
+      () =>
+        useSmartFilterSync(smartFilter as never, endpoint as never, { data: undefined } as never),
+      { wrapper }
+    );
+    expect(endpoint.setSearch).toHaveBeenCalledWith('');
+  });
+
+  it('handlePresetToggle leaves non-matching tokens untouched when the selection clears', () => {
+    const endpoint = makeEndpoint();
+    const removeToken = vi.fn();
+    const smartFilter = {
+      filters: [],
+      search: '',
+      presets: {},
+      quickFilters: [],
+      tokens: [
+        { id: 'search-1', type: 'search', group: undefined },
+        { id: 'preset-other', type: 'preset', group: 'priority' },
+      ],
+      removeToken,
+      addPresetToken: vi.fn(),
+    };
+    const { result } = renderHook(
+      () =>
+        useSmartFilterSync(smartFilter as never, endpoint as never, { data: undefined } as never),
+      { wrapper }
+    );
+    result.current.handlePresetToggle('status', []);
+    expect(removeToken).not.toHaveBeenCalled();
+  });
+
+  it('handlePresetToggle is a no-op when the named preset is not found in meta', () => {
+    const endpoint = makeEndpoint();
+    const addPresetToken = vi.fn();
+    const smartFilter = {
+      filters: [],
+      search: '',
+      presets: {},
+      quickFilters: [],
+      tokens: [],
+      removeToken: vi.fn(),
+      addPresetToken,
+    };
+    const meta = {
+      data: {
+        presetFilterGroups: [{ name: 'status', presets: [{ name: 'open', label: 'Open' }] }],
+      },
+    };
+    const { result } = renderHook(
+      () => useSmartFilterSync(smartFilter as never, endpoint as never, meta as never),
+      { wrapper }
+    );
+    result.current.handlePresetToggle('status', ['unknown']);
+    expect(addPresetToken).not.toHaveBeenCalled();
+  });
+
   it('handlePresetToggle removes matching preset tokens when the selection clears', () => {
     const endpoint = makeEndpoint();
     const removeToken = vi.fn();

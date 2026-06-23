@@ -136,4 +136,73 @@ describe('IdentityCachePage', () => {
     renderWithProviders(<IdentityCachePage />);
     expect(screen.queryByText('Total entries')).not.toBeInTheDocument();
   });
+
+  it('falls back to the unknown-provider label when no provider name is reported', () => {
+    mockUseCapabilities.mockReturnValue({ data: { ...capabilities, providerName: undefined } });
+    renderWithProviders(<IdentityCachePage />);
+    expect(screen.getByText('Unknown provider')).toBeInTheDocument();
+  });
+
+  it('omits the provider badge entirely when capabilities are unavailable', () => {
+    mockUseCapabilities.mockReturnValue({ data: undefined });
+    renderWithProviders(<IdentityCachePage />);
+    expect(screen.queryByText('Keycloak')).not.toBeInTheDocument();
+  });
+
+  it('renders a spinner in the user list while users are loading', async () => {
+    mockUseUsers.mockReturnValue({ data: undefined, isLoading: true });
+    const { user } = renderWithProviders(<IdentityCachePage />);
+    await user.type(screen.getByPlaceholderText('Search or filter...'), 'jane');
+    expect(document.querySelector('[data-slot="identity-cache-page"]')).toBeInTheDocument();
+  });
+
+  it('shows the no-results message when a search returns an empty page', async () => {
+    mockUseUsers.mockReturnValue({
+      data: { items: [], totalCount: 0, hasMore: false },
+      isLoading: false,
+    });
+    const { user } = renderWithProviders(<IdentityCachePage />);
+    await user.type(screen.getByPlaceholderText('Search or filter...'), 'zzz');
+    expect(screen.getByText('No results found')).toBeInTheDocument();
+  });
+
+  it('triggers a sync-stale when the button is clicked', async () => {
+    const hooks = syncHooks();
+    mockUseSync.mockReturnValue(hooks);
+    const { user } = renderWithProviders(<IdentityCachePage />);
+    await user.click(screen.getByRole('button', { name: /Sync stale/i }));
+    expect(hooks.syncStale.mutateAsync).toHaveBeenCalled();
+  });
+
+  it('selects a user and syncs the selection', async () => {
+    mockUseUsers.mockReturnValue({ data: usersPage, isLoading: false });
+    const hooks = syncHooks();
+    mockUseSync.mockReturnValue(hooks);
+    const { user } = renderWithProviders(<IdentityCachePage />);
+    await user.type(screen.getByPlaceholderText('Search or filter...'), 'jane');
+
+    await user.click(screen.getByRole('checkbox'));
+    const syncSelected = await screen.findByRole('button', { name: /Sync 1 selected/i });
+    await user.click(syncSelected);
+    expect(hooks.sync.mutateAsync).toHaveBeenCalled();
+  });
+
+  it('disables the sync buttons while a sync is in progress', () => {
+    mockUseSync.mockReturnValue({
+      sync: { mutateAsync: vi.fn(), isPending: false },
+      syncAll: { mutateAsync: vi.fn(), isPending: true },
+      syncStale: { mutateAsync: vi.fn(), isPending: false },
+    });
+    renderWithProviders(<IdentityCachePage />);
+    expect(screen.getByRole('button', { name: /Sync stale/i })).toBeDisabled();
+  });
+
+  it('renders the dash placeholder for missing sync timestamps', () => {
+    mockUseCacheStats.mockReturnValue({
+      data: { totalEntries: 0, staleEntries: 0, oldestSyncAt: null, newestSyncAt: null },
+      isLoading: false,
+    });
+    renderWithProviders(<IdentityCachePage />);
+    expect(screen.getAllByText('—').length).toBeGreaterThan(0);
+  });
 });
