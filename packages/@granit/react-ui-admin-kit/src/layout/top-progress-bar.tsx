@@ -1,7 +1,6 @@
-import * as React from 'react';
-
 import { cn } from '@granit/utils';
 import { useIsFetching, useIsMutating } from '@tanstack/react-query';
+import * as React from 'react';
 
 let suspenseCount = 0;
 const listeners = new Set<() => void>();
@@ -44,7 +43,6 @@ export function TopProgressBar() {
 
   React.useEffect(() => {
     if (active && state === 'idle') {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync progress to external query/mutation activity
       setState('loading');
       setProgress(8);
     } else if (!active && state === 'loading') {

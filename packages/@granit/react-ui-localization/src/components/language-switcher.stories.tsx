@@ -1,6 +1,7 @@
 import { mockLanguages } from '@granit/react-localization/testing';
 
 import { LanguagesContext } from '../languages-context';
+
 import { LanguageSwitcher } from './language-switcher';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
