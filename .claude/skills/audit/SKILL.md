@@ -25,6 +25,11 @@ audit without the checklist — it contains the full verification matrix.
    `create*` / `update*` / `delete*` for writes
 6. Business/domain HTTP goes through `@granit/api-client` (Axios); native
    `fetch` is allowed only in BFF / telemetry / SSE infra layers (see CLAUDE.md)
+7. Three-layer separation, one-way deps: core `@granit/{module}` (types + api,
+   NO React) ← headless `@granit/react-{module}` (hooks/providers/testing) ←
+   UI `@granit/react-ui-{module}` (components, NO data access / NO api-client)
+8. Tests reuse shared `@granit/react-{module}/testing` fixtures — no duplicated
+   inline DTO data; every module with endpoints ships `/testing` mocks
 
 ---
 
@@ -46,6 +51,8 @@ audit without the checklist — it contains the full verification matrix.
 | `--scope api`     | Only check API functions and serialization       |
 | `--scope hooks`   | Only check React hooks patterns                  |
 | `--scope deps`    | Only check dependencies and peer deps            |
+| `--scope tests`   | Only check test data/mocks reuse + coverage      |
+| `--scope layers`  | Only check 3-tier layer separation               |
 | `--scope all`     | Full audit (default)                             |
 | `--base <branch>` | Base branch for `pr` mode (default: `develop`)   |
 
@@ -73,6 +80,8 @@ FLAGS
                       api     API functions and serialization
                       hooks   React hooks patterns
                       deps    Dependencies and peer deps
+                      tests   Test data/mocks reuse + coverage (no duplication)
+                      layers  3-tier layer separation (core/headless/react-ui)
                       all     Everything (default)
   --base <branch>   Base branch for pr mode (default: develop)
 
@@ -84,6 +93,8 @@ EXAMPLES
   /audit pr --fix               Check and fix before PR
   /audit all --scope types      Only check type conformity across all packages
   /audit notifications --scope api   Only check API coverage for notifications
+  /audit all --scope tests      Check mocks exist + no duplicated test data
+  /audit invoicing --scope layers    Check core/headless/react-ui separation
 
 SEVERITY LEVELS
   BREAKING        Type mismatch causing runtime errors — must fix
@@ -106,7 +117,10 @@ If a specific package was given, resolve it:
 - `query-engine` → `packages/@granit/query-engine` + `packages/@granit/react-query-engine`
 - `notifications` → `packages/@granit/notifications` + `packages/@granit/react-notifications`
   - transport packages (`notifications-signalr`, `notifications-sse`, etc.)
-- Any name → `packages/@granit/{name}` + `packages/@granit/react-{name}` if it exists
+- Any name → resolve the **whole layer trio** when present:
+  `packages/@granit/{name}` (core) + `packages/@granit/react-{name}` (headless) +
+  `packages/@granit/react-ui-{name}` (UI). Audit them together so layer-separation
+  (checklist 7) and fixture-reuse (checklist 5e) can be checked across the trio.
 
 If `all`, list all packages under `packages/@granit/` and process each.
 
@@ -119,6 +133,14 @@ For each target package, collect:
 1. **Frontend types**: read `src/types/` and `src/index.ts` (public API surface)
 2. **Frontend API functions**: read `src/api/` files
 3. **Frontend hooks**: read `src/hooks/` files (for `react-*` packages)
+3b. **Layer surface** (checklist 7): note which of the trio exist
+    (`@granit/{name}` / `react-{name}` / `react-ui-{name}`) and read each one's
+    `package.json` deps + top-level `src/` dirs to verify the one-way dependency
+    direction and that the UI layer holds no `api/`, data hooks, or api-client dep
+3c. **Test data & mocks** (checklist 5e): read `src/testing/` (does the headless
+    package ship `data.ts` + `handlers.ts` + barrel?) and check `vitest.config.ts`
+    for the `<pkg>/testing` alias; scan `src/__tests__/` for inline DTO literals
+    that duplicate an existing fixture
 4. **Backend contract** (multi-step discovery):
 
    a. **Module mapping**: resolve the .NET module name from the package name
@@ -186,7 +208,9 @@ For each target package, collect:
 Apply every category from [checklist.md](checklist.md) against the gathered context.
 Work through the checklist **in order** — type conformity first, then API (including
 HTTP-client conformity and endpoint drift), hooks, dependencies, cross-cutting
-concerns, and finally module decomposition (backend bounded-context alignment).
+concerns (including test data & mocks reuse, checklist 5e), module decomposition
+(backend bounded-context alignment), and finally the 3-tier layer separation
+(checklist 7 — core / headless / react-ui).
 
 For each finding, classify it:
 
@@ -338,6 +362,37 @@ When auditing all packages, perform these additional checks:
 8. **HTTP client + CSP conformity**: no domain `fetch()` outside the allowed
    infra layers (checklist 2d); every package writing to a DOM script sink
    exposes a `<pkg>/csp` subpath — run `pnpm check:csp` to confirm
+9. **Mocks coverage (checklist 5e)**: every domain `react-{module}` with HTTP
+   endpoints ships a `src/testing/` fixtures barrel with a registered
+   `<pkg>/testing` vitest alias. Enumerate the gaps:
+
+   ```bash
+   # modules with a /testing barrel
+   for f in packages/@granit/react-*/src/testing/index.ts; do echo "${f%/src/testing/index.ts}"; done | sed 's|packages/@granit/||'
+   # /testing aliases registered in vitest.config.ts
+   grep -oE "@granit/react-[a-z-]+/testing" vitest.config.ts | sort -u
+   ```
+
+   Flag a `react-{module}` (API-backed) with no `/testing` as GAP, and any
+   `/testing` barrel without a matching alias as BREAKING.
+10. **No duplicated test data (checklist 5e)**: across `react-*` and `react-ui-*`
+    tests, flag inline domain-DTO literals / `makeX()` factories that duplicate an
+    existing shared fixture (`mock*` / `sample*`) instead of importing it from
+    `@granit/react-{module}/testing`.
+11. **Layer separation (checklist 7)**: for every domain that has a
+    `react-ui-{module}`, verify the trio (core / headless / react-ui) and the
+    one-way dependency direction. Quick scans:
+
+    ```bash
+    # react-ui packages that wrongly carry a runtime/peer api-client or Axios dep
+    for p in packages/@granit/react-ui-*/package.json; do
+      grep -q '"@granit/api-client"' <(sed -n '/peerDependencies/,/}/p' "$p") && echo "PEER api-client: $p"
+    done
+    # react-ui packages with a forbidden api/ or HTTP hooks dir
+    ls -d packages/@granit/react-ui-*/src/api 2>/dev/null
+    # core packages that import React (back-edge)
+    grep -rlE "from 'react'|from \"react\"" packages/@granit/*/src 2>/dev/null | grep -vE "/react-|/react-ui-" | head
+    ```
 
 ---
 
@@ -442,12 +497,42 @@ git diff origin/develop...HEAD -- "packages/@granit/{pkg}/src/" | grep -nE "^\+.
 - Verify no forbidden structure mix (checklist 5a); if the package writes to a
   DOM script sink, confirm it exposes `<pkg>/csp` (run `pnpm check:csp`)
 
-#### Test coverage
+#### Test coverage & mocks (checklist 5b, 5e)
 
 For any new `src/api/*.ts` or `src/hooks/*.ts` file:
 
 - Verify a corresponding test file exists
 - If no test: flag as **GAP** with `Action: add test for {function}`
+
+For any new/changed test file in the diff:
+
+- **Reuse fixtures**: flag inline domain-DTO literals (`const x: {Name}Response =
+  {…}`) or `makeX()` factories that duplicate a fixture already exported by
+  `@granit/react-{module}/testing` — **INCONSISTENCY**, `Fix: import the fixture`
+- **New module ships mocks**: if the branch adds a `react-{module}` with HTTP
+  endpoints, verify it also adds `src/testing/` (fixtures + MSW barrel) and the
+  `<pkg>/testing` alias in `vitest.config.ts` (ordered before the base alias) —
+  missing fixtures = GAP, missing/mis-ordered alias = BREAKING
+- **Coverage ≥ 80%** on the changed package (all four metrics)
+
+#### Layer separation (checklist 7)
+
+For any new or changed `react-ui-{module}` package in the diff:
+
+```bash
+git diff origin/develop...HEAD -- "packages/@granit/react-ui-{pkg}/package.json"
+ls -d packages/@granit/react-ui-{pkg}/src/api packages/@granit/react-ui-{pkg}/src/hooks 2>/dev/null
+git diff origin/develop...HEAD -- "packages/@granit/react-ui-{pkg}/src/" | grep -nE "^\+.*(@granit/api-client|axios|\bfetch\()"
+```
+
+- **No data access in the UI layer**: flag `@granit/api-client` / Axios in
+  `peerDependencies`, an `src/api/` dir, an HTTP-performing `src/hooks/`, or a
+  domain `fetch(` as **BREAKING** — data must flow through `@granit/react-{module}`
+  hooks (checklist 7c)
+- **Headless counterpart exists**: a new `react-ui-{module}` without a
+  `@granit/react-{module}` peer dep (logic inlined) is an **INCONSISTENCY**
+- **No back-edges**: a core `@granit/{module}` importing React, or a
+  `react-{module}` importing a `react-ui-*`, is **BREAKING** (checklist 7d)
 
 ### PR Step 3 — Verification gate
 

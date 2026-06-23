@@ -227,7 +227,41 @@ Then check each entry against the frontend `src/api/` functions:
 - [ ] **Mock client**: tests use `createMockClient()` from `@granit/testing`
 - [ ] **Response shape**: mock responses in tests match `PagedResult<T>` or
       the actual backend response shape (not outdated `PaginatedResponse`)
-- [ ] **Coverage >= 80%**: on all source files
+- [ ] **Coverage >= 80%**: on all source files (all four metrics — lines,
+      statements, functions, branches — the global Vitest threshold)
+
+### 5e. Test data & mocks (no duplication)
+
+The headless `@granit/react-{module}` package owns the **shared test fixtures**
+for its domain. Tests in that package AND in its `@granit/react-ui-{module}`
+consumer (and any other consumer) must reuse them — never re-create the same
+domain DTO inline.
+
+- [ ] **Shared mocks exist (every module)**: the headless `@granit/react-{module}`
+      ships `src/testing/` with `data.ts` (typed `mock*` / `sample*` fixtures) and,
+      where the module has HTTP endpoints, `handlers.ts` (MSW), re-exported via a
+      `src/testing/index.ts` barrel and the `<pkg>/testing` subpath. A module with
+      API endpoints but no `/testing` fixtures is a GAP
+      (`Action: add @granit/react-{module}/testing fixtures + MSW handlers`)
+- [ ] **Vitest alias registered**: every `/testing` barrel has a matching alias in
+      `vitest.config.ts` (`'@granit/react-{module}/testing'` →
+      `.../src/testing/index.ts`), declared **before** the broader base alias
+      `'@granit/react-{module}'` so the subpath is not shadowed by prefix match.
+      A missing or mis-ordered alias is BREAKING (tests can't resolve the import)
+- [ ] **No duplicated test data**: tests import the shared fixtures from
+      `@granit/react-{module}/testing` instead of hand-rolling the same domain DTO
+      inline. Flag a `const x: {Name}Response = {…}` literal — or a `makeX()`
+      factory rebuilding a DTO — where a matching fixture already exists as
+      INCONSISTENCY (`Fix: import {fixture} from '@granit/react-{module}/testing'`;
+      rebase `makeX()` on the fixture keeping spread-override). Same-package tests
+      may import their own fixtures via relative `../testing/data`
+- [ ] **Single source of truth**: a DTO shape change should require editing only
+      `testing/data.ts`, not N test files. Legitimately inline: UI-specific props,
+      form-input payloads, and edge values with no matching fixture
+- [ ] **tsc after fixture refactors**: Vitest type-strips, so it will NOT catch
+      `T | undefined` from fixture index access under `noUncheckedIndexedAccess`
+      (`mock[0]` needs `mock[0]!`). Always run `tsc --noEmit` per touched package —
+      the pre-commit `tsc -r` will otherwise block the commit
 
 ### 5c. Consumer compatibility
 
@@ -304,6 +338,77 @@ Granit.{Parent}.{Child}             → sub-module (e.g. Authentication.ApiKeys)
       across layers (framework vs business vs endpoints), the frontend split
       follows the same seam (generic mechanism in `@granit/{module}`, domain
       wiring in a glue package or the consuming app)
+
+---
+
+## 7. Layer Separation — 3-tier architecture (--scope layers)
+
+Every domain now spans **three layers** with a strict one-way dependency
+direction. The admin UI ships as dedicated `react-ui-*` packages on top of the
+headless `react-*` packages on top of the framework-agnostic core:
+
+```text
+@granit/{module}           API layer (core)    types/ + api/ (Axios) + permissions.ts — framework-agnostic, NO React
+        ▲
+@granit/react-{module}     React headless      hooks/ + providers/ + testing/ — logic & data access, NO admin pages
+        ▲
+@granit/react-ui-{module}  React UI            components/ (pages, dialogs, columns, forms) on @granit/react-ui — NO data access
+```
+
+Dependency direction is **react-ui → react → core**, never reversed.
+Prefer extending `@granit/arch-tests` over ad-hoc checks where a rule is
+expressible as an import-boundary test.
+
+### 7a. API layer — core `@granit/{module}`
+
+- [ ] **No React**: no `react` / `react-dom` import, no JSX, no hooks. Only
+      `types/`, `api/` (Axios functions), `permissions.ts` (if backend perms),
+      `index.ts`
+- [ ] **No react-layer dirs**: no `hooks/`, `components/`, `providers/`, or
+      `testing/` MSW (checklist 5a forbidden mixes)
+- [ ] **Owns the HTTP contract**: `api/` functions go through `@granit/api-client`
+      (checklist 2d); this is the ONLY layer that performs domain HTTP
+
+### 7b. React headless — `@granit/react-{module}`
+
+- [ ] **Logic, not chrome**: `hooks/` (React Query + query-key factories),
+      `providers/`, `testing/`. May ship low-level/primitive components, but NOT
+      the admin pages/tables/dialogs/forms — those belong in `react-ui`
+- [ ] **Depends on core only**: peerDeps include `@granit/{module}` (its core);
+      NEVER depends on or imports a `react-ui-*` package
+- [ ] **Ships the mocks**: provides `src/testing/` fixtures (+ MSW) per 5e
+- [ ] **No `api/` dir**: HTTP lives in core; hooks call the core API functions
+      (checklist 5a)
+
+### 7c. React UI — `@granit/react-ui-{module}`
+
+- [ ] **Presentational + composition**: `components/` (pages, dialogs, columns,
+      forms), `locales/`, optional `lib/`. Built on `@granit/react-ui` (the
+      shadcn/ui foundation)
+- [ ] **No data access**: NO `api/` dir, NO `src/hooks/` performing HTTP, NO
+      direct `@granit/api-client` / Axios / domain `fetch`. All data flows through
+      the headless hooks (`@granit/react-{module}`). `@granit/api-client` may
+      appear ONLY in `devDependencies` (test wiring), never `peerDependencies`.
+      A runtime api-client/Axios dependency, a domain `fetch`, or a re-implemented
+      fetching hook is BREAKING
+- [ ] **Depends on the headless layer**: peerDeps include `@granit/react-{module}`
+      and `@granit/react-ui` (+ core `@granit/{module}` for types). Does not depend
+      on another domain's `react-ui-*` except via documented composition
+- [ ] **No headless-logic duplication**: query keys, providers, and fetching hooks
+      are imported from `@granit/react-{module}`, not redefined
+- [ ] **i18n placement**: user-facing locale bundles live in this layer (or the
+      headless layer if it surfaces strings), never in core
+
+### 7d. Direction & boundaries (arch-test territory)
+
+- [ ] **One-way deps only**: core imports nothing React; `react-{module}` imports
+      core (not `react-ui-*`); `react-ui-{module}` imports `react-{module}` + core
+      + `@granit/react-ui`. Flag any back-edge (core → react, react → react-ui) as
+      BREAKING
+- [ ] **Trio completeness**: a domain with a `react-ui-{module}` should have the
+      full trio — core `@granit/{module}` + headless `@granit/react-{module}` +
+      UI `@granit/react-ui-{module}`. A `react-ui-*` with no headless counterpart
+      (data access inlined) is an INCONSISTENCY
 
 ---
 
