@@ -7,7 +7,7 @@ This is the **rendering** layer: it composes the headless
 [`@granit/react-data-exchange`](../react-data-exchange) (TanStack Query hooks +
 `ExportProvider`/`ImportProvider`) with the foundation UI packages
 ([`@granit/react-ui`](../react-ui),
-[`@granit/react-ui-kit`](../react-ui-admin-kit)). It bakes in no Axios
+[`@granit/react-ui-admin-kit`](../react-ui-admin-kit)). It bakes in no Axios
 client — the client is resolved from a `GranitClientProvider` higher in the host
 tree and handed to the headless providers.
 
@@ -37,7 +37,7 @@ these peers:
   and dates are localized; no hard-coded strings on the page surfaces).
 - `@granit/react-ui` — shadcn/ui primitives (`Dialog`, `Select`, `Badge`,
   `Spinner`, …).
-- `@granit/react-ui-kit` — `QueryDataTable`, the paginated history grid.
+- `@granit/react-ui-admin-kit` — `QueryDataTable`, the paginated history grid.
 - `@granit/utils` — `cn` class merge helper.
 - `@tanstack/react-table` (`^8.21`) — `ColumnDef` for the column factories.
 - `lucide-react` (`^1.21`) — action/status icons.

@@ -42,7 +42,7 @@ these peers (all `workspace:*` unless a version range is given):
 - `@granit/react-query-engine` + `@granit/query-engine` — the query-endpoint
   state, metadata, smart-filter and `PagedResult` / `QueryRequest` types behind
   the list / gallery surfaces.
-- `@granit/react-ui` and `@granit/react-ui-kit` — the shadcn primitives
+- `@granit/react-ui` and `@granit/react-ui-admin-kit` — the shadcn primitives
   (`Button`, `Sheet`, `Dialog`, `Card`, `Table`, …) and the admin building blocks
   (`QueryDataTable`, `SmartFilterBar`, `SortSelector`, `FilterPresets`,
   `GroupBySelector`).

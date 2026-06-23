@@ -23,7 +23,7 @@ These pages do **not** wrap a provider: the Axios client resolves from a
 `MeteringProvider` (and a `QueryClientProvider`) mounted higher in the host tree.
 The usage explorer is driven by
 [`@granit/react-query-engine`](../react-query-engine) and reuses the querying
-building blocks from [`@granit/react-ui-kit`](../react-ui-admin-kit).
+building blocks from [`@granit/react-ui-admin-kit`](../react-ui-admin-kit).
 Meter-form validation is spec-driven via
 [`@granit/react-validation`](../react-validation) against the generated
 `@granit/metering` constraints.
@@ -38,7 +38,7 @@ these peers:
 - `@granit/react-metering` — provider + hooks this kit calls.
 - `@granit/react-ui` — shadcn/ui foundation (`Button`, `Dialog`, `Table`,
   `Form`, `Card`, `Badge`, `toast`, …).
-- `@granit/react-ui-kit` — query-engine UI (`QueryDataTable`,
+- `@granit/react-ui-admin-kit` — query-engine UI (`QueryDataTable`,
   `SmartFilterBar`, `SortSelector`, …) for the usage explorer.
 - `@granit/react-query-engine` — `QueryProvider` + query hooks for the usage
   explorer.

@@ -3,7 +3,7 @@
 React bindings for the bank account referential — the hooks/provider layer over
 the framework-agnostic [`@granit/bank-accounts`](../bank-accounts) core, itself
 the TypeScript counterpart of the .NET `Granit.BankAccounts` module
-(`granit-business/src/Granit.BankAccounts`, contract:
+(`granit-dotnet/src/Granit.BankAccounts`, contract:
 `contracts/openapi/bank-accounts.json`).
 
 This package holds the React Query layer: a `BankAccountsProvider` that resolves

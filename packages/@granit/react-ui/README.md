@@ -11,7 +11,7 @@ This is the **presentational** layer: components only render and emit events.
 There is no data fetching, no React Query, no business logic, and no backend
 counterpart — it sits below the `react-<module>` hook layers and the
 `react-ui-<module>` admin feature kits. Those feature kits and the app shells
-(notably [`@granit/react-ui-kit`](../react-ui-admin-kit) and
+(notably [`@granit/react-ui-admin-kit`](../react-ui-admin-kit) and
 [`@granit/react-ui-shell-admin`](../react-ui-shell-admin)) compose these
 primitives; nothing here knows about a specific domain. Unlike the bulk of the
 framework, this package is **published** (a `tsup` build with `dist/` +

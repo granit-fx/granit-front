@@ -9,7 +9,7 @@ time; this package renders the admin surface for managing that lifecycle.
 This is the **`react-ui` admin feature kit** — the visual layer. It is headless-free:
 it composes the headless [`@granit/react-cms`](../react-cms) (provider + release
 hooks) with the foundation UI packages ([`@granit/react-ui`](../react-ui),
-[`@granit/react-ui-kit`](../react-ui-admin-kit)). The split is three packages
+[`@granit/react-ui-admin-kit`](../react-ui-admin-kit)). The split is three packages
 over the same .NET `Granit.Cms` backend (contract: `contracts/openapi/cms.json`):
 
 - [`@granit/cms`](../cms) — framework-agnostic core: release DTOs (`ReleaseResponse`,
@@ -32,7 +32,7 @@ for app consumption through a public registry. A consumer must declare these pee
   client must already be mounted higher in the host tree.
 - `@granit/react-ui` — foundation components (`Table`, `Dialog`, `Form`, `Badge`,
   `Button`, `Input`, `toast`, …).
-- `@granit/react-ui-kit` — supplies `TimezonePicker` for the schedule fields.
+- `@granit/react-ui-admin-kit` — supplies `TimezonePicker` for the schedule fields.
 - `@granit/react-validation` — `createConstraintsResolver`, the spec-driven
   react-hook-form resolver.
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.

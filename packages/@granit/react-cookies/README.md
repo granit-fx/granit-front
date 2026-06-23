@@ -49,10 +49,10 @@ the live state plus per-category and bulk grant/revoke actions.
 
 ```tsx
 import { CookieConsentProvider, useCookieConsent } from '@granit/react-cookies';
-import { createCookieConsentProvider } from '@granit/cookies-cookieconsent';
+import { createCookieConsentAdapter } from '@granit/cookies-cookieconsent';
 import { apiClient } from '@granit/api-client';
 
-const adapter = createCookieConsentProvider({
+const adapter = createCookieConsentAdapter({
   loadConfig: () => apiClient.get('/cookies/config').then((r) => r.data),
 });
 

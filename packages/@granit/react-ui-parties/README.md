@@ -21,7 +21,7 @@ This is the top **react-ui** layer of a three-package split over the same .NET
 
 It composes the headless [`@granit/react-parties`](../react-parties) with the
 foundation UI ([`@granit/react-ui`](../react-ui),
-[`@granit/react-ui-kit`](../react-ui-admin-kit)), the taxonomy UI
+[`@granit/react-ui-admin-kit`](../react-ui-admin-kit)), the taxonomy UI
 ([`@granit/react-taxonomy`](../react-taxonomy) /
 [`@granit/react-ui-taxonomy`](../react-ui-taxonomy)) and gates the taxonomy
 management actions with [`@granit/react-authorization`](../react-authorization)
@@ -39,7 +39,7 @@ consumer must declare these peers:
   hooks, `MergeWizard` and `DuplicatesInbox` the pages wrap.
 - `@granit/react-ui` — shadcn-based primitives (`Button`, `Dialog`, `Table`, `Form`,
   `Tabs`, `Badge`, `toast`, …).
-- `@granit/react-ui-kit` — `FormDialog`, `TimezonePicker`, `UrlInput`.
+- `@granit/react-ui-admin-kit` — `FormDialog`, `TimezonePicker`, `UrlInput`.
 - `@granit/react-taxonomy` + `@granit/react-ui-taxonomy` — `TagChipStrip`,
   `CategorySelector`, and `TAXONOMY_PERMISSIONS` / `TAXONOMY_TARGET_TYPES`.
 - `@granit/react-authorization` — `usePermissions` for the taxonomy management gate.

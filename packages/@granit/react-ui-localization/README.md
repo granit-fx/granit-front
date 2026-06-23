@@ -35,7 +35,7 @@ these peers:
 - `@granit/query-engine` / `@granit/react-query-engine` — drive the overrides grid
   (`QueryProvider`, `useQueryEndpoint`, smart filters) at `/localization/overrides`.
 - `@granit/react-ui` — shadcn/ui primitives (dialogs, badges, selects, toast).
-- `@granit/react-ui-kit` — the smart-filter bar, sort/group selectors, and
+- `@granit/react-ui-admin-kit` — the smart-filter bar, sort/group selectors, and
   `QueryEndpointDataTable`.
 - `@granit/react-data-exchange` / `@granit/react-ui-data-exchange` — the
   import/export provider, buttons, and dialogs.

@@ -33,7 +33,7 @@ these peers:
   the rates list (`QueryProvider`, `useQueryEndpoint`, smart filter).
 - `@granit/react-ui` — foundation primitives (`Card`, `Form`, `Button`,
   `Spinner`, `Badge`, …).
-- `@granit/react-ui-kit` — the smart-filter bar, data table, sort selector.
+- `@granit/react-ui-admin-kit` — the smart-filter bar, data table, sort selector.
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.
 - `@granit/react-validation` — `createConstraintsResolver` for the validate form.
 - `@granit/utils` — `cn`.

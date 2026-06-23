@@ -106,7 +106,7 @@ const canImpersonate = MultiTenancyPermissions.Host.Impersonate;
   generically via [`@granit/react-query-engine`](../react-query-engine) — hence there is
   no `listTenants` here and no `useTenants` in the React layer.
 - **Host never auto-injects a tenant header.** A Host user carries no `tenant_id` claim,
-  so `createJwtClaimTenantResolver` resolves to `null` by construction. Acting in a
+  so `createJwtClaimTenantResolver` resolves to `undefined` by construction. Acting in a
   tenant's context (sending `X-Tenant-Id`) requires the
   `MultiTenancyPermissions.Host.Impersonate` permission; any explicit Host "switch
   tenant" UI must gate on it before setting a tenant. See security audit VULN-203.

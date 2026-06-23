@@ -6,7 +6,7 @@ badges, entity-change cards). This is the **react-ui admin feature kit**: the
 top, presentation-only layer. It composes the headless hooks/providers from
 [`@granit/react-auditing`](../react-auditing) with the foundation UI packages
 ([`@granit/react-ui`](../react-ui),
-[`@granit/react-ui-kit`](../react-ui-admin-kit)) into drop-in pages. The
+[`@granit/react-ui-admin-kit`](../react-ui-admin-kit)) into drop-in pages. The
 headless package stays free of presentation; this package stays free of
 data-fetching wiring.
 
@@ -33,7 +33,7 @@ these peers:
   here for convenience.
 - `@granit/react-ui` — shadcn/ui primitives (`Badge`, `Card`, `Select`,
   `Table`, `Spinner`, `Button`, …).
-- `@granit/react-ui-kit` — `ManualDataTable`, the server-paginated grid
+- `@granit/react-ui-admin-kit` — `ManualDataTable`, the server-paginated grid
   the list page renders into.
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter` used by
   every component.

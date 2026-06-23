@@ -5,7 +5,7 @@ Admin UI feature kit for the Granit **Catalog** module — the products list
 the product detail page (lifecycle transitions, key/value metadata editor,
 external-provider mappings). This is the **react-ui admin layer**: it composes
 the headless [`@granit/react-catalog`](../react-catalog) data hooks with the
-foundation UI packages (`@granit/react-ui`, `@granit/react-ui-kit`) into
+foundation UI packages (`@granit/react-ui`, `@granit/react-ui-admin-kit`) into
 mountable pages and sub-components. It renders; it owns no HTTP transport and no
 TanStack Query wiring of its own.
 
@@ -35,7 +35,7 @@ these peers:
 - `@granit/query-engine` — `QueryConfig` for the grid's base path.
 - `@granit/react-ui` — shadcn-based primitives (`Button`, `Form`, `Card`,
   `AlertDialog`, `toast`, …).
-- `@granit/react-ui-kit` — `QueryDataTable`, `SmartFilterBar`,
+- `@granit/react-ui-admin-kit` — `QueryDataTable`, `SmartFilterBar`,
   `SortSelector`, operator labels.
 - `@granit/react-validation` — `createConstraintsResolver` (spec-driven RHF
   resolver).

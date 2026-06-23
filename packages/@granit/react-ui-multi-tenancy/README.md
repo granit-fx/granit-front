@@ -41,7 +41,7 @@ the pages under a `GranitClientProvider` and declare these peers:
   smart-filter / sort / group-by hooks, and the `QueryEndpointDataTable`.
 - `@granit/react-data-exchange` / `@granit/react-ui-data-exchange` — the export
   provider plus the `ExportButton` / `ExportDialog` surface.
-- `@granit/react-ui` / `@granit/react-ui-kit` — shadcn-based primitives and
+- `@granit/react-ui` / `@granit/react-ui-admin-kit` — shadcn-based primitives and
   the admin layout pieces (`DetailAsideLayout`, `SmartFilterBar`, …).
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.
 - `@granit/react-validation` — `createConstraintsResolver` for the tenant form.
@@ -81,7 +81,7 @@ function TenantAdminRoutes({ renderTimeline }: { renderTimeline: (id: string) =>
 ```
 
 The list page seeds an active-only preset and 20-row pages, wires the
-`@granit/react-ui-kit` smart-filter / sort / group-by bar to the query
+`@granit/react-ui-admin-kit` smart-filter / sort / group-by bar to the query
 metadata, and renders the action menu only for the permissions the user holds
 (`Create` shows the header button, `Update` the edit item, `Manage` the
 activate/deactivate item). The edit page exposes the activity slot:

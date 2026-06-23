@@ -6,7 +6,7 @@ and role-metadata discovery tables, the permission-side (`Host` / `Tenant` /
 `Both`) badge, plus a permission gate and a 403 page. This is the **rendering**
 layer: it composes the headless [`@granit/react-authorization`](../react-authorization)
 (provider + hooks) with the foundation UI packages
-([`@granit/react-ui`](../react-ui), [`@granit/react-ui-kit`](../react-ui-admin-kit)
+([`@granit/react-ui`](../react-ui), [`@granit/react-ui-admin-kit`](../react-ui-admin-kit)
 `QueryDataTable`) and pulls available roles from
 [`@granit/react-identity`](../react-identity). It owns no DTOs, HTTP calls, or
 query keys — those live one and two layers down.
@@ -35,7 +35,7 @@ these peers:
 - `@granit/react-identity` — `useRoles` for the role-selector options.
 - `@granit/react-ui` — foundation primitives (`Card`, `Select`, `Switch`,
   `Badge`, `Input`, `Spinner`, `Button`).
-- `@granit/react-ui-kit` — `QueryDataTable` for the discovery tables.
+- `@granit/react-ui-admin-kit` — `QueryDataTable` for the discovery tables.
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.
 - `@granit/query-engine` — `SortEntry` and the paged query surface types.
 - `@tanstack/react-table` (`^8.21`), `lucide-react` (`^1.21`).

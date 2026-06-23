@@ -15,7 +15,7 @@ Query hooks) over the framework-agnostic core
 [`@granit/templating`](../templating) (DTOs + Axios calls, mirror of the .NET
 `Granit.Templating` module, contract `contracts/openapi/templating.json`), wired to
 the foundation UI packages ([`@granit/react-ui`](../react-ui),
-[`@granit/react-ui-kit`](../react-ui-admin-kit)) and the data-exchange UI
+[`@granit/react-ui-admin-kit`](../react-ui-admin-kit)) and the data-exchange UI
 ([`@granit/react-ui-data-exchange`](../react-ui-data-exchange)). The three-package
 split over the same backend is:
 
@@ -34,7 +34,7 @@ existing `GranitClientProvider` and must declare these peers:
 
 - `@granit/react-templating`, `@granit/templating` — the headless layer + core
   DTOs the pages drive.
-- `@granit/react-ui`, `@granit/react-ui-kit` — foundation primitives, the
+- `@granit/react-ui`, `@granit/react-ui-admin-kit` — foundation primitives, the
   query data table, smart-filter bar and sort selector.
 - `@granit/react-query-engine`, `@granit/query-engine` — the query-driven grid
   (`QueryProvider`, `useQueryEndpoint`, `useSmartFilter`, `QueryConfig`).
