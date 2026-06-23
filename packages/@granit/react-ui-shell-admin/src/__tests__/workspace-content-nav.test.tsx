@@ -15,7 +15,7 @@ import type { WorkspaceTreeResponse } from '@granit/workspaces';
 // resolveLabel is a real (pure) export of @granit/react-localization (#770);
 // keep it via importOriginal and override only useTranslation for the test.
 vi.mock('@granit/react-localization', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@granit/react-localization')>()),
+  ...(await importOriginal<Record<string, unknown>>()),
   useTranslation: () => ({ t: makeT() }),
 }));
 
