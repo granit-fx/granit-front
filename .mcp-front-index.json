@@ -9128,6 +9128,16 @@
           "name": "useLegalDocumentColumns",
           "kind": "function",
           "signature": "function useLegalDocumentColumns( actions: ColumnActions ): ColumnDef<LegalDocumentDetailResponse>[]"
+        },
+        {
+          "name": "createLegalDocumentSchema",
+          "kind": "const",
+          "signature": "const createLegalDocumentSchema"
+        },
+        {
+          "name": "editLegalDocumentSchema",
+          "kind": "const",
+          "signature": "const editLegalDocumentSchema"
         }
       ]
     },
