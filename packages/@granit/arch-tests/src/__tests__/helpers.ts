@@ -53,6 +53,7 @@ export function toModules(pkgs: ReadonlyArray<PackageInfo>): Module[] {
 export const FETCH_ALLOWLIST: ReadonlyArray<string> = [
   '@granit/bff',
   '@granit/react-bff',
+  '@granit/react-ui-bff',
   '@granit/logger-otlp',
   '@granit/react-tracing',
   '@granit/notifications-sse',

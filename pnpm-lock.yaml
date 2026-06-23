@@ -4141,6 +4141,40 @@ importers:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
 
+  packages/@granit/react-ui-bff:
+    dependencies:
+      lucide-react:
+        specifier: ^1.21.0
+        version: 1.21.0(react@19.2.7)
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/authentication':
+        specifier: workspace:*
+        version: link:../authentication
+      '@granit/authentication-keycloak':
+        specifier: workspace:*
+        version: link:../authentication-keycloak
+      '@granit/bff':
+        specifier: workspace:*
+        version: link:../bff
+      '@granit/logger':
+        specifier: workspace:*
+        version: link:../logger
+      '@granit/react-bff':
+        specifier: workspace:*
+        version: link:../react-bff
+      '@granit/react-localization':
+        specifier: workspace:*
+        version: link:../react-localization
+      '@granit/react-ui':
+        specifier: workspace:*
+        version: link:../react-ui
+
   packages/@granit/react-ui-blob-storage:
     dependencies:
       lucide-react:

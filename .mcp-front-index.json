@@ -8363,6 +8363,23 @@
       ]
     },
     {
+      "name": "@granit/react-ui-bff",
+      "description": "BFF auth provider for Granit apps — wraps @granit/react-bff's BffProvider, adapts its session to the app's auth context, wires the 401→login bridge and CSRF manager, and renders init / backend-unavailable states. Companion to react-ui-authentication-keycloak and react-authentication-mock.",
+      "exports": [
+        {
+          "name": "BffAuthProvider",
+          "kind": "function",
+          "signature": "function BffAuthProvider("
+        },
+        {
+          "name": "BffAuthProviderProps",
+          "kind": "interface",
+          "signature": "interface BffAuthProviderProps",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-blob-storage",
       "description": "Granit admin UI for the Blob Storage module — the blobs list (query-driven grid with status pills, size formatting and per-row download/delete actions) plus the orphan-cleanup and crypto-shred delete dialogs. Composes @granit/react-blob-storage (headless) with the foundation UI packages.",
       "exports": [
