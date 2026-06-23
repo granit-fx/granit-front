@@ -10,6 +10,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { API_BASE_PATH } from '../constants';
+import { logger } from '../logger';
 import { useNotificationConfig } from '../providers/notification-provider';
 
 import type {
@@ -78,7 +79,8 @@ export function useSubscribeToNotificationType(): UseMutationResult<void, Error,
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (typeName) => subscribeToNotificationType(config.apiClient, basePath, typeName),
-    onSuccess: () => {
+    onSuccess: (_data, typeName) => {
+      logger.debug('Subscribed to notification type', { typeName });
       queryClient.invalidateQueries({ queryKey: SUBSCRIPTIONS_KEY });
     },
   });
@@ -95,7 +97,8 @@ export function useUnsubscribeFromNotificationType(): UseMutationResult<void, Er
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (typeName) => unsubscribeFromNotificationType(config.apiClient, basePath, typeName),
-    onSuccess: () => {
+    onSuccess: (_data, typeName) => {
+      logger.debug('Unsubscribed from notification type', { typeName });
       queryClient.invalidateQueries({ queryKey: SUBSCRIPTIONS_KEY });
     },
   });
@@ -124,6 +127,7 @@ export function useFollowEntity(): UseMutationResult<void, Error, EntityFollowVa
     mutationFn: ({ entityType, entityId }) =>
       followEntity(config.apiClient, basePath, entityType, entityId),
     onSuccess: (_data, { entityType, entityId }) => {
+      logger.debug('Followed entity', { entityType, entityId });
       queryClient.invalidateQueries({ queryKey: ENTITY_FOLLOWERS_KEY(entityType, entityId) });
     },
   });
@@ -142,6 +146,7 @@ export function useUnfollowEntity(): UseMutationResult<void, Error, EntityFollow
     mutationFn: ({ entityType, entityId }) =>
       unfollowEntity(config.apiClient, basePath, entityType, entityId),
     onSuccess: (_data, { entityType, entityId }) => {
+      logger.debug('Unfollowed entity', { entityType, entityId });
       queryClient.invalidateQueries({ queryKey: ENTITY_FOLLOWERS_KEY(entityType, entityId) });
     },
   });

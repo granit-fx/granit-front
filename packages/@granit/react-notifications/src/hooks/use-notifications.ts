@@ -4,6 +4,7 @@ import { toISODateString } from '@granit/types';
 import { useCallback } from 'react';
 
 import { API_BASE_PATH } from '../constants';
+import { logger } from '../logger';
 import { useNotificationConfig } from '../providers/notification-provider';
 
 import type { UserNotification, UserNotificationPage } from '@granit/notifications';
@@ -59,6 +60,7 @@ export function useNotifications(options: UseNotificationsOptions = {}): UseNoti
   const markRead = useCallback(
     async (id: string) => {
       await markAsRead(config.apiClient, basePath, id);
+      logger.debug('Marked notification as read', { id });
       setNotifications((prev: readonly UserNotification[]) =>
         prev.map((n: UserNotification) =>
           n.id === id
@@ -73,6 +75,7 @@ export function useNotifications(options: UseNotificationsOptions = {}): UseNoti
 
   const markAllRead = useCallback(async () => {
     await markAllAsRead(config.apiClient, basePath);
+    logger.debug('Marked all notifications as read');
     setNotifications((prev: readonly UserNotification[]) =>
       prev.map((n: UserNotification) => ({
         ...n,
