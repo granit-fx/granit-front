@@ -1,4 +1,4 @@
-import { isAxiosError } from '@granit/api-client';
+import { isAxiosError } from '@granit/react-authentication-local';
 import {
   useSendTwoFactorLoginEmailCode,
   useVerifyTwoFactorLogin,

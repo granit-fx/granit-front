@@ -42,8 +42,8 @@ import { useForm, type FieldValues, type Resolver } from 'react-hook-form';
 
 import { logger } from '../logger';
 
-import type { AxiosError } from '@granit/api-client';
 import type { AdminOidcApplicationResponse } from '@granit/openiddict-admin';
+import type { AxiosError } from '@granit/react-openiddict-admin';
 
 const APPLICATION_TYPES = ['web', 'native'] as const;
 const CONSENT_TYPES = ['implicit', 'explicit', 'external', 'systematic'] as const;

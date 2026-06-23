@@ -1,5 +1,5 @@
-import { HttpError } from '@granit/api-client';
 import { useAvailableExternalProviders, useChallengeExternalLogin } from '@granit/react-account';
+import { HttpError } from '@granit/react-authentication-local';
 import { useTranslation } from '@granit/react-localization';
 import { toast, Button } from '@granit/react-ui';
 import { useState } from 'react';

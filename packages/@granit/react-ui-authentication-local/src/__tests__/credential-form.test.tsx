@@ -34,6 +34,11 @@ vi.mock('@granit/react-authentication-local', () => ({
   },
   useBeginPasskeyAssertion: () => ({ mutateAsync: mockBeginPasskey, isPending: false }),
   useCompletePasskeyAssertion: () => ({ mutateAsync: mockCompletePasskey, isPending: false }),
+  // Re-exported HTTP error guard (login-helpers narrows errors with it).
+  isAxiosError: (err: unknown): boolean =>
+    typeof err === 'object' &&
+    err !== null &&
+    (err as { isAxiosError?: boolean }).isAxiosError === true,
 }));
 
 const SUCCESS: AccountLoginResponse = {

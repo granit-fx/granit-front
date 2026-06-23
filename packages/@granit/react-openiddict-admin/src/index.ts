@@ -51,3 +51,7 @@ export type {
 
 // Query keys
 export { openIddictAdminKeys } from './hooks/query-keys';
+
+// HTTP error type — re-exported so the UI tier types errors without depending
+// on @granit/api-client directly (layer boundary: UI → headless).
+export type { AxiosError } from '@granit/api-client';

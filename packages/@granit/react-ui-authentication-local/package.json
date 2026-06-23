@@ -15,7 +15,6 @@
   },
   "peerDependencies": {
     "@granit/account": "workspace:*",
-    "@granit/api-client": "workspace:*",
     "@granit/authentication-local": "workspace:*",
     "@granit/logger": "workspace:*",
     "@granit/react-account": "workspace:*",

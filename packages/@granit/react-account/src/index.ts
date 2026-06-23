@@ -60,3 +60,7 @@ export { useChangeEmail, useConfirmEmailChange } from './hooks/use-email';
 
 // Hooks — Deletion
 export { useDeleteAccount } from './hooks/use-account-deletion';
+
+// HTTP error helpers — re-exported so the UI tier narrows errors without
+// depending on @granit/api-client directly (layer boundary: UI → headless).
+export { isAxiosError, HttpError } from '@granit/api-client';

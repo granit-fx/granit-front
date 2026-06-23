@@ -1,4 +1,4 @@
-import { HttpError } from '@granit/api-client';
+import { HttpError } from '@granit/react-account';
 import { useChallengeExternalLogin } from '@granit/react-account';
 import { useTranslation } from '@granit/react-localization';
 import { toast, Button } from '@granit/react-ui';

@@ -1,5 +1,5 @@
-import { isAxiosError } from '@granit/api-client';
 import { useTranslation } from '@granit/react-localization';
+import { isAxiosError } from '@granit/react-timeline';
 import {
   applyToggleResult,
   useTimeline,

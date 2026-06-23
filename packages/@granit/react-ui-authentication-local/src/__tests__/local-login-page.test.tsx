@@ -42,6 +42,11 @@ vi.mock('@granit/react-authentication-local', () => ({
     isPending: false,
   }),
   useLogin: () => ({ mutateAsync: vi.fn(), isPending: false }),
+  // Re-exported HTTP error guard (login-helpers narrows errors with it).
+  isAxiosError: (err: unknown): boolean =>
+    typeof err === 'object' &&
+    err !== null &&
+    (err as { isAxiosError?: boolean }).isAxiosError === true,
 }));
 
 const locationHrefSpy = vi.fn();

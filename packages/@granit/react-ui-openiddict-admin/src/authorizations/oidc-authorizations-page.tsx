@@ -31,7 +31,7 @@ import { useForm, type Resolver } from 'react-hook-form';
 
 import { logger } from '../logger';
 
-import type { AxiosError } from '@granit/api-client';
+import type { AxiosError } from '@granit/react-openiddict-admin';
 
 // Spec-driven validation: `subject`/`clientId` are required (+maxLength) and
 // `scopes` is required, all derived from contracts/openapi/openiddict.json. The

@@ -53,3 +53,7 @@ export type { PartyDuplicatesBadgeProps } from './components/party-duplicates-ba
 
 // i18n bundles
 export { partiesTranslationsEn, partiesTranslationsFr } from './locales/index';
+
+// HTTP error helper — re-exported so the UI tier narrows errors without
+// depending on @granit/api-client directly (layer boundary: UI → headless).
+export { isAxiosError } from '@granit/api-client';

@@ -34,3 +34,7 @@ export type { ReactionBarLabels, ReactionBarProps } from './components/reaction-
 // i18n resource bundles (namespace: 'timeline')
 export { timelineTranslationsEn, timelineTranslationsFr } from './locales/index';
 export type { TimelineTranslations } from './locales/index';
+
+// HTTP error helper — re-exported so the UI tier narrows errors without
+// depending on @granit/api-client directly (layer boundary: UI → headless).
+export { isAxiosError } from '@granit/api-client';

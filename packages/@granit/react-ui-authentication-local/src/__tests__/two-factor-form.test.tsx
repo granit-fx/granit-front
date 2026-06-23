@@ -21,6 +21,11 @@ const mockSendEmail = vi.fn<[], Promise<void>>();
 vi.mock('@granit/react-authentication-local', () => ({
   useVerifyTwoFactorLogin: () => ({ mutateAsync: mockVerify, isPending: false }),
   useSendTwoFactorLoginEmailCode: () => ({ mutateAsync: mockSendEmail, isPending: false }),
+  // Re-exported HTTP error guard (two-factor-form narrows errors with it).
+  isAxiosError: (err: unknown): boolean =>
+    typeof err === 'object' &&
+    err !== null &&
+    (err as { isAxiosError?: boolean }).isAxiosError === true,
 }));
 
 const SUCCESS: AccountLoginResponse = {

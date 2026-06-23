@@ -1,5 +1,5 @@
-import { isAxiosError } from '@granit/api-client';
 import { useResetPassword } from '@granit/react-account';
+import { isAxiosError } from '@granit/react-authentication-local';
 import { useTranslation } from '@granit/react-localization';
 import {
   Alert,

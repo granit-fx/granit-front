@@ -33,8 +33,8 @@ import { useForm, type Resolver } from 'react-hook-form';
 
 import { logger } from '../logger';
 
-import type { AxiosError } from '@granit/api-client';
 import type { AdminOidcScopeResponse } from '@granit/openiddict-admin';
+import type { AxiosError } from '@granit/react-openiddict-admin';
 
 // Spec-driven validation: constraints (required/maxLength) are derived from
 // contracts/openapi/openiddict.json. The scope forms carry no client-only rule —

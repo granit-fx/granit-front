@@ -23,9 +23,16 @@ const PROVIDERS: readonly ExternalLoginProvider[] = [
   { name: 'corp-sso', type: 'Oidc', displayName: 'Corporate SSO' },
 ];
 
-vi.mock('@granit/react-account', () => ({
-  useChallengeExternalLogin: () => ({ mutateAsync: mockMutateAsync, isPending: mockIsPending }),
-}));
+vi.mock('@granit/react-account', async () => {
+  // The component narrows errors via HttpError re-exported from the headless
+  // package; provide the real class so `instanceof HttpError` matches the
+  // instances the test constructs from @granit/api-client.
+  const actual = (await vi.importActual('@granit/api-client')) as { HttpError: typeof HttpError };
+  return {
+    useChallengeExternalLogin: () => ({ mutateAsync: mockMutateAsync, isPending: mockIsPending }),
+    HttpError: actual.HttpError,
+  };
+});
 
 vi.mock('./use-available-external-providers', () => ({
   useAvailableExternalProviders: () => ({ providers: PROVIDERS, isLoading: false }),
