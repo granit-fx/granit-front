@@ -7797,6 +7797,17 @@
       "exports": []
     },
     {
+      "name": "@granit/react-ui-ai-prompts",
+      "description": "Granit admin UI for the AI Prompts module — the prompt-catalogue management page (list with customise / edit / delete affordances, a create-and-edit dialog form and a delete confirmation). Composes @granit/react-ai-prompts (headless) with the foundation UI packages and gates management actions with @granit/react-authorization.",
+      "exports": [
+        {
+          "name": "PromptCataloguePage",
+          "kind": "function",
+          "signature": "function PromptCataloguePage()"
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-auditing",
       "description": "Granit admin UI for the Auditing module — audit log list/detail pages, columns, category/change-type badges and entity-change cards. Composes @granit/react-auditing (headless) with the foundation UI packages.",
       "exports": [
@@ -8522,6 +8533,32 @@
       ]
     },
     {
+      "name": "@granit/react-ui-entities-customization",
+      "description": "Granit admin UI for entity layout customization (Layer 1 admin overrides) — the entity / workspace form-layout editor with a field-resolution inspector, plus the saved-views manager (create / edit / pin / set defaults / delete). Composes @granit/react-entities-customization, @granit/react-entities-views and @granit/react-workspaces (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "CustomizationPage",
+          "kind": "function",
+          "signature": "function CustomizationPage()"
+        },
+        {
+          "name": "EntityCustomizationSection",
+          "kind": "function",
+          "signature": "function EntityCustomizationSection("
+        },
+        {
+          "name": "EntityViewsTab",
+          "kind": "function",
+          "signature": "function EntityViewsTab()"
+        },
+        {
+          "name": "WorkspaceCustomizationTab",
+          "kind": "function",
+          "signature": "function WorkspaceCustomizationTab()"
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-features",
       "description": "Granit admin UI for the Features module — the feature-flag listing (grouped, collapsible), value badges, the per-feature detail page and the set/remove-override dialog. Composes @granit/react-features (headless) with the foundation UI packages.",
       "exports": [
@@ -8737,6 +8774,52 @@
       ]
     },
     {
+      "name": "@granit/react-ui-invoicing",
+      "description": "Granit admin UI for the Invoicing module — the invoice list (KPI tiles plus a query-driven grid with status badges and per-row detail navigation), the create-invoice dialog, and the invoice detail view (information, amounts, dates, line items, PDF download) with a host-injected workflow slot. Composes @granit/react-invoicing (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "InvoiceListPage",
+          "kind": "function",
+          "signature": "function InvoiceListPage()"
+        },
+        {
+          "name": "InvoiceDetailPage",
+          "kind": "function",
+          "signature": "function InvoiceDetailPage("
+        },
+        {
+          "name": "CreateInvoiceDialog",
+          "kind": "function",
+          "signature": "function CreateInvoiceDialog("
+        },
+        {
+          "name": "DownloadPdfButton",
+          "kind": "function",
+          "signature": "function DownloadPdfButton("
+        },
+        {
+          "name": "InvoiceLineItems",
+          "kind": "function",
+          "signature": "function InvoiceLineItems("
+        },
+        {
+          "name": "InvoiceStatusBadge",
+          "kind": "function",
+          "signature": "function InvoiceStatusBadge("
+        },
+        {
+          "name": "createInvoiceColumns",
+          "kind": "function",
+          "signature": "function createInvoiceColumns("
+        },
+        {
+          "name": "INVOICE_WORKFLOW_STATES",
+          "kind": "const",
+          "signature": "const INVOICE_WORKFLOW_STATES"
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-localization",
       "description": "Granit admin UI for the Localization module — the available-languages list (read-only, sourced from the LanguagesContext) and the translation-overrides grid (query-driven table with module/culture badges, create/edit/delete dialogs and data-exchange import/export). Composes @granit/react-localization (headless) with the foundation UI packages.",
       "exports": [
@@ -8862,6 +8945,54 @@
           "name": "UsageSummaryCard",
           "kind": "function",
           "signature": "function UsageSummaryCard("
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-multi-tenancy",
+      "description": "Granit admin UI for the Multi-Tenancy module — the query-driven tenant list (smart filters, sortable columns, export, per-row activate/deactivate), the tenant create form, and the tenant edit view with a host-injected activity aside. Composes @granit/react-multi-tenancy (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "TenantListPage",
+          "kind": "function",
+          "signature": "function TenantListPage()"
+        },
+        {
+          "name": "TenantCreatePage",
+          "kind": "function",
+          "signature": "function TenantCreatePage()"
+        },
+        {
+          "name": "TenantEditPage",
+          "kind": "function",
+          "signature": "function TenantEditPage(props: TenantEditPageProps)"
+        },
+        {
+          "name": "TenantEditPageProps",
+          "kind": "interface",
+          "signature": "interface TenantEditPageProps",
+          "members": []
+        },
+        {
+          "name": "TenantForm",
+          "kind": "function",
+          "signature": "function TenantForm(props: TenantFormProps)"
+        },
+        {
+          "name": "TenantStatusDialog",
+          "kind": "function",
+          "signature": "function TenantStatusDialog("
+        },
+        {
+          "name": "createTenantColumns",
+          "kind": "function",
+          "signature": "function createTenantColumns("
+        },
+        {
+          "name": "TenantQueryItem",
+          "kind": "interface",
+          "signature": "interface TenantQueryItem",
+          "members": []
         }
       ]
     },
@@ -9255,6 +9386,160 @@
           "name": "ValidationResultCard",
           "kind": "function",
           "signature": "function ValidationResultCard("
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-taxonomy",
+      "description": "Granit admin UI for the Taxonomy module — the tag-manager and category-tree admin pages plus the header-mounted cross-entity search bar. Composes @granit/react-taxonomy (headless) with the foundation UI packages, localises the headless `labels` props and gates management with @granit/react-authorization.",
+      "exports": [
+        {
+          "name": "CategoryTreePage",
+          "kind": "function",
+          "signature": "function CategoryTreePage()"
+        },
+        {
+          "name": "TagManagerPage",
+          "kind": "function",
+          "signature": "function TagManagerPage()"
+        },
+        {
+          "name": "TaxonomyHeaderSearch",
+          "kind": "function",
+          "signature": "function TaxonomyHeaderSearch()"
+        },
+        {
+          "name": "TAXONOMY_DEFAULT_SCOPE",
+          "kind": "const",
+          "signature": "const TAXONOMY_DEFAULT_SCOPE"
+        },
+        {
+          "name": "TAXONOMY_PERMISSIONS",
+          "kind": "const",
+          "signature": "const TAXONOMY_PERMISSIONS"
+        },
+        {
+          "name": "TAXONOMY_TARGET_TYPES",
+          "kind": "const",
+          "signature": "const TAXONOMY_TARGET_TYPES"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-templating",
+      "description": "Granit admin UI for the Templating module — the Scriban template list (query-driven grid with status badges, smart filters, data-exchange import/export and a stats dashboard) plus the create / edit workspace (zod-validated metadata form, dual WYSIWYG/code editor with variable & filter insertion, live HTML/PDF/Excel preview with test-data sets, lifecycle publish/unpublish, revision history and diff) and the category manager. Composes @granit/react-templating (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "TemplateCreatePage",
+          "kind": "function",
+          "signature": "function TemplateCreatePage()"
+        },
+        {
+          "name": "TemplateEditPage",
+          "kind": "function",
+          "signature": "function TemplateEditPage()"
+        },
+        {
+          "name": "TemplateListPage",
+          "kind": "function",
+          "signature": "function TemplateListPage()"
+        },
+        {
+          "name": "TemplateCategoriesDialog",
+          "kind": "function",
+          "signature": "function TemplateCategoriesDialog("
+        },
+        {
+          "name": "TemplateDashboard",
+          "kind": "function",
+          "signature": "function TemplateDashboard("
+        },
+        {
+          "name": "TemplateEditor",
+          "kind": "const",
+          "signature": "const TemplateEditor"
+        },
+        {
+          "name": "TemplateEditorHandle",
+          "kind": "interface",
+          "signature": "interface TemplateEditorHandle",
+          "members": [
+            {
+              "name": "insertAtCursor",
+              "kind": "method",
+              "signature": "insertAtCursor: (text: string) => void"
+            }
+          ]
+        },
+        {
+          "name": "TemplateForm",
+          "kind": "function",
+          "signature": "function TemplateForm("
+        },
+        {
+          "name": "TemplateHistory",
+          "kind": "function",
+          "signature": "function TemplateHistory("
+        },
+        {
+          "name": "TemplateLifecycleActions",
+          "kind": "function",
+          "signature": "function TemplateLifecycleActions("
+        },
+        {
+          "name": "TemplatePreview",
+          "kind": "function",
+          "signature": "function TemplatePreview("
+        },
+        {
+          "name": "TemplateRevisionDiff",
+          "kind": "function",
+          "signature": "function TemplateRevisionDiff("
+        },
+        {
+          "name": "TemplateStatusBadge",
+          "kind": "function",
+          "signature": "function TemplateStatusBadge("
+        },
+        {
+          "name": "VariablePanel",
+          "kind": "function",
+          "signature": "function VariablePanel("
+        },
+        {
+          "name": "createTemplateColumns",
+          "kind": "function",
+          "signature": "function createTemplateColumns("
+        },
+        {
+          "name": "useTestDataStore",
+          "kind": "function",
+          "signature": "function useTestDataStore(templateName: string)"
+        },
+        {
+          "name": "templateFormSchema",
+          "kind": "const",
+          "signature": "const templateFormSchema"
+        },
+        {
+          "name": "TemplateFormValues",
+          "kind": "type",
+          "signature": "type TemplateFormValues = z.infer<typeof templateFormSchema>"
+        },
+        {
+          "name": "DEFAULT_PAGE_SIZE",
+          "kind": "const",
+          "signature": "const DEFAULT_PAGE_SIZE"
+        },
+        {
+          "name": "QUERY_CONFIG",
+          "kind": "const",
+          "signature": "const QUERY_CONFIG: QueryConfig"
+        },
+        {
+          "name": "TEMPLATING_CONFIG",
+          "kind": "const",
+          "signature": "const TEMPLATING_CONFIG: TemplatingConfig"
         }
       ]
     },

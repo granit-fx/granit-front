@@ -1,0 +1,51 @@
+{
+  "name": "@granit/react-ui-taxonomy",
+  "description": "Granit admin UI for the Taxonomy module — the tag-manager and category-tree admin pages plus the header-mounted cross-entity search bar. Composes @granit/react-taxonomy (headless) with the foundation UI packages, localises the headless `labels` props and gates management with @granit/react-authorization.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/react-authorization": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-taxonomy": "workspace:*",
+    "@granit/taxonomy": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.18.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/react-authorization": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-taxonomy": "workspace:*",
+    "@granit/taxonomy": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@storybook/react-vite": "^10.4.6",
+    "@tanstack/react-query": "^5.0.0",
+    "i18next": "^26.0.0",
+    "msw": "^2.12.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-i18next": "^17.0.0",
+    "react-router-dom": "^7.18.0",
+    "storybook": "^10.4.6"
+  }
+}
