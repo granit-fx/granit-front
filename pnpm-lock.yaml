@@ -4139,9 +4139,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.101.1
         version: 5.101.1(react@19.2.7)
-      axios:
-        specifier: 1.18.1
-        version: 1.18.1
       i18next:
         specifier: ^26.0.0
         version: 26.3.1(typescript@6.0.3)
