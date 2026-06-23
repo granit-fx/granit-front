@@ -7,8 +7,8 @@ import { useAIConfig } from '../providers/ai-provider';
 import { aiKeys } from './query-keys';
 
 export interface UseDeleteAIWorkspaceReturn {
-  readonly remove: (name: string) => void;
-  readonly removeAsync: (name: string) => Promise<void>;
+  readonly remove: (key: string) => void;
+  readonly removeAsync: (key: string) => Promise<void>;
   readonly isPending: boolean;
   readonly error: Error | null;
 }
@@ -29,7 +29,7 @@ export function useDeleteAIWorkspace(): UseDeleteAIWorkspaceReturn {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (name: string) => deleteAIWorkspace(config.client, config.basePath, name),
+    mutationFn: (key: string) => deleteAIWorkspace(config.client, config.basePath, key),
     onSuccess: () => {
       queryClient
         .invalidateQueries({ queryKey: aiKeys.workspaces(config.queryKeyPrefix) })
@@ -38,15 +38,15 @@ export function useDeleteAIWorkspace(): UseDeleteAIWorkspaceReturn {
   });
 
   const remove = useCallback(
-    (name: string) => {
-      mutation.mutate(name);
+    (key: string) => {
+      mutation.mutate(key);
     },
     [mutation]
   );
 
   const removeAsync = useCallback(
-    async (name: string) => {
-      await mutation.mutateAsync(name);
+    async (key: string) => {
+      await mutation.mutateAsync(key);
     },
     [mutation]
   );

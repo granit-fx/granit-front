@@ -29,8 +29,8 @@ export function WorkspaceDetail({ workspace }: WorkspaceDetailProps) {
             <Field label={t('AI.Workspaces.Form.ProviderName')} value={workspace.provider} />
             <Field label={t('AI.Workspaces.Form.Model')} value={workspace.model} mono />
           </div>
-          {workspace.workspaceModelName && (
-            <Field label={t('AI.Workspaces.Form.ModelName')} value={workspace.workspaceModelName} />
+          {workspace.displayName && (
+            <Field label={t('AI.Workspaces.Form.ModelName')} value={workspace.displayName} />
           )}
           <WorkspaceCapabilities capabilities={workspace.capabilities} />
         </CardContent>

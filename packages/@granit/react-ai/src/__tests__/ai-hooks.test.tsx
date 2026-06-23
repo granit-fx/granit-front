@@ -98,13 +98,13 @@ describe('useCreateAIWorkspace', () => {
     });
 
     await act(async () => {
-      result.current.create({ name: 'test', provider: 'OpenAI', model: 'gpt-4o' });
+      result.current.create({ key: 'test', provider: 'OpenAI', model: 'gpt-4o' });
     });
 
     await waitFor(() => expect(result.current.isPending).toBe(false));
 
     expect(client.post).toHaveBeenCalledWith('/api/v1/ai/workspaces', {
-      name: 'test',
+      key: 'test',
       provider: 'OpenAI',
       model: 'gpt-4o',
     });
@@ -119,7 +119,7 @@ describe('useCreateAIWorkspace', () => {
     });
 
     await act(async () => {
-      result.current.create({ name: 'dup', provider: 'OpenAI', model: 'gpt-4o' });
+      result.current.create({ key: 'dup', provider: 'OpenAI', model: 'gpt-4o' });
     });
 
     await waitFor(() => expect(result.current.error).not.toBeNull());
@@ -131,7 +131,7 @@ describe('useCreateAIWorkspace', () => {
 describe('useUpdateAIWorkspace', () => {
   it('should PUT to update a workspace', async () => {
     const client = createMockClient();
-    vi.mocked(client.put).mockResolvedValue(axiosResponse({ name: 'ws' }));
+    vi.mocked(client.put).mockResolvedValue(axiosResponse({ key: 'ws' }));
 
     const { result } = renderHook(() => useUpdateAIWorkspace(), {
       wrapper: createWrapper(client, '/api/v1/ai'),

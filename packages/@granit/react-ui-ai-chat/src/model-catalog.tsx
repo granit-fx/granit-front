@@ -219,7 +219,7 @@ function capabilityGlyph(capability: Capability, t: TranslateFn): ReactNode {
  * mark under the "Available" group, so the list never breaks on unknown values.
  *
  * @param modelNameByKey - Optional map of workspace key → its display label
- *   (`AIWorkspaceResponse.workspaceModelName`, e.g. `GPT-4o`). Drives the picker
+ *   (`AIWorkspaceResponse.displayName`, e.g. `GPT-4o`). Drives the picker
  *   label and, when set, is also a brand-matching hint. Null/absent → the label
  *   falls back to the workspace name (never the raw model id).
  * @param modelByKey - Optional map of workspace key → the raw model id it runs

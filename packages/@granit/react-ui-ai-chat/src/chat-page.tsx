@@ -203,16 +203,16 @@ function ChatSurface({ selectedId, initialWorkspaceKey }: Readonly<ChatSurfacePr
   );
 
   // From the admin workspace list, map each workspace key to its display label
-  // (workspaceModelName, "GPT-4o") and, separately, to the raw model id it runs
+  // (displayName, "GPT-4o") and, separately, to the raw model id it runs
   // ("deepseek-r1:7b"). The label drives the picker text; the model id drives the
   // brand icon — so a seeded workspace with no display label still shows the right
-  // provider glyph while keeping the workspace name as its label.
+  // provider glyph while keeping the workspace key as its label.
   const { modelNameByKey, modelByKey } = useMemo(() => {
     const labels: Record<string, string | null> = {};
     const models: Record<string, string | null> = {};
     for (const ws of aiWorkspaces.data?.workspaces ?? []) {
-      labels[ws.name] = ws.workspaceModelName;
-      models[ws.name] = ws.model;
+      labels[ws.key] = ws.displayName;
+      models[ws.key] = ws.model;
     }
     return { modelNameByKey: labels, modelByKey: models };
   }, [aiWorkspaces.data]);

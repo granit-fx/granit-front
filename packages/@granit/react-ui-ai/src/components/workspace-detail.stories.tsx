@@ -4,7 +4,7 @@ import type { AIWorkspaceResponse } from '@granit/ai';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const workspace: AIWorkspaceResponse = {
-  name: 'default-chat',
+  key: 'default-chat',
   provider: 'OpenAI',
   model: 'gpt-4o',
   systemPrompt: 'You are a helpful assistant for the Granit platform.',

@@ -57,7 +57,7 @@ describe('ai-workspaces-api', () => {
   describe('createAIWorkspace', () => {
     it('should POST {basePath}/workspaces', async () => {
       const client = createMockClient();
-      const request = { name: 'test', provider: 'OpenAI', model: 'gpt-4o' };
+      const request = { key: 'test', provider: 'OpenAI', model: 'gpt-4o' };
       const response = { ...request, kind: 'Dynamic', activated: true };
       vi.mocked(client.post).mockResolvedValue({ data: response });
 

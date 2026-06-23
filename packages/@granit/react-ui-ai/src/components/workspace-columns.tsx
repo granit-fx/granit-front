@@ -32,10 +32,10 @@ export function createWorkspaceColumns({
 }: WorkspaceColumnOptions): ColumnDef<AIWorkspaceResponse, unknown>[] {
   return [
     {
-      id: 'name',
-      accessorKey: 'name',
+      id: 'key',
+      accessorKey: 'key',
       header: t('AI.Workspaces.Form.Key'),
-      cell: ({ row }) => <span className="font-mono text-sm font-medium">{row.original.name}</span>,
+      cell: ({ row }) => <span className="font-mono text-sm font-medium">{row.original.key}</span>,
     },
     {
       id: 'provider',
@@ -85,7 +85,7 @@ export function createWorkspaceColumns({
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8"
-                aria-label={`Actions for ${ws.name}`}
+                aria-label={`Actions for ${ws.key}`}
               >
                 <MoreHorizontal className="h-4 w-4" />
               </Button>

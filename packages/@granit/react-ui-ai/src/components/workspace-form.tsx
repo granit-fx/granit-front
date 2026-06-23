@@ -49,7 +49,7 @@ function slugifyKey(value: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+/, '')
-    .slice(0, AI_WORKSPACE_LIMITS.NAME_MAX_LENGTH);
+    .slice(0, AI_WORKSPACE_LIMITS.KEY_MAX_LENGTH);
 }
 
 interface WorkspaceFormBaseProps {
@@ -90,7 +90,7 @@ export function WorkspaceForm(props: Readonly<WorkspaceFormProps>) {
     defaultValues: {
       provider: '',
       model: '',
-      workspaceModelName: '',
+      displayName: '',
       systemPrompt: '',
       temperature: '',
       maxOutputTokens: '',
@@ -130,7 +130,7 @@ export function WorkspaceForm(props: Readonly<WorkspaceFormProps>) {
             <CardContent className="space-y-4">
               <FormField
                 control={form.control}
-                name="workspaceModelName"
+                name="displayName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t('AI.Workspaces.Form.ModelName')}</FormLabel>
@@ -249,7 +249,7 @@ export function WorkspaceForm(props: Readonly<WorkspaceFormProps>) {
             {!isCreate && (
               <FormField
                 control={form.control}
-                name="workspaceModelName"
+                name="displayName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t('AI.Workspaces.Form.ModelName')}</FormLabel>

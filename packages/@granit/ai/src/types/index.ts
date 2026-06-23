@@ -29,12 +29,12 @@ export const AI_STREAM_DONE_MARKER = '[DONE]';
 
 /** Server-enforced limits for workspace fields. */
 export const AI_WORKSPACE_LIMITS = {
-  /** `name` maximum length. Pattern: `^[a-z0-9][a-z0-9-]*$`. */
-  NAME_MAX_LENGTH: 128,
-  /** Slug pattern for workspace names (lowercase alphanumeric + hyphens, no leading hyphen). */
-  NAME_PATTERN: /^[a-z0-9][a-z0-9-]*$/,
-  /** `workspaceModelName` maximum length (display label). */
-  MODEL_NAME_MAX_LENGTH: 64,
+  /** `key` maximum length. Pattern: `^[a-z0-9][a-z0-9-]*$`. */
+  KEY_MAX_LENGTH: 128,
+  /** Slug pattern for workspace keys (lowercase alphanumeric + hyphens, no leading hyphen). */
+  KEY_PATTERN: /^[a-z0-9][a-z0-9-]*$/,
+  /** `displayName` maximum length (display label). */
+  DISPLAY_NAME_MAX_LENGTH: 64,
 } as const;
 
 // -- Workspace ---------------------------------------------------------------
@@ -44,17 +44,18 @@ export type AIWorkspaceKind = 'System' | 'Dynamic';
 
 /** Workspace configuration returned by the API. Mirrors `AIWorkspaceResponse`. */
 export interface AIWorkspaceResponse {
-  readonly name: string;
+  /** Machine key identifying this workspace (slug). */
+  readonly key: string;
   readonly provider: string;
   readonly model: string;
+  /** Short human-readable label (e.g. "GPT-4o"); null if unset (fall back to model). */
+  readonly displayName: string | null;
   readonly systemPrompt: string | null;
   readonly temperature: number | null;
   readonly maxOutputTokens: number | null;
   readonly kind: AIWorkspaceKind;
   readonly activated: boolean;
   readonly capabilities: AIModelCapabilities | null;
-  /** Human-readable model label (e.g. "GPT-4o"); null if not set. */
-  readonly workspaceModelName: string | null;
 }
 
 /** List response wrapper. Mirrors `AIWorkspaceListResponse`. */
@@ -65,25 +66,26 @@ export interface AIWorkspaceListResponse {
 
 /** Create workspace request. Mirrors `AIWorkspaceCreateRequest`. */
 export interface AIWorkspaceCreateRequest {
-  readonly name: string;
+  /** Machine key identifying this workspace (slug, `^[a-z0-9][a-z0-9-]*$`). */
+  readonly key: string;
   readonly provider: string;
   readonly model: string;
+  readonly displayName?: string | null;
   readonly systemPrompt?: string | null;
   readonly temperature?: number | null;
   readonly maxOutputTokens?: number | null;
-  readonly workspaceModelName?: string | null;
 }
 
 /** Update workspace request. Mirrors `AIWorkspaceUpdateRequest`. */
 export interface AIWorkspaceUpdateRequest {
   readonly provider: string;
   readonly model: string;
+  /** Pass null to clear the label. */
+  readonly displayName?: string | null;
   readonly systemPrompt?: string | null;
   readonly temperature?: number | null;
   readonly maxOutputTokens?: number | null;
   readonly activated: boolean;
-  /** Pass null to clear the label. */
-  readonly workspaceModelName?: string | null;
 }
 
 // -- Chat completion ---------------------------------------------------------
@@ -221,7 +223,7 @@ export interface AIUsageRecord {
   readonly outputTokens: number;
   readonly estimatedCost: number | null;
   readonly costCurrency: string | null;
+  readonly conversationId: ConversationId | null;
   readonly timestamp: ISODateString;
   readonly duration: string | null;
-  readonly conversationId: ConversationId | null;
 }

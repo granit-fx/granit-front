@@ -29,13 +29,13 @@ describe('WorkspaceDetail', () => {
   it('shows the display name when present', () => {
     const ws = mockWorkspaces[0]!;
     renderWithProviders(<WorkspaceDetail workspace={ws} />);
-    expect(screen.getByText(ws.workspaceModelName!)).toBeInTheDocument();
+    expect(screen.getByText(ws.displayName!)).toBeInTheDocument();
   });
 
   it('falls back to a dash for missing optional values', () => {
     const ws: AIWorkspaceResponse = {
       ...mockWorkspaces[0]!,
-      workspaceModelName: null,
+      displayName: null,
       systemPrompt: null,
       temperature: null,
       maxOutputTokens: null,

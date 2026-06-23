@@ -53,7 +53,7 @@ const baseCaps: AIModelCapabilities = {
 
 function makeWorkspace(caps: Partial<AIModelCapabilities>): AIWorkspaceResponse {
   return {
-    name: 'test-ws',
+    key: 'test-ws',
     provider: 'OpenAI',
     model: 'gpt-4o',
     systemPrompt: null,
@@ -62,7 +62,7 @@ function makeWorkspace(caps: Partial<AIModelCapabilities>): AIWorkspaceResponse 
     kind: 'Dynamic',
     activated: true,
     capabilities: { ...baseCaps, ...caps },
-    workspaceModelName: null,
+    displayName: null,
   };
 }
 

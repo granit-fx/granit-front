@@ -92,14 +92,14 @@ describe('AIWorkspaceListPage', () => {
   it('renders the table rows for each workspace', () => {
     dataMock.data = { workspaces: mockWorkspaces };
     renderWithProviders(<AIWorkspaceListPage />);
-    expect(screen.getByText(mockWorkspaces[0]!.name)).toBeInTheDocument();
+    expect(screen.getByText(mockWorkspaces[0]!.key)).toBeInTheDocument();
   });
 
   it('navigates to the detail page when a table row is clicked', async () => {
     dataMock.data = { workspaces: mockWorkspaces };
     const { user } = renderWithProviders(<AIWorkspaceListPage />);
-    await user.click(screen.getByText(mockWorkspaces[0]!.name));
-    expect(navigateMock).toHaveBeenCalledWith(`/ai/workspaces/${mockWorkspaces[0]!.name}`);
+    await user.click(screen.getByText(mockWorkspaces[0]!.key));
+    expect(navigateMock).toHaveBeenCalledWith(`/ai/workspaces/${mockWorkspaces[0]!.key}`);
   });
 
   it('switches to the grid view and renders workspace cards', async () => {
@@ -121,7 +121,7 @@ describe('AIWorkspaceListPage', () => {
     // System card exposes a View button (read-only) and a System badge.
     expect(screen.getByText('System')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'View' }));
-    expect(navigateMock).toHaveBeenCalledWith(`/ai/workspaces/${systemWs.name}`);
+    expect(navigateMock).toHaveBeenCalledWith(`/ai/workspaces/${systemWs.key}`);
   });
 
   it('opens the delete dialog from a grid card Delete button', async () => {
@@ -142,13 +142,13 @@ describe('AIWorkspaceListPage', () => {
     dataMock.data = { workspaces: [dynamicWs] };
     const { user } = renderWithProviders(<AIWorkspaceListPage />);
 
-    await user.click(screen.getByRole('button', { name: `Actions for ${dynamicWs.name}` }));
+    await user.click(screen.getByRole('button', { name: `Actions for ${dynamicWs.key}` }));
     await user.click(screen.getByText('Delete'));
 
     const confirmButtons = screen.getAllByRole('button', { name: 'Delete' });
     await user.click(confirmButtons[confirmButtons.length - 1]!);
 
-    await waitFor(() => expect(dataMock.removeAsync).toHaveBeenCalledWith(dynamicWs.name));
+    await waitFor(() => expect(dataMock.removeAsync).toHaveBeenCalledWith(dynamicWs.key));
     await waitFor(() =>
       expect(toastMock.success).toHaveBeenCalledWith('Workspace deleted successfully')
     );
@@ -160,7 +160,7 @@ describe('AIWorkspaceListPage', () => {
     dataMock.removeAsync.mockRejectedValue(new Error('boom'));
     const { user } = renderWithProviders(<AIWorkspaceListPage />);
 
-    await user.click(screen.getByRole('button', { name: `Actions for ${dynamicWs.name}` }));
+    await user.click(screen.getByRole('button', { name: `Actions for ${dynamicWs.key}` }));
     await user.click(screen.getByText('Delete'));
     const confirmButtons = screen.getAllByRole('button', { name: 'Delete' });
     await user.click(confirmButtons[confirmButtons.length - 1]!);

@@ -28,7 +28,7 @@ export function AIWorkspaceEditPage() {
       await updateAsync(name, {
         provider: data.provider,
         model: data.model,
-        workspaceModelName: data.workspaceModelName || null,
+        displayName: data.displayName || null,
         systemPrompt: data.systemPrompt || null,
         temperature: data.temperature ? Number(data.temperature) : null,
         maxOutputTokens: data.maxOutputTokens ? Number(data.maxOutputTokens) : null,
@@ -72,7 +72,7 @@ export function AIWorkspaceEditPage() {
   const defaultValues: EditWorkspaceFormValues = {
     provider: workspace.provider,
     model: workspace.model,
-    workspaceModelName: workspace.workspaceModelName ?? '',
+    displayName: workspace.displayName ?? '',
     systemPrompt: workspace.systemPrompt ?? '',
     temperature: workspace.temperature ?? ('' as const),
     maxOutputTokens: workspace.maxOutputTokens ?? ('' as const),
@@ -90,7 +90,7 @@ export function AIWorkspaceEditPage() {
         </Button>
         <Separator orientation="vertical" className="h-6" />
         <div>
-          <h2 className="text-2xl font-semibold text-foreground font-mono">{workspace.name}</h2>
+          <h2 className="text-2xl font-semibold text-foreground font-mono">{workspace.key}</h2>
           <p className="text-sm text-muted-foreground">
             {workspace.provider} / {workspace.model}
           </p>

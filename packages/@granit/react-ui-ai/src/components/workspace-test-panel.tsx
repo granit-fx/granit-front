@@ -51,10 +51,10 @@ export function WorkspaceTestPanel({ workspace }: WorkspaceTestPanelProps) {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="chat" className="mt-4">
-            <ChatTestTab workspaceName={workspace.name} />
+            <ChatTestTab workspaceName={workspace.key} />
           </TabsContent>
           <TabsContent value="embeddings" className="mt-4">
-            <EmbeddingsTestTab workspaceName={workspace.name} />
+            <EmbeddingsTestTab workspaceName={workspace.key} />
           </TabsContent>
         </Tabs>
       </CardContent>

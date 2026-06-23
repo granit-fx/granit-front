@@ -14,7 +14,7 @@ const formMock = vi.hoisted(() => ({
     key: 'my-workspace',
     provider: 'OpenAI',
     model: 'gpt-4o',
-    workspaceModelName: 'GPT-4o',
+    displayName: 'GPT-4o',
     systemPrompt: 'be helpful',
     temperature: '0.7',
     maxOutputTokens: '4096',
@@ -55,14 +55,14 @@ vi.mock('../components/workspace-form', () => ({
 describe('AIWorkspaceCreatePage', () => {
   beforeEach(() => {
     createMock.mockReset();
-    createMock.mockResolvedValue({ name: 'my-workspace' });
+    createMock.mockResolvedValue({ key: 'my-workspace' });
     navigateMock.mockReset();
     toastMock.success.mockReset();
     formMock.submitValues = {
       key: 'my-workspace',
       provider: 'OpenAI',
       model: 'gpt-4o',
-      workspaceModelName: 'GPT-4o',
+      displayName: 'GPT-4o',
       systemPrompt: 'be helpful',
       temperature: '0.7',
       maxOutputTokens: '4096',
@@ -81,10 +81,10 @@ describe('AIWorkspaceCreatePage', () => {
 
     await waitFor(() =>
       expect(createMock).toHaveBeenCalledWith({
-        name: 'my-workspace',
+        key: 'my-workspace',
         provider: 'OpenAI',
         model: 'gpt-4o',
-        workspaceModelName: 'GPT-4o',
+        displayName: 'GPT-4o',
         systemPrompt: 'be helpful',
         temperature: 0.7,
         maxOutputTokens: 4096,
@@ -99,7 +99,7 @@ describe('AIWorkspaceCreatePage', () => {
       key: 'bare',
       provider: 'OpenAI',
       model: 'gpt-4o',
-      workspaceModelName: '',
+      displayName: '',
       systemPrompt: '',
       temperature: '',
       maxOutputTokens: '',
@@ -109,10 +109,10 @@ describe('AIWorkspaceCreatePage', () => {
 
     await waitFor(() =>
       expect(createMock).toHaveBeenCalledWith({
-        name: 'bare',
+        key: 'bare',
         provider: 'OpenAI',
         model: 'gpt-4o',
-        workspaceModelName: null,
+        displayName: null,
         systemPrompt: null,
         temperature: null,
         maxOutputTokens: null,

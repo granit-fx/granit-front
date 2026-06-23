@@ -19,7 +19,7 @@ import type { Mutable } from '@granit/testing';
 export const aiWorkspaceQueryMetadata: QueryMetadata = {
   columns: [
     {
-      name: 'name',
+      name: 'key',
       label: 'Name',
       type: 'String',
       order: 0,
@@ -83,14 +83,14 @@ export const aiWorkspaceQueryMetadata: QueryMetadata = {
     },
   ],
   filterableFields: [
-    { name: 'name', type: 'String', operators: STRING_OPERATORS },
+    { name: 'key', type: 'String', operators: STRING_OPERATORS },
     { name: 'provider', type: 'String', operators: ENUM_OPERATORS },
     { name: 'model', type: 'String', operators: ENUM_OPERATORS },
     { name: 'kind', type: 'String', operators: ENUM_OPERATORS },
     { name: 'activated', type: 'Boolean', operators: BOOLEAN_OPERATORS },
   ],
   sortableFields: [
-    { name: 'name' },
+    { name: 'key' },
     { name: 'provider' },
     { name: 'model' },
     { name: 'kind' },
@@ -133,7 +133,7 @@ function addUsageRecord(
     ),
     tenantId: toEntityId<'Tenant'>('tenant-1'),
     userId: toEntityId<'User'>('user-1'),
-    workspaceName: ws.name,
+    workspaceName: ws.key,
     provider: ws.provider,
     model: ws.model,
     inputTokens,
@@ -332,8 +332,8 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
     }),
 
     // GET single
-    http.get(`${baseUrl}/workspaces/:name`, ({ params }) => {
-      const ws = workspaces.find((w) => w.name === params.name);
+    http.get(`${baseUrl}/workspaces/:key`, ({ params }) => {
+      const ws = workspaces.find((w) => w.key === params.key);
       if (!ws) return new HttpResponse(null, { status: 404 });
       return HttpResponse.json(ws);
     }),
@@ -342,12 +342,12 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
     http.post(`${baseUrl}/workspaces`, async ({ request }) => {
       const body = (await request.json()) as AIWorkspaceCreateRequest;
 
-      if (workspaces.some((w) => w.name === body.name)) {
+      if (workspaces.some((w) => w.key === body.key)) {
         return HttpResponse.json(
           {
             title: 'Conflict',
             status: 409,
-            detail: `A workspace named '${body.name}' already exists.`,
+            detail: `A workspace named '${body.key}' already exists.`,
           },
           { status: 409 }
         );
@@ -356,7 +356,7 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
       const model = mockProviderModels[body.provider]?.find((m) => m.id === body.model);
 
       const created: AIWorkspaceResponse = {
-        name: body.name,
+        key: body.key,
         provider: body.provider,
         model: body.model,
         systemPrompt: body.systemPrompt ?? null,
@@ -365,7 +365,7 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
         kind: 'Dynamic',
         activated: true,
         capabilities: model?.capabilities ?? null,
-        workspaceModelName: body.workspaceModelName ?? null,
+        displayName: body.displayName ?? null,
       };
 
       workspaces = [...workspaces, created];
@@ -373,9 +373,9 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
     }),
 
     // PUT update
-    http.put(`${baseUrl}/workspaces/:name`, async ({ params, request }) => {
-      const name = params.name as string;
-      const index = workspaces.findIndex((w) => w.name === name);
+    http.put(`${baseUrl}/workspaces/:key`, async ({ params, request }) => {
+      const key = params.key as string;
+      const index = workspaces.findIndex((w) => w.key === key);
 
       if (index === -1) return new HttpResponse(null, { status: 404 });
 
@@ -386,7 +386,7 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
           {
             title: 'Unprocessable Entity',
             status: 422,
-            detail: `System workspace '${name}' cannot be modified.`,
+            detail: `System workspace '${key}' cannot be modified.`,
           },
           { status: 422 }
         );
@@ -403,14 +403,14 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
         activated: body.activated,
       };
 
-      workspaces = workspaces.map((w) => (w.name === name ? updated : w));
+      workspaces = workspaces.map((w) => (w.key === key ? updated : w));
       return HttpResponse.json(updated);
     }),
 
     // DELETE
-    http.delete(`${baseUrl}/workspaces/:name`, ({ params }) => {
-      const name = params.name as string;
-      const ws = workspaces.find((w) => w.name === name);
+    http.delete(`${baseUrl}/workspaces/:key`, ({ params }) => {
+      const key = params.key as string;
+      const ws = workspaces.find((w) => w.key === key);
 
       if (!ws) return new HttpResponse(null, { status: 404 });
 
@@ -419,13 +419,13 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
           {
             title: 'Unprocessable Entity',
             status: 422,
-            detail: `System workspace '${name}' cannot be deleted.`,
+            detail: `System workspace '${key}' cannot be deleted.`,
           },
           { status: 422 }
         );
       }
 
-      workspaces = workspaces.filter((w) => w.name !== name);
+      workspaces = workspaces.filter((w) => w.key !== key);
       return new HttpResponse(null, { status: 204 });
     }),
 
@@ -434,7 +434,7 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
     // SSE streaming endpoint (must be registered before the non-streaming route)
     http.post(`${baseUrl}/chat/:workspaceName/stream`, async ({ params, request }) => {
       const wsName = params.workspaceName as string;
-      const ws = workspaces.find((w) => w.name === wsName);
+      const ws = workspaces.find((w) => w.key === wsName);
 
       if (!ws) {
         return HttpResponse.json(
@@ -472,7 +472,7 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
 
     http.post(`${baseUrl}/chat/:workspaceName`, async ({ params, request }) => {
       const wsName = params.workspaceName as string;
-      const ws = workspaces.find((w) => w.name === wsName);
+      const ws = workspaces.find((w) => w.key === wsName);
 
       if (!ws) {
         return HttpResponse.json(
@@ -506,7 +506,7 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
 
     http.post(`${baseUrl}/embeddings/:workspaceName`, async ({ params, request }) => {
       const wsName = params.workspaceName as string;
-      const ws = workspaces.find((w) => w.name === wsName);
+      const ws = workspaces.find((w) => w.key === wsName);
 
       if (!ws) {
         return HttpResponse.json(

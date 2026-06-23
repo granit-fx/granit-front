@@ -9,7 +9,7 @@ import type { AIWorkspaceResponse } from '@granit/ai';
 import type { ColumnDef } from '@tanstack/react-table';
 
 const columns: ColumnDef<AIWorkspaceResponse, unknown>[] = [
-  { id: 'name', accessorKey: 'name', header: 'Name', cell: ({ row }) => row.original.name },
+  { id: 'key', accessorKey: 'key', header: 'Key', cell: ({ row }) => row.original.key },
   {
     id: 'provider',
     accessorKey: 'provider',
@@ -21,9 +21,9 @@ const columns: ColumnDef<AIWorkspaceResponse, unknown>[] = [
 describe('WorkspaceTable', () => {
   it('renders a header row and a body row per workspace', () => {
     renderWithProviders(<WorkspaceTable data={mockWorkspaces} columns={columns} />);
-    expect(screen.getByText('Name')).toBeInTheDocument();
+    expect(screen.getByText('Key')).toBeInTheDocument();
     for (const ws of mockWorkspaces) {
-      expect(screen.getByText(ws.name)).toBeInTheDocument();
+      expect(screen.getByText(ws.key)).toBeInTheDocument();
     }
   });
 
@@ -32,7 +32,7 @@ describe('WorkspaceTable', () => {
     const { user } = renderWithProviders(
       <WorkspaceTable data={mockWorkspaces} columns={columns} onRowClick={onRowClick} />
     );
-    await user.click(screen.getByText(mockWorkspaces[0]!.name));
+    await user.click(screen.getByText(mockWorkspaces[0]!.key));
     expect(onRowClick).toHaveBeenCalledWith(mockWorkspaces[0]);
   });
 

@@ -9,7 +9,7 @@ import type { AIWorkspaceResponse } from '@granit/ai';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 /**
- * Fetch a single AI workspace by name.
+ * Fetch a single AI workspace by key.
  *
  * @example
  * ```tsx
@@ -18,14 +18,14 @@ import type { UseQueryResult } from '@tanstack/react-query';
  * ```
  */
 export function useAIWorkspace(
-  name: string,
+  key: string,
   options?: { enabled?: boolean }
 ): UseQueryResult<AIWorkspaceResponse> {
   const config = useAIConfig();
 
   return useQuery({
-    queryKey: aiKeys.workspace(config.queryKeyPrefix, name),
-    queryFn: () => getAIWorkspace(config.client, config.basePath, name),
+    queryKey: aiKeys.workspace(config.queryKeyPrefix, key),
+    queryFn: () => getAIWorkspace(config.client, config.basePath, key),
     enabled: options?.enabled ?? true,
   });
 }

@@ -14,7 +14,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
  * @example
  * ```tsx
  * const { data } = useAIWorkspaces();
- * data?.workspaces.map(ws => <div key={ws.name}>{ws.name}</div>);
+ * data?.workspaces.map(ws => <div key={ws.key}>{ws.key}</div>);
  * ```
  */
 export function useAIWorkspaces(options?: {

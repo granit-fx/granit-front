@@ -8,7 +8,7 @@ import type { EditWorkspaceFormValues } from '../validation';
 import type { AIWorkspaceResponse } from '@granit/ai';
 
 const baseWorkspace: AIWorkspaceResponse = {
-  name: 'test-workspace',
+  key: 'test-workspace',
   provider: 'OpenAI',
   model: 'gpt-4o',
   systemPrompt: 'sys',
@@ -17,7 +17,7 @@ const baseWorkspace: AIWorkspaceResponse = {
   kind: 'Dynamic',
   activated: true,
   capabilities: null,
-  workspaceModelName: null,
+  displayName: null,
 };
 
 const state = vi.hoisted(() => ({
@@ -34,7 +34,7 @@ const formMock = vi.hoisted(() => ({
   submitValues: {
     provider: 'OpenAI',
     model: 'gpt-4o',
-    workspaceModelName: '',
+    displayName: '',
     systemPrompt: '',
     temperature: '',
     maxOutputTokens: '',
@@ -109,7 +109,7 @@ describe('AIWorkspaceEditPage', () => {
     formMock.submitValues = {
       provider: 'OpenAI',
       model: 'gpt-4o',
-      workspaceModelName: '',
+      displayName: '',
       systemPrompt: '',
       temperature: '',
       maxOutputTokens: '',
@@ -165,7 +165,7 @@ describe('AIWorkspaceEditPage', () => {
     formMock.submitValues = {
       provider: 'OpenAI',
       model: 'gpt-4o',
-      workspaceModelName: 'GPT-4o',
+      displayName: 'GPT-4o',
       systemPrompt: 'sys',
       temperature: '0.5',
       maxOutputTokens: '2048',
@@ -178,7 +178,7 @@ describe('AIWorkspaceEditPage', () => {
       expect(state.updateAsync).toHaveBeenCalledWith('test-workspace', {
         provider: 'OpenAI',
         model: 'gpt-4o',
-        workspaceModelName: 'GPT-4o',
+        displayName: 'GPT-4o',
         systemPrompt: 'sys',
         temperature: 0.5,
         maxOutputTokens: 2048,
@@ -196,7 +196,7 @@ describe('AIWorkspaceEditPage', () => {
       expect(state.updateAsync).toHaveBeenCalledWith('test-workspace', {
         provider: 'OpenAI',
         model: 'gpt-4o',
-        workspaceModelName: null,
+        displayName: null,
         systemPrompt: null,
         temperature: null,
         maxOutputTokens: null,

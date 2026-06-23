@@ -80,6 +80,16 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
           "409": {
             "description": "Conflict",
             "content": {
@@ -143,7 +153,7 @@
           {
             "name": "name",
             "in": "path",
-            "description": "Unique registered name of the background job.",
+            "description": "Unique registered name.",
             "required": true,
             "schema": {
               "type": "string"
@@ -212,7 +222,7 @@
           {
             "name": "name",
             "in": "path",
-            "description": "Unique registered name of the background job.",
+            "description": "Unique registered name.",
             "required": true,
             "schema": {
               "type": "string"
@@ -240,8 +250,28 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -262,16 +292,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -301,7 +321,7 @@
           {
             "name": "name",
             "in": "path",
-            "description": "Unique registered name of the background job.",
+            "description": "Unique registered name.",
             "required": true,
             "schema": {
               "type": "string"
@@ -727,7 +747,7 @@
           {
             "name": "workspaceName",
             "in": "path",
-            "description": "Workspace identifier \u2014 isolates configuration and routing per AI workspace.",
+            "description": "Workspace identifier — isolates configuration and routing per AI workspace.",
             "required": true,
             "schema": {
               "type": "string"
@@ -751,6 +771,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AIChatResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -822,13 +852,13 @@
       "post": {
         "tags": ["AI - Inference"],
         "summary": "Streams a chat completion response via Server-Sent Events.",
-        "description": "Opens an SSE stream that emits incremental content chunks as they arrive from the provider. The stream ends with a [DONE] sentinel. If the provider returns an error after streaming has started, an SSE 'error' event is emitted before closing. Returns 404 if the workspace does not exist, 422 if the model is not found, or 502/503 if the provider is unavailable.",
+        "description": "Opens an SSE stream that emits incremental 'delta' content frames as they arrive from the provider, then a 'usage' frame with the token counts; end-of-stream is the stream closing. A provider failure before any content is returned as an HTTP problem; a failure after streaming has started is emitted as an 'error' frame. Returns 404 if the workspace does not exist, or 502/503 if the provider is unavailable.",
         "operationId": "AIChatStream",
         "parameters": [
           {
             "name": "workspaceName",
             "in": "path",
-            "description": "Workspace identifier \u2014 isolates configuration and routing per AI workspace.",
+            "description": "Workspace identifier — isolates configuration and routing per AI workspace.",
             "required": true,
             "schema": {
               "type": "string"
@@ -851,7 +881,17 @@
             "content": {
               "text/event-stream": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/AIChatStreamEvent"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -939,7 +979,7 @@
           {
             "name": "workspaceName",
             "in": "path",
-            "description": "Workspace identifier \u2014 isolates configuration and routing per AI workspace.",
+            "description": "Workspace identifier — isolates configuration and routing per AI workspace.",
             "required": true,
             "schema": {
               "type": "string"
@@ -963,6 +1003,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AIEmbeddingResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -1053,7 +1103,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/AIChatMessageRequest"
-            }
+            },
+            "x-granit-validator": "Validation:MaxChatMessages"
           }
         }
       },
@@ -1083,6 +1134,29 @@
           "duration": {
             "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
             "type": "string"
+          }
+        }
+      },
+      "AIChatStreamEvent": {
+        "required": ["type"],
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "content": {
+            "type": ["null", "string"]
+          },
+          "inputTokens": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "outputTokens": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "error": {
+            "type": ["null", "string"]
           }
         }
       },
@@ -1131,10 +1205,12 @@
         "type": "object",
         "properties": {
           "inputs": {
+            "maxLength": 32000,
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "x-granit-validator": "Validation:MaxEmbeddingInputs"
           }
         }
       },
@@ -1286,6 +1362,10 @@
           "costCurrency": {
             "type": ["null", "string"]
           },
+          "conversationId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
           "timestamp": {
             "type": "string",
             "format": "date-time"
@@ -1294,17 +1374,25 @@
             "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
             "type": ["null", "string"]
           },
-          "conversationId": {
-            "type": ["null", "string"],
-            "format": "uuid"
+          "promptVersion": {
+            "type": ["null", "string"]
+          },
+          "promptTemplateName": {
+            "type": ["null", "string"]
+          },
+          "promptTemplateVersion": {
+            "type": ["null", "integer"],
+            "format": "int32"
           }
         }
       },
       "AIWorkspaceCreateRequest": {
-        "required": ["name", "provider", "model"],
+        "required": ["key", "provider", "model"],
         "type": "object",
         "properties": {
-          "name": {
+          "key": {
+            "maxLength": 128,
+            "pattern": "^[a-z0-9][a-z0-9-]*$",
             "type": "string"
           },
           "provider": {
@@ -1312,6 +1400,9 @@
           },
           "model": {
             "type": "string"
+          },
+          "displayName": {
+            "type": ["null", "string"]
           },
           "systemPrompt": {
             "type": ["null", "string"]
@@ -1324,9 +1415,6 @@
           "maxOutputTokens": {
             "type": ["null", "integer"],
             "format": "int32"
-          },
-          "workspaceModelName": {
-            "type": ["null", "string"]
           }
         }
       },
@@ -1351,20 +1439,20 @@
       },
       "AIWorkspaceResponse": {
         "required": [
-          "name",
+          "key",
           "provider",
           "model",
+          "displayName",
           "systemPrompt",
           "temperature",
           "maxOutputTokens",
           "kind",
           "activated",
-          "capabilities",
-          "workspaceModelName"
+          "capabilities"
         ],
         "type": "object",
         "properties": {
-          "name": {
+          "key": {
             "type": "string"
           },
           "provider": {
@@ -1372,6 +1460,9 @@
           },
           "model": {
             "type": "string"
+          },
+          "displayName": {
+            "type": ["null", "string"]
           },
           "systemPrompt": {
             "type": ["null", "string"]
@@ -1400,9 +1491,6 @@
                 "$ref": "#/components/schemas/AIModelCapabilities"
               }
             ]
-          },
-          "workspaceModelName": {
-            "type": ["null", "string"]
           }
         }
       },
@@ -1415,6 +1503,9 @@
           },
           "model": {
             "type": "string"
+          },
+          "displayName": {
+            "type": ["null", "string"]
           },
           "systemPrompt": {
             "type": ["null", "string"]
@@ -1431,9 +1522,6 @@
           "activated": {
             "type": "boolean",
             "default": false
-          },
-          "workspaceModelName": {
-            "type": ["null", "string"]
           }
         }
       },
@@ -1726,6 +1814,10 @@
                 "costCurrency": {
                   "type": ["null", "string"]
                 },
+                "conversationId": {
+                  "type": ["null", "string"],
+                  "format": "uuid"
+                },
                 "timestamp": {
                   "type": "string",
                   "format": "date-time"
@@ -1733,6 +1825,16 @@
                 "duration": {
                   "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
                   "type": ["null", "string"]
+                },
+                "promptVersion": {
+                  "type": ["null", "string"]
+                },
+                "promptTemplateName": {
+                  "type": ["null", "string"]
+                },
+                "promptTemplateVersion": {
+                  "type": ["null", "integer"],
+                  "format": "int32"
                 }
               }
             }

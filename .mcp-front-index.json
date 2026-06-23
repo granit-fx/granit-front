@@ -2815,7 +2815,7 @@
         {
           "name": "useAIWorkspace",
           "kind": "function",
-          "signature": "function useAIWorkspace( name: string, options?:"
+          "signature": "function useAIWorkspace( key: string, options?:"
         },
         {
           "name": "useCreateAIWorkspace",
@@ -10956,6 +10956,187 @@
           "name": "createSubscriptionColumns",
           "kind": "function",
           "signature": "function createSubscriptionColumns("
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-workflow",
+      "description": "Granit admin workflow UI — the status bar, transition dialog, history table and the self-contained EntityWorkflow card that pair with the headless @granit/react-workflow. App-agnostic: EntityWorkflow takes the API config as a prop and the package ships its own Workflow.* translations.",
+      "exports": [
+        {
+          "name": "EntityWorkflow",
+          "kind": "function",
+          "signature": "function EntityWorkflow("
+        },
+        {
+          "name": "EntityWorkflowProps",
+          "kind": "interface",
+          "signature": "interface EntityWorkflowProps",
+          "members": [
+            {
+              "name": "config",
+              "kind": "property",
+              "signature": "config: WorkflowConfig"
+            },
+            {
+              "name": "entityType",
+              "kind": "property",
+              "signature": "entityType: string"
+            },
+            {
+              "name": "entityId",
+              "kind": "property",
+              "signature": "entityId: string"
+            },
+            {
+              "name": "currentState",
+              "kind": "property",
+              "signature": "currentState: string"
+            },
+            {
+              "name": "states",
+              "kind": "property",
+              "signature": "states: readonly string[]"
+            },
+            {
+              "name": "onStateChange",
+              "kind": "method",
+              "signature": "onStateChange?: (newState: string) => void"
+            },
+            {
+              "name": "className",
+              "kind": "property",
+              "signature": "className?: string"
+            }
+          ]
+        },
+        {
+          "name": "TransitionCommentDialog",
+          "kind": "function",
+          "signature": "function TransitionCommentDialog("
+        },
+        {
+          "name": "TransitionCommentDialogProps",
+          "kind": "interface",
+          "signature": "interface TransitionCommentDialogProps",
+          "members": [
+            {
+              "name": "open",
+              "kind": "property",
+              "signature": "open: boolean"
+            },
+            {
+              "name": "transitionName",
+              "kind": "property",
+              "signature": "transitionName: string"
+            },
+            {
+              "name": "requiresApproval",
+              "kind": "property",
+              "signature": "requiresApproval: boolean"
+            },
+            {
+              "name": "onConfirm",
+              "kind": "method",
+              "signature": "onConfirm: (comment?: string) => void"
+            },
+            {
+              "name": "onCancel",
+              "kind": "method",
+              "signature": "onCancel: () => void"
+            }
+          ]
+        },
+        {
+          "name": "WorkflowHistory",
+          "kind": "function",
+          "signature": "function WorkflowHistory("
+        },
+        {
+          "name": "WorkflowHistoryProps",
+          "kind": "interface",
+          "signature": "interface WorkflowHistoryProps",
+          "members": [
+            {
+              "name": "history",
+              "kind": "property",
+              "signature": "history: readonly TransitionHistory[]"
+            },
+            {
+              "name": "loading",
+              "kind": "property",
+              "signature": "loading?: boolean"
+            },
+            {
+              "name": "emptyMessage",
+              "kind": "property",
+              "signature": "emptyMessage?: string"
+            },
+            {
+              "name": "className",
+              "kind": "property",
+              "signature": "className?: string"
+            }
+          ]
+        },
+        {
+          "name": "WorkflowStatusBar",
+          "kind": "function",
+          "signature": "function WorkflowStatusBar("
+        },
+        {
+          "name": "WorkflowStatusBarProps",
+          "kind": "interface",
+          "signature": "interface WorkflowStatusBarProps",
+          "members": [
+            {
+              "name": "currentState",
+              "kind": "property",
+              "signature": "currentState: string"
+            },
+            {
+              "name": "states",
+              "kind": "property",
+              "signature": "states: readonly string[]"
+            },
+            {
+              "name": "transitions",
+              "kind": "property",
+              "signature": "transitions: readonly WorkflowTransition[]"
+            },
+            {
+              "name": "onTransition",
+              "kind": "method",
+              "signature": "onTransition?: (targetState: string, comment?: string) => void"
+            },
+            {
+              "name": "isLoading",
+              "kind": "property",
+              "signature": "isLoading?: boolean"
+            },
+            {
+              "name": "className",
+              "kind": "property",
+              "signature": "className?: string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-workspaces",
+      "description": "Granit admin workspaces UI — the workspace landing page that pairs with the headless @granit/react-workspaces. App-agnostic: it takes the route workspace name and an icon-render slot as props, and ships its own Workspace.* translations.",
+      "exports": [
+        {
+          "name": "WorkspacePage",
+          "kind": "function",
+          "signature": "function WorkspacePage("
+        },
+        {
+          "name": "WorkspacePageProps",
+          "kind": "interface",
+          "signature": "interface WorkspacePageProps",
+          "members": []
         }
       ]
     },

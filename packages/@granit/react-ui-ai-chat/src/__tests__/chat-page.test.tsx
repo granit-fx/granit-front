@@ -95,8 +95,8 @@ vi.mock('@granit/react-ai', () => ({
   useAIWorkspaces: () => ({
     data: {
       workspaces: [
-        { name: 'Auto', workspaceModelName: null, model: null },
-        { name: 'support', workspaceModelName: 'GPT-4o', model: 'gpt-4o' },
+        { key: 'Auto', displayName: null, model: null },
+        { key: 'support', displayName: 'GPT-4o', model: 'gpt-4o' },
       ],
     },
   }),

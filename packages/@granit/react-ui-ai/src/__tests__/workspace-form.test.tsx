@@ -12,9 +12,9 @@ const providerState = vi.hoisted(() => ({ selected: undefined as string | undefi
 
 vi.mock('@granit/ai', () => ({
   AI_WORKSPACE_LIMITS: {
-    NAME_MAX_LENGTH: 128,
-    NAME_PATTERN: /^[a-z0-9][a-z0-9-]*$/,
-    MODEL_NAME_MAX_LENGTH: 64,
+    KEY_MAX_LENGTH: 128,
+    KEY_PATTERN: /^[a-z0-9][a-z0-9-]*$/,
+    DISPLAY_NAME_MAX_LENGTH: 64,
   },
 }));
 
@@ -105,7 +105,7 @@ describe('WorkspaceForm (edit)', () => {
   const defaultValues: EditWorkspaceFormValues = {
     provider: 'OpenAI',
     model: 'gpt-4o',
-    workspaceModelName: 'GPT-4o',
+    displayName: 'GPT-4o',
     systemPrompt: 'be helpful',
     temperature: 0.7,
     maxOutputTokens: 4096,

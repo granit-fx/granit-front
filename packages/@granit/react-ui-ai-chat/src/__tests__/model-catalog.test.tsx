@@ -73,7 +73,7 @@ describe('buildWorkspaceOptions', () => {
   });
 
   it('uses the model id only for the icon, never as the picker label', () => {
-    // workspaceModelName set → label is the friendly display name; the raw model
+    // displayName set → label is the friendly display name; the raw model
     // id drives the brand but never leaks into the label.
     const [option] = buildWorkspaceOptions(
       ['general-chat'],

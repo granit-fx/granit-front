@@ -119,7 +119,7 @@ export const mockProviderModels: Record<string, AIProviderModelResponse[]> = {
 
 export const mockWorkspaces: AIWorkspaceResponse[] = [
   {
-    name: 'default',
+    key: 'default',
     provider: 'OpenAI',
     model: 'gpt-4o',
     systemPrompt: 'You are a helpful assistant for the Granit Showcase platform.',
@@ -128,10 +128,10 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     kind: 'System',
     activated: true,
     capabilities: gpt4oCaps,
-    workspaceModelName: 'GPT-4o',
+    displayName: 'GPT-4o',
   },
   {
-    name: 'code-review',
+    key: 'code-review',
     provider: 'OpenAI',
     model: 'gpt-4o-mini',
     systemPrompt: 'You are a senior code reviewer. Be concise and actionable.',
@@ -140,10 +140,10 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     kind: 'Dynamic',
     activated: true,
     capabilities: basicChatCaps,
-    workspaceModelName: null,
+    displayName: null,
   },
   {
-    name: 'translation',
+    key: 'translation',
     provider: 'AzureOpenAI',
     model: 'gpt-4o',
     systemPrompt: 'You are a professional translator. Translate accurately preserving tone.',
@@ -152,10 +152,10 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     kind: 'Dynamic',
     activated: true,
     capabilities: gpt4oCaps,
-    workspaceModelName: null,
+    displayName: null,
   },
   {
-    name: 'summarizer',
+    key: 'summarizer',
     provider: 'Ollama',
     model: 'llama3.1',
     systemPrompt: null,
@@ -164,7 +164,7 @@ export const mockWorkspaces: AIWorkspaceResponse[] = [
     kind: 'Dynamic',
     activated: false,
     capabilities: ollamaCaps,
-    workspaceModelName: null,
+    displayName: null,
   },
 ];
 

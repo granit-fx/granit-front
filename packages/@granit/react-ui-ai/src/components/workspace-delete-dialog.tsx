@@ -39,8 +39,8 @@ export function WorkspaceDeleteDialog({
           <AlertDialogTitle>{t('AI.Workspaces.DeleteDialog.Title')}</AlertDialogTitle>
           <AlertDialogDescription>
             {isSystem
-              ? t('AI.Workspaces.DeleteDialog.SystemWarning', { name: workspace?.name })
-              : t('AI.Workspaces.DeleteDialog.Description', { name: workspace?.name })}
+              ? t('AI.Workspaces.DeleteDialog.SystemWarning', { name: workspace?.key })
+              : t('AI.Workspaces.DeleteDialog.Description', { name: workspace?.key })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

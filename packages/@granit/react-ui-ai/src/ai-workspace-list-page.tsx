@@ -32,8 +32,8 @@ export function AIWorkspaceListPage() {
     () =>
       createWorkspaceColumns({
         t,
-        onView: (ws) => navigate(`/ai/workspaces/${ws.name}`),
-        onEdit: (ws) => navigate(`/ai/workspaces/${ws.name}`),
+        onView: (ws) => navigate(`/ai/workspaces/${ws.key}`),
+        onEdit: (ws) => navigate(`/ai/workspaces/${ws.key}`),
         onDelete: (ws) => setDeleteTarget(ws),
         canManage,
       }),
@@ -43,7 +43,7 @@ export function AIWorkspaceListPage() {
   const handleDelete = async () => {
     if (!deleteTarget) return;
     try {
-      await removeAsync(deleteTarget.name);
+      await removeAsync(deleteTarget.key);
       toast.success(t('AI.Workspaces.DeleteSuccess'));
       setDeleteTarget(null);
     } catch (err) {
@@ -84,20 +84,20 @@ export function AIWorkspaceListPage() {
         <WorkspaceTable
           data={workspaces}
           columns={columns}
-          onRowClick={(ws) => navigate(`/ai/workspaces/${ws.name}`)}
+          onRowClick={(ws) => navigate(`/ai/workspaces/${ws.key}`)}
         />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {workspaces.map((ws) => (
             <Card
-              key={ws.name}
+              key={ws.key}
               className="cursor-pointer transition-colors hover:border-primary/50"
-              onClick={() => navigate(`/ai/workspaces/${ws.name}`)}
+              onClick={() => navigate(`/ai/workspaces/${ws.key}`)}
             >
               <CardContent className="pt-6">
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
-                    <p className="font-mono text-sm font-medium">{ws.name}</p>
+                    <p className="font-mono text-sm font-medium">{ws.key}</p>
                     <p className="text-xs text-muted-foreground">
                       {ws.provider} / {ws.model}
                     </p>
@@ -123,7 +123,7 @@ export function AIWorkspaceListPage() {
                       size="sm"
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate(`/ai/workspaces/${ws.name}`);
+                        navigate(`/ai/workspaces/${ws.key}`);
                       }}
                     >
                       {ws.kind === AI_WORKSPACE_KINDS.SYSTEM || !canManage

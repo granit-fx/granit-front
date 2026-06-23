@@ -7,14 +7,13 @@ type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
 export function createWorkspaceSchema(t: TranslateFn) {
   return z.object({
-    // UI vocabulary: the workspace's identifier slug is surfaced as "key"
-    // (matching the `workspaceKey` reference used on conversations/messages).
-    // Mapped back to the API's `name` field at the create-page boundary.
+    // The workspace's machine key (slug) — the API's `key` field, and the same
+    // value ai-chat references as `workspaceKey` on conversations/messages.
     key: z
       .string()
       .min(1, t('Validation.Required', { field: t('AI.Workspaces.Form.Key') }))
-      .max(AI_WORKSPACE_LIMITS.NAME_MAX_LENGTH)
-      .regex(AI_WORKSPACE_LIMITS.NAME_PATTERN, t('AI.Workspaces.Validation.NameFormat')),
+      .max(AI_WORKSPACE_LIMITS.KEY_MAX_LENGTH)
+      .regex(AI_WORKSPACE_LIMITS.KEY_PATTERN, t('AI.Workspaces.Validation.NameFormat')),
     provider: z
       .string()
       .min(1, t('Validation.Required', { field: t('AI.Workspaces.Form.ProviderName') }))
@@ -23,9 +22,9 @@ export function createWorkspaceSchema(t: TranslateFn) {
       .string()
       .min(1, t('Validation.Required', { field: t('AI.Workspaces.Form.Model') }))
       .max(128),
-    workspaceModelName: z
+    displayName: z
       .string()
-      .max(AI_WORKSPACE_LIMITS.MODEL_NAME_MAX_LENGTH)
+      .max(AI_WORKSPACE_LIMITS.DISPLAY_NAME_MAX_LENGTH)
       .optional()
       .or(z.literal('')),
     systemPrompt: z.string().max(32000).optional().or(z.literal('')),
@@ -44,9 +43,9 @@ export function editWorkspaceSchema(t: TranslateFn) {
       .string()
       .min(1, t('Validation.Required', { field: t('AI.Workspaces.Form.Model') }))
       .max(128),
-    workspaceModelName: z
+    displayName: z
       .string()
-      .max(AI_WORKSPACE_LIMITS.MODEL_NAME_MAX_LENGTH)
+      .max(AI_WORKSPACE_LIMITS.DISPLAY_NAME_MAX_LENGTH)
       .optional()
       .or(z.literal('')),
     systemPrompt: z.string().max(32000).optional().or(z.literal('')),

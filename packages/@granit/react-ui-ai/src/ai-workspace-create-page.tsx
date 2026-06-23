@@ -17,16 +17,16 @@ export function AIWorkspaceCreatePage() {
   const handleSubmit = async (data: CreateWorkspaceFormValues) => {
     try {
       const result = await createAsync({
-        name: data.key,
+        key: data.key,
         provider: data.provider,
         model: data.model,
-        workspaceModelName: data.workspaceModelName || null,
+        displayName: data.displayName || null,
         systemPrompt: data.systemPrompt || null,
         temperature: data.temperature ? Number(data.temperature) : null,
         maxOutputTokens: data.maxOutputTokens ? Number(data.maxOutputTokens) : null,
       });
       toast.success(t('AI.Workspaces.CreateSuccess'));
-      navigate(`/ai/workspaces/${result.name}`);
+      navigate(`/ai/workspaces/${result.key}`);
     } catch (err) {
       // API errors are surfaced by the global MutationCache.onError toast.
       logger.error('[AIWorkspaceCreatePage] Failed to create workspace', err);

@@ -53,12 +53,12 @@ describe('createWorkspaceColumns', () => {
 
   it('exposes the expected column ids', () => {
     const ids = makeColumns().map((c) => c.id);
-    expect(ids).toEqual(['name', 'provider', 'model', 'kind', 'activated', 'actions']);
+    expect(ids).toEqual(['key', 'provider', 'model', 'kind', 'activated', 'actions']);
   });
 
   it('renders the name cell with the workspace name', () => {
-    renderCell(makeColumns(), 'name', dynamicWs);
-    expect(screen.getByText(dynamicWs.name)).toBeInTheDocument();
+    renderCell(makeColumns(), 'key', dynamicWs);
+    expect(screen.getByText(dynamicWs.key)).toBeInTheDocument();
   });
 
   it('renders the model cell with the model id', () => {
@@ -91,11 +91,11 @@ describe('createWorkspaceColumns', () => {
     const onDelete = vi.fn();
     const { user } = renderCell(makeColumns({ onEdit, onDelete }), 'actions', dynamicWs);
 
-    await user.click(screen.getByRole('button', { name: `Actions for ${dynamicWs.name}` }));
+    await user.click(screen.getByRole('button', { name: `Actions for ${dynamicWs.key}` }));
     await user.click(screen.getByText('Edit'));
     expect(onEdit).toHaveBeenCalledWith(dynamicWs);
 
-    await user.click(screen.getByRole('button', { name: `Actions for ${dynamicWs.name}` }));
+    await user.click(screen.getByRole('button', { name: `Actions for ${dynamicWs.key}` }));
     await user.click(screen.getByText('Delete'));
     expect(onDelete).toHaveBeenCalledWith(dynamicWs);
   });
@@ -104,7 +104,7 @@ describe('createWorkspaceColumns', () => {
     const onView = vi.fn();
     const { user } = renderCell(makeColumns({ onView }), 'actions', systemWs);
 
-    await user.click(screen.getByRole('button', { name: `Actions for ${systemWs.name}` }));
+    await user.click(screen.getByRole('button', { name: `Actions for ${systemWs.key}` }));
     expect(screen.queryByText('Edit')).not.toBeInTheDocument();
     expect(screen.queryByText('Delete')).not.toBeInTheDocument();
     await user.click(screen.getByText('View'));
@@ -115,7 +115,7 @@ describe('createWorkspaceColumns', () => {
     const onView = vi.fn();
     const { user } = renderCell(makeColumns({ onView, canManage: false }), 'actions', dynamicWs);
 
-    await user.click(screen.getByRole('button', { name: `Actions for ${dynamicWs.name}` }));
+    await user.click(screen.getByRole('button', { name: `Actions for ${dynamicWs.key}` }));
     expect(screen.queryByText('Delete')).not.toBeInTheDocument();
     await user.click(screen.getByText('View'));
     expect(onView).toHaveBeenCalledWith(dynamicWs);
@@ -123,7 +123,7 @@ describe('createWorkspaceColumns', () => {
 
   it('renders header strings via the translate fn', () => {
     const columns = makeColumns();
-    render(<>{getCol(columns, 'name').header as string}</>);
+    render(<>{getCol(columns, 'key').header as string}</>);
     expect(screen.getByText('Unique key')).toBeInTheDocument();
   });
 });
