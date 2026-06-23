@@ -8929,6 +8929,88 @@
       ]
     },
     {
+      "name": "@granit/react-ui-error-boundary",
+      "description": "Granit admin error UI — the visible fallback, route-error and not-found pages that pair with the headless @granit/react-error-boundary. App-agnostic: each page takes an optional layout slot and ships its own Errors.* translations.",
+      "exports": [
+        {
+          "name": "ErrorFallback",
+          "kind": "function",
+          "signature": "function ErrorFallback("
+        },
+        {
+          "name": "ErrorFallbackProps",
+          "kind": "interface",
+          "signature": "interface ErrorFallbackProps",
+          "members": [
+            {
+              "name": "error",
+              "kind": "property",
+              "signature": "error: Error"
+            },
+            {
+              "name": "onReset",
+              "kind": "method",
+              "signature": "onReset: () => void"
+            },
+            {
+              "name": "layout",
+              "kind": "property",
+              "signature": "layout?: ComponentType<{ children: ReactNode }>"
+            },
+            {
+              "name": "showErrorDetail",
+              "kind": "property",
+              "signature": "showErrorDetail?: boolean"
+            }
+          ]
+        },
+        {
+          "name": "ErrorPage",
+          "kind": "function",
+          "signature": "function ErrorPage("
+        },
+        {
+          "name": "ErrorPageProps",
+          "kind": "interface",
+          "signature": "interface ErrorPageProps",
+          "members": [
+            {
+              "name": "layout",
+              "kind": "property",
+              "signature": "layout?: ComponentType<{ children: ReactNode }>"
+            },
+            {
+              "name": "onError",
+              "kind": "method",
+              "signature": "onError?: (error: unknown) => void"
+            },
+            {
+              "name": "showErrorDetail",
+              "kind": "property",
+              "signature": "showErrorDetail?: boolean"
+            }
+          ]
+        },
+        {
+          "name": "NotFoundPage",
+          "kind": "function",
+          "signature": "function NotFoundPage("
+        },
+        {
+          "name": "NotFoundPageProps",
+          "kind": "interface",
+          "signature": "interface NotFoundPageProps",
+          "members": [
+            {
+              "name": "layout",
+              "kind": "property",
+              "signature": "layout?: ComponentType<{ children: ReactNode }>"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-features",
       "description": "Granit admin UI for the Features module — the feature-flag listing (grouped, collapsible), value badges, the per-feature detail page and the set/remove-override dialog. Composes @granit/react-features (headless) with the foundation UI packages.",
       "exports": [
@@ -9207,6 +9289,11 @@
           "name": "LanguageList",
           "kind": "function",
           "signature": "function LanguageList()"
+        },
+        {
+          "name": "LanguageSwitcher",
+          "kind": "function",
+          "signature": "function LanguageSwitcher()"
         },
         {
           "name": "createLocalizationColumns",
