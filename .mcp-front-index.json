@@ -8155,6 +8155,23 @@
       ]
     },
     {
+      "name": "@granit/react-ui-authentication-federated",
+      "description": "Federated (external-IdP) login landing page for Granit apps — provider-agnostic 'sign in' screen that triggers the IdP redirect, surfaces auth-error query params, and redirects when already authenticated. The federated parallel to @granit/react-ui-authentication-local (which carries the local OpenIddict login forms).",
+      "exports": [
+        {
+          "name": "FederatedLoginPage",
+          "kind": "function",
+          "signature": "function FederatedLoginPage("
+        },
+        {
+          "name": "FederatedLoginPageProps",
+          "kind": "interface",
+          "signature": "interface FederatedLoginPageProps",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-authentication-keycloak",
       "description": "Keycloak auth provider for Granit apps — wires @granit/react-authentication-keycloak's useKeycloakInit into the app's auth context, with locale-aware login and an init loading state. The Keycloak parallel to @granit/react-ui-authentication-local (which carries OpenIddict login pages; Keycloak hosts its own login, so this ships only the provider).",
       "exports": [
