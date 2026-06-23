@@ -1,5 +1,6 @@
 // @granit/react-ui-shell-admin — barrel.
 export * from './app-right-sidebar';
+export * from './app-public-shell';
 export * from './app-shell';
 export * from './app-sidebar';
 export * from './command-palette';

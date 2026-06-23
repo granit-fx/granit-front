@@ -5115,7 +5115,7 @@ importers:
         version: 4.4.0
       i18next:
         specifier: ^26.0.0
-        version: 26.3.1(typescript@6.0.3)
+        version: 26.3.2(typescript@6.0.3)
       lucide-react:
         specifier: ^1.21.0
         version: 1.21.0(react@19.2.7)
@@ -5130,7 +5130,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       react-i18next:
         specifier: ^17.0.0
-        version: 17.0.8(i18next@26.3.1(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+        version: 17.0.8(i18next@26.3.2(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -6387,6 +6387,9 @@ importers:
       '@granit/react-ui-kit':
         specifier: workspace:*
         version: link:../react-ui-kit
+      '@granit/react-ui-localization':
+        specifier: workspace:*
+        version: link:../react-ui-localization
       '@granit/react-workspaces':
         specifier: workspace:*
         version: link:../react-workspaces
@@ -6904,7 +6907,7 @@ importers:
         version: 5.101.1(react@19.2.7)
       i18next:
         specifier: ^26.0.0
-        version: 26.3.1(typescript@6.0.3)
+        version: 26.3.2(typescript@6.0.3)
       lucide-react:
         specifier: ^1.21.0
         version: 1.21.0(react@19.2.7)
@@ -6916,7 +6919,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       react-i18next:
         specifier: ^17.0.0
-        version: 17.0.8(i18next@26.3.1(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+        version: 17.0.8(i18next@26.3.2(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -6949,7 +6952,7 @@ importers:
         version: 5.101.1(react@19.2.7)
       i18next:
         specifier: ^26.0.0
-        version: 26.3.1(typescript@6.0.3)
+        version: 26.3.2(typescript@6.0.3)
       lucide-react:
         specifier: ^1.21.0
         version: 1.21.0(react@19.2.7)
@@ -6961,7 +6964,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       react-i18next:
         specifier: ^17.0.0
-        version: 17.0.8(i18next@26.3.1(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+        version: 17.0.8(i18next@26.3.2(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
