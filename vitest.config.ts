@@ -242,13 +242,13 @@ export default defineConfig({
         'packages/@granit/react-ai/src/usage/index.ts'
       ),
       '@granit/react-ai': path.resolve(__dirname, 'packages/@granit/react-ai/src/index.ts'),
-      '@granit/react-ai-chat': path.resolve(
-        __dirname,
-        'packages/@granit/react-ai-chat/src/index.ts'
-      ),
       '@granit/react-ai-chat/testing': path.resolve(
         __dirname,
         'packages/@granit/react-ai-chat/src/testing/index.ts'
+      ),
+      '@granit/react-ai-chat': path.resolve(
+        __dirname,
+        'packages/@granit/react-ai-chat/src/index.ts'
       ),
       '@granit/react-ai-chat-blob-storage': path.resolve(
         __dirname,

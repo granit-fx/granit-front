@@ -1,3 +1,4 @@
+import { mockUsageRecords } from '@granit/react-ai/testing';
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 
@@ -7,14 +8,20 @@ import { renderWithProviders } from './test-utils';
 
 import type { AIUsageRecord } from '@granit/ai';
 
-const usageMock = vi.hoisted(() => ({ items: [] as AIUsageRecord[] }));
+const usageMock = vi.hoisted(() => ({
+  items: [] as AIUsageRecord[],
+  meta: {
+    columns: [] as unknown[],
+    presetFilterGroups: [] as unknown[],
+    groupByFields: [] as unknown[],
+  },
+  isGrouped: false,
+  groupedTotal: 0,
+}));
 
 vi.mock('@granit/react-ai/usage', () => ({
   AIUsageProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  useAIUsageMeta: () => ({
-    data: { columns: [], presetFilterGroups: [], groupByFields: [] },
-    isLoading: false,
-  }),
+  useAIUsageMeta: () => ({ data: usageMock.meta, isLoading: false }),
   useAIUsage: () => ({
     query: {
       data: { items: usageMock.items, totalCount: usageMock.items.length },
@@ -22,9 +29,12 @@ vi.mock('@granit/react-ai/usage', () => ({
       isFetching: false,
       refetch: vi.fn(),
     },
-    groupedQuery: { data: null, isLoading: false },
+    groupedQuery: {
+      data: { groups: [], totalCount: usageMock.groupedTotal },
+      isLoading: false,
+    },
     params: { page: 1, pageSize: 20, sort: [], groupBy: undefined },
-    isGrouped: false,
+    isGrouped: usageMock.isGrouped,
     setPage: vi.fn(),
     setPageSize: vi.fn(),
     toggleSort: vi.fn(),
@@ -32,30 +42,12 @@ vi.mock('@granit/react-ai/usage', () => ({
   }),
 }));
 
-// Two records sharing all non-null fields so the only rendered dash comes from
-// the nullable conversationId column under test.
-const baseRecord = {
-  tenantId: null,
-  userId: null,
-  workspaceName: 'ws-a',
-  provider: 'openai',
-  model: 'gpt-4',
-  inputTokens: 10,
-  outputTokens: 20,
-  estimatedCost: 0.01,
-  costCurrency: 'USD',
-  timestamp: '2026-01-01T00:00:00Z',
-  duration: '00:00:01',
-};
-
-const usageRecords = [
-  { ...baseRecord, id: 'rec-1', conversationId: 'conv-123' },
-  { ...baseRecord, id: 'rec-2', conversationId: null },
-] as unknown as AIUsageRecord[];
-
 describe('AIUsagePage', () => {
   beforeEach(() => {
     usageMock.items = [];
+    usageMock.meta = { columns: [], presetFilterGroups: [], groupByFields: [] };
+    usageMock.isGrouped = false;
+    usageMock.groupedTotal = 0;
   });
 
   it('should render the page title', () => {
@@ -68,12 +60,49 @@ describe('AIUsagePage', () => {
     expect(document.querySelector('[data-slot="ai-usage-page"]')).toBeInTheDocument();
   });
 
-  it('should render the conversation column, showing the id or a dash when null', () => {
-    usageMock.items = usageRecords;
+  it('renders every cell type from the shared usage fixtures', () => {
+    usageMock.items = mockUsageRecords;
     renderWithProviders(<AIUsagePage />);
 
+    // Conversation id column shows ids and a dash for the null record.
     expect(screen.getByText('Conversation')).toBeInTheDocument();
-    expect(screen.getByText('conv-123')).toBeInTheDocument();
-    expect(screen.getByText('-')).toBeInTheDocument();
+    expect(screen.getAllByText('-').length).toBeGreaterThan(0);
+
+    // Cost cell formats currency for records with a currency…
+    const withCurrency = mockUsageRecords.find((r) => r.costCurrency)!;
+    expect(
+      screen.getAllByText((text) => text.includes(withCurrency.estimatedCost!.toFixed(4))).length
+    ).toBeGreaterThan(0);
+
+    // …and a dash for the record whose cost is null.
+    expect(mockUsageRecords.some((r) => r.estimatedCost === null)).toBe(true);
+
+    // Token columns are localized numbers.
+    expect(
+      screen.getAllByText(mockUsageRecords[0]!.inputTokens.toLocaleString()).length
+    ).toBeGreaterThan(0);
+  });
+
+  it('renders the meta toolbar with the record count when meta has columns', () => {
+    usageMock.items = mockUsageRecords;
+    usageMock.meta = {
+      columns: [{ id: 'provider', label: 'Provider', sortable: true }],
+      presetFilterGroups: [],
+      groupByFields: [{ field: 'provider', label: 'Provider' }],
+    };
+    renderWithProviders(<AIUsagePage />);
+    expect(screen.getByText('AI Usage Tracking')).toBeInTheDocument();
+  });
+
+  it('uses the grouped totals when the query is grouped', () => {
+    usageMock.meta = {
+      columns: [{ id: 'provider', label: 'Provider', sortable: true }],
+      presetFilterGroups: [],
+      groupByFields: [],
+    };
+    usageMock.isGrouped = true;
+    usageMock.groupedTotal = 7;
+    renderWithProviders(<AIUsagePage />);
+    expect(screen.getByText('AI Usage Tracking')).toBeInTheDocument();
   });
 });

@@ -114,4 +114,59 @@ describe('DocumentPublicLinksPage', () => {
       })
     );
   });
+
+  it('creates a link with the edited scope, ttl and max-uses form values', async () => {
+    mockUseParams.mockReturnValue({ id: 'doc-1' });
+    mockUseDocumentPublicLinks.mockReturnValue({ data: [], isLoading: false });
+    const { user } = renderWithProviders(<DocumentPublicLinksPage />, {
+      route: '/documents/doc-1/public-links',
+    });
+    await user.selectOptions(screen.getByLabelText('Scope'), 'View');
+    const ttl = screen.getByLabelText('Validity (days)');
+    await user.clear(ttl);
+    await user.type(ttl, '30');
+    await user.type(screen.getByLabelText(/Max uses/), '5');
+    await user.click(screen.getByRole('button', { name: 'Create' }));
+    expect(mockCreate).toHaveBeenCalledWith({
+      documentId: 'doc-1',
+      request: { scope: 'View', ttlDays: 30, maxUses: 5 },
+    });
+  });
+
+  it('sends a null max-uses when the field is left blank', async () => {
+    mockUseParams.mockReturnValue({ id: 'doc-1' });
+    mockUseDocumentPublicLinks.mockReturnValue({ data: [], isLoading: false });
+    const { user } = renderWithProviders(<DocumentPublicLinksPage />, {
+      route: '/documents/doc-1/public-links',
+    });
+    await user.click(screen.getByRole('button', { name: 'Create' }));
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.objectContaining({ request: expect.objectContaining({ maxUses: null }) })
+    );
+  });
+
+  it('revokes a link with the typed reason when revoke is clicked', async () => {
+    mockUseParams.mockReturnValue({ id: 'doc-1' });
+    mockUseDocumentPublicLinks.mockReturnValue({ data: [mockLink], isLoading: false });
+    const { user } = renderWithProviders(<DocumentPublicLinksPage />, {
+      route: '/documents/doc-1/public-links',
+    });
+    await user.type(screen.getByPlaceholderText('Reason'), 'expired campaign');
+    await user.click(screen.getByRole('button', { name: 'Revoke' }));
+    expect(mockRevoke).toHaveBeenCalledWith({
+      id: mockLink.id,
+      documentId: mockLink.documentId,
+      request: { reason: 'expired campaign' },
+    });
+  });
+
+  it('revokes with a null reason when none is typed', async () => {
+    mockUseParams.mockReturnValue({ id: 'doc-1' });
+    mockUseDocumentPublicLinks.mockReturnValue({ data: [mockLink], isLoading: false });
+    const { user } = renderWithProviders(<DocumentPublicLinksPage />, {
+      route: '/documents/doc-1/public-links',
+    });
+    await user.click(screen.getByRole('button', { name: 'Revoke' }));
+    expect(mockRevoke).toHaveBeenCalledWith(expect.objectContaining({ request: { reason: null } }));
+  });
 });

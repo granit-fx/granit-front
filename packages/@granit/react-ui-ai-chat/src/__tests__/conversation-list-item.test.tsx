@@ -63,6 +63,65 @@ describe('ConversationListItem', () => {
     await waitFor(() => expect(screen.queryByText('Rename conversation')).not.toBeInTheDocument());
   });
 
+  it('submits the rename on Enter', async () => {
+    const onRename = vi.fn().mockResolvedValue(undefined);
+    const { user } = renderWithProviders(
+      <ConversationListItem
+        {...baseProps}
+        onSelect={noop}
+        onTogglePin={noop}
+        onRename={onRename}
+        onDelete={noop}
+      />
+    );
+    await user.click(screen.getByRole('button', { name: 'Conversation options' }));
+    await user.click(await screen.findByRole('menuitem', { name: 'Rename' }));
+
+    const input = await screen.findByLabelText('Name');
+    await user.clear(input);
+    await user.type(input, 'Via enter{Enter}');
+
+    expect(onRename).toHaveBeenCalledWith('Via enter');
+    await waitFor(() => expect(screen.queryByText('Rename conversation')).not.toBeInTheDocument());
+  });
+
+  it('cancels the rename dialog without persisting', async () => {
+    const onRename = vi.fn();
+    const { user } = renderWithProviders(
+      <ConversationListItem
+        {...baseProps}
+        onSelect={noop}
+        onTogglePin={noop}
+        onRename={onRename}
+        onDelete={noop}
+      />
+    );
+    await user.click(screen.getByRole('button', { name: 'Conversation options' }));
+    await user.click(await screen.findByRole('menuitem', { name: 'Rename' }));
+    await screen.findByLabelText('Name');
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(onRename).not.toHaveBeenCalled();
+    await waitFor(() => expect(screen.queryByText('Rename conversation')).not.toBeInTheDocument());
+  });
+
+  it('shows the unpin action for a pinned conversation', async () => {
+    const onTogglePin = vi.fn();
+    const { user } = renderWithProviders(
+      <ConversationListItem
+        {...baseProps}
+        isPinned
+        onSelect={noop}
+        onTogglePin={onTogglePin}
+        onRename={noop}
+        onDelete={noop}
+      />
+    );
+    await user.click(screen.getByRole('button', { name: 'Conversation options' }));
+    await user.click(await screen.findByRole('menuitem', { name: 'Unpin' }));
+    expect(onTogglePin).toHaveBeenCalledTimes(1);
+  });
+
   it('deletes the conversation after confirming', async () => {
     const onDelete = vi.fn().mockResolvedValue(undefined);
     const { user } = renderWithProviders(

@@ -81,6 +81,36 @@ describe('ChatMessageActions', () => {
     await waitFor(() => expect(screen.queryByText('Report this message')).not.toBeInTheDocument());
   });
 
+  it('closes the report dialog without submitting when cancelled', async () => {
+    const onReport = vi.fn();
+    const { user } = renderWithProviders(
+      <ChatMessageActions content="x" canReport onReport={onReport} />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Report' }));
+    await user.type(screen.getByLabelText('Reason'), 'typed but abandoned');
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    await waitFor(() => expect(screen.queryByText('Report this message')).not.toBeInTheDocument());
+    expect(onReport).not.toHaveBeenCalled();
+  });
+
+  it('resets the form when the dialog is dismissed (Escape)', async () => {
+    const onReport = vi.fn();
+    const { user } = renderWithProviders(
+      <ChatMessageActions content="x" canReport onReport={onReport} />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Report' }));
+    await user.type(screen.getByLabelText('Reason'), 'abandoned');
+    // Escape drives onOpenChange(false) → resetReport (the close-reset branch).
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByText('Report this message')).not.toBeInTheDocument());
+
+    await user.click(screen.getByRole('button', { name: 'Report' }));
+    expect(await screen.findByLabelText('Reason')).toHaveValue('');
+  });
+
   it('keeps the dialog open and shows an error when the report fails', async () => {
     const onReport = vi.fn().mockRejectedValue(new Error('boom'));
     const { user } = renderWithProviders(

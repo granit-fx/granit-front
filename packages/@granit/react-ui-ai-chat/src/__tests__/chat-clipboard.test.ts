@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { markdownToClipboard } from '../components/chat-clipboard';
+import { copyMessage, markdownToClipboard } from '../components/chat-clipboard';
 
 describe('markdownToClipboard', () => {
   const source = '# Title\n\nHello **world** with `code` and a [link](https://example.com).';
@@ -32,5 +32,57 @@ describe('markdownToClipboard', () => {
     expect(html).not.toContain('onerror');
     expect(html).not.toContain('<script');
     expect(markdownToClipboard(malicious, 'plain')).not.toContain('alert');
+  });
+});
+
+describe('copyMessage', () => {
+  // jsdom provides no Clipboard API by default; install spy-able stubs.
+  const write = vi.fn<(items: readonly unknown[]) => Promise<void>>().mockResolvedValue(undefined);
+  const writeText = vi.fn<(text: string) => Promise<void>>().mockResolvedValue(undefined);
+
+  beforeEach(() => {
+    vi.stubGlobal('navigator', { clipboard: { write, writeText } });
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+    vi.unstubAllGlobals();
+  });
+
+  it('publishes a rich ClipboardItem (html + plain fallback) for the html format', async () => {
+    // jsdom lacks ClipboardItem; stub it so the rich-write branch is taken.
+    class FakeClipboardItem {
+      constructor(public readonly parts: Record<string, Blob>) {}
+    }
+    vi.stubGlobal('ClipboardItem', FakeClipboardItem);
+
+    await copyMessage('# Hi\n\n**bold**', 'html');
+
+    expect(write).toHaveBeenCalledTimes(1);
+    expect(writeText).not.toHaveBeenCalled();
+    const [items] = write.mock.calls[0]!;
+    const [item] = items as FakeClipboardItem[];
+    expect(item!.parts['text/html']).toBeInstanceOf(Blob);
+    expect(item!.parts['text/plain']).toBeInstanceOf(Blob);
+  });
+
+  it('falls back to writeText when ClipboardItem is unavailable', async () => {
+    vi.stubGlobal('ClipboardItem', undefined);
+
+    await copyMessage('# Hi', 'html');
+
+    expect(write).not.toHaveBeenCalled();
+    expect(writeText).toHaveBeenCalledTimes(1);
+    expect(writeText.mock.calls[0]![0]).toContain('<h1>Hi</h1>');
+  });
+
+  it('writes plain text directly for the markdown and plain formats', async () => {
+    vi.stubGlobal('ClipboardItem', undefined);
+
+    await copyMessage('# Hi', 'markdown');
+    expect(writeText).toHaveBeenLastCalledWith('# Hi');
+
+    await copyMessage('# Hi', 'plain');
+    expect(writeText).toHaveBeenLastCalledWith('Hi');
   });
 });

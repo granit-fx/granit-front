@@ -90,4 +90,39 @@ describe('DocumentResolutionPage', () => {
       requests: [{ documentId: 'doc-1' }, { documentId: 'doc-2' }],
     });
   });
+
+  it('does not call the mutation when only separators are entered', async () => {
+    mockUseBatchResolve.mockReturnValue(resolveState());
+    const { user } = renderWithProviders(<DocumentResolutionPage />);
+    // The button is enabled (trimmed input is non-empty) but handleResolve
+    // filters the tokens to an empty list and returns early.
+    await user.type(screen.getByLabelText(/Document IDs/), ', ,');
+    await user.click(screen.getByRole('button', { name: 'Resolve' }));
+    expect(mockMutate).not.toHaveBeenCalled();
+  });
+
+  it('shows the resolving label and disables the button while pending', () => {
+    mockUseBatchResolve.mockReturnValue(resolveState({ isPending: true }));
+    renderWithProviders(<DocumentResolutionPage />);
+    expect(screen.getByRole('button', { name: 'Resolving…' })).toBeDisabled();
+  });
+
+  it('shows dashes for resolved assets missing dimensions and size', () => {
+    mockUseBatchResolve.mockReturnValue(
+      resolveState({
+        data: [
+          {
+            ...mockResolved,
+            documentId: 'doc-2',
+            width: null,
+            height: null,
+            sizeBytes: null,
+          },
+        ],
+      })
+    );
+    renderWithProviders(<DocumentResolutionPage />);
+    expect(screen.getByText('doc-2')).toBeInTheDocument();
+    expect(screen.getAllByText('—')).toHaveLength(2);
+  });
 });
