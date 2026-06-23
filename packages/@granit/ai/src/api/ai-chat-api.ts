@@ -3,8 +3,7 @@
 // Mirrors Granit.AI.Endpoints chat endpoints (sync + SSE stream).
 // ---------------------------------------------------------------------------
 
-import { createLogger } from '@granit/logger';
-
+import { logger } from '../logger';
 import { AI_STREAM_DONE_MARKER } from '../types/index';
 
 import type {
@@ -15,8 +14,6 @@ import type {
   AIChatStreamUsage,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
-
-const logger = createLogger('ai');
 
 /**
  * Send a chat completion request and return the full response.

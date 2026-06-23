@@ -7,11 +7,9 @@
 // auto-injects it on mutation methods.
 // ---------------------------------------------------------------------------
 
-import { createLogger } from '@granit/logger';
+import { logger } from '../logger';
 
 import type { BffCsrfTokenResponse } from '../types/index';
-
-const logger = createLogger('bff');
 
 const MUTATION_METHODS = new Set(['POST', 'PUT', 'DELETE', 'PATCH']);
 

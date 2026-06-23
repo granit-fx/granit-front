@@ -1,4 +1,3 @@
-import { createLogger } from '@granit/logger';
 import { type Tracer, trace } from '@opentelemetry/api';
 import { ZoneContextManager } from '@opentelemetry/context-zone';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
@@ -9,6 +8,8 @@ import { resourceFromAttributes } from '@opentelemetry/resources';
 import { BatchSpanProcessor, WebTracerProvider } from '@opentelemetry/sdk-trace-web';
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic-conventions';
 import * as React from 'react';
+
+import { logger } from '../logger';
 
 import type { TracingProviderProps } from '../types/index';
 import type { TracingExporterConfig } from '@granit/tracing';
@@ -22,8 +23,6 @@ import type { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-web';
 
 // ExportResultCode.SUCCESS = 0 (from @opentelemetry/core, not a direct dependency)
 const EXPORT_SUCCESS = { code: 0 as const };
-
-const logger = createLogger('react-tracing');
 
 function createGatedExporter(exporterConfig: TracingExporterConfig): SpanExporter {
   let delegate: OTLPTraceExporter | null = null;

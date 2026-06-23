@@ -1,4 +1,3 @@
-import { createLogger } from '@granit/logger';
 import {
   registerPushSubscription,
   unregisterPushSubscription,
@@ -6,9 +5,8 @@ import {
 } from '@granit/notifications-web-push';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { logger } from '../logger';
 import { useWebPushConfig } from '../providers/web-push-provider';
-
-const logger = createLogger('react-notifications-web-push');
 
 export interface UseWebPushReturn {
   /** Whether the browser supports Web Push. */

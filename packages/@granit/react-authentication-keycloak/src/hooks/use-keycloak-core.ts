@@ -1,7 +1,8 @@
 import { setTokenGetter, setOnUnauthorized } from '@granit/api-client';
-import { createLogger } from '@granit/logger';
 import Keycloak from 'keycloak-js';
 import * as React from 'react';
+
+import { logger } from '../logger';
 
 import type { LoginOptions, LogoutOptions } from '@granit/authentication';
 import type {
@@ -34,8 +35,6 @@ export interface KeycloakCoreResult extends KeycloakAuthContextType {
   /** Decoded JWT payload — undefined before authentication. */
   tokenParsed: Record<string, unknown> | undefined;
 }
-
-const logger = createLogger('react-authentication-keycloak');
 
 // ---------------------------------------------------------------------------
 // Helpers

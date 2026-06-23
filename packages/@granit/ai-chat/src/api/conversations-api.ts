@@ -4,7 +4,7 @@
 // stream. Routes are relative to `basePath` (the `/conversations` prefix).
 // ---------------------------------------------------------------------------
 
-import { createLogger } from '@granit/logger';
+import { logger } from '../logger';
 
 import type {
   ChatStreamEvent,
@@ -22,8 +22,6 @@ import type {
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult } from '@granit/query-engine';
-
-const logger = createLogger('ai-chat');
 
 /**
  * List the current user's conversations, newest first, without their messages.

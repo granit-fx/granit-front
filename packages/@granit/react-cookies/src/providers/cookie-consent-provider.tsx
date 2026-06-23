@@ -1,13 +1,12 @@
 'use client';
 
 import { defaultConsentState } from '@granit/cookies';
-import { createLogger } from '@granit/logger';
 import { createContext, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+
+import { logger } from '../logger';
 
 import type { CookieConsentContextValue } from '../types/index';
 import type { CookieCategory, CookieConsentAdapter, ConsentState } from '@granit/cookies';
-
-const logger = createLogger('cookies');
 
 export const CookieConsentContext = createContext<CookieConsentContextValue | null>(null);
 

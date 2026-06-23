@@ -1,9 +1,7 @@
-import { createLogger } from '@granit/logger';
 import { useState } from 'react';
 
+import { logger } from '../logger';
 import { useAdminConfig } from '../providers/openiddict-admin-provider';
-
-const logger = createLogger('react-openiddict-admin');
 
 export type DeviceVerificationStatus = 'idle' | 'pending' | 'success' | 'error';
 

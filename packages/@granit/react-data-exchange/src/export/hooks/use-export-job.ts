@@ -1,8 +1,8 @@
 import { createExportJob, downloadExportFile, getExportJobStatus } from '@granit/data-exchange';
-import { createLogger } from '@granit/logger';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { logger } from '../../logger';
 import { buildExportQueryKey, useExportConfig } from '../providers/export-provider';
 
 import type {
@@ -10,8 +10,6 @@ import type {
   ExportJobResponse,
   ExportJobStatus,
 } from '@granit/data-exchange';
-
-const logger = createLogger('react-data-exchange');
 
 export interface UseExportJobReturn {
   /** Start a new export job. */

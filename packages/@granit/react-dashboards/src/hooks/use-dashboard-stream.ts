@@ -1,6 +1,6 @@
-import { createLogger } from '@granit/logger';
 import { useEffect } from 'react';
 
+import { logger } from '../logger';
 import { useDashboardsConfig } from '../providers/dashboards-provider';
 
 import type {
@@ -8,8 +8,6 @@ import type {
   RefreshHint,
   WidgetSnapshotStatus,
 } from '@granit/dashboards';
-
-const logger = createLogger('react-dashboards');
 
 /**
  * Wire shape of an `event: snapshot` frame on the dashboard SSE

@@ -1,5 +1,4 @@
 import { setTokenGetter, setOnUnauthorized } from '@granit/api-client';
-import { createLogger } from '@granit/logger';
 import { initializeApp } from 'firebase/app';
 import {
   initializeAuth,
@@ -13,14 +12,14 @@ import {
 } from 'firebase/auth';
 import * as React from 'react';
 
+import { logger } from '../logger';
+
 import type { LoginOptions, LogoutOptions, OidcUserInfo } from '@granit/authentication';
 import type {
   GoogleCloudAuthContextType,
   GoogleCloudCoreConfig,
 } from '@granit/authentication-google-cloud';
 import type { Auth, Persistence, User } from 'firebase/auth';
-
-const logger = createLogger('react-authentication-google-cloud');
 
 /** Resolve the Firebase persistence from the configured posture (default: memory). */
 function resolvePersistence(tokenStorage: GoogleCloudCoreConfig['tokenStorage']): Persistence {

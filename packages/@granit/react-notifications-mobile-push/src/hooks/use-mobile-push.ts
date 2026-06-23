@@ -1,13 +1,11 @@
 import { PushNotifications } from '@capacitor/push-notifications';
-import { createLogger } from '@granit/logger';
 import { registerDeviceToken, unregisterDeviceToken } from '@granit/notifications-mobile-push';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { logger } from '../logger';
 import { useMobilePushConfig } from '../providers/mobile-push-provider';
 
 import type { MobilePlatform } from '@granit/notifications-mobile-push';
-
-const logger = createLogger('react-notifications-mobile-push');
 
 /**
  * Returns a promise that resolves with the device token once Capacitor

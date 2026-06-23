@@ -1,11 +1,9 @@
-import { createLogger } from '@granit/logger';
-
 import { BLOCK_COMPONENTS } from '../blocks/registry';
+import { logger } from '../logger';
+
 
 import type { BlockCatalogResponse, BlockFieldDescriptor, BlockFieldKind } from '@granit/cms';
 import type { Config, ExternalField, Fields } from '@puckeditor/core';
-
-const logger = createLogger('react-cms');
 
 /**
  * Callback supplied by the renderer to resolve live data for a data-bound block.

@@ -1,8 +1,6 @@
-import { createLogger } from '@granit/logger';
+import { logger } from './logger';
 
 import type { CookieCategory, ConsentState } from './types/index';
-
-const logger = createLogger('cookies');
 
 /**
  * Attributes applied when writing a cookie via {@link setConsentedCookie} or

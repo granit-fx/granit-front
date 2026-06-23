@@ -4,7 +4,6 @@ import {
   type DashboardDefinition,
   type WidgetDefinition,
 } from '@granit/dashboards';
-import { createLogger } from '@granit/logger';
 import {
   analyticsWidgetCatalog,
   analyticsWidgetConfigFormRegistry,
@@ -55,7 +54,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
-const logger = createLogger('react-ui-dashboards');
+import { logger } from './logger';
 
 type PendingEditAction = 'delete-widget' | 'discard';
 

@@ -1,8 +1,8 @@
 import { setTokenGetter, setOnUnauthorized } from '@granit/api-client';
-import { createLogger } from '@granit/logger';
 import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import * as React from 'react';
 
+import { logger } from '../logger';
 import {
   buildCognitoAuthorizeUrl,
   generatePkce,
@@ -13,8 +13,6 @@ import {
 import type { LoginOptions, LogoutOptions, OidcUserInfo } from '@granit/authentication';
 import type { CognitoAuthContextType, CognitoCoreConfig } from '@granit/authentication-cognito';
 import type { ICognitoStorage } from 'amazon-cognito-identity-js';
-
-const logger = createLogger('react-authentication-cognito');
 
 /**
  * In-memory implementation of the Cognito SDK storage contract. Tokens live

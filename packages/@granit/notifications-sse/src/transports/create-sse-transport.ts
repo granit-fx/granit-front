@@ -1,10 +1,9 @@
-import { createLogger } from '@granit/logger';
 import { createTransportListeners } from '@granit/notifications';
 import { EventStreamContentType, fetchEventSource } from '@microsoft/fetch-event-source';
 
-import type { NotificationTransportMessage, NotificationTransport } from '@granit/notifications';
+import { logger } from '../logger';
 
-const logger = createLogger('notifications-sse');
+import type { NotificationTransportMessage, NotificationTransport } from '@granit/notifications';
 
 export interface SseTransportConfig {
   /** SSE endpoint URL, e.g. '/api/v1/notifications/stream'. */

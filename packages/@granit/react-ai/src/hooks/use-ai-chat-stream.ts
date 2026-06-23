@@ -1,12 +1,10 @@
 import { chatStream } from '@granit/ai';
-import { createLogger } from '@granit/logger';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { logger } from '../logger';
 import { useAIConfig } from '../providers/ai-provider';
 
 import type { AIChatRequest, AIChatStreamUsage } from '@granit/ai';
-
-const logger = createLogger('react-ai');
 
 export interface UseAIChatStreamReturn {
   /**
