@@ -1,0 +1,151 @@
+import { screen, waitFor } from '@testing-library/react';
+import * as React from 'react';
+
+import { PromptCataloguePage } from '../prompt-catalogue-page';
+
+import { renderWithProviders } from './test-utils';
+
+import type { PromptSummaryResponse } from '@granit/ai-prompts';
+
+// ---------------------------------------------------------------------------
+// Mock data — a minimal valid PromptSummaryResponse list
+// ---------------------------------------------------------------------------
+
+const mockPrompts: PromptSummaryResponse[] = [
+  {
+    id: 'prompt-1' as PromptSummaryResponse['id'],
+    name: 'Summarise',
+    shortDescription: 'Summarise the conversation',
+    icon: null,
+    iconColor: null,
+    isSystem: true,
+    categoryIds: [],
+  },
+  {
+    id: 'prompt-2' as PromptSummaryResponse['id'],
+    name: 'Translate',
+    shortDescription: 'Translate text',
+    icon: null,
+    iconColor: null,
+    isSystem: false,
+    categoryIds: [],
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Mocks
+// ---------------------------------------------------------------------------
+
+const { mockUsePrompts, mockHasPermission } = vi.hoisted(() => ({
+  mockUsePrompts: vi.fn(),
+  mockHasPermission: vi.fn(),
+}));
+
+const mockRemove = vi.fn();
+
+vi.mock('@granit/react-ai-prompts', () => ({
+  usePrompts: mockUsePrompts,
+  usePrompt: () => ({ data: null }),
+  useCreatePrompt: () => ({ createAsync: vi.fn(), isPending: false }),
+  useUpdatePrompt: () => ({ updateAsync: vi.fn(), isPending: false }),
+  useDeletePrompt: () => ({ remove: mockRemove }),
+  useCustomisePrompt: () => ({ customise: vi.fn() }),
+  // Stub heavy package components so they do not self-fetch.
+  PromptCatalogue: ({
+    prompts,
+    canManage,
+    canDelete,
+    onNew,
+    onDelete,
+  }: {
+    prompts: readonly { id: string; name: string }[];
+    canManage: boolean;
+    canDelete: boolean;
+    onNew: () => void;
+    onDelete: (id: string) => void;
+  }) => (
+    <div data-slot="prompt-catalogue-stub">
+      {canManage && (
+        <button type="button" onClick={onNew}>
+          New prompt
+        </button>
+      )}
+      <ul>
+        {prompts.map((p) => (
+          <li key={p.id}>
+            <span>{p.name}</span>
+            {canDelete && (
+              <button type="button" aria-label={`delete ${p.name}`} onClick={() => onDelete(p.id)}>
+                Delete
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  ),
+  PromptForm: () => <div data-slot="prompt-form-stub" />,
+}));
+
+vi.mock('@granit/react-authorization', () => ({
+  usePermissions: () => ({ hasPermission: mockHasPermission }),
+}));
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  mockUsePrompts.mockReturnValue({ data: mockPrompts });
+  mockHasPermission.mockReturnValue(true);
+});
+
+describe('PromptCataloguePage', () => {
+  it('should render the catalogue title and description', () => {
+    renderWithProviders(<PromptCataloguePage />);
+    expect(screen.getByText('Prompt catalogue')).toBeInTheDocument();
+    expect(screen.getByText(/Reusable/)).toBeInTheDocument();
+  });
+
+  it('should expose the page data-slot', () => {
+    renderWithProviders(<PromptCataloguePage />);
+    expect(document.querySelector('[data-slot="ai-prompts-page"]')).toBeInTheDocument();
+  });
+
+  it('should list the prompts from usePrompts', () => {
+    renderWithProviders(<PromptCataloguePage />);
+    expect(screen.getByText('Summarise')).toBeInTheDocument();
+    expect(screen.getByText('Translate')).toBeInTheDocument();
+  });
+
+  it('should show the New prompt affordance when the user can manage', () => {
+    renderWithProviders(<PromptCataloguePage />);
+    expect(screen.getByRole('button', { name: 'New prompt' })).toBeInTheDocument();
+  });
+
+  it('should hide management affordances when the user lacks permission', () => {
+    mockHasPermission.mockReturnValue(false);
+    renderWithProviders(<PromptCataloguePage />);
+    expect(screen.queryByRole('button', { name: 'New prompt' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /delete/i })).not.toBeInTheDocument();
+  });
+
+  it('should open the delete confirmation dialog and delete on confirm', async () => {
+    const { user } = renderWithProviders(<PromptCataloguePage />);
+
+    await user.click(screen.getByRole('button', { name: 'delete Summarise' }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Delete this prompt?')).toBeInTheDocument();
+    });
+    expect(screen.getByText('This cannot be undone.')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Delete' }));
+
+    expect(mockRemove).toHaveBeenCalledWith('prompt-1');
+  });
+
+  it('should render an empty catalogue when there are no prompts', () => {
+    mockUsePrompts.mockReturnValue({ data: [] });
+    renderWithProviders(<PromptCataloguePage />);
+    expect(screen.queryByText('Summarise')).not.toBeInTheDocument();
+    expect(document.querySelector('[data-slot="prompt-catalogue-stub"]')).toBeInTheDocument();
+  });
+});

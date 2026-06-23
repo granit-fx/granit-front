@@ -1,0 +1,46 @@
+{
+  "name": "@granit/react-ui-ai-prompts",
+  "description": "Granit admin UI for the AI Prompts module — the prompt-catalogue management page (list with customise / edit / delete affordances, a create-and-edit dialog form and a delete confirmation). Composes @granit/react-ai-prompts (headless) with the foundation UI packages and gates management actions with @granit/react-authorization.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/ai-prompts": "workspace:*",
+    "@granit/react-ai-prompts": "workspace:*",
+    "@granit/react-authorization": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/ai-prompts": "workspace:*",
+    "@granit/react-ai-prompts": "workspace:*",
+    "@granit/react-authorization": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@tanstack/react-query": "^5.0.0",
+    "i18next": "^26.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-i18next": "^17.0.0"
+  }
+}
