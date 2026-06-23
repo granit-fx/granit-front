@@ -1,6 +1,7 @@
 export { LanguageListPage } from './language-list-page';
 export { LocalizationOverrideListPage } from './localization-override-list-page';
 export { LanguageList } from './components/language-list';
+export { LanguageSwitcher } from './components/language-switcher';
 export { createLocalizationColumns } from './components/localization-columns';
 export { TranslationCreateDialog } from './components/translation-create-dialog';
 export { TranslationEditDialog } from './components/translation-edit-dialog';
