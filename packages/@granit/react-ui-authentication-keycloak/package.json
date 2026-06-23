@@ -1,0 +1,40 @@
+{
+  "name": "@granit/react-ui-authentication-keycloak",
+  "description": "Keycloak auth provider for Granit apps — wires @granit/react-authentication-keycloak's useKeycloakInit into the app's auth context, with locale-aware login and an init loading state. The Keycloak parallel to @granit/react-ui-authentication-local (which carries OpenIddict login pages; Keycloak hosts its own login, so this ships only the provider).",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/authentication": "workspace:*",
+    "@granit/authentication-keycloak": "workspace:*",
+    "@granit/react-authentication-keycloak": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "react": "^19.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/authentication": "workspace:*",
+    "@granit/authentication-keycloak": "workspace:*",
+    "@granit/react-authentication-keycloak": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*"
+  }
+}
