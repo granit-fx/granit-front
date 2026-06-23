@@ -8189,6 +8189,23 @@
       ]
     },
     {
+      "name": "@granit/react-ui-authentication-federated",
+      "description": "Federated (external-IdP) login landing page for Granit apps — provider-agnostic 'sign in' screen that triggers the IdP redirect, surfaces auth-error query params, and redirects when already authenticated. The federated parallel to @granit/react-ui-authentication-local (which carries the local OpenIddict login forms).",
+      "exports": [
+        {
+          "name": "FederatedLoginPage",
+          "kind": "function",
+          "signature": "function FederatedLoginPage("
+        },
+        {
+          "name": "FederatedLoginPageProps",
+          "kind": "interface",
+          "signature": "interface FederatedLoginPageProps",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-authentication-google-cloud",
       "description": "GoogleCloud auth provider for Granit apps — wires @granit/react-authentication-google-cloud's useGoogleCloudInit into the app's auth context, with locale-aware login and an init loading state. Companion to react-ui-authentication-keycloak.",
       "exports": []
@@ -8398,6 +8415,23 @@
           "name": "loadCronstrueLocale",
           "kind": "function",
           "signature": "async function loadCronstrueLocale(language: string): Promise<void>"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-bff",
+      "description": "BFF auth provider for Granit apps — wraps @granit/react-bff's BffProvider, adapts its session to the app's auth context, wires the 401→login bridge and CSRF manager, and renders init / backend-unavailable states. Companion to react-ui-authentication-keycloak and react-authentication-mock.",
+      "exports": [
+        {
+          "name": "BffAuthProvider",
+          "kind": "function",
+          "signature": "function BffAuthProvider("
+        },
+        {
+          "name": "BffAuthProviderProps",
+          "kind": "interface",
+          "signature": "interface BffAuthProviderProps",
+          "members": []
         }
       ]
     },

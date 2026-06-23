@@ -1,0 +1,47 @@
+{
+  "name": "@granit/react-ui-bff",
+  "description": "BFF auth provider for Granit apps — wraps @granit/react-bff's BffProvider, adapts its session to the app's auth context, wires the 401→login bridge and CSRF manager, and renders init / backend-unavailable states. Companion to react-ui-authentication-keycloak and react-authentication-mock.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/authentication": "workspace:*",
+    "@granit/authentication-keycloak": "workspace:*",
+    "@granit/bff": "workspace:*",
+    "@granit/logger": "workspace:*",
+    "@granit/react-bff": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/authentication": "workspace:*",
+    "@granit/authentication-keycloak": "workspace:*",
+    "@granit/bff": "workspace:*",
+    "@granit/logger": "workspace:*",
+    "@granit/react-bff": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*"
+  }
+}
