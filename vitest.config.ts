@@ -229,11 +229,15 @@ export default defineConfig({
         'packages/@granit/reference-data/src/index.ts'
       ),
       '@granit/ai-chat': path.resolve(__dirname, 'packages/@granit/ai-chat/src/index.ts'),
-      '@granit/react-ai': path.resolve(__dirname, 'packages/@granit/react-ai/src/index.ts'),
       '@granit/react-ai/testing': path.resolve(
         __dirname,
         'packages/@granit/react-ai/src/testing/index.ts'
       ),
+      '@granit/react-ai/usage': path.resolve(
+        __dirname,
+        'packages/@granit/react-ai/src/usage/index.ts'
+      ),
+      '@granit/react-ai': path.resolve(__dirname, 'packages/@granit/react-ai/src/index.ts'),
       '@granit/react-ai-chat': path.resolve(
         __dirname,
         'packages/@granit/react-ai-chat/src/index.ts'
