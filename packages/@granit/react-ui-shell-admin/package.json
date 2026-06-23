@@ -45,6 +45,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
+    "@storybook/react-vite": "^10.4.6",
     "@granit/localization": "workspace:*",
     "@granit/react-account": "workspace:*",
     "@granit/react-authorization": "workspace:*",
