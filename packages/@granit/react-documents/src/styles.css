@@ -1,0 +1,700 @@
+/**
+ * Documents framework component styling.
+ *
+ * `@granit/react-documents` ships headless components keyed off
+ * `data-granit-*` markers — apps own the visual layer. Everything below
+ * uses semantic Tailwind tokens (no hardcoded colors) so dark mode and
+ * tenant theme overrides flow through automatically.
+ */
+@layer components {
+  /* ─── Quota badge (header) ────────────────────────────────────────────── */
+  [data-granit-quota-badge] {
+    @apply inline-flex flex-col items-end gap-1 rounded-md border bg-card px-3 py-1.5 text-xs shadow-sm;
+  }
+  [data-granit-quota-badge-loading] {
+    @apply text-muted-foreground;
+  }
+  [data-granit-quota-badge-text] {
+    @apply font-medium tabular-nums text-foreground;
+  }
+  [data-granit-quota-badge-bar] {
+    @apply block h-1 w-32 overflow-hidden rounded-full bg-muted;
+  }
+  [data-granit-quota-badge-bar-fill] {
+    @apply block h-full bg-primary transition-all;
+  }
+
+  /* ─── Quota panel (settings) ──────────────────────────────────────────── */
+  [data-granit-quota-panel] {
+    @apply space-y-3 rounded-lg border bg-card p-4 shadow-sm;
+  }
+  [data-granit-quota-panel-loading] {
+    @apply text-sm text-muted-foreground;
+  }
+  [data-granit-quota-panel-header] {
+    @apply flex items-center justify-between gap-2 text-sm font-medium text-foreground;
+  }
+  [data-granit-quota-panel-bar] {
+    @apply block h-2 w-full overflow-hidden rounded-full bg-muted;
+  }
+  [data-granit-quota-panel-bar-fill] {
+    @apply block h-full bg-primary transition-all;
+  }
+  [data-granit-quota-panel-meta] {
+    @apply flex items-center justify-between text-xs text-muted-foreground;
+  }
+
+  /* ─── Documents explorer (shell) ──────────────────────────────────────── */
+  [data-granit-documents-explorer] {
+    @apply space-y-4 rounded-lg border bg-card p-4 shadow-sm;
+  }
+  [data-granit-documents-explorer-header] {
+    @apply flex items-center justify-between gap-3 border-b pb-3;
+  }
+  [data-granit-documents-explorer-header] h1 {
+    @apply text-lg font-semibold text-foreground;
+  }
+  [data-granit-documents-explorer-body] {
+    @apply grid grid-cols-1 gap-4 lg:grid-cols-[260px_1fr];
+  }
+  [data-granit-documents-explorer-body][data-granit-documents-explorer-with-inspector] {
+    @apply lg:grid-cols-[240px_minmax(0,1fr)_320px];
+  }
+  [data-granit-documents-explorer-tree] {
+    @apply rounded-md border bg-muted/30 p-2;
+  }
+  [data-granit-documents-explorer-main] {
+    @apply flex min-w-0 flex-col gap-3;
+  }
+  [data-granit-documents-explorer-inspector] {
+    @apply flex min-w-0 flex-col gap-3 rounded-md border bg-muted/20 p-3;
+  }
+  [data-granit-documents-explorer-inspector-empty],
+  [data-granit-documents-explorer-inspector-multi] {
+    @apply rounded-md border border-dashed bg-card px-3 py-6 text-center text-xs text-muted-foreground;
+  }
+
+  /* ─── Inline edit primitive ───────────────────────────────────────────── */
+  [data-granit-inline-edit] {
+    @apply flex h-7 min-w-0 flex-1 rounded-sm border border-input bg-background px-2 text-sm text-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+  }
+
+  /* ─── Folder tree ─────────────────────────────────────────────────────── */
+  [data-granit-folder-tree] {
+    @apply space-y-1 text-sm;
+  }
+  [data-granit-folder-tree-loading],
+  [data-granit-folder-tree-empty] {
+    @apply px-2 py-1 text-xs text-muted-foreground;
+  }
+  [data-granit-folder-tree-error] {
+    @apply rounded-md border border-destructive/40 bg-destructive/10 px-2 py-1 text-xs text-destructive;
+  }
+  [data-granit-folder-tree-roots],
+  [data-granit-folder-tree-children] {
+    @apply space-y-0.5;
+  }
+  [data-granit-folder-tree-children] {
+    @apply ml-3 border-l pl-2;
+  }
+  [data-granit-folder-tree-row] {
+    @apply flex items-center gap-1 rounded-sm px-1.5 py-1 transition-colors hover:bg-accent hover:text-accent-foreground;
+  }
+  [data-granit-folder-tree-toggle] {
+    @apply inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-muted-foreground hover:bg-accent hover:text-foreground;
+  }
+  [data-granit-folder-tree-name] {
+    @apply flex-1 cursor-pointer truncate text-left text-foreground;
+  }
+  [data-granit-folder-tree-actions] {
+    @apply ml-auto flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100;
+  }
+  [data-granit-folder-tree-row]:hover [data-granit-folder-tree-actions] {
+    @apply opacity-100;
+  }
+  [data-granit-folder-tree-add-root] {
+    @apply inline-flex h-7 w-full cursor-pointer items-center gap-1 rounded-md border border-dashed bg-transparent px-2 text-xs font-medium text-muted-foreground transition-colors hover:border-solid hover:bg-accent hover:text-accent-foreground;
+  }
+  [data-granit-folder-tree-new-root],
+  [data-granit-folder-tree-new] {
+    @apply px-1.5 py-1;
+  }
+  [data-granit-folder-tree-row][data-granit-folder-tree-current] {
+    @apply bg-accent/60 text-accent-foreground;
+  }
+  [data-granit-folder-tree-confirm] {
+    @apply ml-6 flex items-center gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-2 py-1 text-xs text-destructive;
+  }
+  [data-granit-folder-tree-confirm-text] {
+    @apply flex-1;
+  }
+  [data-granit-folder-tree-confirm-cancel],
+  [data-granit-folder-tree-confirm-ok] {
+    @apply inline-flex h-6 cursor-pointer items-center rounded-sm border bg-card px-2 text-xs font-medium text-foreground hover:bg-accent;
+  }
+  [data-granit-folder-tree-confirm-ok] {
+    @apply border-destructive bg-destructive text-destructive-foreground hover:bg-destructive/90;
+  }
+
+  /* ─── Folder breadcrumb ───────────────────────────────────────────────── */
+  [data-granit-folder-breadcrumb] {
+    @apply flex flex-wrap items-center gap-1 text-sm text-muted-foreground;
+  }
+  [data-granit-folder-breadcrumb-loading] {
+    @apply text-xs italic;
+  }
+  [data-granit-folder-breadcrumb-segment] {
+    @apply cursor-pointer rounded px-1.5 py-0.5 text-foreground hover:bg-accent hover:text-accent-foreground;
+  }
+  [data-granit-folder-breadcrumb-separator] {
+    @apply text-muted-foreground/60;
+  }
+
+  /* ─── Documents list (table) ──────────────────────────────────────────── */
+  [data-granit-documents-list] {
+    @apply space-y-3;
+  }
+  [data-granit-documents-list-loading],
+  [data-granit-documents-list-empty] {
+    @apply rounded-md border border-dashed bg-muted/20 px-4 py-8 text-center text-sm text-muted-foreground;
+  }
+  [data-granit-documents-list-error] {
+    @apply rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive;
+  }
+  [data-granit-documents-list-table] {
+    @apply w-full caption-bottom border-collapse text-sm;
+  }
+  [data-granit-documents-list-table] thead {
+    @apply border-b bg-muted/40 text-xs font-medium uppercase tracking-wide text-muted-foreground;
+  }
+  [data-granit-documents-list-table] th {
+    @apply px-3 py-2 text-left;
+  }
+  [data-granit-documents-list-table] td {
+    @apply px-3 py-2 align-middle;
+  }
+  [data-granit-documents-list-row] {
+    @apply cursor-pointer border-b transition-colors hover:bg-muted/40;
+  }
+  [data-granit-documents-list-row][data-granit-documents-list-selected] {
+    @apply bg-primary/5;
+  }
+  [data-granit-documents-list-row][data-granit-documents-list-focused] {
+    @apply outline outline-1 outline-ring/40;
+  }
+  [data-granit-documents-list-select-cell],
+  [data-granit-documents-list-select-col] {
+    @apply w-8 text-center align-middle;
+  }
+  [data-granit-documents-list-name] {
+    @apply cursor-pointer text-left text-foreground hover:underline;
+  }
+  [data-granit-documents-list-actions] {
+    @apply flex items-center justify-end gap-1 whitespace-nowrap;
+  }
+  [data-granit-documents-list-actions] button {
+    @apply inline-flex h-7 cursor-pointer items-center rounded-sm border bg-card px-2 text-xs font-medium text-foreground hover:bg-accent;
+  }
+  [data-granit-documents-list-confirm] {
+    @apply inline-flex items-center gap-1 rounded-md border border-destructive/40 bg-destructive/10 px-2 py-0.5 text-xs text-destructive;
+  }
+  [data-granit-documents-list-confirm] [data-granit-documents-list-confirm-ok] {
+    @apply border-destructive bg-destructive text-destructive-foreground hover:bg-destructive/90;
+  }
+  [data-granit-documents-list-pagination] {
+    @apply flex items-center justify-between gap-2 pt-1 text-xs text-muted-foreground;
+  }
+  [data-granit-documents-list-page-info] {
+    @apply tabular-nums;
+  }
+
+  /* ─── Documents grid view ─────────────────────────────────────────────── */
+  [data-granit-documents-list-grid] {
+    @apply grid gap-3 outline-none;
+    grid-template-columns: repeat(auto-fill, minmax(var(--granit-documents-tile-size, 160px), 1fr));
+  }
+  [data-granit-documents-list-tile] {
+    @apply relative flex cursor-pointer flex-col items-stretch gap-1.5 rounded-md border bg-card p-2 text-xs shadow-sm transition-colors hover:bg-accent/40;
+  }
+  [data-granit-documents-list-tile][data-granit-documents-list-draggable] {
+    @apply cursor-grab active:cursor-grabbing;
+  }
+  [data-granit-documents-list-tile][data-granit-documents-list-selected] {
+    @apply border-primary bg-primary/5;
+  }
+  [data-granit-documents-list-tile][data-granit-documents-list-focused] {
+    @apply outline outline-1 outline-ring/60;
+  }
+  [data-granit-documents-list-tile-checkbox] {
+    @apply absolute left-1.5 top-1.5 z-10 opacity-0 transition-opacity;
+  }
+  [data-granit-documents-list-tile]:hover [data-granit-documents-list-tile-checkbox],
+  [data-granit-documents-list-tile][data-granit-documents-list-selected]
+    [data-granit-documents-list-tile-checkbox] {
+    @apply opacity-100;
+  }
+  [data-granit-documents-list-tile-thumb] {
+    @apply flex aspect-square w-full items-center justify-center rounded-md border bg-muted/40 text-base font-semibold uppercase tracking-wider text-muted-foreground;
+  }
+  [data-granit-documents-list-tile-badge] {
+    @apply rounded bg-card/90 px-1.5 py-0.5 text-xs;
+  }
+  [data-granit-documents-list-tile-name] {
+    @apply min-h-[1.5rem] text-center;
+  }
+  [data-granit-documents-list-tile-name] [data-granit-documents-list-name] {
+    @apply block truncate text-center text-foreground;
+    /* Two-line clamp to keep tile heights consistent without the truncation
+       hiding too much of the filename. */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+  }
+  [data-granit-documents-list-tile-actions] {
+    @apply absolute right-1.5 top-1.5 flex items-center gap-1 opacity-0 transition-opacity;
+  }
+  [data-granit-documents-list-tile]:hover [data-granit-documents-list-tile-actions] {
+    @apply opacity-100;
+  }
+  [data-granit-documents-list-tile-actions] button {
+    @apply inline-flex h-6 cursor-pointer items-center rounded-sm border bg-card/90 px-1.5 text-xs font-medium text-foreground hover:bg-accent;
+  }
+
+  /* Kind-coded thumb backgrounds — semantic tokens, no raw colors. The
+     `admin`/`success`/`warning`/`alert` ramps come from `src/index.css`
+     and are intentionally limited to the shades declared there. */
+  [data-granit-document-kind='image'] [data-granit-documents-list-tile-thumb] {
+    @apply border-admin-200 bg-admin-50/60 text-admin-700;
+  }
+  [data-granit-document-kind='video'] [data-granit-documents-list-tile-thumb] {
+    @apply border-warning-100 bg-warning-50/60 text-warning-600;
+  }
+  [data-granit-document-kind='audio'] [data-granit-documents-list-tile-thumb] {
+    @apply border-warning-100 bg-warning-50/40 text-warning-600;
+  }
+  [data-granit-document-kind='pdf'] [data-granit-documents-list-tile-thumb] {
+    @apply border-alert-100 bg-alert-50/60 text-alert-700;
+  }
+  [data-granit-document-kind='doc'] [data-granit-documents-list-tile-thumb] {
+    @apply border-admin-100 bg-admin-50/60 text-admin-600;
+  }
+  [data-granit-document-kind='spreadsheet'] [data-granit-documents-list-tile-thumb] {
+    @apply border-success-100 bg-success-50/60 text-success-600;
+  }
+  [data-granit-document-kind='presentation'] [data-granit-documents-list-tile-thumb] {
+    @apply border-warning-100 bg-warning-50/40 text-warning-600;
+  }
+  [data-granit-document-kind='archive'] [data-granit-documents-list-tile-thumb] {
+    @apply border-muted bg-muted/60 text-muted-foreground;
+  }
+  [data-granit-document-kind='code'] [data-granit-documents-list-tile-thumb] {
+    @apply border-primary/30 bg-primary/10 text-primary;
+  }
+  [data-granit-document-kind='text'] [data-granit-documents-list-tile-thumb] {
+    @apply border-input bg-card text-foreground;
+  }
+
+  /* ─── Documents toolbar ───────────────────────────────────────────────── */
+  [data-granit-documents-toolbar] {
+    @apply flex flex-wrap items-center gap-2 rounded-md border bg-muted/30 px-2 py-1.5 text-sm text-foreground;
+  }
+  [data-granit-documents-toolbar][data-granit-documents-toolbar-selection] {
+    @apply border-primary/40 bg-primary/5;
+  }
+  [data-granit-documents-toolbar-summary] {
+    @apply mr-2 truncate text-xs text-muted-foreground;
+  }
+  [data-granit-documents-toolbar][data-granit-documents-toolbar-selection]
+    [data-granit-documents-toolbar-summary] {
+    @apply font-medium text-foreground;
+  }
+  [data-granit-documents-toolbar-actions] {
+    @apply flex items-center gap-1;
+  }
+  [data-granit-documents-toolbar-actions] button {
+    @apply inline-flex h-7 cursor-pointer items-center rounded-sm border bg-card px-2 text-xs font-medium text-foreground hover:bg-accent;
+  }
+  [data-granit-documents-toolbar-trash] {
+    @apply border-destructive/40 text-destructive hover:bg-destructive/10;
+  }
+  [data-granit-documents-toolbar-confirm] {
+    @apply inline-flex items-center gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-2 py-0.5 text-xs text-destructive;
+  }
+  [data-granit-documents-toolbar-confirm-ok] {
+    @apply !border-destructive !bg-destructive !text-destructive-foreground hover:!bg-destructive/90;
+  }
+  [data-granit-documents-toolbar-trailing] {
+    @apply ml-auto flex items-center gap-2;
+  }
+  [data-granit-documents-toolbar-inspector-toggle] {
+    @apply inline-flex h-7 cursor-pointer items-center rounded-sm border bg-card px-2 text-xs font-medium text-foreground hover:bg-accent aria-pressed:bg-accent aria-pressed:text-accent-foreground;
+  }
+  [data-granit-documents-toolbar-view] {
+    @apply inline-flex h-7 overflow-hidden rounded-sm border;
+  }
+  [data-granit-documents-toolbar-view] button {
+    @apply inline-flex h-full w-7 cursor-pointer items-center justify-center bg-card text-sm leading-none text-muted-foreground hover:bg-accent hover:text-foreground aria-pressed:bg-accent aria-pressed:text-accent-foreground;
+  }
+  [data-granit-documents-toolbar-view] button + button {
+    @apply border-l;
+  }
+  [data-granit-documents-toolbar-zoom] {
+    @apply inline-flex h-7 items-center gap-1.5 rounded-sm border bg-card px-2 text-xs text-muted-foreground;
+  }
+  [data-granit-documents-toolbar-zoom-label] {
+    @apply sr-only;
+  }
+  [data-granit-documents-toolbar-zoom] input[type='range'] {
+    @apply h-1 w-20 cursor-pointer accent-primary;
+  }
+  [data-granit-documents-toolbar-error] {
+    @apply w-full text-xs text-destructive;
+  }
+
+  /* ─── Upload drop zone ────────────────────────────────────────────────── */
+  [data-granit-upload-drop-zone] {
+    @apply relative flex min-w-0 flex-col gap-3;
+  }
+  [data-granit-upload-drop-zone-overlay] {
+    @apply pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-md border-2 border-dashed border-primary bg-primary/10 text-sm font-medium text-primary backdrop-blur-sm;
+  }
+  [data-granit-upload-drop-zone][data-granit-upload-drop-zone-over] {
+    @apply rounded-md outline-2 outline-primary/40 outline-dashed;
+  }
+  [data-granit-upload-drop-zone-progress] {
+    @apply rounded-md border bg-card px-3 py-1.5 text-xs tabular-nums text-muted-foreground;
+  }
+  [data-granit-upload-drop-zone-error] {
+    @apply rounded-md border border-destructive/40 bg-destructive/10 px-3 py-1.5 text-xs text-destructive;
+  }
+
+  /* ─── Draggable list rows ────────────────────────────────────────────── */
+  [data-granit-documents-list-row][data-granit-documents-list-draggable] {
+    @apply cursor-grab active:cursor-grabbing;
+  }
+
+  /* ─── Folder tree drop target ────────────────────────────────────────── */
+  [data-granit-folder-tree-row][data-granit-folder-tree-drop-over] {
+    @apply outline-2 outline-primary outline-dashed bg-primary/10;
+  }
+
+  /* ─── Upload button ───────────────────────────────────────────────────── */
+  [data-granit-upload-button] {
+    @apply inline-flex flex-col items-start gap-2;
+  }
+  [data-granit-upload-button-label] {
+    @apply inline-flex h-9 cursor-pointer items-center gap-2 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+  }
+  [data-granit-upload-button-input] {
+    @apply sr-only;
+  }
+  [data-granit-upload-button-progress] {
+    @apply text-xs text-muted-foreground tabular-nums;
+  }
+  [data-granit-upload-button-error] {
+    @apply text-xs text-destructive;
+  }
+
+  /* ─── Document detail ─────────────────────────────────────────────────── */
+  [data-granit-document-detail] {
+    @apply space-y-4 rounded-lg border bg-card p-4 shadow-sm;
+  }
+  [data-granit-document-detail-loading],
+  [data-granit-document-detail-notfound] {
+    @apply text-sm text-muted-foreground;
+  }
+  [data-granit-document-detail-header] {
+    @apply flex items-start justify-between gap-3 border-b pb-3;
+  }
+  [data-granit-document-detail-name] {
+    @apply text-lg font-semibold text-foreground;
+  }
+  [data-granit-document-detail-name-input] {
+    @apply flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+  }
+  [data-granit-document-detail-meta] {
+    @apply text-xs text-muted-foreground;
+  }
+  [data-granit-document-detail-actions] {
+    @apply flex flex-wrap items-center gap-2;
+  }
+  [data-granit-document-detail-download] {
+    @apply inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border bg-card px-3 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+  }
+  [data-granit-document-detail-tags] {
+    @apply flex flex-wrap items-center gap-1.5;
+  }
+
+  /* ─── Versions timeline ───────────────────────────────────────────────── */
+  [data-granit-versions-timeline] {
+    @apply space-y-2;
+  }
+  [data-granit-versions-timeline-loading],
+  [data-granit-versions-timeline-empty] {
+    @apply rounded-md border border-dashed bg-muted/20 px-3 py-4 text-center text-xs text-muted-foreground;
+  }
+  [data-granit-versions-timeline-table] {
+    @apply w-full border-collapse text-sm;
+  }
+  [data-granit-versions-timeline-table] thead {
+    @apply border-b bg-muted/40 text-xs font-medium uppercase tracking-wide text-muted-foreground;
+  }
+  [data-granit-versions-timeline-table] th {
+    @apply px-3 py-2 text-left;
+  }
+  [data-granit-versions-timeline-table] td {
+    @apply px-3 py-2 align-middle;
+  }
+  [data-granit-versions-timeline-row] {
+    @apply border-b transition-colors hover:bg-muted/40;
+  }
+  [data-granit-versions-timeline-current] {
+    @apply bg-primary/5;
+  }
+  [data-granit-versions-timeline-pagination] {
+    @apply flex items-center justify-between gap-2 pt-1 text-xs text-muted-foreground;
+  }
+
+  /* ─── Share dialog ────────────────────────────────────────────────────── */
+  [data-granit-share-dialog] {
+    @apply space-y-3 rounded-lg border bg-card p-4 shadow-sm;
+  }
+  [data-granit-share-dialog-loading],
+  [data-granit-share-dialog-empty] {
+    @apply text-sm text-muted-foreground;
+  }
+  [data-granit-share-dialog-header] {
+    @apply flex items-center justify-between gap-2 border-b pb-2 text-sm font-medium text-foreground;
+  }
+  [data-granit-share-dialog-table] {
+    @apply w-full border-collapse text-sm;
+  }
+  [data-granit-share-dialog-table] thead {
+    @apply border-b bg-muted/40 text-xs font-medium uppercase tracking-wide text-muted-foreground;
+  }
+  [data-granit-share-dialog-table] th {
+    @apply px-3 py-2 text-left;
+  }
+  [data-granit-share-dialog-table] td {
+    @apply px-3 py-2 align-middle;
+  }
+  [data-granit-share-dialog-row] {
+    @apply border-b transition-colors hover:bg-muted/40;
+  }
+  [data-granit-share-dialog-default] {
+    @apply bg-primary/5;
+  }
+  [data-granit-share-dialog-draft] {
+    @apply bg-warning-50/40;
+  }
+
+  /* ─── Trash bin ───────────────────────────────────────────────────────── */
+  [data-granit-trash-bin] {
+    @apply space-y-3 rounded-lg border bg-card p-4 shadow-sm;
+  }
+  [data-granit-trash-bin-loading],
+  [data-granit-trash-bin-empty] {
+    @apply rounded-md border border-dashed bg-muted/20 px-4 py-8 text-center text-sm text-muted-foreground;
+  }
+  [data-granit-trash-bin-header] {
+    @apply flex items-center justify-between gap-2 border-b pb-2;
+  }
+  [data-granit-trash-bin-table] {
+    @apply w-full border-collapse text-sm;
+  }
+  [data-granit-trash-bin-table] thead {
+    @apply border-b bg-muted/40 text-xs font-medium uppercase tracking-wide text-muted-foreground;
+  }
+  [data-granit-trash-bin-table] th {
+    @apply px-3 py-2 text-left;
+  }
+  [data-granit-trash-bin-table] td {
+    @apply px-3 py-2 align-middle;
+  }
+  [data-granit-trash-bin-row] {
+    @apply border-b transition-colors hover:bg-muted/40;
+  }
+  [data-granit-trash-bin-urgent] {
+    @apply bg-destructive/5;
+  }
+  [data-granit-trash-bin-countdown] {
+    @apply text-xs tabular-nums text-muted-foreground;
+  }
+  [data-granit-trash-bin-urgent] [data-granit-trash-bin-countdown] {
+    @apply font-medium text-destructive;
+  }
+  [data-granit-trash-bin-actions] {
+    @apply flex items-center gap-1;
+  }
+  [data-granit-trash-bin-pagination] {
+    @apply flex items-center justify-between gap-2 pt-1 text-xs text-muted-foreground;
+  }
+
+  /* ─── Document tag chip (re-uses tag-chip primitive) ──────────────────── */
+  [data-granit-document-tag] {
+    @apply inline-flex items-center gap-1 rounded-full border bg-muted/40 px-2 py-0.5 text-xs text-foreground;
+  }
+
+  /* ─── Document Quick Look (preview modal) ─────────────────────────────── */
+  [data-granit-document-quick-look] {
+    @apply m-0 max-h-[90vh] max-w-[90vw] overflow-hidden rounded-lg border bg-card p-0 text-foreground shadow-xl;
+    /* Center the native <dialog> manually — the default UA centering pulls
+       it slightly off when the body has a scrollbar. */
+    @apply fixed inset-0 my-auto mx-auto;
+    width: min(1100px, 90vw);
+    height: min(820px, 90vh);
+  }
+  [data-granit-document-quick-look]::backdrop {
+    @apply bg-foreground/60 backdrop-blur-sm;
+  }
+  [data-granit-document-quick-look-header] {
+    @apply flex items-center gap-3 border-b bg-card px-4 py-2;
+  }
+  [data-granit-document-quick-look-name] {
+    @apply min-w-0 flex-1 truncate text-sm font-medium text-foreground;
+  }
+  [data-granit-document-quick-look-position] {
+    @apply rounded-md bg-muted/60 px-2 py-0.5 text-xs tabular-nums text-muted-foreground;
+  }
+  [data-granit-document-quick-look-actions] {
+    @apply flex items-center gap-1;
+  }
+  [data-granit-document-quick-look-actions] button {
+    @apply inline-flex h-8 cursor-pointer items-center gap-1 rounded-sm border bg-card px-2 text-xs font-medium text-foreground hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  [data-granit-document-quick-look-close] {
+    @apply !text-lg !leading-none;
+  }
+  [data-granit-document-quick-look-body] {
+    @apply relative flex h-[calc(100%-3rem)] items-center justify-center overflow-auto bg-muted/20 p-4;
+  }
+  [data-granit-document-quick-look-loading],
+  [data-granit-document-quick-look-fallback] {
+    @apply rounded-md border border-dashed bg-card px-6 py-8 text-center text-sm text-muted-foreground;
+  }
+  [data-granit-document-quick-look-error] {
+    @apply rounded-md border border-destructive/40 bg-destructive/10 px-4 py-2 text-sm text-destructive;
+  }
+  [data-granit-document-quick-look-image] {
+    @apply max-h-full max-w-full object-contain;
+  }
+  [data-granit-document-quick-look-video] {
+    @apply max-h-full max-w-full;
+  }
+  [data-granit-document-quick-look-audio] {
+    @apply w-full max-w-2xl;
+  }
+  [data-granit-document-quick-look-pdf] {
+    @apply h-full w-full border-0 bg-card;
+  }
+  [data-granit-document-quick-look-text] {
+    @apply h-full w-full whitespace-pre-wrap break-words rounded-md border bg-card p-4 font-mono text-xs leading-relaxed text-foreground;
+  }
+
+  /* ─── Documents sidebar (tabs shell) ──────────────────────────────────── */
+  [data-granit-documents-sidebar] {
+    @apply flex h-full flex-col gap-2;
+  }
+  [data-granit-documents-sidebar-tabs] {
+    @apply flex items-center gap-0 rounded-md border bg-card p-0.5 text-xs;
+  }
+  [data-granit-documents-sidebar-tabs] button {
+    @apply inline-flex h-7 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-sm bg-transparent px-2 font-medium text-muted-foreground transition-colors hover:text-foreground aria-pressed:bg-accent aria-pressed:text-accent-foreground;
+  }
+  [data-granit-documents-sidebar-count] {
+    @apply rounded bg-muted/60 px-1 text-[10px] tabular-nums text-muted-foreground aria-pressed:bg-card;
+  }
+  [data-granit-documents-sidebar-panel] {
+    @apply flex-1 overflow-auto;
+  }
+  [data-granit-documents-sidebar-empty] {
+    @apply rounded-md border border-dashed bg-muted/20 px-3 py-4 text-center text-xs text-muted-foreground;
+  }
+  [data-granit-documents-sidebar-list] {
+    @apply space-y-0.5;
+  }
+  [data-granit-documents-sidebar-item] {
+    @apply flex items-center gap-1 rounded-sm px-1.5 py-1 text-sm hover:bg-accent/60;
+  }
+  [data-granit-documents-sidebar-item-pick] {
+    @apply flex min-w-0 flex-1 cursor-pointer items-center gap-2 text-left text-foreground;
+  }
+  [data-granit-documents-sidebar-item-badge] {
+    @apply inline-flex h-5 min-w-[2rem] items-center justify-center rounded border bg-muted/40 px-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground;
+  }
+  [data-granit-documents-sidebar-item-name] {
+    @apply truncate text-xs text-foreground;
+  }
+  [data-granit-documents-sidebar-item-remove] {
+    @apply ml-auto inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-base leading-none text-muted-foreground opacity-0 hover:bg-muted hover:text-foreground;
+  }
+  [data-granit-documents-sidebar-item]:hover [data-granit-documents-sidebar-item-remove] {
+    @apply opacity-100;
+  }
+
+  /* Kind-coded badges inside the sidebar reuse the palette already defined
+     for tiles, but we leave the base item background neutral — the small
+     badge dot is enough visual indication for a dense list. */
+
+  /* ─── Document detail favorite star ───────────────────────────────────── */
+  [data-granit-document-detail-favorite] {
+    @apply ml-2 inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded text-base leading-none text-muted-foreground transition-colors hover:bg-accent hover:text-foreground;
+  }
+  [data-granit-document-detail-favorite][data-granit-document-detail-favorite-on] {
+    @apply text-warning-600 hover:bg-warning-50/60;
+  }
+
+  /* ─── Document search palette (Cmd+K) ─────────────────────────────────── */
+  [data-granit-document-search-palette] {
+    @apply m-0 max-h-[70vh] overflow-hidden rounded-lg border bg-card p-0 text-foreground shadow-2xl;
+    @apply fixed inset-0 my-auto mx-auto;
+    width: min(640px, 92vw);
+    height: auto;
+  }
+  [data-granit-document-search-palette]::backdrop {
+    @apply bg-foreground/40 backdrop-blur-sm;
+  }
+  [data-granit-document-search-palette-input-row] {
+    @apply flex items-center gap-2 border-b px-3 py-2;
+  }
+  [data-granit-document-search-palette-input] {
+    @apply h-9 w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none;
+  }
+  [data-granit-document-search-palette-close] {
+    @apply inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded text-base leading-none text-muted-foreground hover:bg-accent hover:text-foreground;
+  }
+  [data-granit-document-search-palette-body] {
+    @apply max-h-[50vh] overflow-auto p-1;
+  }
+  [data-granit-document-search-palette-loading],
+  [data-granit-document-search-palette-empty] {
+    @apply rounded-md border border-dashed bg-muted/20 px-3 py-6 text-center text-xs text-muted-foreground;
+  }
+  [data-granit-document-search-palette-list] {
+    @apply space-y-0.5;
+  }
+  [data-granit-document-search-palette-section-title] {
+    @apply px-2 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground;
+  }
+  [data-granit-document-search-palette-entry] {
+    @apply rounded-sm transition-colors;
+  }
+  [data-granit-document-search-palette-entry][data-granit-document-search-palette-highlighted] {
+    @apply bg-accent text-accent-foreground;
+  }
+  [data-granit-document-search-palette-entry-button] {
+    @apply flex w-full cursor-pointer items-center gap-2 px-2 py-1.5 text-left text-sm text-foreground;
+  }
+  [data-granit-document-search-palette-entry-badge] {
+    @apply inline-flex h-5 min-w-[2rem] items-center justify-center rounded border bg-muted/40 px-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground;
+  }
+  [data-granit-document-search-palette-entry-name] {
+    @apply truncate;
+  }
+  [data-granit-document-search-palette-footer] {
+    @apply border-t bg-muted/30 px-3 py-1.5 text-[10px] text-muted-foreground;
+  }
+}

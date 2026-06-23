@@ -1,0 +1,139 @@
+/**
+ * Taxonomy framework component styling.
+ *
+ * `@granit/react-taxonomy` ships headless components keyed off
+ * `data-granit-*` markers — apps own the visual layer. Everything below
+ * uses semantic Tailwind tokens (no hardcoded colors) so dark mode and
+ * tenant theme overrides flow through automatically.
+ */
+@layer components {
+  /* ─── Tag chip ────────────────────────────────────────────────────────── */
+  [data-granit-tag-chip] {
+    @apply inline-flex items-center gap-1.5 rounded-full border bg-card px-2.5 py-0.5 text-xs font-medium text-foreground shadow-sm transition-colors;
+  }
+  [data-granit-tag-chip-remove] {
+    @apply ml-0.5 inline-flex h-4 w-4 cursor-pointer items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+  }
+
+  /* ─── Tag chip strip (entity surface) ─────────────────────────────────── */
+  [data-granit-tag-chip-strip] {
+    @apply flex flex-wrap items-center gap-1.5;
+  }
+  [data-granit-tag-chip-strip-loading],
+  [data-granit-tag-chip-strip-empty] {
+    @apply text-xs text-muted-foreground;
+  }
+  [data-granit-tag-chip-strip-error] {
+    @apply text-xs text-destructive;
+  }
+  [data-granit-tag-chip-strip-add] {
+    @apply inline-flex h-7 cursor-pointer items-center gap-1 rounded-full border border-dashed bg-transparent px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:border-solid hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+  }
+
+  /* ─── Tag autocomplete ────────────────────────────────────────────────── */
+  [data-granit-tag-autocomplete] {
+    @apply relative inline-flex flex-col gap-1;
+  }
+  [data-granit-tag-autocomplete-selected] {
+    @apply flex flex-wrap items-center gap-1;
+  }
+  [data-granit-tag-autocomplete-input] {
+    @apply flex h-9 w-64 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  [data-granit-tag-autocomplete-list] {
+    @apply absolute top-full z-50 mt-1 max-h-64 w-64 overflow-y-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md;
+  }
+  [data-granit-tag-autocomplete-option] {
+    @apply flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground;
+  }
+  [data-granit-tag-autocomplete-highlighted] {
+    @apply bg-accent text-accent-foreground;
+  }
+  [data-granit-tag-autocomplete-empty] {
+    @apply px-2 py-1.5 text-sm text-muted-foreground;
+  }
+  [data-granit-tag-autocomplete-create] {
+    @apply flex w-full cursor-pointer items-center gap-2 rounded-sm border-t bg-transparent px-2 py-1.5 text-sm font-medium text-primary outline-none hover:bg-accent;
+  }
+
+  /* ─── Tag manager (admin page) ────────────────────────────────────────── */
+  [data-granit-tag-manager] {
+    @apply space-y-4 rounded-lg border bg-card p-4 shadow-sm;
+  }
+  [data-granit-tag-manager-loading],
+  [data-granit-tag-manager-empty],
+  [data-granit-tag-manager-readonly-hint] {
+    @apply text-sm text-muted-foreground;
+  }
+  [data-granit-tag-manager-error] {
+    @apply rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive;
+  }
+  [data-granit-tag-manager-header] {
+    @apply flex items-center justify-between gap-2 border-b pb-3;
+  }
+  [data-granit-tag-manager-new] {
+    @apply inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  [data-granit-tag-manager-table] {
+    @apply w-full caption-bottom text-sm;
+  }
+  [data-granit-tag-manager-table] thead {
+    @apply [&_tr]:border-b;
+  }
+  [data-granit-tag-manager-table] th {
+    @apply h-10 px-3 text-left align-middle font-medium text-muted-foreground;
+  }
+  [data-granit-tag-manager-table] td {
+    @apply p-3 align-middle;
+  }
+  [data-granit-tag-manager-row] {
+    @apply border-b transition-colors hover:bg-muted/40;
+  }
+  [data-granit-tag-manager-name] input {
+    @apply flex h-8 w-full rounded-md border border-input bg-transparent px-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+  }
+  [data-granit-tag-manager-color] {
+    @apply font-mono text-xs;
+  }
+  [data-granit-tag-manager-color] input[type='color'] {
+    @apply h-7 w-10 cursor-pointer rounded border bg-transparent p-0;
+  }
+  [data-granit-tag-manager-hide] input[type='checkbox'] {
+    @apply h-4 w-4 cursor-pointer rounded border-input text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+  }
+  [data-granit-tag-manager-actions] button {
+    @apply inline-flex h-8 cursor-pointer items-center rounded-md bg-transparent px-2 text-sm text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+  }
+  [data-granit-tag-manager-draft] td {
+    @apply bg-muted/40;
+  }
+  [data-granit-tag-manager-draft-error] {
+    @apply mt-1 text-xs text-destructive;
+  }
+
+  /* ─── Cross-entity search bar ─────────────────────────────────────────── */
+  [data-granit-taxonomy-search] {
+    @apply relative;
+  }
+  [data-granit-taxonomy-search-input] {
+    @apply flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+  }
+  [data-granit-taxonomy-search-list] {
+    @apply absolute right-0 top-full z-50 mt-1 max-h-96 w-80 overflow-y-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md;
+  }
+  [data-granit-taxonomy-search-group] h4 {
+    @apply px-2 py-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground;
+  }
+  [data-granit-taxonomy-search-group] ul {
+    @apply m-0 list-none p-0;
+  }
+  [data-granit-taxonomy-search-item] {
+    @apply flex cursor-pointer flex-col gap-0.5 rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground;
+  }
+  [data-granit-taxonomy-search-highlighted] {
+    @apply bg-accent text-accent-foreground;
+  }
+  [data-granit-taxonomy-search-error] {
+    @apply px-2 py-1.5 text-sm text-destructive;
+  }
+}

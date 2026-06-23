@@ -3,8 +3,13 @@ export {
   PaymentsProvider,
   buildPaymentsQueryKey,
   usePaymentsConfig,
+  useOptionalPaymentsConfig,
 } from './providers/payments-provider';
-export type { PaymentsConfig, PaymentsProviderProps } from './providers/payments-provider';
+export type {
+  PaymentBrandIconResolvers,
+  PaymentsConfig,
+  PaymentsProviderProps,
+} from './providers/payments-provider';
 
 // Hooks
 export {

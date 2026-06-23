@@ -7,6 +7,7 @@ export * from './command-palette-events';
 export * from './header';
 export * from './host-home-page';
 export * from './nav-user-presence-menu';
+export * from './nav-user-theme-menu';
 export * from './right-sidebar-context';
 export * from './shell-chrome-context';
 export * from './use-active-workspace';

@@ -1,3 +1,5 @@
+import { useOptionalPaymentsConfig } from '../providers/payments-provider';
+
 import { resolveMethodIconStyle } from './method-icon-registry';
 
 import type { CSSProperties, ReactNode } from 'react';
@@ -16,9 +18,10 @@ export interface PaymentMethodIconProps {
   /**
    * Override the generic icon with a custom node (e.g., a licensed brand SVG).
    * When provided, the default colored badge is skipped and this node is rendered
-   * inside the same sized container. Useful for apps that have obtained brand
-   * licenses from payment providers (Bancontact, iDEAL, PayPal, ...) and want
-   * to display the official logos.
+   * inside the same sized container. Takes precedence over any `brandIcons.method`
+   * resolver on the surrounding `PaymentsProvider`. Useful for apps that have
+   * obtained brand licenses from payment providers (Bancontact, iDEAL, PayPal,
+   * ...) and want to display the official logos.
    */
   readonly customIcon?: ReactNode;
 }
@@ -42,9 +45,13 @@ export function PaymentMethodIcon({
   title,
   customIcon,
 }: PaymentMethodIconProps) {
+  const config = useOptionalPaymentsConfig();
   const baseContainerStyle: CSSProperties = { width: size, height: size };
 
-  if (customIcon !== undefined) {
+  // Explicit prop wins; otherwise fall back to the app-supplied brand resolver.
+  const brandIcon = customIcon ?? config?.brandIcons?.method?.(methodType);
+
+  if (brandIcon !== undefined) {
     return (
       <span
         className={`inline-flex items-center justify-center overflow-hidden rounded-md ${className ?? ''}`.trim()}
@@ -53,7 +60,7 @@ export function PaymentMethodIcon({
         title={title}
         data-method-type={methodType}
       >
-        {customIcon}
+        {brandIcon}
       </span>
     );
   }

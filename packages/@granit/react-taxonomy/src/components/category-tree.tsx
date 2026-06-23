@@ -1,3 +1,11 @@
+import {
+  Tree,
+  TreeGroup,
+  TreeItem,
+  TreeItemRow,
+  TreeItemSpacer,
+  TreeItemToggle,
+} from '@granit/react-ui';
 import { useState } from 'react';
 
 import { useCategories } from '../hooks/use-categories';
@@ -157,70 +165,90 @@ function CategoryNode({
     });
   }
 
+  // Show the toggle whenever the backend doesn't explicitly say the node is a
+  // leaf. The real `CategoryResponse` from the .NET backend has no `hasChildren`
+  // field; without this fallback every row renders as a leaf and the lazy
+  // children query (`enabled: expanded`) never fires, so newly created
+  // sub-categories are invisible. Only treat the row as a definitive leaf when
+  // `hasChildren === false`.
+  const childIndent = `${(category.depth + 1) * 1.25 + 0.25}rem`;
+  const actionClass =
+    'rounded px-1.5 py-0.5 text-xs text-muted-foreground hover:bg-muted hover:text-foreground';
+
   return (
-    <li
+    <TreeItem
       data-granit-category-tree-node=""
       data-granit-category-id={category.id}
       data-granit-category-depth={category.depth}
     >
-      <div data-granit-category-tree-row="">
-        {/* Show the toggle whenever the backend doesn't explicitly say the node
-            is a leaf. The real `CategoryResponse` from the .NET backend has no
-            `hasChildren` field; without this fallback, every row renders as a
-            leaf and the lazy children query (`enabled: expanded`) never fires,
-            so newly created sub-categories are invisible. Only treat the row
-            as a definitive leaf when `hasChildren === false`. */}
+      <TreeItemRow level={category.depth} data-granit-category-tree-row="">
         {category.hasChildren === false ? (
-          <span data-granit-category-tree-leaf-spacer="" aria-hidden="true">
-            •
-          </span>
+          <TreeItemSpacer data-granit-category-tree-leaf-spacer="" />
         ) : (
-          <button
-            type="button"
+          <TreeItemToggle
+            expanded={expanded}
             data-granit-category-tree-toggle=""
-            aria-expanded={expanded}
             onClick={() => setExpanded((current) => !current)}
-          >
-            {expanded ? '▾' : '▸'}
-          </button>
+          />
         )}
         {onSelect ? (
           <button
             type="button"
             data-granit-category-tree-name=""
             onClick={() => onSelect(category)}
+            className="flex-1 truncate rounded px-1 text-left hover:underline"
           >
             {category.name}
           </button>
         ) : (
-          <span data-granit-category-tree-name="">{category.name}</span>
+          <span data-granit-category-tree-name="" className="flex-1 truncate px-1">
+            {category.name}
+          </span>
         )}
         {canManage && (
-          <span data-granit-category-tree-actions="">
-            <button type="button" onClick={handleAdd}>
+          <span
+            data-granit-category-tree-actions=""
+            className="ml-auto flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover/tree-row:opacity-100 focus-within:opacity-100"
+          >
+            <button type="button" onClick={handleAdd} className={actionClass}>
               {labels.add}
             </button>
-            <button type="button" onClick={handleRename}>
+            <button type="button" onClick={handleRename} className={actionClass}>
               {labels.rename}
             </button>
-            <button type="button" onClick={handleMove}>
+            <button type="button" onClick={handleMove} className={actionClass}>
               {labels.move}
             </button>
-            <button type="button" onClick={handleDelete}>
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="rounded px-1.5 py-0.5 text-xs text-destructive hover:bg-destructive/10"
+            >
               {labels.delete}
             </button>
           </span>
         )}
-      </div>
+      </TreeItemRow>
       {error && (
-        <div data-granit-category-tree-error="" role="alert">
+        <div
+          data-granit-category-tree-error=""
+          role="alert"
+          className="py-1 pr-1 text-xs text-destructive"
+          style={{ paddingInlineStart: childIndent }}
+        >
           {error}
         </div>
       )}
       {expanded && (
-        <ul data-granit-category-tree-children="">
+        <TreeGroup data-granit-category-tree-children="">
           {childrenQuery.isLoading && (
-            <li data-granit-category-tree-loading="">{labels.loading}</li>
+            <li
+              data-granit-category-tree-loading=""
+              className="py-1 text-xs text-muted-foreground"
+              style={{ paddingInlineStart: childIndent }}
+            >
+              {labels.loading}
+            </li>
           )}
           {(childrenQuery.data ?? []).map((child) => (
             <CategoryNode
@@ -232,9 +260,9 @@ function CategoryNode({
               onSelect={onSelect}
             />
           ))}
-        </ul>
+        </TreeGroup>
       )}
-    </li>
+    </TreeItem>
   );
 }
 
@@ -278,7 +306,11 @@ export function CategoryTree({
 
   if (rootsQuery.isLoading) {
     return (
-      <div data-granit-category-tree="" data-granit-category-tree-loading="" className={className}>
+      <div
+        data-granit-category-tree=""
+        data-granit-category-tree-loading=""
+        className={`p-2 text-sm text-muted-foreground ${className ?? ''}`}
+      >
         {labelStrings.loading}
       </div>
     );
@@ -289,7 +321,7 @@ export function CategoryTree({
         data-granit-category-tree=""
         data-granit-category-tree-error=""
         role="alert"
-        className={className}
+        className={`p-2 text-sm text-destructive ${className ?? ''}`}
       >
         {rootsQuery.error?.message ?? 'Failed to load categories.'}
       </div>
@@ -299,21 +331,36 @@ export function CategoryTree({
   const roots = rootsQuery.data ?? [];
 
   return (
-    <div data-granit-category-tree="" data-granit-category-tree-scope={scope} className={className}>
+    <div
+      data-granit-category-tree=""
+      data-granit-category-tree-scope={scope}
+      className={`space-y-1 ${className ?? ''}`}
+    >
       {canManage && (
-        <button type="button" data-granit-category-tree-add-root="" onClick={handleAddRoot}>
+        <button
+          type="button"
+          data-granit-category-tree-add-root=""
+          onClick={handleAddRoot}
+          className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+        >
           {labelStrings.add}
         </button>
       )}
       {rootError && (
-        <div data-granit-category-tree-error="" role="alert">
+        <div
+          data-granit-category-tree-error=""
+          role="alert"
+          className="px-2 py-1 text-xs text-destructive"
+        >
           {rootError}
         </div>
       )}
       {roots.length === 0 ? (
-        <div data-granit-category-tree-empty="">{labelStrings.empty}</div>
+        <div data-granit-category-tree-empty="" className="px-2 py-1 text-sm text-muted-foreground">
+          {labelStrings.empty}
+        </div>
       ) : (
-        <ul data-granit-category-tree-roots="">
+        <Tree data-granit-category-tree-roots="">
           {roots.map((root) => (
             <CategoryNode
               key={root.id}
@@ -324,7 +371,7 @@ export function CategoryTree({
               onSelect={onSelect}
             />
           ))}
-        </ul>
+        </Tree>
       )}
     </div>
   );

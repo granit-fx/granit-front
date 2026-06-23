@@ -6,12 +6,32 @@ import { DEFAULT_BASE_PATH } from '../constants';
 import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
 
+/**
+ * App-supplied resolvers for official, licensed brand logos. The framework
+ * never ships protected brand artwork (see `ProviderIcon`/`PaymentMethodIcon`,
+ * which render trademark-safe generic badges); an application that has obtained
+ * the relevant licenses provides its own SVGs through these resolvers. A
+ * resolver returns the logo node for a known identifier, or `undefined` to let
+ * the icon fall back to the generic badge.
+ */
+export interface PaymentBrandIconResolvers {
+  /** Resolve a provider logo (e.g. `stripe`, `mollie`) or `undefined`. */
+  readonly provider?: (providerName: string) => ReactNode | undefined;
+  /** Resolve a method logo (e.g. `bancontact`, `ideal`) or `undefined`. */
+  readonly method?: (methodType: string) => ReactNode | undefined;
+}
+
 /** Configuration for the payments provider. */
 export interface PaymentsConfig {
   readonly client?: AxiosInstance;
   /** Base path for payment endpoints (default: `/api/v1/payments`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
+  /**
+   * Optional licensed brand-logo resolvers. When omitted, every icon renders
+   * the generic trademark-safe badge.
+   */
+  readonly brandIcons?: PaymentBrandIconResolvers;
 }
 
 /**
@@ -55,6 +75,15 @@ export function usePaymentsConfig(): ResolvedPaymentsConfig {
     throw new Error('usePaymentsConfig must be used within a PaymentsProvider');
   }
   return ctx;
+}
+
+/**
+ * Like `usePaymentsConfig`, but returns `null` instead of throwing when no
+ * `PaymentsProvider` is mounted. Lets shared primitives (e.g. the icons) read
+ * optional config — such as `brandIcons` — while staying usable standalone.
+ */
+export function useOptionalPaymentsConfig(): ResolvedPaymentsConfig | null {
+  return useContext(PaymentsConfigContext);
 }
 
 /** Builds a consistent React Query key for payments operations. */

@@ -1,0 +1,108 @@
+/**
+ * Default skin for the headless <ReactionBar> (@granit/react-timeline): hides the
+ * literal emoji short-names and injects the glyph via ::after keyed on `data-emoji`,
+ * styling the `data-granit-reaction-bar-*` hooks with semantic tokens only. Opt-in:
+ * `@import '@granit/react-timeline/styles.css'` after Tailwind + @granit/ui-theme.
+ */
+@layer components {
+  /* Timeline reaction bar — `<ReactionBar>` from @granit/react-timeline
+   * renders the closed catalog of 5 emojis with their snake_case short
+   * names inside a `<span data-granit-reaction-bar-emoji>` child of each
+   * `<button data-granit-reaction-bar-button>`. We hide that literal text
+   * and inject the glyph via a `::before` keyed on `data-emoji`. The
+   * aria-label override on the button keeps screen readers happy. */
+  .granit-reaction-bar {
+    @apply mt-2 flex flex-wrap gap-1.5;
+  }
+  .granit-reaction-bar [data-granit-reaction-bar-button] {
+    @apply inline-flex h-7 items-center gap-1.5 rounded-full border border-border/60 bg-muted/40 px-2.5 text-xs font-medium text-muted-foreground shadow-sm transition-all duration-150 ease-out hover:-translate-y-px hover:border-border hover:bg-background hover:text-foreground hover:shadow disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+  }
+  .granit-reaction-bar [data-granit-reaction-bar-button]:active {
+    @apply translate-y-0 scale-95 shadow-none;
+  }
+  .granit-reaction-bar [data-granit-reaction-bar-button][aria-pressed='true'] {
+    @apply border-primary/40 bg-primary/10 text-primary shadow-none ring-1 ring-inset ring-primary/30 hover:border-primary/50 hover:bg-primary/15 hover:text-primary;
+  }
+  .granit-reaction-bar [data-granit-reaction-bar-count] {
+    @apply tabular-nums;
+  }
+  /* Hide the literal `thumbs_up` text but keep the span as an anchor
+   * for the ::after glyph (which carries the emoji's accessible name
+   * via the `alt` after the `/`). font-size:0 collapses the raw text;
+   * ::after restores a normal font-size for the glyph itself. */
+  .granit-reaction-bar [data-granit-reaction-bar-emoji] {
+    font-size: 0;
+    line-height: 1;
+  }
+  .granit-reaction-bar [data-granit-reaction-bar-emoji]::after {
+    font-size: 0.95rem;
+    line-height: 1;
+    transition: transform 150ms ease-out;
+  }
+  .granit-reaction-bar
+    [data-granit-reaction-bar-button]:hover
+    [data-granit-reaction-bar-emoji]::after {
+    transform: scale(1.15);
+  }
+  .granit-reaction-bar
+    [data-granit-reaction-bar-button][data-emoji='thumbs_up']
+    [data-granit-reaction-bar-emoji]::after {
+    content: '👍';
+  }
+  .granit-reaction-bar
+    [data-granit-reaction-bar-button][data-emoji='heart']
+    [data-granit-reaction-bar-emoji]::after {
+    content: '❤️';
+  }
+  .granit-reaction-bar
+    [data-granit-reaction-bar-button][data-emoji='tada']
+    [data-granit-reaction-bar-emoji]::after {
+    content: '🎉';
+    display: inline-block;
+    transform-origin: 50% 80%;
+  }
+  /* Pop animation — fires only when the user just *added* their tada
+   * reaction (data-has-reacted appears in the DOM). Toggling it off
+   * does not re-trigger. CSS restarts the animation on attribute
+   * appearance because the selector starts matching at that point. */
+  .granit-reaction-bar
+    [data-granit-reaction-bar-button][data-emoji='tada'][data-has-reacted]
+    [data-granit-reaction-bar-emoji]::after {
+    animation: granit-reaction-tada-pop 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .granit-reaction-bar
+      [data-granit-reaction-bar-button][data-emoji='tada'][data-has-reacted]
+      [data-granit-reaction-bar-emoji]::after {
+      animation: none;
+    }
+  }
+  .granit-reaction-bar
+    [data-granit-reaction-bar-button][data-emoji='joy']
+    [data-granit-reaction-bar-emoji]::after {
+    content: '😂';
+  }
+  .granit-reaction-bar
+    [data-granit-reaction-bar-button][data-emoji='eyes']
+    [data-granit-reaction-bar-emoji]::after {
+    content: '👀';
+  }
+}
+
+/* Tada pop — celebratory burst when the user adds their reaction.
+ * The cubic-bezier on the animation timing gives a slight overshoot
+ * (springy feel) before settling. */
+@keyframes granit-reaction-tada-pop {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  40% {
+    transform: scale(1.5) rotate(-15deg);
+  }
+  70% {
+    transform: scale(1.25) rotate(10deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}

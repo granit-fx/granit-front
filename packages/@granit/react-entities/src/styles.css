@@ -1,0 +1,270 @@
+/**
+ * Default skin for the headless entity renderers (EntityDetail / EntityForm /
+ * EntityGallery). These components emit unstyled HTML keyed off stable
+ * `data-granit-*` attribute hooks; this Card-style layer targets them with
+ * semantic Tailwind tokens only (dark mode + tenant themes flow through). Opt-in:
+ * `@import '@granit/react-entities/styles.css'` after Tailwind + @granit/ui-theme.
+ * Apps can override any rule, or supply richer widgets via EntityRendererProvider.
+ */
+@layer components {
+  /* Article root: section column + optional rail (when sidebar relations
+   * or side-panel slots are present). */
+  [data-granit-entity-detail] {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  @media (min-width: 1024px) {
+    [data-granit-entity-detail]:has([data-granit-detail-rail]) {
+      grid-template-columns: minmax(0, 1fr) 18rem;
+    }
+  }
+
+  /* Smart-button strip — flex-wrap chip layout above the section grid. */
+  [data-granit-detail-smart-buttons] {
+    @apply flex flex-wrap gap-3;
+    grid-column: 1 / -1;
+  }
+
+  [data-granit-smart-button] {
+    @apply inline-flex min-w-40 cursor-pointer items-center justify-between gap-3 rounded-lg border bg-card px-4 py-3 text-sm shadow-sm transition-colors;
+    @apply hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none;
+    @apply disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-card disabled:hover:text-foreground;
+  }
+
+  [data-granit-smart-button] [data-granit-relation-item-label] {
+    @apply font-medium text-foreground;
+  }
+
+  [data-granit-smart-button] [data-granit-relation-item-count] {
+    @apply ml-auto rounded bg-secondary px-2 py-0.5 font-mono text-xs text-secondary-foreground;
+  }
+
+  /* Sections grid — single column on mobile, 2-col when 2+ sections fit. */
+  [data-granit-detail-sections] {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  @media (min-width: 1024px) {
+    [data-granit-detail-sections]:has([data-granit-detail-section]:nth-child(2)) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Each section as a Card. */
+  [data-granit-detail-section] {
+    @apply rounded-xl border bg-card p-6 shadow-sm;
+  }
+
+  [data-granit-section-header] {
+    @apply mb-4 block text-base font-semibold tracking-tight text-foreground;
+  }
+
+  [data-granit-detail-fields] {
+    @apply m-0 space-y-3;
+  }
+
+  [data-granit-detail-row] {
+    @apply flex items-baseline justify-between gap-4;
+  }
+
+  [data-granit-detail-label] {
+    @apply text-sm text-muted-foreground;
+  }
+
+  [data-granit-detail-value] {
+    @apply text-sm font-medium text-foreground;
+  }
+
+  /* Side panel rail — vertical stack of cards. Empty slots collapse so a
+   * registered renderer-less Audit/Timeline placeholder doesn't add
+   * empty whitespace.
+   */
+  [data-granit-detail-rail] {
+    @apply space-y-4;
+  }
+
+  [data-granit-side-panel-slot]:not(:empty) {
+    @apply rounded-xl border bg-card p-4 shadow-sm;
+  }
+
+  [data-granit-side-panel-slot]:empty {
+    display: none;
+  }
+
+  /* Inline chips strip below the section column (for relations declared
+   * with `display: 'InlineChips'`). */
+  [data-granit-detail-inline-chips] {
+    @apply flex flex-wrap gap-2;
+    grid-column: 1 / -1;
+  }
+
+  /* ─── EntityForm — Card-style sections + shadcn-like inputs ───────── */
+
+  [data-granit-entity-form] {
+    @apply flex flex-col gap-6;
+  }
+
+  /* Form-page-specific: lay sections out in a responsive 2-col grid
+   * when the page provides enough width (`contentWidth="comfortable"`).
+   * Modals / drawers / other embedders keep the flex column default. */
+  [data-slot='workspace-entity-form'] [data-granit-entity-form] {
+    @apply grid grid-cols-1 gap-6 lg:grid-cols-2;
+  }
+
+  [data-granit-form-section] {
+    @apply flex flex-col gap-4 rounded-xl border bg-card p-6 shadow-sm;
+  }
+
+  [data-granit-form-section] [data-granit-section-header] {
+    @apply block text-base font-semibold tracking-tight text-foreground;
+  }
+
+  [data-granit-form-field] {
+    @apply flex flex-col gap-1.5;
+  }
+
+  [data-granit-field-label] {
+    @apply text-sm font-medium text-foreground;
+  }
+
+  [data-granit-field-help] {
+    @apply text-xs text-muted-foreground;
+  }
+
+  [data-granit-field-error] {
+    @apply text-xs font-medium text-destructive;
+  }
+
+  /* Inputs from the framework's standard widget catalogue render as
+   * raw HTML controls. Style them generically so the form looks
+   * coherent without forcing every host to ship its own widget
+   * catalog. Apps that want richer controls (Combobox, RichText, …)
+   * can still override per-widget via `<EntityRendererProvider widgets={…}>`.
+   */
+  [data-granit-form-field] input[type='text'],
+  [data-granit-form-field] input[type='number'],
+  [data-granit-form-field] input[type='date'],
+  [data-granit-form-field] input[type='time'],
+  [data-granit-form-field] input[type='datetime-local'],
+  [data-granit-form-field] textarea,
+  [data-granit-form-field] select {
+    @apply flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors;
+    @apply placeholder:text-muted-foreground;
+    @apply focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring;
+    @apply read-only:cursor-default read-only:bg-muted/40 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  [data-granit-form-field] textarea {
+    @apply min-h-20 py-2;
+    height: auto;
+  }
+
+  [data-granit-form-field] input[type='checkbox'] {
+    @apply size-4 rounded border-input;
+  }
+
+  [data-granit-form-field][aria-invalid='true'] input,
+  [data-granit-form-field][aria-invalid='true'] textarea,
+  [data-granit-form-field][aria-invalid='true'] select,
+  [data-granit-form-field] input[aria-invalid='true'],
+  [data-granit-form-field] textarea[aria-invalid='true'],
+  [data-granit-form-field] select[aria-invalid='true'] {
+    @apply border-destructive focus-visible:ring-destructive;
+  }
+
+  /* ── EntityGallery (`@granit/react-entities`) ─────────────────────
+   * The framework emits semantic `data-granit-gallery-*` hooks on a
+   * structurally-bare `<ol>`. Card sizing is driven by the
+   * `data-card-size` attribute the renderer copies from the manifest's
+   * `EntityGalleryLayoutManifest.cardSize`; the host owns the actual
+   * track widths. The `<img>` tag itself is mounted by
+   * `EntityGalleryView` (the framework only emits `data-image-blob-id`
+   * since blob URL resolution depends on host auth). */
+  [data-granit-entity-gallery] [data-granit-gallery-cards] {
+    @apply m-0 grid list-none gap-4 p-0;
+    grid-template-columns: repeat(auto-fill, minmax(var(--granit-gallery-card-size, 16rem), 1fr));
+  }
+  [data-granit-entity-gallery][data-card-size='Small'] {
+    --granit-gallery-card-size: 12rem;
+  }
+  [data-granit-entity-gallery][data-card-size='Medium'] {
+    --granit-gallery-card-size: 16rem;
+  }
+  [data-granit-entity-gallery][data-card-size='Large'] {
+    --granit-gallery-card-size: 20rem;
+  }
+  [data-granit-gallery-card] {
+    @apply flex flex-col overflow-hidden rounded-lg border bg-card text-card-foreground shadow-sm transition-shadow;
+  }
+  [data-granit-gallery-card]:hover {
+    @apply shadow-md;
+  }
+  [data-granit-gallery-card][data-row-id]:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2;
+  }
+  [data-granit-gallery-card] [data-granit-gallery-card-image] {
+    @apply w-full bg-muted object-cover;
+    aspect-ratio: 4 / 3;
+  }
+  /* Cards whose `renderImage` slot didn't actually mount an `<img>`
+   * (null `BlobReference`, presign expired, 404 from the blob endpoint
+   * — `<BlobImage>` renders its `fallback` instead) reserve the same
+   * 4:3 slot via a ::before pseudo so the title / subtitle stay
+   * anchored at the bottom of every card. The `:has()` check covers
+   * all three failure modes with a single rule. */
+  [data-granit-gallery-card]:not(:has([data-granit-gallery-card-image]))::before {
+    content: '';
+    @apply w-full bg-muted/40;
+    aspect-ratio: 4 / 3;
+    /* lucide `camera-off` — entity-agnostic "no photo" iconography
+     * (struck-through camera reads instantly across cultures and
+     * applies regardless of what the gallery represents — Parties,
+     * Products, anything). Stroke is slate-600 (#475569) at width 2
+     * for ~4.5:1 contrast over `bg-muted/40`; Tailwind can't
+     * interpolate vars into a url() string, so colour stays inline. */
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14.564 14.558a3 3 0 1 1-4.122-4.121'/><path d='m2 2 20 20'/><path d='M20 20H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 .819-.175'/><path d='M9.695 4.024A2 2 0 0 1 10.004 4h3.993a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v7.344'/></svg>");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 3.5rem;
+  }
+  [data-granit-gallery-card-title] {
+    @apply truncate px-3 pt-3 text-sm font-semibold;
+  }
+  [data-granit-gallery-card-subtitle] {
+    @apply truncate px-3 pb-3 text-xs text-muted-foreground;
+  }
+  [data-granit-gallery-loading],
+  [data-granit-gallery-empty],
+  [data-granit-gallery-error] {
+    @apply flex h-32 items-center justify-center text-sm text-muted-foreground;
+  }
+  [data-granit-gallery-sentinel] {
+    @apply col-span-full h-1;
+  }
+  /* Section headers in grouped mode — emitted by the showcase
+   * `EntityGalleryView` wrapper (the framework renderer is still
+   * flat-only when ambient `groupBy` is set). The header is a sibling
+   * `<li>` inside the same `<ol data-granit-gallery-cards>` grid; it
+   * spans the full row via `grid-column: 1 / -1` so the cards below
+   * snap onto a fresh grid row regardless of how many siblings the
+   * previous group ended on. The first header has no top margin so
+   * it doesn't push down from the toolbar. */
+  [data-granit-gallery-group-header] {
+    @apply col-span-full mt-6 flex items-baseline gap-2 border-b border-border pb-2 text-sm font-semibold text-foreground;
+  }
+  [data-granit-gallery-cards] > [data-granit-gallery-group-header]:first-child {
+    @apply mt-0;
+  }
+  [data-granit-gallery-group-label] {
+    @apply text-base capitalize;
+  }
+  [data-granit-gallery-group-count] {
+    /* Match the kanban column-count badge convention
+     * (`entity-kanban-view.tsx`): light background + muted-foreground
+     * text. `bg-muted` (slate-400) was too dark for muted-foreground
+     * (slate-500) → near-invisible "disabled" look. */
+    @apply rounded-full border border-border bg-background px-2 py-0.5 text-xs font-medium text-muted-foreground;
+  }
+}

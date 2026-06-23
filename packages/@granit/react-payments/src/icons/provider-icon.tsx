@@ -1,5 +1,7 @@
 import { Building2, CircleDollarSign, Landmark, Wallet } from 'lucide-react';
 
+import { useOptionalPaymentsConfig } from '../providers/payments-provider';
+
 import type { LucideIcon } from 'lucide-react';
 import type { CSSProperties, ReactNode } from 'react';
 
@@ -12,8 +14,9 @@ export interface ProviderIconProps {
   readonly className?: string;
   /**
    * Override the generic icon with a custom node (e.g., a licensed brand SVG).
-   * Useful for apps that have obtained licenses from the provider and want to
-   * display the official logo.
+   * Takes precedence over any `brandIcons.provider` resolver on the surrounding
+   * `PaymentsProvider`. Useful for apps that have obtained licenses from the
+   * provider and want to display the official logo.
    */
   readonly customIcon?: ReactNode;
 }
@@ -53,9 +56,13 @@ export function ProviderIcon({
   className,
   customIcon,
 }: ProviderIconProps) {
+  const config = useOptionalPaymentsConfig();
   const baseContainerStyle: CSSProperties = { width: size, height: size };
 
-  if (customIcon !== undefined) {
+  // Explicit prop wins; otherwise fall back to the app-supplied brand resolver.
+  const brandIcon = customIcon ?? config?.brandIcons?.provider?.(providerName);
+
+  if (brandIcon !== undefined) {
     return (
       <span
         className={`inline-flex items-center justify-center overflow-hidden rounded-md ${className ?? ''}`.trim()}
@@ -63,7 +70,7 @@ export function ProviderIcon({
         aria-label={providerName}
         data-provider-name={providerName}
       >
-        {customIcon}
+        {brandIcon}
       </span>
     );
   }

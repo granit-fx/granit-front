@@ -4,6 +4,20 @@ import { describe, expect, it } from 'vitest';
 import { resolveMethodIconStyle } from '../icons/method-icon-registry';
 import { PaymentMethodIcon } from '../icons/payment-method-icon';
 import { ProviderIcon } from '../icons/provider-icon';
+import { PaymentsProvider } from '../providers/payments-provider';
+
+import type { PaymentBrandIconResolvers } from '../providers/payments-provider';
+import type { AxiosInstance } from '@granit/api-client';
+import type { ReactNode } from 'react';
+
+// PaymentsProvider only needs a truthy client; no request is made in these tests.
+const STUB_CLIENT = {} as AxiosInstance;
+
+function withBrandIcons(brandIcons: PaymentBrandIconResolvers, ui: ReactNode) {
+  return render(
+    <PaymentsProvider config={{ client: STUB_CLIENT, brandIcons }}>{ui}</PaymentsProvider>
+  );
+}
 
 describe('resolveMethodIconStyle', () => {
   it('returns the category style when no method override exists', () => {
@@ -75,5 +89,44 @@ describe('ProviderIcon', () => {
       <ProviderIcon providerName="mollie" customIcon={<svg data-testid="brand-provider" />} />
     );
     expect(getByTestId('brand-provider')).toBeDefined();
+  });
+});
+
+describe('brandIcons resolver via PaymentsProvider', () => {
+  it('PaymentMethodIcon uses the method resolver when it returns a node', () => {
+    const { getByTestId, container } = withBrandIcons(
+      { method: (type) => (type === 'ideal' ? <svg data-testid="ideal-logo" /> : undefined) },
+      <PaymentMethodIcon methodType="ideal" category={1} />
+    );
+    expect(getByTestId('ideal-logo')).toBeDefined();
+    // No generic colored badge background when a brand logo is rendered.
+    const span = container.querySelector<HTMLElement>('[data-method-type="ideal"]');
+    expect(span?.style.backgroundColor).toBe('');
+  });
+
+  it('PaymentMethodIcon falls back to the generic badge when the resolver returns undefined', () => {
+    const { container } = withBrandIcons(
+      { method: () => undefined },
+      <PaymentMethodIcon methodType="card" category={0} />
+    );
+    const span = container.querySelector<HTMLElement>('[data-method-type="card"]');
+    expect(span?.style.backgroundColor).not.toBe('');
+  });
+
+  it('customIcon prop takes precedence over the method resolver', () => {
+    const { getByTestId, queryByTestId } = withBrandIcons(
+      { method: () => <svg data-testid="from-resolver" /> },
+      <PaymentMethodIcon methodType="ideal" category={1} customIcon={<svg data-testid="from-prop" />} />
+    );
+    expect(getByTestId('from-prop')).toBeDefined();
+    expect(queryByTestId('from-resolver')).toBeNull();
+  });
+
+  it('ProviderIcon uses the provider resolver when it returns a node', () => {
+    const { getByTestId } = withBrandIcons(
+      { provider: (name) => (name === 'stripe' ? <svg data-testid="stripe-logo" /> : undefined) },
+      <ProviderIcon providerName="stripe" />
+    );
+    expect(getByTestId('stripe-logo')).toBeDefined();
   });
 });
