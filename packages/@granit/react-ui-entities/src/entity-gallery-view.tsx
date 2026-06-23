@@ -1,13 +1,12 @@
-import type { ReactNode } from 'react';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
-
-import type { EntityGalleryLayoutManifest, EntityManifestResponse } from '@granit/entities';
 import { getPage, type PagedResult, type QueryRequest } from '@granit/query-engine';
 import { EntityGallery, type EntityActionHandlers } from '@granit/react-entities';
 import { useQueryConfig, useQueryEndpointState } from '@granit/react-query-engine';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import type { ExtendedEntityManifest } from './manifest-extensions';
+import type { EntityGalleryLayoutManifest, EntityManifestResponse } from '@granit/entities';
+import type { ReactNode } from 'react';
 
 /**
  * Image slot — the host injects the image layer (e.g. `<BlobImage>` from

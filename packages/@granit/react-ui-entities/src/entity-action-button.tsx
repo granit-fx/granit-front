@@ -1,13 +1,13 @@
-import { useState } from 'react';
-
-import type { EntityActionManifest } from '@granit/entities';
 import { useEntityActionDispatcher, type EntityActionHandlers } from '@granit/react-entities';
 import { useTranslation } from '@granit/react-localization';
-import { Button } from '@granit/react-ui';
 import { resolveLabel } from '@granit/react-localization';
+import { Button } from '@granit/react-ui';
 import { Download, ExternalLink, PanelRightOpen, Play, SquarePen, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 
 import { logger } from './logger';
+
+import type { EntityActionManifest } from '@granit/entities';
 
 // Showcase-styled wrapper around the framework's entity action
 // dispatcher. Renders a shadcn `<Button>` whose visual is derived from

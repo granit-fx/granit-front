@@ -1,6 +1,3 @@
-import { useState } from 'react';
-
-import type { EntityFormManifest } from '@granit/entities';
 import { useGranitClient } from '@granit/react-api-client';
 import {
   EntityForm,
@@ -20,8 +17,11 @@ import {
   DialogTitle,
 } from '@granit/react-ui';
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 
 import { useEntityActionScope } from './entity-action-scope';
+
+import type { EntityFormManifest } from '@granit/entities';
 
 // ---------------------------------------------------------------------------
 // Modal host UI — paired with `<EntityActionModalHost>`. Body branches on

@@ -1,10 +1,3 @@
-import { useCallback, useMemo, useState } from 'react';
-
-import type {
-  CalendarItemResponse,
-  EntityActionManifest,
-  EntityCalendarLayoutManifest,
-} from '@granit/entities';
 import {
   EntityActionButton,
   resolveAction,
@@ -14,6 +7,7 @@ import {
 } from '@granit/react-entities';
 import { useTimezone, useTranslation } from '@granit/react-localization';
 import { Button, Switch } from '@granit/react-ui';
+import { cn } from '@granit/utils';
 import {
   addDays,
   addMonths,
@@ -31,10 +25,14 @@ import {
   startOfYear,
 } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-
-import { cn } from '@granit/utils';
+import { useCallback, useMemo, useState } from 'react';
 
 import type { ExtendedEntityManifest } from './manifest-extensions';
+import type {
+  CalendarItemResponse,
+  EntityActionManifest,
+  EntityCalendarLayoutManifest,
+} from '@granit/entities';
 
 export type CalendarViewMode = 'day' | 'week' | 'month' | 'year';
 

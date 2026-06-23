@@ -1,9 +1,10 @@
 import { fn } from 'storybook/test';
 
+import { EntityViewSwitcher } from './entity-view-switcher';
+
 import type { EntityListLayoutManifest } from '@granit/entities';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { EntityViewSwitcher } from './entity-view-switcher';
 
 const layout = (
   kind: EntityListLayoutManifest['kind'],

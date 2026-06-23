@@ -1,4 +1,3 @@
-import type { EntityRelationManifest } from '@granit/entities';
 import { useTranslation } from '@granit/react-localization';
 import { Button } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
@@ -6,6 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { EntityDetailContent } from './entity-detail-content';
 import { EntityPageLayout } from './entity-page-layout';
+
+import type { EntityRelationManifest } from '@granit/entities';
 
 // Workspace-scoped entity detail route (`/w/:workspace/:entity/:id`).
 // Wraps `<EntityDetailContent />` with the unified `<EntityPageLayout />`

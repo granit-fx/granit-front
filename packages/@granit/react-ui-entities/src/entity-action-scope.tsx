@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 
 // Host-side scope captured by `<WorkspaceEntityPage>` whenever a list

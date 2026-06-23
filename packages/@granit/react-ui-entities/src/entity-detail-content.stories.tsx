@@ -1,17 +1,18 @@
+import { createApiClient } from '@granit/api-client';
 import { GranitClientProvider } from '@granit/react-api-client';
 import { EntityRendererProvider } from '@granit/react-entities';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { delay, http, HttpResponse } from 'msw';
+import { MemoryRouter } from 'react-router-dom';
+
+import { EntityDetailContent } from './entity-detail-content';
+
 import type {
   EntityDiscoveryResponse,
   EntityFormFieldManifest,
   EntityManifestResponse,
 } from '@granit/entities';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { createApiClient } from '@granit/api-client';
-import { delay, http, HttpResponse } from 'msw';
-import { MemoryRouter } from 'react-router-dom';
-
-import { EntityDetailContent } from './entity-detail-content';
 
 const ENTITY_NAME = 'Granit.Parties.Party';
 const ENTITY_ID = 'party-1';

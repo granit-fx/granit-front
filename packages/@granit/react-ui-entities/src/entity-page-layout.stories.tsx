@@ -1,9 +1,10 @@
 import { Button } from '@granit/react-ui';
 import { ArrowLeft, Plus } from 'lucide-react';
 
+import { EntityPageLayout } from './entity-page-layout';
+
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { EntityPageLayout } from './entity-page-layout';
 
 const meta = {
   title: 'Shared Components/Layout/EntityPageLayout',

@@ -1,14 +1,13 @@
-import * as React from 'react';
-
-import type { EntityActionManifest } from '@granit/entities';
+import { createApiClient } from '@granit/api-client';
 import { GranitClientProvider } from '@granit/react-api-client';
 import { EntityActionModalHost, useEntityActionModal } from '@granit/react-entities';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createApiClient } from '@granit/api-client';
+import * as React from 'react';
 
 import { ActionModal } from './action-modal';
 import { EntityActionScopeProvider } from './entity-action-scope';
 
+import type { EntityActionManifest } from '@granit/entities';
 import type { EntityActionOverlayState } from '@granit/react-entities';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 

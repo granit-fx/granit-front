@@ -1,6 +1,3 @@
-import { useMemo } from 'react';
-
-import type { EntityRelationManifest } from '@granit/entities';
 import { useGranitClient } from '@granit/react-api-client';
 import {
   EntityDetail,
@@ -9,14 +6,17 @@ import {
   type EntityActionHandlers,
 } from '@granit/react-entities';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
-import { Skeleton, Spinner } from '@granit/react-ui';
 import { resolveLabel } from '@granit/react-localization';
+import { Skeleton, Spinner } from '@granit/react-ui';
 import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { CollectionSectionCard } from './collection-section-card';
 import { EntityActionButton } from './entity-action-button';
 import { asExtended } from './manifest-extensions';
+
+import type { EntityRelationManifest } from '@granit/entities';
 
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;
 

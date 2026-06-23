@@ -8908,6 +8908,156 @@
       ]
     },
     {
+      "name": "@granit/react-ui-entities",
+      "description": "Granit manifest-driven entity-rendering UI — generic list/detail/form views plus calendar, kanban and gallery layouts, entity action overlays and collection sections. The UI counterpart to the headless @granit/react-entities. App-agnostic: image rendering, the active workspace and label resolution are injected.",
+      "exports": [
+        {
+          "name": "WorkspaceEntityPage",
+          "kind": "function",
+          "signature": "function WorkspaceEntityPage("
+        },
+        {
+          "name": "EntityCalendarView",
+          "kind": "function",
+          "signature": "function EntityCalendarView("
+        },
+        {
+          "name": "EntityCalendarViewProps",
+          "kind": "interface",
+          "signature": "interface EntityCalendarViewProps",
+          "members": []
+        },
+        {
+          "name": "CalendarViewMode",
+          "kind": "type",
+          "signature": "type CalendarViewMode = 'day' | 'week' | 'month' | 'year'"
+        },
+        {
+          "name": "EntityKanbanView",
+          "kind": "function",
+          "signature": "function EntityKanbanView("
+        },
+        {
+          "name": "EntityKanbanViewProps",
+          "kind": "interface",
+          "signature": "interface EntityKanbanViewProps",
+          "members": []
+        },
+        {
+          "name": "EntityGalleryView",
+          "kind": "function",
+          "signature": "function EntityGalleryView("
+        },
+        {
+          "name": "EntityGalleryViewProps",
+          "kind": "interface",
+          "signature": "interface EntityGalleryViewProps",
+          "members": []
+        },
+        {
+          "name": "GalleryRenderImage",
+          "kind": "type",
+          "signature": "type GalleryRenderImage = ( blobId: string | null, row: Readonly<Record<string, unknown>> ) => ReactNode"
+        },
+        {
+          "name": "EntityViewSwitcher",
+          "kind": "function",
+          "signature": "function EntityViewSwitcher("
+        },
+        {
+          "name": "EntityViewSwitcherProps",
+          "kind": "interface",
+          "signature": "interface EntityViewSwitcherProps",
+          "members": []
+        },
+        {
+          "name": "EntityDetailContent",
+          "kind": "function",
+          "signature": "function EntityDetailContent("
+        },
+        {
+          "name": "EntityDetailContentProps",
+          "kind": "interface",
+          "signature": "interface EntityDetailContentProps",
+          "members": []
+        },
+        {
+          "name": "CollectionSectionCard",
+          "kind": "function",
+          "signature": "function CollectionSectionCard("
+        },
+        {
+          "name": "ActionDrawer",
+          "kind": "function",
+          "signature": "function ActionDrawer()"
+        },
+        {
+          "name": "ActionModal",
+          "kind": "function",
+          "signature": "function ActionModal()"
+        },
+        {
+          "name": "EntityActionButton",
+          "kind": "function",
+          "signature": "function EntityActionButton("
+        },
+        {
+          "name": "EntityActionButtonProps",
+          "kind": "interface",
+          "signature": "interface EntityActionButtonProps",
+          "members": []
+        },
+        {
+          "name": "EntityActionScopeProvider",
+          "kind": "function",
+          "signature": "function EntityActionScopeProvider("
+        },
+        {
+          "name": "useEntityActionScope",
+          "kind": "function",
+          "signature": "function useEntityActionScope(): EntityActionScopeValue"
+        },
+        {
+          "name": "EntityPageLayout",
+          "kind": "function",
+          "signature": "function EntityPageLayout("
+        },
+        {
+          "name": "EntityPageLayoutProps",
+          "kind": "interface",
+          "signature": "interface EntityPageLayoutProps",
+          "members": []
+        },
+        {
+          "name": "EntityPageLayoutWidth",
+          "kind": "type",
+          "signature": "type EntityPageLayoutWidth = keyof typeof PADDING_CLASSES"
+        },
+        {
+          "name": "SidePeekDrawer",
+          "kind": "function",
+          "signature": "function SidePeekDrawer("
+        },
+        {
+          "name": "SidePeekDrawerProps",
+          "kind": "interface",
+          "signature": "interface SidePeekDrawerProps",
+          "members": []
+        },
+        {
+          "name": "recapParentRefs",
+          "kind": "function",
+          "signature": "function recapParentRefs(recap: EntitySelectionBarRecap): readonly ParentRef[]"
+        },
+        {
+          "name": "ParentRef",
+          "kind": "interface",
+          "signature": "interface ParentRef",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-entities-customization",
       "description": "Granit admin UI for entity layout customization (Layer 1 admin overrides) — the entity / workspace form-layout editor with a field-resolution inspector, plus the saved-views manager (create / edit / pin / set defaults / delete). Composes @granit/react-entities-customization, @granit/react-entities-views and @granit/react-workspaces (headless) with the foundation UI packages.",
       "exports": [

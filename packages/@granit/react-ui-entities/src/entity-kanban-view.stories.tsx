@@ -1,15 +1,14 @@
-import { fn } from 'storybook/test';
-
+import { createApiClient } from '@granit/api-client';
 import { GranitClientProvider } from '@granit/react-api-client';
 import { QueryProvider } from '@granit/react-query-engine';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { createApiClient } from '@granit/api-client';
+import { fn } from 'storybook/test';
 
 import { EntityKanbanView } from './entity-kanban-view';
 
-import type { EntityFormFieldManifest, EntityKanbanLayoutManifest } from '@granit/entities';
 import type { ExtendedEntityManifest } from './manifest-extensions';
+import type { EntityFormFieldManifest, EntityKanbanLayoutManifest } from '@granit/entities';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const mockApiClient = createApiClient({ baseURL: '' });
 

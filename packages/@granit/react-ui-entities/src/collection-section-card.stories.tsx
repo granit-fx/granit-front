@@ -1,8 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
-
 import { CollectionSectionCard } from './collection-section-card';
 
 import type { EntityCollectionSectionManifest } from './manifest-extensions';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 // Invoice line-items section: amount columns formatted via the `money`
 // component (minor units → currency) with a `Sum` footer over `total`.

@@ -1,7 +1,8 @@
-import type { EntitySelectionBarRecap } from '@granit/react-entities';
 import { describe, expect, it } from 'vitest';
 
 import { recapParentRefs } from '../bulk-recap';
+
+import type { EntitySelectionBarRecap } from '@granit/react-entities';
 
 const baseRecap: Omit<EntitySelectionBarRecap, 'parents'> = {
   succeeded: ['p-1', 'p-2'],

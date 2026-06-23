@@ -1,9 +1,8 @@
-import type { EntityListLayoutKind, EntityListLayoutManifest } from '@granit/entities';
 import { useTranslation } from '@granit/react-localization';
+import { cn } from '@granit/utils';
 import { Calendar, Images, KanbanSquare, List } from 'lucide-react';
 
-import { cn } from '@granit/utils';
-
+import type { EntityListLayoutKind, EntityListLayoutManifest } from '@granit/entities';
 import type { LucideIcon } from 'lucide-react';
 
 const KIND_ICONS: Readonly<Record<EntityListLayoutKind, LucideIcon>> = {

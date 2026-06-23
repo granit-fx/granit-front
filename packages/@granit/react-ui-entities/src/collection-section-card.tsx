@@ -1,6 +1,5 @@
-import type { ReactNode } from 'react';
-
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
+import { resolveLabel } from '@granit/react-localization';
 import {
   Card,
   CardContent,
@@ -14,12 +13,12 @@ import {
   TableHeader,
   TableRow,
 } from '@granit/react-ui';
-import { resolveLabel } from '@granit/react-localization';
 
 import type {
   CollectionColumnManifest,
   EntityCollectionSectionManifest,
 } from './manifest-extensions';
+import type { ReactNode } from 'react';
 
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;
 

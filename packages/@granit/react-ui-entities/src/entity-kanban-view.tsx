@@ -1,21 +1,11 @@
-import { useCallback, useMemo, useState, type DragEvent } from 'react';
-
-import type {
-  EntityActionManifest,
-  EntityFormFieldManifest,
-  EntityKanbanCardActionManifest,
-  EntityKanbanColumnManifest,
-  EntityKanbanLayoutManifest,
-  KanbanColor,
-  KanbanColumnState,
-} from '@granit/entities';
 import { buildQueryKey } from '@granit/query-engine';
 import { useGranitClient } from '@granit/react-api-client';
 import { useEntityActionDispatcher, type EntityActionHandlers } from '@granit/react-entities';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
+import { resolveLabel } from '@granit/react-localization';
 import { useQueryConfig } from '@granit/react-query-engine';
 import { Button } from '@granit/react-ui';
-import { resolveLabel } from '@granit/react-localization';
+import { cn } from '@granit/utils';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   ChevronDown,
@@ -27,12 +17,21 @@ import {
   SquarePen,
   Trash2,
 } from 'lucide-react';
+import { useCallback, useMemo, useState, type DragEvent } from 'react';
 import { toast } from 'sonner';
 
 import { logger } from './logger';
-import { cn } from '@granit/utils';
 
 import type { ExtendedEntityManifest } from './manifest-extensions';
+import type {
+  EntityActionManifest,
+  EntityFormFieldManifest,
+  EntityKanbanCardActionManifest,
+  EntityKanbanColumnManifest,
+  EntityKanbanLayoutManifest,
+  KanbanColor,
+  KanbanColumnState,
+} from '@granit/entities';
 
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;
 

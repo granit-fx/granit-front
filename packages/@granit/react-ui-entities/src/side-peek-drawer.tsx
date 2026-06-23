@@ -1,12 +1,12 @@
-import { useCallback } from 'react';
-
-import type { EntityRelationManifest } from '@granit/entities';
 import { useTranslation } from '@granit/react-localization';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@granit/react-ui';
 import { useSidePeek } from '@granit/react-workspaces';
+import { useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { EntityDetailContent } from './entity-detail-content';
+
+import type { EntityRelationManifest } from '@granit/entities';
 
 // Notion-style side peek drawer — globally mounted in `<Layout />` so any
 // list page can pop a row's detail without leaving the list. Driven by

@@ -1,7 +1,7 @@
+import { createApiClient } from '@granit/api-client';
 import { GranitClientProvider } from '@granit/react-api-client';
 import { EntityActionDrawerHost, useEntityActionDrawer } from '@granit/react-entities';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createApiClient } from '@granit/api-client';
 import { http, HttpResponse } from 'msw';
 
 import { ActionDrawer } from './action-drawer';

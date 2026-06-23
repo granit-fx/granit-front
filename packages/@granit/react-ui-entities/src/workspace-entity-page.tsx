@@ -1,12 +1,3 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
-
-import type {
-  EntityListLayoutKind,
-  EntityListLayoutManifest,
-  EntityManifestResponse,
-  EntitySelectionActionManifest,
-} from '@granit/entities';
-import type { ColumnDefinition, QueryMetadata } from '@granit/query-engine';
 import {
   EntityListPageHeader,
   EntitySelectionBar,
@@ -19,6 +10,7 @@ import {
   type EntitySelectionBarRecap,
 } from '@granit/react-entities';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
+import { resolveLabel } from '@granit/react-localization';
 import {
   QueryEndpointStateProvider,
   QueryProvider,
@@ -49,14 +41,13 @@ import {
 } from '@granit/react-ui-admin-kit';
 import { useOperatorLabels } from '@granit/react-ui-admin-kit';
 import { useSmartFilterSync } from '@granit/react-ui-admin-kit';
-import { resolveLabel } from '@granit/react-localization';
 import { useSidePeek } from '@granit/react-workspaces';
 import { ChevronRight, Pencil, Plus } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { recapParentRefs } from './bulk-recap';
-
 import { useEntityActionScope } from './entity-action-scope';
 import { EntityCalendarView } from './entity-calendar-view';
 import { EntityGalleryView, type GalleryRenderImage } from './entity-gallery-view';
@@ -66,6 +57,13 @@ import { EntityViewSwitcher } from './entity-view-switcher';
 import { asExtended } from './manifest-extensions';
 
 import type { ExtendedEntityManifest } from './manifest-extensions';
+import type {
+  EntityListLayoutKind,
+  EntityListLayoutManifest,
+  EntityManifestResponse,
+  EntitySelectionActionManifest,
+} from '@granit/entities';
+import type { ColumnDefinition, QueryMetadata } from '@granit/query-engine';
 import type { ColumnDef } from '@tanstack/react-table';
 
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;

@@ -1,6 +1,7 @@
+import { cn } from '@granit/utils';
+
 import type { ReactNode } from 'react';
 
-import { cn } from '@granit/utils';
 
 // `<EntityPageLayout>` doesn't set max-width itself — Layout's outer
 // content wrapper detects `[data-content-width=…]` via `:has()` and

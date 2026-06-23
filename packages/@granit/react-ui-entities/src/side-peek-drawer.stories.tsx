@@ -1,12 +1,13 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import type { Meta, StoryObj } from '@storybook/react-vite';
 import { createApiClient } from '@granit/api-client';
+import { GranitClientProvider } from '@granit/react-api-client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { delay, http } from 'msw';
 import { MemoryRouter } from 'react-router-dom';
 
-import { GranitClientProvider } from '@granit/react-api-client';
 
 import { SidePeekDrawer } from './side-peek-drawer';
+
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const mockApiClient = createApiClient({ baseURL: '' });
 
