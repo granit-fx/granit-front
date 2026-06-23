@@ -1,6 +1,13 @@
 // @granit/react-ui-authorization — French resource bundle (flat keys, "translation" ns).
 
 export const authorizationTranslationsFr = {
+  'Auth.AccessDenied.ConnectedAs': 'Connecté en tant que',
+  'Auth.AccessDenied.Title': 'Accès refusé',
+  'Auth.AccessDeniedContact':
+    "Veuillez contacter votre administrateur système pour demander l'accès.",
+  'Auth.AccessDeniedMessage':
+    'Vous ne disposez pas des permissions requises pour accéder à cette page.',
+  'Auth.SwitchAccount': 'Changer de compte',
   'PermissionGrants.Columns.Created': 'Créé le',
   'PermissionGrants.Columns.Permission': 'Permission',
   'PermissionGrants.Columns.Provider': 'Fournisseur',

@@ -3866,6 +3866,23 @@
       ]
     },
     {
+      "name": "@granit/react-authentication-mock",
+      "description": "Mock auth provider for development and tests — satisfies the auth context with a configurable fake user and no real IdP (optionally wrapped in BffProvider so MSW-backed BFF endpoints still resolve).",
+      "exports": [
+        {
+          "name": "MockAuthProvider",
+          "kind": "function",
+          "signature": "function MockAuthProvider("
+        },
+        {
+          "name": "MockAuthProviderProps",
+          "kind": "interface",
+          "signature": "interface MockAuthProviderProps",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/react-authorization",
       "description": "React hooks for @granit/authorization — permission checking, definitions, role grants",
       "exports": [
@@ -8138,6 +8155,23 @@
       ]
     },
     {
+      "name": "@granit/react-ui-authentication-keycloak",
+      "description": "Keycloak auth provider for Granit apps — wires @granit/react-authentication-keycloak's useKeycloakInit into the app's auth context, with locale-aware login and an init loading state. The Keycloak parallel to @granit/react-ui-authentication-local (which carries OpenIddict login pages; Keycloak hosts its own login, so this ships only the provider).",
+      "exports": [
+        {
+          "name": "KeycloakAuthProvider",
+          "kind": "function",
+          "signature": "function KeycloakAuthProvider("
+        },
+        {
+          "name": "KeycloakAuthProviderProps",
+          "kind": "interface",
+          "signature": "interface KeycloakAuthProviderProps",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-authentication-local",
       "description": "Granit end-user authentication UI for the local (OpenIddict) provider — login (credentials, passkey, two-factor), registration, forgot/reset password, email confirmation and change-email pages. Composes the headless @granit/react-authentication-local and @granit/react-account data layers with the foundation UI packages.",
       "exports": [
@@ -8268,6 +8302,22 @@
           "name": "PermissionSideBadge",
           "kind": "function",
           "signature": "function PermissionSideBadge("
+        },
+        {
+          "name": "PermissionGuard",
+          "kind": "function",
+          "signature": "function PermissionGuard("
+        },
+        {
+          "name": "AccessDeniedPage",
+          "kind": "function",
+          "signature": "function AccessDeniedPage("
+        },
+        {
+          "name": "AccessDeniedPageProps",
+          "kind": "interface",
+          "signature": "interface AccessDeniedPageProps",
+          "members": []
         }
       ]
     },

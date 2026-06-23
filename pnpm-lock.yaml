@@ -1583,6 +1583,25 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/react-authentication-mock:
+    dependencies:
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+    devDependencies:
+      '@granit/authentication':
+        specifier: workspace:*
+        version: link:../authentication
+      '@granit/authentication-keycloak':
+        specifier: workspace:*
+        version: link:../authentication-keycloak
+      '@granit/bff':
+        specifier: workspace:*
+        version: link:../bff
+      '@granit/react-bff':
+        specifier: workspace:*
+        version: link:../react-bff
+
   packages/@granit/react-authorization:
     dependencies:
       '@granit/authorization':
@@ -3913,6 +3932,28 @@ importers:
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+
+  packages/@granit/react-ui-authentication-keycloak:
+    dependencies:
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+    devDependencies:
+      '@granit/authentication':
+        specifier: workspace:*
+        version: link:../authentication
+      '@granit/authentication-keycloak':
+        specifier: workspace:*
+        version: link:../authentication-keycloak
+      '@granit/react-authentication-keycloak':
+        specifier: workspace:*
+        version: link:../react-authentication-keycloak
+      '@granit/react-localization':
+        specifier: workspace:*
+        version: link:../react-localization
+      '@granit/react-ui':
+        specifier: workspace:*
+        version: link:../react-ui
 
   packages/@granit/react-ui-authentication-local:
     dependencies:

@@ -10,6 +10,8 @@ export { RoleMetadataPage } from './role-metadata-page';
 export { RolePermissionsPanel } from './components/role-permissions-panel';
 export type { RolePermissionsPanelProps } from './components/role-permissions-panel';
 export { PermissionSideBadge } from './components/permission-side-badge';
+export { PermissionGuard } from './components/permission-guard';
+export { AccessDeniedPage, type AccessDeniedPageProps } from './components/access-denied-page';
 
 // i18next resource bundles (flat keys, "translation" ns)
 export { authorizationTranslationsEn, authorizationTranslationsFr } from './locales/index';
