@@ -1,0 +1,56 @@
+{
+  "name": "@granit/react-ui-documents",
+  "description": "Granit admin UI for the Documents module — the documents explorer (folder tree, list/grid views, upload, inspector, quota badge) plus the per-document detail view (versions, shares, tags/categories) and the metadata, public-links, renditions, asset-resolution, trash and storage-quota pages. Composes the headless @granit/react-documents with the foundation UI packages and @granit/react-ui-taxonomy.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/documents": "workspace:*",
+    "@granit/react-authorization": "workspace:*",
+    "@granit/react-documents": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-taxonomy": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-ui-taxonomy": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.18.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/documents": "workspace:*",
+    "@granit/react-authorization": "workspace:*",
+    "@granit/react-documents": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-taxonomy": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-ui-taxonomy": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@storybook/react-vite": "^10.4.6",
+    "@tanstack/react-query": "^5.0.0",
+    "i18next": "^26.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-i18next": "^17.0.0",
+    "react-router-dom": "^7.18.0",
+    "storybook": "^10.4.6"
+  }
+}

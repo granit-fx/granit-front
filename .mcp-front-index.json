@@ -7797,6 +7797,130 @@
       "exports": []
     },
     {
+      "name": "@granit/react-ui-ai",
+      "description": "Granit admin UI for the AI module — the workspace management surface (list/grid with view switcher, create and edit forms with provider/model selection, capabilities badges, delete confirmation and an inline chat/embeddings test panel) plus the query-driven AI usage tracking grid. Composes @granit/react-ai (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "AIWorkspaceListPage",
+          "kind": "function",
+          "signature": "function AIWorkspaceListPage()"
+        },
+        {
+          "name": "AIWorkspaceCreatePage",
+          "kind": "function",
+          "signature": "function AIWorkspaceCreatePage()"
+        },
+        {
+          "name": "AIWorkspaceEditPage",
+          "kind": "function",
+          "signature": "function AIWorkspaceEditPage()"
+        },
+        {
+          "name": "AIUsagePage",
+          "kind": "function",
+          "signature": "function AIUsagePage()"
+        },
+        {
+          "name": "createWorkspaceColumns",
+          "kind": "function",
+          "signature": "function createWorkspaceColumns("
+        },
+        {
+          "name": "WorkspaceTable",
+          "kind": "function",
+          "signature": "function WorkspaceTable("
+        },
+        {
+          "name": "WorkspaceForm",
+          "kind": "function",
+          "signature": "function WorkspaceForm(props: Readonly<WorkspaceFormProps>)"
+        },
+        {
+          "name": "WorkspaceDetail",
+          "kind": "function",
+          "signature": "function WorkspaceDetail("
+        },
+        {
+          "name": "WorkspaceCapabilities",
+          "kind": "function",
+          "signature": "function WorkspaceCapabilities("
+        },
+        {
+          "name": "WorkspaceDeleteDialog",
+          "kind": "function",
+          "signature": "function WorkspaceDeleteDialog("
+        },
+        {
+          "name": "WorkspaceTestPanel",
+          "kind": "function",
+          "signature": "function WorkspaceTestPanel("
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-ai-chat",
+      "description": "Granit admin UI for the AI Chat module — the agentic chat workspace (conversation sidebar with pin/rename/delete, streamed thread, the / @ composer with a branded model picker, per-message copy/regenerate/report actions) plus the per-user chat preferences page. Composes @granit/react-ai-chat (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "ChatPage",
+          "kind": "function",
+          "signature": "function ChatPage()"
+        },
+        {
+          "name": "ChatSettingsPage",
+          "kind": "function",
+          "signature": "function ChatSettingsPage()"
+        },
+        {
+          "name": "ChatMessageActions",
+          "kind": "function",
+          "signature": "function ChatMessageActions("
+        },
+        {
+          "name": "ChatMessageActionsProps",
+          "kind": "interface",
+          "signature": "interface ChatMessageActionsProps",
+          "members": []
+        },
+        {
+          "name": "ConversationListItem",
+          "kind": "function",
+          "signature": "function ConversationListItem("
+        },
+        {
+          "name": "ConversationListItemProps",
+          "kind": "interface",
+          "signature": "interface ConversationListItemProps",
+          "members": []
+        },
+        {
+          "name": "ProviderIcon",
+          "kind": "function",
+          "signature": "function ProviderIcon("
+        },
+        {
+          "name": "copyMessage",
+          "kind": "function",
+          "signature": "async function copyMessage(markdown: string, format: CopyFormat): Promise<void>"
+        },
+        {
+          "name": "markdownToClipboard",
+          "kind": "function",
+          "signature": "function markdownToClipboard(markdown: string, format: CopyFormat): string"
+        },
+        {
+          "name": "CopyFormat",
+          "kind": "type",
+          "signature": "type CopyFormat = 'html' | 'markdown' | 'plain'"
+        },
+        {
+          "name": "buildWorkspaceOptions",
+          "kind": "function",
+          "signature": "function buildWorkspaceOptions( workspaces: readonly string[], t: TranslateFn, modelNameByKey: Readonly<Record<string, string | null>> ="
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-ai-prompts",
       "description": "Granit admin UI for the AI Prompts module — the prompt-catalogue management page (list with customise / edit / delete affordances, a create-and-edit dialog form and a delete confirmation). Composes @granit/react-ai-prompts (headless) with the foundation UI packages and gates management actions with @granit/react-authorization.",
       "exports": [
@@ -8529,6 +8653,52 @@
           "name": "AutoRefreshIndicator",
           "kind": "function",
           "signature": "function AutoRefreshIndicator("
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-documents",
+      "description": "Granit admin UI for the Documents module — the documents explorer (folder tree, list/grid views, upload, inspector, quota badge) plus the per-document detail view (versions, shares, tags/categories) and the metadata, public-links, renditions, asset-resolution, trash and storage-quota pages. Composes the headless @granit/react-documents with the foundation UI packages and @granit/react-ui-taxonomy.",
+      "exports": [
+        {
+          "name": "DocumentsExplorerPage",
+          "kind": "function",
+          "signature": "function DocumentsExplorerPage()"
+        },
+        {
+          "name": "DocumentDetailPage",
+          "kind": "function",
+          "signature": "function DocumentDetailPage()"
+        },
+        {
+          "name": "DocumentPropertiesPage",
+          "kind": "function",
+          "signature": "function DocumentPropertiesPage()"
+        },
+        {
+          "name": "DocumentPublicLinksPage",
+          "kind": "function",
+          "signature": "function DocumentPublicLinksPage()"
+        },
+        {
+          "name": "DocumentRenditionsPage",
+          "kind": "function",
+          "signature": "function DocumentRenditionsPage()"
+        },
+        {
+          "name": "DocumentResolutionPage",
+          "kind": "function",
+          "signature": "function DocumentResolutionPage()"
+        },
+        {
+          "name": "TrashBinPage",
+          "kind": "function",
+          "signature": "function TrashBinPage()"
+        },
+        {
+          "name": "StorageQuotaPage",
+          "kind": "function",
+          "signature": "function StorageQuotaPage()"
         }
       ]
     },
@@ -9269,6 +9439,79 @@
           "name": "editLegalDocumentSchema",
           "kind": "const",
           "signature": "const editLegalDocumentSchema"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-reference-data",
+      "description": "Granit admin UI toolkit for the Reference-Data module — the generic, prefix-injected building blocks (list/create/edit page shells, spec-validated form, columns factory, card, category tree view, metadata editor, deactivate dialog) that domain features (countries, document-types, product-categories…) compose into concrete admin pages. Composes @granit/react-reference-data (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "createReferenceDataConstraints",
+          "kind": "const",
+          "signature": "const createReferenceDataConstraints: SchemaConstraints"
+        },
+        {
+          "name": "editReferenceDataConstraints",
+          "kind": "const",
+          "signature": "const editReferenceDataConstraints: SchemaConstraints"
+        },
+        {
+          "name": "MetadataEditor",
+          "kind": "function",
+          "signature": "function MetadataEditor("
+        },
+        {
+          "name": "ReferenceDataForm",
+          "kind": "function",
+          "signature": "function ReferenceDataForm(props: Readonly<ReferenceDataFormProps>)"
+        },
+        {
+          "name": "createReferenceDataColumns",
+          "kind": "function",
+          "signature": "function createReferenceDataColumns("
+        },
+        {
+          "name": "ReferenceDataCard",
+          "kind": "function",
+          "signature": "function ReferenceDataCard("
+        },
+        {
+          "name": "ReferenceDataDeactivateDialog",
+          "kind": "function",
+          "signature": "function ReferenceDataDeactivateDialog("
+        },
+        {
+          "name": "CategoryTreeView",
+          "kind": "function",
+          "signature": "function CategoryTreeView("
+        },
+        {
+          "name": "ReferenceDataListPageShell",
+          "kind": "function",
+          "signature": "function ReferenceDataListPageShell<T extends ReferenceDataEntry = ReferenceDataEntry>("
+        },
+        {
+          "name": "ReferenceDataListPageShellProps",
+          "kind": "interface",
+          "signature": "interface ReferenceDataListPageShellProps<",
+          "members": [
+            {
+              "name": "entry",
+              "kind": "property",
+              "signature": "entry: T,"
+            }
+          ]
+        },
+        {
+          "name": "ReferenceDataCreatePageShell",
+          "kind": "function",
+          "signature": "function ReferenceDataCreatePageShell("
+        },
+        {
+          "name": "ReferenceDataEditPageShell",
+          "kind": "function",
+          "signature": "function ReferenceDataEditPageShell("
         }
       ]
     },

@@ -1,0 +1,10 @@
+export { DocumentsExplorerPage } from './documents-explorer-page';
+export { DocumentDetailPage } from './document-detail-page';
+export { DocumentPropertiesPage } from './document-properties-page';
+export { DocumentPublicLinksPage } from './document-public-links-page';
+export { DocumentRenditionsPage } from './document-renditions-page';
+export { DocumentResolutionPage } from './document-resolution-page';
+export { TrashBinPage } from './trash-bin-page';
+export { StorageQuotaPage } from './storage-quota-page';
+export { DOCUMENTS_PERMISSIONS } from './constants';
+export { documentsAdminTranslationsEn, documentsAdminTranslationsFr } from './locales';
