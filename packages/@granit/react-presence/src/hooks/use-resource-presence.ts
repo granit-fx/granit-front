@@ -1,4 +1,3 @@
-import { createLogger } from '@granit/logger';
 import { joinResourceRoom, leaveResourceRoom } from '@granit/presence';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -6,11 +5,10 @@ import {
   DEFAULT_RESOURCE_HEARTBEAT_INTERVAL_MS,
   DEFAULT_RESOURCE_STALE_THRESHOLD_MS,
 } from '../constants';
+import { logger } from '../logger';
 import { usePresenceConfig } from '../providers/presence-provider';
 
 import type { ResourcePresenceParticipantResponse, ResourceRoomResponse } from '@granit/presence';
-
-const logger = createLogger('react-presence');
 
 export interface UseResourcePresenceOptions {
   /** Heartbeat cadence ms. Default: 15 000. */
@@ -186,6 +184,11 @@ export function useResourcePresence(
           setParticipants(applyStaleFilter(data, staleThresholdRef.current));
           setIsJoining(false);
           setError(null);
+          logger.debug('Resource presence heartbeat', {
+            kind,
+            id,
+            participants: data.participants.length,
+          });
         }
       } catch (err) {
         if (!cancelled && !ac.signal.aborted) {

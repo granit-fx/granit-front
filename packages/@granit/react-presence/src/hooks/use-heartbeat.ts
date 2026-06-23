@@ -1,16 +1,14 @@
-import { createLogger } from '@granit/logger';
 import { pollMyPresence } from '@granit/presence';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 
 import { DEFAULT_HEARTBEAT_INTERVAL_MS } from '../constants';
+import { logger } from '../logger';
 import { buildPresenceQueryKey, usePresenceConfig } from '../providers/presence-provider';
 
 import { presenceKeys } from './query-keys';
 
 import type { PresenceResponse } from '@granit/presence';
-
-const logger = createLogger('react-presence');
 
 export interface UseHeartbeatOptions {
   /** Polling interval in ms while the tab is visible. Default: 30 000. */
@@ -83,6 +81,7 @@ export function useHeartbeat(options: UseHeartbeatOptions = {}): void {
           // tick. This races on initial mount and on every tab re-focus.
           await queryClient.cancelQueries({ queryKey });
           queryClient.setQueryData<PresenceResponse>(queryKey, data);
+          logger.debug('Presence heartbeat sent', { idleSeconds });
         }
       } catch {
         // Heartbeat failures are non-critical — keep polling.
