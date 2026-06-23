@@ -54,7 +54,13 @@ describe('patterns (delegated to kit)', () => {
     expect(
       scanUseFormResolver({
         ...ctx,
-        allowedFiles: ['react-entities/src/hooks/use-entity-form.ts'],
+        allowedFiles: [
+          'react-entities/src/hooks/use-entity-form.ts',
+          // Storybook demo: FormDialog is form-agnostic (the host owns the
+          // form); the story wires a throwaway useForm purely to render the
+          // dialog chrome, so it needs no validation contract.
+          'react-ui-admin-kit/src/form-dialog/form-dialog.stories.tsx',
+        ],
       })
     ).toEqual([]);
   });
