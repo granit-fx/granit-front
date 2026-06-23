@@ -23,7 +23,7 @@ const meta: Meta<typeof RichTextEditor> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-function RichTextEditorWithState(props: { value?: string; readOnly?: boolean }) {
+function RichTextEditorWithState(props: Readonly<{ value?: string; readOnly?: boolean }>) {
   const [value, setValue] = useState(
     props.value ?? '<h1>Invoice Template</h1><p>Hello <strong>{{ model.name }}</strong>,</p>'
   );

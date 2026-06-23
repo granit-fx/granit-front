@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { TemplateEditor } from './template-editor';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { ComponentProps } from 'react';
 
 const meta: Meta<typeof TemplateEditor> = {
   title: 'Features/Templates/TemplateEditor',
@@ -28,18 +29,20 @@ const SAMPLE_CONTENT = `<h1>{{ model.title }}</h1>
 
 <footer>Généré le {{ now.date }}</footer>`;
 
+function TemplateEditorWithState(
+  args: Readonly<Partial<ComponentProps<typeof TemplateEditor>> & { initialValue?: string }>
+) {
+  const { initialValue = '', ...rest } = args;
+  const [value, setValue] = useState(initialValue);
+  return <TemplateEditor {...rest} value={value} onChange={setValue} />;
+}
+
 export const Default: Story = {
-  render: (args) => {
-    const [value, setValue] = useState(SAMPLE_CONTENT);
-    return <TemplateEditor {...args} value={value} onChange={setValue} />;
-  },
+  render: (args) => <TemplateEditorWithState {...args} initialValue={SAMPLE_CONTENT} />,
 };
 
 export const Empty: Story = {
-  render: (args) => {
-    const [value, setValue] = useState('');
-    return <TemplateEditor {...args} value={value} onChange={setValue} />;
-  },
+  render: (args) => <TemplateEditorWithState {...args} initialValue="" />,
 };
 
 export const ReadOnly: Story = {
