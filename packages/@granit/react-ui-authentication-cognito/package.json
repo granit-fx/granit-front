@@ -1,0 +1,42 @@
+{
+  "name": "@granit/react-ui-authentication-cognito",
+  "description": "Cognito auth provider for Granit apps — wires @granit/react-authentication-cognito's useCognitoInit into the app's auth context, with locale-aware login and an init loading state. Companion to react-ui-authentication-keycloak.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/authentication": "workspace:*",
+    "@granit/authentication-keycloak": "workspace:*",
+    "@granit/authentication-cognito": "workspace:*",
+    "@granit/react-authentication-cognito": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "react": "^19.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/authentication": "workspace:*",
+    "@granit/authentication-keycloak": "workspace:*",
+    "@granit/authentication-cognito": "workspace:*",
+    "@granit/react-authentication-cognito": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*"
+  }
+}

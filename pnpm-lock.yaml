@@ -3933,6 +3933,81 @@ importers:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
 
+  packages/@granit/react-ui-authentication-cognito:
+    dependencies:
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+    devDependencies:
+      '@granit/authentication':
+        specifier: workspace:*
+        version: link:../authentication
+      '@granit/authentication-cognito':
+        specifier: workspace:*
+        version: link:../authentication-cognito
+      '@granit/authentication-keycloak':
+        specifier: workspace:*
+        version: link:../authentication-keycloak
+      '@granit/react-authentication-cognito':
+        specifier: workspace:*
+        version: link:../react-authentication-cognito
+      '@granit/react-localization':
+        specifier: workspace:*
+        version: link:../react-localization
+      '@granit/react-ui':
+        specifier: workspace:*
+        version: link:../react-ui
+
+  packages/@granit/react-ui-authentication-entraid:
+    dependencies:
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+    devDependencies:
+      '@granit/authentication':
+        specifier: workspace:*
+        version: link:../authentication
+      '@granit/authentication-entraid':
+        specifier: workspace:*
+        version: link:../authentication-entraid
+      '@granit/authentication-keycloak':
+        specifier: workspace:*
+        version: link:../authentication-keycloak
+      '@granit/react-authentication-entraid':
+        specifier: workspace:*
+        version: link:../react-authentication-entraid
+      '@granit/react-localization':
+        specifier: workspace:*
+        version: link:../react-localization
+      '@granit/react-ui':
+        specifier: workspace:*
+        version: link:../react-ui
+
+  packages/@granit/react-ui-authentication-google-cloud:
+    dependencies:
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+    devDependencies:
+      '@granit/authentication':
+        specifier: workspace:*
+        version: link:../authentication
+      '@granit/authentication-google-cloud':
+        specifier: workspace:*
+        version: link:../authentication-google-cloud
+      '@granit/authentication-keycloak':
+        specifier: workspace:*
+        version: link:../authentication-keycloak
+      '@granit/react-authentication-google-cloud':
+        specifier: workspace:*
+        version: link:../react-authentication-google-cloud
+      '@granit/react-localization':
+        specifier: workspace:*
+        version: link:../react-localization
+      '@granit/react-ui':
+        specifier: workspace:*
+        version: link:../react-ui
+
   packages/@granit/react-ui-authentication-keycloak:
     dependencies:
       react:

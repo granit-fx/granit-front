@@ -1,0 +1,60 @@
+import { useCognitoInit } from '@granit/react-authentication-cognito';
+import { useTranslation } from '@granit/react-localization';
+import { Spinner } from '@granit/react-ui';
+import { useCallback, useMemo } from 'react';
+
+import type { CognitoCoreConfig } from '@granit/authentication-cognito';
+import type { KeycloakAuthContextType } from '@granit/authentication-keycloak';
+import type { Context, ReactNode } from 'react';
+
+export interface CognitoAuthProviderProps {
+  /** The app's auth context (from `createAuthContext`). */
+  readonly context: Context<KeycloakAuthContextType | undefined>;
+  /** Cognito core config (from the host environment). */
+  readonly config: CognitoCoreConfig;
+  readonly children: ReactNode;
+}
+
+/**
+ * Cognito auth provider. Wires `useCognitoInit` into the app's auth context, forwards the
+ * active UI locale to the IdP login, and renders an init spinner until the session
+ * resolves. App-agnostic: the host owns its context instance and decides (via its
+ * auth-mode) whether to mount this provider. Companion to the Keycloak provider.
+ */
+export function CognitoAuthProvider({
+  context: AuthContext,
+  config,
+  children,
+}: CognitoAuthProviderProps) {
+  const { t, i18n } = useTranslation();
+  const {
+    authenticated,
+    loading,
+    user,
+    login: hookLogin,
+    logout: hookLogout,
+  } = useCognitoInit(config);
+
+  const login = useCallback(() => hookLogin({ locale: i18n.language }), [hookLogin, i18n.language]);
+  const logout = useCallback(() => hookLogout(), [hookLogout]);
+
+  const value = useMemo<KeycloakAuthContextType>(
+    () => ({ keycloak: null, authenticated, loading, user, login, logout }),
+    [authenticated, loading, user, login, logout]
+  );
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="flex flex-col items-center">
+          <Spinner size="lg" className="mb-4" />
+          <p className="text-sm font-medium text-muted-foreground">
+            {t('Auth.Initializing', 'Initializing…')}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}

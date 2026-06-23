@@ -8155,6 +8155,45 @@
       ]
     },
     {
+      "name": "@granit/react-ui-authentication-cognito",
+      "description": "Cognito auth provider for Granit apps — wires @granit/react-authentication-cognito's useCognitoInit into the app's auth context, with locale-aware login and an init loading state. Companion to react-ui-authentication-keycloak.",
+      "exports": [
+        {
+          "name": "CognitoAuthProvider",
+          "kind": "function",
+          "signature": "function CognitoAuthProvider("
+        },
+        {
+          "name": "CognitoAuthProviderProps",
+          "kind": "interface",
+          "signature": "interface CognitoAuthProviderProps",
+          "members": []
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-authentication-entraid",
+      "description": "EntraId auth provider for Granit apps — wires @granit/react-authentication-entraid's useEntraIdInit into the app's auth context, with locale-aware login and an init loading state. Companion to react-ui-authentication-keycloak.",
+      "exports": [
+        {
+          "name": "EntraIdAuthProvider",
+          "kind": "function",
+          "signature": "function EntraIdAuthProvider("
+        },
+        {
+          "name": "EntraIdAuthProviderProps",
+          "kind": "interface",
+          "signature": "interface EntraIdAuthProviderProps",
+          "members": []
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-authentication-google-cloud",
+      "description": "GoogleCloud auth provider for Granit apps — wires @granit/react-authentication-google-cloud's useGoogleCloudInit into the app's auth context, with locale-aware login and an init loading state. Companion to react-ui-authentication-keycloak.",
+      "exports": []
+    },
+    {
       "name": "@granit/react-ui-authentication-keycloak",
       "description": "Keycloak auth provider for Granit apps — wires @granit/react-authentication-keycloak's useKeycloakInit into the app's auth context, with locale-aware login and an init loading state. The Keycloak parallel to @granit/react-ui-authentication-local (which carries OpenIddict login pages; Keycloak hosts its own login, so this ships only the provider).",
       "exports": [
