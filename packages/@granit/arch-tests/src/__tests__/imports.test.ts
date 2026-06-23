@@ -15,7 +15,9 @@ import {
   AXIOS_ALLOWLIST,
   CONSOLE_ALLOWLIST,
   FETCH_ALLOWLIST,
+  REACT_ECOSYSTEM_CORE_ALLOWLIST,
   REPO_ROOT,
+  UI_ROUTER_BASELINE,
   listPackages,
   toModules,
 } from './helpers';
@@ -125,5 +127,51 @@ describe('imports — granit-specific rules', () => {
 
     for (const n of graph.keys()) if ((color.get(n) ?? WHITE) === WHITE) dfs(n);
     expect(cycles).toEqual([]);
+  });
+
+  // R1 (checklist 7g) — keep the framework-agnostic core portable for a future
+  // non-React adapter (Angular, React Native): the neutral query core is
+  // @tanstack/query-core, not the React binding.
+  it('framework-agnostic (non-react) packages do not import the React ecosystem', () => {
+    const offenders: string[] = [];
+    for (const pkg of packages) {
+      if (pkg.isReact) continue;
+      if (REACT_ECOSYSTEM_CORE_ALLOWLIST.includes(pkg.name)) continue;
+      for (const f of walkSourceFiles(pkg.srcDir, (file) => !isTestFile(file))) {
+        for (const spec of collectImports(f)) {
+          if (/^(react|react-dom|@tanstack\/react-query)$/.test(spec)) {
+            offenders.push(`${rel(f, REPO_ROOT)} :: ${spec}`);
+          }
+        }
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
+
+  // R3 (checklist 7g) — ratchet: react-ui pages should receive navigation via a
+  // thin port/props so a non-web router (react-navigation / Angular Router) can
+  // substitute. No NEW package may import a web router directly; UI_ROUTER_BASELINE
+  // is the frozen set of current offenders and should shrink over time.
+  it('react-ui packages do not add NEW direct web-router imports', () => {
+    const offenders = new Set<string>();
+    for (const pkg of packages) {
+      if (!pkg.dirName.startsWith('react-ui-')) continue;
+      const notTestSupport = (file: string): boolean =>
+        !isTestFile(file) &&
+        !isTestingDir(file) &&
+        !/[\\/]__tests__[\\/]/.test(file) &&
+        !/test-utils\.tsx?$/.test(file) &&
+        !/\.stories\.tsx?$/.test(file);
+      for (const f of walkSourceFiles(pkg.srcDir, notTestSupport)) {
+        for (const spec of collectImports(f)) {
+          if (/^react-router(-dom)?$/.test(spec)) {
+            offenders.add(pkg.name);
+            break;
+          }
+        }
+      }
+    }
+    const newOffenders = [...offenders].filter((n) => !UI_ROUTER_BASELINE.includes(n)).sort();
+    expect(newOffenders).toEqual([]);
   });
 });
