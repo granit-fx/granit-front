@@ -13,7 +13,7 @@ import type { TFunction } from 'i18next';
 import type { ReactNode } from 'react';
 
 const storyI18n = i18next.createInstance();
-void storyI18n.use(initReactI18next).init({
+await storyI18n.use(initReactI18next).init({
   lng: 'en',
   fallbackLng: 'en',
   ns: ['translation'],

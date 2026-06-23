@@ -32,6 +32,30 @@ function capitalize(value: string): string {
 }
 
 /**
+ * Spec-driven validation from the OpenAPI contract (CreatePageRequest constrains
+ * parentId / slugSegment / layoutKey). `layoutKey` is a required-key / nullable-value
+ * field — empty is a legitimate "no layout", so its `required` error is dropped here
+ * (mirrors the field augmentation in @granit/react-ui-hostnames' add dialog).
+ * `Validation:Builtin:*` messages are owned by the host's @granit/Validation bundle.
+ */
+function buildFormResolver(t: ReturnType<typeof useTranslation>['t']): Resolver<PageFormValues> {
+  const baseResolver = createConstraintsResolver(cmsConstraints.CreatePageRequest, t, {
+    labelResolver: (field) => t(`cms:Pages.Fields.${capitalize(field)}`, field),
+  });
+  return (async (
+    values: Record<string, unknown>,
+    context: unknown,
+    options: { fields: Record<string, { name: string }> }
+  ) => {
+    const result = await baseResolver(values, context, options);
+    if (result.errors.layoutKey && (values.layoutKey ?? '') === '') {
+      delete result.errors.layoutKey;
+    }
+    return result;
+  }) as unknown as Resolver<PageFormValues>;
+}
+
+/**
  * Create / rename a CMS page *structure* node (slug + parent + layout).
  *
  * Page *content* (blocks) is authored in the granit-cms-renderer Puck editor —
@@ -52,25 +76,7 @@ export function PageFormPage() {
   const createPage = useCreatePage();
   const updatePage = useUpdatePage();
 
-  // Spec-driven validation from the OpenAPI contract (CreatePageRequest constrains
-  // parentId / slugSegment / layoutKey). `layoutKey` is a required-key / nullable-value
-  // field — empty is a legitimate "no layout", so its `required` error is dropped here
-  // (mirrors the field augmentation in @granit/react-ui-hostnames' add dialog).
-  // `Validation:Builtin:*` messages are owned by the host's @granit/Validation bundle.
-  const baseResolver = createConstraintsResolver(cmsConstraints.CreatePageRequest, t, {
-    labelResolver: (field) => t(`cms:Pages.Fields.${capitalize(field)}`, field),
-  });
-  const formResolver = (async (
-    values: Record<string, unknown>,
-    context: unknown,
-    options: { fields: Record<string, { name: string }> }
-  ) => {
-    const result = await baseResolver(values, context, options);
-    if (result.errors.layoutKey && (values.layoutKey ?? '') === '') {
-      delete result.errors.layoutKey;
-    }
-    return result;
-  }) as unknown as Resolver<PageFormValues>;
+  const formResolver = buildFormResolver(t);
 
   const {
     register,

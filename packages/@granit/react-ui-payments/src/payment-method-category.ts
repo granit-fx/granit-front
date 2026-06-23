@@ -18,8 +18,7 @@ const CATEGORY_ORDER: readonly PaymentMethodCategory[] = [
 
 /** Index of a `PaymentMethodCategory` for `PaymentMethodIcon` (falls back to Card). */
 export function categoryIndex(category: PaymentMethodCategory): number {
-  const index = CATEGORY_ORDER.indexOf(category);
-  return index >= 0 ? index : 0;
+  return Math.max(CATEGORY_ORDER.indexOf(category), 0);
 }
 
 /**

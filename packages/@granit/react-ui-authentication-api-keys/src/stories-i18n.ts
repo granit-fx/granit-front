@@ -19,7 +19,7 @@ const Common = {
 } as const;
 
 export const storyI18n = i18next.createInstance();
-void storyI18n.use(initReactI18next).init({
+await storyI18n.use(initReactI18next).init({
   lng: 'en',
   fallbackLng: 'en',
   ns: ['translation'],

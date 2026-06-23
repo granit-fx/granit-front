@@ -15,5 +15,5 @@ type Story = StoryObj<typeof meta>;
 export const Active: Story = { args: { status: 'Active' } };
 export const Pending: Story = { args: { status: 'Pending' } };
 export const Verifying: Story = { args: { status: 'Verifying' } };
-export const Error: Story = { args: { status: 'Error' } };
+export const Errored: Story = { args: { status: 'Error' } };
 export const Unknown: Story = { args: { status: 'Suspended' } };

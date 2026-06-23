@@ -1,6 +1,5 @@
 import { createApiClient } from '@granit/api-client';
-import { CmsProvider } from '@granit/react-cms';
-import { cmsKeys } from '@granit/react-cms';
+import { CmsProvider, cmsKeys } from '@granit/react-cms';
 import { mockSites } from '@granit/react-cms/testing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import i18next from 'i18next';
@@ -14,7 +13,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 
 const storyI18n = i18next.createInstance();
-void storyI18n.use(initReactI18next).init({
+await storyI18n.use(initReactI18next).init({
   lng: 'en',
   fallbackLng: 'en',
   ns: ['translation'],
