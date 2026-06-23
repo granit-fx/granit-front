@@ -6,44 +6,19 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
+import { mockPersonalView, mockTenantView } from '@granit/react-entities-views/testing';
+
 import { defaultEntityViewQueryKey, useDefaultEntityView } from '../hooks/use-default-entity-view';
 import { entityViewQueryKey, useEntityView } from '../hooks/use-entity-view';
 import { entityViewsQueryKey, useEntityViews } from '../hooks/use-entity-views';
 
-import type { EntityViewResponse } from '@granit/entities-views';
 import type { ReactNode } from 'react';
 
 const ENTITY = 'Granit.Parties.Party';
 const ENCODED = encodeURIComponent(ENTITY);
 
-const VIEW_A: EntityViewResponse = {
-  id: '8c6b1e10-0000-4000-8000-000000000001',
-  entityName: ENTITY,
-  basedOn: 'default',
-  kind: 'list',
-  name: 'My open parties',
-  description: null,
-  icon: null,
-  state: { filters: [] },
-  visibility: 'Personal',
-  ownerId: '00000000-0000-0000-0000-000000000001',
-  sharedWith: null,
-  isPinned: false,
-  isDefault: false,
-  isPersonalDefault: true,
-  sortOrder: 0,
-};
-
-const VIEW_B: EntityViewResponse = {
-  ...VIEW_A,
-  id: '8c6b1e10-0000-4000-8000-000000000002',
-  name: 'Tenant overdue',
-  visibility: 'Tenant',
-  ownerId: null,
-  isPersonalDefault: false,
-  isDefault: true,
-  sortOrder: 10,
-};
+const VIEW_A = mockPersonalView;
+const VIEW_B = mockTenantView;
 
 function freshHandlers() {
   return [

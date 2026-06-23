@@ -1,7 +1,7 @@
 import { listDeviceTokens } from '@granit/notifications-mobile-push';
+import { mockMobilePushTokens } from '@granit/react-notifications-mobile-push/testing';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
@@ -9,7 +9,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { deviceTokenKeys, useDeviceTokens } from '../hooks/use-device-tokens';
 import { MobilePushProvider } from '../providers/mobile-push-provider';
 
-import type { MobilePushTokenResponse } from '@granit/notifications-mobile-push';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -17,18 +16,7 @@ vi.mock('@granit/notifications-mobile-push', () => ({
   listDeviceTokens: vi.fn(),
 }));
 
-const mockTokens: readonly MobilePushTokenResponse[] = [
-  {
-    deviceToken: 'token-abc-123',
-    platform: 'android',
-    createdAt: toISODateString('2026-03-17T10:00:00Z'),
-  },
-  {
-    deviceToken: 'token-def-456',
-    platform: 'ios',
-    createdAt: toISODateString('2026-03-17T09:00:00Z'),
-  },
-];
+const mockTokens = mockMobilePushTokens;
 
 function createWrapper(client: AxiosInstance, basePath?: string) {
   return function Wrapper({ children }: { children: ReactNode }) {

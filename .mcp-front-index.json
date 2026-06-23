@@ -10669,9 +10669,9 @@
           ]
         },
         {
-          "name": "TimelineStreamEntryResponse",
+          "name": "TimelineEntry",
           "kind": "function",
-          "signature": "function TimelineStreamEntryResponse("
+          "signature": "function TimelineEntry("
         },
         {
           "name": "TimelineEntryProps",

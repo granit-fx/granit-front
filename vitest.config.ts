@@ -140,6 +140,90 @@ export default defineConfig({
         __dirname,
         'packages/@granit/react-workflow/src/testing/index.ts'
       ),
+      '@granit/react-activities/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-activities/src/testing/index.ts'
+      ),
+      '@granit/react-ai-prompts/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-ai-prompts/src/testing/index.ts'
+      ),
+      '@granit/react-analytics/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-analytics/src/testing/index.ts'
+      ),
+      '@granit/react-bank-accounts/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-bank-accounts/src/testing/index.ts'
+      ),
+      '@granit/react-bff/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-bff/src/testing/index.ts'
+      ),
+      '@granit/react-catalog/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-catalog/src/testing/index.ts'
+      ),
+      '@granit/react-cms-hostnames/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-cms-hostnames/src/testing/index.ts'
+      ),
+      '@granit/react-cms-redirects/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-cms-redirects/src/testing/index.ts'
+      ),
+      '@granit/react-cms-seo/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-cms-seo/src/testing/index.ts'
+      ),
+      '@granit/react-cms/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-cms/src/testing/index.ts'
+      ),
+      '@granit/react-cookies/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-cookies/src/testing/index.ts'
+      ),
+      '@granit/react-dashboards/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-dashboards/src/testing/index.ts'
+      ),
+      '@granit/react-payments-sepa-direct-debit/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-payments-sepa-direct-debit/src/testing/index.ts'
+      ),
+      '@granit/react-payments-sepa-transfer/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-payments-sepa-transfer/src/testing/index.ts'
+      ),
+      '@granit/react-reference-data/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-reference-data/src/testing/index.ts'
+      ),
+      '@granit/react-taxonomy/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-taxonomy/src/testing/index.ts'
+      ),
+      '@granit/react-workspaces/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-workspaces/src/testing/index.ts'
+      ),
+      '@granit/react-entities/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-entities/src/testing/index.ts'
+      ),
+      '@granit/react-entities-views/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-entities-views/src/testing/index.ts'
+      ),
+      '@granit/react-entities-customization/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-entities-customization/src/testing/index.ts'
+      ),
+      '@granit/react-notifications-mobile-push/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-notifications-mobile-push/src/testing/index.ts'
+      ),
       '@granit/auditing': path.resolve(__dirname, 'packages/@granit/auditing/src/index.ts'),
       '@granit/account': path.resolve(__dirname, 'packages/@granit/account/src/index.ts'),
       '@granit/ai': path.resolve(__dirname, 'packages/@granit/ai/src/index.ts'),

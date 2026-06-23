@@ -6,6 +6,8 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
+import { mockPersonalView, sampleShareRequest } from '@granit/react-entities-views/testing';
+
 import { defaultEntityViewQueryKey } from '../hooks/use-default-entity-view';
 import { entityViewQueryKey } from '../hooks/use-entity-view';
 import {
@@ -21,25 +23,14 @@ import type { ReactNode } from 'react';
 
 const ENTITY = 'Granit.Parties.Party';
 const ENCODED = encodeURIComponent(ENTITY);
-const VIEW_ID = '8c6b1e10-0000-4000-8000-000000000001';
+const VIEW_ID = mockPersonalView.id;
 const VIEW_PATH = `http://localhost/api/v1/entities/${ENCODED}/views/${encodeURIComponent(VIEW_ID)}`;
 
 const VIEW: EntityViewResponse = {
-  id: VIEW_ID,
-  entityName: ENTITY,
-  basedOn: 'default',
-  kind: 'list',
-  name: 'My open parties',
-  description: null,
-  icon: null,
+  ...mockPersonalView,
   state: {},
-  visibility: 'Personal',
   ownerId: '00000000-0000-0000-0000-000000000010',
-  sharedWith: null,
-  isPinned: false,
-  isDefault: false,
   isPersonalDefault: false,
-  sortOrder: 0,
 };
 
 const lastBodyByEndpoint = new Map<string, unknown>();
@@ -155,10 +146,7 @@ describe('useShareEntityView', () => {
     const { result } = renderHook(() => useShareEntityView(ENTITY), { wrapper });
 
     await act(async () => {
-      await result.current.mutateAsync({
-        id: VIEW_ID,
-        request: { roles: ['admin'], users: [] },
-      });
+      await result.current.mutateAsync({ id: VIEW_ID, request: sampleShareRequest });
     });
 
     expect(lastBodyByEndpoint.get('share')).toEqual({ roles: ['admin'], users: [] });

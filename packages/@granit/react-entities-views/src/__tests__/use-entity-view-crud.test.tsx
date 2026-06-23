@@ -6,6 +6,12 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
+import {
+  mockPersonalView,
+  sampleCreateRequest,
+  sampleUpdateRequest,
+} from '@granit/react-entities-views/testing';
+
 import { defaultEntityViewQueryKey } from '../hooks/use-default-entity-view';
 import { entityViewQueryKey } from '../hooks/use-entity-view';
 import {
@@ -20,24 +26,12 @@ import type { ReactNode } from 'react';
 
 const ENTITY = 'Granit.Parties.Party';
 const ENCODED = encodeURIComponent(ENTITY);
-const VIEW_ID = '8c6b1e10-0000-4000-8000-000000000001';
+const VIEW_ID = mockPersonalView.id;
 
 const VIEW: EntityViewResponse = {
-  id: VIEW_ID,
-  entityName: ENTITY,
-  basedOn: 'default',
-  kind: 'list',
-  name: 'My open parties',
-  description: null,
-  icon: null,
-  state: { filters: [] },
-  visibility: 'Personal',
+  ...mockPersonalView,
   ownerId: '00000000-0000-0000-0000-000000000010',
-  sharedWith: null,
-  isPinned: false,
-  isDefault: false,
   isPersonalDefault: false,
-  sortOrder: 0,
 };
 
 let lastBody: unknown = null;
@@ -96,14 +90,7 @@ describe('useCreateEntityView', () => {
     const { result } = renderHook(() => useCreateEntityView(ENTITY), { wrapper });
     let returned: EntityViewResponse | undefined;
     await act(async () => {
-      returned = await result.current.mutateAsync({
-        basedOn: 'default',
-        kind: 'list',
-        name: 'My open parties',
-        description: null,
-        icon: null,
-        state: { filters: [] },
-      });
+      returned = await result.current.mutateAsync(sampleCreateRequest);
     });
     expect(returned).toEqual(VIEW);
     expect(lastBody).toMatchObject({ name: 'My open parties', kind: 'list' });
@@ -135,15 +122,7 @@ describe('useUpdateEntityView', () => {
     const { wrapper, queryClient } = makeWrapper();
     const { result } = renderHook(() => useUpdateEntityView(ENTITY), { wrapper });
     await act(async () => {
-      await result.current.mutateAsync({
-        id: VIEW_ID,
-        request: {
-          name: 'Renamed',
-          description: null,
-          icon: null,
-          state: { filters: [] },
-        },
-      });
+      await result.current.mutateAsync({ id: VIEW_ID, request: sampleUpdateRequest });
     });
     expect(lastBody).toMatchObject({ name: 'Renamed' });
     expect(queryClient.getQueryData(entityViewQueryKey(ENTITY, VIEW_ID))).toEqual({
