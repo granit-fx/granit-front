@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+
 import {
   collectImports,
   hasBannedConsole,
@@ -15,6 +17,7 @@ import {
   AXIOS_ALLOWLIST,
   CONSOLE_ALLOWLIST,
   FETCH_ALLOWLIST,
+  LOGGER_MULTI_INSTANCE_BASELINE,
   REACT_ECOSYSTEM_CORE_ALLOWLIST,
   REPO_ROOT,
   UI_ROUTER_BASELINE,
@@ -173,5 +176,24 @@ describe('imports — granit-specific rules', () => {
     }
     const newOffenders = [...offenders].filter((n) => !UI_ROUTER_BASELINE.includes(n)).sort();
     expect(newOffenders).toEqual([]);
+  });
+
+  // Logging hygiene (checklist 5d) — one logger instance per package, created once in
+  // src/logger.ts and imported everywhere (see @granit/react-ui-bff). Repeating
+  // createLogger('<pkg>') across files builds duplicate same-prefix instances. Ratchet:
+  // no NEW package may have >1 createLogger() call; LOGGER_MULTI_INSTANCE_BASELINE shrinks.
+  it('packages create at most one logger instance (centralise in src/logger.ts)', () => {
+    const offenders: string[] = [];
+    for (const pkg of packages) {
+      if (pkg.name === '@granit/logger') continue;
+      let count = 0;
+      for (const f of walkSourceFiles(pkg.srcDir, (file) => !isTestFile(file))) {
+        count += (fs.readFileSync(f, 'utf8').match(/\bcreateLogger\s*\(/g) ?? []).length;
+      }
+      if (count > 1 && !LOGGER_MULTI_INSTANCE_BASELINE.includes(pkg.name)) {
+        offenders.push(`${pkg.name} (${count} createLogger calls)`);
+      }
+    }
+    expect(offenders).toEqual([]);
   });
 });

@@ -187,3 +187,21 @@ export const STORYBOOK_PAGE_BUDGET: Readonly<Record<string, number>> = {
   '@granit/react-ui-templating': 3,
   '@granit/react-ui-webhooks': 3,
 };
+
+/**
+ * Logging hygiene (checklist 5d) — packages that currently call `createLogger()` more
+ * than once, building duplicate instances of the same prefix. The convention is ONE
+ * logger per package in `src/logger.ts`, imported everywhere (see `@granit/react-ui-bff`).
+ * Ratchet baseline: no NEW package may have >1 `createLogger()` call; this set must
+ * SHRINK as packages centralise their logger. Regenerate by counting `createLogger(`
+ * per package (excluding `@granit/logger` itself).
+ */
+export const LOGGER_MULTI_INSTANCE_BASELINE: ReadonlyArray<string> = [
+  '@granit/localization',
+  '@granit/react-ai-chat',
+  '@granit/react-localization',
+  '@granit/react-notifications',
+  '@granit/react-presence',
+  '@granit/react-timeline',
+  '@granit/react-validation',
+];
