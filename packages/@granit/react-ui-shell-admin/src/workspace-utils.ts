@@ -1,3 +1,4 @@
+import { resolveLabel } from '@granit/react-localization';
 import {
   buildWorkspaceUrl,
   resolveFeatureRoute,
@@ -5,29 +6,13 @@ import {
   type WorkspaceItemResponse,
 } from '@granit/workspaces';
 
+// Re-export the shared label resolver (canonical home: @granit/react-localization)
+// so workspace-utils stays the single import surface for shell-admin's helpers.
+export { resolveLabel };
+
 // Loose i18next TFunction shape — keeps the helper free of
 // `react-i18next` peer typings.
 type TranslateFn = (key: string) => string;
-
-// Resolves a backend display key (e.g. `AuditingEndpoints:Workspace.Item`)
-// to its translated label. When a `t` function is provided, i18next is
-// consulted first; otherwise (or when the translation misses) we fall
-// back to the last segment of the key, then to the supplied fallback.
-//
-// The showcase `i18n` instance is configured with
-// `nsSeparator: false; keySeparator: false`, so `t(displayKey)` is a
-// literal lookup against the flat bundle populated by
-// `LocalizationProvider`. The last-segment fallback only matters when
-// the backend translation hasn't loaded yet.
-export function resolveLabel(displayKey: string | null, fallback: string, t?: TranslateFn): string {
-  if (!displayKey) return fallback;
-  if (t) {
-    const translated = t(displayKey);
-    if (translated && translated !== displayKey) return translated;
-  }
-  const lastSegment = displayKey.split(/[.:]/).pop();
-  return lastSegment && lastSegment.length > 0 ? lastSegment : fallback;
-}
 
 // Resolves the navigation URL for one workspace item. Entity items route
 // through `/w/{parentWorkspace}/{entityName}` so the manifest renderer

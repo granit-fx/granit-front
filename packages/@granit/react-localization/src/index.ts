@@ -30,3 +30,4 @@ export { I18nextProvider, Trans } from 'react-i18next';
 // Custom useTranslation wrapper that auto-applies standard separators for
 // custom namespaces when the app disables them globally. See use-translation.ts.
 export { useTranslation } from './use-translation';
+export { resolveLabel } from './resolve-label';
