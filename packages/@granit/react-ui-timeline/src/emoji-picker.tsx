@@ -1,7 +1,6 @@
-import { lazy, Suspense, useEffect, type ReactNode } from 'react';
-
 import { useTranslation } from '@granit/react-localization';
 import { useTheme } from 'next-themes';
+import { lazy, Suspense, useEffect, type ReactNode } from 'react';
 
 interface EmojiMartSelection {
   readonly native: string;

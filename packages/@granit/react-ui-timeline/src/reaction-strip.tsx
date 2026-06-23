@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { useTranslation } from '@granit/react-localization';
 import { Popover, PopoverContent, PopoverTrigger } from '@granit/react-ui';
 import {
@@ -9,9 +7,9 @@ import {
   type ReactionMap,
   type TimelineEntryId,
 } from '@granit/timeline';
-import { SmilePlus } from 'lucide-react';
-
 import { cn } from '@granit/utils';
+import { SmilePlus } from 'lucide-react';
+import * as React from 'react';
 
 import { EmojiPicker } from './emoji-picker';
 import { TwemojiImage } from './twemoji-image';

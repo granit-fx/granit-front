@@ -1,6 +1,7 @@
+import { TwemojiImage } from './twemoji-image';
+
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { TwemojiImage } from './twemoji-image';
 
 const meta = {
   title: 'Timeline/TwemojiImage',

@@ -1,15 +1,14 @@
-import type { FormEvent } from 'react';
-import { useCallback, useState } from 'react';
-
 import { useTranslation } from '@granit/react-localization';
 import { Button } from '@granit/react-ui';
 import { TimelineEntryType } from '@granit/timeline';
-import type { PostTimelineEntryRequest, MentionSuggestion } from '@granit/timeline';
-import { Lock, MessageSquare } from 'lucide-react';
-
 import { cn } from '@granit/utils';
+import { Lock, MessageSquare } from 'lucide-react';
+import { useCallback, useState } from 'react';
 
 import { MentionEditor } from './mention-editor';
+
+import type { PostTimelineEntryRequest, MentionSuggestion } from '@granit/timeline';
+import type { FormEvent } from 'react';
 
 export interface TimelineComposerProps {
   onSubmit: (request: PostTimelineEntryRequest) => Promise<void>;

@@ -1,19 +1,18 @@
-import { useCallback, useMemo } from 'react';
-
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { useAnchorEntry, useToggleReaction } from '@granit/react-timeline';
 import { Button, Avatar, AvatarFallback } from '@granit/react-ui';
 import { TimelineEntryOrigin, TimelineEntryType } from '@granit/timeline';
+import { cn } from '@granit/utils';
+import { useCallback, useMemo } from 'react';
+
+import { ReactionStrip } from './reaction-strip';
+
 import type {
   ReactionEmoji,
   ReactionToggleResponse,
   TimelineStreamEntryResponse,
   TimelineEntryId,
 } from '@granit/timeline';
-
-import { cn } from '@granit/utils';
-
-import { ReactionStrip } from './reaction-strip';
 
 export interface TimelineEntryProps {
   entry: TimelineStreamEntryResponse;

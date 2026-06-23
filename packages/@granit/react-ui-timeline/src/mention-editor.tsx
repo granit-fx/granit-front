@@ -1,3 +1,8 @@
+import { cn } from '@granit/utils';
+import Mention from '@tiptap/extension-mention';
+import Placeholder from '@tiptap/extension-placeholder';
+import { EditorContent, ReactRenderer, useEditor, type Editor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
 import {
   forwardRef,
   useEffect,
@@ -6,15 +11,9 @@ import {
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
-
-import type { MentionSuggestion } from '@granit/timeline';
-import Mention from '@tiptap/extension-mention';
-import Placeholder from '@tiptap/extension-placeholder';
-import { EditorContent, ReactRenderer, useEditor, type Editor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
 import tippy, { type Instance, type Props as TippyProps } from 'tippy.js';
 
-import { cn } from '@granit/utils';
+import type { MentionSuggestion } from '@granit/timeline';
 
 import 'tippy.js/dist/tippy.css';
 
@@ -148,7 +147,6 @@ const MentionList = forwardRef<MentionListItemRef, MentionListProps>(function Me
       },
     }),
     // selectItem closes over the latest selectedIndex/items via state.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [items, selectedIndex]
   );
 

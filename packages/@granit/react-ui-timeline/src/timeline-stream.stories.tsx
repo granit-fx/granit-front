@@ -1,16 +1,17 @@
+import { createApiClient } from '@granit/api-client';
 import { TimelineProvider } from '@granit/react-timeline';
 import { createTimelineHandlers } from '@granit/react-timeline/testing';
 import { TimelineEntryType } from '@granit/timeline';
-import type { TimelineStreamEntryResponse } from '@granit/timeline';
 import { toEntityId, toISODateString } from '@granit/types';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fn } from 'storybook/test';
 
-import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { createApiClient } from '@granit/api-client';
 
 import { TimelineStream } from './timeline-stream';
+
+import type { TimelineStreamEntryResponse } from '@granit/timeline';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false }, mutations: { retry: false } },

@@ -134,6 +134,7 @@ export const UI_ROUTER_BASELINE: ReadonlyArray<string> = [
   '@granit/react-ui-tax',
   '@granit/react-ui-taxonomy',
   '@granit/react-ui-templating',
+  '@granit/react-ui-timeline',
   '@granit/react-ui-webhooks',
 ];
 

@@ -1,6 +1,6 @@
+import { cn } from '@granit/utils';
 import { useState, type CSSProperties } from 'react';
 
-import { cn } from '@granit/utils';
 
 // Pinned jsdelivr CDN. Twemoji 14.x is the last "official" Twitter
 // drop; jdecked/twemoji is the community-maintained successor that
@@ -24,7 +24,6 @@ const VS16 = '️';
 //   '👍🏽'            → '1f44d-1f3fd'
 //
 // Exported for test access only.
-// eslint-disable-next-line react-refresh/only-export-components
 export function emojiToTwemojiCodepoints(emoji: string): string {
   const normalized = emoji.includes(ZWJ) ? emoji : emoji.replaceAll(VS16, '');
   const out: string[] = [];

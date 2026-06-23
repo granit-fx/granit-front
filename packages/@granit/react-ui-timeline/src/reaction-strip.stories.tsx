@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { fn } from 'storybook/test';
 import { toReactionEmoji } from '@granit/timeline';
 import { toEntityId } from '@granit/types';
+import { fn } from 'storybook/test';
 
 import { ReactionStrip } from './reaction-strip';
 
 import type { ReactionMap, TimelineEntryId } from '@granit/timeline';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const entryId = toEntityId<'TimelineStreamEntryResponse'>('tl-1') as TimelineEntryId;
 

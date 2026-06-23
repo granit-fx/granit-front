@@ -1,18 +1,16 @@
-import { useCallback, useMemo } from 'react';
-
 import { useTranslation } from '@granit/react-localization';
 import { Button, Spinner } from '@granit/react-ui';
+import { cn } from '@granit/utils';
+import { useCallback, useMemo } from 'react';
+
+import { TimelineStreamEntryResponse } from './timeline-entry.js';
+
+import type { TimelineEntryProps } from './timeline-entry.js';
 import type {
   ReactionToggleResponse,
   TimelineStreamEntryResponse as TimelineEntryType,
   TimelineEntryId,
 } from '@granit/timeline';
-
-import { cn } from '@granit/utils';
-
-import { TimelineStreamEntryResponse } from './timeline-entry.js';
-
-import type { TimelineEntryProps } from './timeline-entry.js';
 
 export interface TimelineStreamProps {
   entries: readonly TimelineEntryType[];

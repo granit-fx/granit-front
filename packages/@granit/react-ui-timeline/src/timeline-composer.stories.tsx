@@ -1,10 +1,11 @@
-import type { MentionSuggestion, PostTimelineEntryRequest } from '@granit/timeline';
 import { TimelineEntryType } from '@granit/timeline';
 import { fn } from 'storybook/test';
 
-import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { TimelineComposer } from './timeline-composer';
+
+import type { MentionSuggestion, PostTimelineEntryRequest } from '@granit/timeline';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const mockSuggestions: MentionSuggestion[] = [
   { id: '11111111-1111-1111-1111-111111111111', displayName: 'Jane Dupont' },

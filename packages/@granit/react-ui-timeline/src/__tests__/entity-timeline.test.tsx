@@ -1,8 +1,9 @@
 import { screen } from '@testing-library/react';
 
+import { EntityTimeline } from '../entity-timeline';
+
 import { renderWithProviders } from './test-utils';
 
-import { EntityTimeline } from '../entity-timeline';
 
 // Mock @granit/react-timeline (hooks + provider)
 const { mockUseTimeline, mockUseTimelineActions, mockUseTimelineFollowers } = vi.hoisted(() => ({

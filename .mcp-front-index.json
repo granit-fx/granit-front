@@ -10287,6 +10287,369 @@
       ]
     },
     {
+      "name": "@granit/react-ui-timeline",
+      "description": "Granit admin UI for the Timeline module — the entity activity feed (stream, entries, composer with @-mentions, emoji reactions). Composes the headless @granit/react-timeline (provider, hooks) with the foundation UI packages. App-agnostic: auth/permission/mention data are injected as props.",
+      "exports": [
+        {
+          "name": "EntityTimeline",
+          "kind": "function",
+          "signature": "function EntityTimeline(props: Readonly<EntityTimelineProps>)"
+        },
+        {
+          "name": "EntityTimelineProps",
+          "kind": "interface",
+          "signature": "interface EntityTimelineProps",
+          "members": [
+            {
+              "name": "entityType",
+              "kind": "property",
+              "signature": "entityType: string"
+            },
+            {
+              "name": "entityId",
+              "kind": "property",
+              "signature": "entityId: string"
+            },
+            {
+              "name": "entryTypes",
+              "kind": "property",
+              "signature": "entryTypes?: TimelineEntryType[]"
+            },
+            {
+              "name": "pageSize",
+              "kind": "property",
+              "signature": "pageSize?: number"
+            },
+            {
+              "name": "canReact",
+              "kind": "property",
+              "signature": "canReact?: boolean"
+            },
+            {
+              "name": "searchMentions",
+              "kind": "method",
+              "signature": "searchMentions?: (query: string) => Promise<MentionSuggestion[]>"
+            },
+            {
+              "name": "currentUserId",
+              "kind": "property",
+              "signature": "currentUserId?: string"
+            },
+            {
+              "name": "className",
+              "kind": "property",
+              "signature": "className?: string"
+            }
+          ]
+        },
+        {
+          "name": "TimelineStream",
+          "kind": "function",
+          "signature": "function TimelineStream("
+        },
+        {
+          "name": "TimelineStreamProps",
+          "kind": "interface",
+          "signature": "interface TimelineStreamProps",
+          "members": [
+            {
+              "name": "entries",
+              "kind": "property",
+              "signature": "entries: readonly TimelineEntryType[]"
+            },
+            {
+              "name": "entityType",
+              "kind": "property",
+              "signature": "entityType?: string"
+            },
+            {
+              "name": "entityId",
+              "kind": "property",
+              "signature": "entityId?: string"
+            },
+            {
+              "name": "canReact",
+              "kind": "property",
+              "signature": "canReact?: boolean"
+            },
+            {
+              "name": "loading",
+              "kind": "property",
+              "signature": "loading?: boolean"
+            },
+            {
+              "name": "loadingMore",
+              "kind": "property",
+              "signature": "loadingMore?: boolean"
+            },
+            {
+              "name": "hasMore",
+              "kind": "property",
+              "signature": "hasMore?: boolean"
+            },
+            {
+              "name": "onLoadMore",
+              "kind": "method",
+              "signature": "onLoadMore?: () => void"
+            },
+            {
+              "name": "onReply",
+              "kind": "method",
+              "signature": "onReply?: (entryId: string) => void"
+            },
+            {
+              "name": "onDelete",
+              "kind": "method",
+              "signature": "onDelete?: (entryId: string) => void"
+            },
+            {
+              "name": "onEdit",
+              "kind": "method",
+              "signature": "onEdit?: ("
+            },
+            {
+              "name": "entryId",
+              "kind": "property",
+              "signature": "entryId: TimelineEntryId,"
+            },
+            {
+              "name": "currentBody",
+              "kind": "property",
+              "signature": "currentBody: string,"
+            },
+            {
+              "name": "entryType",
+              "kind": "property",
+              "signature": "entryType: TimelineEntryType['entryType']"
+            },
+            {
+              "name": "canEdit",
+              "kind": "method",
+              "signature": "canEdit?: (entry: TimelineEntryType) => boolean"
+            },
+            {
+              "name": "onReactionToggled",
+              "kind": "method",
+              "signature": "onReactionToggled?: (entryId: TimelineEntryId, result: ReactionToggleResponse) => void"
+            },
+            {
+              "name": "renderEntry",
+              "kind": "method",
+              "signature": "renderEntry?: (props: TimelineEntryProps) => React.ReactNode"
+            },
+            {
+              "name": "renderBody",
+              "kind": "method",
+              "signature": "renderBody?: (body: string) => React.ReactNode"
+            },
+            {
+              "name": "className",
+              "kind": "property",
+              "signature": "className?: string"
+            },
+            {
+              "name": "emptyMessage",
+              "kind": "property",
+              "signature": "emptyMessage?: string"
+            }
+          ]
+        },
+        {
+          "name": "TimelineStreamEntryResponse",
+          "kind": "function",
+          "signature": "function TimelineStreamEntryResponse("
+        },
+        {
+          "name": "TimelineEntryProps",
+          "kind": "interface",
+          "signature": "interface TimelineEntryProps",
+          "members": [
+            {
+              "name": "entry",
+              "kind": "property",
+              "signature": "entry: TimelineStreamEntryResponse"
+            },
+            {
+              "name": "entityType",
+              "kind": "property",
+              "signature": "entityType?: string"
+            },
+            {
+              "name": "entityId",
+              "kind": "property",
+              "signature": "entityId?: string"
+            },
+            {
+              "name": "canReact",
+              "kind": "property",
+              "signature": "canReact?: boolean"
+            },
+            {
+              "name": "depth",
+              "kind": "property",
+              "signature": "depth?: number"
+            },
+            {
+              "name": "onReply",
+              "kind": "method",
+              "signature": "onReply?: (entryId: string) => void"
+            },
+            {
+              "name": "onDelete",
+              "kind": "method",
+              "signature": "onDelete?: (entryId: string) => void"
+            },
+            {
+              "name": "onEdit",
+              "kind": "method",
+              "signature": "onEdit?: ("
+            },
+            {
+              "name": "entryId",
+              "kind": "property",
+              "signature": "entryId: TimelineEntryId,"
+            },
+            {
+              "name": "currentBody",
+              "kind": "property",
+              "signature": "currentBody: string,"
+            },
+            {
+              "name": "entryType",
+              "kind": "property",
+              "signature": "entryType: TimelineStreamEntryResponse['entryType']"
+            },
+            {
+              "name": "onReactionToggled",
+              "kind": "method",
+              "signature": "onReactionToggled?: (entryId: TimelineEntryId, result: ReactionToggleResponse) => void"
+            },
+            {
+              "name": "renderBody",
+              "kind": "method",
+              "signature": "renderBody?: (body: string) => React.ReactNode"
+            },
+            {
+              "name": "className",
+              "kind": "property",
+              "signature": "className?: string"
+            }
+          ]
+        },
+        {
+          "name": "TimelineComposer",
+          "kind": "function",
+          "signature": "function TimelineComposer("
+        },
+        {
+          "name": "TimelineComposerProps",
+          "kind": "interface",
+          "signature": "interface TimelineComposerProps",
+          "members": [
+            {
+              "name": "onSubmit",
+              "kind": "method",
+              "signature": "onSubmit: (request: PostTimelineEntryRequest) => Promise<void>"
+            },
+            {
+              "name": "parentEntryId",
+              "kind": "property",
+              "signature": "parentEntryId?: string"
+            },
+            {
+              "name": "entryTypes",
+              "kind": "property",
+              "signature": "entryTypes?: TimelineEntryType[]"
+            },
+            {
+              "name": "searchMentions",
+              "kind": "method",
+              "signature": "searchMentions?: (query: string) => Promise<MentionSuggestion[]>"
+            },
+            {
+              "name": "placeholder",
+              "kind": "property",
+              "signature": "placeholder?: string"
+            },
+            {
+              "name": "submitLabel",
+              "kind": "property",
+              "signature": "submitLabel?: string"
+            },
+            {
+              "name": "initialBody",
+              "kind": "property",
+              "signature": "initialBody?: string"
+            },
+            {
+              "name": "initialEntryType",
+              "kind": "property",
+              "signature": "initialEntryType?: TimelineEntryType"
+            },
+            {
+              "name": "hideEntryTypeSelector",
+              "kind": "property",
+              "signature": "hideEntryTypeSelector?: boolean"
+            },
+            {
+              "name": "className",
+              "kind": "property",
+              "signature": "className?: string"
+            }
+          ]
+        },
+        {
+          "name": "ReactionStrip",
+          "kind": "function",
+          "signature": "function ReactionStrip("
+        },
+        {
+          "name": "ReactionStripProps",
+          "kind": "interface",
+          "signature": "interface ReactionStripProps",
+          "members": []
+        },
+        {
+          "name": "MentionEditor",
+          "kind": "function",
+          "signature": "function MentionEditor("
+        },
+        {
+          "name": "MentionEditorProps",
+          "kind": "interface",
+          "signature": "interface MentionEditorProps",
+          "members": []
+        },
+        {
+          "name": "EmojiPicker",
+          "kind": "function",
+          "signature": "function EmojiPicker("
+        },
+        {
+          "name": "EmojiPickerProps",
+          "kind": "interface",
+          "signature": "interface EmojiPickerProps",
+          "members": []
+        },
+        {
+          "name": "TwemojiImage",
+          "kind": "function",
+          "signature": "function TwemojiImage("
+        },
+        {
+          "name": "emojiToTwemojiCodepoints",
+          "kind": "function",
+          "signature": "function emojiToTwemojiCodepoints(emoji: string): string"
+        },
+        {
+          "name": "TwemojiImageProps",
+          "kind": "interface",
+          "signature": "interface TwemojiImageProps",
+          "members": []
+        }
+      ]
+    },
+    {
       "name": "@granit/react-ui-webhooks",
       "description": "Granit admin UI for the Webhooks module — the subscriptions list, the create wizard (with the one-time signing-secret reveal) and the per-subscription detail view (lifecycle actions, delivery history, signing-key rotation, test ping and live stats dashboard). Composes @granit/react-webhooks (headless) with the foundation UI packages.",
       "exports": [

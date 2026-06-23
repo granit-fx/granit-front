@@ -1,9 +1,10 @@
-import type { MentionSuggestion } from '@granit/timeline';
 import { fn } from 'storybook/test';
 
+import { MentionEditor } from './mention-editor';
+
+import type { MentionSuggestion } from '@granit/timeline';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { MentionEditor } from './mention-editor';
 
 const mockSuggestions: MentionSuggestion[] = [
   { id: '11111111-1111-1111-1111-111111111111', displayName: 'Jane Dupont' },
