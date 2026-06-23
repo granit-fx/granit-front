@@ -1,0 +1,38 @@
+{
+  "name": "@granit/react-authentication-mock",
+  "description": "Mock auth provider for development and tests — satisfies the auth context with a configurable fake user and no real IdP (optionally wrapped in BffProvider so MSW-backed BFF endpoints still resolve).",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/authentication": "workspace:*",
+    "@granit/authentication-keycloak": "workspace:*",
+    "@granit/bff": "workspace:*",
+    "@granit/react-bff": "workspace:*",
+    "react": "^19.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/authentication": "workspace:*",
+    "@granit/authentication-keycloak": "workspace:*",
+    "@granit/bff": "workspace:*",
+    "@granit/react-bff": "workspace:*"
+  }
+}
