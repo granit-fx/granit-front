@@ -1,0 +1,80 @@
+{
+  "name": "@granit/react-ui-parties",
+  "description": "Granit admin UI for the Parties module — party list (role / status filters), create (with deterministic-duplicate conflict resolution), and a tabbed detail view (identity, addresses, emails, phones, external mappings, roles, metadata, tax status) plus lifecycle actions, vCard download, duplicate merge wizard, taxonomy tags/categories and the duplicates inbox. Composes @granit/react-parties (headless) with the foundation UI packages.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
+    "@granit/parties": "workspace:*",
+    "@granit/react-authorization": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-parties": "workspace:*",
+    "@granit/react-taxonomy": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-ui-admin-kit": "workspace:*",
+    "@granit/react-ui-taxonomy": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@hookform/resolvers": "^5.4.0",
+    "@tanstack/react-table": "^8.21.3",
+    "libphonenumber-js": "^1.13.7",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.80.0",
+    "react-router-dom": "^7.18.0",
+    "sonner": "^2.0.7",
+    "zod": "^4.4.3"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
+    "@granit/parties": "workspace:*",
+    "@granit/react-authorization": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-parties": "workspace:*",
+    "@granit/react-taxonomy": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-ui-admin-kit": "workspace:*",
+    "@granit/react-ui-taxonomy": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@hookform/resolvers": "^5.4.0",
+    "@storybook/react-vite": "^10.4.6",
+    "@tanstack/react-query": "^5.0.0",
+    "@tanstack/react-table": "^8.21.3",
+    "i18next": "^26.0.0",
+    "libphonenumber-js": "^1.13.7",
+    "lucide-react": "^1.21.0",
+    "msw": "^2.12.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.80.0",
+    "react-i18next": "^17.0.0",
+    "react-router-dom": "^7.18.0",
+    "sonner": "^2.0.7",
+    "storybook": "^10.4.6",
+    "zod": "^4.4.3"
+  }
+}
