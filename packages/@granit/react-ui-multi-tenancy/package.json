@@ -1,0 +1,74 @@
+{
+  "name": "@granit/react-ui-multi-tenancy",
+  "description": "Granit admin UI for the Multi-Tenancy module — the query-driven tenant list (smart filters, sortable columns, export, per-row activate/deactivate), the tenant create form, and the tenant edit view with a host-injected activity aside. Composes @granit/react-multi-tenancy (headless) with the foundation UI packages.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/multi-tenancy": "workspace:*",
+    "@granit/query-engine": "workspace:*",
+    "@granit/react-authorization": "workspace:*",
+    "@granit/react-data-exchange": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-multi-tenancy": "workspace:*",
+    "@granit/react-query-engine": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-ui-admin-kit": "workspace:*",
+    "@granit/react-ui-data-exchange": "workspace:*",
+    "@hookform/resolvers": "^5.4.0",
+    "@tanstack/react-query": "^5.0.0",
+    "@tanstack/react-table": "^8.21.3",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.80.0",
+    "react-router-dom": "^7.18.0",
+    "sonner": "^2.0.7",
+    "zod": "^4.4.3"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/multi-tenancy": "workspace:*",
+    "@granit/query-engine": "workspace:*",
+    "@granit/react-authorization": "workspace:*",
+    "@granit/react-data-exchange": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-multi-tenancy": "workspace:*",
+    "@granit/react-query-engine": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-ui-admin-kit": "workspace:*",
+    "@granit/react-ui-data-exchange": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@hookform/resolvers": "^5.4.0",
+    "@storybook/react-vite": "^10.4.6",
+    "@tanstack/react-query": "^5.0.0",
+    "@tanstack/react-table": "^8.21.3",
+    "i18next": "^26.0.0",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.80.0",
+    "react-i18next": "^17.0.0",
+    "react-router-dom": "^7.18.0",
+    "sonner": "^2.0.7",
+    "storybook": "^10.4.6",
+    "zod": "^4.4.3"
+  }
+}
