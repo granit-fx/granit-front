@@ -13,20 +13,24 @@ import '@testing-library/jest-dom';
 // ---------------------------------------------------------------------------
 
 if (typeof globalThis.window !== 'undefined') {
-  if (!('matchMedia' in globalThis.window)) {
-    Object.defineProperty(globalThis.window, 'matchMedia', {
-      writable: true,
-      value: (query: string) => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: () => {},
-        removeListener: () => {},
-        addEventListener: () => {},
-        removeEventListener: () => {},
-        dispatchEvent: () => false,
-      }),
-    });
+  // Runtime code reads `globalThis.matchMedia` (the idiomatic pattern across the
+  // framework), while some libraries (e.g. sonner) read `window.matchMedia`.
+  // Under vitest's jsdom env these two targets are not always the same object,
+  // so stub both to keep the polyfill effective wherever it is consumed.
+  const matchMediaStub = (query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  });
+  for (const target of [globalThis, globalThis.window]) {
+    if (target !== undefined && !('matchMedia' in target)) {
+      Object.defineProperty(target, 'matchMedia', { writable: true, value: matchMediaStub });
+    }
   }
 
   class ResizeObserverStub {
