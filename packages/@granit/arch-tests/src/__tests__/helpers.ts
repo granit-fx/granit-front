@@ -103,6 +103,7 @@ export const UI_ROUTER_BASELINE: ReadonlyArray<string> = [
   '@granit/react-ui-ai-chat',
   '@granit/react-ui-auditing',
   '@granit/react-ui-authentication-api-keys',
+  '@granit/react-ui-authentication-federated',
   '@granit/react-ui-authentication-local',
   '@granit/react-ui-catalog',
   '@granit/react-ui-cms-hostnames',
@@ -134,3 +135,55 @@ export const UI_ROUTER_BASELINE: ReadonlyArray<string> = [
   '@granit/react-ui-templating',
   '@granit/react-ui-webhooks',
 ];
+
+/**
+ * Storybook coverage ratchet (checklist 7f) — per `react-ui-*` package, the number
+ * of `*-page.tsx` / `*-dialog.tsx` components that currently LACK a co-located
+ * same-name `*.stories.tsx`. The test asserts each package stays at or below its
+ * budget, so no NEW page/dialog may ship without a story; lower a number whenever a
+ * story is added (the budget must only ever SHRINK). A package absent from this map
+ * must have ZERO storyless pages/dialogs (default budget 0). Regenerate the counts
+ * from the same scan as checklist 7f (`*-page.tsx`/`*-dialog.tsx` without a sibling
+ * `.stories.tsx`, per package).
+ */
+export const STORYBOOK_PAGE_BUDGET: Readonly<Record<string, number>> = {
+  '@granit/react-ui-account': 8,
+  '@granit/react-ui-admin-kit': 1,
+  '@granit/react-ui-ai': 4,
+  '@granit/react-ui-ai-chat': 2,
+  '@granit/react-ui-ai-prompts': 1,
+  '@granit/react-ui-auditing': 2,
+  '@granit/react-ui-authentication-federated': 1,
+  '@granit/react-ui-authentication-local': 7,
+  '@granit/react-ui-authorization': 4,
+  '@granit/react-ui-background-jobs': 1,
+  '@granit/react-ui-blob-storage': 1,
+  '@granit/react-ui-catalog': 3,
+  '@granit/react-ui-cms-hostnames': 1,
+  '@granit/react-ui-cms-pages': 1,
+  '@granit/react-ui-cms-redirects': 1,
+  '@granit/react-ui-cms-releases': 2,
+  '@granit/react-ui-customer-balance': 1,
+  '@granit/react-ui-dashboards': 3,
+  '@granit/react-ui-data-exchange': 2,
+  '@granit/react-ui-diagnostics': 1,
+  '@granit/react-ui-documents': 8,
+  '@granit/react-ui-features': 2,
+  '@granit/react-ui-hostnames': 1,
+  '@granit/react-ui-identity': 7,
+  '@granit/react-ui-invoicing': 2,
+  '@granit/react-ui-localization': 2,
+  '@granit/react-ui-metering': 3,
+  '@granit/react-ui-multi-tenancy': 3,
+  '@granit/react-ui-notifications': 2,
+  '@granit/react-ui-parties': 13,
+  '@granit/react-ui-payments': 4,
+  '@granit/react-ui-privacy': 9,
+  '@granit/react-ui-scheduling': 2,
+  '@granit/react-ui-settings': 1,
+  '@granit/react-ui-shell-admin': 1,
+  '@granit/react-ui-subscriptions': 4,
+  '@granit/react-ui-tax': 2,
+  '@granit/react-ui-templating': 3,
+  '@granit/react-ui-webhooks': 3,
+};
