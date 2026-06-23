@@ -1,0 +1,63 @@
+{
+  "name": "@granit/react-ui-blob-storage",
+  "description": "Granit admin UI for the Blob Storage module — the blobs list (query-driven grid with status pills, size formatting and per-row download/delete actions) plus the orphan-cleanup and crypto-shred delete dialogs. Composes @granit/react-blob-storage (headless) with the foundation UI packages.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/blob-storage": "workspace:*",
+    "@granit/logger": "workspace:*",
+    "@granit/query-engine": "workspace:*",
+    "@granit/react-authorization": "workspace:*",
+    "@granit/react-blob-storage": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-query-engine": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-ui-admin-kit": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@tanstack/react-table": "^8.21.3",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sonner": "^2.0.7"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/blob-storage": "workspace:*",
+    "@granit/logger": "workspace:*",
+    "@granit/query-engine": "workspace:*",
+    "@granit/react-authorization": "workspace:*",
+    "@granit/react-blob-storage": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-query-engine": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-ui-admin-kit": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@storybook/react-vite": "^10.4.6",
+    "@tanstack/react-query": "^5.0.0",
+    "@tanstack/react-table": "^8.21.3",
+    "i18next": "^26.0.0",
+    "msw": "^2.12.0",
+    "react-i18next": "^17.0.0",
+    "storybook": "^10.4.6"
+  }
+}
