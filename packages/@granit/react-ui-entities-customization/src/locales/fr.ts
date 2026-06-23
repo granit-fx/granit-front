@@ -1,0 +1,56 @@
+/**
+ * French admin strings for the entity-customization UI. Mirrors
+ * {@link entitiesCustomizationAdminTranslationsEn}.
+ */
+export const entitiesCustomizationAdminTranslationsFr = {
+  'customization:Form.SaveSuccess': 'Disposition du formulaire enregistrée',
+  'customization:Form.Title': 'Disposition du formulaire',
+  'customization:Inspector.Description':
+    'Chaîne de résolution du champ sélectionné, par niveaux manifeste → locataire → utilisateur.',
+  'customization:Inspector.Layer1.Hidden': 'Masqué',
+  'customization:Inspector.Layer1.NoOverride': 'Aucune surcharge administrateur',
+  'customization:Page.AccessDenied.Body':
+    "Vous devez disposer de l'autorisation EntitiesCustomization.Forms.Manage ou Entities.Views.Manage pour utiliser cette page.",
+  'customization:Page.AccessDenied.Title': 'Accès refusé',
+  'customization:Page.Subtitle':
+    'Réorganiser, regrouper et masquer les champs par entité (surcharges administrateur de niveau 1).',
+  'customization:Page.Title': 'Personnalisation de la mise en page',
+  'customization:Picker.Empty': "Sélectionnez une entité pour commencer l'édition.",
+  'customization:Picker.Entity': 'Entité',
+  'customization:Picker.LayoutKind': 'Disposition',
+  'customization:Picker.SelectEntity': 'Sélectionner une entité',
+  'customization:Tabs.Forms': 'Formulaires',
+  'customization:Tabs.Workspaces': 'Espaces de travail',
+  'customization:TopTab.Layouts': 'Dispositions',
+  'customization:TopTab.Views': 'Vues',
+  'customization:Workspace.NoItems': 'Cet espace de travail ne contient aucun élément modifiable.',
+  'customization:Workspace.PickToStart':
+    "Sélectionnez un espace de travail pour commencer l'édition.",
+  'customization:Workspace.PickerPlaceholder': 'Sélectionner un espace de travail',
+  'customization:Workspace.SaveSuccess': "Disposition de l'espace de travail enregistrée",
+  'customization:Workspace.Title': "Disposition de l'espace de travail",
+  'views:Action.Delete': 'Supprimer',
+  'views:Action.Edit': 'Modifier',
+  'views:Action.NewView': 'Nouvelle vue',
+  'views:Action.Pin': 'Épingler',
+  'views:Action.SetDefault': 'Définir comme valeur par défaut du locataire',
+  'views:Action.SetPersonalDefault': 'Définir comme valeur par défaut personnelle',
+  'views:Action.Unpin': 'Détacher',
+  'views:Action.UnsetDefault': 'Retirer la valeur par défaut du locataire',
+  'views:Action.UnsetPersonalDefault': 'Retirer la valeur par défaut personnelle',
+  'views:Create.Success': 'Vue créée',
+  'views:Create.Title': 'Nouvelle vue',
+  'views:Delete.ConfirmBody': 'Cette action est irréversible.',
+  'views:Delete.ConfirmTitle': 'Supprimer cette vue ?',
+  'views:Delete.Success': 'Vue supprimée',
+  'views:Edit.Success': 'Vue mise à jour',
+  'views:Edit.Title': 'Modifier la vue',
+  'views:Field.Description': 'Description',
+  'views:Field.DescriptionPlaceholder': 'Description facultative',
+  'views:Field.Kind': 'Type',
+  'views:Field.Name': 'Nom',
+  'views:Field.NamePlaceholder': 'Ma vue',
+  'views:Page.Empty': 'Aucune vue pour cette entité.',
+  'views:Page.PickEntity': 'Sélectionnez une entité pour afficher ses vues.',
+  'views:Page.Title': 'Vues enregistrées',
+} as const;

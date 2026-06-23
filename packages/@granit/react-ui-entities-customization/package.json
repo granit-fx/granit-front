@@ -1,0 +1,65 @@
+{
+  "name": "@granit/react-ui-entities-customization",
+  "description": "Granit admin UI for entity layout customization (Layer 1 admin overrides) — the entity / workspace form-layout editor with a field-resolution inspector, plus the saved-views manager (create / edit / pin / set defaults / delete). Composes @granit/react-entities-customization, @granit/react-entities-views and @granit/react-workspaces (headless) with the foundation UI packages.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/entities-customization": "workspace:*",
+    "@granit/entities-views": "workspace:*",
+    "@granit/react-authorization": "workspace:*",
+    "@granit/react-entities": "workspace:*",
+    "@granit/react-entities-customization": "workspace:*",
+    "@granit/react-entities-views": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-workspaces": "workspace:*",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sonner": "^2.0.7"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/entities-customization": "workspace:*",
+    "@granit/entities-views": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-authorization": "workspace:*",
+    "@granit/react-entities": "workspace:*",
+    "@granit/react-entities-customization": "workspace:*",
+    "@granit/react-entities-views": "workspace:*",
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-workspaces": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@storybook/react-vite": "^10.4.6",
+    "@tanstack/react-query": "^5.0.0",
+    "i18next": "^26.0.0",
+    "lucide-react": "^1.21.0",
+    "msw": "^2.12.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-i18next": "^17.0.0",
+    "react-router-dom": "^7.18.0",
+    "sonner": "^2.0.7",
+    "storybook": "^10.4.6"
+  }
+}
