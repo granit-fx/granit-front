@@ -24,11 +24,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  toast,
 } from '@granit/react-ui';
 import { ArrowLeft, Plus, X } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { UserSearchCombobox } from '../components/user-search-combobox';
 

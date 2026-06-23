@@ -1,13 +1,12 @@
 import { cmsConstraints } from '@granit/cms';
 import { useSite, useCreateSite, useUpdateSite } from '@granit/react-cms';
 import { useTranslation } from '@granit/react-localization';
-import { Badge, Button, Input, Label, Separator, Switch } from '@granit/react-ui';
+import { toast, Badge, Button, Input, Label, Separator, Switch } from '@granit/react-ui';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { ArrowLeft } from 'lucide-react';
 import { useEffect } from 'react';
 import { Controller, useForm, type Resolver } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 interface SiteFormValues {
   slug: string;

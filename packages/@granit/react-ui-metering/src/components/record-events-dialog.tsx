@@ -15,13 +15,13 @@ import {
   FormItem,
   FormMessage,
   Input,
+  toast,
 } from '@granit/react-ui';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { toEntityId, toISODateString } from '@granit/types';
 import { Plus, Trash2 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 
 import type { MeterDefinitionResponse } from '@granit/metering';
 import type { Resolver } from 'react-hook-form';

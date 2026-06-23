@@ -18,10 +18,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  toast,
 } from '@granit/react-ui';
 import { ArrowLeft, Plus, Pencil, Trash2 } from 'lucide-react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 export function PageTreePage() {
   const { t } = useTranslation();

@@ -22,10 +22,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  toast,
 } from '@granit/react-ui';
 import { ArrowLeft, RefreshCw, Star, Trash2 } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { CmsHostnameAddForm } from './components/cms-hostname-add-form';
 import { CmsHostnameStatusBadge } from './components/cms-hostname-status-badge';

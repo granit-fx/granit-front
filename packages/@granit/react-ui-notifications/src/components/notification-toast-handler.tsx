@@ -1,7 +1,7 @@
 import { useTranslation } from '@granit/react-localization';
 import { useRealTimeNotifications } from '@granit/react-notifications';
+import { toast } from '@granit/react-ui';
 import { useEffect, useMemo, useRef } from 'react';
-import { toast } from 'sonner';
 
 import { resolveNotificationPresentation } from '../rendering';
 

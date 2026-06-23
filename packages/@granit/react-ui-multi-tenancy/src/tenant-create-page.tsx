@@ -1,9 +1,8 @@
 import { useTranslation } from '@granit/react-localization';
 import { TenantAdminProvider, useCreateTenant } from '@granit/react-multi-tenancy';
-import { Button, Separator } from '@granit/react-ui';
+import { toast, Button, Separator } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { TenantForm } from './components/tenant-form';
 

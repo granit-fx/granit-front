@@ -10,11 +10,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  toast,
 } from '@granit/react-ui';
 import { ArrowLeft, Eye, Plus, Send } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { ReleaseFormDialog } from './components/release-form-dialog';
 

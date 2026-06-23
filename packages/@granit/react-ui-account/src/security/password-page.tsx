@@ -1,9 +1,17 @@
 import { useChangePassword } from '@granit/react-account';
 import { useTranslation } from '@granit/react-localization';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@granit/react-ui';
+import {
+  toast,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+} from '@granit/react-ui';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 

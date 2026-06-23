@@ -11,13 +11,13 @@ import {
   SelectTrigger,
   SelectValue,
   Separator,
+  toast,
 } from '@granit/react-ui';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { Controller, useForm, type Resolver } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { buildPageEditorUrl } from './renderer';
 

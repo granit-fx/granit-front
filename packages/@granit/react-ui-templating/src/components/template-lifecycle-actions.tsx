@@ -10,10 +10,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   Button,
+  toast,
 } from '@granit/react-ui';
 import { Trash2, Upload, Undo2 } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 

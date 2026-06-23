@@ -21,11 +21,11 @@ import {
   Label,
   Separator,
   Spinner,
+  toast,
 } from '@granit/react-ui';
 import { CheckCircle, Copy, Mail, Shield, XCircle } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 

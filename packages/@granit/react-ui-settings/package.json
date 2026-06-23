@@ -19,8 +19,7 @@
     "@granit/react-ui": "workspace:*",
     "@granit/settings": "workspace:*",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "sonner": "^2.0.7"
+    "react-dom": "^19.0.0"
   },
   "publishConfig": {
     "exports": {

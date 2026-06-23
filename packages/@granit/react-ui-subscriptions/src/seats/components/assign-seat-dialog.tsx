@@ -9,10 +9,10 @@ import {
   DialogTitle,
   Input,
   Label,
+  toast,
 } from '@granit/react-ui';
 import { toEntityId } from '@granit/types';
 import { useState, type FormEvent } from 'react';
-import { toast } from 'sonner';
 
 import type { SubscriptionId } from '@granit/subscriptions';
 import type { UserId } from '@granit/types';

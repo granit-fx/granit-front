@@ -17,12 +17,12 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
+  toast,
 } from '@granit/react-ui';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { Loader2 } from 'lucide-react';
 import { useForm, type Resolver } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { PRODUCT_TYPES } from './constants';
 import { capitalize } from './lib/capitalize';

@@ -1,9 +1,8 @@
 import { useUpdateProductMetadata } from '@granit/react-catalog';
 import { useTranslation } from '@granit/react-localization';
-import { Button, Input } from '@granit/react-ui';
+import { toast, Button, Input } from '@granit/react-ui';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import type { ProductResponse } from '@granit/catalog';
 

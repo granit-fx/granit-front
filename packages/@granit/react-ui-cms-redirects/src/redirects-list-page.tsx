@@ -19,11 +19,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  toast,
 } from '@granit/react-ui';
 import { ArrowLeft, Pencil, Plus, Trash2, ToggleLeft, ToggleRight } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { RedirectFormDialog } from './components/redirect-form-dialog';
 

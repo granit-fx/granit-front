@@ -50,4 +50,11 @@ const Toaster = ({ theme = 'system', ...props }: Readonly<ToasterProps>) => {
   );
 };
 
+// Re-export the imperative `toast` API so domain UI packages trigger toasts
+// through the foundation barrel instead of depending on `sonner` directly
+// (keeps the shadcn stack confined to the UI tier — see eslint no-restricted-imports).
+export { toast } from 'sonner';
+
+export type { ExternalToast } from 'sonner';
+
 export { Toaster };

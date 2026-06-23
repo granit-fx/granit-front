@@ -1,9 +1,8 @@
 import { useTranslation } from '@granit/react-localization';
 import { useRemovePartyEmailMutation } from '@granit/react-parties';
-import { Badge, Button } from '@granit/react-ui';
+import { toast, Badge, Button } from '@granit/react-ui';
 import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 

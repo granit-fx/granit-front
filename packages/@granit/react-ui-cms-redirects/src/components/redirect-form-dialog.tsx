@@ -16,11 +16,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  toast,
 } from '@granit/react-ui';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { useEffect, useMemo } from 'react';
 import { Controller, useForm, type Resolver } from 'react-hook-form';
-import { toast } from 'sonner';
 
 import type {
   RedirectMatchType,

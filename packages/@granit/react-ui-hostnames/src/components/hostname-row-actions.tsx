@@ -16,9 +16,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
   Button,
+  toast,
 } from '@granit/react-ui';
 import { Loader2, RefreshCw, Star, Trash2 } from 'lucide-react';
-import { toast } from 'sonner';
 
 import type { ManagedHostnameResponse } from '@granit/hostnames';
 

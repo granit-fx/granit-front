@@ -3557,9 +3557,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -3699,9 +3696,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -3783,9 +3777,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -3886,9 +3877,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -4090,9 +4078,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/account':
         specifier: workspace:*
@@ -4304,9 +4289,6 @@ importers:
       react-dom:
         specifier: 19.2.7
         version: 19.2.7(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -4383,9 +4365,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -4462,9 +4441,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -4520,9 +4496,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -4575,9 +4548,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -4639,9 +4609,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -4694,9 +4661,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -4786,9 +4750,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -4810,9 +4771,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -4865,9 +4823,6 @@ importers:
       react-hook-form:
         specifier: ^7.80.0
         version: 7.80.0(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -4923,9 +4878,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/analytics':
         specifier: workspace:*
@@ -5178,9 +5130,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -5232,9 +5181,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -5281,9 +5227,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -5330,9 +5273,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -5460,9 +5400,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -5481,9 +5418,6 @@ importers:
       react-dom:
         specifier: 19.2.7
         version: 19.2.7(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -5560,9 +5494,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -5681,9 +5612,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -5705,9 +5633,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -5808,9 +5733,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -5898,9 +5820,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -5925,9 +5844,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -6086,9 +6002,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -6097,10 +6010,6 @@ importers:
         version: 4.4.3
 
   packages/@granit/react-ui-reference-data:
-    dependencies:
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -6267,9 +6176,6 @@ importers:
       react-dom:
         specifier: 19.2.7
         version: 19.2.7(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -6368,9 +6274,6 @@ importers:
       react-dom:
         specifier: 19.2.7
         version: 19.2.7(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -6658,9 +6561,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -6739,9 +6639,6 @@ importers:
       react-router-dom:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      sonner:
-        specifier: ^2.0.7
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)

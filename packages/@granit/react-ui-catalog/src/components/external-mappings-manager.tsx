@@ -13,11 +13,11 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  toast,
 } from '@granit/react-ui';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
 import { useForm, type Resolver } from 'react-hook-form';
-import { toast } from 'sonner';
 
 import { capitalize } from '../lib/capitalize';
 

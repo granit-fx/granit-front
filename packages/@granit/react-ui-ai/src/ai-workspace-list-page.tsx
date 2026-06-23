@@ -2,12 +2,11 @@ import { AI_WORKSPACE_KINDS, AIPermissions } from '@granit/ai';
 import { useAIWorkspaces, useDeleteAIWorkspace } from '@granit/react-ai';
 import { usePermissions } from '@granit/react-authorization';
 import { useTranslation } from '@granit/react-localization';
-import { Badge, Button, Card, CardContent, Spinner } from '@granit/react-ui';
+import { toast, Badge, Button, Card, CardContent, Spinner } from '@granit/react-ui';
 import { ViewSwitcher } from '@granit/react-ui-admin-kit';
 import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { createWorkspaceColumns } from './components/workspace-columns';
 import { WorkspaceDeleteDialog } from './components/workspace-delete-dialog';

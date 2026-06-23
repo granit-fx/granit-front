@@ -96,6 +96,10 @@ export default tseslint.config(
               name: 'axios',
               message: "Import Axios types from '@granit/api-client' instead. The api-client package owns the HTTP client façade (createApiClient, AxiosInstance re-export, interceptors).",
             },
+            {
+              name: 'sonner',
+              message: "Import `toast` / `Toaster` from '@granit/react-ui' instead. The react-ui foundation owns the sonner wrapper (themed Toaster, semantic icons); domain UI packages must not depend on sonner directly.",
+            },
           ],
         },
       ],
@@ -127,6 +131,18 @@ export default tseslint.config(
       '**/*.test.{ts,tsx}',
     ],
     rules: { 'no-restricted-imports': 'off', 'no-restricted-globals': 'off' },
+  },
+
+  // react-ui owns the sonner wrapper (themed Toaster + re-exported toast), so it
+  // is the only package allowed to import sonner directly. Keep the fetch ban.
+  {
+    files: ['packages/@granit/react-ui/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { paths: [{ name: 'axios', message: "Import Axios types from '@granit/api-client' instead." }] },
+      ],
+    },
   },
 
   // Test files — relax some rules

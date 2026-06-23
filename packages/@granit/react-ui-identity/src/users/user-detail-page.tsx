@@ -18,13 +18,13 @@ import {
   Label,
   Separator,
   Spinner,
+  toast,
 } from '@granit/react-ui';
 import { DetailAsideLayout, DetailAsideMobileTrigger } from '@granit/react-ui-admin-kit';
 import { toEntityId } from '@granit/types';
 import { AlertTriangle, ArrowLeft, AlertCircle, Pencil, Trash2 } from 'lucide-react';
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 

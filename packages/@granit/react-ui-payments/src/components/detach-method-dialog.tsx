@@ -9,8 +9,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  toast,
 } from '@granit/react-ui';
-import { toast } from 'sonner';
 
 import type { PaymentMethodResponse } from '@granit/payments';
 

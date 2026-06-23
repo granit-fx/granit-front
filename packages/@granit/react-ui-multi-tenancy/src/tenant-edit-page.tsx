@@ -7,13 +7,12 @@ import {
   useTenantDetail,
   useUpdateTenant,
 } from '@granit/react-multi-tenancy';
-import { Badge, Button, Separator } from '@granit/react-ui';
+import { toast, Badge, Button, Separator } from '@granit/react-ui';
 import { DetailAsideLayout, DetailAsideMobileTrigger } from '@granit/react-ui-admin-kit';
 import { useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, Loader2, Network } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { TenantForm } from './components/tenant-form';
 import { TenantStatusDialog } from './components/tenant-status-dialog';

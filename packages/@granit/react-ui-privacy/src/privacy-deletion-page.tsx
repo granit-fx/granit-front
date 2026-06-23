@@ -18,10 +18,10 @@ import {
   Checkbox,
   Label,
   Textarea,
+  toast,
 } from '@granit/react-ui';
 import { AlertTriangle, Info, Loader2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import { DeletionRequestTable } from './components/deletion-request-table';
 import { logger } from './logger';

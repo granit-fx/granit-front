@@ -1,6 +1,6 @@
 import { mockAppSettings } from '@granit/react-settings/testing';
+import { toast } from '@granit/react-ui';
 import { screen, waitFor } from '@testing-library/react';
-import { toast } from 'sonner';
 
 import { AppSettingsPanel } from '../components/app-settings-panel';
 

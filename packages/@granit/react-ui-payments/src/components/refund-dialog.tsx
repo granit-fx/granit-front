@@ -17,11 +17,11 @@ import {
   FormMessage,
   Input,
   Textarea,
+  toast,
 } from '@granit/react-ui';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { toEntityId } from '@granit/types';
 import { useForm, type Resolver } from 'react-hook-form';
-import { toast } from 'sonner';
 
 interface RefundFormValues {
   amount: number;

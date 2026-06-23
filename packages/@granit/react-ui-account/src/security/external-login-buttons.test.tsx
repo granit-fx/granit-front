@@ -1,8 +1,8 @@
 import { HttpError } from '@granit/api-client';
+import { toast } from '@granit/react-ui';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { I18nextProvider } from 'react-i18next';
-import { toast } from 'sonner';
 
 import { testI18n } from '../__tests__/test-utils';
 

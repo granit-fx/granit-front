@@ -9,10 +9,10 @@ import {
   DialogTitle,
   Input,
   Skeleton,
+  toast,
 } from '@granit/react-ui';
 import { Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 

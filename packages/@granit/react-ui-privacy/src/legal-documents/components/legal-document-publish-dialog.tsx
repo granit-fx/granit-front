@@ -9,8 +9,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  toast,
 } from '@granit/react-ui';
-import { toast } from 'sonner';
 
 interface LegalDocumentPublishDialogProps {
   readonly documentId: string;

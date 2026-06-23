@@ -1,10 +1,9 @@
 import { downloadPartyVCard } from '@granit/parties';
 import { useTranslation } from '@granit/react-localization';
 import { usePartiesConfig } from '@granit/react-parties';
-import { Button } from '@granit/react-ui';
+import { toast, Button } from '@granit/react-ui';
 import { Download } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 

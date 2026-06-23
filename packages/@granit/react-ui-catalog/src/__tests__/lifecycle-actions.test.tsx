@@ -1,8 +1,8 @@
+import { toast } from '@granit/react-ui';
 import { workflowTranslationsEn } from '@granit/react-workflow';
 import { toEntityId } from '@granit/types';
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { toast } from 'sonner';
 import { beforeAll, vi } from 'vitest';
 
 import { LifecycleActions } from '../components/lifecycle-actions';

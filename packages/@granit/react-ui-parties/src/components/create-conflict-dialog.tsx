@@ -10,10 +10,10 @@ import {
   DialogHeader,
   DialogTitle,
   Skeleton,
+  toast,
 } from '@granit/react-ui';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 

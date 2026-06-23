@@ -15,10 +15,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  toast,
 } from '@granit/react-ui';
 import { toEntityId } from '@granit/types';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import { formatCurrency } from '../../format-currency';
 

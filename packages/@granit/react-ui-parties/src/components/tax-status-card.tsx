@@ -1,8 +1,7 @@
 import { useTranslation } from '@granit/react-localization';
 import { useClearPartyTaxStatusMutation } from '@granit/react-parties';
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from '@granit/react-ui';
+import { toast, Badge, Button, Card, CardContent, CardHeader, CardTitle } from '@granit/react-ui';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 

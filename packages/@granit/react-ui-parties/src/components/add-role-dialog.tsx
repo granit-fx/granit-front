@@ -13,9 +13,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  toast,
 } from '@granit/react-ui';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import { PARTY_ASSIGNABLE_ROLES } from '../constants';
 import { logger } from '../logger';

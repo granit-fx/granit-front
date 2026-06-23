@@ -24,13 +24,13 @@ import {
   TabsList,
   TabsTrigger,
   Textarea,
+  toast,
 } from '@granit/react-ui';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { Check, X } from 'lucide-react';
 import { useState } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import type {
   RobotsTxtRule,

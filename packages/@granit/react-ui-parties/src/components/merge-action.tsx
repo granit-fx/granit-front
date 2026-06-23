@@ -7,11 +7,11 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  toast,
 } from '@granit/react-ui';
 import { GitMerge } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { PartyPickerDialog } from './party-picker-dialog';
 

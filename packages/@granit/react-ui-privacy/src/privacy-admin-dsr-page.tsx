@@ -11,10 +11,10 @@ import {
   Checkbox,
   Input,
   Label,
+  toast,
 } from '@granit/react-ui';
 import { Loader2, Send } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 export function PrivacyAdminDsrPage() {
   const { t } = useTranslation();

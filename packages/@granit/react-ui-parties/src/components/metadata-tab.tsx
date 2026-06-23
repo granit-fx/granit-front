@@ -1,9 +1,8 @@
 import { useTranslation } from '@granit/react-localization';
 import { useReplacePartyMetadataMutation } from '@granit/react-parties';
-import { Button, Input } from '@granit/react-ui';
+import { toast, Button, Input } from '@granit/react-ui';
 import { Plus, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 import { metadataLimits } from '../validation';

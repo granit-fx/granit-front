@@ -6181,6 +6181,11 @@
           "name": "useTranslation",
           "kind": "function",
           "signature": "function useTranslation< Ns extends FlatNamespace | readonly [FlatNamespace?, ...FlatNamespace[]] = 'translation', KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined, >( ns?: Ns, options?: UseTranslationOptions<KPrefix> ): UseTranslationResponse<FallbackNs<Ns>, KPrefix>"
+        },
+        {
+          "name": "resolveLabel",
+          "kind": "function",
+          "signature": "function resolveLabel(displayKey: string | null, fallback: string, t?: TranslateFn): string"
         }
       ]
     },

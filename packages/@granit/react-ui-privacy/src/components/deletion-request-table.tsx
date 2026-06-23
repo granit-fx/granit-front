@@ -12,9 +12,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  toast,
 } from '@granit/react-ui';
 import { Loader2, XCircle } from 'lucide-react';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 

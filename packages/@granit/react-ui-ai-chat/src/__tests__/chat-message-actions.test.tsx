@@ -1,5 +1,5 @@
+import { toast } from '@granit/react-ui';
 import { screen, waitFor } from '@testing-library/react';
-import { toast } from 'sonner';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { ChatMessageActions } from '../components/chat-message-actions';

@@ -6,7 +6,7 @@ import {
   useQueryMeta,
   useSmartFilter,
 } from '@granit/react-query-engine';
-import { Button, Card, CardContent, Skeleton, Spinner } from '@granit/react-ui';
+import { toast, Button, Card, CardContent, Skeleton, Spinner } from '@granit/react-ui';
 import {
   FilterPresets,
   GroupBySelector,
@@ -24,7 +24,6 @@ import { ImportDialog } from '@granit/react-ui-data-exchange';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 

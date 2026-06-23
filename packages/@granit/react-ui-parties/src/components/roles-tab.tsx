@@ -1,9 +1,8 @@
 import { useTranslation } from '@granit/react-localization';
 import { useRemovePartyRoleMutation } from '@granit/react-parties';
-import { Badge, Button } from '@granit/react-ui';
+import { toast, Badge, Button } from '@granit/react-ui';
 import { Plus, X } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import { PARTY_ASSIGNABLE_ROLES, parsePartyRoleFlags } from '../constants';
 import { logger } from '../logger';

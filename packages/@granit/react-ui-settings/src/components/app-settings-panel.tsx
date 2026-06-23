@@ -16,9 +16,9 @@ import {
   SelectValue,
   Skeleton,
   Switch,
+  toast,
 } from '@granit/react-ui';
 import * as React from 'react';
-import { toast } from 'sonner';
 
 import type {
   AdminAppSettingResponse,

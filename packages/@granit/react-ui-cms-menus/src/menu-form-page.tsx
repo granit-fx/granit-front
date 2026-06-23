@@ -1,13 +1,12 @@
 import { cmsConstraints, type MenuItemRequest } from '@granit/cms';
 import { useMenu, useCreateMenu, useUpdateMenu } from '@granit/react-cms';
 import { useTranslation } from '@granit/react-localization';
-import { Button, Input, Label, Separator, Textarea } from '@granit/react-ui';
+import { toast, Button, Input, Label, Separator, Textarea } from '@granit/react-ui';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { ArrowLeft } from 'lucide-react';
 import { useEffect } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 interface MenuFormValues {
   key: string;

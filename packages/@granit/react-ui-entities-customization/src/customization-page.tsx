@@ -24,9 +24,9 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
+  toast,
 } from '@granit/react-ui';
 import { useMemo, useState } from 'react';
-import { toast } from 'sonner';
 
 import { EntityCustomizationSection } from './components/entity-customization-section';
 import { EntityViewsTab } from './components/entity-views-tab';

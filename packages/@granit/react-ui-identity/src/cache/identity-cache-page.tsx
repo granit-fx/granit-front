@@ -15,11 +15,11 @@ import {
   CardTitle,
   Input,
   Spinner,
+  toast,
 } from '@granit/react-ui';
 import { toEntityId } from '@granit/types';
 import { DatabaseZap, RefreshCw, Search, Users } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 

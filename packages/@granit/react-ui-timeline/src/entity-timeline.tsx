@@ -19,6 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
   Spinner,
+  toast,
 } from '@granit/react-ui';
 import {
   TimelineEntryNotEditableReason,
@@ -29,8 +30,6 @@ import { cn } from '@granit/utils';
 import { AlertCircle, AlertTriangle, Bell, BellOff, MessageSquare, Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { toast } from 'sonner';
-
 
 import { TimelineComposer } from './timeline-composer';
 import { TimelineStream } from './timeline-stream';
@@ -43,7 +42,6 @@ import type {
   TimelineEntryId,
   TimelineEntryNotEditableReasonValue,
 } from '@granit/timeline';
-
 
 // Single-pass tokenizer for the timeline body. Branch 1 is the canonical
 // mention payload (`@[Name](user:guid)`) emitted by `<TimelineComposer>`

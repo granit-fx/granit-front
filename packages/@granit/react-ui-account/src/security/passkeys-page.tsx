@@ -23,11 +23,11 @@ import {
   Input,
   Label,
   Spinner,
+  toast,
 } from '@granit/react-ui';
 import { fromBase64Url } from '@granit/react-ui-authentication-local';
 import { Fingerprint, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 

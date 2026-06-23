@@ -8,11 +8,11 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
+  toast,
 } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { TemplateForm } from './components/template-form';
 import { TemplateHistory } from './components/template-history';

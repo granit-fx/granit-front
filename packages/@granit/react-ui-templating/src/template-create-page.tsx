@@ -1,9 +1,8 @@
 import { useTranslation } from '@granit/react-localization';
 import { TemplatingProvider, useTemplateMutations } from '@granit/react-templating';
-import { Button, Separator } from '@granit/react-ui';
+import { toast, Button, Separator } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { TemplateForm } from './components/template-form';
 import { TEMPLATING_CONFIG } from './constants';

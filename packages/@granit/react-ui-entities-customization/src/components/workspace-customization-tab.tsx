@@ -17,10 +17,10 @@ import {
   SelectTrigger,
   SelectValue,
   Spinner,
+  toast,
 } from '@granit/react-ui';
 import { useWorkspaces } from '@granit/react-workspaces';
 import { useMemo, useState } from 'react';
-import { toast } from 'sonner';
 
 import { useMemoSyncDraft } from '../hooks/use-memo-sync-draft';
 

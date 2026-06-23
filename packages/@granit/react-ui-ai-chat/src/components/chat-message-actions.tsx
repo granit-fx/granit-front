@@ -22,10 +22,10 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  toast,
 } from '@granit/react-ui';
 import { ChevronDown, Code2, Copy, Flag, Hash, RefreshCw, RemoveFormatting } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 

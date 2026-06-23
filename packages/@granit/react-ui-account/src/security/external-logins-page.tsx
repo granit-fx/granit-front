@@ -8,9 +8,9 @@ import {
   CardHeader,
   CardTitle,
   Spinner,
+  toast,
 } from '@granit/react-ui';
 import { Link2Off } from 'lucide-react';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 

@@ -18,6 +18,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  toast,
 } from '@granit/react-ui';
 import { TimezonePicker } from '@granit/react-ui-admin-kit';
 import { createConstraintsResolver } from '@granit/react-validation';
@@ -25,7 +26,6 @@ import { ArrowLeft } from 'lucide-react';
 import { useEffect } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import type { ReleaseActionStatus, ReleaseResponse, ReleaseStatus } from '@granit/cms';
 

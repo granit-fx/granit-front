@@ -17,9 +17,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  toast,
 } from '@granit/react-ui';
 import { Loader2, ShieldOff } from 'lucide-react';
-import { toast } from 'sonner';
 
 export function PrivacyOptOutPage() {
   const { t } = useTranslation();

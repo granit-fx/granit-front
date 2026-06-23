@@ -16,11 +16,11 @@ import {
   Button,
   Checkbox,
   Skeleton,
+  toast,
 } from '@granit/react-ui';
 import { getRevision } from '@granit/templating';
 import { GitCompareArrows, RotateCcw } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 

@@ -1,8 +1,7 @@
 import { useConfirmEmail, useResendConfirmation } from '@granit/react-account';
 import { useTranslation } from '@granit/react-localization';
-import { Button } from '@granit/react-ui';
+import { toast, Button } from '@granit/react-ui';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 
 import { logger } from './logger';
 import { TokenConfirmationResult, type ConfirmationStatus } from './token-confirmation-result';

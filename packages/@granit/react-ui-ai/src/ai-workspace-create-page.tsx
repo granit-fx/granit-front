@@ -1,9 +1,8 @@
 import { useCreateAIWorkspace } from '@granit/react-ai';
 import { useTranslation } from '@granit/react-localization';
-import { Button, Separator } from '@granit/react-ui';
+import { toast, Button, Separator } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { WorkspaceForm } from './components/workspace-form';
 import { logger } from './logger';

@@ -15,6 +15,7 @@ import {
   Input,
   Spinner,
   Textarea,
+  toast,
 } from '@granit/react-ui';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { toEntityId } from '@granit/types';
@@ -22,7 +23,6 @@ import { AlertTriangle, Loader2 } from 'lucide-react';
 import { useEffect } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { capitalize } from './lib/capitalize';
 

@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
   StatusBadge,
   type StatusBadgeIntent,
+  toast,
 } from '@granit/react-ui';
 import {
   FilterPresets,
@@ -22,7 +23,6 @@ import {
 } from '@granit/react-ui-admin-kit';
 import { Download, MoreHorizontal, Trash2 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
-import { toast } from 'sonner';
 
 import { BlobCleanupOrphansButton } from './components/blob-cleanup-orphans-button';
 import { BlobDeleteDialog } from './components/blob-delete-dialog';

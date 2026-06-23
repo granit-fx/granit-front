@@ -11,10 +11,10 @@ import {
   Label,
   RadioGroup,
   RadioGroupItem,
+  toast,
 } from '@granit/react-ui';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import type { PartyDuplicateCandidateResponse, PartyId } from '@granit/parties';
 

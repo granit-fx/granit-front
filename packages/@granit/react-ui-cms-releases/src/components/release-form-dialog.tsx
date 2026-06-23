@@ -17,12 +17,12 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  toast,
 } from '@granit/react-ui';
 import { TimezonePicker } from '@granit/react-ui-admin-kit';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { useEffect } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
-import { toast } from 'sonner';
 
 function capitalize(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);

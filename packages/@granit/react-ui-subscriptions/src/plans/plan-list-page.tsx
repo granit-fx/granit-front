@@ -14,6 +14,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  toast,
 } from '@granit/react-ui';
 import {
   FilterPresets,
@@ -27,7 +28,6 @@ import { useSmartFilterSync } from '@granit/react-ui-admin-kit';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 

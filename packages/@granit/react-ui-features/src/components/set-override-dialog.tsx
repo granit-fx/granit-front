@@ -17,9 +17,9 @@ import {
   SelectTrigger,
   SelectValue,
   Switch,
+  toast,
 } from '@granit/react-ui';
 import { useCallback, useState } from 'react';
-import { toast } from 'sonner';
 
 import type { FeatureDefinitionResponse, FeatureValueResponse } from '@granit/features';
 

@@ -12,7 +12,7 @@ import {
   useQueryMeta,
   useSmartFilter,
 } from '@granit/react-query-engine';
-import { Button, Spinner } from '@granit/react-ui';
+import { toast, Button, Spinner } from '@granit/react-ui';
 import {
   FilterPresets,
   GroupBySelector,
@@ -27,7 +27,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { createTenantColumns } from './components/tenant-columns';
 import { TenantStatusDialog } from './components/tenant-status-dialog';

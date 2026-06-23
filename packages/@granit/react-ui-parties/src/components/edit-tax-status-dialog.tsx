@@ -8,12 +8,12 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  toast,
 } from '@granit/react-ui';
 import { FormDialog } from '@granit/react-ui-admin-kit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 import { partyTaxStatusSchema, type PartyTaxStatusFormValues } from '../validation';

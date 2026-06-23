@@ -48,11 +48,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  toast,
 } from '@granit/react-ui';
 import { ArrowLeft, Plus, RotateCcw, Save, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { logger } from './logger';
 

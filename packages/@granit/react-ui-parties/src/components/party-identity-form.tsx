@@ -10,12 +10,12 @@ import {
   FormMessage,
   Input,
   Textarea,
+  toast,
 } from '@granit/react-ui';
 import { TimezonePicker, UrlInput } from '@granit/react-ui-admin-kit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 
 import { logger } from '../logger';
 import { partyIdentitySchema, type PartyIdentityFormValues } from '../validation';

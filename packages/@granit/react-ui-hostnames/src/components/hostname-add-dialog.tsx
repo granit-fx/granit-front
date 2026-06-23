@@ -17,12 +17,12 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  toast,
 } from '@granit/react-ui';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { CheckCircle2, Loader2, XCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
-import { toast } from 'sonner';
 
 // Client-only UX guard for a real FQDN. The contract carries only `maxLength` on
 // `host` (the .NET endpoint runs the authoritative hostname check), so this regex

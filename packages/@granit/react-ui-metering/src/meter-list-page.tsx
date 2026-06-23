@@ -14,12 +14,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  toast,
 } from '@granit/react-ui';
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { createMeterColumns } from './components/meter-columns';
 import { MeterForm } from './components/meter-form';

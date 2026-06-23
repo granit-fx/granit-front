@@ -19,9 +19,9 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  toast,
 } from '@granit/react-ui';
 import { RefreshCw } from 'lucide-react';
-import { toast } from 'sonner';
 
 import { categoryIndex } from '../payment-method-category';
 

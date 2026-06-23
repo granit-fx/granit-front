@@ -15,9 +15,9 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
+  toast,
 } from '@granit/react-ui';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import { logger } from './logger';
 

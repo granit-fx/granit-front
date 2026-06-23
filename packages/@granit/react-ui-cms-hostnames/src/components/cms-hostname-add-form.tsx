@@ -1,10 +1,9 @@
 import { cmsHostnamesConstraints } from '@granit/cms-hostnames';
 import { useAddSiteHostname } from '@granit/react-cms-hostnames';
 import { useTranslation } from '@granit/react-localization';
-import { Button, Checkbox, Input, Label } from '@granit/react-ui';
+import { toast, Button, Checkbox, Input, Label } from '@granit/react-ui';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { Controller, useForm, type Resolver } from 'react-hook-form';
-import { toast } from 'sonner';
 
 // Client-only UX guard for a real FQDN. The CMS contract carries only
 // `required` + `maxLength` on `host` (the .NET endpoint runs the authoritative

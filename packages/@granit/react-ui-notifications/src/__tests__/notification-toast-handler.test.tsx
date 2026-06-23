@@ -1,4 +1,4 @@
-import { toast } from 'sonner';
+import { toast } from '@granit/react-ui';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NotificationToastHandler } from '../components/notification-toast-handler';

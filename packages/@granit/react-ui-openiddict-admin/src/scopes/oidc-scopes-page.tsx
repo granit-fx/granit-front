@@ -24,12 +24,12 @@ import {
   Input,
   Spinner,
   Textarea,
+  toast,
 } from '@granit/react-ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Layers, Loader2, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { logger } from '../logger';

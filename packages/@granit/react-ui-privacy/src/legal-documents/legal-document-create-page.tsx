@@ -1,9 +1,8 @@
 import { useTranslation } from '@granit/react-localization';
 import { useCreateLegalDocument } from '@granit/react-privacy';
-import { Button, Separator } from '@granit/react-ui';
+import { toast, Button, Separator } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { LegalDocumentForm } from './components/legal-document-form';
 

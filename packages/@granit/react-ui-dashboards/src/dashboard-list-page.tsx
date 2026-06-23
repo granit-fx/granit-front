@@ -13,11 +13,10 @@ import {
   useResyncDashboard,
 } from '@granit/react-dashboards';
 import { useTranslation } from '@granit/react-localization';
-import { Button, Spinner } from '@granit/react-ui';
+import { toast, Button, Spinner } from '@granit/react-ui';
 import { Archive, ArchiveRestore, LayoutDashboard, Pencil, RefreshCw, Send } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { DriftBadge } from './components/dashboard-drift-badge';
 import { DashboardImportFromCatalog } from './components/dashboard-import-from-catalog';

@@ -2,10 +2,9 @@ import { AI_WORKSPACE_KINDS, AIPermissions } from '@granit/ai';
 import { useAIWorkspace, useUpdateAIWorkspace } from '@granit/react-ai';
 import { usePermissions } from '@granit/react-authorization';
 import { useTranslation } from '@granit/react-localization';
-import { Badge, Button, Separator, Spinner } from '@granit/react-ui';
+import { toast, Badge, Button, Separator, Spinner } from '@granit/react-ui';
 import { AlertCircle, ArrowLeft } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { WorkspaceDetail } from './components/workspace-detail';
 import { WorkspaceForm } from './components/workspace-form';

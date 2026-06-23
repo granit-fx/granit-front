@@ -18,6 +18,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  toast,
 } from '@granit/react-ui';
 import {
   Plus,
@@ -31,7 +32,6 @@ import {
   Network,
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 export function SitesListPage() {
   const { t } = useTranslation();

@@ -11,12 +11,12 @@ import {
   Button,
   Input,
   Label,
+  toast,
 } from '@granit/react-ui';
 import { buildLifecycleTransitionPrompt } from '@granit/react-workflow';
 import { WorkflowLifecycleStatus, type WorkflowLifecycleStatusValue } from '@granit/workflow';
 import { Archive, Loader2, Send } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import type { ProductResponse } from '@granit/catalog';
 

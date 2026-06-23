@@ -10,10 +10,10 @@ import {
   Input,
   Label,
   Textarea,
+  toast,
 } from '@granit/react-ui';
 import { toEntityId } from '@granit/types';
 import { useState, type FormEvent } from 'react';
-import { toast } from 'sonner';
 
 import type { PlanId } from '@granit/subscriptions';
 

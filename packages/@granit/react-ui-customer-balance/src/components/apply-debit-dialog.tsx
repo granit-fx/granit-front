@@ -9,11 +9,11 @@ import {
   FormMessage,
   Input,
   Textarea,
+  toast,
 } from '@granit/react-ui';
 import { FormDialog } from '@granit/react-ui-admin-kit';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { useForm, type Resolver } from 'react-hook-form';
-import { toast } from 'sonner';
 
 import type { AdminDebitRequest } from '@granit/customer-balance';
 import type { CurrencyCode } from '@granit/types';

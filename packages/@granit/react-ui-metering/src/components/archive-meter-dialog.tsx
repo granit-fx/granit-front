@@ -8,8 +8,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  toast,
 } from '@granit/react-ui';
-import { toast } from 'sonner';
 
 import type { MeterDefinitionResponse } from '@granit/metering';
 

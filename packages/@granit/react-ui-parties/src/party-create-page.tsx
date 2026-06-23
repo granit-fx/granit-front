@@ -1,11 +1,10 @@
 import { isAxiosError } from '@granit/api-client';
 import { useTranslation } from '@granit/react-localization';
 import { useCreatePartyMutation } from '@granit/react-parties';
-import { Button, Separator } from '@granit/react-ui';
+import { toast, Button, Separator } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { CreateConflictDialog } from './components/create-conflict-dialog';
 import { PartyCreateForm } from './components/party-create-form';
