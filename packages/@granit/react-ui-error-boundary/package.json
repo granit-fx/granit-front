@@ -1,0 +1,43 @@
+{
+  "name": "@granit/react-ui-error-boundary",
+  "description": "Granit admin error UI — the visible fallback, route-error and not-found pages that pair with the headless @granit/react-error-boundary. App-agnostic: each page takes an optional layout slot and ships its own Errors.* translations.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.18.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@storybook/react-vite": "^10.4.6",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.18.0",
+    "storybook": "^10.4.6"
+  }
+}
