@@ -1,7 +1,8 @@
-import type { EntityComponentCatalog, EntityFormComponent } from '@granit/react-entities';
 import { STANDARD_FORM_COMPONENTS } from '@granit/react-entities';
 import { PhoneInput, TimezonePicker, UrlInput } from '@granit/react-ui-kit';
 import { Mail } from 'lucide-react';
+
+import type { EntityComponentCatalog, EntityFormComponent } from '@granit/react-entities';
 
 // ---------------------------------------------------------------------------
 // Phone

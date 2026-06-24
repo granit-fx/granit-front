@@ -9127,6 +9127,36 @@
           "members": []
         },
         {
+          "name": "EmailFormComponent",
+          "kind": "const",
+          "signature": "const EmailFormComponent: EntityFormComponent"
+        },
+        {
+          "name": "MoneyFormComponent",
+          "kind": "const",
+          "signature": "const MoneyFormComponent: EntityFormComponent"
+        },
+        {
+          "name": "PhoneFormComponent",
+          "kind": "const",
+          "signature": "const PhoneFormComponent: EntityFormComponent"
+        },
+        {
+          "name": "TimezoneFormComponent",
+          "kind": "const",
+          "signature": "const TimezoneFormComponent: EntityFormComponent"
+        },
+        {
+          "name": "UrlFormComponent",
+          "kind": "const",
+          "signature": "const UrlFormComponent: EntityFormComponent"
+        },
+        {
+          "name": "GRANIT_UI_FORM_COMPONENTS",
+          "kind": "const",
+          "signature": "const GRANIT_UI_FORM_COMPONENTS: EntityComponentCatalog"
+        },
+        {
           "name": "recapParentRefs",
           "kind": "function",
           "signature": "function recapParentRefs(recap: EntitySelectionBarRecap): readonly ParentRef[]"
