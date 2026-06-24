@@ -3937,6 +3937,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-admin-kit':
+        specifier: workspace:*
+        version: link:../react-ui-admin-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation

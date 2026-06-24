@@ -1,6 +1,6 @@
-import { useTenantStorageQuota } from '../hooks/use-quota';
-
 import { formatBytes } from '@granit/utils';
+
+import { useTenantStorageQuota } from '../hooks/use-quota';
 
 import type { ReactNode } from 'react';
 
