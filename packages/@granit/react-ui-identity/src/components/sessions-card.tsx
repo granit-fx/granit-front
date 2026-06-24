@@ -1,4 +1,5 @@
 import { composeDeviceLabel } from '@granit/identity';
+import { isHandheldUserAgent, parseUserAgent } from '@granit/identity';
 import { useDateFormatter } from '@granit/react-localization';
 import { Badge, Card, CardContent, CardHeader, CardTitle, Skeleton } from '@granit/react-ui';
 import { cn } from '@granit/utils';
@@ -16,7 +17,6 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-import { isHandheldUserAgent, parseUserAgent } from '@granit/identity';
 import { RiskButton } from './risk-button';
 import { SessionRiskIndicator } from './session-risk-indicator';
 import { useDeviceLabelStrings } from './use-device-label-strings';
