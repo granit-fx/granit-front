@@ -1,4 +1,5 @@
 import { classifyMergeError } from '@granit/entity-merge';
+import { Alert, AlertDescription } from '@granit/react-ui';
 import { useState } from 'react';
 
 import { useFieldChoices } from '../hooks/use-field-choices';
@@ -171,9 +172,9 @@ export function MergeWizard<TId extends string = string>({
       </div>
 
       {errorMessage && (
-        <p role="alert" className="text-sm text-destructive">
-          {errorMessage}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>{errorMessage}</AlertDescription>
+        </Alert>
       )}
 
       <div className="flex justify-end gap-2">

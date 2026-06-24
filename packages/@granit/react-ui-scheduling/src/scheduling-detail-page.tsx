@@ -30,6 +30,7 @@ import {
   Label,
   Spinner,
 } from '@granit/react-ui';
+import { EmptyState } from '@granit/react-ui-admin-kit';
 import { ScheduledActionStatus, SchedulingPermissions } from '@granit/scheduling';
 import { toEntityId, toISODateString } from '@granit/types';
 import { ArrowLeft, Ban, CalendarClock } from 'lucide-react';
@@ -78,9 +79,7 @@ function SchedulingDetailContent() {
   }
 
   if (!action) {
-    return (
-      <div className="py-12 text-center text-muted-foreground">{t('Scheduling.NotFound')}</div>
-    );
+    return <EmptyState message={t('Scheduling.NotFound')} />;
   }
 
   const isPending = action.status === ScheduledActionStatus.Pending;

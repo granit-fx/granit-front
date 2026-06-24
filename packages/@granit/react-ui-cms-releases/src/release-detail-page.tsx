@@ -2,6 +2,8 @@ import { cmsConstraints } from '@granit/cms';
 import { useCancelRelease, useRelease, useScheduleRelease } from '@granit/react-cms';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import {
+  Alert,
+  AlertDescription,
   Badge,
   Button,
   Form,
@@ -221,9 +223,11 @@ export function ReleaseDetailPage() {
 
   if (isError || !release) {
     return (
-      <p className="text-sm text-destructive">
-        {t('cms:Releases.LoadError', 'Failed to load release.')}
-      </p>
+      <Alert variant="destructive">
+        <AlertDescription>
+          {t('cms:Releases.LoadError', 'Failed to load release.')}
+        </AlertDescription>
+      </Alert>
     );
   }
 

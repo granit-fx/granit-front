@@ -1,5 +1,6 @@
 import { useTranslation } from '@granit/react-localization';
 import { Badge, Spinner } from '@granit/react-ui';
+import { EmptyState } from '@granit/react-ui-admin-kit';
 import { cn } from '@granit/utils';
 import { ChevronRight } from 'lucide-react';
 import * as React from 'react';
@@ -28,8 +29,6 @@ export function CategoryTreeView({
   onSelect,
   i18nPrefix = 'ReferenceData.Common',
 }: CategoryTreeViewProps) {
-  const { t } = useTranslation();
-
   if (isLoading) {
     return (
       <div className="flex h-32 items-center justify-center">
@@ -39,9 +38,7 @@ export function CategoryTreeView({
   }
 
   if (roots.length === 0) {
-    return (
-      <p className="py-8 text-center text-sm text-muted-foreground">{t('Common.NoResults')}</p>
-    );
+    return <EmptyState />;
   }
 
   return (

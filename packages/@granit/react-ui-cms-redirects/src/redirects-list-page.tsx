@@ -1,6 +1,8 @@
 import { useRedirects, useDeleteRedirect, useUpdateRedirect } from '@granit/react-cms-redirects';
 import { useTranslation } from '@granit/react-localization';
 import {
+  Alert,
+  AlertDescription,
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -93,9 +95,11 @@ export function RedirectsListPage() {
       </div>
 
       {isError && (
-        <p className="text-sm text-destructive">
-          {t('cms:Redirects.LoadError', 'Failed to load redirects.')}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>
+            {t('cms:Redirects.LoadError', 'Failed to load redirects.')}
+          </AlertDescription>
+        </Alert>
       )}
 
       <Table>

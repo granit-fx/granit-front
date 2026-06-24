@@ -1,6 +1,8 @@
 import { useSites, useDeleteSite } from '@granit/react-cms';
 import { useTranslation } from '@granit/react-localization';
 import {
+  Alert,
+  AlertDescription,
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -67,9 +69,9 @@ export function SitesListPage() {
       </header>
 
       {isError && (
-        <p className="text-sm text-destructive">
-          {t('cms:Sites.LoadError', 'Failed to load sites.')}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>{t('cms:Sites.LoadError', 'Failed to load sites.')}</AlertDescription>
+        </Alert>
       )}
 
       <Table>

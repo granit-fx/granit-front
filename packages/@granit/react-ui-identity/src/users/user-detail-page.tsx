@@ -20,7 +20,11 @@ import {
   Spinner,
   toast,
 } from '@granit/react-ui';
-import { DetailAsideLayout, DetailAsideMobileTrigger } from '@granit/react-ui-admin-kit';
+import {
+  DetailAsideLayout,
+  DetailAsideMobileTrigger,
+  EmptyState,
+} from '@granit/react-ui-admin-kit';
 import { toEntityId } from '@granit/types';
 import { AlertTriangle, ArrowLeft, AlertCircle, Pencil, Trash2 } from 'lucide-react';
 import * as React from 'react';
@@ -127,11 +131,7 @@ export function UserDetailPage({ renderActivityAside, activityAsideTitle }: User
             </Link>
           </Button>
         </div>
-        <div className="flex flex-col items-center gap-2 py-16 text-center">
-          <AlertCircle className="h-8 w-8 text-muted-foreground/70" />
-          <p className="text-sm font-medium text-foreground">{t('Users.Detail.NotFound')}</p>
-          <p className="text-sm text-muted-foreground">{t('Users.Detail.NotFoundMessage')}</p>
-        </div>
+        <EmptyState icon={AlertCircle} message={t('Users.Detail.NotFound')} />
       </div>
     );
   }

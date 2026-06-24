@@ -1,6 +1,6 @@
 import { useTranslation } from '@granit/react-localization';
 import { useReplacePartyMetadataMutation } from '@granit/react-parties';
-import { toast, Button, Input } from '@granit/react-ui';
+import { Alert, AlertDescription, toast, Button, Input } from '@granit/react-ui';
 import { Plus, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -131,7 +131,11 @@ export function MetadataTab({ partyId, metadata }: MetadataTabProps) {
         </div>
       )}
 
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && (
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
       <div className="flex justify-end">
         <Button onClick={handleSave} disabled={mutation.isPending}>

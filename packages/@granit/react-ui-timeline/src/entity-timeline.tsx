@@ -8,6 +8,9 @@ import {
   useUpdateEntryBody,
 } from '@granit/react-timeline';
 import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
   Button,
   Card,
   CardContent,
@@ -27,7 +30,7 @@ import {
   TimelineEntryType,
 } from '@granit/timeline';
 import { cn } from '@granit/utils';
-import { AlertCircle, AlertTriangle, Bell, BellOff, MessageSquare, Plus } from 'lucide-react';
+import { AlertTriangle, Bell, BellOff, MessageSquare, Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -389,11 +392,10 @@ function EntityTimelineInner({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col items-center gap-2 py-8 text-center">
-            <AlertCircle className="h-8 w-8 text-muted-foreground/70" />
-            <p className="text-sm font-medium text-foreground">{t('Timeline.ErrorTitle')}</p>
-            <p className="text-sm text-muted-foreground">{t('Timeline.ErrorMessage')}</p>
-          </div>
+          <Alert variant="destructive">
+            <AlertTitle>{t('Timeline.ErrorTitle')}</AlertTitle>
+            <AlertDescription>{t('Timeline.ErrorMessage')}</AlertDescription>
+          </Alert>
         </CardContent>
       </Card>
     );
@@ -452,18 +454,15 @@ function EntityTimelineInner({
       </CardHeader>
       <CardContent className="space-y-4">
         {degradedLabel && (
-          <output
-            data-testid="timeline-degraded-banner"
-            className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive"
-          >
-            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-            <span>
+          <Alert variant="destructive" data-testid="timeline-degraded-banner">
+            <AlertTriangle className="h-4 w-4" aria-hidden />
+            <AlertDescription>
               {t('Timeline.PartialData', {
                 defaultValue: `Partial data — these sources are unavailable: ${degradedLabel}.`,
                 sources: degradedLabel,
               })}
-            </span>
-          </output>
+            </AlertDescription>
+          </Alert>
         )}
 
         <TimelineStream

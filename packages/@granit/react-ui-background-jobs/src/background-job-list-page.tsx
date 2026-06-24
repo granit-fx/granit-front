@@ -8,7 +8,7 @@ import {
 } from '@granit/react-background-jobs';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { Button, Card, CardContent, Spinner } from '@granit/react-ui';
-import { ManualDataTable, ViewSwitcher } from '@granit/react-ui-admin-kit';
+import { EmptyState, ManualDataTable, ViewSwitcher } from '@granit/react-ui-admin-kit';
 import { RotateCw } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -130,8 +130,8 @@ function BackgroundJobListPageContent() {
       {view === 'kanban' && jobs.length > 0 && <JobKanbanView jobs={jobs} />}
       {view === 'kanban' && jobs.length === 0 && (
         <Card>
-          <CardContent className="py-8 text-center text-muted-foreground">
-            {t('BackgroundJobs.NoJobs')}
+          <CardContent>
+            <EmptyState message={t('BackgroundJobs.NoJobs')} />
           </CardContent>
         </Card>
       )}

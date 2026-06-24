@@ -8,6 +8,7 @@ import {
 } from '@granit/react-query-engine';
 import { toast, Button, Card, CardContent, Skeleton, Spinner } from '@granit/react-ui';
 import {
+  EmptyState,
   FilterPresets,
   GroupBySelector,
   QueryDataTable,
@@ -265,8 +266,8 @@ function ListPageContent<T extends ReferenceDataEntry>({
           {!queryEndpoint.query.isLoading &&
             (queryEndpoint.query.data?.items ?? []).length === 0 && (
               <Card>
-                <CardContent className="py-8 text-center text-muted-foreground">
-                  {t('Common.NoResults')}
+                <CardContent>
+                  <EmptyState />
                 </CardContent>
               </Card>
             )}

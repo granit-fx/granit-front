@@ -25,6 +25,7 @@ import {
   Spinner,
   toast,
 } from '@granit/react-ui';
+import { EmptyState } from '@granit/react-ui-admin-kit';
 import { fromBase64Url } from '@granit/react-ui-authentication-local';
 import { Fingerprint, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
@@ -208,11 +209,11 @@ export function PasskeysPage() {
       );
     }
     return (
-      <div className="flex flex-col items-center gap-2 py-8 text-center">
-        <Fingerprint className="h-8 w-8 text-muted-foreground/40" />
-        <p className="text-sm text-muted-foreground">
-          {t('Account.Passkeys.NoPasskeys', 'No passkeys registered')}
-        </p>
+      <div className="flex flex-col items-center gap-2">
+        <EmptyState
+          icon={Fingerprint}
+          message={t('Account.Passkeys.NoPasskeys', 'No passkeys registered')}
+        />
         {!supportsPasskeys && (
           <Badge variant="secondary">
             {t('Account.Passkeys.NotSupported', 'Passkeys not supported in this browser')}

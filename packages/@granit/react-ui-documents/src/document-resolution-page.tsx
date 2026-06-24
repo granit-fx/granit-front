@@ -1,6 +1,6 @@
 import { formatBytes, useBatchResolveDocumentAssets } from '@granit/react-documents';
 import { useTranslation } from '@granit/react-localization';
-import { Button } from '@granit/react-ui';
+import { Alert, AlertDescription, Button } from '@granit/react-ui';
 import { useState } from 'react';
 
 export function DocumentResolutionPage() {
@@ -57,9 +57,11 @@ export function DocumentResolutionPage() {
       </section>
 
       {resolve.error && (
-        <p className="text-sm text-destructive">
-          {t('documents:Resolution.Error', 'Resolution failed.')}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>
+            {t('documents:Resolution.Error', 'Resolution failed.')}
+          </AlertDescription>
+        </Alert>
       )}
 
       {resolve.data?.length === 0 && (

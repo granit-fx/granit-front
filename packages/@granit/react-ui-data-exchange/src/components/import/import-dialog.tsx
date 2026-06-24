@@ -1,6 +1,8 @@
 import { useImportJob, useImportPreview, useImportReport } from '@granit/react-data-exchange';
 import { useTranslation } from '@granit/react-localization';
 import {
+  Alert,
+  AlertDescription,
   Button,
   Dialog,
   DialogContent,
@@ -279,9 +281,11 @@ export function ImportDialog({
 
           {/* Error display */}
           {(importJob.error ?? importPreview.error) && (
-            <p className="text-sm text-destructive">
-              {(importJob.error ?? importPreview.error)?.message}
-            </p>
+            <Alert variant="destructive">
+              <AlertDescription>
+                {(importJob.error ?? importPreview.error)?.message}
+              </AlertDescription>
+            </Alert>
           )}
         </div>
 

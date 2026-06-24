@@ -5,6 +5,8 @@ import {
 } from '@granit/react-cms-hostnames';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import {
+  Alert,
+  AlertDescription,
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -72,9 +74,11 @@ export function HostnamesPage() {
       <CmsHostnameAddForm siteId={effectiveSiteId} />
 
       {isError && (
-        <p className="text-sm text-destructive">
-          {t('cms:Hostnames.LoadError', 'Failed to load hostnames.')}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>
+            {t('cms:Hostnames.LoadError', 'Failed to load hostnames.')}
+          </AlertDescription>
+        </Alert>
       )}
 
       <Table>

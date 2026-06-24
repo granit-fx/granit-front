@@ -26,6 +26,7 @@ import {
   TableRow,
   toast,
 } from '@granit/react-ui';
+import { EmptyState } from '@granit/react-ui-admin-kit';
 import { ArrowLeft, Plus, X } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -118,17 +119,7 @@ export function GroupDetailPage() {
           <ArrowLeft className="size-4" />
           <span className="sr-only">{t('Common.Back', 'Back')}</span>
         </Button>
-        <div className="flex flex-col items-center gap-2 py-16 text-center">
-          <p className="text-sm font-medium text-foreground">
-            {t('Identity.Groups.Detail.NotFound', 'Group not found')}
-          </p>
-          <p className="text-sm text-muted-foreground">
-            {t(
-              'Identity.Groups.Detail.NotFoundMessage',
-              'This group does not exist or has been removed.'
-            )}
-          </p>
-        </div>
+        <EmptyState message={t('Identity.Groups.Detail.NotFound', 'Group not found')} />
       </div>
     );
   }

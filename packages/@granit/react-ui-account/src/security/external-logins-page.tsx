@@ -10,6 +10,7 @@ import {
   Spinner,
   toast,
 } from '@granit/react-ui';
+import { EmptyState } from '@granit/react-ui-admin-kit';
 import { Link2Off } from 'lucide-react';
 
 import { logger } from '../logger';
@@ -69,12 +70,10 @@ export function ExternalLoginsPage() {
       );
     }
     return (
-      <div className="flex flex-col items-center gap-2 py-8 text-center">
-        <Link2Off className="h-8 w-8 text-muted-foreground/40" />
-        <p className="text-sm text-muted-foreground">
-          {t('Account.ExternalLogins.NoLogins', 'No external accounts linked')}
-        </p>
-      </div>
+      <EmptyState
+        icon={Link2Off}
+        message={t('Account.ExternalLogins.NoLogins', 'No external accounts linked')}
+      />
     );
   }
 

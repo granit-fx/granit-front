@@ -18,6 +18,7 @@
     "@granit/api-client": "workspace:*",
     "@granit/entity-merge": "workspace:*",
     "@granit/react-api-client": "workspace:*",
+    "@granit/react-ui": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "msw": "^2.12.0",
     "react": "^19.0.0"
@@ -45,6 +46,7 @@
     "@granit/entity-merge": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
+    "@granit/react-ui": "workspace:*",
     "@granit/testing": "workspace:*"
   }
 }

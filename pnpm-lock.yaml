@@ -2406,6 +2406,9 @@ importers:
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
+      '@granit/react-ui':
+        specifier: workspace:*
+        version: link:../react-ui
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -6890,6 +6893,9 @@ importers:
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
+      '@granit/react-icons':
+        specifier: workspace:*
+        version: link:../react-icons
       '@granit/react-localization':
         specifier: workspace:*
         version: link:../react-localization

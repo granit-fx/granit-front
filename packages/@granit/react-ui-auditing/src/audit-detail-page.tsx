@@ -9,6 +9,7 @@ import {
   Separator,
   Spinner,
 } from '@granit/react-ui';
+import { EmptyState } from '@granit/react-ui-admin-kit';
 import { toEntityId } from '@granit/types';
 import { ArrowLeft } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
@@ -54,7 +55,7 @@ function AuditDetailContent({ routeBase }: { readonly routeBase: string }) {
   }
 
   if (!entry) {
-    return <div className="py-12 text-center text-muted-foreground">{t('Audit.NotFound')}</div>;
+    return <EmptyState message={t('Audit.NotFound')} />;
   }
 
   return (

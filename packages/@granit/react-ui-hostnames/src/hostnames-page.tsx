@@ -2,6 +2,8 @@ import { usePermissions } from '@granit/react-authorization';
 import { useHostnames } from '@granit/react-hostnames';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import {
+  Alert,
+  AlertDescription,
   Badge,
   Button,
   Input,
@@ -143,7 +145,9 @@ export function HostnamesPage() {
           </div>
 
           {isError && (
-            <div className="px-4 py-3 text-sm text-destructive">{t('Hostnames.LoadError')}</div>
+            <Alert variant="destructive">
+              <AlertDescription>{t('Hostnames.LoadError')}</AlertDescription>
+            </Alert>
           )}
 
           <Table>

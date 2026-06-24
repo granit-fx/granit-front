@@ -1,6 +1,8 @@
 import { useMenus, useDeleteMenu } from '@granit/react-cms';
 import { useTranslation } from '@granit/react-localization';
 import {
+  Alert,
+  AlertDescription,
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -65,9 +67,9 @@ export function MenusListPage() {
       </div>
 
       {isError && (
-        <p className="text-sm text-destructive">
-          {t('cms:Menus.LoadError', 'Failed to load menus.')}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>{t('cms:Menus.LoadError', 'Failed to load menus.')}</AlertDescription>
+        </Alert>
       )}
 
       <Table>

@@ -8,6 +8,8 @@ import {
   useResyncPaymentMethod,
 } from '@granit/react-payments';
 import {
+  Alert,
+  AlertDescription,
   Badge,
   Button,
   Card,
@@ -167,9 +169,11 @@ function ProviderConfigurationCard({ providerName }: { readonly providerName: st
           </div>
         )}
         {!catalogQuery.isLoading && catalogQuery.isError && (
-          <p className="py-2 text-sm text-destructive">
-            Failed to load {providerName} catalog: {(catalogQuery.error as Error).message}
-          </p>
+          <Alert variant="destructive">
+            <AlertDescription>
+              Failed to load {providerName} catalog: {(catalogQuery.error as Error).message}
+            </AlertDescription>
+          </Alert>
         )}
         {!catalogQuery.isLoading && !catalogQuery.isError && methods.length === 0 && (
           <p className="py-2 text-sm text-muted-foreground">
