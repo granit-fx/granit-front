@@ -1,22 +1,24 @@
 # @granit/arch-tests-kit
 
-Reusable architecture-test primitives for Digital Dynamics front-end apps.
-Pure scanner functions that return `Violation[]` — bring your own test runner.
+Reusable **architecture-test primitives** for Digital Dynamics front-end apps —
+pure scanner functions that walk source trees and return `Violation[]`. The kit
+does the analysis only; you bring your own test runner (Vitest or Jest) and wire
+the `describe/it` blocks around each scanner, asserting `toEqual([])`.
 
-## Why
-
-Every DD app shares conventions: kebab-case filenames, `hooks/use-*.ts`,
-no `console.*` in runtime code, no direct `axios` imports, no committed
-`.only`. This kit lets each app enforce them mechanically with ~40 lines
-of Vitest, without copy-pasting AST regexes across repos.
-
-Used in production by [`@granit/arch-tests`](../arch-tests) (framework
-self-check) and [`granit-showcase-admin-react`](https://github.com/granit-fx/granit-showcase-admin-react).
+This is a **tooling/test** package — framework-agnostic (no React, no DOM, Node
+`fs`/`path` only) and one of the few `@granit/*` packages that **ships a `tsup`
+build** (`dist/` + `publishConfig` → `npm.pkg.github.com`) so downstream apps can
+consume it outside the source-direct workspace. Its reference consumer is the
+sibling [`@granit/arch-tests`](../arch-tests), the framework's own self-check
+suite that runs every scanner across 200+ packages; that suite is the kit's
+primary regression net and catches false positives before app suites hit them.
+There is no core/React/react-ui split — a tooling package has none.
 
 ## Install
 
-While the framework is consumed source-direct, link the kit from your
-app's `package.json`:
+Workspace-internal — `@granit/arch-tests` consumes it via `workspace:*` and the
+`@granit/*` Vite/Vitest aliases, so within `granit-front` no extra wiring is
+needed. Downstream apps link the (built) package from their own `package.json`:
 
 ```json
 {
@@ -28,10 +30,9 @@ app's `package.json`:
 
 Vite-based apps with the `@granit/*` auto-alias plugin (or a root Vitest alias)
 pick the `link:` symlink up for free — `moduleResolution: bundler` resolves the
-package's `exports` to `src/index.ts`, so no extra TypeScript config is needed.
-
-Only if your test `tsconfig` runs without that alias (plain `tsc`, no bundler
-resolution), add a path mapping:
+package's `exports` to `src/index.ts`, no extra TypeScript config needed. Only if
+your test `tsconfig` runs without that alias (plain `tsc`, no bundler resolution)
+add a path mapping:
 
 ```jsonc
 {
@@ -45,7 +46,16 @@ resolution), add a path mapping:
 }
 ```
 
+The kit declares **no runtime peer dependencies** — it imports only Node
+builtins (`node:fs`, `node:path`). Your test runner (Vitest / Jest) is the only
+thing a consumer must provide.
+
 ## Quick start
+
+A scanner takes a `ScanContext` (the modules to scan + a `repoRoot` for readable
+relative paths) and returns `Violation[]`. An empty array means the rule passes.
+One root module covers app-wide scans; one module per feature folder makes
+per-feature scans point their violation messages at the right feature.
 
 ```ts
 // src/__tests__/architecture.test.ts
@@ -66,9 +76,6 @@ import { describe, expect, it } from 'vitest';
 const REPO_ROOT = path.resolve(__dirname, '../..');
 const SRC = path.resolve(__dirname, '..');
 
-// One root module covers app-wide scans (kebab-case, console, fetch).
-// One module per feature folder makes per-feature scans (hooks, components)
-// produce violation messages that point at the right feature.
 const appModule: Module = { name: 'app', dir: SRC, srcDir: SRC, isReact: true };
 const features: Module[] = fs
   .readdirSync(path.join(SRC, 'features'), { withFileTypes: true })
@@ -88,7 +95,7 @@ describe('architecture', () => {
     expect(scanKebabCase(appCtx)).toEqual([]);
   });
 
-  it('no console.*', () => {
+  it('no console.* (use createLogger)', () => {
     expect(scanConsole(appCtx)).toEqual([]);
   });
 
@@ -100,118 +107,118 @@ describe('architecture', () => {
     expect(scanOnlySkip(appCtx)).toEqual([]);
   });
 
-  it('hooks/use-*.ts exports a useXxx symbol', () => {
+  it('hooks/use-*.ts export a useXxx symbol', () => {
     expect(scanHookNaming(moduleCtx)).toEqual([]);
   });
 
-  it('components/*.tsx exports a PascalCase symbol', () => {
+  it('components/*.tsx export a PascalCase symbol', () => {
     expect(scanComponentNaming(moduleCtx)).toEqual([]);
   });
 });
 ```
 
-A complete reference setup lives in
-[`granit-showcase-admin-react/src/__tests__/architecture.test.ts`](https://github.com/granit-fx/granit-showcase-admin-react/blob/develop/src/__tests__/architecture.test.ts).
+### Customizing
 
-## Available scanners
-
-| Scanner                       | Rule                                                                                     |
-| ----------------------------- | ---------------------------------------------------------------------------------------- |
-| `scanKebabCase`               | Source files use kebab-case (allows `.stories.tsx`, `.d.ts`)                             |
-| `scanHookNaming`              | Every `hooks/use-*.ts` exports a `useXxx` symbol                                         |
-| `scanComponentNaming`         | Every `components/*.tsx` exports a PascalCase / `createX` / `useX` symbol                |
-| `scanFetchVerbInApi`          | `api/` functions never use the `fetch*` verb                                             |
-| `scanConsole`                 | No `console.*` in runtime code                                                           |
-| `scanFetch`                   | No native `fetch()` calls                                                                |
-| `scanAxiosImports`            | No direct `axios` imports                                                                |
-| `scanOnlySkip`                | No committed `.only` / `.skip` in tests                                                  |
-| `scanBarrelDefaultExports`    | No `export default` in module barrels                                                    |
-| `scanLeakedInternals`         | No underscore-prefixed exports leaked from barrels                                       |
-| `scanLocaleParity`            | `locales/` ships `en.ts` + `fr.ts` + `index.ts` + matching `TranslationsEn/Fr` constants |
-| `scanDomScriptSinks`          | Any package writing to a DOM-script sink ships a `<pkg>/csp` subpath (Trusted Types)     |
-| `scanUndeclaredDeps`          | Every bare import is declared in the package's own `package.json` (no phantom deps)      |
-| `scanUseClientDirective`      | RSC-consumed modules mark every client-hook file with `'use client'` (opt-in)            |
-| `scanForbiddenStructure`      | Core modules carry no `hooks/components/providers/`; React modules carry no `api/`       |
-| `scanAnonymousDefaultExports` | No anonymous `export default` (breaks DevTools labels & stack traces)                    |
-| `scanWallClockInApi`          | `api/` helpers never read the wall clock (`Date.now()` / `new Date()`)                   |
-| `scanUseFormResolver`         | Every `useForm()` call pairs with a `resolver:` (no silent validation skips)             |
-| `scanEmptyCatch`              | No empty `catch {}` blocks (errors must be logged, rethrown, or handled)                 |
-| `scanReadmePresence`          | Every module ships a `README.md` whose H1 matches the module name                        |
-| `scanSharedDepVersions`       | Curated shared deps use one version constraint across every package                      |
-
-All scanners return `Violation[]`. Empty array means the rule passes.
-`collectImports` (specifier extraction) and `hasBannedConsole` (pure predicate)
-are also exported for building custom checks.
-
-## Customizing
-
-### Skip rules per module
+Allowlisted scanners (those taking `AllowlistedScanContext`) accept
+`allowedModules` (exempt a whole module) and `allowedFiles` (substring match
+against the relative path — exempt one file):
 
 ```ts
-scanConsole({
-  ...ctx,
-  allowedModules: ['logger', 'logger-otlp'], // these may use console.*
-});
+scanConsole({ ...ctx, allowedModules: ['logger', 'logger-otlp'] });
+scanFetch({ ...ctx, allowedFiles: ['src/features/auth/bff-auth-provider.tsx'] });
 ```
 
-### Skip rules per file
+`scanUseClientDirective` is **opt-in by module** — it flags only the modules you
+pass in `ctx.modules`, so scope it to the packages a React Server Components app
+actually imports. `scanDomScriptSinks`, `scanUndeclaredDeps`, `scanReadmePresence`
+and `scanSharedDepVersions` read each module's `package.json` / `csp` entry from
+`Module.dir`/`Module.srcDir`; override the lookup with `packageJsonPath` /
+`cspSubpath` for non-standard layouts.
 
-Use `allowedFiles` (substring match against the relative path) for
-one-off exceptions:
+## Public API
 
-```ts
-scanFetch({
-  ...ctx,
-  allowedFiles: ['src/features/auth/bff-auth-provider.tsx'],
-});
-```
+Every `scan*` function returns `Violation[]`; an empty array passes. `fs` helpers
+(`walkSourceFiles`, `isTestFile`, `isTestingDir`, `rel`, `readFile`,
+`stripComments`) and the import-collection helpers are exported for building
+custom checks.
 
-Available on `scanKebabCase`, `scanConsole`, `scanFetch`, `scanAxiosImports`.
+| Symbol                        | Kind | Purpose                                                                   |
+| ----------------------------- | ---- | ------------------------------------------------------------------------- |
+| `Module`                      | type | One unit to scan (`name`, `dir`, `srcDir`, `isReact?`)                    |
+| `Violation`                   | type | A single finding (`rule`, `module`, `file`, `message`)                    |
+| `ScanContext`                 | type | `{ modules, repoRoot }` shared by every scanner                           |
+| `AllowlistedScanContext`      | type | `ScanContext` + `allowedModules` / `allowedFiles` exemptions              |
+| `walkSourceFiles`             | fn   | Recursively list `.ts`/`.tsx` files (skips `node_modules`, `dist`, …)     |
+| `isTestFile` / `isTestingDir` | fn   | Predicates: `*.test.*` / `__tests__/` and `testing/` paths                |
+| `rel`                         | fn   | Path relative to `repoRoot` for readable messages                         |
+| `readFile`                    | fn   | UTF-8 file read                                                           |
+| `stripComments`               | fn   | Drop `//`, `/* */`, JSDoc lines before regex matching                     |
+| `collectImports`              | fn   | Extract import/export-from specifiers (comments stripped)                 |
+| `hasBannedConsole`            | fn   | Pure predicate: text references the global `console`                      |
+| `scanKebabCase`               | fn   | Source file names are kebab-case (allows `.stories.tsx`, `.d.ts`)         |
+| `scanHookNaming`              | fn   | Every `hooks/use-*.ts` exports a `useXxx` symbol                          |
+| `scanComponentNaming`         | fn   | `components/*.tsx` exports a PascalCase / `createX` / `useX` symbol       |
+| `scanFetchVerbInApi`          | fn   | `api/` functions never use the `fetch*` verb (mirrors .NET `get`/`list`)  |
+| `scanConsole`                 | fn   | No `console.*` (incl. `globalThis.console`) in runtime code               |
+| `scanFetch`                   | fn   | No native `fetch()` — use the centralized Axios client                    |
+| `scanAxiosImports`            | fn   | No direct `axios` imports outside the api-client façade                   |
+| `scanOnlySkip`                | fn   | No committed `.only` / `.skip` in tests                                   |
+| `scanBarrelDefaultExports`    | fn   | No `export default` in module barrels (tree-shaking)                      |
+| `scanLeakedInternals`         | fn   | No underscore-prefixed exports leaked from barrels                        |
+| `scanLocaleParity`            | fn   | `locales/` ships `en.ts` + `fr.ts` + `index.ts` + `TranslationsEn/Fr`     |
+| `scanAnonymousDefaultExports` | fn   | No anonymous `export default` (breaks DevTools labels / stack traces)     |
+| `scanWallClockInApi`          | fn   | `api/` never reads the wall clock (`Date.now()` / `new Date()`)           |
+| `scanUseFormResolver`         | fn   | Every `useForm()` pairs with a `resolver:` (no silent validation skip)    |
+| `scanEmptyCatch`              | fn   | No empty `catch {}` blocks (log, rethrow, or handle)                      |
+| `scanReadmePresence`          | fn   | Every module ships a `README.md` whose H1 matches the module name         |
+| `scanSharedDepVersions`       | fn   | Curated shared deps use one version constraint across packages            |
+| `scanDomScriptSinks`          | fn   | DOM-script-sink packages ship a `<pkg>/csp` subpath (Trusted Types)       |
+| `scanUndeclaredDeps`          | fn   | Every bare import is declared in the package's own `package.json`         |
+| `scanUseClientDirective`      | fn   | Opt-in: RSC-consumed client-hook files carry `'use client'`               |
+| `scanForbiddenStructure`      | fn   | Core no `hooks/components/providers/`; React no `api/`                    |
+| `BarrelScanOptions`           | type | `ScanContext` + `barrelFile?` for `scanBarrel*` / `scanLeakedInternals`   |
+| `ReadmePresenceOptions`       | type | `scanReadmePresence` options (`expectedHeading?`)                         |
+| `SharedDepVersionsOptions`    | type | `scanSharedDepVersions` options (`deps`, `sections?`, `packageJsonPath?`) |
+| `DomScriptSinksOptions`       | type | `scanDomScriptSinks` options (`cspSubpath?`)                              |
+| `UndeclaredDepsOptions`       | type | `scanUndeclaredDeps` options (`packageJsonPath?`, `ignore?`)              |
+| `ForbiddenStructureOptions`   | type | `scanForbiddenStructure` options (`coreForbidden?`, `reactForbidden?`)    |
 
-### Nested layouts
-
-`scanHookNaming`, `scanComponentNaming`, and `scanFetchVerbInApi` walk
-**recursively** under each module's `srcDir`, so they find every
-`hooks/` / `components/` / `api/` subdir regardless of depth — the same
-rule works for a flat package and a feature-folder app.
-
-### Opt-in scanners
-
-`scanUseClientDirective` is **opt-in by module**: it flags only the modules
-you pass in `ctx.modules`. Scope it to the packages a React Server Components
-app actually imports — server-only modules never need the directive:
-
-```ts
-const rsc = new Set(['@granit/react-cms']);
-scanUseClientDirective({ ...ctx, modules: ctx.modules.filter((m) => rsc.has(m.name)) });
-```
-
-`scanDomScriptSinks` and `scanUndeclaredDeps` read each module's
-`package.json`/`src/csp/index.ts` from `Module.dir`/`Module.srcDir`. Override
-the lookup with `packageJsonPath` / `cspSubpath` for non-standard layouts.
-
-## Violation shape
+### `Violation` shape
 
 ```ts
 interface Violation {
-  rule: string; // stable identifier ("kebab-case", "no-console", ...)
+  rule: string; // stable identifier ("kebab-case", "no-console", …)
   module: string; // the Module.name where the violation lives
   file: string; // path relative to ScanContext.repoRoot
   message: string; // human-readable explanation
 }
 ```
 
-Vitest renders the array diff inline — the `file` field is enough for
-your IDE to make it clickable.
+Vitest renders the array diff inline — the `file` field is enough for your IDE to
+make it clickable.
 
-## Adding a new scanner
+## Out of scope / caveats
 
-1. Add a function in
-   [`src/scanners/<area>.ts`](src/scanners) returning `Violation[]`.
-2. Re-export it from [`src/index.ts`](src/index.ts).
-3. Add coverage in the framework's
-   [`@granit/arch-tests`](../arch-tests) suite first — it's the kit's
-   reference user, and it catches false-positives across 120+ packages.
+- **No assertions.** Scanners are pure (no `expect`, no file mutation); the caller
+  decides how to assert. Keep added scanners pure too — the caller owns the test
+  framework.
+- **Regex-based, not a full AST.** Scanners match against comment-stripped source
+  via bounded regexes (no user input, no ReDoS risk on developer files). They are
+  intentionally conservative heuristics, not type-aware analysis.
+- **`scanDomScriptSinks` mirrors, does not replace, `scripts/check-csp-policies.mjs`.**
+  Inside `granit-front` the canonical CSP gate remains `pnpm check:csp`; the
+  scanner lets downstream apps enforce the same Trusted-Types rule from their own
+  Vitest suite. A package writing to a DOM-script sink (`.innerHTML`, `.outerHTML`,
+  `.insertAdjacentHTML`, `setAttribute('src', …)`) MUST ship a `<pkg>/csp` subpath
+  with an idempotent `installPolicy()`.
+- **`scanEmptyCatch` ignores `.catch(() => …)` Promise handlers** on purpose —
+  `.catch(() => undefined)` is an accepted fire-and-forget idiom (e.g. cache
+  invalidation after an already-successful mutation).
+- **Adding a scanner:** add the function under `src/scanners/<area>.ts`, re-export
+  it from `src/index.ts`, and add coverage in the [`@granit/arch-tests`](../arch-tests)
+  suite first — it's the kit's reference user and catches false positives across
+  the whole workspace.
 
-Keep scanners pure (no `expect`, no file mutation). The caller decides
-how to assert.
+## License
+
+Apache-2.0
