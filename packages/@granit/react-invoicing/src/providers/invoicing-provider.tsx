@@ -1,9 +1,11 @@
 import { useOptionalGranitClient } from '@granit/react-api-client';
+import { QueryProvider } from '@granit/react-query-engine';
 import { createContext, useContext, useMemo } from 'react';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
 import type { AxiosInstance } from '@granit/api-client';
+import type { QueryConfig } from '@granit/query-engine';
 import type { ReactNode } from 'react';
 
 /** Configuration for the invoicing provider. */
@@ -20,6 +22,8 @@ export interface InvoicingConfig {
  */
 export interface ResolvedInvoicingConfig extends InvoicingConfig {
   readonly client: AxiosInstance;
+  /** Base path after the provider applied the default. */
+  readonly basePath: string;
 }
 
 export interface InvoicingProviderProps {
@@ -45,7 +49,20 @@ export function InvoicingProvider({ config, children }: Readonly<InvoicingProvid
       client,
     };
   }, [config, contextClient]);
-  return <InvoicingConfigContext value={value}>{children}</InvoicingConfigContext>;
+
+  // QueryEngine surface for the invoice grid: `GET {basePath}/invoices` is a
+  // `MapGranitQuery<InvoiceResponse>` endpoint (it ships a `/meta`), so the
+  // list is driven by `useInvoiceQuery` (useQueryEndpoint) under this provider.
+  const queryConfig = useMemo<QueryConfig>(
+    () => ({ client: value.client, basePath: `${value.basePath}/invoices` }),
+    [value]
+  );
+
+  return (
+    <InvoicingConfigContext value={value}>
+      <QueryProvider config={queryConfig}>{children}</QueryProvider>
+    </InvoicingConfigContext>
+  );
 }
 
 /** Returns the invoicing configuration from the nearest `InvoicingProvider`. */

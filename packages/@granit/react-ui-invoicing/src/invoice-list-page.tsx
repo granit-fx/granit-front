@@ -1,18 +1,9 @@
 import { Datasource, WIDGET_SIZE } from '@granit/dashboards';
 import { KpiTile } from '@granit/react-analytics';
-import { useInvoices } from '@granit/react-invoicing';
+import { useInvoiceQuery } from '@granit/react-invoicing';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
-import {
-  Button,
-  Skeleton,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@granit/react-ui';
-import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { Button, Skeleton } from '@granit/react-ui';
+import { ManualDataTable } from '@granit/react-ui-admin-kit';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -38,11 +29,17 @@ const UNPAID_TOTAL_KPI: KpiWidgetDefinition = {
   datasource: Datasource.metric('Granit.Invoicing.UnpaidInvoiceTotalMetric'),
 };
 
+const PAGE_SIZES = [10, 20, 50];
+
 export function InvoiceListPage() {
   const { t, i18n } = useTranslation();
   const { formatDate } = useDateFormatter();
   const navigate = useNavigate();
-  const { data: invoicesPage, isLoading } = useInvoices();
+  // Query-engine surface: server-side pagination/filter/sort lives in the
+  // shared reducer (wired by InvoicingProvider). The grid renders the paged
+  // result and dispatches page changes back through it.
+  const { query, params, setPage, setPageSize } = useInvoiceQuery();
+  const { data: invoicesPage, isLoading } = query;
 
   const [createOpen, setCreateOpen] = useState(false);
 
@@ -63,12 +60,6 @@ export function InvoiceListPage() {
       }),
     [t, formatDate, handleViewDetail, i18n.language]
   );
-
-  const table = useReactTable({
-    data: [...(invoicesPage?.items ?? [])],
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
 
   return (
     <div data-slot="invoice-list-page" className="space-y-6">
@@ -95,44 +86,17 @@ export function InvoiceListPage() {
           ))}
         </div>
       ) : (
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="py-8 text-center">
-                    <span className="text-sm text-muted-foreground">
-                      {t('Invoicing.List.NoResults')}
-                    </span>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+        <ManualDataTable
+          columns={columns}
+          data={invoicesPage?.items ?? []}
+          totalCount={invoicesPage?.totalCount ?? 0}
+          page={params.page ?? 1}
+          pageSize={params.pageSize ?? 20}
+          pageSizes={PAGE_SIZES}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+          data-slot="invoice-table"
+        />
       )}
 
       <CreateInvoiceDialog open={createOpen} onOpenChange={setCreateOpen} />

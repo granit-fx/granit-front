@@ -10,6 +10,7 @@ import {
   markInvoiceUncollectible,
   queryInvoices,
 } from '@granit/invoicing';
+import { useQueryEndpoint } from '@granit/react-query-engine';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { buildInvoicingQueryKey, useInvoicingConfig } from '../providers/invoicing-provider';
@@ -22,6 +23,7 @@ import type {
   MarkInvoiceUncollectibleRequest,
 } from '@granit/invoicing';
 import type { PagedResult, QueryMetadata, QueryRequest } from '@granit/query-engine';
+import type { UseQueryEndpointOptions, UseQueryEndpointReturn } from '@granit/react-query-engine';
 import type {
   WorkflowStatus,
   WorkflowTransitionRequest,
@@ -47,6 +49,26 @@ export function useInvoices(
     queryKey: [...buildInvoicingQueryKey(config, 'invoices', 'list'), request],
     queryFn: () => queryInvoices(config.client, config.basePath!, request),
   });
+}
+
+/**
+ * QueryEngine endpoint for invoices ({@link InvoiceResponse}), backed by the
+ * `MapGranitQuery<InvoiceResponse>()` group under `{basePath}/invoices`. Owns the
+ * pagination / filter / sort / group-by state and exposes the dispatchers plus
+ * the paged result — the standard surface for the interactive invoice grid
+ * (prefer this over {@link useInvoices} for list pages). Must be used within an
+ * {@link InvoicingProvider}, which wires the inner `QueryProvider`.
+ *
+ * @example
+ * ```tsx
+ * const { query, params, setPage, setPageSize } = useInvoiceQuery();
+ * query.data?.items.map((inv) => inv.number);
+ * ```
+ */
+export function useInvoiceQuery(
+  options?: UseQueryEndpointOptions
+): UseQueryEndpointReturn<InvoiceResponse> {
+  return useQueryEndpoint<InvoiceResponse>(options);
 }
 
 /**

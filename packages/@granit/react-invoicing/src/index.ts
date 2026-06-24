@@ -15,6 +15,7 @@ export {
   useFinalizeInvoice,
   useInvoice,
   useInvoiceMeta,
+  useInvoiceQuery,
   useInvoices,
   useListInvoiceTransitions,
   useMarkInvoiceUncollectible,

@@ -25,8 +25,8 @@ vi.mock('react-router-dom', async (importOriginal) => {
   };
 });
 
-const { mockUseInvoices, mockUseInvoice } = vi.hoisted(() => ({
-  mockUseInvoices: vi.fn(),
+const { mockUseInvoiceQuery, mockUseInvoice } = vi.hoisted(() => ({
+  mockUseInvoiceQuery: vi.fn(),
   mockUseInvoice: vi.fn(),
 }));
 
@@ -34,7 +34,7 @@ vi.mock('@granit/react-invoicing', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   return {
     ...actual,
-    useInvoices: mockUseInvoices,
+    useInvoiceQuery: mockUseInvoiceQuery,
     useInvoice: mockUseInvoice,
   };
 });
@@ -94,9 +94,11 @@ afterEach(() => vi.clearAllMocks());
 
 describe('InvoiceListPage navigation', () => {
   beforeEach(() => {
-    mockUseInvoices.mockReturnValue({
-      data: { items: [mockInvoice], totalCount: 1 },
-      isLoading: false,
+    mockUseInvoiceQuery.mockReturnValue({
+      query: { data: { items: [mockInvoice], totalCount: 1 }, isLoading: false },
+      params: {},
+      setPage: vi.fn(),
+      setPageSize: vi.fn(),
     });
   });
 

@@ -17,15 +17,25 @@ const mockInvoices = sampleInvoices;
 // Mocks
 // ---------------------------------------------------------------------------
 
-const { mockUseInvoices } = vi.hoisted(() => ({
-  mockUseInvoices: vi.fn(),
+const { mockUseInvoiceQuery } = vi.hoisted(() => ({
+  mockUseInvoiceQuery: vi.fn(),
 }));
+
+// Build the query-engine surface returned by useInvoiceQuery (UseQueryEndpointReturn).
+function queryEndpoint(data: unknown, isLoading: boolean) {
+  return {
+    query: { data, isLoading },
+    params: {},
+    setPage: vi.fn(),
+    setPageSize: vi.fn(),
+  };
+}
 
 vi.mock('@granit/react-invoicing', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   return {
     ...actual,
-    useInvoices: mockUseInvoices,
+    useInvoiceQuery: mockUseInvoiceQuery,
   };
 });
 
@@ -59,10 +69,9 @@ describe('InvoiceListPage', () => {
   afterEach(() => vi.clearAllMocks());
 
   it('should render the page title and subtitle', async () => {
-    mockUseInvoices.mockReturnValue({
-      data: { items: mockInvoices, totalCount: mockInvoices.length },
-      isLoading: false,
-    });
+    mockUseInvoiceQuery.mockReturnValue(
+      queryEndpoint({ items: mockInvoices, totalCount: mockInvoices.length }, false)
+    );
     renderWithProviders(<InvoiceListPage />);
     await waitFor(() => {
       expect(screen.getByText('Invoicing')).toBeInTheDocument();
@@ -71,28 +80,25 @@ describe('InvoiceListPage', () => {
   });
 
   it('should have the correct data-slot', () => {
-    mockUseInvoices.mockReturnValue({
-      data: { items: mockInvoices, totalCount: mockInvoices.length },
-      isLoading: false,
-    });
+    mockUseInvoiceQuery.mockReturnValue(
+      queryEndpoint({ items: mockInvoices, totalCount: mockInvoices.length }, false)
+    );
     renderWithProviders(<InvoiceListPage />);
     expect(document.querySelector('[data-slot="invoice-list-page"]')).toBeInTheDocument();
   });
 
   it('should render the create button', () => {
-    mockUseInvoices.mockReturnValue({
-      data: { items: mockInvoices, totalCount: mockInvoices.length },
-      isLoading: false,
-    });
+    mockUseInvoiceQuery.mockReturnValue(
+      queryEndpoint({ items: mockInvoices, totalCount: mockInvoices.length }, false)
+    );
     renderWithProviders(<InvoiceListPage />);
     expect(screen.getByRole('button', { name: 'Create Invoice' })).toBeInTheDocument();
   });
 
   it('should render the column headers', async () => {
-    mockUseInvoices.mockReturnValue({
-      data: { items: mockInvoices, totalCount: mockInvoices.length },
-      isLoading: false,
-    });
+    mockUseInvoiceQuery.mockReturnValue(
+      queryEndpoint({ items: mockInvoices, totalCount: mockInvoices.length }, false)
+    );
     renderWithProviders(<InvoiceListPage />);
     await waitFor(() => {
       expect(screen.getByText('Invoice Number')).toBeInTheDocument();
@@ -105,10 +111,9 @@ describe('InvoiceListPage', () => {
   });
 
   it('should render a row per invoice', async () => {
-    mockUseInvoices.mockReturnValue({
-      data: { items: mockInvoices, totalCount: mockInvoices.length },
-      isLoading: false,
-    });
+    mockUseInvoiceQuery.mockReturnValue(
+      queryEndpoint({ items: mockInvoices, totalCount: mockInvoices.length }, false)
+    );
     renderWithProviders(<InvoiceListPage />);
     await waitFor(() => {
       expect(screen.getByText('INV-2026-0001')).toBeInTheDocument();
@@ -119,23 +124,21 @@ describe('InvoiceListPage', () => {
     expect(screen.getByText('Paid')).toBeInTheDocument();
   });
 
-  it('should render the empty state when there are no invoices', async () => {
-    mockUseInvoices.mockReturnValue({
-      data: { items: [], totalCount: 0 },
-      isLoading: false,
-    });
+  it('should render the query grid with no data rows when there are no invoices', async () => {
+    mockUseInvoiceQuery.mockReturnValue(queryEndpoint({ items: [], totalCount: 0 }, false));
     renderWithProviders(<InvoiceListPage />);
+    // The admin-kit grid still renders (with its own empty state); no invoice rows.
     await waitFor(() => {
-      expect(screen.getByText('No invoices found')).toBeInTheDocument();
+      expect(document.querySelector('[data-slot="invoice-table"]')).toBeInTheDocument();
     });
     expect(screen.queryByText('INV-2026-0001')).not.toBeInTheDocument();
   });
 
   it('should render loading skeletons while invoices load', () => {
-    mockUseInvoices.mockReturnValue({ data: undefined, isLoading: true });
+    mockUseInvoiceQuery.mockReturnValue(queryEndpoint(undefined, true));
     renderWithProviders(<InvoiceListPage />);
-    // Table rows are not rendered during loading.
+    // The grid is not rendered during loading — skeletons take its place.
     expect(screen.queryByText('Invoice Number')).not.toBeInTheDocument();
-    expect(screen.queryByText('No invoices found')).not.toBeInTheDocument();
+    expect(document.querySelector('[data-slot="invoice-table"]')).not.toBeInTheDocument();
   });
 });
