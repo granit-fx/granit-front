@@ -8999,20 +8999,9 @@
           "signature": "function WorkspaceEntityPage("
         },
         {
-          "name": "EntityCalendarView",
+          "name": "WorkspaceEntityDetailPage",
           "kind": "function",
-          "signature": "function EntityCalendarView("
-        },
-        {
-          "name": "EntityCalendarViewProps",
-          "kind": "interface",
-          "signature": "interface EntityCalendarViewProps",
-          "members": []
-        },
-        {
-          "name": "CalendarViewMode",
-          "kind": "type",
-          "signature": "type CalendarViewMode = 'day' | 'week' | 'month' | 'year'"
+          "signature": "function WorkspaceEntityDetailPage()"
         },
         {
           "name": "EntityKanbanView",
@@ -9024,22 +9013,6 @@
           "kind": "interface",
           "signature": "interface EntityKanbanViewProps",
           "members": []
-        },
-        {
-          "name": "EntityGalleryView",
-          "kind": "function",
-          "signature": "function EntityGalleryView("
-        },
-        {
-          "name": "EntityGalleryViewProps",
-          "kind": "interface",
-          "signature": "interface EntityGalleryViewProps",
-          "members": []
-        },
-        {
-          "name": "GalleryRenderImage",
-          "kind": "type",
-          "signature": "type GalleryRenderImage = ( blobId: string | null, row: Readonly<Record<string, unknown>> ) => ReactNode"
         },
         {
           "name": "EntityViewSwitcher",
@@ -9100,22 +9073,6 @@
           "signature": "function useEntityActionScope(): EntityActionScopeValue"
         },
         {
-          "name": "EntityPageLayout",
-          "kind": "function",
-          "signature": "function EntityPageLayout("
-        },
-        {
-          "name": "EntityPageLayoutProps",
-          "kind": "interface",
-          "signature": "interface EntityPageLayoutProps",
-          "members": []
-        },
-        {
-          "name": "EntityPageLayoutWidth",
-          "kind": "type",
-          "signature": "type EntityPageLayoutWidth = keyof typeof PADDING_CLASSES"
-        },
-        {
           "name": "SidePeekDrawer",
           "kind": "function",
           "signature": "function SidePeekDrawer("
@@ -9130,6 +9087,16 @@
           "name": "EmailFormComponent",
           "kind": "const",
           "signature": "const EmailFormComponent: EntityFormComponent"
+        },
+        {
+          "name": "ImageUploadFormComponent",
+          "kind": "const",
+          "signature": "const ImageUploadFormComponent: EntityFormComponent"
+        },
+        {
+          "name": "LanguageFormComponent",
+          "kind": "const",
+          "signature": "const LanguageFormComponent: EntityFormComponent"
         },
         {
           "name": "MoneyFormComponent",

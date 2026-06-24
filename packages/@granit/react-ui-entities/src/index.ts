@@ -1,17 +1,23 @@
 // Workspace entity pages
 export { WorkspaceEntityPage } from './workspace-entity-page';
-export {
-  WorkspaceEntityDetailPage,
-} from './workspace-entity-detail-page';
+export { WorkspaceEntityDetailPage } from './workspace-entity-detail-page';
 export {
   WorkspaceEntityFormPage,
   type WorkspaceEntityFormPageProps,
 } from './workspace-entity-form-page';
 
 // Views
-export { EntityCalendarView, type EntityCalendarViewProps, type CalendarViewMode } from './entity-calendar-view';
+export {
+  EntityCalendarView,
+  type EntityCalendarViewProps,
+  type CalendarViewMode,
+} from './entity-calendar-view';
 export { EntityKanbanView, type EntityKanbanViewProps } from './entity-kanban-view';
-export { EntityGalleryView, type EntityGalleryViewProps, type GalleryRenderImage } from './entity-gallery-view';
+export {
+  EntityGalleryView,
+  type EntityGalleryViewProps,
+  type GalleryRenderImage,
+} from './entity-gallery-view';
 export { EntityViewSwitcher, type EntityViewSwitcherProps } from './entity-view-switcher';
 export { EntityDetailContent, type EntityDetailContentProps } from './entity-detail-content';
 export { CollectionSectionCard } from './collection-section-card';
@@ -23,18 +29,22 @@ export { EntityActionButton, type EntityActionButtonProps } from './entity-actio
 export { EntityActionScopeProvider, useEntityActionScope } from './entity-action-scope';
 
 // Layout + side peek
-export { EntityPageLayout, type EntityPageLayoutProps, type EntityPageLayoutWidth } from './entity-page-layout';
+export {
+  EntityPageLayout,
+  type EntityPageLayoutProps,
+  type EntityPageLayoutWidth,
+} from './entity-page-layout';
 export { SidePeekDrawer, type SidePeekDrawerProps } from './side-peek-drawer';
 
 // Form-component catalog
-export {
-  PhoneFormComponent,
-  UrlFormComponent,
-  TimezoneFormComponent,
-  EmailFormComponent,
-  MoneyFormComponent,
-  GRANIT_UI_FORM_COMPONENTS,
-} from './form-catalog';
+export { EmailFormComponent } from './form-components/email-form-component';
+export { ImageUploadFormComponent } from './form-components/image-upload-form-component';
+export { LanguageFormComponent } from './form-components/language-form-component';
+export { MoneyFormComponent } from './form-components/money-form-component';
+export { PhoneFormComponent } from './form-components/phone-form-component';
+export { TimezoneFormComponent } from './form-components/timezone-form-component';
+export { UrlFormComponent } from './form-components/url-form-component';
+export { GRANIT_UI_FORM_COMPONENTS } from './form-catalog';
 
 // Helpers + manifest extensions
 export { recapParentRefs, type ParentRef } from './bulk-recap';

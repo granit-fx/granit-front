@@ -5074,9 +5074,15 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-blob-storage':
+        specifier: workspace:*
+        version: link:../react-ui-blob-storage
       '@granit/react-ui-kit':
         specifier: workspace:*
         version: link:../react-ui-kit
+      '@granit/react-ui-localization':
+        specifier: workspace:*
+        version: link:../react-ui-localization
       '@granit/react-workspaces':
         specifier: workspace:*
         version: link:../react-workspaces
