@@ -5,8 +5,7 @@ import {
   useEntityForm,
   useEntityMetadata,
 } from '@granit/react-entities';
-import { useTranslation } from '@granit/react-localization';
-import { resolveLabel } from '@granit/react-localization';
+import { resolveLabel, useTranslation } from '@granit/react-localization';
 import { Button, Skeleton, toast } from '@granit/react-ui';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft } from 'lucide-react';

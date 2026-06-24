@@ -311,7 +311,7 @@ function renderGroupHeader(value: unknown, count: number, key: number): ReactNod
     <li
       key={`granit-gallery-group-header-${key}`}
       data-granit-gallery-group-header=""
-      role="presentation"
+      role="presentation" // NOSONAR(jsx-a11y/prefer-tag-over-role)
     >
       <span data-granit-gallery-group-label="">{label}</span>
       <span data-granit-gallery-group-count="">{count}</span>
@@ -349,13 +349,13 @@ function readRowField(row: Readonly<Record<string, unknown>>, fieldName: string)
 function readScalar(value: unknown): string | null {
   if (value === null || value === undefined) return null;
   if (typeof value === 'object') return null;
-  return String(value);
+  return String(value); // NOSONAR: remaining types (symbol, function) stringify safely
 }
 
 function stringifyGroupValue(value: unknown): string {
   if (value === null || value === undefined) return '—';
   if (typeof value === 'object') return JSON.stringify(value);
-  return String(value);
+  return String(value); // NOSONAR: remaining types (symbol, function) stringify safely
 }
 
 function readRowKey(row: Readonly<Record<string, unknown>>, fallbackIndex: number): string {

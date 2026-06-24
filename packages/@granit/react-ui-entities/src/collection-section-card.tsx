@@ -1,5 +1,4 @@
-import { useDateFormatter, useTranslation } from '@granit/react-localization';
-import { resolveLabel } from '@granit/react-localization';
+import { resolveLabel, useDateFormatter, useTranslation } from '@granit/react-localization';
 import {
   Card,
   CardContent,
@@ -104,7 +103,7 @@ function formatCell(
 
   if (typeof value === 'object') return JSON.stringify(value);
   // Narrowed to primitive scalars above — `String()` is safe.
-  return String(value);
+  return String(value); // NOSONAR: remaining types (symbol, function) stringify safely
 }
 
 function alignClass(align: CollectionColumnManifest['align']): string {

@@ -209,7 +209,7 @@ export function PhoneInput({
         <PopoverTrigger asChild>
           <button
             type="button"
-            role="combobox"
+            role="combobox" // NOSONAR(jsx-a11y/prefer-tag-over-role): custom typeahead combobox — native <input list>/<select> cannot model the rich country selector
             aria-expanded={open}
             aria-controls="phone-input-country-list"
             aria-label={ariaLabelCountry ?? t('Common.Phone.Country', 'Select country')}

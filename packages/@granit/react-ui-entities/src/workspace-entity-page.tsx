@@ -9,8 +9,7 @@ import {
   type EntityActionHandlers,
   type EntitySelectionBarRecap,
 } from '@granit/react-entities';
-import { useDateFormatter, useTranslation } from '@granit/react-localization';
-import { resolveLabel } from '@granit/react-localization';
+import { resolveLabel, useDateFormatter, useTranslation } from '@granit/react-localization';
 import {
   QueryEndpointStateProvider,
   QueryProvider,
@@ -39,9 +38,9 @@ import {
   QueryDataTable,
   SmartFilterBar,
   SortSelector,
+  useOperatorLabels,
+  useSmartFilterSync,
 } from '@granit/react-ui-admin-kit';
-import { useOperatorLabels } from '@granit/react-ui-admin-kit';
-import { useSmartFilterSync } from '@granit/react-ui-admin-kit';
 import { useSidePeek } from '@granit/react-workspaces';
 import { ChevronRight, Pencil, Plus } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
@@ -293,7 +292,7 @@ function formatCell(
   if (formattedDate !== null) return formattedDate;
 
   if (typeof value === 'object') return JSON.stringify(value);
-  return String(value);
+  return String(value); // NOSONAR: remaining types (symbol, function) stringify safely
 }
 
 interface ContentProps {

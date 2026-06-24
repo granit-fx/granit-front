@@ -5,8 +5,7 @@ import {
   useEntityMetadata,
   type EntityActionHandlers,
 } from '@granit/react-entities';
-import { useDateFormatter, useTranslation } from '@granit/react-localization';
-import { resolveLabel } from '@granit/react-localization';
+import { resolveLabel, useDateFormatter, useTranslation } from '@granit/react-localization';
 import { Skeleton } from '@granit/react-ui';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
@@ -25,7 +24,7 @@ type DateFormatter = (date: string | Date) => string;
 function toDisplayString(value: unknown): string {
   if (value === null || value === undefined) return '';
   if (typeof value === 'object') return JSON.stringify(value);
-  return String(value);
+  return String(value); // NOSONAR: remaining types (symbol, function) stringify safely
 }
 
 function formatValuesForDetail(

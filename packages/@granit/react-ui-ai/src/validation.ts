@@ -61,6 +61,55 @@ function isBlank(value: unknown): boolean {
 }
 
 /**
+ * Apply the numeric-range rules for `temperature` and `maxOutputTokens`. Both are
+ * blank-tolerant (untouched empty inputs pass) and skipped when the spec resolver
+ * already flagged the field, so a spec error always wins.
+ */
+function applyNumericRules(
+  values: Record<string, unknown>,
+  errors: ResolverErrors,
+  t: TranslateFn,
+  label: (field: string) => string
+) {
+  if (!errors.temperature && !isBlank(values.temperature)) {
+    const temperature = Number(values.temperature);
+    if (Number.isNaN(temperature) || temperature < TEMPERATURE_MIN) {
+      errors.temperature = {
+        type: CODE_GTE,
+        message: t(CODE_GTE, {
+          comparisonValue: TEMPERATURE_MIN,
+          PropertyName: label('temperature'),
+          nsSeparator: false,
+        }),
+      };
+    } else if (temperature > TEMPERATURE_MAX) {
+      errors.temperature = {
+        type: CODE_LTE,
+        message: t(CODE_LTE, {
+          comparisonValue: TEMPERATURE_MAX,
+          PropertyName: label('temperature'),
+          nsSeparator: false,
+        }),
+      };
+    }
+  }
+
+  if (!errors.maxOutputTokens && !isBlank(values.maxOutputTokens)) {
+    const maxOutputTokens = Number(values.maxOutputTokens);
+    if (!Number.isInteger(maxOutputTokens) || maxOutputTokens < MAX_OUTPUT_TOKENS_MIN) {
+      errors.maxOutputTokens = {
+        type: CODE_GTE,
+        message: t(CODE_GTE, {
+          comparisonValue: MAX_OUTPUT_TOKENS_MIN,
+          PropertyName: label('maxOutputTokens'),
+          nsSeparator: false,
+        }),
+      };
+    }
+  }
+}
+
+/**
  * Apply the client-only validation rules the AI contract does not express.
  * Mutates `errors` in place, only filling fields the spec resolver left untouched
  * (so a spec error always wins). Shared by the create and edit resolvers.
@@ -121,42 +170,7 @@ function applyClientRules(
     errors.model = { type: CODE_MAX_LENGTH, message: maxLengthMessage(MODEL_MAX, 'model') };
   }
 
-  if (!errors.temperature && !isBlank(values.temperature)) {
-    const temperature = Number(values.temperature);
-    if (Number.isNaN(temperature) || temperature < TEMPERATURE_MIN) {
-      errors.temperature = {
-        type: CODE_GTE,
-        message: t(CODE_GTE, {
-          comparisonValue: TEMPERATURE_MIN,
-          PropertyName: label('temperature'),
-          nsSeparator: false,
-        }),
-      };
-    } else if (temperature > TEMPERATURE_MAX) {
-      errors.temperature = {
-        type: CODE_LTE,
-        message: t(CODE_LTE, {
-          comparisonValue: TEMPERATURE_MAX,
-          PropertyName: label('temperature'),
-          nsSeparator: false,
-        }),
-      };
-    }
-  }
-
-  if (!errors.maxOutputTokens && !isBlank(values.maxOutputTokens)) {
-    const maxOutputTokens = Number(values.maxOutputTokens);
-    if (!Number.isInteger(maxOutputTokens) || maxOutputTokens < MAX_OUTPUT_TOKENS_MIN) {
-      errors.maxOutputTokens = {
-        type: CODE_GTE,
-        message: t(CODE_GTE, {
-          comparisonValue: MAX_OUTPUT_TOKENS_MIN,
-          PropertyName: label('maxOutputTokens'),
-          nsSeparator: false,
-        }),
-      };
-    }
-  }
+  applyNumericRules(values, errors, t, label);
 }
 
 /**

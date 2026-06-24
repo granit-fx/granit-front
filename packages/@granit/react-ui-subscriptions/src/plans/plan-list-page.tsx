@@ -22,9 +22,9 @@ import {
   QueryEndpointDataTable,
   SmartFilterBar,
   SortSelector,
+  useOperatorLabels,
+  useSmartFilterSync,
 } from '@granit/react-ui-admin-kit';
-import { useOperatorLabels } from '@granit/react-ui-admin-kit';
-import { useSmartFilterSync } from '@granit/react-ui-admin-kit';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

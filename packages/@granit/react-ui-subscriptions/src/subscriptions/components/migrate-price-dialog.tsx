@@ -51,7 +51,8 @@ export function MigratePriceDialog({
 
   function priceLabel(price: PlanPriceResponse): string {
     const amount = formatCurrency(price.amount, price.currency, i18n.language);
-    return `${amount} / ${t(`Subscriptions.BillingInterval.${price.interval}`)}`;
+    const interval = t(`Subscriptions.BillingInterval.${price.interval}`);
+    return `${amount} / ${interval}`;
   }
 
   function handleConfirm() {

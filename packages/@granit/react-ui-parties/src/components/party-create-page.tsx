@@ -1,6 +1,5 @@
 import { useTranslation } from '@granit/react-localization';
-import { isAxiosError } from '@granit/react-parties';
-import { useCreatePartyMutation } from '@granit/react-parties';
+import { isAxiosError, useCreatePartyMutation } from '@granit/react-parties';
 import { toast, Button, Separator } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
 import { useRef, useState } from 'react';

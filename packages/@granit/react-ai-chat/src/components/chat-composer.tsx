@@ -231,7 +231,7 @@ export function ChatComposer({
 
   const suggestionItems = trigger?.kind === '@' ? mentionResults : promptMatches;
   const showSuggestions =
-    trigger !== null && (trigger.kind === '/' || effectiveSearchMentions !== undefined);
+    trigger?.kind === '/' || (trigger !== null && effectiveSearchMentions !== undefined);
 
   /** Cancel any pending debounced mention search. */
   const clearMentionDebounce = useCallback(() => {
