@@ -6809,7 +6809,19 @@
     {
       "name": "@granit/react-payments",
       "description": "React bindings for @granit/payments — PaymentsProvider and hooks",
-      "exports": []
+      "exports": [
+        {
+          "name": "PaymentTransactionsProvider",
+          "kind": "function",
+          "signature": "function PaymentTransactionsProvider("
+        },
+        {
+          "name": "PaymentTransactionsProviderProps",
+          "kind": "interface",
+          "signature": "interface PaymentTransactionsProviderProps",
+          "members": []
+        }
+      ]
     },
     {
       "name": "@granit/react-payments-sepa-direct-debit",

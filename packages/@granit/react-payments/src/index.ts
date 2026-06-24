@@ -10,6 +10,8 @@ export type {
   PaymentsConfig,
   PaymentsProviderProps,
 } from './providers/payments-provider';
+export { PaymentTransactionsProvider } from './providers/payment-transactions-provider';
+export type { PaymentTransactionsProviderProps } from './providers/payment-transactions-provider';
 
 // Hooks
 export {
@@ -24,6 +26,7 @@ export {
   usePaymentMethods,
   usePaymentTransaction,
   usePaymentTransactions,
+  usePaymentTransactionsQuery,
   useProviderCatalog,
   useRequestPaymentRefund,
   useResyncPaymentMethod,

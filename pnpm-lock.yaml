@@ -2915,12 +2915,6 @@ importers:
       '@granit/payments':
         specifier: workspace:*
         version: link:../payments
-      '@granit/query-engine':
-        specifier: workspace:*
-        version: link:../query-engine
-      '@granit/react-query-engine':
-        specifier: workspace:*
-        version: link:../react-query-engine
       '@tanstack/react-query':
         specifier: 5.101.1
         version: 5.101.1(react@19.2.7)
@@ -2937,9 +2931,15 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
+      '@granit/react-query-engine':
+        specifier: workspace:*
+        version: link:../react-query-engine
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -5956,6 +5956,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-admin-kit':
+        specifier: workspace:*
+        version: link:../react-ui-admin-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation

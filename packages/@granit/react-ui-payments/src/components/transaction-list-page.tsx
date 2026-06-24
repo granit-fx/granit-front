@@ -1,45 +1,25 @@
 import { useTranslation } from '@granit/react-localization';
-import { usePaymentTransactions } from '@granit/react-payments';
-import {
-  Button,
-  Spinner,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@granit/react-ui';
-import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { PaymentTransactionsProvider, usePaymentTransactionsQuery } from '@granit/react-payments';
+import { Button } from '@granit/react-ui';
+import { QueryEndpointDataTable } from '@granit/react-ui-admin-kit';
 import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { ChargeDialog } from './charge-dialog';
 import { createTransactionColumns } from './transaction-columns';
 
-export function TransactionListPage() {
+// Query-engine surface: `GET {basePath}/transactions` is a
+// `MapGranitQuery<PaymentTransactionResponse>` endpoint (it ships a `/meta`), so
+// the list is driven by `usePaymentTransactionsQuery` (useQueryEndpoint) scoped
+// to the transactions resource by `PaymentTransactionsProvider`. Server-side
+// pagination / sort / group-by live in the shared reducer; the admin-kit grid
+// renders the paged result and dispatches changes back through it.
+function TransactionListContent() {
   const { t } = useTranslation();
   const [chargeOpen, setChargeOpen] = useState(false);
 
-  const transactionsQuery = usePaymentTransactions();
-
+  const queryEndpoint = usePaymentTransactionsQuery();
   const columns = useMemo(() => createTransactionColumns({ t }), [t]);
-
-  const transactions = [...(transactionsQuery.data?.items ?? [])];
-
-  const table = useReactTable({
-    data: transactions,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  if (transactionsQuery.isLoading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <Spinner />
-      </div>
-    );
-  }
 
   return (
     <div data-slot="transaction-list-page" className="space-y-6">
@@ -58,47 +38,17 @@ export function TransactionListPage() {
         </Button>
       </div>
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder ? null : (header.column.columnDef.header as string)}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.length > 0 ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {typeof cell.column.columnDef.cell === 'function'
-                        ? cell.column.columnDef.cell(cell.getContext())
-                        : cell.getValue()}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="py-8 text-center text-muted-foreground"
-                >
-                  {t('Common.NoResults')}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      <QueryEndpointDataTable queryEndpoint={queryEndpoint} columns={columns} />
 
       <ChargeDialog open={chargeOpen} onOpenChange={setChargeOpen} />
     </div>
+  );
+}
+
+export function TransactionListPage() {
+  return (
+    <PaymentTransactionsProvider>
+      <TransactionListContent />
+    </PaymentTransactionsProvider>
   );
 }

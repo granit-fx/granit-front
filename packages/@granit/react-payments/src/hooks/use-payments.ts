@@ -14,6 +14,7 @@ import {
   requestPaymentRefund,
   resyncPaymentMethodConfiguration,
 } from '@granit/payments';
+import { useQueryEndpoint } from '@granit/react-query-engine';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { buildPaymentsQueryKey, usePaymentsConfig } from '../providers/payments-provider';
@@ -33,6 +34,7 @@ import type {
   PaymentTransactionResponse,
 } from '@granit/payments';
 import type { PagedResult } from '@granit/query-engine';
+import type { UseQueryEndpointOptions, UseQueryEndpointReturn } from '@granit/react-query-engine';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 /**
@@ -51,6 +53,27 @@ export function usePaymentTransactions(): UseQueryResult<PagedResult<PaymentTran
     queryKey: buildPaymentsQueryKey(config, 'transactions'),
     queryFn: () => listPaymentTransactions(config.client, basePath),
   });
+}
+
+/**
+ * QueryEngine endpoint for payment transactions ({@link PaymentTransactionResponse}),
+ * backed by the `MapGranitQuery<PaymentTransactionResponse>()` group under
+ * `{basePath}/transactions`. Owns the pagination / filter / sort / group-by state
+ * and exposes the dispatchers plus the paged result — the standard surface for the
+ * interactive transaction grid (prefer this over {@link usePaymentTransactions} for
+ * list pages). Must be used within a {@link PaymentTransactionsProvider}, which
+ * wires the inner `QueryProvider`.
+ *
+ * @example
+ * ```tsx
+ * const { query, params, setPage, setPageSize } = usePaymentTransactionsQuery();
+ * query.data?.items.map((txn) => txn.id);
+ * ```
+ */
+export function usePaymentTransactionsQuery(
+  options?: UseQueryEndpointOptions
+): UseQueryEndpointReturn<PaymentTransactionResponse> {
+  return useQueryEndpoint<PaymentTransactionResponse>(options);
 }
 
 /**
