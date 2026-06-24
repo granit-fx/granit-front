@@ -13,7 +13,7 @@ import {
   SortSelector,
   useOperatorLabels,
   useSmartFilterSync,
-} from '@granit/react-ui-admin-kit';
+} from '@granit/react-ui-kit';
 import { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 

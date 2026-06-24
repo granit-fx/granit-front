@@ -12,7 +12,7 @@ import {
   Textarea,
   toast,
 } from '@granit/react-ui';
-import { TimezonePicker, UrlInput } from '@granit/react-ui-admin-kit';
+import { TimezonePicker, UrlInput } from '@granit/react-ui-kit';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 

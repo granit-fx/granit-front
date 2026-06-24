@@ -24,7 +24,7 @@ import {
   SortSelector,
   useOperatorLabels,
   useSmartFilterSync,
-} from '@granit/react-ui-admin-kit';
+} from '@granit/react-ui-kit';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

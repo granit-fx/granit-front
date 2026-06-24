@@ -37,7 +37,7 @@ vi.mock('@granit/react-query-engine', () => ({
 
 // The list page reads `useOperatorLabels` / `useSmartFilterSync` from admin-kit
 // (cross-cutting helpers). Keep the real grid components, stub only the hooks.
-vi.mock('@granit/react-ui-admin-kit', async (importOriginal) => {
+vi.mock('@granit/react-ui-kit', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   return {
     ...actual,

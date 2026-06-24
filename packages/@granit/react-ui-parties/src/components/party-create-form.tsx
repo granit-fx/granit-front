@@ -15,7 +15,7 @@ import {
   SelectValue,
   Textarea,
 } from '@granit/react-ui';
-import { TimezonePicker, UrlInput } from '@granit/react-ui-admin-kit';
+import { TimezonePicker, UrlInput } from '@granit/react-ui-kit';
 import { useForm } from 'react-hook-form';
 
 import { PARTY_ASSIGNABLE_ROLES, PARTY_KINDS } from '../constants';

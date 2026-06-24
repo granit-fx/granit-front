@@ -1,4 +1,4 @@
-// @granit/react-ui-admin-kit — barrel. Cross-cutting admin building blocks
+// @granit/react-ui-kit — barrel. Cross-cutting admin building blocks
 // (data grid, querying, form dialog, view switcher). export * so consumers
 // keep their previous deep-import surface through a single entrypoint.
 
@@ -30,3 +30,4 @@ export * from './view-switcher/view-switcher';
 export * from './inputs/url-input';
 export * from './inputs/phone-input';
 export { formatPhoneInternational } from './inputs/format-phone';
+export { useDebouncedValue } from '@granit/react-data-lookup';

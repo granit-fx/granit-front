@@ -84,7 +84,7 @@ vi.mock('@granit/react-subscriptions', () => ({
   useCreateSubscription: () => ({ mutate: vi.fn(), isPending: false }),
 }));
 
-vi.mock('@granit/react-ui-admin-kit', async (importOriginal) => ({
+vi.mock('@granit/react-ui-kit', async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
   useSmartFilterSync: () => ({ handlePresetToggle: vi.fn() }),
   useOperatorLabels: () => ({}),

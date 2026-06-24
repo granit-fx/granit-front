@@ -13,7 +13,7 @@ import {
   SortSelector,
   useOperatorLabels,
   useSmartFilterSync,
-} from '@granit/react-ui-admin-kit';
+} from '@granit/react-ui-kit';
 import { useMemo } from 'react';
 
 import type { UsageAggregate } from '@granit/metering';

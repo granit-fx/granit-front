@@ -6,7 +6,7 @@ page (currency selector, summary card, paginated transaction table) and the admi
 feature by composing the headless hooks/provider from
 [`@granit/react-customer-balance`](../react-customer-balance) with the foundation UI
 packages ([`@granit/react-ui`](../react-ui) primitives and the
-[`@granit/react-ui-admin-kit`](../react-ui-admin-kit) `FormDialog`). It owns no HTTP
+[`@granit/react-ui-kit`](../react-ui-admin-kit) `FormDialog`). It owns no HTTP
 transport and no React Query wiring — those live one layer down.
 
 The split is three packages over the same .NET `Granit.CustomerBalance` backend
@@ -31,7 +31,7 @@ for app consumption through a public registry. A consumer must declare these pee
   `customerBalanceConstraints` that drive the dialog form validation.
 - `@granit/react-ui` — the shadcn-style primitives (`Card`, `Table`, `Select`,
   `Input`, `FormField`, `toast`, …).
-- `@granit/react-ui-admin-kit` — the `FormDialog` shell used by both dialogs.
+- `@granit/react-ui-kit` — the `FormDialog` shell used by both dialogs.
 - `@granit/react-localization` — `useTranslation` and `useDateFormatter`.
 - `@granit/react-validation` — `createConstraintsResolver` bridging the core
   constraints to react-hook-form.

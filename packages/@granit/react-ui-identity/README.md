@@ -7,7 +7,7 @@ devices, attributes), roles, groups, and the identity cache. This is the
 [`@granit/react-identity`](../react-identity) (the `IdentityProvider` and its
 `useProviderUsers` / `useRoles` / `useGroups` / `useUserSessions` /
 `useIdentityCacheStats` / … hooks) with the foundation UI packages
-(`@granit/react-ui`, `@granit/react-ui-admin-kit`, `@granit/react-ui-data-exchange`)
+(`@granit/react-ui`, `@granit/react-ui-kit`, `@granit/react-ui-data-exchange`)
 into drop-in screens. It owns rendering only — no Axios calls, no DTOs.
 
 The split is three packages over the same .NET `Granit.Identity` backend
@@ -39,7 +39,7 @@ these peers:
 - `@granit/react-data-exchange` — `DataExchangeProvider` for user export/import.
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.
 - `@granit/react-ui` — the shadcn-based primitives (`Card`, `Table`, `Command`, …).
-- `@granit/react-ui-admin-kit` — `DetailAsideLayout` for the user-detail layout.
+- `@granit/react-ui-kit` — `DetailAsideLayout` for the user-detail layout.
 - `@granit/react-ui-data-exchange` — the export/import buttons and dialogs.
 - `@granit/types` — branded ids (`UserId`, `toEntityId`).
 - `@granit/utils` — the `cn` class helper.

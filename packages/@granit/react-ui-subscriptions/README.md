@@ -7,7 +7,7 @@ the subscriptions list / detail (create, change-plan, cancel, migrate-price,
 bulk-migrate) and per-subscription seat assignment. This is the **rendering**
 layer: it composes the headless [`@granit/react-subscriptions`](../react-subscriptions)
 (provider + hooks) with the foundation UI packages
-([`@granit/react-ui`](../react-ui), [`@granit/react-ui-admin-kit`](../react-ui-admin-kit))
+([`@granit/react-ui`](../react-ui), [`@granit/react-ui-kit`](../react-ui-admin-kit))
 and the QueryEngine ([`@granit/react-query-engine`](../react-query-engine)) for
 the discovery grids. It owns no DTOs, HTTP calls, or query keys — those live one
 and two layers down.
@@ -34,7 +34,7 @@ these peers:
   `SeatResponse`, …) used in column, dialog, and page types.
 - `@granit/react-ui` — foundation primitives (`Card`, `Dialog`, `Table`,
   `Badge`, `Button`, `Skeleton`, `Spinner`, `toast`, …).
-- `@granit/react-ui-admin-kit` — `QueryEndpointDataTable`, `QueryControlBar`,
+- `@granit/react-ui-kit` — `QueryEndpointDataTable`, `QueryControlBar`,
   `SmartFilterBar`, and the sort / group-by selectors for the discovery grids.
 - `@granit/react-query-engine` — `QueryProvider` / `useQueryEndpoint` /
   `useQueryMeta`, the QueryEngine surface backing the plans and subscriptions

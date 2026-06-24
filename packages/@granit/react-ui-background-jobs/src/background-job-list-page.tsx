@@ -8,7 +8,7 @@ import {
 } from '@granit/react-background-jobs';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { Button, Card, CardContent, Spinner } from '@granit/react-ui';
-import { ManualDataTable, ViewSwitcher } from '@granit/react-ui-admin-kit';
+import { ManualDataTable, ViewSwitcher } from '@granit/react-ui-kit';
 import { RotateCw } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -16,7 +16,7 @@ import { createBackgroundJobColumns } from './components/background-job-columns'
 import { JobCard } from './components/job-card';
 
 import type { BackgroundJobStatus } from '@granit/background-jobs';
-import type { ViewMode } from '@granit/react-ui-admin-kit';
+import type { ViewMode } from '@granit/react-ui-kit';
 
 // ---------------------------------------------------------------------------
 // Kanban view

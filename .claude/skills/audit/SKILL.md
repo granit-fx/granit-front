@@ -425,13 +425,13 @@ When auditing all packages, perform these additional checks:
     find packages/@granit/react-ui-*/src -maxdepth 3 \( -name 'button.tsx' -o -name 'dialog.tsx' -o -name 'select.tsx' -o -name 'table.tsx' \) 2>/dev/null
     ```
 
-    `@granit/react-ui-admin-kit`'s direct `radix-ui` use for low-level
+    `@granit/react-ui-kit`'s direct `radix-ui` use for low-level
     compositions (smart-filter-bar) is the documented exception — verify, don't
     flag. A domain `react-ui-{module}` rebuilding a wrapped primitive is an
     INCONSISTENCY.
 
 13. **Admin UI composition & structure (checklist 7f)**: domain `react-ui-*`
-    forms are spec-driven (no zod); grids compose the `@granit/react-ui-admin-kit`
+    forms are spec-driven (no zod); grids compose the `@granit/react-ui-kit`
     data-table family rather than raw `@tanstack/react-table`; components live under
     `src/components/`; non-trivial components ship `*.stories.tsx`; a11y baseline holds.
 
@@ -659,7 +659,7 @@ git diff origin/develop...HEAD --name-only -- "packages/@granit/react-ui-{pkg}/s
   pre-commit generator)
 - **Grid via admin-kit**: a new `useReactTable` / `flexRender` for a paginated
   list is an **INCONSISTENCY** (`Fix: compose QueryEndpointDataTable from
-  @granit/react-ui-admin-kit`); a raw `ColumnDef<T>` type import is fine
+  @granit/react-ui-kit`); a raw `ColumnDef<T>` type import is fine
 - **Placement**: a new `*-page.tsx` / `*-dialog.tsx` at `src/` root (not under
   `src/components/`) is an **INCONSISTENCY**
 - **Storybook**: a new presentational component without a co-located

@@ -2,7 +2,7 @@ import { useGranitClient } from '@granit/react-api-client';
 import { ImportProvider, useImportJobs } from '@granit/react-data-exchange';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { Spinner } from '@granit/react-ui';
-import { QueryDataTable } from '@granit/react-ui-admin-kit';
+import { QueryDataTable } from '@granit/react-ui-kit';
 import { useCallback, useMemo, useState } from 'react';
 
 import { HistoryFilters } from './components/history-filters';

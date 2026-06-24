@@ -8,7 +8,7 @@ human-readable cron-expression rendering.
 This is the **react-ui** (visual) layer. It holds the rendering only; it composes
 the headless [`@granit/react-background-jobs`](../react-background-jobs) (TanStack
 Query data hooks + `BackgroundJobsProvider`) with the foundation UI packages
-([`@granit/react-ui`](../react-ui), [`@granit/react-ui-admin-kit`](../react-ui-admin-kit)).
+([`@granit/react-ui`](../react-ui), [`@granit/react-ui-kit`](../react-ui-admin-kit)).
 The DTOs, Axios calls and permission constants come from the framework-agnostic
 core, [`@granit/background-jobs`](../background-jobs).
 
@@ -35,7 +35,7 @@ these peers:
   columns and badge.
 - `@granit/react-api-client` — `useGranitClient`, the Axios client the page hands
   to the headless provider.
-- `@granit/react-ui` and `@granit/react-ui-admin-kit` — shadcn primitives plus
+- `@granit/react-ui` and `@granit/react-ui-kit` — shadcn primitives plus
   `ManualDataTable` / `ViewSwitcher`.
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.
 - `@granit/utils` — `cn` class-name helper.

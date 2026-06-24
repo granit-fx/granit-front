@@ -1,6 +1,6 @@
 {
-  "name": "@granit/react-ui-admin-kit",
-  "description": "Granit admin React building blocks — cross-cutting data-grid, querying (smart filter bar, sort/group-by/column-visibility, server-paginated tables), form dialogs and view switcher. Composes @granit/react-ui with @granit/react-query-engine; not tied to any single domain.",
+  "name": "@granit/react-ui-kit",
+  "description": "Granit React building blocks — cross-cutting data-grid, querying (smart filter bar, sort/group-by/column-visibility, server-paginated tables), form dialogs and view switcher. Composes @granit/react-ui with @granit/react-query-engine; not tied to any single domain.",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",

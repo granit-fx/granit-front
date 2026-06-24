@@ -10,7 +10,7 @@ import {
   SelectField,
   TextField,
 } from '@granit/react-ui';
-import { PhoneInput } from '@granit/react-ui-admin-kit';
+import { PhoneInput } from '@granit/react-ui-kit';
 import { useForm } from 'react-hook-form';
 
 import { PHONE_KINDS } from '../constants';

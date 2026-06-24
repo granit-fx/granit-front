@@ -8,6 +8,12 @@ import {
 } from '@granit/react-query-engine';
 import { Button, Spinner } from '@granit/react-ui';
 import {
+  ExportButton,
+  ExportDialog,
+  ImportButton,
+  ImportDialog,
+} from '@granit/react-ui-data-exchange';
+import {
   FilterPresets,
   GroupBySelector,
   QueryEndpointDataTable,
@@ -15,13 +21,7 @@ import {
   SortSelector,
   useOperatorLabels,
   useSmartFilterSync,
-} from '@granit/react-ui-admin-kit';
-import {
-  ExportButton,
-  ExportDialog,
-  ImportButton,
-  ImportDialog,
-} from '@granit/react-ui-data-exchange';
+} from '@granit/react-ui-kit';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 

@@ -9,7 +9,7 @@ This is the **react-ui admin feature kit**: the visual layer. It composes the
 headless [`@granit/react-ai`](../react-ai) (provider + React Query hooks, plus its
 opt-in `@granit/react-ai/usage` querying surface) with the foundation UI packages
 ([`@granit/react-ui`](../react-ui),
-[`@granit/react-ui-admin-kit`](../react-ui-admin-kit)) and gates management actions
+[`@granit/react-ui-kit`](../react-ui-admin-kit)) and gates management actions
 with [`@granit/react-authorization`](../react-authorization) `usePermissions`. It
 holds no Axios call or DTO of its own — those live in the lower layers.
 
@@ -38,7 +38,7 @@ these peers:
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.
 - `@granit/react-ui` — shadcn/ui primitives (`Card`, `Form`, `Table`, `Tabs`,
   `AlertDialog`, `toast`, …).
-- `@granit/react-ui-admin-kit` — `ViewSwitcher`, `QueryDataTable`, `SortSelector`,
+- `@granit/react-ui-kit` — `ViewSwitcher`, `QueryDataTable`, `SortSelector`,
   `GroupBySelector` for the usage grid.
 - `@granit/react-query-engine` + `@granit/query-engine` — the query surface the
   usage page drives.

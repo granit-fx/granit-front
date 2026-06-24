@@ -10,7 +10,7 @@ import {
   Input,
   toast,
 } from '@granit/react-ui';
-import { FormDialog } from '@granit/react-ui-admin-kit';
+import { FormDialog } from '@granit/react-ui-kit';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 

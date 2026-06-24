@@ -34,7 +34,7 @@ vi.mock('@granit/react-query-engine', () => ({
   }),
 }));
 
-vi.mock('@granit/react-ui-admin-kit', async (importOriginal) => {
+vi.mock('@granit/react-ui-kit', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   return {
     ...actual,

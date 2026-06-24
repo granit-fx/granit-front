@@ -1,7 +1,7 @@
 import { useTranslation } from '@granit/react-localization';
 import { useRemovePartyPhoneMutation } from '@granit/react-parties';
 import { toast, Badge, Button } from '@granit/react-ui';
-import { formatPhoneInternational } from '@granit/react-ui-admin-kit';
+import { formatPhoneInternational } from '@granit/react-ui-kit';
 import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 

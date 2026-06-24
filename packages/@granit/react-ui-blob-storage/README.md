@@ -7,7 +7,7 @@ delete) plus the orphan-cleanup confirmation and the crypto-shred delete dialog.
 This is the **react-ui admin feature kit** layer: it renders. It composes the
 headless [`@granit/react-blob-storage`](../react-blob-storage) (provider + Query
 hooks) with the foundation UI packages
-([`@granit/react-ui`](../react-ui), [`@granit/react-ui-admin-kit`](../react-ui-admin-kit)),
+([`@granit/react-ui`](../react-ui), [`@granit/react-ui-kit`](../react-ui-admin-kit)),
 drives the grid through [`@granit/react-query-engine`](../react-query-engine),
 and gates every management action with
 [`@granit/react-authorization`](../react-authorization) `usePermissions`.
@@ -40,7 +40,7 @@ these peers:
 - `@granit/react-localization` — `useTranslation`, `useDateFormatter`.
 - `@granit/query-engine` and `@granit/react-query-engine` — the `QueryConfig` /
   `QueryProvider` / `useQueryEndpoint` that drive the list grid.
-- `@granit/react-ui` and `@granit/react-ui-admin-kit` — the shadcn-derived
+- `@granit/react-ui` and `@granit/react-ui-kit` — the shadcn-derived
   primitives and the `QueryEndpointDataTable` / filter-sort-group toolbar.
 - `@granit/logger` — `createLogger` (action handlers log on failure).
 - `@granit/types` — shared base types.

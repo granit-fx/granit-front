@@ -34,7 +34,7 @@ vi.mock('@granit/react-authorization', () => ({
 }));
 
 // Deterministic grid/list toggle: a single button that flips to the kanban view.
-vi.mock('@granit/react-ui-admin-kit', () => ({
+vi.mock('@granit/react-ui-kit', () => ({
   ViewSwitcher: ({ onViewChange }: { onViewChange: (view: 'list' | 'kanban') => void }) => (
     <button type="button" onClick={() => onViewChange('kanban')}>
       toggle-grid

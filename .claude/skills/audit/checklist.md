@@ -443,7 +443,7 @@ class strings. Companions used alongside it: `lucide-react` (icons),
 `react-hook-form` + `@hookform/resolvers` (the shadcn `Form` wrapper).
 
 **Allowed only in the UI tier** — the foundation `@granit/react-ui`, the
-cross-cutting `@granit/react-ui-admin-kit`, and the domain `react-ui-{module}`
+cross-cutting `@granit/react-ui-kit`, and the domain `react-ui-{module}`
 packages. Confine each layer:
 
 - [ ] **Foundation owns the primitives**: the shadcn primitive files (radix-ui /
@@ -470,7 +470,7 @@ packages. Confine each layer:
       `radix-ui` import rebuilding a wrapped primitive — is an INCONSISTENCY
       (`Fix: import from @granit/react-ui`). Direct `radix-ui` is acceptable ONLY
       for a low-level composition the foundation does NOT yet wrap (as
-      `@granit/react-ui-admin-kit` does for the smart-filter-bar); when a primitive
+      `@granit/react-ui-kit` does for the smart-filter-bar); when a primitive
       is reused 3+ times, promote it into `@granit/react-ui` instead.
 - [ ] **Styling via `cn` + tokens**: UI components combine classes with `cn` (from
       `@granit/utils`) and use `@granit/ui-theme` design-token CSS variables — not
@@ -487,7 +487,7 @@ packages. Confine each layer:
 
 Conventions for the domain `react-ui-{module}` packages, on top of the shadcn
 foundation. Verify against the established patterns in `@granit/react-ui-parties`
-/ `@granit/react-ui-account` and the `@granit/react-ui-admin-kit` building blocks.
+/ `@granit/react-ui-account` and the `@granit/react-ui-kit` building blocks.
 
 - [ ] **Forms are spec-driven (no zod)**: forms use the shadcn `Form` wrapper from
       `@granit/react-ui` + react-hook-form, with a **spec-driven resolver** —
@@ -503,12 +503,12 @@ foundation. Verify against the established patterns in `@granit/react-ui-parties
       arch-test. zod is acceptable ONLY for a purely client-side form with no backend
       DTO behind it (rare — confirm there is no matching spec before allowing it).
 - [ ] **Grids compose admin-kit, not raw react-table**: server-paginated / query
-      grids use the `@granit/react-ui-admin-kit` data-table family
+      grids use the `@granit/react-ui-kit` data-table family
       (`QueryDataTable`, `QueryEndpointDataTable`, `ManualDataTable`) — which wrap
       `@tanstack/react-table`, pagination, sort/group/column-visibility and the
       smart-filter-bar. A domain page calling `useReactTable` / `flexRender`
       directly to rebuild a paginated list is an INCONSISTENCY
-      (`Fix: compose QueryEndpointDataTable from @granit/react-ui-admin-kit`).
+      (`Fix: compose QueryEndpointDataTable from @granit/react-ui-kit`).
       `@tanstack/react-table` as a dep is fine for the `ColumnDef<T>` *type* only —
       column definitions live in a `*-columns.tsx` file, the rendering goes through
       admin-kit.

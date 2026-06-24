@@ -3602,73 +3602,6 @@ importers:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
 
-  packages/@granit/react-ui-admin-kit:
-    dependencies:
-      lucide-react:
-        specifier: ^1.21.0
-        version: 1.21.0(react@19.2.7)
-      react:
-        specifier: 19.2.7
-        version: 19.2.7
-      react-dom:
-        specifier: 19.2.7
-        version: 19.2.7(react@19.2.7)
-      react-hook-form:
-        specifier: ^7.80.0
-        version: 7.80.0(react@19.2.7)
-      react-i18next:
-        specifier: ^17.0.0
-        version: 17.0.8(i18next@26.3.2(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
-    devDependencies:
-      '@granit/api-client':
-        specifier: workspace:*
-        version: link:../api-client
-      '@granit/data-lookup':
-        specifier: workspace:*
-        version: link:../data-lookup
-      '@granit/query-engine':
-        specifier: workspace:*
-        version: link:../query-engine
-      '@granit/react-api-client':
-        specifier: workspace:*
-        version: link:../react-api-client
-      '@granit/react-data-lookup':
-        specifier: workspace:*
-        version: link:../react-data-lookup
-      '@granit/react-localization':
-        specifier: workspace:*
-        version: link:../react-localization
-      '@granit/react-query-engine':
-        specifier: workspace:*
-        version: link:../react-query-engine
-      '@granit/react-ui':
-        specifier: workspace:*
-        version: link:../react-ui
-      '@granit/utils':
-        specifier: workspace:*
-        version: link:../utils
-      '@storybook/react-vite':
-        specifier: ^10.4.6
-        version: 10.4.6(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rollup@4.62.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)(vite@8.1.0(@types/node@26.0.0)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
-      '@tanstack/react-query':
-        specifier: 5.101.1
-        version: 5.101.1(react@19.2.7)
-      '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      cmdk:
-        specifier: ^1.1.1
-        version: 1.1.1(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      libphonenumber-js:
-        specifier: ^1.13.7
-        version: 1.13.7
-      msw:
-        specifier: ^2.14.6
-        version: 2.14.6(@types/node@26.0.0)(typescript@6.0.3)
-      storybook:
-        specifier: ^10.4.6
-        version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-
   packages/@granit/react-ui-ai:
     devDependencies:
       '@granit/ai':
@@ -3698,9 +3631,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -3882,9 +3815,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@granit/types':
         specifier: workspace:*
         version: link:../types
@@ -3937,6 +3870,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -4208,9 +4144,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@storybook/react-vite':
         specifier: ^10.4.6
         version: 10.4.6(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rollup@4.62.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)(vite@8.1.0(@types/node@26.0.0)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
@@ -4254,9 +4190,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@granit/types':
         specifier: workspace:*
         version: link:../types
@@ -4352,9 +4288,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -4422,9 +4358,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -4712,9 +4648,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -4874,9 +4810,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -4987,9 +4923,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@granit/utils':
         specifier: workspace:*
         version: link:../utils
@@ -5129,9 +5065,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@granit/react-workspaces':
         specifier: workspace:*
         version: link:../react-workspaces
@@ -5414,12 +5350,12 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
-        specifier: workspace:*
-        version: link:../react-ui-admin-kit
       '@granit/react-ui-data-exchange':
         specifier: workspace:*
         version: link:../react-ui-data-exchange
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -5474,9 +5410,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -5523,6 +5459,73 @@ importers:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
 
+  packages/@granit/react-ui-kit:
+    dependencies:
+      lucide-react:
+        specifier: ^1.21.0
+        version: 1.21.0(react@19.2.7)
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+      react-dom:
+        specifier: 19.2.7
+        version: 19.2.7(react@19.2.7)
+      react-hook-form:
+        specifier: ^7.80.0
+        version: 7.80.0(react@19.2.7)
+      react-i18next:
+        specifier: ^17.0.0
+        version: 17.0.8(i18next@26.3.2(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/data-lookup':
+        specifier: workspace:*
+        version: link:../data-lookup
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
+      '@granit/react-data-lookup':
+        specifier: workspace:*
+        version: link:../react-data-lookup
+      '@granit/react-localization':
+        specifier: workspace:*
+        version: link:../react-localization
+      '@granit/react-query-engine':
+        specifier: workspace:*
+        version: link:../react-query-engine
+      '@granit/react-ui':
+        specifier: workspace:*
+        version: link:../react-ui
+      '@granit/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@storybook/react-vite':
+        specifier: ^10.4.6
+        version: 10.4.6(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rollup@4.62.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)(vite@8.1.0(@types/node@26.0.0)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
+      '@tanstack/react-query':
+        specifier: 5.101.1
+        version: 5.101.1(react@19.2.7)
+      '@tanstack/react-table':
+        specifier: ^8.21.3
+        version: 8.21.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      cmdk:
+        specifier: ^1.1.1
+        version: 1.1.1(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      libphonenumber-js:
+        specifier: ^1.13.7
+        version: 1.13.7
+      msw:
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@26.0.0)(typescript@6.0.3)
+      storybook:
+        specifier: ^10.4.6
+        version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+
   packages/@granit/react-ui-localization:
     dependencies:
       lucide-react:
@@ -5562,12 +5565,12 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
-        specifier: workspace:*
-        version: link:../react-ui-admin-kit
       '@granit/react-ui-data-exchange':
         specifier: workspace:*
         version: link:../react-ui-data-exchange
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -5632,9 +5635,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -5686,12 +5689,12 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
-        specifier: workspace:*
-        version: link:../react-ui-admin-kit
       '@granit/react-ui-data-exchange':
         specifier: workspace:*
         version: link:../react-ui-data-exchange
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -5879,9 +5882,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@granit/react-ui-taxonomy':
         specifier: workspace:*
         version: link:../react-ui-taxonomy
@@ -5970,9 +5973,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -6148,12 +6151,12 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
-        specifier: workspace:*
-        version: link:../react-ui-admin-kit
       '@granit/react-ui-data-exchange':
         specifier: workspace:*
         version: link:../react-ui-data-exchange
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -6232,9 +6235,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@granit/scheduling':
         specifier: workspace:*
         version: link:../scheduling
@@ -6412,9 +6415,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@granit/subscriptions':
         specifier: workspace:*
         version: link:../subscriptions
@@ -6482,9 +6485,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -6596,12 +6599,12 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
-        specifier: workspace:*
-        version: link:../react-ui-admin-kit
       '@granit/react-ui-data-exchange':
         specifier: workspace:*
         version: link:../react-ui-data-exchange
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -6779,9 +6782,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
-      '@granit/react-ui-admin-kit':
+      '@granit/react-ui-kit':
         specifier: workspace:*
-        version: link:../react-ui-admin-kit
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation

@@ -1,6 +1,6 @@
 import { AIUsageProvider, useAIUsage, useAIUsageMeta } from '@granit/react-ai/usage';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
-import { GroupBySelector, QueryDataTable, SortSelector } from '@granit/react-ui-admin-kit';
+import { GroupBySelector, QueryDataTable, SortSelector } from '@granit/react-ui-kit';
 import { useMemo } from 'react';
 
 import type { AIUsageRecord } from '@granit/ai';

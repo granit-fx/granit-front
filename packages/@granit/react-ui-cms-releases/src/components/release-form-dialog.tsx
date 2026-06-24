@@ -19,7 +19,7 @@ import {
   Input,
   toast,
 } from '@granit/react-ui';
-import { TimezonePicker } from '@granit/react-ui-admin-kit';
+import { TimezonePicker } from '@granit/react-ui-kit';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { useEffect } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';

@@ -4,7 +4,7 @@ import i18next from 'i18next';
 import { type ReactElement, type ReactNode } from 'react';
 import { initReactI18next, I18nextProvider } from 'react-i18next';
 
-// Shared render helper for @granit/react-ui-admin-kit component tests. The kit's
+// Shared render helper for @granit/react-ui-kit component tests. The kit's
 // components call `useTranslation()` from @granit/react-localization, so they
 // need an initialised i18next instance in context. We init once with no
 // resources — `t(key)` echoes the key back, which keeps assertions stable

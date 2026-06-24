@@ -8,7 +8,7 @@ import {
   useUpdateTenant,
 } from '@granit/react-multi-tenancy';
 import { toast, Badge, Button, Separator } from '@granit/react-ui';
-import { DetailAsideLayout, DetailAsideMobileTrigger } from '@granit/react-ui-admin-kit';
+import { DetailAsideLayout, DetailAsideMobileTrigger } from '@granit/react-ui-kit';
 import { useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, Loader2, Network } from 'lucide-react';
 import { useState } from 'react';

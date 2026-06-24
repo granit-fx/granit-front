@@ -1,7 +1,7 @@
 // @granit/react-ui-tax — admin UI for the Tax module.
 // Composes the headless @granit/react-tax (provider + hooks) and the
 // @granit/react-query-engine query layer with the foundation UI packages
-// (@granit/react-ui, @granit/react-ui-admin-kit, @granit/react-localization).
+// (@granit/react-ui, @granit/react-ui-kit, @granit/react-localization).
 // The Axios client resolves from a GranitClientProvider in the host tree (via the
 // host-supplied TaxProvider / QueryProvider) — this package does NOT wrap a data
 // provider. Form validation is spec-driven via @granit/react-validation + the

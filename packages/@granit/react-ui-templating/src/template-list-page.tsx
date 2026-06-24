@@ -9,18 +9,18 @@ import {
 import { TemplatingProvider } from '@granit/react-templating';
 import { Button, Spinner } from '@granit/react-ui';
 import {
-  QueryDataTable,
-  SmartFilterBar,
-  SortSelector,
-  useOperatorLabels,
-  useSmartFilterSync,
-} from '@granit/react-ui-admin-kit';
-import {
   ExportButton,
   ExportDialog,
   ImportButton,
   ImportDialog,
 } from '@granit/react-ui-data-exchange';
+import {
+  QueryDataTable,
+  SmartFilterBar,
+  SortSelector,
+  useOperatorLabels,
+  useSmartFilterSync,
+} from '@granit/react-ui-kit';
 import { FolderOpen, Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

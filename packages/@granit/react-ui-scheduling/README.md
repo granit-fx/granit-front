@@ -8,7 +8,7 @@ reschedule dialogs.
 This is the **react-ui admin feature kit** layer: it renders. It composes the
 headless [`@granit/react-scheduling`](../react-scheduling) (provider + query/mutation
 hooks) with the foundation UI packages ([`@granit/react-ui`](../react-ui) shadcn
-primitives, [`@granit/react-ui-admin-kit`](../react-ui-admin-kit) grid + smart-filter
+primitives, [`@granit/react-ui-kit`](../react-ui-admin-kit) grid + smart-filter
 chrome) and the [`@granit/react-query-engine`](../react-query-engine) discovery
 surface, gating management actions through
 [`@granit/react-authorization`](../react-authorization) `usePermissions`.
@@ -34,7 +34,7 @@ for app consumption through a public registry. A consumer must declare these pee
 - `@granit/scheduling` — `SchedulingPermissions`, `ScheduledActionStatus`,
   `SCHEDULING_STATUS_COLORS`, and the `ScheduledActionResponse` DTO.
 - `@granit/react-ui` — shadcn primitives (Card, Dialog, AlertDialog, Badge, …).
-- `@granit/react-ui-admin-kit` — `QueryDataTable`, `SmartFilterBar`, `FilterPresets`,
+- `@granit/react-ui-kit` — `QueryDataTable`, `SmartFilterBar`, `FilterPresets`,
   `SortSelector` and the smart-filter sync helpers.
 - `@granit/react-query-engine` + `@granit/query-engine` — the query endpoint, metadata,
   and smart-filter state for the list grid.

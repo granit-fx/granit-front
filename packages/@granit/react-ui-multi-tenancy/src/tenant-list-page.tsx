@@ -13,6 +13,7 @@ import {
   useSmartFilter,
 } from '@granit/react-query-engine';
 import { toast, Button, Spinner } from '@granit/react-ui';
+import { ExportButton, ExportDialog } from '@granit/react-ui-data-exchange';
 import {
   FilterPresets,
   GroupBySelector,
@@ -21,8 +22,7 @@ import {
   SortSelector,
   useOperatorLabels,
   useSmartFilterSync,
-} from '@granit/react-ui-admin-kit';
-import { ExportButton, ExportDialog } from '@granit/react-ui-data-exchange';
+} from '@granit/react-ui-kit';
 import { useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';

@@ -2,7 +2,7 @@ import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { QueryProvider, useQueryEndpoint, useQueryMeta } from '@granit/react-query-engine';
 import { useActivePlans } from '@granit/react-subscriptions';
 import { Button } from '@granit/react-ui';
-import { QueryControlBar, QueryEndpointDataTable } from '@granit/react-ui-admin-kit';
+import { QueryControlBar, QueryEndpointDataTable } from '@granit/react-ui-kit';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

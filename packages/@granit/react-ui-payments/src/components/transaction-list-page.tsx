@@ -1,7 +1,7 @@
 import { useTranslation } from '@granit/react-localization';
 import { PaymentTransactionsProvider, usePaymentTransactionsQuery } from '@granit/react-payments';
 import { Button } from '@granit/react-ui';
-import { QueryEndpointDataTable } from '@granit/react-ui-admin-kit';
+import { QueryEndpointDataTable } from '@granit/react-ui-kit';
 import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 

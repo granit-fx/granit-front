@@ -8,7 +8,7 @@ import {
   SelectValue,
   Spinner,
 } from '@granit/react-ui';
-import { ManualDataTable } from '@granit/react-ui-admin-kit';
+import { ManualDataTable } from '@granit/react-ui-kit';
 import { useMemo } from 'react';
 
 import { createAuditColumns } from './components/audit-columns';

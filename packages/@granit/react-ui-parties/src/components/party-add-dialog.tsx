@@ -1,6 +1,6 @@
 import { useTranslation } from '@granit/react-localization';
 import { toast } from '@granit/react-ui';
-import { FormDialog } from '@granit/react-ui-admin-kit';
+import { FormDialog } from '@granit/react-ui-kit';
 
 import { logger } from '../logger';
 

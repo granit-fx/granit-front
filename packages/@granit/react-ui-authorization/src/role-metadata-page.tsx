@@ -2,12 +2,12 @@ import { useGranitClient } from '@granit/react-api-client';
 import { useRoleMetadata, useRoleMetadataMeta } from '@granit/react-authorization';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { Badge, Input, Spinner } from '@granit/react-ui';
-import { QueryDataTable } from '@granit/react-ui-admin-kit';
+import { QueryDataTable } from '@granit/react-ui-kit';
+import { useDebouncedValue } from '@granit/react-ui-kit';
 import { Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { PermissionSideBadge } from './components/permission-side-badge';
-import { useDebounce } from './hooks/use-debounce';
 
 import type { RoleMetadata } from '@granit/authorization';
 import type { SortEntry } from '@granit/query-engine';
@@ -45,7 +45,7 @@ export function RoleMetadataPage() {
   const client = useGranitClient();
 
   const [search, setSearch] = useState('');
-  const debouncedSearch = useDebounce(search, 300);
+  const debouncedSearch = useDebouncedValue(search, 300);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [sort, setSort] = useState<SortEntry[]>([{ field: 'name', direction: 'asc' }]);

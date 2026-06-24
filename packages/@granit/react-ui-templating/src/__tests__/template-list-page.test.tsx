@@ -79,7 +79,7 @@ vi.mock('@granit/react-ui-data-exchange', async (importOriginal) => ({
   ImportDialog: () => <div data-testid="import-dialog" />,
 }));
 
-vi.mock('@granit/react-ui-admin-kit', async (importOriginal) => ({
+vi.mock('@granit/react-ui-kit', async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
   useSmartFilterSync: () => ({ handlePresetToggle: vi.fn() }),
   useOperatorLabels: () => ({}),

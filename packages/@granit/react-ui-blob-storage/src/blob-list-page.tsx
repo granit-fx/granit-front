@@ -20,7 +20,8 @@ import {
   GroupBySelector,
   QueryEndpointDataTable,
   SortSelector,
-} from '@granit/react-ui-admin-kit';
+} from '@granit/react-ui-kit';
+import { formatBytes } from '@granit/utils';
 import { Download, MoreHorizontal, Trash2 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -38,13 +39,6 @@ const QUERY_CONFIG: QueryConfig = {
   basePath: '/api/v1/blob-storage/blobs',
 };
 
-function formatFileSize(bytes: number | null | undefined): string {
-  if (bytes == null || !Number.isFinite(bytes)) return '—';
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-  return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
-}
 
 const STATUS_INTENT: Record<BlobStatus, StatusBadgeIntent> = {
   Pending: 'warning',
@@ -78,7 +72,8 @@ function renderMonoCellBlob(info: CellContext<BlobDescriptorListItem, unknown>):
 }
 
 function renderSizeCell(info: CellContext<BlobDescriptorListItem, unknown>): React.ReactNode {
-  return formatFileSize(info.getValue<number | null | undefined>());
+  const v = info.getValue<number | null | undefined>();
+  return v == null ? '—' : formatBytes(v);
 }
 
 function renderStatusCell(t: TranslateFn) {

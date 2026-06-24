@@ -7,7 +7,7 @@ import {
   SortSelector,
   useOperatorLabels,
   useSmartFilterSync,
-} from '@granit/react-ui-admin-kit';
+} from '@granit/react-ui-kit';
 import { useCallback, useMemo, useState } from 'react';
 
 import { DEFAULT_PAGE_SIZE } from '../constants';

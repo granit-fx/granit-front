@@ -28,7 +28,7 @@ Apps          showcase-admin · (future) app-mobile · (future) site-X
 Shells        @granit/react-ui-shell-admin   (admin chrome: sidebar + topbar + content + rail)
  (chrome)         + future react-ui-shell-mobile / react-ui-shell-site
    ▲
-Admin-kit     @granit/react-ui-admin-kit     (data grid, querying, form dialog, view switcher)
+Admin-kit     @granit/react-ui-kit     (data grid, querying, form dialog, view switcher)
    ▲
 Primitives    @granit/react-ui               (shadcn/ui: Button, Input, Dialog, Table, Sidebar…)
 Tokens        @granit/ui-theme               (CSS variables: colours, dark mode, palettes, fonts)
@@ -56,7 +56,7 @@ Two orthogonal axes are encoded in every package name:
 | ------------------------------ | --------- | --------------- |
 | `@granit/ui-theme`             | agnostic  | visual (tokens) |
 | `@granit/react-ui`             | React     | visual          |
-| `@granit/react-ui-admin-kit`   | React     | visual          |
+| `@granit/react-ui-kit`   | React     | visual          |
 | `@granit/react-ui-shell-admin` | React     | visual (chrome) |
 | `@granit/shell-core`           | agnostic  | logic           |
 | `@granit/react-shell-core`     | React     | logic           |
@@ -102,7 +102,7 @@ Command, Tooltip, …) plus a few generic form-field wrappers. Presentational
 only: no data fetching, no business logic. `cn` comes from `@granit/utils`.
 Barrel-only — import everything from the package root.
 
-### `@granit/react-ui-admin-kit` — admin building blocks (React, visual)
+### `@granit/react-ui-kit` — admin building blocks (React, visual)
 
 Cross-cutting pieces that are neither bare primitives nor tied to one domain:
 `ManualDataTable`, the querying suite (`SmartFilterBar`, `SortSelector`,

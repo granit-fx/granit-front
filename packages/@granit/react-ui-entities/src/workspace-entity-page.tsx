@@ -40,7 +40,7 @@ import {
   SortSelector,
   useOperatorLabels,
   useSmartFilterSync,
-} from '@granit/react-ui-admin-kit';
+} from '@granit/react-ui-kit';
 import { useSidePeek } from '@granit/react-workspaces';
 import { ChevronRight, Pencil, Plus } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';

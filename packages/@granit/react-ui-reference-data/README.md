@@ -9,7 +9,7 @@ compose into concrete admin pages.
 This is the **react-ui** layer: it renders. It composes the headless
 [`@granit/react-reference-data`](../react-reference-data) hooks factory with the
 foundation UI packages ([`@granit/react-ui`](../react-ui),
-[`@granit/react-ui-admin-kit`](../react-ui-admin-kit),
+[`@granit/react-ui-kit`](../react-ui-admin-kit),
 [`@granit/react-ui-data-exchange`](../react-ui-data-exchange)) and spec validation
 ([`@granit/react-validation`](../react-validation)). Nothing is hard-wired: each
 shell takes an `i18nPrefix`, a `basePath`, a `QueryConfig`, and the domain
@@ -35,7 +35,7 @@ these peers (all `workspace:*` unless noted):
 - `@granit/react-reference-data` — the headless hooks factory the shells drive.
 - `@granit/reference-data` — core DTOs (re-exports `ReferenceDataEntry`).
 - `@granit/react-ui` — shadcn/ui primitives (form, card, dialog, table, toast).
-- `@granit/react-ui-admin-kit` — the query grid + smart-filter / sort / view
+- `@granit/react-ui-kit` — the query grid + smart-filter / sort / view
   controls (`QueryDataTable`, `SmartFilterBar`, `ViewSwitcher`, …).
 - `@granit/react-ui-data-exchange` + `@granit/react-data-exchange` — the
   export/import buttons and dialogs and their provider.

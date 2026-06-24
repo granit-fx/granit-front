@@ -3,7 +3,7 @@
 // foundation UI packages. The Axios client resolves from a MeteringProvider in
 // the host tree (config.client or the nearest GranitClientProvider) — these pages
 // do NOT wrap a provider. The usage explorer is driven by @granit/react-query-engine
-// and reuses the @granit/react-ui-admin-kit querying building blocks. Meter-form
+// and reuses the @granit/react-ui-kit querying building blocks. Meter-form
 // validation is spec-driven via @granit/react-validation against the generated
 // @granit/metering constraints.
 

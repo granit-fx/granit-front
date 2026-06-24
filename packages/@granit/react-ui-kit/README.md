@@ -1,4 +1,4 @@
-# @granit/react-ui-admin-kit
+# @granit/react-ui-kit
 
 Cross-cutting React building blocks for Granit admin apps — the pieces that are
 neither bare UI primitives nor tied to a single domain: a server-paginated data
@@ -56,7 +56,7 @@ import {
   QueryControlBar,
   QueryEndpointDataTable,
   useSmartFilterSync,
-} from '@granit/react-ui-admin-kit';
+} from '@granit/react-ui-kit';
 import { useSmartFilter, useQueryEndpoint, useQueryMeta } from '@granit/react-query-engine';
 import type { ColumnDef } from '@tanstack/react-table';
 
@@ -91,7 +91,7 @@ for `ManualDataTable`; for a create/edit form in a modal, `FormDialog` wraps a
 `react-hook-form` instance with shared Cancel/Submit chrome:
 
 ```tsx
-import { ManualDataTable, FormDialog } from '@granit/react-ui-admin-kit';
+import { ManualDataTable, FormDialog } from '@granit/react-ui-kit';
 import { useForm } from 'react-hook-form';
 
 function EditDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -115,7 +115,7 @@ function EditDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
 
 ## Public API
 
-All exports come through the single barrel (`@granit/react-ui-admin-kit`);
+All exports come through the single barrel (`@granit/react-ui-kit`);
 import everything from the package root. Each component type alias
 (`*Props`) is re-exported alongside its component.
 

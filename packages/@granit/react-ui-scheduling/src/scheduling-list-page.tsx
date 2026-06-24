@@ -37,7 +37,7 @@ import {
   SortSelector,
   useOperatorLabels,
   useSmartFilterSync,
-} from '@granit/react-ui-admin-kit';
+} from '@granit/react-ui-kit';
 import { SchedulingPermissions } from '@granit/scheduling';
 import { toISODateString } from '@granit/types';
 import { RotateCw } from 'lucide-react';

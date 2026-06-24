@@ -9,7 +9,7 @@ This is the **visual** layer: it composes the headless
 [`@granit/react-webhooks`](../react-webhooks) (provider + TanStack Query hooks)
 and the core DTOs/enums from [`@granit/webhooks`](../webhooks) with the foundation
 UI packages ([`@granit/react-ui`](../react-ui),
-[`@granit/react-ui-admin-kit`](../react-ui-admin-kit)). It renders three routable
+[`@granit/react-ui-kit`](../react-ui-admin-kit)). It renders three routable
 pages plus the badges, tables and dialogs they assemble. It owns no HTTP transport
 of its own — every call goes through the `@granit/react-webhooks` hooks.
 
@@ -34,7 +34,7 @@ these peers:
 - `@granit/webhooks` — core DTOs and the status enums the badges switch on.
 - `@granit/react-ui` — shadcn-style primitives (`Dialog`, `Tabs`, `Table`,
   `Form`, `Card`, `StatusBadge`, …).
-- `@granit/react-ui-admin-kit` — `QueryDataTable`, `SmartFilterBar`,
+- `@granit/react-ui-kit` — `QueryDataTable`, `SmartFilterBar`,
   `SortSelector` and the smart-filter hooks for the grids.
 - `@granit/react-query-engine` + `@granit/query-engine` — `QueryProvider` and the
   `QueryConfig` shape that drive the subscription and delivery grids.

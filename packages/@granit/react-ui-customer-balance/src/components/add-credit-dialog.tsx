@@ -16,7 +16,7 @@ import {
   Textarea,
   toast,
 } from '@granit/react-ui';
-import { FormDialog } from '@granit/react-ui-admin-kit';
+import { FormDialog } from '@granit/react-ui-kit';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { toISODateString } from '@granit/types';
 import { useForm, type Resolver } from 'react-hook-form';

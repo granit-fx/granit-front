@@ -9,7 +9,7 @@ import {
   DialogTitle,
   toast,
 } from '@granit/react-ui';
-import { QueryEndpointDataTable } from '@granit/react-ui-admin-kit';
+import { QueryEndpointDataTable } from '@granit/react-ui-kit';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

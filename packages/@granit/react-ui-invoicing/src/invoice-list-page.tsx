@@ -3,7 +3,7 @@ import { KpiTile } from '@granit/react-analytics';
 import { useInvoiceQuery } from '@granit/react-invoicing';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { Button, Skeleton } from '@granit/react-ui';
-import { ManualDataTable } from '@granit/react-ui-admin-kit';
+import { ManualDataTable } from '@granit/react-ui-kit';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

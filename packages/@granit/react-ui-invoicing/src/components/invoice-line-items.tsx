@@ -1,7 +1,6 @@
 import { useTranslation } from '@granit/react-localization';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@granit/react-ui';
-
-import { formatCurrency } from '../lib/format-currency';
+import { formatCurrency } from '@granit/utils';
 
 import type { InvoiceLineItemResponse } from '@granit/invoicing';
 

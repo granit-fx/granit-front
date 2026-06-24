@@ -151,7 +151,7 @@ export const UI_ROUTER_BASELINE: ReadonlyArray<string> = [
  */
 export const STORYBOOK_PAGE_BUDGET: Readonly<Record<string, number>> = {
   '@granit/react-ui-account': 8,
-  '@granit/react-ui-admin-kit': 1,
+  '@granit/react-ui-kit': 1,
   '@granit/react-ui-ai': 4,
   '@granit/react-ui-ai-chat': 2,
   '@granit/react-ui-ai-prompts': 1,

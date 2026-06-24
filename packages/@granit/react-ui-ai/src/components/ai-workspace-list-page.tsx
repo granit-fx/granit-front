@@ -3,7 +3,7 @@ import { useAIWorkspaces, useDeleteAIWorkspace } from '@granit/react-ai';
 import { usePermissions } from '@granit/react-authorization';
 import { useTranslation } from '@granit/react-localization';
 import { toast, Badge, Button, Card, CardContent, Spinner } from '@granit/react-ui';
-import { ViewSwitcher } from '@granit/react-ui-admin-kit';
+import { ViewSwitcher } from '@granit/react-ui-kit';
 import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +15,7 @@ import { WorkspaceDeleteDialog } from './workspace-delete-dialog';
 import { WorkspaceTable } from './workspace-table';
 
 import type { AIWorkspaceResponse } from '@granit/ai';
-import type { ViewMode } from '@granit/react-ui-admin-kit';
+import type { ViewMode } from '@granit/react-ui-kit';
 
 export function AIWorkspaceListPage() {
   const { t } = useTranslation();
