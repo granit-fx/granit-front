@@ -4315,6 +4315,9 @@ importers:
 
   packages/@granit/react-ui-blob-storage:
     dependencies:
+      '@granit/utils':
+        specifier: workspace:*
+        version: link:../utils
       lucide-react:
         specifier: ^1.21.0
         version: 1.21.0(react@19.2.7)
@@ -6381,6 +6384,9 @@ importers:
 
   packages/@granit/react-ui-subscriptions:
     dependencies:
+      '@granit/utils':
+        specifier: workspace:*
+        version: link:../utils
       lucide-react:
         specifier: ^1.21.0
         version: 1.21.0(react@19.2.7)
