@@ -30,3 +30,4 @@ export * from './view-switcher/view-switcher';
 export * from './inputs/url-input';
 export * from './inputs/phone-input';
 export { formatPhoneInternational } from './inputs/format-phone';
+export { useDebouncedValue } from '@granit/react-data-lookup';

@@ -68,3 +68,34 @@ export function calculatePercentage(value: number, total: number, decimals = 0):
   const factor = 10 ** decimals;
   return Math.round((value / total) * 100 * factor) / factor;
 }
+
+/**
+ * Format a minor-unit amount (e.g. cents) as a locale-aware currency string.
+ * Divides `amount` by 100 before formatting so callers work in minor units.
+ * Pass the active i18n language as `locale` so separators/grouping match the UI
+ * language (`undefined` falls back to the runtime locale).
+ */
+export function formatCurrency(amount: number, currency: string, locale?: string): string {
+  return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(amount / 100);
+}
+
+/**
+ * Format a byte count as a 1024-based human string (B / KB / MB / GB / TB / PB).
+ * Mirrors the Scriban `format_bytes` filter used by the .NET back-end.
+ * One decimal for KB and above; integer for raw bytes.
+ * Negative or non-finite inputs coerce to `"0 B"`.
+ */
+const BYTE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'] as const;
+
+export function formatBytes(bytes: number): string {
+  if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
+  let value = bytes;
+  let index = 0;
+  while (value >= 1024 && index < BYTE_UNITS.length - 1) {
+    value /= 1024;
+    index += 1;
+  }
+  return index === 0
+    ? `${Math.round(value).toString()} ${BYTE_UNITS[index]}`
+    : `${value.toFixed(1)} ${BYTE_UNITS[index]}`;
+}

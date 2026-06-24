@@ -10,11 +10,11 @@ import {
   Skeleton,
 } from '@granit/react-ui';
 import { toEntityId } from '@granit/types';
+import { formatCurrency } from '@granit/utils';
 import { ArrowLeft, AlertCircle, Archive, Pencil, PlusCircle, Rocket } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { formatCurrency } from '../format-currency';
 
 import { ArchivePlanDialog } from './components/archive-plan-dialog';
 import { CreatePriceDialog } from './components/create-price-dialog';

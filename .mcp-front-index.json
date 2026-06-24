@@ -1878,6 +1878,21 @@
           "kind": "interface",
           "signature": "interface DeviceLabelStrings",
           "members": []
+        },
+        {
+          "name": "isHandheldUserAgent",
+          "kind": "function",
+          "signature": "function isHandheldUserAgent(parsed: ParsedUserAgent | null): boolean"
+        },
+        {
+          "name": "parseUserAgent",
+          "kind": "function",
+          "signature": "function parseUserAgent(userAgent: string | null | undefined): ParsedUserAgent | null"
+        },
+        {
+          "name": "ParsedUserAgent",
+          "kind": "type",
+          "signature": "type ParsedUserAgent = Pick<UserDeviceResponse, 'kind' | 'operatingSystem' | 'browser'>"
         }
       ]
     },
@@ -5537,11 +5552,6 @@
           "kind": "interface",
           "signature": "interface VersionsTimelineProps",
           "members": []
-        },
-        {
-          "name": "formatBytes",
-          "kind": "function",
-          "signature": "function formatBytes(bytes: number): string"
         }
       ]
     },
@@ -8745,11 +8755,6 @@
           "name": "createTransactionColumns",
           "kind": "function",
           "signature": "function createTransactionColumns("
-        },
-        {
-          "name": "formatCurrency",
-          "kind": "function",
-          "signature": "function formatCurrency(amount: number, currency: string, locale?: string): string"
         }
       ]
     },
@@ -9428,16 +9433,6 @@
           "kind": "interface",
           "signature": "interface RiskLabelStrings",
           "members": []
-        },
-        {
-          "name": "isHandheldUserAgent",
-          "kind": "function",
-          "signature": "function isHandheldUserAgent(parsed: ParsedUserAgent | null): boolean"
-        },
-        {
-          "name": "parseUserAgent",
-          "kind": "function",
-          "signature": "function parseUserAgent(userAgent: string | null | undefined): ParsedUserAgent | null"
         }
       ]
     },

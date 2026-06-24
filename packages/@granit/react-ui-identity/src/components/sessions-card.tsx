@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-import { isHandheldUserAgent, parseUserAgent } from './parse-user-agent';
+import { isHandheldUserAgent, parseUserAgent } from '@granit/identity';
 import { RiskButton } from './risk-button';
 import { SessionRiskIndicator } from './session-risk-indicator';
 import { useDeviceLabelStrings } from './use-device-label-strings';

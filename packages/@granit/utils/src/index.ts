@@ -1,6 +1,8 @@
 export {
   calculatePercentage,
   cn,
+  formatBytes,
+  formatCurrency,
   formatDate,
   formatDateTime,
   formatNumber,

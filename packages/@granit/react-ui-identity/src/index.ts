@@ -41,7 +41,8 @@ export type { SessionsScope } from './components/use-sessions-card-labels';
 export { useDeviceLabelStrings } from './components/use-device-label-strings';
 export { useRiskLabelStrings } from './components/use-risk-label-strings';
 export type { RiskLabelStrings } from './components/use-risk-label-strings';
-export { isHandheldUserAgent, parseUserAgent } from './components/parse-user-agent';
+export { isHandheldUserAgent, parseUserAgent } from '@granit/identity';
+export type { ParsedUserAgent } from '@granit/identity';
 
 // i18next resource bundles (flat keys, "translation" ns). Named distinctly from the
 // headless @granit/react-identity identityTranslationsEn/Fr ("identity" ns) bundle.

@@ -1,6 +1,5 @@
+import { formatBytes } from '@granit/utils';
 import { describe, expect, it } from 'vitest';
-
-import { formatBytes } from '../components/format-bytes';
 
 describe('formatBytes', () => {
   it('returns 0 B for zero', () => {

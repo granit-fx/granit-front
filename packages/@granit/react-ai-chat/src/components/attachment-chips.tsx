@@ -1,4 +1,4 @@
-import { cn } from '@granit/utils';
+import { cn, formatBytes } from '@granit/utils';
 import { File as FileIcon, Loader2, X } from 'lucide-react';
 
 import { defaultChatLabels } from '../locales/index';
@@ -23,19 +23,6 @@ export interface AttachmentChipsProps {
   readonly className?: string;
 }
 
-const UNITS = ['B', 'KB', 'MB', 'GB'] as const;
-
-/** Human-readable byte size. */
-function formatBytes(sizeBytes: number): string {
-  let size = sizeBytes;
-  if (!Number.isFinite(size) || size <= 0) return '0 B';
-  let unit = 0;
-  while (size >= 1024 && unit < UNITS.length - 1) {
-    size /= 1024;
-    unit++;
-  }
-  return `${size.toFixed(unit === 0 ? 0 : 1)} ${UNITS[unit]}`;
-}
 
 /** Renders the staged attachments as removable chips with upload status. */
 export function AttachmentChips({
