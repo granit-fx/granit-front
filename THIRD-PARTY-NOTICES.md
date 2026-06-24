@@ -4,7 +4,7 @@ This file lists the third-party libraries used by the **granit-front** project
 along with their respective licenses. It is updated whenever an external
 dependency is added or modified.
 
-Last updated: 2026-06-20
+Last updated: 2026-06-24
 
 ---
 
@@ -29,30 +29,30 @@ Last updated: 2026-06-20
 | ------------------------------- | ------- | ------------------------------------------ |
 | @azure/msal-browser             | 5.x     | Copyright (c) Microsoft Corporation        |
 | @capacitor/push-notifications   | 8.1.1   | Copyright (c) Drifty Co.                   |
-| @commitlint/cli                 | 21.0.2  | commitlint Contributors                    |
-| @commitlint/config-conventional | 21.0.2  | commitlint Contributors                    |
+| @commitlint/cli                 | 21.1.0  | commitlint Contributors                    |
+| @commitlint/config-conventional | 21.1.0  | commitlint Contributors                    |
 | @date-fns/tz                    | 1.5.0   | Copyright (c) Sasha Koss                   |
 | @eslint/js                      | 10.0.1  | OpenJS Foundation                          |
 | @puckeditor/core                | 0.21.3  | Copyright (c) Measured Corp                |
 | @microsoft/fetch-event-source   | 2.0.1   | Copyright (c) Microsoft Corporation        |
 | @microsoft/signalr              | 10.0.0  | Copyright (c) .NET Foundation              |
-| @tanstack/react-query           | 5.101.0 | Copyright (c) Tanner Linsley               |
+| @tanstack/react-query           | 5.101.1 | Copyright (c) Tanner Linsley               |
 | @tanstack/react-virtual         | 3.14.3  | Copyright (c) Tanner Linsley               |
 | @testing-library/jest-dom       | 6.9.1   | Copyright (c) Testing Library Contributors |
 | @testing-library/react          | 16.3.2  | Copyright (c) Testing Library Contributors |
 | @testing-library/user-event     | 14.6.1  | Copyright (c) Testing Library Contributors |
 | @types/node                     | 26.0.0  | DefinitelyTyped Contributors               |
 | @types/react                    | 19.2.17 | DefinitelyTyped Contributors               |
-| @vitejs/plugin-react            | 6.0.2   | Copyright (c) Evan You                     |
+| @vitejs/plugin-react            | 6.0.3   | Copyright (c) Evan You                     |
 | @vitest/coverage-v8             | 4.1.9   | Vitest Contributors                        |
-| axios                           | 1.18.0  | Copyright (c) Matt Zabriskie               |
+| axios                           | 1.18.1  | Copyright (c) Matt Zabriskie               |
 | clsx                            | 2.1.1   | Copyright (c) Luke Edwards                 |
 | date-fns                        | 4.4.0   | Copyright (c) Sasha Koss                   |
 | echarts-for-react               | 3.0.6   | Copyright (c) hustcc                       |
 | eslint                          | 10.5.0  | OpenJS Foundation                          |
-| eslint-plugin-import-x          | 4.16.2  | eslint-plugin-import-x Contributors        |
+| eslint-plugin-import-x          | 4.17.0  | eslint-plugin-import-x Contributors        |
 | husky                           | 9.1.7   | Copyright (c) typicode                     |
-| i18next                         | 26.3.1  | Copyright (c) i18next Contributors         |
+| i18next                         | 26.3.2  | Copyright (c) i18next Contributors         |
 | isomorphic-dompurify            | 2.x     | Copyright (c) Andrew Karpów                |
 | jsdom                           | 29.1.1  | Copyright (c) jsdom Contributors           |
 | lint-staged                     | 17.0.7  | Copyright (c) Andrey Okonetchnikov         |
@@ -68,9 +68,9 @@ Last updated: 2026-06-20
 | remark-gfm                      | 4.0.1   | Copyright (c) Titus Wormer                 |
 | tailwind-merge                  | 3.6.0   | Copyright (c) Dany Castillo                |
 | tsup                            | 8.5.1   | Copyright (c) EGOIST                       |
-| typescript-eslint               | 8.61.1  | typescript-eslint Contributors             |
+| typescript-eslint               | 8.62.0  | typescript-eslint Contributors             |
 | vanilla-cookieconsent           | 3.1.0   | Copyright (c) Orest Bida                   |
-| vite                            | 8.0.16  | Copyright (c) Evan You                     |
+| vite                            | 8.1.0   | Copyright (c) Evan You                     |
 | amazon-cognito-identity-js      | 6.3.16  | Copyright (c) Amazon.com, Inc.             |
 | vitest                          | 4.1.9   | Vitest Contributors                        |
 
