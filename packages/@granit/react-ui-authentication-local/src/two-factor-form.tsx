@@ -1,5 +1,5 @@
-import { isAxiosError } from '@granit/react-authentication-local';
 import {
+  isAxiosError,
   useSendTwoFactorLoginEmailCode,
   useVerifyTwoFactorLogin,
 } from '@granit/react-authentication-local';

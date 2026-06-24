@@ -112,37 +112,44 @@ export function PageFormPage() {
     parentInitialized.current = true;
   }, [isEdit, tree, setValue]);
 
+  function submitEdit(slugSegment: string) {
+    if (!pageId || !page) return;
+    updatePage.mutate(
+      { id: pageId, request: { slugSegment, concurrencyStamp: page.concurrencyStamp } },
+      {
+        onSuccess: () => {
+          toast.success(t('cms:Pages.UpdateSuccess', 'Page updated.'));
+          navigate(pagesPath);
+        },
+      }
+    );
+  }
+
+  function submitCreate(values: PageFormValues, slugSegment: string) {
+    createPage.mutate(
+      {
+        // Site is derived from the parent on the backend; parentId is required
+        // (defaults to the site root, set on mount). layoutKey is a
+        // required-key / nullable-value field.
+        parentId: values.parentId,
+        slugSegment,
+        layoutKey: values.layoutKey.trim() || null,
+      },
+      {
+        onSuccess: () => {
+          toast.success(t('cms:Pages.CreateSuccess', 'Page created.'));
+          navigate(pagesPath);
+        },
+      }
+    );
+  }
+
   function onSubmit(values: PageFormValues) {
     const slugSegment = values.slugSegment.trim();
-
-    if (isEdit && pageId) {
-      if (!page) return;
-      updatePage.mutate(
-        { id: pageId, request: { slugSegment, concurrencyStamp: page.concurrencyStamp } },
-        {
-          onSuccess: () => {
-            toast.success(t('cms:Pages.UpdateSuccess', 'Page updated.'));
-            navigate(pagesPath);
-          },
-        }
-      );
+    if (isEdit) {
+      submitEdit(slugSegment);
     } else {
-      createPage.mutate(
-        {
-          // Site is derived from the parent on the backend; parentId is required
-          // (defaults to the site root, set on mount). layoutKey is a
-          // required-key / nullable-value field.
-          parentId: values.parentId,
-          slugSegment,
-          layoutKey: values.layoutKey.trim() || null,
-        },
-        {
-          onSuccess: () => {
-            toast.success(t('cms:Pages.CreateSuccess', 'Page created.'));
-            navigate(pagesPath);
-          },
-        }
-      );
+      submitCreate(values, slugSegment);
     }
   }
 

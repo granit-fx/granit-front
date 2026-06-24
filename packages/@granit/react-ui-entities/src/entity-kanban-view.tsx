@@ -1,8 +1,7 @@
 import { buildQueryKey } from '@granit/query-engine';
 import { useGranitClient } from '@granit/react-api-client';
 import { useEntityActionDispatcher, type EntityActionHandlers } from '@granit/react-entities';
-import { useDateFormatter, useTranslation } from '@granit/react-localization';
-import { resolveLabel } from '@granit/react-localization';
+import { resolveLabel, useDateFormatter, useTranslation } from '@granit/react-localization';
 import { useQueryConfig } from '@granit/react-query-engine';
 import { Button, toast } from '@granit/react-ui';
 import { cn } from '@granit/utils';
@@ -563,7 +562,7 @@ function formatFieldValue(
   if (formattedDate !== null) return formattedDate;
 
   if (typeof value === 'object') return JSON.stringify(value);
-  return String(value);
+  return String(value); // NOSONAR: remaining types (symbol, function) stringify safely
 }
 
 interface KanbanCardActionButtonProps {
@@ -651,5 +650,5 @@ function renderActionIcon(action: EntityActionManifest) {
 function formatTitle(value: unknown): string | null {
   if (value === null || value === undefined) return null;
   if (typeof value === 'object') return null;
-  return String(value);
+  return String(value); // NOSONAR: remaining types (symbol, function) stringify safely
 }

@@ -1,6 +1,5 @@
 import { useEntityActionDispatcher, type EntityActionHandlers } from '@granit/react-entities';
-import { useTranslation } from '@granit/react-localization';
-import { resolveLabel } from '@granit/react-localization';
+import { resolveLabel, useTranslation } from '@granit/react-localization';
 import { Button } from '@granit/react-ui';
 import { Download, ExternalLink, PanelRightOpen, Play, SquarePen, Trash2 } from 'lucide-react';
 import { useState } from 'react';

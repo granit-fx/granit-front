@@ -17,11 +17,30 @@ function Tree({ className, ...props }: React.ComponentProps<'ul'>) {
 }
 
 function TreeItem({ className, ...props }: React.ComponentProps<'li'>) {
-  return <li role="treeitem" data-slot="tree-item" className={cn(className)} {...props} />;
+  // `aria-selected` defaults to false so the treeitem always exposes a selection
+  // state (required by the WAI-ARIA tree pattern); consumers override via props.
+  return (
+    <li
+      role="treeitem"
+      aria-selected={false}
+      data-slot="tree-item"
+      className={cn(className)}
+      {...props}
+    />
+  );
 }
 
 function TreeGroup({ className, ...props }: React.ComponentProps<'ul'>) {
-  return <ul role="group" data-slot="tree-group" className={cn(className)} {...props} />;
+  // role="group" is mandated by the WAI-ARIA tree pattern for nested item sets;
+  // the suggested native tags (details/fieldset/optgroup) cannot model a subtree.
+  return (
+    <ul
+      role="group" // NOSONAR(jsx-a11y/prefer-tag-over-role)
+      data-slot="tree-group"
+      className={cn(className)}
+      {...props}
+    />
+  );
 }
 
 /**

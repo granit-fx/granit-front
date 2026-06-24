@@ -10,8 +10,8 @@ interface MetadataFormValues {
 }
 
 function MetadataEditorHarness(props: {
-  initial?: MetadataFormValues['metadata'];
-  suggestions?: string[];
+  readonly initial?: MetadataFormValues['metadata'];
+  readonly suggestions?: string[];
 }) {
   const form = useForm<MetadataFormValues>({
     // Story-only passthrough resolver (the editor itself validates nothing here).
