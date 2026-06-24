@@ -1,4 +1,4 @@
-import { axiosResponse, createMockClient } from '@granit/api-client/test-utils';
+import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import {

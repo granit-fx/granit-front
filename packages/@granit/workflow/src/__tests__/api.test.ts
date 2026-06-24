@@ -1,4 +1,4 @@
-import { axiosResponse, createMockClient } from '@granit/api-client/test-utils';
+import { axiosResponse, createMockClient } from '@granit/testing';
 import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -31,7 +31,12 @@ describe('workflow api', () => {
     expect(client.get).toHaveBeenCalledWith('/api/v1/workflow/Document/doc-1/history', {
       params: {},
     });
-    expect(result).toEqual({ items: historyItems, totalCount: 1, hasMore: false, nextCursor: null });
+    expect(result).toEqual({
+      items: historyItems,
+      totalCount: 1,
+      hasMore: false,
+      nextCursor: null,
+    });
   });
 
   it('should call GET with query param for listTransitions', async () => {

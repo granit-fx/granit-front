@@ -5,8 +5,7 @@
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./test-utils": "./src/test-utils.ts"
+    ".": "./src/index.ts"
   },
   "files": [
     "dist"
@@ -15,19 +14,14 @@
     "build": "tsup"
   },
   "devDependencies": {
-    "@granit/logger": "workspace:*",
-    "@granit/testing": "workspace:*"
+    "@granit/logger": "workspace:*"
   },
   "peerDependencies": {
     "@granit/logger": "workspace:*",
-    "@granit/testing": "workspace:*",
     "axios": "^1.6.0"
   },
   "peerDependenciesMeta": {
     "@granit/logger": {
-      "optional": true
-    },
-    "@granit/testing": {
       "optional": true
     }
   },
@@ -36,10 +30,6 @@
       ".": {
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js"
-      },
-      "./test-utils": {
-        "types": "./dist/test-utils.d.ts",
-        "import": "./dist/test-utils.js"
       }
     },
     "registry": "https://npm.pkg.github.com"

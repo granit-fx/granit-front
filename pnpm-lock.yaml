@@ -315,9 +315,6 @@ importers:
       '@granit/logger':
         specifier: workspace:*
         version: link:../logger
-      '@granit/testing':
-        specifier: workspace:*
-        version: link:../testing
 
   packages/@granit/arch-tests:
     devDependencies:
@@ -857,11 +854,7 @@ importers:
         specifier: workspace:*
         version: link:../types
 
-  packages/@granit/logger:
-    devDependencies:
-      '@granit/testing':
-        specifier: workspace:*
-        version: link:../testing
+  packages/@granit/logger: {}
 
   packages/@granit/logger-otlp:
     devDependencies:
