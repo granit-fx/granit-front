@@ -1,5 +1,3 @@
-import type { PagedResult } from '@granit/query-engine';
-
 import type {
   LegalDocumentCreateRequest,
   LegalDocumentDetailResponse,
@@ -22,6 +20,7 @@ import type {
   PrivacyUserAgreementResponse,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
+import type { PagedResult } from '@granit/query-engine';
 
 // ── Data Export (GDPR Art. 15/20) ────────────────────────────────────────────
 
