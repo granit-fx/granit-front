@@ -12,11 +12,6 @@ export interface ExportFieldResponse {
 }
 
 /**
- * @deprecated Renamed to {@link ExportFieldResponse} to mirror the .NET DTO name. Will be removed in a future release.
- */
-export type ExportField = ExportFieldResponse;
-
-/**
  * Summary of a registered export definition.
  * Mirrors `Granit.DataExchange.Endpoints.Dtos.Export.ExportDefinitionResponse`.
  */

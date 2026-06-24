@@ -5,7 +5,6 @@ export { unflattenKeys } from './unflatten-keys';
 export { LOCALE_STORAGE_KEY } from './constants';
 
 export type {
-  ApplicationLocalizationDto,
   ApplicationLocalizationResponse,
   LanguageInfo,
   LocalizationConfig,

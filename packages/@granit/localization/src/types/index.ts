@@ -16,13 +16,6 @@ export interface ApplicationLocalizationResponse {
   languages: LanguageInfo[];
 }
 
-/**
- * @deprecated Renamed to {@link ApplicationLocalizationResponse} to mirror the
- * backend DTO name. Kept as an alias for backward compatibility; will be
- * removed in a future major version.
- */
-export type ApplicationLocalizationDto = ApplicationLocalizationResponse;
-
 // ── Admin types ─────────────────────────────────────────────────────────────
 
 /** Branded localization override identifier. */

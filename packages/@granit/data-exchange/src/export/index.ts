@@ -1,9 +1,5 @@
 // Types
-export type {
-  ExportDefinitionResponse,
-  ExportField,
-  ExportFieldResponse,
-} from './types/export-definition';
+export type { ExportDefinitionResponse, ExportFieldResponse } from './types/export-definition';
 
 export type {
   CreateExportJobRequest,
