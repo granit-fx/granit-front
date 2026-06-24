@@ -4,6 +4,8 @@
 
 export * from './data-table/manual-data-table';
 export * from './form-dialog/form-dialog';
+export * from './hooks/use-copy-to-clipboard';
+export * from './hooks/use-local-storage';
 export * from './hooks/use-operator-labels';
 export * from './layout/detail-aside-layout';
 export * from './layout/top-progress-bar';

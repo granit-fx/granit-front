@@ -7,8 +7,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@granit/react-ui';
+import { useCopyToClipboard } from '@granit/react-ui-kit';
 import { Check, ClipboardCopy } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
 import { logger } from '../logger';
 
@@ -26,7 +27,7 @@ export function WebhookPayloadViewer({
   onOpenChange,
 }: Readonly<WebhookPayloadViewerProps>) {
   const { t } = useTranslation();
-  const [copied, setCopied] = useState(false);
+  const { copy, copied } = useCopyToClipboard();
 
   const formattedPayload = delivery.payload
     ? (() => {
@@ -41,12 +42,8 @@ export function WebhookPayloadViewer({
     : null;
 
   const handleCopy = useCallback(async () => {
-    if (formattedPayload) {
-      await navigator.clipboard.writeText(formattedPayload);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  }, [formattedPayload]);
+    if (formattedPayload) await copy(formattedPayload);
+  }, [copy, formattedPayload]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

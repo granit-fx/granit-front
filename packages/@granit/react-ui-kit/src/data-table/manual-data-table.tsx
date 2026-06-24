@@ -52,7 +52,7 @@ export function ManualDataTable<TData>({
   'data-slot': dataSlot = 'manual-data-table',
 }: ManualDataTableProps<TData>) {
   const { t } = useTranslation();
-  const totalPages = Math.ceil(totalCount / pageSize);
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
   const table = useReactTable({
     data: data as TData[],

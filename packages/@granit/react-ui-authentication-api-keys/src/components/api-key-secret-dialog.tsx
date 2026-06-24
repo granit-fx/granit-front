@@ -8,8 +8,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@granit/react-ui';
+import { useCopyToClipboard } from '@granit/react-ui-kit';
 import { AlertTriangle, Check, ClipboardCopy } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
 interface ApiKeySecretDialogProps {
   open: boolean;
@@ -19,13 +20,11 @@ interface ApiKeySecretDialogProps {
 
 export function ApiKeySecretDialog({ open, secret, onClose }: Readonly<ApiKeySecretDialogProps>) {
   const { t } = useTranslation();
-  const [copied, setCopied] = useState(false);
+  const { copy, copied } = useCopyToClipboard();
 
   const handleCopy = useCallback(async () => {
-    await navigator.clipboard.writeText(secret);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }, [secret]);
+    await copy(secret);
+  }, [copy, secret]);
 
   return (
     <Dialog open={open} onOpenChange={() => {}}>

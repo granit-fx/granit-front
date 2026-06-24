@@ -1,5 +1,6 @@
 import { useTranslation } from '@granit/react-localization';
 import { Button } from '@granit/react-ui';
+import { useCopyToClipboard } from '@granit/react-ui-kit';
 import { cn } from '@granit/utils';
 import { Check, ClipboardCopy, Eye, EyeOff, RefreshCw, Terminal } from 'lucide-react';
 import { useCallback, useState } from 'react';
@@ -26,21 +27,19 @@ export function WebhookSecretDisplay({
 }: Readonly<WebhookSecretDisplayProps>) {
   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(isOneTime);
-  const [copied, setCopied] = useState<'secret' | 'curl' | null>(null);
+  const { copy: copySecret, copied: copiedSecret } = useCopyToClipboard();
+  const { copy: copyCurl, copied: copiedCurl } = useCopyToClipboard();
 
-  const handleCopy = useCallback(
-    async (type: 'secret' | 'curl') => {
-      const text =
-        type === 'curl' && targetUrl
-          ? `curl -X POST ${targetUrl} -H "Content-Type: application/json" -H "X-Webhook-Signature: $(echo -n '{}' | openssl dgst -sha256 -hmac '${secret}' -binary | base64)" -d '{}'`
-          : secret;
+  const handleCopySecret = useCallback(async () => {
+    await copySecret(secret);
+  }, [copySecret, secret]);
 
-      await navigator.clipboard.writeText(text);
-      setCopied(type);
-      setTimeout(() => setCopied(null), 2000);
-    },
-    [secret, targetUrl]
-  );
+  const handleCopyCurl = useCallback(async () => {
+    if (!targetUrl) return;
+    await copyCurl(
+      `curl -X POST ${targetUrl} -H "Content-Type: application/json" -H "X-Webhook-Signature: $(echo -n '{}' | openssl dgst -sha256 -hmac '${secret}' -binary | base64)" -d '{}'`
+    );
+  }, [copyCurl, secret, targetUrl]);
 
   return (
     <div data-slot="webhook-secret-display" className={cn('space-y-3', className)}>
@@ -70,10 +69,10 @@ export function WebhookSecretDisplay({
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => handleCopy('secret')}
+            onClick={handleCopySecret}
             aria-label={t('Webhooks.Secret.CopySecret')}
           >
-            {copied === 'secret' ? (
+            {copiedSecret ? (
               <Check className="size-4 text-green-600" />
             ) : (
               <ClipboardCopy className="size-4" />
@@ -84,8 +83,8 @@ export function WebhookSecretDisplay({
 
       <div className="flex flex-wrap gap-2">
         {canReveal && targetUrl && (
-          <Button variant="outline" size="sm" onClick={() => handleCopy('curl')}>
-            {copied === 'curl' ? (
+          <Button variant="outline" size="sm" onClick={handleCopyCurl}>
+            {copiedCurl ? (
               <Check className="mr-1 size-3.5 text-green-600" />
             ) : (
               <Terminal className="mr-1 size-3.5" />

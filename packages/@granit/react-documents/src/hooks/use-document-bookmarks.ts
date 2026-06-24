@@ -36,26 +36,10 @@ function isBookmark(value: unknown): value is DocumentBookmark {
   );
 }
 
-function readStorage(key: string): StoredBookmarks | null {
-  if (globalThis.localStorage === undefined) return null;
-  try {
-    const raw = globalThis.localStorage.getItem(key);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as StoredBookmarks;
-    return parsed && typeof parsed === 'object' ? parsed : null;
-  } catch {
-    return null;
-  }
-}
+import { readJsonFromStorage, writeJsonToStorage } from './storage-utils';
 
-function writeStorage(key: string, value: StoredBookmarks): void {
-  if (globalThis.localStorage === undefined) return;
-  try {
-    globalThis.localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    /* quota / disabled — silently ignore */
-  }
-}
+const readStorage = (key: string) => readJsonFromStorage<StoredBookmarks>(key);
+const writeStorage = (key: string, value: StoredBookmarks) => writeJsonToStorage(key, value);
 
 export interface UseDocumentBookmarksOptions {
   /** Max recents to keep. Defaults to 20. Older entries fall off the end. */

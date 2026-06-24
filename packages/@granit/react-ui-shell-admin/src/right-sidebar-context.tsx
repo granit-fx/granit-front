@@ -1,3 +1,4 @@
+import { useLocalStorage } from '@granit/react-ui-kit';
 import * as React from 'react';
 
 interface RightSidebarContextValue {
@@ -16,22 +17,9 @@ const RightSidebarContext = React.createContext<RightSidebarContextValue | null>
 const STORAGE_KEY = 'granit:right-sidebar-open';
 const DESKTOP_MEDIA_QUERY = '(min-width: 1024px)';
 
-function readPersisted(defaultValue: boolean) {
-  if (globalThis.localStorage === undefined) return defaultValue;
-  const raw = globalThis.localStorage.getItem(STORAGE_KEY);
-  return raw === null ? defaultValue : raw === 'true';
-}
-
 export function RightSidebarProvider({ children }: { readonly children: React.ReactNode }) {
-  const [open, setOpenState] = React.useState<boolean>(() => readPersisted(false));
+  const [open, setOpen] = useLocalStorage<boolean>(STORAGE_KEY, false);
   const [sheetOpen, setSheetOpen] = React.useState(false);
-
-  const setOpen = React.useCallback((next: boolean) => {
-    setOpenState(next);
-    if (globalThis.localStorage !== undefined) {
-      globalThis.localStorage.setItem(STORAGE_KEY, String(next));
-    }
-  }, []);
 
   const toggle = React.useCallback(() => {
     const isDesktop =

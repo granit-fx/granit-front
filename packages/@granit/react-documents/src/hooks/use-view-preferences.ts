@@ -21,26 +21,10 @@ interface StorageShape {
   readonly tileSize?: TileSizeStep;
 }
 
-function readStorage(key: string): StorageShape | null {
-  if (globalThis.localStorage === undefined) return null;
-  try {
-    const raw = globalThis.localStorage.getItem(key);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as StorageShape;
-    return parsed && typeof parsed === 'object' ? parsed : null;
-  } catch {
-    return null;
-  }
-}
+import { readJsonFromStorage, writeJsonToStorage } from './storage-utils';
 
-function writeStorage(key: string, value: StorageShape): void {
-  if (globalThis.localStorage === undefined) return;
-  try {
-    globalThis.localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    /* quota / disabled — silently ignore */
-  }
-}
+const readStorage = (key: string) => readJsonFromStorage<StorageShape>(key);
+const writeStorage = (key: string, value: StorageShape) => writeJsonToStorage(key, value);
 
 /**
  * Persists list/grid view mode and tile size in `localStorage` so the

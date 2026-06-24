@@ -4,6 +4,8 @@ import { cn } from '@granit/utils';
 import { MessageSquare, PanelRightClose, PanelRightOpen } from 'lucide-react';
 import * as React from 'react';
 
+import { useLocalStorage } from '../hooks/use-local-storage';
+
 const DESKTOP_MEDIA_QUERY = '(min-width: 1024px)';
 const STORAGE_KEY_DEFAULT = 'granit:detail-aside-open';
 
@@ -27,19 +29,6 @@ function useMatchesMedia(query: string) {
     return () => mql.removeEventListener('change', update);
   }, [query]);
   return matches;
-}
-
-function usePersistentBoolean(key: string, defaultValue: boolean) {
-  const [value, setValue] = React.useState<boolean>(() => {
-    if (globalThis.localStorage === undefined) return defaultValue;
-    const raw = globalThis.localStorage.getItem(key);
-    return raw === null ? defaultValue : raw === 'true';
-  });
-  React.useEffect(() => {
-    if (globalThis.localStorage === undefined) return;
-    globalThis.localStorage.setItem(key, String(value));
-  }, [key, value]);
-  return [value, setValue] as const;
 }
 
 interface DetailAsideContextValue {
@@ -111,7 +100,7 @@ export function DetailAsideLayout({
 }: DetailAsideLayoutProps) {
   const { t } = useTranslation();
   const isDesktop = useMatchesMedia(DESKTOP_MEDIA_QUERY);
-  const [open, setOpen] = usePersistentBoolean(storageKey, true);
+  const [open, setOpen] = useLocalStorage<boolean>(storageKey, true);
   const [sheetOpen, setSheetOpen] = React.useState(false);
 
   const showInline = open && isDesktop;
