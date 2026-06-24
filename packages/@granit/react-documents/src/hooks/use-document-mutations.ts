@@ -111,6 +111,10 @@ export function useFinalizeUpload(): UseMutationResult<
   return useMutation({
     mutationFn: (request: FinalizeUploadRequest) =>
       finalizeUpload(config.client, config.basePath, request),
+    // blobId is single-use: once the blob is Rejected it cannot be re-confirmed.
+    // Retrying with the same blobId escalates a 422 validation error into a
+    // confusing 400 BlobNotValidException. Never retry this mutation.
+    retry: 0,
     onSuccess: (data) => {
       logger.debug('Document upload finalized', { id: data.id });
       invalidateAllFolders(queryClient, config);
@@ -243,6 +247,8 @@ export function useAppendDocumentVersion(): UseMutationResult<
   return useMutation({
     mutationFn: ({ id, request }: DocumentIdMutationArgs<AppendVersionRequest>) =>
       appendDocumentVersion(config.client, config.basePath, id, request),
+    // Same blobId single-use constraint as useFinalizeUpload — never retry.
+    retry: 0,
     onSuccess: (_data, { id }) => {
       logger.debug('Document version appended', { id });
       invalidateDocumentVersions(queryClient, config, id);
