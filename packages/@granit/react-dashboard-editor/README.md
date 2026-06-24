@@ -6,7 +6,7 @@ reorderable, resizable widget grid built on
 keep edits round-trippable through the backend's widget-CRUD endpoints. The
 frontend half of the dashboard composer feature (EPIC #1366, story B5-C).
 
-This is the **edit-mode React layer**. It mirrors the read-mode `<Dashboard>`
+This is the **edit-mode React layer**. It mirrors the read-mode `<RenderedDashboard>`
 from [`@granit/react-dashboards`](../react-dashboards) — same auto-flow CSS
 grid, same `WidgetRegistry`-driven renderers — and adds drag-reorder,
 drag-resize, an add-widget palette, and per-kind config forms. It renders no
@@ -22,7 +22,7 @@ backend (contract: `contracts/openapi/dashboards.json`):
   primitives (`WIDGET_SIZE`), and the built-in Markdown / Image / Text widget
   shapes. Source of every type this package consumes.
 - [`@granit/react-dashboards`](../react-dashboards) — the read-mode renderer:
-  `<Dashboard>`, `WidgetRenderer`, the `WidgetRegistry` provider, and the
+  `<RenderedDashboard>`, `WidgetRenderer`, the `WidgetRegistry` provider, and the
   built-in widget renderers. Re-used here for in-grid widget rendering.
 - `@granit/react-dashboard-editor` (this package) — headless edit-mode
   primitives + pure definition mutators.
@@ -188,7 +188,7 @@ const formRegistry = composeWidgetConfigFormRegistries(
 
 ## Out of scope
 
-- **Read-mode rendering** — `<Dashboard>`, `WidgetRenderer`, and the
+- **Read-mode rendering** — `<RenderedDashboard>`, `WidgetRenderer`, and the
   `WidgetRegistry` belong to [`@granit/react-dashboards`](../react-dashboards).
 - **DTOs, HTTP transport, and persistence** — the dashboard/widget wire shapes
   come from [`@granit/dashboards`](../dashboards); saving is the host app's

@@ -223,16 +223,6 @@ For the full client-side security posture, see
 - **Authentication** — issuing/refreshing tokens is `@granit/authentication` and the
   BFF; this package consumes the already-authenticated Axios client.
 
-## Out of scope
-
-- **Rendering** — role panels, grant/role-metadata tables, and the permission-side
-  badge live in [`@granit/react-ui-authorization`](../react-ui-authorization). This
-  package is headless.
-- **DTOs and HTTP transport** — owned by [`@granit/authorization`](../authorization)
-  (mirror of `Granit.Authorization`); hooks here only adapt them to React Query.
-- **Authentication** — issuing/refreshing tokens is `@granit/authentication` and the
-  BFF; this package consumes the already-authenticated Axios client.
-
 ## License
 
 Apache-2.0

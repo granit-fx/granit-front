@@ -183,7 +183,8 @@ Requires the optional `msw` peer. Stateful in-memory handler factories —
 > render path.
 
 - **Link hrefs are scheme-filtered.** `CmsMenuNav` runs every item href through
-  `safeLinkHref` (`@granit/utils`): only `http(s)`, `mailto:`, `tel:` and
+  `safeLinkHref` (built on `isSafeUrl` + `LINK_URL_SCHEMES` from `@granit/utils`):
+  only `http(s)`, `mailto:`, `tel:` and
   same-origin relative paths pass; `javascript:` / `data:` / `vbscript:` URLs are
   dropped and the item renders as inert text. Stored XSS via a menu link is
   blocked here (security audit VULN-100 / VULN-101). External links additionally
