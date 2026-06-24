@@ -1,5 +1,6 @@
 'use client';
 
+import { createIconSet } from '@granit/react-icons';
 import {
   ArrowRight,
   Award,
@@ -42,11 +43,13 @@ const ICONS: Record<IconName, LucideIcon> = {
   Briefcase,
 };
 
+const iconSet = createIconSet(ICONS, { fallback: 'Check' });
+
 const SIZES: Record<IconSize, number> = { Sm: 16, Md: 24, Lg: 32 };
 
 /** Renders one icon from the curated set. */
 export function IconBlock({ name = 'Check', size = 'Md', color = 'Primary' }: IconBlockProps) {
-  const Glyph = ICONS[name] ?? Check;
+  const Glyph = iconSet.resolve(name);
   return (
     <span data-block="icon" data-color={color}>
       <Glyph size={SIZES[size]} aria-hidden />

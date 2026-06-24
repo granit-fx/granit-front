@@ -1,0 +1,29 @@
+{
+  "name": "@granit/react-icons",
+  "description": "Granit data-driven icon primitive — resolve a backend-stored icon identifier string to a lucide glyph with a fallback. createIconSet (bounded, package-owned) + createIconRegistry (open, host-filled). Tree-shakes to only the icons used; avoids lucide-react/dynamic's per-icon chunk explosion.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "lucide-react": "^1.0.0",
+    "react": "^19.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  }
+}

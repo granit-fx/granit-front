@@ -1315,6 +1315,9 @@ importers:
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
+      '@granit/react-icons':
+        specifier: workspace:*
+        version: link:../react-icons
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1888,6 +1891,9 @@ importers:
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
+      '@granit/react-icons':
+        specifier: workspace:*
+        version: link:../react-icons
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -2481,6 +2487,15 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
+
+  packages/@granit/react-icons:
+    dependencies:
+      lucide-react:
+        specifier: ^1.0.0
+        version: 1.21.0(react@19.2.7)
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
 
   packages/@granit/react-identity:
     dependencies:
@@ -6325,6 +6340,9 @@ importers:
       '@granit/react-authorization':
         specifier: workspace:*
         version: link:../react-authorization
+      '@granit/react-icons':
+        specifier: workspace:*
+        version: link:../react-icons
       '@granit/react-localization':
         specifier: workspace:*
         version: link:../react-localization

@@ -1,3 +1,4 @@
+import { createIconSet } from '@granit/react-icons';
 import {
   Bell,
   BookOpen,
@@ -17,14 +18,15 @@ import {
   Zap,
 } from 'lucide-react';
 
-import type { LucideIcon } from 'lucide-react';
+import type { IconGlyph } from '@granit/react-icons';
 
 /**
  * The front owns the prompt glyph set: the catalogue stores an icon
- * *identifier* string; this registry maps it to a rendered glyph. Extend it as
- * the showcase / apps need more icons — backend never sends a component.
+ * *identifier* string; this set maps it to a rendered glyph. Extend it as the
+ * showcase / apps need more icons — backend never sends a component. Bounded by
+ * the `IconPicker`, so a stored identifier is always one of these.
  */
-export const PROMPT_ICONS: Record<string, LucideIcon> = {
+export const PROMPT_ICONS: Record<string, IconGlyph> = {
   sparkles: Sparkles,
   calendar: Calendar,
   'file-text': FileText,
@@ -46,10 +48,10 @@ export const PROMPT_ICONS: Record<string, LucideIcon> = {
 /** The icon identifier used when a prompt has no icon or an unknown one. */
 export const DEFAULT_PROMPT_ICON = 'sparkles';
 
+const promptIconSet = createIconSet(PROMPT_ICONS, { fallback: DEFAULT_PROMPT_ICON });
+
 /** Selectable icon identifiers, for the icon picker grid. */
-export const PROMPT_ICON_IDS: readonly string[] = Object.keys(PROMPT_ICONS);
+export const PROMPT_ICON_IDS: readonly string[] = promptIconSet.ids;
 
 /** Resolve an icon identifier to a glyph, falling back to the default. */
-export function getPromptIcon(icon: string | null | undefined): LucideIcon {
-  return (icon ? PROMPT_ICONS[icon] : undefined) ?? PROMPT_ICONS[DEFAULT_PROMPT_ICON]!;
-}
+export const getPromptIcon = promptIconSet.resolve;
