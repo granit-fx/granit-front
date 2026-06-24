@@ -1,7 +1,7 @@
 import { samplePaymentMethods } from '@granit/react-payments/testing';
 import { screen, waitFor } from '@testing-library/react';
 
-import { TenantPaymentMethodsPage } from '../tenant-payment-methods-page';
+import { TenantPaymentMethodsPage } from '../components/tenant-payment-methods-page';
 
 import { renderWithProviders } from './test-utils';
 

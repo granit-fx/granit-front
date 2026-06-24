@@ -4,10 +4,11 @@ import { toast, Button, Separator } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { WorkspaceForm } from './components/workspace-form';
-import { logger } from './logger';
+import { logger } from '../logger';
 
-import type { CreateWorkspaceFormValues } from './validation';
+import { WorkspaceForm } from './workspace-form';
+
+import type { CreateWorkspaceFormValues } from '../validation';
 
 export function AIWorkspaceCreatePage() {
   const { t } = useTranslation();

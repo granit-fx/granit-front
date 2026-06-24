@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 
-import { PartyDetailPage } from '../party-detail-page';
+import { PartyDetailPage } from '../components/party-detail-page';
 
 import { renderWithProviders } from './test-utils';
 

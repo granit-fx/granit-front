@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 
-import { PaymentMethodsPage } from '../payment-methods-page';
+import { PaymentMethodsPage } from '../components/payment-methods-page';
 
 import { renderWithProviders } from './test-utils';
 

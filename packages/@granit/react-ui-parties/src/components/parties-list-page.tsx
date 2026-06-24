@@ -21,13 +21,14 @@ import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { createPartyColumns } from './components/party-columns';
 import {
   PARTY_LIST_ROLE_FILTERS,
   PARTY_LIST_STATUS_FILTERS,
   type PartyListRoleFilter,
   type PartyListStatusFilter,
-} from './constants';
+} from '../constants';
+
+import { createPartyColumns } from './party-columns';
 
 import type { PartyId, PartyRole } from '@granit/parties';
 

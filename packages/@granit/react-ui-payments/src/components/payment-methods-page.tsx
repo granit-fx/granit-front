@@ -1,6 +1,6 @@
 import { useTranslation } from '@granit/react-localization';
 
-import { PaymentConfigurationSection } from './components/payment-configuration-section';
+import { PaymentConfigurationSection } from './payment-configuration-section';
 
 /**
  * Host-level payment methods page: the platform operator activates or

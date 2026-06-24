@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 
-import { PrivacyExportPage } from '../privacy-export-page';
+import { PrivacyExportPage } from '../components/privacy-export-page';
 
 import { renderWithProviders } from './test-utils';
 

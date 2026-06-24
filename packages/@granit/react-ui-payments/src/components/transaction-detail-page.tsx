@@ -21,10 +21,10 @@ import { ArrowLeft, RotateCcw } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { createDisputeColumns } from './components/dispute-columns';
-import { createRefundColumns } from './components/refund-columns';
-import { RefundDialog } from './components/refund-dialog';
-import { TransactionStatusBadge } from './components/transaction-status-badge';
+import { createDisputeColumns } from './dispute-columns';
+import { createRefundColumns } from './refund-columns';
+import { RefundDialog } from './refund-dialog';
+import { TransactionStatusBadge } from './transaction-status-badge';
 
 import type { PaymentDisputeResponse, PaymentRefundResponse } from '@granit/payments';
 

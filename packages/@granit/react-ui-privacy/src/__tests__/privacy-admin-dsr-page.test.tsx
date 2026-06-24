@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { PrivacyAdminDsrPage } from '../privacy-admin-dsr-page';
+import { PrivacyAdminDsrPage } from '../components/privacy-admin-dsr-page';
 
 import { renderWithProviders } from './test-utils';
 

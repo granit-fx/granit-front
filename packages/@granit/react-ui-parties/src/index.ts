@@ -1,8 +1,8 @@
 // Pages
-export { PartiesListPage } from './parties-list-page';
-export { PartyCreatePage } from './party-create-page';
-export { PartyDetailPage } from './party-detail-page';
-export { DuplicatesInboxPage } from './duplicates-inbox-page';
+export { PartiesListPage } from './components/parties-list-page';
+export { PartyCreatePage } from './components/party-create-page';
+export { PartyDetailPage } from './components/party-detail-page';
+export { DuplicatesInboxPage } from './components/duplicates-inbox-page';
 
 // Components — list / detail building blocks
 export { createPartyColumns } from './components/party-columns';

@@ -7,10 +7,10 @@
 // @granit/react-validation.
 
 // Pages
-export { TransactionListPage } from './transaction-list-page';
-export { TransactionDetailPage } from './transaction-detail-page';
-export { PaymentMethodsPage } from './payment-methods-page';
-export { TenantPaymentMethodsPage } from './tenant-payment-methods-page';
+export { TransactionListPage } from './components/transaction-list-page';
+export { TransactionDetailPage } from './components/transaction-detail-page';
+export { PaymentMethodsPage } from './components/payment-methods-page';
+export { TenantPaymentMethodsPage } from './components/tenant-payment-methods-page';
 
 // Components
 export { ChargeDialog } from './components/charge-dialog';

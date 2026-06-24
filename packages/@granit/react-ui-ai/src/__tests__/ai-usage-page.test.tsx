@@ -2,7 +2,7 @@ import { mockUsageRecords } from '@granit/react-ai/testing';
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 
-import { AIUsagePage } from '../ai-usage-page';
+import { AIUsagePage } from '../components/ai-usage-page';
 
 import { renderWithProviders } from './test-utils';
 

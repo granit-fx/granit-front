@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 
-import { AIWorkspaceEditPage } from '../ai-workspace-edit-page';
+import { AIWorkspaceEditPage } from '../components/ai-workspace-edit-page';
 
 import { renderWithProviders } from './test-utils';
 

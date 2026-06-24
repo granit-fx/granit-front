@@ -1,7 +1,7 @@
 import { mockWorkspaces } from '@granit/react-ai/testing';
 import { screen, waitFor } from '@testing-library/react';
 
-import { AIWorkspaceListPage } from '../ai-workspace-list-page';
+import { AIWorkspaceListPage } from '../components/ai-workspace-list-page';
 
 import { renderWithProviders } from './test-utils';
 

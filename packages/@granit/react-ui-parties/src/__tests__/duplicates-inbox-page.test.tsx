@@ -1,7 +1,7 @@
 import { sampleDuplicates } from '@granit/react-parties/testing';
 import { screen } from '@testing-library/react';
 
-import { DuplicatesInboxPage } from '../duplicates-inbox-page';
+import { DuplicatesInboxPage } from '../components/duplicates-inbox-page';
 
 import { renderWithProviders } from './test-utils';
 

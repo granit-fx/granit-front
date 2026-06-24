@@ -1,7 +1,7 @@
 import { sampleTransactions } from '@granit/react-payments/testing';
 import { screen, waitFor } from '@testing-library/react';
 
-import { TransactionListPage } from '../transaction-list-page';
+import { TransactionListPage } from '../components/transaction-list-page';
 
 import { renderWithProviders } from './test-utils';
 

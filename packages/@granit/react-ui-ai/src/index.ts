@@ -1,8 +1,8 @@
 // Pages
-export { AIWorkspaceListPage } from './ai-workspace-list-page';
-export { AIWorkspaceCreatePage } from './ai-workspace-create-page';
-export { AIWorkspaceEditPage } from './ai-workspace-edit-page';
-export { AIUsagePage } from './ai-usage-page';
+export { AIWorkspaceListPage } from './components/ai-workspace-list-page';
+export { AIWorkspaceCreatePage } from './components/ai-workspace-create-page';
+export { AIWorkspaceEditPage } from './components/ai-workspace-edit-page';
+export { AIUsagePage } from './components/ai-usage-page';
 
 // Components
 export { createWorkspaceColumns } from './components/workspace-columns';

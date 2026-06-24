@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 
-import { AIWorkspaceCreatePage } from '../ai-workspace-create-page';
+import { AIWorkspaceCreatePage } from '../components/ai-workspace-create-page';
 
 import { renderWithProviders } from './test-utils';
 

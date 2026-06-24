@@ -1,7 +1,7 @@
 import { DuplicatesInbox } from '@granit/react-parties';
 import { useState } from 'react';
 
-import { MergeFromCandidate } from './components/merge-from-candidate';
+import { MergeFromCandidate } from './merge-from-candidate';
 
 import type { PartyDuplicateCandidateResponse } from '@granit/parties';
 

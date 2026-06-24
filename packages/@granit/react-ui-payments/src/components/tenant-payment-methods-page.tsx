@@ -4,9 +4,9 @@ import { Button, Spinner } from '@granit/react-ui';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 
-import { AttachMethodDialog } from './components/attach-method-dialog';
-import { DetachMethodDialog } from './components/detach-method-dialog';
-import { PaymentMethodCard } from './components/payment-method-card';
+import { AttachMethodDialog } from './attach-method-dialog';
+import { DetachMethodDialog } from './detach-method-dialog';
+import { PaymentMethodCard } from './payment-method-card';
 
 import type { PaymentMethodResponse } from '@granit/payments';
 

@@ -19,19 +19,19 @@ import { toEntityId } from '@granit/types';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { AddressesTab } from './components/addresses-tab';
-import { DownloadVCardButton } from './components/download-vcard-button';
-import { EmailsTab } from './components/emails-tab';
-import { ExternalMappingsTab } from './components/external-mappings-tab';
-import { LifecycleActions } from './components/lifecycle-actions';
-import { MergeAction } from './components/merge-action';
-import { MetadataTab } from './components/metadata-tab';
-import { PartyIdentityForm } from './components/party-identity-form';
-import { PartyRolesBadges } from './components/party-roles-badges';
-import { PartyStatusBadge } from './components/party-status-badge';
-import { PhonesTab } from './components/phones-tab';
-import { RolesTab } from './components/roles-tab';
-import { TaxStatusCard } from './components/tax-status-card';
+import { AddressesTab } from './addresses-tab';
+import { DownloadVCardButton } from './download-vcard-button';
+import { EmailsTab } from './emails-tab';
+import { ExternalMappingsTab } from './external-mappings-tab';
+import { LifecycleActions } from './lifecycle-actions';
+import { MergeAction } from './merge-action';
+import { MetadataTab } from './metadata-tab';
+import { PartyIdentityForm } from './party-identity-form';
+import { PartyRolesBadges } from './party-roles-badges';
+import { PartyStatusBadge } from './party-status-badge';
+import { PhonesTab } from './phones-tab';
+import { RolesTab } from './roles-tab';
+import { TaxStatusCard } from './tax-status-card';
 
 import type { PartyId } from '@granit/parties';
 

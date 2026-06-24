@@ -6,12 +6,13 @@ import { toast, Badge, Button, Separator, Spinner } from '@granit/react-ui';
 import { AlertCircle, ArrowLeft } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-import { WorkspaceDetail } from './components/workspace-detail';
-import { WorkspaceForm } from './components/workspace-form';
-import { WorkspaceTestPanel } from './components/workspace-test-panel';
-import { logger } from './logger';
+import { logger } from '../logger';
 
-import type { EditWorkspaceFormValues } from './validation';
+import { WorkspaceDetail } from './workspace-detail';
+import { WorkspaceForm } from './workspace-form';
+import { WorkspaceTestPanel } from './workspace-test-panel';
+
+import type { EditWorkspaceFormValues } from '../validation';
 
 export function AIWorkspaceEditPage() {
   const { t } = useTranslation();

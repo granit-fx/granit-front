@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 
-import { PrivacyAgreementsPage } from '../privacy-agreements-page';
+import { PrivacyAgreementsPage } from '../components/privacy-agreements-page';
 
 import { renderWithProviders } from './test-utils';
 

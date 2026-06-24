@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 
-import { PrivacyDeletionPage } from '../privacy-deletion-page';
+import { PrivacyDeletionPage } from '../components/privacy-deletion-page';
 
 import { renderWithProviders } from './test-utils';
 

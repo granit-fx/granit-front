@@ -6,11 +6,12 @@ import { ArrowLeft } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { CreateConflictDialog } from './components/create-conflict-dialog';
-import { PartyCreateForm } from './components/party-create-form';
-import { logger } from './logger';
+import { logger } from '../logger';
 
-import type { PartyCreateFormValues } from './validation';
+import { CreateConflictDialog } from './create-conflict-dialog';
+import { PartyCreateForm } from './party-create-form';
+
+import type { PartyCreateFormValues } from '../validation';
 import type {
   PartyCreateConflictResponse,
   PartyCreateRequest,

@@ -14,8 +14,8 @@ import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
-import { ChargeDialog } from './components/charge-dialog';
-import { createTransactionColumns } from './components/transaction-columns';
+import { ChargeDialog } from './charge-dialog';
+import { createTransactionColumns } from './transaction-columns';
 
 export function TransactionListPage() {
   const { t } = useTranslation();

@@ -23,8 +23,9 @@ import {
 import { AlertTriangle, Info, Loader2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
-import { DeletionRequestTable } from './components/deletion-request-table';
-import { logger } from './logger';
+import { logger } from '../logger';
+
+import { DeletionRequestTable } from './deletion-request-table';
 
 export function PrivacyDeletionPage() {
   const { t } = useTranslation();

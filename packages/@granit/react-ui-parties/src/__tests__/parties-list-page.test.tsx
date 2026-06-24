@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 
-import { PartiesListPage } from '../parties-list-page';
+import { PartiesListPage } from '../components/parties-list-page';
 
 import { renderWithProviders } from './test-utils';
 

@@ -8,10 +8,11 @@ import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { createWorkspaceColumns } from './components/workspace-columns';
-import { WorkspaceDeleteDialog } from './components/workspace-delete-dialog';
-import { WorkspaceTable } from './components/workspace-table';
-import { logger } from './logger';
+import { logger } from '../logger';
+
+import { createWorkspaceColumns } from './workspace-columns';
+import { WorkspaceDeleteDialog } from './workspace-delete-dialog';
+import { WorkspaceTable } from './workspace-table';
 
 import type { AIWorkspaceResponse } from '@granit/ai';
 import type { ViewMode } from '@granit/react-ui-admin-kit';
