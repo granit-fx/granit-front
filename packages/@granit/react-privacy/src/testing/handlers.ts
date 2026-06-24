@@ -515,20 +515,20 @@ export function createPrivacyHandlers(baseUrl = DEFAULT_BASE_PATH) {
       return new HttpResponse(null, { status: 201 });
     }),
 
-    // GET /legal-documents — list all, optionally filtered by documentId
+    // GET /legal-documents — QueryEngine list; filter[documentId.eq] for version history
     http.get(legalBase, ({ request }) => {
       const url = new URL(request.url);
-      const documentId = url.searchParams.get('documentId');
+      const documentIdFilter = url.searchParams.get('filter[documentId.eq]');
 
-      let result = legalDocuments as LegalDocumentDetailResponse[];
-      if (documentId) {
-        result = legalDocuments.filter(
-          (d) => d.documentId === documentId
+      let items = legalDocuments as LegalDocumentDetailResponse[];
+      if (documentIdFilter) {
+        items = legalDocuments.filter(
+          (d) => d.documentId === documentIdFilter
         ) as LegalDocumentDetailResponse[];
       }
 
-      result = [...result].sort((a, b) => b.version - a.version);
-      return HttpResponse.json(result);
+      items = [...items].sort((a, b) => b.version - a.version);
+      return HttpResponse.json({ items, totalCount: items.length });
     }),
 
     // GET /legal-documents/:id — single document by id

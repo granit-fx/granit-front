@@ -25,7 +25,10 @@ export function useLegalDocuments(
 
   return useQuery({
     queryKey: [...buildPrivacyQueryKey(config, 'legal-documents'), params],
-    queryFn: () => listLegalDocuments(config.client, config.basePath!, params),
+    queryFn: async () => {
+      const result = await listLegalDocuments(config.client, config.basePath!, params);
+      return result.items as LegalDocumentDetailResponse[];
+    },
   });
 }
 

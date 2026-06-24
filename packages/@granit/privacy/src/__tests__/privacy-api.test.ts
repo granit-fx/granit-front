@@ -334,28 +334,32 @@ describe('privacy-api', () => {
   });
 
   describe('listLegalDocuments', () => {
-    it('sends GET to /legal-documents with params', async () => {
+    it('sends GET to /legal-documents with QueryEngine filter for documentId', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValueOnce({ data: [mockDocument] });
+      vi.mocked(client.get).mockResolvedValueOnce({
+        data: { items: [mockDocument], totalCount: 1 },
+      });
 
       const result = await listLegalDocuments(client, BASE, { documentId: 'privacy-policy' });
 
       expect(client.get).toHaveBeenCalledWith(`${BASE}/legal-documents`, {
-        params: { documentId: 'privacy-policy' },
+        params: { 'filter[documentId.eq]': 'privacy-policy' },
       });
-      expect(result).toEqual([mockDocument]);
+      expect(result).toEqual({ items: [mockDocument], totalCount: 1 });
     });
 
     it('sends GET to /legal-documents without params', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValueOnce({ data: [mockDocument] });
+      vi.mocked(client.get).mockResolvedValueOnce({
+        data: { items: [mockDocument], totalCount: 1 },
+      });
 
       const result = await listLegalDocuments(client, BASE);
 
       expect(client.get).toHaveBeenCalledWith(`${BASE}/legal-documents`, {
         params: undefined,
       });
-      expect(result).toEqual([mockDocument]);
+      expect(result).toEqual({ items: [mockDocument], totalCount: 1 });
     });
   });
 

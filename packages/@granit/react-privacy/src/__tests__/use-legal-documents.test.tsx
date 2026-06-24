@@ -70,7 +70,7 @@ const mockDocument: LegalDocumentDetailResponse = {
 
 describe('useLegalDocuments', () => {
   it('should fetch all legal documents', async () => {
-    vi.mocked(listLegalDocuments).mockResolvedValueOnce([mockDocument]);
+    vi.mocked(listLegalDocuments).mockResolvedValueOnce({ items: [mockDocument], totalCount: 1 });
 
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useLegalDocuments(), { wrapper });
@@ -82,7 +82,7 @@ describe('useLegalDocuments', () => {
   });
 
   it('should pass documentId filter params', async () => {
-    vi.mocked(listLegalDocuments).mockResolvedValueOnce([mockDocument]);
+    vi.mocked(listLegalDocuments).mockResolvedValueOnce({ items: [mockDocument], totalCount: 1 });
 
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useLegalDocuments({ documentId: 'privacy-policy' }), {
