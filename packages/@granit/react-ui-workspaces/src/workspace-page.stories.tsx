@@ -1,8 +1,16 @@
 import { createApiClient } from '@granit/api-client';
 import { GranitClientProvider } from '@granit/react-api-client';
+import { createIconRegistry } from '@granit/react-icons';
 import { createWorkspacesHandlers } from '@granit/react-workspaces/testing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { DynamicIcon, type IconName } from 'lucide-react/dynamic';
+import {
+  BriefcaseBusiness,
+  Building2,
+  LayoutDashboard,
+  Settings,
+  Square,
+  Users,
+} from 'lucide-react';
 import { I18nextProvider } from 'react-i18next';
 
 import { storyI18n } from './stories-i18n';
@@ -15,9 +23,15 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
 });
 
-// Mirrors the host's injected WorkspaceIcon (lucide dynamic icon by backend name).
-const renderIcon = (name: string | null, className?: string) =>
-  name ? <DynamicIcon name={name as IconName} className={className} /> : null;
+// Static registry with a representative subset of workspace icons.
+// Uses createIconRegistry (tree-shakeable) instead of lucide-react/dynamic's
+// full 1762-entry lazy map. Unknown names fall back to Square.
+const storyRegistry = createIconRegistry({ fallback: Square });
+storyRegistry.register({ BriefcaseBusiness, Building2, LayoutDashboard, Settings, Users });
+
+const renderIcon = (name: string | null, className?: string) => (
+  <storyRegistry.Icon name={name} className={className} />
+);
 
 const meta: Meta<typeof WorkspacePage> = {
   title: 'Workspaces/WorkspacePage',

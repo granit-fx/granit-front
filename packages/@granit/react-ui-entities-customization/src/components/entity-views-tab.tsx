@@ -38,6 +38,7 @@ import {
   AlertDialogTitle,
   toast,
 } from '@granit/react-ui';
+import { EmptyState } from '@granit/react-ui-kit';
 import { Globe, Pencil, Pin, PinOff, Star, Trash2, Users } from 'lucide-react';
 import { useState } from 'react';
 
@@ -378,17 +379,15 @@ export function EntityViewsTab() {
         );
       }
       return (
-        <p className="py-8 text-center text-sm text-muted-foreground">
-          {t('views:Page.Empty', {
-            defaultValue: 'No views yet for this entity.',
-          })}
-        </p>
+        <EmptyState
+          message={t('views:Page.Empty', { defaultValue: 'No views yet for this entity.' })}
+        />
       );
     }
     return (
-      <p className="py-8 text-center text-sm text-muted-foreground">
-        {t('views:Page.PickEntity', { defaultValue: 'Pick an entity to see its views.' })}
-      </p>
+      <EmptyState
+        message={t('views:Page.PickEntity', { defaultValue: 'Pick an entity to see its views.' })}
+      />
     );
   })();
 

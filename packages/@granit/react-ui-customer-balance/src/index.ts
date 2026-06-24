@@ -8,7 +8,7 @@ export { BalanceSummaryCard } from './components/balance-summary-card';
 export { AddCreditDialog } from './components/add-credit-dialog';
 export { ApplyDebitDialog } from './components/apply-debit-dialog';
 export { createTransactionColumns } from './components/transaction-columns';
-export { formatCurrency } from './format-currency';
+export { formatCurrency } from '@granit/utils';
 
 // i18next resource bundles (flat keys, "translation" ns)
 export { customerBalanceTranslationsEn, customerBalanceTranslationsFr } from './locales/index';

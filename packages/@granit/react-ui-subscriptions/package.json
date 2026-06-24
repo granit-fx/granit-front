@@ -17,6 +17,7 @@
     "@granit/logger": "workspace:*",
     "@granit/query-engine": "workspace:*",
     "@granit/react-localization": "workspace:*",
+    "@granit/utils": "workspace:*",
     "@granit/react-query-engine": "workspace:*",
     "@granit/react-subscriptions": "workspace:*",
     "@granit/react-ui": "workspace:*",

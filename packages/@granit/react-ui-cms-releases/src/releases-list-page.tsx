@@ -1,6 +1,8 @@
 import { usePublishRelease, useReleases } from '@granit/react-cms';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import {
+  Alert,
+  AlertDescription,
   Badge,
   Button,
   Separator,
@@ -85,9 +87,11 @@ export function ReleasesListPage() {
       <ReleaseFormDialog open={createOpen} onOpenChange={setCreateOpen} siteId={siteId ?? ''} />
 
       {isError && (
-        <p className="text-sm text-destructive">
-          {t('cms:Releases.LoadError', 'Failed to load releases.')}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>
+            {t('cms:Releases.LoadError', 'Failed to load releases.')}
+          </AlertDescription>
+        </Alert>
       )}
 
       <Table>

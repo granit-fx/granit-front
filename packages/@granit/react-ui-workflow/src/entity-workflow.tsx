@@ -1,6 +1,15 @@
-
 import { useTranslation } from '@granit/react-localization';
-import { Card, CardContent, CardHeader, CardTitle, Spinner, toast } from '@granit/react-ui';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Spinner,
+  toast,
+} from '@granit/react-ui';
 import {
   WorkflowProvider,
   useExecuteTransition,
@@ -8,7 +17,7 @@ import {
   useWorkflowHistory,
 } from '@granit/react-workflow';
 import { cn } from '@granit/utils';
-import { AlertCircle, GitBranch } from 'lucide-react';
+import { GitBranch } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 
 import { TransitionCommentDialog } from './transition-comment-dialog';
@@ -135,11 +144,10 @@ function EntityWorkflowInner({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col items-center gap-2 py-8 text-center">
-            <AlertCircle className="h-8 w-8 text-muted" />
-            <p className="text-sm font-medium text-foreground">{t('Workflow.ErrorTitle')}</p>
-            <p className="text-sm text-muted-foreground">{t('Workflow.ErrorMessage')}</p>
-          </div>
+          <Alert variant="destructive">
+            <AlertTitle>{t('Workflow.ErrorTitle')}</AlertTitle>
+            <AlertDescription>{t('Workflow.ErrorMessage')}</AlertDescription>
+          </Alert>
         </CardContent>
       </Card>
     );

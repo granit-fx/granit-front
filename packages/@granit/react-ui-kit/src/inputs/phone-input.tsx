@@ -18,7 +18,7 @@ import {
   getCountries,
   getCountryCallingCode,
   parsePhoneNumberFromString,
-} from 'libphonenumber-js/min';
+} from 'libphonenumber-js';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { useMemo, useState } from 'react';
 

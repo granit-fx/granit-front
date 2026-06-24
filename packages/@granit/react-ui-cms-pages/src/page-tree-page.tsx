@@ -1,6 +1,8 @@
 import { usePageTree, useDeletePage } from '@granit/react-cms';
 import { useTranslation } from '@granit/react-localization';
 import {
+  Alert,
+  AlertDescription,
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -66,9 +68,9 @@ export function PageTreePage() {
       </div>
 
       {isError && (
-        <p className="text-sm text-destructive">
-          {t('cms:Pages.LoadError', 'Failed to load pages.')}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>{t('cms:Pages.LoadError', 'Failed to load pages.')}</AlertDescription>
+        </Alert>
       )}
 
       <Table>

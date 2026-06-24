@@ -16,6 +16,7 @@
   "peerDependencies": {
     "@granit/blob-storage": "workspace:*",
     "@granit/logger": "workspace:*",
+    "@granit/utils": "workspace:*",
     "@granit/query-engine": "workspace:*",
     "@granit/react-authorization": "workspace:*",
     "@granit/react-blob-storage": "workspace:*",

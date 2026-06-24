@@ -2,8 +2,10 @@
 // WebAuthn returns no device identity either. The best we can do is derive a
 // human-friendly "{browser} – {os}" label so the user recognises this passkey
 // later. Prefer low-entropy User-Agent Client Hints (Chromium) — no async, no
-// permission prompt — and fall back to userAgent parsing (Safari/Firefox).
+// permission prompt — and fall back to parseUserAgent (Safari/Firefox).
 // The value is only a suggestion: the user edits it freely before saving.
+
+import { parseUserAgent } from '@granit/identity';
 
 interface UADataBrand {
   readonly brand: string;
@@ -35,26 +37,6 @@ function browserFromBrands(brands: readonly UADataBrand[]): string | undefined {
   return brands.length > 0 ? 'Chromium' : undefined;
 }
 
-function browserFromUA(ua: string): string | undefined {
-  if (/edg(a|ios)?\//i.test(ua)) return 'Edge';
-  if (/opr\/|opera/i.test(ua)) return 'Opera';
-  if (/firefox\/|fxios\//i.test(ua)) return 'Firefox';
-  if (/chrome\/|crios\//i.test(ua)) return 'Chrome';
-  if (/safari\//i.test(ua)) return 'Safari';
-  return undefined;
-}
-
-function osFromUA(ua: string): string | undefined {
-  if (/windows nt/i.test(ua)) return 'Windows';
-  if (/iphone|ipod/i.test(ua)) return 'iOS';
-  if (/ipad/i.test(ua)) return 'iPadOS';
-  if (/mac os x|macintosh/i.test(ua)) return 'macOS';
-  if (/cros/i.test(ua)) return 'ChromeOS';
-  if (/android/i.test(ua)) return 'Android';
-  if (/linux/i.test(ua)) return 'Linux';
-  return undefined;
-}
-
 /**
  * Best-effort default label for a new passkey, e.g. `"Chrome – Windows"`.
  * Returns an empty string when nothing can be detected (SSR, locked-down UA).
@@ -65,9 +47,9 @@ export function getDefaultPasskeyName(): string {
   let os = uaData?.platform || undefined;
 
   if ((!browser || !os) && typeof navigator !== 'undefined') {
-    const { userAgent } = navigator;
-    browser ??= browserFromUA(userAgent);
-    os ??= osFromUA(userAgent);
+    const parsed = parseUserAgent(navigator.userAgent);
+    browser ??= parsed?.browser ?? undefined;
+    os ??= parsed?.operatingSystem ?? undefined;
   }
 
   return [browser, os].filter(Boolean).join(' – ');

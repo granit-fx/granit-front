@@ -1,4 +1,4 @@
-import { parsePhoneNumberFromString } from 'libphonenumber-js/min';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
 
 /**
  * Format an E.164 phone number for display in the user's spaced

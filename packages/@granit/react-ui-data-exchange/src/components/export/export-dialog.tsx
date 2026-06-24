@@ -6,6 +6,8 @@ import {
 } from '@granit/react-data-exchange';
 import { useTranslation } from '@granit/react-localization';
 import {
+  Alert,
+  AlertDescription,
   Badge,
   Button,
   Checkbox,
@@ -396,13 +398,17 @@ export function ExportDialog({
                   )}
                 </div>
                 {exportJob.job.errorMessage && (
-                  <p className="text-sm text-destructive">{exportJob.job.errorMessage}</p>
+                  <Alert variant="destructive">
+                    <AlertDescription>{exportJob.job.errorMessage}</AlertDescription>
+                  </Alert>
                 )}
               </div>
             )}
 
             {exportJob.error && !exportJob.job && (
-              <p className="text-sm text-destructive">{exportJob.error.message}</p>
+              <Alert variant="destructive">
+                <AlertDescription>{exportJob.error.message}</AlertDescription>
+              </Alert>
             )}
           </div>
         )}

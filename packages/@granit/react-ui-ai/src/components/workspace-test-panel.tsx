@@ -3,6 +3,8 @@ import { useAIChatStream, useAIEmbeddings } from '@granit/react-ai';
 import { usePermissions } from '@granit/react-authorization';
 import { useTranslation } from '@granit/react-localization';
 import {
+  Alert,
+  AlertDescription,
   Button,
   Card,
   CardContent,
@@ -124,9 +126,9 @@ function ChatTestTab({ workspaceName }: { readonly workspaceName: string }) {
       </div>
 
       {error && (
-        <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
-          {error.message}
-        </div>
+        <Alert variant="destructive">
+          <AlertDescription>{error.message}</AlertDescription>
+        </Alert>
       )}
 
       {content && (
@@ -179,9 +181,9 @@ function EmbeddingsTestTab({ workspaceName }: { readonly workspaceName: string }
       </Button>
 
       {error && (
-        <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
-          {error.message}
-        </div>
+        <Alert variant="destructive">
+          <AlertDescription>{error.message}</AlertDescription>
+        </Alert>
       )}
 
       {data && (

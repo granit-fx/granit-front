@@ -1,5 +1,6 @@
 import { useDocumentProperties } from '@granit/react-documents';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
+import { Alert, AlertDescription } from '@granit/react-ui';
 import { useParams } from 'react-router-dom';
 
 function Row({
@@ -55,9 +56,11 @@ export function DocumentPropertiesPage() {
       )}
 
       {props.error && (
-        <p className="text-sm text-destructive">
-          {t('documents:Properties.Error', 'Failed to load properties.')}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>
+            {t('documents:Properties.Error', 'Failed to load properties.')}
+          </AlertDescription>
+        </Alert>
       )}
 
       {props.data && (

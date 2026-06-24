@@ -1,7 +1,7 @@
-import type { DeviceKind, UserDeviceResponse } from '@granit/identity';
+import type { DeviceKind, UserDeviceResponse } from './types/index';
 
 /** The device-shaped subset {@link composeDeviceLabel} consumes. */
-type ParsedUserAgent = Pick<UserDeviceResponse, 'kind' | 'operatingSystem' | 'browser'>;
+export type ParsedUserAgent = Pick<UserDeviceResponse, 'kind' | 'operatingSystem' | 'browser'>;
 
 /** Operating systems we treat as handheld for icon selection. */
 const MOBILE_OPERATING_SYSTEMS: ReadonlySet<string> = new Set(['iOS', 'Android']);
@@ -64,9 +64,7 @@ export function parseUserAgent(userAgent: string | null | undefined): ParsedUser
   const browser = matchFirst(userAgent, BROWSERS);
   const operatingSystem = matchFirst(userAgent, OPERATING_SYSTEMS);
   const kind: DeviceKind = matchFirst(userAgent, KINDS) ?? 'Browser';
-  // Nothing recognizable: let the caller fall back to "unknown device".
   if (kind === 'Browser' && !browser && !operatingSystem) return null;
-
   return { kind, operatingSystem, browser };
 }
 

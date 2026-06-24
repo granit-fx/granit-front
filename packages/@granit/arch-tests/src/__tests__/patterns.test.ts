@@ -59,7 +59,7 @@ describe('patterns (delegated to kit)', () => {
           // Storybook demo: FormDialog is form-agnostic (the host owns the
           // form); the story wires a throwaway useForm purely to render the
           // dialog chrome, so it needs no validation contract.
-          'react-ui-admin-kit/src/form-dialog/form-dialog.stories.tsx',
+          'react-ui-kit/src/form-dialog/form-dialog.stories.tsx',
         ],
       })
     ).toEqual([]);

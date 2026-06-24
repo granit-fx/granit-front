@@ -1878,6 +1878,21 @@
           "kind": "interface",
           "signature": "interface DeviceLabelStrings",
           "members": []
+        },
+        {
+          "name": "isHandheldUserAgent",
+          "kind": "function",
+          "signature": "function isHandheldUserAgent(parsed: ParsedUserAgent | null): boolean"
+        },
+        {
+          "name": "parseUserAgent",
+          "kind": "function",
+          "signature": "function parseUserAgent(userAgent: string | null | undefined): ParsedUserAgent | null"
+        },
+        {
+          "name": "ParsedUserAgent",
+          "kind": "type",
+          "signature": "type ParsedUserAgent = Pick<UserDeviceResponse, 'kind' | 'operatingSystem' | 'browser'>"
         }
       ]
     },
@@ -5537,11 +5552,6 @@
           "kind": "interface",
           "signature": "interface VersionsTimelineProps",
           "members": []
-        },
-        {
-          "name": "formatBytes",
-          "kind": "function",
-          "signature": "function formatBytes(bytes: number): string"
         }
       ]
     },
@@ -8508,33 +8518,6 @@
           "name": "BlobDeleteDialog",
           "kind": "function",
           "signature": "function BlobDeleteDialog("
-        },
-        {
-          "name": "FileUploadField",
-          "kind": "function",
-          "signature": "function FileUploadField("
-        },
-        {
-          "name": "FileUploadFieldProps",
-          "kind": "interface",
-          "signature": "interface FileUploadFieldProps",
-          "members": []
-        },
-        {
-          "name": "ImageUploadField",
-          "kind": "function",
-          "signature": "function ImageUploadField("
-        },
-        {
-          "name": "AspectRatio",
-          "kind": "type",
-          "signature": "type AspectRatio = '1:1' | '4:3' | '3:4' | '16:9' | '9:16' | '3:2' | '2:3'"
-        },
-        {
-          "name": "ImageUploadFieldProps",
-          "kind": "interface",
-          "signature": "interface ImageUploadFieldProps",
-          "members": []
         }
       ]
     },
@@ -8761,11 +8744,6 @@
           "name": "createTransactionColumns",
           "kind": "function",
           "signature": "function createTransactionColumns("
-        },
-        {
-          "name": "formatCurrency",
-          "kind": "function",
-          "signature": "function formatCurrency(amount: number, currency: string, locale?: string): string"
         }
       ]
     },
@@ -9444,16 +9422,6 @@
           "kind": "interface",
           "signature": "interface RiskLabelStrings",
           "members": []
-        },
-        {
-          "name": "isHandheldUserAgent",
-          "kind": "function",
-          "signature": "function isHandheldUserAgent(parsed: ParsedUserAgent | null): boolean"
-        },
-        {
-          "name": "parseUserAgent",
-          "kind": "function",
-          "signature": "function parseUserAgent(userAgent: string | null | undefined): ParsedUserAgent | null"
         }
       ]
     },

@@ -16,8 +16,9 @@ import {
   TableHeader,
   TableRow,
 } from '@granit/react-ui';
+import { EmptyState } from '@granit/react-ui-kit';
 import { toEntityId } from '@granit/types';
-import { ArrowLeft, AlertCircle, Ban, RefreshCw, ArrowRightLeft, UserPlus } from 'lucide-react';
+import { AlertCircle, ArrowLeft, Ban, RefreshCw, ArrowRightLeft, UserPlus } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
@@ -67,10 +68,7 @@ export function SubscriptionDetailPage() {
             </Link>
           </Button>
         </div>
-        <div className="flex flex-col items-center gap-2 py-16 text-center">
-          <AlertCircle className="h-8 w-8 text-muted-foreground/70" />
-          <p className="text-sm font-medium text-foreground">{t('Subscriptions.List.NotFound')}</p>
-        </div>
+        <EmptyState icon={AlertCircle} message={t('Subscriptions.List.NotFound')} />
       </div>
     );
   }

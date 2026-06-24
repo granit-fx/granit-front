@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from '@granit/react-ui';
+import { EmptyState } from '@granit/react-ui-kit';
 import { toEntityId } from '@granit/types';
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
@@ -75,11 +76,7 @@ export function TransactionDetailPage() {
   }
 
   if (!transaction) {
-    return (
-      <div className="py-12 text-center text-muted-foreground">
-        {t('Payments.Transactions.NotFound')}
-      </div>
-    );
+    return <EmptyState message={t('Payments.Transactions.NotFound')} />;
   }
 
   return (

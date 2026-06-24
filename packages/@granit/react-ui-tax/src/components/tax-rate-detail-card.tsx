@@ -1,6 +1,7 @@
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { useTaxRateByCountry } from '@granit/react-tax';
 import { Card, CardContent, CardHeader, CardTitle, Skeleton } from '@granit/react-ui';
+import { EmptyState } from '@granit/react-ui-kit';
 
 interface TaxRateDetailCardProps {
   readonly countryCode: string;
@@ -29,8 +30,8 @@ export function TaxRateDetailCard({ countryCode }: TaxRateDetailCardProps) {
   if (!rate) {
     return (
       <Card data-slot="tax-rate-detail-card">
-        <CardContent className="py-8 text-center text-muted-foreground">
-          {t('Tax.Rates.NotFound')}
+        <CardContent>
+          <EmptyState message={t('Tax.Rates.NotFound')} />
         </CardContent>
       </Card>
     );

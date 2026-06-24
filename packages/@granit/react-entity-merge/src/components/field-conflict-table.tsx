@@ -1,4 +1,5 @@
 import { resolveWinner } from '@granit/entity-merge';
+import { Alert, AlertDescription } from '@granit/react-ui';
 
 import type { FieldConflict, MergeFieldChoices, WinnerSide } from '@granit/entity-merge';
 
@@ -51,9 +52,9 @@ export function FieldConflictTable({
   }
   if (isError) {
     return (
-      <p role="alert" className="text-sm text-destructive">
-        {labels.error}
-      </p>
+      <Alert variant="destructive">
+        <AlertDescription>{labels.error}</AlertDescription>
+      </Alert>
     );
   }
   if (conflicts.length === 0) {

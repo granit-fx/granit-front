@@ -209,7 +209,7 @@ export { VersionsTimeline } from './components/versions-timeline';
 export type { VersionsTimelineLabels, VersionsTimelineProps } from './components/versions-timeline';
 
 // Helpers
-export { formatBytes } from './components/format-bytes';
+export { formatBytes } from '@granit/utils';
 
 // i18n
 export { documentsTranslationsEn, documentsTranslationsFr } from './locales/index';

@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@granit/react-ui';
+import { EmptyState } from '@granit/react-ui-kit';
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { Loader2, Plus, X } from 'lucide-react';
 import { useState } from 'react';
@@ -129,9 +130,7 @@ export function LegalDocumentListPage() {
         </div>
       )}
       {!isLoading && (!documents || documents.length === 0) && (
-        <div className="py-8 text-center text-sm text-muted-foreground">
-          {t('Privacy.LegalDocuments.NoDocuments')}
-        </div>
+        <EmptyState message={t('Privacy.LegalDocuments.NoDocuments')} />
       )}
 
       {publishTarget && (
