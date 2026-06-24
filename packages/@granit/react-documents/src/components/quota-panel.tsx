@@ -2,7 +2,7 @@ import { toISODateString } from '@granit/types';
 
 import { useTenantStorageQuota } from '../hooks/use-quota';
 
-import { formatBytes } from './format-bytes';
+import { formatBytes } from '@granit/utils';
 
 import type { ReactNode } from 'react';
 

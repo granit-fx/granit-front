@@ -18,9 +18,9 @@ import {
   toast,
 } from '@granit/react-ui';
 import { toEntityId } from '@granit/types';
+import { formatCurrency } from '@granit/utils';
 import { useState } from 'react';
 
-import { formatCurrency } from '../../format-currency';
 
 import type { PlanPriceResponse, SubscriptionId } from '@granit/subscriptions';
 

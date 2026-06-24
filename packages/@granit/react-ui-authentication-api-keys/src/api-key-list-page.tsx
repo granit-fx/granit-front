@@ -18,6 +18,7 @@ import {
   Spinner,
   Switch,
 } from '@granit/react-ui';
+import { useDebouncedValue } from '@granit/react-ui-admin-kit';
 import { KeyRound, Plus, Search } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -27,7 +28,6 @@ import { ApiKeyRotateDialog } from './components/api-key-rotate-dialog';
 import { ApiKeySecretDialog } from './components/api-key-secret-dialog';
 import { ApiKeyTable } from './components/api-key-table';
 import { API_KEY_ENVIRONMENTS, API_KEY_TYPES, DEFAULT_PAGE_SIZE } from './constants';
-import { useDebounce } from './hooks/use-debounce';
 
 import type { ApiKeyListItemResponse, ApiKeyRotateResponse } from '@granit/authentication-api-keys';
 import type { FilterEntry } from '@granit/query-engine';
@@ -43,7 +43,7 @@ export function ApiKeyListPage() {
   const client = useGranitClient();
 
   const [search, setSearch] = useState('');
-  const debouncedSearch = useDebounce(search, 300);
+  const debouncedSearch = useDebouncedValue(search, 300);
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [environmentFilter, setEnvironmentFilter] = useState<string>('all');
   const [includeRevoked, setIncludeRevoked] = useState(false);

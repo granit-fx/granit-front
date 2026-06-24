@@ -8,7 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { DownloadPdfButton } from './components/download-pdf-button';
 import { InvoiceLineItems } from './components/invoice-line-items';
 import { InvoiceStatusBadge } from './components/invoice-status-badge';
-import { formatCurrency } from './lib/format-currency';
+import { formatCurrency } from '@granit/utils';
 
 import type { InvoiceId, InvoiceResponse } from '@granit/invoicing';
 

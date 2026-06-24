@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { useDocumentDownloadUrl, useDocumentVersions } from '../hooks/use-documents';
 
-import { formatBytes } from './format-bytes';
+import { formatBytes } from '@granit/utils';
 
 import type { DocumentVersionResponse } from '@granit/documents';
 import type { ReactNode } from 'react';

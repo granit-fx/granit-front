@@ -1,7 +1,7 @@
 import { Button } from '@granit/react-ui';
 import { Eye } from 'lucide-react';
 
-import { formatCurrency } from '../lib/format-currency';
+import { formatCurrency } from '@granit/utils';
 
 import { InvoiceStatusBadge } from './invoice-status-badge';
 

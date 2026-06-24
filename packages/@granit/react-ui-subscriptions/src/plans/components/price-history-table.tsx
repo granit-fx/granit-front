@@ -9,8 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@granit/react-ui';
-
-import { formatCurrency } from '../../format-currency';
+import { formatCurrency } from '@granit/utils';
 
 import type { PlanPriceResponse } from '@granit/subscriptions';
 

@@ -1,5 +1,5 @@
 import { Badge } from '@granit/react-ui';
-import { cn } from '@granit/utils';
+import { cn, formatNumber } from '@granit/utils';
 
 import type { BalanceTransactionResponse } from '@granit/customer-balance';
 import type { useTranslation } from '@granit/react-localization';
@@ -9,10 +9,6 @@ import type { ColumnDef } from '@tanstack/react-table';
  * hook itself so the column factory's type always matches the caller's, free of
  * any i18next version skew across the workspace. */
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
-
-function formatAmount(amount: number, locale: string): string {
-  return new Intl.NumberFormat(locale, { minimumFractionDigits: 2 }).format(amount / 100);
-}
 
 interface TransactionColumnOptions {
   readonly t: TranslateFn;
@@ -64,7 +60,7 @@ export function createTransactionColumns({
             )}
           >
             {isCredit ? '+' : ''}
-            {formatAmount(amount, locale)}
+            {formatNumber(amount / 100, { minimumFractionDigits: 2 }, locale)}
           </span>
         );
       },

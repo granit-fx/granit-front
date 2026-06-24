@@ -4,6 +4,8 @@ import { useGranitClient } from '@granit/react-api-client';
 import { useQuery, type Query, type UseQueryResult } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
+import { analyticsKeys } from './query-keys';
+
 import type { MetricRequest, MetricResponse } from '@granit/analytics';
 
 const ANALYTICS_BASE_PATH = '/api/v1/analytics';
@@ -51,7 +53,7 @@ export function useMetric(
   const normalizedRequest = useMemo(() => normalizeMetricRequest(request), [request]);
 
   const queryKey = useMemo(
-    () => ['analytics', 'metric', metricName, normalizedRequest] as const,
+    () => analyticsKeys.metric(metricName, normalizedRequest),
     [metricName, normalizedRequest]
   );
 

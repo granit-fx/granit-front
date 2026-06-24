@@ -1,7 +1,7 @@
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { Card, CardContent, CardHeader, CardTitle } from '@granit/react-ui';
 
-import { formatCurrency } from '../format-currency';
+import { formatCurrency } from '@granit/utils';
 
 import type { CustomerBalanceResponse } from '@granit/customer-balance';
 

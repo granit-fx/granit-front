@@ -2,10 +2,10 @@ import { usePermissionGrantMeta, usePermissionGrants } from '@granit/react-autho
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { Input, Spinner } from '@granit/react-ui';
 import { QueryDataTable } from '@granit/react-ui-admin-kit';
+import { useDebouncedValue } from '@granit/react-ui-admin-kit';
 import { Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
-import { useDebounce } from './hooks/use-debounce';
 
 import type { PermissionGrant } from '@granit/authorization';
 import type { SortEntry } from '@granit/query-engine';
@@ -32,7 +32,7 @@ export function PermissionGrantsPage() {
   const { formatDate } = useDateFormatter();
 
   const [search, setSearch] = useState('');
-  const debouncedSearch = useDebounce(search, 300);
+  const debouncedSearch = useDebouncedValue(search, 300);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [sort, setSort] = useState<SortEntry[]>([{ field: 'name', direction: 'asc' }]);

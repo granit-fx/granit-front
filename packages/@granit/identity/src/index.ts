@@ -97,3 +97,7 @@ export { IdentityPermissions } from './permissions';
 // Device label composition
 export { composeDeviceLabel } from './device-label';
 export type { DeviceLabelStrings } from './device-label';
+
+// User-Agent parsing (shared by session management UI and passkey naming)
+export { isHandheldUserAgent, parseUserAgent } from './parse-user-agent';
+export type { ParsedUserAgent } from './parse-user-agent';
