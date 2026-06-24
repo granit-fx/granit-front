@@ -43,6 +43,9 @@ importers:
       '@opentelemetry/context-zone':
         specifier: ^2.8.0
         version: 2.8.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/core':
+        specifier: '>=2.8.0'
+        version: 2.8.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/exporter-trace-otlp-http':
         specifier: ^0.219.0
         version: 0.219.0(@opentelemetry/api@1.9.1)
@@ -3482,6 +3485,9 @@ importers:
       '@opentelemetry/context-zone':
         specifier: ^2.6.0
         version: 2.8.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/core':
+        specifier: '>=2.8.0'
+        version: 2.8.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/exporter-trace-otlp-http':
         specifier: ^0.213.0
         version: 0.213.0(@opentelemetry/api@1.9.1)
@@ -3577,6 +3583,9 @@ importers:
       '@granit/react-ui-identity':
         specifier: workspace:*
         version: link:../react-ui-identity
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -5173,6 +5182,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/react-workspaces':
         specifier: workspace:*
         version: link:../react-workspaces
@@ -5840,6 +5852,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -6106,6 +6121,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation

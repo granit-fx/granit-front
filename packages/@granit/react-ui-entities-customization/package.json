@@ -25,7 +25,8 @@
     "@granit/react-workspaces": "workspace:*",
     "lucide-react": "^1.21.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "@granit/react-ui-kit": "workspace:*"
   },
   "publishConfig": {
     "exports": {
@@ -58,6 +59,7 @@
     "react-dom": "^19.0.0",
     "react-i18next": "^17.0.0",
     "react-router-dom": "^7.18.0",
-    "storybook": "^10.4.6"
+    "storybook": "^10.4.6",
+    "@granit/react-ui-kit": "workspace:*"
   }
 }

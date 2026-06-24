@@ -61,6 +61,15 @@ vi.mock('@opentelemetry/context-zone', () => ({
   },
 }));
 
+const mockW3CTraceContextPropagatorInstance = {};
+vi.mock('@opentelemetry/core', () => ({
+  W3CTraceContextPropagator: class {
+    constructor() {
+      return mockW3CTraceContextPropagatorInstance;
+    }
+  },
+}));
+
 vi.mock('@opentelemetry/instrumentation-fetch', () => ({
   FetchInstrumentation: class {
     enable = vi.fn();
@@ -111,10 +120,12 @@ describe('TracingProvider', () => {
     expect(result.current).toBe(mockTracer);
   });
 
-  it('should register the WebTracerProvider', () => {
+  it('should register the WebTracerProvider with the W3C TraceContext propagator', () => {
     renderHook(() => useTracingConfig(), { wrapper: createWrapper() });
 
-    expect(mockRegister).toHaveBeenCalled();
+    expect(mockRegister).toHaveBeenCalledWith(
+      expect.objectContaining({ propagator: mockW3CTraceContextPropagatorInstance })
+    );
   });
 
   it('should call shutdown on unmount', () => {
