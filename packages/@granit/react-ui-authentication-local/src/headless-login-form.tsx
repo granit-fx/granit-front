@@ -79,14 +79,18 @@ function DirectLoginDemo() {
             </p>
           )}
           {result.isLockedOut && (
-            <p className="text-sm text-destructive">
-              {t('Auth.HeadlessLogin.LockedOut', 'Account locked out')}
-            </p>
+            <Alert variant="destructive">
+              <AlertDescription>
+                {t('Auth.HeadlessLogin.LockedOut', 'Account locked out')}
+              </AlertDescription>
+            </Alert>
           )}
           {result.isNotAllowed && (
-            <p className="text-sm text-destructive">
-              {t('Auth.HeadlessLogin.NotAllowed', 'Login not allowed')}
-            </p>
+            <Alert variant="destructive">
+              <AlertDescription>
+                {t('Auth.HeadlessLogin.NotAllowed', 'Login not allowed')}
+              </AlertDescription>
+            </Alert>
           )}
           <pre className="rounded bg-muted px-3 py-2 text-xs text-muted-foreground">
             {JSON.stringify(result, null, 2)}

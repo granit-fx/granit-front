@@ -24,6 +24,7 @@ import {
   Spinner,
   toast,
 } from '@granit/react-ui';
+import { EmptyState } from '@granit/react-ui-kit';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { KeyRound, Loader2, Plus, ShieldOff } from 'lucide-react';
 import { useCallback, useState } from 'react';
@@ -246,10 +247,7 @@ export function OidcAuthorizationsPage() {
       )}
 
       {!isLoading && (!authorizations || authorizations.length === 0) && (
-        <div className="flex h-64 flex-col items-center justify-center gap-3 text-muted-foreground">
-          <KeyRound className="size-12 opacity-30" />
-          <p>{t('OpenIddict.Authorizations.Empty')}</p>
-        </div>
+        <EmptyState icon={KeyRound} message={t('OpenIddict.Authorizations.Empty')} />
       )}
 
       {/* Grant consent dialog */}

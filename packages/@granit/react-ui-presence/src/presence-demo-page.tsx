@@ -10,7 +10,14 @@ import {
   useMyPresence,
   useResourcePresence,
 } from '@granit/react-presence';
-import { Card, CardContent, CardHeader, CardTitle } from '@granit/react-ui';
+import {
+  Alert,
+  AlertDescription,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@granit/react-ui';
 import { useMemo } from 'react';
 
 import type { IdentityUser } from '@granit/identity';
@@ -80,9 +87,11 @@ export function PresenceDemoPage() {
               <p className="text-sm text-muted-foreground">{t('Presence.Loading')}</p>
             )}
             {my.error && (
-              <p className="text-sm text-destructive">
-                {t('Presence.LoadFailed', { error: my.error.message })}
-              </p>
+              <Alert variant="destructive">
+                <AlertDescription>
+                  {t('Presence.LoadFailed', { error: my.error.message })}
+                </AlertDescription>
+              </Alert>
             )}
             {my.data && (
               <dl className="space-y-1 text-sm">
@@ -125,9 +134,11 @@ export function PresenceDemoPage() {
             <p className="text-sm text-muted-foreground">{t('Presence.TeamLoading')}</p>
           )}
           {usersQuery.error && (
-            <p className="text-sm text-destructive">
-              {t('Presence.LoadFailed', { error: usersQuery.error.message })}
-            </p>
+            <Alert variant="destructive">
+              <AlertDescription>
+                {t('Presence.LoadFailed', { error: usersQuery.error.message })}
+              </AlertDescription>
+            </Alert>
           )}
           {!usersQuery.isPending && !usersQuery.error && teamUsers.length === 0 && (
             <p className="text-sm text-muted-foreground">{t('Presence.TeamEmpty')}</p>
@@ -159,9 +170,11 @@ export function PresenceDemoPage() {
             <p className="text-sm text-muted-foreground">{t('Presence.RoomJoining')}</p>
           )}
           {room.error && (
-            <p className="text-sm text-destructive">
-              {t('Presence.RoomError', { error: room.error.message })}
-            </p>
+            <Alert variant="destructive">
+              <AlertDescription>
+                {t('Presence.RoomError', { error: room.error.message })}
+              </AlertDescription>
+            </Alert>
           )}
           {!room.isJoining && !room.error && room.participants.length === 0 && (
             <p className="text-sm text-muted-foreground">{t('Presence.RoomEmpty')}</p>

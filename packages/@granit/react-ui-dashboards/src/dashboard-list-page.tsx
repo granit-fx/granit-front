@@ -14,6 +14,7 @@ import {
 } from '@granit/react-dashboards';
 import { useTranslation } from '@granit/react-localization';
 import { toast, Button, Spinner } from '@granit/react-ui';
+import { EmptyState } from '@granit/react-ui-kit';
 import { Archive, ArchiveRestore, LayoutDashboard, Pencil, RefreshCw, Send } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -116,10 +117,10 @@ export function DashboardListPage() {
       </div>
 
       {items.length === 0 ? (
-        <div className="flex h-48 flex-col items-center justify-center rounded-md border bg-card text-sm text-muted-foreground">
-          <LayoutDashboard className="mb-2 h-8 w-8" />
-          {t('Dashboards.List.Empty', { defaultValue: 'No dashboards yet.' })}
-        </div>
+        <EmptyState
+          icon={LayoutDashboard}
+          message={t('Dashboards.List.Empty', { defaultValue: 'No dashboards yet.' })}
+        />
       ) : (
         <ul data-slot="dashboard-list" className="space-y-2">
           {items.map((dashboard) => {

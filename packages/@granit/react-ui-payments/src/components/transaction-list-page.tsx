@@ -15,11 +15,14 @@ import { createTransactionColumns } from './transaction-columns';
 // pagination / sort / group-by live in the shared reducer; the admin-kit grid
 // renders the paged result and dispatches changes back through it.
 function TransactionListContent() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [chargeOpen, setChargeOpen] = useState(false);
 
   const queryEndpoint = usePaymentTransactionsQuery();
-  const columns = useMemo(() => createTransactionColumns({ t }), [t]);
+  const columns = useMemo(
+    () => createTransactionColumns({ t, locale: i18n.language }),
+    [t, i18n.language]
+  );
 
   return (
     <div data-slot="transaction-list-page" className="space-y-6">

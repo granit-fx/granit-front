@@ -21,6 +21,7 @@ import {
 } from '@granit/react-ui';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { toEntityId } from '@granit/types';
+import { formatCurrency } from '@granit/utils';
 import { useForm, type Resolver } from 'react-hook-form';
 
 interface RefundFormValues {
@@ -36,10 +37,6 @@ interface RefundDialogProps {
   readonly currency: string;
 }
 
-function formatCurrency(amount: number, currency: string): string {
-  return new Intl.NumberFormat('en', { style: 'currency', currency }).format(amount / 100);
-}
-
 /** Title-cases a form field name to match the `Payments.Fields.*` key suffix. */
 function capitalize(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
@@ -52,7 +49,7 @@ export function RefundDialog({
   maxAmount,
   currency,
 }: RefundDialogProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const mutation = useRequestPaymentRefund();
 
   // Spec-derived validation: the resolver checks each registered field (amount,
@@ -95,7 +92,9 @@ export function RefundDialog({
         <DialogHeader>
           <DialogTitle>{t('Payments.Refund.Title')}</DialogTitle>
           <DialogDescription>
-            {t('Payments.Refund.MaxAmount', { amount: formatCurrency(maxAmount, currency) })}
+            {t('Payments.Refund.MaxAmount', {
+              amount: formatCurrency(maxAmount, currency, i18n.language),
+            })}
           </DialogDescription>
         </DialogHeader>
 

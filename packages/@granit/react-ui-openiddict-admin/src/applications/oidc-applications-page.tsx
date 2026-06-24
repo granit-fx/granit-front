@@ -31,6 +31,7 @@ import {
   Textarea,
   toast,
 } from '@granit/react-ui';
+import { EmptyState } from '@granit/react-ui-kit';
 import {
   createConstraintsResolver,
   type ConstraintsResolver,
@@ -400,10 +401,7 @@ export function OidcApplicationsPage() {
       )}
 
       {!isLoading && (!applications || applications.length === 0) && (
-        <div className="flex h-64 flex-col items-center justify-center gap-3 text-muted-foreground">
-          <Shield className="size-12 opacity-30" />
-          <p>{t('OpenIddict.Applications.Empty')}</p>
-        </div>
+        <EmptyState icon={Shield} message={t('OpenIddict.Applications.Empty')} />
       )}
 
       {/* Create dialog */}

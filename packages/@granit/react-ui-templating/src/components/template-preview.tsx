@@ -5,6 +5,8 @@ import {
   useTemplateVariables,
 } from '@granit/react-templating';
 import {
+  Alert,
+  AlertDescription,
   Button,
   Select,
   SelectContent,
@@ -176,12 +178,14 @@ function PreviewContent({
 
   if (htmlPreview.isError) {
     return (
-      <div className="text-sm text-destructive">
-        {t('Templates.Messages.PreviewError')}
-        {htmlPreview.error?.message && (
-          <pre className="mt-2 whitespace-pre-wrap text-xs">{htmlPreview.error.message}</pre>
-        )}
-      </div>
+      <Alert variant="destructive">
+        <AlertDescription>
+          {t('Templates.Messages.PreviewError')}
+          {htmlPreview.error?.message && (
+            <pre className="mt-2 whitespace-pre-wrap text-xs">{htmlPreview.error.message}</pre>
+          )}
+        </AlertDescription>
+      </Alert>
     );
   }
 

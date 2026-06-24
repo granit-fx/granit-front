@@ -26,6 +26,16 @@ export { EntityActionScopeProvider, useEntityActionScope } from './entity-action
 export { EntityPageLayout, type EntityPageLayoutProps, type EntityPageLayoutWidth } from './entity-page-layout';
 export { SidePeekDrawer, type SidePeekDrawerProps } from './side-peek-drawer';
 
+// Form-component catalog
+export {
+  PhoneFormComponent,
+  UrlFormComponent,
+  TimezoneFormComponent,
+  EmailFormComponent,
+  MoneyFormComponent,
+  GRANIT_UI_FORM_COMPONENTS,
+} from './form-catalog';
+
 // Helpers + manifest extensions
 export { recapParentRefs, type ParentRef } from './bulk-recap';
 export {

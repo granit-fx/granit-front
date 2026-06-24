@@ -17,6 +17,7 @@ import {
 } from '@granit/react-ui';
 import { EmptyState } from '@granit/react-ui-kit';
 import { toEntityId } from '@granit/types';
+import { formatCurrency } from '@granit/utils';
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -29,12 +30,8 @@ import { TransactionStatusBadge } from './transaction-status-badge';
 
 import type { PaymentDisputeResponse, PaymentRefundResponse } from '@granit/payments';
 
-function formatCurrency(amount: number, currency: string): string {
-  return new Intl.NumberFormat('en', { style: 'currency', currency }).format(amount / 100);
-}
-
 export function TransactionDetailPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { formatDateTime } = useDateFormatter();
   const { id } = useParams<{ id: string }>();
   const [refundOpen, setRefundOpen] = useState(false);
@@ -118,7 +115,7 @@ export function TransactionDetailPage() {
                 {t('Payments.Transactions.Columns.Amount')}
               </dt>
               <dd className="mt-1 text-sm font-semibold">
-                {formatCurrency(transaction.amount, transaction.currency)}
+                {formatCurrency(transaction.amount, transaction.currency, i18n.language)}
               </dd>
             </div>
             <div>

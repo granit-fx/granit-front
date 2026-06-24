@@ -4,7 +4,7 @@ import {
   useRenditionDownloadUrl,
 } from '@granit/react-documents';
 import { useTranslation } from '@granit/react-localization';
-import { Button } from '@granit/react-ui';
+import { Alert, AlertDescription, Button } from '@granit/react-ui';
 import { useParams } from 'react-router-dom';
 
 import type { RenditionResponse, RenditionType } from '@granit/documents';
@@ -92,9 +92,11 @@ export function DocumentRenditionsPage() {
       )}
 
       {renditions.error && (
-        <p className="text-sm text-destructive">
-          {t('documents:Renditions.Error', 'Failed to load renditions.')}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>
+            {t('documents:Renditions.Error', 'Failed to load renditions.')}
+          </AlertDescription>
+        </Alert>
       )}
 
       {renditions.data?.renditions.length === 0 && (

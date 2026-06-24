@@ -1,4 +1,5 @@
 import { Button } from '@granit/react-ui';
+import { formatCurrency } from '@granit/utils';
 import { Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -8,16 +9,14 @@ import type { PaymentTransactionResponse } from '@granit/payments';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { TFunction } from 'i18next';
 
-function formatCurrency(amount: number, currency: string): string {
-  return new Intl.NumberFormat('en', { style: 'currency', currency }).format(amount / 100);
-}
-
 interface TransactionColumnOptions {
   readonly t: TFunction;
+  readonly locale?: string;
 }
 
 export function createTransactionColumns({
   t,
+  locale,
 }: TransactionColumnOptions): ColumnDef<PaymentTransactionResponse, unknown>[] {
   return [
     {
@@ -42,7 +41,7 @@ export function createTransactionColumns({
       header: t('Payments.Transactions.Columns.Amount'),
       cell: ({ row }) => (
         <span className="text-sm font-medium">
-          {formatCurrency(row.original.amount, row.original.currency)}
+          {formatCurrency(row.original.amount, row.original.currency, locale)}
         </span>
       ),
     },

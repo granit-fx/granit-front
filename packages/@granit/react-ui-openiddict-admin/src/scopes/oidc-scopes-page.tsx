@@ -26,6 +26,7 @@ import {
   Textarea,
   toast,
 } from '@granit/react-ui';
+import { EmptyState } from '@granit/react-ui-kit';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { Layers, Loader2, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
@@ -236,10 +237,7 @@ export function OidcScopesPage() {
       )}
 
       {!isLoading && (!scopes || scopes.length === 0) && (
-        <div className="flex h-64 flex-col items-center justify-center gap-3 text-muted-foreground">
-          <Layers className="size-12 opacity-30" />
-          <p>{t('OpenIddict.Scopes.Empty')}</p>
-        </div>
+        <EmptyState icon={Layers} message={t('OpenIddict.Scopes.Empty')} />
       )}
 
       {/* Create dialog */}
